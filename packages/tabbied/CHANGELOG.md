@@ -1,5 +1,13 @@
 # tabbied
 
+## 0.5.2
+
+### Patch Changes
+
+- Changes since tabbied@0.5.1 that landed without a changeset:
+
+  - Studio: name a database behind its migrations instead of 500, plain punctuation policy, UX review ([#69](https://github.com/tabbied-design/tabbied/issues/69))
+
 ## 0.5.1
 
 ### Patch Changes
@@ -138,10 +146,10 @@
   | `createArtwork(host, config)`                                                                                                                 | `createPattern(host, config)`                            |
   | `hydrateArtworks({ artworks })`                                                                                                               | `hydratePatterns({ patterns })`                          |
   | `artworkConfigToAttributes` / `artworkConfigFromElement`                                                                                      | `patternConfigToAttributes` / `patternConfigFromElement` |
-  | `ArtworkDefinition`, `ArtworkOption`, `ArtworkConfig`, `ArtworkController`, `ArtworkSlug`, `ArtworkColors`, `ArtworkSizing`, `ArtworkBoxSize` | `Pattern...` equivalents                                   |
-  | `import { ... } from 'tabbied/artworks'`                                                                                                        | `import { ... } from 'tabbied/patterns'`                   |
+  | `ArtworkDefinition`, `ArtworkOption`, `ArtworkConfig`, `ArtworkController`, `ArtworkSlug`, `ArtworkColors`, `ArtworkSizing`, `ArtworkBoxSize` | `Pattern...` equivalents                                 |
+  | `import { ... } from 'tabbied/artworks'`                                                                                                      | `import { ... } from 'tabbied/patterns'`                 |
   | `artworks` record, `isArtworkSlug()`                                                                                                          | `patterns` record, `isPatternSlug()`                     |
-  | `<TabbiedArtwork artwork={...} />`                                                                                                              | `<TabbiedPattern pattern={...} />`                         |
+  | `<TabbiedArtwork artwork={...} />`                                                                                                            | `<TabbiedPattern pattern={...} />`                       |
   | `TabbiedArtworkProps`, `TabbiedArtworkHandle`                                                                                                 | `TabbiedPatternProps`, `TabbiedPatternHandle`            |
   | `data-artwork="<slug>"`                                                                                                                       | `data-pattern="<slug>"`                                  |
 
