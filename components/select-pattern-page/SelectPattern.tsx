@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
 import useMediaQuery from 'lib/useMediaQuery';
 import type { GalleryItem } from 'lib/pattern';
 import {
@@ -209,7 +208,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     <main className={styles.gallery}>
       <GalleryScrollRestorer />
 
-      <GalleryTopBar label="Pattern library" />
+      <GalleryTopBar />
 
       {!isMobile && (
       <GalleryRail
@@ -231,6 +230,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
         search={search}
         onSearchChange={onSearchChange}
         onNewPalette={() => editor.openEditor()}
+        paletteCount={savedPalettes.length + PALETTE_LIBRARY.length}
         palettes={savedPalettes}
         library={PALETTE_LIBRARY}
         selectedId={selectedId}
@@ -263,7 +263,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
 
       <div className={styles.mainColumn}>
         <div className={styles.mainHeader}>
-          <h1 className={styles.title}>Pick a design</h1>
+          <h1 className={styles.title}>Pick a pattern</h1>
           <p className={styles.intro}>
             <strong>
               {filtered.length}{' '}
@@ -291,18 +291,11 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
               })}
             </div>
 
+            {/* Numbers only, as the design draws it: the window always shows
+                the neighbours of the current page, so there is nothing an
+                arrow would reach that a number does not. */}
             {pageCount > 1 && (
               <nav className={styles.pagination} aria-label="Pages">
-                <button
-                  type="button"
-                  className={styles.pageArrow}
-                  onClick={() => goToPage(clampedPage - 1)}
-                  disabled={clampedPage <= 1}
-                  aria-label="Previous page"
-                >
-                  <ArrowLeft size={15} />
-                </button>
-
                 {pages.map((p, index) =>
                   p === null ? (
                     <span
@@ -328,16 +321,6 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
                     </button>
                   )
                 )}
-
-                <button
-                  type="button"
-                  className={styles.pageArrow}
-                  onClick={() => goToPage(clampedPage + 1)}
-                  disabled={clampedPage >= pageCount}
-                  aria-label="Next page"
-                >
-                  <ArrowRight size={15} />
-                </button>
               </nav>
             )}
           </>

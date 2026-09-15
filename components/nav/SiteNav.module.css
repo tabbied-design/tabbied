@@ -1,0 +1,282 @@
+/* The masthead. Its colours are tokens on the bar itself, redefined for the
+   dark tone, so the one stylesheet draws both the paper and the ink version
+   and the sections below never reach in. The menus are portaled to <body>,
+   so they take the light treatment in both tones, as the artboards do. */
+
+.nav {
+  --n-fg: #0e0e13;
+  --n-link: oklch(0.62 0.01 260);
+  --n-rule: oklch(0 0 0 / 0.08);
+  --n-avatar-bg: #0e0e13;
+  --n-avatar-fg: #ffffff;
+  --n-sans: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --n-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  position: relative;
+  /* Above the homepage's column rules (50), so a menu dropping out of the bar
+     covers them. */
+  z-index: 60;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 20px 48px;
+  font-family: var(--n-sans);
+  color: var(--n-fg);
+  border-bottom: 1px solid var(--n-rule);
+}
+
+.nav[data-tone='dark'] {
+  --n-fg: #eef0f6;
+  --n-link: oklch(0.58 0.01 260);
+  --n-rule: oklch(1 0 0 / 0.08);
+  --n-avatar-bg: #eef0f6;
+  --n-avatar-fg: #0e0e13;
+
+  padding: 22px 48px;
+}
+
+/* The library scrolls under its bar, so the bar has to stay legible over it. */
+.sticky {
+  position: sticky;
+  top: 0;
+  background-color: oklch(1 0 0 / 0.94);
+  backdrop-filter: blur(8px);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  color: var(--n-fg);
+  line-height: 0;
+}
+
+.nav[data-tone='dark'] .logo {
+  margin-left: 6px;
+}
+
+.links {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  justify-self: center;
+  font: 400 12px var(--n-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.links a {
+  color: var(--n-link);
+  transition: color 150ms ease;
+}
+
+.links a:hover,
+.links a[aria-current='page'] {
+  color: var(--n-fg);
+}
+
+/* The right-hand slot holds either the sign-in link or the person, and is
+   the height of the circle either way, so the bar does not change height
+   when a session resolves. */
+.end {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-self: end;
+  min-height: 34px;
+}
+
+.signIn {
+  font: 400 12px var(--n-mono);
+  color: var(--n-link);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 150ms ease;
+}
+
+.signIn:hover {
+  color: var(--n-fg);
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font: 600 11.5px var(--n-mono);
+  color: var(--n-avatar-fg);
+  letter-spacing: 0.02em;
+  background-color: var(--n-avatar-bg);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.avatar:hover,
+.avatar[data-popup-open] {
+  opacity: 0.85;
+}
+
+/* Two bars that meet as a cross while the menu is open. Desktop never shows
+   it: the destinations are inline there. */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hamburger span {
+  display: block;
+  width: 21px;
+  height: 1px;
+  background-color: var(--n-fg);
+  transition: transform 250ms ease;
+}
+
+/* The bars are 5px apart, so meeting in the middle is a 3px move each. */
+.hamburger[data-popup-open] span:first-child {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.hamburger[data-popup-open] span:last-child {
+  transform: translateY(-3px) rotate(-45deg);
+}
+
+.links a:focus-visible,
+.signIn:focus-visible,
+.avatar:focus-visible,
+.hamburger:focus-visible,
+.logo:focus-visible {
+  outline: 2px solid var(--blue-medium);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- The menus ---- */
+
+.positioner {
+  z-index: 70;
+}
+
+.menu {
+  min-width: 210px;
+  padding: 6px;
+  font-family: var(--n-sans);
+  color: #0e0e13;
+  background-color: #ffffff;
+  border-radius: 12px;
+  outline: none;
+  box-shadow: 0 12px 32px oklch(0 0 0 / 0.16);
+  transform-origin: var(--transform-origin);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.menu[data-starting-style],
+.menu[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.97);
+}
+
+.menuEmail {
+  padding: 10px 12px 8px;
+  overflow: hidden;
+  font-size: 13px;
+  color: oklch(0.5 0.01 260);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuRule {
+  height: 1px;
+  margin: 4px 6px 5px;
+  background-color: oklch(0 0 0 / 0.08);
+}
+
+.menuItem {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 9px 12px;
+  font: 400 13px var(--n-sans);
+  color: #0e0e13;
+  text-align: left;
+  text-decoration: none;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+}
+
+.menuItem[data-highlighted],
+.menuItem:hover {
+  color: #0e0e13;
+  background-color: oklch(0 0 0 / 0.05);
+}
+
+.narrowOnly {
+  display: none;
+}
+
+/* ---- Narrow ---- */
+
+@media (max-width: 767.98px) {
+  .nav,
+  .nav[data-tone='dark'] {
+    grid-template-columns: 1fr auto;
+    padding: 16px 20px;
+  }
+
+  .nav[data-tone='dark'] .logo {
+    margin-left: 0;
+  }
+
+  .links,
+  .signIn {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .narrowOnly {
+    display: block;
+  }
+
+  .menu {
+    min-width: 230px;
+    border-radius: 14px;
+    box-shadow: 0 14px 38px oklch(0 0 0 / 0.22);
+  }
+
+  .menuEmail {
+    padding: 11px 12px 9px;
+    font-size: 14px;
+  }
+
+  .menuItem {
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .links a,
+  .signIn,
+  .avatar,
+  .hamburger span,
+  .menu {
+    transition: none;
+  }
+}

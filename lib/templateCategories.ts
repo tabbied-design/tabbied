@@ -1,0 +1,118 @@
+// Every template site, by category, for the gallery's filter row.
+//
+// Hand-assigned. The sites carry a free-form `topic` ("Dry pigment mill",
+// "Fair-faced concrete") and no keyword rule sorts seventy-seven of those into
+// a handful of bins without filing a bell foundry under Food. A site missing
+// from this table fails the build (`categoryOf` throws while the gallery
+// prerenders), which is the same gate the thumbnails and the editable specs
+// use: the failure otherwise is a card that no filter reaches.
+
+export const TEMPLATE_CATEGORIES = [
+  'Shop',
+  'Studio',
+  'Culture',
+  'Science & tech',
+  'Industry',
+  'Travel',
+  'Food & drink',
+  'Wellness & sport',
+  'Media',
+] as const;
+
+export type TemplateCategory = (typeof TEMPLATE_CATEGORIES)[number];
+
+const BY_SLUG: Record<string, TemplateCategory> = {
+  // The first collection.
+  solstice: 'Wellness & sport',
+  'ember-and-oak': 'Food & drink',
+  facet: 'Shop',
+  verdant: 'Shop',
+  nocturne: 'Shop',
+
+  // The second.
+  'mistral-cycles': 'Shop',
+  'zenith-observatory': 'Culture',
+  'maison-ambre': 'Shop',
+  'cairn-expeditions': 'Travel',
+  'hopscotch-museum': 'Culture',
+  'cerulean-swim': 'Shop',
+  'oxbow-workshop': 'Studio',
+  'piquant-provisions': 'Food & drink',
+  'quanta-robotics': 'Science & tech',
+  'madrigal-strings': 'Studio',
+  'caldera-rail': 'Travel',
+  'konzerthaus-halden': 'Culture',
+  'institut-vollmer': 'Science & tech',
+  'linie-nord': 'Travel',
+  'chronometrie-bex': 'Shop',
+  'bogen-papier': 'Shop',
+  werkraum: 'Studio',
+  nordlicht: 'Science & tech',
+  halbfett: 'Studio',
+  'hafen-sechs': 'Industry',
+  klangwerk: 'Studio',
+  mesura: 'Science & tech',
+  seconde: 'Wellness & sport',
+  'cobalt-works': 'Industry',
+  nullpunkt: 'Science & tech',
+  'sammlung-weiss': 'Culture',
+  frequenz: 'Media',
+  'fonds-aubert': 'Culture',
+  passform: 'Shop',
+  meterware: 'Industry',
+  sichtbeton: 'Industry',
+  kaella: 'Industry',
+  nachtzug: 'Travel',
+  lichtfeld: 'Studio',
+  silbersalz: 'Studio',
+  kryss: 'Studio',
+  salzhaus: 'Culture',
+  zwoelfton: 'Culture',
+  'bureau-vektor': 'Science & tech',
+  'presse-neun': 'Studio',
+  isobar: 'Science & tech',
+  beaufort: 'Industry',
+  grafit: 'Shop',
+  falzbogen: 'Industry',
+  kubus: 'Culture',
+  tiefsee: 'Science & tech',
+  glockenhof: 'Industry',
+  orgelwerk: 'Industry',
+  'marais-blanc': 'Food & drink',
+  ringmark: 'Science & tech',
+  kupferwalz: 'Industry',
+  purpurhaus: 'Industry',
+  betonpark: 'Wellness & sport',
+  'revue-marges': 'Media',
+  'orbital-lounge': 'Food & drink',
+  pixelmelt: 'Studio',
+  'birk-mobler': 'Shop',
+  'werkstatt-neun': 'Studio',
+  'hotel-meridien': 'Travel',
+  'kiln-aoi': 'Studio',
+  nullsec: 'Science & tech',
+  'bonbon-club': 'Culture',
+  'sable-and-pine': 'Studio',
+  'harbour-ledger': 'Media',
+  'fennel-and-thyme': 'Shop',
+  norrbolt: 'Shop',
+  'lantern-rock': 'Travel',
+  'xerox-riot': 'Media',
+  'tidy-ledger': 'Science & tech',
+  'atelier-vane': 'Shop',
+  'mesa-outfitters': 'Travel',
+  'velo-criterium': 'Wellness & sport',
+};
+
+/** The category a site is filed under; throws for a site the table has not met. */
+export function categoryOf(slug: string): TemplateCategory {
+  const category = BY_SLUG[slug];
+
+  if (!category) {
+    throw new Error(
+      `templateCategories: no category for "${slug}" - add it to lib/templateCategories.ts`
+    );
+  }
+
+  return category;
+}

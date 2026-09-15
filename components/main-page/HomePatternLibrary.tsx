@@ -145,10 +145,10 @@ export default function HomePatternLibrary({
               updates instantly as you edit: no page reloads, no guesswork.
             </p>
             <Link href="/patterns" prefetch={false} className={styles.cta}>
-              <span className={styles.ctaDisc} aria-hidden="true">
+              <span>Make your pattern</span>
+              <span className={styles.ctaArrow} aria-hidden="true">
                 &rarr;
               </span>
-              <span>Make your pattern</span>
             </Link>
           </div>
 

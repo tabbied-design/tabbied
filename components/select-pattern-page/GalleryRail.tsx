@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { Search } from 'lucide-react';
-import PaletteRow from 'components/palette/PaletteRow';
+import PaletteListRow from 'components/palette/PaletteListRow';
 import { usePaletteReveal } from 'components/palette/usePaletteReveal';
 import type { BrandPalette } from 'lib/brandPalettes';
 import type { LibraryPalette } from 'lib/paletteLibrary';
@@ -15,13 +15,12 @@ import styles from './GalleryRail.module.css';
 const PAGE = 24;
 
 /**
- * The gallery's desktop palette rail: one search that filters both the palette
- * list and the design grid, a labelled count, the full merged palette list
- * (custom first, then the read-only library) in a single scrolling column, and
- * a pinned "+ New Palette". The list is the whole point of the rail, so it's
- * shown from the start - no "Preview colors" step and no separate browser.
- *
- * The way home lives in GalleryTopBar above it, not here.
+ * The gallery's desktop palette rail: the count as an eyebrow, one search that
+ * filters both the palette list and the design grid, the full merged palette
+ * list (custom first, then the read-only library) scrolling in a single
+ * column, and a pinned "+ New Palette". It fills the height under the masthead
+ * - the artboard drew it as a fixed box with a fade, and the list is the whole
+ * point of the rail, so it gets the room.
  */
 export default function GalleryRail({
   search,
@@ -58,7 +57,12 @@ export default function GalleryRail({
   return (
     <aside className={styles.sidebar}>
       <div className={styles.top}>
+        <span className={styles.eyebrow}>
+          Palettes ({palettes.length + library.length})
+        </span>
+
         <label className={styles.search}>
+          <Search size={15} aria-hidden="true" />
           <input
             type="text"
             placeholder="Search palettes & designs"
@@ -69,32 +73,20 @@ export default function GalleryRail({
             }}
             aria-label="Search palettes and designs"
           />
-          <Search size={15} aria-hidden="true" />
         </label>
-
-        <div className={styles.listHeader}>
-          <span className={styles.listTitle}>Palettes</span>
-          <span className={styles.listCount}>
-            {merged.length} {merged.length === 1 ? 'palette' : 'palettes'}
-          </span>
-        </div>
       </div>
 
       <div ref={listRef} className={styles.list} onScroll={onScroll}>
         {shown.map(({ kind, palette }) => {
           const active = palette.id === selectedId;
+          const name = palette.name || 'Untitled';
 
           return (
-            <PaletteRow
+            <PaletteListRow
               key={palette.id}
+              name={name}
               colors={palette.colors}
-              transparentBackground={
-                kind === 'custom' ? palette.transparentBackground : false
-              }
-              name={palette.name || 'Untitled'}
               active={active}
-              showEdit
-              showDelete={kind === 'custom'}
               editLabel={`Edit ${palette.name || 'palette'}${
                 kind === 'library' ? ' (saves as a copy)' : ''
               }`}

@@ -1,14 +1,18 @@
 import type { Metadata } from 'next';
-import type { CSSProperties, ReactNode } from 'react';
 import { TabbiedPattern } from 'tabbied/react';
 import type { PatternDefinition } from 'tabbied';
 import {
   lobe, windowpane, prisma, foliage, veil, blossom, spark, frond, chamfer,
   fluting, merlon, diadem, vitrail, ivy, bokeh, lunette, neon, bauhaus, tetro,
 } from 'tabbied/patterns';
-import LazyPattern from './LazyPattern';
+import SiteNav from 'components/nav';
+import HomeFooter from 'components/main-page/HomeFooter';
+import TemplatesGrid, { type TemplateCard } from 'components/template/TemplatesGrid';
 import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
+import { categoryOf } from 'lib/templateCategories';
+import { plexMono } from 'lib/fonts';
+import home from 'components/main-page/home.module.css';
 import s from './templates.module.css';
 
 // Derived, never written out: adding a site can't leave a stale number behind.
@@ -26,83 +30,6 @@ const ART: Record<string, PatternDefinition> = {
   ...Object.fromEntries(NEW_TEMPLATE_SITES.map((x) => [x.patternSlug, x.pattern])),
 };
 
-type CardData = {
-  slug: string;
-  href: string;
-  n: number;
-  name: string;
-  topic: string;
-  pattern: string;
-  paletteName: string;
-  colors: string[];
-  seed: string;
-};
-
-/**
- * A card in the mosaic. The pattern is the content, so it takes the whole top of
- * the card and the metadata sits underneath in one quiet line. Each card carries
- * its palette as a custom property, which tints its hover state: mousing across
- * the grid previews each site's accent before you open it.
- */
-function Card({ c }: { c: CardData }) {
-  const vars = { '--accent': c.colors[1] ?? c.colors[0] } as CSSProperties;
-  return (
-    // A <div>, not the <a> it used to be: the download links are anchors of
-    // their own and an anchor cannot nest inside another. The card link still
-    // covers everything above the download row.
-    <div className={s.card} style={vars}>
-      <a className={s.cardLink} href={c.href}>
-        <div className={s.thumb}>
-          <LazyPattern pattern={ART[c.pattern]} palette={c.colors} seed={c.seed} />
-          <span className={s.num}>{String(c.n).padStart(2, '0')}</span>
-        </div>
-        <div className={s.cbody}>
-          <div className={s.cmain}>
-            <h3>{c.name}</h3>
-            <p>{c.topic}</p>
-          </div>
-          <div className={s.foot}>
-            <div className={s.sw} aria-hidden="true">
-              {c.colors.map((col, i) => (
-                <span key={i} style={{ background: col }} />
-              ))}
-            </div>
-            <div className={s.pn}>
-              {c.paletteName} <i>/</i> {c.pattern}
-            </div>
-          </div>
-        </div>
-      </a>
-      {/* Both formats are built by `npm run templates` into out/downloads/,
-          so these are plain static files served next to the site. `download`
-          saves the zip rather than navigating to it. Customize goes through
-          /studio/customize/, the one door into the customizer, which makes a
-          copy of the template under the person's account (signing in first
-          when it has to). */}
-      <div className={s.dl}>
-        <a className={`${s.dlBtn} ${s.customize}`} href={`/studio/customize/?slug=${c.slug}`}>
-          Customize
-        </a>
-        <span className={s.dlLabel}>Download</span>
-        <a
-          className={s.dlBtn}
-          href={`/downloads/${c.slug}-html.zip`}
-          download
-        >
-          HTML
-        </a>
-        <a
-          className={s.dlBtn}
-          href={`/downloads/${c.slug}-react.zip`}
-          download
-        >
-          React
-        </a>
-      </div>
-    </div>
-  );
-}
-
 // The hero backdrop is a contact sheet rather than one enlarged pattern: four
 // different patterns on four different palettes, which states the premise of the
 // page before a word is read.
@@ -113,39 +40,10 @@ const HERO_TILES: { art: PatternDefinition; palette: string[]; seed: string }[] 
   { art: prisma, palette: ['#0d0d12', '#ffd23e', '#3fffb2', '#7048e8'], seed: 'H4' },
 ];
 
-function GroupHead({
-  kicker,
-  title,
-  body,
-  count,
-  unit = 'sites',
-}: {
-  kicker: string;
-  title: string;
-  body: ReactNode;
-  count: number;
-  unit?: string;
-}) {
-  return (
-    <header className={s.group}>
-      <div>
-        <span className={s.kicker}>{kicker}</span>
-        <h2>{title}</h2>
-      </div>
-      <div className={s.groupMeta}>
-        <p>{body}</p>
-        <span className={s.count}>
-          {count} {unit}
-        </span>
-      </div>
-    </header>
-  );
-}
-
 export default function TemplatesGallery() {
   // One list, numbered straight through: the gallery shows a single grid
   // rather than splitting the collections into separate batches.
-  const allCards: CardData[] = [
+  const cards: TemplateCard[] = [
     ...TEMPLATE_SITES.map((x, i) => ({
       slug: x.slug,
       href: `/templates/${x.slug}/`,
@@ -166,76 +64,57 @@ export default function TemplatesGallery() {
       colors: x.palette,
       seed: x.seed,
     })),
-  ].map((c, i) => ({ ...c, n: i + 1 }));
+  ].map((c, i) => ({
+    ...c,
+    n: i + 1,
+    art: ART[c.pattern],
+    // Throws for a site the category table has not met, which fails the
+    // export rather than shipping a card no filter reaches.
+    category: categoryOf(c.slug),
+  }));
 
   return (
-    <main className={s.page}>
-      <header className={s.hero}>
-        <div className={s.heroArt} aria-hidden="true">
-          {HERO_TILES.map((t) => (
-            <div key={t.seed}>
-              <TabbiedPattern
-                pattern={t.art}
-                palette={t.palette}
-                seed={t.seed}
-                fit="cover"
-                density={1}
-              />
-            </div>
-          ))}
-        </div>
-        <div className={s.heroScrim} />
-        <div className={s.heroInner}>
-          <div className={s.pre}>Made with Tabbied</div>
-          <h1>
-            {TOTAL} sites,<br />
-            <span>one pattern engine</span>
-          </h1>
-          <p>
-            Every site below uses a <strong>Tabbied</strong> generative pattern as its
-            main design accent, themed end to end with a single palette.
-            Same component, {TOTAL} completely different moods.
-          </p>
-          <dl className={s.facts}>
-            <div><dt>{TOTAL}</dt><dd>sample sites</dd></div>
-            <div><dt>{TOTAL}</dt><dd>palettes</dd></div>
-            <div><dt>{TOTAL}</dt><dd>patterns</dd></div>
-            <div><dt>1</dt><dd>component</dd></div>
-          </dl>
-        </div>
-      </header>
+    // The homepage's dark tokens, so the masthead, the footer and the cards
+    // read from the same set.
+    <div className={`${home.home} ${plexMono.variable} ${s.page}`}>
+      <SiteNav tone="dark" />
 
-      <div className={s.wrap}>
-        <section>
-          <GroupHead
-            kicker="01"
-            title="Every site, one component"
-            body={
-              <>
-                Live Next.js pages, each rendered by the same{' '}
-                <code>TabbiedPattern</code> component on its own palette and
-                presets - some with AI-generated imagery composited over the
-                patterns, the newest ten with the patterns carrying the page
-                on their own.
-              </>
-            }
-            count={allCards.length}
-          />
-          <div className={s.mosaic}>
-            {allCards.map((c) => (
-              <Card key={c.href} c={c} />
+      <main>
+        <header className={s.hero}>
+          <div className={s.heroArt} aria-hidden="true">
+            {HERO_TILES.map((t) => (
+              <div key={t.seed}>
+                <TabbiedPattern
+                  pattern={t.art}
+                  palette={t.palette}
+                  seed={t.seed}
+                  fit="cover"
+                  density={1}
+                />
+              </div>
             ))}
           </div>
-        </section>
+          <div className={s.heroScrim} />
+          <div className={s.heroInner}>
+            <div className={s.pre}>Made with Tabbied</div>
+            <h1>
+              {TOTAL} sites,<br />
+              <span>one pattern engine</span>
+            </h1>
+            <p>
+              Every site below uses a <strong>Tabbied</strong> generative pattern as its
+              main design accent, themed end to end with a single palette.
+              Same component, {TOTAL} completely different moods.
+            </p>
+          </div>
+        </header>
 
-      </div>
+        <div className={s.wrap}>
+          <TemplatesGrid cards={cards} />
+        </div>
+      </main>
 
-      <footer className={s.footer}>
-        <p>
-          Built with <a href="https://tabbied.com">Tabbied</a>, generative patterns
-          powered by css-doodle. Open any card to view the full site.
-        </p>
-      </footer>
-    </main>
+      <HomeFooter />
+    </div>
   );
 }

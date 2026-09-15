@@ -89,10 +89,10 @@ export default function HomeTemplates({
 
       <div className={styles.ctaRow}>
         <Link href="/templates" prefetch={false} className={styles.cta}>
-          <span className={styles.ctaDisc} aria-hidden="true">
+          <span>Explore all {templateCount} templates</span>
+          <span className={styles.ctaArrow} aria-hidden="true">
             &rarr;
           </span>
-          <span>Explore all {templateCount} templates</span>
         </Link>
       </div>
     </section>

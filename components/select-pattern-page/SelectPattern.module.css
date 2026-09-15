@@ -1,14 +1,14 @@
-/* Gallery (3a): a two-column layout - the white palette rail and the design
-   grid - both plain white, with no divider or tint between them. */
+/* The gallery: the white palette rail and the design grid beside it, the
+   grid on a near-white sheet with a hairline between them. */
 .gallery {
-  /* Height of GalleryTopBar: the fixed rail starts below it, and the main
+  /* Height of the masthead: the fixed rail starts below it, and the main
      column is inset by it. One number, two consumers. */
   --gallery-bar-h: 75px;
+  /* Width of the rail, read by the rail itself and by the column beside it. */
+  --gallery-rail-w: clamp(268px, 20vw, 340px);
 
   position: relative;
-  /* Warm grey behind the page; the design column sits on near-white above it,
-     which is what makes the column read as a sheet rather than the page. */
-  background: #efeeea;
+  background: #ffffff;
   min-height: 100vh;
   min-height: 100dvh;
 }
@@ -18,32 +18,37 @@
 .mainColumn {
   min-width: 0;
   min-height: 100vh;
-  margin-left: 300px;
+  margin-left: var(--gallery-rail-w);
   padding: 40px 48px 72px clamp(28px, 3vw, 48px);
   background: #fdfdfc;
   border-left: 1px solid oklch(0 0 0 / 0.09);
 }
 
+/* The title on the left half, the lede on the right, its last line level
+   with the title's baseline. */
 .mainHeader {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
   align-items: start;
   margin-bottom: 40px;
 }
 
 .title {
+  grid-column: 1 / 3;
   margin: 0;
-  font: 400 clamp(30px, 3.2vw, 46px) / 1.1 var(--font-sans-serif);
+  font: 700 40px / 1.05 var(--font-sans-serif);
   color: #0e0e13;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
 }
 
 .intro {
-  margin: 6px 0 0;
-  font-size: 15px;
+  grid-column: 3 / -1;
+  align-self: end;
+  margin: 0;
+  font-size: 14px;
   line-height: 1.6;
-  color: oklch(0.42 0.01 260);
+  color: oklch(0.45 0.01 260);
 }
 
 .intro strong {
@@ -51,10 +56,33 @@
   color: #0e0e13;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 1024.98px) {
+  .mainHeader {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .title {
+    grid-column: 1 / 2;
+  }
+
+  .intro {
+    grid-column: 2 / -1;
+  }
+}
+
+@media (max-width: 768px) {
   .mainHeader {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+
+  .title,
+  .intro {
+    grid-column: 1 / -1;
+  }
+
+  .title {
+    font-size: 34px;
   }
 }
 
@@ -104,13 +132,13 @@
   grid-row: span 2;
 }
 
-@media (min-width: 861px) {
+@media (min-width: 769px) {
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1041px) {
+@media (min-width: 1025px) {
   .grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -119,7 +147,7 @@
 /* Below four columns the bands can no longer tile, so every tile narrows to one
    column and only its height still varies. Row spans are deliberately left
    alone - that is what keeps the grid from flattening into a plain list. */
-@media (max-width: 1040.98px) {
+@media (max-width: 1024.98px) {
   .grid > * {
     grid-column: span 1 !important;
   }
@@ -132,44 +160,24 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin-top: 32px;
-}
-
-.pageArrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  color: #646d7b;
-  cursor: pointer;
-  transition: background-color 120ms ease;
-}
-
-.pageArrow:hover:not(:disabled) {
-  background: #f8f9fa;
-}
-
-.pageArrow:disabled {
-  color: #ced3d9;
-  cursor: default;
+  margin-top: 44px;
+  font-size: 13px;
+  color: oklch(0.4 0.01 260);
 }
 
 .pageNumber {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  height: 36px;
+  min-width: 30px;
+  height: 30px;
   padding: 0 6px;
   border: none;
   border-radius: 50%;
   background: transparent;
-  color: #646d7b;
-  font-size: 14px;
+  color: inherit;
+  font-family: var(--font-sans-serif);
+  font-size: 13px;
   font-weight: 400;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
@@ -177,24 +185,22 @@
 }
 
 .pageNumber:hover {
-  background: #f1f3f5;
+  background: oklch(0 0 0 / 0.05);
 }
 
 .pageNumberCurrent,
 .pageNumberCurrent:hover {
-  background: #232529;
+  background: #0e0e13;
   color: #ffffff;
-  font-weight: 600;
 }
 
 .pageGap {
-  width: 24px;
+  min-width: 30px;
   text-align: center;
-  color: #98a0af;
-  font-size: 14px;
+  color: inherit;
+  font-size: 13px;
 }
 
-.pageArrow:focus-visible,
 .pageNumber:focus-visible,
 .clearSearch:focus-visible {
   outline: 2px solid var(--blue-medium);
@@ -286,12 +292,12 @@
   outline-offset: 2px;
 }
 
+/* The name, in the sans, under the tile. */
 .cardName {
-  margin-top: 12px;
-  font: 500 11px var(--font-plex-mono, ui-monospace), ui-monospace, monospace;
+  margin: 0;
+  padding-top: 9px;
+  font: 400 13px var(--font-sans-serif);
   color: #0e0e13;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
 }
 
 /* ---- Live css-doodle thumbnail (shared with GalleryDoodle/Inner) ---- */

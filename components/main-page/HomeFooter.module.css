@@ -24,13 +24,13 @@
 .blurb {
   margin: 0;
   font: 400 14px / 1.7 var(--h-sans);
-  color: oklch(0.55 0.01 260);
+  color: oklch(0.75 0.01 260);
 }
 
 .heading {
   margin-bottom: 14px;
   font: 600 12px var(--h-mono);
-  color: var(--h-dim);
+  color: oklch(0.7 0.01 260);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -39,13 +39,13 @@
   margin: 0;
   padding: 0;
   font: 400 14px / 2 var(--h-sans);
-  color: var(--h-nav);
+  color: oklch(0.88 0.01 260);
   list-style: none;
 }
 
 .links a,
 .contact a {
-  color: var(--h-nav);
+  color: oklch(0.88 0.01 260);
 }
 
 .links a:hover,
@@ -62,7 +62,7 @@
 .contact {
   margin: 0;
   font: 400 14px / 1.9 var(--h-sans);
-  color: var(--h-nav);
+  color: oklch(0.88 0.01 260);
 }
 
 .bottom {
@@ -75,7 +75,7 @@
   padding-bottom: 64px;
   padding-left: var(--h-pad);
   font: 400 12px var(--h-sans);
-  color: oklch(0.45 0.01 260);
+  color: oklch(0.7 0.01 260);
 }
 
 .bottom a {

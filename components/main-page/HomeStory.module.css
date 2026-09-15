@@ -61,15 +61,15 @@
 
 /* ── Copy ────────────────────────────────────────────────────────────────── */
 
-.badge {
-  display: inline-block;
-  margin-bottom: 24px;
-  padding: 6px 12px;
-  font: 600 11px var(--h-mono);
-  color: var(--h-ink);
-  letter-spacing: 0.14em;
+/* The section's name, in the violet the design gives this one section and
+   nothing else on the page. */
+.eyebrow {
+  display: block;
+  margin-bottom: 14px;
+  font: 400 12px var(--h-mono);
+  color: oklch(0.52 0.18 300);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  background-color: var(--h-mint);
 }
 
 .title {
@@ -106,26 +106,27 @@
 }
 
 .statLabel {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  font: 400 12px var(--h-mono);
+  display: block;
+  font: 500 12px var(--h-mono);
   color: var(--h-ink-dim);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-.statArrow {
+/* The two that lead somewhere are underlined in teal, which is the whole of
+   the difference between a figure and a link here. */
+.statLink {
   color: #0d9488;
-  transition: transform 200ms ease;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 a.stat:hover {
   color: var(--h-ink);
 }
 
-a.stat:hover .statArrow {
-  transform: translateX(3px);
+a.stat:hover .statLink {
+  color: var(--h-ink);
 }
 
 @media (max-width: 1023.98px) {
@@ -159,8 +160,7 @@ a.stat:hover .statArrow {
     animation: none;
   }
 
-  .square,
-  .statArrow {
+  .square {
     transition: none;
   }
 }

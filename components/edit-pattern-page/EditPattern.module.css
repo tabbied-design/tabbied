@@ -388,41 +388,50 @@
   margin-top: 16px;
 }
 
-.chipsHeader {
+/* Borderless search with only a bottom hairline; the magnifier sits after
+   the field so the placeholder starts at the rail's left edge, in line with
+   the rows below it. */
+.paletteSearch {
   display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.chipsLabel {
-  font-size: 14px;
-  color: #98a0af;
-}
-
-.chipsRow {
-  display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-top: 8px;
+  padding: 8px 2px 10px;
+  color: #98a0af;
+  border-bottom: 1px solid #e3e6ea;
+  transition: border-color 120ms ease;
 }
 
-/* Mobile (7d): one horizontal, scrollable shelf of every palette chip. Bleeds
-   to the panel edges so chips can scroll fully off-screen. */
-.chipsRowScroll {
-  flex-wrap: nowrap;
-  margin: 8px -20px 0;
-  padding: 2px 20px 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
+.paletteSearch:hover,
+.paletteSearch:focus-within {
+  border-color: #98a0af;
 }
 
-.chipsRowScroll::-webkit-scrollbar {
-  display: none;
+.paletteSearch input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-sans-serif);
+  font-size: 13px;
+  color: #232529;
+  background: transparent;
+  border: none;
+  outline: none;
 }
 
-.chipsRowScroll > * {
-  flex: none;
+/* A bounded list of PaletteListRow, scrolling inside its box. */
+.paletteList {
+  max-height: 296px;
+  margin: 12px -6px 0;
+  padding: 2px 6px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d4d9df transparent;
+}
+
+.paletteEmpty {
+  padding: 16px 12px;
+  font-size: 13px;
+  color: #98a0af;
 }
 
 /* "+ New Palette" (left) and "Browse all palettes ›" (right) under the chips. */
@@ -661,9 +670,10 @@
 
   .previewWrapper {
     flex: none;
-    height: 300px;
+    height: 330px;
     padding: 1rem;
   }
+
 
   .doodleFrame {
     box-shadow:
@@ -672,14 +682,18 @@
   }
 
   /* The preview band is a fixed height here, so the caption has to fit inside
-     it. The header above already names the pattern, which makes the name the
-     line to drop - the size is the part that is not shown anywhere else. */
+     it; the header no longer names the pattern, so the caption is where the
+     name lives on a phone too. */
   .stage {
     gap: 12px;
   }
 
+  .stageCaption {
+    gap: 1px;
+  }
+
   .stageName {
-    display: none;
+    font-size: 16px;
   }
 
   .panel {
@@ -688,6 +702,17 @@
     width: auto;
     border-left: none;
     border-top: 1px solid #eceef1;
+  }
+}
+
+/* On a phone the plate is a share of the screen rather than a fixed band.
+   300px is most of a 667px viewport and barely a third of a 932px one, which
+   left the controls cramped on the small phones and the pattern small on the
+   large ones; a floor keeps it legible where the fraction is smallest. */
+@media (max-width: 767.98px) {
+  .previewWrapper {
+    height: 48vh;
+    min-height: 280px;
   }
 }
 
@@ -769,6 +794,26 @@
 
 .exportRow:disabled .exportIcon {
   color: #ced4da;
+}
+
+/* The background-image footnote, under a rule so it reads as a note about the
+   rows above rather than a fifth row. */
+.exportNote {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  margin: 14px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid oklch(0 0 0 / 0.08);
+  font-family: var(--font-sans-serif);
+  font-size: 14px;
+  line-height: 1.5;
+  color: oklch(0.5 0.01 260);
+}
+
+.exportNote svg {
+  flex: none;
+  margin-top: 1px;
 }
 
 .scopeOptionActive {

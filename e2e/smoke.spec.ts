@@ -36,7 +36,7 @@ test.describe('Tabbied site', () => {
 
     await expect(page).toHaveURL(/\/patterns/);
     await expect(
-      page.getByRole('heading', { name: 'Pick a design' })
+      page.getByRole('heading', { name: 'Pick a pattern' })
     ).toBeVisible();
   });
 
@@ -74,7 +74,7 @@ test.describe('Tabbied site', () => {
 
     await page.waitForURL(/\/patterns\/radius/, { timeout: 15000 });
     await expect(
-      page.getByRole('link', { name: 'Gallery' })
+      page.getByRole('link', { name: 'Back to gallery' })
     ).toBeVisible({ timeout: 15000 });
   });
 
@@ -256,7 +256,7 @@ test.describe('Tabbied site', () => {
     expect(href, 'expected a gallery card link within the viewport').not.toBeNull();
     await page.locator(`main a[href="${href}"]`).click();
 
-    await page.getByRole('link', { name: 'Gallery' }).click();
+    await page.getByRole('link', { name: 'Back to gallery' }).click();
     await expect(page).toHaveURL(/\/patterns\/?$/);
 
     // The gallery is restored to (approximately) where it was left.
@@ -555,59 +555,45 @@ test.describe('Tabbied site (mobile viewport)', () => {
     ).toBeVisible();
   });
 
-  test('the homepage menu exposes the nav and GitHub on mobile', async ({
+  test('the homepage menu holds the destinations and the way in on mobile', async ({
     page,
   }) => {
     await page.goto('/');
 
-    // The homepage has its own dark masthead rather than the shared header, and
-    // below 768px its inline nav is display:none - the panel is the only way to
-    // reach the rest of the site from here.
-    const trigger = page.getByRole('button', { name: 'Open menu' });
+    // Below 768px the inline nav is display:none and the hamburger opens a
+    // menu of the three destinations and Sign in. GitHub and Docs are in the
+    // footer, not up here.
+    const trigger = page.getByRole('button', { name: 'Menu' });
     await expect(trigger).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Sign in' })).toBeHidden();
 
     await trigger.click();
 
-    const menu = page.locator('#home-nav-menu');
-    await expect(menu.getByRole('link', { name: 'Templates' })).toBeVisible();
-    await expect(menu.getByRole('link', { name: 'GitHub' })).toBeVisible();
-
-    // Studio replaced the "Soon" generator item and is now a real destination.
-    // The export uses trailing slashes, so the rendered href is "/studio/".
-    await expect(menu.getByRole('link', { name: 'Studio' })).toHaveAttribute(
+    const menu = page.getByRole('menu');
+    await expect(menu.getByRole('menuitem', { name: 'Home' })).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: 'Patterns' })).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: 'Sign in' })).toHaveAttribute(
       'href',
-      /^\/studio\/?$/
+      /\/sign-in/
     );
 
-    await menu.getByRole('link', { name: 'Docs' }).click();
-    await expect(page).toHaveURL(/\/docs\/react/);
+    await menu.getByRole('menuitem', { name: 'Websites' }).click();
+    await expect(page).toHaveURL(/\/templates/);
   });
 
-  test('hamburger drawer exposes the nav and GitHub on mobile', async ({
-    page,
-  }) => {
-    // The shared header is no longer on the homepage, so the drawer is
-    // exercised on a page that still uses it.
+  test('the content pages draw the same menu on mobile', async ({ page }) => {
+    // The shared masthead is exercised on a page in the light tone.
     await page.goto('/privacy-policy');
 
-    // The inline nav is display:none below 992px, so the hamburger drawer is the
-    // only way to reach the site navigation (and GitHub) here.
-    const trigger = page.getByRole('button', { name: 'Open navigation menu' });
-    await expect(trigger).toBeVisible();
+    await page.getByRole('button', { name: 'Menu' }).click();
 
-    await trigger.click();
+    const menu = page.getByRole('menu');
+    await expect(menu.getByRole('menuitem', { name: 'Websites' })).toBeVisible();
 
-    const drawer = page.getByRole('dialog');
-    await expect(
-      drawer.getByRole('link', { name: 'Browse Patterns' })
-    ).toBeVisible();
-    // GitHub moves from the header into the drawer on mobile.
-    await expect(drawer.getByRole('link', { name: 'GitHub' })).toBeVisible();
-
-    // Choosing a destination navigates and closes the drawer.
-    await drawer.getByRole('link', { name: 'Docs' }).click();
-    await expect(page).toHaveURL(/\/docs\/react/);
-    await expect(page.getByRole('dialog')).toHaveCount(0);
+    // Choosing a destination navigates and closes the menu.
+    await menu.getByRole('menuitem', { name: 'Patterns' }).click();
+    await expect(page).toHaveURL(/\/patterns/);
+    await expect(page.getByRole('menu')).toHaveCount(0);
   });
 });
 
@@ -726,58 +712,51 @@ test.describe('Template preview and customize', () => {
 });
 
 test.describe('Shared site header', () => {
-  test('is reused on content pages and marks the active nav item', async ({
+  test('carries the three destinations and marks the current one', async ({
     page,
   }) => {
-    // The gallery (/patterns) now owns its own rail chrome, so the shared
-    // header is exercised on the docs page instead.
-    await page.goto('/docs/react');
+    await page.goto('/templates');
 
-    // The home-page header (logo nav + GitHub link) is reused here.
-    await expect(
-      page.getByRole('link', { name: 'Tabbied on GitHub' })
-    ).toBeVisible();
+    // Home / Patterns / Websites in the middle, Sign in on the right. GitHub
+    // and Docs are in the footer now, not the bar.
+    const nav = page.getByRole('navigation', { name: 'Main' });
+    await expect(nav.getByRole('link', { name: 'Home' })).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Sign in' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Tabbied on GitHub' })).toHaveCount(0);
 
     // At desktop widths the inline nav replaces the hamburger entirely.
-    await expect(
-      page.getByRole('button', { name: 'Open navigation menu' })
-    ).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden();
 
-    // "Docs" is the current section, "Browse Patterns" is not. The active item
-    // is both flagged for assistive tech and given a style hook.
-    const docs = page.getByRole('link', { name: 'Docs' });
-    await expect(docs).toHaveAttribute('aria-current', 'page');
-    await expect(docs).toHaveClass(/active/);
-    await expect(
-      page.getByRole('link', { name: 'Browse Patterns' })
-    ).not.toHaveAttribute('aria-current', 'page');
+    // "Websites" is the current section; it is flagged for assistive tech.
+    await expect(nav.getByRole('link', { name: 'Websites' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+    await expect(nav.getByRole('link', { name: 'Patterns' })).not.toHaveAttribute(
+      'aria-current',
+      'page'
+    );
 
-    // A page with no matching nav item highlights nothing.
-    await page.goto('/privacy-policy');
-    await expect(
-      page.getByRole('link', { name: 'Browse Patterns' })
-    ).toBeVisible();
+    // The content pages draw the same bar in ink, and a page with no matching
+    // destination highlights nothing.
+    await page.goto('/docs/react');
+    await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
     await expect(page.locator('header a[aria-current="page"]')).toHaveCount(0);
   });
 
-  test('the gallery rail owns its chrome instead of the shared header', async ({
-    page,
-  }) => {
+  test('the gallery pins the bar over its own rail', async ({ page }) => {
     await page.goto('/patterns');
 
-    // The page carries its own slim bar with the way home, and the rail beside
-    // it carries the palette chrome - but neither is the shared site nav.
-    await expect(
-      page.getByRole('link', { name: 'Tabbied', exact: true })
-    ).toBeVisible();
-    await expect(page.getByText('Pattern library')).toBeVisible();
+    // The bar is the shared one, and the rail beside it carries the palette
+    // chrome.
+    const nav = page.getByRole('navigation', { name: 'Main' });
+    await expect(nav.getByRole('link', { name: 'Patterns' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+    await expect(page.getByRole('heading', { name: 'Pick a pattern' })).toBeVisible();
     await expect(page.locator('aside')).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: 'Open navigation menu' })
-    ).toHaveCount(0);
-    await expect(
-      page.getByRole('link', { name: 'Browse Patterns' })
-    ).toHaveCount(0);
   });
 
   test('is not used on the individual pattern editor', async ({ page }) => {
@@ -785,13 +764,11 @@ test.describe('Shared site header', () => {
 
     // The editor keeps its own header...
     await expect(
-      page.getByRole('link', { name: 'Gallery' })
+      page.getByRole('link', { name: 'Back to gallery' })
     ).toBeVisible({ timeout: 15000 });
 
     // ...and never renders the shared site nav.
-    await expect(
-      page.getByRole('link', { name: 'Browse Patterns' })
-    ).toHaveCount(0);
+    await expect(page.getByRole('navigation', { name: 'Main' })).toHaveCount(0);
   });
 });
 

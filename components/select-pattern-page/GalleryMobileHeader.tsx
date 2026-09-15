@@ -1,25 +1,23 @@
 'use client';
 
-import Link from 'next/link';
 import { Plus, Search } from 'lucide-react';
-import LogoDoodle from 'components/main-page/LogoDoodle';
 import PaletteBrowser from 'components/palette/PaletteBrowser';
 import type { BrandPalette } from 'lib/brandPalettes';
 import type { LibraryPalette } from 'lib/paletteLibrary';
-import GithubIcon from './GithubIcon';
 import styles from './GalleryMobileHeader.module.css';
 
 /**
- * Mobile (7a) gallery chrome: a compact logo + GitHub header, the design search,
- * and a "Preview colors" row with "New Palette" (or the embedded browser when
- * "All ›" is tapped). The palette chip shelf itself is rendered by SelectPattern
- * just below this header - as a direct child of the scrolling page - so it can
- * stay pinned with `position: sticky` across the whole grid scroll.
+ * Mobile gallery chrome, under the shared masthead: the palette count as an
+ * eyebrow, the search, and "New Palette" (or the embedded browser when "All"
+ * is tapped). The palette chip shelf itself is rendered by SelectPattern just
+ * below this - as a direct child of the scrolling page - so it can stay pinned
+ * with `position: sticky` across the whole grid scroll.
  */
 export default function GalleryMobileHeader({
   search,
   onSearchChange,
   onNewPalette,
+  paletteCount,
   palettes,
   library,
   selectedId,
@@ -33,6 +31,7 @@ export default function GalleryMobileHeader({
   search: string;
   onSearchChange: (value: string) => void;
   onNewPalette: () => void;
+  paletteCount: number;
   palettes: BrandPalette[];
   library: LibraryPalette[];
   selectedId: string | null;
@@ -45,30 +44,26 @@ export default function GalleryMobileHeader({
 }) {
   return (
     <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <Link href="/" aria-label="Tabbied" className={styles.logo} prefetch={false}>
-          <LogoDoodle size={30} />
-        </Link>
+      <div className={styles.eyebrowRow}>
+        <span className={styles.eyebrow}>Palettes ({paletteCount})</span>
         <span className={styles.spacer} />
-        <a
-          href="https://github.com/tabbied-design/tabbied/"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Tabbied on GitHub"
-          className={styles.github}
+        <button
+          type="button"
+          className={styles.newPalette}
+          onClick={onNewPalette}
         >
-          <GithubIcon size={18} />
-        </a>
-      </header>
+          <Plus size={14} /> New Palette
+        </button>
+      </div>
 
       <label className={styles.search}>
         <Search size={15} aria-hidden="true" />
         <input
           type="text"
-          placeholder="Search designs"
+          placeholder="Search palettes & designs"
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
-          aria-label="Search designs"
+          aria-label="Search palettes and designs"
         />
       </label>
 
@@ -87,19 +82,7 @@ export default function GalleryMobileHeader({
             onClose={onCloseBrowser}
           />
         </div>
-      ) : (
-        <div className={styles.previewRow}>
-          <span className={styles.previewLabel}>Preview colors</span>
-          <span className={styles.spacer} />
-          <button
-            type="button"
-            className={styles.newPalette}
-            onClick={onNewPalette}
-          >
-            <Plus size={14} /> New Palette
-          </button>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 }

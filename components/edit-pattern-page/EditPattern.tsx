@@ -12,11 +12,13 @@ import {
   FileCode,
   ImageDown,
   ImagePlus,
+  Info,
   Link as LinkIcon,
   Minus,
   Plus,
   TriangleAlert,
   X,
+  Search,
 } from 'lucide-react';
 import useMediaQuery from 'lib/useMediaQuery';
 import type { Pattern, PatternOption } from 'lib/pattern';
@@ -35,14 +37,14 @@ import {
 } from 'tabbied';
 import { TabbiedPattern, type TabbiedPatternHandle } from 'tabbied/react';
 import EditPatternHeader from 'components/edit-pattern-page/EditPatternHeader';
-import PaletteChip from 'components/edit-pattern-page/PaletteChip';
 import Toaster, { toaster } from 'components/Toaster';
 import ValueSlider from 'components/ValueSlider';
 import ToggleSwitch from 'components/ToggleSwitch';
 import ColorSwatch from 'components/ColorSwatch';
 import PaletteEditorDialog from 'components/palette/PaletteEditorDialog';
 import PaletteBrowser from 'components/palette/PaletteBrowser';
-import SectionPager from 'components/palette/SectionPager';
+import PaletteListRow from 'components/palette/PaletteListRow';
+import { usePaletteReveal } from 'components/palette/usePaletteReveal';
 import {
   SHUFFLE_ACTIONS,
   SHUFFLE_STORAGE_KEY,
@@ -60,7 +62,6 @@ import {
 } from 'lib/color';
 import {
   deletePalette,
-  getBrandPaletteState,
   resolveActivePalette,
   setActivePalette,
   useBrandPalettes,
@@ -74,13 +75,14 @@ import styles from './EditPattern.module.css';
 const GRID_OPTION_ID = 'grid';
 
 // Chips per page in the merged Palettes section.
-const CHIP_PER_PAGE = 8;
 
 // Longest edge of the little aspect-ratio glyph rectangle, in pixels.
 const RATIO_GLYPH_SIZE = 12;
 
 // Fraction of the preview area the pattern fills, leaving a margin around it.
 const PREVIEW_FIT_MARGIN = 0.9;
+/** The caption's two lines and the gap above them, on the mobile band. */
+const CAPTION_ALLOWANCE = 48;
 
 // The paletteSource marker for "the pattern's own colors" / a freely-edited
 // palette - neither highlights any chip.
@@ -197,7 +199,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   // chip outline. 'pattern'/'custom' highlight no chip; a palette id highlights
   // that chip. Any manual swatch edit switches this to 'custom'.
   const [paletteSource, setPaletteSource] = useState<PaletteSource>('pattern');
-  const [chipsPage, setChipsPage] = useState(0);
+  const [paletteQuery, setPaletteQuery] = useState('');
   const [browserOpen, setBrowserOpen] = useState(false);
 
   // The default shuffle scope, shared by the desktop split button and the
@@ -356,13 +358,16 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   const baseWidth = isScreenXS ? 240 : 360;
 
   // The preview is a bounded box in every layout now (a flex-filled pane on
-  // desktop, a fixed 300px band on mobile 7d), so the pattern simply fits the
-  // measured box.
+  // desktop, a fixed band on mobile), so the pattern simply fits the measured
+  // box. On the band the two-line caption under the plate is a real share of
+  // the height, so it is taken off before the fit; the desktop pane is tall
+  // enough that the fit margin covers it.
+  const captionAllowance = isMobile ? CAPTION_ALLOWANCE : 0;
   const { width, height } = previewSize
     ? fitToBox(
         aspectRatio,
         previewSize.width * PREVIEW_FIT_MARGIN,
-        previewSize.height * PREVIEW_FIT_MARGIN
+        previewSize.height * PREVIEW_FIT_MARGIN - captionAllowance
       )
     : fitToBox(aspectRatio, baseWidth, baseWidth * 1.5);
 
@@ -622,12 +627,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       applyBrandPalette(saved);
       setActivePalette(saved.id);
       setPaletteSource(saved.id);
-
-      // Jump the merged chip pager to the saved palette's page (custom first).
-      const state = getBrandPaletteState();
-      const index = state.palettes.findIndex((p) => p.id === saved.id);
-
-      if (index >= 0) setChipsPage(Math.floor(index / CHIP_PER_PAGE));
     },
   });
 
@@ -912,12 +911,25 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   // One merged chip list: custom palettes first, then the read-only library.
   const mergedChips = mergePalettes(brandPalettes, PALETTE_LIBRARY);
-  const chipsPageCount = Math.max(1, Math.ceil(mergedChips.length / CHIP_PER_PAGE));
-  const clampedChipsPage = Math.min(chipsPage, chipsPageCount - 1);
-  const chipRows = mergedChips.slice(
-    clampedChipsPage * CHIP_PER_PAGE,
-    clampedChipsPage * CHIP_PER_PAGE + CHIP_PER_PAGE
-  );
+  // The rail lists every palette, custom first, filtered by the search above
+  // it and revealed in batches as it scrolls (the same list the gallery's
+  // rail shows, so the two read as one control).
+  const paletteNeedle = paletteQuery.trim().toLowerCase();
+  const listedPalettes = paletteNeedle
+    ? mergedChips.filter(({ palette: p }) =>
+        (p.name || 'Untitled').toLowerCase().includes(paletteNeedle)
+      )
+    : mergedChips;
+  const paletteList = usePaletteReveal(listedPalettes, 24);
+
+  // The plate's caption names what it is: the palette it wears (when it wears
+  // a named one), its grid and its ratio - the three things the rail changes.
+  const gridIndex = pattern.options.findIndex((option) => option.id === GRID_OPTION_ID);
+  const captionParts = [
+    mergedChips.find(({ palette: p }) => p.id === paletteSource)?.palette.name,
+    gridIndex >= 0 ? `${String(optionValues[gridIndex]).replace('x', '\u00D7')} grid` : null,
+    aspectRatio,
+  ].filter(Boolean);
 
   const hasEffects = pattern.options.some(
     (option) => option.type === 'ToggleSwitch'
@@ -1147,6 +1159,16 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           <CodeXml className={styles.exportIcon} size={16} /> Copy React component
         </button>
       </div>
+
+      {backgroundImage && (
+        <p className={styles.exportNote}>
+          <Info size={17} aria-hidden="true" />
+          <span>
+            The PNG and the SVG carry your background image. The link and the
+            React component do not - it stays on this device.
+          </span>
+        </p>
+      )}
     </div>
   );
 
@@ -1163,6 +1185,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         svgExportWarning={svgExportEnabled && svgExportNotes.length > 0}
         onCopyLink={copyShareLink}
         onCopyReactComponent={copyReactComponent}
+        hasBackgroundImage={backgroundImage !== null}
         mobile={isMobile}
         mobilePanelOpen={mobilePanelOpen}
         onOpenShufflePanel={openShufflePanel}
@@ -1255,7 +1278,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
               <figcaption className={styles.stageCaption}>
                 <span className={styles.stageName}>{pattern.name}</span>
                 <span className={styles.stageMeta}>
-                  {width} &times; {height}
+                  {captionParts.join(' \u00B7 ')}
                 </span>
               </figcaption>
             </figure>
@@ -1476,63 +1499,62 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
               </div>
 
               <div className={styles.chipsSection}>
-                <div className={styles.chipsHeader}>
-                  <span className={styles.chipsLabel}>Palettes</span>
-                  {/* Mobile (7d) shows every chip in one horizontal scroll row;
-                      desktop paginates instead. */}
-                  {!isMobile && chipsPageCount > 1 && (
-                    <SectionPager
-                      page={clampedChipsPage}
-                      pageCount={chipsPageCount}
-                      onPageChange={setChipsPage}
-                      label="palettes"
+                <label className={styles.paletteSearch}>
+                  <input
+                    type="text"
+                    placeholder={`Search ${mergedChips.length} palettes`}
+                    value={paletteQuery}
+                    onChange={(event) => {
+                      setPaletteQuery(event.target.value);
+                      paletteList.reset();
+                    }}
+                    aria-label="Search palettes"
+                  />
+                  <Search size={15} aria-hidden="true" />
+                </label>
+
+                <div
+                  ref={paletteList.listRef}
+                  className={styles.paletteList}
+                  onScroll={paletteList.onScroll}
+                >
+                  {paletteList.shown.map(({ kind, palette: p }) => (
+                    <PaletteListRow
+                      key={p.id}
+                      name={p.name || 'Untitled'}
+                      colors={p.colors}
+                      active={paletteSource === p.id}
+                      editLabel={`Edit ${p.name || 'palette'}${
+                        kind === 'library' ? ' (saves as a copy)' : ''
+                      }`}
+                      editTitle={
+                        kind === 'library'
+                          ? 'Edit palette (saves as a copy)'
+                          : 'Edit palette'
+                      }
+                      deleteLabel={`Delete ${p.name || 'palette'}`}
+                      onClick={() =>
+                        kind === 'library'
+                          ? onSelectLibraryChip(p)
+                          : onSelectCustomChip(p)
+                      }
+                      onEdit={() =>
+                        kind === 'library'
+                          ? editor.openEditorAsCopy(p)
+                          : editor.openEditor(p)
+                      }
+                      onDelete={
+                        kind === 'custom' ? () => removePalette(p.id) : undefined
+                      }
                     />
+                  ))}
+                  {listedPalettes.length === 0 && (
+                    <p className={styles.paletteEmpty}>
+                      No palettes match your search.
+                    </p>
                   )}
                 </div>
-                <div
-                  className={
-                    isMobile
-                      ? `${styles.chipsRow} ${styles.chipsRowScroll}`
-                      : styles.chipsRow
-                  }
-                >
-                  {(isMobile ? mergedChips : chipRows).map(({ kind, palette }) => {
-                    const active = paletteSource === palette.id;
 
-                    return (
-                      <PaletteChip
-                        key={palette.id}
-                        colors={palette.colors}
-                        transparentBackground={
-                          kind === 'custom'
-                            ? palette.transparentBackground
-                            : false
-                        }
-                        name={palette.name || 'Untitled'}
-                        active={active}
-                        title={
-                          active
-                            ? kind === 'library'
-                              ? 'Edit this palette (saves as a copy)'
-                              : 'Edit this palette'
-                            : `Fill the swatches with "${palette.name || 'Untitled'}"`
-                        }
-                        onClick={() =>
-                          kind === 'library'
-                            ? onSelectLibraryChip(palette)
-                            : onSelectCustomChip(palette)
-                        }
-                        canDelete={kind === 'custom'}
-                        deleteLabel={`Delete ${palette.name || 'palette'}`}
-                        onDelete={
-                          kind === 'custom'
-                            ? () => removePalette(palette.id)
-                            : undefined
-                        }
-                      />
-                    );
-                  })}
-                </div>
                 <div className={styles.chipsActions}>
                   <button
                     type="button"

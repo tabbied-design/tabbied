@@ -1,0 +1,98 @@
+/* A palette row is a pill: name, inks, pencil. The active one is inked. */
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 0 2px;
+  padding: 7px 12px;
+  font-family: var(--font-sans-serif);
+  color: #0e0e13;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.row:hover {
+  background-color: oklch(0 0 0 / 0.05);
+}
+
+.row[data-active] {
+  color: #f7f5f0;
+  background-color: #0e0e13;
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--blue-medium);
+  outline-offset: 2px;
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chips {
+  display: flex;
+  flex: none;
+  gap: 3px;
+  align-items: stretch;
+  height: 18px;
+}
+
+.chips > span {
+  flex: none;
+  width: 12px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.22);
+}
+
+.row[data-active] .chips > span {
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.55);
+}
+
+/* The pencil, and the delete mark on a palette the person made. */
+.mark {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: oklch(0.62 0.01 260);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 120ms ease;
+}
+
+.mark:hover {
+  color: #0e0e13;
+}
+
+.row[data-active] .mark {
+  color: oklch(0.86 0.01 260);
+}
+
+.row[data-active] .mark:hover {
+  color: #ffffff;
+}
+
+.mark:focus-visible {
+  outline: 2px solid var(--blue-medium);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .mark {
+    transition: none;
+  }
+}
