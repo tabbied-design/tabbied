@@ -1,0 +1,253 @@
+/* The template gallery's chips and cards, on the dark shell (the tokens are
+   the homepage's, `--h-...`, which the page wraps itself in). */
+
+/* ---- Filters ---- */
+
+/* One row that scrolls sideways rather than wrapping, fading out at the
+   right edge so the cut-off chip reads as "more this way". */
+.filterWrap {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.filters {
+  display: flex;
+  gap: 9px;
+  padding: 2px 44px 2px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filterFade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 90px;
+  pointer-events: none;
+  background: linear-gradient(to right, oklch(0.15 0.005 265 / 0), var(--h-bg) 72%);
+}
+
+.filter {
+  flex: none;
+  padding: 10px 20px;
+  font: 300 11.5px var(--h-mono);
+  color: oklch(0.82 0.01 260);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: transparent;
+  border: 1px solid oklch(1 0 0 / 0.18);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.filter:hover {
+  border-color: oklch(1 0 0 / 0.4);
+}
+
+.filter[aria-pressed='true'] {
+  color: var(--h-ink);
+  background-color: var(--h-fg);
+  border-color: var(--h-fg);
+}
+
+.filter:focus-visible {
+  outline: 2px solid var(--h-cyan);
+  outline-offset: 2px;
+}
+
+/* ---- Grid ---- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Card ---- */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--h-card);
+  border: 1px solid oklch(1 0 0 / 0.14);
+  border-radius: 14px;
+  transition: border-color 250ms ease;
+}
+
+.card:hover {
+  border-color: oklch(1 0 0 / 0.34);
+}
+
+.cardLink {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--h-card);
+}
+
+/* The pattern fills the tile; the number badge must keep its intrinsic size,
+   or it stretches into a full-bleed panel over the top of the pattern. */
+.thumb > *:not(.num) {
+  width: 100%;
+  height: 100%;
+}
+
+.num {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  padding: 5px 9px;
+  font: 600 11px var(--h-mono);
+  color: var(--h-ink);
+  letter-spacing: 0.06em;
+  background: oklch(1 0 0 / 0.92);
+  border-radius: 6px;
+}
+
+.body {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 18px 18px 16px;
+}
+
+.main {
+  min-width: 0;
+}
+
+.main h3 {
+  margin: 0 0 5px;
+  font: 600 16px var(--h-sans);
+  color: var(--h-fg);
+}
+
+.main p {
+  margin: 0 0 11px;
+  font: 400 13px var(--h-sans);
+  color: oklch(0.66 0.01 260);
+}
+
+.sw {
+  display: flex;
+  gap: 3px;
+}
+
+.sw span {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.14);
+}
+
+/* The palette and the pattern, named at the right in the mono. */
+.meta {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 7px;
+  max-width: 45%;
+  font: 300 11px var(--h-mono);
+  color: oklch(0.72 0.01 260);
+  letter-spacing: 0.1em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.meta span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta span + span {
+  color: oklch(0.55 0.01 260);
+}
+
+/* ---- The download row ---- */
+
+.dl {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: auto;
+  padding: 14px 18px;
+  border-top: 1px solid oklch(1 0 0 / 0.1);
+}
+
+.dlLabel {
+  margin-left: auto;
+  margin-right: 6px;
+  font: 300 11px var(--h-mono);
+  color: oklch(0.6 0.01 260);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.pill {
+  flex: none;
+  padding: 7px 14px;
+  font: 400 12.5px var(--h-sans);
+  color: var(--h-fg);
+  text-decoration: none;
+  border: 1px solid oklch(1 0 0 / 0.24);
+  border-radius: 999px;
+  transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+.pill:hover,
+.pill:focus-visible {
+  color: var(--h-fg);
+  background: oklch(1 0 0 / 0.1);
+}
+
+/* Customize is the way into the customizer, so it borrows the site's accent
+   for its hairline. */
+.customize {
+  border-color: var(--accent);
+}
+
+@media (max-width: 480px) {
+  .dlLabel {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filter,
+  .card,
+  .pill {
+    transition: none;
+  }
+}

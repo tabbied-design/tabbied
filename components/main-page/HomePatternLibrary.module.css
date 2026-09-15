@@ -53,34 +53,29 @@
   color: var(--h-ink-muted);
 }
 
+/* The brand gradient in a pill with a hairline, the same button the editor's
+   Export wears. */
 .cta {
   display: inline-flex;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
+  padding: 14px 22px 14px 28px;
   font: 500 16px var(--h-sans);
   color: var(--h-ink);
-}
-
-.ctaDisc {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  font-size: 16px;
-  color: var(--h-fg);
-  background-color: var(--h-ink);
-  border-radius: 50%;
-  transition: transform 200ms ease;
+  background: linear-gradient(135deg, #3ff0b2, #2ee6f0);
+  border: 1px solid var(--h-ink);
+  border-radius: 999px;
+  transition: filter 200ms ease;
 }
 
 .cta:hover {
   color: var(--h-ink);
+  filter: brightness(1.05);
 }
 
-.cta:hover .ctaDisc {
-  transform: translateX(4px);
+.ctaArrow {
+  font-size: 16px;
+  line-height: 1;
 }
 
 /* ── The demo field ──────────────────────────────────────────────────────── */
@@ -174,7 +169,7 @@
   .demoTriangle,
   .control,
   .controlValue,
-  .ctaDisc {
+  .cta {
     transition: none;
   }
 }

@@ -1,5 +1,5 @@
-/* Mobile (7a) gallery header. Hidden on the two-column desktop layout, where
-   the fixed rail (GalleryRail) takes over instead. */
+/* Mobile gallery header, under the shared masthead. Hidden on the two-column
+   desktop layout, where the fixed rail (GalleryRail) takes over instead. */
 .wrapper {
   display: none;
 }
@@ -7,54 +7,46 @@
 @media (max-width: 991.98px) {
   .wrapper {
     display: block;
-    padding: 14px 20px 0;
+    padding: 20px 20px 0;
   }
 }
 
-.header {
+.eyebrowRow {
   display: flex;
   align-items: center;
-  padding-bottom: 2px;
+  gap: 8px;
 }
 
-.logo {
-  display: inline-flex;
-  color: #232529;
+/* "PALETTES (437)": the rail's eyebrow, kept on the narrow layout so the
+   shelf below it is named. */
+.eyebrow {
+  font: 400 12px var(--font-plex-mono, ui-monospace), ui-monospace, monospace;
+  color: oklch(0.45 0.01 260);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .spacer {
   flex: 1;
 }
 
-.github {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  margin-right: -12px;
-  color: #98a0af;
-  transition: color 120ms ease;
-}
-
-.github:hover {
-  color: #4a5160;
-}
-
+/* The rail's pill search, at the width of the page. */
 .search {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 11px 2px;
-  border-bottom: 1px solid #e3e6ea;
-  color: #98a0af;
+  gap: 9px;
+  margin-top: 14px;
+  padding: 9px 15px;
+  color: oklch(0.55 0.01 260);
+  background: #ffffff;
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 999px;
   transition: border-color 120ms ease;
 }
 
 .search:hover,
 .search:focus-within {
-  border-color: #98a0af;
+  border-color: oklch(0 0 0 / 0.4);
 }
 
 .search input {
@@ -63,22 +55,9 @@
   border: none;
   background: transparent;
   font-family: var(--font-sans-serif);
-  font-size: 14px;
-  color: #232529;
+  font-size: 13.5px;
+  color: #0e0e13;
   outline: none;
-}
-
-.previewRow {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-top: 20px;
-}
-
-.previewLabel {
-  font-size: 14px;
-  font-weight: 600;
-  color: #646d7b;
 }
 
 .newPalette {
@@ -100,7 +79,7 @@
   color: #232529;
 }
 
-/* When "All ›" opens the browser, it takes the palette slot as a bounded,
+/* When "All" opens the browser, it takes the palette slot as a bounded,
    internally scrolling panel (the same embedded browser as the desktop rail). */
 .browserPanel {
   display: flex;

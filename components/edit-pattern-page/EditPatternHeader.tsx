@@ -6,14 +6,14 @@ import { useEffect, useState, type MouseEvent } from 'react';
 import { Menu } from '@base-ui-components/react/menu';
 import {
   ArrowDownToLine,
-  ArrowLeft,
   ChevronDown,
+  ChevronLeft,
   FileCode,
   ImageDown,
   Info,
   Link as LinkIcon,
   CodeXml,
-  Shuffle,
+  LayoutTemplate,
   TriangleAlert,
 } from 'lucide-react';
 import {
@@ -124,6 +124,8 @@ export default function EditPatternHeader({
     }
   };
 
+  // The pattern is named under the stage, in the plate's caption, so the
+  // header carries no title: the heading is for assistive tech alone.
   if (mobile) {
     return (
       <header className={`${styles.header} ${styles.headerMobile}`}>
@@ -131,26 +133,28 @@ export default function EditPatternHeader({
           href="/patterns"
           prefetch={false}
           onClick={handleBack}
-          className={styles.backIcon}
+          className={styles.backCircle}
           aria-label={mobilePanelOpen ? 'Back to editor' : 'Back to gallery'}
         >
-          <ArrowLeft size={18} aria-hidden="true" />
+          <ChevronLeft size={16} aria-hidden="true" />
         </NextLink>
 
-        <h1 className={styles.titleMobile}>{patternName}</h1>
+        <h1 className={styles.srOnly}>{patternName}</h1>
+
+        <span className={styles.spacer} />
 
         <button
           type="button"
-          className={styles.iconButton}
+          className={styles.iconCircle}
           onClick={onOpenShufflePanel}
           aria-label="Shuffle options"
           title="Shuffle"
         >
-          <Shuffle size={17} />
+          <LayoutTemplate size={17} />
         </button>
         <button
           type="button"
-          className={`${styles.iconButton} ${styles.iconButtonExport}`}
+          className={`${styles.iconCircle} ${styles.iconCircleExport}`}
           onClick={onOpenExportPanel}
           aria-label="Export options"
           title="Export"
@@ -167,14 +171,18 @@ export default function EditPatternHeader({
         href="/patterns"
         prefetch={false}
         onClick={handleBack}
-        className={styles.back}
+        className={styles.backCircle}
+        aria-label="Back to gallery"
       >
-        <ArrowLeft size={16} aria-hidden="true" /> Gallery
+        <ChevronLeft size={16} aria-hidden="true" />
       </NextLink>
+      <span className={styles.crumb} aria-hidden="true">
+        Patterns
+      </span>
 
-      <div className={styles.titleWrap}>
-        <h1 className={styles.title}>{patternName}</h1>
-      </div>
+      <h1 className={styles.srOnly}>{patternName}</h1>
+
+      <span className={styles.spacer} />
 
       <div className={styles.actions}>
         <ShuffleMenuButton
@@ -189,9 +197,8 @@ export default function EditPatternHeader({
             className={`${styles.btn} ${styles.btnExport}`}
             aria-label="Export"
           >
-            <ArrowDownToLine className={styles.reactIcon} size={16} />
             <span className={styles.label}>Export</span>
-            <ChevronDown className={styles.chevronIcon} size={15} />
+            <ChevronDown className={styles.chevronIcon} size={13} />
           </Menu.Trigger>
           <Menu.Portal>
             <Menu.Positioner

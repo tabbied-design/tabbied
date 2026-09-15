@@ -1,29 +1,11 @@
-import Link from 'next/link';
-import { LogoMark } from 'components/logo';
-import styles from './GalleryTopBar.module.css';
+import SiteNav from 'components/nav';
 
 /**
- * The gallery's own slim masthead: a way back to the homepage on the left and
- * the page's name in the middle. The shared site header is deliberately not
- * used here - this page owns its chrome, because the palette rail underneath
- * has to start at the top of the viewport.
- *
- * The mark goes without the wordmark: the bar already names the page in its
- * middle, and the two set beside each other read as one long label.
+ * The gallery's masthead: the shared bar, pinned, because the palette rail
+ * underneath starts where it ends and the design grid scrolls under it. The
+ * rail reads the bar's height as `--gallery-bar-h` (SelectPattern.module.css),
+ * so the bar keeps to that height at every width the rail is shown at.
  */
-export default function GalleryTopBar({ label }: { label: string }) {
-  return (
-    <div className={styles.bar}>
-      <Link
-        href="/"
-        prefetch={false}
-        className={styles.back}
-        aria-label="Tabbied"
-      >
-        <LogoMark size={18} />
-      </Link>
-
-      <span className={styles.label}>{label}</span>
-    </div>
-  );
+export default function GalleryTopBar() {
+  return <SiteNav tone="light" sticky />;
 }

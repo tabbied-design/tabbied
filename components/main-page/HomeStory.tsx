@@ -165,7 +165,7 @@ export default function HomeStory({
       </div>
 
       <div className={styles.inner}>
-        <span className={styles.badge}>Our story</span>
+        <span className={styles.eyebrow}>Our story</span>
 
         <h2 className={styles.title}>
           Simple tools to help you move from inspiration to creation
@@ -189,15 +189,15 @@ export default function HomeStory({
 
           <Link href="/patterns" prefetch={false} className={styles.stat}>
             <span className={styles.statNumber}>{patternCount}</span>
-            <span className={styles.statLabel}>
-              Unique patterns <span className={styles.statArrow} aria-hidden="true">&rarr;</span>
+            <span className={`${styles.statLabel} ${styles.statLink}`}>
+              Unique patterns
             </span>
           </Link>
 
           <Link href="/templates" prefetch={false} className={styles.stat}>
             <span className={styles.statNumber}>{templateCount}</span>
-            <span className={styles.statLabel}>
-              Website templates <span className={styles.statArrow} aria-hidden="true">&rarr;</span>
+            <span className={`${styles.statLabel} ${styles.statLink}`}>
+              Website templates
             </span>
           </Link>
 

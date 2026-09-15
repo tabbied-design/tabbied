@@ -2,8 +2,13 @@ import Link from 'next/link';
 import StudioSpark from './StudioSpark';
 import styles from './HomeFooter.module.css';
 
-// The homepage's own footer, matching its dark shell. Every other route keeps
-// the shared light Footer in components/Footer.
+// The dark shell's footer, under the homepage and the template gallery. The
+// content pages keep the shared light Footer in components/Footer.
+//
+// Docs and GitHub live here rather than in the masthead: the bar is for the
+// three destinations, and this is where the artboards put everything else. The
+// legal pages stay listed because they exist; the artboard's "Colophon" is a
+// page nobody has written.
 
 const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';
 
@@ -29,13 +34,18 @@ export default function HomeFooter() {
             </li>
             <li>
               <Link href="/templates" prefetch={false}>
-                Templates
+                Websites
               </Link>
             </li>
             <li>
               <Link href="/studio" prefetch={false} className={styles.studio}>
                 <StudioSpark size={10} />
                 Studio
+              </Link>
+            </li>
+            <li>
+              <Link href="/account" prefetch={false}>
+                My Account
               </Link>
             </li>
           </ul>

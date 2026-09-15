@@ -5,61 +5,57 @@
   display: inline-flex;
   align-items: stretch;
   flex: none;
-  height: 40px;
-  border-radius: 3px;
-  background-color: var(--gray-dark);
-  transition: background-color 120ms ease;
-}
-
-.group:hover {
-  background-color: #2f3237; /* color.scale($gray-dark, +6% lightness) */
+  height: 32px;
 }
 
 .main {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
+  padding: 0 6px 0 2px;
   border: none;
   background: transparent;
-  color: white;
+  color: oklch(0.28 0.01 260);
   font-family: var(--font-sans-serif);
-  font-size: 14.5px;
-  font-weight: 300;
+  font-size: 13px;
+  font-weight: 400;
   white-space: nowrap;
-  padding: 0 0.75rem 0 1rem;
   cursor: pointer;
+  transition: color 120ms ease;
+}
+
+.main:hover {
+  color: #0e0e13;
 }
 
 .icon {
-  margin-right: 0.4rem;
+  flex: none;
 }
 
+/* The caret that opens the scope menu. */
 .chevron {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 20px;
+  padding: 0;
   border: none;
   background: transparent;
-  color: white;
-  padding: 0 0.55rem;
+  color: oklch(0.45 0.01 260);
   cursor: pointer;
+  transition: color 120ms ease;
 }
 
-/* Hairline divider between the two segments. */
-.chevron::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 22%;
-  bottom: 22%;
-  width: 1px;
-  background-color: rgba(255, 255, 255, 0.22);
+.chevron:hover,
+.chevron[data-popup-open] {
+  color: #0e0e13;
 }
 
 .main:focus-visible,
 .chevron:focus-visible {
   outline: 2px solid var(--blue-medium);
-  outline-offset: -2px;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* ---- Scope menu ---- */
@@ -114,16 +110,15 @@
 }
 
 @media (max-width: 991.98px) {
-  .main {
-    font-size: 0.95rem;
-    padding: 0 0.5rem 0 0.75rem;
-  }
-
   .main .label {
     display: none;
   }
+}
 
-  .icon {
-    margin-right: 0;
+@media (prefers-reduced-motion: reduce) {
+  .main,
+  .chevron,
+  .popup {
+    transition: none;
   }
 }

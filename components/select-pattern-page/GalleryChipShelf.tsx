@@ -1,17 +1,20 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Check, ChevronRight, Pencil, X } from 'lucide-react';
-import PaletteStrip from 'components/palette/PaletteStrip';
+import { ChevronRight, Pencil, X } from 'lucide-react';
 import type { BrandPalette } from 'lib/brandPalettes';
 import type { LibraryPalette } from 'lib/paletteLibrary';
 import { mergePalettes } from 'lib/paletteList';
 import styles from './GalleryChipShelf.module.css';
 
+/** The most inks a chip shows; a palette with more is still whole in the editor. */
+const MAX_CHIPS = 6;
+
 /**
- * Mobile (7a): the merged palette list as a horizontal, scrollable chip shelf.
- * Custom chips carry a delete mark (single-click delete); library chips a pencil
- * (edit-as-copy). A trailing "All ›" pill opens the embedded palette browser.
+ * Mobile: the merged palette list as a horizontal, scrollable shelf of the
+ * rail's rows - name, inks, pencil - laid side by side. Custom chips carry a
+ * delete mark (single-click delete); library chips a pencil (edit-as-copy). A
+ * trailing "All" pill opens the embedded palette browser.
  */
 export default function GalleryChipShelf({
   className,
@@ -59,19 +62,12 @@ export default function GalleryChipShelf({
               onApply(palette.id);
             }}
           >
-            <PaletteStrip
-              className={styles.strip}
-              colors={palette.colors}
-              transparentBackground={
-                kind === 'custom' ? palette.transparentBackground : false
-              }
-            />
             <span className={styles.name}>{palette.name || 'Untitled'}</span>
-            {active && (
-              <span className={styles.check}>
-                <Check size={13} />
-              </span>
-            )}
+            <span className={styles.chips} aria-hidden="true">
+              {palette.colors.slice(1, 1 + MAX_CHIPS).map((color, index) => (
+                <span key={`${color}-${index}`} style={{ background: color }} />
+              ))}
+            </span>
             {kind === 'custom' ? (
               <span
                 role="button"

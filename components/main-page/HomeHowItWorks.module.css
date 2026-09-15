@@ -275,7 +275,13 @@
   }
 }
 
+/* The design drops the three steps on a phone: the library section above
+   already says what the editor does, and the steps only illustrate it. */
 @media (max-width: 767.98px) {
+  .section {
+    display: none;
+  }
+
   .row,
   .row[data-flipped] {
     flex-direction: column;

@@ -162,32 +162,37 @@ export default function HomeHero({
       <div className={styles.stats}>
         <div className={styles.statsGrid}>
           <Link href="/patterns" prefetch={false} className={styles.stat}>
-            <span className={styles.statArrow} aria-hidden="true">
-              &rarr;
-            </span>
             <span className={styles.statNumber} style={{ color: accentA }}>
               {patternCount}
             </span>
-            <span className={styles.statLabel}>Patterns</span>
+            <span className={styles.statLabel}>
+              Patterns
+              <span className={styles.statArrow} aria-hidden="true">
+                &rarr;
+              </span>
+            </span>
           </Link>
 
           <Link href="/templates" prefetch={false} className={styles.stat}>
-            <span className={styles.statArrow} aria-hidden="true">
-              &rarr;
-            </span>
             <span className={styles.statNumber} style={{ color: accentB }}>
               {templateCount}
             </span>
-            <span className={styles.statLabel}>Free website templates</span>
+            <span className={styles.statLabel}>
+              Free website templates
+              <span className={styles.statArrow} aria-hidden="true">
+                &rarr;
+              </span>
+            </span>
           </Link>
 
-          <Link href="/studio" prefetch={false} className={styles.stat}>
-            <span className={styles.statArrow} aria-hidden="true">
-              &rarr;
-            </span>
+          {/* Not a link: the engine is the thing the other two are made
+              with, and the design leaves it as a fact. */}
+          <div className={styles.stat}>
             <span className={styles.statNumber}>1</span>
-            <span className={styles.statLabel}>Pattern engine</span>
-          </Link>
+            <span className={`${styles.statLabel} ${styles.statLabelQuiet}`}>
+              Pattern engine
+            </span>
+          </div>
         </div>
       </div>
     </>

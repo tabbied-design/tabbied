@@ -413,12 +413,37 @@ maintained by hand.
 
 `components/logo/` is the whole of the brand mark: `LogoMark` is the glyph,
 two mirrored strokes in `currentColor`, and `Logo` is the lockup that adds the
-wordmark. Every masthead draws one of them - the homepage's dark nav, the
-shared light `MainHeader`, account, admin, the gallery's slim bar and the
+wordmark. Every masthead draws one of them - the shared `SiteNav` in both its
+tones, the admin sidebar, the editor's and the customizer's bars and the
 account forms' own shell. Nothing else should draw a Tabbied mark: the four
 outlined cells that preceded it existed in three hand-copied variants (a
 css-doodle, a CSS grid, and a grid with one cell omitted), and keeping them in
 step is exactly the work this component removes.
+
+## The masthead - one bar, two tones
+
+`components/nav/SiteNav` is the site's masthead: the lockup on the left,
+Home / Patterns / Websites in the middle, and on the right either "Sign in" or
+the person's initials opening a menu (email, My Account, Settings, Sign out).
+Signed in, the first destination reads My Account. Below 768px the
+destinations fold into that menu, or behind a hamburger when signed out. It
+takes a `tone` (`dark` for the homepage and the template gallery, `light` for
+everything else) and a `sticky` flag the pattern library uses because its
+rail starts where the bar ends. `HomeNav`, `MainHeader`, `AccountHeader` and
+`GalleryTopBar` are now one-line wrappers over it.
+
+Two things worth not re-litigating:
+
+- **GitHub and Docs are in the footer, not the bar.** The 2026 artboards put
+  three destinations and the account up top and everything else in
+  `HomeFooter`; the bar used to carry a different set of links on every
+  page, which is what one component ends. Studio is reachable from the
+  footer and the account, not the bar - the artboards name it nowhere, and
+  it was kept in the footer rather than dropped.
+- **It renders the signed-out chrome until a session says otherwise.** The
+  export cannot know who is looking, and most visitors are nobody; a ghost
+  in the right-hand slot while the session resolves would leave the phone
+  layout with no menu at all until the fetch returned.
 
 The stroke is authored at 17 units in a 391-unit viewBox, which is what keeps
 it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
@@ -439,12 +464,15 @@ quietly carries residue.
 
 ## The homepage - its own shell, and a hydration rule
 
-`app/page.tsx` is the only route in the dark editorial treatment. It brings its
-own masthead and footer (`HomeNav`, `HomeFooter`) and its own token set
+`app/page.tsx` and `/templates` are the two routes in the dark editorial
+treatment. The homepage brings its own token set
 (`components/main-page/home.module.css`, inherited by every `Home*` section as
-`var(--h-...)`); every other route still renders the shared light `MainHeader` and
-`components/Footer`. Nothing here is global - the tokens sit on the page wrapper,
-not on `:root` - so restyling the homepage cannot reach `/patterns` or `/docs`.
+`var(--h-...)`) and the dark `HomeFooter`; the template gallery wraps itself in
+the same tokens so its masthead, cards and footer read from one set. Every
+other route renders the masthead in its light tone and `components/Footer`.
+Nothing here is global - the tokens sit on the page wrapper, not on `:root` -
+so restyling the homepage cannot reach `/patterns` or `/docs`. The three
+how-it-works steps are hidden below 768px, as the artboard hides them.
 
 Three things worth not re-litigating:
 
@@ -832,9 +860,9 @@ whatever text Studio wrote, so putting them back is a UI change.
   `/studio/results` Preview is still a real link to the full page, and a
   plain click opens `PreviewDialog` instead: the packaged download with the
   direction applied, in an iframe, built by the same `buildPreviewDocument`
-  the preview route uses. The account pages sit under `AccountHeader` (the
-  homepage nav in ink on paper, initials on the right, a menu with the
-  destinations and Sign out) and the admin pages under a sidebar shell whose
+  the preview route uses. The account pages sit under the shared masthead in
+  its light tone (initials on the right, a menu with the account's pages and
+  Sign out) and the admin pages under a sidebar shell whose
   "Export users" writes the directory as CSV in the browser. All of it is
   responsive down to 390px; the account and admin tables collapse to stacked
   rows, the admin rows labelling their cells once the header row is gone.

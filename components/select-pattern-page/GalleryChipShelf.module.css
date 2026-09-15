@@ -1,10 +1,10 @@
-/* Mobile (7a): the merged palette list as a horizontal, scrollable chip shelf.
-   Rendered as a direct child of the document-scrolled gallery (not nested in the
+/* Mobile: the merged palette list as a horizontal, scrollable shelf. Rendered
+   as a direct child of the document-scrolled gallery (not nested in the
    header), so `position: sticky` pins it to the top of the viewport across the
-   whole grid scroll. Chips scroll sideways; the trailing "All ›" pill opens the
-   browser. Instead of a hard divider, the background is solid white behind the
-   chips and fades out over its bottom edge, so the pinned bar melts into the
-   grid scrolling beneath it rather than sitting on a visible line. */
+   whole grid scroll. The rows are the rail's rows laid side by side; the
+   trailing "All" pill opens the browser. Solid white behind the chips, fading
+   out over its bottom edge so the pinned bar melts into the grid scrolling
+   beneath it rather than sitting on a visible line. */
 .shelf {
   position: sticky;
   top: 0;
@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px 16px;
+  padding: 12px 20px 18px;
   background: linear-gradient(
     to bottom,
     #ffffff 0%,
@@ -32,19 +32,22 @@
   flex: none;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 9px 12px;
+  gap: 8px;
+  padding: 7px 12px;
   border: none;
-  border-radius: 20px;
+  border-radius: 999px;
   background: #ffffff;
-  box-shadow: 0 1px 2px rgba(35, 37, 41, 0.16);
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
   font-family: var(--font-sans-serif);
+  color: #0e0e13;
   cursor: pointer;
-  transition: box-shadow 120ms ease;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 .chipActive {
-  box-shadow: 0 0 0 2px #232529;
+  color: #f7f5f0;
+  background: #0e0e13;
+  box-shadow: none;
 }
 
 .chip:focus-visible {
@@ -52,50 +55,55 @@
   outline-offset: 2px;
 }
 
-.strip {
-  --strip-width: 46px;
-  --strip-height: 14px;
-  border-radius: 3px;
-  border: 1px solid rgba(35, 37, 41, 0.12);
-}
-
 .name {
   font-size: 13px;
-  color: #646d7b;
   white-space: nowrap;
 }
 
-.chipActive .name {
-  color: #232529;
+.chips {
+  display: flex;
+  flex: none;
+  gap: 3px;
+  align-items: stretch;
+  height: 18px;
 }
 
-.check {
-  display: inline-flex;
-  color: #ff3d8b;
+.chips > span {
+  flex: none;
+  width: 12px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.22);
 }
 
-/* Trailing delete mark (custom) / pencil (library) - a small tap target inset into the
-   chip's right padding so it doesn't widen the pill. */
+.chipActive .chips > span {
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.55);
+}
+
+/* Trailing delete mark (custom) / pencil (library). */
 .trailing {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   flex: none;
-  margin: 0 -4px 0 -2px;
-  border-radius: 50%;
-  color: #c9cfd8;
+  margin-right: -4px;
+  border-radius: 6px;
+  color: oklch(0.62 0.01 260);
   cursor: pointer;
-  transition: color 120ms ease, background 120ms ease;
+  transition: color 120ms ease;
 }
 
 .trailing:hover {
-  color: #4a5160;
+  color: #0e0e13;
 }
 
-.chip:has(.check) .trailing {
-  color: #c9cfd8;
+.chipActive .trailing {
+  color: oklch(0.86 0.01 260);
+}
+
+.chipActive .trailing:hover {
+  color: #ffffff;
 }
 
 .allPill {
@@ -103,10 +111,10 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 9px 12px;
+  padding: 8px 12px;
   border: none;
-  border-radius: 20px;
-  background: #f1f3f5;
+  border-radius: 999px;
+  background: oklch(0 0 0 / 0.05);
   font-family: var(--font-sans-serif);
   font-size: 13px;
   color: #646d7b;
@@ -121,4 +129,12 @@
 .allPill:focus-visible {
   outline: 2px solid var(--blue-medium);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .trailing,
+  .allPill {
+    transition: none;
+  }
 }

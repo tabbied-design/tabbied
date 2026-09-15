@@ -163,12 +163,16 @@ a.stat:hover {
   background-color: oklch(1 0 0 / 0.03);
 }
 
+/* The arrow rides the label rather than a corner of the cell, so the label
+   reads as the link it is. */
 .statArrow {
-  position: absolute;
-  top: 20px;
-  right: 24px;
-  font-size: 16px;
-  color: var(--h-dim);
+  font: 400 13px var(--h-sans);
+  line-height: inherit;
+  transition: transform 200ms ease;
+}
+
+a.stat:hover .statArrow {
+  transform: translateX(3px);
 }
 
 .statNumber {
@@ -181,12 +185,19 @@ a.stat:hover {
 }
 
 .statLabel {
-  display: block;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
   margin-top: 10px;
-  font: 300 11px var(--h-mono);
-  color: oklch(0.55 0.01 260);
+  font: 400 11px var(--h-mono);
+  color: var(--h-fg);
   letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+
+.statLabelQuiet {
+  color: var(--h-nav);
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
@@ -233,7 +244,8 @@ a.stat:hover {
 @media (prefers-reduced-motion: reduce) {
   .marginCell,
   .skylineCell,
-  .statNumber {
+  .statNumber,
+  .statArrow {
     transition: none;
   }
 }

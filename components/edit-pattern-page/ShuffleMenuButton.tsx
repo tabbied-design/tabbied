@@ -45,12 +45,12 @@ export default function ShuffleMenuButton({
         onClick={() => onRun(current.id)}
         aria-label={current.label}
       >
-        <CurrentIcon className={styles.icon} size={18} />
+        <CurrentIcon className={styles.icon} size={19} strokeWidth={1.7} />
         <span className={styles.label}>{current.label}</span>
       </button>
       <Menu.Root>
         <Menu.Trigger className={styles.chevron} aria-label="Shuffle options">
-          <ChevronDown size={16} />
+          <ChevronDown size={13} />
         </Menu.Trigger>
         <Menu.Portal>
           <Menu.Positioner
