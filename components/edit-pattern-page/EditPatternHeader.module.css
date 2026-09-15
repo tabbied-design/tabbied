@@ -1,9 +1,15 @@
+/* 69px tall, as it was with the old 40px shuffle button: the plate under it
+   is fitted to the pane's height, and the SVG parity thresholds in
+   e2e/svg-export.spec.ts were tuned on the cell size that height gives
+   (see the stepramp note there). A 4px shorter bar moved every cell edge
+   onto different fractional pixels and put four hairline designs over their
+   thresholds, and one into an exporter edge case. */
 .header {
   flex: none;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 22px;
+  padding: 16px 22px;
   border-bottom: 1px solid oklch(0 0 0 / 0.1);
 }
 
