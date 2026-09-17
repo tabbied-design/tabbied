@@ -134,6 +134,14 @@
   border-top: 1px solid oklch(0 0 0 / 0.1);
 }
 
+.groupHeader {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
 .groupTitle {
   margin: 0;
   font-family: var(--font-display);
@@ -145,36 +153,34 @@
 
 /* ---- Colors group ---- */
 
+/* Both groups sit on one baseline so the two captions line up, and the inks
+   never wrap: the stepper that used to share this row is in the header now. */
 .colorsRow {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-top: 14px;
+  align-items: flex-end;
+  gap: 18px;
+  margin-bottom: 26px;
 }
 
 .bgGroup {
   flex: none;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
 }
 
+/* No box around the three: the design separates the background from the inks
+   with the gap and the caption, not with a border. */
 .bgSwatchBox {
-  display: inline-flex;
-  gap: 6px;
-  padding: 5px;
-  border: 1px solid #e3e6ea;
-  border-radius: 6px;
+  display: flex;
+  gap: 4px;
 }
 
 .bgSwatch {
   position: relative;
-  display: inline-block;
-  width: 34px;
-  height: 34px;
+  display: block;
+  width: 28px;
+  height: 28px;
   flex: none;
-  border-radius: 3px;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.2);
   overflow: hidden;
   transition: transform 120ms ease;
 }
@@ -200,7 +206,7 @@
 .bgInput::-webkit-color-swatch,
 .bgInput::-moz-color-swatch {
   border: none;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 /* Dark strip along the bottom edge marking this swatch as the background. */
@@ -216,24 +222,38 @@
 
 .transButton {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   flex: none;
   padding: 0;
-  border: 2px solid #e3e6ea;
-  border-radius: 3px;
-  background: repeating-conic-gradient(#dfe3e8 0% 25%, #ffffff 0% 50%) 0 0 / 8px
-    8px;
-  color: #232529;
+  border: none;
+  border-radius: 2px;
+  background-color: #ffffff;
+  background-image: linear-gradient(
+      45deg,
+      oklch(0 0 0 / 0.14) 25%,
+      transparent 25% 75%,
+      oklch(0 0 0 / 0.14) 75%
+    ),
+    linear-gradient(
+      45deg,
+      oklch(0 0 0 / 0.14) 25%,
+      transparent 25% 75%,
+      oklch(0 0 0 / 0.14) 75%
+    );
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.2);
+  color: #0e0e13;
   cursor: pointer;
-  transition: border-color 120ms ease;
+  transition: box-shadow 120ms ease;
 }
 
 .transButton:hover {
-  border-color: #98a0af;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.4);
 }
 
 .transButtonActive {
@@ -244,24 +264,25 @@
    until one is chosen, then wide enough to show it. */
 .bgImageButton {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   flex: none;
   overflow: hidden;
-  border: 2px solid #e3e6ea;
-  border-radius: 3px;
+  border: none;
+  border-radius: 2px;
   background-color: #ffffff;
-  color: #6b7280;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.2);
+  color: oklch(0.42 0.01 260);
   cursor: pointer;
-  transition: border-color 120ms ease, width 120ms ease;
+  transition: box-shadow 120ms ease, width 120ms ease;
 }
 
 .bgImageButton:hover {
-  border-color: #98a0af;
-  color: #232529;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.4);
+  color: #0e0e13;
 }
 
 .bgImageButtonActive {
@@ -283,99 +304,83 @@
 .bgCaptionRow {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
+  margin-top: 8px;
 }
 
 .bgRemove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
   border: none;
   background: none;
-  font-size: 12px;
   line-height: 1;
-  color: #98a0af;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  color: oklch(0.42 0.01 260);
   cursor: pointer;
 }
 
 .bgRemove:hover {
-  color: #232529;
+  color: #0e0e13;
 }
 
 .groupCaption {
   font-size: 13px;
-  color: #98a0af;
+  color: oklch(0.42 0.01 260);
   line-height: 1;
 }
 
-.bgGroup .groupCaption {
-  text-align: center;
-}
-
 .inksGroup {
-  flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.inksRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 0;
 }
 
 .inksWrap {
-  flex: 1;
-  min-width: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 4px;
+}
+
+.inksGroup .groupCaption {
+  display: block;
+  margin-top: 8px;
 }
 
 .inkSwatch {
-  --swatch-size: 34px;
-  border-radius: 3px;
+  --swatch-size: 28px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.2);
 }
 
+/* Two separate round buttons rather than one joined pill. */
 .countGroup {
-  display: inline-flex;
+  display: flex;
   flex: none;
-  align-self: flex-start;
-  margin-top: 3px;
-  border: 1px solid #e3e6ea;
-  border-radius: 3px;
-  overflow: hidden;
+  gap: 4px;
 }
 
 .countButton {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   flex: none;
+  padding: 0;
   border: none;
-  background: #ffffff;
-  color: #646d7b;
+  border-radius: 50%;
+  background: none;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.16);
+  color: #0e0e13;
   cursor: pointer;
-  transition: color 120ms ease, background-color 120ms ease;
-}
-
-.countButton + .countButton {
-  border-left: 1px solid #e3e6ea;
+  transition: background-color 120ms ease;
 }
 
 .countButton:hover:not(:disabled) {
-  color: #4a5160;
-  background: #f8f9fa;
+  background-color: oklch(0 0 0 / 0.05);
 }
 
 .countButton:disabled {
-  color: #ced3d9;
+  color: oklch(0.78 0.01 260);
   cursor: default;
 }
 

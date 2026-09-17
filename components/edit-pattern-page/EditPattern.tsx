@@ -1340,7 +1340,40 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           <div className={styles.panelScroll}>
           {palette.length > 0 && (
             <section className={styles.group}>
-              <h2 className={styles.groupTitle}>Colors</h2>
+              {/* The design hangs the swatch count off the title rather than
+                  off the end of the ink row, which is what keeps the inks on
+                  one line however many there are. */}
+              <div className={styles.groupHeader}>
+                <h2 className={styles.groupTitle}>Colors</h2>
+                {minColors < maxColors && (
+                  <div
+                    className={styles.countGroup}
+                    role="group"
+                    aria-label="Number of colors"
+                  >
+                    <button
+                      type="button"
+                      className={styles.countButton}
+                      onClick={() => changeColorCount(-1)}
+                      disabled={colorCount <= minColors}
+                      aria-label="Remove color"
+                      title="Remove color"
+                    >
+                      <Minus size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.countButton}
+                      onClick={() => changeColorCount(1)}
+                      disabled={colorCount >= maxColors}
+                      aria-label="Add color"
+                      title="Add color"
+                    >
+                      <Plus size={14} />
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <div className={styles.colorsRow}>
                 <div className={styles.bgGroup}>
@@ -1432,67 +1465,38 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                         type="button"
                         className={styles.bgRemove}
                         onClick={clearBackgroundImage}
+                        title="Remove the background image"
+                        aria-label="Remove the background image"
                       >
-                        remove image
+                        <X size={14} aria-hidden="true" />
                       </button>
                     )}
                   </span>
                 </div>
 
                 <div className={styles.inksGroup}>
-                  <div className={styles.inksRow}>
-                    <div className={styles.inksWrap}>
-                      {palette.slice(1, colorCount).map((hex, inkIndex) => {
-                        const index = inkIndex + 1;
+                  <div className={styles.inksWrap}>
+                    {palette.slice(1, colorCount).map((hex, inkIndex) => {
+                      const index = inkIndex + 1;
 
-                        return (
-                          <ColorSwatch
-                            key={`color${index}`}
-                            className={styles.inkSwatch}
-                            ariaLabel={`Color ${index + 1}`}
-                            color={hex}
-                            onChange={(newHex) => {
-                              setPalette((prev) => {
-                                const next = [...prev];
-                                next[index] = newHex;
+                      return (
+                        <ColorSwatch
+                          key={`color${index}`}
+                          className={styles.inkSwatch}
+                          ariaLabel={`Color ${index + 1}`}
+                          color={hex}
+                          onChange={(newHex) => {
+                            setPalette((prev) => {
+                              const next = [...prev];
+                              next[index] = newHex;
 
-                                return next;
-                              });
-                              setPaletteSource('custom');
-                            }}
-                          />
-                        );
-                      })}
-                    </div>
-
-                    {minColors < maxColors && (
-                      <div
-                        className={styles.countGroup}
-                        role="group"
-                        aria-label="Number of colors"
-                      >
-                        <button
-                          type="button"
-                          className={styles.countButton}
-                          onClick={() => changeColorCount(-1)}
-                          disabled={colorCount <= minColors}
-                          aria-label="Remove color"
-                          title="Remove color"
-                        >
-                          <Minus size={14} />
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.countButton}
-                          onClick={() => changeColorCount(1)}
-                          disabled={colorCount >= maxColors}
-                          aria-label="Add color"
-                          title="Add color"
-                        >
-                          <Plus size={14} />
-                        </button>
-                      </div>
-                    )}
+                              return next;
+                            });
+                            setPaletteSource('custom');
+                          }}
+                        />
+                      );
+                    })}
                   </div>
                   <span className={styles.groupCaption}>inks</span>
                 </div>
