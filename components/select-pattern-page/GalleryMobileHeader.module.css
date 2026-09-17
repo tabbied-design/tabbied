@@ -70,13 +70,13 @@
   background: transparent;
   font-family: var(--font-sans-serif);
   font-size: 13px;
-  color: #646d7b;
+  color: oklch(0.55 0.01 260);
   cursor: pointer;
   transition: color 120ms ease;
 }
 
 .newPalette:hover {
-  color: #232529;
+  color: #0e0e13;
 }
 
 /* When "All" opens the browser, it takes the palette slot as a bounded,

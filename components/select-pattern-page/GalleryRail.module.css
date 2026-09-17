@@ -107,7 +107,7 @@
   padding: 24px 12px;
   font-size: 13px;
   line-height: 1.5;
-  color: #98a0af;
+  color: oklch(0.7 0.01 260);
 }
 
 /* ---- Pinned footer: "+ New Palette" ---- */
@@ -131,14 +131,14 @@
   background: transparent;
   font-family: var(--font-sans-serif);
   font-size: 13px;
-  color: #646d7b;
+  color: oklch(0.55 0.01 260);
   cursor: pointer;
   text-align: left;
   transition: color 120ms ease;
 }
 
 .newPalette:hover {
-  color: #232529;
+  color: #0e0e13;
 }
 
 .newPalette:focus-visible {

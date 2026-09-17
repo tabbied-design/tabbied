@@ -119,13 +119,13 @@
   background: oklch(0 0 0 / 0.05);
   font-family: var(--font-sans-serif);
   font-size: 13px;
-  color: #646d7b;
+  color: oklch(0.55 0.01 260);
   cursor: pointer;
   transition: color 120ms ease;
 }
 
 .allPill:hover {
-  color: #232529;
+  color: #0e0e13;
 }
 
 .allPill:focus-visible {

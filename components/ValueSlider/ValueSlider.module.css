@@ -12,7 +12,7 @@
   flex-shrink: 0;
   min-width: 2.25rem;
   text-align: right;
-  color: var(--gray-dark);
+  color: #0e0e13;
   font-size: 1.05rem;
   font-variant-numeric: tabular-nums;
 }
