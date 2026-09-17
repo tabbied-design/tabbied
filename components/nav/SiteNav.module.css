@@ -9,7 +9,10 @@
   --n-rule: oklch(0 0 0 / 0.08);
   --n-avatar-bg: #0e0e13;
   --n-avatar-fg: #ffffff;
-  --n-sans: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --n-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --n-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
   --n-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   position: relative;

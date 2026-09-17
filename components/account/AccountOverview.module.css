@@ -26,7 +26,7 @@
 }
 
 .figureValue {
-  font: 700 46px / 1 var(--s-sans);
+  font: 700 46px / 1 var(--s-display);
   font-variant-numeric: tabular-nums;
 }
 

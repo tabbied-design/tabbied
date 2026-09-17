@@ -93,7 +93,16 @@ th:not([align]) {
 }
 
 :root {
-  --font-sans-serif: 'proxima-nova', 'Inter', sans-serif;
+  /* Two sans, split by role - see lib/fonts.ts. The editor, the gallery and
+     the palette browser read these; the older docs and legal pages reference
+     neither, so switching the text face here cannot reach them. The inner
+     fallback matters: a bare `var(--font-plex-sans)` on a route that does not
+     load the font resolves to nothing and leaves `font-family: , 'Helvetica
+     Neue', ...`, which is invalid and drops the whole declaration. */
+  --font-sans-serif: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   /* Design tokens (the subset referenced across the app). */
   --gray-dark: #232529;

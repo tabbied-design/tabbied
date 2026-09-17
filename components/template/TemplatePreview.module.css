@@ -9,7 +9,10 @@
   --s-dim: oklch(0.5 0.01 260);
   --s-rule: oklch(0 0 0 / 0.08);
   --s-line: oklch(0 0 0 / 0.12);
-  --s-sans: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --s-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --s-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
   --s-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   min-height: 100vh;
@@ -75,7 +78,7 @@
 
 .name {
   overflow: hidden;
-  font: 700 16px var(--s-sans);
+  font: 700 16px var(--s-display);
   text-overflow: ellipsis;
   white-space: nowrap;
 }

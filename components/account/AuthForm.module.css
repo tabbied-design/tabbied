@@ -25,7 +25,7 @@
 
 .title {
   margin: 0 0 12px;
-  font: 700 31px / 1.1 var(--a-sans);
+  font: 700 31px / 1.1 var(--a-display);
   letter-spacing: -0.02em;
 }
 
@@ -42,7 +42,7 @@
 
 .sectionTitle {
   margin: 0 0 14px;
-  font: 700 20px / 1.2 var(--a-sans);
+  font: 700 20px / 1.2 var(--a-display);
   letter-spacing: -0.01em;
 }
 
@@ -171,7 +171,7 @@
   width: 100%;
   margin-top: 20px;
   padding: 16px;
-  font: 600 15px var(--a-sans);
+  font: 600 15px var(--a-display);
   color: #fff;
   background-color: var(--a-ink);
   border: none;

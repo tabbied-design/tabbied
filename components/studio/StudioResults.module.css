@@ -8,7 +8,7 @@
 
 .title {
   margin: 0 0 16px;
-  font: 700 46px / 1.1 var(--s-sans);
+  font: 700 46px / 1.1 var(--s-display);
   letter-spacing: -0.01em;
 }
 
@@ -62,7 +62,7 @@
 
 .name {
   margin: 0 0 4px;
-  font: 700 22px var(--s-sans);
+  font: 700 22px var(--s-display);
 }
 
 .descriptors {
@@ -101,7 +101,7 @@
 /* The generated headline, shown above the field it would sit on. */
 .headline {
   margin: 0 0 14px;
-  font: 700 22px / 1.25 var(--s-sans);
+  font: 700 22px / 1.25 var(--s-display);
   color: var(--s-ink);
   letter-spacing: -0.01em;
 }
@@ -217,7 +217,7 @@
   display: inline-flex;
   gap: 12px;
   align-items: center;
-  font: 500 16px var(--s-sans);
+  font: 500 16px var(--s-display);
   color: var(--s-ink);
 }
 

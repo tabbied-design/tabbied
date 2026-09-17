@@ -24,7 +24,7 @@ const FREQUENCY_INTERVAL = 5200;
 
 function PalettePanel({ activeIdx }: { activeIdx: number }) {
   return (
-    <div className={styles.panelBody}>
+    <div className={`${styles.panelBody} ${styles.paletteBody}`}>
       <div className={styles.pillGrid}>
         {/* One highlight slides between the four cells instead of four
             backgrounds cross-fading, which is what makes it read as a choice. */}

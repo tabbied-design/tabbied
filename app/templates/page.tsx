@@ -11,7 +11,7 @@ import TemplatesGrid, { type TemplateCard } from 'components/template/TemplatesG
 import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 import { categoryOf } from 'lib/templateCategories';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import home from 'components/main-page/home.module.css';
 import s from './templates.module.css';
 
@@ -76,7 +76,7 @@ export default function TemplatesGallery() {
   return (
     // The homepage's dark tokens, so the masthead, the footer and the cards
     // read from the same set.
-    <div className={`${home.home} ${plexMono.variable} ${s.page}`}>
+    <div className={`${home.home} ${plexMono.variable} ${plexSans.variable} ${s.page}`}>
       <SiteNav tone="dark" />
 
       <main>

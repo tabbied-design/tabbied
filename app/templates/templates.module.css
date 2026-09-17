@@ -78,7 +78,7 @@
 
 .hero h1 {
   margin: 34px 0 0;
-  font: 700 92px / 1.02 var(--h-sans);
+  font: 700 92px / 1.02 var(--h-display);
   color: var(--h-fg);
   letter-spacing: -0.025em;
   text-wrap: balance;

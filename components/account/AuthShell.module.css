@@ -18,7 +18,10 @@
   --a-edge: oklch(0 0 0 / 0.09);
   --a-field: oklch(0 0 0 / 0.16);
 
-  --a-sans: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --a-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --a-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
   --a-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   display: flex;

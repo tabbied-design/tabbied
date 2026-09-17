@@ -49,7 +49,7 @@
 
 .stepTitle {
   margin-bottom: 12px;
-  font: 700 32px var(--h-sans);
+  font: 700 32px var(--h-display);
   color: var(--h-ink);
   letter-spacing: -0.01em;
 }
@@ -91,12 +91,21 @@
   display: flex;
   flex: 1;
   align-items: center;
-  width: 80%;
-  margin: 0 auto;
   padding: 6px 0 24px;
 }
 
 /* ── 01 · palette picker ─────────────────────────────────────────────────── */
+
+/* Only the picker is inset as a proportion of the card; the other two panels
+   fill the card and inset themselves with padding, as the design has them. The
+   auto margins used to sit on .panelBody, where they outlived the width they
+   centred: a panel that reset `width` to auto still absorbed its free space
+   into those margins, so its slider and chips shrink-wrapped and floated in
+   the middle of the card instead of spanning it. */
+.paletteBody {
+  width: 80%;
+  margin: 0 auto;
+}
 
 .pillGrid {
   position: relative;
@@ -155,7 +164,6 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  width: auto;
   padding: 0 56px 0 48px;
 }
 
@@ -210,7 +218,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: auto;
   padding: 0 24px 24px;
   text-align: center;
 }

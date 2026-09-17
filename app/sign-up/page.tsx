@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import AuthForm from 'components/account/AuthForm';
 import AuthShell from 'components/account/AuthShell';
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <AuthShell className={plexMono.variable}>
+    <AuthShell className={`${plexMono.variable} ${plexSans.variable}`}>
       {/* The form reads ?next= to return people where they were sent from. */}
       <Suspense>
         <AuthForm mode="sign-up" />

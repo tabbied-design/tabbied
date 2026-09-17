@@ -75,7 +75,7 @@
 .title {
   max-width: 640px;
   margin: 0 0 24px;
-  font: 700 64px / 1.15 var(--h-sans);
+  font: 700 64px / 1.15 var(--h-display);
   letter-spacing: -0.01em;
 }
 
@@ -102,7 +102,7 @@
 .statNumber {
   display: block;
   margin-bottom: 8px;
-  font: 700 64px var(--h-sans);
+  font: 700 64px var(--h-display);
 }
 
 .statLabel {

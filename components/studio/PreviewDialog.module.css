@@ -17,7 +17,10 @@
 }
 
 .popup {
-  --pd-sans: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --pd-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --pd-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   position: fixed;
   inset: 0;
@@ -62,7 +65,7 @@
 .title {
   margin: 0;
   overflow: hidden;
-  font: 700 16px / 1.3 var(--pd-sans);
+  font: 700 16px / 1.3 var(--pd-display);
   text-overflow: ellipsis;
   white-space: nowrap;
 }

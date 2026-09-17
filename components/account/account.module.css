@@ -58,7 +58,7 @@
 
 .title {
   margin: 0 0 12px;
-  font: 700 52px / 1.05 var(--s-sans);
+  font: 700 52px / 1.05 var(--s-display);
   letter-spacing: -0.02em;
 }
 
@@ -81,7 +81,7 @@
 .cta {
   flex: none;
   padding: 16px 26px;
-  font: 600 15px var(--s-sans);
+  font: 600 15px var(--s-display);
   color: #fff;
   white-space: nowrap;
   background-color: var(--s-ink);
@@ -135,13 +135,13 @@
 
 .h2 {
   margin: 0 0 18px;
-  font: 700 26px var(--s-sans);
+  font: 700 26px var(--s-display);
   letter-spacing: -0.01em;
 }
 
 .h3 {
   margin: 0 0 18px;
-  font: 700 20px var(--s-sans);
+  font: 700 20px var(--s-display);
   letter-spacing: -0.01em;
 }
 
@@ -314,7 +314,7 @@
   padding: 0 22px;
   margin: 0 0 10px;
   overflow: hidden;
-  font: 600 14px var(--s-sans);
+  font: 600 14px var(--s-display);
   color: #fff;
   background-color: var(--s-ink);
   border-radius: 999px;
@@ -435,7 +435,7 @@
 .button {
   margin-top: 20px;
   padding: 13px 24px;
-  font: 600 14.5px / 1.2 var(--s-sans);
+  font: 600 14.5px / 1.2 var(--s-display);
   color: #fff;
   background-color: var(--s-ink);
   border: 0;
