@@ -77,13 +77,12 @@
 }
 
 .scrollHint {
-  font-weight: 300;
-  color: var(--h-dim);
+  color: oklch(0.7 0.01 260);
 }
 
 .title {
   margin: 0 0 24px;
-  font: 700 96px / 1.02 var(--h-sans);
+  font: 700 96px / 1.02 var(--h-display);
   color: var(--h-fg);
   letter-spacing: -0.02em;
 }
@@ -101,7 +100,7 @@
   max-width: 560px;
   margin: 0;
   font: 400 18px / 1.6 var(--h-sans);
-  color: var(--h-muted);
+  color: oklch(0.78 0.01 260);
 }
 
 /* ── Skyline ─────────────────────────────────────────────────────────────── */
@@ -175,9 +174,14 @@ a.stat:hover .statArrow {
   transform: translateX(3px);
 }
 
+/* The artboard's inline style says 200, and the artboard does not render it:
+   its Proxima Nova ships 400 and 700 only, so the figure a reader of the design
+   actually sees is bold, matching the story section's stat row lower down the
+   page. Typekit's proxima-nova does have a 200, so taking the number literally
+   was the one place the site drew a weight the design never showed. */
 .statNumber {
   display: block;
-  font: 200 64px var(--h-sans);
+  font: 700 64px var(--h-display);
   line-height: 1;
   color: var(--h-fg);
   /* Colour is the one thing the palette cycle animates directly. */

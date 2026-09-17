@@ -102,8 +102,8 @@
 }
 
 .chevron {
-  font-size: 9px;
-  opacity: 0.6;
+  flex: none;
+  opacity: 0.55;
 }
 
 /* ---- Menus ------------------------------------------------------------- */
@@ -113,10 +113,17 @@
 }
 
 .menu {
-  min-width: 210px;
-  max-width: 300px;
+  /* Fixed, like the preview's: a range lets the tracked-out eyebrows wrap at
+     whatever width the items happen to ask for. */
+  width: 290px;
   padding: 7px;
-  font-family: var(--s-sans, 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif);
+  /* Portalled out of the bar, so --s-sans is not in scope and the fallback is
+     the one that renders: the body stack, same as everywhere else. */
+  font-family: var(
+    --s-sans,
+    var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova', 'Helvetica Neue',
+    Helvetica, Arial, sans-serif
+  );
   background-color: #fff;
   border-radius: 14px;
   outline: none;

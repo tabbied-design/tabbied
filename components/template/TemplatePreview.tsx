@@ -10,9 +10,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
+import { ChevronDown } from 'lucide-react';
 import { initials } from 'components/account/AccountHeader';
 import { signOut, useSessionUser } from 'lib/authClient';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import styles from './TemplatePreview.module.css';
 
 export default function TemplatePreview({
@@ -22,13 +23,15 @@ export default function TemplatePreview({
 }: {
   slug: string;
   name: string;
+  /** Not drawn in the bar any more - both still name the frame for a screen
+      reader, which "tabbied.com/template/<slug>/" does not. */
   topic: string;
 }) {
   const { user, isPending } = useSessionUser();
   const router = useRouter();
 
   return (
-    <div className={`${styles.page} ${plexMono.variable}`}>
+    <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
       <header className={styles.bar}>
         <Link href="/templates" prefetch={false} className={styles.back} aria-label="All templates">
           <span className={styles.backCircle} aria-hidden="true">
@@ -47,11 +50,6 @@ export default function TemplatePreview({
           </span>
           <span className={styles.backLabel}>Websites</span>
         </Link>
-
-        <div className={styles.meta}>
-          <span className={styles.name}>{name}</span>
-          <span className={styles.topic}>{topic}</span>
-        </div>
 
         <div className={styles.actions}>
           <Link
@@ -78,9 +76,7 @@ export default function TemplatePreview({
           <Menu.Root>
             <Menu.Trigger className={styles.download}>
               Download
-              <span className={styles.chevron} aria-hidden="true">
-                &#9662;
-              </span>
+              <ChevronDown className={styles.chevron} size={15} aria-hidden="true" />
             </Menu.Trigger>
             <Menu.Portal>
               <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
@@ -90,7 +86,7 @@ export default function TemplatePreview({
                     className={styles.option}
                     render={<a href={`/downloads/${slug}-html.zip`} download />}
                   >
-                    <span className={styles.optionTitle}>Static HTML and CSS</span>
+                    <span className={styles.optionTitle}>Static HTML &amp; CSS</span>
                     <span className={styles.optionNote}>One folder, drop on any host</span>
                   </Menu.Item>
                   <Menu.Item

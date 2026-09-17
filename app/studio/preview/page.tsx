@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import StudioHeader from 'components/studio/StudioHeader';
 import StudioPreview from 'components/studio/StudioPreview';
 import styles from 'components/studio/studio.module.css';
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function StudioPreviewPage() {
   return (
-    <div className={`${styles.page} ${plexMono.variable}`}>
+    <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
       <StudioHeader
         backHref="/studio"
         backLabel="Back to the description"

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import { PALETTE_COUNT, PATTERN_COUNT, TEMPLATE_COUNT } from 'lib/siteCounts';
 import HomeNav from 'components/main-page/HomeNav';
 import HomeHero from 'components/main-page/HomeHero';
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className={`${styles.home} ${plexMono.variable}`}>
+    <div className={`${styles.home} ${plexMono.variable} ${plexSans.variable}`}>
       {/* The two hairlines marking the edges of the 1280px column, running the
           full height of the page behind every section. */}
       <div className={`${styles.columnRule} ${styles.columnRuleLeft}`} aria-hidden="true" />

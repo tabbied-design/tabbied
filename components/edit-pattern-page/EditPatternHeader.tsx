@@ -6,6 +6,7 @@ import { useEffect, useState, type MouseEvent } from 'react';
 import { Menu } from '@base-ui-components/react/menu';
 import {
   ArrowDownToLine,
+  Check,
   ChevronDown,
   ChevronLeft,
   FileCode,
@@ -13,7 +14,7 @@ import {
   Info,
   Link as LinkIcon,
   CodeXml,
-  LayoutTemplate,
+  PanelsLeftBottom,
   TriangleAlert,
 } from 'lucide-react';
 import {
@@ -21,7 +22,7 @@ import {
   consumeGalleryNavigation,
 } from 'lib/galleryScroll';
 import ShuffleMenuButton from './ShuffleMenuButton';
-import type { ShuffleAction } from './shuffleActions';
+import { SHUFFLE_ACTIONS, type ShuffleAction } from './shuffleActions';
 import styles from './EditPatternHeader.module.css';
 
 type EditPatternHeaderProps = {
@@ -58,7 +59,6 @@ type EditPatternHeaderProps = {
   /** Mobile: whether an inline panel (shuffle/export/palettes) is open. */
   mobilePanelOpen: boolean;
   /** Mobile: open the inline shuffle panel. */
-  onOpenShufflePanel: () => void;
   /** Mobile: open the inline export panel. */
   onOpenExportPanel: () => void;
   /** Mobile: close whichever inline panel is open. */
@@ -79,7 +79,6 @@ export default function EditPatternHeader({
   hasBackgroundImage,
   mobile,
   mobilePanelOpen,
-  onOpenShufflePanel,
   onOpenExportPanel,
   onCloseMobilePanel,
 }: EditPatternHeaderProps) {
@@ -143,15 +142,44 @@ export default function EditPatternHeader({
 
         <span className={styles.spacer} />
 
-        <button
-          type="button"
-          className={styles.iconCircle}
-          onClick={onOpenShufflePanel}
-          aria-label="Shuffle options"
-          title="Shuffle"
-        >
-          <LayoutTemplate size={17} />
-        </button>
+        {/* A dropdown under the button, not a sheet at the foot of the
+            screen: the scopes belong to the control that opened them, and a
+            panel that replaces the rail puts them a screen away from it. */}
+        <Menu.Root>
+          <Menu.Trigger
+            className={styles.iconCircle}
+            aria-label="Shuffle options"
+            title="Shuffle"
+          >
+            <PanelsLeftBottom size={17} />
+          </Menu.Trigger>
+          <Menu.Portal>
+            <Menu.Positioner
+              className={styles.menuPositioner}
+              side="bottom"
+              align="end"
+              sideOffset={6}
+            >
+              <Menu.Popup className={styles.menuPopup}>
+                {SHUFFLE_ACTIONS.map(({ id, label, Icon }) => (
+                  <Menu.Item
+                    key={id}
+                    className={styles.menuItem}
+                    onClick={() => {
+                      onSelectShuffle(id);
+                      onRunShuffle(id);
+                    }}
+                  >
+                    <Icon size={15} /> {label}
+                    {id === shuffleAction && (
+                      <Check className={styles.menuItemCheck} size={14} aria-hidden="true" />
+                    )}
+                  </Menu.Item>
+                ))}
+              </Menu.Popup>
+            </Menu.Positioner>
+          </Menu.Portal>
+        </Menu.Root>
         <button
           type="button"
           className={`${styles.iconCircle} ${styles.iconCircleExport}`}

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { ebGaramond } from 'lib/fonts';
+import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
 import { getAllPatternIds, getPattern } from 'lib/pattern';
 import EditPattern from 'components/edit-pattern-page/EditPattern';
 
@@ -35,11 +35,16 @@ export default async function PatternPage({
   const { id } = await params;
   const pattern = await getPattern(id);
 
-  // The serif is used only by the stage caption, and EditPattern is a client
-  // component, so the variable reaches it from here.
+  // EditPattern is a client component, so every font variable it reads has to
+  // reach it from here: the serif for the stage caption, the mono for the
+  // header crumb and the rail's readouts, and Plex Sans for the rail's copy.
+  // The mono was missing, and the failure was quiet - `var(--font-plex-mono)`
+  // simply resolved to nothing and the crumb rendered in the system monospace.
   return (
     <Suspense>
-      <div className={ebGaramond.variable}>
+      <div
+        className={`${ebGaramond.variable} ${plexMono.variable} ${plexSans.variable}`}
+      >
         <EditPattern pattern={pattern} />
       </div>
     </Suspense>

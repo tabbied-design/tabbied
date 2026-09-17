@@ -15,7 +15,7 @@ import styles from './GalleryRail.module.css';
 const PAGE = 24;
 
 /**
- * The gallery's desktop palette rail: the count as an eyebrow, one search that
+ * The gallery's desktop palette rail: one search that
  * filters both the palette list and the design grid, the full merged palette
  * list (custom first, then the read-only library) scrolling in a single
  * column, and a pinned "+ New Palette". It fills the height under the masthead
@@ -57,10 +57,6 @@ export default function GalleryRail({
   return (
     <aside className={styles.sidebar}>
       <div className={styles.top}>
-        <span className={styles.eyebrow}>
-          Palettes ({palettes.length + library.length})
-        </span>
-
         <label className={styles.search}>
           <Search size={15} aria-hidden="true" />
           <input

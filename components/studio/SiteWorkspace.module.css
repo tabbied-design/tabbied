@@ -12,12 +12,15 @@
   display: block;
 }
 
+/* The rail owns its own scrolling from here in (see SiteRail's .rail): the
+   palette list fills what the tabs leave and scrolls inside it, rather than a
+   short capped list scrolling inside a rail that also scrolls. */
 .rail {
   position: sticky;
   top: 63px;
   box-sizing: border-box;
   height: calc(100vh - 63px);
-  overflow-y: auto;
+  overflow: hidden;
   border-right: 1px solid oklch(0 0 0 / 0.1);
 }
 
@@ -158,6 +161,7 @@
   .rail {
     position: static;
     height: auto;
+    overflow: visible;
     border-right: none;
     border-bottom: 1px solid oklch(0 0 0 / 0.1);
   }

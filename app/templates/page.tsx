@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { TabbiedPattern } from 'tabbied/react';
 import type { PatternDefinition } from 'tabbied';
 import {
   lobe, windowpane, prisma, foliage, veil, blossom, spark, frond, chamfer,
-  fluting, merlon, diadem, vitrail, ivy, bokeh, lunette, neon, bauhaus, tetro,
+  fluting, merlon, diadem, vitrail, ivy, bokeh, lunette,
 } from 'tabbied/patterns';
 import SiteNav from 'components/nav';
 import HomeFooter from 'components/main-page/HomeFooter';
@@ -11,7 +10,7 @@ import TemplatesGrid, { type TemplateCard } from 'components/template/TemplatesG
 import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 import { categoryOf } from 'lib/templateCategories';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import home from 'components/main-page/home.module.css';
 import s from './templates.module.css';
 
@@ -29,16 +28,6 @@ const ART: Record<string, PatternDefinition> = {
   // The second collection's patterns, keyed by preset slug.
   ...Object.fromEntries(NEW_TEMPLATE_SITES.map((x) => [x.patternSlug, x.pattern])),
 };
-
-// The hero backdrop is a contact sheet rather than one enlarged pattern: four
-// different patterns on four different palettes, which states the premise of the
-// page before a word is read.
-const HERO_TILES: { art: PatternDefinition; palette: string[]; seed: string }[] = [
-  { art: neon, palette: ['#0d0d12', '#3fffb2', '#3eecff', '#ff3d8b'], seed: 'H1' },
-  { art: bauhaus, palette: ['#0d0d12', '#ff3d8b', '#ffd23e', '#3eecff'], seed: 'H2' },
-  { art: tetro, palette: ['#0d0d12', '#7048e8', '#3eecff', '#3fffb2'], seed: 'H3' },
-  { art: prisma, palette: ['#0d0d12', '#ffd23e', '#3fffb2', '#7048e8'], seed: 'H4' },
-];
 
 export default function TemplatesGallery() {
   // One list, numbered straight through: the gallery shows a single grid
@@ -76,24 +65,13 @@ export default function TemplatesGallery() {
   return (
     // The homepage's dark tokens, so the masthead, the footer and the cards
     // read from the same set.
-    <div className={`${home.home} ${plexMono.variable} ${s.page}`}>
+    <div className={`${home.home} ${plexMono.variable} ${plexSans.variable} ${s.page}`}>
       <SiteNav tone="dark" />
 
       <main>
         <header className={s.hero}>
-          <div className={s.heroArt} aria-hidden="true">
-            {HERO_TILES.map((t) => (
-              <div key={t.seed}>
-                <TabbiedPattern
-                  pattern={t.art}
-                  palette={t.palette}
-                  seed={t.seed}
-                  fit="cover"
-                  density={1}
-                />
-              </div>
-            ))}
-          </div>
+          {/* The design's backdrop grid renders no cells, so the hero is the
+              flat ground with only its vignette over it. */}
           <div className={s.heroScrim} />
           <div className={s.heroInner}>
             <div className={s.pre}>Made with Tabbied</div>

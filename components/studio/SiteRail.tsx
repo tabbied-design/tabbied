@@ -169,7 +169,7 @@ export default function SiteRail({
       </div>
 
       {tab === 'colours' ? (
-        <section className={styles.panel} aria-label="Colours">
+        <section className={`${styles.panel} ${styles.panelColours}`} aria-label="Colours">
           <p className={styles.hint}>Pick a palette and the whole page recolours.</p>
 
           <div className={styles.paletteScroll}>

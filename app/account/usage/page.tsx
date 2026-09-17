@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import AccountPage from 'components/account/AccountPage';
 import UsagePanel from 'components/account/UsagePanel';
 import styles from 'components/studio/studio.module.css';
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className={`${styles.page} ${plexMono.variable}`}>
+    <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
       <AccountPage
         title="Usage"
         lede="What you have spent today against each cap, and the recent ledger."

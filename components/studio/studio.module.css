@@ -14,7 +14,10 @@
 
   --s-pad: 128px;
 
-  --s-sans: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --s-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --s-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
   --s-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Studio's mark is teal on white rather than mint on near-black. */

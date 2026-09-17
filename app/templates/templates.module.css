@@ -25,35 +25,6 @@
   text-align: center;
 }
 
-.heroArt {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  opacity: 0.22;
-}
-
-.heroArt > div {
-  position: relative;
-  overflow: hidden;
-}
-
-.heroArt > div + div {
-  border-left: 1px solid #00000040;
-}
-
-.heroArt > div > * {
-  width: 100%;
-  height: 100%;
-}
-
-@media (max-width: 720px) {
-  .heroArt {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-  }
-}
-
 .heroScrim {
   position: absolute;
   inset: 0;
@@ -78,7 +49,7 @@
 
 .hero h1 {
   margin: 34px 0 0;
-  font: 700 92px / 1.02 var(--h-sans);
+  font: 700 92px / 1.02 var(--h-display);
   color: var(--h-fg);
   letter-spacing: -0.025em;
   text-wrap: balance;

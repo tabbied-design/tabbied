@@ -28,7 +28,7 @@
   min-width: 0;
   font-size: 13px;
   font-weight: 400;
-  color: #7d8594;
+  color: oklch(0.62 0.01 260);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -36,7 +36,7 @@
 }
 
 .nameActive {
-  color: #232529;
+  color: #0e0e13;
 }
 
 .check {
@@ -53,14 +53,14 @@
   height: 22px;
   flex: none;
   border-radius: 4px;
-  color: #c9cfd8;
+  color: oklch(0.86 0.01 260);
   background: transparent;
   cursor: pointer;
   transition: color 120ms ease, background-color 120ms ease;
 }
 
 .edit:hover {
-  color: #4a5160;
+  color: oklch(0.42 0.01 260);
 }
 
 .delete {

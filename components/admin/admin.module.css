@@ -12,7 +12,10 @@
   --a-line: oklch(0 0 0 / 0.09);
   --a-teal: oklch(0.4 0.13 175);
   --a-mint: oklch(0.72 0.16 168);
-  --a-sans: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --a-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --a-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
   --a-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   display: grid;
@@ -152,7 +155,7 @@
 }
 
 .topbarTitle {
-  font: 600 16px var(--a-sans);
+  font: 600 16px var(--a-display);
 }
 
 .main {
@@ -171,7 +174,7 @@
 
 .title {
   margin: 0 0 10px;
-  font: 700 40px / 1.1 var(--a-sans);
+  font: 700 40px / 1.1 var(--a-display);
   letter-spacing: -0.02em;
 }
 
@@ -184,13 +187,13 @@
 
 .h2 {
   margin: 0;
-  font: 700 24px var(--a-sans);
+  font: 700 24px var(--a-display);
   letter-spacing: -0.01em;
 }
 
 .h3 {
   margin: 0 0 8px;
-  font: 600 18px var(--a-sans);
+  font: 600 18px var(--a-display);
 }
 
 .sectionHead {
@@ -244,7 +247,7 @@
 
 .button {
   padding: 10px 20px;
-  font: 600 14px var(--a-sans);
+  font: 600 14px var(--a-display);
   color: #fff;
   white-space: nowrap;
   background-color: var(--a-ink);
@@ -293,7 +296,7 @@
 }
 
 .pillGlyph {
-  font-size: 9px;
+  flex: none;
   opacity: 0.55;
 }
 
@@ -385,7 +388,7 @@
 
 .statValue {
   margin: 16px 0 14px;
-  font: 700 38px / 1 var(--a-sans);
+  font: 700 38px / 1 var(--a-display);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }

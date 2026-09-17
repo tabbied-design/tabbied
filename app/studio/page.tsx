@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import { TEMPLATE_COUNT } from 'lib/siteCounts';
 import StudioHeader from 'components/studio/StudioHeader';
 import StudioForm from 'components/studio/StudioForm';
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function StudioPage() {
   return (
-    <div className={`${styles.page} ${plexMono.variable}`}>
+    <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
       <div className={`${styles.rule} ${styles.ruleLeft}`} aria-hidden="true" />
       <div className={`${styles.rule} ${styles.ruleRight}`} aria-hidden="true" />
 

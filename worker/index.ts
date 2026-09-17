@@ -213,7 +213,7 @@ async function schemaStatus(env: Env) {
   return { expected: EXPECTED_MIGRATION, applied, current: applied === EXPECTED_MIGRATION };
 }
 
-app.onError((error, c) => {
+app.onError(async (error, c) => {
   const { pathname } = new URL(c.req.url);
   const detail = describeError(error);
   const ray = c.req.header('cf-ray') ?? null;
@@ -260,6 +260,32 @@ app.onError((error, c) => {
       {
         error: 'The database schema is behind this deployment. Apply the pending migrations.',
         ray,
+      },
+      503
+    );
+  }
+
+  // The same diagnosis, reached the other way. `no such table|column` only
+  // catches a migration that would have *added* something; one that relaxes a
+  // constraint is invisible to it, and fails as ordinary SQL. 0005 is exactly
+  // that shape - it made `site.generation_id` and `direction_index` nullable so
+  // a site could start from a template - so with 0005 unapplied, `POST
+  // /api/studio/sites {slug}` raises `NOT NULL constraint failed` and answered
+  // "Internal error" while every generation-backed route around it worked.
+  //
+  // So when the ledger says the database is behind this build, say that instead
+  // of guessing from the wording. Only a ledger that exists and disagrees
+  // counts: a database with no `d1_migrations` at all is the case the regex
+  // above already catches, and treating "no ledger" as behind would relabel
+  // every unrelated 500 in an environment that provisions its tables directly.
+  const schema = await schemaStatus(c.env);
+
+  if (schema.expected && schema.applied && schema.applied !== schema.expected) {
+    return c.json(
+      {
+        error: 'The database schema is behind this deployment. Apply the pending migrations.',
+        ray,
+        schema,
       },
       503
     );

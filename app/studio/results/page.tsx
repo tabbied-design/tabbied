@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import { STUDIO_ENTRIES } from 'lib/studioDirections';
 import StudioHeader from 'components/studio/StudioHeader';
 import StudioResults from 'components/studio/StudioResults';
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function StudioResultsPage() {
   return (
-    <div className={`${styles.page} ${plexMono.variable}`}>
+    <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
       {/* No column rules here: they mark Studio's 720px writing measure, and
           the results grid is wider than that - drawn at this width they would
           fall through the middle of the cards. */}

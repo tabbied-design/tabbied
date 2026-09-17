@@ -56,14 +56,37 @@
   text-transform: uppercase;
 }
 
+/* The plan pill sits on the title's baseline, so it wraps under it rather than
+   squeezing it on a narrow screen. */
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.badge {
+  flex: none;
+  position: relative;
+  top: 7px;
+  padding: 6px 13px;
+  font: 600 12px var(--s-mono);
+  color: #fff;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background-color: var(--s-ink);
+  border-radius: 999px;
+}
+
 .title {
-  margin: 0 0 12px;
-  font: 700 52px / 1.05 var(--s-sans);
+  margin: 0;
+  font: 700 52px / 1.05 var(--s-display);
   letter-spacing: -0.02em;
 }
 
 .lede {
-  max-width: 640px;
+  max-width: 620px;
   margin: 0;
   font: 400 16px / 1.6 var(--s-sans);
   color: oklch(0.45 0.01 260);
@@ -81,7 +104,7 @@
 .cta {
   flex: none;
   padding: 16px 26px;
-  font: 600 15px var(--s-sans);
+  font: 600 15px var(--s-display);
   color: #fff;
   white-space: nowrap;
   background-color: var(--s-ink);
@@ -135,13 +158,13 @@
 
 .h2 {
   margin: 0 0 18px;
-  font: 700 26px var(--s-sans);
+  font: 700 26px var(--s-display);
   letter-spacing: -0.01em;
 }
 
 .h3 {
   margin: 0 0 18px;
-  font: 700 20px var(--s-sans);
+  font: 700 20px var(--s-display);
   letter-spacing: -0.01em;
 }
 
@@ -314,7 +337,7 @@
   padding: 0 22px;
   margin: 0 0 10px;
   overflow: hidden;
-  font: 600 14px var(--s-sans);
+  font: 600 14px var(--s-display);
   color: #fff;
   background-color: var(--s-ink);
   border-radius: 999px;
@@ -435,7 +458,7 @@
 .button {
   margin-top: 20px;
   padding: 13px 24px;
-  font: 600 14.5px / 1.2 var(--s-sans);
+  font: 600 14.5px / 1.2 var(--s-display);
   color: #fff;
   background-color: var(--s-ink);
   border: 0;
@@ -523,8 +546,25 @@
   gap: 6px;
   margin: 0;
   padding: 0;
-  font: 400 14px var(--s-sans);
+  font: 400 15px var(--s-sans);
+  color: oklch(0.32 0.01 260);
   list-style: none;
+}
+
+/* The address sits under what it signed in with, not apart from it. */
+.providers + .note {
+  margin-top: 6px;
+  color: oklch(0.5 0.01 260);
+}
+
+/* The one long paragraph on the page, at the design's measure and colour;
+   .quiet elsewhere is a one-line aside and keeps its own. */
+.settings .quiet {
+  max-width: 620px;
+  margin-bottom: 20px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: oklch(0.45 0.01 260);
 }
 
 /* ── Narrow screens ──────────────────────────────────────────────────────── */

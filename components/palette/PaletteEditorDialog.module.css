@@ -41,7 +41,7 @@
   font-size: 20px;
   font-weight: 600;
   line-height: 1.3;
-  color: #232529;
+  color: #0e0e13;
 }
 
 /* Shuffle-color-order icon button, pushed to the trailing edge of the title. */
@@ -56,13 +56,13 @@
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #646d7b;
+  color: oklch(0.55 0.01 260);
   cursor: pointer;
   transition: color 120ms ease, background-color 120ms ease;
 }
 
 .shuffleButton:hover {
-  color: #4a5160;
+  color: oklch(0.42 0.01 260);
   background: #f8f9fa;
 }
 
@@ -80,12 +80,12 @@
   margin-bottom: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: #232529;
+  color: #0e0e13;
 }
 
 .labelHint {
   font-weight: 400;
-  color: #98a0af;
+  color: oklch(0.7 0.01 260);
 }
 
 /* Name field: bordered (inset) so it reads as an outlined input. */
@@ -99,7 +99,7 @@
   box-shadow: inset 0 0 0 1px #ced3d9;
   font-family: var(--font-sans-serif);
   font-size: 14px;
-  color: #232529;
+  color: #0e0e13;
   outline: none;
   transition: box-shadow 120ms ease;
 }
@@ -132,7 +132,7 @@
   background-color: #f8f9fa;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 13.5px;
-  color: #232529;
+  color: #0e0e13;
   transition: box-shadow 120ms ease;
 }
 
@@ -141,7 +141,7 @@
 }
 
 .hexHash {
-  color: #98a0af;
+  color: oklch(0.7 0.01 260);
   user-select: none;
   pointer-events: none;
 }
@@ -173,7 +173,7 @@
 
 .bgTransparentLabel {
   font-size: 14px;
-  color: #232529;
+  color: #0e0e13;
 }
 
 /* ---- Ink color list ---- */
@@ -201,7 +201,7 @@
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #98a0af;
+  color: oklch(0.7 0.01 260);
   cursor: pointer;
   transition: color 120ms ease, background-color 120ms ease;
 }
@@ -224,7 +224,7 @@
   padding: 0;
   border: none;
   background: transparent;
-  color: #646d7b;
+  color: oklch(0.55 0.01 260);
   font-family: var(--font-sans-serif);
   font-size: 14px;
   cursor: pointer;
@@ -232,7 +232,7 @@
 }
 
 .addColor:hover {
-  color: #4a5160;
+  color: oklch(0.42 0.01 260);
 }
 
 .dialogError {
@@ -259,7 +259,7 @@
   padding: 0;
   border: none;
   background: transparent;
-  color: #98a0af;
+  color: oklch(0.7 0.01 260);
   font-family: var(--font-sans-serif);
   font-size: 13.5px;
   cursor: pointer;
@@ -276,7 +276,7 @@
   align-items: center;
   gap: 12px;
   font-size: 13.5px;
-  color: #232529;
+  color: #0e0e13;
 }
 
 .confirmDeleteButton {
@@ -300,7 +300,7 @@
   padding: 0;
   border: none;
   background: transparent;
-  color: #646d7b;
+  color: oklch(0.55 0.01 260);
   font-family: var(--font-sans-serif);
   font-size: 13px;
   cursor: pointer;
@@ -308,7 +308,7 @@
 }
 
 .confirmKeep:hover {
-  color: #232529;
+  color: #0e0e13;
 }
 
 .cancelButton {
@@ -318,7 +318,7 @@
   padding: 0;
   border: none;
   background: transparent;
-  color: #646d7b;
+  color: oklch(0.55 0.01 260);
   font-family: var(--font-sans-serif);
   font-size: 14px;
   cursor: pointer;
@@ -326,7 +326,7 @@
 }
 
 .cancelButton:hover {
-  color: #4a5160;
+  color: oklch(0.42 0.01 260);
 }
 
 .saveButton {

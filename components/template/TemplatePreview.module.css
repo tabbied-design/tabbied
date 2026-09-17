@@ -9,7 +9,10 @@
   --s-dim: oklch(0.5 0.01 260);
   --s-rule: oklch(0 0 0 / 0.08);
   --s-line: oklch(0 0 0 / 0.12);
-  --s-sans: 'proxima-nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --s-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --s-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
   --s-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   min-height: 100vh;
@@ -65,34 +68,14 @@
   text-transform: uppercase;
 }
 
-.meta {
-  display: flex;
-  flex: 1;
-  gap: 12px;
-  align-items: baseline;
-  min-width: 0;
-}
-
-.name {
-  overflow: hidden;
-  font: 700 16px var(--s-sans);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.topic {
-  overflow: hidden;
-  font: 400 13px var(--s-sans);
-  color: var(--s-dim);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .actions {
   display: flex;
   flex: none;
   gap: 10px;
   align-items: center;
+  /* .meta used to take the slack between the crumb and these; with it gone the
+     auto margin is what holds them at the right edge. */
+  margin-left: auto;
 }
 
 .customize {
@@ -130,7 +113,7 @@
 }
 
 .chevron {
-  font-size: 9px;
+  flex: none;
   opacity: 0.55;
 }
 
@@ -139,8 +122,9 @@
 }
 
 .menu {
-  min-width: 210px;
-  max-width: 290px;
+  /* A fixed width, not a range: at 210px the tracked-out eyebrow wraps onto a
+     second line, which is what made this menu read as a different control. */
+  width: 290px;
   padding: 7px;
   font-family: var(--s-sans);
   background-color: #fff;
@@ -330,11 +314,6 @@
   .bar {
     flex-wrap: wrap;
     padding: 14px 20px;
-  }
-
-  .meta {
-    order: 3;
-    flex-basis: 100%;
   }
 
   .backLabel {

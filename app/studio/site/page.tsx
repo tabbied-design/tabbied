@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { plexMono } from 'lib/fonts';
+import { plexMono, plexSans } from 'lib/fonts';
 import { DESIGN_CHOICES } from 'lib/designCatalog';
 import StudioSite from 'components/studio/StudioSite';
 import styles from 'components/studio/studio.module.css';
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function StudioSitePage() {
   return (
-    <div className={`${styles.page} ${plexMono.variable}`}>
+    <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
       {/* The site id arrives in the query string, so everything below reads
           useSearchParams and needs a boundary to prerender behind. The design
           list is read here, server-side, and passed down as plain data: a

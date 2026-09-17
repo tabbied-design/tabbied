@@ -29,7 +29,7 @@
 
 .title {
   margin: 0 0 8px;
-  font: 700 26px var(--s-sans);
+  font: 700 26px var(--s-display);
   letter-spacing: -0.015em;
 }
 
@@ -138,7 +138,7 @@
   gap: 9px;
   align-items: center;
   padding: 13px 22px;
-  font: 600 14.5px var(--s-sans);
+  font: 600 14.5px var(--s-display);
   color: #fff;
   background-color: var(--s-ink);
   border: none;

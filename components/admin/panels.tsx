@@ -5,6 +5,7 @@
 // admin endpoints via the client plugin.
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
+import { ChevronDown } from 'lucide-react';
 import { apiUrl } from 'lib/apiFetch';
 import { authClient } from 'lib/authClient';
 import { initials } from 'components/account/AccountHeader';
@@ -226,9 +227,7 @@ export function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: 
               aria-label={`Showing ${filter.toLowerCase()}. Next filter`}
             >
               <span>{filter}</span>
-              <span className={styles.pillGlyph} aria-hidden="true">
-                &#9662;
-              </span>
+              <ChevronDown className={styles.pillGlyph} size={14} aria-hidden="true" />
             </button>
             <form
               className={styles.search}

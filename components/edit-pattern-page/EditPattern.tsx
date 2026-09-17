@@ -8,12 +8,13 @@ import {
   Check,
   ChevronRight,
   CodeXml,
-  Expand,
   FileCode,
   ImageDown,
   ImagePlus,
   Info,
   Link as LinkIcon,
+  Maximize2,
+  Minimize2,
   Minus,
   Plus,
   TriangleAlert,
@@ -46,7 +47,6 @@ import PaletteBrowser from 'components/palette/PaletteBrowser';
 import PaletteListRow from 'components/palette/PaletteListRow';
 import { usePaletteReveal } from 'components/palette/usePaletteReveal';
 import {
-  SHUFFLE_ACTIONS,
   SHUFFLE_STORAGE_KEY,
   isShuffleAction,
   type ShuffleAction,
@@ -208,7 +208,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   // Mobile (7d) inline panel shown in the editing region below the preview.
   // 'palettes' reuses the shared browser (browserOpen).
-  const [mobilePanel, setMobilePanel] = useState<'shuffle' | 'export' | null>(
+  const [mobilePanel, setMobilePanel] = useState<'export' | null>(
     null
   );
 
@@ -330,10 +330,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     useState<AspectRatioId>(aspectRatioFromQuery);
   const [seed, setSeed] = useState(() => searchParams.get('seed') ?? '0000');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [viewport, setViewport] = useState<{
-    width: number;
-    height: number;
-  } | null>(null);
   const [previewSize, setPreviewSize] = useState<{
     width: number;
     height: number;
@@ -438,15 +434,18 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCustomPalette]);
 
+  // Escape came free with the dialog; expanding in place has to bind it.
   useEffect(() => {
-    const updateViewport = () =>
-      setViewport({ width: window.innerWidth, height: window.innerHeight });
+    if (!isExpanded) return;
 
-    updateViewport();
-    window.addEventListener('resize', updateViewport);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsExpanded(false);
+    };
 
-    return () => window.removeEventListener('resize', updateViewport);
-  }, []);
+    window.addEventListener('keydown', onKey);
+
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isExpanded]);
 
   // The object URL holds the file's bytes until it is revoked.
   useEffect(
@@ -573,10 +572,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   };
 
   // ---- Mobile (7d) inline panels ----
-  const openShufflePanel = () => {
-    setBrowserOpen(false);
-    setMobilePanel('shuffle');
-  };
   const openExportPanel = () => {
     setBrowserOpen(false);
     setMobilePanel('export');
@@ -901,12 +896,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   const bgIsTransparent = isTransparentHex(palette[0] ?? '');
 
-  const expanded = fitToBox(
-    aspectRatio,
-    (viewport?.width ?? 1200) * 0.9,
-    (viewport?.height ?? 800) * 0.9
-  );
-
   // ---- Grouped inspector controls ----
 
   // One merged chip list: custom palettes first, then the read-only library.
@@ -975,18 +964,16 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       const label = option.id === GRID_OPTION_ID ? 'Grid density' : option.displayName;
 
       return (
-        <div className={styles.layoutRow} key={option.id}>
+        <div className={styles.layoutField} key={option.id}>
           <span className={styles.layoutLabel}>{label}</span>
-          <div className={styles.segmented} role="group" aria-label={label}>
+          <div className={styles.chipRow} role="group" aria-label={label}>
             {options.map((opt) => (
               <button
                 key={opt}
                 type="button"
                 aria-pressed={opt === value}
                 className={
-                  opt === value
-                    ? `${styles.segment} ${styles.segmentActive}`
-                    : styles.segment
+                  opt === value ? `${styles.chip} ${styles.chipActive}` : styles.chip
                 }
                 onClick={() => onChange(opt)}
               >
@@ -1000,7 +987,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
     if (option.type === 'Slider') {
       const step = option.step ?? 1;
-      const formatted = step < 1 ? Number(value).toFixed(1) : String(value);
+      const decimals = (String(step).split('.')[1] ?? '').length;
+      const formatted = decimals ? Number(value).toFixed(decimals) : String(value);
 
       return (
         <div key={option.id} className={styles.sliderBlock}>
@@ -1024,73 +1012,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     return null;
   };
 
-  // Mobile (7d): the inline "Shuffle" panel - scope radios plus a run button
-  // labelled with the current scope. Selecting a scope persists it; the run
-  // button applies it (repeatedly, for a fresh arrangement each tap).
-  const renderShufflePanel = () => {
-    const current =
-      SHUFFLE_ACTIONS.find((a) => a.id === shuffleAction) ?? SHUFFLE_ACTIONS[0];
-    const RunIcon = current.Icon;
-
-    return (
-      <div className={styles.mobilePanel}>
-        <div className={styles.mobilePanelHead}>
-          <span className={styles.mobilePanelTitle}>Shuffle</span>
-          <button
-            type="button"
-            className={styles.mobilePanelBack}
-            onClick={closeMobilePanel}
-          >
-            <ArrowLeft size={14} /> Back to editor
-          </button>
-        </div>
-
-        <div
-          className={styles.scopeGroup}
-          role="radiogroup"
-          aria-label="Shuffle scope"
-        >
-          {SHUFFLE_ACTIONS.map(({ id, label, Icon }) => {
-            const active = id === shuffleAction;
-
-            return (
-              <button
-                key={id}
-                type="button"
-                role="radio"
-                aria-checked={active}
-                className={
-                  active
-                    ? `${styles.scopeOption} ${styles.scopeOptionActive}`
-                    : styles.scopeOption
-                }
-                onClick={() => selectShuffleAction(id)}
-              >
-                <Icon className={styles.scopeIcon} size={16} />
-                <span className={styles.scopeLabel}>{label}</span>
-                {active && <Check size={15} aria-hidden="true" />}
-              </button>
-            );
-          })}
-        </div>
-
-        <button
-          type="button"
-          className={styles.runShuffle}
-          onClick={() => runShuffle(shuffleAction)}
-        >
-          <RunIcon size={16} /> {current.label}
-        </button>
-        <p className={styles.runHint}>
-          Tap again for a new arrangement - the preview above updates live.
-        </p>
-      </div>
-    );
-  };
-
-  // Mobile (7d): the inline "Export" panel - the same three actions as the
-  // desktop dropdown, each returning to the editor once fired (a toast reports
-  // the result).
+  // Mobile (7d): the inline "Export" panel. Export stays a panel rather than a
+  // dropdown because its rows are long and one of them opens a dialog.
   const renderExportPanel = () => (
     <div className={styles.mobilePanel}>
       <div className={styles.mobilePanelHead}>
@@ -1188,7 +1111,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         hasBackgroundImage={backgroundImage !== null}
         mobile={isMobile}
         mobilePanelOpen={mobilePanelOpen}
-        onOpenShufflePanel={openShufflePanel}
         onOpenExportPanel={openExportPanel}
         onCloseMobilePanel={closeMobilePanel}
       />
@@ -1244,79 +1166,65 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         </Dialog.Portal>
       </Dialog.Root>
 
-      <main className={styles.editPatternSection}>
-        <Dialog.Root open={isExpanded} onOpenChange={setIsExpanded}>
-          <div
-            ref={previewRef}
-            className={
-              previewIsTransparent
-                ? `${styles.previewWrapper} ${styles.previewTransparent}`
-                : styles.previewWrapper
-            }
-          >
-            <Dialog.Trigger
-              className={styles.expandButton}
-              aria-label="Expand pattern"
-            >
-              <Expand size={18} />
-            </Dialog.Trigger>
-
-            <figure className={styles.stage}>
-              <div className={styles.doodleFrame} style={imageStyle}>
-                <TabbiedPattern
-                  ref={doodleRef}
-                  {...patternProps}
-                  fit="fixed"
-                  width={width}
-                  height={height}
-                  decorative={false}
-                />
-              </div>
-
-              {/* The pattern is named under it rather than in a header bar, so
-                  the stage reads as a plate with its caption. */}
-              <figcaption className={styles.stageCaption}>
-                <span className={styles.stageName}>{pattern.name}</span>
-                <span className={styles.stageMeta}>
-                  {captionParts.join(' \u00B7 ')}
-                </span>
-              </figcaption>
-            </figure>
-          </div>
-
-          <Dialog.Portal>
-            <Dialog.Backdrop className={styles.dialogBackdrop} />
-            <Dialog.Popup className={styles.dialogPopup}>
-              <Dialog.Title className={styles.srOnly}>
-                {pattern.name}
-              </Dialog.Title>
-              <Dialog.Close
-                className={styles.dialogClose}
-                aria-label="Close expanded view"
-              >
-                <X size={24} />
-              </Dialog.Close>
-              <div
-                className={
-                  previewIsTransparent
-                    ? `${styles.dialogDoodle} ${styles.previewTransparent}`
-                    : styles.dialogDoodle
+      <main
+        className={
+          isExpanded
+            ? `${styles.editPatternSection} ${styles.editPatternSectionExpanded}`
+            : styles.editPatternSection
+        }
+      >
+        <div
+          ref={previewRef}
+          className={
+            previewIsTransparent
+              ? `${styles.previewWrapper} ${styles.previewTransparent}`
+              : styles.previewWrapper
+          }
+          // Expanded, the stage is the whole editor, so anywhere that is not
+          // the plate is "outside" and dismisses it - the affordance a backdrop
+          // used to provide. Guarded on the target being this element so a
+          // click on the plate, the caption or the toggle does not close it.
+          onClick={
+            isExpanded
+              ? (event) => {
+                  if (event.target === event.currentTarget) setIsExpanded(false);
                 }
-                style={imageStyle ?? { backgroundColor: previewBackground }}
-              >
-                {isExpanded && (
-                  <TabbiedPattern
-                    {...patternProps}
-                    fit="fixed"
-                    width={expanded.width}
-                    height={expanded.height}
-                    decorative={false}
-                  />
-                )}
-              </div>
-            </Dialog.Popup>
-          </Dialog.Portal>
-        </Dialog.Root>
+              : undefined
+          }
+        >
+          <button
+            type="button"
+            className={styles.expandButton}
+            onClick={() => setIsExpanded((open) => !open)}
+            aria-pressed={isExpanded}
+            aria-label={isExpanded ? 'Collapse pattern' : 'Expand pattern'}
+            title={isExpanded ? 'Collapse pattern' : 'Expand pattern'}
+          >
+            {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+          </button>
+
+          <figure className={styles.stage}>
+            <div className={styles.doodleFrame} style={imageStyle}>
+              <TabbiedPattern
+                ref={doodleRef}
+                {...patternProps}
+                fit="fixed"
+                width={width}
+                height={height}
+                decorative={false}
+              />
+            </div>
+
+            {/* The pattern is named under it rather than in a header bar, so
+                the stage reads as a plate with its caption. */}
+            <figcaption className={styles.stageCaption}>
+              <span className={styles.stageName}>{pattern.name}</span>
+              <span className={styles.stageMeta}>
+                {captionParts.join(' \u00B7 ')}
+              </span>
+            </figcaption>
+          </figure>
+        </div>
 
         <div className={styles.panel}>
           {browserOpen ? (
@@ -1332,15 +1240,46 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
               onNewPalette={() => editor.openEditor()}
               onClose={closeMobilePanel}
             />
-          ) : isMobile && mobilePanel === 'shuffle' ? (
-            <div className={styles.panelScroll}>{renderShufflePanel()}</div>
           ) : isMobile && mobilePanel === 'export' ? (
             <div className={styles.panelScroll}>{renderExportPanel()}</div>
           ) : (
           <div className={styles.panelScroll}>
           {palette.length > 0 && (
             <section className={styles.group}>
-              <h2 className={styles.groupTitle}>Colors</h2>
+              {/* The design hangs the swatch count off the title rather than
+                  off the end of the ink row, which is what keeps the inks on
+                  one line however many there are. */}
+              <div className={styles.groupHeader}>
+                <h2 className={styles.groupTitle}>Colors</h2>
+                {minColors < maxColors && (
+                  <div
+                    className={styles.countGroup}
+                    role="group"
+                    aria-label="Number of colors"
+                  >
+                    <button
+                      type="button"
+                      className={styles.countButton}
+                      onClick={() => changeColorCount(-1)}
+                      disabled={colorCount <= minColors}
+                      aria-label="Remove color"
+                      title="Remove color"
+                    >
+                      <Minus size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.countButton}
+                      onClick={() => changeColorCount(1)}
+                      disabled={colorCount >= maxColors}
+                      aria-label="Add color"
+                      title="Add color"
+                    >
+                      <Plus size={14} />
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <div className={styles.colorsRow}>
                 <div className={styles.bgGroup}>
@@ -1432,67 +1371,38 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                         type="button"
                         className={styles.bgRemove}
                         onClick={clearBackgroundImage}
+                        title="Remove the background image"
+                        aria-label="Remove the background image"
                       >
-                        remove image
+                        <X size={14} aria-hidden="true" />
                       </button>
                     )}
                   </span>
                 </div>
 
                 <div className={styles.inksGroup}>
-                  <div className={styles.inksRow}>
-                    <div className={styles.inksWrap}>
-                      {palette.slice(1, colorCount).map((hex, inkIndex) => {
-                        const index = inkIndex + 1;
+                  <div className={styles.inksWrap}>
+                    {palette.slice(1, colorCount).map((hex, inkIndex) => {
+                      const index = inkIndex + 1;
 
-                        return (
-                          <ColorSwatch
-                            key={`color${index}`}
-                            className={styles.inkSwatch}
-                            ariaLabel={`Color ${index + 1}`}
-                            color={hex}
-                            onChange={(newHex) => {
-                              setPalette((prev) => {
-                                const next = [...prev];
-                                next[index] = newHex;
+                      return (
+                        <ColorSwatch
+                          key={`color${index}`}
+                          className={styles.inkSwatch}
+                          ariaLabel={`Color ${index + 1}`}
+                          color={hex}
+                          onChange={(newHex) => {
+                            setPalette((prev) => {
+                              const next = [...prev];
+                              next[index] = newHex;
 
-                                return next;
-                              });
-                              setPaletteSource('custom');
-                            }}
-                          />
-                        );
-                      })}
-                    </div>
-
-                    {minColors < maxColors && (
-                      <div
-                        className={styles.countGroup}
-                        role="group"
-                        aria-label="Number of colors"
-                      >
-                        <button
-                          type="button"
-                          className={styles.countButton}
-                          onClick={() => changeColorCount(-1)}
-                          disabled={colorCount <= minColors}
-                          aria-label="Remove color"
-                          title="Remove color"
-                        >
-                          <Minus size={14} />
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.countButton}
-                          onClick={() => changeColorCount(1)}
-                          disabled={colorCount >= maxColors}
-                          aria-label="Add color"
-                          title="Add color"
-                        >
-                          <Plus size={14} />
-                        </button>
-                      </div>
-                    )}
+                              return next;
+                            });
+                            setPaletteSource('custom');
+                          }}
+                        />
+                      );
+                    })}
                   </div>
                   <span className={styles.groupCaption}>inks</span>
                 </div>
@@ -1580,7 +1490,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           <section className={styles.group}>
             <h2 className={styles.groupTitle}>Layout</h2>
 
-            <div className={styles.layoutRow}>
+            <div className={styles.layoutField}>
               <span className={styles.layoutLabel}>Aspect ratio</span>
               <div className={styles.ratioTiles}>
                 {ASPECT_RATIO_IDS.map((id) => renderRatioTile(id))}

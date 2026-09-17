@@ -89,7 +89,7 @@
   border-radius: 5px;
   font-family: var(--font-sans-serif);
   font-size: 13.5px;
-  color: var(--gray-dark);
+  color: #0e0e13;
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
@@ -100,7 +100,7 @@
 }
 
 .item svg {
-  color: var(--gray-medium);
+  color: oklch(0.55 0.01 260);
   flex: none;
 }
 
