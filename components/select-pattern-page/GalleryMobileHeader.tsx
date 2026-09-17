@@ -8,7 +8,7 @@ import styles from './GalleryMobileHeader.module.css';
 
 /**
  * Mobile gallery chrome, under the shared masthead: the palette count as an
- * eyebrow, the search, and "New Palette" (or the embedded browser when "All"
+ * the search, and "New Palette" (or the embedded browser when "All"
  * is tapped). The palette chip shelf itself is rendered by SelectPattern just
  * below this - as a direct child of the scrolling page - so it can stay pinned
  * with `position: sticky` across the whole grid scroll.
@@ -17,7 +17,6 @@ export default function GalleryMobileHeader({
   search,
   onSearchChange,
   onNewPalette,
-  paletteCount,
   palettes,
   library,
   selectedId,
@@ -31,7 +30,6 @@ export default function GalleryMobileHeader({
   search: string;
   onSearchChange: (value: string) => void;
   onNewPalette: () => void;
-  paletteCount: number;
   palettes: BrandPalette[];
   library: LibraryPalette[];
   selectedId: string | null;
@@ -45,7 +43,6 @@ export default function GalleryMobileHeader({
   return (
     <div className={styles.wrapper}>
       <div className={styles.eyebrowRow}>
-        <span className={styles.eyebrow}>Palettes ({paletteCount})</span>
         <span className={styles.spacer} />
         <button
           type="button"

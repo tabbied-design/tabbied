@@ -1,16 +1,64 @@
-/* The overview's own pieces: the two summary cards, the counts under them,
+/* The overview's own pieces: the two summary cards,
    and the history rows. */
 
 .cards {
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   overflow: hidden;
   border: 1px solid oklch(0 0 0 / 0.1);
   border-radius: 14px;
 }
 
-.card {
-  padding: 30px 32px;
+/* The paper half: the ring beside what it is counting. */
+.gaugeCard {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  padding: 32px;
+  background-color: #fff;
+  border-right: 1px solid oklch(0 0 0 / 0.08);
+}
+
+.gauge {
+  position: relative;
+  flex: none;
+  width: 96px;
+  height: 96px;
+}
+
+/* A quarter turn left, so the arc starts at twelve rather than at three. */
+.gauge svg {
+  display: block;
+  transform: rotate(-90deg);
+}
+
+.gaugeValue {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 28px var(--s-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--s-ink);
+}
+
+.gaugeLabel {
+  margin: 0 0 8px;
+  font: 400 15px var(--s-sans);
+  color: var(--s-ink);
+}
+
+.gaugeCount {
+  margin: 0 0 6px;
+  font: 400 14px var(--s-sans);
+  color: oklch(0.45 0.01 260);
+}
+
+.gaugeResets {
+  margin: 0;
+  font: 400 13px var(--s-sans);
+  color: oklch(0.58 0.01 260);
 }
 
 .cardLabel {
@@ -19,24 +67,9 @@
   color: oklch(0.45 0.01 260);
 }
 
-.figure {
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-}
-
-.figureValue {
-  font: 700 46px / 1 var(--s-display);
-  font-variant-numeric: tabular-nums;
-}
-
-.figureNote {
-  font: 400 14px var(--s-sans);
-  color: oklch(0.5 0.01 260);
-}
-
 /* Today's AI usage, in ink: the one card on the page that is about spending. */
 .dark {
+  padding: 32px;
   color: #eef0f6;
   background-color: #0e0e13;
 }
@@ -44,20 +77,15 @@
 .darkHead {
   display: flex;
   gap: 16px;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  margin: 0 0 20px;
+  margin: 0 0 26px;
 }
 
 .darkHead .cardLabel {
   margin: 0;
-  color: oklch(0.78 0.01 260);
-}
-
-.resets {
-  font: 400 13px var(--s-sans);
-  color: oklch(0.7 0.01 260);
-  white-space: nowrap;
+  font-size: 15px;
+  color: oklch(0.86 0.01 260);
 }
 
 .meters {
@@ -73,9 +101,9 @@
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  margin: 0 0 8px;
-  font: 400 13px var(--s-sans);
-  color: oklch(0.78 0.01 260);
+  margin: 0 0 10px;
+  font: 400 14px var(--s-sans);
+  color: oklch(0.66 0.01 260);
 }
 
 .meterHead strong {
@@ -106,37 +134,6 @@
 
 /* ── Counts ──────────────────────────────────────────────────────────────── */
 
-.counts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 26px;
-  justify-content: flex-end;
-  margin: 20px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.count {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  font: 400 14px var(--s-sans);
-  color: oklch(0.42 0.01 260);
-}
-
-.countValue {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 26px;
-  height: 26px;
-  padding: 0 6px;
-  font: 600 12px var(--s-mono);
-  color: var(--s-ink);
-  background-color: oklch(0 0 0 / 0.05);
-  border-radius: 999px;
-}
-
 /* ── Recents ─────────────────────────────────────────────────────────────── */
 
 .recentsHead {
@@ -149,6 +146,13 @@
 
 .recentsHead h2 {
   margin: 0;
+}
+
+.recentsActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
 }
 
 .sort {
@@ -249,16 +253,13 @@
     grid-template-columns: 1fr;
   }
 
-  .card + .card {
-    border-top: 1px solid oklch(0 0 0 / 0.1);
+  .gaugeCard {
+    border-right: none;
+    border-bottom: 1px solid oklch(0 0 0 / 0.1);
   }
 
   .meters {
     grid-template-columns: 1fr;
-  }
-
-  .counts {
-    justify-content: flex-start;
   }
 
   .recentsHead {
@@ -267,7 +268,8 @@
 }
 
 @media (max-width: 560px) {
-  .card {
+  .gaugeCard,
+  .dark {
     padding: 24px;
   }
 }

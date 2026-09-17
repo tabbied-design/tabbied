@@ -56,8 +56,31 @@
   text-transform: uppercase;
 }
 
+/* The plan pill sits on the title's baseline, so it wraps under it rather than
+   squeezing it on a narrow screen. */
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.badge {
+  flex: none;
+  position: relative;
+  top: 7px;
+  padding: 6px 13px;
+  font: 600 12px var(--s-mono);
+  color: #fff;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background-color: var(--s-ink);
+  border-radius: 999px;
+}
+
 .title {
-  margin: 0 0 14px;
+  margin: 0;
   font: 700 52px / 1.05 var(--s-display);
   letter-spacing: -0.02em;
 }

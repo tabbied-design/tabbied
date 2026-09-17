@@ -230,7 +230,6 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
         search={search}
         onSearchChange={onSearchChange}
         onNewPalette={() => editor.openEditor()}
-        paletteCount={savedPalettes.length + PALETTE_LIBRARY.length}
         palettes={savedPalettes}
         library={PALETTE_LIBRARY}
         selectedId={selectedId}

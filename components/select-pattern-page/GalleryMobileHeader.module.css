@@ -17,15 +17,6 @@
   gap: 8px;
 }
 
-/* "PALETTES (437)": the rail's eyebrow, kept on the narrow layout so the
-   shelf below it is named. */
-.eyebrow {
-  font: 400 12px var(--font-plex-mono, ui-monospace), ui-monospace, monospace;
-  color: oklch(0.45 0.01 260);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .spacer {
   flex: 1;
 }

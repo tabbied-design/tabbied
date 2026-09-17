@@ -1,6 +1,6 @@
 /* The gallery's desktop palette rail. Fixed to the viewport under the
    masthead, so it stays put while the design grid scrolls with the document:
-   the eyebrow and search are pinned at the top, "+ New Palette" at the
+   the search is pinned at the top, "+ New Palette" at the
    bottom, and only the palette list between them scrolls. The main column
    offsets itself by the rail's width (see SelectPattern.module.css). */
 .sidebar {
@@ -23,17 +23,6 @@
 .top {
   flex: none;
   padding-right: 6px;
-}
-
-/* "PALETTES (437)": the rail is named once, in the mono the labels use. */
-.eyebrow {
-  display: block;
-  margin-bottom: 16px;
-  padding-left: 12px;
-  font: 400 12px var(--font-plex-mono, ui-monospace), ui-monospace, monospace;
-  color: oklch(0.45 0.01 260);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 
 /* A pill, with the magnifier before the field. */

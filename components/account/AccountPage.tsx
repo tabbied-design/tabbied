@@ -20,12 +20,15 @@ import styles from './account.module.css';
 export default function AccountPage({
   eyebrow = 'Account',
   title,
+  badge,
   lede,
   action,
   children,
 }: {
   eyebrow?: string;
   title: string;
+  /** A pill on the title's baseline - the plan the account is on. */
+  badge?: string;
   lede?: ReactNode;
   /** Something to do, beside the title - the "+ New Studio request" pill. */
   action?: { href: string; label: string };
@@ -58,7 +61,10 @@ export default function AccountPage({
             <div className={styles.head}>
               <div>
                 <p className={styles.eyebrow}>{eyebrow}</p>
-                <h1 className={styles.title}>{title}</h1>
+                <div className={styles.titleRow}>
+                  <h1 className={styles.title}>{title}</h1>
+                  {badge ? <span className={styles.badge}>{badge}</span> : null}
+                </div>
                 {lede ? <p className={styles.lede}>{lede}</p> : null}
               </div>
               {action ? (
