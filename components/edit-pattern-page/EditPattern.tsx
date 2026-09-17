@@ -975,18 +975,16 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       const label = option.id === GRID_OPTION_ID ? 'Grid density' : option.displayName;
 
       return (
-        <div className={styles.layoutRow} key={option.id}>
+        <div className={styles.layoutField} key={option.id}>
           <span className={styles.layoutLabel}>{label}</span>
-          <div className={styles.segmented} role="group" aria-label={label}>
+          <div className={styles.chipRow} role="group" aria-label={label}>
             {options.map((opt) => (
               <button
                 key={opt}
                 type="button"
                 aria-pressed={opt === value}
                 className={
-                  opt === value
-                    ? `${styles.segment} ${styles.segmentActive}`
-                    : styles.segment
+                  opt === value ? `${styles.chip} ${styles.chipActive}` : styles.chip
                 }
                 onClick={() => onChange(opt)}
               >
@@ -1000,7 +998,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
     if (option.type === 'Slider') {
       const step = option.step ?? 1;
-      const formatted = step < 1 ? Number(value).toFixed(1) : String(value);
+      const decimals = (String(step).split('.')[1] ?? '').length;
+      const formatted = decimals ? Number(value).toFixed(decimals) : String(value);
 
       return (
         <div key={option.id} className={styles.sliderBlock}>
@@ -1584,7 +1583,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           <section className={styles.group}>
             <h2 className={styles.groupTitle}>Layout</h2>
 
-            <div className={styles.layoutRow}>
+            <div className={styles.layoutField}>
               <span className={styles.layoutLabel}>Aspect ratio</span>
               <div className={styles.ratioTiles}>
                 {ASPECT_RATIO_IDS.map((id) => renderRatioTile(id))}

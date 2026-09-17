@@ -112,7 +112,6 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   const next = safeNext(useSearchParams().get('next'));
   const providers = useProviders();
 
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [pending, setPending] = useState(false);
@@ -126,7 +125,17 @@ export default function AuthForm({ mode }: { mode: Mode }) {
 
     const result =
       mode === 'sign-up'
-        ? await signUp.email({ name, email, password, callbackURL: '/verify-email/' })
+        ? await signUp.email({
+            // The design's account form is two fields, so there is nothing to
+            // ask a name with. better-auth's user.name is not nullable, so it
+            // is seeded from the address and changed under Settings, which is
+            // where the name lives anyway. `initials` already falls back to the
+            // address, so the avatar reads the same either way.
+            name: email.split('@')[0],
+            email,
+            password,
+            callbackURL: '/verify-email/',
+          })
         : await signIn.email({ email, password });
 
     setPending(false);
@@ -215,20 +224,6 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       ) : null}
 
       <div className={styles.fields}>
-        {mode === 'sign-up' ? (
-          <label className={styles.field}>
-            <span>Name</span>
-            <input
-              type="text"
-              autoComplete="name"
-              placeholder="Your name"
-              required
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </label>
-        ) : null}
-
         <label className={styles.field}>
           <span>Email</span>
           <input

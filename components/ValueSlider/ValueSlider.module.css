@@ -22,9 +22,9 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: 20px;
+  height: 14px;
   /* Inset by half the thumb so it never spills past the track at the extremes. */
-  padding: 0 10px;
+  padding: 0 6px;
   cursor: pointer;
   touch-action: none;
 }
@@ -32,25 +32,24 @@
 .track {
   position: relative;
   width: 100%;
-  height: 4px;
-  border-radius: 4px;
-  background: var(--gray);
+  height: 2px;
+  border-radius: 2px;
+  background: oklch(0 0 0 / 0.18);
 }
 
-/* Base UI sizes/positions the filled portion; we only paint it. */
+/* The design draws one uninterrupted hairline and lets the thumb carry the
+   position, so the filled portion is not painted. Base UI still sizes it. */
 .indicator {
-  border-radius: 4px;
-  background: var(--gray-dark);
+  background: transparent;
 }
 
 .thumb {
   box-sizing: border-box;
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
+  border: none;
   border-radius: 50%;
-  background: #fff;
-  border: 3px solid var(--gray-dark);
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  background: #0e0e13;
 }
 
 .thumb:focus-visible {
