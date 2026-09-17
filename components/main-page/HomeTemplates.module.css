@@ -21,7 +21,7 @@
 }
 
 .eyebrow {
-  font: 300 12px var(--h-mono);
+  font: 400 12px var(--h-mono);
   color: var(--h-cyan);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -46,7 +46,7 @@
   max-width: 520px;
   margin: 0;
   font: 400 16px / 1.6 var(--h-sans);
-  color: oklch(0.55 0.01 260);
+  color: oklch(0.75 0.01 260);
 }
 
 /* ── Rails ───────────────────────────────────────────────────────────────── */

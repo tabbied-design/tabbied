@@ -19,7 +19,7 @@
 }
 
 .eyebrow {
-  font: 300 12px var(--h-mono);
+  font: 400 12px var(--h-mono);
   color: var(--h-teal);
   letter-spacing: 0.16em;
   text-transform: uppercase;

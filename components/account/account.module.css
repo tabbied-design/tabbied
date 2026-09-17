@@ -57,13 +57,13 @@
 }
 
 .title {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   font: 700 52px / 1.05 var(--s-display);
   letter-spacing: -0.02em;
 }
 
 .lede {
-  max-width: 640px;
+  max-width: 620px;
   margin: 0;
   font: 400 16px / 1.6 var(--s-sans);
   color: oklch(0.45 0.01 260);
@@ -523,8 +523,25 @@
   gap: 6px;
   margin: 0;
   padding: 0;
-  font: 400 14px var(--s-sans);
+  font: 400 15px var(--s-sans);
+  color: oklch(0.32 0.01 260);
   list-style: none;
+}
+
+/* The address sits under what it signed in with, not apart from it. */
+.providers + .note {
+  margin-top: 6px;
+  color: oklch(0.5 0.01 260);
+}
+
+/* The one long paragraph on the page, at the design's measure and colour;
+   .quiet elsewhere is a one-line aside and keeps its own. */
+.settings .quiet {
+  max-width: 620px;
+  margin-bottom: 20px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: oklch(0.45 0.01 260);
 }
 
 /* ── Narrow screens ──────────────────────────────────────────────────────── */
