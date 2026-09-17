@@ -1,18 +1,60 @@
 /* The customizer's rail. Sticky beside the canvas on a wide screen, below it
    on a narrow one (see SiteWorkspace.module.css). */
 
+/* A column that fills the sticky wrapper, so the name and the tabs hold their
+   place and the open panel takes the rest. Below 1024px the wrapper is static
+   and grows with its content, so the rail goes back to being an ordinary
+   block. */
 .rail {
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
   padding: 28px 26px 32px;
+  overflow: hidden;
   background-color: #fff;
+}
+
+.nameBlock,
+.tabs {
+  flex: none;
 }
 
 /* The gutters come in where the rail is the width of the phone. Set here and
    not on the wrapper in SiteWorkspace: the wrapper has no padding of its own,
    so a rule there would add to this one rather than replace it. */
+/* Below the two-column breakpoint the wrapper is static and grows with its
+   content, so the rail is an ordinary block again and the list goes back to a
+   capped window rather than trying to fill a height nothing sets. */
+@media (max-width: 1024px) {
+  .rail {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+
+  .panel {
+    display: block;
+  }
+
+  .paletteScroll {
+    min-height: 0;
+  }
+
+  .palettes {
+    height: auto;
+    max-height: 320px;
+  }
+}
+
 @media (max-width: 768px) {
   .rail {
     padding: 22px 18px 40px;
+  }
+
+  .paletteScroll {
+    margin: 0 -18px;
   }
 }
 
@@ -97,7 +139,17 @@
 /* ---- Panels -------------------------------------------------------------- */
 
 .panel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
   margin-bottom: 30px;
+}
+
+.hint,
+.textAction,
+.patternActions {
+  flex: none;
 }
 
 .hint {
@@ -108,24 +160,51 @@
 
 /* ---- Palettes ------------------------------------------------------------ */
 
-/* The list scrolls inside the rail rather than lengthening it: the rail is
-   already sticky beside the canvas, and 438 rows would push the reset action
-   and the tabs out of reach. The fade is the affordance that says so. */
+/* The list takes whatever the tabs and the reset action leave, and scrolls
+   inside that. It was capped at 320px, which left a short window scrolling
+   inside a rail that also scrolled - two scrollbars for one list. The negative
+   margin is the rail's full side padding, so a row's hover and its inked state
+   run to the rail's edges. The fade says the list continues. */
 .paletteScroll {
   position: relative;
-  margin: 0 -12px;
+  flex: 1;
+  min-height: 0;
+  margin: 0 -26px;
 }
 
 .palettes {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  max-height: 320px;
+  height: 100%;
   margin: 0;
   padding: 0 12px 40px;
   overflow-x: hidden;
   overflow-y: auto;
   list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0 0 0 / 0.22) transparent;
+}
+
+.palettes::-webkit-scrollbar {
+  width: 10px;
+}
+
+.palettes::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.palettes::-webkit-scrollbar-thumb {
+  background-color: oklch(0 0 0 / 0.22);
+  /* Drawn inside a transparent border so the thumb reads as a 4px bar with
+     room either side rather than a slab against the rail's edge. */
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+.palettes::-webkit-scrollbar-thumb:hover {
+  background-color: oklch(0 0 0 / 0.38);
 }
 
 .palettes li {
@@ -137,7 +216,7 @@
   gap: 10px;
   align-items: center;
   width: 100%;
-  padding: 7px 34px 7px 12px;
+  padding: 7px 36px 7px 14px;
   font: 400 13px var(--s-sans);
   color: var(--s-ink);
   text-align: left;
