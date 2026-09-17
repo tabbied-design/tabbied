@@ -2,8 +2,9 @@ import Link from 'next/link';
 import StudioSpark from './StudioSpark';
 import styles from './HomeFooter.module.css';
 
-// The dark shell's footer, under the homepage and the template gallery. The
-// content pages keep the shared light Footer in components/Footer.
+// The dark shell's footer, under the homepage, the template gallery and the
+// docs. The legal pages and the 404 keep the shared light Footer in
+// components/Footer.
 //
 // Docs and GitHub live here rather than in the masthead: the bar is for the
 // three destinations, and this is where the artboards put everything else. The

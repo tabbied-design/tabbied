@@ -1,15 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { sectionIndex, type DocsSection } from './sections';
 import styles from './ReactDocs.module.css';
 
-export type DocsSection = { id: string; label: string };
+export type { DocsSection } from './sections';
 
-// "On this page" navigation with a scroll-spy highlight. Renders as a sticky
-// sidebar on desktop and a horizontally scrollable pill row on smaller
-// screens (see ReactDocs.module.css).
+// The contents rail, with a scroll-spy highlight. A sticky column beside the
+// article on desktop; below the desktop breakpoint, a row of pills pinned to
+// the top of the viewport that scrolls sideways (see ReactDocs.module.css).
 export default function DocsNav({ sections }: { sections: DocsSection[] }) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const headings = sections
@@ -43,25 +45,67 @@ export default function DocsNav({ sections }: { sections: DocsSection[] }) {
     return () => observer.disconnect();
   }, [sections]);
 
+  // In the pill row the current section can be off the side of the screen, so
+  // it is scrolled into view as the page moves past it. The row only scrolls
+  // when it overflows, which is how this knows it is the row and not the
+  // column - and the column is never touched.
+  useEffect(() => {
+    const scroller = scrollRef.current;
+
+    if (!scroller || !activeId || scroller.scrollWidth <= scroller.clientWidth) {
+      return;
+    }
+
+    const link = scroller.querySelector<HTMLElement>(`a[href="#${activeId}"]`);
+
+    if (!link) {
+      return;
+    }
+
+    const margin = 24;
+    const start = link.offsetLeft - scroller.offsetLeft;
+    const end = start + link.offsetWidth;
+    const viewStart = scroller.scrollLeft;
+    const viewEnd = viewStart + scroller.clientWidth;
+    let left: number | null = null;
+
+    if (start < viewStart + margin) {
+      left = start - margin;
+    } else if (end > viewEnd - margin) {
+      left = end - scroller.clientWidth + margin;
+    }
+
+    if (left !== null) {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      scroller.scrollTo({ left, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+  }, [activeId]);
+
   return (
     <nav className={styles.docsNav} aria-label="On this page">
       <p className={styles.docsNavTitle}>On this page</p>
-      <ul className={styles.docsNavList}>
-        {sections.map(({ id, label }) => (
-          <li key={id}>
-            <a
-              href={`#${id}`}
-              className={
-                activeId === id
-                  ? `${styles.docsNavLink} ${styles.docsNavLinkActive}`
-                  : styles.docsNavLink
-              }
-            >
-              {label}
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.docsNavScroll} ref={scrollRef}>
+        <ul className={styles.docsNavList}>
+          {sections.map(({ id, label }, i) => (
+            <li key={id}>
+              <a
+                href={`#${id}`}
+                className={
+                  activeId === id
+                    ? `${styles.docsNavLink} ${styles.docsNavLinkActive}`
+                    : styles.docsNavLink
+                }
+                aria-current={activeId === id ? 'location' : undefined}
+              >
+                <span className={styles.docsNavIndex} aria-hidden="true">
+                  {sectionIndex(i + 1)}
+                </span>
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   );
 }

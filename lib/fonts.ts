@@ -9,8 +9,8 @@ import {
  * The mono that carries every label, eyebrow and figure in the 2026 design.
  *
  * Declared here and applied per route rather than in the root layout, so only
- * the routes that use it preload it - the docs and legal pages are still the
- * older light theme and never ask for it. next/font memoises by call site, so
+ * the routes that use it preload it - the legal pages are still the older
+ * light theme and never ask for it. next/font memoises by call site, so
  * importing this from several pages emits one font, not one per page.
  */
 export const plexMono = IBM_Plex_Mono({
@@ -36,8 +36,8 @@ export const plexMono = IBM_Plex_Mono({
  * different enough at 13-18px that running body copy in the display face is
  * visible on the hero paragraph.
  *
- * Applied per route beside `plexMono`, for the same reason: the docs and legal
- * pages are still the older light theme and should not download it.
+ * Applied per route beside `plexMono`, for the same reason: the legal pages
+ * are still the older light theme and should not download it.
  */
 export const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
