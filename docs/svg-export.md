@@ -51,12 +51,15 @@ directly into pages.
 
 ## Pattern support tiers
 
-### 1. No SVG export - `"svgExport": false` (4)
+### 1. No SVG export - `"svgExport": false` (32)
 
-These paint **smooth conic-gradient sweeps**; SVG has no angular-gradient
-primitive, so faithful export is impossible. The editor disables the menu
-item with tooltip *"This design uses effects SVG can't represent."* No
-dialog - the option simply can't be used.
+These paint something the converter has no primitive for, so faithful export
+is impossible. The editor disables the menu item with tooltip *"This design
+uses effects SVG can't represent."* No dialog - the option simply can't be
+used.
+
+The first four paint **smooth conic-gradient sweeps**; SVG has no
+angular-gradient primitive.
 
 | Pattern | Reason |
 | --- | --- |
@@ -64,6 +67,43 @@ dialog - the option simply can't be used.
 | `spectrum` | Smooth multi-color conic sweeps |
 | `pinwheel` | Source *looks* hard-stop, but css-doodle re-rolls each `var()` occurrence independently, so quarters blend smoothly |
 | `wedge` | Two independently-rolled `@pick()` stop positions make most cells a smooth black->transparent conic fade |
+
+The other 28 arrived with the September pattern drop, in two groups.
+
+**Ten throw `SvgExportUnsupportedError`** from the shipped converter. Listed
+with the exact construct, so a future converter change can retire them as a
+group rather than one at a time:
+
+| Pattern | Unsupported construct |
+| --- | --- |
+| `crosslattice`, `dashfield` | `border-style: double` |
+| `isometricweave` | `border-style: dashed` |
+| `diamondember`, `randomrings`, `teardropleaves` | Border on a partially-rounded box |
+| `isometricblocks` | 3D transform (`matrix3d`) |
+| `kilngrid`, `warpribbon` | `color-mix()`, which computes to `color(srgb ...)` |
+| `meridianhatch` | `repeating-conic-gradient` |
+
+**Eighteen export without complaint but fail pixel parity**, which is the
+worse failure of the two: the converter produces a plausible SVG that is not
+what the screen shows, so there is nothing to warn on. They were measured with
+`scripts/svg-parity-sweep.mjs`, and the tier is set from that measurement
+rather than from reading the source:
+
+| Pattern | Divergence from the live render |
+| --- | --- |
+| `wovenkhaki`, `tidewashbands` | 100%, 99.97% |
+| `turbulentsunburst`, `diamondconfetti` | 78.8%, 75.1% |
+| `marbledarcs`, `scatteredgems`, `confettitriangles`, `goldencoil` | 51.9%, 50.9%, 44.9%, 39.5% |
+| `paintscribble`, `cornerbloom`, `squarelabyrinth`, `quartercirclequilt` | 42.2%, 29.9%, 27.9%, 27.6% |
+| `radiantswirl`, `softbubbles`, `driftspiral` | 20.4%, 14.1%, 12.8% |
+| `horizonbands`, `tealboomerang`, `midnightblossoms` | 3.7%, 1.8%, 1.3% |
+
+The last three are near misses rather than broken exports, and are the
+candidates to promote to tier 2 first: the route is the one `fractal`,
+`matryoshka` and `subdivide` took, namely understand the deviation, write it
+down, and give it a `PER_PATTERN_MAX` entry. Until somebody does that work the
+export stays off, because a download that quietly differs from the canvas is
+the thing this whole file exists to prevent.
 
 ### 2. Limited support - `"svgExportNote"` on the definition (11)
 
@@ -102,7 +142,7 @@ design that needs a conditional effect can use it. It is currently unexercised
 by any pattern, which is why `e2e/svg-export.spec.ts` no longer has a case for
 it: there is no fixture to point one at.
 
-### 4. Full support - everything else (239)
+### 4. Full support - everything else (295)
 
 Solid fills, border-radius shapes, per-side borders, clip-paths,
 linear/radial/repeating gradients (incl. `calc(% ± px)` ramps and

@@ -1,0 +1,38 @@
+{
+  "name": "Isometric Weave",
+  "slug": "isometricweave",
+  "galleryOrder": 3011,
+  "description": "A tilted isometric lattice of dashed and dotted outlines in a mixed ink palette, built from one repeating tile viewed at an angle.",
+  "tags": [
+    "diamonds",
+    "concentric",
+    "lattice"
+  ],
+  "mood": [
+    "technical",
+    "bold"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "section-divider",
+    "card-texture"
+  ],
+  "palette": [
+    "#2A0D5F",
+    "#FA4659",
+    "#FEFFE4",
+    "#A3DE83",
+    "#2EB872"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [],
+  "code": {
+    "style": "--rule: ( --wStyle: @p(dashed, solid, dotted); --wColor: @p(var(--color1), var(--color2), var(--color3), var(--color4)); grid-row-end: span @p(2, 4); grid-column-end: span @lp(); margin: -1px; border: 2px @var(--wStyle) @var(--wColor); outline: 2px @var(--wStyle) @var(--wColor); outline-offset: -8px; background: linear-gradient(@r(360deg), @var(--wColor), @var(--wColor)) 50% 50% / calc(8% + 1px) calc(8% + 1px) no-repeat; :after, :before { content: ''; position: absolute; margin: auto; outline: 2px @var(--wStyle) @var(--wColor); outline-offset: 2px; @size: @pn(25%, 50%); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 200x1 / ${width} ${height}; overflow:hidden; box-sizing:border-box; background: var(--color0); } :container { transform: rotateX(45deg) rotate(45deg) scale(2); grid-template-rows: auto; grid-template-columns: repeat(auto-fill, calc(.5em + 1vmin)); grid-auto-rows: calc(.5em + 1vmin); grid-auto-flow: dense; overflow:hidden; }"
+  },
+  "svgExport": false
+}

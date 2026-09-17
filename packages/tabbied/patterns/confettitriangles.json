@@ -1,0 +1,39 @@
+{
+  "name": "Confetti Triangles",
+  "slug": "confettitriangles",
+  "galleryOrder": 3030,
+  "description": "Small triangles scattered in a mixed ink palette, sized as a seamless repeating tile.",
+  "tags": [
+    "triangles",
+    "dots"
+  ],
+  "mood": [
+    "playful",
+    "bold"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper",
+    "section-divider"
+  ],
+  "palette": [
+    "#FFF8E7",
+    "#FF6B9D",
+    "#FFA94D",
+    "#3BCEAC",
+    "#845EC2",
+    "#FFD93D"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [],
+  "code": {
+    "style": "--rule: ( background: @doodle( :doodle { @grid: 1 / 10000px; transform: scale(1.5) rotate(45deg); } background-size: 150px 150px; background-color: var(--color1); background-image: @doodle( @grid: 4 / 100%; :after { content: ''; @size: 100%; position: absolute; background: @doodle( @grid: @r(1,4) / 100%; @shape: triangle; background: @p(var(--color2), var(--color3), var(--color4), var(--color5)); transform: rotate(@p(0, 180deg)) scale(.8); ); } ); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

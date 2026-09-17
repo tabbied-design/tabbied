@@ -46,7 +46,7 @@ Presets are imported individually, so your bundle only includes the designs you 
 
 ### Using Tabbied with an AI coding assistant
 
-The hard part for an assistant isn't the API - it's picking one of the 295
+The hard part for an assistant isn't the API - it's picking one of the 338
 designs, since the slugs (`cleat`, `gnomonwedge`, `karst`) say nothing about
 what they draw.
 
@@ -70,7 +70,7 @@ For assistants without MCP, the same catalog is three static files:
 | File | For |
 | --- | --- |
 | [`/llms.txt`](https://tabbied.com/llms.txt) | The [llms.txt](https://llmstxt.org/) index - a short pointer to everything below. |
-| [`/llms-full.txt`](https://tabbied.com/llms-full.txt) | The full API contract and a one-line entry for all 295 designs (~55 KB). |
+| [`/llms-full.txt`](https://tabbied.com/llms-full.txt) | The full API contract and a one-line entry for all 338 designs (~62 KB). |
 | [`/catalog.json`](https://tabbied.com/catalog.json) | Structured per-design data: palette, options and accepted values, default fit, SVG-export support. Also shipped in the package as `tabbied/catalog.json`. |
 
 All three are generated at build time from the same `patterns/*.json` the

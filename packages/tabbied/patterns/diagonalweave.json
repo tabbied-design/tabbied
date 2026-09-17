@@ -1,0 +1,52 @@
+{
+  "name": "Diagonal Weave",
+  "slug": "diagonalweave",
+  "galleryOrder": 3014,
+  "description": "A tight diagonal crosshatch of hairline strokes in a mixed ink palette, alternating direction tile by tile.",
+  "tags": [
+    "maze",
+    "diagonals",
+    "lines"
+  ],
+  "mood": [
+    "calm",
+    "technical"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "section-divider",
+    "card-texture",
+    "poster"
+  ],
+  "palette": [
+    "#F4EDE1",
+    "#1D2B3A",
+    "#7A3B1E",
+    "#2F5468"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Grid density",
+      "type": "ButtonSelectGroup",
+      "default": "18x18",
+      "options": [
+        "10x10",
+        "14x14",
+        "18x18",
+        "22x22",
+        "26x26"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @size: 2px calc(141.4% + 2px); transform: rotate(@pick(45deg, -45deg)); background: @p(var(--color1), var(--color2), var(--color3)); margin: auto; -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

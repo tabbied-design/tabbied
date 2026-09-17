@@ -44,7 +44,7 @@ claude mcp add tabbied -- npx -y tabbied-mcp
 
 ## The tools
 
-Slugs are opaque (`cleat`, `karst`, `radius`) and there are 295 of them, so the
+Slugs are opaque (`cleat`, `karst`, `radius`) and there are 338 of them, so the
 toolset is built around a single flow: **narrow on metadata, then look.**
 
 - **`search_designs`** filters on a closed vocabulary - `tags` (visible

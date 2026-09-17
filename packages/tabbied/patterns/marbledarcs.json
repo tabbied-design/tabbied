@@ -1,0 +1,54 @@
+{
+  "name": "Marbled Arcs",
+  "slug": "marbledarcs",
+  "galleryOrder": 3024,
+  "description": "Concentric arcs in a mixed ink palette swept together into a single marbled curve.",
+  "tags": [
+    "arcs",
+    "curves",
+    "radial"
+  ],
+  "mood": [
+    "bold",
+    "elegant"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "og-image",
+    "poster"
+  ],
+  "palette": [
+    "#1A1330",
+    "#F9ED69",
+    "#F08A5D",
+    "#B83B5E",
+    "#6A2C70"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Bar count",
+      "type": "ButtonSelectGroup",
+      "default": "100x1",
+      "options": [
+        "60x1",
+        "80x1",
+        "100x1",
+        "120x1",
+        "140x1"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @place-cell: center; border-radius: 50%; transform: rotate(@r(-.5deg, .5deg)); height: 20%; width: calc(100% - (@i - 1) * 100% / @size); background: @pick(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; background: var(--color0); overflow:hidden; box-sizing:border-box; } :container { @size: 125%; transform: scale(3) translateY(15%) translateX(12%) rotate(45deg); background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

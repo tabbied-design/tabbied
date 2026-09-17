@@ -1,0 +1,42 @@
+{
+  "name": "Diamond Confetti",
+  "slug": "diamondconfetti",
+  "galleryOrder": 3009,
+  "description": "Scattered diamonds in a mixed ink palette, overlapping in a loose confetti toss.",
+  "tags": [
+    "diamonds",
+    "chevrons",
+    "zigzags"
+  ],
+  "mood": [
+    "bold",
+    "playful"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper",
+    "section-divider"
+  ],
+  "palette": [
+    "#FAF3E8",
+    "#232323",
+    "#E4572E",
+    "#F3A712",
+    "#3AAFA9",
+    "#2B4162",
+    "#D64550",
+    "#8AC926"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 8,
+    "default": 8
+  },
+  "options": [],
+  "code": {
+    "style": "--rule: ( background: @doodle( :doodle { @grid: 1 / 100000px; transform: rotate(-135deg) scale(2); } background-size: 30px 30px; background-image: @doodle( @grid: 6x1 / calc(100% + 1px); @size: calc(100% - 100% / @size * (@i - 1)); position: absolute; border: 1px solid var(--color1); background: @pn( var(--color2), var(--color3), var(--color4), var(--color5), var(--color6), var(--color7) ); ); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

@@ -6,7 +6,7 @@ Guidance for coding agents working in this repository.
 
 Tabbied: generative patterns built on css-doodle. npm workspaces - the
 Next.js site at the root consumes the `tabbied` package in
-`packages/tabbied/` (framework-free core + React wrapper + 295 pattern
+`packages/tabbied/` (framework-free core + React wrapper + 338 pattern
 presets as JSON in `packages/tabbied/patterns/`, embedded by codegen), the
 `tabbied-mcp` package in `packages/tabbied-mcp/` (the MCP server, shared by
 the site's `/mcp` endpoint and a `tabbied-mcp` stdio bin), and
@@ -611,7 +611,7 @@ Things worth not re-litigating:
 
 `/studio` takes a description of a business and `/studio/results` answers with
 three template sites. Studio answers with what the repo actually has: 77
-finished template sites, each on one of the 295 patterns and one of the 437
+finished template sites, each on one of the 338 patterns and one of the 437
 palettes, each with a real page and a real zip. (The AI tier this was designed
 against - `agent-outputs/20260827-studio-ai-plan.md` - has since landed; see
 below. The matcher was not replaced by it.)
@@ -722,10 +722,10 @@ the template and shows the result.
 - **The bootstrap is repointed at a same-origin bundle, and must be.** The
   package imports `tabbied` from esm.sh, pinned, which is right for a stranger
   who unzipped it years later and wrong for this site drawing its own preview.
-  `scripts/build-preview-runtime.mjs` bundles `hydratePatterns` plus every
-  design any packaged template mounts (231 of them, 88 KB gzipped, cached
-  across previews) into `public/studio/preview-runtime.js`, and the shell
-  rewrites that one script tag. Serving `tabbied/dist` raw instead does not
+  `scripts/build-preview-runtime.mjs` bundles `hydratePatterns` plus the whole
+  catalog (338 designs, 108 KB gzipped, cached across previews) into
+  `public/studio/preview-runtime.js`, and the shell rewrites that one script
+  tag. Serving `tabbied/dist` raw instead does not
   work: `register.js` does a bare `import 'css-doodle'` that no browser
   resolves. The step runs between the two `next build` passes, after the
   packager it reads from - **it is derived from the packaged HTML**, so a
@@ -827,7 +827,7 @@ whatever text Studio wrote, so putting them back is a UI change.
   what lets a field read over a photograph.
 - **The preview runtime carries the whole catalog.** It used to bundle the
   231 designs the packaged templates mount, which was right while a preview
-  could only re-colour a field; a shuffle can swap to any of the 295, and a
+  could only re-colour a field; a shuffle can swap to any of the 338, and a
   design missing from the bundle hydrates to nothing with a console warning.
 - **The download is rebuilt where the changes are.** The customizer's
   Download menu fetches the packaged `<slug>-html.zip`, applies the document
@@ -972,10 +972,49 @@ scale, 0 once `fitRenderToBox` quantised the scale so `cell × scale` is whole
 (rounded up, translate rounded). Both halves are required; the render-box snap
 only exists to give the quantiser a whole cell.
 
+## Importing a pattern authored outside this repo
+
+The September 2026 drop was 60 hand-authored designs from a standalone
+css-doodle editor. 43 shipped as gallery orders 3000-3042; the 17 "river
+study" files did not (see the follow-up issue). Adding a batch from outside
+is mostly mechanical, and four things are not:
+
+- **`var(--x)` in a rule body is fatal, and silently so.** Tabbied mounts a
+  design with `use="var(--rule)"`, so the host computes `--rule` first and
+  substitutes every `var()` inside it. A helper property the host does not
+  define makes the whole declaration invalid at computed-value time, and the
+  design paints *nothing* - no console error, no partial render, just the
+  ground colour. That is why the house rule says a rule-local custom property
+  is read with css-doodle's `@var(--x)`, which resolves at generation time,
+  before CSS sees it. Exactly 12 of the 43 arrived with `var(--x)` and all 12
+  were blank; nothing else in the batch was. An editor that splices the rule
+  in literally, as the source editor did, never hits this, so a design can
+  look finished and still be un-mountable here.
+  Two relatives of the same failure: `@var()` is not expanded inside the
+  `@size` directive, and a `var(--colorN)` past the end of the palette is the
+  same invalid value (`softbubbles` picked `--color5` with five colours).
+- **The grid belongs to `fit: "grid"`, not to the design.** `buildSource`
+  overrides the grid option with tracks derived from the host, so a design
+  that treats cell count as "how many things to scatter" gets whatever number
+  the container implies. Density comes from a `@random(${shapeFrequency})`
+  gate, which is why every design here has one.
+- **Metadata is authored from the render, not the prose.** The drop's own tags
+  were largely out of vocabulary, and mapping them by hand from the
+  descriptions put `stripes, gradients` on a basket weave. Render the previews
+  first, look at them, then tag.
+- **The SVG tier is measured, never assumed, and a throw is the easy half.**
+  10 of the 43 threw, for constructs the converter has no primitive for
+  (double and dashed borders, a border on a partially-rounded box, `matrix3d`,
+  `color-mix()`, `repeating-conic-gradient`). Another 18 exported happily and
+  disagreed with the canvas, from 1.3% of pixels up to all of them. Only
+  `scripts/svg-parity-sweep.mjs` tells those apart, so run it over every new
+  design and set `svgExport: false` on anything that throws or misses the
+  threshold; both groups are tabulated in docs/svg-export.md.
+
 ## Reduced motion - invariant
 
 A pattern moves two ways, and `prefers-reduced-motion` has to stop both. The
-`redrawInterval` timer is the obvious one. The other is that **all 295 designs
+`redrawInterval` timer is the obvious one. The other is that **all 338 designs
 declare a ~400ms `transition`** - the thing that makes a redraw morph rather
 than cut - and it fires on any re-render, including ones nobody asked for:
 `grid` and `cover` re-derive their cell grid on resize, so turning a phone
@@ -1003,14 +1042,21 @@ Two things that look redundant and are not:
 The native SVG exporter (`packages/tabbied/src/core/svgExport.ts`) converts
 rendered patterns to true vector SVG. Rules that must not regress:
 
-- **Support tiers are metadata-driven.** `"svgExport": false` marks the 4
-  designs SVG cannot represent (coil, spectrum, pinwheel, wedge - smooth
-  conic sweeps): the editor *disables* "Download SVG" for them.
-  `"svgExportNote"` on a definition (11 designs) documents limitations -
-  filter-based effects or ≤1px deviations. The option-level form still works
-  but no design uses it: the Shadow toggle that was its only user was removed
-  rather than left as an export trap. Everything else (239) is clean.
+- **Support tiers are metadata-driven.** `"svgExport": false` marks the 32
+  designs SVG cannot represent: the original four smooth conic sweeps (coil,
+  spectrum, pinwheel, wedge) plus 28 from the September drop, and the editor
+  *disables* "Download SVG" for all of them. `"svgExportNote"` on a definition
+  (11 designs) documents limitations - filter-based effects or ≤1px
+  deviations. The option-level form still works but no design uses it: the
+  Shadow toggle that was its only user was removed rather than left as an
+  export trap. Everything else (295) is clean.
   See docs/svg-export.md for the complete lists and reasons.
+- **The tier is measured, not read off the source.** Ten of the drop's
+  designs throw; eighteen more export a plausible SVG that is not what the
+  canvas shows, one of them differing on every pixel, and *nothing warns* -
+  the converter is as confident about those as about a correct export. So a
+  new design's tier comes from running `scripts/svg-parity-sweep.mjs` over it,
+  never from judging its CSS.
 - **Limited exports must warn before downloading**: a right-aligned amber
   `TriangleAlert` on the "Download SVG" item (desktop menu + mobile panel)
   and a Base UI **`Dialog`** (not `AlertDialog` - outside-click must

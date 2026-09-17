@@ -1,0 +1,40 @@
+{
+  "name": "Corner Bloom",
+  "slug": "cornerbloom",
+  "galleryOrder": 3010,
+  "description": "A dense mosaic of solid color blocks, dotted stripes and hairline gradients, built from mismatched rectangles stacked corner to corner.",
+  "tags": [
+    "mosaic",
+    "blocks",
+    "grid"
+  ],
+  "mood": [
+    "bold",
+    "elegant"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "og-image",
+    "poster"
+  ],
+  "palette": [
+    "#1B1035",
+    "#FF6B6B",
+    "#FFD166",
+    "#06D6A0",
+    "#118AB2",
+    "#EF476F"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [],
+  "code": {
+    "style": "--rule: ( --pos: @p(0 0, 0 100%, 100% 0, 100% 100%); --size: calc(@r(100%) / @size * @i) calc(@r(100%) / @size * @i); --pos1: @var(--pos); --pos2: @var(--pos); grid-column-end: span @ri(12); grid-row-end: span @ri(18); background: radial-gradient( circle at @var(--pos), @stripe(transparent, @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)) 1px, transparent) ) @@var(--pos1) / @r(100%) @lr() no-repeat, @m(@r(8), ( linear-gradient(@p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)), @lp) @@var(--pos1) / @var(--size) no-repeat )), radial-gradient( circle at @var(--pos), @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)) @r(70%), #0000 0) @r(100%) @r(100%) / @r(20%, 50%) @lr() @p(round, space), linear-gradient( @r(360deg), @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)) @r(20%), #0000 0) @r(100%) @r(100%) / @r(5px, 10px) @lr() @p(round, space); :after, :before { content: ''; @size: @r(100%); background: @m(@r(2), ( linear-gradient(@p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)), @lp) @@var(--pos2) / @var(--size) no-repeat )), radial-gradient( circle at @var(--pos), @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)) @r(70%), #0000 0) @r(100%) @r(100%) / @r(5%, 25%) @lr() @p(round, space), linear-gradient( @r(360deg), @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)) @r(20%), #0000 0) @r(100%) @r(100%) / @r(2px, 5px) @lr() @p(round, space); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1x120 / ${width} ${height}; grid-template: auto / repeat(auto-fill, @r(2%)); grid-auto-rows: @lr(); grid-auto-flow: dense; grid-gap: 1%; overflow: hidden; box-sizing: border-box; background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); } :container { @size: 105%; overflow: hidden; }"
+  },
+  "svgExport": false
+}

@@ -1,0 +1,37 @@
+{
+  "name": "Woven Khaki",
+  "slug": "wovenkhaki",
+  "galleryOrder": 3002,
+  "description": "A tightly interlaced lattice of concentric rings in warm khaki and ink tones, woven into a dense repeating dot-matrix textile.",
+  "tags": [
+    "circles",
+    "lattice",
+    "grid"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "card-texture",
+    "section-divider",
+    "poster"
+  ],
+  "palette": [
+    "#1F2E36",
+    "#F9DF90",
+    "#1F2E36"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 3
+  },
+  "options": [],
+  "code": {
+    "style": "--rule: ( @content: @svg( viewBox: 0 0 10 10; preserveAspectRatio: xMidYMid slice; --bc: var(--color1); --fc: var(--color2); --size: 10%; defs symbol#circle { viewBox: 0 0 10 10; g { stroke-width: 1; stroke: @p(--fc); fill: @p(--bc); circle*10-1 { cx, cy: @match(n<6, 0 10, 10 0); r: $(1 + @n.match(n<6, -1, -6) * 2); } } } defs pattern#pattern { viewBox: 0 0 10 10; width, height: @p(--size); rect { width, height: 100%; fill: @p(--bc); } use*4 { href: #circle; width, height: 50%; transform: translate(@pn(0, 10 0, 0 10, 10 10)) rotate(@pn(0, 90, -90, 180)); } } rect { width, height: 100%; fill: url(#pattern); } ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

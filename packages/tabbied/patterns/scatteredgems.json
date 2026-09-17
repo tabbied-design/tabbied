@@ -1,0 +1,39 @@
+{
+  "name": "Scattered Gems",
+  "slug": "scatteredgems",
+  "galleryOrder": 3031,
+  "description": "A fine scatter of dots in a mixed ink palette, sized as a seamless repeating tile.",
+  "tags": [
+    "diamonds",
+    "circles",
+    "squares"
+  ],
+  "mood": [
+    "elegant",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper",
+    "section-divider"
+  ],
+  "palette": [
+    "#FFFFFF",
+    "#211a4c",
+    "#293462",
+    "#b2ebf2",
+    "#e84a5f"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [],
+  "code": {
+    "style": "--rule: ( background-color: var(--color1); background-image: @doodle( :doodle { @grid: 1 / 10000px; transform: scale(1.5) rotate(45deg); } background-size: 300px 300px; background-image: @doodle( @grid: 1 / 100%; background: @doodle( @grid: @r(8) / 100%; background: @doodle( @grid: @r(10) / 100%; background: radial-gradient( @stripe.@m2.@p( @m(10, (var(--color2))), @m(10, (var(--color1))), @m(2, (var(--color3))), var(--color4) ) ); ); ); ); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

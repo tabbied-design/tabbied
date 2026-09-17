@@ -1,0 +1,37 @@
+{
+  "name": "Square Labyrinth",
+  "slug": "squarelabyrinth",
+  "galleryOrder": 3007,
+  "description": "A crisp 3x3 field of nested square spirals traced as a single continuous line, like tiny maze targets stamped edge to edge.",
+  "tags": [
+    "maze",
+    "squares",
+    "grid"
+  ],
+  "mood": [
+    "technical",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "section-divider",
+    "card-texture",
+    "poster"
+  ],
+  "palette": [
+    "#F5F0E6",
+    "#161616",
+    "#B8452F"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 2
+  },
+  "options": [],
+  "code": {
+    "style": "--rule: ( background: @svg( viewBox: 0 0 130 130; path { stroke-linecap: square; stroke-width: .6; stroke: @p(var(--color1), var(--color2)); fill: none; d: M 2 3 @p(@p.@reverse(h1 @M19(@pn(v,h) @calc(@pn(-2,-2,2,2)*@n)) h38) @reverse.@p) h2 v-40 h2 @p h2 v-40 h2 @p h2 v-40 h2 v82 h-2 @flip.@p h-2 v40 h-2 @flip.@p h-2 @fliph.@p h-2 v-40 h-2 v40 v2 @p h2 v-40 h2 @p h2 v-40 h2 @p h2 v-40 h2 v40 } ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

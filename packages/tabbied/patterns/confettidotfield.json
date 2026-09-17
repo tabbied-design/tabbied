@@ -1,0 +1,53 @@
+{
+  "name": "Confetti Dot Field",
+  "slug": "confettidotfield",
+  "galleryOrder": 3018,
+  "description": "A scatter of colored rings and dots on charcoal, catching light like a page of confetti under low light.",
+  "tags": [
+    "rings",
+    "concentric",
+    "spirals"
+  ],
+  "mood": [
+    "playful",
+    "bold"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "textile",
+    "card-texture",
+    "og-image"
+  ],
+  "palette": [
+    "#17191D",
+    "#FFF4E0",
+    "#F8B501",
+    "#06ACB5",
+    "#FC3D3C"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Grid density",
+      "type": "ButtonSelectGroup",
+      "default": "8x1",
+      "options": [
+        "6x1",
+        "8x1",
+        "10x1",
+        "12x1",
+        "16x1"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @place-cell: center; @size: 50%; transform-origin: -50% 50%; transform: translateX(100%) rotate(calc(1turn / @size() * @i())); :after, :before { content: ''; position: absolute; } :after { @size: 100% 72%; right: 0%; background: radial-gradient(@pd(var(--color1), var(--color2), var(--color3), var(--color4)) 30%, transparent 0) 2% 50% / 25% 25% no-repeat, radial-gradient(var(--color0) 50%, transparent 0) 5% 50% / 25% 25% no-repeat, radial-gradient(@pd(var(--color1), var(--color2), var(--color3), var(--color4)) 70%, transparent 0) 8% 50% / 30% 30% no-repeat, radial-gradient(var(--color0) 60%, transparent 0) 0% 50% / 50% 50% no-repeat, radial-gradient(@pd(var(--color1), var(--color2), var(--color3), var(--color4)) 70%, transparent 0) } :before { @size: 24%; left: -27%; transform-origin: -100% center; transform: rotate(22deg); background: radial-gradient(ellipse 100% 80%, @pd(var(--color1), var(--color2), var(--color3), var(--color4)) 50%, transparent 0) 20% 50% / 40% 40% no-repeat, radial-gradient(ellipse 100% 80%, var(--color0) 50%, transparent 0) 10% 50% / 80% 80% no-repeat, radial-gradient(ellipse 100% 80%, @pd(var(--color1), var(--color2), var(--color3), var(--color4)) 50%, transparent 0) 0 / 100% 100% no-repeat; } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); background-image: radial-gradient(@p(var(--color1), var(--color2), var(--color3), var(--color4)) 4%, transparent 0), radial-gradient(var(--color0) 8%, transparent 0), radial-gradient(@p(var(--color1), var(--color2), var(--color3), var(--color4)) 10%, transparent 0); overflow:hidden; }"
+  }
+}

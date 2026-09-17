@@ -1,0 +1,63 @@
+{
+  "name": "Soft Bubbles",
+  "slug": "softbubbles",
+  "galleryOrder": 3022,
+  "description": "Translucent, overlapping bubbles in a mixed ink palette, softened into a hazy glow.",
+  "tags": [
+    "circles",
+    "gradients"
+  ],
+  "mood": [
+    "elegant",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "hero-background",
+    "card-texture",
+    "section-divider"
+  ],
+  "palette": [
+    "#1D3557",
+    "#E63946",
+    "#F1FAEE",
+    "#A8DADC",
+    "#457B9D"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Column count",
+      "type": "ButtonSelectGroup",
+      "default": "8x8",
+      "options": [
+        "4x4",
+        "6x6",
+        "8x8",
+        "10x10",
+        "12x12"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 0.15,
+      "min": 0.05,
+      "max": 0.6,
+      "step": 0.05,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @place-cell: @r(5%, 95%) @r(5%, 95%); @random(${shapeFrequency}) { @size: @r(5%, 24%); border-radius: 50%; background: radial-gradient(circle at 35% 35%, @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color4)) 0%, transparent 70%); mix-blend-mode: screen; opacity: @r(.45, .9); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

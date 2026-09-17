@@ -2,7 +2,7 @@
 //
 // This is deliberately not a model call. Everything Studio needs to answer with
 // already exists in the repo - 77 finished template sites, each built on one of
-// the 295 patterns and one of the 437 palettes, each with a real preview page
+// the 338 patterns and one of the 437 palettes, each with a real preview page
 // and a real downloadable zip. So a description is matched against that library
 // rather than used to generate anything, and every result is a site a person can
 // open and download today.

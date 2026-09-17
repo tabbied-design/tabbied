@@ -1,0 +1,51 @@
+{
+  "name": "Kiln Grid",
+  "slug": "kilngrid",
+  "galleryOrder": 3039,
+  "description": "Rotated tiles interlocking into a diamond mosaic, hue blending diagonally between two ink colors like a run of kiln-fired clay.",
+  "tags": [
+    "gradients",
+    "squares"
+  ],
+  "mood": [
+    "organic",
+    "technical"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "poster",
+    "og-image",
+    "wallpaper"
+  ],
+  "palette": [
+    "#1B120A",
+    "#C97C3D",
+    "#7A3B1E"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 3
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Grid density",
+      "type": "ButtonSelectGroup",
+      "default": "12x12",
+      "options": [
+        "8x8",
+        "10x10",
+        "12x12",
+        "14x14",
+        "16x16"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --t: calc((@x + @y) / (@size-col + @size-row - 2)); background: color-mix(in srgb, var(--color1) calc((1 - @var(--t)) * 100%), var(--color2) calc(@var(--t) * 100%)); filter: brightness(calc(0.75 + 0.5 * (@i / @size))); margin: -1px; transform: rotate(45deg) scale(1.42); transition: @r(1.2s) ease; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

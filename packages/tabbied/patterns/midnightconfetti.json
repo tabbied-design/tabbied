@@ -1,0 +1,58 @@
+{
+  "name": "Midnight Confetti",
+  "slug": "midnightconfetti",
+  "galleryOrder": 3000,
+  "description": "A field of jewel-toned confetti shapes scattered across a near-black ground, softening on every refresh.",
+  "tags": [
+    "petals",
+    "leaves",
+    "dots"
+  ],
+  "mood": [
+    "elegant",
+    "playful"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "hero-background",
+    "og-image"
+  ],
+  "palette": [
+    "#0A0C27"
+  ],
+  "colors": {
+    "min": 1,
+    "max": 1,
+    "default": 1
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Grid density",
+      "type": "ButtonSelectGroup",
+      "default": "18",
+      "options": [
+        "10",
+        "14",
+        "18",
+        "22",
+        "28"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( visibility: hidden; @random(${shapeFrequency}) { visibility: visible; } transition: .2s @r(.6s); border-radius: @pick(100% 0, 0 100%); transform: scale(@r(.25, 1.25)); background: hsla(calc(240 - 6 * @x * @y), 70%, 68%, @r.8); );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

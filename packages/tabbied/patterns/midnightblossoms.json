@@ -1,0 +1,50 @@
+{
+  "name": "Midnight Blossoms",
+  "slug": "midnightblossoms",
+  "galleryOrder": 3033,
+  "description": "Small four-petal blossoms scattered in a mixed ink palette.",
+  "tags": [
+    "petals",
+    "dots"
+  ],
+  "mood": [
+    "calm",
+    "elegant"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper",
+    "section-divider"
+  ],
+  "palette": [
+    "#FFFFFF",
+    "#293D56",
+    "#ff6f6f",
+    "#fff46e",
+    "#f6f6f6",
+    "#a58bff"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( background-size: 300px 300px; background-color: var(--color1); background-image: @doodle( @grid: 16x1 / 100%; @place-cell: center; @size: 100%; visibility: hidden; @random(${shapeFrequency}) { visibility: visible; } background-image: @doodle( @grid: 1 / 80px; background: @p(var(--color2), var(--color3), var(--color4), var(--color5)); transform: rotate(@r(360deg)) scale(@r(.5, 1)); clip-path: @shape( split: 240; y: sin(2t) * sin(4t) * cos(5t); x: cos(2t) * cos(5t) * sin(t); ); ); background-position: @pn( -5px 10px, 65px 25px, 80px 90px, 110px -40px, -40px 120px, 40px 240px, 90px 180px, 150px 190px, 160px 40px, 220px 60px, 240px 240px, 210px 160px, 20px 150px, 160px 100px ); z-index: 2; @nth(15, 16) { z-index: 1; background: @m(90, ( radial-gradient( @p(var(--color2), var(--color3), var(--color4), var(--color5)) @r(50%), transparent 0 ) @r(100%) @r(100%) / @r(10px) @lr no-repeat )); } ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

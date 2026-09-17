@@ -5,7 +5,7 @@
 // is 384 KB and carries each design's description, options and metadata,
 // none of which "Shuffle patterns" needs. The site workspace page reads this
 // in its server component and passes the reduced list down, a few kilobytes
-// for 295 designs.
+// for 338 designs.
 import catalog from 'tabbied/catalog.json';
 
 export type DesignDensity = 'sparse' | 'medium' | 'dense';

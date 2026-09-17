@@ -173,7 +173,7 @@ sources and prompts, pattern configuration, and the brand palette (read back
 off the root's inline `--brand-*`). Nothing is hand-written, so a spec cannot
 describe a page that no longer exists. Option ranges are copied in from
 `packages/tabbied/catalog.json`, which is what lets the engine validate a
-slider value and an editor build a typed control without loading 295 pattern
+slider value and an editor build a typed control without loading 338 pattern
 definitions.
 
 **The generator is also the build gate.** An annotation that resolves to

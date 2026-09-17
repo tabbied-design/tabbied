@@ -1,7 +1,7 @@
 # tabbied-mcp
 
 An [MCP](https://modelcontextprotocol.io) server for
-[Tabbied](https://tabbied.com): search 295 generative pattern designs, look at
+[Tabbied](https://tabbied.com): search 338 generative pattern designs, look at
 them, and render them to SVG or PNG - from Claude Code, Claude Desktop, Cursor,
 or any other MCP client.
 
