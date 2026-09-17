@@ -265,11 +265,8 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
         <div className={styles.mainHeader}>
           <h1 className={styles.title}>Pick a pattern</h1>
           <p className={styles.intro}>
-            <strong>
-              {filtered.length}{' '}
-              {filtered.length === 1 ? 'pattern' : 'patterns'}
-            </strong>
-            , each drawn live in your browser. Pick a color palette to recolor
+            {filtered.length} {filtered.length === 1 ? 'pattern' : 'patterns'},
+            each drawn live in your browser. Pick a color palette to recolor
             the library (edit its colors if you want your own), then choose
             a pattern to customize.
           </p>

@@ -8,12 +8,13 @@ import {
   Check,
   ChevronRight,
   CodeXml,
-  Expand,
   FileCode,
   ImageDown,
   ImagePlus,
   Info,
   Link as LinkIcon,
+  Maximize2,
+  Minimize2,
   Minus,
   Plus,
   TriangleAlert,
@@ -330,10 +331,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     useState<AspectRatioId>(aspectRatioFromQuery);
   const [seed, setSeed] = useState(() => searchParams.get('seed') ?? '0000');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [viewport, setViewport] = useState<{
-    width: number;
-    height: number;
-  } | null>(null);
   const [previewSize, setPreviewSize] = useState<{
     width: number;
     height: number;
@@ -438,15 +435,18 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCustomPalette]);
 
+  // Escape came free with the dialog; expanding in place has to bind it.
   useEffect(() => {
-    const updateViewport = () =>
-      setViewport({ width: window.innerWidth, height: window.innerHeight });
+    if (!isExpanded) return;
 
-    updateViewport();
-    window.addEventListener('resize', updateViewport);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsExpanded(false);
+    };
 
-    return () => window.removeEventListener('resize', updateViewport);
-  }, []);
+    window.addEventListener('keydown', onKey);
+
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isExpanded]);
 
   // The object URL holds the file's bytes until it is revoked.
   useEffect(
@@ -901,12 +901,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   const bgIsTransparent = isTransparentHex(palette[0] ?? '');
 
-  const expanded = fitToBox(
-    aspectRatio,
-    (viewport?.width ?? 1200) * 0.9,
-    (viewport?.height ?? 800) * 0.9
-  );
-
   // ---- Grouped inspector controls ----
 
   // One merged chip list: custom palettes first, then the read-only library.
@@ -1243,79 +1237,65 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         </Dialog.Portal>
       </Dialog.Root>
 
-      <main className={styles.editPatternSection}>
-        <Dialog.Root open={isExpanded} onOpenChange={setIsExpanded}>
-          <div
-            ref={previewRef}
-            className={
-              previewIsTransparent
-                ? `${styles.previewWrapper} ${styles.previewTransparent}`
-                : styles.previewWrapper
-            }
-          >
-            <Dialog.Trigger
-              className={styles.expandButton}
-              aria-label="Expand pattern"
-            >
-              <Expand size={18} />
-            </Dialog.Trigger>
-
-            <figure className={styles.stage}>
-              <div className={styles.doodleFrame} style={imageStyle}>
-                <TabbiedPattern
-                  ref={doodleRef}
-                  {...patternProps}
-                  fit="fixed"
-                  width={width}
-                  height={height}
-                  decorative={false}
-                />
-              </div>
-
-              {/* The pattern is named under it rather than in a header bar, so
-                  the stage reads as a plate with its caption. */}
-              <figcaption className={styles.stageCaption}>
-                <span className={styles.stageName}>{pattern.name}</span>
-                <span className={styles.stageMeta}>
-                  {captionParts.join(' \u00B7 ')}
-                </span>
-              </figcaption>
-            </figure>
-          </div>
-
-          <Dialog.Portal>
-            <Dialog.Backdrop className={styles.dialogBackdrop} />
-            <Dialog.Popup className={styles.dialogPopup}>
-              <Dialog.Title className={styles.srOnly}>
-                {pattern.name}
-              </Dialog.Title>
-              <Dialog.Close
-                className={styles.dialogClose}
-                aria-label="Close expanded view"
-              >
-                <X size={24} />
-              </Dialog.Close>
-              <div
-                className={
-                  previewIsTransparent
-                    ? `${styles.dialogDoodle} ${styles.previewTransparent}`
-                    : styles.dialogDoodle
+      <main
+        className={
+          isExpanded
+            ? `${styles.editPatternSection} ${styles.editPatternSectionExpanded}`
+            : styles.editPatternSection
+        }
+      >
+        <div
+          ref={previewRef}
+          className={
+            previewIsTransparent
+              ? `${styles.previewWrapper} ${styles.previewTransparent}`
+              : styles.previewWrapper
+          }
+          // Expanded, the stage is the whole editor, so anywhere that is not
+          // the plate is "outside" and dismisses it - the affordance a backdrop
+          // used to provide. Guarded on the target being this element so a
+          // click on the plate, the caption or the toggle does not close it.
+          onClick={
+            isExpanded
+              ? (event) => {
+                  if (event.target === event.currentTarget) setIsExpanded(false);
                 }
-                style={imageStyle ?? { backgroundColor: previewBackground }}
-              >
-                {isExpanded && (
-                  <TabbiedPattern
-                    {...patternProps}
-                    fit="fixed"
-                    width={expanded.width}
-                    height={expanded.height}
-                    decorative={false}
-                  />
-                )}
-              </div>
-            </Dialog.Popup>
-          </Dialog.Portal>
-        </Dialog.Root>
+              : undefined
+          }
+        >
+          <button
+            type="button"
+            className={styles.expandButton}
+            onClick={() => setIsExpanded((open) => !open)}
+            aria-pressed={isExpanded}
+            aria-label={isExpanded ? 'Collapse pattern' : 'Expand pattern'}
+            title={isExpanded ? 'Collapse pattern' : 'Expand pattern'}
+          >
+            {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+          </button>
+
+          <figure className={styles.stage}>
+            <div className={styles.doodleFrame} style={imageStyle}>
+              <TabbiedPattern
+                ref={doodleRef}
+                {...patternProps}
+                fit="fixed"
+                width={width}
+                height={height}
+                decorative={false}
+              />
+            </div>
+
+            {/* The pattern is named under it rather than in a header bar, so
+                the stage reads as a plate with its caption. */}
+            <figcaption className={styles.stageCaption}>
+              <span className={styles.stageName}>{pattern.name}</span>
+              <span className={styles.stageMeta}>
+                {captionParts.join(' \u00B7 ')}
+              </span>
+            </figcaption>
+          </figure>
+        </div>
 
         <div className={styles.panel}>
           {browserOpen ? (

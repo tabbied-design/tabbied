@@ -51,11 +51,6 @@
   color: oklch(0.45 0.01 260);
 }
 
-.intro strong {
-  font-weight: 700;
-  color: #0e0e13;
-}
-
 @media (max-width: 1024.98px) {
   .mainHeader {
     grid-template-columns: repeat(3, minmax(0, 1fr));
