@@ -436,13 +436,18 @@ test.describe('Tabbied site', () => {
       .toContain('blob:');
     // The swatch and the transparent toggle stand down while a picture is set.
     await expect(page.locator('input[type="color"]')).toHaveCount(5);
-    await expect(page.getByRole('button', { name: 'remove image' })).toBeVisible();
+    // The control that clears it is an X beside the caption, named in full:
+    // the caption row wrapped onto two lines when it read "remove image".
+    const removeImage = page.getByRole('button', {
+      name: 'Remove the background image',
+    });
+    await expect(removeImage).toBeVisible();
     await expect
       .poll(() => new URL(page.url()).searchParams.getAll('palette')[0])
       .toMatch(/00$/);
 
     // Removing it brings the colour back exactly as it was.
-    await page.getByRole('button', { name: 'remove image' }).click();
+    await removeImage.click();
     await expect(page.locator('input[type="color"]')).toHaveCount(6);
     await expect
       .poll(() => stageFrame.evaluate((el) => getComputedStyle(el).backgroundImage))
@@ -501,36 +506,37 @@ test.describe('Tabbied site', () => {
 test.describe('Tabbied site (mobile viewport)', () => {
   test.use({ viewport: { width: 390, height: 664 } });
 
-  test('the editor header opens inline shuffle / export panels (7d)', async ({
+  test('the editor header opens the shuffle menu and the export panel (7d)', async ({
     page,
   }) => {
     await page.goto('/patterns/radius?seed=0000');
 
-    // The compact 7d header replaces the split buttons with icon buttons that
-    // open inline panels in the editing region (not run the action directly).
+    // The compact 7d header replaces the split buttons with two icon buttons.
     const shuffleBtn = page.getByRole('button', { name: 'Shuffle options' });
     const exportBtn = page.getByRole('button', { name: 'Export options' });
     await expect(shuffleBtn).toBeVisible({ timeout: 15000 });
     await expect(exportBtn).toBeVisible();
 
-    // Opening the shuffle panel reveals the scope radios and a run button; the
-    // run button (labelled with the current scope) reseeds the pattern.
+    // The scopes are a dropdown under the button that opened them, as on the
+    // desktop, rather than a sheet at the foot of the screen. Choosing one
+    // makes it the default and runs it in the same move, so picking the
+    // layout scope reseeds the pattern.
     await shuffleBtn.click();
-    await expect(
-      page.getByRole('radio', { name: 'Shuffle layout' })
-    ).toBeVisible();
-    await page.getByRole('button', { name: 'Shuffle', exact: true }).click();
+    const layout = page.getByRole('menuitem', { name: 'Shuffle layout' });
+    await expect(layout).toBeVisible();
+    await layout.click();
     await expect(page).not.toHaveURL(/seed=0000/);
 
-    // The back arrow closes the open panel before it would leave the editor.
-    await page.getByRole('link', { name: 'Back to editor' }).click();
-    await expect(page.getByRole('heading', { name: 'Colors' })).toBeVisible();
-
-    // The export panel lists the three export actions.
+    // Export stays a panel: its rows are long and one of them opens a dialog.
     await exportBtn.click();
     await expect(
       page.getByRole('button', { name: 'Copy React component' })
     ).toBeVisible();
+
+    // With that panel open, the back arrow closes it rather than leaving the
+    // editor, and the rail comes back.
+    await page.getByRole('link', { name: 'Back to editor' }).click();
+    await expect(page.getByRole('heading', { name: 'Colors' })).toBeVisible();
   });
 
   test('the gallery shows palettes as a horizontal chip shelf (7a)', async ({
@@ -685,7 +691,7 @@ test.describe('Template preview and customize', () => {
     await expect(page.getByRole('link', { name: 'All templates' })).toHaveAttribute('href', '/templates/');
 
     await page.getByRole('button', { name: 'Download' }).click();
-    await expect(page.getByRole('menuitem', { name: /Static HTML and CSS/ })).toHaveAttribute(
+    await expect(page.getByRole('menuitem', { name: /Static HTML & CSS/ })).toHaveAttribute(
       'href',
       '/downloads/verdant-html.zip'
     );
