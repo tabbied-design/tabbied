@@ -47,7 +47,6 @@ import PaletteBrowser from 'components/palette/PaletteBrowser';
 import PaletteListRow from 'components/palette/PaletteListRow';
 import { usePaletteReveal } from 'components/palette/usePaletteReveal';
 import {
-  SHUFFLE_ACTIONS,
   SHUFFLE_STORAGE_KEY,
   isShuffleAction,
   type ShuffleAction,
@@ -209,7 +208,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   // Mobile (7d) inline panel shown in the editing region below the preview.
   // 'palettes' reuses the shared browser (browserOpen).
-  const [mobilePanel, setMobilePanel] = useState<'shuffle' | 'export' | null>(
+  const [mobilePanel, setMobilePanel] = useState<'export' | null>(
     null
   );
 
@@ -573,10 +572,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   };
 
   // ---- Mobile (7d) inline panels ----
-  const openShufflePanel = () => {
-    setBrowserOpen(false);
-    setMobilePanel('shuffle');
-  };
   const openExportPanel = () => {
     setBrowserOpen(false);
     setMobilePanel('export');
@@ -1017,73 +1012,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     return null;
   };
 
-  // Mobile (7d): the inline "Shuffle" panel - scope radios plus a run button
-  // labelled with the current scope. Selecting a scope persists it; the run
-  // button applies it (repeatedly, for a fresh arrangement each tap).
-  const renderShufflePanel = () => {
-    const current =
-      SHUFFLE_ACTIONS.find((a) => a.id === shuffleAction) ?? SHUFFLE_ACTIONS[0];
-    const RunIcon = current.Icon;
-
-    return (
-      <div className={styles.mobilePanel}>
-        <div className={styles.mobilePanelHead}>
-          <span className={styles.mobilePanelTitle}>Shuffle</span>
-          <button
-            type="button"
-            className={styles.mobilePanelBack}
-            onClick={closeMobilePanel}
-          >
-            <ArrowLeft size={14} /> Back to editor
-          </button>
-        </div>
-
-        <div
-          className={styles.scopeGroup}
-          role="radiogroup"
-          aria-label="Shuffle scope"
-        >
-          {SHUFFLE_ACTIONS.map(({ id, label, Icon }) => {
-            const active = id === shuffleAction;
-
-            return (
-              <button
-                key={id}
-                type="button"
-                role="radio"
-                aria-checked={active}
-                className={
-                  active
-                    ? `${styles.scopeOption} ${styles.scopeOptionActive}`
-                    : styles.scopeOption
-                }
-                onClick={() => selectShuffleAction(id)}
-              >
-                <Icon className={styles.scopeIcon} size={16} />
-                <span className={styles.scopeLabel}>{label}</span>
-                {active && <Check size={15} aria-hidden="true" />}
-              </button>
-            );
-          })}
-        </div>
-
-        <button
-          type="button"
-          className={styles.runShuffle}
-          onClick={() => runShuffle(shuffleAction)}
-        >
-          <RunIcon size={16} /> {current.label}
-        </button>
-        <p className={styles.runHint}>
-          Tap again for a new arrangement - the preview above updates live.
-        </p>
-      </div>
-    );
-  };
-
-  // Mobile (7d): the inline "Export" panel - the same three actions as the
-  // desktop dropdown, each returning to the editor once fired (a toast reports
-  // the result).
+  // Mobile (7d): the inline "Export" panel. Export stays a panel rather than a
+  // dropdown because its rows are long and one of them opens a dialog.
   const renderExportPanel = () => (
     <div className={styles.mobilePanel}>
       <div className={styles.mobilePanelHead}>
@@ -1181,7 +1111,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         hasBackgroundImage={backgroundImage !== null}
         mobile={isMobile}
         mobilePanelOpen={mobilePanelOpen}
-        onOpenShufflePanel={openShufflePanel}
         onOpenExportPanel={openExportPanel}
         onCloseMobilePanel={closeMobilePanel}
       />
@@ -1311,8 +1240,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
               onNewPalette={() => editor.openEditor()}
               onClose={closeMobilePanel}
             />
-          ) : isMobile && mobilePanel === 'shuffle' ? (
-            <div className={styles.panelScroll}>{renderShufflePanel()}</div>
           ) : isMobile && mobilePanel === 'export' ? (
             <div className={styles.panelScroll}>{renderExportPanel()}</div>
           ) : (

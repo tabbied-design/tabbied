@@ -177,6 +177,12 @@
   color: #e8a13c;
 }
 
+/* The tick on the shuffle scope that is the current default. */
+.menuItem svg.menuItemCheck {
+  margin-left: auto;
+  color: #0e0e13;
+}
+
 /* The background-image footnote. Below a rule rather than in the list, because
    it is a note about the items above it and must not read as a fifth one. */
 .menuNote {
@@ -204,6 +210,13 @@
 .headerMobile {
   gap: 8px;
   padding: 12px 16px;
+}
+
+/* The two round actions read as one control at the bar's own 8px gap, which is
+   the spacing between a circle and the label beside it, not between two
+   separate buttons. */
+.headerMobile .iconCircle + .iconCircle {
+  margin-left: 6px;
 }
 
 .iconCircle {
