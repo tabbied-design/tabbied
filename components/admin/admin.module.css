@@ -296,7 +296,7 @@
 }
 
 .pillGlyph {
-  font-size: 9px;
+  flex: none;
   opacity: 0.55;
 }
 

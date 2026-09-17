@@ -11,6 +11,7 @@
 // each tagged with which kind it was.
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { ChevronDown } from 'lucide-react';
 import type { GenerationSummary, SiteSummary } from 'lib/studioDocument';
 import { apiFetch } from 'lib/apiFetch';
 import AccountPage from './AccountPage';
@@ -221,9 +222,7 @@ export default function AccountOverview() {
           aria-label={newestFirst ? 'Sorted newest first. Show oldest first' : 'Sorted oldest first. Show newest first'}
         >
           <span>{newestFirst ? 'Newest first' : 'Oldest first'}</span>
-          <span className={styles.sortGlyph} aria-hidden="true">
-            &#9662;
-          </span>
+          <ChevronDown className={styles.sortGlyph} size={14} aria-hidden="true" />
         </button>
       </div>
 

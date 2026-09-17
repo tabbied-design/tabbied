@@ -10,6 +10,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
+import { ChevronDown } from 'lucide-react';
 import { initials } from 'components/account/AccountHeader';
 import { signOut, useSessionUser } from 'lib/authClient';
 import styles from './CustomizerBar.module.css';
@@ -82,16 +83,14 @@ export default function CustomizerBar({
         <Menu.Root>
           <Menu.Trigger className={styles.download} disabled={downloading}>
             {downloading ? 'Preparing...' : 'Download'}
-            <span className={styles.chevron} aria-hidden="true">
-              &#9662;
-            </span>
+            <ChevronDown className={styles.chevron} size={15} aria-hidden="true" />
           </Menu.Trigger>
           <Menu.Portal>
             <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
               <Menu.Popup className={styles.menu}>
                 <div className={styles.menuHead}>Includes your colours and patterns</div>
                 <Menu.Item className={styles.option} onClick={onDownloadHtml}>
-                  <span className={styles.optionTitle}>Static HTML and CSS</span>
+                  <span className={styles.optionTitle}>Static HTML &amp; CSS</span>
                   <span className={styles.optionNote}>One folder, drop on any host</span>
                 </Menu.Item>
                 <Menu.Separator className={styles.menuRule} />
