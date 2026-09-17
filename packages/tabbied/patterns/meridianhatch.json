@@ -27,6 +27,7 @@
     "max": 4,
     "default": 4
   },
+  "defaultAspectRatio": "1:1",
   "options": [],
   "code": {
     "style": "--rule: ( border-radius: 50%; background: repeating-conic-gradient( from @r(0deg, 20deg), @p(var(--color1), var(--color2), var(--color3)) 0deg 2.4deg, var(--color0) 2.4deg 7.5deg ); -webkit-transition: ease 450ms; transition: ease 450ms; );",

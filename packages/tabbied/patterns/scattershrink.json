@@ -28,6 +28,7 @@
     "max": 4,
     "default": 3
   },
+  "defaultAspectRatio": "1:1",
   "options": [
     {
       "id": "grid",
