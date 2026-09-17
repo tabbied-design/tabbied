@@ -36,6 +36,7 @@
 
   .panel {
     display: block;
+    overflow: visible;
   }
 
   .paletteScroll {
@@ -138,12 +139,22 @@
 
 /* ---- Panels -------------------------------------------------------------- */
 
+/* The open tab takes what the name and the tabs leave, and scrolls - the rail
+   itself does not, so a panel taller than it would otherwise be clipped with no
+   way to reach the rest. */
 .panel {
   display: flex;
   flex: 1;
   flex-direction: column;
   min-height: 0;
   margin-bottom: 30px;
+  overflow-y: auto;
+}
+
+/* Except Colours, where the palette list is the long part and scrolls inside
+   the panel; a scroll here as well would put one inside the other. */
+.panelColours {
+  overflow: hidden;
 }
 
 .hint,
