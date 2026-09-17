@@ -468,11 +468,33 @@ quietly carries residue.
 treatment. The homepage brings its own token set
 (`components/main-page/home.module.css`, inherited by every `Home*` section as
 `var(--h-...)`) and the dark `HomeFooter`; the template gallery wraps itself in
-the same tokens so its masthead, cards and footer read from one set. Every
-other route renders the masthead in its light tone and `components/Footer`.
-Nothing here is global - the tokens sit on the page wrapper, not on `:root` -
-so restyling the homepage cannot reach `/patterns` or `/docs`. The three
+the same tokens so its masthead, cards and footer read from one set, and so
+does `/docs/react`, as a light section of that shell (below). Every other
+route renders the masthead in its light tone; the legal pages and the 404 are
+the older light theme and end in `components/Footer`. Nothing here is global:
+the tokens sit on the page wrapper, not on `:root`, so restyling the homepage
+cannot reach `/patterns`, only the pages that opt into the set. The three
 how-it-works steps are hidden below 768px, as the artboard hides them.
+
+**The docs page is the design's light section, not a third theme.**
+`app/docs/react` wraps itself in `home.home` plus the two fonts, draws the
+masthead in its light tone over a white `.paper` wrapper, and ends in
+`HomeFooter`, which brings its own dark ground; the light tokens the homepage
+declares for its inset sections (`--h-paper`, `--h-ink`, `--h-teal`, the
+paper rule and well) are what the article reads, and the code panels are the
+dark shell turned back on (`--h-bg`, `--h-card`, mint for strings, cyan for
+keywords). Two things about it:
+
+- **The code colouring is a tokenizer, not a highlighter**
+  (`components/react-docs-page/highlight.ts`): comments, strings, a short
+  keyword list and JSX tag openings, scanned left to right so an apostrophe
+  in a comment never opens a string. It runs at build time over the page's
+  own samples and leaves anything it is unsure of plain. Do not reach for a
+  grammar library to colour a dozen snippets.
+- **The section numbers come from the `SECTIONS` array**, in the contents
+  rail and above each heading alike, so reordering a section renumbers both;
+  a heading that is not in the array has no index and no rail entry, which is
+  the cue that it was forgotten.
 
 Three things worth not re-litigating:
 

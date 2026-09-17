@@ -1,330 +1,469 @@
-/* Docs layout: sticky "On this page" sidebar + article column on desktop,
-   stacked with a scrollable pill nav on smaller screens. A monospace stack is
-   scoped to the docs subtree so code samples and inline tokens share one font
-   without touching the global typography. */
-.docs {
-  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
-    'Liberation Mono', monospace;
-  display: grid;
-  grid-template-columns: 15rem minmax(0, 1fr);
-  gap: 3rem;
-  align-items: start;
+/* The docs page (/docs/react): a light section of the homepage's shell.
+
+   The page wraps itself in the homepage tokens (home.module.css, `--h-...`)
+   the way the template gallery does, so the masthead, the prose, the code
+   panels and the footer read from one set: ink on paper for the article, and
+   the dark shell turned back on for the code. The fonts are the design's
+   three, by role: Proxima Nova for headings, IBM Plex Sans for copy, and
+   IBM Plex Mono for every label, index and token. Nothing here is global. */
+
+.page {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (max-width: 991.98px) {
-  .docs {
-    display: block;
-  }
+/* The light ground under the masthead and the article. The footer brings its
+   own dark one, so the two meet with no seam to draw. */
+.paper {
+  position: relative;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--h-ink);
+  background-color: var(--h-paper);
+}
+
+.main {
+  padding-bottom: 120px;
+}
+
+.inner {
+  max-width: var(--h-max);
+  margin: 0 auto;
+  padding-right: var(--h-pad);
+  padding-left: var(--h-pad);
 }
 
 /* ---- Page header ---- */
 
-.docsHeader {
-  margin-bottom: 1rem;
+/* The title on the left half, the lede and the package's particulars on the
+   right, bottom-aligned - the library page's header, on a page that is read
+   rather than browsed. */
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: end;
+  padding: 72px 0 48px;
+  border-bottom: 1px solid var(--h-paper-rule);
 }
 
 .eyebrow {
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  margin: 0 0 18px;
+  font: 400 12px var(--h-mono);
+  color: var(--h-teal);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--blue-medium);
 }
 
-.pageTitle {
-  margin-top: 0.25rem;
-  color: var(--gray-dark);
-  font-size: 2.33rem;
-  font-weight: 600;
-  line-height: 1.25;
+.title {
+  margin: 0;
+  font: 700 56px / 1.02 var(--h-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
-.intro {
-  margin-top: 1rem;
-  font-size: 1.25rem;
-  color: var(--gray-medium);
-  max-width: 44rem;
+.lede {
+  max-width: 520px;
+  margin: 0;
+  font: 400 16px / 1.65 var(--h-sans);
+  color: var(--h-ink-muted);
 }
 
-.headerMeta {
+.lede a {
+  color: var(--h-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lede a:hover {
+  color: var(--h-teal);
+}
+
+/* The version, the licence, and the two places the package lives: a row of
+   the design's mono pills. The facts are plain chips; the destinations take
+   the ink and a hairline that darkens on hover. */
+.meta {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: 1.25rem;
+  gap: 8px;
+  margin-top: 22px;
 }
 
-.metaLink {
+.chip,
+.chipLink {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.3rem 0.75rem;
-  border: 1px solid var(--gray-light);
-  border-radius: 2rem;
-  font-size: 0.9rem;
-  color: var(--gray-medium);
+  height: 32px;
+  padding: 0 14px;
+  font: 400 11px var(--h-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 999px;
 }
 
-.metaLink:hover {
-  border-color: var(--gray);
-  color: var(--gray-dark);
+.chip {
+  color: var(--h-ink-dim);
 }
 
-.metaBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.3rem 0.75rem;
-  border-radius: 2rem;
-  background-color: var(--gray-ultra-light);
-  border: 1px solid var(--gray-light);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--gray-medium);
+.chipLink {
+  color: var(--h-ink);
+  transition: border-color 150ms ease;
 }
 
-/* ---- Sidebar nav ---- */
+.chipLink:hover {
+  color: var(--h-ink);
+  border-color: var(--h-ink);
+}
+
+/* ---- The two columns ---- */
+
+.docs {
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
+  padding-top: 56px;
+}
+
+/* ---- Contents rail ---- */
 
 .docsNav {
   position: sticky;
-  top: 2rem;
-  font-size: 0.95rem;
+  top: 32px;
 }
 
 .docsNavTitle {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  margin: 0 0 16px;
+  font: 400 11px var(--h-mono);
+  color: var(--h-teal);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gray);
-  margin-bottom: 0.75rem;
 }
 
 .docsNavList {
   display: flex;
   flex-direction: column;
-  border-left: 2px solid var(--gray-ultra-light);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid oklch(0 0 0 / 0.1);
 }
 
+/* Each entry is its index and its name, in the mono the masthead's
+   destinations wear; the current one takes the ink and the rule beside it. */
 .docsNavLink {
-  display: block;
-  padding: 0.3rem 0 0.3rem 1rem;
-  margin-left: -2px;
-  border-left: 2px solid transparent;
-  color: var(--gray-medium);
-  line-height: 1.5;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-left: -1px;
+  padding: 6px 0 6px 16px;
+  font: 400 11.5px / 1.5 var(--h-mono);
+  color: var(--h-ink-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-left: 1px solid transparent;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.docsNavIndex {
+  flex: none;
+  color: oklch(0.68 0.01 260);
+  font-variant-numeric: tabular-nums;
 }
 
 .docsNavLink:hover {
-  color: var(--gray-dark);
+  color: var(--h-ink);
 }
 
 .docsNavLinkActive {
-  border-left-color: var(--gray-dark);
-  color: var(--gray-dark);
-  font-weight: 600;
+  color: var(--h-ink);
+  border-left-color: var(--h-ink);
 }
 
-/* Below the desktop breakpoint the nav becomes a horizontal pill row. */
-@media (max-width: 991.98px) {
-  .docsNav {
-    position: static;
-    margin: 1.5rem 0 0.5rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+.docsNavLinkActive .docsNavIndex {
+  color: var(--h-teal);
+}
 
-  .docsNavTitle {
-    display: none;
-  }
-
-  .docsNavList {
-    flex-direction: row;
-    gap: 0.5rem;
-    border-left: none;
-    padding-bottom: 0.5rem;
-  }
-
-  .docsNavLink {
-    padding: 0.25rem 0.8rem;
-    margin-left: 0;
-    border: 1px solid var(--gray-light);
-    border-radius: 2rem;
-    white-space: nowrap;
-  }
-
-  .docsNavLinkActive {
-    border-color: var(--gray-dark);
-    background-color: white;
-  }
+.docsNavLink:focus-visible {
+  outline: 2px solid var(--blue-medium);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* ---- Article ---- */
 
 .article {
   min-width: 0;
+  max-width: 760px;
+  font: 400 16px / 1.7 var(--h-sans);
+  color: oklch(0.4 0.01 260);
 }
 
+.article strong {
+  font-weight: 600;
+  color: var(--h-ink);
+}
+
+.article a {
+  color: var(--h-ink);
+  text-decoration: underline;
+  text-decoration-color: oklch(0 0 0 / 0.25);
+  text-underline-offset: 3px;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+
+.article a:hover {
+  color: var(--h-teal);
+  text-decoration-color: currentColor;
+}
+
+/* Every section after the first opens under a hairline, with its index above
+   the heading the way the homepage numbers its three steps. */
 .section {
-  margin-top: 3.5rem;
+  margin-top: 56px;
+  padding-top: 56px;
+  border-top: 1px solid var(--h-paper-rule);
   /* Anchored headings land clear of the viewport top. */
-  scroll-margin-top: 2rem;
+  scroll-margin-top: 32px;
 }
 
 .section:first-of-type {
-  margin-top: 2.5rem;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.sectionIndex {
+  display: block;
+  margin-bottom: 12px;
+  font: 400 12px var(--h-mono);
+  color: var(--h-teal);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .subhead {
-  color: var(--gray-dark);
-  font-size: 1.6rem;
-  font-weight: 600;
-  line-height: 1.3;
+  margin: 0;
+  font: 700 28px / 1.2 var(--h-display);
+  color: var(--h-ink);
+  letter-spacing: -0.01em;
 }
 
 /* Heading anchor: a # that appears on hover, linking to the section. */
-.anchor {
-  margin-left: 0.4rem;
-  color: var(--gray-light);
-  font-weight: 400;
+.article .anchor {
+  margin-left: 10px;
+  font: 400 20px var(--h-mono);
+  color: oklch(0.7 0.01 260);
   text-decoration: none;
   opacity: 0;
-  transition: opacity 120ms ease;
+  transition: opacity 120ms ease, color 120ms ease;
 }
 
 .subhead:hover .anchor,
-.anchor:focus-visible {
+.article .anchor:focus-visible {
   opacity: 1;
 }
 
-.anchor:hover {
-  color: var(--pink);
+.article .anchor:hover {
+  color: var(--h-teal);
 }
 
 .minihead {
-  margin-top: 2rem;
-  color: var(--gray-dark);
-  font-size: 1.15rem;
-  font-weight: 600;
-  line-height: 1.4;
+  margin: 36px 0 0;
+  font: 700 20px / 1.3 var(--h-display);
+  color: var(--h-ink);
+  letter-spacing: -0.01em;
 }
 
 .section p {
-  margin-top: 1rem;
+  margin: 16px 0 0;
 }
 
+/* Lists take a small square for a marker, the shape the homepage is drawn
+   from, rather than the browser's disc. */
 .list {
-  margin-top: 1rem;
-  padding-left: 1.25rem;
-  list-style: disc;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
 }
 
 .list li {
-  margin-top: 0.5rem;
+  position: relative;
+  margin-top: 10px;
+  padding-left: 20px;
 }
 
-/* Callout for tips/notes. */
-.callout {
+.list li::before {
+  content: '';
+  position: absolute;
+  top: 0.72em;
+  left: 2px;
+  width: 5px;
+  height: 5px;
+  background-color: oklch(0.62 0.01 260);
+}
+
+/* The package's three entry points, as three cards. */
+.entries {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.entry {
+  padding: 20px 20px 22px;
+  border: 1px solid oklch(0 0 0 / 0.12);
+  border-radius: 14px;
+}
+
+.entryName {
   display: block;
-  margin-top: 1.25rem;
-  padding: 0.9rem 1.25rem;
-  border-left: 3px solid var(--blue-medium);
-  border-radius: 0 0.4rem 0.4rem 0;
-  background-color: var(--gray-ultra-light);
-  font-size: 1.05rem;
+  margin-bottom: 10px;
+  font: 500 13px var(--h-mono);
+  color: var(--h-ink);
+}
+
+.entry p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* A note beside the prose: the well the homepage's panels sit in, with a
+   teal label so it reads as an aside and not a paragraph that lost its way. */
+.callout {
+  margin-top: 20px;
+  padding: 18px 20px 20px;
+  font-size: 15px;
+  line-height: 1.65;
+  background-color: var(--h-paper-well);
+  border: 1px solid oklch(0 0 0 / 0.06);
+  border-radius: 12px;
+}
+
+.calloutLabel {
+  display: block;
+  margin-bottom: 6px;
+  font: 400 11px var(--h-mono);
+  color: var(--h-teal);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .callout p {
-  margin-top: 0;
+  margin: 0;
 }
 
 /* Inline code in prose. */
 .inlineCode {
-  padding: 0.1rem 0.4rem;
-  border-radius: 0.25rem;
-  background-color: var(--gray-ultra-light);
-  border: 1px solid var(--gray-light);
-  font-family: var(--font-mono);
-  font-size: 0.88em;
-  color: var(--gray-dark);
+  padding: 2px 6px;
+  font: 400 0.875em var(--h-mono);
+  color: var(--h-ink);
+  background-color: oklch(0 0 0 / 0.05);
+  border-radius: 5px;
 }
 
 /* ---- Code panels ---- */
 
+/* The dark shell, inverted back inside the light page: the homepage's ground
+   and card colours, its hairline, and its mint and cyan for the two kinds of
+   token that are worth a colour. */
 .codePanel {
-  border-radius: 0.5rem;
   overflow: hidden;
-  background-color: var(--gray-dark);
+  color: var(--h-fg);
+  background-color: var(--h-bg);
+  border-radius: 14px;
 }
 
 .codePanelBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.4rem 0.6rem 0.4rem 1.5rem;
-  background-color: #2c2f34;
+  min-height: 42px;
+  padding: 4px 8px 4px 20px;
+  background-color: var(--h-card);
+  border-bottom: 1px solid var(--h-rule);
 }
 
 .codePanelTitle {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: #9aa3ad;
+  font: 400 11px var(--h-mono);
+  color: oklch(0.62 0.01 260);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .copyButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  border: none;
-  border-radius: 0.3rem;
+  color: oklch(0.62 0.01 260);
   background: transparent;
-  color: #9aa3ad;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
   transition: color 120ms ease, background-color 120ms ease;
 }
 
 .copyButton:hover {
-  color: white;
-  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--h-fg);
+  background-color: oklch(1 0 0 / 0.08);
 }
 
 .copyButton:focus-visible {
-  outline: 2px solid #9aa3ad;
+  outline: 2px solid var(--h-cyan);
   outline-offset: 1px;
 }
 
 .codeBlock {
   margin: 0;
-  padding: 1.25rem 1.5rem;
-  color: #e7ebf0;
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  line-height: 1.65;
+  padding: 20px 22px;
   overflow-x: auto;
+  font: 400 13.5px / 1.7 var(--h-mono);
+  color: oklch(0.88 0.01 260);
   white-space: pre;
+  tab-size: 2;
 }
 
 .codeBlock code {
-  font-family: inherit;
+  font: inherit;
+}
+
+.tokenComment {
+  color: oklch(0.56 0.01 260);
+}
+
+.tokenString {
+  color: var(--h-mint);
+}
+
+.tokenKeyword {
+  color: var(--h-cyan);
+}
+
+.tokenTag {
+  color: var(--h-fg);
 }
 
 .codeStandalone {
-  margin-top: 1rem;
+  margin-top: 20px;
 }
 
 /* Live preview stacked above its source, framed as one unit. */
 .example {
-  margin-top: 1.5rem;
-  border: 1px solid var(--gray-light);
-  border-radius: 0.5rem;
+  margin-top: 20px;
   overflow: hidden;
+  border: 1px solid oklch(0 0 0 / 0.12);
+  border-radius: 14px;
 }
 
 .preview {
-  padding: 1.5rem;
-  background-color: var(--gray-ultra-light);
+  padding: 20px;
+  background-color: var(--h-paper-well);
 }
 
 .example .codePanel {
@@ -333,20 +472,20 @@
 
 /* Rounds the corners of a rendered pattern inside a preview. */
 .demoArt {
-  border-radius: 0.4rem;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 /* Fit-mode comparison. Every mode draws the same pattern at the same seed into
    the same two boxes - one landscape, one portrait - because what separates the
    modes is only visible when the box stops matching the drawing. */
-/* Sized so all four modes sit on one row inside the docs column (~590px of
-   preview): a mode that wraps onto a row of its own stops reading as part of
-   the comparison. The portrait box is 116px, so the track can go this narrow. */
+/* Sized so all three modes sit on one row inside the docs column: a mode that
+   wraps onto a row of its own stops reading as part of the comparison. The
+   portrait box is 116px, so the track can go this narrow. */
 .fitGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(126px, 1fr));
-  gap: 1.75rem 0.9rem;
+  gap: 28px 16px;
 }
 
 .fitItem {
@@ -356,17 +495,17 @@
 .fitShapes {
   display: flex;
   flex-direction: column;
+  gap: 8px;
   align-items: center;
-  gap: 0.5rem;
 }
 
 /* Both boxes clip: fit="fixed" draws a canvas of its own size and lets the
    box crop it, which is exactly the difference being shown. */
 .fitWide,
 .fitTall {
-  border-radius: 0.35rem;
   overflow: hidden;
-  background-color: var(--gray-light);
+  background-color: oklch(0 0 0 / 0.06);
+  border-radius: 8px;
 }
 
 .fitWide {
@@ -380,53 +519,55 @@
 }
 
 .fitCaption {
-  margin-top: 0.7rem;
+  margin-top: 12px;
+  font: 400 12.5px / 1.5 var(--h-sans);
+  color: var(--h-ink-dim);
   text-align: center;
-  font-size: 0.85rem;
-  color: var(--gray-medium);
 }
 
 .fitCaption code {
   display: block;
-  margin-bottom: 0.35rem;
-  font-family: var(--font-mono);
-  color: var(--gray-dark);
+  margin-bottom: 6px;
+  font: 500 12px var(--h-mono);
+  color: var(--h-ink);
 }
 
 /* Box-prop comparison: what `fill` and the bounded form each resolve to. */
 .boxDemo {
   display: grid;
-  gap: 1.25rem;
+  gap: 20px;
 }
 
 .boxDemoFill {
   height: 120px;
-  border-radius: 0.35rem;
   overflow: hidden;
+  border-radius: 8px;
 }
 
-/* Imperative-handle demo buttons. */
+/* Imperative-handle demo buttons: the design's two pills, ink and hairline. */
 .demoActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
+  gap: 10px;
+  margin-top: 18px;
 }
 
 .demoBtn {
   display: inline-flex;
   align-items: center;
-  padding: 0.7rem 1.25rem;
-  border: 1px solid var(--gray-light);
-  border-radius: 0.3rem;
-  background-color: white;
-  color: var(--gray-dark);
-  font-size: 1rem;
+  height: 40px;
+  padding: 0 20px;
+  font: 500 14px var(--h-sans);
+  color: var(--h-ink);
+  background-color: var(--h-paper);
+  border: 1px solid oklch(0 0 0 / 0.16);
+  border-radius: 999px;
   cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .demoBtn:hover {
-  border-color: var(--gray);
+  border-color: var(--h-ink);
 }
 
 .demoBtn:focus-visible {
@@ -435,79 +576,253 @@
 }
 
 .demoBtnPrimary {
-  border-color: transparent;
-  background-color: var(--lime);
+  font: 600 14px var(--h-display);
+  color: var(--h-paper);
+  background-color: var(--h-ink);
+  border-color: var(--h-ink);
 }
 
 .demoBtnPrimary:hover {
-  border-color: transparent;
-  background-color: var(--lime-hover);
+  background-color: #25252e;
+  border-color: #25252e;
 }
 
 /* ---- Reference tables ---- */
 
-/* Horizontal scroller so wide tables stay reachable on phones (the page
-   clips body overflow globally). */
+/* The account pages' panel: a rounded hairline frame, a mono header row on
+   the faintest tint, hairlines between rows. The frame is the scroller, so a
+   wide table stays reachable on a phone (the page clips body overflow). */
 .tableScroll {
-  margin-top: 1.5rem;
+  margin-top: 20px;
   overflow-x: auto;
+  border: 1px solid oklch(0 0 0 / 0.1);
+  border-radius: 14px;
   -webkit-overflow-scrolling: touch;
 }
 
 .propsTable {
   width: 100%;
   min-width: 34rem;
+  font: 400 14px / 1.55 var(--h-sans);
   border-collapse: collapse;
-  font-size: 1rem;
-  line-height: 1.5;
 }
 
 .propsTable th,
 .propsTable td {
-  padding: 0.7rem 1rem;
+  padding: 14px 18px;
   text-align: left;
   vertical-align: top;
-  border-bottom: 1px solid var(--gray-light);
+  border-top: 1px solid oklch(0 0 0 / 0.08);
 }
 
 .propsTable thead th {
-  color: var(--gray-dark);
-  font-weight: 600;
-  border-bottom: 2px solid var(--gray-light);
+  padding: 12px 18px;
+  font: 400 11px var(--h-mono);
+  color: oklch(0.45 0.01 260);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background-color: oklch(0 0 0 / 0.028);
+  border-top: none;
 }
 
 .propName {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  font-weight: 600;
-  color: var(--gray-dark);
+  font: 500 13px var(--h-mono);
+  color: var(--h-ink);
   white-space: nowrap;
 }
 
-.propsTable code {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  color: var(--pink);
-}
-
-.required {
-  margin-left: 0.4rem;
-  font-size: 0.75em;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--red-high-contrast);
+.typeCol code {
+  font: 400 12.5px var(--h-mono);
+  color: var(--h-teal);
 }
 
 .defaultCol {
+  font: 400 12.5px var(--h-mono);
+  color: var(--h-ink);
   white-space: nowrap;
 }
 
-/* Divider before the footer nav of the article. */
+.propsTable thead .defaultCol {
+  font: 400 11px var(--h-mono);
+  color: oklch(0.45 0.01 260);
+}
+
+.noDefault {
+  color: oklch(0.68 0.01 260);
+}
+
+.required {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px;
+  font: 500 9.5px var(--h-mono);
+  color: oklch(0.35 0.09 175);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  vertical-align: 2px;
+  background-color: oklch(0.95 0.03 175);
+  border-radius: 999px;
+}
+
+/* Divider before the sign-off of the article. */
 .articleFooter {
-  margin-top: 4rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--gray-light);
-  font-size: 1rem;
-  color: var(--gray-medium);
+  margin-top: 72px;
+  padding-top: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--h-ink-dim);
+  border-top: 1px solid var(--h-paper-rule);
+}
+
+.articleFooter p {
+  margin: 0;
+}
+
+/* ---- Responsive ---- */
+
+/* The rail narrows before it folds; the article keeps its measure. */
+@media (max-width: 1279.98px) {
+  .docs {
+    grid-template-columns: 184px minmax(0, 1fr);
+    gap: 48px;
+  }
+}
+
+/* Below the desktop breakpoint the header stacks and the rail becomes a row
+   of pills pinned to the top of the viewport, scrolling sideways: thirteen
+   sections on a phone are otherwise reachable only from the top. */
+@media (max-width: 1023.98px) {
+  .head {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 48px 0 40px;
+  }
+
+  .title {
+    font-size: 44px;
+  }
+
+  .docs {
+    display: block;
+    padding-top: 0;
+  }
+
+  .docsNav {
+    top: 0;
+    z-index: 5;
+    margin: 0 calc(-1 * var(--h-pad));
+    background-color: var(--h-paper);
+    border-bottom: 1px solid var(--h-paper-rule);
+  }
+
+  /* The cut-off pill at the right edge reads as "more this way". */
+  .docsNav::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 1px;
+    width: 56px;
+    pointer-events: none;
+    background: linear-gradient(to right, oklch(1 0 0 / 0), var(--h-paper) 70%);
+  }
+
+  .docsNavTitle {
+    display: none;
+  }
+
+  .docsNavScroll {
+    padding: 12px var(--h-pad);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .docsNavScroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .docsNavList {
+    flex-direction: row;
+    gap: 8px;
+    padding-right: 40px;
+    border-left: none;
+  }
+
+  .docsNavLink {
+    margin: 0;
+    padding: 8px 14px;
+    font-size: 11px;
+    white-space: nowrap;
+    border: 1px solid oklch(0 0 0 / 0.14);
+    border-radius: 999px;
+  }
+
+  .docsNavIndex {
+    display: none;
+  }
+
+  .docsNavLinkActive {
+    color: var(--h-paper);
+    background-color: var(--h-ink);
+    border-color: var(--h-ink);
+  }
+
+  .article {
+    max-width: none;
+    padding-top: 40px;
+  }
+
+  /* Clear of the pinned pill row. */
+  .section {
+    scroll-margin-top: 72px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .main {
+    padding-bottom: 80px;
+  }
+
+  .title {
+    font-size: 38px;
+  }
+
+  .section {
+    margin-top: 44px;
+    padding-top: 44px;
+  }
+
+  .subhead {
+    font-size: 24px;
+  }
+
+  .entries {
+    grid-template-columns: 1fr;
+  }
+
+  .preview {
+    padding: 14px;
+  }
+
+  .codeBlock {
+    padding: 16px 18px;
+    font-size: 13px;
+  }
+
+  .propsTable th,
+  .propsTable td {
+    padding: 12px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chipLink,
+  .docsNavLink,
+  .article a,
+  .article .anchor,
+  .copyButton,
+  .demoBtn {
+    transition: none;
+  }
 }

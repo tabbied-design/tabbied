@@ -94,8 +94,8 @@ th:not([align]) {
 
 :root {
   /* Two sans, split by role - see lib/fonts.ts. The editor, the gallery and
-     the palette browser read these; the older docs and legal pages reference
-     neither, so switching the text face here cannot reach them. The inner
+     the palette browser read these; the older legal pages reference neither,
+     so switching the text face here cannot reach them. The inner
      fallback matters: a bare `var(--font-plex-sans)` on a route that does not
      load the font resolves to nothing and leaves `font-family: , 'Helvetica
      Neue', ...`, which is invalid and drops the whole declaration. */
