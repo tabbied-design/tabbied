@@ -1,10 +1,11 @@
 /* Mobile: the merged palette list as a horizontal, scrollable shelf. Rendered
    as a direct child of the document-scrolled gallery (not nested in the
-   header), so `position: sticky` pins it to the top of the viewport across the
-   whole grid scroll. The rows are the rail's rows laid side by side; the
-   trailing "All" pill opens the browser. Solid white behind the chips, fading
-   out over its bottom edge so the pinned bar melts into the grid scrolling
-   beneath it rather than sitting on a visible line. */
+   header), so `position: sticky` pins it under the masthead across the whole
+   grid scroll; the offset is the gallery's `--gallery-bar-h`, set where the
+   shelf is placed (SelectPattern.module.css). The rows are the rail's rows
+   laid side by side; the trailing "All" pill opens the browser. Solid white
+   behind the chips, fading out over its bottom edge so the pinned bar melts
+   into the grid scrolling beneath it rather than sitting on a visible line. */
 .shelf {
   position: sticky;
   top: 0;
@@ -31,9 +32,19 @@
 /* No outline around each palette, as the design has it: the name and its inks
    are the item, and a ring around every one of them turns a quiet strip into a
    row of buttons. The chosen one is still inked, which is the only state that
-   needs to carry. */
+   needs to carry. A chip is a pill holding the palette button and its mark. */
 .chip {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: transparent;
+  color: #0e0e13;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+/* The palette button: name and inks, carrying the pill's padding. */
+.chipMain {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -42,19 +53,38 @@
   border-radius: 999px;
   background: transparent;
   font-family: var(--font-sans-serif);
-  color: #0e0e13;
+  color: inherit;
   cursor: pointer;
-  transition: background-color 150ms ease, color 150ms ease;
 }
 
+/* With a mark after it the button gives up its right padding; the mark's
+   margins put the mark where it sat inside the single button. */
+.chipMainWithMark {
+  padding-right: 0;
+}
+
+/* Declared after .chipMain: the random chip is one button wearing both
+   classes, and at equal specificity the later rule's background wins. */
 .chipActive {
   color: #f7f5f0;
   background: #0e0e13;
 }
 
-.chip:focus-visible {
+.chipMain:focus-visible {
   outline: 2px solid var(--blue-medium);
   outline-offset: 2px;
+}
+
+/* Where the browser can, the ring goes round the pill rather than the words. */
+@supports selector(:has(a)) {
+  .chip > .chipMain:focus-visible {
+    outline: none;
+  }
+
+  .chip:has(> .chipMain:focus-visible) {
+    outline: 2px solid var(--blue-medium);
+    outline-offset: 2px;
+  }
 }
 
 .name {
@@ -81,8 +111,8 @@
   box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.55);
 }
 
-/* Trailing delete mark (custom) / pencil (library). */
-.trailing {
+/* The swap arrows on the random chip, where a palette chip carries its mark. */
+.randomMark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -90,7 +120,22 @@
   height: 22px;
   flex: none;
   margin-right: -4px;
+}
+
+/* Trailing delete mark (custom) / pencil (library). */
+.trailing {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  margin: 0 8px;
+  padding: 0;
+  border: none;
   border-radius: 6px;
+  background: transparent;
   color: oklch(0.62 0.01 260);
   cursor: pointer;
   transition: color 120ms ease;
@@ -98,6 +143,11 @@
 
 .trailing:hover {
   color: #0e0e13;
+}
+
+.trailing:focus-visible {
+  outline: 2px solid var(--blue-medium);
+  outline-offset: 1px;
 }
 
 .chipActive .trailing {
@@ -131,6 +181,26 @@
 .allPill:focus-visible {
   outline: 2px solid var(--blue-medium);
   outline-offset: 2px;
+}
+
+/* The shelf is a touch surface first. On a coarse pointer the chips grow to
+   a 40px row and the 22px marks get a 40px hit area behind their box. */
+@media (pointer: coarse) {
+  .chipMain {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
+  .allPill {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
+  .trailing::before {
+    content: '';
+    position: absolute;
+    inset: -9px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

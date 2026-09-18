@@ -413,10 +413,6 @@
   margin-top: 18px;
 }
 
-.chipsSection + .chipsSection {
-  margin-top: 16px;
-}
-
 /* Borderless search with only a bottom hairline; the magnifier sits after
    the field so the placeholder starts at the rail's left edge, in line with
    the rows below it. */
@@ -476,19 +472,25 @@
   display: none;
 }
 
-.paletteStrip > button {
+/* Each row is a PaletteListRow: a pill holding the palette button and its
+   marks. The pill takes the ring and the side padding; the button its height. */
+.paletteStrip > * {
   flex: none;
   width: auto;
   margin: 0;
-  padding: 9px 14px;
+  padding: 0 14px;
   box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.12);
 }
 
-.paletteStrip > button[data-active] {
+.paletteStrip > [data-active] {
   box-shadow: none;
 }
 
-.paletteStrip > button > span:first-child {
+.paletteStrip > * > button:first-child {
+  padding: 9px 0;
+}
+
+.paletteStrip > * > button:first-child > span:first-child {
   flex: none;
   overflow: visible;
 }
@@ -748,6 +750,40 @@
   .previewWrapper {
     height: 48vh;
     min-height: 280px;
+  }
+}
+
+/* The inspector's small controls keep their drawn size and get a 40px hit
+   area behind it on a coarse pointer: the +/- count circles (26px), the
+   expand toggle (30px), the picture's remove mark (its 14px icon) and the
+   strip's "View all" text. */
+@media (pointer: coarse) {
+  .countButton,
+  .bgRemove {
+    position: relative;
+  }
+
+  .countButton::before {
+    content: '';
+    position: absolute;
+    inset: -7px;
+  }
+
+  .expandButton::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+  }
+
+  .bgRemove::before {
+    content: '';
+    position: absolute;
+    inset: -13px;
+  }
+
+  .viewAll {
+    margin: -10px 0;
+    padding: 10px 0;
   }
 }
 

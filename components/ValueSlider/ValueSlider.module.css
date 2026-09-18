@@ -29,6 +29,15 @@
   touch-action: none;
 }
 
+/* The hairline stays 2px; a finger gets the row's height to land on. The
+   14px control also carries `touch-action: none`, so on a phone a touch that
+   missed it by a pixel scrolled the panel instead of moving the thumb. */
+@media (pointer: coarse) {
+  .control {
+    height: 32px;
+  }
+}
+
 .track {
   position: relative;
   width: 100%;

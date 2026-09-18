@@ -13,6 +13,13 @@ const MAX_CHIPS = 6;
  * *with*, and the ground is what the page around the list already shows under
  * every thumbnail. The active row is an ink pill. Shared by the gallery's rail
  * and the editor's palette list, so the two read as one control.
+ *
+ * The row is a group of real buttons: the pill (name and inks) applies the
+ * palette, and the pencil and delete mark beside it are buttons of their own.
+ * They used to be `role="button"` spans nested inside the pill's button, which
+ * HTML forbids: the pill's accessible name swallowed their labels ("Ink Edit
+ * Ink (saves as a copy)"), and a keypress on a mark also activated the pill in
+ * browsers that do not let a descendant stop the ancestor button's default.
  */
 export default function PaletteListRow({
   name,
@@ -35,58 +42,42 @@ export default function PaletteListRow({
   onEdit: () => void;
   onDelete?: () => void;
 }) {
-  const stop =
-    (handler: () => void) => (event: React.MouseEvent | React.KeyboardEvent) => {
-      if (
-        event.type === 'keydown' &&
-        (event as React.KeyboardEvent).key !== 'Enter' &&
-        (event as React.KeyboardEvent).key !== ' '
-      ) {
-        return;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      handler();
-    };
-
   return (
-    <button
-      type="button"
-      className={styles.row}
-      data-active={active || undefined}
-      onClick={onClick}
-      title={name}
-    >
-      <span className={styles.name}>{name}</span>
-      <span className={styles.chips} aria-hidden="true">
-        {colors.slice(1, 1 + MAX_CHIPS).map((color, index) => (
-          <span key={`${color}-${index}`} style={{ background: color }} />
-        ))}
-      </span>
-      <span
-        role="button"
-        tabIndex={0}
+    <div className={styles.row} data-active={active || undefined}>
+      <button
+        type="button"
+        className={styles.main}
+        aria-pressed={active}
+        onClick={onClick}
+        title={name}
+      >
+        <span className={styles.name}>{name}</span>
+        <span className={styles.chips} aria-hidden="true">
+          {colors.slice(1, 1 + MAX_CHIPS).map((color, index) => (
+            <span key={`${color}-${index}`} style={{ background: color }} />
+          ))}
+        </span>
+      </button>
+      <button
+        type="button"
+        className={styles.mark}
         aria-label={editLabel}
         title={editTitle}
-        className={styles.mark}
-        onClick={stop(onEdit)}
-        onKeyDown={stop(onEdit)}
+        onClick={onEdit}
       >
         <Pencil size={13} />
-      </span>
+      </button>
       {onDelete && (
-        <span
-          role="button"
-          tabIndex={0}
+        <button
+          type="button"
+          className={styles.mark}
           aria-label={deleteLabel}
           title="Delete palette"
-          className={styles.mark}
-          onClick={stop(onDelete)}
-          onKeyDown={stop(onDelete)}
+          onClick={onDelete}
         >
           <X size={13} strokeWidth={2} />
-        </span>
+        </button>
       )}
-    </button>
+    </div>
   );
 }

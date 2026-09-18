@@ -20,9 +20,9 @@ const GalleryDoodleInner = dynamic(() => import('./GalleryDoodleInner'), {
 const MOUNT_MARGIN = '400px';
 
 // Whether a hex background reads as dark, so the loading shimmer can sweep a
-// light band over dark cards and a dark band over light ones. Defaults to
-// "light" when the color can't be parsed (e.g. a transparent #rrggbbaa).
-export const isDarkColor = (hex: string): boolean => {
+// light band over dark cards and a dark band over light ones. An #rrggbbaa
+// reads its rgb; anything that is not hex (`transparent`) defaults to light.
+const isDarkColor = (hex: string): boolean => {
   const match = /^#([0-9a-f]{6})/i.exec(hex ?? '');
 
   if (!match) {
@@ -48,13 +48,14 @@ export default function GalleryDoodle({
 }) {
   const frameRef = useRef<HTMLDivElement>(null);
 
-  // The gallery holds 100+ live doodles; rendering and reseeding all of them
-  // at once chokes the main thread. Each card mounts its doodle only once it
-  // approaches the viewport (and then stays mounted), and keeps its reseed
-  // animation running only while it remains nearby - so the total work is
-  // bounded by the viewport, not by the size of the gallery.
+  // The gallery holds 100+ live doodles; rendering all of them at once chokes
+  // the main thread. Each card mounts its doodle only once it approaches the
+  // viewport, and then stays mounted, so the initial work is bounded by the
+  // viewport rather than by the size of the gallery. The observer has one
+  // thing to report and disconnects once it has: the reseed ticks are gated
+  // by the pattern controller's own viewport observer (createPattern.ts), so
+  // a second gate here only re-rendered the card on every crossing.
   const [hasApproached, setHasApproached] = useState(false);
-  const [inView, setInView] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -66,13 +67,9 @@ export default function GalleryDoodle({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Multiple transitions can be batched into one callback (fast
-        // scrolling); the last entry is the current state.
-        const intersecting = entries[entries.length - 1].isIntersecting;
-
-        setInView(intersecting);
-        if (intersecting) {
+        if (entries.some((entry) => entry.isIntersecting)) {
           setHasApproached(true);
+          observer.disconnect();
         }
       },
       { rootMargin: MOUNT_MARGIN }
@@ -106,7 +103,6 @@ export default function GalleryDoodle({
         <GalleryDoodleInner
           item={item}
           palette={palette}
-          paused={!inView}
           onReady={() => setReady(true)}
         />
       )}

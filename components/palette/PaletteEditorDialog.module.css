@@ -357,8 +357,10 @@
 }
 
 /* On phones the dialog docks to the bottom as a sheet (7c): a grab handle up
-   top, the form scrolls, and the Cancel / Save bar sticks to the bottom. */
-@media (max-width: 640px) {
+   top, the form scrolls, and the Cancel / Save bar sticks to the bottom. The
+   fold is the site's (768px): between 641 and 767px the editor was already in
+   its phone layout while this stayed a centred card. */
+@media (max-width: 767.98px) {
   .dialogPopup {
     top: auto;
     bottom: 0;

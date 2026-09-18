@@ -5,6 +5,7 @@ import useMediaQuery from 'lib/useMediaQuery';
 import type { GalleryItem } from 'lib/pattern';
 import {
   deletePalette,
+  previewPalette,
   RANDOM_PALETTE_ID,
   setActivePalette,
   useBrandPalettes,
@@ -77,7 +78,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
   const savedPalettes = brandState.palettes;
 
   // Below the two-column breakpoint the fixed rail is replaced by the mobile
-  // header (7a). Rendering it only on mobile keeps its ~120 palette chips out of
+  // header (7a). Rendering it only on mobile keeps its palette shelf out of
   // the desktop DOM; the `&&` placeholder holds the slot so the grid (a later
   // sibling) never remounts when this toggles.
   const isMobile = useMediaQuery('(max-width: 991.98px)');
@@ -171,10 +172,6 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     setRandomSeed(sessionRandomSeed());
   }, []);
 
-  const indexBySlug = useMemo(
-    () => new Map(gallery.map((item, index) => [item.slug, index])),
-    [gallery]
-  );
   const randomSpread = useMemo(
     () => assignRandomPalettes(gallery.length, PALETTE_LIBRARY, randomSeed),
     [gallery.length, randomSeed]
@@ -182,15 +179,29 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
 
   // The spread is keyed by the card's place in the whole catalog, not on the
   // page, so a search or a page change keeps each design in its own palette.
-  const randomPaletteFor = (item: GalleryItem): string[] | undefined => {
-    if (!randomMode) return undefined;
+  // Fitted once per spread: a fresh array per card per render reached
+  // TabbiedPattern as a changed palette on every keystroke and palette click,
+  // and rebuilt every visible doodle's source to find nothing had changed.
+  const spreadPalettes = useMemo(
+    () =>
+      new Map(
+        gallery.map((item, index) => {
+          const palette = randomSpread[index];
 
-    const palette = randomSpread[indexBySlug.get(item.slug) ?? 0];
+          return [
+            item.slug,
+            palette
+              ? fitToColorBounds(palette.colors, item.colors?.min, item.colors?.max)
+              : undefined,
+          ] as const;
+        })
+      ),
+    [gallery, randomSpread]
+  );
 
-    return palette
-      ? fitToColorBounds(palette.colors, item.colors?.min, item.colors?.max)
-      : undefined;
-  };
+  // The palette every card wears when the spread is off, resolved once here
+  // rather than by each card from the same store snapshot.
+  const activePalette = useMemo(() => previewPalette(brandState), [brandState]);
 
   const chooseRandom = () => {
     setRandomSeed(rerollRandomSeed());
@@ -204,10 +215,11 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
   });
 
   // Delete a custom palette on the first click of its delete mark (no confirm step).
-  // Deleting the active palette reverts previews to the random spread.
+  // The store reverts the active palette to the random spread itself; the rail
+  // follows at once rather than after the apply debounce.
   const removePalette = (id: string) => {
     deletePalette(id);
-    if (selectedId === id) applyPalette(RANDOM_PALETTE_ID, true);
+    if (selectedId === id) setSelectedId(RANDOM_PALETTE_ID);
   };
 
   const filtered = useMemo(
@@ -340,7 +352,8 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
                 <GalleryCard
                   key={item.slug}
                   item={item}
-                  palette={randomPaletteFor(item)}
+                  palette={randomMode ? spreadPalettes.get(item.slug) : undefined}
+                  fallbackPalette={activePalette}
                   className={styles[`rows${ROW_SPANS[index % ROW_SPANS.length]}`]}
                 />
               ))}

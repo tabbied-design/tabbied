@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Dialog } from '@base-ui-components/react/dialog';
 import {
@@ -42,9 +42,11 @@ import { usePaletteReveal } from 'components/palette/usePaletteReveal';
 import { usePaletteEditor } from 'components/palette/usePaletteEditor';
 import { PALETTE_LIBRARY, type LibraryPalette } from 'lib/paletteLibrary';
 import { mergePalettes } from 'lib/paletteList';
+import { fitToColorBounds } from 'lib/randomPalettes';
 import { isTransparentHex, toColorInputValue, toOpaqueHex } from 'lib/color';
 import {
   deletePalette,
+  isValidPaletteColor,
   resolveActivePalette,
   setActivePalette,
   useBrandPalettes,
@@ -56,8 +58,6 @@ import styles from './EditPattern.module.css';
 // Options with this id hold a "colsxrows" grid string and follow the selected
 // aspect ratio so that cells stay (near-)square.
 const GRID_OPTION_ID = 'grid';
-
-// Chips per page in the merged Palettes section.
 
 // Longest edge of the little aspect-ratio glyph rectangle, in pixels.
 const RATIO_GLYPH_SIZE = 12;
@@ -176,14 +176,49 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   const brandPalettes = brandState.palettes;
   // The active palette shared with the gallery - a saved palette or a curated
   // library palette (opening a pattern picks up whatever the gallery previews).
-  const activeCustomPalette = resolveActivePalette(brandState);
+  // Memoised on the store snapshot: the resolver builds a fresh object, and an
+  // effect keyed on it re-ran every render.
+  const activeCustomPalette = useMemo(
+    () => resolveActivePalette(brandState),
+    [brandState]
+  );
 
   const draftPreview = useDraftPreview();
 
+  // The palette a link carries, when it carries a usable one: a colour count
+  // the pattern can take, every entry a colour. `?palette=red`, or a stray
+  // `}`, used to reach css-doodle's source (which painted nothing, silently)
+  // and the copied React snippet verbatim.
+  const linkedPaletteFromQuery = (): string[] | null => {
+    const queryPalette = searchParams.getAll('palette');
+
+    return queryPalette.length >= minColors &&
+      queryPalette.length <= maxColors &&
+      queryPalette.every(
+        (color) => color === 'transparent' || isValidPaletteColor(color)
+      )
+      ? queryPalette
+      : null;
+  };
+
+  // What the link carried at mount, lower-cased for matching, read once: the
+  // URL is rewritten from state after the first render.
+  const linkedAtMount = useRef<string[] | null | undefined>(undefined);
+
+  if (linkedAtMount.current === undefined) {
+    linkedAtMount.current =
+      linkedPaletteFromQuery()?.map((color) => color.toLowerCase()) ?? null;
+  }
+
+  const urlHadPaletteAtMount = useRef(linkedAtMount.current !== null);
+
   // Which palette (if any) the editor's swatches currently reflect, driving the
   // chip outline. 'pattern'/'custom' highlight no chip; a palette id highlights
-  // that chip. Any manual swatch edit switches this to 'custom'.
-  const [paletteSource, setPaletteSource] = useState<PaletteSource>('pattern');
+  // that chip. Any manual swatch edit switches this to 'custom'. A link's
+  // colours start as 'custom' and the lookup below names them if it can.
+  const [paletteSource, setPaletteSource] = useState<PaletteSource>(() =>
+    urlHadPaletteAtMount.current ? 'custom' : 'pattern'
+  );
   const [paletteQuery, setPaletteQuery] = useState('');
   // The phone's "View all": every palette in a fullscreen sheet, since the
   // strip under the swatches shows only the first STRIP_LIMIT.
@@ -213,13 +248,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     };
   };
 
-  const urlHadPaletteAtMount = useRef<boolean | null>(null);
-
-  if (urlHadPaletteAtMount.current === null) {
-    const n = searchParams.getAll('palette').length;
-    urlHadPaletteAtMount.current = n >= minColors && n <= maxColors;
-  }
-
   const initialCustomApplied = useRef(false);
 
   const optionFromQuery = (option: PatternOption): OptionValue => {
@@ -248,7 +276,12 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
     if (option.type === 'ButtonSelectGroup') {
       if (option.id === GRID_OPTION_ID) {
-        return /^\d+x\d+$/.test(queryVal) ? queryVal : option.default;
+        // Snapped to the ratio's nearest density level: the slider can only
+        // show a grid on its list, and css-doodle silently rescales a grid
+        // past 64 cells a side, seams and all.
+        return /^\d+x\d+$/.test(queryVal)
+          ? deriveGrid(aspectRatioFromQuery(), gridToLevel(queryVal))
+          : option.default;
       }
 
       return option.options?.includes(queryVal) ? queryVal : option.default;
@@ -258,9 +291,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   };
 
   const paletteStateFromQuery = (): { palette: string[]; count: number } => {
-    const queryPalette = searchParams.getAll('palette');
+    const queryPalette = linkedPaletteFromQuery();
 
-    if (queryPalette.length >= minColors && queryPalette.length <= maxColors) {
+    if (queryPalette) {
       return {
         palette: [
           ...queryPalette,
@@ -314,25 +347,25 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   const bgWasOpaque = useRef(false);
 
   const selfWrites = useRef<Set<string>>(new Set());
-  const isScreenXS = useMediaQuery('(max-width: 747.99px)');
-  const isTwoColumn = useMediaQuery('(min-width: 992px)');
   // Below the two-column breakpoint the editor uses the compact 7d layout: a
   // fixed preview with an icon-button header and inline shuffle/export panels.
   const isMobile = useMediaQuery('(max-width: 991.98px)');
-  const baseWidth = isScreenXS ? 240 : 360;
 
   // The preview is a bounded box in every layout now (a flex-filled pane on
   // desktop, a fixed band on mobile), so the pattern simply fits the measured
   // box. The caption under the plate is hidden on the band, so nothing is
   // taken off before the fit there; the desktop pane is tall enough that the
-  // fit margin covers it.
+  // fit margin covers it. The pattern is drawn only once the box has been
+  // measured (see the stage): drawn first at a guessed size and again at the
+  // real one a frame later, every visit paid for a whole extra generation.
+  // Until then these numbers stand in for the handlers that read them.
   const { width, height } = previewSize
     ? fitToBox(
         aspectRatio,
         previewSize.width * PREVIEW_FIT_MARGIN,
         previewSize.height * PREVIEW_FIT_MARGIN
       )
-    : fitToBox(aspectRatio, baseWidth, baseWidth * 1.5);
+    : fitToBox(aspectRatio, 360, 540);
 
   // Sync component state FROM the URL search params when they change externally.
   useEffect(() => {
@@ -379,22 +412,13 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   }, [searchParams]);
 
   // Apply the gallery's selected palette on first load, once, and mark it as the
-  // active chip. A shared link that carries its own palette wins: its colours
-  // are looked up in the list, so a link from the gallery's random spread (or
-  // one shared from a named palette) lights that palette's row, and anything
-  // else stays "custom" - the link's colors, not a named palette.
+  // active chip. A shared link that carries its own palette wins: it is
+  // applied by the state initialisers, and named (or not) by the lookup below.
   useEffect(() => {
     if (initialCustomApplied.current) return;
 
     if (urlHadPaletteAtMount.current || paletteDefaults.length === 0) {
       initialCustomApplied.current = true;
-      if (urlHadPaletteAtMount.current) {
-        const linked = searchParams.getAll('palette').map((color) => color.toLowerCase());
-        const named = mergePalettes(brandPalettes, PALETTE_LIBRARY).find(({ palette: p }) =>
-          arraysEqual(p.colors.map((color) => color.toLowerCase()), linked)
-        );
-        setPaletteSource(named ? named.palette.id : 'custom');
-      }
       return;
     }
 
@@ -408,6 +432,42 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     setPaletteSource(activeCustomPalette.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCustomPalette]);
+
+  // A link's colours are looked up in the list, so a link from the gallery's
+  // random spread (or one shared from a named palette) lights that palette's
+  // row; anything else stays "custom". Two things about the lookup. The
+  // gallery fits a palette to the pattern before putting it in the link
+  // (fitToColorBounds: cut to the most inks the design takes, padded to the
+  // fewest), so the list is compared fitted the same way - compared whole, a
+  // five-ink palette on a four-ink design never matched. And it runs again
+  // when the saved palettes arrive: useSyncExternalStore renders the
+  // hydration pass with the server snapshot, which has none, and only then
+  // with the stored ones, so a lookup made once on mount could name a library
+  // palette and never a saved one. It stops the moment the swatches stop
+  // matching what the link carried.
+  useEffect(() => {
+    const linked = linkedAtMount.current;
+
+    if (!linked || paletteSource !== 'custom') return;
+
+    const current = palette
+      .slice(0, colorCount)
+      .map((color) => color.toLowerCase());
+
+    if (!arraysEqual(current, linked)) return;
+
+    const named = mergePalettes(brandPalettes, PALETTE_LIBRARY).find(
+      ({ palette: p }) =>
+        arraysEqual(
+          fitToColorBounds(p.colors, pattern.colors?.min, pattern.colors?.max).map(
+            (color) => color.toLowerCase()
+          ),
+          linked
+        )
+    );
+
+    if (named) setPaletteSource(named.palette.id);
+  }, [brandPalettes, palette, colorCount, paletteSource, pattern.colors]);
 
   // Escape came free with the dialog; expanding in place has to bind it.
   useEffect(() => {
@@ -652,7 +712,24 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     setAspectRatio(nextRatio);
   };
 
-  const exportPattern = async () => {
+  // One export at a time: a second click while the first is rendering, or a
+  // picture removed mid-export (which revokes the object URL being read),
+  // otherwise ended in the generic failure toast.
+  const exporting = useRef(false);
+
+  const runExport = async (run: () => Promise<void>) => {
+    if (exporting.current) return;
+
+    exporting.current = true;
+
+    try {
+      await run();
+    } finally {
+      exporting.current = false;
+    }
+  };
+
+  const exportPattern = () => runExport(async () => {
     const scale = Math.ceil(3000 / Math.max(width, height));
 
     try {
@@ -677,7 +754,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     } catch {
       toaster.add({ title: 'Could not export the PNG' });
     }
-  };
+  });
 
   const svgExportEnabled = supportsSvgExport(pattern);
 
@@ -695,7 +772,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   const [svgConfirmOpen, setSvgConfirmOpen] = useState(false);
 
-  const downloadSvg = async () => {
+  const downloadSvg = () => runExport(async () => {
     try {
       if (!backgroundImage) {
         await doodleRef.current?.exportSvg({ download: true });
@@ -716,7 +793,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     } catch {
       toaster.add({ title: 'Could not export the SVG' });
     }
-  };
+  });
 
   const exportSvgPattern = async () => {
     if (!svgExportEnabled) return;
@@ -826,27 +903,31 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   // ---- Grouped inspector controls ----
 
   // One merged chip list: custom palettes first, then the read-only library.
-  const mergedChips = mergePalettes(brandPalettes, PALETTE_LIBRARY);
+  // Memoised on the saved palettes: every slider tick and colour-picker drag
+  // re-renders the editor, and merging, filtering and searching 437 palettes
+  // on each of them was the bulk of that render.
+  const mergedChips = useMemo(
+    () => mergePalettes(brandPalettes, PALETTE_LIBRARY),
+    [brandPalettes]
+  );
   // The rail lists every palette, custom first, filtered by the search above
   // it and revealed in batches as it scrolls (the same list the gallery's
   // rail shows, so the two read as one control).
-  const paletteNeedle = paletteQuery.trim().toLowerCase();
-  const listedPalettes = paletteNeedle
-    ? mergedChips.filter(({ palette: p }) =>
-        (p.name || 'Untitled').toLowerCase().includes(paletteNeedle)
-      )
-    : mergedChips;
+  const listedPalettes = useMemo(
+    () => mergePalettes(brandPalettes, PALETTE_LIBRARY, paletteQuery),
+    [brandPalettes, paletteQuery]
+  );
   const paletteList = usePaletteReveal(listedPalettes, 24);
   // The phone's strip is a single horizontal row, so it shows the first few
   // and the one in use, and "View all" reaches the rest.
-  const stripPalettes = (() => {
+  const stripPalettes = useMemo(() => {
     const head = mergedChips.slice(0, STRIP_LIMIT);
     const inUse = mergedChips.find(({ palette: p }) => p.id === paletteSource);
 
     if (inUse && !head.includes(inUse)) head.unshift(inUse);
 
     return head;
-  })();
+  }, [mergedChips, paletteSource]);
   const listedRows = isMobile ? stripPalettes : paletteList.shown;
 
   // The plate's caption names what it is: the palette it wears (when it wears
@@ -1111,14 +1192,16 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
           <figure className={styles.stage}>
             <div className={styles.doodleFrame} style={imageStyle}>
-              <TabbiedPattern
-                ref={doodleRef}
-                {...patternProps}
-                fit="fixed"
-                width={width}
-                height={height}
-                decorative={false}
-              />
+              {previewSize && (
+                <TabbiedPattern
+                  ref={doodleRef}
+                  {...patternProps}
+                  fit="fixed"
+                  width={width}
+                  height={height}
+                  decorative={false}
+                />
+              )}
             </div>
 
             {/* The pattern is named under it rather than in a header bar, so
@@ -1329,8 +1412,14 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                   </label>
                 )}
 
+                {/* The reveal hook measures its list to keep filling until it
+                    overflows. The strip is one row that never overflows
+                    vertically, so given the strip it filled all the way to
+                    the end of the library - some twenty full re-renders of
+                    the editor on every phone visit - for a slice it never
+                    showed. It gets the desktop list only. */}
                 <div
-                  ref={paletteList.listRef}
+                  ref={isMobile ? undefined : paletteList.listRef}
                   className={isMobile ? `${styles.paletteList} ${styles.paletteStrip}` : styles.paletteList}
                   onScroll={isMobile ? undefined : paletteList.onScroll}
                 >

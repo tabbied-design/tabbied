@@ -65,7 +65,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
   .mainHeader {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -117,7 +117,7 @@
   grid-row: span 5;
 }
 
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -219,7 +219,10 @@
   }
 }
 
-/* Below the two-column breakpoint the rail stacks above the grid. */
+/* Below the two-column breakpoint the rail stacks above the grid, and the
+   palette shelf pins under the masthead. Both are sticky at the top of the
+   same page; at `top: 0` the shelf pinned in the masthead's own rows and the
+   bar, above it in the stack, covered it for the whole grid scroll. */
 @media (max-width: 991.98px) {
   .gallery {
     min-height: 0;
@@ -230,6 +233,30 @@
     min-height: 0;
     padding: 24px 20px 56px;
     border-left: none;
+  }
+
+  .mobileShelf {
+    top: var(--gallery-bar-h);
+  }
+}
+
+/* The masthead folds at 768px and loses 4px of padding each side: 16px, a
+   34px right-hand slot, 16px and its rule. */
+@media (max-width: 767.98px) {
+  .gallery {
+    --gallery-bar-h: 67px;
+  }
+}
+
+/* Page numbers are 30px circles; a finger gets a 40px one. */
+@media (pointer: coarse) {
+  .pageNumber {
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .pagination {
+    gap: 2px;
   }
 }
 
@@ -285,8 +312,8 @@
   position: relative;
   width: 100%;
   /* Fills the tile the mosaic sized, rather than forcing a square. The height
-     resolves because the grid row is a fixed 104px multiple, which is also what
-     keeps content-visibility safe here. */
+     resolves because the grid rows are a fixed 52px, which is also what keeps
+     content-visibility safe here. */
   height: 100%;
   overflow: hidden;
   line-height: 0;

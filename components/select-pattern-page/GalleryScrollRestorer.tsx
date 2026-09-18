@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import {
+  GALLERY_NAVIGATION,
   GALLERY_SCROLL_Y,
   GALLERY_SCROLL_RESTORE,
 } from 'lib/galleryScroll';
@@ -33,7 +34,14 @@ export default function GalleryScrollRestorer() {
       ticking = true;
       requestAnimationFrame(() => {
         try {
-          sessionStorage.setItem(GALLERY_SCROLL_Y, String(window.scrollY));
+          // Once a card has been clicked the next scroll is the router's own
+          // scroll to the top of the editor, which can land while this is
+          // still mounted and record 0 over the position worth coming back
+          // to. The card sets the marker before navigating; the editor
+          // consumes it on mount.
+          if (!sessionStorage.getItem(GALLERY_NAVIGATION)) {
+            sessionStorage.setItem(GALLERY_SCROLL_Y, String(window.scrollY));
+          }
         } catch {
           // Ignore unavailable sessionStorage.
         }
