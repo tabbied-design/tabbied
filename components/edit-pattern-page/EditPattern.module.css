@@ -158,11 +158,13 @@
   margin-bottom: 18px;
 }
 
+/* Bold, so the two sections read as headings over their controls rather than
+   as one more label among them. */
 .groupTitle {
   margin: 0 0 18px;
   font-family: var(--font-display);
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 700;
   color: #0e0e13;
   letter-spacing: 0.01em;
 }
@@ -455,13 +457,87 @@
   scrollbar-color: #d4d9df transparent;
 }
 
+/* The phone's strip: the same rows laid side by side in one swipeable line,
+   each ringed so it reads as a chip against the white, run out to the tile's
+   edges. Scroll within scroll on touch is what the vertical list would be. */
+.paletteStrip {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  max-height: none;
+  margin: 10px -22px 0;
+  padding: 2px 22px 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.paletteStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.paletteStrip > button {
+  flex: none;
+  width: auto;
+  margin: 0;
+  padding: 9px 14px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.12);
+}
+
+.paletteStrip > button[data-active] {
+  box-shadow: none;
+}
+
+.paletteStrip > button > span:first-child {
+  flex: none;
+  overflow: visible;
+}
+
+/* Over the strip: what it is, and the way to the rest of the list. */
+.stripHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: oklch(0.42 0.01 260);
+}
+
+.viewAll {
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans-serif);
+  font-size: 13px;
+  color: #0e0e13;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.viewAll:focus-visible {
+  outline: 2px solid var(--blue-medium);
+  outline-offset: 2px;
+}
+
+/* The phone's "View all": the browser over the whole screen. */
+.allPalettesSheet {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  outline: none;
+}
+
 .paletteEmpty {
   padding: 16px 12px;
   font-size: 13px;
   color: oklch(0.7 0.01 260);
 }
 
-/* "+ New Palette" (left) and "Browse all palettes ›" (right) under the chips. */
+/* "+ New Palette" under the list. */
 .chipsActions {
   display: flex;
   flex-wrap: wrap;
@@ -492,10 +568,6 @@
 .chipsAction:focus-visible {
   outline: 2px solid var(--blue-medium);
   outline-offset: 2px;
-}
-
-.browseAll {
-  margin-left: auto;
 }
 
 /* ---- Layout group ---- */
@@ -649,19 +721,14 @@
       0 14px 20px -16px oklch(0 0 0 / 0.42);
   }
 
-  /* The preview band is a fixed height here, so the caption has to fit inside
-     it; the header no longer names the pattern, so the caption is where the
-     name lives on a phone too. */
+  /* The band is all plate: the caption is hidden here, and the heading for
+     assistive tech in the header is where the name lives on a phone. */
   .stage {
-    gap: 12px;
+    gap: 0;
   }
 
   .stageCaption {
-    gap: 1px;
-  }
-
-  .stageName {
-    font-size: 16px;
+    display: none;
   }
 
   .panel {
@@ -682,91 +749,6 @@
     height: 48vh;
     min-height: 280px;
   }
-}
-
-/* ---- Mobile (7d) inline shuffle / export panels ---- */
-
-.mobilePanel {
-  padding: 14px 20px 24px;
-}
-
-.mobilePanelHead {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.mobilePanelTitle {
-  font-size: 15px;
-  font-weight: 600;
-  color: oklch(0.55 0.01 260);
-}
-
-.mobilePanelBack {
-  margin-left: auto;
-  margin-right: -10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 10px;
-  border: none;
-  background: transparent;
-  font-family: var(--font-sans-serif);
-  font-size: 13px;
-  color: oklch(0.55 0.01 260);
-  cursor: pointer;
-  transition: color 120ms ease;
-}
-
-.mobilePanelBack:hover {
-  color: #0e0e13;
-}
-
-.exportRow:disabled {
-  color: oklch(0.78 0.01 260);
-  cursor: not-allowed;
-}
-
-.exportRow:disabled:hover {
-  background: transparent;
-}
-
-.exportRow:disabled .exportIcon {
-  color: oklch(0.86 0.01 260);
-}
-
-/* The background-image footnote, under a rule so it reads as a note about the
-   rows above rather than a fifth row. */
-.exportNote {
-  display: flex;
-  gap: 11px;
-  align-items: flex-start;
-  margin: 14px 0 0;
-  padding-top: 14px;
-  border-top: 1px solid oklch(0 0 0 / 0.08);
-  font-family: var(--font-sans-serif);
-  font-size: 14px;
-  line-height: 1.5;
-  color: oklch(0.5 0.01 260);
-}
-
-.exportNote svg {
-  flex: none;
-  margin-top: 1px;
-}
-
-/* Right-aligned limitations marker on the mobile "Download SVG" row. */
-.exportWarningIcon {
-  flex: none;
-  margin-left: auto;
-  color: #e8a13c;
-}
-
-.exportList {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 10px;
 }
 
 /* ---- SVG-export limitations confirmation dialog ---- */

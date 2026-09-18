@@ -125,9 +125,29 @@ export default function HomeHero({
               <span className={styles.scrollHint}>(scroll)</span>
             </div>
 
+            {/* The two things the site offers are links to them, each in
+                its own gradient; the rest of the sentence is plain type.
+                The break is authored: the design sets the second line on
+                "websites", which a wrap at the measure would not do. On a
+                phone it goes, or "and" sits on a line of its own. */}
             <h1 className={styles.title}>
-              Free patterns and websites,{' '}
-              <span className={styles.titleAccent}>yours to shape.</span>
+              <Link
+                href="/patterns"
+                prefetch={false}
+                className={`${styles.titleLink} ${styles.titleLinkPatterns}`}
+              >
+                Free patterns
+              </Link>{' '}
+              and{' '}
+              <br className={styles.titleBreak} />
+              <Link
+                href="/templates"
+                prefetch={false}
+                className={`${styles.titleLink} ${styles.titleLinkSites}`}
+              >
+                websites
+              </Link>
+              , yours to shape.
             </h1>
 
             <p className={styles.lede}>

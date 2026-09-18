@@ -1,19 +1,23 @@
 'use client';
 
-// A template in a frame, with the two things to do with it.
+// A template in a frame, with one thing to do with it: use it.
 //
-// Customize is a link, not a call: /studio/customize/ makes the site (and
-// handles signing in first), so this page holds no session logic beyond the
-// avatar. Download is a menu because there are two packages and both are the
-// template as authored - the note in the menu says so, since the customizer's
-// download menu says something different.
+// "Use this template" is the only action. Signed in, it opens a menu of the
+// three ways to take a template: customize it (a link, not a call, since
+// /studio/customize/ makes the site), download it as it is, or export the
+// React project. Signed out, the same button opens a card that asks for a
+// sign-in first, with the customizer as the way back, so a first visitor sees
+// one button and one ask rather than two actions with different rules. The
+// gate is this page's: the packaged zips are static assets, and Studio's
+// results page still links them directly.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
+import { Popover } from '@base-ui-components/react/popover';
 import { ChevronDown } from 'lucide-react';
 import { initials } from 'components/account/AccountHeader';
 import { signOut, useSessionUser } from 'lib/authClient';
-import { plexMono, plexSans } from 'lib/fonts';
+import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
 import styles from './TemplatePreview.module.css';
 
 export default function TemplatePreview({
@@ -30,8 +34,20 @@ export default function TemplatePreview({
   const { user, isPending } = useSessionUser();
   const router = useRouter();
 
+  const customizeHref = `/studio/customize/?slug=${slug}`;
+  const next = encodeURIComponent(customizeHref);
+
+  const useLabel = (
+    <>
+      <span className={styles.useLabel}>Use this template</span>
+      <ChevronDown className={styles.chevron} size={15} aria-hidden="true" />
+    </>
+  );
+
   return (
-    <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
+    <div
+      className={`${styles.page} ${plexMono.variable} ${plexSans.variable} ${ebGaramond.variable}`}
+    >
       <header className={styles.bar}>
         <Link href="/templates" prefetch={false} className={styles.back} aria-label="All templates">
           <span className={styles.backCircle} aria-hidden="true">
@@ -52,59 +68,71 @@ export default function TemplatePreview({
         </Link>
 
         <div className={styles.actions}>
-          <Link
-            href={`/studio/customize/?slug=${slug}`}
-            prefetch={false}
-            className={styles.customize}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              width="19"
-              height="19"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M16.4 3.9a1.9 1.9 0 0 1 2.7 2.7L8.2 17.5l-3.7 1 1-3.7z" />
-            </svg>
-            Customize
-          </Link>
-
-          <Menu.Root>
-            <Menu.Trigger className={styles.download}>
-              Download
-              <ChevronDown className={styles.chevron} size={15} aria-hidden="true" />
-            </Menu.Trigger>
-            <Menu.Portal>
-              <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
-                <Menu.Popup className={styles.menu}>
-                  <div className={styles.menuHead}>Free, no account needed</div>
-                  <Menu.Item
-                    className={styles.option}
-                    render={<a href={`/downloads/${slug}-html.zip`} download />}
-                  >
-                    <span className={styles.optionTitle}>Static HTML &amp; CSS</span>
-                    <span className={styles.optionNote}>One folder, drop on any host</span>
-                  </Menu.Item>
-                  <Menu.Item
-                    className={styles.option}
-                    render={<a href={`/downloads/${slug}-react.zip`} download />}
-                  >
-                    <span className={styles.optionTitle}>React project</span>
-                    <span className={styles.optionNote}>Components, ready for a repo</span>
-                  </Menu.Item>
-                </Menu.Popup>
-              </Menu.Positioner>
-            </Menu.Portal>
-          </Menu.Root>
+          {user ? (
+            <Menu.Root>
+              <Menu.Trigger className={styles.use}>{useLabel}</Menu.Trigger>
+              <Menu.Portal>
+                <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
+                  <Menu.Popup className={styles.menu}>
+                    <Menu.Item
+                      className={styles.option}
+                      render={<Link href={customizeHref} prefetch={false} />}
+                    >
+                      <span className={styles.optionTitle}>Customize</span>
+                      <span className={styles.optionNote}>Change colors and patterns</span>
+                    </Menu.Item>
+                    <Menu.Separator className={styles.menuRule} />
+                    <Menu.Item
+                      className={styles.option}
+                      render={<a href={`/downloads/${slug}-html.zip`} download />}
+                    >
+                      <span className={styles.optionTitle}>Download as-is</span>
+                      <span className={styles.optionNote}>Static HTML &amp; CSS, drop on any host</span>
+                    </Menu.Item>
+                    <Menu.Item
+                      className={styles.option}
+                      render={<a href={`/downloads/${slug}-react.zip`} download />}
+                    >
+                      <span className={styles.optionTitle}>Export React project</span>
+                      <span className={styles.optionNote}>Components, ready for a repo</span>
+                    </Menu.Item>
+                  </Menu.Popup>
+                </Menu.Positioner>
+              </Menu.Portal>
+            </Menu.Root>
+          ) : (
+            <Popover.Root>
+              <Popover.Trigger className={styles.use}>{useLabel}</Popover.Trigger>
+              <Popover.Portal>
+                <Popover.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
+                  <Popover.Popup className={styles.signCard} aria-label="Sign in to use this template">
+                    <Popover.Title className={styles.signTitle}>Sign in to use this template</Popover.Title>
+                    <Popover.Description className={styles.signCopy}>
+                      Customize it online, download it as-is, or export it as a React project.
+                    </Popover.Description>
+                    <div className={styles.signActions}>
+                      <Link href={`/sign-in?next=${next}`} prefetch={false} className={styles.signIn}>
+                        Log in
+                      </Link>
+                      <Link href={`/sign-up?next=${next}`} prefetch={false} className={styles.signUp}>
+                        Sign up
+                      </Link>
+                    </div>
+                    <p className={styles.signFree}>Free to use.</p>
+                  </Popover.Popup>
+                </Popover.Positioner>
+              </Popover.Portal>
+            </Popover.Root>
+          )}
 
           {user ? (
             <Menu.Root>
-              <Menu.Trigger className={styles.avatar} aria-label="Account menu">
-                {initials(user.name, user.email)}
+              <Menu.Trigger className={styles.account} aria-label="Account menu">
+                <span className={styles.avatar}>{initials(user.name, user.email)}</span>
+                <span className={styles.lines} aria-hidden="true">
+                  <span />
+                  <span />
+                </span>
               </Menu.Trigger>
               <Menu.Portal>
                 <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>

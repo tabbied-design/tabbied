@@ -8,7 +8,7 @@ test.describe('Tabbied site', () => {
 
     await expect(page).toHaveTitle(/Tabbied/);
     await expect(
-      page.getByRole('heading', { level: 1, name: /Free patterns and websites/ })
+      page.getByRole('heading', { level: 1, name: /Free patterns and\s+websites/ })
     ).toBeVisible();
 
     // Every figure on the page is derived from the catalog at build time
@@ -163,14 +163,16 @@ test.describe('Tabbied site', () => {
       .waitFor({ state: 'attached', timeout: 15000 });
 
     // The rail is fixed to the window, so scrolling the grid leaves its pinned
-    // "+ New Palette" footer button in place.
-    const newPalette = page
+    // "Random per pattern" row in place. (There is no "New palette" button any
+    // more: the pencil on a row is the way to a new one.)
+    const random = page
       .locator('aside')
-      .getByRole('button', { name: /New Palette/ });
-    const before = await newPalette.boundingBox();
+      .getByRole('button', { name: 'Random per pattern' });
+    await expect(page.locator('aside').getByRole('button', { name: /New Palette/ })).toHaveCount(0);
+    const before = await random.boundingBox();
     await page.evaluate(() => window.scrollTo(0, 1400));
     await page.waitForTimeout(300);
-    const after = await newPalette.boundingBox();
+    const after = await random.boundingBox();
 
     expect(Math.abs((after?.y ?? 0) - (before?.y ?? 0))).toBeLessThan(4);
   });
@@ -320,10 +322,11 @@ test.describe('Tabbied site', () => {
       page.getByRole('button', { name: 'Export' })
     ).toBeVisible();
 
-    // Option controls coming from the pattern definition (the grid select is
-    // presented as "Grid density" in the redesigned inspector).
+    // Option controls coming from the pattern definition: the grid is a
+    // "Grid density" slider whose readout names the grid it resolves to.
     await expect(page.getByText('Grid density')).toBeVisible();
-    await expect(page.getByText('4x6', { exact: true })).toBeVisible();
+    await expect(page.getByRole('slider', { name: 'Grid density' })).toBeVisible();
+    await expect(page.getByText('6\u00D79', { exact: true })).toBeVisible();
 
     // Regression guard: the generative grid must actually paint its cells.
     // css-doodle >= 0.5 reinterpreted `@random(1)`, which collapsed the
@@ -357,9 +360,12 @@ test.describe('Tabbied site', () => {
     // Wait until state has been written back into the URL.
     await expect(page).toHaveURL(/grid=6x9/);
 
-    await page.getByText('4x6', { exact: true }).click();
+    // One step down the density slider is the next grid in the ratio's list.
+    await page.getByRole('slider', { name: 'Grid density' }).focus();
+    await page.keyboard.press('ArrowLeft');
 
     await expect(page).toHaveURL(/grid=4x6/);
+    await expect(page.getByText('4\u00D76', { exact: true })).toBeVisible();
   });
 
   test('changing the aspect ratio remaps the grid to keep square cells', async ({
@@ -377,7 +383,7 @@ test.describe('Tabbied site', () => {
 
     await expect(page).toHaveURL(/aspectRatio=1%3A1/);
     await expect(page).toHaveURL(/grid=9x9/);
-    await expect(page.getByText('9x9', { exact: true })).toBeVisible();
+    await expect(page.getByText('9\u00D79', { exact: true })).toBeVisible();
   });
 
   test('palette colors can be removed and re-added within the pattern bounds', async ({
@@ -481,9 +487,13 @@ test.describe('Tabbied site', () => {
     // The static export uses trailing slashes, so match /patterns/radius/?seed=...
     await page.waitForURL(/\/patterns\/radius\/?\?/, { timeout: 15000 });
     await expect(page).toHaveURL(/seed=0000/);
+    // A first visit is the random spread, so the card's link also carries
+    // the palette it was wearing, and the editor opens in it.
+    expect(new URL(page.url()).searchParams.getAll('palette').length).toBeGreaterThan(1);
 
-    await page.getByText('6x9', { exact: true }).click();
-    await expect(page).toHaveURL(/grid=6x9/);
+    await page.getByRole('slider', { name: 'Grid density' }).focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(page).toHaveURL(/grid=8x12/);
   });
 
   test('editor opens directly in the state described by a shared URL', async ({
@@ -492,51 +502,55 @@ test.describe('Tabbied site', () => {
     await page.goto('/patterns/radius?seed=ZZZZ&grid=9x9&aspectRatio=1%3A1');
 
     // Initial state comes from the URL (not corrected after mount), so the
-    // matching grid density option must already be selected (aria-pressed).
-    await expect(page.getByText('9x9', { exact: true })).toBeVisible();
-    const pressed = page.getByRole('button', {
-      name: '9x9',
-      exact: true,
-      pressed: true,
-    });
-    await expect(pressed).toHaveCount(1);
+    // density slider must already sit on that grid's level.
+    await expect(page.getByText('9\u00D79', { exact: true })).toBeVisible();
+    await expect(page.getByRole('slider', { name: 'Grid density' })).toHaveAttribute(
+      'aria-valuenow',
+      '2'
+    );
   });
 });
 
 test.describe('Tabbied site (mobile viewport)', () => {
   test.use({ viewport: { width: 390, height: 664 } });
 
-  test('the editor header opens the shuffle menu and the export panel (7d)', async ({
+  test('the editor header shuffles the layout and drops the export menu (7d)', async ({
     page,
   }) => {
     await page.goto('/patterns/radius?seed=0000');
 
-    // The compact 7d header replaces the split buttons with two icon buttons.
-    const shuffleBtn = page.getByRole('button', { name: 'Shuffle options' });
-    const exportBtn = page.getByRole('button', { name: 'Export options' });
+    // The compact header is two circles: Shuffle, which draws the layout
+    // again and nothing else, and Export.
+    const shuffleBtn = page.getByRole('button', { name: 'Shuffle', exact: true });
+    const exportBtn = page.getByRole('button', { name: 'Export', exact: true });
     await expect(shuffleBtn).toBeVisible({ timeout: 15000 });
     await expect(exportBtn).toBeVisible();
 
-    // The scopes are a dropdown under the button that opened them, as on the
-    // desktop, rather than a sheet at the foot of the screen. Choosing one
-    // makes it the default and runs it in the same move, so picking the
-    // layout scope reseeds the pattern.
     await shuffleBtn.click();
-    const layout = page.getByRole('menuitem', { name: 'Shuffle layout' });
-    await expect(layout).toBeVisible();
-    await layout.click();
     await expect(page).not.toHaveURL(/seed=0000/);
 
-    // Export stays a panel: its rows are long and one of them opens a dialog.
+    // Export is a dropdown under its button, as on the desktop, not a sheet
+    // that replaces the rail.
     await exportBtn.click();
     await expect(
-      page.getByRole('button', { name: 'Copy React component' })
+      page.getByRole('menuitem', { name: 'Copy React component' })
     ).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('menu')).toHaveCount(0);
 
-    // With that panel open, the back arrow closes it rather than leaving the
-    // editor, and the rail comes back.
-    await page.getByRole('link', { name: 'Back to editor' }).click();
+    // The plate's caption is hidden on the band; the name is in the heading
+    // for assistive tech. The rail is still there under the band.
+    await expect(page.locator('figcaption')).toBeHidden();
     await expect(page.getByRole('heading', { name: 'Colors' })).toBeVisible();
+
+    // The palettes are a strip with "View all" over it, which opens every
+    // palette in a sheet over the editor.
+    await expect(page.getByRole('textbox', { name: 'Search palettes' })).toHaveCount(0);
+    await page.getByRole('button', { name: 'View all' }).click();
+    const close = page.getByRole('button', { name: 'Close palette browser' });
+    await expect(close).toBeVisible();
+    await close.click();
+    await expect(close).toHaveCount(0);
   });
 
   test('the gallery shows palettes as a horizontal chip shelf (7a)', async ({
@@ -545,11 +559,14 @@ test.describe('Tabbied site (mobile viewport)', () => {
     await page.goto('/patterns');
 
     // The fixed rail is hidden below the two-column breakpoint; the palettes
-    // become a horizontal chip shelf with a trailing "All ›" browser pill.
+    // become a horizontal chip shelf, "Random per pattern" first, with a
+    // trailing "All ›" browser pill. No "New palette" anywhere: the pencil
+    // on a chip is the way to a new one.
     await expect(page.locator('aside')).toBeHidden();
     await expect(
-      page.getByRole('button', { name: 'New Palette' })
+      page.getByRole('button', { name: 'Random per pattern' })
     ).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('button', { name: 'New Palette' })).toHaveCount(0);
 
     const allPill = page.getByRole('button', { name: /^All/ });
     await expect(allPill).toBeVisible();
@@ -676,24 +693,32 @@ test.describe('Studio', () => {
 });
 
 test.describe('Template preview and customize', () => {
-  test('a template is framed with the two things to do with it', async ({ page }) => {
+  test('a template is framed with one thing to do with it, behind a sign-in', async ({ page }) => {
     // The frame loads the live template page, whose typekit and Google Fonts
     // stylesheets can hang in a sandbox with no outbound network, and `load`
     // would wait for them through the iframe. The bar is what is asserted.
     await page.goto('/templates/verdant/', { waitUntil: 'domcontentloaded' });
 
-    await expect(page.getByRole('link', { name: 'Customize' })).toHaveAttribute(
-      'href',
-      '/studio/customize/?slug=verdant'
-    );
     await expect(page.locator('iframe')).toHaveAttribute('src', '/template/verdant/');
     // next/link writes the export's trailing slash.
     await expect(page.getByRole('link', { name: 'All templates' })).toHaveAttribute('href', '/templates/');
 
-    await page.getByRole('button', { name: 'Download' }).click();
-    await expect(page.getByRole('menuitem', { name: /Static HTML & CSS/ })).toHaveAttribute(
+    // Signed out (no Worker behind the export), the one button asks for a
+    // sign-in first, with the customizer as the way back; Customize and the
+    // downloads are behind it, not beside it.
+    await expect(page.getByRole('link', { name: 'Customize' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Download' })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Use this template' }).click();
+
+    const card = page.getByRole('dialog', { name: 'Sign in to use this template' });
+    await expect(card).toBeVisible();
+    await expect(card.getByRole('link', { name: 'Log in' })).toHaveAttribute(
       'href',
-      '/downloads/verdant-html.zip'
+      /\/sign-in\/?\?next=%2Fstudio%2Fcustomize%2F%3Fslug%3Dverdant/
+    );
+    await expect(card.getByRole('link', { name: 'Sign up' })).toHaveAttribute(
+      'href',
+      /\/sign-up\/?\?next=%2Fstudio%2Fcustomize%2F%3Fslug%3Dverdant/
     );
   });
 

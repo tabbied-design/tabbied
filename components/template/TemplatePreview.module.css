@@ -1,10 +1,20 @@
-/* The template preview: Studio's light tokens, a bar, and the page framed.
-   The iframe shows the live /template/<slug>/ route, which is the page the
-   packager derives the download from; nothing in this file reaches it. */
+/* The template preview: a dark bar over the page framed on Studio's paper.
+   The bar is dark so the chrome reads apart from whatever the template is -
+   most of them open on a pale ground, and a white bar over a white page
+   left nothing between the site and the site it was showing. The iframe
+   shows the live /template/<slug>/ route, which is the page the packager
+   derives the download from; nothing in this file reaches it. */
 
-.page {
+/* The tokens are declared on the page and again on the two popups, because
+   the popups are portaled to <body>: outside the page they would read none
+   of these, and a `font:` or `background-color:` naming one is then invalid
+   as a whole, which is how the sign-in card lost its dark pill. */
+.page,
+.menu,
+.signCard {
   --s-paper: #fbfaf8;
   --s-ink: #0e0e13;
+  --s-bar: #14141a;
   --s-muted: oklch(0.4 0.01 260);
   --s-dim: oklch(0.5 0.01 260);
   --s-rule: oklch(0 0 0 / 0.08);
@@ -13,8 +23,11 @@
     'Helvetica Neue', Helvetica, Arial, sans-serif;
   --s-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
     'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --s-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --s-mono: var(--font-plex-mono, ui-monospace), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --s-serif: var(--font-garamond, 'EB Garamond'), 'EB Garamond', Georgia, serif;
+}
 
+.page {
   min-height: 100vh;
   font-family: var(--s-sans);
   color: var(--s-ink);
@@ -30,8 +43,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 40px;
-  background-color: #fff;
-  border-bottom: 1px solid var(--s-rule);
+  background-color: var(--s-bar);
+  border-bottom: 1px solid oklch(1 0 0 / 0.1);
 }
 
 .back {
@@ -39,11 +52,11 @@
   flex: none;
   gap: 13px;
   align-items: center;
-  color: var(--s-muted);
+  color: oklch(0.8 0.01 260);
 }
 
 .back:hover {
-  color: var(--s-ink);
+  color: #fff;
 }
 
 .backCircle {
@@ -54,7 +67,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.14);
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.22);
 }
 
 .backCircle svg {
@@ -73,27 +86,12 @@
   flex: none;
   gap: 10px;
   align-items: center;
-  /* .meta used to take the slack between the crumb and these; with it gone the
-     auto margin is what holds them at the right edge. */
   margin-left: auto;
 }
 
-.customize {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  height: 32px;
-  padding: 0 8px;
-  font: 400 13px var(--s-sans);
-  color: oklch(0.28 0.01 260);
-  white-space: nowrap;
-}
-
-.customize:hover {
-  color: var(--s-ink);
-}
-
-.download {
+/* The one action. The brand gradient with no ring round it: on the dark bar
+   the gradient is edge enough. */
+.use {
   display: flex;
   gap: 6px;
   align-items: center;
@@ -104,12 +102,17 @@
   background: linear-gradient(135deg, #3ff0b2, #2ee6f0);
   border: none;
   border-radius: 999px;
-  box-shadow: inset 0 0 0 1px var(--s-ink);
   cursor: pointer;
 }
 
-.download:hover {
+.use:hover,
+.use[data-popup-open] {
   filter: brightness(1.05);
+}
+
+.use:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .chevron {
@@ -124,13 +127,14 @@
 .menu {
   /* A fixed width, not a range: at 210px the tracked-out eyebrow wraps onto a
      second line, which is what made this menu read as a different control. */
-  width: 290px;
+  width: 300px;
   padding: 7px;
   font-family: var(--s-sans);
+  color: var(--s-ink);
   background-color: #fff;
   border-radius: 14px;
   outline: none;
-  box-shadow: 0 16px 40px oklch(0 0 0 / 0.18);
+  box-shadow: 0 16px 40px oklch(0 0 0 / 0.2);
   transform-origin: var(--transform-origin);
   transition: opacity 120ms ease, transform 120ms ease;
 }
@@ -139,14 +143,6 @@
 .menu[data-ending-style] {
   opacity: 0;
   transform: scale(0.97);
-}
-
-.menuHead {
-  padding: 9px 12px 7px;
-  font: 400 10.5px var(--s-mono);
-  color: oklch(0.55 0.01 260);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
 }
 
 .menuEmail {
@@ -160,7 +156,7 @@
 
 .menuRule {
   height: 1px;
-  margin: 4px 0;
+  margin: 5px 12px;
   background-color: oklch(0 0 0 / 0.08);
 }
 
@@ -208,6 +204,108 @@
   color: oklch(0.5 0.01 260);
 }
 
+/* ---- Signed out: the ask ------------------------------------------------- */
+
+.signCard {
+  box-sizing: border-box;
+  width: 300px;
+  padding: 20px;
+  font-family: var(--s-sans);
+  color: var(--s-ink);
+  background-color: #fff;
+  border-radius: 14px;
+  outline: none;
+  box-shadow: 0 16px 40px oklch(0 0 0 / 0.2);
+  transform-origin: var(--transform-origin);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.signCard[data-starting-style],
+.signCard[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.97);
+}
+
+.signTitle {
+  margin: 0 0 6px;
+  font: 600 15px var(--s-sans);
+}
+
+.signCopy {
+  margin: 0 0 16px;
+  font: 400 13px / 1.55 var(--s-sans);
+  color: oklch(0.48 0.01 260);
+}
+
+.signActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.signIn,
+.signUp {
+  display: block;
+  padding: 11px;
+  font: 500 13.5px var(--s-sans);
+  text-align: center;
+  border-radius: 999px;
+}
+
+.signIn {
+  color: #fff;
+  background-color: var(--s-bar);
+}
+
+.signIn:hover {
+  color: #fff;
+  background-color: #25252e;
+}
+
+.signUp {
+  color: var(--s-ink);
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.16);
+}
+
+.signUp:hover {
+  color: var(--s-ink);
+  background-color: oklch(0 0 0 / 0.04);
+}
+
+.signFree {
+  margin: 12px 0 0;
+  font: italic 400 13px var(--s-serif);
+  color: oklch(0.55 0.01 260);
+  text-align: center;
+}
+
+/* ---- The person ---------------------------------------------------------- */
+
+/* The initials and two lines in one pill: the person and the menu they open,
+   drawn together so the circle is not mistaken for a picture of them. */
+.account {
+  display: inline-flex;
+  flex: none;
+  gap: 9px;
+  align-items: center;
+  margin-left: 6px;
+  padding: 3px 11px 3px 3px;
+  background: transparent;
+  border: 1px solid oklch(1 0 0 / 0.22);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.account:hover,
+.account[data-popup-open] {
+  border-color: oklch(1 0 0 / 0.5);
+}
+
+.account:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
 .avatar {
   display: flex;
   flex: none;
@@ -215,19 +313,24 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  margin-left: 6px;
-  padding: 0;
   font: 600 11.5px var(--s-mono);
-  color: #fff;
-  background-color: var(--s-ink);
-  border: none;
+  color: var(--s-bar);
+  background-color: #fff;
   border-radius: 50%;
-  cursor: pointer;
 }
 
-.avatar:hover,
-.avatar[data-popup-open] {
-  background-color: #25252e;
+.lines {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.lines span {
+  display: block;
+  width: 16px;
+  height: 1px;
+  background-color: #eef0f6;
 }
 
 .avatarGhost {
@@ -235,7 +338,7 @@
   width: 34px;
   height: 34px;
   margin-left: 6px;
-  background-color: oklch(0 0 0 / 0.06);
+  background-color: oklch(1 0 0 / 0.12);
   border-radius: 50%;
 }
 
@@ -310,9 +413,12 @@
   border: 0;
 }
 
+/* On a phone the pretend browser goes: no chrome, no frame, the template
+   full bleed under the bar and scrolling inside its own height. The bar is
+   14px of padding round a 34px circle, plus its rule: 63px. */
 @media (max-width: 768px) {
   .bar {
-    flex-wrap: wrap;
+    gap: 12px;
     padding: 14px 20px;
   }
 
@@ -321,16 +427,25 @@
   }
 
   .stage {
-    padding: 20px 20px 0;
+    padding: 0;
   }
 
   .frame {
-    height: calc(100vh - 150px);
+    height: calc(100vh - 63px);
+    height: calc(100dvh - 63px);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .chrome {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .menu {
+  .menu,
+  .signCard {
     transition: none;
   }
 }

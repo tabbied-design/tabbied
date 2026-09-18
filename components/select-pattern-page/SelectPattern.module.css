@@ -93,38 +93,28 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  /* Fixed rows plus dense flow are what make the mosaic tile: every span is a
-     whole number of these, so bands close cleanly and a gap left by a wide tile
-     is backfilled by the next narrow one. */
-  grid-auto-rows: 104px;
+  /* Masonry: every card is one column wide and a whole number of these rows
+     tall, and dense flow puts each one under the shortest column. The rows are
+     fine enough (52px) that the three heights read as a rhythm rather than a
+     step, and flushGridBottom evens the columns at the end of the page. */
+  grid-auto-rows: 52px;
   grid-auto-flow: dense;
   gap: 20px;
 }
 
-/* Tile spans, assigned per card in SelectPattern.tsx. */
-.s1x2 {
-  grid-column: span 1;
-  grid-row: span 2;
+/* Row spans, assigned per card in SelectPattern.tsx. A card is never wider
+   than a column: at four columns of a 1100px sheet that is 196-340px tall on
+   ~250px wide, which is the tallest the design lets a card get. */
+.rows3 {
+  grid-row: span 3;
 }
 
-.s1x4 {
-  grid-column: span 1;
+.rows4 {
   grid-row: span 4;
 }
 
-.s2x2 {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-.s2x4 {
-  grid-column: span 2;
-  grid-row: span 4;
-}
-
-.s4x2 {
-  grid-column: span 4;
-  grid-row: span 2;
+.rows5 {
+  grid-row: span 5;
 }
 
 @media (min-width: 769px) {
@@ -136,15 +126,6 @@
 @media (min-width: 1025px) {
   .grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-/* Below four columns the bands can no longer tile, so every tile narrows to one
-   column and only its height still varies. Row spans are deliberately left
-   alone - that is what keeps the grid from flattening into a plain list. */
-@media (max-width: 1024.98px) {
-  .grid > * {
-    grid-column: span 1 !important;
   }
 }
 

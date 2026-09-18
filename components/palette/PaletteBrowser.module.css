@@ -1,12 +1,12 @@
-/* Embedded palette browser. Fills its host (the gallery rail or the editor
-   panel); the list scrolls between a fixed header and a fixed "+ New Palette". */
+/* Embedded palette browser. Fills its host (the gallery's palette slot or the
+   editor's fullscreen sheet); the list scrolls under a fixed header. */
 .browser {
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
 
-/* In the rail it grows to fill the aside between the logo and the footer. */
+/* In the gallery it grows to fill the palette slot under the search. */
 .rail {
   flex: 1;
 }
@@ -113,7 +113,7 @@
 }
 
 .panel .list {
-  padding: 4px 20px 12px;
+  padding: 4px 20px 24px;
 }
 
 .more {
@@ -128,56 +128,4 @@
   text-align: center;
   font-size: 13px;
   color: oklch(0.7 0.01 260);
-}
-
-.foot {
-  flex: none;
-}
-
-.panel .foot {
-  padding: 12px 28px 16px;
-  border-top: 1px solid #eceef1;
-}
-
-.newPalette {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin-top: 10px;
-  padding: 8px 0;
-  border: none;
-  background: transparent;
-  font-family: var(--font-sans-serif);
-  font-size: 13px;
-  color: oklch(0.55 0.01 260);
-  cursor: pointer;
-  text-align: left;
-  transition: color 120ms ease;
-}
-
-.newPalette:hover {
-  color: #0e0e13;
-}
-
-.newPalette:focus-visible {
-  outline: 2px solid var(--blue-medium);
-  outline-offset: -2px;
-}
-
-.newStrip {
-  display: flex;
-  width: 60px;
-  height: 16px;
-  flex: none;
-  border: 1px solid #ced3d9;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.newStrip > span {
-  flex: 1;
-}
-
-.newStrip > span:not(:last-child) {
-  border-right: 1px solid #ced3d9;
 }

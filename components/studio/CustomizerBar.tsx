@@ -1,41 +1,35 @@
 'use client';
 
-// The customizer's top bar: the way back, Save, Download, and the person.
+// The customizer's top bar: the way back, Download, and the person.
+//
+// Dark, like the template preview's, so the chrome reads apart from the site
+// on the canvas. Save is not up here: it sits at the foot of the rail, next
+// to the controls that make the changes it saves.
 //
 // Download is a menu because there are two packages and they are not the
 // same thing. The static package is rebuilt in the browser with the site's
 // colours and patterns in it (lib/studioDownload.ts); the React package is the
 // template's source, which the customizer's document cannot be applied to,
-// and the menu says so rather than implying otherwise.
+// and the menu says so rather than implying otherwise. The design draws a
+// gauge of downloads used above the two; nothing counts downloads yet (the
+// account's usage page says the same), so the gauge waits for a counter
+// rather than reading a number nobody keeps.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
-import { ChevronDown } from 'lucide-react';
+import { ArrowDownToLine, ChevronDown } from 'lucide-react';
 import { initials } from 'components/account/AccountHeader';
 import { signOut, useSessionUser } from 'lib/authClient';
 import styles from './CustomizerBar.module.css';
 
-export type SaveState = 'clean' | 'dirty' | 'saving' | 'saved';
-
-const SAVE_LABEL: Record<SaveState, string> = {
-  clean: 'No changes to save',
-  dirty: 'Save changes',
-  saving: 'Saving...',
-  saved: 'Saved to your custom sites',
-};
-
 export default function CustomizerBar({
   mine,
-  saveState,
-  onSave,
   downloading,
   onDownloadHtml,
   reactHref,
 }: {
-  /** The viewer owns the site: Save is shown and the way back is the account. */
+  /** The viewer owns the site: the way back is the account. */
   mine: boolean;
-  saveState: SaveState;
-  onSave: () => void;
   downloading: boolean;
   onDownloadHtml: () => void;
   reactHref: string;
@@ -69,20 +63,14 @@ export default function CustomizerBar({
       </Link>
 
       <div className={styles.actions}>
-        {mine ? (
-          <button
-            type="button"
-            className={styles.save}
-            disabled={saveState !== 'dirty'}
-            onClick={onSave}
-          >
-            {SAVE_LABEL[saveState]}
-          </button>
-        ) : null}
-
         <Menu.Root>
-          <Menu.Trigger className={styles.download} disabled={downloading}>
-            {downloading ? 'Preparing...' : 'Download'}
+          <Menu.Trigger
+            className={styles.download}
+            disabled={downloading}
+            aria-label={downloading ? 'Preparing the download' : 'Download'}
+          >
+            <ArrowDownToLine className={styles.downloadIcon} size={18} aria-hidden="true" />
+            <span className={styles.downloadLabel}>{downloading ? 'Preparing...' : 'Download'}</span>
             <ChevronDown className={styles.chevron} size={15} aria-hidden="true" />
           </Menu.Trigger>
           <Menu.Portal>
@@ -111,8 +99,12 @@ export default function CustomizerBar({
 
         {user ? (
           <Menu.Root>
-            <Menu.Trigger className={styles.avatar} aria-label="Account menu">
-              {initials(user.name, user.email)}
+            <Menu.Trigger className={styles.account} aria-label="Account menu">
+              <span className={styles.avatar}>{initials(user.name, user.email)}</span>
+              <span className={styles.lines} aria-hidden="true">
+                <span />
+                <span />
+              </span>
             </Menu.Trigger>
             <Menu.Portal>
               <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>

@@ -1,19 +1,22 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import useMediaQuery from 'lib/useMediaQuery';
 import type { GalleryItem } from 'lib/pattern';
 import {
   deletePalette,
+  RANDOM_PALETTE_ID,
   setActivePalette,
   useBrandPalettes,
   type BrandPalette,
 } from 'lib/brandPalettes';
+import { PALETTE_LIBRARY, type LibraryPalette } from 'lib/paletteLibrary';
 import {
-  DEFAULT_PALETTE_ID,
-  PALETTE_LIBRARY,
-  type LibraryPalette,
-} from 'lib/paletteLibrary';
+  assignRandomPalettes,
+  fitToColorBounds,
+  rerollRandomSeed,
+  sessionRandomSeed,
+} from 'lib/randomPalettes';
 import { usePaletteEditor } from 'components/palette/usePaletteEditor';
 import PaletteEditorDialog from 'components/palette/PaletteEditorDialog';
 import GalleryTopBar from './GalleryTopBar';
@@ -22,31 +25,33 @@ import GalleryMobileHeader from './GalleryMobileHeader';
 import GalleryChipShelf from './GalleryChipShelf';
 import GalleryCard from './GalleryCard';
 import GalleryScrollRestorer from './GalleryScrollRestorer';
+import { flushGridBottom } from './flushGridBottom';
 import styles from './SelectPattern.module.css';
 
-const PER_PAGE = 20;
+const PER_PAGE = 24;
 
 /**
- * Tile spans for the mosaic grid, as [columns, rows] against four columns and
- * 104px rows. The six bands each tile the four columns exactly and together
- * come to PER_PAGE, so a full page never ends on a ragged row - and because the
- * list repeats per page, the rhythm is the same wherever you are in the
- * catalog. A short last page (or a search) just falls back to dense packing.
+ * Row spans for the masonry, in 52px rows: every card is one column wide and
+ * three, four or five rows tall, and the grid's dense placement puts each one
+ * under the shortest column, which is what makes it masonry rather than a
+ * mosaic. The sequence is the design's. It repeats per page, so the rhythm is
+ * the same wherever you are in the catalog, and it stays between 196 and
+ * 340px, so a card never reads as a strip however narrow the column.
  */
-const TILE_SPANS: readonly (readonly [number, number])[] = [
-  [2, 4], [1, 4], [1, 2], [1, 2],
-  [2, 2], [1, 2], [1, 2],
-  [1, 2], [1, 2], [2, 4], [1, 2], [1, 2],
-  [4, 2],
-  [1, 4], [2, 4], [1, 2], [1, 2],
-  [2, 2], [1, 2], [1, 2],
+const ROW_SPANS: readonly number[] = [
+  3, 5, 4, 5,
+  4, 5, 3,
+  4, 3, 5, 4, 5,
+  3,
+  5, 4, 3, 4, 5, 3, 4,
+  3, 5, 4, 5,
 ];
 
 // Wait after the last palette pick before recoloring the grid, so rapidly
 // clicking through palettes recolors the thumbnails once, not once per click.
 const APPLY_DEBOUNCE_MS = 150;
 
-// Page numbers to render: the first two, last two, and current ±2, with `null`
+// Page numbers to render: the first two, last two, and current +-2, with `null`
 // standing in for a collapsed range (an ellipsis).
 const paginationWindow = (page: number, pageCount: number): (number | null)[] => {
   const nums: number[] = [];
@@ -116,17 +121,17 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     else window.history.pushState(null, '', url);
   };
 
-  // The rail's highlighted palette. Local so it updates instantly on click,
-  // while the applied palette (which recolors the grid, read from the store by
-  // each card) is written after a short debounce.
-  const [selectedId, setSelectedId] = useState<string | null>(DEFAULT_PALETTE_ID);
+  // The rail's highlighted row. Local so it updates instantly on click, while
+  // the applied palette (which recolors the grid, read from the store by each
+  // card) is written after a short debounce.
+  const [selectedId, setSelectedId] = useState<string | null>(RANDOM_PALETTE_ID);
   const applyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (applyTimer.current) return;
-    // A null active id means "the shared default palette" now (never per-pattern
-    // colors), so highlight the default chip rather than nothing.
-    setSelectedId(brandState.activePaletteId ?? DEFAULT_PALETTE_ID);
+    // A null active id is a stored id that no longer names anything; the rail
+    // lights the random spread rather than nothing.
+    setSelectedId(brandState.activePaletteId ?? RANDOM_PALETTE_ID);
   }, [brandState.activePaletteId]);
 
   useEffect(
@@ -155,6 +160,43 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     }, APPLY_DEBOUNCE_MS);
   };
 
+  // "Random per pattern": one library palette per card, drawn for the session
+  // and kept until the option is chosen again. The seed starts fixed so the
+  // prerendered grid and the first client render agree, and the session's
+  // seed lands after mount.
+  const randomMode = selectedId === RANDOM_PALETTE_ID;
+  const [randomSeed, setRandomSeed] = useState(0);
+
+  useEffect(() => {
+    setRandomSeed(sessionRandomSeed());
+  }, []);
+
+  const indexBySlug = useMemo(
+    () => new Map(gallery.map((item, index) => [item.slug, index])),
+    [gallery]
+  );
+  const randomSpread = useMemo(
+    () => assignRandomPalettes(gallery.length, PALETTE_LIBRARY, randomSeed),
+    [gallery.length, randomSeed]
+  );
+
+  // The spread is keyed by the card's place in the whole catalog, not on the
+  // page, so a search or a page change keeps each design in its own palette.
+  const randomPaletteFor = (item: GalleryItem): string[] | undefined => {
+    if (!randomMode) return undefined;
+
+    const palette = randomSpread[indexBySlug.get(item.slug) ?? 0];
+
+    return palette
+      ? fitToColorBounds(palette.colors, item.colors?.min, item.colors?.max)
+      : undefined;
+  };
+
+  const chooseRandom = () => {
+    setRandomSeed(rerollRandomSeed());
+    applyPalette(RANDOM_PALETTE_ID, true);
+  };
+
   const editor = usePaletteEditor({
     // Saving/creating applies the palette; the rail shows the full list, so a
     // freshly saved custom palette is already at the top - no page to jump to.
@@ -162,10 +204,10 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
   });
 
   // Delete a custom palette on the first click of its delete mark (no confirm step).
-  // Deleting the active palette reverts previews to the shared default.
+  // Deleting the active palette reverts previews to the random spread.
   const removePalette = (id: string) => {
     deletePalette(id);
-    if (selectedId === id) applyPalette(DEFAULT_PALETTE_ID, true);
+    if (selectedId === id) applyPalette(RANDOM_PALETTE_ID, true);
   };
 
   const filtered = useMemo(
@@ -179,11 +221,31 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const clampedPage = Math.min(page, pageCount);
-  const visible = filtered.slice(
-    (clampedPage - 1) * PER_PAGE,
-    (clampedPage - 1) * PER_PAGE + PER_PAGE
+  // Memoised because the flush effect below is keyed on it: a fresh slice per
+  // render would measure the grid again on every palette click.
+  const visible = useMemo(
+    () => filtered.slice((clampedPage - 1) * PER_PAGE, clampedPage * PER_PAGE),
+    [filtered, clampedPage]
   );
   const pages = paginationWindow(clampedPage, pageCount);
+
+  // The masonry ends on one line: the lowest card in each column is stretched
+  // to the last row (see flushGridBottom), again whenever the grid's width
+  // changes, since that moves the cards between columns.
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const grid = gridRef.current;
+
+    if (!grid) return;
+
+    flushGridBottom(grid);
+
+    const observer = new ResizeObserver(() => flushGridBottom(grid));
+    observer.observe(grid);
+
+    return () => observer.disconnect();
+  }, [visible]);
 
   const goToPage = (nextPage: number) => {
     const clamped = Math.min(Math.max(1, nextPage), pageCount);
@@ -218,10 +280,10 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
         library={PALETTE_LIBRARY}
         selectedId={selectedId}
         onApply={(id) => applyPalette(id)}
+        onRandom={chooseRandom}
         onEditCustom={onEditCustom}
         onEditLibrary={onEditLibrary}
         onDelete={removePalette}
-        onNewPalette={() => editor.openEditor()}
       />
       )}
 
@@ -229,7 +291,6 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
       <GalleryMobileHeader
         search={search}
         onSearchChange={onSearchChange}
-        onNewPalette={() => editor.openEditor()}
         palettes={savedPalettes}
         library={PALETTE_LIBRARY}
         selectedId={selectedId}
@@ -253,6 +314,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
           library={PALETTE_LIBRARY}
           selectedId={selectedId}
           onApply={(id) => applyPalette(id)}
+          onRandom={chooseRandom}
           onEditCustom={onEditCustom}
           onEditLibrary={onEditLibrary}
           onDelete={removePalette}
@@ -273,18 +335,15 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
 
         {hasResults ? (
           <>
-            <div className={styles.grid}>
-              {visible.map((item, index) => {
-                const [columns, rows] = TILE_SPANS[index % TILE_SPANS.length];
-
-                return (
-                  <GalleryCard
-                    key={item.slug}
-                    item={item}
-                    className={styles[`s${columns}x${rows}`]}
-                  />
-                );
-              })}
+            <div ref={gridRef} className={styles.grid}>
+              {visible.map((item, index) => (
+                <GalleryCard
+                  key={item.slug}
+                  item={item}
+                  palette={randomPaletteFor(item)}
+                  className={styles[`rows${ROW_SPANS[index % ROW_SPANS.length]}`]}
+                />
+              ))}
             </div>
 
             {/* Numbers only, as the design draws it: the window always shows

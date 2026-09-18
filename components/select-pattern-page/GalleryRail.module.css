@@ -1,8 +1,8 @@
 /* The gallery's desktop palette rail. Fixed to the viewport under the
    masthead, so it stays put while the design grid scrolls with the document:
-   the search is pinned at the top, "+ New Palette" at the
-   bottom, and only the palette list between them scrolls. The main column
-   offsets itself by the rail's width (see SelectPattern.module.css). */
+   the search and the random row are pinned at the top, and only the palette
+   list under them scrolls. The main column offsets itself by the rail's
+   width (see SelectPattern.module.css). */
 .sidebar {
   position: fixed;
   /* Below the masthead, which is sticky at the top of the same page. */
@@ -15,7 +15,7 @@
   width: var(--gallery-rail-w, 300px);
   height: calc(100vh - var(--gallery-bar-h, 75px));
   height: calc(100dvh - var(--gallery-bar-h, 75px));
-  padding: 26px 20px 18px 26px;
+  padding: 20px 20px 0 26px;
   background: #ffffff;
   overflow: hidden;
 }
@@ -25,16 +25,14 @@
   padding-right: 6px;
 }
 
-/* A pill, with the magnifier before the field. */
+/* A field with only a bottom rule, the magnifier after it. */
 .search {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 15px;
+  gap: 10px;
+  padding: 6px 0 9px;
   color: oklch(0.55 0.01 260);
-  background: #ffffff;
-  border: 1px solid oklch(0 0 0 / 0.14);
-  border-radius: 999px;
+  border-bottom: 1px solid oklch(0 0 0 / 0.16);
   transition: border-color 120ms ease;
 }
 
@@ -49,9 +47,62 @@
   border: none;
   background: transparent;
   font-family: var(--font-sans-serif);
-  font-size: 13.5px;
+  font-size: 13px;
   color: #0e0e13;
   outline: none;
+}
+
+.search svg {
+  flex: none;
+}
+
+/* "Random per pattern": drawn as a palette row, inked when it is the choice,
+   with the swap arrows where a row carries its pencil. Pulled out to the
+   rows' edges like the list below it, so the two read as one column. */
+.random {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  box-sizing: border-box;
+  width: calc(100% + 24px);
+  margin: 12px -12px 4px;
+  padding: 7px 7px 7px 12px;
+  font-family: var(--font-sans-serif);
+  font-size: 13px;
+  color: #0e0e13;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.random:hover {
+  background-color: oklch(0 0 0 / 0.05);
+}
+
+.random[data-active] {
+  color: #f7f5f0;
+  background-color: #0e0e13;
+}
+
+.random:focus-visible {
+  outline: 2px solid var(--blue-medium);
+  outline-offset: 2px;
+}
+
+.randomLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.random svg {
+  flex: none;
+  margin-right: 5px;
 }
 
 /* ---- Scrolling palette list ---- */
@@ -59,8 +110,8 @@
 .list {
   flex: 1;
   min-height: 0;
-  margin: 16px -6px 0;
-  padding: 2px 6px;
+  margin: 0 -6px;
+  padding: 2px 6px 44px;
   overflow-y: auto;
   overflow-x: hidden;
   /* Minimal scrollbar: a slim, low-contrast thumb that fades into the white
@@ -99,66 +150,15 @@
   color: oklch(0.7 0.01 260);
 }
 
-/* ---- Pinned footer: "+ New Palette" ---- */
-
-.foot {
-  flex: none;
-  margin-top: 6px;
-  padding: 14px 12px 4px;
-  border-top: 1px solid #eceef1;
-}
-
-/* "+ New Palette" - placeholder strip of empty cells + label. Hover darkens the
-   label only (no wash). */
-.newPalette {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  width: 100%;
-  padding: 8px 0;
-  border: none;
-  background: transparent;
-  font-family: var(--font-sans-serif);
-  font-size: 13px;
-  color: oklch(0.55 0.01 260);
-  cursor: pointer;
-  text-align: left;
-  transition: color 120ms ease;
-}
-
-.newPalette:hover {
-  color: #0e0e13;
-}
-
-.newPalette:focus-visible {
-  outline: 2px solid var(--blue-medium);
-  outline-offset: -2px;
-}
-
-.newStrip {
-  display: flex;
-  width: 60px;
-  height: 16px;
-  flex: none;
-  border: 1px solid #ced3d9;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.newStrip > span {
-  flex: 1;
-}
-
-.newStrip > span:not(:last-child) {
-  border-right: 1px solid #ced3d9;
-}
-
-.newLabel {
-  flex: 1;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* Over the last rows, so the list reads as continuing under the fold. */
+.fade {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 44px;
+  background: linear-gradient(to bottom, transparent, #ffffff 88%);
+  pointer-events: none;
 }
 
 /* Below the two-column breakpoint the fixed rail is replaced by the mobile
@@ -171,7 +171,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .search,
-  .newPalette {
+  .random {
     transition: none;
   }
 }

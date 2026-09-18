@@ -53,7 +53,7 @@ export const samePalette = (a: readonly string[], b: readonly string[]): boolean
 
 /**
  * The rows the rail draws: the template's own palette first - it is the one
- * the site was designed in, and the one "Reset palette" goes back to - then
+ * the site was designed in, and choosing it is the way back to them - then
  * the library, fitted to this template's roles.
  */
 export function paletteChoices(templateName: string, authored: readonly string[]): PaletteChoice[] {
