@@ -462,6 +462,66 @@ the packaged page carried a class with no rule behind it.
 every other silent rot in this file: the build stays green and the download
 quietly carries residue.
 
+## The 17 September updates - a random spread, a masonry, one action
+
+Sy's second set of notes, applied. Six pages moved; the decisions that are
+not obvious from the diff:
+
+- **"Random per pattern" is the gallery's default, and it lives in the
+  palette store.** `RANDOM_PALETTE_ID` sits in `activePaletteId` beside a
+  saved or library id, because it is chosen from the same list. It names no
+  colours: `SelectPattern` draws one library palette per card
+  (`lib/randomPalettes.ts`, a seeded shuffle keyed by the card's place in the
+  whole catalog, so a page change keeps each design in its palette), and the
+  seed is the session's - drawn after mount, never during render, and kept
+  until the option is chosen again, so coming back from the editor shows the
+  cards as they were. `resolveActivePalette` returns null for it, which is
+  what makes a bare editor visit open in the pattern's own colours; a card's
+  link carries its palette instead, and the editor looks the linked colours up
+  in the list so the row lights. `fitToColorBounds` cuts or pads a palette to
+  what the pattern can take, for the card and the link alike.
+- **The masonry is the grid's own dense placement, plus one JS step.** Every
+  card is one column wide and three, four or five 52px rows tall; with
+  `grid-auto-flow: dense` each lands under the shortest column, which is
+  masonry. `flushGridBottom` then stretches the lowest card in each column to
+  the last row line, written as the `grid-row` shorthand: an inline
+  `grid-row-end` alone is ignored when the class already sets the start as a
+  span, which is exactly how the first version of it did nothing.
+- **No "New palette" button anywhere.** The pencil on any row opens the
+  editor, and saving a library palette's edit is how a new one is made; the
+  editor's desktop rail keeps its "+ New Palette" text, the only place the
+  design still draws one.
+- **Shuffle shuffles the layout.** The three scopes (layout, colours, both)
+  and the remembered default are gone with `shuffleActions.ts`; the colours
+  are chosen from the list under the swatches. Grid density is a slider over
+  `getGridOptions(ratio)`, its readout the grid it resolves to, so a shared
+  URL's grid still puts the thumb on its level (`gridToLevel`).
+- **The editor on a phone: no caption, no export sheet, a strip and a sheet.**
+  Export is the same dropdown as the desktop. The palettes are the first
+  thirty (and the one in use) in a swipeable row, and "View all" opens
+  `PaletteBrowser` in a fullscreen `Dialog`; the rail search is desktop only.
+- **The template preview has one action, and the sign-in gate is the
+  page's.** "Use this template" opens Customize / Download as-is / Export
+  React project when signed in, and a card asking for a sign-in (with the
+  customizer as `?next=`) when not. The zips stay static assets and Studio's
+  results page still links them; gating them at the edge would mean routing
+  `/downloads/*` through the Worker, which nothing asked for.
+- **Popups are portaled, so they carry their own tokens.** The preview's
+  menus and the customizer's are rendered under `<body>`, outside the page
+  wrapper that declares `--s-*`; a `font:` or `background-color:` naming an
+  undeclared token is invalid as a whole, which is how the sign-in card's
+  "Log in" pill lost its background. Each popup class redeclares what it
+  reads.
+- **The customizer: Save in the rail, no Reset palette, no editor on a
+  phone, no download gauge.** Save is at the foot of the rail beside the
+  controls, and the bar is dark like the preview's. The template's own
+  palette row is the reset. Below 768px the rail is hidden and a notice says
+  customizing wants a larger screen, with the site full bleed to preview and
+  download; the canvas-first layout that pinned the page at half the viewport
+  is gone. The design's "4 of 30 downloads used" is not drawn: nothing counts
+  downloads (the account's usage page says the same), and a gauge reading a
+  number nobody keeps is worse than none. It waits for a counter.
+
 ## The homepage - its own shell, and a hydration rule
 
 `app/page.tsx` and `/templates` are the two routes in the dark editorial

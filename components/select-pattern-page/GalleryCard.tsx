@@ -16,20 +16,30 @@ import styles from './SelectPattern.module.css';
 // applied to every design in the grid.
 export default function GalleryCard({
   item,
+  palette: cardPalette,
   className,
 }: {
   item: GalleryItem;
+  /**
+   * This card's own palette, ground first: the random spread gives every card
+   * one. Nothing stored knows it, so the link carries it and the editor opens
+   * the pattern in the colours the card was wearing.
+   */
+  palette?: string[];
   className?: string;
 }) {
   const brandState = useBrandPalettes();
   // While a palette is being edited, every card recolors live to the draft;
-  // otherwise it follows the active saved or library palette.
+  // otherwise it follows its own palette, or the active saved or library one.
   const draftPreview = useDraftPreview();
-  const palette = draftPreview ?? previewPalette(brandState);
+  const palette = draftPreview ?? cardPalette ?? previewPalette(brandState);
+
+  const params = new URLSearchParams({ seed: '0000' });
+  cardPalette?.forEach((color) => params.append('palette', color));
 
   return (
     <Link
-      href={`/patterns/${item.slug}?seed=0000`}
+      href={`/patterns/${item.slug}?${params.toString()}`}
       prefetch={false}
       onClick={markGalleryNavigation}
       className={className ? `${styles.card} ${className}` : styles.card}

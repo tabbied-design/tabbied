@@ -2,11 +2,10 @@
 
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, type MouseEvent } from 'react';
+import { useEffect, useState, type MouseEvent, type ReactNode } from 'react';
 import { Menu } from '@base-ui-components/react/menu';
 import {
   ArrowDownToLine,
-  Check,
   ChevronDown,
   ChevronLeft,
   FileCode,
@@ -14,25 +13,22 @@ import {
   Info,
   Link as LinkIcon,
   CodeXml,
-  PanelsLeftBottom,
+  Shuffle,
   TriangleAlert,
 } from 'lucide-react';
 import {
   armGalleryScrollRestore,
   consumeGalleryNavigation,
 } from 'lib/galleryScroll';
-import ShuffleMenuButton from './ShuffleMenuButton';
-import { SHUFFLE_ACTIONS, type ShuffleAction } from './shuffleActions';
 import styles from './EditPatternHeader.module.css';
 
 type EditPatternHeaderProps = {
   patternName: string;
-  /** The current default shuffle scope (shared with the mobile panel). */
-  shuffleAction: ShuffleAction;
-  /** Run a shuffle scope without changing the default. */
-  onRunShuffle: (id: ShuffleAction) => void;
-  /** Make a shuffle scope the new default (persisted). */
-  onSelectShuffle: (id: ShuffleAction) => void;
+  /**
+   * Draw the layout again. One action, not a menu of scopes: the colours are
+   * chosen from the rail, so a shuffle only ever rearranges the cells.
+   */
+  onShuffle: () => void;
   /** Download the current pattern as a PNG. */
   onExportPng: () => void;
   /** Download the current pattern as a native vector SVG. */
@@ -54,22 +50,13 @@ type EditPatternHeaderProps = {
    * local to this tab, so the link and the snippet open without it.
    */
   hasBackgroundImage: boolean;
-  /** Mobile (7d): render icon buttons that open inline shuffle/export panels. */
+  /** Below the two-column breakpoint: the actions are two circles. */
   mobile: boolean;
-  /** Mobile: whether an inline panel (shuffle/export/palettes) is open. */
-  mobilePanelOpen: boolean;
-  /** Mobile: open the inline shuffle panel. */
-  /** Mobile: open the inline export panel. */
-  onOpenExportPanel: () => void;
-  /** Mobile: close whichever inline panel is open. */
-  onCloseMobilePanel: () => void;
 };
 
 export default function EditPatternHeader({
   patternName,
-  shuffleAction,
-  onRunShuffle,
-  onSelectShuffle,
+  onShuffle,
   onExportPng,
   onExportSvg,
   svgExportDisabled,
@@ -78,9 +65,6 @@ export default function EditPatternHeader({
   onCopyReactComponent,
   hasBackgroundImage,
   mobile,
-  mobilePanelOpen,
-  onOpenExportPanel,
-  onCloseMobilePanel,
 }: EditPatternHeaderProps) {
   const router = useRouter();
 
@@ -106,13 +90,6 @@ export default function EditPatternHeader({
       return;
     }
 
-    // Mobile: an open inline panel is closed first, before leaving the editor.
-    if (mobile && mobilePanelOpen) {
-      event.preventDefault();
-      onCloseMobilePanel();
-      return;
-    }
-
     event.preventDefault();
 
     if (cameFromGallery) {
@@ -122,6 +99,69 @@ export default function EditPatternHeader({
       router.push('/patterns');
     }
   };
+
+  // Export is a dropdown at every width: a PNG download plus clipboard
+  // exports. On a phone it used to be a sheet that replaced the rail, which
+  // put four short rows a screen away from the button that opened them.
+  const exportMenu = (trigger: ReactNode) => (
+    <Menu.Root>
+      {trigger}
+      <Menu.Portal>
+        <Menu.Positioner
+          className={styles.menuPositioner}
+          side="bottom"
+          align="end"
+          sideOffset={6}
+        >
+          <Menu.Popup className={styles.menuPopup}>
+            <Menu.Item className={styles.menuItem} onClick={onExportPng}>
+              <ImageDown size={15} /> Download PNG
+            </Menu.Item>
+            <Menu.Item
+              className={styles.menuItem}
+              onClick={onExportSvg}
+              disabled={svgExportDisabled}
+              title={
+                svgExportDisabled
+                  ? "This design uses effects SVG can't represent."
+                  : undefined
+              }
+            >
+              <FileCode size={15} /> Download SVG
+              {svgExportWarning && (
+                <TriangleAlert
+                  className={styles.menuItemWarning}
+                  size={14}
+                  aria-label="Has export limitations"
+                />
+              )}
+            </Menu.Item>
+            <Menu.Item
+              className={styles.menuItem}
+              onClick={() => void onCopyLink()}
+            >
+              <LinkIcon size={15} /> Copy shareable link
+            </Menu.Item>
+            <Menu.Item
+              className={styles.menuItem}
+              onClick={() => void onCopyReactComponent()}
+            >
+              <CodeXml size={15} /> Copy React component
+            </Menu.Item>
+            {hasBackgroundImage && (
+              <p className={styles.menuNote}>
+                <Info size={15} aria-hidden="true" />
+                <span>
+                  The PNG and the SVG carry your background image. The link and
+                  the React component do not - it stays on this device.
+                </span>
+              </p>
+            )}
+          </Menu.Popup>
+        </Menu.Positioner>
+      </Menu.Portal>
+    </Menu.Root>
+  );
 
   // The pattern is named under the stage, in the plate's caption, so the
   // header carries no title: the heading is for assistive tech alone.
@@ -133,7 +173,7 @@ export default function EditPatternHeader({
           prefetch={false}
           onClick={handleBack}
           className={styles.backCircle}
-          aria-label={mobilePanelOpen ? 'Back to editor' : 'Back to gallery'}
+          aria-label="Back to gallery"
         >
           <ChevronLeft size={16} aria-hidden="true" />
         </NextLink>
@@ -142,53 +182,24 @@ export default function EditPatternHeader({
 
         <span className={styles.spacer} />
 
-        {/* A dropdown under the button, not a sheet at the foot of the
-            screen: the scopes belong to the control that opened them, and a
-            panel that replaces the rail puts them a screen away from it. */}
-        <Menu.Root>
-          <Menu.Trigger
-            className={styles.iconCircle}
-            aria-label="Shuffle options"
-            title="Shuffle"
-          >
-            <PanelsLeftBottom size={17} />
-          </Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner
-              className={styles.menuPositioner}
-              side="bottom"
-              align="end"
-              sideOffset={6}
-            >
-              <Menu.Popup className={styles.menuPopup}>
-                {SHUFFLE_ACTIONS.map(({ id, label, Icon }) => (
-                  <Menu.Item
-                    key={id}
-                    className={styles.menuItem}
-                    onClick={() => {
-                      onSelectShuffle(id);
-                      onRunShuffle(id);
-                    }}
-                  >
-                    <Icon size={15} /> {label}
-                    {id === shuffleAction && (
-                      <Check className={styles.menuItemCheck} size={14} aria-hidden="true" />
-                    )}
-                  </Menu.Item>
-                ))}
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
         <button
           type="button"
-          className={`${styles.iconCircle} ${styles.iconCircleExport}`}
-          onClick={onOpenExportPanel}
-          aria-label="Export options"
-          title="Export"
+          className={styles.iconCircle}
+          onClick={onShuffle}
+          aria-label="Shuffle"
+          title="Shuffle the layout"
         >
-          <ArrowDownToLine size={17} />
+          <Shuffle size={16} strokeWidth={1.7} />
         </button>
+        {exportMenu(
+          <Menu.Trigger
+            className={`${styles.iconCircle} ${styles.iconCircleExport}`}
+            aria-label="Export"
+            title="Export"
+          >
+            <ArrowDownToLine size={17} />
+          </Menu.Trigger>
+        )}
       </header>
     );
   }
@@ -213,14 +224,17 @@ export default function EditPatternHeader({
       <span className={styles.spacer} />
 
       <div className={styles.actions}>
-        <ShuffleMenuButton
-          action={shuffleAction}
-          onRun={onRunShuffle}
-          onSelect={onSelectShuffle}
-        />
+        <button
+          type="button"
+          className={styles.shuffle}
+          onClick={onShuffle}
+          title="Shuffle the layout"
+        >
+          <Shuffle size={16} strokeWidth={1.7} aria-hidden="true" />
+          <span>Shuffle</span>
+        </button>
 
-        {/* Export is a dropdown: a PNG download plus clipboard exports. */}
-        <Menu.Root>
+        {exportMenu(
           <Menu.Trigger
             className={`${styles.btn} ${styles.btnExport}`}
             aria-label="Export"
@@ -228,61 +242,7 @@ export default function EditPatternHeader({
             <span className={styles.label}>Export</span>
             <ChevronDown className={styles.chevronIcon} size={13} />
           </Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner
-              className={styles.menuPositioner}
-              side="bottom"
-              align="end"
-              sideOffset={6}
-            >
-              <Menu.Popup className={styles.menuPopup}>
-                <Menu.Item className={styles.menuItem} onClick={onExportPng}>
-                  <ImageDown size={15} /> Download PNG
-                </Menu.Item>
-                <Menu.Item
-                  className={styles.menuItem}
-                  onClick={onExportSvg}
-                  disabled={svgExportDisabled}
-                  title={
-                    svgExportDisabled
-                      ? "This design uses effects SVG can't represent."
-                      : undefined
-                  }
-                >
-                  <FileCode size={15} /> Download SVG
-                  {svgExportWarning && (
-                    <TriangleAlert
-                      className={styles.menuItemWarning}
-                      size={14}
-                      aria-label="Has export limitations"
-                    />
-                  )}
-                </Menu.Item>
-                <Menu.Item
-                  className={styles.menuItem}
-                  onClick={() => void onCopyLink()}
-                >
-                  <LinkIcon size={15} /> Copy shareable link
-                </Menu.Item>
-                <Menu.Item
-                  className={styles.menuItem}
-                  onClick={() => void onCopyReactComponent()}
-                >
-                  <CodeXml size={15} /> Copy React component
-                </Menu.Item>
-                {hasBackgroundImage && (
-                  <p className={styles.menuNote}>
-                    <Info size={15} aria-hidden="true" />
-                    <span>
-                      The PNG and the SVG carry your background image. The link and
-                      the React component do not - it stays on this device.
-                    </span>
-                  </p>
-                )}
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
+        )}
       </div>
     </header>
   );

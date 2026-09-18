@@ -4,15 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Dialog } from '@base-ui-components/react/dialog';
 import {
-  ArrowLeft,
   Check,
-  ChevronRight,
-  CodeXml,
-  FileCode,
-  ImageDown,
   ImagePlus,
-  Info,
-  Link as LinkIcon,
   Maximize2,
   Minimize2,
   Minus,
@@ -46,20 +39,10 @@ import PaletteEditorDialog from 'components/palette/PaletteEditorDialog';
 import PaletteBrowser from 'components/palette/PaletteBrowser';
 import PaletteListRow from 'components/palette/PaletteListRow';
 import { usePaletteReveal } from 'components/palette/usePaletteReveal';
-import {
-  SHUFFLE_STORAGE_KEY,
-  isShuffleAction,
-  type ShuffleAction,
-} from 'components/edit-pattern-page/shuffleActions';
 import { usePaletteEditor } from 'components/palette/usePaletteEditor';
 import { PALETTE_LIBRARY, type LibraryPalette } from 'lib/paletteLibrary';
 import { mergePalettes } from 'lib/paletteList';
-import {
-  isTransparentHex,
-  randomHexColor,
-  toColorInputValue,
-  toOpaqueHex,
-} from 'lib/color';
+import { isTransparentHex, toColorInputValue, toOpaqueHex } from 'lib/color';
 import {
   deletePalette,
   resolveActivePalette,
@@ -81,8 +64,10 @@ const RATIO_GLYPH_SIZE = 12;
 
 // Fraction of the preview area the pattern fills, leaving a margin around it.
 const PREVIEW_FIT_MARGIN = 0.9;
-/** The caption's two lines and the gap above them, on the mobile band. */
-const CAPTION_ALLOWANCE = 48;
+
+// How many palettes the phone's strip shows before "View all" takes over: a
+// single horizontal row, so it has to stay swipeable.
+const STRIP_LIMIT = 30;
 
 // The paletteSource marker for "the pattern's own colors" / a freely-edited
 // palette - neither highlights any chip.
@@ -200,26 +185,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   // that chip. Any manual swatch edit switches this to 'custom'.
   const [paletteSource, setPaletteSource] = useState<PaletteSource>('pattern');
   const [paletteQuery, setPaletteQuery] = useState('');
+  // The phone's "View all": every palette in a fullscreen sheet, since the
+  // strip under the swatches shows only the first STRIP_LIMIT.
   const [browserOpen, setBrowserOpen] = useState(false);
-
-  // The default shuffle scope, shared by the desktop split button and the
-  // mobile 7d panel. Starts at 'all' for SSR, then restores the saved choice.
-  const [shuffleAction, setShuffleAction] = useState<ShuffleAction>('all');
-
-  // Mobile (7d) inline panel shown in the editing region below the preview.
-  // 'palettes' reuses the shared browser (browserOpen).
-  const [mobilePanel, setMobilePanel] = useState<'export' | null>(
-    null
-  );
-
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(SHUFFLE_STORAGE_KEY);
-      if (isShuffleAction(saved)) setShuffleAction(saved);
-    } catch {
-      // Ignore storage access failures (private mode, etc.).
-    }
-  }, []);
 
   const customPaletteColors = (custom: BrandPalette): string[] =>
     custom.colors.map((color, index) =>
@@ -355,15 +323,14 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   // The preview is a bounded box in every layout now (a flex-filled pane on
   // desktop, a fixed band on mobile), so the pattern simply fits the measured
-  // box. On the band the two-line caption under the plate is a real share of
-  // the height, so it is taken off before the fit; the desktop pane is tall
-  // enough that the fit margin covers it.
-  const captionAllowance = isMobile ? CAPTION_ALLOWANCE : 0;
+  // box. The caption under the plate is hidden on the band, so nothing is
+  // taken off before the fit there; the desktop pane is tall enough that the
+  // fit margin covers it.
   const { width, height } = previewSize
     ? fitToBox(
         aspectRatio,
         previewSize.width * PREVIEW_FIT_MARGIN,
-        previewSize.height * PREVIEW_FIT_MARGIN - captionAllowance
+        previewSize.height * PREVIEW_FIT_MARGIN
       )
     : fitToBox(aspectRatio, baseWidth, baseWidth * 1.5);
 
@@ -412,14 +379,22 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   }, [searchParams]);
 
   // Apply the gallery's selected palette on first load, once, and mark it as the
-  // active chip. A shared link that carries its own palette wins (source stays
-  // "custom" - the link's colors, not a named palette).
+  // active chip. A shared link that carries its own palette wins: its colours
+  // are looked up in the list, so a link from the gallery's random spread (or
+  // one shared from a named palette) lights that palette's row, and anything
+  // else stays "custom" - the link's colors, not a named palette.
   useEffect(() => {
     if (initialCustomApplied.current) return;
 
     if (urlHadPaletteAtMount.current || paletteDefaults.length === 0) {
       initialCustomApplied.current = true;
-      if (urlHadPaletteAtMount.current) setPaletteSource('custom');
+      if (urlHadPaletteAtMount.current) {
+        const linked = searchParams.getAll('palette').map((color) => color.toLowerCase());
+        const named = mergePalettes(brandPalettes, PALETTE_LIBRARY).find(({ palette: p }) =>
+          arraysEqual(p.colors.map((color) => color.toLowerCase()), linked)
+        );
+        setPaletteSource(named ? named.palette.id : 'custom');
+      }
       return;
     }
 
@@ -531,61 +506,13 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     });
   };
 
+  // Shuffle draws the layout again and nothing else. It used to be a menu of
+  // three scopes (layout, colours, both); the colours are chosen from the
+  // list under the swatches, and a control that could also reroll them read
+  // as noise beside it.
   const randomizeSeed = () => {
     setSeed(randomSeed(4));
   };
-
-  // Randomize only the visible colors; hidden slots keep their stored values.
-  // A transparent background is preserved (only the inks reroll).
-  const randomizePalette = () => {
-    setPalette((prev) =>
-      prev.map((color, index) => {
-        if (index >= colorCount) return color;
-        if (index === 0 && isTransparentHex(color)) return color;
-
-        return randomHexColor();
-      })
-    );
-    setPaletteSource('custom');
-  };
-
-  // Run a shuffle scope: reseed the layout, reroll the colors, or both.
-  const runShuffle = (id: ShuffleAction) => {
-    if (id === 'all') {
-      randomizeSeed();
-      randomizePalette();
-    } else if (id === 'layout') {
-      randomizeSeed();
-    } else {
-      randomizePalette();
-    }
-  };
-
-  // Make a scope the new default (persisted) without running it.
-  const selectShuffleAction = (id: ShuffleAction) => {
-    setShuffleAction(id);
-    try {
-      window.localStorage.setItem(SHUFFLE_STORAGE_KEY, id);
-    } catch {
-      // Ignore storage access failures.
-    }
-  };
-
-  // ---- Mobile (7d) inline panels ----
-  const openExportPanel = () => {
-    setBrowserOpen(false);
-    setMobilePanel('export');
-  };
-  const openBrowser = () => {
-    setMobilePanel(null);
-    setBrowserOpen(true);
-  };
-  const closeMobilePanel = () => {
-    setMobilePanel(null);
-    setBrowserOpen(false);
-  };
-  // The header's back arrow closes an open panel before leaving the editor.
-  const mobilePanelOpen = mobilePanel !== null || browserOpen;
 
   const changeColorCount = (delta: number) => {
     setColorCount((prev) =>
@@ -665,7 +592,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     applyLibraryPalette(library);
   };
 
-  // The palette browser applies by id (resolving to a custom or library palette).
+  // The "View all" sheet applies by id (resolving to a custom or library palette).
   const onBrowserApply = (id: string) => {
     const saved = brandPalettes.find((p) => p.id === id);
 
@@ -910,6 +837,17 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       )
     : mergedChips;
   const paletteList = usePaletteReveal(listedPalettes, 24);
+  // The phone's strip is a single horizontal row, so it shows the first few
+  // and the one in use, and "View all" reaches the rest.
+  const stripPalettes = (() => {
+    const head = mergedChips.slice(0, STRIP_LIMIT);
+    const inUse = mergedChips.find(({ palette: p }) => p.id === paletteSource);
+
+    if (inUse && !head.includes(inUse)) head.unshift(inUse);
+
+    return head;
+  })();
+  const listedRows = isMobile ? stripPalettes : paletteList.shown;
 
   // The plate's caption names what it is: the palette it wears (when it wears
   // a named one), its grid and its ratio - the three things the rail changes.
@@ -961,7 +899,33 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
       if (!options || options.length === 0) return null;
 
-      const label = option.id === GRID_OPTION_ID ? 'Grid density' : option.displayName;
+      // The grid is a slider over the ratio's density levels, its readout the
+      // grid it resolves to. The other select groups stay chips.
+      if (option.id === GRID_OPTION_ID) {
+        const level = gridToLevel(String(value));
+
+        return (
+          <div key={option.id} className={styles.sliderBlock}>
+            <div className={styles.layoutRow}>
+              <span className={styles.layoutLabel}>Grid density</span>
+              <span className={styles.layoutValue}>
+                {String(value).replace('x', '\u00D7')}
+              </span>
+            </div>
+            <ValueSlider
+              min={0}
+              max={options.length - 1}
+              step={1}
+              value={level}
+              onChange={(next) => onChange(options[Math.round(next)] ?? options[0])}
+              label="Grid density"
+              hideValue
+            />
+          </div>
+        );
+      }
+
+      const label = option.displayName;
 
       return (
         <div className={styles.layoutField} key={option.id}>
@@ -1012,96 +976,11 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     return null;
   };
 
-  // Mobile (7d): the inline "Export" panel. Export stays a panel rather than a
-  // dropdown because its rows are long and one of them opens a dialog.
-  const renderExportPanel = () => (
-    <div className={styles.mobilePanel}>
-      <div className={styles.mobilePanelHead}>
-        <span className={styles.mobilePanelTitle}>Export</span>
-        <button
-          type="button"
-          className={styles.mobilePanelBack}
-          onClick={closeMobilePanel}
-        >
-          <ArrowLeft size={14} /> Back to editor
-        </button>
-      </div>
-
-      <div className={styles.exportList}>
-        <button
-          type="button"
-          className={styles.exportRow}
-          onClick={() => {
-            void exportPattern();
-            closeMobilePanel();
-          }}
-        >
-          <ImageDown className={styles.exportIcon} size={16} /> Download PNG
-        </button>
-        <button
-          type="button"
-          className={styles.exportRow}
-          disabled={!svgExportEnabled}
-          title={
-            svgExportEnabled
-              ? undefined
-              : "This design uses effects SVG can't represent."
-          }
-          onClick={() => {
-            void exportSvgPattern();
-            closeMobilePanel();
-          }}
-        >
-          <FileCode className={styles.exportIcon} size={16} /> Download SVG
-          {svgExportEnabled && svgExportNotes.length > 0 && (
-            <TriangleAlert
-              className={styles.exportWarningIcon}
-              size={15}
-              aria-label="Has export limitations"
-            />
-          )}
-        </button>
-        <button
-          type="button"
-          className={styles.exportRow}
-          onClick={() => {
-            void copyShareLink();
-            closeMobilePanel();
-          }}
-        >
-          <LinkIcon className={styles.exportIcon} size={16} /> Copy shareable link
-        </button>
-        <button
-          type="button"
-          className={styles.exportRow}
-          onClick={() => {
-            void copyReactComponent();
-            closeMobilePanel();
-          }}
-        >
-          <CodeXml className={styles.exportIcon} size={16} /> Copy React component
-        </button>
-      </div>
-
-      {backgroundImage && (
-        <p className={styles.exportNote}>
-          <Info size={17} aria-hidden="true" />
-          <span>
-            The PNG and the SVG carry your background image. The link and the
-            React component do not - it stays on this device.
-          </span>
-        </p>
-      )}
-    </div>
-  );
-
   return (
     <div className={styles.pageWrapper}>
       <EditPatternHeader
         patternName={pattern.name}
-        shuffleAction={shuffleAction}
-        onRunShuffle={runShuffle}
-        onSelectShuffle={selectShuffleAction}
+        onShuffle={randomizeSeed}
         onExportPng={exportPattern}
         onExportSvg={exportSvgPattern}
         svgExportDisabled={!svgExportEnabled}
@@ -1110,10 +989,37 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         onCopyReactComponent={copyReactComponent}
         hasBackgroundImage={backgroundImage !== null}
         mobile={isMobile}
-        mobilePanelOpen={mobilePanelOpen}
-        onOpenExportPanel={openExportPanel}
-        onCloseMobilePanel={closeMobilePanel}
       />
+
+      {/* The phone's "View all": every palette, in a sheet over the editor
+          rather than a panel in the rail, so the list has the whole screen
+          and the way back is one tap. The desktop rail lists them all. */}
+      <Dialog.Root open={browserOpen} onOpenChange={setBrowserOpen}>
+        <Dialog.Portal>
+          <Dialog.Popup className={styles.allPalettesSheet} aria-label="All palettes">
+            <PaletteBrowser
+              variant="panel"
+              palettes={brandPalettes}
+              library={PALETTE_LIBRARY}
+              activeId={paletteSource}
+              onApply={(id) => {
+                onBrowserApply(id);
+                setBrowserOpen(false);
+              }}
+              onEditCustom={(p) => {
+                setBrowserOpen(false);
+                editor.openEditor(p);
+              }}
+              onEditLibrary={(p) => {
+                setBrowserOpen(false);
+                editor.openEditorAsCopy(p);
+              }}
+              onDelete={removePalette}
+              onClose={() => setBrowserOpen(false)}
+            />
+          </Dialog.Popup>
+        </Dialog.Portal>
+      </Dialog.Root>
 
       {/* Confirmation before downloading an SVG with known limitations
           (filter-based effects or documented sub-pixel deviations). A plain
@@ -1216,7 +1122,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
             </div>
 
             {/* The pattern is named under it rather than in a header bar, so
-                the stage reads as a plate with its caption. */}
+                the stage reads as a plate with its caption. On a phone the
+                caption is hidden and the band is all plate. */}
             <figcaption className={styles.stageCaption}>
               <span className={styles.stageName}>{pattern.name}</span>
               <span className={styles.stageMeta}>
@@ -1227,22 +1134,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         </div>
 
         <div className={styles.panel}>
-          {browserOpen ? (
-            <PaletteBrowser
-              variant="panel"
-              palettes={brandPalettes}
-              library={PALETTE_LIBRARY}
-              activeId={paletteSource}
-              onApply={onBrowserApply}
-              onEditCustom={(p) => editor.openEditor(p)}
-              onEditLibrary={(p) => editor.openEditorAsCopy(p)}
-              onDelete={removePalette}
-              onNewPalette={() => editor.openEditor()}
-              onClose={closeMobilePanel}
-            />
-          ) : isMobile && mobilePanel === 'export' ? (
-            <div className={styles.panelScroll}>{renderExportPanel()}</div>
-          ) : (
           <div className={styles.panelScroll}>
           {palette.length > 0 && (
             <section className={styles.group}>
@@ -1409,26 +1300,41 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
               </div>
 
               <div className={styles.chipsSection}>
-                <label className={styles.paletteSearch}>
-                  <input
-                    type="text"
-                    placeholder={`Search ${mergedChips.length} palettes`}
-                    value={paletteQuery}
-                    onChange={(event) => {
-                      setPaletteQuery(event.target.value);
-                      paletteList.reset();
-                    }}
-                    aria-label="Search palettes"
-                  />
-                  <Search size={15} aria-hidden="true" />
-                </label>
+                {isMobile ? (
+                  // No search on the phone: a label for the strip, and the
+                  // way to the rest of the list.
+                  <div className={styles.stripHead}>
+                    <span>Select a palette</span>
+                    <button
+                      type="button"
+                      className={styles.viewAll}
+                      onClick={() => setBrowserOpen(true)}
+                    >
+                      View all
+                    </button>
+                  </div>
+                ) : (
+                  <label className={styles.paletteSearch}>
+                    <input
+                      type="text"
+                      placeholder={`Search ${mergedChips.length} palettes`}
+                      value={paletteQuery}
+                      onChange={(event) => {
+                        setPaletteQuery(event.target.value);
+                        paletteList.reset();
+                      }}
+                      aria-label="Search palettes"
+                    />
+                    <Search size={15} aria-hidden="true" />
+                  </label>
+                )}
 
                 <div
                   ref={paletteList.listRef}
-                  className={styles.paletteList}
-                  onScroll={paletteList.onScroll}
+                  className={isMobile ? `${styles.paletteList} ${styles.paletteStrip}` : styles.paletteList}
+                  onScroll={isMobile ? undefined : paletteList.onScroll}
                 >
-                  {paletteList.shown.map(({ kind, palette: p }) => (
+                  {listedRows.map(({ kind, palette: p }) => (
                     <PaletteListRow
                       key={p.id}
                       name={p.name || 'Untitled'}
@@ -1458,31 +1364,27 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                       }
                     />
                   ))}
-                  {listedPalettes.length === 0 && (
+                  {listedRows.length === 0 && (
                     <p className={styles.paletteEmpty}>
                       No palettes match your search.
                     </p>
                   )}
                 </div>
 
-                <div className={styles.chipsActions}>
-                  <button
-                    type="button"
-                    className={styles.chipsAction}
-                    onClick={() => editor.openEditor()}
-                    title="Create a new palette"
-                  >
-                    <Plus size={13} /> New Palette
-                  </button>
-                  <button
-                    type="button"
-                    className={`${styles.chipsAction} ${styles.browseAll}`}
-                    onClick={openBrowser}
-                    title="Browse all palettes"
-                  >
-                    Browse all palettes <ChevronRight size={13} />
-                  </button>
-                </div>
+                {/* The rail lists every palette from the start, so there is
+                    no "browse all" to reach; only the way to a new one. */}
+                {!isMobile && (
+                  <div className={styles.chipsActions}>
+                    <button
+                      type="button"
+                      className={styles.chipsAction}
+                      onClick={() => editor.openEditor()}
+                      title="Create a new palette"
+                    >
+                      <Plus size={13} /> New Palette
+                    </button>
+                  </div>
+                )}
               </div>
             </section>
           )}
@@ -1520,7 +1422,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
             </section>
           )}
           </div>
-          )}
         </div>
       </main>
 

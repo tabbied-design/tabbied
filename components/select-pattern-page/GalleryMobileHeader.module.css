@@ -11,27 +11,14 @@
   }
 }
 
-.eyebrowRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.spacer {
-  flex: 1;
-}
-
-/* The rail's pill search, at the width of the page. */
+/* The rail's ruled field, at the width of the page. */
 .search {
   display: flex;
   align-items: center;
-  gap: 9px;
-  margin-top: 14px;
-  padding: 9px 15px;
+  gap: 10px;
+  padding: 6px 0 9px;
   color: oklch(0.55 0.01 260);
-  background: #ffffff;
-  border: 1px solid oklch(0 0 0 / 0.14);
-  border-radius: 999px;
+  border-bottom: 1px solid oklch(0 0 0 / 0.16);
   transition: border-color 120ms ease;
 }
 
@@ -46,28 +33,13 @@
   border: none;
   background: transparent;
   font-family: var(--font-sans-serif);
-  font-size: 13.5px;
+  font-size: 13px;
   color: #0e0e13;
   outline: none;
 }
 
-.newPalette {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 10px;
-  margin-right: -10px;
-  border: none;
-  background: transparent;
-  font-family: var(--font-sans-serif);
-  font-size: 13px;
-  color: oklch(0.55 0.01 260);
-  cursor: pointer;
-  transition: color 120ms ease;
-}
-
-.newPalette:hover {
-  color: #0e0e13;
+.search svg {
+  flex: none;
 }
 
 /* When "All" opens the browser, it takes the palette slot as a bounded,
@@ -78,4 +50,10 @@
   height: 60vh;
   height: 60dvh;
   margin-top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search {
+    transition: none;
+  }
 }

@@ -176,15 +176,18 @@ test.describe('studio site', () => {
     await dialog.getByRole('button', { name: 'Save changes' }).click();
     await expect.poll(groundProperty).toBe('#0b2545');
 
-    // And the way back is the template's own palette, not the document's.
-    await rail.getByRole('button', { name: 'Reset palette' }).click();
+    // And the way back is the template's own row, not a reset of its own:
+    // choosing it puts the template's palette back, not the document's.
+    await expect(rail.getByRole('button', { name: 'Reset palette' })).toHaveCount(0);
+    await own.click();
     await expect.poll(groundProperty).toBe('#f4faf0');
     await expect(own).toHaveAttribute('aria-pressed', 'true');
 
     await cobalt.click();
     await expect.poll(groundProperty).toBe('#0a1a3f');
 
-    const save = page.getByRole('button', { name: 'Save changes' });
+    // Save is at the foot of the rail, beside the controls, not in the bar.
+    const save = rail.getByRole('button', { name: 'Save changes' });
     await expect(save).toBeEnabled();
     await save.click();
     await expect(page.getByRole('button', { name: 'Saved to your custom sites' })).toBeVisible();
@@ -232,8 +235,9 @@ test.describe('studio site', () => {
       timeout: 15_000,
     });
 
-    await expect(page.getByRole('button', { name: 'Save changes' })).toBeEnabled();
+    await expect(rail.getByRole('button', { name: 'Save changes' })).toBeEnabled();
 
+    // "Reset" appears beside Shuffle only once the page has changed.
     await rail.getByRole('button', { name: 'Reset patterns' }).click();
     await expect
       .poll(() => hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern'))))

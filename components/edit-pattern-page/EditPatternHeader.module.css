@@ -63,7 +63,39 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 14px;
+  gap: 18px;
+}
+
+/* Shuffle is a plain action, not a split button: there is one thing it does. */
+.shuffle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 4px;
+  border: none;
+  background: transparent;
+  color: oklch(0.28 0.01 260);
+  font-family: var(--font-sans-serif);
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 120ms ease;
+}
+
+.shuffle:hover {
+  color: #0e0e13;
+}
+
+.shuffle svg {
+  flex: none;
+}
+
+.shuffle:focus-visible {
+  outline: 2px solid var(--blue-medium);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .btn {
@@ -100,18 +132,19 @@
 }
 
 /* Export is the one thing the page exists to get you to, so it carries the
-   brand gradient and a hairline that keeps it legible on a light stage. */
+   brand gradient. No hairline round it: the gradient is edge enough on the
+   white bar, and the ring read as noise beside the plain Shuffle. */
 .btnExport {
   color: #0e0e13;
   background: linear-gradient(135deg, #3ff0b2, #2ee6f0);
-  box-shadow: inset 0 0 0 1px oklch(0.33 0.012 265);
+  box-shadow: none;
   font-weight: 400;
 }
 
 .btnExport:hover,
 .btnExport[data-popup-open] {
   background: linear-gradient(135deg, #3ff0b2, #2ee6f0);
-  box-shadow: inset 0 0 0 1px oklch(0.33 0.012 265);
+  box-shadow: none;
   filter: brightness(1.05);
 }
 
@@ -177,12 +210,6 @@
   color: #e8a13c;
 }
 
-/* The tick on the shuffle scope that is the current default. */
-.menuItem svg.menuItemCheck {
-  margin-left: auto;
-  color: #0e0e13;
-}
-
 /* The background-image footnote. Below a rule rather than in the list, because
    it is a note about the items above it and must not read as a fifth one. */
 .menuNote {
@@ -241,15 +268,18 @@
   box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.4);
 }
 
-/* Export in the brand gradient, as the desktop pill is. */
-.iconCircleExport {
+/* Export in the brand gradient, as the desktop pill is, and like it without
+   a ring. */
+.iconCircleExport,
+.iconCircleExport:hover,
+.iconCircleExport[data-popup-open] {
   color: #0e0e13;
   background: linear-gradient(135deg, #3ff0b2, #2ee6f0);
-  box-shadow: inset 0 0 0 1px oklch(0.33 0.012 265);
+  box-shadow: none;
 }
 
-.iconCircleExport:hover {
-  box-shadow: inset 0 0 0 1px oklch(0.33 0.012 265);
+.iconCircleExport:hover,
+.iconCircleExport[data-popup-open] {
   filter: brightness(1.05);
 }
 
@@ -262,6 +292,7 @@
 @media (prefers-reduced-motion: reduce) {
   .backCircle,
   .btn,
+  .shuffle,
   .iconCircle {
     transition: none;
   }

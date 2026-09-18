@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { ChevronRight, Pencil, X } from 'lucide-react';
-import type { BrandPalette } from 'lib/brandPalettes';
+import { ArrowLeftRight, ChevronRight, Pencil, X } from 'lucide-react';
+import { RANDOM_PALETTE_ID, type BrandPalette } from 'lib/brandPalettes';
 import type { LibraryPalette } from 'lib/paletteLibrary';
 import { mergePalettes } from 'lib/paletteList';
 import styles from './GalleryChipShelf.module.css';
@@ -12,9 +12,10 @@ const MAX_CHIPS = 6;
 
 /**
  * Mobile: the merged palette list as a horizontal, scrollable shelf of the
- * rail's rows - name, inks, pencil - laid side by side. Custom chips carry a
- * delete mark (single-click delete); library chips a pencil (edit-as-copy). A
- * trailing "All" pill opens the embedded palette browser.
+ * rail's rows - "Random per pattern" first, then name, inks, pencil - laid
+ * side by side. Custom chips carry a delete mark (single-click delete);
+ * library chips a pencil (edit-as-copy). A trailing "All" pill opens the
+ * embedded palette browser.
  */
 export default function GalleryChipShelf({
   className,
@@ -22,6 +23,7 @@ export default function GalleryChipShelf({
   library,
   selectedId,
   onApply,
+  onRandom,
   onEditCustom,
   onEditLibrary,
   onDelete,
@@ -32,6 +34,8 @@ export default function GalleryChipShelf({
   library: LibraryPalette[];
   selectedId: string | null;
   onApply: (id: string) => void;
+  /** Draw a new random spread and make it the gallery's palette. */
+  onRandom: () => void;
   onEditCustom: (palette: BrandPalette) => void;
   onEditLibrary: (palette: LibraryPalette) => void;
   onDelete: (id: string) => void;
@@ -42,8 +46,23 @@ export default function GalleryChipShelf({
     [palettes, library]
   );
 
+  const randomActive = selectedId === RANDOM_PALETTE_ID;
+
   return (
     <div className={className ? `${styles.shelf} ${className}` : styles.shelf}>
+      <button
+        type="button"
+        className={randomActive ? `${styles.chip} ${styles.chipActive}` : styles.chip}
+        aria-pressed={randomActive}
+        title="A random palette for every pattern"
+        onClick={onRandom}
+      >
+        <span className={styles.name}>Random per pattern</span>
+        <span className={styles.trailing} aria-hidden="true">
+          <ArrowLeftRight size={13} strokeWidth={1.8} />
+        </span>
+      </button>
+
       {merged.map(({ kind, palette }) => {
         const active = palette.id === selectedId;
 

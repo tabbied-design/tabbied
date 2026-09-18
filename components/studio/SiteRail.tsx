@@ -12,9 +12,13 @@
 // Colours is a list of palettes rather than a row of colour pickers because
 // picking four colours that work together is the hard part and the library
 // has already done it 437 times. The pickers did not go away - the pencil on
-// a row opens them, seeded with that palette.
+// a row opens them, seeded with that palette. There is no "Reset palette":
+// the template's own palette is the first row, and choosing it is the reset.
+//
+// Save sits at the foot of the rail rather than in the bar: it belongs beside
+// the controls that make the changes it saves.
 import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
-import { Pencil } from 'lucide-react';
+import { Pencil, Save } from 'lucide-react';
 import type { PatternSlot, TemplateSpec } from 'tabbied-templates';
 import type { DesignChoice } from 'lib/designCatalog';
 import { activeChoice, paletteChoices } from 'lib/studioPalettes';
@@ -22,6 +26,15 @@ import PaletteDialog from './PaletteDialog';
 import styles from './SiteRail.module.css';
 
 export type RailTab = 'colours' | 'patterns' | 'content';
+
+export type SaveState = 'clean' | 'dirty' | 'saving' | 'saved';
+
+const SAVE_LABEL: Record<SaveState, string> = {
+  clean: 'No changes to save',
+  dirty: 'Save changes',
+  saving: 'Saving...',
+  saved: 'Saved to your custom sites',
+};
 
 const TABS: [RailTab, string][] = [
   ['colours', 'Colours'],
@@ -47,15 +60,15 @@ export default function SiteRail({
   spec,
   designs,
   palette,
-  coloursChanged,
   onPalette,
-  onResetColours,
   patternSlots,
   designOn,
   patternsChanged,
   shuffling,
   onShuffle,
   onResetPatterns,
+  saveState,
+  onSave,
 }: {
   title: string;
   /** The template the site was made from - the name its own palette goes by. */
@@ -66,10 +79,8 @@ export default function SiteRail({
   designs: readonly DesignChoice[];
   /** The colours the page wears now, ground first. */
   palette: readonly string[];
-  coloursChanged: boolean;
   /** Re-colour the whole page. Always a full role-length array. */
   onPalette: (colors: string[]) => void;
-  onResetColours: () => void;
   patternSlots: readonly PatternSlot[];
   /** The design a field draws now, by slot id. */
   designOn: (slot: PatternSlot) => string;
@@ -77,6 +88,8 @@ export default function SiteRail({
   shuffling: boolean;
   onShuffle: () => void;
   onResetPatterns: () => void;
+  saveState: SaveState;
+  onSave: () => void;
 }) {
   const [tab, setTab] = useState<RailTab>('colours');
   const [name, setName] = useState(title);
@@ -210,12 +223,6 @@ export default function SiteRail({
             <span className={styles.paletteFade} aria-hidden="true" />
           </div>
 
-          {coloursChanged ? (
-            <button type="button" className={styles.textAction} onClick={onResetColours}>
-              Reset palette
-            </button>
-          ) : null}
-
           <PaletteDialog
             open={editingChoice !== null}
             onOpenChange={(next) => {
@@ -269,17 +276,23 @@ export default function SiteRail({
               })}
             </ul>
           )}
+          {/* Shuffle has the row to itself until the page has been changed;
+              then Reset appears beside it, the way back to the template's own. */}
           <div className={styles.patternActions}>
             {patternsChanged ? (
-              <button type="button" className={styles.textAction} onClick={onResetPatterns}>
-                Reset patterns
+              <button
+                type="button"
+                className={styles.textAction}
+                aria-label="Reset patterns"
+                title="Reset patterns"
+                onClick={onResetPatterns}
+              >
+                Reset
               </button>
-            ) : (
-              <span />
-            )}
+            ) : null}
             <button
               type="button"
-              className={styles.shuffle}
+              className={patternsChanged ? styles.shuffle : `${styles.shuffle} ${styles.shuffleWide}`}
               disabled={shuffling || patternSlots.length === 0}
               onClick={onShuffle}
             >
@@ -332,6 +345,18 @@ export default function SiteRail({
           </ul>
         </section>
       ) : null}
+
+      <div className={styles.saveDock}>
+        <button
+          type="button"
+          className={styles.save}
+          disabled={saveState !== 'dirty'}
+          onClick={onSave}
+        >
+          <Save size={15} strokeWidth={1.8} aria-hidden="true" />
+          {SAVE_LABEL[saveState]}
+        </button>
+      </div>
     </aside>
   );
 }

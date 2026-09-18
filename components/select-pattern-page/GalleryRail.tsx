@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Search } from 'lucide-react';
+import { ArrowLeftRight, Search } from 'lucide-react';
 import PaletteListRow from 'components/palette/PaletteListRow';
 import { usePaletteReveal } from 'components/palette/usePaletteReveal';
 import type { BrandPalette } from 'lib/brandPalettes';
+import { RANDOM_PALETTE_ID } from 'lib/brandPalettes';
 import type { LibraryPalette } from 'lib/paletteLibrary';
 import { mergePalettes } from 'lib/paletteList';
 import styles from './GalleryRail.module.css';
@@ -15,12 +16,14 @@ import styles from './GalleryRail.module.css';
 const PAGE = 24;
 
 /**
- * The gallery's desktop palette rail: one search that
- * filters both the palette list and the design grid, the full merged palette
- * list (custom first, then the read-only library) scrolling in a single
- * column, and a pinned "+ New Palette". It fills the height under the masthead
- * - the artboard drew it as a fixed box with a fade, and the list is the whole
- * point of the rail, so it gets the room.
+ * The gallery's desktop palette rail: one search that filters both the
+ * palette list and the design grid, then "Random per pattern" above the full
+ * merged palette list (custom first, then the read-only library) scrolling in
+ * a single column. It fills the height under the masthead - the artboard drew
+ * it as a fixed box with a fade, and the list is the whole point of the rail,
+ * so it gets the room. There is no "New palette" here: the pencil on any row
+ * opens the editor, and saving a library palette's edit is how a new one is
+ * made.
  */
 export default function GalleryRail({
   search,
@@ -29,10 +32,10 @@ export default function GalleryRail({
   library,
   selectedId,
   onApply,
+  onRandom,
   onEditCustom,
   onEditLibrary,
   onDelete,
-  onNewPalette,
 }: {
   search: string;
   onSearchChange: (value: string) => void;
@@ -40,10 +43,11 @@ export default function GalleryRail({
   library: LibraryPalette[];
   selectedId: string | null;
   onApply: (id: string) => void;
+  /** Draw a new random spread and make it the gallery's palette. */
+  onRandom: () => void;
   onEditCustom: (palette: BrandPalette) => void;
   onEditLibrary: (palette: LibraryPalette) => void;
   onDelete: (id: string) => void;
-  onNewPalette: () => void;
 }) {
   // The same query filters both the palette list (here) and the design grid
   // (owned by the parent), so there's a single search for the whole page.
@@ -53,12 +57,14 @@ export default function GalleryRail({
   );
 
   const { shown, listRef, onScroll, reset } = usePaletteReveal(merged, PAGE);
+  const randomActive = selectedId === RANDOM_PALETTE_ID;
 
   return (
     <aside className={styles.sidebar}>
       <div className={styles.top}>
+        {/* A bottom-ruled field rather than a pill, the magnifier after the
+            text so the placeholder starts on the rows' left edge. */}
         <label className={styles.search}>
-          <Search size={15} aria-hidden="true" />
           <input
             type="text"
             placeholder="Search palettes & designs"
@@ -69,7 +75,23 @@ export default function GalleryRail({
             }}
             aria-label="Search palettes and designs"
           />
+          <Search size={15} aria-hidden="true" />
         </label>
+
+        {/* The random spread is chosen from the same list as a palette, so it
+            sits where a palette would, above the rest and pinned: choosing it
+            again draws a new spread. */}
+        <button
+          type="button"
+          className={styles.random}
+          data-active={randomActive || undefined}
+          aria-pressed={randomActive}
+          onClick={onRandom}
+          title="A random palette for every pattern"
+        >
+          <span className={styles.randomLabel}>Random per pattern</span>
+          <ArrowLeftRight size={13} strokeWidth={1.8} aria-hidden="true" />
+        </button>
       </div>
 
       <div ref={listRef} className={styles.list} onScroll={onScroll}>
@@ -115,22 +137,9 @@ export default function GalleryRail({
         )}
       </div>
 
-      <div className={styles.foot}>
-        <button
-          type="button"
-          className={styles.newPalette}
-          onClick={onNewPalette}
-        >
-          <span className={styles.newStrip} aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-          </span>
-          <span className={styles.newLabel}>+ New Palette</span>
-        </button>
-      </div>
+      {/* The list runs under a fade rather than stopping at a line, which is
+          what says it continues. */}
+      <span className={styles.fade} aria-hidden="true" />
     </aside>
   );
 }

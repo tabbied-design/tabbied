@@ -15,6 +15,10 @@
 // holds the routes for both (revise, images), and the document still carries
 // whatever text Studio wrote for a generated site; the rail's Content tab says
 // they are not edited here yet, which is the first release's scope.
+//
+// Nor is the editor offered on a phone. Below 768px the rail is hidden, a
+// notice says customizing wants a larger screen, and the page is the site
+// alone, full bleed, to preview and download.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -39,9 +43,9 @@ import {
   templateSpecUrl,
 } from 'lib/studioPreview';
 import Toaster, { toaster } from 'components/Toaster';
-import CustomizerBar, { type SaveState } from './CustomizerBar';
+import CustomizerBar from './CustomizerBar';
 import { PreviewNotices } from './PreviewFrame';
-import SiteRail from './SiteRail';
+import SiteRail, { type SaveState } from './SiteRail';
 import styles from './SiteWorkspace.module.css';
 
 type Loaded = {
@@ -61,9 +65,6 @@ type Frame = HTMLIFrameElement & {
 
 /** How long the canvas dims while a shuffle draws, so the change reads as one. */
 const SHUFFLE_BEAT_MS = 700;
-
-const sameColours = (a: readonly string[], b: readonly string[]) =>
-  a.length === b.length && a.every((colour, index) => colour.toLowerCase() === b[index].toLowerCase());
 
 export default function StudioSite({ designs }: { designs: readonly DesignChoice[] }) {
   const searchParams = useSearchParams();
@@ -194,25 +195,17 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
 
   const { site, packaged } = ready;
   const palette = draft.edits.palette ?? spec.palette.colors;
-  const coloursChanged = !sameColours(palette, spec.palette.colors);
   const fieldsChanged = patternsChanged(patternSlots, draft.edits.patterns);
 
   // A whole palette at a time: a row in the rail, or the dialog's Save. The
   // spec's role count is the shape the page reads, so a shorter or longer
-  // array never reaches the document.
+  // array never reaches the document. The template's own row is the way back
+  // to its colours: they are written as inline properties, the same values
+  // the class rule holds, so the page reads as it did.
   const setPalette = (colors: string[]) => {
     const next = spec.palette.colors.map((authored, index) => colors[index] ?? authored);
     touch({ ...draft, edits: { ...draft.edits, palette: next } });
     applyLive({ palette: next }, true);
-  };
-
-  const resetColours = () => {
-    const { palette: _dropped, ...rest } = draft.edits;
-    touch({ ...draft, edits: rest });
-    // The authored colours, written back as inline properties: the same
-    // values the class rule holds, so the page reads as it did.
-    applyLive({ palette: spec.palette.colors }, true);
-    toaster.add({ title: 'Palette back to the template default' });
   };
 
   const shuffle = () => {
@@ -312,8 +305,6 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
     <>
       <CustomizerBar
         mine={site.mine}
-        saveState={saveState}
-        onSave={() => void save()}
         downloading={downloading}
         onDownloadHtml={() => void downloadHtml()}
         reactHref={`/downloads/${site.slug}-react.zip`}
@@ -348,16 +339,41 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
               designs={designs}
               templateName={site.templateName}
               palette={palette}
-              coloursChanged={coloursChanged}
               onPalette={setPalette}
-              onResetColours={resetColours}
               patternSlots={patternSlots}
               designOn={(slot) => designOn(slot, patternEdit(slot))}
               patternsChanged={fieldsChanged}
               shuffling={shuffling}
               onShuffle={shuffle}
               onResetPatterns={resetPatterns}
+              saveState={saveState}
+              onSave={() => void save()}
             />
+          </div>
+        ) : null}
+
+        {/* Shown only where the rail is not (see SiteWorkspace.module.css):
+            on a phone the editor is a larger screen's, and this is the page
+            to preview and download from. */}
+        {site.mine ? (
+          <div className={styles.smallNotice} role="status">
+            <span className={styles.smallNoticeIcon} aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="15"
+                height="15"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="4" width="18" height="12" rx="2" />
+                <path d="M8 20h8" />
+                <path d="M12 16v4" />
+              </svg>
+            </span>
+            <span>Customizing works on a larger screen. From here you can preview and download.</span>
           </div>
         ) : null}
 

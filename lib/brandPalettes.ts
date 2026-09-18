@@ -33,14 +33,27 @@ export type BrandPalette = {
 export type BrandPaletteState = {
   palettes: BrandPalette[];
   /**
-   * The palette previewed across the gallery. `null` is not "each pattern's own
-   * colors" anymore - the site always themes previews with a shared palette, so
-   * a null id resolves to DEFAULT_PALETTE_ID (see resolveActivePalette).
+   * The palette previewed across the gallery: a saved or library palette's
+   * id, RANDOM_PALETTE_ID for one random library palette per pattern, or
+   * `null`, which is not "each pattern's own colors" - a null id resolves to
+   * DEFAULT_PALETTE_ID (see resolveActivePalette).
    */
   activePaletteId: string | null;
 };
 
 export const STORAGE_KEY = 'tabbied.brandPalettes.v1';
+
+/**
+ * The gallery's "Random per pattern" option, kept in the same slot as a
+ * palette id because it is chosen from the same list. It names no colours of
+ * its own: the gallery draws one library palette per card, and the editor
+ * opens a pattern with whatever palette its card was wearing (carried in the
+ * link), or with the pattern's own colours on a bare visit.
+ */
+export const RANDOM_PALETTE_ID = 'random';
+
+export const isRandomPaletteId = (id: string | null | undefined): boolean =>
+  id === RANDOM_PALETTE_ID;
 
 /** Palette size bounds: a background plus at least one ink. */
 export const MIN_PALETTE_COLORS = 2;
@@ -48,9 +61,11 @@ export const MAX_PALETTE_COLORS = 12;
 
 const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 
+// A first visit is the random spread, as the design draws the library: each
+// card in a different palette until a person picks one for all of them.
 const DEFAULT_STATE: BrandPaletteState = {
   palettes: [],
-  activePaletteId: DEFAULT_PALETTE_ID,
+  activePaletteId: RANDOM_PALETTE_ID,
 };
 
 export const isValidPaletteColor = (value: unknown): value is string =>
@@ -106,12 +121,13 @@ const readState = (): BrandPaletteState => {
     const palettes = Array.isArray(parsed.palettes)
       ? parsed.palettes.filter(isValidPalette).map(normalizePalette)
       : [];
-    // The active id may name a saved palette or a curated library palette
-    // (both can be applied to the gallery previews), so accept either.
+    // The active id may name a saved palette, a curated library palette (both
+    // can be applied to the gallery previews) or the random spread.
     const activePaletteId =
       typeof parsed.activePaletteId === 'string' &&
       (palettes.some((palette) => palette.id === parsed.activePaletteId) ||
-        isLibraryPaletteId(parsed.activePaletteId))
+        isLibraryPaletteId(parsed.activePaletteId) ||
+        isRandomPaletteId(parsed.activePaletteId))
         ? parsed.activePaletteId
         : null;
 
@@ -255,7 +271,8 @@ export const setActivePalette = (id: string | null) => {
     activePaletteId:
       id !== null &&
       (state.palettes.some((palette) => palette.id === id) ||
-        isLibraryPaletteId(id))
+        isLibraryPaletteId(id) ||
+        isRandomPaletteId(id))
         ? id
         : null,
   });
@@ -272,13 +289,17 @@ const libraryAsBrand = (library: LibraryPalette): BrandPalette => ({
 /**
  * The active palette resolved from the saved palettes first, then the curated
  * library. A null/unknown active id falls back to the shared default library
- * palette, so the gallery is always themed by one palette (never each pattern's
- * own colors). Returns null only in the impossible case that the default id has
- * been dropped from the library.
+ * palette, so the gallery is themed by one palette rather than each pattern's
+ * own colors. Null when the random spread is active - there is no one palette
+ * to hand out, and a consumer with nothing else to go on shows the pattern's
+ * own colours - and in the impossible case that the default id has been
+ * dropped from the library.
  */
 export const resolveActivePalette = (
   state: BrandPaletteState
 ): BrandPalette | null => {
+  if (isRandomPaletteId(state.activePaletteId)) return null;
+
   const activeId = state.activePaletteId ?? DEFAULT_PALETTE_ID;
 
   const saved = state.palettes.find((palette) => palette.id === activeId);

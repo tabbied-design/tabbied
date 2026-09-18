@@ -12,10 +12,12 @@ import styles from './PaletteBrowser.module.css';
 const PAGE = 16;
 
 /**
- * The embedded "Browse all palettes" browser: one merged, searchable, infinitely
- * scrolling list (custom palettes first, then the read-only library) with a
- * "+ New Palette" at the bottom. Swaps into the gallery rail or the editor's
- * options panel (variant) rather than opening a separate dialog.
+ * The "All palettes" browser: one merged, searchable, infinitely scrolling
+ * list (custom palettes first, then the read-only library). On a phone it
+ * takes the gallery's palette slot (variant "rail") or fills the editor's
+ * fullscreen sheet (variant "panel"). No "New palette" here: the pencil on a
+ * row opens the editor, and saving a library palette's edit is how a new one
+ * is made.
  */
 export default function PaletteBrowser({
   variant,
@@ -26,7 +28,6 @@ export default function PaletteBrowser({
   onEditCustom,
   onEditLibrary,
   onDelete,
-  onNewPalette,
   onClose,
 }: {
   variant: 'rail' | 'panel';
@@ -37,7 +38,6 @@ export default function PaletteBrowser({
   onEditCustom: (palette: BrandPalette) => void;
   onEditLibrary: (palette: LibraryPalette) => void;
   onDelete: (id: string) => void;
-  onNewPalette: () => void;
   onClose: () => void;
 }) {
   const [query, setQuery] = useState('');
@@ -138,19 +138,6 @@ export default function PaletteBrowser({
         {merged.length === 0 && (
           <div className={styles.empty}>No palettes match your search.</div>
         )}
-      </div>
-
-      <div className={styles.foot}>
-        <button type="button" className={styles.newPalette} onClick={onNewPalette}>
-          <span className={styles.newStrip} aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-          </span>
-          <span>+ New Palette</span>
-        </button>
       </div>
     </div>
   );
