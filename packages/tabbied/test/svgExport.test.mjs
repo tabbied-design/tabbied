@@ -357,11 +357,42 @@ const catalogue = fs
 const slugsWhere = (predicate) => catalogue.filter(predicate).map((a) => a.slug).sort();
 
 test('tier 1 - the designs SVG cannot represent still opt out', () => {
+  // The four conic sweeps, plus the 28 from the September drop: ten the
+  // converter throws on and eighteen it exports wrongly without warning.
+  // See docs/svg-export.md for the construct behind each.
   assert.deepEqual(slugsWhere((a) => a.svgExport === false), [
     'coil',
+    'confettitriangles',
+    'cornerbloom',
+    'crosslattice',
+    'dashfield',
+    'diamondconfetti',
+    'diamondember',
+    'driftspiral',
+    'goldencoil',
+    'horizonbands',
+    'isometricblocks',
+    'isometricweave',
+    'kilngrid',
+    'marbledarcs',
+    'meridianhatch',
+    'midnightblossoms',
+    'paintscribble',
     'pinwheel',
+    'quartercirclequilt',
+    'radiantswirl',
+    'randomrings',
+    'scatteredgems',
+    'softbubbles',
     'spectrum',
+    'squarelabyrinth',
+    'tealboomerang',
+    'teardropleaves',
+    'tidewashbands',
+    'turbulentsunburst',
+    'warpribbon',
     'wedge',
+    'wovenkhaki',
   ]);
 });
 

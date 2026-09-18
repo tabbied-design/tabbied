@@ -52,6 +52,13 @@ const unsupportedSlugs = allPatterns
 // Batch 13 (orders 2000-2041) adds three, one per family it's built from: a
 // linear+radial gradient mask (`bight`), a pure clip-path composition
 // (`bench`), and the batch's only stepped-conic mask (`mirrorblack`).
+//
+// The September drop (orders 3000-3042) adds three of the 15 it landed in
+// tier 4, chosen for shapes the list did not already cover: a
+// repeating-radial ramp read off a rule-local custom property
+// (`contourlines`), per-cell scaled ring borders (`concentricrings`), and a
+// skewed two-tone tile mosaic (`patternsampler`). The drop's other 28 are
+// tier 1 and are covered by the disabled-menu cases below instead.
 const REPRESENTATIVE = [
   'damier',
   'radius',
@@ -88,6 +95,9 @@ const REPRESENTATIVE = [
   'bight',
   'bench',
   'mirrorblack',
+  'contourlines',
+  'concentricrings',
+  'patternsampler',
 ];
 
 // Differing pixels tolerated (after anti-aliasing forgiveness). A few

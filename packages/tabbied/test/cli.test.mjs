@@ -7,11 +7,17 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const packageRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const cli = path.join(packageRoot, 'dist', 'cli.js');
+
+// Derived, not pinned: a batch of new designs should not fail these tests.
+const designCount = JSON.parse(
+  readFileSync(path.join(packageRoot, 'catalog.json'), 'utf-8')
+).designs.length;
 
 const run = (...args) =>
   execFileSync(process.execPath, [cli, ...args], { encoding: 'utf-8' });
@@ -24,14 +30,14 @@ test('help prints usage and exits 0', () => {
 
 test('list with no filters prints every design', () => {
   const out = run('list');
-  assert.match(out, /295\/295 designs/);
+  assert.match(out, new RegExp(`${designCount}/${designCount} designs`));
 });
 
 test('list filters compose (tag + density)', () => {
   const out = run('list', '--tag', 'dots', '--density', 'dense');
   const lines = out.trim().split('\n');
   const summary = lines.at(-1);
-  assert.match(summary, /^\d+\/295 designs$/);
+  assert.match(summary, new RegExp(`^\\d+/${designCount} designs$`));
 
   // Every printed row names both the tag and the density it filtered on.
   for (const line of lines.slice(0, -2)) {

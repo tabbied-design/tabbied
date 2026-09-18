@@ -1,0 +1,53 @@
+{
+  "name": "Circus Poster",
+  "slug": "circusposter",
+  "galleryOrder": 3003,
+  "description": "A bold harlequin diamond lattice in crimson, gold, cream and teal against deep indigo, built from a single flipped triangle.",
+  "tags": [
+    "triangles",
+    "diamonds",
+    "grid"
+  ],
+  "mood": [
+    "bold",
+    "festive"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "poster",
+    "og-image",
+    "textile"
+  ],
+  "palette": [
+    "#241D3D",
+    "#E63946",
+    "#F2C249",
+    "#F4EDE1",
+    "#2F8F7A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Columns and rows",
+      "type": "ButtonSelectGroup",
+      "default": "10x7",
+      "options": [
+        "6x4",
+        "8x6",
+        "10x7",
+        "12x9",
+        "14x10"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( clip-path: polygon(50% 100%, 0 0, 100% 0); background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); @row(even) { transform: scale(1, -1); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; gap: 0; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

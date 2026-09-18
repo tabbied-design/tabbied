@@ -1,0 +1,37 @@
+{
+  "name": "Golden Coil",
+  "slug": "goldencoil",
+  "galleryOrder": 3028,
+  "description": "A tight coiled spiral in a mixed ink palette, sized as a seamless repeating tile.",
+  "tags": [
+    "circles",
+    "concentric",
+    "rings"
+  ],
+  "mood": [
+    "elegant",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper",
+    "section-divider"
+  ],
+  "palette": [
+    "#FFFFFF",
+    "#F7D006",
+    "#52514F"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 3
+  },
+  "options": [],
+  "code": {
+    "style": "--rule: ( background-color: var(--color0); background-image: @doodle( background-size: 125px 125px; background-image: @doodle( :doodle { @grid: 3 / 100%; transform: scale(calc(3 / 2)); } z-index: @ri(100); :after, :before { content: ''; @size: 100%; border-radius: 50%; position: absolute; background: radial-gradient( @stripe.@m8.@pn(var(--color1), var(--color2)) ); } :before { transform: translate(50%, 50%); } ); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

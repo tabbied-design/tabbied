@@ -1,0 +1,47 @@
+{
+  "name": "Teardrop Leaves",
+  "slug": "teardropleaves",
+  "galleryOrder": 3026,
+  "description": "A repeating teardrop leaf motif in a mixed ink palette.",
+  "tags": [
+    "leaves",
+    "petals"
+  ],
+  "mood": [
+    "organic",
+    "calm"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper",
+    "section-divider"
+  ],
+  "palette": [
+    "#221C22",
+    "#332B33",
+    "#BCB8BB"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 3
+  },
+  "options": [
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( background-color: var(--color1); background-image: @doodle( :doodle { @grid: 1 / 10000px; transform: scale(1.5) rotate(45deg); } background-size: 50px 50px; background-image: @doodle( :doodle { @grid: 8x1 / 90%; border-radius: 0% 60%; } position: absolute; border: 1px solid var(--color2); visibility: hidden; @random(${shapeFrequency}) { visibility: visible; } @nth(1) { border-radius: 0% 60%; } @size: calc(100% - 100% / @size * (@i - 1)); background: linear-gradient( 45deg, @stripe(transparent, var(--color2) 1px, transparent) ); ); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

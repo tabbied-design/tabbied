@@ -16,7 +16,7 @@
 //
 // The bundle carries the whole catalog, not just the designs the packaged
 // templates mount. It used to be derived from the packaged HTML (231 of the
-// 295), which was exactly right while a preview could only re-colour a field;
+// 338), which was exactly right while a preview could only re-colour a field;
 // the customizer's "Shuffle patterns" swaps a field to any design in the
 // library, and a design missing from this bundle hydrates to a blank with a
 // console warning - the silent failure the whole editable scheme exists to

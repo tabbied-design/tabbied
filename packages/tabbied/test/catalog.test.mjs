@@ -56,13 +56,46 @@ test('catalog svgExport.supported matches supportsSvgExport()', () => {
     );
   }
 
-  // The four conic-sweep designs SVG cannot represent (see docs/svg-export.md).
+  // The designs SVG cannot represent (see docs/svg-export.md).
   const unsupported = catalog.designs
     .filter((design) => !design.svgExport.supported)
     .map((design) => design.slug)
     .sort();
 
-  assert.deepEqual(unsupported, ['coil', 'pinwheel', 'spectrum', 'wedge']);
+  assert.deepEqual(unsupported, [
+    'coil',
+    'confettitriangles',
+    'cornerbloom',
+    'crosslattice',
+    'dashfield',
+    'diamondconfetti',
+    'diamondember',
+    'driftspiral',
+    'goldencoil',
+    'horizonbands',
+    'isometricblocks',
+    'isometricweave',
+    'kilngrid',
+    'marbledarcs',
+    'meridianhatch',
+    'midnightblossoms',
+    'paintscribble',
+    'pinwheel',
+    'quartercirclequilt',
+    'radiantswirl',
+    'randomrings',
+    'scatteredgems',
+    'softbubbles',
+    'spectrum',
+    'squarelabyrinth',
+    'tealboomerang',
+    'teardropleaves',
+    'tidewashbands',
+    'turbulentsunburst',
+    'warpribbon',
+    'wedge',
+    'wovenkhaki',
+  ]);
 });
 
 test('catalog carries every option a consumer can set', () => {

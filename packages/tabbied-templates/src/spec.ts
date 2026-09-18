@@ -153,7 +153,7 @@ export type PatternSlotConfig = {
  *
  * It is here so this package stays dependency-free and still validates an
  * option against the range it actually has, and so an editing UI can build a
- * control without loading 295 pattern definitions.
+ * control without loading 338 pattern definitions.
  */
 export type PatternOptionSpec = {
   id: string;

@@ -1,0 +1,52 @@
+{
+  "name": "Concentric Rings",
+  "slug": "concentricrings",
+  "galleryOrder": 3036,
+  "description": "Nested rings in a mixed ink palette, sized by index and frozen mid-rotation until hover sets them spinning back into alignment.",
+  "tags": [
+    "rings",
+    "concentric",
+    "circles"
+  ],
+  "mood": [
+    "technical",
+    "calm"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "section-divider",
+    "card-texture"
+  ],
+  "palette": [
+    "#0B132B",
+    "#3A506B",
+    "#5BC0BE",
+    "#FFFFFF"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 3
+  },
+  "defaultAspectRatio": "1:1",
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Grid density",
+      "type": "ButtonSelectGroup",
+      "default": "8",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @place-cell: center; @size: calc(150% / @size * @i); border-radius: 50%; border: 1px solid @p(var(--color1), var(--color2), var(--color3)); transform: rotate(calc(@i * 10deg)); animation: concentricRingsRotate 2s ease-in-out 0s infinite alternate; animation-play-state: paused; @keyframes concentricRingsRotate { to { transform: rotate(0); } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; grid-gap: -1px; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

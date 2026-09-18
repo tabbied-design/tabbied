@@ -17,7 +17,7 @@ export default function StudioSitePage() {
       {/* The site id arrives in the query string, so everything below reads
           useSearchParams and needs a boundary to prerender behind. The design
           list is read here, server-side, and passed down as plain data: a
-          few kilobytes for 295 names, where the catalog itself is 384 KB. */}
+          few kilobytes for 338 names, where the catalog itself is 384 KB. */}
       <Suspense>
         <StudioSite designs={DESIGN_CHOICES} />
       </Suspense>

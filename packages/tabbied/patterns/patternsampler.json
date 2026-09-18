@@ -1,0 +1,56 @@
+{
+  "name": "Pattern Sampler",
+  "slug": "patternsampler",
+  "galleryOrder": 3021,
+  "description": "A grid of small skewed tile motifs in a mixed duotone ink palette, each cell its own miniature study.",
+  "tags": [
+    "diamonds",
+    "mosaic",
+    "grid"
+  ],
+  "mood": [
+    "bold",
+    "playful"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "poster",
+    "og-image"
+  ],
+  "palette": [
+    "#FFFFFF",
+    "#FFECBA",
+    "#FF8D68",
+    "#A10054",
+    "#001F52",
+    "#BFF4ED",
+    "#280F34",
+    "#B30753",
+    "#F6C667"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 9,
+    "default": 9
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Grid density",
+      "type": "ButtonSelectGroup",
+      "default": "5x5",
+      "options": [
+        "3x3",
+        "4x4",
+        "5x5",
+        "6x6",
+        "7x7"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); opacity: .85; transform: scale(.5) translate(-50%, -50%); margin: 3%; box-shadow: 10% 10% 0 18% @pd(var(--color5), var(--color6), var(--color7), var(--color8)); :after, :before { content: ''; position: absolute; @size: 100%; transform-origin: 0 0; } :after { background: @p(var(--color5), var(--color6), var(--color7), var(--color8)); transform: translateX(100%) skewY(45deg); } :before { background: @p(var(--color1), var(--color2), var(--color3), var(--color4)); transform: translateY(100%) skewX(45deg); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

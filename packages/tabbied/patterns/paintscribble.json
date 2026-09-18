@@ -1,0 +1,53 @@
+{
+  "name": "Paint Scribble",
+  "slug": "paintscribble",
+  "galleryOrder": 3019,
+  "description": "Loose brush-like glyphs in a mixed ink palette, layered with shadow offsets like a quick gestural sketch.",
+  "tags": [
+    "curves",
+    "lines"
+  ],
+  "mood": [
+    "playful",
+    "bold"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "card-texture",
+    "section-divider",
+    "og-image"
+  ],
+  "palette": [
+    "#151515",
+    "#F2C641",
+    "#EF5B5B",
+    "#3AAFA9",
+    "#FEEFE0"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 5,
+    "default": 5
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Grid density",
+      "type": "ButtonSelectGroup",
+      "default": "7x7",
+      "options": [
+        "5x5",
+        "6x6",
+        "7x7",
+        "8x8",
+        "9x9"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @content: @unicode.r(0x30A0, 0x30CF); display: flex; align-items: center; justify-content: center; font-size: @r(5vmin, 18vmin); color: @p(var(--color1), var(--color2), var(--color3), var(--color4)); font-weight: bold; overflow: visible; transform: rotate(@r(360deg)) translate(@r(-30%, 30%), @r(-30%, 30%)); text-shadow: @m(8, (calc(@n() * .12vmin) calc(@n() * .12vmin) 0 @pn(currentColor, var(--color0)))); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

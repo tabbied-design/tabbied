@@ -1,0 +1,51 @@
+{
+  "name": "Teal Boomerang",
+  "slug": "tealboomerang",
+  "galleryOrder": 3032,
+  "description": "Teardrop \"boomerang\" shapes scattered in a mixed ink palette.",
+  "tags": [
+    "arcs",
+    "semicircles",
+    "dots"
+  ],
+  "mood": [
+    "playful",
+    "bold"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper",
+    "section-divider"
+  ],
+  "palette": [
+    "#FFFFFF",
+    "#005874",
+    "#65d6ce",
+    "#1c819e",
+    "#e6e6d4",
+    "#ffbe00"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( background-size: 200px 200px; background-image: @doodle( background-color: var(--color1); background-image: @m(10, (@doodle( @grid: 1 / 50px; background: transparent; @random(${shapeFrequency}) { background: @p(var(--color2), var(--color3), var(--color4), var(--color5)); } transform: rotate(@r(360deg)) scale(@r(.5, 1)); clip-path: @shape( split: 50; scale: .3; x: cos(t) + cos(2t) * 2; y: sin(2t) + sin(t) * 2; ); ))); background-position: -25px 45px, 50px 75px, 90px 95px, 160px 165px, 20px 0, 22px -65px, 110px -18px, 120px 34px, 130px 125px, 5px 90px; ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

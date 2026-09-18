@@ -1,0 +1,52 @@
+{
+  "name": "Warp Ribbon",
+  "slug": "warpribbon",
+  "galleryOrder": 3041,
+  "description": "A run of threads laid on a sine curve, blending from one ink color to another as the ribbon runs out.",
+  "tags": [
+    "lines",
+    "waves",
+    "gradients"
+  ],
+  "mood": [
+    "calm",
+    "technical"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "section-divider",
+    "card-texture",
+    "hero-background"
+  ],
+  "palette": [
+    "#0A1A1F",
+    "#2FB8C6",
+    "#16324A"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 3,
+    "default": 3
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Thread count",
+      "type": "ButtonSelectGroup",
+      "default": "1x72",
+      "options": [
+        "1x40",
+        "1x56",
+        "1x72",
+        "1x88",
+        "1x104"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @size: 74% 1px; justify-self: center; --t: calc(@i / @size); background: color-mix(in srgb, var(--color1) calc((1 - @var(--t)) * 100%), var(--color2) calc(@var(--t) * 100%)); opacity: calc(.35 + .65 * @var(--t)); transform: rotate(-8deg) translateX(calc(@sin(@i / 5) * π * ${width} * 0.018)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

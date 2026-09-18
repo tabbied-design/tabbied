@@ -1,0 +1,37 @@
+{
+  "name": "Meridian Hatch",
+  "slug": "meridianhatch",
+  "galleryOrder": 3040,
+  "description": "A radiating sunburst disc, hatch angle drifting and ink color drawn from a small curated set.",
+  "tags": [
+    "radial",
+    "lines",
+    "stripes"
+  ],
+  "mood": [
+    "bold"
+  ],
+  "density": "medium",
+  "goodFor": [
+    "poster",
+    "og-image"
+  ],
+  "palette": [
+    "#F4EDE1",
+    "#1D2B3A",
+    "#2F5468",
+    "#7A2E12"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "defaultAspectRatio": "1:1",
+  "options": [],
+  "code": {
+    "style": "--rule: ( border-radius: 50%; background: repeating-conic-gradient( from @r(0deg, 20deg), @p(var(--color1), var(--color2), var(--color3)) 0deg 2.4deg, var(--color0) 2.4deg 7.5deg ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

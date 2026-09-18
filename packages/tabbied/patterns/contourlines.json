@@ -1,0 +1,48 @@
+{
+  "name": "Contour Lines",
+  "slug": "contourlines",
+  "galleryOrder": 3042,
+  "description": "Rings traced like a survey map, alternating between ink colors, spacing held constant for the whole plate.",
+  "tags": [
+    "rings",
+    "curves",
+    "concentric"
+  ],
+  "mood": [
+    "calm",
+    "technical"
+  ],
+  "density": "sparse",
+  "goodFor": [
+    "poster",
+    "section-divider",
+    "card-texture"
+  ],
+  "palette": [
+    "#ECE4D3",
+    "#35586B",
+    "#8B4B3B",
+    "#4B6B4E"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 0.5,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( --gap: calc(6px + ${shapeFrequency} * 14px); background-color: var(--color0); background-image: repeating-radial-gradient(circle at 50% 50%, transparent 0, transparent calc(@var(--gap) - 1.4px), var(--color1) calc(@var(--gap) - 1.4px), var(--color1) @var(--gap), transparent @var(--gap), transparent calc(@var(--gap) * 2 - 1.4px), var(--color2) calc(@var(--gap) * 2 - 1.4px), var(--color2) calc(@var(--gap) * 2), transparent calc(@var(--gap) * 2), transparent calc(@var(--gap) * 3 - 1.4px), var(--color3) calc(@var(--gap) * 3 - 1.4px), var(--color3) calc(@var(--gap) * 3)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}

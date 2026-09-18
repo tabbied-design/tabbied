@@ -1,0 +1,38 @@
+{
+  "name": "Isometric Blocks",
+  "slug": "isometricblocks",
+  "galleryOrder": 3029,
+  "description": "Tumbling isometric cubes in a mixed ink palette, sized as a seamless repeating tile.",
+  "tags": [
+    "blocks",
+    "diamonds",
+    "squares"
+  ],
+  "mood": [
+    "bold",
+    "technical"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper",
+    "section-divider"
+  ],
+  "palette": [
+    "#FFFFFF",
+    "#D24B45",
+    "#3C2B34",
+    "#F7F0E9"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "options": [],
+  "code": {
+    "style": "--rule: ( background-size: 83px 135px; background-color: var(--color1); background-image: @doodle( @grid: 2 / 100%; background: @pn(var(--color2), var(--color3), var(--color3)); transform-origin: @pn(100% 100%, 0 100%, 100% 0, 0 0); transform: rotateX(45deg) skewY(@pn(34deg, -34deg, -34deg)); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

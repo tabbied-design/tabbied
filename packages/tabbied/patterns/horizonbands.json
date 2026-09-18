@@ -1,0 +1,65 @@
+{
+  "name": "Horizon Bands",
+  "slug": "horizonbands",
+  "galleryOrder": 3006,
+  "description": "Three broad color bands stacked like a horizon line, with a small sun that drifts across on its own timer.",
+  "tags": [
+    "lattice",
+    "dots",
+    "diagonals"
+  ],
+  "mood": [
+    "calm",
+    "playful"
+  ],
+  "density": "dense",
+  "goodFor": [
+    "hero-background",
+    "wallpaper",
+    "card-texture"
+  ],
+  "palette": [
+    "#EAF4FB",
+    "#274472",
+    "#5B7DB1",
+    "#0B132B",
+    "#FFEAA7",
+    "#FDCB6E"
+  ],
+  "colors": {
+    "min": 3,
+    "max": 6,
+    "default": 6
+  },
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Grid density",
+      "type": "ButtonSelectGroup",
+      "default": "11",
+      "options": [
+        "5",
+        "8",
+        "11",
+        "14",
+        "17"
+      ],
+      "replace": "${grid}"
+    },
+    {
+      "id": "frequency",
+      "displayName": "Frequency",
+      "type": "Slider",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "replace": "${shapeFrequency}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( background: linear-gradient(@pick-d(0deg, 90deg, 180deg, 270deg), var(--color1) 25%, var(--color2) 25% 50%, var(--color3) 50%); :after { content: ''; width: @r(20%, 50%); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at @r(100%) @r(100%), var(--color4) 0% 50%, var(--color5) 50% 100%); display: none; transform: translateX(@r(-30%, -60%)); animation: floatAnim @r(1s, 1.5s) @r(1.5s) infinite alternate ease-in-out; } @random(${shapeFrequency}) { :after { display: unset; } } @keyframes floatAnim { 100% { transform: translateX(@r(30%, 60%)); } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "svgExport": false
+}

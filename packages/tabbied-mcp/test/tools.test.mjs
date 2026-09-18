@@ -1,5 +1,5 @@
 // The toolset, tested against the real catalog rather than a fixture - these
-// tools exist to make an opaque set of 295 slugs queryable, so a test that
+// tools exist to make an opaque set of 338 slugs queryable, so a test that
 // invented its own three-design catalog would pass while the thing users
 // actually query stayed broken.
 //

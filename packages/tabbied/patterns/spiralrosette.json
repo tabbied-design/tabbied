@@ -1,0 +1,54 @@
+{
+  "name": "Spiral Rosette",
+  "slug": "spiralrosette",
+  "galleryOrder": 3001,
+  "description": "Concentric rings stacked and rotated around a single center, tracing a rosette like a plotted spiral.",
+  "tags": [
+    "rings",
+    "concentric",
+    "radial",
+    "lines"
+  ],
+  "mood": [
+    "calm",
+    "technical"
+  ],
+  "density": "sparse",
+  "goodFor": [
+    "section-divider",
+    "card-texture",
+    "og-image"
+  ],
+  "palette": [
+    "#0A0C27",
+    "#9FD8D8",
+    "#F2A9C1",
+    "#F2D06B"
+  ],
+  "colors": {
+    "min": 2,
+    "max": 4,
+    "default": 4
+  },
+  "defaultAspectRatio": "1:1",
+  "options": [
+    {
+      "id": "grid",
+      "displayName": "Ring count",
+      "type": "ButtonSelectGroup",
+      "default": "9x1",
+      "options": [
+        "6x1",
+        "9x1",
+        "12x1",
+        "15x1",
+        "18x1"
+      ],
+      "replace": "${grid}"
+    }
+  ],
+  "code": {
+    "style": "--rule: ( @place-cell: center; @size: calc(100% - (100% / @size) * @i); border-radius: 50%; transform: rotate(calc(@i * 8deg)); border: 1px solid @p(var(--color1), var(--color2), var(--color3)); opacity: calc(.35 + .65 * (@i / @size)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  }
+}
