@@ -7,7 +7,8 @@ import { aiUsage, devMail, generation, revision, site, upload, user } from '../d
 import type { Env } from '../env';
 import { buildAuth } from '../auth';
 import { isDev } from '../env';
-import { DAILY_CAPS } from '../lib/quota';
+import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
+import { authConfigured } from '../lib/session';
 import { loadEditableCatalog } from '../lib/templateAssets';
 
 // The admin tier: reads over everything, for people whose user row says
@@ -19,6 +20,9 @@ import { loadEditableCatalog } from '../lib/templateAssets';
 type AdminUser = { id: string; role?: string | null };
 
 async function requireAdmin(env: Env, headers: Headers): Promise<AdminUser | null> {
+  // No secret, no admins: see requireUser for why this is not a lookup.
+  if (!authConfigured(env)) return null;
+
   // Past the cookie cache, on purpose: a role revoked a minute ago must not
   // keep answering here for the cache's remaining minutes. One D1 read per
   // admin request is the right price for that.
@@ -46,10 +50,6 @@ admin.use('*', async (c, next) => {
 });
 
 const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000);
-const startOfUtcDay = () => {
-  const now = new Date();
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-};
 
 admin.get('/overview', async (c) => {
   const db = drizzle(c.env.DB, { schema });
@@ -104,8 +104,22 @@ const listQuery = z.object({
   limit: z.coerce.number().int().min(1).max(200).default(50),
 });
 
+const usageQuery = z.object({
+  days: z.coerce.number().int().min(1).max(90).default(14),
+});
+
+// A query string that does not parse is the caller's mistake, answered as
+// one. `parse` threw, and a `?limit=abc` came back as a 500 with a needless
+// schema check behind it.
+const badQuery = (c: { json: (body: unknown, status: 400) => Response }) =>
+  c.json({ error: 'Bad query.' }, 400);
+
 admin.get('/users', async (c) => {
-  const { q, limit } = listQuery.parse({ q: c.req.query('q'), limit: c.req.query('limit') });
+  const query = listQuery.safeParse({ q: c.req.query('q'), limit: c.req.query('limit') });
+
+  if (!query.success) return badQuery(c);
+
+  const { q, limit } = query.data;
   const db = drizzle(c.env.DB, { schema });
 
   const rows = await db
@@ -170,7 +184,11 @@ admin.get('/users/:id', async (c) => {
 });
 
 admin.get('/usage', async (c) => {
-  const days = Math.min(90, Math.max(1, Number(c.req.query('days') ?? 14)));
+  const query = usageQuery.safeParse({ days: c.req.query('days') });
+
+  if (!query.success) return badQuery(c);
+
+  const { days } = query.data;
   const db = drizzle(c.env.DB, { schema });
   const since = daysAgo(days);
 
@@ -213,7 +231,11 @@ admin.get('/usage', async (c) => {
 });
 
 admin.get('/generations', async (c) => {
-  const { limit } = listQuery.parse({ limit: c.req.query('limit') });
+  const query = listQuery.safeParse({ limit: c.req.query('limit') });
+
+  if (!query.success) return badQuery(c);
+
+  const { limit } = query.data;
   const db = drizzle(c.env.DB, { schema });
 
   const rows = await db
@@ -247,8 +269,16 @@ admin.get('/generations/:id', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
+  // Qualified by hand, as in /users: no join in the outer query, so drizzle
+  // would render both columns bare and the subquery would compare
+  // revision.site_id to revision.id - every count was 0.
   const sites = await db
-    .select({ id: site.id, title: site.title, slug: site.slug, revisions: sql<number>`(select count(*) from ${revision} where ${revision.siteId} = ${site.id})` })
+    .select({
+      id: site.id,
+      title: site.title,
+      slug: site.slug,
+      revisions: sql<number>`(select count(*) from ${revision} where ${revision}.site_id = ${site}.id)`,
+    })
     .from(site)
     .where(eq(site.generationId, row.generation.id));
 
@@ -281,7 +311,11 @@ admin.get('/templates', async (c) => {
 });
 
 admin.get('/uploads', async (c) => {
-  const { limit } = listQuery.parse({ limit: c.req.query('limit') });
+  const query = listQuery.safeParse({ limit: c.req.query('limit') });
+
+  if (!query.success) return badQuery(c);
+
+  const { limit } = query.data;
   const db = drizzle(c.env.DB, { schema });
 
   const rows = await db

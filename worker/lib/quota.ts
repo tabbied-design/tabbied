@@ -34,7 +34,8 @@ export const DAILY_CAPS: Record<Endpoint, { calls: number; label: string }> = {
 
 export type Db = DrizzleD1Database<typeof schema>;
 
-const startOfUtcDay = () => {
+/** Midnight UTC today: the ledger's day, the caps' day, the admin's day. */
+export const startOfUtcDay = () => {
   const now = new Date();
 
   return new Date(

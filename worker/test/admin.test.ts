@@ -1,19 +1,6 @@
 import { SELF, env } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
-
-const ORIGIN = 'https://tabbied.com';
-const json = { 'content-type': 'application/json', origin: ORIGIN };
-
-async function signIn(email: string): Promise<string> {
-  await SELF.fetch(`${ORIGIN}/api/auth/sign-up/email`, {
-    method: 'POST',
-    headers: json,
-    body: JSON.stringify({ email, password: 'correct horse battery staple', name: 'Test' }),
-  });
-  const mail = await env.DB.prepare('SELECT url FROM dev_mail WHERE email = ?').bind(email.toLowerCase()).first<{ url: string }>();
-  const verify = await SELF.fetch(mail!.url, { redirect: 'manual' });
-  return verify.headers.getSetCookie().map((cookie) => cookie.split(';')[0]).join('; ');
-}
+import { ORIGIN, json, signIn } from './helpers';
 
 const ROUTES = ['overview', 'users', 'usage', 'generations', 'templates', 'uploads', 'quotas', 'mail'];
 

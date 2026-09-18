@@ -1,26 +1,12 @@
 import { SELF, env } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
-
-const ORIGIN = 'https://tabbied.com';
-const json = { 'content-type': 'application/json', origin: ORIGIN };
+import { ORIGIN, json, signIn } from './helpers';
 
 // The smallest valid PNG: a 1×1 transparent pixel.
 const PNG = Uint8Array.from(
   atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='),
   (c) => c.charCodeAt(0)
 );
-
-async function signIn(email: string): Promise<string> {
-  const signUp = await SELF.fetch(`${ORIGIN}/api/auth/sign-up/email`, {
-    method: 'POST',
-    headers: json,
-    body: JSON.stringify({ email, password: 'correct horse battery staple', name: 'Test' }),
-  });
-  expect(signUp.status).toBe(200);
-  const mail = await env.DB.prepare('SELECT url FROM dev_mail WHERE email = ?').bind(email).first<{ url: string }>();
-  const verify = await SELF.fetch(mail!.url, { redirect: 'manual' });
-  return verify.headers.getSetCookie().map((cookie) => cookie.split(';')[0]).join('; ');
-}
 
 const post = (cookie: string, blob: Blob, name = 'ref.png', note?: string) => {
   const form = new FormData();

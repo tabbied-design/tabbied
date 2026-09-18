@@ -38,7 +38,6 @@ export type Env = {
    * D1; this is for the deploy that has no one to run it yet.
    */
   ADMIN_EMAILS?: string;
-  TURNSTILE_SECRET_KEY?: string;
   GITHUB_CLIENT_ID?: string;
   GITHUB_CLIENT_SECRET?: string;
   GOOGLE_CLIENT_ID?: string;

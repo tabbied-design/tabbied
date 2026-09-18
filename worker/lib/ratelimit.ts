@@ -56,7 +56,3 @@ export async function consume(db: Db, limit: Limit): Promise<LimitVerdict> {
 
   return { ok: true, count };
 }
-
-/** The client IP as Cloudflare sees it, for limiting requests with no session. */
-export const clientIp = (request: Request) =>
-  request.headers.get('cf-connecting-ip') ?? 'unknown';

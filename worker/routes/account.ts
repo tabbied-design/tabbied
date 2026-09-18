@@ -4,18 +4,13 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import { aiUsage } from '../db/schema';
 import type { Env } from '../env';
-import { DAILY_CAPS, type Endpoint } from '../lib/quota';
+import { DAILY_CAPS, startOfUtcDay, type Endpoint } from '../lib/quota';
 import { requireUser } from '../lib/session';
 
 // A person's own account data beyond what better-auth serves: today's spend
 // against the caps, and the recent ledger. Session-scoped throughout.
 
 const account = new Hono<{ Bindings: Env }>();
-
-const startOfUtcDay = () => {
-  const now = new Date();
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-};
 
 account.get('/usage', async (c) => {
   const userId = await requireUser(c.env, c.req.raw.headers);

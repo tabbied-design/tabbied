@@ -1,5 +1,6 @@
-import { SELF, env } from 'cloudflare:test';
+import { SELF } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { ORIGIN, json, signIn } from './helpers';
 
 // The site tier end to end, minus the model: with no AI_API_KEY the directions
 // call answers from the matcher and the make call writes the three-string
@@ -7,32 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // first revision, the pin, the listing - through the real routes, the real
 // D1, and the real packaged assets served by the assets binding.
 //
-// The session is a real one: sign up, read the verification link out of the
-// dev mailbox (DEV=1 writes it to D1 rather than sending it), follow it, keep
-// the cookie. That is the same path the e2e flow reads a link back through.
-
-const ORIGIN = 'https://tabbied.com';
-const json = { 'content-type': 'application/json', origin: ORIGIN };
-
-async function signIn(email: string): Promise<string> {
-  const signUp = await SELF.fetch(`${ORIGIN}/api/auth/sign-up/email`, {
-    method: 'POST',
-    headers: json,
-    body: JSON.stringify({ email, password: 'correct horse battery staple', name: 'Test' }),
-  });
-  expect(signUp.status, await signUp.text()).toBe(200);
-
-  const mail = await env.DB.prepare('SELECT url FROM dev_mail WHERE email = ?')
-    .bind(email)
-    .first<{ url: string }>();
-  expect(mail?.url).toBeTruthy();
-
-  const verify = await SELF.fetch(mail!.url, { redirect: 'manual' });
-  const cookies = verify.headers.getSetCookie().map((cookie) => cookie.split(';')[0]);
-  expect(cookies.length, 'verification should sign the person in').toBeGreaterThan(0);
-
-  return cookies.join('; ');
-}
+// The session is a real one (see helpers.ts).
 
 async function generate(cookie: string): Promise<string> {
   const response = await SELF.fetch(`${ORIGIN}/api/studio/directions`, {
@@ -84,6 +60,32 @@ describe('sites need a session', () => {
       body: JSON.stringify({ slot: 'hero.photo' }),
     });
     expect(response.status).toBe(401);
+  });
+});
+
+describe('a direction is its author\'s to make', () => {
+  it('refuses a site from somebody else\'s generation, and makes it for its owner', async () => {
+    const author = await signIn('author@example.com');
+    const visitor = await signIn('visitor@example.com');
+    const generationId = await generate(author);
+
+    // A generation is readable by anyone holding its id, but a site made from
+    // it spends the maker's budget against the author's description and hangs
+    // off the author's row, whose deletion would cascade to it. The same line
+    // direction-image draws.
+    const theirs = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
+      method: 'POST',
+      headers: { ...json, cookie: visitor },
+      body: JSON.stringify({ generationId, index: 0 }),
+    });
+    expect(theirs.status).toBe(403);
+
+    const mine = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
+      method: 'POST',
+      headers: { ...json, cookie: author },
+      body: JSON.stringify({ generationId, index: 0 }),
+    });
+    expect(mine.status, await mine.clone().text()).toBe(200);
   });
 });
 
