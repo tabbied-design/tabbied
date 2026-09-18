@@ -21,7 +21,7 @@ export type PaletteChoice = {
 };
 
 /** A colour that renders as nothing, so `transparent` must survive a recolour. */
-const isTransparent = (value: string): boolean => {
+export const isTransparent = (value: string): boolean => {
   const colour = value.trim().toLowerCase();
 
   return colour === 'transparent' || /^#(?:[0-9a-f]{6})00$/.test(colour);

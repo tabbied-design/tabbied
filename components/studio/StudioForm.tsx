@@ -107,6 +107,13 @@ export default function StudioForm({ templateCount }: { templateCount: number })
   const drop = (event: DragEvent) => {
     event.preventDefault();
     setOver(false);
+    // The same gate the click has: the photos go to the person's library, so
+    // dropped signed out they were kept in memory until Generate sent the
+    // person to sign in and lost them on the way.
+    if (!user && !sessionPending) {
+      signInFirst();
+      return;
+    }
     addFiles(event.dataTransfer.files);
   };
 

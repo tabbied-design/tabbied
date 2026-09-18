@@ -25,7 +25,7 @@ import { activeChoice, paletteChoices } from 'lib/studioPalettes';
 import PaletteDialog from './PaletteDialog';
 import styles from './SiteRail.module.css';
 
-export type RailTab = 'colours' | 'patterns' | 'content';
+type RailTab = 'colours' | 'patterns' | 'content';
 
 export type SaveState = 'clean' | 'dirty' | 'saving' | 'saved';
 
@@ -129,7 +129,9 @@ export default function SiteRail({
     }
   };
 
-  const names = new Map(designs.map((design) => [design.slug, design.name]));
+  // Memoised: the rail re-renders on every palette click, shuffle tick and
+  // save-state change, and rebuilt a 338-entry map on each of them.
+  const names = useMemo(() => new Map(designs.map((design) => [design.slug, design.name])), [designs]);
 
   return (
     <aside className={styles.rail} aria-label="Customize this site">

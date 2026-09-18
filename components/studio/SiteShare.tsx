@@ -33,10 +33,12 @@ export default function SiteShare() {
     (async () => {
       if (!id) throw new Error('no id');
 
-      const site = await apiFetch<SiteDocument>(`/api/studio/sites/${id}`);
+      // Encoded: an id shaped like a path (`../generations/x`) otherwise
+      // normalised to a different endpoint and a confusing failure.
+      const site = await apiFetch<SiteDocument>(`/api/studio/sites/${encodeURIComponent(id)}`);
       const revision =
         Number.isInteger(n) && n >= 1 && n !== site.latest.n
-          ? await apiFetch<StoredRevision>(`/api/studio/sites/${id}/revisions/${n}`)
+          ? await apiFetch<StoredRevision>(`/api/studio/sites/${encodeURIComponent(id)}/revisions/${n}`)
           : site.latest;
 
       const [specResponse, htmlResponse] = await Promise.all([

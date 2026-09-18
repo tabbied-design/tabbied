@@ -38,7 +38,7 @@ export default function StudioPreview() {
       return { status: 'error', message: 'That preview link is incomplete.' };
     }
 
-    const stored = await apiFetch<StoredGeneration>(`/api/studio/generations/${generationId}`);
+    const stored = await apiFetch<StoredGeneration>(`/api/studio/generations/${encodeURIComponent(generationId)}`);
     const direction = stored.result.directions[index];
 
     if (!direction) {

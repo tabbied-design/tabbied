@@ -29,7 +29,10 @@
   flex-direction: column;
   box-sizing: border-box;
   width: min(1200px, calc(100vw - 32px));
+  /* dvh where it exists: on a phone the vh bottom, which is the iframe's, sat
+     behind the browser's toolbar. */
   height: min(calc(100vh - 48px), 940px);
+  height: min(calc(100dvh - 48px), 940px);
   margin: auto;
   overflow: hidden;
   font-family: var(--pd-sans);
@@ -195,6 +198,7 @@
   .popup {
     width: calc(100vw - 16px);
     height: calc(100vh - 16px);
+    height: calc(100dvh - 16px);
     border-radius: 12px;
   }
 

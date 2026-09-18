@@ -2,7 +2,7 @@ import { STUDIO_ENTRIES } from 'lib/studioDirections';
 
 // The studio index, emitted as a plain static asset by the export.
 //
-// The Worker matches against the same 57 entries the browser does, and this is
+// The Worker matches against the same entries the browser does, and this is
 // how it gets them: `env.ASSETS.fetch('/studio-index.json')`. Reading it as an
 // asset rather than bundling it into the Worker is the property the MCP
 // endpoint already relies on - the tools describe exactly the bytes this

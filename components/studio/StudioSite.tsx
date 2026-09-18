@@ -83,6 +83,14 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
   // keep the attributes the live edits wrote into it.
   const [canvasKey, setCanvasKey] = useState(0);
   const frameRef = useRef<HTMLIFrameElement | null>(null);
+  const shuffleTimer = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (shuffleTimer.current !== null) window.clearTimeout(shuffleTimer.current);
+    },
+    []
+  );
 
   useEffect(() => {
     let live = true;
@@ -94,7 +102,7 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
         return { status: 'error', message: 'That site link is incomplete.' };
       }
 
-      const site = await apiFetch<SiteDocument>(`/api/studio/sites/${siteId}`);
+      const site = await apiFetch<SiteDocument>(`/api/studio/sites/${encodeURIComponent(siteId)}`);
 
       const [specResponse, htmlResponse] = await Promise.all([
         fetch(templateSpecUrl(site.slug)),
@@ -148,21 +156,57 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
 
   const patternSlots = useMemo<PatternSlot[]>(() => spec?.slots.filter(isPatternSlot) ?? [], [spec]);
 
-  /** Plan and run a partial document against the live page. */
-  const applyLive = useCallback(
-    (edits: EditsDocument['edits'], rehydrate: boolean) => {
+  /**
+   * Rebuild the canvas from the package with a document, and remount it. The
+   * way back when a live plan cannot express the change (a reset, which has
+   * to put authored options back) or has nowhere to run yet.
+   */
+  const rebuild = useCallback(
+    (next: EditsDocument) => {
+      setState((prev) => {
+        if (prev.status !== 'ready') return prev;
+
+        const built = buildPreviewDocument({ html: prev.packaged, spec: prev.spec, edits: next, slug: prev.site.slug });
+
+        return { ...prev, html: built.html, problems: built.problems };
+      });
+      setCanvasKey((key) => key + 1);
+    },
+    []
+  );
+
+  /**
+   * Run a document against the live page: plan it whole, apply the plan to
+   * the iframe's document, and ask the runtime inside to draw its patterns
+   * again. Whole, not the changed part: the planner gives a field's own
+   * palette precedence over the brand palette only when both are in the
+   * document it plans, so a palette change planned alone re-coloured a field
+   * the saved document leaves alone, and the canvas disagreed with what Save
+   * would store and Download would build. Text operations are idempotent, so
+   * planning them again costs nothing. What the engine could not place is
+   * reported with the page's other notices rather than dropped; before the
+   * frame has loaded its document and runtime there is nothing to plan
+   * against, so the canvas is rebuilt instead.
+   */
+  const applyDocument = useCallback(
+    (next: EditsDocument) => {
       if (!spec) return;
 
       const frame = frameRef.current as Frame | null;
       const doc = frame?.contentDocument;
+      const runtime = frame?.contentWindow?.__tabbied;
 
-      if (!doc) return;
+      if (!doc || !runtime) {
+        rebuild(next);
+        return;
+      }
 
-      applyPlan(doc, planEdits(spec, { specVersion: spec.specVersion, slug: spec.site.slug, edits }));
+      const { problems } = applyPlan(doc, planEdits(spec, next));
 
-      if (rehydrate) frame?.contentWindow?.__tabbied?.rehydrate();
+      runtime.rehydrate();
+      setState((prev) => (prev.status === 'ready' ? { ...prev, problems } : prev));
     },
-    [spec]
+    [spec, rebuild]
   );
 
   const touch = (next: EditsDocument) => {
@@ -193,7 +237,7 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
     );
   }
 
-  const { site, packaged } = ready;
+  const { site } = ready;
   const palette = draft.edits.palette ?? spec.palette.colors;
   const fieldsChanged = patternsChanged(patternSlots, draft.edits.patterns);
 
@@ -204,20 +248,22 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
   // the class rule holds, so the page reads as it did.
   const setPalette = (colors: string[]) => {
     const next = spec.palette.colors.map((authored, index) => colors[index] ?? authored);
-    touch({ ...draft, edits: { ...draft.edits, palette: next } });
-    applyLive({ palette: next }, true);
+    const document = { ...draft, edits: { ...draft.edits, palette: next } };
+    touch(document);
+    applyDocument(document);
   };
 
   const shuffle = () => {
     if (shuffling) return;
 
     const patterns = shuffleDesigns(patternSlots, draft.edits.patterns, designs);
+    const document = { ...draft, edits: { ...draft.edits, patterns } };
 
     setShuffling(true);
-    touch({ ...draft, edits: { ...draft.edits, patterns } });
-    applyLive({ patterns }, true);
+    touch(document);
+    applyDocument(document);
 
-    window.setTimeout(() => setShuffling(false), SHUFFLE_BEAT_MS);
+    shuffleTimer.current = window.setTimeout(() => setShuffling(false), SHUFFLE_BEAT_MS);
   };
 
   const resetPatterns = () => {
@@ -225,40 +271,53 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
     const next = { ...draft, edits: rest };
 
     touch(next);
-    // A swap removed the field's authored options and seed, which a partial
-    // plan cannot put back; the canvas is rebuilt from the package instead,
-    // and remounted, since the rebuilt page may equal the one already loaded.
-    const rebuilt = buildPreviewDocument({ html: packaged, spec, edits: next, slug: site.slug });
-    setState({ ...ready, html: rebuilt.html, problems: rebuilt.problems });
-    setCanvasKey((key) => key + 1);
+    // A swap removed the field's authored options and seed, which a plan of
+    // the document without them cannot put back; the canvas is rebuilt from
+    // the package instead, and remounted, since the rebuilt page may equal
+    // the one already loaded.
+    rebuild(next);
     toaster.add({ title: `Back to ${site.templateName}'s own patterns` });
   };
 
+  // The handlers below update state functionally. Each closes over the render
+  // it was created in, and the rail stays live while its request is out: a
+  // palette click during a save, or a reset during a rename, used to be
+  // overwritten by the stale `ready` the response then spread back in, which
+  // put the shuffled patterns back on a canvas the person had just reset.
   const save = async () => {
+    const saving = draft;
+
     setSaveState('saving');
 
     try {
       const { revision } = await apiFetch<{ revision: number }>(
-        `/api/studio/sites/${site.id}/revisions`,
-        { method: 'POST', body: JSON.stringify({ edits: draft }) }
+        `/api/studio/sites/${encodeURIComponent(site.id)}/revisions`,
+        { method: 'POST', body: JSON.stringify({ edits: saving }) }
       );
 
-      setState({
-        ...ready,
-        site: {
-          ...site,
-          revisions: revision,
-          palette,
-          latest: {
-            ...site.latest,
-            n: revision,
-            edits: draft,
-            source: 'manual',
-            instruction: null,
-          },
-        },
-      });
-      setSaveState('saved');
+      setState((prev) =>
+        prev.status !== 'ready'
+          ? prev
+          : {
+              ...prev,
+              site: {
+                ...prev.site,
+                revisions: revision,
+                palette: saving.edits.palette ?? prev.spec.palette.colors,
+                latest: {
+                  ...prev.site.latest,
+                  n: revision,
+                  edits: saving,
+                  source: 'manual',
+                  instruction: null,
+                },
+              },
+            }
+      );
+      // "Saved" only if nothing changed while the request was out: a change
+      // in flight has already marked the draft dirty, and the button saying
+      // "Saved to your custom sites" over unsaved changes was a lie.
+      setSaveState((current) => (current === 'saving' ? 'saved' : current));
       toaster.add({ title: 'Saved. Find it under Custom sites.' });
     } catch (cause) {
       setSaveState('dirty');
@@ -268,11 +327,11 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
 
   const rename = async (title: string) => {
     try {
-      await apiFetch<{ title: string }>(`/api/studio/sites/${site.id}`, {
+      await apiFetch<{ title: string }>(`/api/studio/sites/${encodeURIComponent(site.id)}`, {
         method: 'PATCH',
         body: JSON.stringify({ title }),
       });
-      setState({ ...ready, site: { ...site, title } });
+      setState((prev) => (prev.status === 'ready' ? { ...prev, site: { ...prev.site, title } } : prev));
       toaster.add({ title: 'Site name saved' });
     } catch (cause) {
       toaster.add({ title: cause instanceof ApiError ? cause.message : 'Could not rename the site.' });

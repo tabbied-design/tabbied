@@ -29,7 +29,7 @@ import { loadStudioIndex } from '../lib/studioIndex';
 //
 // The shipped client-side matcher is not replaced by any of this: it is the
 // signed-out path, and here it becomes *candidate assembly*. The model picks
-// three from a scored dozen rather than hallucinating over 57, and the slug
+// three from a scored dozen rather than hallucinating over the whole library, and the slug
 // enum in the response schema is built from exactly that dozen - so an invented
 // template cannot survive validation, and every card still leads to a real page
 // and a real zip.
