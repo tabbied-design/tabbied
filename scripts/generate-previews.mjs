@@ -82,7 +82,10 @@ const slugs = requested.length ? requested : allSlugs;
 
 const { server, port } = await serveRepo();
 const browser = await chromium.launch({
-  executablePath: process.env.MOCKUP_CHROMIUM || '/opt/pw-browsers/chromium',
+  // Playwright's own browser unless a binary is named, like every other
+  // browser script here (svg-parity-sweep, render-sweep): a hard-coded
+  // sandbox path failed to launch on any machine that lacked it.
+  ...(process.env.MOCKUP_CHROMIUM ? { executablePath: process.env.MOCKUP_CHROMIUM } : {}),
 });
 
 try {

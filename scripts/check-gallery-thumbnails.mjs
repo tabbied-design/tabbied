@@ -41,6 +41,17 @@ const entries = [
   ...readFileSync(THUMBNAILS_FILE, 'utf-8').matchAll(/^ {2}([a-z][a-z0-9]*): \{/gm),
 ].map((m) => m[1]);
 
+// The match above is tied to the file's formatting. Reformatted (four-space
+// indent, quoted keys) it finds nothing, and a gate that finds nothing has
+// checked nothing: that is the vacuous pass, not a clean one.
+if (entries.length === 0) {
+  console.error(
+    'galleryThumbnails.ts: no entries matched the expected shape (two-space indent, ' +
+      'one-line configs). Reformat the file or update check-gallery-thumbnails.mjs.'
+  );
+  process.exit(1);
+}
+
 const orphans = entries.filter((slug) => !patterns.has(slug));
 
 if (orphans.length) {

@@ -77,7 +77,8 @@ if (existsSync(designCatalogPath)) {
 const titleOf = (html) => {
   const match = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html);
 
-  return match ? match[1].replace(/\s*[·| - -]\s*Tabbied\s*$/i, '').trim() : '';
+  // The separator before the site name: a middle dot, a pipe or a hyphen.
+  return match ? match[1].replace(/\s*[\u00b7|-]\s*Tabbied\s*$/i, '').trim() : '';
 };
 
 const fontsOf = (html) => {
@@ -143,6 +144,7 @@ for (const slug of slugs) {
   }
 
   const brand = slots.find((slot) => slot.id === 'brand.name');
+  const fonts = fontsOf(html);
   const spec = {
     specVersion: SPEC_VERSION,
     site: {
@@ -158,7 +160,7 @@ for (const slug of slugs) {
       // them nowhere.
       ...(root.varNames ? { varNames: root.varNames } : {}),
     },
-    ...(fontsOf(html) ? { fonts: fontsOf(html) } : {}),
+    ...(fonts ? { fonts } : {}),
     slots,
   };
 
@@ -191,11 +193,10 @@ const counts = (spec, kind) =>
 
 // The aggregate index: what /create lists, and what the MCP `list_templates`
 // tool serves. Small enough to return whole - 77 entries needs no query
-// language.
-const catalog = {
-  specVersion: SPEC_VERSION,
-  generated: specs.length,
-  templates: specs.map((spec) => ({
+// language. Naming slugs regenerates those specs in place, so the index is
+// merged rather than rewritten: written from `specs` alone, `npm run
+// editable <slug>` used to leave a catalog of one template behind.
+const entryOf = (spec) => ({
     slug: spec.site.slug,
     name: spec.site.name,
     href: `/template/${spec.site.slug}/`,
@@ -221,7 +222,22 @@ const catalog = {
       html: `/downloads/${spec.site.slug}-html.zip`,
       react: `/downloads/${spec.site.slug}-react.zip`,
     },
-  })),
+});
+
+const previous =
+  only.length > 0 && existsSync(catalogPath)
+    ? JSON.parse(readFileSync(catalogPath, 'utf8')).templates ?? []
+    : [];
+const regenerated = new Set(specs.map((spec) => spec.site.slug));
+const templates = [
+  ...previous.filter((entry) => !regenerated.has(entry.slug)),
+  ...specs.map(entryOf),
+].sort((a, b) => a.slug.localeCompare(b.slug));
+
+const catalog = {
+  specVersion: SPEC_VERSION,
+  generated: templates.length,
+  templates,
 };
 
 writeFileSync(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`);
