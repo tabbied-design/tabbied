@@ -81,9 +81,14 @@ export default function HomeHero({
 
   // Read through a ref rather than a dependency: the cell timer runs three times
   // per palette step, and restarting it on every step would swallow the tick
-  // that lands on the changeover.
+  // that lands on the changeover. Written in an effect, not during render:
+  // a render-time ref write is order-dependent under StrictMode's double
+  // render and is what the React Compiler refuses.
   const paletteRef = useRef(palette);
-  paletteRef.current = palette;
+
+  useEffect(() => {
+    paletteRef.current = palette;
+  }, [palette]);
 
   // Cells are replaced rather than recolored, so a palette change washes through
   // the margins gradually instead of repainting every cell at once.

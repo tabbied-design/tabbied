@@ -40,12 +40,6 @@
   color: var(--a-ink);
 }
 
-.sectionTitle {
-  margin: 0 0 14px;
-  font: 700 20px / 1.2 var(--a-display);
-  letter-spacing: -0.01em;
-}
-
 /* ── Providers ───────────────────────────────────────────────────────────── */
 
 .providers {
@@ -199,15 +193,6 @@
   color: var(--a-ink);
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-.notice {
-  margin: 22px 0 0;
-  padding: 12px 14px;
-  font: 400 13px / 1.5 var(--a-sans);
-  color: oklch(0.35 0.09 175);
-  background-color: oklch(0.95 0.03 175);
-  border-radius: 10px;
 }
 
 @media (max-width: 767.98px) {

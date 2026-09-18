@@ -4,8 +4,8 @@ import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from 'components/logo';
-import { initials } from 'components/account/AccountHeader';
-import { plexMono } from 'lib/fonts';
+import { initials } from 'components/nav';
+import { plexMono, plexSans } from 'lib/fonts';
 import { apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import styles from './admin.module.css';
@@ -39,11 +39,21 @@ type UserRow = {
   generations: number;
 };
 
-/** A CSV cell: quoted when it has to be, doubled quotes inside. */
+/**
+ * A CSV cell: quoted when it has to be, doubled quotes inside. Names and
+ * addresses are what people typed, and a spreadsheet runs a cell that starts
+ * like a formula (`=HYPERLINK(...)`, `@SUM`, `+cmd|...`) when the file is
+ * opened; a leading apostrophe is how every spreadsheet is told "text". A
+ * carriage return breaks a row as surely as a newline, so it quotes too.
+ */
 const cell = (value: unknown) => {
-  const text = value === null || value === undefined ? '' : String(value);
-  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  const raw = value === null || value === undefined ? '' : String(value);
+  const text = /^[=+\-@\t\r]/.test(raw) ? `'${raw}` : raw;
+  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 };
+
+/** The most the directory answers in one call; the file says when it hit it. */
+const EXPORT_PAGE = 200;
 
 /**
  * Every user the directory can list, as a file. Built here rather than by the
@@ -51,7 +61,7 @@ const cell = (value: unknown) => {
  * representation of them is not worth one more route to gate.
  */
 async function exportUsers() {
-  const { users } = await apiFetch<{ users: UserRow[] }>('/api/admin/users?limit=200');
+  const { users } = await apiFetch<{ users: UserRow[] }>(`/api/admin/users?limit=${EXPORT_PAGE}`);
   const header = ['id', 'name', 'email', 'verified', 'role', 'banned', 'joined', 'sites', 'generations'];
   const lines = users.map((user) =>
     [
@@ -72,9 +82,13 @@ async function exportUsers() {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = `tabbied-users-${new Date().toISOString().slice(0, 10)}.csv`;
+  // A directory past the page size is a partial file, and the name says so
+  // rather than leaving it to be discovered against the users page's count.
+  const scope = users.length >= EXPORT_PAGE ? `-first-${EXPORT_PAGE}` : '';
+  anchor.download = `tabbied-users-${new Date().toISOString().slice(0, 10)}${scope}.csv`;
   anchor.click();
-  URL.revokeObjectURL(url);
+  // Revoking synchronously has cancelled the download in Safari.
+  setTimeout(() => URL.revokeObjectURL(url), 10_000);
 }
 
 export default function AdminPage({
@@ -112,7 +126,7 @@ export default function AdminPage({
   }
 
   return (
-    <div className={`${styles.shell} ${plexMono.variable}`}>
+    <div className={`${styles.shell} ${plexMono.variable} ${plexSans.variable}`}>
       <aside className={styles.sidebar}>
         <Link href="/" className={styles.logo} aria-label="Tabbied home" prefetch={false}>
           <Logo />

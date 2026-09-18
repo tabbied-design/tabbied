@@ -58,6 +58,12 @@
   line-height: 0;
 }
 
+/* Over the global a:hover, which would turn the lockup pink. */
+.logo:hover,
+.logo:focus-visible {
+  color: var(--a-ink);
+}
+
 .nav {
   display: flex;
   flex-direction: column;
@@ -318,12 +324,6 @@
 .small:disabled {
   cursor: default;
   opacity: 0.5;
-}
-
-.smallOn {
-  color: #fff;
-  background-color: var(--a-ink);
-  border-color: var(--a-ink);
 }
 
 .toolbar {

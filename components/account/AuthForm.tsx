@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { apiFetch } from 'lib/apiFetch';
 import { signIn, signUp } from 'lib/authClient';
+import { safeNext } from 'lib/safeNext';
 import styles from './AuthForm.module.css';
 
 // Sign-in and sign-up are the same form with two labels and one extra field,
@@ -32,11 +33,6 @@ const COPY = {
     swapHref: '/sign-in',
   },
 } as const;
-
-/** Where to land afterwards. Same-origin paths only - never an open redirect. */
-function safeNext(raw: string | null): string {
-  return raw && raw.startsWith('/') && !raw.startsWith('//') ? raw : '/studio';
-}
 
 // ---- providers --------------------------------------------------------------
 //
@@ -109,7 +105,8 @@ function ProviderIcon({ provider }: { provider: Provider }) {
 export default function AuthForm({ mode }: { mode: Mode }) {
   const copy = COPY[mode];
   const router = useRouter();
-  const next = safeNext(useSearchParams().get('next'));
+  // Where to land afterwards: same-origin paths only (lib/safeNext).
+  const next = safeNext(useSearchParams().get('next'), '/studio');
   const providers = useProviders();
 
   const [email, setEmail] = useState('');
@@ -134,7 +131,11 @@ export default function AuthForm({ mode }: { mode: Mode }) {
             name: email.split('@')[0],
             email,
             password,
-            callbackURL: '/verify-email/',
+            // Absolute, like the social callback below: better-auth resolves
+            // a relative one against its own baseURL, which in development
+            // is the Worker on :8787, so the mailed link landed there rather
+            // than on the site.
+            callbackURL: `${window.location.origin}/verify-email/`,
           })
         : await signIn.email({ email, password });
 

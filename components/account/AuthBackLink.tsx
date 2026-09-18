@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { safeNext } from 'lib/safeNext';
 import styles from './AuthShell.module.css';
 
 // The way out of the account forms, on its own so that reading `?next=` costs
@@ -12,13 +13,9 @@ import styles from './AuthShell.module.css';
 // account - so leaving and finishing land in the same place. With no `next`
 // it is the homepage.
 
-/** Same-origin paths only - never an open redirect. */
-function safeBack(raw: string | null): string {
-  return raw && raw.startsWith('/') && !raw.startsWith('//') ? raw : '/';
-}
-
 export default function AuthBackLink() {
-  const back = safeBack(useSearchParams().get('next'));
+  // Same-origin paths only (lib/safeNext); the homepage otherwise.
+  const back = safeNext(useSearchParams().get('next'), '/');
 
   return (
     <Link href={back} prefetch={false} className={styles.back} aria-label="Go back">

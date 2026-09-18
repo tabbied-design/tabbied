@@ -6,9 +6,9 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
-import { apiUrl } from 'lib/apiFetch';
+import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
 import { authClient } from 'lib/authClient';
-import { initials } from 'components/account/AccountHeader';
+import { initials } from 'components/nav';
 import { money, useAdminData, when } from './useAdminData';
 import styles from './admin.module.css';
 
@@ -650,6 +650,7 @@ export function TemplatesPanel() {
 
 export function UploadsPanel() {
   const [busy, setBusy] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const { data, error, reload } = useAdminData<{ uploads: { id: string; src: string; bytes: number; note: string | null; createdAt: string; userEmail: string }[] }>('/api/admin/uploads?limit=100');
   if (!data) return <Load error={error} />;
   if (data.uploads.length === 0) {
@@ -660,6 +661,12 @@ export function UploadsPanel() {
     );
   }
   return (
+    <>
+    {message ? (
+      <p className={styles.error} role="alert">
+        {message}
+      </p>
+    ) : null}
     <ul className={styles.grid}>
       {data.uploads.map((u) => (
         <li key={u.id} className={styles.thumb}>
@@ -673,8 +680,16 @@ export function UploadsPanel() {
               disabled={busy !== null}
               onClick={async () => {
                 setBusy(u.id);
-                await fetch(apiUrl(`/api/admin/uploads/${u.id}`), { method: 'DELETE', credentials: 'include' });
-                setBusy(null);
+                setMessage(null);
+                // A refused delete used to reload silently and leave the row
+                // standing with nothing said.
+                try {
+                  await apiFetch(`/api/admin/uploads/${u.id}`, { method: 'DELETE' });
+                } catch (cause) {
+                  setMessage(cause instanceof ApiError ? cause.message : 'Could not remove that picture.');
+                } finally {
+                  setBusy(null);
+                }
                 reload();
               }}
             >
@@ -684,6 +699,7 @@ export function UploadsPanel() {
         </li>
       ))}
     </ul>
+    </>
   );
 }
 
@@ -692,7 +708,9 @@ export function QuotasPanel() {
   if (!data) return <Load error={error} />;
   return (
     <>
-      <div className={styles.panel}>
+      {/* Scrollable like the other tables: the cells do not wrap, and on a
+          phone the third column was cut off with no way to reach it. */}
+      <div className={`${styles.panel} ${styles.scroll}`}>
         <table className={styles.table}>
           <thead>
             <tr>

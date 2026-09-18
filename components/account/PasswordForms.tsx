@@ -41,7 +41,9 @@ export function ForgotPasswordForm() {
 
         const result = await authClient.requestPasswordReset({
           email,
-          redirectTo: '/reset-password/',
+          // Absolute: a relative path resolves against the Worker's own
+          // origin, which in development is not the site's.
+          redirectTo: `${window.location.origin}/reset-password/`,
         });
 
         setPending(false);

@@ -35,28 +35,12 @@
   }
 }
 
-/*
- * Full-bleed below the md breakpoint (old `.container-fluid-on-mobile`).
- * Declared after the breakpoint max-widths so it wins in the 748-991px range.
- */
-@media (max-width: 991.98px) {
-  .containerFluidOnMobile {
-    max-width: 100%;
-    padding-right: 0;
-    padding-left: 0;
-  }
-}
-
 .row {
   --gutter-x: 32px;
   display: flex;
   flex-wrap: wrap;
   margin-right: calc(-0.5 * var(--gutter-x));
   margin-left: calc(-0.5 * var(--gutter-x));
-}
-
-.noGutter {
-  --gutter-x: 0px;
 }
 
 .col {
