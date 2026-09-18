@@ -1,8 +1,9 @@
 {
   "name": "tabbied-mcp",
   "version": "0.2.0",
-  "description": "MCP server for Tabbied: search, look at, and render 295 generative pattern designs from any MCP client.",
+  "description": "MCP server for Tabbied: search, look at, and render its generative pattern designs from any MCP client.",
   "type": "module",
+  "sideEffects": false,
   "license": "MIT",
   "author": "Sy Hong and Ye Joo Park",
   "homepage": "https://tabbied.com",

@@ -460,9 +460,30 @@ function parseStops(
 function emulatePremultipliedInterpolation(stops: GradientStop[]): GradientStop[] {
   const out: GradientStop[] = [];
   const SUBDIVISIONS = 8;
+  const sameRgbOf = (a: GradientStop['color'], b: GradientStop['color']) =>
+    a.r === b.r && a.g === b.g && a.b === b.b;
   for (let i = 0; i < stops.length; i++) {
-    out.push(stops[i]);
+    const previous = stops[i - 1];
     const next = stops[i + 1];
+    // A fully transparent stop between two different opaque colours: CSS
+    // fades the first out and the second in, so it becomes two coincident
+    // stops, each the transparent form of its neighbour. Rewritten as one
+    // stop it took the second neighbour's colour, and the first segment
+    // interpolated between the two hues in non-premultiplied space - a haze
+    // of the mixed colour where CSS shows none.
+    if (
+      stops[i].color.a === 0 &&
+      previous &&
+      next &&
+      previous.color.a > 0 &&
+      next.color.a > 0 &&
+      !sameRgbOf(previous.color, next.color)
+    ) {
+      out.push({ ...stops[i], color: { ...previous.color, a: 0 } });
+      out.push({ ...stops[i], color: { ...next.color, a: 0 } });
+      continue;
+    }
+    out.push(stops[i]);
     if (!next) break;
     const c1 = stops[i].color;
     const c2 = next.color;
@@ -514,10 +535,17 @@ function stopNodes(stops: GradientStop[], ctx: Ctx, offsetMap?: (p: number) => n
   });
 }
 
-/** Angle for `to <side-or-corner>` forms, in degrees (CSS bearing). */
+/**
+ * Angle for `to <side-or-corner>` forms, in degrees (CSS bearing). A corner
+ * form's gradient line is perpendicular to the diagonal joining the two
+ * neighbouring corners (CSS Images 3), so for `to top right` it points along
+ * (h, w): a bearing of atan2(h, w). On a 200 by 100 box that is 26.57deg;
+ * atan2(w, h), which this had, gave 63.43deg. The two agree only on a
+ * square, which is why the cell-by-cell parity sweep did not see it.
+ */
 function sideOrCornerAngle(token: string, w: number, h: number): number {
   const dirs = token.replace(/^to\s+/, '').trim().split(/\s+/).sort().join(' ');
-  const corner = (Math.atan2(w, h) * 180) / Math.PI;
+  const corner = (Math.atan2(h, w) * 180) / Math.PI;
   switch (dirs) {
     case 'top': return 0;
     case 'right': return 90;
@@ -1253,6 +1281,18 @@ function paintBoxLayers(box: Box, cs: CSSStyleDeclaration, env: WalkEnv): SvgNod
   const shape = shapeFor(box, radii, ctx.precision);
   const nodes: SvgNode[] = [];
 
+  // Painted properties this converter has no primitive for. The rule is to
+  // throw, never to leave them out: an export that quietly omits an outline
+  // or a text shadow is as confident as a correct one, and only the parity
+  // sweep would ever tell them apart.
+  const outlineWidth = px(cs.outlineWidth);
+  if (cs.outlineStyle && cs.outlineStyle !== 'none' && outlineWidth > 0) {
+    throw new SvgExportUnsupportedError('outline', `${cs.outlineStyle} ${cs.outlineWidth}`);
+  }
+  if (cs.textShadow && cs.textShadow !== 'none') {
+    throw new SvgExportUnsupportedError('text-shadow', cs.textShadow);
+  }
+
   const bg = env.normalizeColor(cs.backgroundColor);
   if (bg.a > 0) {
     const color = ctx.maskMode ? { r: 255, g: 255, b: 255, a: bg.a } : bg;
@@ -1273,6 +1313,18 @@ function paintBoxLayers(box: Box, cs: CSSStyleDeclaration, env: WalkEnv): SvgNod
   }
 
   const imageValue = cs.backgroundImage;
+  if (bg.a > 0 || (imageValue && imageValue !== 'none')) {
+    // A background painted anywhere but the border box, or blended into the
+    // layer below, is drawn here as neither.
+    const clip = (cs.backgroundClip || 'border-box').split(',').map((part) => part.trim());
+    if (clip.some((part) => part && part !== 'border-box')) {
+      throw new SvgExportUnsupportedError('background-clip', cs.backgroundClip);
+    }
+    const blend = (cs.backgroundBlendMode || 'normal').split(',').map((part) => part.trim());
+    if (blend.some((part) => part && part !== 'normal')) {
+      throw new SvgExportUnsupportedError('background-blend-mode', cs.backgroundBlendMode);
+    }
+  }
   if (imageValue && imageValue !== 'none') {
     const layers = splitTopLevel(imageValue);
     const sizes = splitTopLevel(cs.backgroundSize || 'auto');

@@ -24,6 +24,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { patterns, isPatternSlug } from './patterns.generated.js';
+import { splitTopLevel } from './core/splitTopLevel.js';
 import type { PatternDefinition, OptionValue } from './core/types.js';
 
 const require = createRequire(import.meta.url);
@@ -211,12 +212,9 @@ function parseRenderArgs(argv: string[]): RenderArgs {
     slug,
     out,
     seed: flags.get('seed') ?? Math.random().toString(36).slice(2, 6),
-    palette:
-      flags
-        .get('palette')
-        ?.split(',')
-        .map((color) => color.trim())
-        .filter(Boolean) ?? null,
+    // Split at paren depth zero: the help promises comma-separated CSS
+    // colours, and `rgb(0, 0, 0)` is one of them, not three fragments.
+    palette: flags.has('palette') ? splitTopLevel(flags.get('palette')!, ',') : null,
     options: flags.has('options')
       ? parseOptions(definition, flags.get('options')!)
       : {},
@@ -297,8 +295,11 @@ async function runRender(args: RenderArgs): Promise<void> {
     }
     if (url === '/css-doodle.js') file = cssDoodlePath;
     else if (url.startsWith('/pkg/')) {
+      // Inside the package by path, not by prefix: `/x/tabbied-other/...`
+      // starts with `/x/tabbied` too.
       const candidate = path.join(packageRoot, url.slice('/pkg/'.length));
-      if (candidate.startsWith(packageRoot)) file = candidate;
+      const relative = path.relative(packageRoot, candidate);
+      if (relative && !relative.startsWith('..') && !path.isAbsolute(relative)) file = candidate;
     }
     try {
       if (!file) throw new Error('not found');

@@ -32,6 +32,8 @@ const RESERVED_SLUGS = new Set([
   'protected', 'public', 'return', 'static', 'super', 'switch', 'this',
   'throw', 'true', 'try', 'typeof', 'var', 'void', 'while', 'with', 'yield',
   'await', 'patterns', 'ispatternslug',
+  // Restricted in strict mode, which a module always is.
+  'eval', 'arguments',
 ]);
 
 const fileNames = (await readdir(patternsDir))

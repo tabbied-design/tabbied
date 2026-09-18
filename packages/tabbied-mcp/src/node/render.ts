@@ -7,7 +7,7 @@
 // dance, the SVG converter, and the option parsing, so this is a wrapper over
 // argv - and a Worker, having no browser, simply doesn't offer the tool.
 import { execFile } from 'node:child_process';
-import { mkdtemp, readFile, stat } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
@@ -123,12 +123,12 @@ export function renderTool(catalog: Catalog): Tool {
       }
 
       const inline = typeof args.out !== 'string' || args.out.length === 0;
-      const outPath = inline
-        ? path.join(
-            await mkdtemp(path.join(tmpdir(), 'tabbied-')),
-            `${slug}.${format}`
-          )
-        : (args.out as string);
+      // An inline render's file lives only until its bytes have been read
+      // back; a directory per call otherwise accumulated for the life of the
+      // machine.
+      const scratch = inline ? await mkdtemp(path.join(tmpdir(), 'tabbied-')) : null;
+      const outPath = scratch ? path.join(scratch, `${slug}.${format}`) : (args.out as string);
+      const discard = () => (scratch ? rm(scratch, { recursive: true, force: true }) : Promise.resolve());
 
       const scale =
         typeof args.scale === 'number' && Number.isFinite(args.scale)
@@ -217,6 +217,7 @@ export function renderTool(catalog: Catalog): Tool {
 
       if (format === 'svg') {
         const svg = await readFile(outPath, 'utf-8');
+        await discard();
         return {
           content: [
             text(
@@ -231,6 +232,7 @@ export function renderTool(catalog: Catalog): Tool {
       const png = await readFile(outPath);
       const data = png.toString('base64');
       if (data.length > INLINE_BYTE_BUDGET) {
+        // Kept: the answer tells the agent to read it from that path.
         return {
           content: [
             text(
@@ -243,6 +245,7 @@ export function renderTool(catalog: Catalog): Tool {
         };
       }
 
+      await discard();
       return {
         content: [
           text(

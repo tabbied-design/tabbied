@@ -11,6 +11,7 @@
 // to check its own output before anyone sees it.
 
 import { isHexColor } from './color.js';
+import { stripEmphasis } from './text.js';
 import { propertiesForPalette, resolvePaletteRoles } from './palette.js';
 import type { PaletteProperties } from './palette.js';
 import type {
@@ -248,12 +249,16 @@ export function planEdits(
     }
 
     // A soft budget, not a rule: the design was set for roughly this much, but
-    // it is the user's page and a long headline is their call to make.
-    if (slot.maxChars != null && value.length > slot.maxChars) {
+    // it is the user's page and a long headline is their call to make. The
+    // budget was derived from rendered text, so it is measured against the
+    // rendered text too: the `{em}` markers of an accented run are not
+    // characters on the page.
+    const rendered = stripEmphasis(value).length;
+    if (slot.maxChars != null && rendered > slot.maxChars) {
       problems.push(
         warning(
           path,
-          `${value.length} characters where the design expects about ${slot.maxChars}`
+          `${rendered} characters where the design expects about ${slot.maxChars}`
         )
       );
     }

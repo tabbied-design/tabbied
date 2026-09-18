@@ -16,7 +16,17 @@ import {
   luminance,
   mix,
   onColor,
+  toRgb,
 } from '../dist/index.js';
+
+test('toRgb reads every hex form isHexColor admits, alpha dropped', () => {
+  assert.deepEqual(toRgb('#ff0000'), [255, 0, 0]);
+  assert.deepEqual(toRgb('#f00'), [255, 0, 0]);
+  assert.deepEqual(toRgb('#f008'), [255, 0, 0]);
+  // Parsed as one number and shifted, this was (0, 0, 128): the wrong bytes.
+  assert.deepEqual(toRgb('#ff000080'), [255, 0, 0]);
+  assert.equal(luminance('#ffffff80'), luminance('#ffffff'));
+});
 
 test('direct derivation writes only the brand roles', () => {
   assert.deepEqual(derivePaletteProperties(['#ffffff', '#000000'], 'direct'), {

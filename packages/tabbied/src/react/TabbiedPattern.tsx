@@ -123,6 +123,40 @@ export type TabbiedPatternProps = PatternBoxSize & {
  * CLS, no hydration mismatch, no raw-source flash). After mount, the
  * framework-free createPattern() controller owns the <css-doodle> inside it.
  */
+
+/** The same list, entry for entry. */
+const sameList = (a: readonly unknown[] | undefined, b: readonly unknown[] | undefined) =>
+  a === b || (a !== undefined && b !== undefined && a.length === b.length && a.every((v, i) => v === b[i]));
+
+/** The same record, key for key. */
+const sameRecord = (a: Record<string, unknown> | undefined, b: Record<string, unknown> | undefined) => {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every((key) => a[key] === b[key]);
+};
+
+/** Whether two configs would build the same pattern; callbacks are not compared. */
+function sameConfig(a: PatternConfig, b: PatternConfig): boolean {
+  return (
+    a.pattern === b.pattern &&
+    a.seed === b.seed &&
+    a.fit === b.fit &&
+    a.cellSize === b.cellSize &&
+    a.density === b.density &&
+    a.width === b.width &&
+    a.height === b.height &&
+    a.redrawInterval === b.redrawInterval &&
+    a.paused === b.paused &&
+    sameList(a.palette, b.palette) &&
+    sameRecord(a.options as Record<string, unknown> | undefined, b.options as Record<string, unknown> | undefined) &&
+    sameRecord(
+      a.coverRender as unknown as Record<string, unknown> | undefined,
+      b.coverRender as unknown as Record<string, unknown> | undefined
+    )
+  );
+}
+
 export const TabbiedPattern = forwardRef<
   TabbiedPatternHandle,
   TabbiedPatternProps
@@ -176,13 +210,19 @@ export const TabbiedPattern = forwardRef<
   };
   const configRef = useRef(config);
 
-  // Forward prop changes into the controller. Runs on every commit - the
-  // controller diffs the built source, so unchanged props are a cheap no-op
-  // (this also makes the first run after mount a no-op, mirroring the
-  // renderedSource guard the site components used).
+  // Forward prop changes into the controller. Runs on every commit, but
+  // hands the controller only a config that differs from the last one it was
+  // given: the controller's own diff is on the built source, which means
+  // resolving the palette and options and rebuilding the whole css-doodle
+  // source to find nothing changed. On a gallery page whose parent
+  // re-renders on hover or a keystroke that was dozens of rebuilds per
+  // commit. Callbacks are left out of the comparison: onReady fires once,
+  // and a fresh closure with the same meaning is not a new pattern.
   useEffect(() => {
+    const previous = configRef.current;
     configRef.current = config;
-    controllerRef.current?.update(config);
+
+    if (!sameConfig(previous, config)) controllerRef.current?.update(config);
   });
 
   // Mount once, destroy on unmount. StrictMode's mount->cleanup->mount cycle

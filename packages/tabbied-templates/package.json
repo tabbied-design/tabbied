@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "The editable-section spec for Tabbied template sites: what a person or an agent may change about a template, and the engine that applies it.",
   "type": "module",
+  "sideEffects": false,
   "license": "MIT",
   "author": "Sy Hong and Ye Joo Park",
   "homepage": "https://tabbied.com",
