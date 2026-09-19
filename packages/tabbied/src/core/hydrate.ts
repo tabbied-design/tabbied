@@ -25,6 +25,7 @@ import { createPattern } from './createPattern.js';
 import type { PatternConfig, PatternController } from './createPattern.js';
 import { FIT_MODES } from './sizing.js';
 import type { CoverRender } from './sizing.js';
+import { splitTopLevel } from './splitTopLevel.js';
 import type {
   PatternDefinition,
   PatternOption,
@@ -81,28 +82,8 @@ const hydrated = new WeakMap<Element, PatternController>();
 // Values are joined with a separator and parsed back by splitting on it, so
 // the parse has to survive a CSS color that contains its own commas -
 // `rgb(0, 0, 0)`. Every authored palette in the catalog is hex-or-keyword,
-// but the config takes any CSS color, so split at top level only.
-const splitTopLevel = (value: string, separator: string): string[] => {
-  const parts: string[] = [];
-  let depth = 0;
-  let current = '';
-
-  for (const char of value) {
-    if (char === '(') depth += 1;
-    else if (char === ')') depth = Math.max(0, depth - 1);
-
-    if (char === separator && depth === 0) {
-      parts.push(current);
-      current = '';
-    } else {
-      current += char;
-    }
-  }
-
-  parts.push(current);
-
-  return parts.map((part) => part.trim()).filter((part) => part.length > 0);
-};
+// but the config takes any CSS color, so split at top level only
+// (splitTopLevel.ts, shared with the CLI).
 
 const coverRenderToString = (render: CoverRender): string =>
   `${render.width}x${render.height}`;

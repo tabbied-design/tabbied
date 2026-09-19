@@ -19,6 +19,11 @@ import { chromium } from '@playwright/test';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// Every path below is from the repository root, wherever the sweep is run from.
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const patternsDir = path.join(repoRoot, 'packages', 'tabbied', 'patterns');
 
 const BASE_URL = process.env.SVG_SWEEP_BASE_URL || 'http://localhost:3000';
 const SCRATCH =
@@ -27,7 +32,7 @@ const SCRATCH =
 fs.mkdirSync(SCRATCH, { recursive: true });
 
 const compiled = fs.readFileSync(
-  'packages/tabbied/dist/core/svgExport.js',
+  path.join(repoRoot, 'packages', 'tabbied', 'dist', 'core', 'svgExport.js'),
   'utf8'
 );
 const script =
@@ -35,15 +40,13 @@ const script =
   '\nwindow.__svgx = { doodleToSvg, _internals };';
 
 const allSlugs = fs
-  .readdirSync('packages/tabbied/patterns')
+  .readdirSync(patternsDir)
   .filter((f) => f.endsWith('.json'))
   .map((f) => f.replace(/\.json$/, ''));
 
 const unsupported = new Set(
   allSlugs.filter((slug) => {
-    const def = JSON.parse(
-      fs.readFileSync(path.join('packages/tabbied/patterns', `${slug}.json`), 'utf8')
-    );
+    const def = JSON.parse(fs.readFileSync(path.join(patternsDir, `${slug}.json`), 'utf8'));
     return def.svgExport === false;
   })
 );

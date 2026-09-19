@@ -50,6 +50,14 @@ uploads.post('/', async (c) => {
     return c.json({ error: 'Sign in to add pictures.' }, 401);
   }
 
+  // The size is checked twice: on the declared length before the body is
+  // read, since `formData()` buffers the whole request first, and on the file
+  // once it is. The allowance over the cap is the multipart framing and the
+  // note.
+  if (Number(c.req.header('content-length') ?? 0) > MAX_BYTES + 64 * 1024) {
+    return c.json({ error: 'Pictures are limited to 8 MB.' }, 413);
+  }
+
   const form = await c.req.formData().catch(() => null);
   const file = form?.get('file');
   const note = form?.get('note');

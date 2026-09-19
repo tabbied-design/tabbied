@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 import styles from './HomeTemplates.module.css';
 
@@ -14,13 +13,21 @@ const ROWS = [SHOWCASE.slice(0, 5), SHOWCASE.slice(5, 10)];
 
 type Site = (typeof SHOWCASE)[number];
 
-function Card({ site }: { site: Site }) {
+/**
+ * One card; the second copy of each row is the marquee's seam, not a second
+ * list, so it is hidden from assistive tech and out of the tab order - a
+ * keyboard user was tabbing through twenty links of which ten were the same
+ * ten again.
+ */
+function Card({ site, clone = false }: { site: Site; clone?: boolean }) {
   return (
     <Link
       href={`/template/${site.slug}/`}
       prefetch={false}
       className={styles.card}
       aria-label={`${site.name} - ${site.topic}`}
+      aria-hidden={clone || undefined}
+      tabIndex={clone ? -1 : undefined}
     >
       <span className={styles.chrome} aria-hidden="true">
         <span />
@@ -28,11 +35,15 @@ function Card({ site }: { site: Site }) {
         <span />
       </span>
       <span className={styles.thumb}>
-        <Image
+        {/* A plain img: the export runs with images unoptimized, so
+            next/image added its client runtime to the homepage to do what
+            object-fit does. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src={`/previews/${site.patternSlug}.webp`}
           alt=""
-          fill
-          sizes="340px"
+          loading="lazy"
+          decoding="async"
           className={styles.thumbImage}
         />
       </span>
@@ -80,7 +91,9 @@ export default function HomeTemplates({
                 width, so the loop has no seam to hide. */}
             <div className={styles.track} data-direction={i === 1 ? 'right' : 'left'}>
               {[0, 1].map((copy) =>
-                row.map((site) => <Card key={`${copy}-${site.slug}`} site={site} />)
+                row.map((site) => (
+                  <Card key={`${copy}-${site.slug}`} site={site} clone={copy === 1} />
+                ))
               )}
             </div>
           </div>

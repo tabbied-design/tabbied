@@ -97,6 +97,10 @@ export function buildAuth(env: Env) {
       session: {
         create: {
           after: async (created) => {
+            // Nothing to grant when nobody is configured: skip the read that
+            // otherwise ran on every sign-in.
+            if (!env.ADMIN_EMAILS) return;
+
             const [row] = await db
               .select({ email: schema.user.email, role: schema.user.role })
               .from(schema.user)
@@ -203,5 +207,3 @@ export function buildAuth(env: Env) {
     },
   });
 }
-
-export type Auth = ReturnType<typeof buildAuth>;

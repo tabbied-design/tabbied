@@ -18,7 +18,7 @@
 // Usage: node scripts/check-typography.mjs [path ...]
 // With no paths, every file `git ls-files` reports that has a text extension.
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 const BANNED = [
@@ -61,9 +61,14 @@ const isText = (file) =>
   TEXT_EXTENSIONS.has(path.extname(file)) || TEXT_BASENAMES.has(path.basename(file));
 
 function trackedFiles() {
-  return execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
-    .split('\0')
-    .filter((file) => file && isText(file) && !SKIP.some((pattern) => pattern.test(file)));
+  return (
+    execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
+      .split('\0')
+      .filter((file) => file && isText(file) && !SKIP.some((pattern) => pattern.test(file)))
+      // A tracked file deleted in the working tree is still listed by the
+      // index; there is nothing to scan, and reading it threw instead.
+      .filter((file) => existsSync(file))
+  );
 }
 
 function describe(codePoint) {

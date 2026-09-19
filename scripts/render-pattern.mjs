@@ -32,9 +32,10 @@
 import { createServer } from 'node:http';
 import { readFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
 
-const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 function parseArgs(argv) {
   const o = {
@@ -82,7 +83,10 @@ export async function renderPattern(opts) {
 
   const { server, port } = await serveRepo();
   const browser = await chromium.launch({
-    executablePath: process.env.MOCKUP_CHROMIUM || '/opt/pw-browsers/chromium',
+    // Playwright's own browser unless a binary is named, like every other
+    // browser script here (svg-parity-sweep, render-sweep): a hard-coded
+    // sandbox path failed to launch on any machine that lacked it.
+    ...(process.env.MOCKUP_CHROMIUM ? { executablePath: process.env.MOCKUP_CHROMIUM } : {}),
   });
   try {
     const page = await browser.newPage({

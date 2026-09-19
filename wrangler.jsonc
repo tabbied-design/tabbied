@@ -117,7 +117,7 @@
   }
 
   // Secrets (never in this file): AI_API_KEY, BETTER_AUTH_SECRET, RESEND_API_KEY,
-  // TURNSTILE_SECRET_KEY, GITHUB_CLIENT_ID/SECRET, GOOGLE_CLIENT_ID/SECRET.
+  // GITHUB_CLIENT_ID/SECRET, GOOGLE_CLIENT_ID/SECRET.
   // Locally they live in .dev.vars (gitignored); in production,
   // `wrangler secret put <NAME>`.
 

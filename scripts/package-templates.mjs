@@ -36,6 +36,27 @@ import { zipSync } from 'fflate';
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const exportDir = path.join(repoRoot, 'out');
+// Derived, never typed: both READMEs quote it, and the typed one said 254
+// while 338 shipped.
+const DESIGN_COUNT = fsSync
+  .readdirSync(path.join(repoRoot, 'packages', 'tabbied', 'patterns'))
+  .filter((file) => file.endsWith('.json')).length;
+
+/** The entities the export writes into <title> and attributes, undone. */
+const unescapeHtml = (text) =>
+  text
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+
+const escapeHtml = (text) =>
+  text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 const templateDir = path.join(repoRoot, 'app', 'template');
 const publicDir = path.join(repoRoot, 'public');
 const globalsCss = path.join(repoRoot, 'styles', 'globals.css');
@@ -238,12 +259,26 @@ async function resolveStylesheet(slug, moduleName) {
  */
 function rewriteImagePaths(html) {
   const used = new Set();
+  // Flattening keeps only the file name, so two files of one name from two
+  // folders (`sites/x.webp`, `template/x.webp`) would land on one path and
+  // the second copy would overwrite the first, silently. Fail instead.
+  const byBasename = new Map();
 
   const rewritten = html.replace(
     /\/images\/([A-Za-z0-9/_-]+\.(?:webp|png|jpg|jpeg|svg|avif))(\?v=[a-z0-9]+)?/g,
     (_match, relativePath) => {
+      const basename = path.basename(relativePath);
+      const previous = byBasename.get(basename);
+
+      if (previous && previous !== relativePath) {
+        throw new Error(
+          `two images flatten to images/${basename}: ${previous} and ${relativePath}`
+        );
+      }
+
+      byBasename.set(basename, relativePath);
       used.add(relativePath);
-      return `./images/${path.basename(relativePath)}`;
+      return `./images/${basename}`;
     }
   );
 
@@ -355,6 +390,31 @@ function trimUnusedRules(css, usedClasses) {
     return classes.length === 0 || classes.every((c) => usedClasses.has(c));
   };
 
+  // A selector list splits on the commas between selectors, not the ones
+  // inside `:is(.a, .b)` or `:not(.a, .b)`: split naively, an unused `.b`
+  // there took `:is(.a` with it and left broken CSS.
+  const splitSelectorList = (text) => {
+    const parts = [];
+    let depth = 0;
+    let current = '';
+
+    for (const char of text) {
+      if (char === '(') depth += 1;
+      else if (char === ')') depth = Math.max(0, depth - 1);
+
+      if (char === ',' && depth === 0) {
+        parts.push(current);
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+
+    parts.push(current);
+
+    return parts.map((part) => part.trim()).filter(Boolean);
+  };
+
   // Scanning has to skip comments, not just count braces. This codebase
   // documents its CSS heavily and at least one comment contains a literal
   // `{ color: inherit }` as an example - counted naively, that desynchronises
@@ -412,11 +472,7 @@ function trimUnusedRules(css, usedClasses) {
       } else if (selectorText.startsWith('@')) {
         out += `${prelude}{${body}}`; // @font-face, @keyframes: keep whole
       } else {
-        const kept = selectorText
-          .split(',')
-          .map((part) => part.trim())
-          .filter(Boolean)
-          .filter(keepSelector);
+        const kept = splitSelectorList(selectorText).filter(keepSelector);
 
         if (kept.length) {
           // Keep the comments that documented this rule.
@@ -490,7 +546,6 @@ function toStandaloneComponent(source, componentName) {
   let out = source
     .replace(/^import type \{ Metadata \}[^\n]*\n/m, '')
     // `export const metadata = { ... };` - lifted into index.html instead.
-    .replace(/^export const metadata(?::\s*Metadata)?\s*=\s*\{[\s\S]*?\n\};\n/m, '')
     .replace(/^export const metadata(?::\s*Metadata)?\s*=\s*\{[\s\S]*?\n\};\n/m, '');
 
   for (const [specifier, target] of LOCAL_IMPORTS) {
@@ -578,7 +633,7 @@ Blocks of pattern are \`<TabbiedPattern>\` elements from
 <TabbiedPattern pattern={ortho} palette={['transparent', '#C9C8C1']} fit="grid" />
 \`\`\`
 
-Swap \`pattern\` for any of the 254 designs (see https://tabbied.com), change
+Swap \`pattern\` for any of the ${DESIGN_COUNT} designs (see https://tabbied.com), change
 \`palette\` to recolour, or set \`seed\` to pin one arrangement.
 
 ## Images
@@ -763,7 +818,7 @@ async function packageReactSite(slug, outDir, version, name, images) {
     `<!doctype html>\n<html lang="en">\n  <head>\n` +
       `    <meta charset="utf-8" />\n` +
       `    <meta name="viewport" content="width=device-width, initial-scale=1" />\n` +
-      `    <title>${name}</title>\n` +
+      `    <title>${escapeHtml(name)}</title>\n` +
       `    <link rel="preconnect" href="https://fonts.googleapis.com" />\n` +
       `    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />\n` +
       `  </head>\n  <body>\n    <div id="root"></div>\n` +
@@ -805,7 +860,7 @@ that describes itself in \`data-\` attributes:
 \`\`\`
 
 Change \`data-palette\` to recolour it, \`data-pattern\` to swap the design
-(254 to choose from - see https://tabbied.com), \`data-seed\` to pin a
+(${DESIGN_COUNT} to choose from - see https://tabbied.com), \`data-seed\` to pin a
 particular arrangement, or drop \`data-redraw-interval\` to hold it still.
 The script at the bottom of \`index.html\` is what brings them to life; remove
 it and the patterns disappear.
@@ -903,8 +958,9 @@ async function packageSite(slug, outDir, version) {
     );
   }
 
-  // The page's own <title> is the site's name.
-  const name = /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? slug;
+  // The page's own <title> is the site's name. Decoded: the export writes
+  // entities, and "Ember &amp; Oak" was the heading of two READMEs.
+  const name = unescapeHtml(/<title>([^<]*)<\/title>/.exec(html)?.[1] ?? slug);
   await fs.writeFile(
     path.join(siteDir, 'README.md'),
     README(slug, name, version, slugs)
@@ -928,6 +984,12 @@ async function packageSite(slug, outDir, version) {
 
 const args = process.argv.slice(2);
 const outDirIndex = args.indexOf('--out-dir');
+
+if (outDirIndex !== -1 && !args[outDirIndex + 1]) {
+  console.error('package-templates: --out-dir needs a path');
+  process.exit(1);
+}
+
 const outDir = path.resolve(
   repoRoot,
   // Not out/templates: that is now the exported /templates route, and a site

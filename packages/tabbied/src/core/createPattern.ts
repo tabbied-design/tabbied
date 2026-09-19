@@ -196,10 +196,22 @@ const appendMuteStyle = (
   return mute;
 };
 
-const reducedMotionQuery = (): MediaQueryList | null =>
-  typeof matchMedia === 'function'
-    ? matchMedia('(prefers-reduced-motion: reduce)')
-    : null;
+// One MediaQueryList for the module: `prefersReducedMotion()` is read on every
+// update and every reconcile of every pattern on a page, and each read built
+// a new list. Every instance adds its own `change` listener to the shared one
+// and removes it in destroy(), so sharing changes nothing else.
+let reducedMotionList: MediaQueryList | null | undefined;
+
+const reducedMotionQuery = (): MediaQueryList | null => {
+  if (reducedMotionList === undefined) {
+    reducedMotionList =
+      typeof matchMedia === 'function'
+        ? matchMedia('(prefers-reduced-motion: reduce)')
+        : null;
+  }
+
+  return reducedMotionList;
+};
 
 const prefersReducedMotion = (): boolean =>
   reducedMotionQuery()?.matches ?? false;
@@ -649,7 +661,16 @@ export function createPattern(
     syncObserver(resolved);
     syncRedrawTimer();
 
-    if (needsMeasure(resolved.fit) && !hostSize) {
+    // A measured fit waits for a usable size, not merely a first one. The
+    // resize handler records a 0x0 host (a pattern in a hidden tab or a
+    // collapsed section) without mounting, but a config update from the
+    // wrapper's per-commit effect came through here, saw a size, and mounted
+    // a 1x1 grid at zero pixels: onReady fired with nothing painted, and
+    // when the host appeared that canvas was stretched over it for the
+    // resize debounce.
+    const measured = hostSize !== null && hostSize.width > 0 && hostSize.height > 0;
+
+    if (needsMeasure(resolved.fit) && !measured) {
       if (element) unmountElement();
       return;
     }
@@ -818,7 +839,9 @@ export function createPattern(
       syncRedrawTimer();
 
       if (prefersReducedMotion()) {
-        if (element && !muteStyle) muteStyle = appendMuteStyle(element);
+        // Connected, not merely held: an update() during the first-draw
+        // window regenerates the shadow root and leaves a detached node here.
+        if (element && !muteStyle?.isConnected) muteStyle = appendMuteStyle(element);
       } else if (muteStyle) {
         muteStyle.remove();
         muteStyle = null;

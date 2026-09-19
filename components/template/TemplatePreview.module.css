@@ -42,7 +42,12 @@
   gap: 24px;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 40px;
+  /* One height whatever it holds (see CustomizerBar.module.css): the framed
+     page below sizes itself against 71px, and padding round the account pill
+     made the bar 79px signed in, which scrolled the flush-bottomed frame. */
+  box-sizing: border-box;
+  min-height: 71px;
+  padding: 0 40px;
   background-color: var(--s-bar);
   border-bottom: 1px solid oklch(1 0 0 / 0.1);
 }
@@ -350,11 +355,12 @@
   padding: 32px 40px 0;
 }
 
+/* The viewport less the 71px bar and the stage's 32px of top padding. */
 .frame {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  height: calc(100vh - 102px);
+  height: calc(100vh - 103px);
   overflow: hidden;
   background-color: #fff;
   border: 1px solid var(--s-line);
@@ -415,11 +421,12 @@
 
 /* On a phone the pretend browser goes: no chrome, no frame, the template
    full bleed under the bar and scrolling inside its own height. The bar is
-   14px of padding round a 34px circle, plus its rule: 63px. */
+   63px, the height the customizer's is. */
 @media (max-width: 768px) {
   .bar {
     gap: 12px;
-    padding: 14px 20px;
+    min-height: 63px;
+    padding: 0 20px;
   }
 
   .backLabel {

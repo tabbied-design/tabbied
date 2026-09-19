@@ -311,8 +311,12 @@ api.use('*', async (c, next) => {
     return next();
   }
 
+  // Any loopback origin, for the same reason trustedOrigins in auth.ts takes
+  // any: the site is :3000, the Worker :8787, `npm run preview` picks its own
+  // and a test harness another, and a list of two ports refused the rest.
   return cors({
-    origin: ['http://localhost:3000', 'http://localhost:8787'],
+    origin: (origin) =>
+      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) ? origin : '',
     credentials: true,
     allowHeaders: ['content-type'],
   })(c, next);

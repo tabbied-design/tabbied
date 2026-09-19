@@ -236,6 +236,9 @@ function searchTool(catalog: Catalog): Tool {
           ...(density
             ? [alone(`density "${density}"`, (design) => design.density === density)]
             : []),
+          ...(svgExport !== null
+            ? [alone(`svgExport ${svgExport}`, (design) => design.svgExport.supported === svgExport)]
+            : []),
         ];
 
         return {

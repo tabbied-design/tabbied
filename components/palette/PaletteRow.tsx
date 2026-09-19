@@ -9,7 +9,10 @@ import styles from './PaletteRow.module.css';
  * library), shared by the gallery rail and the embedded palette browser. Rows
  * share a single left edge - no horizontal padding, no hover background; hover
  * is a 2px translateX nudge. Clicking the row applies the palette (or, when it's
- * already active, opens the editor - handled by the caller's onClick).
+ * already active, opens the editor - handled by the caller's onClick). The
+ * pencil and delete mark are buttons beside the row's own button, not spans
+ * inside it: a button may not contain another control, and a nested one both
+ * pollutes the row's accessible name and fires the row on a keypress.
  */
 export default function PaletteRow({
   colors,
@@ -38,60 +41,49 @@ export default function PaletteRow({
   onEdit?: () => void;
   onDelete?: () => void;
 }) {
-  const stop =
-    (handler?: () => void) =>
-    (event: React.MouseEvent | React.KeyboardEvent) => {
-      if (
-        event.type === 'keydown' &&
-        (event as React.KeyboardEvent).key !== 'Enter' &&
-        (event as React.KeyboardEvent).key !== ' '
-      ) {
-        return;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      handler?.();
-    };
-
   return (
-    <button type="button" className={styles.row} onClick={onClick} title={name}>
-      <PaletteStrip colors={colors} transparentBackground={transparentBackground} />
-      <span
-        className={active ? `${styles.name} ${styles.nameActive}` : styles.name}
+    <div className={styles.row}>
+      <button
+        type="button"
+        className={styles.main}
+        aria-pressed={active}
+        onClick={onClick}
+        title={name}
       >
-        {name}
-      </span>
-      {active && (
-        <span className={styles.check}>
-          <Check size={14} />
-        </span>
-      )}
-      {showEdit && onEdit && (
+        <PaletteStrip colors={colors} transparentBackground={transparentBackground} />
         <span
-          role="button"
-          tabIndex={0}
+          className={active ? `${styles.name} ${styles.nameActive}` : styles.name}
+        >
+          {name}
+        </span>
+        {active && (
+          <span className={styles.check}>
+            <Check size={14} />
+          </span>
+        )}
+      </button>
+      {showEdit && onEdit && (
+        <button
+          type="button"
+          className={styles.edit}
           aria-label={editLabel}
           title={editTitle}
-          className={styles.edit}
-          onClick={stop(onEdit)}
-          onKeyDown={stop(onEdit)}
+          onClick={onEdit}
         >
           <Pencil size={13} />
-        </span>
+        </button>
       )}
       {showDelete && onDelete && (
-        <span
-          role="button"
-          tabIndex={0}
+        <button
+          type="button"
+          className={styles.delete}
           aria-label={deleteLabel}
           title="Delete palette"
-          className={styles.delete}
-          onClick={stop(onDelete)}
-          onKeyDown={stop(onDelete)}
+          onClick={onDelete}
         >
           <X size={12} strokeWidth={2} />
-        </span>
+        </button>
       )}
-    </button>
+    </div>
   );
 }

@@ -82,6 +82,10 @@ export default function PreviewDialog({
 
     return () => {
       live = false;
+      // Forget the built page with the card: the next card otherwise rendered
+      // the previous one's document for a commit, runtime import and all,
+      // before its own build began.
+      setState({ status: 'loading' });
     };
   }, [target]);
 

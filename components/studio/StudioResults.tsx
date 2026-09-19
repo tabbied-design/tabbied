@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { TabbiedPattern } from 'tabbied/react';
-import { isPatternSlug, patterns } from 'tabbied/patterns';
 import { apiFetch, ApiError, apiUrl } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import { matchDirections, type StudioEntry } from 'lib/studioMatch';
@@ -40,22 +39,51 @@ type Direction = Pick<
     reasons?: string[];
   };
 
+type Catalog = typeof import('tabbied/patterns');
+
+/**
+ * The runtime catalog, loaded after the cards have drawn. Three previews
+ * need three designs, and a static import put the whole 338-design module
+ * on this page's critical path - the free, signed-out landing for a
+ * library match. Split out, it streams in behind the copy and is the same
+ * chunk the gallery and the editor already cache.
+ */
+function useCatalog(): Catalog | null {
+  const [catalog, setCatalog] = useState<Catalog | null>(null);
+
+  useEffect(() => {
+    let live = true;
+
+    import('tabbied/patterns').then((loaded) => {
+      if (live) setCatalog(loaded);
+    });
+
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  return catalog;
+}
+
 function DirectionPreview({
+  catalog,
   patternSlug,
   palette,
   seed,
 }: {
+  catalog: Catalog | null;
   patternSlug: string;
   palette: string[];
   seed: string;
 }) {
-  if (!isPatternSlug(patternSlug)) {
+  if (!catalog || !catalog.isPatternSlug(patternSlug)) {
     return <div className={styles.previewFallback} />;
   }
 
   return (
     <TabbiedPattern
-      pattern={patterns[patternSlug]}
+      pattern={catalog.patterns[patternSlug]}
       palette={palette}
       seed={seed}
       fit="cover"
@@ -93,6 +121,7 @@ export default function StudioResults({ entries }: { entries: StudioEntry[] }) {
   const [makeError, setMakeError] = useState<string | null>(null);
   /** Which card's Preview is open in the dialog, if any. */
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  const catalog = useCatalog();
   useEffect(() => {
     if (!generationId) {
       setStored(null);
@@ -103,7 +132,7 @@ export default function StudioResults({ entries }: { entries: StudioEntry[] }) {
     setStored(null);
     setLoadError(null);
 
-    apiFetch<StoredGeneration>(`/api/studio/generations/${generationId}`)
+    apiFetch<StoredGeneration>(`/api/studio/generations/${encodeURIComponent(generationId)}`)
       .then((body) => {
         if (live) {
           setStored(body);
@@ -287,8 +316,9 @@ export default function StudioResults({ entries }: { entries: StudioEntry[] }) {
                   </p>
 
                   <div className={styles.swatches} aria-hidden="true">
-                    {direction.palette.slice(0, SWATCHES).map((color) => (
-                      <span key={color} style={{ background: color }} />
+                    {/* By position: a model-authored palette may repeat a colour. */}
+                    {direction.palette.slice(0, SWATCHES).map((color, index) => (
+                      <span key={index} style={{ background: color }} />
                     ))}
                   </div>
 
@@ -324,6 +354,7 @@ export default function StudioResults({ entries }: { entries: StudioEntry[] }) {
                       />
                     ) : (
                       <DirectionPreview
+                        catalog={catalog}
                         patternSlug={direction.patternSlug}
                         palette={direction.palette}
                         seed={direction.slug}

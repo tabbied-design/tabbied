@@ -1,4 +1,6 @@
-/* A palette row is a pill: name, inks, pencil. The active one is inked. */
+/* A palette row is a pill: name, inks, pencil. The active one is inked. The
+   pill is a group of buttons (apply, edit, delete); the padding sits on the
+   apply button and the marks so the whole pill is a target. */
 .row {
   display: flex;
   gap: 8px;
@@ -6,14 +8,11 @@
   box-sizing: border-box;
   width: 100%;
   margin: 0 0 2px;
-  padding: 7px 12px;
+  padding: 0 12px;
   font-family: var(--font-sans-serif);
   color: #0e0e13;
-  text-align: left;
   background: transparent;
-  border: none;
   border-radius: 999px;
-  cursor: pointer;
   transition: background-color 150ms ease, color 150ms ease;
 }
 
@@ -26,9 +25,37 @@
   background-color: #0e0e13;
 }
 
-.row:focus-visible {
+/* The apply button: name and inks, the height of the pill. */
+.main {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  padding: 7px 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.main:focus-visible {
   outline: 2px solid var(--blue-medium);
   outline-offset: 2px;
+}
+
+/* Where the browser can, the ring goes round the pill rather than the words. */
+@supports selector(:has(a)) {
+  .main:focus-visible {
+    outline: none;
+  }
+
+  .row:has(> .main:focus-visible) {
+    outline: 2px solid var(--blue-medium);
+    outline-offset: 2px;
+  }
 }
 
 .name {
@@ -61,13 +88,17 @@
 
 /* The pencil, and the delete mark on a palette the person made. */
 .mark {
+  position: relative;
   display: flex;
   flex: none;
   align-items: center;
   justify-content: center;
   width: 22px;
   height: 22px;
+  padding: 0;
   color: oklch(0.62 0.01 260);
+  background: transparent;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: color 120ms ease;
@@ -88,6 +119,16 @@
 .mark:focus-visible {
   outline: 2px solid var(--blue-medium);
   outline-offset: 1px;
+}
+
+/* A finger needs more than a 22px mark: on a coarse pointer the hit area
+   grows to 40px behind the mark, which keeps its drawn size. */
+@media (pointer: coarse) {
+  .mark::before {
+    content: '';
+    position: absolute;
+    inset: -9px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

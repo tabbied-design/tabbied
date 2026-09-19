@@ -9,15 +9,25 @@
 
 export type Rgb = [number, number, number];
 
+/**
+ * The three colour channels of a hex colour. Every form isHexColor admits is
+ * read: `#rgb` and `#rgba` are expanded, and the alpha byte of `#rgba` and
+ * `#rrggbbaa` is dropped. It used to be parsed as one number and shifted,
+ * so `#ff000080` came back as (0, 0, 128): the green, blue and alpha bytes
+ * of a red - and every derived property (which ink reads on this ground,
+ * the tints, the text colour over a swatch) was computed from them.
+ */
 export function toRgb(hex: string): Rgb {
   let value = hex.replace('#', '').trim();
 
-  if (value.length === 3) {
+  if (value.length === 3 || value.length === 4) {
     value = value
       .split('')
       .map((char) => char + char)
       .join('');
   }
+
+  if (value.length === 8) value = value.slice(0, 6);
 
   const n = Number.parseInt(value, 16);
 

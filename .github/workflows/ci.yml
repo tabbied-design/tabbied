@@ -31,6 +31,11 @@ jobs:
         run: npm run build:packages
       - name: Test tabbied
         run: npm test --workspace tabbied
+      # The editable-section engine: the build gate, the Worker's planEdits
+      # and Studio all run on it, and its 58 tests ran nowhere in CI before
+      # this step.
+      - name: Test tabbied-templates
+        run: npm test --workspace tabbied-templates
       # The protocol is the MCP SDK's, so this suite pins the seam instead: that
       # our tools register with schemas the SDK accepts, and that both protocol
       # eras see the same toolset (see docs/mcp-server.md).

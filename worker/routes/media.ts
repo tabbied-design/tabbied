@@ -6,7 +6,9 @@ import type { Env } from '../env';
 // Reads are unauthenticated for the same reason a generation's id is: the key
 // contains 128 bits of randomness (the generation id, or a uuid for an upload)
 // and holding it is the grant. Nothing here is enumerable - R2 listing is never
-// exposed - and no user identity is derivable from a key.
+// exposed. An upload's key does carry its owner's account id (`up/<userId>/`),
+// which is opaque to anyone but an admin; a generated image's carries only
+// the generation's.
 //
 // `immutable` is honest rather than optimistic: a key is written once and never
 // rewritten. Regenerating imagery writes a new object under a new generation.

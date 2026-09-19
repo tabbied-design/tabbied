@@ -22,14 +22,14 @@ import {
 } from '../ai/schema';
 import { ensurePalette } from '../lib/palette';
 import { checkQuota, recordUsage } from '../lib/quota';
-import { clientIp, consume } from '../lib/ratelimit';
+import { consume } from '../lib/ratelimit';
 import { loadStudioIndex } from '../lib/studioIndex';
 
 // Studio's generation tier.
 //
 // The shipped client-side matcher is not replaced by any of this: it is the
 // signed-out path, and here it becomes *candidate assembly*. The model picks
-// three from a scored dozen rather than hallucinating over 57, and the slug
+// three from a scored dozen rather than hallucinating over the whole library, and the slug
 // enum in the response schema is built from exactly that dozen - so an invented
 // template cannot survive validation, and every card still leads to a real page
 // and a real zip.
@@ -213,7 +213,14 @@ studio.post('/directions', async (c) => {
               .join('\n');
         }
       } catch (error) {
-        if (error instanceof UpstreamError || error instanceof SyntaxError) {
+        // An answer that is not JSON is the model getting it wrong once, which
+        // is what the repair turn exists for; only the upstream failing ends
+        // the attempt.
+        if (error instanceof SyntaxError) {
+          repairNote = 'Your previous answer was not valid JSON. Answer with the JSON object alone.';
+          continue;
+        }
+        if (error instanceof UpstreamError) {
           console.error(`studio/directions: ${String(error)}`);
           break;
         }
@@ -316,7 +323,11 @@ studio.get('/generations', async (c) => {
       source: generation.source,
       createdAt: generation.createdAt,
       result: generation.result,
-      sites: sql<number>`(select count(*) from ${site} where ${site.generationId} = ${generation.id})`,
+      // Qualified by hand: with no join in the outer query drizzle renders
+      // both columns bare, and inside the subquery `generation_id = id`
+      // compares two columns of *site* - every count came back 0 (see the
+      // same note in admin.ts and CLAUDE.md).
+      sites: sql<number>`(select count(*) from ${site} where ${site}.generation_id = ${generation}.id)`,
     })
     .from(generation)
     .where(eq(generation.userId, userId))
@@ -486,4 +497,3 @@ studio.post('/direction-image', async (c) => {
 });
 
 export default studio;
-export { clientIp };

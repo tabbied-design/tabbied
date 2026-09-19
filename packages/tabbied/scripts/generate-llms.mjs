@@ -44,7 +44,7 @@ Designs are referred to by slug and imported individually - \`import { radius } 
 
 ## Docs
 
-- [MCP server](${SITE}/mcp): if you speak the Model Context Protocol, connect to this endpoint instead of reading files - it is the only route that lets you *look* at a design before choosing it. Tools: \`search_designs\`, \`preview_design\`, \`get_design\`, \`get_docs\`. Run \`npx -y tabbied-mcp\` locally to also get \`render_design\`.
+- [MCP server](${SITE}/mcp): if you speak the Model Context Protocol, connect to this endpoint instead of reading files - it is the only route that lets you *look* at a design before choosing it. Tools: \`search_designs\`, \`preview_design\`, \`get_design\`, \`get_docs\`, \`list_templates\`, \`get_template\`. Run \`npx -y tabbied-mcp\` locally to also get \`render_design\`.
 - [llms-full.txt](${SITE}/llms-full.txt): the complete API contract, integration recipes, and a one-line entry for every design. Start here - it is designed to be enough on its own.
 - [catalog.json](${SITE}/catalog.json): every design with its description, tags, palette, options, preview URL, and SVG-export support. Use it to look up one design in detail. Also shipped in the package at \`tabbied/catalog.json\`.
 - [React component reference](${SITE}/docs/react/): props, sizing, and live examples.
@@ -120,6 +120,7 @@ claude mcp add tabbied -- npx -y tabbied-mcp           # local, adds rendering
 
 Tools: \`search_designs\` (the filters above, as a query), \`preview_design\`
 (returns the rendered image for up to six slugs), \`get_design\`, \`get_docs\`,
+\`list_templates\` and \`get_template\` (the editable template sites),
 and - locally only, since it needs a browser - \`render_design\` for SVG/PNG
 files. Endpoint: ${SITE}/mcp. Package: \`tabbied-mcp\`.
 
@@ -269,7 +270,7 @@ ${SITE}/patterns/<slug>/?seed=<seed>&palette=<color0>&palette=<color1>&...&aspec
 \`\`\`
 
 \`palette\` repeats (background first, URL-encode the \`#\`), \`aspectRatio\` is
-one of 2:3 | 3:4 | 1:1 | 4:3 | 3:2, and each design option appears under its
+one of 1:2 | 2:3 | 1:1 | 3:2 | 2:1 (the ids in src/core/aspectRatio.ts), and each design option appears under its
 own id (\`grid=8x12\`, \`frequency=0.6\`). Unknown or out-of-range values fall
 back to defaults, so a partial link is safe.
 
@@ -379,7 +380,7 @@ Rendering runs css-doodle in a headless browser via whatever Playwright the
 project already has (\`playwright\`, \`playwright-core\`, or
 \`@playwright/test\`); pass \`--browser <path>\` (or set \`TABBIED_CHROMIUM\`) to
 use a specific Chromium binary. \`--out\`'s extension picks SVG or PNG; the
-4 \`[no SVG]\` designs below render as PNG only.
+${designs.filter((design) => !design.svgExport.supported).length} \`[no SVG]\` designs below render as PNG only.
 
 ## SVG export
 

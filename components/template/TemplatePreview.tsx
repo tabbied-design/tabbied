@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
 import { Popover } from '@base-ui-components/react/popover';
 import { ChevronDown } from 'lucide-react';
-import { initials } from 'components/account/AccountHeader';
+import { initials } from 'components/nav';
 import { signOut, useSessionUser } from 'lib/authClient';
 import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
 import styles from './TemplatePreview.module.css';

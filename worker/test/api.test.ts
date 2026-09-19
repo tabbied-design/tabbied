@@ -100,17 +100,16 @@ describe('media', () => {
 });
 
 describe('the schema is the boundary', () => {
-  it('rejects a description that is too short to match on', async () => {
-    // Checked before the session, so this is the shape of the request being
-    // wrong rather than the caller being wrong.
+  it('answers an anonymous, malformed request with the auth gate', async () => {
+    // The session is checked before the body, so an anonymous request with a
+    // description too short to match on is refused as anonymous. Either way
+    // it never reaches the upstream.
     const response = await SELF.fetch('https://x/api/studio/directions', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ description: 'hi' }),
     });
 
-    // Anonymous, so the auth gate answers first - the point is that neither
-    // path ever reaches the upstream.
-    expect([400, 401]).toContain(response.status);
+    expect(response.status).toBe(401);
   });
 });

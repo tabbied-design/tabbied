@@ -11,7 +11,7 @@ const LANG_LABEL = {
   sh: 'shell',
 } as const;
 
-export type CodeLang = keyof typeof LANG_LABEL;
+type CodeLang = keyof typeof LANG_LABEL;
 
 const TOKEN_CLASS: Record<Exclude<TokenKind, 'plain'>, string> = {
   comment: styles.tokenComment,

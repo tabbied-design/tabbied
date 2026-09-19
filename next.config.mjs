@@ -23,6 +23,11 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Next 16.3's dev server appends an "agent rules" block to CLAUDE.md on
+  // every start. The block is written with an em dash, which
+  // `check:typography` bans, so every `npm run dev` left the tree dirty with
+  // a change CI would reject. The file is maintained by hand; see CLAUDE.md.
+  agentRules: false,
 };
 
 export default nextConfig;

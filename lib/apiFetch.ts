@@ -34,7 +34,12 @@ export async function apiFetch<T>(
     // this, which reads as "signed out" for reasons nothing in the UI explains.
     credentials: 'include',
     headers: {
-      'content-type': 'application/json',
+      // Only a request with a body has a content type. On a GET or DELETE the
+      // header is meaningless, and in development it made every cross-port
+      // read a CORS preflight.
+      ...(init.body !== undefined && init.body !== null
+        ? { 'content-type': 'application/json' }
+        : {}),
       ...init.headers,
     },
   });

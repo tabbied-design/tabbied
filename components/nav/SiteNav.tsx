@@ -6,6 +6,7 @@ import { Menu } from '@base-ui-components/react/menu';
 import { Logo } from 'components/logo';
 import { plexMono } from 'lib/fonts';
 import { signOut, useSessionUser } from 'lib/authClient';
+import useMediaQuery from 'lib/useMediaQuery';
 import styles from './SiteNav.module.css';
 
 // The site's masthead, in the two tones the design draws it in: ink on paper
@@ -30,8 +31,6 @@ const DESTINATIONS = [
   ['/patterns', 'Patterns'],
   ['/templates', 'Websites'],
 ] as const;
-
-const SIGN_IN = '/sign-in?next=%2Faccount';
 
 /** Two letters for the circle: first and last name, or the start of the email. */
 export function initials(name: string, email: string): string {
@@ -62,7 +61,21 @@ export default function SiteNav({
 }) {
   const { user } = useSessionUser();
   const router = useRouter();
-  const pathname = normalize(usePathname() ?? '/');
+  const rawPathname = usePathname() ?? '/';
+  const pathname = normalize(rawPathname);
+  // The two destinations join the account menu only where the inline nav has
+  // folded. Decided here rather than by a display: none class: a menu item
+  // that is hidden is still in the list Base UI arrows through, so on the
+  // desktop two invisible items sat between My Account and Settings, and a
+  // screen reader counted five where three showed. Menus open after mount,
+  // so the query's server value never draws.
+  const narrow = useMediaQuery('(max-width: 767.98px)');
+
+  // Signing in returns the person to the page they were on - the homepage's
+  // signed-in face is the account, so from there it is the account.
+  const signInHref = `/sign-in?next=${encodeURIComponent(
+    pathname === '/' ? '/account' : rawPathname
+  )}`;
 
   const home = user ? (['/account', 'My Account'] as const) : (['/', 'Home'] as const);
   const links = [home, ...DESTINATIONS] as const;
@@ -70,12 +83,8 @@ export default function SiteNav({
   const isCurrent = (href: string) =>
     href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
 
-  const item = (href: string, label: string, extra?: string) => (
-    <Menu.Item
-      key={href}
-      className={extra ? `${styles.menuItem} ${extra}` : styles.menuItem}
-      render={<Link href={href} prefetch={false} />}
-    >
+  const item = (href: string, label: string) => (
+    <Menu.Item key={href} className={styles.menuItem} render={<Link href={href} prefetch={false} />}>
       {label}
     </Menu.Item>
   );
@@ -123,16 +132,21 @@ export default function SiteNav({
                   <div className={styles.menuEmail}>{user.email}</div>
                   <Menu.Separator className={styles.menuRule} />
                   {item('/account', 'My Account')}
-                  {/* The two destinations, only where the inline nav is gone. */}
-                  {item('/patterns', 'Patterns', styles.narrowOnly)}
-                  {item('/templates', 'Websites', styles.narrowOnly)}
+                  {narrow && item('/patterns', 'Patterns')}
+                  {narrow && item('/templates', 'Websites')}
                   {item('/account/settings', 'Settings')}
                   <Menu.Separator className={styles.menuRule} />
                   <Menu.Item
                     className={styles.menuItem}
                     onClick={async () => {
-                      await signOut();
-                      router.push('/');
+                      // Leave whether or not the sign-out call answered: a
+                      // rejected call was an unhandled rejection and a menu
+                      // that simply closed.
+                      try {
+                        await signOut();
+                      } finally {
+                        router.push('/');
+                      }
                     }}
                   >
                     Sign out
@@ -143,7 +157,7 @@ export default function SiteNav({
           </Menu.Root>
         ) : (
           <>
-            <Link href={SIGN_IN} className={styles.signIn} prefetch={false}>
+            <Link href={signInHref} className={styles.signIn} prefetch={false}>
               Sign in
             </Link>
 
@@ -164,7 +178,7 @@ export default function SiteNav({
                     {item('/patterns', 'Patterns')}
                     {item('/templates', 'Websites')}
                     <Menu.Separator className={styles.menuRule} />
-                    {item(SIGN_IN, 'Sign in')}
+                    {item(signInHref, 'Sign in')}
                   </Menu.Popup>
                 </Menu.Positioner>
               </Menu.Portal>

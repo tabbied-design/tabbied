@@ -55,6 +55,14 @@
   line-height: 0;
 }
 
+/* The legacy `a:hover { color: var(--pink) }` in globals.css outranks a bare
+   class, and the mark and wordmark are currentColor: the lockup went pink on
+   hover in every masthead. */
+.logo:hover,
+.logo:focus-visible {
+  color: var(--n-fg);
+}
+
 .nav[data-tone='dark'] .logo {
   margin-left: 6px;
 }
@@ -125,8 +133,11 @@
 }
 
 /* Two bars that meet as a cross while the menu is open. Desktop never shows
-   it: the destinations are inline there. */
+   it: the destinations are inline there. The drawn box is 37 by 23px; the
+   hit area behind it is 41px each way, since on a phone this is the only way
+   into the menu. */
 .hamburger {
+  position: relative;
   display: none;
   flex-direction: column;
   gap: 5px;
@@ -137,6 +148,12 @@
   border: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+
+.hamburger::before {
+  content: '';
+  position: absolute;
+  inset: -9px -2px;
 }
 
 .hamburger span {
@@ -172,7 +189,14 @@
   z-index: 70;
 }
 
+/* Portaled to <body>, so the tokens on .nav are out of reach here: a `font:`
+   naming an undeclared property is invalid as a whole and every longhand
+   falls back to the body's (1.2rem, line-height 1.7). The face is redeclared
+   on the popup, as the other portaled menus on the site do. */
 .menu {
+  --n-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+
   min-width: 210px;
   padding: 6px;
   font-family: var(--n-sans);
@@ -228,10 +252,6 @@
   background-color: oklch(0 0 0 / 0.05);
 }
 
-.narrowOnly {
-  display: none;
-}
-
 /* ---- Narrow ---- */
 
 @media (max-width: 767.98px) {
@@ -254,10 +274,6 @@
     display: flex;
   }
 
-  .narrowOnly {
-    display: block;
-  }
-
   .menu {
     min-width: 230px;
     border-radius: 14px;
@@ -269,7 +285,9 @@
     font-size: 14px;
   }
 
+  /* 40px rows: the menu is the phone's navigation. */
   .menuItem {
+    padding: 12px;
     font-size: 14px;
   }
 }

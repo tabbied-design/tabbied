@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
 import { ArrowDownToLine, ChevronDown } from 'lucide-react';
-import { initials } from 'components/account/AccountHeader';
+import { initials } from 'components/nav';
 import { signOut, useSessionUser } from 'lib/authClient';
 import styles from './CustomizerBar.module.css';
 

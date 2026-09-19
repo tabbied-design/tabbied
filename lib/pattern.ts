@@ -18,7 +18,6 @@ export type Pattern = PatternDefinition;
 export type GalleryItem = {
   slug: PatternSlug;
   name: string;
-  white: boolean;
   /** Authored palette (color0 = background) for placeholders + title fades. */
   palette: string[];
   colors?: PatternDefinition['colors'];
@@ -48,17 +47,15 @@ export async function getGalleryItems(): Promise<GalleryItem[]> {
       return {
         slug,
         name: pattern.name,
-        white: pattern.galleryWhite ?? false,
         palette: pattern.palette ?? [],
         colors: pattern.colors,
         order: pattern.galleryOrder ?? Number.MAX_SAFE_INTEGER,
       };
     })
     .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name))
-    .map(({ slug, name, white, palette, colors }) => ({
+    .map(({ slug, name, palette, colors }) => ({
       slug,
       name,
-      white,
       palette,
       colors,
     }));

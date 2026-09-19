@@ -2,6 +2,7 @@ import { SELF, env } from 'cloudflare:test';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import app from '../index';
 import type { Env } from '../env';
+import { ORIGIN, json, signIn } from './helpers';
 
 // The sites route's model branch, which the stub upstream cannot reach: it
 // answers every /responses call with a *directions* payload, so a local run
@@ -10,27 +11,6 @@ import type { Env } from '../env';
 // at the fetch boundary with an answer shaped by the schema the route sent,
 // which is what a compliant upstream does.
 
-const ORIGIN = 'https://tabbied.com';
-const json = { 'content-type': 'application/json', origin: ORIGIN };
-
-async function signIn(email: string): Promise<string> {
-  const signUp = await SELF.fetch(`${ORIGIN}/api/auth/sign-up/email`, {
-    method: 'POST',
-    headers: json,
-    body: JSON.stringify({ email, password: 'correct horse battery staple', name: 'Test' }),
-  });
-  expect(signUp.status, await signUp.text()).toBe(200);
-
-  const mail = await env.DB.prepare('SELECT url FROM dev_mail WHERE email = ?')
-    .bind(email)
-    .first<{ url: string }>();
-  const verify = await SELF.fetch(mail!.url, { redirect: 'manual' });
-
-  return verify.headers
-    .getSetCookie()
-    .map((cookie) => cookie.split(';')[0])
-    .join('; ');
-}
 
 type SiteSchema = { properties: { text: { required: string[] } } };
 

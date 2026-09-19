@@ -5,9 +5,12 @@
 // image: node scripts/optimize-images.mjs
 import path from 'node:path';
 import { stat, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+// fileURLToPath, not URL.pathname: a checkout under a folder with a space
+// keeps its percent-encoding in the pathname and every read misses.
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIR = path.join(ROOT, 'public/images');
 
 // maxWidth ≈ 2x the widest layout slot the image ever occupies.

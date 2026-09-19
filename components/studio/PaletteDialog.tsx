@@ -12,14 +12,10 @@
 import { useEffect, useState } from 'react';
 import { Dialog } from '@base-ui-components/react/dialog';
 import { Check, X } from 'lucide-react';
+// A colour the picker cannot show is kept as authored rather than filled in;
+// the same test the rail's palette fitting uses.
+import { isTransparent } from 'lib/studioPalettes';
 import styles from './PaletteDialog.module.css';
-
-/** A colour the picker cannot show. Kept as authored rather than filled in. */
-const isTransparent = (value: string) => {
-  const colour = value.trim().toLowerCase();
-
-  return colour === 'transparent' || /^#(?:[0-9a-f]{6})00$/.test(colour);
-};
 
 /** `abc` and `#abc` both mean `#aabbcc`; anything else leaves the value alone. */
 function normalise(raw: string, fallback: string): string {

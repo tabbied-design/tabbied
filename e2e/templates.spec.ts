@@ -141,7 +141,7 @@ for (const fixture of FIXTURES) {
     expect(errors).toEqual([]);
   });
 
-  test('carries no build-tool residue', async ({ page }) => {
+  test('carries no build-tool residue', () => {
     const html = fs.readFileSync(
       path.join(TEMPLATE_DIR, 'index.html'),
       'utf-8'
@@ -171,9 +171,13 @@ for (const fixture of FIXTURES) {
     expect(css).not.toContain('composes:');
 
     // Every class the markup uses must survive into the stylesheet -
-    // this is what the trim could get wrong on a shared sheet.
+    // this is what the trim could get wrong on a shared sheet. Declared
+    // means in a rule: the trimmer keeps comments, and this codebase's
+    // comments name classes, so a rule the trim dropped still "declared"
+    // its class through the comment above it.
+    const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
     const declared = new Set(
-      [...css.matchAll(/\.(-?[A-Za-z_][A-Za-z0-9_-]*)/g)].map((m) => m[1])
+      [...withoutComments.matchAll(/\.(-?[A-Za-z_][A-Za-z0-9_-]*)/g)].map((m) => m[1])
     );
     const onPage = new Set<string>();
     for (const attr of html.matchAll(/class="([^"]*)"/g)) {
@@ -193,7 +197,6 @@ for (const fixture of FIXTURES) {
 
     // Braces balance - the trim walks the sheet by hand, and a comment
     // containing a literal `{` once desynchronised it.
-    const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
     expect((withoutComments.match(/\{/g) ?? []).length).toBe(
       (withoutComments.match(/\}/g) ?? []).length
     );
@@ -205,8 +208,6 @@ for (const fixture of FIXTURES) {
         `${match[1]} should be packaged`
       ).toBe(true);
     }
-
-    await page.goto(`/downloads/${fixture.slug}/`);
   });
   });
 

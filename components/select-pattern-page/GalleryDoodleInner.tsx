@@ -17,14 +17,11 @@ const REDRAW_STAGGER_MS = 1500;
 export default function GalleryDoodleInner({
   item,
   palette,
-  paused = false,
   onReady,
 }: {
   item: GalleryItem;
   /** Preview palette override (color0 first) - e.g. an active brand palette. */
   palette?: string[];
-  /** Skip reseed ticks (set while the card is outside the viewport). */
-  paused?: boolean;
   /** Called once the doodle has been measured and first painted. */
   onReady?: () => void;
 }) {
@@ -55,8 +52,8 @@ export default function GalleryDoodleInner({
 
   // No seed prop: a fresh random seed per mount keeps the gallery dynamic -
   // every visit draws a new variation of each design - and redrawInterval
-  // rotates it from there (paused while the card is out of view, and skipped
-  // for reduced motion / hidden tabs). The cover fit reproduces the
+  // rotates it from there (the controller skips ticks while the card is out
+  // of view, in a hidden tab, or under reduced motion). The cover fit reproduces the
   // fixed-resolution + transform-scale technique, so fixed-px strokes and
   // shadows keep the proportions of the original 800px pattern at any card
   // size. onReady fires on first paint, letting the parent drop its shimmer.
@@ -68,7 +65,6 @@ export default function GalleryDoodleInner({
       fit="cover"
       coverRender={{ ...DEFAULT_RENDER, ...config?.render }}
       redrawInterval={redrawInterval}
-      paused={paused}
       onReady={onReady}
       className={styles.doodleThumbInner}
     />

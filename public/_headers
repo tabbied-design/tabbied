@@ -27,10 +27,24 @@
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
+# Every response. The export is HTML, CSS, JS and images with correct types,
+# so a browser has nothing to sniff for.
+/*
+  X-Content-Type-Options: nosniff
+
 # Marketing and template imagery: content-addressed by name and never edited in
 # place, so a month is safe.
 /images/*
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+# The committed design previews: stable URLs the catalog hands to agents, and
+# re-rendered only by hand (see CLAUDE.md), so the same month.
+/previews/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+# Next's build output is content-hashed in the file name, so a year, immutable.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
 
 # Favicons and the web manifest, same reasoning.
 /favicon.ico

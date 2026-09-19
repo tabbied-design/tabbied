@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { sectionIndex, type DocsSection } from './sections';
 import styles from './ReactDocs.module.css';
 
-export type { DocsSection } from './sections';
-
 // The contents rail, with a scroll-spy highlight. A sticky column beside the
 // article on desktop; below the desktop breakpoint, a row of pills pinned to
 // the top of the viewport that scrolls sideways (see ReactDocs.module.css).

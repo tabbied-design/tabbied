@@ -6,9 +6,12 @@ import type { Env } from '../env';
 // Same doctrine as the catalog and the studio index: the Worker describes and
 // authors against exactly the bytes this deployment serves, so a template
 // re-packaged in this commit cannot be missing from, or disagree with, what
-// the model is handed. None of it is memoised per isolate: there are 57 slugs
-// each read rarely, and a stale spec cached across a deploy would be precisely
-// the drift the pinning in `site` exists to detect.
+// the model is handed. The specs and pages are read fresh each time: there
+// are 77 slugs each read rarely. What is memoised is the page's hash (and the
+// design catalog below), for the same reason the catalog is: an isolate lives
+// inside one deployment, so a value that changes only with a deploy cannot go
+// stale within it - and a site read by link re-hashed a whole packaged page
+// on every visit.
 
 type CatalogEntry = { slug: string; copyRoles?: string[] };
 type EditableCatalog = { templates: CatalogEntry[] };
@@ -115,4 +118,28 @@ export async function hashText(text: string): Promise<string> {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
 
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+const hashPromises = new Map<string, Promise<string>>();
+
+/**
+ * The packaged page's hash, once per slug per isolate. Written into
+ * `site.templateHash` when a site is made and compared to it on every read,
+ * so a re-packaged template is announced rather than discovered. A miss is
+ * dropped so a transient failure does not stick for the isolate's life.
+ */
+export function hashPackagedHtml(env: Env, request: Request, slug: string): Promise<string> {
+  let promise = hashPromises.get(slug);
+
+  if (!promise) {
+    promise = loadPackagedHtml(env, request, slug)
+      .then(hashText)
+      .catch((error) => {
+        hashPromises.delete(slug);
+        throw error;
+      });
+    hashPromises.set(slug, promise);
+  }
+
+  return promise;
 }

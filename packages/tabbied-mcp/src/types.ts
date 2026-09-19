@@ -21,7 +21,8 @@ export type CatalogDesign = {
   palette: string[];
   colors?: unknown;
   options: CatalogOption[];
-  defaultAspectRatio?: number;
+  /** An aspect-ratio id such as `2:3`, as codegen emits it. */
+  defaultAspectRatio?: string;
   svgExport: { supported: boolean; note?: string };
 };
 

@@ -73,6 +73,12 @@
   color: var(--a-ink);
 }
 
+/* Over the global a:hover, which would turn the lockup pink. */
+.home:hover,
+.home:focus-visible {
+  color: var(--a-ink);
+}
+
 .wrap {
   display: flex;
   flex: 1;

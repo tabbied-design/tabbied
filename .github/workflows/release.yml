@@ -64,6 +64,16 @@ jobs:
       - name: Build the packages
         run: npm run build:packages
 
+      # This job does not wait for the CI workflow (both trigger on the same
+      # push), so a scheduled auto-patch could publish a commit whose CI run
+      # failed or had not finished. Run the unit suites here before anything
+      # is versioned or published.
+      - name: Test the packages
+        run: |
+          npm test --workspace tabbied
+          npm test --workspace tabbied-templates
+          npm test --workspace tabbied-mcp
+
       # Scheduled/manual runs decide for themselves what (if anything) to ship.
       # Push runs skip this and hand straight to changesets/action, which knows
       # whether to open the version PR or publish.

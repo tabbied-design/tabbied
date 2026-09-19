@@ -33,8 +33,8 @@ const outFile = path.join(repoRoot, 'public', 'studio', 'preview-runtime.js');
 
 // The packager writes into public/downloads during a build (so the second
 // `next build` exports it) and into out/downloads when re-run by hand against
-// an existing export. Read whichever is there, newest first - the same
-// two-candidate shape e2e/editable.spec.ts uses for the spec.
+// an existing export. Read the build's first, then the hand-run one - the
+// same two-candidate shape e2e/editable.spec.ts uses for the spec.
 const downloadsDir = [
   path.join(repoRoot, 'public', 'downloads'),
   path.join(repoRoot, 'out', 'downloads'),
@@ -58,8 +58,10 @@ function usedPatterns() {
 
     if (!existsSync(file) || !statSync(file).isFile()) continue;
 
+    // The same shape the packager's own reader uses: a slug is lower-case
+    // alphanumerics (codegen's rule), so the two lists cannot disagree.
     for (const match of readFileSync(file, 'utf-8').matchAll(
-      /data-pattern="([a-z0-9-]+)"/g
+      /data-pattern="([a-z0-9]+)"/g
     )) {
       slugs.add(match[1]);
     }

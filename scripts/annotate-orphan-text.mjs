@@ -38,9 +38,13 @@
 
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parse } from '@babel/parser';
 
-const templateDir = path.join(process.cwd(), 'app', 'template');
+// From the script's own location, like its siblings: run from any other
+// directory this reported every slug as "skipped: no page.tsx" and exited 0.
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const templateDir = path.join(repoRoot, 'app', 'template');
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const only = args.filter((arg) => !arg.startsWith('-'));

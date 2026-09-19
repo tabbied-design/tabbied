@@ -11,11 +11,25 @@ import styles from './GalleryChipShelf.module.css';
 const MAX_CHIPS = 6;
 
 /**
+ * How many palettes the shelf shows before "All" takes over. It is a single
+ * swipeable row pinned to the top of a phone, and the merged list is over
+ * four hundred palettes: laid out whole it was some five thousand nodes in a
+ * sticky bar that repaints on every scroll, with the chosen palette possibly
+ * three hundred chips off-screen. The editor's strip draws the same line.
+ */
+const SHELF_LIMIT = 30;
+
+/**
  * Mobile: the merged palette list as a horizontal, scrollable shelf of the
  * rail's rows - "Random per pattern" first, then name, inks, pencil - laid
  * side by side. Custom chips carry a delete mark (single-click delete);
  * library chips a pencil (edit-as-copy). A trailing "All" pill opens the
  * embedded palette browser.
+ *
+ * Each chip is a pill holding two buttons, the palette and its mark, rather
+ * than a button with a `role="button"` span inside it: HTML forbids a control
+ * inside a button, the nested label leaked into the chip's accessible name,
+ * and a keypress on the mark also fired the chip.
  */
 export default function GalleryChipShelf({
   className,
@@ -46,91 +60,90 @@ export default function GalleryChipShelf({
     [palettes, library]
   );
 
+  // The first few, and the one in use wherever it sits in the list, so the
+  // chosen palette is always on the shelf.
+  const shown = useMemo(() => {
+    const head = merged.slice(0, SHELF_LIMIT);
+    const inUse = merged.find(({ palette }) => palette.id === selectedId);
+
+    if (inUse && !head.includes(inUse)) head.unshift(inUse);
+
+    return head;
+  }, [merged, selectedId]);
+
   const randomActive = selectedId === RANDOM_PALETTE_ID;
 
   return (
     <div className={className ? `${styles.shelf} ${className}` : styles.shelf}>
       <button
         type="button"
-        className={randomActive ? `${styles.chip} ${styles.chipActive}` : styles.chip}
+        className={
+          randomActive
+            ? `${styles.chip} ${styles.chipMain} ${styles.chipActive}`
+            : `${styles.chip} ${styles.chipMain}`
+        }
         aria-pressed={randomActive}
         title="A random palette for every pattern"
         onClick={onRandom}
       >
         <span className={styles.name}>Random per pattern</span>
-        <span className={styles.trailing} aria-hidden="true">
+        <span className={styles.randomMark} aria-hidden="true">
           <ArrowLeftRight size={13} strokeWidth={1.8} />
         </span>
       </button>
 
-      {merged.map(({ kind, palette }) => {
+      {shown.map(({ kind, palette }) => {
         const active = palette.id === selectedId;
+        const name = palette.name || 'Untitled';
 
         return (
-          <button
+          <span
             key={palette.id}
-            type="button"
             className={active ? `${styles.chip} ${styles.chipActive}` : styles.chip}
-            title={palette.name || 'Untitled'}
-            onClick={() => {
-              if (active) {
-                if (kind === 'library') onEditLibrary(palette);
-                else onEditCustom(palette);
-                return;
-              }
-              onApply(palette.id);
-            }}
           >
-            <span className={styles.name}>{palette.name || 'Untitled'}</span>
-            <span className={styles.chips} aria-hidden="true">
-              {palette.colors.slice(1, 1 + MAX_CHIPS).map((color, index) => (
-                <span key={`${color}-${index}`} style={{ background: color }} />
-              ))}
-            </span>
+            <button
+              type="button"
+              className={`${styles.chipMain} ${styles.chipMainWithMark}`}
+              aria-pressed={active}
+              title={name}
+              onClick={() => {
+                if (active) {
+                  if (kind === 'library') onEditLibrary(palette);
+                  else onEditCustom(palette);
+                  return;
+                }
+                onApply(palette.id);
+              }}
+            >
+              <span className={styles.name}>{name}</span>
+              <span className={styles.chips} aria-hidden="true">
+                {palette.colors.slice(1, 1 + MAX_CHIPS).map((color, index) => (
+                  <span key={`${color}-${index}`} style={{ background: color }} />
+                ))}
+              </span>
+            </button>
             {kind === 'custom' ? (
-              <span
-                role="button"
-                tabIndex={0}
+              <button
+                type="button"
                 className={styles.trailing}
                 aria-label={`Delete ${palette.name || 'palette'}`}
                 title="Delete palette"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onDelete(palette.id);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    onDelete(palette.id);
-                  }
-                }}
+                onClick={() => onDelete(palette.id)}
               >
                 <X size={12} strokeWidth={2} />
-              </span>
+              </button>
             ) : (
-              <span
-                role="button"
-                tabIndex={0}
+              <button
+                type="button"
                 className={styles.trailing}
                 aria-label={`Edit ${palette.name} (saves as a copy)`}
                 title="Edit palette (saves as a copy)"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onEditLibrary(palette);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    onEditLibrary(palette);
-                  }
-                }}
+                onClick={() => onEditLibrary(palette)}
               >
                 <Pencil size={12} />
-              </span>
+              </button>
             )}
-          </button>
+          </span>
         );
       })}
 

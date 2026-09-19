@@ -97,11 +97,15 @@ function Panel({ children }: { children: React.ReactNode }) {
 
 export default function HomeHowItWorks() {
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  // The section is display: none below 768px (see the stylesheet); two clocks
+  // re-rendering invisible panels for the life of the page is what a phone
+  // visitor otherwise paid for it.
+  const shown = useMediaQuery('(min-width: 768px)');
   const [paletteIdx, setPaletteIdx] = useState(0);
   const [frequencyIdx, setFrequencyIdx] = useState(FREQUENCY_STEPS.length - 1);
 
   useEffect(() => {
-    if (reduceMotion) {
+    if (reduceMotion || !shown) {
       return;
     }
 
@@ -124,7 +128,7 @@ export default function HomeHowItWorks() {
       clearInterval(paletteTimer);
       clearInterval(frequencyTimer);
     };
-  }, [reduceMotion]);
+  }, [reduceMotion, shown]);
 
   const steps = [
     {

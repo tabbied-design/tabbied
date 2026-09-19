@@ -2,7 +2,7 @@
 
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, type MouseEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { Menu } from '@base-ui-components/react/menu';
 import {
   ArrowDownToLine,
@@ -69,11 +69,16 @@ export default function EditPatternHeader({
   const router = useRouter();
 
   // Whether this editor was opened from the gallery (a marker the gallery card
-  // sets on click, consumed here on mount).
+  // sets on click, consumed here on mount). Consumed once per mount, through
+  // a ref: the marker is one-shot, and React runs a mount effect twice under
+  // StrictMode in development, so the second run found it gone and the back
+  // link fell through to a plain push with no scroll to restore.
   const [cameFromGallery, setCameFromGallery] = useState(false);
+  const consumed = useRef<boolean | null>(null);
 
   useEffect(() => {
-    setCameFromGallery(consumeGalleryNavigation());
+    if (consumed.current === null) consumed.current = consumeGalleryNavigation();
+    setCameFromGallery(consumed.current);
   }, []);
 
   // Go back through history so the gallery's previous scroll position is

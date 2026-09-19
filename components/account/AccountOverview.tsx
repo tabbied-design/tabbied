@@ -184,7 +184,7 @@ export default function AccountOverview() {
   return (
     <AccountPage
       eyebrow="My account"
-      title="Usage this month"
+      title="Usage today"
       badge="Free plan"
       lede="Tabbied is free while we're in beta. There are no paid tiers yet, so every account gets the same limits."
     >

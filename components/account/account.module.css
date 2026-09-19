@@ -147,15 +147,6 @@
   border-radius: 10px;
 }
 
-.ok {
-  margin: 0 0 12px;
-  padding: 12px 14px;
-  font: 400 13px / 1.5 var(--s-sans);
-  color: oklch(0.35 0.09 175);
-  background-color: oklch(0.95 0.03 175);
-  border-radius: 10px;
-}
-
 .h2 {
   margin: 0 0 18px;
   font: 700 26px var(--s-display);
@@ -580,8 +571,12 @@
     padding: 10px 0;
   }
 
+  /* 40px rows on the narrow layout, where these are tapped. */
   .navLink {
-    padding: 10px 0;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0;
   }
 
   .head {

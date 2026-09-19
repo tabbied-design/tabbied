@@ -288,31 +288,6 @@
   .section {
     display: none;
   }
-
-  .row,
-  .row[data-flipped] {
-    flex-direction: column;
-    gap: 24px;
-    align-items: stretch;
-    justify-content: flex-start;
-  }
-
-  /* Copy first on a narrow screen: the panel illustrates a step you have
-     already read. */
-  .text {
-    order: 1;
-    width: 100%;
-  }
-
-  .panel {
-    order: 2;
-    flex: none;
-    width: 100%;
-  }
-
-  .stepBody {
-    max-width: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

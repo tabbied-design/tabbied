@@ -1,19 +1,6 @@
-import { SELF, env } from 'cloudflare:test';
+import { SELF } from 'cloudflare:test';
 import { describe, expect, it } from 'vitest';
-
-const ORIGIN = 'https://tabbied.com';
-const json = { 'content-type': 'application/json', origin: ORIGIN };
-
-async function signIn(email: string): Promise<string> {
-  await SELF.fetch(`${ORIGIN}/api/auth/sign-up/email`, {
-    method: 'POST',
-    headers: json,
-    body: JSON.stringify({ email, password: 'correct horse battery staple', name: 'Test' }),
-  });
-  const mail = await env.DB.prepare('SELECT url FROM dev_mail WHERE email = ?').bind(email).first<{ url: string }>();
-  const verify = await SELF.fetch(mail!.url, { redirect: 'manual' });
-  return verify.headers.getSetCookie().map((cookie) => cookie.split(';')[0]).join('; ');
-}
+import { ORIGIN, json, signIn } from './helpers';
 
 describe('account usage', () => {
   it('needs a session', async () => {
@@ -61,9 +48,10 @@ describe('account history', () => {
       expect(made.status).toBe(200);
     }
 
-    const mine = (await SELF.fetch(`${ORIGIN}/api/studio/generations`, { headers: { cookie } }).then((r) => r.json())) as {
-      generations: { description: string; sites: number; directions: { name: string; palette: string[] }[] }[];
+    type Listing = {
+      generations: { id: string; description: string; sites: number; directions: { name: string; palette: string[] }[] }[];
     };
+    const mine = (await SELF.fetch(`${ORIGIN}/api/studio/generations`, { headers: { cookie } }).then((r) => r.json())) as Listing;
     expect(mine.generations.map((row) => row.description)).toEqual([
       'A modern design studio in Berlin, minimal and precise.',
       'A bakery in a small coastal town, sourdough and coffee.',
@@ -71,6 +59,20 @@ describe('account history', () => {
     expect(mine.generations[0].sites).toBe(0);
     expect(mine.generations[0].directions).toHaveLength(3);
     expect(mine.generations[0].directions[0].palette.length).toBeGreaterThan(0);
+
+    // The count has to be able to be something other than 0: the subquery is
+    // one of the single-table selects drizzle renders with bare column names
+    // (see CLAUDE.md), and written the obvious way it compared two columns of
+    // `site` and answered 0 for every row.
+    const made = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
+      method: 'POST',
+      headers: { ...json, cookie },
+      body: JSON.stringify({ generationId: mine.generations[0].id, index: 0 }),
+    });
+    expect(made.status, await made.clone().text()).toBe(200);
+
+    const after = (await SELF.fetch(`${ORIGIN}/api/studio/generations`, { headers: { cookie } }).then((r) => r.json())) as Listing;
+    expect(after.generations.map((row) => row.sites)).toEqual([1, 0]);
 
     // Somebody else's list is empty: the rows are scoped by session, not by id.
     const theirs = (await SELF.fetch(`${ORIGIN}/api/studio/generations`, { headers: { cookie: other } }).then((r) => r.json())) as { generations: unknown[] };

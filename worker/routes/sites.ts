@@ -47,9 +47,8 @@ import { consume } from '../lib/ratelimit';
 import { requireUser } from '../lib/session';
 import { loadStudioIndex } from '../lib/studioIndex';
 import {
-  hashText,
+  hashPackagedHtml,
   loadDesignSlugs,
-  loadPackagedHtml,
   loadTemplateSpec,
 } from '../lib/templateAssets';
 
@@ -74,7 +73,17 @@ const BURST = {
   make: { max: 3, windowSeconds: 60 },
   image: { max: 4, windowSeconds: 60 },
   revise: { max: 6, windowSeconds: 60 },
+  // A manual save calls no model, so it needs no daily cap, but it appends a
+  // row each time and had no gate at all: the one unlimited write path.
+  save: { max: 30, windowSeconds: 60 },
 };
+
+/**
+ * The most a manual revision may be on the wire. A document is a few
+ * kilobytes of slot text; `c.req.json()` buffers the whole body first, so the
+ * declared length is checked before it is read.
+ */
+const MAX_REVISION_BYTES = 256 * 1024;
 
 /** How many reference pictures one image call may take. */
 const MAX_REFERENCES = 4;
@@ -282,11 +291,10 @@ sites.post('/', async (c) => {
       });
     }
 
-    const [spec, html] = await Promise.all([
+    const [spec, templateHash] = await Promise.all([
       loadTemplateSpec(c.env, c.req.raw, slug),
-      loadPackagedHtml(c.env, c.req.raw, slug),
+      hashPackagedHtml(c.env, c.req.raw, slug),
     ]);
-    const templateHash = await hashText(html);
     const id = newId();
     const now = new Date();
 
@@ -331,6 +339,14 @@ sites.post('/', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
+  // Reading a generation is a capability; spending money against one is not
+  // (the same line direction-image draws). A site made from somebody else's
+  // generation would also hang off their row: `site.generation_id` cascades,
+  // so their account deletion would take the site with it.
+  if (row.userId !== userId) {
+    return c.json({ error: 'Not yours to make. Generate your own directions first.' }, 403);
+  }
+
   const result = JSON.parse(row.result) as StoredResult;
   const direction = result.directions[index];
 
@@ -370,11 +386,10 @@ sites.post('/', async (c) => {
     return c.json({ error: quota.message }, 429);
   }
 
-  const [spec, html] = await Promise.all([
+  const [spec, templateHash] = await Promise.all([
     loadTemplateSpec(c.env, c.req.raw, direction.slug),
-    loadPackagedHtml(c.env, c.req.raw, direction.slug),
+    hashPackagedHtml(c.env, c.req.raw, direction.slug),
   ]);
-  const templateHash = await hashText(html);
   const slots = siteSlots(spec);
 
   // The three-string rebrand is both the fallback and the floor: whatever the
@@ -456,7 +471,12 @@ sites.post('/', async (c) => {
         source = 'ai';
         done = true;
       } catch (error) {
-        if (error instanceof UpstreamError || error instanceof SyntaxError) {
+        // Not-JSON is the model's mistake, and the repair turn's job.
+        if (error instanceof SyntaxError) {
+          repairNote = 'Your previous answer was not valid JSON. Answer with the JSON object alone.';
+          continue;
+        }
+        if (error instanceof UpstreamError) {
           console.error(`studio/sites: ${String(error)}`);
           break;
         }
@@ -586,18 +606,22 @@ sites.get('/:id', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  const [{ count }] = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(revision)
-    .where(eq(revision.siteId, row.site.id));
+  // Four independent reads, one round trip: the revision count, the
+  // template's index entry, the packaged page's hash (a missing package is
+  // drift too - the template was retired) and the viewer. Reads are by
+  // capability; whether the reader may *write* is a session question,
+  // answered here so the workspace knows to show its editor.
+  const [[{ count }], entry, currentHash, viewer] = await Promise.all([
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(revision)
+      .where(eq(revision.siteId, row.site.id)),
+    templateEntry(c.env, c.req.raw, row.site.slug),
+    hashPackagedHtml(c.env, c.req.raw, row.site.slug).catch(() => null),
+    requireUser(c.env, c.req.raw.headers),
+  ]);
 
   const direction = directionOf(row);
-  const entry = await templateEntry(c.env, c.req.raw, row.site.slug);
-
-  // A missing package is drift too - the template was retired.
-  const currentHash = await loadPackagedHtml(c.env, c.req.raw, row.site.slug)
-    .then(hashText)
-    .catch(() => null);
 
   const stored: StoredRevision = {
     n: latest.n,
@@ -607,10 +631,6 @@ sites.get('/:id', async (c) => {
     model: latest.model,
     createdAt: latest.createdAt,
   };
-
-  // Reads are by capability; whether the reader may *write* is a session
-  // question, answered here so the workspace knows to show its editor.
-  const viewer = await requireUser(c.env, c.req.raw.headers);
 
   const body: SiteDocument = {
     mine: viewer !== null && viewer === row.site.userId,
@@ -806,28 +826,47 @@ sites.post('/:id/images', async (c) => {
   return c.json({ key, slot: slot.id, revision: written.n });
 });
 
+// Bounded throughout: the planner treats a value over a slot's budget as a
+// warning, not an error, so without these a megabyte of text under a real
+// slot id was stored verbatim. The bounds are generous against anything the
+// customizer writes; a colour is a hex string, a design slug is short (the
+// planner, not the schema, refuses one the catalog lacks, with its reason),
+// an option key is an identifier.
+const slotId = z.string().min(1).max(120);
+const colour = z.string().max(32);
 const revisionRequestSchema = z.object({
   edits: z.object({
     specVersion: z.number().int(),
-    slug: z.string().min(1),
+    slug: z.string().min(1).max(80),
     edits: z.object({
-      text: z.record(z.string(), z.string()).optional(),
-      images: z.record(z.string(), z.object({ src: z.string().min(1), alt: z.string().optional() })).optional(),
+      text: z.record(slotId, z.string().max(4_000)).optional(),
+      images: z
+        .record(slotId, z.object({ src: z.string().min(1).max(512), alt: z.string().max(300).optional() }))
+        .optional(),
       patterns: z
         .record(
-          z.string(),
+          slotId,
           z.object({
-            slug: z.string().optional(),
-            palette: z.array(z.string()).optional(),
-            options: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
-            seed: z.string().optional(),
+            slug: z.string().max(64).optional(),
+            palette: z.array(colour).max(16).optional(),
+            options: z
+              .record(z.string().max(64), z.union([z.string().max(64), z.number(), z.boolean()]))
+              .optional(),
+            seed: z.string().max(64).optional(),
           })
         )
         .optional(),
-      palette: z.array(z.string()).optional(),
+      palette: z.array(colour).max(16).optional(),
     }),
   }),
 });
+
+/**
+ * Where a saved document's images may point: this site's own generated
+ * media, or a file the template ships (`./images/x.webp`), by a relative
+ * path with no way back up.
+ */
+const TEMPLATE_FILE = /^\.\/[A-Za-z0-9._-]+(\/[A-Za-z0-9._-]+)*$/;
 
 /**
  * A manual revision: the editor's document, whole. Validated by the same
@@ -840,6 +879,10 @@ sites.post('/:id/revisions', async (c) => {
 
   if (!userId) {
     return c.json({ error: 'Sign in to save.' }, 401);
+  }
+
+  if (Number(c.req.header('content-length') ?? 0) > MAX_REVISION_BYTES) {
+    return c.json({ error: 'That document is too large to be one.' }, 413);
   }
 
   const parsed = revisionRequestSchema.safeParse(await c.req.json().catch(() => null));
@@ -859,6 +902,14 @@ sites.post('/:id/revisions', async (c) => {
     return c.json({ error: 'Not yours to change.' }, 403);
   }
 
+  const burst = await consume(db, { key: `save:${userId}`, ...BURST.save });
+
+  if (!burst.ok) {
+    return c.json({ error: 'Too fast. Try again in a minute.' }, 429, {
+      'retry-after': String(burst.retryAfter),
+    });
+  }
+
   const latest = await latestRevision(db, row.site.id);
 
   if (!latest) {
@@ -874,8 +925,10 @@ sites.post('/:id/revisions', async (c) => {
 
   // An image src may only point at this site's own media or the template's
   // own files: the document is applied into a page, and a src is a fetch.
+  // "This site's", not any site's: the prefix used to stop at gen/site/.
+  const ownMedia = `/api/media/gen/site/${row.site.id}/`;
   const foreign = Object.values(edits.edits.images ?? {}).find(
-    (image) => !(image.src.startsWith('/api/media/gen/site/') || image.src.startsWith('./'))
+    (image) => !(image.src.startsWith(ownMedia) || TEMPLATE_FILE.test(image.src))
   );
 
   if (foreign) {
@@ -1051,20 +1104,22 @@ sites.post('/:id/revise', async (c) => {
   let repairNote = '';
   let next: EditsDocument | null = null;
   let note = '';
+  // A stored turn the upstream no longer holds (retention ran out, or the
+  // upstream pruned it) is a cache miss, not a failure: the call is made
+  // again with the page restated, and that restatement gets its own repair
+  // turn. Continuity is an optimisation and never a dependency.
+  let restated = false;
 
-  for (let attempt = 0; attempt < 2 && !next; attempt++) {
+  for (let attempt = 0; attempt < (restated ? 3 : 2) && !next; attempt++) {
     // First turn: the request alone when a context exists, the whole page
     // otherwise. Repair turn: the correction alone when the rejected answer
     // stored, the whole thing again when it did not.
     const chained = previousResponseId !== undefined;
-    const input =
-      attempt === 0
-        ? chained
-          ? `The request:\n"""\n${parsed.data.instruction}\n"""`
-          : user
-        : chained
-          ? repairNote
-          : `${user}\n\n${repairNote}`;
+    const input = chained
+      ? repairNote || `The request:\n"""\n${parsed.data.instruction}\n"""`
+      : repairNote
+        ? `${user}\n\n${repairNote}`
+        : user;
 
     try {
       const completion = await respondJson(c.env, {
@@ -1121,7 +1176,24 @@ sites.post('/:id/revise', async (c) => {
       next = candidate;
       note = checked.data.note;
     } catch (error) {
-      if (error instanceof UpstreamError || error instanceof SyntaxError) {
+      if (error instanceof SyntaxError) {
+        repairNote = 'Your previous answer was not valid JSON. Answer with the JSON object alone.';
+        continue;
+      }
+      if (error instanceof UpstreamError) {
+        // A 4xx on a chained first turn is the upstream saying it does not
+        // know the id; anything else, or a failure of the restatement, ends
+        // the attempt.
+        const staleChain =
+          chained && !restated && error.status !== undefined && error.status >= 400 && error.status < 500;
+
+        if (staleChain) {
+          console.warn(`studio/sites/revise: previous_response_id not honoured, restating (${error.status})`);
+          previousResponseId = undefined;
+          restated = true;
+          continue;
+        }
+
         console.error(`studio/sites/revise: ${String(error)}`);
         break;
       }
