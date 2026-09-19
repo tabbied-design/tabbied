@@ -1,5 +1,12 @@
 # tabbied-mcp
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`4f45e56`](https://github.com/tabbied-design/tabbied/commit/4f45e56a6a541944af5c648ae8d3932c738ea731)]:
+  - tabbied@0.6.0
+
 ## 0.2.0
 
 ### Minor Changes
