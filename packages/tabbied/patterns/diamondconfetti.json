@@ -35,7 +35,7 @@
   },
   "options": [],
   "code": {
-    "style": "--rule: ( background: @doodle( :doodle { @grid: 1 / 100000px; transform: rotate(-135deg) scale(2); } background-size: 30px 30px; background-image: @doodle( @grid: 6x1 / calc(100% + 1px); @size: calc(100% - 100% / @size * (@i - 1)); position: absolute; border: 1px solid var(--color1); background: @pn( var(--color2), var(--color3), var(--color4), var(--color5), var(--color6), var(--color7) ); ); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "style": "--rule: ( background: @doodle( :doodle { @grid: 1 / 3000px; transform: rotate(-135deg) scale(2); } background-size: 30px 30px; background-image: @doodle( @grid: 6x1 / calc(100% + 1px); @size: calc(100% - 100% / @size * (@i - 1)); position: absolute; border: 1px solid var(--color1); background: @pn( var(--color2), var(--color3), var(--color4), var(--color5), var(--color6), var(--color7) ); ); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
   },
   "svgExport": false

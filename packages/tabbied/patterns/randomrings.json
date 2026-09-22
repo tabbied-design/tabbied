@@ -46,7 +46,7 @@
     }
   ],
   "code": {
-    "style": "--rule: ( @place-cell: center; @size: @r(100%); border-radius: @r(30%, 50%); border: 1px solid @p(var(--color1), var(--color2), var(--color3)); animation: randomRingsScaleUp @r(1s, 4s) linear calc(@i * 100ms) infinite; animation-play-state: paused; @keyframes randomRingsScaleUp { to { filter: blur(3px); transform: rotate(360deg) scale(2); } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "style": "--rule: ( @place-cell: center; @size: @r(100%); border-radius: @r(30%, 50%); border: 1px solid @p(var(--color1), var(--color2), var(--color3)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; grid-gap: -1px; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
   },
   "svgExport": false

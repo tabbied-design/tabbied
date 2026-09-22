@@ -509,9 +509,9 @@ not obvious from the diff:
   design still draws one.
 - **Shuffle shuffles the layout.** The three scopes (layout, colours, both)
   and the remembered default are gone with `shuffleActions.ts`; the colours
-  are chosen from the list under the swatches. Grid density is a slider over
-  `getGridOptions(ratio)`, its readout the grid it resolves to, so a shared
-  URL's grid still puts the thumb on its level (`gridToLevel`).
+  are chosen from the list under the swatches. Grid density is a slider
+  from 0 to 1 over the cell size (see "The editor's density" below), its
+  readout the grid the plate resolves to at that cell.
 - **The editor on a phone: no caption, no export sheet, a strip and a sheet.**
   Export is the same dropdown as the desktop. The palettes are the first
   thirty (and the one in use) in a swipeable row, and "View all" opens
@@ -546,6 +546,39 @@ not obvious from the diff:
   that is what is drawn, and the overview reads only `/api/studio/sites`. Its
   list is "Custom sites", with no request-type column, because every row is
   now a site.
+
+## The editor's density - one number, the cell's size
+
+`density` is a number from 0 (coarse) to 1 (fine), in the package and in the
+editor alike, mapped onto the cell sizes the editor's original 360px plate
+drew at its five stops: `cellPx = 360 / (2 + 8 * density)`, so the former
+integer levels 0..4 sit at 0, 0.25, 0.5, 0.75 and 1, and 0.5 is the 60px cell
+most designs open at (`densityToCellPx` in `sizing.ts`;
+`agent-outputs/20260922-remove-aspect-ratio-plan.md` has the discussion). The
+aspect ratio picker stayed; only the grid control changed. Four things worth
+not re-litigating:
+
+- **Density is a cell size in px, not a count.** The editor derives the
+  grid from its plate at that cell (`deriveGridForBox`, the same derivation
+  `fit: "grid"` runs on a container), so a wider stage shows more cells at
+  the same density, and the copied snippet's `density={0.5}` draws in an
+  embed the cells the plate showed at the size it showed them. A count along
+  the long edge would keep one picture on every screen, and the snippet
+  could not then say it honestly, because the package's unit is px.
+- **The grid is not a link parameter.** A share link carries `density=`;
+  `grid=CxR` is read as a legacy density (`densityFromGrid`, the long edge
+  against the original 540px plate) and the URL is rewritten, since
+  llms.txt told agents to write it for a year. The grid option's slot in
+  `optionValues` is inert and never reaches the URL or the snippet.
+- **Expand pins the grid.** Same seed plus a different `cols x rows` is a
+  different arrangement, so expanding the plate holds the grid it showed
+  and scales the cells; a ratio change, a density change or a collapse
+  releases it. A plain window resize re-derives, as every embed does.
+- **The rescale is a breaking change to a shipped prop.** A legacy
+  `density={2}` clamps to 1 (36px cells, not 60px), and `createPattern`
+  warns once per page on a value above 1; a legacy `1` (90px then, 36px
+  now) is the silent case nothing can tell apart. Every call site in this
+  repo migrated level n to n / 4 in the same change.
 
 ## The homepage - its own shell, and a hydration rule
 
@@ -1131,6 +1164,27 @@ is mostly mechanical, and four things are not:
   were largely out of vocabulary, and mapping them by hand from the
   descriptions put `stripes, gradients` on a basket weave. Render the previews
   first, look at them, then tag.
+- **A nested `@doodle` canvas and a `@keyframes` animation are both paid
+  for per cell, per card, and the gallery holds 24 cards.** Five of the 43
+  arrived nesting a `@doodle` on a 10,000px (one on a 100,000px) canvas, the
+  editor trick that rotates a huge tile so it covers any host; css-doodle
+  renders a sized nested doodle as an SVG image, and on WebKit (Safari, and
+  every browser on iOS) it rasterises that to a PNG canvas of the declared
+  size first, 400 MB at 10,000px and beyond any canvas limit at 100,000px.
+  Seven arrived with keyframe animations, four of them authored
+  `animation-play-state: paused`: an animated cell is a compositing layer
+  whether it moves or not, so those four cost 131 layers per card for a
+  still image, and page 14 asked for 317 layers (267 MB of textures at 1x,
+  nine times that on a phone). That is what crashed the gallery's pages 13
+  and 14 on iOS and slowed them on desktop. The tile only needs the rotated
+  square to cover its own tile (`scale >= 1.42`, which all five have) and a
+  side longer than any host, so 3,000px; and the package moves patterns by
+  reseeding, not by keyframes, so the animations went. `node
+  scripts/gallery-cost.mjs --page N` (or a list of slugs) measures a design
+  the way the gallery pays for it: nodes across shadow roots, SVG image
+  documents, compositing layers and their texture bytes. Run it over a new
+  batch before it reaches a page; anything past a few layers a card wants a
+  reason.
 - **The SVG tier is measured, never assumed, and a throw is the easy half.**
   10 of the 43 threw, for constructs the converter has no primitive for
   (double and dashed borders, a border on a partially-rounded box, `matrix3d`,
@@ -1142,17 +1196,24 @@ is mostly mechanical, and four things are not:
 
 ## Reduced motion - invariant
 
-A pattern moves two ways, and `prefers-reduced-motion` has to stop both. The
-`redrawInterval` timer is the obvious one. The other is that **all 338 designs
-declare a ~400ms `transition`** - the thing that makes a redraw morph rather
-than cut - and it fires on any re-render, including ones nobody asked for:
-`grid` and `cover` re-derive their cell grid on resize, so turning a phone
-would otherwise animate every cell on the page.
+A pattern moves three ways, and `prefers-reduced-motion` has to stop all of
+them. The `redrawInterval` timer is the obvious one. The second is that
+**all 338 designs declare a ~400ms `transition`** - the thing that makes a
+redraw morph rather than cut - and it fires on any re-render, including ones
+nobody asked for: `grid` and `cover` re-derive their cell grid on resize, so
+turning a phone would otherwise animate every cell on the page. The third
+arrived with the September drop: seven designs declare `@keyframes`
+animations that run for as long as the element lives (a sunburst that turns,
+bands that drift), four of them authored `animation-play-state: paused` and
+three not.
 
-`createPattern` mutes them by injecting `transition: none !important` into the
-shadow root (the generated cell styles live there; a light-DOM rule can't
-reach them). The same override suppresses the first paint for two frames -
-under reduced motion it simply never lifts.
+`createPattern` mutes them by injecting `transition: none !important` and
+`animation-play-state: paused !important` into the shadow root (the generated
+cell styles live there; a light-DOM rule can't reach them). The same override
+suppresses the first paint for two frames - under reduced motion it simply
+never lifts. Paused, not `animation: none`: a paused animation holds its
+first frame, which is the still the four already-paused designs show, while
+`none` would also drop a `to` state.
 
 Two things that look redundant and are not:
 
