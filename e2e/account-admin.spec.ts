@@ -124,7 +124,7 @@ test.describe('account and admin pages', () => {
     // And an admin's masthead menu names the way in.
     await page.goto('/account/');
     await page.getByRole('button', { name: 'Account menu' }).click();
-    await expect(page.getByRole('menuitem', { name: 'Admin' })).toHaveAttribute('href', '/admin');
+    await expect(page.getByRole('menuitem', { name: 'Admin' })).toHaveAttribute('href', '/admin/');
     await page.keyboard.press('Escape');
 
     await page.goto('/admin/users/');
