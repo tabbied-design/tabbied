@@ -4,11 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './account.module.css';
 
+// Pictures and Usage are not listed for the first launch. Both exist only for
+// the generation flow - the pictures are its references, and every cap in
+// worker/lib/quota.ts is one of its endpoints - so with that flow held back they
+// would report a feature nobody can reach. The routes still build and answer.
 const LINKS = [
   ['/account/', 'Overview'],
   ['/account/sites/', 'Custom sites'],
-  ['/account/uploads/', 'Pictures'],
-  ['/account/usage/', 'Usage'],
   ['/account/settings/', 'Settings'],
 ] as const;
 

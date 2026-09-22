@@ -40,15 +40,8 @@
   padding: 96px var(--h-pad) 44px;
 }
 
-.pre {
-  font: 400 12px var(--h-mono);
-  color: var(--h-mint);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-}
-
 .hero h1 {
-  margin: 34px 0 0;
+  margin: 0;
   font: 700 92px / 1.02 var(--h-display);
   color: var(--h-fg);
   letter-spacing: -0.025em;

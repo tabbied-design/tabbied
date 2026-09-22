@@ -106,7 +106,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   const copy = COPY[mode];
   const router = useRouter();
   // Where to land afterwards: same-origin paths only (lib/safeNext).
-  const next = safeNext(useSearchParams().get('next'), '/studio');
+  const next = safeNext(useSearchParams().get('next'), '/account');
   const providers = useProviders();
 
   const [email, setEmail] = useState('');
@@ -178,7 +178,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   }
 
   const swapHref =
-    next === '/studio' ? copy.swapHref : `${copy.swapHref}?next=${encodeURIComponent(next)}`;
+    next === '/account' ? copy.swapHref : `${copy.swapHref}?next=${encodeURIComponent(next)}`;
 
   if (sent) {
     return (
@@ -190,7 +190,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
           you'll be signed in.
         </p>
         <p className={styles.swap}>
-          <Link href="/studio">Back to Studio</Link>
+          <Link href="/account">Back to my account</Link>
         </p>
       </div>
     );

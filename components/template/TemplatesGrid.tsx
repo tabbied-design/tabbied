@@ -68,21 +68,20 @@ function Card({ c }: { c: TemplateCard }) {
       </a>
       {/* Both formats are built by `npm run templates` into out/downloads/,
           so these are plain static files served next to the site. `download`
-          saves the zip rather than navigating to it. Customize goes through
-          /studio/customize/, the one door into the customizer, which makes a
-          copy of the template under the person's account (signing in first
-          when it has to). */}
+          saves the zip rather than navigating to it. The label sits hard left
+          and the two pills hard right, which is the artboard's footer: taking
+          a template from a card is downloading it, and the two formats are
+          the whole of the choice. */}
       <div className={s.dl}>
-        <a className={`${s.pill} ${s.customize}`} href={`/studio/customize/?slug=${c.slug}`}>
-          Customize
-        </a>
         <span className={s.dlLabel}>Download</span>
-        <a className={s.pill} href={`/downloads/${c.slug}-html.zip`} download>
-          HTML
-        </a>
-        <a className={s.pill} href={`/downloads/${c.slug}-react.zip`} download>
-          React
-        </a>
+        <div className={s.dlPills}>
+          <a className={s.pill} href={`/downloads/${c.slug}-html.zip`} download>
+            HTML
+          </a>
+          <a className={s.pill} href={`/downloads/${c.slug}-react.zip`} download>
+            React
+          </a>
+        </div>
       </div>
     </div>
   );

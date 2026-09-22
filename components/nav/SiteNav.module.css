@@ -9,6 +9,11 @@
   --n-rule: oklch(0 0 0 / 0.08);
   --n-avatar-bg: #0e0e13;
   --n-avatar-fg: #ffffff;
+  --n-pill: oklch(0 0 0 / 0.14);
+  --n-pill-hover: oklch(0 0 0 / 0.32);
+  /* The ground a pinned bar needs. The bar is otherwise transparent and
+     takes whatever the page is; pinned, the page scrolls behind it. */
+  --n-bg: oklch(1 0 0 / 0.94);
   --n-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
     'Helvetica Neue', Helvetica, Arial, sans-serif;
   --n-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
@@ -23,7 +28,18 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   box-sizing: border-box;
-  padding: 20px 48px;
+  /* A height, not vertical padding, and it is the artboards' measured bar:
+     62px light, 67px dark, both counting the hairline. Padding plus whatever
+     the right-hand slot happened to be drew a 75px light bar and a 79px dark
+     one - 13px taller than the design everywhere - because the 34px circle,
+     not the lockup, was the tallest thing in the row. Stating the height
+     instead keeps the two tones on their artboards AND keeps the bar from
+     changing height when the session resolves, which is what the circle's
+     own min-height used to be for.
+     `--gallery-bar-h` in SelectPattern.module.css is this light number: the
+     library's rail is fixed below the bar, so the two have to agree. */
+  min-height: 62px;
+  padding: 0 48px;
   font-family: var(--n-sans);
   color: var(--n-fg);
   border-bottom: 1px solid var(--n-rule);
@@ -35,15 +51,24 @@
   --n-rule: oklch(1 0 0 / 0.08);
   --n-avatar-bg: #eef0f6;
   --n-avatar-fg: #0e0e13;
+  --n-pill: oklch(1 0 0 / 0.22);
+  --n-pill-hover: oklch(1 0 0 / 0.5);
+  /* The dark shell's own ground (#0e0e13), at the same opacity. Written as
+     rgb so it is exactly that colour: the shell declares it as a hex, and an
+     oklch conversion of it is a value nobody can check by reading. */
+  --n-bg: rgb(14 14 19 / 0.94);
 
-  padding: 22px 48px;
+  min-height: 67px;
 }
 
-/* The library scrolls under its bar, so the bar has to stay legible over it. */
+/* The library scrolls under its bar, so the bar has to stay legible over it.
+   The same treatment is what every route gets on a phone (see the narrow
+   block at the foot of this file), so the ground is a tone token rather than
+   white: one declaration, both tones. */
 .sticky {
   position: sticky;
   top: 0;
-  background-color: oklch(1 0 0 / 0.94);
+  background-color: var(--n-bg);
   backdrop-filter: blur(8px);
 }
 
@@ -87,15 +112,16 @@
   color: var(--n-fg);
 }
 
-/* The right-hand slot holds either the sign-in link or the person, and is
-   the height of the circle either way, so the bar does not change height
-   when a session resolves. */
+/* The right-hand slot holds either the sign-in link or the person. It keeps
+   the pill's height as a floor so the slot itself does not collapse, but
+   the bar's own height is what holds the row steady across a session
+   resolving - see the note on .nav. */
 .end {
   display: flex;
   gap: 12px;
   align-items: center;
   justify-self: end;
-  min-height: 34px;
+  min-height: 42px;
 }
 
 .signIn {
@@ -110,26 +136,53 @@
   color: var(--n-fg);
 }
 
+/* The pill: the circle, a gap, and the two rules. 42px tall against the
+   bar's 61px (light) and 66px (dark) content box, so it sits inside the
+   height .nav states rather than setting it. */
+.account {
+  display: inline-flex;
+  flex: none;
+  gap: 9px;
+  align-items: center;
+  padding: 3px 11px 3px 3px;
+  background: transparent;
+  border: 1px solid var(--n-pill);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 150ms ease;
+}
+
+.account:hover,
+.account[data-popup-open] {
+  border-color: var(--n-pill-hover);
+}
+
 .avatar {
   display: flex;
+  flex: none;
   align-items: center;
   justify-content: center;
   width: 34px;
   height: 34px;
-  padding: 0;
   font: 600 11.5px var(--n-mono);
   color: var(--n-avatar-fg);
   letter-spacing: 0.02em;
   background-color: var(--n-avatar-bg);
-  border: none;
   border-radius: 50%;
-  cursor: pointer;
-  transition: opacity 150ms ease;
 }
 
-.avatar:hover,
-.avatar[data-popup-open] {
-  opacity: 0.85;
+.lines {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.lines span {
+  display: block;
+  width: 16px;
+  height: 1px;
+  background-color: var(--n-fg);
 }
 
 /* Two bars that meet as a cross while the menu is open. Desktop never shows
@@ -175,7 +228,7 @@
 
 .links a:focus-visible,
 .signIn:focus-visible,
-.avatar:focus-visible,
+.account:focus-visible,
 .hamburger:focus-visible,
 .logo:focus-visible {
   outline: 2px solid var(--blue-medium);
@@ -255,10 +308,22 @@
 /* ---- Narrow ---- */
 
 @media (max-width: 767.98px) {
+  /* Pinned on a phone, on every route. The destinations live behind this bar
+     at these widths - folded into its menu - so a bar that scrolls away
+     takes the site's navigation with it. `position` is set here rather than
+     by the `sticky` flag because the flag is one page's choice and this is
+     the width's. */
   .nav,
   .nav[data-tone='dark'] {
+    position: sticky;
+    top: 0;
     grid-template-columns: 1fr auto;
-    padding: 16px 20px;
+    /* Both artboards pad a phone's bar by 16px, which measures 56px over the
+       taller of the lockup and the hamburger. */
+    min-height: 56px;
+    padding: 0 20px;
+    background-color: var(--n-bg);
+    backdrop-filter: blur(8px);
   }
 
   .nav[data-tone='dark'] .logo {
@@ -295,7 +360,7 @@
 @media (prefers-reduced-motion: reduce) {
   .links a,
   .signIn,
-  .avatar,
+  .account,
   .hamburger span,
   .menu {
     transition: none;

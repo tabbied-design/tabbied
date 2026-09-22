@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import StudioSpark from './StudioSpark';
 import styles from './HomeFooter.module.css';
 
 // The dark shell's footer, under the homepage, the template gallery and the
@@ -10,6 +9,10 @@ import styles from './HomeFooter.module.css';
 // three destinations, and this is where the artboards put everything else. The
 // legal pages stay listed because they exist; the artboard's "Colophon" is a
 // page nobody has written.
+//
+// Product is Patterns, Websites and My Account, which is the artboard's own
+// list. Studio is not in it: the generation flow is held back from the first
+// launch, and this footer was its last link.
 
 const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';
 
@@ -36,12 +39,6 @@ export default function HomeFooter() {
             <li>
               <Link href="/templates" prefetch={false}>
                 Websites
-              </Link>
-            </li>
-            <li>
-              <Link href="/studio" prefetch={false} className={styles.studio}>
-                <StudioSpark size={10} />
-                Studio
               </Link>
             </li>
             <li>

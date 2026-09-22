@@ -182,7 +182,7 @@ export function VerifyEmailNotice() {
             : 'Your address is confirmed. Sign in to continue.'}
       </p>
       <p className={styles.swap}>
-        {user ? <Link href="/studio">Go to Studio</Link> : <Link href="/sign-in">Sign in</Link>}
+        {user ? <Link href="/account">Go to my account</Link> : <Link href="/sign-in">Sign in</Link>}
       </p>
     </div>
   );

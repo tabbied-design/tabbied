@@ -156,7 +156,7 @@ test.describe('studio site', () => {
 
     // This document carries a palette of its own, which is none of the rows,
     // so nothing is lit until one is picked.
-    const own = rail.getByRole('button', { name: 'Verdant (template default)', exact: true });
+    const own = rail.getByRole('button', { name: 'Verdant (default)', exact: true });
     const cobalt = rail.getByRole('button', { name: 'Cobalt', exact: true });
     await expect(own).toHaveAttribute('aria-pressed', 'false');
     await expect(cobalt).toHaveAttribute('aria-pressed', 'false');

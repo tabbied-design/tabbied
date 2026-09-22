@@ -53,12 +53,6 @@
   color: var(--h-fg);
 }
 
-.studio {
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-}
-
 .contact {
   margin: 0;
   font: 400 14px / 1.9 var(--h-sans);

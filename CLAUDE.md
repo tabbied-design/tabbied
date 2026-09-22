@@ -424,22 +424,38 @@ step is exactly the work this component removes.
 
 `components/nav/SiteNav` is the site's masthead: the lockup on the left,
 Home / Patterns / Websites in the middle, and on the right either "Sign in" or
-the person's initials opening a menu (email, My Account, Settings, Sign out).
-Signed in, the first destination reads My Account. Below 768px the
-destinations fold into that menu, or behind a hamburger when signed out. It
-takes a `tone` (`dark` for the homepage and the template gallery, `light` for
-everything else) and a `sticky` flag the pattern library uses because its
-rail starts where the bar ends. `HomeNav`, `MainHeader`, `AccountHeader` and
-`GalleryTopBar` are now one-line wrappers over it.
+the person as a pill - the initials in a circle beside two rules - opening a
+menu (email, My Account, Settings, Sign out). Signed in, the first destination
+reads My Account. Below 768px the destinations fold into that menu, or behind
+a hamburger when signed out. It takes a `tone` (`dark` for the homepage and
+the template gallery, `light` for everything else) and a `sticky` flag the
+pattern library uses because its rail starts where the bar ends. `HomeNav`,
+`MainHeader`, `AccountHeader` and `GalleryTopBar` are now one-line wrappers
+over it.
 
-Two things worth not re-litigating:
+Four things worth not re-litigating:
 
+- **The bar states a height; it does not add up to one.** 62px light, 67px
+  dark, 56px below 768px - the artboards' own bars, measured. Vertical
+  padding plus whatever the right-hand slot happened to be drew it 13px
+  taller than the design everywhere, because the circle rather than the
+  lockup was the tallest thing in the row. A stated height also keeps the bar
+  from changing height when the session resolves, and it lets the 42px
+  account pill sit inside the artboards' bar rather than setting it.
+  `--gallery-bar-h` in `SelectPattern.module.css` is the light number: the
+  library's rail is fixed below the bar, so the two have to agree.
+- **Below 768px it is pinned**, on every route and in both tones, which is
+  why `--n-bg` exists - the bar is otherwise transparent and takes whatever
+  the page is. At those widths the destinations live *behind* this bar, so a
+  bar that scrolled away would take the site's navigation with it. The
+  `sticky` flag stays a page's own choice; the narrow rule is the width's.
 - **GitHub and Docs are in the footer, not the bar.** The 2026 artboards put
   three destinations and the account up top and everything else in
   `HomeFooter`; the bar used to carry a different set of links on every
-  page, which is what one component ends. Studio is reachable from the
-  footer and the account, not the bar - the artboards name it nowhere, and
-  it was kept in the footer rather than dropped.
+  page, which is what one component ends. Studio is in neither now: the
+  generation flow is held back from the first launch (see below), and the
+  footer's Product list is the artboard's own - Patterns, Websites, My
+  Account.
 - **It renders the signed-out chrome until a session says otherwise.** The
   export cannot know who is looking, and most visitors are nobody; a ghost
   in the right-hand slot while the session resolves would leave the phone
@@ -521,6 +537,15 @@ not obvious from the diff:
   is gone. The design's "4 of 30 downloads used" is not drawn: nothing counts
   downloads (the account's usage page says the same), and a gauge reading a
   number nobody keeps is worse than none. It waits for a counter.
+- **The account overview draws the artboard's AI card and nothing beside
+  it.** The same reasoning reached the ring that used to sit there: it
+  metered the `site` generation endpoint, and with that flow held back it can
+  only read zero. The artboard had already written the card for this moment -
+  "AI usage", a "Not yet available" pill opposite it, "AI credits: words and
+  pictures" over a hatched track, and a sentence about a later release - so
+  that is what is drawn, and the overview reads only `/api/studio/sites`. Its
+  list is "Custom sites", with no request-type column, because every row is
+  now a site.
 
 ## The homepage - its own shell, and a hydration rule
 
@@ -690,6 +715,25 @@ Things worth not re-litigating:
   the site's tsconfig on purpose, so the client types `data` as `never`.
 
 ## Studio - matching, then generating
+
+**The generation flow is unlinked for the first launch, and the code is all
+still here.** `/studio`, `/studio/results` and `/studio/preview` build, export
+and answer at their URLs; nothing on the site points at them. So does every
+`/api/studio/*` endpoint and every cap in `worker/lib/quota.ts`. What went was
+the links: the footer's "Studio", the account overview's "+ New Studio
+request" and its generation history, `AuthForm`'s and `PasswordForms`'
+post-sign-in default (now `/account`), the shared page's way out (now
+`/templates`), and Pictures and Usage in the account nav - both of those
+pages exist only to serve generation, and every cap belongs to one of its
+endpoints, so with the flow held back they would report a feature nobody can
+reach. Putting it back is adding those links again, which is why none of the
+routes were deleted.
+
+The customizer is **not** part of this. `/studio/customize/?slug=` and
+`/studio/site/?id=` are the template customizer, they make no model call, and
+they stay reachable from the framed template preview and from the account.
+
+The rest of this section describes the flow as built, for when it comes back.
 
 `/studio` takes a description of a business and `/studio/results` answers with
 three template sites. Studio answers with what the repo actually has: 77
@@ -884,8 +928,11 @@ whatever text Studio wrote, so putting them back is a UI change.
   column's constraint and D1 cannot switch foreign keys off, and dropping a
   parent under enforced keys runs an implicit DELETE that would cascade every
   saved document away. `/studio/customize/?slug=` is the one door in - the
-  gallery cards, the framed `/templates/<slug>/` preview and the account's
-  "Create new site" all link to it - and it handles the sign-in detour.
+  framed `/templates/<slug>/` preview's "Use this template" links to it, and
+  it handles the sign-in detour. The gallery cards no longer do: the
+  artboard's card footer is the DOWNLOAD label and the two format pills, and
+  nothing else. The account's "Create new site" leads to `/templates`, since
+  a site starts from a template and the slug is the choice being made.
 - **The rail edits through the engine, live.** Choosing a palette plans the
   properties and the pattern-host rewrites and runs them against the iframe's
   document, then calls `window.__tabbied.rehydrate()` inside it, which the

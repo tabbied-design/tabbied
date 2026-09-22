@@ -168,7 +168,9 @@ export default function HomeStory({
         <span className={styles.eyebrow}>Our story</span>
 
         <h2 className={styles.title}>
-          Simple tools to help you move from inspiration to creation
+          Simple tools to
+          <br />
+          help you move from inspiration to creation
         </h2>
 
         <p className={styles.body}>
