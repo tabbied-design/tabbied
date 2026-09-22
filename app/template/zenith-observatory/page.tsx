@@ -136,7 +136,7 @@ export default function ZenithObservatoryPage() {
           palette={SKY_PALETTE}
           seed="zen-sky-07"
           fit="cover"
-          density={2}
+          density={0.5}
           style={{ position: 'absolute', inset: 0 }}
         />
         <div className={styles.heroVeil} aria-hidden="true" />

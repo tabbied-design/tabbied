@@ -326,7 +326,7 @@ export default function CairnExpeditionsPage() {
             palette={[SLATE, ICE, TEAL, EMBER, MIST]}
             seed="cairn-approach"
             fit="cover"
-            density={1}
+            density={0.25}
             className={styles.approachField}
           />
           <div className={styles.approachScrim} aria-hidden="true" />
@@ -511,7 +511,7 @@ export default function CairnExpeditionsPage() {
             palette={[SLATE, TEAL, ICE, EMBER, MIST]}
             seed="cairn-enquire"
             fit="cover"
-            density={1}
+            density={0.25}
             className={styles.enquireField}
           />
           <div className={styles.enquireScrim} aria-hidden="true" />

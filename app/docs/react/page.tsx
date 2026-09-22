@@ -251,7 +251,7 @@ function FitDemo({
       pattern={radius}
       seed="k9Pz"
       fit={fit}
-      density={1}
+      density={0.25}
       {...(fit === 'fixed' ? { width: 150, height: 225 } : {})}
     />
   );
@@ -393,12 +393,14 @@ const PROPS: PropRow[] = [
   },
   {
     name: 'density',
-    type: '0 | 1 | 2 | 3 | 4',
-    defaultValue: '4',
+    type: 'number',
+    defaultValue: '1',
     description: (
       <>
-        <Code>fit=&quot;grid&quot;</Code>: authored density level, an
-        alternative to <Code>cellSize</Code>.
+        <Code>fit=&quot;grid&quot;</Code>: how fine the cells are, an
+        alternative to <Code>cellSize</Code>. 0 is the coarsest cell
+        (180px), 1 the finest (36px); 0.5 is the 60px cell most designs
+        open at in the editor.
       </>
     ),
   },
@@ -654,7 +656,7 @@ export default function ReactDocsPage() {
                           <TabbiedPattern
                             pattern={radius}
                             seed="k9Pz"
-                            density={1}
+                            density={0.25}
                           />
                         </div>
                         <figcaption className={styles.fitCaption}>
@@ -669,7 +671,7 @@ export default function ReactDocsPage() {
                         <TabbiedPattern
                           pattern={radius}
                           seed="k9Pz"
-                          density={1}
+                          density={0.25}
                           maxWidth={320}
                           aspectRatio={3 / 2}
                           className={styles.demoArt}
@@ -726,7 +728,7 @@ export default function ReactDocsPage() {
                       from the measured container, so any box is tiled
                       edge-to-edge with whole, near-square cells. Tune the
                       density with <Code>cellSize</Code> (px) or{' '}
-                      <Code>density</Code> (0-4).
+                      <Code>density</Code> (0 coarse to 1 fine).
                     </li>
                     <li>
                       <Code>cover</Code> - draws a fixed-resolution render

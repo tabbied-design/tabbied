@@ -323,10 +323,14 @@ test.describe('Tabbied site', () => {
     ).toBeVisible();
 
     // Option controls coming from the pattern definition: the grid is a
-    // "Grid density" slider whose readout names the grid it resolves to.
+    // "Grid density" slider, 0 to 1, whose readout names the grid the plate
+    // resolves to at that cell size. The count depends on the viewport, so
+    // only its shape is asserted; the slider's value is the stable number.
     await expect(page.getByText('Grid density')).toBeVisible();
-    await expect(page.getByRole('slider', { name: 'Grid density' })).toBeVisible();
-    await expect(page.getByText('6\u00D79', { exact: true })).toBeVisible();
+    const slider = page.getByRole('slider', { name: 'Grid density' });
+    await expect(slider).toBeVisible();
+    await expect(slider).toHaveAttribute('aria-valuenow', '0.5');
+    await expect(page.locator('figcaption').getByText(/\d+\u00D7\d+ grid/)).toBeVisible();
 
     // Regression guard: the generative grid must actually paint its cells.
     // css-doodle >= 0.5 reinterpreted `@random(1)`, which collapsed the
@@ -357,15 +361,60 @@ test.describe('Tabbied site', () => {
     // Seed query param triggers the URL <-> state synchronization.
     await page.goto('/patterns/radius?seed=0000');
 
-    // Wait until state has been written back into the URL.
-    await expect(page).toHaveURL(/grid=6x9/);
+    // Wait until state has been written back into the URL: the density, not
+    // the grid, which is derived from the viewer's plate and never linked.
+    await expect(page).toHaveURL(/density=0\.5/);
+    await expect(page).not.toHaveURL(/grid=/);
 
-    // One step down the density slider is the next grid in the ratio's list.
+    // One step down the density slider is 0.05 coarser.
     await page.getByRole('slider', { name: 'Grid density' }).focus();
     await page.keyboard.press('ArrowLeft');
 
-    await expect(page).toHaveURL(/grid=4x6/);
-    await expect(page.getByText('4\u00D76', { exact: true })).toBeVisible();
+    await expect(page).toHaveURL(/density=0\.45/);
+    await expect(page.getByRole('slider', { name: 'Grid density' })).toHaveAttribute(
+      'aria-valuenow',
+      '0.45'
+    );
+  });
+
+  test('the density slider sets the cell size, and the grid follows the plate', async ({
+    page,
+  }) => {
+    await page.goto('/patterns/radius?seed=0000');
+
+    const readout = page.locator('figcaption').getByText(/\d+\u00D7\d+ grid/);
+    await expect(readout).toBeVisible();
+    const cells = (text: string) => {
+      const match = /(\d+)\u00D7(\d+) grid/.exec(text);
+
+      return match ? Number(match[1]) * Number(match[2]) : 0;
+    };
+    const atHalf = cells(await readout.innerText());
+
+    // The coarsest stop is the 180px cell, so a 2:3 plate that fits the
+    // viewport holds far fewer cells than it does at 0.5; the finest is the
+    // 36px cell, so it holds more. The mounted doodle follows the readout.
+    const slider = page.getByRole('slider', { name: 'Grid density' });
+    await slider.focus();
+    await page.keyboard.press('Home');
+    await expect(slider).toHaveAttribute('aria-valuenow', '0');
+    await expect(page).toHaveURL(/density=0(&|$)/);
+    await expect.poll(async () => cells(await readout.innerText())).toBeLessThan(atHalf);
+
+    await page.keyboard.press('End');
+    await expect(slider).toHaveAttribute('aria-valuenow', '1');
+    await expect.poll(async () => cells(await readout.innerText())).toBeGreaterThan(atHalf);
+
+    const finest = cells(await readout.innerText());
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const el = document.querySelector('[data-pattern="radius"] css-doodle');
+
+          return el?.shadowRoot?.querySelectorAll('cssd-cell').length ?? 0;
+        })
+      )
+      .toBe(finest);
   });
 
   test('changing the aspect ratio remaps the grid to keep square cells', async ({
@@ -373,17 +422,18 @@ test.describe('Tabbied site', () => {
   }) => {
     await page.goto('/patterns/radius?seed=0000');
 
-    // Default portrait ratio reproduces the original 2:3 grid options.
+    // Default portrait ratio, at the default density.
     await expect(page).toHaveURL(/aspectRatio=2%3A3/);
-    await expect(page).toHaveURL(/grid=6x9/);
+    await expect(page).toHaveURL(/density=0\.5/);
 
-    // Switch to a square canvas: the 6x9 (level 2) grid re-derives to 9x9.
-    // Aspect ratios are icon tiles named by their id.
+    // Switch to a square canvas: the grid re-derives from the square plate
+    // at the same cell size, so it comes out square, and the density is
+    // untouched. Aspect ratios are icon tiles named by their id.
     await page.getByRole('button', { name: '1:1' }).click();
 
     await expect(page).toHaveURL(/aspectRatio=1%3A1/);
-    await expect(page).toHaveURL(/grid=9x9/);
-    await expect(page.getByText('9\u00D79', { exact: true })).toBeVisible();
+    await expect(page).toHaveURL(/density=0\.5/);
+    await expect(page.locator('figcaption').getByText(/(?<!\d)(\d+)\u00D7\1 grid/)).toBeVisible();
   });
 
   test('palette colors can be removed and re-added within the pattern bounds', async ({
@@ -493,21 +543,38 @@ test.describe('Tabbied site', () => {
 
     await page.getByRole('slider', { name: 'Grid density' }).focus();
     await page.keyboard.press('ArrowRight');
-    await expect(page).toHaveURL(/grid=8x12/);
+    await expect(page).toHaveURL(/density=0\.55/);
   });
 
   test('editor opens directly in the state described by a shared URL', async ({
     page,
   }) => {
-    await page.goto('/patterns/radius?seed=ZZZZ&grid=9x9&aspectRatio=1%3A1');
+    await page.goto('/patterns/radius?seed=ZZZZ&density=0.75&aspectRatio=1%3A1');
 
     // Initial state comes from the URL (not corrected after mount), so the
-    // density slider must already sit on that grid's level.
-    await expect(page.getByText('9\u00D79', { exact: true })).toBeVisible();
+    // density slider must already sit on the linked value.
     await expect(page.getByRole('slider', { name: 'Grid density' })).toHaveAttribute(
       'aria-valuenow',
-      '2'
+      '0.75'
     );
+    await expect(page.getByRole('button', { name: '1:1' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  test('an older link naming a grid opens at the density that grid had', async ({
+    page,
+  }) => {
+    // llms.txt told agents to write `grid=CxR` links, so one is read as the
+    // density whose cell that grid had on the original plate (9 along the
+    // long edge is 0.5), and the URL is rewritten to the form written now.
+    await page.goto('/patterns/radius?seed=ZZZZ&grid=9x9&aspectRatio=1%3A1');
+
+    await expect(page.getByRole('slider', { name: 'Grid density' })).toHaveAttribute(
+      'aria-valuenow',
+      '0.5'
+    );
+    await expect(page).toHaveURL(/density=0\.5/);
+    await expect(page).toHaveURL(/aspectRatio=1%3A1/);
+    await expect(page).not.toHaveURL(/grid=/);
   });
 });
 

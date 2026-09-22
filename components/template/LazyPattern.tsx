@@ -66,7 +66,7 @@ export default function LazyPattern({
           palette={palette}
           seed={seed}
           fit="cover"
-          density={2}
+          density={0.5}
           style={{ width: '100%', height: '100%' }}
         />
       )}

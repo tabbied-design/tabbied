@@ -266,23 +266,30 @@ Every design has an editor page whose URL round-trips its full
 configuration - hand one to a user to let them tweak your pick by hand:
 
 \`\`\`
-${SITE}/patterns/<slug>/?seed=<seed>&palette=<color0>&palette=<color1>&...&aspectRatio=2:3&<optionId>=<value>
+${SITE}/patterns/<slug>/?seed=<seed>&palette=<color0>&palette=<color1>&...&aspectRatio=2:3&density=<0-1>&<optionId>=<value>
 \`\`\`
 
 \`palette\` repeats (background first, URL-encode the \`#\`), \`aspectRatio\` is
-one of 1:2 | 2:3 | 1:1 | 3:2 | 2:1 (the ids in src/core/aspectRatio.ts), and each design option appears under its
-own id (\`grid=8x12\`, \`frequency=0.6\`). Unknown or out-of-range values fall
-back to defaults, so a partial link is safe.
+one of 1:2 | 2:3 | 1:1 | 3:2 | 2:1 (the ids in src/core/aspectRatio.ts),
+\`density\` is a number from 0 (coarse) to 1 (fine) on the same scale as the
+\`density\` prop, and each design option appears under its own id
+(\`frequency=0.6\`). The \`grid\` option is not a link parameter: the editor
+derives it from the plate at that density, as \`fit: "grid"\` derives it from
+a container. Unknown or out-of-range values fall back to defaults, so a
+partial link is safe, and an older \`grid=8x12\` link is read as the density
+that grid had.
 
 ## Reduced motion
 
-Under \`prefers-reduced-motion: reduce\` the controller suppresses both sources
+Under \`prefers-reduced-motion: reduce\` the controller suppresses every source
 of movement with no configuration: the \`redrawInterval\` timer never starts,
-and the designs' own ~400ms cell transitions are muted, so any re-render cuts
-to the new arrangement instead of morphing. That second half covers passive
-motion - a resize re-derives the grid, so turning a phone would otherwise
-animate every cell. The preference is observed, not read once, so toggling it
-mid-session takes effect immediately. Nothing needs to be passed for this.
+the designs' own ~400ms cell transitions are muted, so any re-render cuts
+to the new arrangement instead of morphing, and the keyframe animations a few
+designs declare are paused on their first frame. The transition half covers
+passive motion - a resize re-derives the grid, so turning a phone would
+otherwise animate every cell. The preference is observed, not read once, so
+toggling it mid-session takes effect immediately. Nothing needs to be passed
+for this.
 
 ## Palettes and options
 

@@ -22,9 +22,10 @@ import {
   ASPECT_RATIOS,
   ASPECT_RATIO_IDS,
   DEFAULT_ASPECT_RATIO,
-  deriveGrid,
-  getGridOptions,
-  gridToLevel,
+  GRID_OPTION_ID,
+  densityFromGrid,
+  densityToCellPx,
+  deriveGridForBox,
   isAspectRatioId,
   randomSeed,
   supportsSvgExport,
@@ -55,9 +56,9 @@ import {
 } from 'lib/brandPalettes';
 import styles from './EditPattern.module.css';
 
-// Options with this id hold a "colsxrows" grid string and follow the selected
-// aspect ratio so that cells stay (near-)square.
-const GRID_OPTION_ID = 'grid';
+// The density a design opens at when its authored grid says nothing usable
+// (a single number, or no grid at all): the 60px cell most designs open at.
+const DEFAULT_DENSITY = 0.5;
 
 // Longest edge of the little aspect-ratio glyph rectangle, in pixels.
 const RATIO_GLYPH_SIZE = 12;
@@ -275,14 +276,10 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     }
 
     if (option.type === 'ButtonSelectGroup') {
-      if (option.id === GRID_OPTION_ID) {
-        // Snapped to the ratio's nearest density level: the slider can only
-        // show a grid on its list, and css-doodle silently rescales a grid
-        // past 64 cells a side, seams and all.
-        return /^\d+x\d+$/.test(queryVal)
-          ? deriveGrid(aspectRatioFromQuery(), gridToLevel(queryVal))
-          : option.default;
-      }
+      // The grid option's slot is inert: the grid is derived from the plate
+      // at the density (below), never read from here or from a link. A
+      // legacy `grid=` link is read by densityFromQuery instead.
+      if (option.id === GRID_OPTION_ID) return option.default;
 
       return option.options?.includes(queryVal) ? queryVal : option.default;
     }
@@ -318,6 +315,33 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       : defaultAspectRatio;
   };
 
+  const gridIndex = pattern.options.findIndex((option) => option.id === GRID_OPTION_ID);
+  const hasGrid = gridIndex >= 0;
+
+  // The density a link carries, 0 (coarse) to 1 (fine): `density` when it
+  // parses in range, else a legacy `grid=CxR` read as the density whose
+  // cell that grid had on the original plate (links written before density
+  // existed, and llms.txt told agents to write them), else the design's
+  // authored default. Two decimals, the precision the link is written at.
+  const densityFromQuery = (): number => {
+    const raw = searchParams.get('density');
+    const parsed = raw === null || raw.trim() === '' ? NaN : Number(raw);
+
+    if (Number.isFinite(parsed) && parsed >= 0 && parsed <= 1) {
+      return Math.round(parsed * 100) / 100;
+    }
+
+    const legacyGrid = searchParams.get('grid');
+    const legacy = legacyGrid === null ? null : densityFromGrid(legacyGrid);
+
+    if (legacy !== null) return legacy;
+
+    return (
+      (hasGrid ? densityFromGrid(String(pattern.options[gridIndex].default)) : null) ??
+      DEFAULT_DENSITY
+    );
+  };
+
   const [palette, setPalette] = useState<string[]>(
     () => paletteStateFromQuery().palette
   );
@@ -329,6 +353,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   );
   const [aspectRatio, setAspectRatio] =
     useState<AspectRatioId>(aspectRatioFromQuery);
+  const [density, setDensity] = useState<number>(densityFromQuery);
   const [seed, setSeed] = useState(() => searchParams.get('seed') ?? '0000');
   const [isExpanded, setIsExpanded] = useState(false);
   const [previewSize, setPreviewSize] = useState<{
@@ -337,6 +362,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   } | null>(null);
   const doodleRef = useRef<TabbiedPatternHandle>(null);
   const previewRef = useRef<HTMLDivElement>(null);
+  // The grid held while the plate is expanded, so expanding scales the
+  // arrangement rather than re-rolling it at the larger plate's cell count.
+  const pinnedGrid = useRef<{ cols: number; rows: number } | null>(null);
 
   // A picture behind the pattern instead of a colour. It is a local object
   // URL and nothing else: it goes in no query string, no saved palette and no
@@ -367,6 +395,17 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       )
     : fitToBox(aspectRatio, 360, 540);
 
+  // The grid is derived from the plate at the density's target cell, the way
+  // fit="grid" derives it from a container: the slider sets how big a cell
+  // is, and how many fit follows from the plate. So a wider stage shows more
+  // cells at the same density, which is what an embed under the default fit
+  // then draws from the copied snippet. The design's own cell bounds apply as
+  // they do everywhere else.
+  const grid = hasGrid
+    ? pinnedGrid.current ??
+      deriveGridForBox(width, height, densityToCellPx(density), pattern.sizing)
+    : null;
+
   // Sync component state FROM the URL search params when they change externally.
   useEffect(() => {
     const currentParams = searchParams.toString();
@@ -390,12 +429,23 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     }
 
     pattern.options.forEach((option, optionIndex) => {
+      if (option.id === GRID_OPTION_ID) return;
+
       const queryVal = optionFromQuery(option);
 
       if (queryVal !== optionValues[optionIndex]) {
         setOptionByIndex(optionIndex, queryVal);
       }
     });
+
+    if (hasGrid) {
+      const queryDensity = densityFromQuery();
+
+      if (queryDensity !== density) {
+        pinnedGrid.current = null;
+        setDensity(queryDensity);
+      }
+    }
 
     const querySeed = searchParams.get('seed') ?? '0000';
 
@@ -469,12 +519,24 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     if (named) setPaletteSource(named.palette.id);
   }, [brandPalettes, palette, colorCount, paletteSource, pattern.colors]);
 
+  // Expanding pins the grid the plate shows now, and collapsing releases it;
+  // the grid is otherwise the plate's, at whatever size the stage is.
+  const expand = () => {
+    pinnedGrid.current = grid;
+    setIsExpanded(true);
+  };
+
+  const collapse = () => {
+    pinnedGrid.current = null;
+    setIsExpanded(false);
+  };
+
   // Escape came free with the dialog; expanding in place has to bind it.
   useEffect(() => {
     if (!isExpanded) return;
 
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsExpanded(false);
+      if (event.key === 'Escape') collapse();
     };
 
     window.addEventListener('keydown', onKey);
@@ -531,7 +593,12 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       .forEach((color) => newParams.append('palette', color));
     newParams.set('seed', seed);
     newParams.set('aspectRatio', aspectRatio);
+    // The grid is not in a link: it is derived from the viewer's plate, and
+    // the density is what reproduces it there.
+    if (hasGrid) newParams.set('density', String(density));
     pattern.options.forEach((option, index) => {
+      if (option.id === GRID_OPTION_ID) return;
+
       newParams.set(option.id, String(optionValues[index]));
     });
 
@@ -555,7 +622,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       window.history.replaceState(null, '', `${pathname}?${nextParams}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seed, palette, colorCount, optionValues, aspectRatio]);
+  }, [seed, palette, colorCount, optionValues, aspectRatio, density]);
 
   const setOptionByIndex = (index: number, value: OptionValue) => {
     setOptionValues((prev) => {
@@ -701,15 +768,18 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     bgWasOpaque.current = false;
   };
 
+  // The grid follows the plate, so a new ratio re-derives it at the same
+  // density and the cells stay the size they were.
   const changeAspectRatio = (nextRatio: AspectRatioId) => {
-    setOptionValues((prev) =>
-      prev.map((value, index) =>
-        pattern.options[index].id === GRID_OPTION_ID
-          ? deriveGrid(nextRatio, gridToLevel(String(value)))
-          : value
-      )
-    );
+    pinnedGrid.current = null;
     setAspectRatio(nextRatio);
+  };
+
+  // Two decimals: the slider steps by 0.05, and a float sum of those is not
+  // always the round number the link and the snippet should carry.
+  const changeDensity = (next: number) => {
+    pinnedGrid.current = null;
+    setDensity(Math.round(next * 100) / 100);
   };
 
   // One export at a time: a second click while the first is rendering, or a
@@ -826,8 +896,11 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   const copyReactComponent = async () => {
     const activePalette = palette.slice(0, colorCount);
     const paletteLiteral = activePalette.map((color) => `'${color}'`).join(', ');
-    const optionEntries = pattern.options.map(
-      (option, index) => [option.id, optionValues[index]] as const
+    // The grid stays out of the snippet: under the default fit the package
+    // derives it from the box, and `density` is what carries the cell size
+    // the plate showed.
+    const optionEntries = pattern.options.flatMap((option, index) =>
+      option.id === GRID_OPTION_ID ? [] : [[option.id, optionValues[index]] as const]
     );
     const optionsLiteral = optionEntries
       .map(([id, value]) =>
@@ -843,6 +916,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       `<TabbiedPattern`,
       `  pattern={${pattern.slug}}`,
       `  seed="${seed}"`,
+      ...(hasGrid ? [`  density={${density}}`] : []),
       `  palette={[${paletteLiteral}]}`,
       ...(optionEntries.length ? [`  options={{ ${optionsLiteral} }}`] : []),
       `/>`,
@@ -871,12 +945,17 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     ? overlayPreviewColors(draftPreview)
     : palette.slice(0, colorCount);
 
+  // fit="fixed" substitutes the grid option straight into `@grid`, so the
+  // derived grid goes in as the option's value.
   const patternProps = {
     pattern,
     seed,
     palette: displayPalette,
     options: Object.fromEntries(
-      pattern.options.map((option, index) => [option.id, optionValues[index]])
+      pattern.options.map((option, index) => [
+        option.id,
+        option.id === GRID_OPTION_ID && grid ? `${grid.cols}x${grid.rows}` : optionValues[index],
+      ])
     ),
   } as const;
 
@@ -932,10 +1011,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   // The plate's caption names what it is: the palette it wears (when it wears
   // a named one), its grid and its ratio - the three things the rail changes.
-  const gridIndex = pattern.options.findIndex((option) => option.id === GRID_OPTION_ID);
   const captionParts = [
     mergedChips.find(({ palette: p }) => p.id === paletteSource)?.palette.name,
-    gridIndex >= 0 ? `${String(optionValues[gridIndex]).replace('x', '\u00D7')} grid` : null,
+    grid ? `${grid.cols}\u00D7${grid.rows} grid` : null,
     aspectRatio,
   ].filter(Boolean);
 
@@ -973,38 +1051,36 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     const onChange = (next: OptionValue) => setOptionByIndex(index, next);
 
     if (option.type === 'ButtonSelectGroup') {
-      const options =
-        option.id === GRID_OPTION_ID
-          ? getGridOptions(aspectRatio)
-          : option.options;
-
-      if (!options || options.length === 0) return null;
-
-      // The grid is a slider over the ratio's density levels, its readout the
-      // grid it resolves to. The other select groups stay chips.
+      // The grid is a density slider, 0 coarse to 1 fine, its readout the
+      // grid the plate resolves to at that cell size. The other select
+      // groups stay chips.
       if (option.id === GRID_OPTION_ID) {
-        const level = gridToLevel(String(value));
+        if (!grid) return null;
 
         return (
           <div key={option.id} className={styles.sliderBlock}>
             <div className={styles.layoutRow}>
               <span className={styles.layoutLabel}>Grid density</span>
               <span className={styles.layoutValue}>
-                {String(value).replace('x', '\u00D7')}
+                {`${grid.cols}\u00D7${grid.rows}`}
               </span>
             </div>
             <ValueSlider
               min={0}
-              max={options.length - 1}
-              step={1}
-              value={level}
-              onChange={(next) => onChange(options[Math.round(next)] ?? options[0])}
+              max={1}
+              step={0.05}
+              value={density}
+              onChange={changeDensity}
               label="Grid density"
               hideValue
             />
           </div>
         );
       }
+
+      const options = option.options;
+
+      if (!options || options.length === 0) return null;
 
       const label = option.displayName;
 
@@ -1174,7 +1250,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           onClick={
             isExpanded
               ? (event) => {
-                  if (event.target === event.currentTarget) setIsExpanded(false);
+                  if (event.target === event.currentTarget) collapse();
                 }
               : undefined
           }
@@ -1182,7 +1258,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           <button
             type="button"
             className={styles.expandButton}
-            onClick={() => setIsExpanded((open) => !open)}
+            onClick={isExpanded ? collapse : expand}
             aria-pressed={isExpanded}
             aria-label={isExpanded ? 'Collapse pattern' : 'Expand pattern'}
             title={isExpanded ? 'Collapse pattern' : 'Expand pattern'}

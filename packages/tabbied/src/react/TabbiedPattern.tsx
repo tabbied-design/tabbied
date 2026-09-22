@@ -67,8 +67,12 @@ export type TabbiedPatternProps = PatternBoxSize & {
   fit?: FitMode;
   /** fit:"grid" - target cell size in px (default 36). */
   cellSize?: number;
-  /** fit:"grid" - authored density level 0..4, alternative to cellSize. */
-  density?: 0 | 1 | 2 | 3 | 4;
+  /**
+   * fit:"grid" - how fine the cells are, 0 (coarse, 180px cells) to 1 (fine,
+   * 36px cells); an alternative to cellSize. 0.5 is the 60px cell most
+   * designs open at in the editor.
+   */
+  density?: number;
   /** `cover` - render resolution override. */
   coverRender?: CoverRender;
   /**

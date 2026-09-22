@@ -10,13 +10,26 @@ import type { PatternSizing, FitMode } from './types.js';
 // fit overrides it with a grid derived from the measured container.
 export const GRID_OPTION_ID = 'grid';
 
-// Authored density levels (see aspectRatio.ts): long-edge cell counts
-// [3, 6, 9, 12, 15] against the editor's 360×540 base box give these target
-// cell sizes. Most presets default to "10x15" (level 4), so the 36px default
-// reproduces today's authored look.
-export const DENSITY_CELL_PX = [180, 90, 60, 45, 36] as const;
+// The editor's original plate was 360px wide and showed 2, 4, 6, 8 or 10
+// cells across at its five density stops (180, 90, 60, 45 and 36px cells). A
+// density in [0, 1] walks that span continuously, so the former levels 0..4
+// sit at 0, 0.25, 0.5, 0.75 and 1, and 0.5 is the 60px cell most designs
+// open at.
+export const DENSITY_REFERENCE_PX = 360;
 
-export const DEFAULT_CELL_PX = DENSITY_CELL_PX[4];
+/**
+ * Target cell size for a density in [0, 1]: 180px at 0 (the coarsest cell
+ * the editor draws), 36px at 1 (the finest). Values outside the range clamp.
+ */
+export function densityToCellPx(density: number): number {
+  const d = Math.min(Math.max(density, 0), 1);
+
+  return DENSITY_REFERENCE_PX / (2 + 8 * d);
+}
+
+// The 36px default is density 1: a consumer that passes neither `cellSize`
+// nor `density` draws the finest cell, which is what it always drew.
+export const DEFAULT_CELL_PX = densityToCellPx(1);
 
 // css-doodle caps grids at 64×64 cells (parse_grid).
 export const MAX_GRID_EDGE = 64;
@@ -246,6 +259,29 @@ export function parseGridValue(
   const rows = Number(match[2]);
 
   return cols > 0 && rows > 0 ? { cols, rows } : null;
+}
+
+// The long edge of the editor's original 360x540 plate, which is what an
+// authored "colsxrows" default was drawn against.
+const DENSITY_REFERENCE_LONG_EDGE = 540;
+
+/**
+ * The density whose cell, on the original 360x540 plate, has the long edge
+ * of a "colsxrows" grid; null when the value is not one. Reads a preset's
+ * authored default and the old editor's `grid=8x12` links: 6x9 is 0.5,
+ * 10x15 is 1, and anything finer clamps to 1. Two decimals, the precision a
+ * share link carries.
+ */
+export function densityFromGrid(grid: string): number | null {
+  const parsed = parseGridValue(grid);
+
+  if (!parsed) return null;
+
+  const longEdge = Math.max(parsed.cols, parsed.rows);
+  const cellPx = DENSITY_REFERENCE_LONG_EDGE / longEdge;
+  const density = (DENSITY_REFERENCE_PX / cellPx - 2) / 8;
+
+  return Math.round(Math.min(Math.max(density, 0), 1) * 100) / 100;
 }
 
 // The render box `cover` uses for a grid-driven pattern: the largest box of

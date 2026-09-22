@@ -189,7 +189,7 @@ export default function MistralCyclesPage() {
               palette={BLUEPRINT_PALETTE}
               seed="mc-hero-04"
               fit="cover"
-              density={1}
+              density={0.25}
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
@@ -372,7 +372,7 @@ export default function MistralCyclesPage() {
               palette={BLUEPRINT_PALETTE}
               seed="mc-geo-31"
               fit="cover"
-              density={1}
+              density={0.25}
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
@@ -609,7 +609,7 @@ export default function MistralCyclesPage() {
             palette={EMBER_PALETTE}
             seed="mc-cta-19"
             fit="cover"
-            density={2}
+            density={0.5}
             style={{ position: 'absolute', inset: 0 }}
           />
           <div className={styles.ctaInner}>

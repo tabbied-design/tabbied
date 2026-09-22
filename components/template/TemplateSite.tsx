@@ -84,7 +84,7 @@ function artAt(site: Site, patterns: ArtMap, i: number): PatternDefinition {
 }
 
 // Decorative accent: cover fit (no stretch), re-seeds over time.
-function Decor({ def, palette, density = 1 }: { def: PatternDefinition; palette: string[]; density?: 0 | 1 | 2 | 3 | 4 }) {
+function Decor({ def, palette, density = 0.25 }: { def: PatternDefinition; palette: string[]; density?: number }) {
   return <TabbiedPattern pattern={def} palette={palette} fit="cover" density={density} redrawInterval={4200} className={s.doodle} />;
 }
 
@@ -244,7 +244,7 @@ function About({ site, patterns, content }: Ctx & { content: NonNullable<Ctx['co
         {content.aboutImage ? (
           <ImageCard editId="about.photo" id={imageId(site, 'about', 0)} prompt={content.aboutImage} colors={site.colors} />
         ) : (
-          <Decor def={artAt(site, patterns, 2)} palette={site.colors} density={1} />
+          <Decor def={artAt(site, patterns, 2)} palette={site.colors} density={0.25} />
         )}
       </div>
     </section>
@@ -254,7 +254,7 @@ function About({ site, patterns, content }: Ctx & { content: NonNullable<Ctx['co
 function Manifesto({ site, patterns, data }: Ctx & { data: NonNullable<NonNullable<Ctx['sec']>['manifesto']> }) {
   return (
     <section className={s.manifesto}>
-      <div className={s.abs} style={{ opacity: 0.16 }} data-edit-pattern="manifesto.field" data-edit-roles={fullRoles(site)}><Decor def={artAt(site, patterns, 2)} palette={site.colors} density={1} /></div>
+      <div className={s.abs} style={{ opacity: 0.16 }} data-edit-pattern="manifesto.field" data-edit-roles={fullRoles(site)}><Decor def={artAt(site, patterns, 2)} palette={site.colors} density={0.25} /></div>
       <div className={s.manifestoInner}>
         <div className={s.eyebrow} data-edit="manifesto.kicker" data-edit-max="28">{data.kicker}</div>
         <p data-edit="manifesto.text" data-edit-multiline data-edit-max="280">{data.text}</p>
@@ -492,7 +492,7 @@ function Team({ site, data }: Ctx & { data: NonNullable<NonNullable<Ctx['sec']>[
 function BigQuote({ site, patterns, data }: Ctx & { data: NonNullable<NonNullable<Ctx['sec']>['bigQuote']> }) {
   return (
     <section className={s.bigQuote}>
-      <div className={s.abs} style={{ opacity: 0.18 }} data-edit-pattern="bigQuote.field" data-edit-roles={fullRoles(site)}><Decor def={artAt(site, patterns, 3)} palette={site.colors} density={1} /></div>
+      <div className={s.abs} style={{ opacity: 0.18 }} data-edit-pattern="bigQuote.field" data-edit-roles={fullRoles(site)}><Decor def={artAt(site, patterns, 3)} palette={site.colors} density={0.25} /></div>
       <div className={s.bigQuoteScrim} />
       <figure className={s.bigQuoteInner}>
         <blockquote data-edit="bigQuote.quote" data-edit-multiline data-edit-max="260">"{data.quote}"</blockquote>
@@ -546,7 +546,7 @@ function Band({ site, patterns, index = 0 }: Ctx & { index?: number }) {
   return (
     <section className={s.band}>
       <div className={s.doodleBox} style={{ position: 'absolute', inset: 0 }} data-edit-pattern="band.field" data-edit-roles={fullRoles(site)}>
-        <Decor def={artAt(site, patterns, index)} palette={site.colors} density={1} />
+        <Decor def={artAt(site, patterns, index)} palette={site.colors} density={0.25} />
       </div>
       <div className={s.bandScrim} />
       <div className={s.bandInner}>
@@ -608,7 +608,7 @@ function SplitHero({ site, patterns, heroImage, overlay }: HeroProps) {
  */
 function HeroArt({ site, patterns, heroImage, overlay }: HeroProps) {
   if (!heroImage) {
-    return <Decor def={artAt(site, patterns, 0)} palette={site.colors} density={1} />;
+    return <Decor def={artAt(site, patterns, 0)} palette={site.colors} density={0.25} />;
   }
 
   const def = (overlay && patterns[overlay]) ?? artAt(site, patterns, site.patterns.length - 1);

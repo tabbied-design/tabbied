@@ -367,7 +367,7 @@ export default function HopscotchMuseumPage() {
               palette={[BLUE, CREAM, YELLOW, GREEN]}
               seed="hop-visit"
               fit="cover"
-              density={1}
+              density={0.25}
               className={styles.visitPattern}
             />
             <div className={styles.visitScrim} aria-hidden="true" />
@@ -432,7 +432,7 @@ export default function HopscotchMuseumPage() {
             palette={[CREAM, YELLOW, RED, GREEN, BLUE]}
             seed="hop-birthdays"
             fit="cover"
-            density={1}
+            density={0.25}
             className={styles.birthdayConfetti}
           />
           <div className={styles.birthdayScrim} aria-hidden="true" />

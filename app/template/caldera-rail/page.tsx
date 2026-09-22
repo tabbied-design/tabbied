@@ -521,7 +521,7 @@ export default function CalderaRailPage() {
               palette={[NAVY, TEAL, GOLD, APRICOT, EMBER]}
               seed="caldera-fleet-7"
               fit="cover"
-              density={2}
+              density={0.5}
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>

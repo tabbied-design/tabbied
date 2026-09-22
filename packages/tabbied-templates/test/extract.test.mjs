@@ -60,7 +60,7 @@ const page = `<!DOCTYPE html>
   <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,3">
     <div data-pattern="lobe" data-palette="transparent, #2E2A25, #A9713C"
          data-options="grid: 4x6; frequency: 0.6" data-seed="sol-1"
-         data-fit="cover" data-density="1"></div>
+         data-fit="cover" data-density="0.25"></div>
   </div>
   <img data-edit-image="logo" src="/images/logo.svg" alt="Solstice" />
 </div>
@@ -140,7 +140,7 @@ test('a pattern slot reads the placeholder config and its roles', () => {
     options: { grid: '4x6', frequency: 0.6 },
     seed: 'sol-1',
     fit: 'cover',
-    density: 1,
+    density: 0.25,
   });
   assert.equal(field.options.length, 2);
 });

@@ -12,10 +12,10 @@ import {
   DEFAULT_COVER_RENDER,
   DEFAULT_FIT_MODE,
   DEFAULT_FIXED_SIZE,
-  DENSITY_CELL_PX,
   GRID_OPTION_ID,
   adaptCoverRenderToBox,
   coverCellPx,
+  densityToCellPx,
   deriveGridForBox,
   fitRenderToBox,
   snapSpanToTracks,
@@ -74,7 +74,10 @@ export type PatternConfig = {
   fit?: FitMode;
   /** fit:"grid" - target cell size in px (default 36). */
   cellSize?: number;
-  /** fit:"grid" - authored density level 0..4, alternative to cellSize. */
+  /**
+   * fit:"grid" - how fine the cells are, 0 (coarse, 180px cells) to 1 (fine,
+   * 36px cells); an alternative to cellSize. See densityToCellPx().
+   */
   density?: number;
   /** fit:"fixed" - canvas size in px. */
   width?: number;
@@ -177,8 +180,16 @@ let instanceCounter = 0;
 //
 // The override lives in the shadow root because that is where css-doodle puts
 // the generated cell styles; a rule in the light DOM cannot reach them.
+//
+// Keyframe animations are the third source of motion, and the September
+// designs brought seven of them (a sunburst that turns, bands that drift,
+// rings that pulse). They are paused rather than removed: `animation: none`
+// would also drop the `to` state a paused design is authored to rest in,
+// while a paused animation holds its first frame, which is the still image
+// the design's own `animation-play-state: paused` already shows for four of
+// the seven.
 const MUTE_TRANSITIONS =
-  'cssd-cell,cssd-cell *,cssd-cell::before,cssd-cell::after{transition:none !important}';
+  'cssd-cell,cssd-cell *,cssd-cell::before,cssd-cell::after{transition:none !important;animation-play-state:paused !important}';
 
 const appendMuteStyle = (
   element: CssDoodleElement
@@ -227,8 +238,23 @@ type ResolvedConfig = {
   coverRender: CoverRender;
 };
 
-const clampDensity = (density: number): number =>
-  Math.min(Math.max(Math.round(density), 0), DENSITY_CELL_PX.length - 1);
+// `density` was an integer level 0..4 before it became a number 0..1 (level
+// n is now n / 4). A value above 1 can only be the old scale, so it is named
+// once per page; a legacy 1 (90px then, 36px now) cannot be told apart.
+let warnedLegacyDensity = false;
+
+const clampDensity = (density: number): number => {
+  if (density > 1 && !warnedLegacyDensity) {
+    warnedLegacyDensity = true;
+    console.warn(
+      `[tabbied] density ${density} is above 1. density is now a number from ` +
+        '0 (coarse) to 1 (fine); the old levels 0..4 map to 0, 0.25, 0.5, ' +
+        '0.75 and 1.'
+    );
+  }
+
+  return Math.min(Math.max(density, 0), 1);
+};
 
 export function createPattern(
   host: HTMLElement,
@@ -297,7 +323,7 @@ export function createPattern(
       targetCellPx:
         config.cellSize ??
         (config.density != null
-          ? DENSITY_CELL_PX[clampDensity(config.density)]
+          ? densityToCellPx(clampDensity(config.density))
           : DEFAULT_CELL_PX),
       fixedWidth: config.width ?? DEFAULT_FIXED_SIZE.width,
       fixedHeight: config.height ?? DEFAULT_FIXED_SIZE.height,
