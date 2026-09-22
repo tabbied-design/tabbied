@@ -56,8 +56,8 @@ After: **the plate is the stage**, less the same 10% margin, in every layout
 editor when expanded). There is no shape to choose. The shape is the
 viewer's, exactly as an embed takes its container's. The grid is derived
 from the plate the way `fit: "grid"` derives it from a container, at a
-target cell size, and the density slider becomes the package's five density
-levels (`DENSITY_CELL_PX`).
+target cell size, and the density slider becomes one number from 0 to 1
+that sets that cell size (below).
 
 The plate keeps `fit="fixed"`, and the editor snaps the canvas *down* to
 whole square cells before handing it over. Two reasons this is not simply
