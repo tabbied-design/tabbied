@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { UsersPanel, UserDetailPanel } from './panels';
 import styles from './admin.module.css';
@@ -12,7 +13,7 @@ export default function UsersRoute() {
     return (
       <>
         <p className={styles.quiet} style={{ marginBottom: 20 }}>
-          <Link href="/admin/users/" prefetch={false}>&larr; All users</Link>
+          <Link href="/admin/users/" prefetch={false}><ArrowLeft size={13} aria-hidden="true" /> All users</Link>
         </p>
         <UserDetailPanel id={id} />
       </>

@@ -19,11 +19,11 @@ const HOUSE_FIGURES = [
   { value: '1974', label: 'Founded in Bex, Vaud' },
   { value: '11', label: 'People, all on one floor' },
   { value: '240', label: 'Watches finished per year' },
-  { value: '3', label: 'References in the catalogue' },
+  { value: '3', label: 'References in the catalog' },
 ];
 
 const MOVEMENT_SPECS = [
-  { label: 'Calibre', value: 'CB-14, hand-wound' },
+  { label: 'Caliber', value: 'CB-14, hand-wound' },
   { label: 'Diameter', value: '11.5 lignes, 25.6 mm' },
   { label: 'Height', value: '3.85 mm' },
   { label: 'Frequency', value: '21 600 A/h, 3 Hz' },
@@ -43,7 +43,7 @@ const COLLECTION = [
     alt: 'A round wristwatch with a blank dial and a slim polished steel case, isolated on a plain field',
     line: 'The first watch the house made, redrawn in 2019 with a thinner bezel and a flat sapphire.',
     diameter: '37.0 mm',
-    calibre: 'CB-11, hand-wound',
+    caliber: 'CB-11, hand-wound',
     reserve: '62 hours',
     price: 'CHF 8 400',
     seed: 'cb-plate-01',
@@ -55,7 +55,7 @@ const COLLECTION = [
     alt: 'A round wristwatch with a blank regulator dial and a brushed steel case, isolated on a plain field',
     line: 'Hours, minutes and seconds kept apart, so the minute hand carries the whole dial on its own.',
     diameter: '39.0 mm',
-    calibre: 'CB-14, hand-wound',
+    caliber: 'CB-14, hand-wound',
     reserve: '58 hours',
     price: 'CHF 11 900',
     seed: 'cb-plate-02',
@@ -67,7 +67,7 @@ const COLLECTION = [
     alt: 'A hunter-cased pocket watch with a blank dial, the cover opened, hanging from a steel chain, isolated on a plain field',
     line: 'Not a wristwatch. A hunter case on a steel chain, with three days of reserve from twin barrels.',
     diameter: '46.0 mm',
-    calibre: 'CB-21, hand-wound',
+    caliber: 'CB-21, hand-wound',
     reserve: '72 hours',
     price: 'CHF 14 600',
     seed: 'cb-plate-03',
@@ -82,7 +82,7 @@ const SPEC_ROWS = [
   { label: 'Lug or bow', values: ['18 mm', '19 mm', 'Bow, 6 mm'] },
   { label: 'Crystal', values: ['Sapphire', 'Sapphire', 'Sapphire'] },
   { label: 'Water resistance', values: ['30 m', '30 m', 'Dust-tight'] },
-  { label: 'Calibre', values: ['CB-11', 'CB-14', 'CB-21'] },
+  { label: 'Caliber', values: ['CB-11', 'CB-14', 'CB-21'] },
   { label: 'Winding', values: ['Hand', 'Hand', 'Hand'] },
   { label: 'Frequency', values: ['18 000 A/h', '21 600 A/h', '18 000 A/h'] },
   { label: 'Jewels', values: ['19', '22', '25'] },
@@ -154,7 +154,7 @@ const ORDER_STEPS = [
 export default function ChronometrieBexPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--bone': '#ededeb',
@@ -223,7 +223,7 @@ export default function ChronometrieBexPage() {
             </h1>
             <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={styles.heroLede}>
               Eleven people on one floor above the old salt road. Three
-              references, three calibres, every escapement adjusted by hand in
+              references, three calibers, every escapement adjusted by hand in
               five positions. We do not run a boutique, we do not run a
               waiting-list auction, and we answer letters.
             </p>
@@ -274,7 +274,7 @@ export default function ChronometrieBexPage() {
                 decided that a wristwatch could be made to the same standard if
                 nobody was in a hurry. The first Type 01 left the bench in
                 March 1976. The design has been altered twice since, both times
-                by less than a millimetre.
+                by less than a millimeter.
               </p>
               <p data-edit="manufacture.body2" data-edit-max="240" data-edit-multiline>
                 Cases are turned in Le Sentier by a supplier we have used since
@@ -329,10 +329,10 @@ export default function ChronometrieBexPage() {
             <div className={styles.secHead}>
               <span data-edit="movement.secNo" data-edit-max="60" className={styles.secNo}>02</span>
               <h2 data-edit="movement.secTitle" data-edit-max="60" id="movement-title" className={styles.secTitle}>
-                Calibre CB-14
+                Caliber CB-14
               </h2>
               <p data-edit="movement.secLede" data-edit-max="240" data-edit-multiline className={styles.secLede}>
-                The middle calibre, and the one the house is judged on. In
+                The middle caliber, and the one the house is judged on. In
                 production since 2008, revised in 2017.
               </p>
             </div>
@@ -419,8 +419,8 @@ export default function ChronometrieBexPage() {
                       <dd data-edit={`plate.body.${i}`} data-edit-max="200" data-edit-multiline>{w.diameter}</dd>
                     </div>
                     <div>
-                      <dt data-edit={`plate.term2.${i}`} data-edit-max="28">Calibre</dt>
-                      <dd data-edit={`plate.body2.${i}`} data-edit-max="200" data-edit-multiline>{w.calibre}</dd>
+                      <dt data-edit={`plate.term2.${i}`} data-edit-max="28">Caliber</dt>
+                      <dd data-edit={`plate.body2.${i}`} data-edit-max="200" data-edit-multiline>{w.caliber}</dd>
                     </div>
                     <div>
                       <dt data-edit={`plate.term3.${i}`} data-edit-max="28">Power reserve</dt>
@@ -711,7 +711,7 @@ export default function ChronometrieBexPage() {
             </p>
           </div>
           <div className={styles.footCol}>
-            <h2 data-edit="footer.footHead" data-edit-max="60" className={styles.footHead}>Catalogue</h2>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={styles.footHead}>Catalog</h2>
             <ul className={styles.footLinks}>
               <li>
                 <a data-edit="footer.collection" data-edit-max="28" href="#collection">Type 01 Secteur</a>

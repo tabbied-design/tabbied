@@ -8,14 +8,14 @@ import s from './fonds-aubert.module.css';
 export const metadata = {
   title: 'Fonds Aubert: Archives Privées, Lausanne',
   description:
-    'Fonds Aubert holds 4.2 linear kilometres of private and business records. Deposit, conservation, and a reading room open four days a week.',
+    'Fonds Aubert holds 4.2 linear kilometers of private and business records. Deposit, conservation, and a reading room open four days a week.',
 };
 
 /* Pale paper, dark ink, one olive that only ever appears on a reference.
    Pattern fields take `transparent` in the background slot. */
 const INK = '#1A1C18';
 const OLIVE = '#4C6B2F';
-const GREY = '#8C8F84';
+const GRAY = '#8C8F84';
 const PALE = '#DEDAD4';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,14 +23,14 @@ const PALE = '#DEDAD4';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PALE;
 
 
 const FONDS = [
-  { ref: 'FA 001', name: 'Aubert et Fils, négoce', span: '1861 to 1974', extent: '312 m', state: 'Catalogued' },
-  { ref: 'FA 014', name: 'Papeteries de la Broye', span: '1903 to 1991', extent: '486 m', state: 'Catalogued' },
-  { ref: 'FA 022', name: 'Fonds Marthe Vionnet', span: '1919 to 1988', extent: '46 m', state: 'Catalogued' },
+  { ref: 'FA 001', name: 'Aubert et Fils, négoce', span: '1861 to 1974', extent: '312 m', state: 'Catalogd' },
+  { ref: 'FA 014', name: 'Papeteries de la Broye', span: '1903 to 1991', extent: '486 m', state: 'Catalogd' },
+  { ref: 'FA 022', name: 'Fonds Marthe Vionnet', span: '1919 to 1988', extent: '46 m', state: 'Catalogd' },
   { ref: 'FA 031', name: 'Chemins de fer du Jorat', span: '1889 to 1963', extent: '204 m', state: 'In progress' },
   { ref: 'FA 040', name: 'Coopérative du Léman', span: '1932 to 2004', extent: '618 m', state: 'In progress' },
   { ref: 'FA 047', name: 'Atelier Perrin, photographie', span: '1948 to 1997', extent: '91 m', state: 'Uncatalogued' },
@@ -39,8 +39,8 @@ const FONDS = [
 const SERVICES = [
   { n: 'A', t: 'Deposit', d: 'We accept records of lasting value from businesses, associations and families in the canton. Appraisal is free and honest: most of what people offer us should be recycled, and we say so.' },
   { n: 'B', t: 'Conservation', d: 'Rehousing, surface cleaning, paper repair and a bindery for anything a reader would otherwise tear. Nothing is treated that does not need it.' },
-  { n: 'C', t: 'Cataloguing', d: 'To ISAD(G), at fonds, series and file level. Item level only where a researcher has already asked twice.' },
-  { n: 'D', t: 'Access', d: 'A reading room of eight places, four days a week. Anything catalogued can be ordered the same morning.' },
+  { n: 'C', t: 'Cataloging', d: 'To ISAD(G), at fonds, series and file level. Item level only where a researcher has already asked twice.' },
+  { n: 'D', t: 'Access', d: 'A reading room of eight places, four days a week. Anything catalogd can be ordered the same morning.' },
 ];
 
 const NUMBERS = [
@@ -53,17 +53,17 @@ const NUMBERS = [
 export default function FondsAubertPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f0f0e8',
         '--ink': '#1a1c18',
         '--olive': '#4c6b2f',
-        '--grey': '#8c8f84',
+        '--gray': '#8c8f84',
         '--pale': '#dedad4',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,olive,grey,pale"
+      data-edit-vars="paper,ink,olive,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -92,7 +92,7 @@ export default function FondsAubertPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={quire}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={124}
               redrawInterval={6800}
@@ -104,7 +104,7 @@ export default function FondsAubertPage() {
             <h1 data-edit="hero.text" data-edit-format="emphasis" data-edit-max="70">
               Four point two
               <br />
-              kilometres of paper
+              kilometers of paper
               <br />
               <span>somebody kept.</span>
             </h1>
@@ -119,7 +119,7 @@ export default function FondsAubertPage() {
         <figure className={s.bleed}>
           <Figure editId="photo.aubert-stacks"
             slug="aubert-stacks"
-            alt="Long rows of grey archive boxes on steel shelving receding into the distance"
+            alt="Long rows of gray archive boxes on steel shelving receding into the distance"
             priority
           />
           <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>Repository 2, aisle 14. 16 °C, 45 % RH, no daylight.</figcaption>
@@ -141,7 +141,7 @@ export default function FondsAubertPage() {
           </h2>
           <p data-edit="holdings.note" data-edit-max="240" data-edit-multiline className={s.note}>
             Six of forty-seven. The full finding aid is in the reading room and,
-            for anything catalogued, online as a plain list.
+            for anything catalogd, online as a plain list.
           </p>
           <ol className={s.table}>
             <li className={s.thead} aria-hidden="true">
@@ -159,7 +159,7 @@ export default function FondsAubertPage() {
                 <span data-edit={`holdings.extent.${i}`} data-edit-max="60" className={s.extent}>{f.extent}</span>
                 <span data-edit={`holdings.done.${i}`} data-edit-max="60"
                   className={
-                    f.state === 'Catalogued'
+                    f.state === 'Catalogd'
                       ? s.done
                       : f.state === 'In progress'
                         ? s.wip
@@ -178,7 +178,7 @@ export default function FondsAubertPage() {
           <div data-edit-pattern="shelfBand.field" data-edit-roles="transparent,1,2,3" className={s.shelfField}>
             <TabbiedPattern
               pattern={stitch}
-              palette={['transparent', INK, OLIVE, GREY]}
+              palette={['transparent', INK, OLIVE, GRAY]}
               fit="grid"
               cellSize={104}
               redrawInterval={4600}
@@ -192,7 +192,7 @@ export default function FondsAubertPage() {
           <div data-edit-pattern="services.field" data-edit-roles="transparent,4,3" className={s.svcField} aria-hidden="true">
             <TabbiedPattern
               pattern={subdivide}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={166}
               redrawInterval={5800}
@@ -249,7 +249,7 @@ export default function FondsAubertPage() {
               <li data-edit="reading.item2" data-edit-max="80">Five boxes on the desk at a time</li>
               <li data-edit="reading.item3" data-edit-max="80">Photography without flash, for private study</li>
               <li data-edit="reading.item4" data-edit-max="80">Foam supports and weights on every desk</li>
-              <li data-edit="reading.item5" data-edit-max="80">No appointment needed for catalogued material</li>
+              <li data-edit="reading.item5" data-edit-max="80">No appointment needed for catalogd material</li>
             </ul>
           </div>
           <figure className={s.wide}>
@@ -266,7 +266,7 @@ export default function FondsAubertPage() {
           <div data-edit-pattern="deposit.field" data-edit-roles="transparent,2,3" className={s.depField} aria-hidden="true">
             <TabbiedPattern
               pattern={dotfield}
-              palette={['transparent', OLIVE, GREY]}
+              palette={['transparent', OLIVE, GRAY]}
               fit="grid"
               cellSize={48}
               redrawInterval={4000}
@@ -329,7 +329,7 @@ export default function FondsAubertPage() {
                 </div>
                 <p data-edit="tiles.tileN" data-edit-max="240" data-edit-multiline className={s.tileN}>01</p>
                 <h3 data-edit="tiles.title2" data-edit-max="40">Water</h3>
-                <p data-edit="tiles.tileBody" data-edit-max="240" data-edit-multiline className={s.tileBody}>Not floods. Humidity above sixty per cent, held for a season, which is enough for mould to start and impossible to reverse afterwards.</p>
+                <p data-edit="tiles.tileBody" data-edit-max="240" data-edit-multiline className={s.tileBody}>Not floods. Humidity above sixty per cent, held for a season, which is enough for mold to start and impossible to reverse afterwards.</p>
               </article>
               <article key="02">
                 <div data-edit-pattern="tiles.field2" data-edit-roles="transparent,3,4" className={s.tilePlate} aria-hidden="true">
@@ -444,10 +444,10 @@ export default function FondsAubertPage() {
               </div>
               <div key="How long until my deposi">
                 <dt data-edit="faq.term3" data-edit-max="28">How long until my deposit is usable?</dt>
-                <dd data-edit="faq.body3" data-edit-max="200" data-edit-multiline>Catalogued in eighteen months to four years depending on extent. Uncatalogued material is accessible in principle and unfindable in practice.</dd>
+                <dd data-edit="faq.body3" data-edit-max="200" data-edit-multiline>Catalogd in eighteen months to four years depending on extent. Uncatalogued material is accessible in principle and unfindable in practice.</dd>
               </div>
               <div key="Do you digitise on reque">
-                <dt data-edit="faq.term4" data-edit-max="28">Do you digitise on request?</dt>
+                <dt data-edit="faq.term4" data-edit-max="28">Do you digitize on request?</dt>
                 <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Up to two hundred images a year, free, for research. Beyond that we quote, and we would rather you came and sat at a desk.</dd>
               </div>
           </dl>
@@ -462,7 +462,7 @@ export default function FondsAubertPage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
             <TabbiedPattern
               pattern={matryoshka}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={120}
               redrawInterval={5040}

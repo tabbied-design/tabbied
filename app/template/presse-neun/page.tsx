@@ -7,7 +7,7 @@ import s from './presse-neun.module.css';
 export const metadata = {
   title: 'Presse Neun: Screenprint workshop, Rotterdam',
   description:
-    'A nine-colour hand screenprint workshop. Editions, posters and impossible flat colour, printed wet on wet on paper we keep in the building.',
+    'A nine-color hand screenprint workshop. Editions, posters and impossible flat color, printed wet on wet on paper we keep in the building.',
 };
 
 /* Warm paper, ink, one fluorescent pink. Every field takes `transparent` in
@@ -15,7 +15,7 @@ export const metadata = {
    overprint is. */
 const INK = '#141210';
 const PINK = '#ff2d78';
-const GREY = '#8c8a82';
+const GRAY = '#8c8a82';
 const PALE = '#e2dfd4';
 
 /* Whether a swatch label is set in paper or in ink is decided by the swatch,
@@ -29,7 +29,7 @@ function labelOn(hex: string) {
 }
 
 /* The house ink rack, printed as flat blocks - the loudest thing on the page
-   and the only place all nine colours appear at once. */
+   and the only place all nine colors appear at once. */
 const INKS = [
   ['Fluoro Pink', '#ff2d78'],
   ['Warm Red', '#f0421f'],
@@ -46,14 +46,14 @@ const SERVICES = [
   {
     n: '01',
     t: 'Editions',
-    d: 'Signed and numbered, up to nine colours, up to 700 × 1000 mm',
+    d: 'Signed and numbered, up to nine colors, up to 700 × 1000 mm',
     lead: '3 weeks',
     from: '€ 640',
   },
   {
     n: '02',
     t: 'Posters',
-    d: 'One to four colours on our own stock, runs of 50 to 500',
+    d: 'One to four colors on our own stock, runs of 50 to 500',
     lead: '10 days',
     from: '€ 380',
   },
@@ -66,7 +66,7 @@ const SERVICES = [
   },
   {
     n: '04',
-    t: 'Colour matching',
+    t: 'Color matching',
     d: 'Mixed by eye against your sample, drawn down and posted to you',
     lead: '4 days',
     from: '€ 85',
@@ -85,7 +85,7 @@ const PROCESS = [
     art: octagon,
     n: 'I',
     t: 'Separate',
-    d: 'Your file becomes one screen per colour. This is where most of the thinking happens and where a nine-colour print becomes a five-colour print that looks better.',
+    d: 'Your file becomes one screen per color. This is where most of the thinking happens and where a nine-color print becomes a five-color print that looks better.',
   },
   {
     art: notch,
@@ -97,63 +97,63 @@ const PROCESS = [
     art: chip,
     n: 'III',
     t: 'Print',
-    d: 'One pull, one flood, one colour at a time, in the order the separation says. Wet on wet where the ink allows it and overnight where it does not.',
+    d: 'One pull, one flood, one color at a time, in the order the separation says. Wet on wet where the ink allows it and overnight where it does not.',
   },
   {
     art: quaver,
     n: 'IV',
     t: 'Dry and count',
-    d: 'Racked for a day per colour, then counted twice, then the spoils are torn in half in front of you so nobody has to wonder.',
+    d: 'Racked for a day per color, then counted twice, then the spoils are torn in half in front of you so nobody has to wonder.',
   },
 ];
 
 const PRICES = [
-  ['A2', '420 × 594 mm', '1 colour', '50 sheets', '€ 380'],
-  ['A2', '420 × 594 mm', '3 colours', '50 sheets', '€ 640'],
-  ['A1', '594 × 841 mm', '1 colour', '50 sheets', '€ 520'],
-  ['A1', '594 × 841 mm', '4 colours', '50 sheets', '€ 1 090'],
-  ['A1', '594 × 841 mm', '4 colours', '200 sheets', '€ 2 240'],
-  ['B1', '700 × 1000 mm', '2 colours', '30 sheets', '€ 780'],
-  ['B1', '700 × 1000 mm', '6 colours', '30 sheets', '€ 1 860'],
-  ['B1', '700 × 1000 mm', '9 colours', '30 sheets', '€ 2 690'],
+  ['A2', '420 × 594 mm', '1 color', '50 sheets', '€ 380'],
+  ['A2', '420 × 594 mm', '3 colors', '50 sheets', '€ 640'],
+  ['A1', '594 × 841 mm', '1 color', '50 sheets', '€ 520'],
+  ['A1', '594 × 841 mm', '4 colors', '50 sheets', '€ 1 090'],
+  ['A1', '594 × 841 mm', '4 colors', '200 sheets', '€ 2 240'],
+  ['B1', '700 × 1000 mm', '2 colors', '30 sheets', '€ 780'],
+  ['B1', '700 × 1000 mm', '6 colors', '30 sheets', '€ 1 860'],
+  ['B1', '700 × 1000 mm', '9 colors', '30 sheets', '€ 2 690'],
   ['Custom', 'Up to 700 × 1000 mm', 'Any', 'Any run', 'Ask'],
-  ['Overprint', 'Your own sheets', '1 - 3 colours', 'Any run', 'From € 190'],
+  ['Overprint', 'Your own sheets', '1 - 3 colors', 'Any run', 'From € 190'],
 ];
 
 const STOCK = [
-  ['Somerset Satin', '300 gsm', 'Cotton, mould made', 'Editions', 'Held'],
-  ['Somerset Velvet', '250 gsm', 'Cotton, mould made', 'Editions', 'Held'],
-  ['Colorplan Pristine', '270 gsm', 'Coloured through', 'Posters', 'Held'],
-  ['Colorplan Ebony', '270 gsm', 'Coloured through', 'Posters', 'Held'],
+  ['Somerset Satin', '300 gsm', 'Cotton, mold made', 'Editions', 'Held'],
+  ['Somerset Velvet', '250 gsm', 'Cotton, mold made', 'Editions', 'Held'],
+  ['Colorplan Pristine', '270 gsm', 'Colored through', 'Posters', 'Held'],
+  ['Colorplan Ebony', '270 gsm', 'Colored through', 'Posters', 'Held'],
   ['Munken Pure Rough', '240 gsm', 'Uncoated, warm', 'Posters', 'Held'],
   ['Munken Lynx', '170 gsm', 'Uncoated, bright', 'Runs over 200', 'Held'],
-  ['Fedrigoni Sirio', '290 gsm', 'Coloured through', 'Posters', 'To order'],
-  ['Zerkall Litho', '250 gsm', 'Mould made', 'Editions', 'To order'],
+  ['Fedrigoni Sirio', '290 gsm', 'Colored through', 'Posters', 'To order'],
+  ['Zerkall Litho', '250 gsm', 'Mold made', 'Editions', 'To order'],
   ['GF Smith Naturalis', '300 gsm', 'Uncoated, soft', 'Editions', 'To order'],
   ['Newsprint', '52 gsm', 'For proofing only', 'Never sold', 'Held'],
-  ['Board, grey', '1.5 mm', 'For test pulls', 'Never sold', 'Held'],
+  ['Board, gray', '1.5 mm', 'For test pulls', 'Never sold', 'Held'],
   ['Yours', 'Any', 'Bring it and we will test it', 'Overprints', ' - '],
 ];
 
 const EDITIONS = [
-  ['PN-041', 'Iris Kaandorp', 'Zeven Havens', '9 colours', 'Ed. 30', 'Sold out'],
-  ['PN-039', 'Mensah Osei', 'Loud Field', '6 colours', 'Ed. 40', '12 left'],
-  ['PN-036', 'Tove Lindgren', 'Rood op Rood', '4 colours', 'Ed. 60', '31 left'],
-  ['PN-034', 'Studio Bakker', 'Kade', '3 colours', 'Ed. 100', '4 left'],
-  ['PN-030', 'Iris Kaandorp', 'Nachtploeg', '7 colours', 'Ed. 25', 'Sold out'],
-  ['PN-027', 'Halima Yusuf', 'Overprint No. 2', '5 colours', 'Ed. 45', '19 left'],
-  ['PN-023', 'Pieter Vos', 'Blauwe Maandag', '2 colours', 'Ed. 150', '88 left'],
-  ['PN-019', 'Mensah Osei', 'Quiet Field', '6 colours', 'Ed. 40', 'Sold out'],
-  ['PN-014', 'Tove Lindgren', 'Wit', '1 colour', 'Ed. 200', '112 left'],
-  ['PN-009', 'Ensemble', 'Nine Inks', '9 colours', 'Ed. 9', 'Archive'],
+  ['PN-041', 'Iris Kaandorp', 'Zeven Havens', '9 colors', 'Ed. 30', 'Sold out'],
+  ['PN-039', 'Mensah Osei', 'Loud Field', '6 colors', 'Ed. 40', '12 left'],
+  ['PN-036', 'Tove Lindgren', 'Rood op Rood', '4 colors', 'Ed. 60', '31 left'],
+  ['PN-034', 'Studio Bakker', 'Kade', '3 colors', 'Ed. 100', '4 left'],
+  ['PN-030', 'Iris Kaandorp', 'Nachtploeg', '7 colors', 'Ed. 25', 'Sold out'],
+  ['PN-027', 'Halima Yusuf', 'Overprint No. 2', '5 colors', 'Ed. 45', '19 left'],
+  ['PN-023', 'Pieter Vos', 'Blauwe Maandag', '2 colors', 'Ed. 150', '88 left'],
+  ['PN-019', 'Mensah Osei', 'Quiet Field', '6 colors', 'Ed. 40', 'Sold out'],
+  ['PN-014', 'Tove Lindgren', 'Wit', '1 color', 'Ed. 200', '112 left'],
+  ['PN-009', 'Ensemble', 'Nine Inks', '9 colors', 'Ed. 9', 'Archive'],
 ];
 
 const FAQ = [
-  ['Can you print my gradient?', 'We can print four flat colours that read as a gradient from two metres away, which is what a screen does. A true gradient is a different process and we will say so.'],
-  ['How close is your colour match?', 'Close enough that you will not pick it out of a line-up, and we post you the draw-down before printing so you can disagree in writing.'],
-  ['Do you print on textiles?', 'No. The dryer, the inks and the mesh counts are all wrong for it and there are four workshops within a kilometre that do it properly.'],
+  ['Can you print my gradient?', 'We can print four flat colors that read as a gradient from two meters away, which is what a screen does. A true gradient is a different process and we will say so.'],
+  ['How close is your color match?', 'Close enough that you will not pick it out of a line-up, and we post you the draw-down before printing so you can disagree in writing.'],
+  ['Do you print on textiles?', 'No. The dryer, the inks and the mesh counts are all wrong for it and there are four workshops within a kilometer that do it properly.'],
   ['What happens to the spoils?', 'Torn in half and recycled. If you want the good spoils, say so before we print and they cost the same as a print.'],
-  ['Can I watch?', 'Yes, and you should. A colour decision made at the press takes ten seconds and a colour decision made by email takes four days.'],
+  ['Can I watch?', 'Yes, and you should. A color decision made at the press takes ten seconds and a color decision made by email takes four days.'],
   ['Do you ship?', 'Rolled in a tube anywhere, flat in a crate within the Benelux. Editions over B1 travel flat or not at all.'],
 ];
 
@@ -167,17 +167,17 @@ const SIGNUP_META: [string, string][] = [
 export default function PresseNeunPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f4f2ea',
         '--ink': '#141210',
         '--pink': '#ff2d78',
-        '--grey': '#8c8a82',
+        '--gray': '#8c8a82',
         '--pale': '#e2dfd4',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,pink,grey,pale"
+      data-edit-vars="paper,ink,pink,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -201,7 +201,7 @@ export default function PresseNeunPage() {
       <main id="top">
         {/* ------------------------------------------------------------ HERO
             Two fields stacked in multiply - which is exactly what happens
-            when a second colour goes down on a sheet that is still wet. */}
+            when a second color goes down on a sheet that is still wet. */}
         <section className={s.hero}>
           <div className={s.heroStack} aria-hidden="true">
             <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,4" className={s.heroLayer}>
@@ -217,7 +217,7 @@ export default function PresseNeunPage() {
             <div data-edit-pattern="hero.field2" data-edit-roles="transparent,3,4" className={`${s.heroLayer} ${s.heroLayerTwo}`}>
               <TabbiedPattern
                 pattern={bias}
-                palette={['transparent', GREY, PALE]}
+                palette={['transparent', GRAY, PALE]}
                 fit="grid"
                 cellSize={124}
                 redrawInterval={4300}
@@ -225,14 +225,14 @@ export default function PresseNeunPage() {
               />
             </div>
           </div>
-          <p data-edit="hero.heroKicker" data-edit-max="240" data-edit-multiline className={s.heroKicker}>Hand screenprint / Rotterdam / nine colours</p>
+          <p data-edit="hero.heroKicker" data-edit-max="240" data-edit-multiline className={s.heroKicker}>Hand screenprint / Rotterdam / nine colors</p>
           <h1 className={s.heroType}>
             <span data-edit="hero.text" data-edit-max="60">Presse</span>
             <span data-edit="hero.pink" data-edit-max="60" className={s.pink}>Neun</span>
           </h1>
           <div className={s.heroFoot}>
             <p data-edit="hero.body" data-edit-max="240" data-edit-multiline>
-              Flat colour you cannot get any other way, pulled by hand, one
+              Flat color you cannot get any other way, pulled by hand, one
               screen at a time, on paper we keep in the building.
             </p>
             <a data-edit="hero.cta" data-edit-max="28" className={s.cta} href="#prices">
@@ -254,14 +254,14 @@ export default function PresseNeunPage() {
         <section className={s.statement}>
           <p data-edit="statement.big" data-edit-max="240" data-edit-multiline className={s.big}>
             A screen lays down more ink than any other process, which is why a
-            flat colour printed this way looks lit from inside and the same
-            colour printed digitally looks like a photograph of it.
+            flat color printed this way looks lit from inside and the same
+            color printed digitally looks like a photograph of it.
           </p>
           <div className={s.statementMeta}>
             <p data-edit="statement.body" data-edit-max="240" data-edit-multiline>
-              Nine of us, one four-metre bed, two dryers and a rack that holds
+              Nine of us, one four-meter bed, two dryers and a rack that holds
               eleven hundred sheets. We print editions for artists, posters for
-              anybody, and we mix every colour in the building.
+              anybody, and we mix every color in the building.
             </p>
             <p data-edit="statement.body2" data-edit-max="240" data-edit-multiline>
               The workshop has been in the same brick shed on the Maashaven
@@ -306,7 +306,7 @@ export default function PresseNeunPage() {
         <section id="process" className={s.process} aria-labelledby="process-h">
           <div className={s.secHead}>
             <h2 data-edit="process.title" data-edit-max="60" id="process-h">Four stages</h2>
-            <p data-edit="process.body" data-edit-max="240" data-edit-multiline>The same four whether it is one colour or nine. Only the third one gets longer.</p>
+            <p data-edit="process.body" data-edit-max="240" data-edit-multiline>The same four whether it is one color or nine. Only the third one gets longer.</p>
           </div>
           <div className={s.pGrid}>
             {PROCESS.map((p, i) => (
@@ -314,7 +314,7 @@ export default function PresseNeunPage() {
                 <div data-edit-pattern={`process.field.${i}`} data-edit-roles="transparent,2,3" className={s.pPlate} aria-hidden="true">
                   <TabbiedPattern
                     pattern={p.art}
-                    palette={['transparent', PINK, GREY]}
+                    palette={['transparent', PINK, GRAY]}
                     fit="grid"
                     cellSize={56}
                     redrawInterval={5400}
@@ -380,7 +380,7 @@ export default function PresseNeunPage() {
             />
           </div>
           <blockquote>
-            <p data-edit="quote.body" data-edit-max="240" data-edit-multiline>Nine colours is not nine times better than four. It is nine times more places to go wrong.</p>
+            <p data-edit="quote.body" data-edit-max="240" data-edit-multiline>Nine colors is not nine times better than four. It is nine times more places to go wrong.</p>
             <cite data-edit="quote.attribution" data-edit-max="48">Halima Yusuf, master printer</cite>
           </blockquote>
         </section>
@@ -451,7 +451,7 @@ export default function PresseNeunPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,4,2,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={octagon}
-          palette={['transparent', PALE, PINK, GREY]}
+          palette={['transparent', PALE, PINK, GRAY]}
           fit="grid"
           cellSize={96}
           redrawInterval={5000}

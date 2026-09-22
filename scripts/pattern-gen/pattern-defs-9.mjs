@@ -8,14 +8,14 @@
 // the same composition at a different resolution.
 //
 // That needs three things css-doodle gives you and the earlier batches never
-// used: real maths on the cell's coordinates (@sqrt for distance from the
-// centre of the sheet, @atan2 for its bearing, @sin for the wave fields),
+// used: real math on the cell's coordinates (@sqrt for distance from the
+// center of the sheet, @atan2 for its bearing, @sin for the wave fields),
 // conic gradients, which are the only way to sweep a value round an angle, and
 // SVG *stroke* - line art rather than filled shapes.
 //
-//   A. Radial fields      distance from the centre of the *canvas* drives the
+//   A. Radial fields      distance from the center of the *canvas* drives the
 //                         cell (Epicentre, Pivot, Fulcrum, Centroid).
-//   B. Angular fields     @atan2 gives every cell its bearing from the centre,
+//   B. Angular fields     @atan2 gives every cell its bearing from the center,
 //                         so the field points or swirls as a whole (Flux,
 //                         Gyre, Maelstrom, Nutation, Gimbal, Dipole).
 //   C. Conic              conic-gradient as a mask, so the wedge is a real
@@ -39,7 +39,7 @@
 //     snap instead of morphing;
 //   * a randomized custom prop read more than once goes through @var(--x);
 //   * nothing paints var(--color0). A hole knocked out in the background
-//     colour is a fake hole - set the background slot to transparent and it
+//     color is a fake hole - set the background slot to transparent and it
 //     stops erasing anything. Every gap here is a mask, a clip-path hole, or
 //     a gap between elements, and validate-batch9.mjs re-renders the whole
 //     batch over a checkerboard with the background slot set to #00000000 and
@@ -62,7 +62,7 @@ const ink = (c, s = 1) => {
   return `@p(${a.join(', ')})`;
 };
 
-// ── shared snippets ────────────────────────────────────────────────────────
+// -- shared snippets --------------------------------------------------------
 const F = '@random(${shapeFrequency})';
 const TR = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
 const pt = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
@@ -83,12 +83,12 @@ const R8 = '@pick(0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg)';
 // take lengths only, never percentages.
 const u = (v) => `calc(${v}px * 6 / @size-col)`;
 
-// ── canvas coordinates ─────────────────────────────────────────────────────
+// -- canvas coordinates -----------------------------------------------------
 // @x and @y are the 1-based column and row; @X and @Y are the totals. These
 // put the origin at the middle of the *canvas*, so a design written against
 // them holds its composition at any grid density.
 //
-// One hard constraint shapes how they are written. css-doodle's @calc honours
+// One hard constraint shapes how they are written. css-doodle's @calc honors
 // operator precedence, but a *bare grouping paren* does not survive it -
 // `@calc(90 - 74 * (2 * @x / @X - 1))` quietly evaluates the group to zero and
 // the whole field goes flat. Only a function call's own parentheses are safe,
@@ -100,13 +100,13 @@ const u = (v) => `calc(${v}px * 6 / @size-col)`;
 // custom property and reading it back with @var() also comes out flat, so the
 // expressions are inlined at every use even though it makes the CSS long.
 
-// Distance from the vertical / horizontal centreline: 0 in the middle of the
+// Distance from the vertical / horizontal centerline: 0 in the middle of the
 // canvas, about 1 at an edge.
 const AX = '@abs(2 * @x / @X - 1 - 1 / @X)';
 const AY = '@abs(2 * @y / @Y - 1 - 1 / @Y)';
-// 0 at the centre of the canvas, 1 at the middle of an edge, ~1.41 at a corner.
+// 0 at the center of the canvas, 1 at the middle of an edge, ~1.41 at a corner.
 const RAD = `@sqrt(${AX} * ${AX} + ${AY} * ${AY})`;
-// Bearing from the centre, in degrees.
+// Bearing from the center, in degrees.
 const ANG = '@atan2(2 * @y / @Y - 1 - 1 / @Y, 2 * @x / @X - 1 - 1 / @X) * 57.2958';
 // A sweep across the sheet, left to right and top to bottom.
 const RX = '@x / @X';
@@ -120,13 +120,13 @@ const ramp = (a, b, t) =>
 const rampN = (a, b, t) =>
   `@calc(${a} ${b >= a ? '+' : '-'} ${Math.abs(b - a)} * ${t})`;
 
-// ── conic masks ────────────────────────────────────────────────────────────
+// -- conic masks ------------------------------------------------------------
 // The only way to sweep a value round an angle. As a mask the wedges are real
 // holes, so the design survives a transparent background.
 const pieMask = (deg, from = '0deg') =>
   msk(`conic-gradient(from ${from} at 50% 50%, #000 0 ${deg}, transparent ${deg} 360deg)`);
 
-// ── stroke helpers ─────────────────────────────────────────────────────────
+// -- stroke helpers ---------------------------------------------------------
 // @svg() as a mask, drawing with stroke rather than fill. `d` is fixed path
 // data - calc() does not survive inside a path's `d`, so anything that has to
 // vary per cell varies through a repeated element's own attributes instead.
@@ -135,18 +135,18 @@ const pieMask = (deg, from = '0deg') =>
 // stroke width, which reads as a rounded terminal on an open stroke - right
 // for these designs, but wrong on a path that stops at a corner, where the
 // overhang shows as a thorn poking out past the join. A design like that
-// wants `butt` and a neighbouring miter join to fill the corner instead.
+// wants `butt` and a neighboring miter join to fill the corner instead.
 const strokePath = (d, w) =>
   svgMask(`viewBox: 0 0 100 100; path { d: ${d}; fill: none; stroke: #000; stroke-width: ${w}; stroke-linecap: round; }`);
 
-// ── graded rules ───────────────────────────────────────────────────────────
+// -- graded rules -----------------------------------------------------------
 // A border width authored for a six-column grid, ramping from `a` to `b`.
 // border-width takes a length, never a percentage, so the ramp is computed as
 // a bare number and then multiplied into px.
 const wRamp = (a, b, t) =>
   `calc(@calc(${a} ${b >= a ? '+' : '-'} ${Math.abs(b - a)} * ${t}) * 1px * 6 / @size-col)`;
 
-// ── palette bank ───────────────────────────────────────────────────────────
+// -- palette bank -----------------------------------------------------------
 // color0 = background. Palettes may repeat across designs (they are different
 // patterns).
 const PAL = [
@@ -387,9 +387,9 @@ const add = (name, palIdx, description, build, cfg = {}) => {
   });
 };
 
-// ══════════════════════════════════════════════════════════════════════════
-// A. Radial fields - distance from the centre of the *canvas* drives the cell.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
+// A. Radial fields - distance from the center of the *canvas* drives the cell.
+// --------------------------------------------------------------------------
 
 add('Epicentre', 1, 'Discs at their largest in the middle of the sheet and shrinking all the way to the corners.', (c) => ({
   vars: '',
@@ -411,10 +411,10 @@ add('Centroid', 3, 'A plain grid of squares, lit from the middle: only the opaci
   rule: `${F} { background: ${ink(c)}; opacity: ${rampN(1, 0.22, RAD)}; }${TR}`,
 }), { tg: '6x6' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // B. Angular fields - @atan2 gives every cell its bearing from the middle of
 //    the sheet, so the whole canvas points or swirls as one thing.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Flux', 43, 'The same field turned a quarter: every mark lies across the radius instead of along it.', (c) => ({
   vars: '',
@@ -446,10 +446,10 @@ add('Dipole', 10, 'Two poles instead of one, and the field between them bending 
   rule: `${F} { ${A(`left: 6%; top: 42%; width: 88%; height: 16%; border-radius: 999px; background: ${ink(c)}; ${xf(`rotate(@calc(@atan2(2 * @y / @Y - 1 - 1 / @Y, 2 * @x / @X - 1.6 - 1 / @X) * 28.6 + @atan2(2 * @y / @Y - 1 - 1 / @Y, 2 * @x / @X - 0.4 - 1 / @X) * 28.6)deg)`)}`)} }${TR}`,
 }), { tg: '6x6' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // C. Conic - conic-gradient is the only thing in CSS that sweeps a value round
 //    an angle, and as a mask its wedge is a real hole.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Wedge', 2, 'A single wedge cut out of each cell, its angle rolled from a short list.', (c) => ({
   vars: '',
@@ -459,9 +459,9 @@ add('Wedge', 2, 'A single wedge cut out of each cell, its angle rolled from a sh
   // and SVG has no angular gradient. See docs/svg-export.md, tier 1.
 }), { grid: '6x9', tg: '5x5', svgExport: false });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // D. Line art - @svg used as a mask, drawing with stroke rather than fill.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Charcoal', 43, 'Charcoal: broad, blunt strokes that almost close the paper up.', (c) => ({
   vars: '',
@@ -473,12 +473,12 @@ add('Reedpen', 62, 'A reed pen: three strokes of the same length, laid down side
   rule: `--rot: ${R2}; ${F} { background: ${ink(c)}; ${strokePath('M20 14 V86 M50 14 V86 M80 14 V86', 10)} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // E. Mirrors - @match on the cell's own address folds the canvas about an
 //    axis, so the composition is symmetrical however many cells it has.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
-add('Bilateral', 1, 'The sheet folded down its middle: everything past the centreline is the mirror of what came before it.', (c) => ({
+add('Bilateral', 1, 'The sheet folded down its middle: everything past the centerline is the mirror of what came before it.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(0 0, 100% 0, 62% 100%, 0 100%)')} @match(@x > @X / 2) { ${xf('scaleX(-1)')} } }${TR}`,
 }), { tg: '6x6' });
@@ -488,15 +488,15 @@ add('Axial', 40, 'A single fold about the horizontal, with the shape running off
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(0 0, 101% 0, 101% 46%, 40% 101%, 0 101%)')} @match(@y > @Y / 2) { ${xf('scaleY(-1)')} } }${TR}`,
 }), { tg: '6x6' });
 
-add('Foldback', 54, 'Arcs folded back on themselves at the centreline of the sheet.', (c) => ({
+add('Foldback', 54, 'Arcs folded back on themselves at the centerline of the sheet.', (c) => ({
   vars: '',
   rule: `${F} { ${A(`inset: 0; background: ${ink(c)}; border-radius: 0 100% 0 0;`)} @match(@x > @X / 2) { ${xf('scaleX(-1)')} } @match(@y > @Y / 2) { ${xf('scaleY(-1)')} } }${TR}`,
 }), { tg: '6x6' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // F. Perspective - a skew or scale that builds across the sheet turns a flat
 //    grid into a receding one.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Ortho', 29, 'No perspective at all - the same square everywhere, and only the weight of the line changing.', (c) => ({
   vars: '',
@@ -523,9 +523,9 @@ add('Raking', 38, 'A raking light: parallel bars whose lean builds steadily down
   rule: `${F} { ${A(`left: 26%; top: -20%; width: 48%; height: 140%; background: ${ink(c)}; ${xf(`skewX(@calc(-42 + 84 * ${RY})deg)`)}`)} }${TR}`,
 }), { tg: '6x6' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // G. Weights - rule width graded across the sheet, with nothing else moving.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Thickset', 2, 'Heavy throughout, and heavier still as it goes: frames that all but close up.', (c) => ({
   vars: '',

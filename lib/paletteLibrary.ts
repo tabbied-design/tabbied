@@ -421,12 +421,12 @@ export const PALETTE_LIBRARY: LibraryPalette[] = [
   { id: 'lib-rosegold', name: 'Rose Gold', colors: ['#fbf1ec', '#d99a86', '#b5705a', '#4a2f28'] },
   { id: 'lib-electrum', name: 'Electrum', colors: ['#faf5e4', '#d9c46a', '#a8934a', '#6b6a52', '#33301f'] },
   { id: 'lib-solder', name: 'Solder', colors: ['#e6e8ea', '#9aa2a8', '#5f676d', '#2b3034', '#c9a227'] },
-  { id: 'lib-galvanised', name: 'Galvanised', colors: ['#dfe3e6', '#a8b0b5', '#6b7377', '#3a4044'] },
+  { id: 'lib-galvanised', name: 'Galvanized', colors: ['#dfe3e6', '#a8b0b5', '#6b7377', '#3a4044'] },
   { id: 'lib-anodised', name: 'Anodised', colors: ['#14181f', '#2b7f9e', '#6bbdd4', '#d94f7a'] },
   { id: 'lib-foundry', name: 'Foundry', colors: ['#1b1a18', '#4a4540', '#8a7f6f', '#e2542a'] },
   { id: 'lib-millscale', name: 'Millscale', colors: ['#26262a', '#4a4a52', '#7a7a86', '#b5b5be', '#d9a441'] },
 
-  // Stones & gems - mineral colour, cut and uncut.
+  // Stones & gems - mineral color, cut and uncut.
   { id: 'lib-tourmaline', name: 'Tourmaline', colors: ['#f0f5f2', '#2f8a6b', '#d94f7a', '#1f3f38'] },
   { id: 'lib-peridot', name: 'Peridot', colors: ['#f4f8e4', '#a8c42c', '#6b8a18', '#33400c'] },
   { id: 'lib-garnet', name: 'Garnet', colors: ['#f6eeef', '#7a1c2b', '#b03a4a', '#2b0f14'] },
@@ -482,7 +482,7 @@ export const PALETTE_LIBRARY: LibraryPalette[] = [
   { id: 'lib-limoncello', name: 'Limoncello', colors: ['#fffce6', '#f2d21c', '#c9a800', '#4a4208'] },
   { id: 'lib-pilsner', name: 'Pilsner', colors: ['#fdf6e0', '#e8c44a', '#b89a22', '#3a3212'] },
 
-  // Places - cities keyed to the colours they are painted in.
+  // Places - cities keyed to the colors they are painted in.
   { id: 'lib-lisbon', name: 'Lisbon', colors: ['#f5f2ea', '#2b6fa8', '#d9a441', '#a83a2a', '#33383d'] },
   { id: 'lib-marrakech', name: 'Marrakech', colors: ['#f2e2d0', '#c24a2a', '#d9903c', '#4a6b5a', '#2f2018'] },
   { id: 'lib-havana', name: 'Havana', colors: ['#f7f0e2', '#2ba88a', '#e8a83c', '#d94f4a', '#2b3a3a'] },

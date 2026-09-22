@@ -12,10 +12,10 @@ export const metadata = {
 };
 
 /* Paper, ink, one directional green. Every field takes `transparent` in the
-   background slot, so the concourse colour of the page runs through them. */
+   background slot, so the concourse color of the page runs through them. */
 const INK = '#131416';
 const GREEN = '#00843D';
-const GREY = '#8E9094';
+const GRAY = '#8E9094';
 const PALE = '#E2E2DE';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,7 +23,7 @@ const PALE = '#E2E2DE';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PALE;
 
 
@@ -52,17 +52,17 @@ const NUMBERS = [
 export default function KryssPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f4f4f1',
         '--ink': '#131416',
         '--green': '#00843d',
-        '--grey': '#8e9094',
+        '--gray': '#8e9094',
         '--pale': '#e2e2de',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,green,grey,pale"
+      data-edit-vars="paper,ink,green,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -92,7 +92,7 @@ export default function KryssPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={caltrop}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={130}
               redrawInterval={4600}
@@ -172,7 +172,7 @@ export default function KryssPage() {
           <div data-edit-pattern="routeBand.field" data-edit-roles="transparent,2,1,3" className={s.routeField}>
             <TabbiedPattern
               pattern={metro}
-              palette={['transparent', GREEN, INK, GREY]}
+              palette={['transparent', GREEN, INK, GRAY]}
               fit="grid"
               cellSize={120}
               redrawInterval={3200}
@@ -186,7 +186,7 @@ export default function KryssPage() {
           <div data-edit-pattern="work.field" data-edit-roles="transparent,3,4" className={s.workField} aria-hidden="true">
             <TabbiedPattern
               pattern={bothways}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={112}
               redrawInterval={5600}
@@ -257,7 +257,7 @@ export default function KryssPage() {
           <div data-edit-pattern="studio.field" data-edit-roles="transparent,2,3" className={s.studioField} aria-hidden="true">
             <TabbiedPattern
               pattern={trigram}
-              palette={['transparent', GREEN, GREY]}
+              palette={['transparent', GREEN, GRAY]}
               fit="grid"
               cellSize={88}
               redrawInterval={4200}
@@ -320,7 +320,7 @@ export default function KryssPage() {
                 </div>
                 <p data-edit="tiles.tileN" data-edit-max="240" data-edit-multiline className={s.tileN}>01</p>
                 <h3 data-edit="tiles.title2" data-edit-max="40">It is not at a decision</h3>
-                <p data-edit="tiles.tileBody" data-edit-max="240" data-edit-multiline className={s.tileBody}>A sign twenty metres past the fork is worse than no sign, because it confirms a choice already made. We map the forks first and hang signs only there.</p>
+                <p data-edit="tiles.tileBody" data-edit-max="240" data-edit-multiline className={s.tileBody}>A sign twenty meters past the fork is worse than no sign, because it confirms a choice already made. We map the forks first and hang signs only there.</p>
               </article>
               <article key="02">
                 <div data-edit-pattern="tiles.field2" data-edit-roles="transparent,3,4" className={s.tilePlate} aria-hidden="true">
@@ -366,7 +366,7 @@ export default function KryssPage() {
                 </div>
                 <p data-edit="tiles.tileN3" data-edit-max="240" data-edit-multiline className={s.tileN}>03</p>
                 <h3 data-edit="tiles.title4" data-edit-max="40">It arrives too late</h3>
-                <p data-edit="tiles.tileBody3" data-edit-max="240" data-edit-multiline className={s.tileBody}>Read at thirty metres, twelve metres and two metres, in that order, with a different amount of information at each. Most systems only design the last one.</p>
+                <p data-edit="tiles.tileBody3" data-edit-max="240" data-edit-multiline className={s.tileBody}>Read at thirty meters, twelve meters and two meters, in that order, with a different amount of information at each. Most systems only design the last one.</p>
               </article>
           </div>
         </section>
@@ -402,7 +402,7 @@ export default function KryssPage() {
               </li>
               <li key="Panel">
                 <span data-edit="index.text17" data-edit-max="60">Panel</span>
-                <span data-edit="index.text18" data-edit-max="60">Anodised aluminium</span>
+                <span data-edit="index.text18" data-edit-max="60">Anodised aluminum</span>
                 <span data-edit="index.text19" data-edit-max="60">3 mm</span>
                 <span data-edit="index.text20" data-edit-max="60">Powder coat on the reverse</span>
               </li>
@@ -453,7 +453,7 @@ export default function KryssPage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
             <TabbiedPattern
               pattern={ell}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={108}
               redrawInterval={4956}

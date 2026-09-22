@@ -3,9 +3,9 @@
    Y2K vaporwave on a dark ground. Bungee for display, Space Grotesk for
    everything else. Violet-black paper, pale lilac ink, hot pink and cyan.
    The headline is a gradient clipped to its own letterforms, the borders
-   glow (box-shadow in the accent colours, never a solid line), and the
+   glow (box-shadow in the accent colors, never a solid line), and the
    sections are separated by chrome dividers built from linear gradients of
-   the role colours and nothing else. Every colour is one of the five roles.
+   the role colors and nothing else. Every color is one of the five roles.
    ========================================================================== */
 
 .page {
@@ -13,10 +13,10 @@
   --ink: #f4eeff;
   --pink: #ff5fd2;
   --cyan: #38e0ff;
-  --grey: #7c6f94;
+  --gray: #7c6f94;
   --gut: clamp(1rem, 4vw, 3rem);
   --max: 78rem;
-  --line: 1px solid color-mix(in srgb, var(--grey) 40%, transparent);
+  --line: 1px solid color-mix(in srgb, var(--gray) 40%, transparent);
   --chrome: linear-gradient(
     90deg,
     var(--pink) 0%,
@@ -193,7 +193,7 @@
 }
 
 /* The wash. spectrum glows out of the dark at the edges, and a pool of the
-   paper colour sits under the headline so the gradient text reads. */
+   paper color sits under the headline so the gradient text reads. */
 .heroField {
   position: absolute;
   inset: 0;
@@ -270,7 +270,7 @@
 
 .facts dd {
   margin: 0.4rem 0 0;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------- section */
@@ -350,13 +350,13 @@
 
 .gamePlatforms {
   margin: 0;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .gameWhen {
   margin: 0.2rem 0 0;
   font-size: 0.86rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- engine */
@@ -403,7 +403,7 @@
 .statNote {
   margin: 0.3rem 0 0;
   font-size: 0.86rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .engineText {
@@ -459,7 +459,7 @@
 
 .teamSince {
   text-align: right;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- devlog */

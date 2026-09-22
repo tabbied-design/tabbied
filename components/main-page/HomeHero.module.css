@@ -10,7 +10,7 @@
   padding-left: var(--h-pad);
 }
 
-/* ── Margin columns ──────────────────────────────────────────────────────── */
+/* -- Margin columns -------------------------------------------------------- */
 /* The strips either side of the 1280px column are filled with the same cells
    the skyline uses, at low opacity - the page bleeding pattern into its own
    gutters. Purely decorative, and never in the way of a pointer. */
@@ -52,7 +52,7 @@
   transition: border-radius 600ms ease, clip-path 600ms ease;
 }
 
-/* ── Headline ────────────────────────────────────────────────────────────── */
+/* -- Headline -------------------------------------------------------------- */
 
 .heroPad {
   padding: 100px 0 60px;
@@ -90,7 +90,7 @@
 /* "Free patterns" and "websites" are links to the two galleries, each in a
    gradient, so the headline names the product and takes you to it. The
    underline is drawn rather than inherited: a text-decoration under
-   gradient-filled type paints in the fill colour, which is transparent. */
+   gradient-filled type paints in the fill color, which is transparent. */
 .titleLink {
   position: relative;
   display: inline-block;
@@ -141,7 +141,7 @@
   color: oklch(0.78 0.01 260);
 }
 
-/* ── Skyline ─────────────────────────────────────────────────────────────── */
+/* -- Skyline --------------------------------------------------------------- */
 
 .skylineRow {
   display: flex;
@@ -167,7 +167,7 @@
   transition: border-radius 600ms ease, clip-path 600ms ease;
 }
 
-/* ── Stats strip ─────────────────────────────────────────────────────────── */
+/* -- Stats strip ----------------------------------------------------------- */
 
 .stats {
   position: relative;
@@ -222,7 +222,7 @@ a.stat:hover .statArrow {
   font: 700 64px var(--h-display);
   line-height: 1;
   color: var(--h-fg);
-  /* Colour is the one thing the palette cycle animates directly. */
+  /* Color is the one thing the palette cycle animates directly. */
   transition: color 1200ms ease;
 }
 
@@ -242,7 +242,7 @@ a.stat:hover .statArrow {
   color: var(--h-nav);
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
+/* -- Responsive ------------------------------------------------------------ */
 
 /* The display sizes step down twice. Without the middle step the 96px headline
    runs to four lines between 768px and the desktop layout, which is where a

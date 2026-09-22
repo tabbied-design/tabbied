@@ -1,7 +1,7 @@
-// Colour maths for palette derivation.
+// Color math for palette derivation.
 //
 // These were the private helpers at the top of components/template/TemplateSite.tsx.
-// They moved here because a re-colour has to happen in two places that must
+// They moved here because a re-color has to happen in two places that must
 // agree exactly: the React component rendering the live page, and applyEdits()
 // rewriting a page it has no React in. Two copies of a luminance threshold is
 // the kind of drift that shows up as one download package whose body text is
@@ -10,12 +10,12 @@
 export type Rgb = [number, number, number];
 
 /**
- * The three colour channels of a hex colour. Every form isHexColor admits is
+ * The three color channels of a hex color. Every form isHexColor admits is
  * read: `#rgb` and `#rgba` are expanded, and the alpha byte of `#rgba` and
  * `#rrggbbaa` is dropped. It used to be parsed as one number and shifted,
  * so `#ff000080` came back as (0, 0, 128): the green, blue and alpha bytes
  * of a red - and every derived property (which ink reads on this ground,
- * the tints, the text colour over a swatch) was computed from them.
+ * the tints, the text color over a swatch) was computed from them.
  */
 export function toRgb(hex: string): Rgb {
   let value = hex.replace('#', '').trim();
@@ -46,7 +46,7 @@ export function luminance(hex: string): number {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-/** Contrast ratio between two colours, 1..21. */
+/** Contrast ratio between two colors, 1..21. */
 export function contrastRatio(a: string, b: string): number {
   const la = luminance(a);
   const lb = luminance(b);
@@ -56,7 +56,7 @@ export function contrastRatio(a: string, b: string): number {
 }
 
 /**
- * Blend two colours, returning `rgb(...)`.
+ * Blend two colors, returning `rgb(...)`.
  *
  * Deliberately not hex: these feed CSS custom properties, and keeping them as
  * rgb() makes a derived value obvious when reading the DOM in devtools - it is
@@ -70,7 +70,7 @@ export function mix(a: string, b: string, t: number): string {
   return `rgb(${channel(ar, br)}, ${channel(ag, bg)}, ${channel(ab, bb)})`;
 }
 
-/** Legible text colour to sit on a filled swatch. */
+/** Legible text color to sit on a filled swatch. */
 export function onColor(hex: string): string {
   return luminance(hex) < 0.55 ? '#ffffff' : '#151515';
 }

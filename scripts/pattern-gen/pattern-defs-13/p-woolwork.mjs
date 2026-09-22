@@ -3,7 +3,7 @@
 // `mask-composite: intersect` multiplies two mask layers: the field decides
 // where ink *can* go, the ramp decides how much of it survives. What comes out
 // is a halftone that lives in a band - rules that exist only across the middle
-// of the cell, dots given a lustre on the bias - and neither layer could draw
+// of the cell, dots given a luster on the bias - and neither layer could draw
 // it alone.
 //
 // The intersection exports as one <mask> nested inside the next, which is the
@@ -39,7 +39,7 @@ add(
 
 add(
   'Mercerising',
-  'Dots given a lustre band on the bias.',
+  'Dots given a luster band on the bias.',
   (c) => ({
     rule: finished(c, dotsL('26%', '12.5%'), midFade('135deg', '15%', '42%', '58%', '85%')),
   }),

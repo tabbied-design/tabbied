@@ -64,7 +64,7 @@
   overflow: hidden;
 }
 
-/* ── Nav ─────────────────────────────────────────────────────────────────── */
+/* -- Nav ------------------------------------------------------------------- */
 .nav {
   display: flex;
   justify-content: space-between;
@@ -104,7 +104,7 @@
 /* Scoped under .site on purpose: `.site a { color: inherit }` above is (0,1,1)
    and would otherwise outrank a bare `.navCta` (0,1,0), painting the label in
    --ink on the --c1 pill - which on a dark-accent palette is text you cannot
-   read. Every coloured control below is scoped for the same reason. */
+   read. Every colored control below is scoped for the same reason. */
 .site .navCta {
   padding: 10px 20px;
   border-radius: 100px;
@@ -120,7 +120,7 @@
   }
 }
 
-/* ── Buttons ─────────────────────────────────────────────────────────────── */
+/* -- Buttons --------------------------------------------------------------- */
 .btn {
   display: inline-block;
   padding: 15px 30px;
@@ -295,7 +295,7 @@
   font-style: inherit;
 }
 
-/* ── Layout: SPLIT ───────────────────────────────────────────────────────── */
+/* -- Layout: SPLIT --------------------------------------------------------- */
 .splitHero {
   display: grid;
   grid-template-columns: 1.02fr 0.98fr;
@@ -377,7 +377,7 @@
   }
 }
 
-/* ── Layout: SPOTLIGHT (full-bleed hero doodle) ──────────────────────────── */
+/* -- Layout: SPOTLIGHT (full-bleed hero doodle) ---------------------------- */
 .spotHero {
   position: relative;
   min-height: 100vh;
@@ -453,7 +453,7 @@
   font-style: normal;
 }
 
-/* ── Layout: EDITORIAL ───────────────────────────────────────────────────── */
+/* -- Layout: EDITORIAL ----------------------------------------------------- */
 /* This layout was built out of ink rules - masthead, title row, nav and cover
    were each closed off by one. The masthead now sits on its own tone and the
    rest is separated by space, which is what the rules were standing in for. */
@@ -573,7 +573,7 @@
   }
 }
 
-/* ── Layout: BOUTIQUE (elegant centered hero + collection) ───────────────── */
+/* -- Layout: BOUTIQUE (elegant centered hero + collection) ----------------- */
 .boutHero {
   position: relative;
   min-height: 96vh;
@@ -695,7 +695,7 @@
   padding: var(--sp) var(--pad-x);
 }
 
-/* ── Image placeholder (card media, carries a GPT Image 2 prompt) ─────────── */
+/* -- Image placeholder (card media, carries a GPT Image 2 prompt) ----------- */
 .imgph {
   position: absolute;
   inset: 0;
@@ -750,7 +750,7 @@
   color: var(--ink);
   /* Was an outlined chip on a translucent wash. It is a solid chip now, so it
      still reads as a control against whatever image sits behind it, and the
-     hover state moves to fill rather than to a border colour that no longer
+     hover state moves to fill rather than to a border color that no longer
      exists. */
   background: color-mix(in srgb, var(--ink) 16%, var(--bg));
   border-radius: 8px;
@@ -792,7 +792,7 @@
   justify-content: center;
 }
 
-/* ── About ───────────────────────────────────────────────────────────────── */
+/* -- About ----------------------------------------------------------------- */
 .about {
   max-width: var(--max);
   margin: 0 auto;
@@ -853,7 +853,7 @@
   }
 }
 
-/* ── Features ────────────────────────────────────────────────────────────── */
+/* -- Features -------------------------------------------------------------- */
 /* The tone change alone marks this band off; the hairlines it used to be
    bracketed by said the same thing twice. */
 .features {
@@ -887,7 +887,7 @@
   letter-spacing: calc(0.08em + var(--tracking, 0em));
 }
 
-/* ── Testimonials ────────────────────────────────────────────────────────── */
+/* -- Testimonials ---------------------------------------------------------- */
 .quoteGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -920,7 +920,7 @@
   opacity: 0.6;
 }
 
-/* ── Newsletter ──────────────────────────────────────────────────────────── */
+/* -- Newsletter ------------------------------------------------------------ */
 .newsletter {
   padding: var(--sp-lg) var(--pad-x);
 }
@@ -966,7 +966,7 @@
   opacity: 0.55;
 }
 
-/* ── Footer (expanded) ───────────────────────────────────────────────────── */
+/* -- Footer (expanded) ----------------------------------------------------- */
 .footTop {
   max-width: var(--max);
   margin: 0 auto;
@@ -1000,7 +1000,7 @@
   opacity: 0.6;
 }
 
-/* ── New section: shared helpers ─────────────────────────────────────────── */
+/* -- New section: shared helpers ------------------------------------------- */
 .abs { position: absolute; inset: 0; overflow: hidden; }
 
 /* Manifesto: a large statement over a faint pattern */
@@ -1013,7 +1013,7 @@
 }
 /* The manifesto carries a full-bleed pattern of its own, and on the boutique
    layouts it follows a hero that does too - two fields meeting on a hard edge
-   with nothing between them. A band of page colour separates them so each
+   with nothing between them. A band of page color separates them so each
    reads as its own gesture. */
 header + .manifesto {
   margin-top: clamp(72px, 10vw, 150px);
@@ -1084,7 +1084,7 @@ header + .manifesto {
 .logosLabel { font-size: 12px; letter-spacing: calc(0.22em + var(--tracking, 0em)); text-transform: uppercase; opacity: 0.5; }
 .logosRow { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 4vw, 52px); margin-top: 18px; font-family: var(--display); font-weight: 700; font-size: clamp(15px, 2vw, 20px); letter-spacing: calc(0.04em + var(--tracking, 0em)); opacity: 0.55; }
 
-/* ── Kits: per-site visual treatments ────────────────────────────────────────
+/* -- Kits: per-site visual treatments ----------------------------------------
    The kits used to be told apart largely by how much border they drew. They are
    told apart by radius, fill and shadow now, which turns out to be plenty. */
 /* soft: pillowy, rounded, shadowed (default-leaning) */
@@ -1127,7 +1127,7 @@ header + .manifesto {
 .kitMinimal .newsForm input { border-radius: 0; }
 
 
-/* ── Section rhythm helper ───────────────────────────────────────────────────
+/* -- Section rhythm helper ---------------------------------------------------
    Alternating tone, so the page reads as a stack of distinct blocks instead of
    one continuous field of background color. The tone change is the divider -
    the hairlines that used to bracket it were doing the same job twice. */
@@ -1135,7 +1135,7 @@ header + .manifesto {
   background: var(--band);
 }
 
-/* ── Process: numbered steps ─────────────────────────────────────────────── */
+/* -- Process: numbered steps ----------------------------------------------- */
 .process {
   max-width: var(--max);
   margin: 0 auto;
@@ -1176,7 +1176,7 @@ header + .manifesto {
   opacity: 0.72;
 }
 
-/* ── Pricing tiers ───────────────────────────────────────────────────────── */
+/* -- Pricing tiers --------------------------------------------------------- */
 .pricing {
   max-width: var(--max);
   margin: 0 auto;
@@ -1271,7 +1271,7 @@ header + .manifesto {
   color: var(--onC1);
 }
 
-/* ── Specs: a plain, confident detail table ──────────────────────────────── */
+/* -- Specs: a plain, confident detail table -------------------------------- */
 .specs {
   max-width: var(--max);
   margin: 0 auto;
@@ -1310,7 +1310,7 @@ header + .manifesto {
   }
 }
 
-/* ── Team: the pattern doubles as each portrait tile ─────────────────────── */
+/* -- Team: the pattern doubles as each portrait tile ----------------------- */
 .team {
   max-width: var(--max);
   margin: 0 auto;

@@ -11,7 +11,7 @@
 //
 // That anchoring is what the new vocabulary in pattern-defs-13/shared.mjs is
 // for: `farthest-side` radials, so a stop at 100% means "one cell side"
-// wherever the centre sits, and hard linear bands, so a bar is a mask layer
+// wherever the center sits, and hard linear bands, so a bar is a mask layer
 // that composes rather than a pseudo-element that does not.
 //
 // Sixteen families, in the order they ship:
@@ -30,7 +30,7 @@
 //   L. Knitwork   ribbing end-on, and a sawtooth skyline.               (2)
 //   M. Kilnglow   a smooth radial ramp, behaving like a glaze.          (1)
 //   N. Silk       linear ramps as sheen on cloth.                       (3)
-//   O. Fresco     the fall of ink quantised into counted levels.        (4)
+//   O. Fresco     the fall of ink quantized into counted levels.        (4)
 //   P. Woolwork   a periodic field crossed with a smooth ramp.          (2)
 //
 // House rules, inherited from every earlier batch and enforced by
@@ -39,7 +39,7 @@
 // design; every design samples a transition-able ink per cell so a reseed
 // morphs; a randomized custom prop read more than once goes through @var(--x);
 // nothing paints var(--color0), because a hole knocked out in the background
-// colour stops being a hole the moment the background is transparent.
+// color stops being a hole the moment the background is transparent.
 import { RESERVED, TAKEN13 } from './pattern-defs-13/shared.mjs';
 import { sectionA } from './pattern-defs-13/a-shore.mjs';
 import { sectionB } from './pattern-defs-13/b-fell.mjs';

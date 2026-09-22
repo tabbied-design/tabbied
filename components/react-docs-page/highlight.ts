@@ -4,7 +4,7 @@
 // It runs at build time over samples the page authors itself, never over
 // input, so it can afford to be conservative: a token it is not sure of stays
 // plain, which reads as unhighlighted rather than wrong. A real highlighter
-// would bring a grammar and a bundle to colour a dozen snippets.
+// would bring a grammar and a bundle to color a dozen snippets.
 //
 // The scan is sequential, and that is what keeps it right: an apostrophe in
 // a comment ("the box's shape") is never mistaken for a string opening,

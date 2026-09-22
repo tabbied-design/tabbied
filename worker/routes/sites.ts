@@ -61,7 +61,7 @@ import {
 //   from a scored dozen and writes three strings each; this is the second,
 //   dearer stage, and it is behind a click for that reason.
 // - Straight from the template gallery, with nothing written: revision 1 is
-//   an empty document, and the customizer's colours and patterns are the
+//   an empty document, and the customizer's colors and patterns are the
 //   whole of what changes. No model is called, so no daily cap applies; the
 //   burst limiter still does.
 //
@@ -272,7 +272,7 @@ sites.post('/', async (c) => {
 
   // ---- from the gallery ---------------------------------------------------
   // Nothing is written for the business; the person starts from the template
-  // as it is and changes its colours and patterns. Not idempotent: each
+  // as it is and changes its colors and patterns. Not idempotent: each
   // Customize is a new copy, which is what the account's "Create new site"
   // means.
   if ('slug' in parsed.data) {
@@ -554,7 +554,7 @@ sites.get('/', async (c) => {
     .orderBy(desc(site.updatedAt))
     .limit(100);
 
-  // The swatches a row shows are the colours the site wears now, so the
+  // The swatches a row shows are the colors the site wears now, so the
   // latest document is read for each - a site whose palette was changed and
   // saved should not list under the template's own.
   const [index, latest] = await Promise.all([
@@ -829,11 +829,11 @@ sites.post('/:id/images', async (c) => {
 // Bounded throughout: the planner treats a value over a slot's budget as a
 // warning, not an error, so without these a megabyte of text under a real
 // slot id was stored verbatim. The bounds are generous against anything the
-// customizer writes; a colour is a hex string, a design slug is short (the
+// customizer writes; a color is a hex string, a design slug is short (the
 // planner, not the schema, refuses one the catalog lacks, with its reason),
 // an option key is an identifier.
 const slotId = z.string().min(1).max(120);
-const colour = z.string().max(32);
+const color = z.string().max(32);
 const revisionRequestSchema = z.object({
   edits: z.object({
     specVersion: z.number().int(),
@@ -848,7 +848,7 @@ const revisionRequestSchema = z.object({
           slotId,
           z.object({
             slug: z.string().max(64).optional(),
-            palette: z.array(colour).max(16).optional(),
+            palette: z.array(color).max(16).optional(),
             options: z
               .record(z.string().max(64), z.union([z.string().max(64), z.number(), z.boolean()]))
               .optional(),
@@ -856,7 +856,7 @@ const revisionRequestSchema = z.object({
           })
         )
         .optional(),
-      palette: z.array(colour).max(16).optional(),
+      palette: z.array(color).max(16).optional(),
     }),
   }),
 });
@@ -1107,7 +1107,7 @@ sites.post('/:id/revise', async (c) => {
   // A stored turn the upstream no longer holds (retention ran out, or the
   // upstream pruned it) is a cache miss, not a failure: the call is made
   // again with the page restated, and that restatement gets its own repair
-  // turn. Continuity is an optimisation and never a dependency.
+  // turn. Continuity is an optimization and never a dependency.
   let restated = false;
 
   for (let attempt = 0; attempt < (restated ? 3 : 2) && !next; attempt++) {
@@ -1188,7 +1188,7 @@ sites.post('/:id/revise', async (c) => {
           chained && !restated && error.status !== undefined && error.status >= 400 && error.status < 500;
 
         if (staleChain) {
-          console.warn(`studio/sites/revise: previous_response_id not honoured, restating (${error.status})`);
+          console.warn(`studio/sites/revise: previous_response_id not honored, restating (${error.status})`);
           previousResponseId = undefined;
           restated = true;
           continue;

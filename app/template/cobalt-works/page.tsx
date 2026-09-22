@@ -42,7 +42,7 @@ const STEPS = [
   { n: 'I', t: 'Source', d: 'Earths from six quarries we have bought from for longer than any of us has worked here. Synthetics from two makers, both named on the label.' },
   { n: 'II', t: 'Wash and levigate', d: 'Natural earths are settled through four tanks over eleven days. What comes out of the last tank is what we sell.' },
   { n: 'III', t: 'Mill', d: 'Roller mill for the earths, jet mill for anything under 3 µm. Grind is measured on every batch and printed on the tin.' },
-  { n: 'IV', t: 'Draw down', d: 'Every batch is drawn down beside the retained standard in daylight. If a colourist can see the difference, the batch goes back.' },
+  { n: 'IV', t: 'Draw down', d: 'Every batch is drawn down beside the retained standard in daylight. If a colorist can see the difference, the batch goes back.' },
 ];
 
 const FACTS = [
@@ -55,7 +55,7 @@ const FACTS = [
 export default function CobaltWorksPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--bone': '#f6f4ee',
@@ -104,7 +104,7 @@ export default function CobaltWorksPage() {
           <div className={s.heroInner}>
             <p data-edit="hero.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Est. 1911 / Attercliffe</p>
             <h1 data-edit="hero.text" data-edit-format="emphasis" data-edit-max="70">
-              Colour is a
+              Color is a
               <br />
               <span>material</span> before
               <br />
@@ -248,7 +248,7 @@ export default function CobaltWorksPage() {
           <figure className={s.wide}>
             <Figure editId="photo.cobalt-chips"
               slug="cobalt-chips"
-              alt="A fan of painted colour chip cards ranging from pale to deep blue"
+              alt="A fan of painted color chip cards ranging from pale to deep blue"
             />
             <figcaption data-edit="matching.caption" data-edit-max="120" data-edit-multiline>Standards for PB 28, drawn down in daylight, kept for forty years.</figcaption>
           </figure>
@@ -376,7 +376,7 @@ export default function CobaltWorksPage() {
         {/* ---------------------------------------------------------- INDEX */}
         <section id="index" className={s.idx} aria-labelledby="idx-h">
           <h2 data-edit="index.title" data-edit-max="60" id="idx-h">Binders we stock</h2>
-          <p data-edit="index.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>Sold alongside the pigment because people ask, and because the wrong binder wastes good colour.</p>
+          <p data-edit="index.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>Sold alongside the pigment because people ask, and because the wrong binder wastes good color.</p>
           <ol className={s.idxList}>
             <li className={s.idxHead} aria-hidden="true">
                 <span data-edit="index.text" data-edit-max="60">Binder</span>
@@ -398,7 +398,7 @@ export default function CobaltWorksPage() {
               </li>
               <li key="Gum arabic, solution">
                 <span data-edit="index.text13" data-edit-max="60">Gum arabic, solution</span>
-                <span data-edit="index.text14" data-edit-max="60">Watercolour</span>
+                <span data-edit="index.text14" data-edit-max="60">Watercolor</span>
                 <span data-edit="index.text15" data-edit-max="60">500 ml</span>
                 <span data-edit="index.text16" data-edit-max="60">£16</span>
               </li>
@@ -432,7 +432,7 @@ export default function CobaltWorksPage() {
                 <dd data-edit="faq.body" data-edit-max="200" data-edit-multiline>Yes, and it always has been. A cutting quantity is how people find out whether they want twenty-five.</dd>
               </div>
               <div key="Can you match a historic">
-                <dt data-edit="faq.term2" data-edit-max="28">Can you match a historic colour?</dt>
+                <dt data-edit="faq.term2" data-edit-max="28">Can you match a historic color?</dt>
                 <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>Send a chip or a fragment. We will mill against it and send three drawdowns, with a note on what we think the original was.</dd>
               </div>
               <div key="Are your earths natural?">

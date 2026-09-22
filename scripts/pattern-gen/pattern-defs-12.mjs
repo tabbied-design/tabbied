@@ -1,10 +1,10 @@
 // Batch 12 - 32 designs that export as native SVG with no caveat at all.
 //
-// Batch 11 asked what the catalogue looks like when the *format* is the
+// Batch 11 asked what the catalog looks like when the *format* is the
 // constraint: designs that download as true vector files with no warning
 // dialog, no filter effects for a design tool to mangle, and no sub-pixel
 // deviation from what is on screen. This batch keeps that rule and spends most
-// of its designs on the one part of the supported CSS subset the catalogue had
+// of its designs on the one part of the supported CSS subset the catalog had
 // barely used - the smooth gradient.
 //
 // Nineteen of the thirty-two are ramps: straight fades over a solid ink, dot
@@ -12,13 +12,13 @@
 // ramps shut inside a cut shape, and a fade posterized into flat alpha levels.
 // They are safe for the same reason the hard-edged ones are: a
 // <linearGradient> or <radialGradient> carries the same stops CSS did, and the
-// converter subdivides a colour->transparent run to account for CSS
+// converter subdivides a color->transparent run to account for CSS
 // interpolating premultiplied alpha where SVG does not. Only *conic* blends
 // are impossible, and there are none.
 //
 // Every ramp is a mask over an ordinary background-color rather than a
-// two-colour background image. That keeps the ink transitionable - a reseed
-// morphs through the colour instead of snapping to it - and it makes the faded
+// two-color background image. That keeps the ink transitionable - a reseed
+// morphs through the color instead of snapping to it - and it makes the faded
 // end a real hole: set the background slot to transparent and the sheet shows
 // through a soft edge exactly as it does through a hard one.
 //
@@ -51,7 +51,7 @@
 // exactly one @random(${shapeFrequency}) gate per design; every design samples
 // a transition-able ink per cell so a reseed morphs; a randomized custom prop
 // read more than once goes through @var(--x); nothing paints var(--color0),
-// because a hole knocked out in the background colour stops being a hole the
+// because a hole knocked out in the background color stops being a hole the
 // moment the background is transparent.
 import { RESERVED, TAKEN12 } from './pattern-defs-12/shared.mjs';
 import { sectionA } from './pattern-defs-12/a-falloff.mjs';

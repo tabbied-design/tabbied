@@ -151,14 +151,14 @@ function checkOption(
 
 function checkPalette(path: string, colors: unknown): Problem[] {
   if (!Array.isArray(colors)) {
-    return [error(path, 'palette must be an array of colours')];
+    return [error(path, 'palette must be an array of colors')];
   }
 
   if (colors.length < MIN_PALETTE_COLORS) {
     return [
       error(
         path,
-        `palette needs at least ${MIN_PALETTE_COLORS} colours (a ground and an ink)`
+        `palette needs at least ${MIN_PALETTE_COLORS} colors (a ground and an ink)`
       ),
     ];
   }
@@ -166,7 +166,7 @@ function checkPalette(path: string, colors: unknown): Problem[] {
   return colors.flatMap((color, index) =>
     isHexColor(color)
       ? []
-      : [error(`${path}[${index}]`, `"${String(color)}" is not a hex colour`)]
+      : [error(`${path}[${index}]`, `"${String(color)}" is not a hex color`)]
   );
 }
 
@@ -210,7 +210,7 @@ export function planEdits(
   const edits = document.edits ?? {};
 
   // ---- palette ------------------------------------------------------------
-  // Resolved first because pattern fields re-colour from it, and an explicit
+  // Resolved first because pattern fields re-color from it, and an explicit
   // per-field palette in the same document has to win over that.
   let paletteColors: string[] | null = null;
 
@@ -307,7 +307,7 @@ export function planEdits(
   }
 
   // ---- patterns -----------------------------------------------------------
-  // Every pattern slot that re-colours from the brand palette needs an
+  // Every pattern slot that re-colors from the brand palette needs an
   // operation when the palette moved, even if the document never mentions it.
   const patternIds = new Set<string>(Object.keys(edits.patterns ?? {}));
 
@@ -503,7 +503,7 @@ function isPatternSlotWithRoles(slot: Slot): slot is PatternSlot {
   return slot.kind === 'pattern' && slot.paletteRoles != null;
 }
 
-/** Pattern slots that follow the brand palette - the ones a re-colour moves. */
-export function recolourablePatternSlots(spec: TemplateSpec): PatternSlot[] {
+/** Pattern slots that follow the brand palette - the ones a re-color moves. */
+export function recolorablePatternSlots(spec: TemplateSpec): PatternSlot[] {
   return spec.slots.filter(isPatternSlotWithRoles);
 }

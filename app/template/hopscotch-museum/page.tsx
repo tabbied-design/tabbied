@@ -54,7 +54,7 @@ const exhibits = [
     slug: 'hopscotch-rocket-cutout',
     alt: 'Red and white striped toy rocket standing on its fins',
     blurb:
-      'A two-storey rocket you climb through, mission control included. Countdown button pressed roughly 4,000 times a day.',
+      'A two-story rocket you climb through, mission control included. Countdown button pressed roughly 4,000 times a day.',
     tile: 'pattern' as const,
     bg: YELLOW,
     seed: 'hop-rocket',
@@ -78,7 +78,7 @@ const exhibits = [
     name: 'The Gear Wall',
     ages: 'All ages',
     slug: 'hopscotch-gears-cutout',
-    alt: 'Colourful cluster of interlocking plastic gears',
+    alt: 'Colorful cluster of interlocking plastic gears',
     blurb:
       'Forty cranks, one wall, infinite clatter. Make the whole thing spin and a bell rings somewhere upstairs. Find the bell.',
     tile: 'flat' as const,
@@ -191,7 +191,7 @@ const faqs = [
 export default function HopscotchMuseumPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--cream': '#fff9ef',
@@ -367,7 +367,7 @@ export default function HopscotchMuseumPage() {
               palette={[BLUE, CREAM, YELLOW, GREEN]}
               seed="hop-visit"
               fit="cover"
-              density={1}
+              density={0.25}
               className={styles.visitPattern}
             />
             <div className={styles.visitScrim} aria-hidden="true" />
@@ -432,7 +432,7 @@ export default function HopscotchMuseumPage() {
             palette={[CREAM, YELLOW, RED, GREEN, BLUE]}
             seed="hop-birthdays"
             fit="cover"
-            density={1}
+            density={0.25}
             className={styles.birthdayConfetti}
           />
           <div className={styles.birthdayScrim} aria-hidden="true" />

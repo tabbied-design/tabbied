@@ -87,7 +87,7 @@ function DirectionPreview({
       palette={palette}
       seed={seed}
       fit="cover"
-      density={2}
+      density={0.5}
       style={{ width: '100%', height: '100%' }}
     />
   );
@@ -316,7 +316,7 @@ export default function StudioResults({ entries }: { entries: StudioEntry[] }) {
                   </p>
 
                   <div className={styles.swatches} aria-hidden="true">
-                    {/* By position: a model-authored palette may repeat a colour. */}
+                    {/* By position: a model-authored palette may repeat a color. */}
                     {direction.palette.slice(0, SWATCHES).map((color, index) => (
                       <span key={index} style={{ background: color }} />
                     ))}

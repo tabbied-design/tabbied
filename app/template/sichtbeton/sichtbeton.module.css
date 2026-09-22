@@ -3,12 +3,12 @@
    The page is built like a formwork setting-out drawing: a coarse module, hard
    square corners, tolerances flush right, and one safety orange that only ever
    marks something that must be witnessed. Pattern fields run full width with
-   `transparent` in the background slot, so the grey paper is the concrete and
+   `transparent` in the background slot, so the gray paper is the concrete and
    the pattern is what is cast into it.
    ========================================================================== */
 
 .page {
-  --grey-p: #e9e9e6;
+  --gray-p: #e9e9e6;
   --ink: #131313;
   --orange: #ff5a00;
   --steel: #8b8b87;
@@ -18,7 +18,7 @@
 
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   letter-spacing: -0.014em;
-  background: var(--grey-p);
+  background: var(--gray-p);
   color: var(--ink);
   line-height: 1.5;
   overflow-x: clip;
@@ -52,7 +52,7 @@
   align-items: center;
   gap: var(--gut);
   padding: 0.8rem var(--gut);
-  background: color-mix(in srgb, var(--grey-p) 91%, transparent);
+  background: color-mix(in srgb, var(--gray-p) 91%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 3px solid var(--ink);
 }
@@ -312,7 +312,7 @@
   position: relative;
   height: 240px;
   overflow: hidden;
-  background: var(--grey-p);
+  background: var(--gray-p);
 }
 
 .tieField {
@@ -350,8 +350,8 @@
   inset: 0;
   background: radial-gradient(
     ellipse 68% 60% at 50% 34%,
-    var(--grey-p) 0%,
-    color-mix(in srgb, var(--grey-p) 62%, transparent) 60%,
+    var(--gray-p) 0%,
+    color-mix(in srgb, var(--gray-p) 62%, transparent) 60%,
     transparent 100%
   );
 }
@@ -513,7 +513,7 @@
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: color-mix(in srgb, var(--pale) 55%, var(--grey-p));
+  background: color-mix(in srgb, var(--pale) 55%, var(--gray-p));
   margin-bottom: 0.9rem;
 }
 
@@ -627,7 +627,7 @@
 
 .footer {
   background: var(--ink);
-  color: var(--grey-p);
+  color: var(--gray-p);
   padding: clamp(2.5rem, 6vw, 4rem) var(--gut) clamp(1.6rem, 3vw, 2.4rem);
 }
 
@@ -651,7 +651,7 @@
   margin: 0;
   max-width: 24rem;
   font-size: 0.88rem;
-  color: color-mix(in srgb, var(--grey-p) 74%, transparent);
+  color: color-mix(in srgb, var(--gray-p) 74%, transparent);
 }
 
 .footHead {
@@ -660,7 +660,7 @@
   font-weight: 600;
   letter-spacing: 0.17em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--grey-p) 52%, transparent);
+  color: color-mix(in srgb, var(--gray-p) 52%, transparent);
 }
 
 .footLinks {
@@ -673,7 +673,7 @@
 
 .footLinks a {
   font-size: 0.88rem;
-  color: color-mix(in srgb, var(--grey-p) 88%, transparent);
+  color: color-mix(in srgb, var(--gray-p) 88%, transparent);
 }
 
 .footLinks a:hover {
@@ -684,14 +684,14 @@
   margin: 0;
   font-size: 0.88rem;
   line-height: 1.62;
-  color: color-mix(in srgb, var(--grey-p) 88%, transparent);
+  color: color-mix(in srgb, var(--gray-p) 88%, transparent);
 }
 
 .footFine {
   max-width: var(--max);
   margin: clamp(2.5rem, 6vw, 4rem) auto 0;
   padding-top: 1.1rem;
-  border-top: 1px solid color-mix(in srgb, var(--grey-p) 18%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--gray-p) 18%, transparent);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(1rem, 3vw, 2.5rem);
@@ -700,11 +700,11 @@
 .footFine p {
   margin: 0;
   font-size: 0.76rem;
-  color: color-mix(in srgb, var(--grey-p) 56%, transparent);
+  color: color-mix(in srgb, var(--gray-p) 56%, transparent);
 }
 
 .footFine a {
-  color: color-mix(in srgb, var(--grey-p) 80%, transparent);
+  color: color-mix(in srgb, var(--gray-p) 80%, transparent);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -808,7 +808,7 @@
   position: relative;
   height: clamp(132px, 20vw, 248px);
   overflow: hidden;
-  background: var(--grey-p);
+  background: var(--gray-p);
 }
 
 .codaField {

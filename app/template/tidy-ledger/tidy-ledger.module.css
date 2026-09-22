@@ -11,7 +11,7 @@
   --ink: #1b1a2e;
   --violet: #6d5df5;
   --mint: #2ed3a5;
-  --grey: #7d7a94;
+  --gray: #7d7a94;
   --pale: #eceafb;
   --radius: 18px;
   --gut: clamp(1.25rem, 4vw, 3rem);
@@ -261,7 +261,7 @@
 .heroNote {
   margin: 1.1rem 0 0;
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .stats {
@@ -293,7 +293,7 @@
 .stats dd {
   margin: 0.25rem 0 0;
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------- sections */
@@ -583,7 +583,7 @@
 .tierPer {
   margin: 0.4rem 0 0;
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .tierFeatured .tierPer {
@@ -646,7 +646,7 @@
   margin: 2rem auto 0;
   max-width: 40rem;
   font-size: 0.84rem;
-  color: var(--grey);
+  color: var(--gray);
   text-align: center;
 }
 
@@ -686,7 +686,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .chips {
@@ -711,7 +711,7 @@
 .intNote {
   margin: 1.4rem 0 0;
   font-size: 0.86rem;
-  color: var(--grey);
+  color: var(--gray);
   max-width: 26rem;
 }
 
@@ -772,7 +772,7 @@
 .storyMeta {
   margin: 0;
   font-size: 0.82rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .storySince {
@@ -872,7 +872,7 @@
 .startNote {
   margin: 1.4rem auto 0;
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
   max-width: 34rem;
 }
 
@@ -926,7 +926,7 @@
   margin: 0;
   font-size: 0.84rem;
   line-height: 1.6;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footHead {
@@ -935,7 +935,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footLinks {
@@ -968,7 +968,7 @@
 .footFine p {
   margin: 0;
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footFine a {

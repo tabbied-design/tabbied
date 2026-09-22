@@ -2,7 +2,7 @@
   "name": "Tidering",
   "slug": "tidering",
   "galleryOrder": 1214,
-  "description": "The rings are centred on the bottom edge, so each cell shows a run of arcs rather than circles.",
+  "description": "The rings are centerd on the bottom edge, so each cell shows a run of arcs rather than circles.",
   "tags": [
     "arcs",
     "concentric",

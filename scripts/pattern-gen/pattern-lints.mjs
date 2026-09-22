@@ -5,7 +5,7 @@
 //
 //   * the *house* rules every batch since 6 has been checked against - one
 //     frequency gate, a transitionable ink per cell, no plain var() re-rolls,
-//     nothing painted in the background colour;
+//     nothing painted in the background color;
 //   * the *SVG* rules that keep a design in tier 4 of docs/svg-export.md - no
 //     declaration that exports as an SVG filter, no smooth conic sweep, no
 //     border on a partially-rounded box.
@@ -65,12 +65,12 @@ const splitTokens = (text) => {
 };
 
 /**
- * A conic-gradient span whose endpoints differ in colour is a smooth angular
+ * A conic-gradient span whose endpoints differ in color is a smooth angular
  * sweep - SVG has no angular gradient, and the converter throws on one. Only
- * hard stops are allowed: wherever the colour changes, the two stops must sit
+ * hard stops are allowed: wherever the color changes, the two stops must sit
  * at the same angle.
  *
- * Every stop is flattened to (colour, angle) pairs first, so the two-position
+ * Every stop is flattened to (color, angle) pairs first, so the two-position
  * shorthand `#000 0 42deg` is compared the same way a pair of stops would be.
  * Positions that are still css-doodle expressions (`@calc(20 + 310 * @y / @Y)deg`)
  * stay strings and compare textually: two stops written from the same

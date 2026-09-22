@@ -183,7 +183,7 @@ export const TEMPLATE_SITES: TemplateSite[] = [
     primaryCta: 'View collections',
     secondaryCta: 'Book an appointment',
     sectionTitle: 'The Prism collection',
-    sectionSub: 'Colour, held to the light.',
+    sectionSub: 'Color, held to the light.',
     items: [
       { eyebrow: 'N° 01', title: 'Aurora Ring', meta: 'sapphire · 18k', seed: 'fac1' },
       { eyebrow: 'N° 02', title: 'Spectra Drop', meta: 'tourmaline · platinum', seed: 'fac2' },
@@ -218,7 +218,7 @@ export const TEMPLATE_SITES: TemplateSite[] = [
     primaryCta: 'Find your plant',
     secondaryCta: 'Care quiz',
     stats: [{ n: 'Next-day', l: 'Local delivery' }, { n: '30-day', l: 'Thrive promise' }, { n: '120+', l: 'Varieties' }],
-    sectionTitle: 'Easy-care favourites',
+    sectionTitle: 'Easy-care favorites',
     sectionSub: 'Cut this morning, potted and ready to go.',
     items: [
       { eyebrow: 'Low light', title: 'ZZ Plant', meta: '$32', seed: 'v1' },

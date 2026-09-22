@@ -12,7 +12,7 @@ export const metadata = {
    in the off-white of the page rather than on a plate of its own. */
 const INK = '#111111';
 const RED = '#B3261E';
-const GREY = '#6B6B66';
+const GRAY = '#6B6B66';
 const PALE = '#DCD9CF';
 
 const NAV = [
@@ -39,9 +39,9 @@ const LEAD: Story = {
     'The council has confirmed that the 1908 structure will shut to vehicles from Monday 5 October, with the footway kept open except at the top of the tide.',
   byline: 'By Anne Storr, Harbour correspondent',
   body: [
-    'The bridge that joins the two halves of the town will close to traffic for the first time since 2011 while its turning gear is replaced. The work, put out to tender in March, has gone to a Hull firm that rebuilt the mechanism at Selby, and the council says the six-week programme has a fortnight of slack in it for weather.',
+    'The bridge that joins the two halves of the town will close to traffic for the first time since 2011 while its turning gear is replaced. The work, put out to tender in March, has gone to a Hull firm that rebuilt the mechanism at Selby, and the council says the six-week program has a fortnight of slack in it for weather.',
     'Pedestrians will keep the footway for most of each day. The bridge will be swung for the fishing fleet twice a day at high water, at which point the footway closes for up to forty minutes, and the council is asking the east side to plan around the tide table printed on page 15 of this edition.',
-    'Traders on Church Street, who lost an estimated third of their autumn takings in the 2011 closure, have asked for the contractor\'s programme to be published week by week. The council has agreed, and the Ledger will print it.',
+    'Traders on Church Street, who lost an estimated third of their autumn takings in the 2011 closure, have asked for the contractor\'s program to be published week by week. The council has agreed, and the Ledger will print it.',
   ],
 };
 
@@ -57,7 +57,7 @@ const STORIES: Story[] = [
   },
   {
     kicker: 'Town',
-    headline: 'Pannett Park bandstand to be repainted in its 1929 colours',
+    headline: 'Pannett Park bandstand to be repainted in its 1929 colors',
     standfirst: 'Green and cream, from a paint sample found under the eaves.',
     byline: 'By Cath Dunning',
     body: [
@@ -124,7 +124,7 @@ type Letter = {
 const LETTERS: Letter[] = [
   {
     title: 'The bridge closure',
-    body: 'Six weeks is optimistic. The last time the swing bridge shut, in 2011, the notice said four and the bridge said nine. Might the council publish the contractor\'s programme, so that those of us on the east side can plan our deliveries around it rather than around hope?',
+    body: 'Six weeks is optimistic. The last time the swing bridge shut, in 2011, the notice said four and the bridge said nine. Might the council publish the contractor\'s program, so that those of us on the east side can plan our deliveries around it rather than around hope?',
     from: 'D. Hebden, Church Street',
   },
   {
@@ -177,7 +177,7 @@ const HISTORY = [
   ['1902', 'Moves to Church Street, where the office still is'],
   ['1953', 'The flood edition, set by hand in Scarborough while the press stood under water'],
   ['1974', 'Bought by its staff when the Pennock family sold up'],
-  ['2011', 'The archive digitised, every edition back to the first'],
+  ['2011', 'The archive digitized, every edition back to the first'],
   ['2026', 'Edition 7,912. Twelve staff, one press, still Fridays'],
 ];
 
@@ -193,17 +193,17 @@ const OFFICE = [
 export default function HarbourLedgerPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f7f5ee',
         '--ink': '#111111',
         '--red': '#b3261e',
-        '--grey': '#6b6b66',
+        '--gray': '#6b6b66',
         '--pale': '#dcd9cf',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,red,grey,pale"
+      data-edit-vars="paper,ink,red,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -230,13 +230,13 @@ export default function HarbourLedgerPage() {
       <main id="top">
         {/* ------------------------------------------------------ MASTHEAD
             wale runs behind the nameplate as a field of ribbing, washed
-            with the paper colour where the name sits, so the type stays as
+            with the paper color where the name sits, so the type stays as
             crisp as a plate. */}
         <section className={s.masthead} aria-labelledby="masthead-h">
           <div data-edit-pattern="masthead.field" data-edit-roles="transparent,4,3,1" className={s.mastField} aria-hidden="true">
             <TabbiedPattern
               pattern={wale}
-              palette={['transparent', PALE, GREY, INK]}
+              palette={['transparent', PALE, GRAY, INK]}
               fit="grid"
               cellSize={112}
               redrawInterval={6000}
@@ -320,7 +320,7 @@ export default function HarbourLedgerPage() {
           <div data-edit-pattern="band.field" data-edit-roles="transparent,1,2,4,3" className={s.bandField} aria-hidden="true">
             <TabbiedPattern
               pattern={percale}
-              palette={['transparent', INK, RED, PALE, GREY]}
+              palette={['transparent', INK, RED, PALE, GRAY]}
               fit="grid"
               cellSize={96}
               redrawInterval={4600}
@@ -436,7 +436,7 @@ export default function HarbourLedgerPage() {
           <div data-edit-pattern="about.field" data-edit-roles="transparent,4,3,1" className={s.washField} aria-hidden="true">
             <TabbiedPattern
               pattern={eyot}
-              palette={['transparent', PALE, GREY, INK]}
+              palette={['transparent', PALE, GRAY, INK]}
               fit="grid"
               cellSize={104}
               redrawInterval={6800}
@@ -502,7 +502,7 @@ export default function HarbourLedgerPage() {
         <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField} aria-hidden="true">
           <TabbiedPattern
             pattern={wale}
-            palette={['transparent', PALE, GREY]}
+            palette={['transparent', PALE, GRAY]}
             fit="grid"
             cellSize={80}
             redrawInterval={5200}

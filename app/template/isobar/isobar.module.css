@@ -10,7 +10,7 @@
   --paper: #e9edf0;
   --ink: #0d1418;
   --violet: #6b2be0;
-  --grey: #7c8792;
+  --gray: #7c8792;
   --pale: #d3dae1;
   --white: #f7f9fa;
 
@@ -80,7 +80,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -113,7 +113,7 @@
 }
 
 /* A reading, not a slogan. The unit runs at a fifth of the size and carries
-   the colour, which is the only hierarchy the line needs. */
+   the color, which is the only hierarchy the line needs. */
 .heroType {
   margin: 0;
   display: flex;
@@ -207,13 +207,13 @@
 .dTemp span {
   font-size: 0.42em;
   vertical-align: super;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .dLo {
   margin: 0;
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .dW {
@@ -226,7 +226,7 @@
 .dP {
   margin: 0.15rem 0 0;
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* The confidence, drawn rather than described. Twelve pixels wide, as tall
@@ -237,7 +237,7 @@
   display: flex;
   align-items: flex-end;
   /* The empty part of the track is drawn too, faintly: a bar with nothing
-     behind it can only be compared to its neighbours, and this one has to be
+     behind it can only be compared to its neighbors, and this one has to be
      readable on its own. */
   background: color-mix(in srgb, var(--ink) 8%, transparent);
 }
@@ -261,7 +261,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------- statement */
@@ -403,7 +403,7 @@
 
 .tId {
   font-weight: 600;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .tLevel {
@@ -483,7 +483,7 @@
   font-weight: 600;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------------- quote */
@@ -641,7 +641,7 @@
   margin: 0;
   font-size: 0.78rem;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* A locator, not a map: the pattern stands in for the ground and the offices
@@ -695,7 +695,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 

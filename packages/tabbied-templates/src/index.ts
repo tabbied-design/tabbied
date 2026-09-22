@@ -50,7 +50,7 @@ export {
   validateSpec,
   hasErrors,
   formatProblems,
-  recolourablePatternSlots,
+  recolorablePatternSlots,
   MIN_PALETTE_COLORS,
 } from './plan.js';
 

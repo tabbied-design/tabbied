@@ -14,9 +14,9 @@ const AZURE = '#1B98E0';
 const ICE = '#E0FBFC';
 const ORANGE = '#FF7B00';
 const YELLOW = '#FFD23F';
-const GREY = '#EAEAEA';
+const GRAY = '#EAEAEA';
 
-const FULL_PALETTE = [NAVY, AZURE, ICE, ORANGE, YELLOW, GREY];
+const FULL_PALETTE = [NAVY, AZURE, ICE, ORANGE, YELLOW, GRAY];
 const BLUEPRINT_PALETTE = [NAVY, '#14385C', AZURE, '#0F2A45', ICE];
 const EMBER_PALETTE = ['#081220', ORANGE, YELLOW, '#14385C', AZURE];
 
@@ -26,7 +26,7 @@ const BUILDS = [
     name: 'Tramontane',
     kind: 'All-road randonneur',
     price: 'Framesets from $3,400 · complete builds from $7,900',
-    copy: 'Low-trail geometry drawn for a handlebar bag and a long day. Triple-butted 9/6/9 chromoly, thin-wall fork blades raked to 65 mm, and clearance for 42 mm tyres with fenders. It disappears under you at hour nine, which is the whole point.',
+    copy: 'Low-trail geometry drawn for a handlebar bag and a long day. Triple-butted 9/6/9 chromoly, thin-wall fork blades raked to 65 mm, and clearance for 42 mm tires with fenders. It disappears under you at hour nine, which is the whole point.',
     specs: ['650B or 700C', 'Trail 38 mm', 'Rack + dynamo bosses', 'Paint: storm navy / signal orange'],
     featured: true,
   },
@@ -83,7 +83,7 @@ const PROCESS = [
     n: '04',
     title: 'The build',
     time: '3 WKS',
-    copy: 'Tubes mitred to the half millimetre, pinned, brazed, and left to normalize overnight before alignment. Your frame is checked on the plate twice: hot and cold.',
+    copy: 'Tubes mitred to the half millimeter, pinned, brazed, and left to normalize overnight before alignment. Your frame is checked on the plate twice: hot and cold.',
   },
   {
     n: '05',
@@ -120,7 +120,7 @@ const PROVISIONS = [
 const FAQS = [
   {
     q: 'Why steel, in this decade?',
-    a: 'Because it can be repaired, repainted, and re-loved for fifty years. Because tubing walls under a torch respond to a builder in a way moulds never will. And because a good steel frame rides like a conversation, not a lecture.',
+    a: 'Because it can be repaired, repainted, and re-loved for fifty years. Because tubing walls under a torch respond to a builder in a way molds never will. And because a good steel frame rides like a conversation, not a lecture.',
   },
   {
     q: 'How long is the wait, really?',
@@ -128,7 +128,7 @@ const FAQS = [
   },
   {
     q: 'Can you copy the geometry of my old frame?',
-    a: 'We can measure it, learn from it, and keep everything you love. We will also quietly fix its front-centre if it has been clipping your toes for a decade. That part is not optional.',
+    a: 'We can measure it, learn from it, and keep everything you love. We will also quietly fix its front-center if it has been clipping your toes for a decade. That part is not optional.',
   },
   {
     q: 'Do you ship internationally?',
@@ -143,7 +143,7 @@ const FAQS = [
 export default function MistralCyclesPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--navy': '#0d1b2a',
@@ -153,10 +153,10 @@ export default function MistralCyclesPage() {
         '--ice': '#e0fbfc',
         '--orange': '#ff7b00',
         '--yellow': '#ffd23f',
-        '--grey': '#eaeaea',
+        '--gray': '#eaeaea',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="navy,navy-2,navy-3,azure,ice,orange,yellow,grey"
+      data-edit-vars="navy,navy-2,navy-3,azure,ice,orange,yellow,gray"
       className={styles.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -189,7 +189,7 @@ export default function MistralCyclesPage() {
               palette={BLUEPRINT_PALETTE}
               seed="mc-hero-04"
               fit="cover"
-              density={1}
+              density={0.25}
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
@@ -202,7 +202,7 @@ export default function MistralCyclesPage() {
               </h1>
               <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={styles.lede}>
                 Every Mistral begins as a full-scale pencil drawing and ends as mitred,
-                brazed chromoly, checked on the alignment plate to a half millimetre,
+                brazed chromoly, checked on the alignment plate to a half millimeter,
                 twice. Two builders. Around forty frames a year. No two alike, all of
                 them true.
               </p>
@@ -273,7 +273,7 @@ export default function MistralCyclesPage() {
               <h3 data-edit="phil.title3" data-edit-max="40">Fit is geometry</h3>
               <p data-edit="phil.body2" data-edit-max="240" data-edit-multiline>
                 A stem swap is a patch; geometry is the cure. We move the tubes,
-                not your spine. Reach, stack, trail and front-centre are drawn
+                not your spine. Reach, stack, trail and front-center are drawn
                 around your body and your loads before a single mitre is cut.
               </p>
             </article>
@@ -372,7 +372,7 @@ export default function MistralCyclesPage() {
               palette={BLUEPRINT_PALETTE}
               seed="mc-geo-31"
               fit="cover"
-              density={1}
+              density={0.25}
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
@@ -381,7 +381,7 @@ export default function MistralCyclesPage() {
             <p data-edit="geometry.sectionNo" data-edit-max="240" data-edit-multiline className={styles.sectionNo}>§ 03</p>
             <h2 data-edit="geometry.title" data-edit-max="60" id="geo-title">Geometry: Tramontane, stock drawings</h2>
             <p data-edit="geometry.sectionSub" data-edit-max="240" data-edit-multiline className={styles.sectionSub}>
-              Millimetres unless noted. Custom drawings deviate freely; these are
+              Millimeters unless noted. Custom drawings deviate freely; these are
               where the pencil starts.
             </p>
           </div>
@@ -549,7 +549,7 @@ export default function MistralCyclesPage() {
               <div className={styles.founderTile}>
                 <Figure editId="photo.mistral-founder-2"
                   slug="mistral-founder-2"
-                  alt="Portrait of Arjun Mehta, painter and fitter, in a grey shop apron"
+                  alt="Portrait of Arjun Mehta, painter and fitter, in a gray shop apron"
                   className={styles.founderImg}
                 />
               </div>
@@ -558,7 +558,7 @@ export default function MistralCyclesPage() {
               <p data-edit="founder.body2" data-edit-max="240" data-edit-multiline>
                 Trained as an industrial designer, converted by a borrowed 1974
                 tourer with a bent fork he fixed in a stairwell. Arjun runs the
-                fit jig, mixes every paint colour in-house, and letters the
+                fit jig, mixes every paint color in-house, and letters the
                 drawing that you sign.
               </p>
             </article>
@@ -609,7 +609,7 @@ export default function MistralCyclesPage() {
             palette={EMBER_PALETTE}
             seed="mc-cta-19"
             fit="cover"
-            density={2}
+            density={0.5}
             style={{ position: 'absolute', inset: 0 }}
           />
           <div className={styles.ctaInner}>

@@ -11,7 +11,7 @@ export const metadata = {
     'Mesura is a structural engineering office in Barcelona. Long-span steel, post-tensioned concrete, and the arithmetic that holds them up.',
 };
 
-/* Paper, ink, one orange, two greys. Pattern fields take `transparent` in the
+/* Paper, ink, one orange, two grays. Pattern fields take `transparent` in the
    background slot so the paper reads through every gap. */
 const INK = '#15171A';
 const ORANGE = '#FF6A00';
@@ -28,7 +28,7 @@ const TILE_B = PALE;
 
 
 const CAPABILITIES = [
-  { n: '01', t: 'Long-span steel', d: 'Trusses, arches and space frames from 30 to 180 metres. Fabrication drawings issued from the same model we analysed.' },
+  { n: '01', t: 'Long-span steel', d: 'Trusses, arches and space frames from 30 to 180 meters. Fabrication drawings issued from the same model we analyzed.' },
   { n: '02', t: 'Post-tensioned concrete', d: 'Flat slabs and transfer structures. We draw the tendon layout before the architect fixes the column grid, and say why.' },
   { n: '03', t: 'Assessment and reuse', d: 'Load testing and capacity checks on structures older than the codes that would condemn them. Most of them pass.' },
   { n: '04', t: 'Seismic retrofit', d: 'Base isolation, added damping, and the unglamorous work of tying a floor plate back to a wall it was never connected to.' },
@@ -40,7 +40,7 @@ const PROJECTS = [
   { code: 'M-231', name: 'Mercat de la Vall', span: '64 m', mat: 'Steel arch', year: '2026', role: 'Full design' },
   { code: 'M-228', name: 'Pont de Sant Roc', span: '112 m', mat: 'Composite box', year: '2025', role: 'Full design' },
   { code: 'M-219', name: 'Nau 7, Poblenou', span: '31 m', mat: 'Reuse, timber added', year: '2025', role: 'Assessment' },
-  { code: 'M-207', name: 'Torre Aigua', span: '9 storeys', mat: 'PT flat slab', year: '2024', role: 'Full design' },
+  { code: 'M-207', name: 'Torre Aigua', span: '9 stories', mat: 'PT flat slab', year: '2024', role: 'Full design' },
   { code: 'M-198', name: 'Escola Bruguera', span: '22 m', mat: 'Seismic retrofit', year: '2023', role: 'Retrofit' },
 ];
 
@@ -54,7 +54,7 @@ const NUMBERS = [
 export default function MesuraPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f2f1ed',
@@ -246,7 +246,7 @@ export default function MesuraPage() {
                 <li>
                   <span data-edit="method.text2" data-edit-max="60">B</span>
                   <div>
-                    <h3 data-edit="method.title2" data-edit-max="40">Model and analyse</h3>
+                    <h3 data-edit="method.title2" data-edit-max="40">Model and analyze</h3>
                     <p data-edit="method.body2" data-edit-max="240" data-edit-multiline>Linear first, non-linear only where the answer depends on it. Every model is archived with its inputs.</p>
                   </div>
                 </li>
@@ -367,7 +367,7 @@ export default function MesuraPage() {
                 </div>
                 <p data-edit="tiles.tileN2" data-edit-max="240" data-edit-multiline className={s.tileN}>02</p>
                 <h3 data-edit="tiles.title3" data-edit-max="40">The connection, not the member</h3>
-                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>The member is a catalogue page. The joint is a decision, and it is where the load actually has to be believed.</p>
+                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>The member is a catalog page. The joint is a decision, and it is where the load actually has to be believed.</p>
               </article>
               <article key="03">
                 <div data-edit-pattern="tiles.field3" data-edit-roles="transparent,3,4" className={s.tilePlate} aria-hidden="true">
@@ -390,7 +390,7 @@ export default function MesuraPage() {
                 </div>
                 <p data-edit="tiles.tileN3" data-edit-max="240" data-edit-multiline className={s.tileN}>03</p>
                 <h3 data-edit="tiles.title4" data-edit-max="40">Time</h3>
-                <p data-edit="tiles.tileBody3" data-edit-max="240" data-edit-multiline className={s.tileBody}>Creep, shrinkage, thermal cycling, and the fact that a building is loaded for eighty years and analysed for an afternoon.</p>
+                <p data-edit="tiles.tileBody3" data-edit-max="240" data-edit-multiline className={s.tileBody}>Creep, shrinkage, thermal cycling, and the fact that a building is loaded for eighty years and analyzed for an afternoon.</p>
               </article>
           </div>
         </section>
@@ -455,7 +455,7 @@ export default function MesuraPage() {
               </div>
               <div key="Will you tell us it cann">
                 <dt data-edit="faq.term2" data-edit-max="28">Will you tell us it cannot be done?</dt>
-                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>Rarely. We will tell you what it costs, in depth, in money and in programme, and let you decide whether the idea is worth it.</dd>
+                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>Rarely. We will tell you what it costs, in depth, in money and in program, and let you decide whether the idea is worth it.</dd>
               </div>
               <div key="Can we use your model?">
                 <dt data-edit="faq.term3" data-edit-max="28">Can we use your model?</dt>

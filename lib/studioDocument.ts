@@ -88,7 +88,7 @@ export type SiteSummary = {
   /** The direction's stance, or '' for a site made from the gallery. */
   stance: string;
   /**
-   * The colours the site currently wears: the latest revision's palette when
+   * The colors the site currently wears: the latest revision's palette when
    * one was saved, the direction's or the template's own otherwise.
    */
   palette: string[];

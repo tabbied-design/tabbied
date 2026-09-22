@@ -182,16 +182,26 @@ export function buildAuth(env: Env) {
       useSecureCookies: !isDev(env),
     },
 
-    // Dev only, and any loopback origin rather than a list of ports. The site
-    // runs on :3000 while the Worker runs on :8787, `npm run preview` picks its
-    // own, and a test harness picks another again - a hardcoded pair silently
-    // rejects every one it does not name, as "Invalid origin", which reads like
-    // a bug in the form rather than a missing entry here.
+    // Two origins beside PUBLIC_ORIGIN, and nothing else: the origin check
+    // otherwise falls back to baseURL, which is the whole point of being
+    // same-origin.
     //
-    // In production this returns nothing and the origin check falls back to
-    // baseURL, which is the whole point of being same-origin.
+    // In dev, any loopback origin rather than a list of ports. The site runs
+    // on :3000 while the Worker runs on :8787, `npm run preview` picks its
+    // own, and a test harness picks another again - a hardcoded pair silently
+    // rejects every one it does not name, as "Invalid origin", which reads
+    // like a bug in the form rather than a missing entry here.
+    //
+    // On a preview deployment, the deployment's own origin. Workers Builds
+    // gives every branch and every version a *.workers.dev host, so a sign-in
+    // there arrives from that host and not from PUBLIC_ORIGIN, and answered
+    // "Invalid origin" on every preview. The host is trusted only for a
+    // request that is same-origin with it (the Origin header naming the very
+    // host the request arrived on), so nothing is gained by naming a
+    // workers.dev origin from anywhere else; the cookie a preview issues is
+    // host-only, so it never reaches production.
     trustedOrigins: (request) => {
-      if (!isDev(env) || !request) {
+      if (!request) {
         return [];
       }
 
@@ -203,7 +213,26 @@ export function buildAuth(env: Env) {
 
       const { hostname } = new URL(origin);
 
-      return hostname === 'localhost' || hostname === '127.0.0.1' ? [origin] : [];
+      if (isDev(env) && (hostname === 'localhost' || hostname === '127.0.0.1')) {
+        return [origin];
+      }
+
+      return isPreviewOrigin(origin, request) ? [origin] : [];
     },
   });
+}
+
+/**
+ * A preview deployment's own origin: a *.workers.dev host that is also the
+ * host this request arrived on. Same-origin is the whole test, since a
+ * request from any other page carries that page's origin, not this host's.
+ */
+export function isPreviewOrigin(origin: string, request: Request): boolean {
+  try {
+    const { hostname } = new URL(origin);
+
+    return hostname.endsWith('.workers.dev') && origin === new URL(request.url).origin;
+  } catch {
+    return false;
+  }
 }

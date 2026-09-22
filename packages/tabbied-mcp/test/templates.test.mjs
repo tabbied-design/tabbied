@@ -1,6 +1,6 @@
 // The template tools.
 //
-// Unlike the design tools, these read *site* artefacts rather than the
+// Unlike the design tools, these read *site* artifacts rather than the
 // installed package, so a fixture is the honest choice here - the generated
 // specs are not in this package's dependency tree, and a test that fetched
 // tabbied.com would be testing the deploy.

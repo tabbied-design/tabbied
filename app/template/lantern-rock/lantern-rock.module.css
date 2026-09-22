@@ -1,6 +1,6 @@
 /* ==========================================================================
    LANTERN ROCK - lighthouse keepers' inn, Pembrokeshire
-   Off-white paper, navy ink, one red, a grey and a pale blue. Libre
+   Off-white paper, navy ink, one red, a gray and a pale blue. Libre
    Baskerville for anything that is a heading, a year or a rate; Source Sans
    for everything read at length. Double rules stand in for rope, navy panels
    carry cream type, labels are set in small capitals, and the compass is
@@ -12,7 +12,7 @@
   --paper: #f5f3ec;
   --ink: #0f2440;
   --red: #c8102e;
-  --grey: #7b8794;
+  --gray: #7b8794;
   --pale: #d9dfe5;
   --display: 'Libre Baskerville', Baskerville, 'Times New Roman', serif;
   --body: 'Source Sans 3', 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
@@ -80,7 +80,7 @@
   font-variant-caps: small-caps;
   font-size: 0.86rem;
   letter-spacing: 0.18em;
-  color: var(--grey);
+  color: var(--gray);
   margin: 0 0 0.9rem;
 }
 
@@ -401,7 +401,7 @@
 
 .keeper {
   font-style: italic;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .roomFacts {
@@ -611,7 +611,7 @@
   font-family: var(--body);
   font-size: 0.75rem;
   letter-spacing: 0.06em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .walkTime {
@@ -698,7 +698,7 @@
 }
 
 .tideRange {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- book
@@ -896,7 +896,7 @@
 
 .footFine p {
   font-size: 0.82rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footFine a {

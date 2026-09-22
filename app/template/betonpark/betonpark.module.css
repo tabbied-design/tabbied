@@ -11,7 +11,7 @@
   --paper: #ededea;
   --ink: #0b0b0b;
   --green: #2bd32b;
-  --grey: #7a7a76;
+  --gray: #7a7a76;
   --pale: #d2d2cc;
   --rule: 3px;
   --gut: clamp(1rem, 4vw, 3rem);
@@ -50,7 +50,7 @@
 }
 
 /* The mono label, used everywhere a thing needs naming rather than reading:
-   nav, day names, prices, terms. One rule, then per-place colour and size. */
+   nav, day names, prices, terms. One rule, then per-place color and size. */
 .nav a,
 .barMeta,
 .heroKicker,
@@ -222,7 +222,7 @@
 .facts dd {
   margin: 0.3rem 0 0;
   font-size: 0.66rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------- section head
@@ -306,7 +306,7 @@
 
 .dayName {
   font-size: 0.62rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .dayOpen,
@@ -326,7 +326,7 @@
   font-size: 0.58rem;
   font-weight: 400;
   letter-spacing: 0.08em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .dayOpen::before {
@@ -424,7 +424,7 @@
   margin: 0;
   font-size: 0.72rem;
   letter-spacing: 0.06em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .rampText {
@@ -476,7 +476,7 @@
   margin: 0;
   font-size: 0.7rem;
   letter-spacing: 0.06em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .sessBody {
@@ -558,7 +558,7 @@
 }
 
 /* ---------------------------------------------------------------- rules
-   The quiet field. gorge at low opacity, and a wash of the paper colour
+   The quiet field. gorge at low opacity, and a wash of the paper color
    concentrated where the list sits, so the numbers stay legible. */
 
 .rules {
@@ -683,7 +683,7 @@
 
 .findList dt {
   font-size: 0.7rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .findList dd {

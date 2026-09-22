@@ -158,11 +158,11 @@ The remote server reads `/catalog.json`, `/previews/*.webp`,
 `/llms-full.txt`, `/editable-catalog.json`, and `/editable/<slug>.json`
 **through its own assets binding** rather than bundling them. The tools
 therefore describe exactly the bytes that deployment serves, and a 384 KB
-catalog stays out of the Worker. Reads are memoised per isolate, and a failed
+catalog stays out of the Worker. Reads are memoized per isolate, and a failed
 read is not cached - except the template specs, which are many and each read
 rarely, so they are fetched per call.
 
-The template artefacts are *site* artefacts, generated from the static export
+The template artifacts are *site* artifacts, generated from the static export
 (see `editable-templates.md`), which is why the local server fetches those two
 over the network with no local fallback: the `tabbied` package does not contain
 them, so there is nothing local to prefer. A host that cannot resolve them

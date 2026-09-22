@@ -252,12 +252,14 @@ looking at.
 
 ### Reduced motion
 
-Under `prefers-reduced-motion: reduce` the controller suppresses **both**
-sources of movement, with no configuration:
+Under `prefers-reduced-motion: reduce` the controller suppresses **every**
+source of movement, with no configuration:
 
-- the `redrawInterval` timer never starts, and
+- the `redrawInterval` timer never starts,
 - the designs' own cell transitions are muted, so anything that re-renders
-  cuts to the new arrangement instead of morphing into it.
+  cuts to the new arrangement instead of morphing into it, and
+- the keyframe animations a few designs declare are paused on their first
+  frame.
 
 The second half matters more than it sounds. Every design carries a ~400ms
 `transition`, and a re-render is not always something the reader asked for: a
@@ -292,7 +294,7 @@ all up with one call:
 ```
 
 The attributes are readable rather than a JSON blob - the point is that
-somebody editing a page can change a colour or a slug without decoding
+somebody editing a page can change a color or a slug without decoding
 anything. Values are typed by the pattern's own option metadata, so a
 `ButtonSelectGroup` choice that looks numeric stays a string.
 

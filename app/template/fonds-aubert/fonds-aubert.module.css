@@ -1,7 +1,7 @@
 /* ==========================================================================
    FONDS AUBERT - private records archive, Lausanne
    A finding-aid page: everything is a reference, a span of dates and an
-   extent. Type is small and the leading is loose, the way a catalogue reads.
+   extent. Type is small and the leading is loose, the way a catalog reads.
    Pattern fields run full width with `transparent` in the background slot, so
    they behave like the tint blocks on an archival box label.
    ========================================================================== */
@@ -10,7 +10,7 @@
   --paper: #f0f0e8;
   --ink: #1a1c18;
   --olive: #4c6b2f;
-  --grey: #8c8f84;
+  --gray: #8c8f84;
   --pale: #dedad4;
   --gut: clamp(1.15rem, 4vw, 3.25rem);
   --max: 78rem;
@@ -71,7 +71,7 @@
   font-weight: 400;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .bar nav {
@@ -127,9 +127,9 @@
 }
 
 .hero /* The muted second line sits over the hero pattern; plain
-     var(--grey) measured under AA on the glyph pixels. */
+     var(--gray) measured under AA on the glyph pixels. */
   h1 span {
-  color: color-mix(in srgb, var(--grey) 75%, var(--ink));
+  color: color-mix(in srgb, var(--gray) 75%, var(--ink));
 }
 
 .lede {
@@ -157,7 +157,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .bleed figcaption {
@@ -221,7 +221,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- headings */
@@ -270,7 +270,7 @@
   font-size: 0.65rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   padding-bottom: 0.4rem !important;
 }
 
@@ -313,7 +313,7 @@
 }
 
 .todo {
-  color: var(--grey);
+  color: var(--gray);
   box-shadow: inset 0 0 0 1px currentColor;
 }
 
@@ -491,7 +491,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   margin-bottom: 0.4rem;
 }
 
@@ -590,7 +590,7 @@
   font-size: 0.64rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey) !important;
+  color: var(--gray) !important;
   padding-bottom: 0.4rem !important;
 }
 
@@ -604,7 +604,7 @@
 .idxList li > :last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .faqList {

@@ -5,7 +5,7 @@ import s from './werkstatt-neun.module.css';
 export const metadata = {
   title: 'Werkstatt Neun: Design school summer workshop, Dessau',
   description:
-    'Werkstatt Neun is a four-week summer school in a 1929 hall in Dessau. Typography, weaving, metal and colour theory, twenty-four places each, taught by people who make things for a living.',
+    'Werkstatt Neun is a four-week summer school in a 1929 hall in Dessau. Typography, weaving, metal and color theory, twenty-four places each, taught by people who make things for a living.',
 };
 
 /* The three primaries and the ink. Every field takes `transparent` in the
@@ -71,7 +71,7 @@ const WORKSHOPS: Workshop[] = [
   },
   {
     no: '04',
-    title: 'Colour theory',
+    title: 'Color theory',
     block: 'Block B',
     dates: '19 to 31 July 2027',
     tutor: 'Ilka Brandt',
@@ -103,7 +103,7 @@ const TUTORS: Tutor[] = [
   { no: '1', name: 'Hanne Vieth', role: 'Typography', bio: 'Ran the composing room of a Leipzig type foundry for nine years and still sets her own letterhead.' },
   { no: '2', name: 'Ruth Amsel', role: 'Weaving', bio: 'Textile designer in Halle; weaves upholstery cloth for two furniture makers and nothing else.' },
   { no: '3', name: 'Jakob Steinhauer', role: 'Metal', bio: 'Trained as a silversmith, makes lamps in an old dairy outside Wittenberg, repairs the hall lathe himself.' },
-  { no: '4', name: 'Ilka Brandt', role: 'Colour theory', bio: 'Painter. Taught colour at a school in Halle for eleven years and has never used a projector.' },
+  { no: '4', name: 'Ilka Brandt', role: 'Color theory', bio: 'Painter. Taught color at a school in Halle for eleven years and has never used a projector.' },
   { no: '5', name: 'Moritz Kahn', role: 'Director, Vorkurs', bio: 'Furniture designer; runs the daily hour of basic form and the closing show, and answers the post.' },
   { no: '6', name: 'Petra Lange', role: 'Workshop master', bio: 'Keeps twelve looms, a lathe, two presses and forty people from harming each other. Ask her first.' },
 ];
@@ -125,9 +125,9 @@ const APPLY: ApplyStep[] = [
 const BUILDING = [
   ['Built', '1929, as the testing hall of a lamp works'],
   ['Structure', 'Concrete frame, sawtooth roof, glass wall to the north'],
-  ['Floor', '1 400 square metres on one level, no steps'],
+  ['Floor', '1 400 square meters on one level, no steps'],
   ['Restored', '2019, with the original window frames kept'],
-  ['Studios', 'Four, one per workshop, each 22 by 12 metres'],
+  ['Studios', 'Four, one per workshop, each 22 by 12 meters'],
   ['Named', 'Halle Neun, after the number over the door'],
 ];
 
@@ -143,7 +143,7 @@ const STAY = [
 export default function WerkstattNeunPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f2efe6',
@@ -210,7 +210,7 @@ export default function WerkstattNeunPage() {
                 <span className={s.barYellow} />
               </div>
               <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
-                Typography, weaving, metal and colour theory, taught by people
+                Typography, weaving, metal and color theory, taught by people
                 who make things for a living, in a hall built in 1929 for
                 testing lamps. Twenty-four places each. No lectures before
                 seven in the evening.
@@ -402,7 +402,7 @@ export default function WerkstattNeunPage() {
               </div>
               <p data-edit="building.buildingLead" data-edit-max="240" data-edit-multiline className={s.buildingLead}>
                 A concrete frame with a sawtooth roof and a glass wall
-                twenty-two metres long facing north, built to test lamps and
+                twenty-two meters long facing north, built to test lamps and
                 never used for anything louder than a lathe since. The light
                 is even from eight in the morning to eight at night, which is
                 why the timetable is the shape it is.
@@ -487,7 +487,7 @@ export default function WerkstattNeunPage() {
         <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Werkstatt Neun</p>
         <div className={s.footGrid}>
           <div>
-            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Programme</h2>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Program</h2>
             <ul className={s.footLinks}>
               <li><a data-edit="footer.workshops" data-edit-max="28" href="#workshops">Four workshops</a></li>
               <li><a data-edit="footer.timetable" data-edit-max="28" href="#timetable">A week in the hall</a></li>

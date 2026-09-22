@@ -15,7 +15,7 @@ const { add, all } = section('L. Ring');
 
 add(
   'Ringfield',
-  'Rings on a close pitch, run from a point on one edge rather than the centre.',
+  'Rings on a close pitch, run from a point on one edge rather than the center.',
   (c) => ({
     rule: `--rot: ${R4}; ${F} { ${faded(c, ringsL('4%', '13%', '50% 100%'))} ${rot('@var(--rot)')} }${TR}`,
   }),

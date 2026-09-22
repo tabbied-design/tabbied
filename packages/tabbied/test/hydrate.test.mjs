@@ -43,7 +43,7 @@ test('round trips every serializable field', () => {
     palette: ['#0B1020', '#3E8BFF', '#3FFFB2'],
     fit: 'cover',
     cellSize: 48,
-    density: 2,
+    density: 0.5,
     width: 360,
     height: 540,
     coverRender: { width: 800, height: 1200 },
@@ -58,7 +58,7 @@ test('round trips every serializable field', () => {
   assert.deepEqual(parsed.palette, config.palette);
   assert.equal(parsed.fit, 'cover');
   assert.equal(parsed.cellSize, 48);
-  assert.equal(parsed.density, 2);
+  assert.equal(parsed.density, 0.5);
   assert.equal(parsed.width, 360);
   assert.equal(parsed.height, 540);
   assert.deepEqual(parsed.coverRender, { width: 800, height: 1200 });

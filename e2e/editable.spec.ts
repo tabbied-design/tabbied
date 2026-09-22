@@ -3,11 +3,11 @@
 // The unit tests in packages/tabbied-templates cover every decision the engine
 // makes, with no DOM. What they cannot cover is the half that only exists in a
 // browser - that the annotations survived the export and the packager, that the
-// slot ids still find their elements, and that a re-colour reaches both the
+// slot ids still find their elements, and that a re-color reaches both the
 // stylesheet's custom properties and the pattern fields.
 //
 // So this runs the real engine against the real packaged download, which is
-// the artefact a stranger gets. Requires `npm run build` (or `next build` plus
+// the artifact a stranger gets. Requires `npm run build` (or `next build` plus
 // `npm run editable` and `npm run templates`); skips loudly rather than failing
 // when those haven't run, matching e2e/templates.spec.ts.
 import { test, expect } from '@playwright/test';
@@ -146,8 +146,8 @@ test.describe('editable templates', () => {
     );
     expect(ink.trim()).not.toBe('');
 
-    // Pattern fields that follow the brand palette were re-coloured, and the
-    // literal `transparent` in colour0 of an overlay field was not touched -
+    // Pattern fields that follow the brand palette were re-colored, and the
+    // literal `transparent` in color0 of an overlay field was not touched -
     // that is what keeps a field readable over a photograph.
     const palettes = await page
       .locator('[data-edit-pattern] [data-pattern]')
@@ -191,7 +191,7 @@ test.describe('editable templates', () => {
 // The other palette derivation. The 52 bespoke pages each own their custom
 // property names (`--navy`, `--bone`, ...) rather than the shared component's,
 // and their annotations were added by a codemod rather than by hand - so the
-// thing worth proving here is that a re-colour reaches a page whose stylesheet
+// thing worth proving here is that a re-color reaches a page whose stylesheet
 // never heard of `--brand-0`, and that the codemod's generated slot ids
 // actually find their elements.
 test.describe('editable templates (bespoke page)', () => {
@@ -207,7 +207,7 @@ test.describe('editable templates (bespoke page)', () => {
     'run `npm run build` first'
   );
 
-  test('a vars-derivation page re-colours through its own property names', async ({
+  test('a vars-derivation page re-colors through its own property names', async ({
     page,
   }) => {
     const spec = JSON.parse(fs.readFileSync(bespokeSpecPath as string, 'utf8'));
@@ -244,7 +244,7 @@ test.describe('editable templates (bespoke page)', () => {
 
     // The page's own property, not --brand-0, and it actually resolves: the
     // stylesheet's authored default sits in a class rule, so the inline
-    // property has to win for a re-colour to be visible at all.
+    // property has to win for a re-color to be visible at all.
     const ground = await page.evaluate((name) => {
       const root = document.querySelector('[data-edit-root]') as HTMLElement;
       return {
@@ -261,7 +261,7 @@ test.describe('editable templates (bespoke page)', () => {
     );
 
     // Every field that follows the brand palette moved, and the literal
-    // `transparent` in colour 0 survived - these pages draw their patterns on
+    // `transparent` in color 0 survived - these pages draw their patterns on
     // the page ground, so filling that slot would black out the section.
     const palettes = await page
       .locator('[data-edit-pattern] [data-pattern]')

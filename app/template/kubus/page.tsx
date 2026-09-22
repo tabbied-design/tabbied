@@ -7,14 +7,14 @@ import s from './kubus.module.css';
 export const metadata = {
   title: 'Kubus: Kunsthalle',
   description:
-    'A kunsthalle with no collection: four exhibitions a year in one twelve-metre room, black and white throughout, admission free on Thursdays.',
+    'A kunsthalle with no collection: four exhibitions a year in one twelve-meter room, black and white throughout, admission free on Thursdays.',
 };
 
-/* No accent colour anywhere on this page. A kunsthalle that shows other
-   people's work has no business having a house colour, so the contrast is
-   the design: paper, ink, and one grey between them. */
+/* No accent color anywhere on this page. A kunsthalle that shows other
+   people's work has no business having a house color, so the contrast is
+   the design: paper, ink, and one gray between them. */
 const WHITE = '#fafaf8';
-const GREY = '#8a8a86';
+const GRAY = '#8a8a86';
 const MID = '#1c1c1c';
 
 const SHOWS = [
@@ -39,7 +39,7 @@ const SHOWS = [
     title: 'Two Hundred Grey',
     who: 'Group show, eleven artists',
     when: '27 Feb - 09 May 2027',
-    what: 'Everything in the show is the same value and nothing is the same colour',
+    what: 'Everything in the show is the same value and nothing is the same color',
     room: 'Halle + Kabinett',
   },
   {
@@ -71,7 +71,7 @@ const PRINCIPLES = [
     art: housing,
     n: 'II',
     t: 'One room at a time',
-    d: 'Four exhibitions a year in one twelve-metre room. An artist gets the whole building or none of it, and the answer arrives within six weeks.',
+    d: 'Four exhibitions a year in one twelve-meter room. An artist gets the whole building or none of it, and the answer arrives within six weeks.',
   },
   {
     art: fenestrate,
@@ -81,7 +81,7 @@ const PRINCIPLES = [
   },
 ];
 
-const PROGRAMME = [
+const PROGRAM = [
   ['Th 17.09', 'Opening talk', 'Marta Reinholdt with the curator', '19:00', 'Free'],
   ['Sa 26.09', 'Guided tour', 'In German', '15:00', 'Free'],
   ['Th 01.10', 'Late opening', 'Until 22:00, bar in the Hof', '18:00', 'Free'],
@@ -98,7 +98,7 @@ const NUMBERS = [
   ['4', 'Exhibitions a year'],
   ['1', 'Rooms in the main hall'],
   ['0', 'Works in a collection'],
-  ['272', 'Square metres, the Halle'],
+  ['272', 'Square meters, the Halle'],
 ];
 
 const VISIT = [
@@ -132,16 +132,16 @@ const HOURS: [string, string, boolean?][] = [
 export default function KubusPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--black': '#080808',
         '--white': '#fafaf8',
-        '--grey': '#8a8a86',
+        '--gray': '#8a8a86',
         '--mid': '#1c1c1c',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="black,white,grey,mid"
+      data-edit-vars="black,white,gray,mid"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -156,7 +156,7 @@ export default function KubusPage() {
         <nav aria-label="Sections">
           <a data-edit="bar.shows" data-edit-max="28" href="#shows">Exhibitions</a>
           <a data-edit="bar.rooms" data-edit-max="28" href="#rooms">Rooms</a>
-          <a data-edit="bar.programme" data-edit-max="28" href="#programme">Programme</a>
+          <a data-edit="bar.programme" data-edit-max="28" href="#programme">Program</a>
           <a data-edit="bar.visit" data-edit-max="28" href="#visit">Visit</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Kunsthalle</span>
@@ -164,13 +164,13 @@ export default function KubusPage() {
 
       <main id="top">
         {/* ------------------------------------------------------------ HERO
-            One word, one room, no colour. The pattern is the architecture:
+            One word, one room, no color. The pattern is the architecture:
             lintel draws an opening in every cell. */}
         <section className={s.hero}>
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={lintel}
-              palette={['transparent', MID, GREY]}
+              palette={['transparent', MID, GRAY]}
               fit="grid"
               cellSize={166}
               redrawInterval={6400}
@@ -181,7 +181,7 @@ export default function KubusPage() {
           <h1 data-edit="hero.heroType" data-edit-max="70" className={s.heroType}>Kubus</h1>
           <div className={s.heroFoot}>
             <p data-edit="hero.body" data-edit-max="240" data-edit-multiline>
-              One room, twelve metres by twenty-two, four times a year. We own
+              One room, twelve meters by twenty-two, four times a year. We own
               nothing and we show everything in it.
             </p>
             <a data-edit="hero.cta" data-edit-max="28" className={s.cta} href="#shows">
@@ -215,7 +215,7 @@ export default function KubusPage() {
         {/* ------------------------------------------------------- STATEMENT */}
         <section className={s.statement}>
           <p data-edit="statement.big" data-edit-max="240" data-edit-multiline className={s.big}>
-            A kunsthalle with a collection eventually programmes its store room.
+            A kunsthalle with a collection eventually programs its store room.
             We have no store room. Every wall in this building is empty four
             times a year and it is the most expensive decision we make.
           </p>
@@ -238,7 +238,7 @@ export default function KubusPage() {
           <div data-edit-pattern="numbers.field" data-edit-roles="transparent,2,3" className={s.numbersField} aria-hidden="true">
             <TabbiedPattern
               pattern={housing}
-              palette={['transparent', GREY, MID]}
+              palette={['transparent', GRAY, MID]}
               fit="grid"
               cellSize={94}
               redrawInterval={5600}
@@ -265,7 +265,7 @@ export default function KubusPage() {
                 <div data-edit-pattern={`pr.field.${i}`} data-edit-roles="transparent,2,1" className={s.pPlate} aria-hidden="true">
                   <TabbiedPattern
                     pattern={p.art}
-                    palette={['transparent', GREY, WHITE]}
+                    palette={['transparent', GRAY, WHITE]}
                     fit="grid"
                     cellSize={64}
                     redrawInterval={5400}
@@ -284,7 +284,7 @@ export default function KubusPage() {
         <div data-edit-pattern="top.field" data-edit-roles="transparent,1,2" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={mullion}
-            palette={['transparent', WHITE, GREY]}
+            palette={['transparent', WHITE, GRAY]}
             fit="grid"
             cellSize={122}
             redrawInterval={4200}
@@ -316,7 +316,7 @@ export default function KubusPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,3,2" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={loophole}
-              palette={['transparent', MID, GREY]}
+              palette={['transparent', MID, GRAY]}
               fit="grid"
               cellSize={118}
               redrawInterval={4600}
@@ -329,14 +329,14 @@ export default function KubusPage() {
           </blockquote>
         </section>
 
-        {/* ------------------------------------------------------- PROGRAMME */}
+        {/* ------------------------------------------------------- PROGRAM */}
         <section id="programme" className={s.listing} aria-labelledby="prog-h">
           <div className={s.secHead}>
-            <h2 data-edit="programme.title" data-edit-max="60" id="prog-h">Autumn programme</h2>
+            <h2 data-edit="programme.title" data-edit-max="60" id="prog-h">Autumn program</h2>
             <p data-edit="programme.body" data-edit-max="240" data-edit-multiline>Talks, tours and two late openings. Everything free unless it says otherwise.</p>
           </div>
           <ol className={s.table}>
-            {PROGRAMME.map((r, i) => (
+            {PROGRAM.map((r, i) => (
               <li key={i}>
                 <span data-edit={`programme.tMain.${i}`} data-edit-max="60" className={s.tMain}>{r[1]}</span>
                 <span data-edit={`programme.tDim.${i}`} data-edit-max="60" className={s.tDim}>{r[0]}</span>
@@ -353,7 +353,7 @@ export default function KubusPage() {
           <div data-edit-pattern="support.field" data-edit-roles="transparent,2,3" className={s.supportField} aria-hidden="true">
             <TabbiedPattern
               pattern={notchblock}
-              palette={['transparent', GREY, MID]}
+              palette={['transparent', GRAY, MID]}
               fit="grid"
               cellSize={104}
               redrawInterval={6400}
@@ -419,7 +419,7 @@ export default function KubusPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,3,2" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={cove}
-          palette={['transparent', MID, GREY]}
+          palette={['transparent', MID, GRAY]}
           fit="grid"
           cellSize={112}
           redrawInterval={5000}
@@ -440,7 +440,7 @@ export default function KubusPage() {
             <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>
               A goods depot of 1908, four rooms, no wall moved
               <br />
-              Nine metres to the trusses in the long room
+              Nine meters to the trusses in the long room
               <br />
               Daylight only, north-facing, no blinds
             </p>

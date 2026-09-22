@@ -1,6 +1,6 @@
 /* ==========================================================================
    FALZBOGEN - trade bookbindery, Leipzig
-   The imposition diagram is the centrepiece: eight pages a side, half of them
+   The imposition diagram is the centerpiece: eight pages a side, half of them
    upside down, drawn at full width as flat blocks. Everything else is set
    large on cream with one crimson and no rules at all. Inter, tracked in.
    ========================================================================== */
@@ -9,7 +9,7 @@
   --paper: #f2eee4;
   --ink: #171310;
   --red: #b0003a;
-  --grey: #8b857a;
+  --gray: #8b857a;
   --pale: #e0dacb;
 
   --edge: clamp(1.15rem, 3.4vw, 4.5rem);
@@ -78,7 +78,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -211,7 +211,7 @@
 
 .pageCell {
   /* Portrait, but not as portrait as a real page: at full viewport width four
-     true 1:1.34 pages make a diagram a metre tall. */
+     true 1:1.34 pages make a diagram a meter tall. */
   aspect-ratio: 1 / 0.92;
   background: var(--pale);
   display: flex;
@@ -331,7 +331,7 @@
   font-size: 0.74rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .rowLead {
@@ -580,7 +580,7 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .field input,
@@ -635,7 +635,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 

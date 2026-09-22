@@ -9,7 +9,7 @@
   --night: #0b0b0f;
   --bone: #efeee7;
   --acid: #e8ff00;
-  --grey: #6d6d66;
+  --gray: #6d6d66;
   --deep: #22222a;
 
   --edge: clamp(1.15rem, 3.4vw, 4.5rem);
@@ -78,7 +78,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -110,7 +110,7 @@
   color: var(--acid);
 }
 
-/* One word, split across two lines and two colours, at the largest size the
+/* One word, split across two lines and two colors, at the largest size the
    viewport will carry. */
 .heroType {
   margin: 0;
@@ -248,7 +248,7 @@
 }
 
 /* ------------------------------------------------------------------ season
-   The date is the headline and the programme is the caption: a concert is a
+   The date is the headline and the program is the caption: a concert is a
    night before it is a title. */
 
 .season,
@@ -318,7 +318,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .nTag {
@@ -420,7 +420,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------------- quote */
@@ -504,7 +504,7 @@
 
 .tYear {
   font-weight: 600;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .tWho {
@@ -545,7 +545,7 @@
   font-weight: 600;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   white-space: nowrap;
 }
 
@@ -646,7 +646,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .contactMail {

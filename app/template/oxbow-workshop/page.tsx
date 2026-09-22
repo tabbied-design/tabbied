@@ -4,7 +4,7 @@ import { Figure } from 'components/Figure';
 import styles from './oxbow-workshop.module.css';
 
 export const metadata = {
-  title: 'Oxbow Workshop · Catalogue № 7, Spring 2026',
+  title: 'Oxbow Workshop · Catalog № 7, Spring 2026',
   description:
     'Oxbow is a furniture workshop in the Hudson Valley. Four pieces in oak, walnut and ash: numbered plates, full materials, honest lead times. Commissions open.',
 };
@@ -123,7 +123,7 @@ const MAKERS = [
 const COMMISSION_STEPS = [
   {
     numeral: 'I',
-    title: 'Enquiry',
+    title: 'Inquiry',
     body: 'Write with a room, a use, and a budget. Photographs help. We answer within the week, plainly, including when the answer is no.',
   },
   {
@@ -146,7 +146,7 @@ const COMMISSION_STEPS = [
 export default function OxbowWorkshopPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--bone': '#f5f1e8',
@@ -171,7 +171,7 @@ export default function OxbowWorkshopPage() {
         href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400..700;1,400..700&family=Mulish:wght@300..700&display=swap"
       />
 
-      {/* MASTHEAD - a label pasted on the catalogue's patterned endpaper */}
+      {/* MASTHEAD - a label pasted on the catalog's patterned endpaper */}
       <header className={styles.masthead}>
         <div data-edit-pattern="masthead.field" data-edit-roles="0,5,4,2" className={styles.mastField} aria-hidden="true">
           <TabbiedPattern
@@ -185,10 +185,10 @@ export default function OxbowWorkshopPage() {
         </div>
         <div className={styles.mastScrim} aria-hidden="true" />
         <div className={styles.mastPlate}>
-          <p data-edit="masthead.mastLabel" data-edit-max="240" data-edit-multiline className={styles.mastLabel}>Catalogue № 7 · Spring 2026</p>
+          <p data-edit="masthead.mastLabel" data-edit-max="240" data-edit-multiline className={styles.mastLabel}>Catalog № 7 · Spring 2026</p>
           <h1 data-edit="masthead.mastTitle" data-edit-max="70" className={styles.mastTitle}>OXBOW</h1>
           <p data-edit="masthead.mastSub" data-edit-max="240" data-edit-multiline className={styles.mastSub}>Furniture Workshop · Hudson Valley</p>
-          <nav className={styles.mastNav} aria-label="Catalogue contents">
+          <nav className={styles.mastNav} aria-label="Catalog contents">
             <a data-edit="masthead.collection" data-edit-max="28" href="#collection">The Collection</a>
             <span data-edit="masthead.text" data-edit-max="60" aria-hidden="true">·</span>
             <a data-edit="masthead.joinery" data-edit-max="28" href="#joinery">On Joinery</a>
@@ -328,19 +328,19 @@ export default function OxbowWorkshopPage() {
             <div className={styles.joineryText}>
               <p data-edit="joinery.body" data-edit-max="240" data-edit-multiline>
                 We use glue, and we do not trust it. Every joint in this
-                catalogue would hold with the glue omitted: the tenon is
+                catalog would hold with the glue omitted: the tenon is
                 wedged, the dovetail is tapered, the stool leg swells against
                 its socket as the seat dries around it.
               </p>
               <p data-edit="joinery.body2" data-edit-max="240" data-edit-multiline>
                 The mortise and tenon is the oldest agreement in woodwork:
                 one piece gives way so another can enter, and both are
-                stronger for it. The pattern running through this catalogue is
+                stronger for it. The pattern running through this catalog is
                 that joint, drawn plainly. We chose it over a photograph of
                 one because the idea is the point.
               </p>
               <p data-edit="joinery.body3" data-edit-max="240" data-edit-multiline>
-                Wood moves. A tabletop grows and shrinks a few millimetres
+                Wood moves. A tabletop grows and shrinks a few millimeters
                 every year, forever. Good joinery does not fight this; it
                 leaves room. Buttons, slots, elongated holes; the quiet
                 allowances are the craft.
@@ -530,7 +530,7 @@ export default function OxbowWorkshopPage() {
                 most come back as firewood, which is also fine.
               </p>
               <p data-edit="care.body4" data-edit-max="240" data-edit-multiline>
-                Lead times in this catalogue are honest, not optimistic. When
+                Lead times in this catalog are honest, not optimistic. When
                 a date moves, you hear it from us first, with a reason.
               </p>
             </div>
@@ -549,7 +549,7 @@ export default function OxbowWorkshopPage() {
             bench@oxbow.example · Showroom Saturdays 10 to 4
           </address>
           <p className={styles.colophonNote}>
-            Catalogue № 7, set in Cormorant and Mulish. Photography made in the
+            Catalog № 7, set in Cormorant and Mulish. Photography made in the
             workshop with no styling and one window. Two joints are drawn
             through the book: "Mortise" on the endpapers and "Halving" on the
             plates and bands, both with{' '}

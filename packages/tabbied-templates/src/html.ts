@@ -7,7 +7,7 @@
 //
 // This is a real (small) tokenizer rather than a regex, and the reason is on
 // the record elsewhere in this repo: the CSS trimmer in package-templates.mjs
-// was written with naive `indexOf('{')` scanning and silently desynchronised
+// was written with naive `indexOf('{')` scanning and silently desynchronized
 // on a comment containing a brace. HTML has more of those traps, not fewer -
 // a `>` inside an attribute value, a comment containing markup, and script
 // bodies that are not markup at all.
@@ -240,7 +240,7 @@ export function scanElements(
  * `/images/sites/x.webp?v=ab12cd34` -> `/images/sites/x.webp`.
  *
  * The export cache-busts image URLs with a content hash. A spec records the
- * stable path: the hash changes whenever the file is re-optimised, and a spec
+ * stable path: the hash changes whenever the file is re-optimized, and a spec
  * that carried it would show a spurious diff on every image rebuild.
  */
 export function stripCacheBuster(src: string): string {

@@ -115,7 +115,7 @@ export type ChatResult = {
   /**
    * The id to quote as `previous_response_id` to continue this turn. Absent
    * when the upstream did not store the response - every caller therefore
-   * treats chaining as an optimisation and keeps a full-context path.
+   * treats chaining as an optimization and keeps a full-context path.
    */
   responseId?: string;
 };
@@ -247,7 +247,7 @@ export async function respondJson(
     content,
     model: payload.model ?? env.AI_MODEL,
     responseId: payload.id,
-    // An upstream that omits `usage` is not licence to record zero: the caller
+    // An upstream that omits `usage` is not license to record zero: the caller
     // substitutes a conservative estimate, so the ledger over-counts rather
     // than silently letting a budget run free.
     usage: {
@@ -264,7 +264,7 @@ export type ImageResult = { bytes: ArrayBuffer; contentType: string; model: stri
 /**
  * One image, as WebP. Transparency is a *parameter* - never a request in the
  * prose, which paints a fake checkerboard into the pixels - and the GPT Image
- * models honour it natively, which is why this reaches one vendor and not two
+ * models honor it natively, which is why this reaches one vendor and not two
  * (see docs/image-pipeline.md).
  *
  * This stays on the images endpoint rather than moving to the Responses API's

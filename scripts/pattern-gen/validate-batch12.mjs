@@ -5,7 +5,7 @@
 //
 // The transparent-background pass matters more here than in any earlier batch:
 // half of batch 12 fades its ink out with a mask, and a masked fade is only a
-// real hole if nothing behind it is painted in the background colour. Contact
+// real hole if nothing behind it is painted in the background color. Contact
 // sheets land in /tmp/sheet-b12-*.png, the transparent pass over a
 // checkerboard so a soft edge that is genuinely see-through looks it.
 //

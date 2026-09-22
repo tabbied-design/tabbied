@@ -213,7 +213,7 @@ function parseRenderArgs(argv: string[]): RenderArgs {
     out,
     seed: flags.get('seed') ?? Math.random().toString(36).slice(2, 6),
     // Split at paren depth zero: the help promises comma-separated CSS
-    // colours, and `rgb(0, 0, 0)` is one of them, not three fragments.
+    // colors, and `rgb(0, 0, 0)` is one of them, not three fragments.
     palette: flags.has('palette') ? splitTopLevel(flags.get('palette')!, ',') : null,
     options: flags.has('options')
       ? parseOptions(definition, flags.get('options')!)

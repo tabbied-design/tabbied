@@ -19,7 +19,7 @@
 //   </script>
 //
 // The attributes are deliberately readable rather than a JSON blob: somebody
-// editing a downloaded template should be able to change a colour or a slug
+// editing a downloaded template should be able to change a color or a slug
 // in the markup without decoding anything.
 import { createPattern } from './createPattern.js';
 import type { PatternConfig, PatternController } from './createPattern.js';

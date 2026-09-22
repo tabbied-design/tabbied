@@ -2,7 +2,7 @@
    BIRK MOBLER - furniture maker, Aarhus
    One narrow column of light type, a great deal of paper around it, and
    hairlines in the pale tone to mark where one thing stops and the next
-   begins. Nothing is bold. The only warm colour is the oak, and it is used
+   begins. Nothing is bold. The only warm color is the oak, and it is used
    the way a maker uses a pencil line: to point, never to fill.
    ========================================================================== */
 
@@ -10,7 +10,7 @@
   --paper: #fafaf8;
   --ink: #1f1f1d;
   --oak: #b8895a;
-  --grey: #9a9994;
+  --gray: #9a9994;
   --pale: #e6e4df;
   --gut: clamp(1.25rem, 5vw, 4rem);
   --max: 66rem;
@@ -93,7 +93,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -126,7 +126,7 @@
   font-size: 0.74rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .heroTitle {
@@ -176,7 +176,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------- section frame
@@ -243,7 +243,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .pieceHead span:last-child {
@@ -305,7 +305,7 @@
 
 /* The one place the oak is a surface rather than a line, and it is a line
    too: 3px tall, as wide as the column, a swatch of the wood in question.
-   The three are the same colour on purpose; the words tell them apart. */
+   The three are the same color on purpose; the words tell them apart. */
 .woodRule {
   display: block;
   width: 2.5rem;
@@ -428,7 +428,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .steps p {
@@ -451,7 +451,7 @@
   font-weight: 400;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   margin-bottom: 1rem;
 }
 
@@ -533,7 +533,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .contact dd {
@@ -607,7 +607,7 @@
   font-weight: 400;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footLinks {

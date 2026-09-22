@@ -10,7 +10,7 @@
   --paper: #ffffff;
   --ink: #0c0d10;
   --blue: #1f3cff;
-  --grey: #8a8f99;
+  --gray: #8a8f99;
   --pale: #e8eaf0;
 
   --edge: clamp(1.15rem, 3.4vw, 4.5rem);
@@ -79,7 +79,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -323,7 +323,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-align: center;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------- band, coda */
@@ -427,7 +427,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------------- quote */
@@ -534,7 +534,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------------- reuse */
@@ -642,7 +642,7 @@
   margin: 0;
   font-size: 0.78rem;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* A locator, not a map: the pattern stands in for the ground and the offices
@@ -696,7 +696,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 

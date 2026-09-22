@@ -53,7 +53,7 @@ export type ExtractOptions = {
 };
 
 // Values are joined with a separator and split back out, so the split has to
-// survive a CSS colour carrying its own commas - `rgb(0, 0, 0)`. Same rule as
+// survive a CSS color carrying its own commas - `rgb(0, 0, 0)`. Same rule as
 // the pattern hydration contract this reads.
 function splitTopLevel(value: string, separator: string): string[] {
   const parts: string[] = [];
@@ -308,7 +308,7 @@ export type ExtractedRoot = {
   /**
    * The brand palette, read back off the root's inline `--brand-*` properties.
    *
-   * Taking the colours from the page rather than from the module that rendered
+   * Taking the colors from the page rather than from the module that rendered
    * it is the same discipline as the rest of this file: a spec that sourced its
    * palette separately could disagree with what shipped, and nothing would say
    * so.
@@ -336,7 +336,7 @@ export function parseNamedColors(
 
     // Stop at the first name the page does not actually set: a gap would
     // renumber every role after it, so role 2 in a saved edits document would
-    // land on a different colour than the page it was made from.
+    // land on a different color than the page it was made from.
     if (!match) break;
 
     colors.push(match[1].trim());

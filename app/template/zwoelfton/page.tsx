@@ -7,14 +7,14 @@ import s from './zwoelfton.module.css';
 export const metadata = {
   title: 'Zwölfton: New-music ensemble, Vienna',
   description:
-    'Zwölfton plays music written in the last five years, twelve players, no conductor. Season, commissions, recordings and the whole back catalogue.',
+    'Zwölfton plays music written in the last five years, twelve players, no conductor. Season, commissions, recordings and the whole back catalog.',
 };
 
 /* Night ground, bone type, one acid yellow. Fields take `transparent` in the
    background slot so the black of the page is the black of the pattern. */
 const BONE = '#efeee7';
 const ACID = '#e8ff00';
-const GREY = '#6d6d66';
+const GRAY = '#6d6d66';
 const DEEP = '#22222a';
 
 /* The row itself, used as a design element in three places. */
@@ -144,17 +144,17 @@ const VISIT = [
 export default function ZwoelftonPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--night': '#0b0b0f',
         '--bone': '#efeee7',
         '--acid': '#e8ff00',
-        '--grey': '#6d6d66',
+        '--gray': '#6d6d66',
         '--deep': '#22222a',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="night,bone,acid,grey,deep"
+      data-edit-vars="night,bone,acid,gray,deep"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -181,7 +181,7 @@ export default function ZwoelftonPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={raking}
-              palette={['transparent', DEEP, GREY, ACID]}
+              palette={['transparent', DEEP, GRAY, ACID]}
               fit="grid"
               cellSize={150}
               redrawInterval={5400}
@@ -213,7 +213,7 @@ export default function ZwoelftonPage() {
               <div data-edit-pattern={`row.field.${i}`} className={s.rowField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={reedpen}
-                  palette={['transparent', i % 4 === 0 ? ACID : GREY, DEEP]}
+                  palette={['transparent', i % 4 === 0 ? ACID : GRAY, DEEP]}
                   fit="grid"
                   cellSize={30 + i * 4}
                   redrawInterval={4000 + i * 260}
@@ -293,7 +293,7 @@ export default function ZwoelftonPage() {
           <div data-edit-pattern="players.field" data-edit-roles="transparent,4,3" className={s.playersField} aria-hidden="true">
             <TabbiedPattern
               pattern={parity}
-              palette={['transparent', DEEP, GREY]}
+              palette={['transparent', DEEP, GRAY]}
               fit="grid"
               cellSize={118}
               redrawInterval={6400}
@@ -322,7 +322,7 @@ export default function ZwoelftonPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={subside}
-              palette={['transparent', ACID, GREY]}
+              palette={['transparent', ACID, GRAY]}
               fit="grid"
               cellSize={126}
               redrawInterval={4600}
@@ -406,7 +406,7 @@ export default function ZwoelftonPage() {
           <div data-edit-pattern="visit.field" data-edit-roles="transparent,3,4" className={s.visitField} aria-hidden="true">
             <TabbiedPattern
               pattern={stepramp}
-              palette={['transparent', GREY, DEEP]}
+              palette={['transparent', GRAY, DEEP]}
               fit="grid"
               cellSize={100}
               redrawInterval={5600}
@@ -440,7 +440,7 @@ export default function ZwoelftonPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,3,4,2" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={seamband}
-          palette={['transparent', GREY, DEEP, ACID]}
+          palette={['transparent', GRAY, DEEP, ACID]}
           fit="grid"
           cellSize={104}
           redrawInterval={5000}
@@ -479,7 +479,7 @@ export default function ZwoelftonPage() {
           </div>
         </div>
         <div className={s.footFine}>
-          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional ensemble. Composers, dates and catalogue numbers are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional ensemble. Composers, dates and catalog numbers are invented.</p>
           <p>
             Patterns by{' '}
             <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">

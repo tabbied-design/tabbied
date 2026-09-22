@@ -10,12 +10,12 @@ export const metadata = {
     'Seventeen grades from 9H to 9B, cedar from one forest, graphite from one mine. A pencil factory that has changed its recipe twice since 1868.',
 };
 
-/* Warm grey paper, ink, one ochre. Fields take `transparent` in the
+/* Warm gray paper, ink, one ochre. Fields take `transparent` in the
    background slot so the paper of the page is the paper of the pattern. */
 const PAPER = '#eeede7';
 const INK = '#131313';
 const OCHRE = '#e5a000';
-const GREY = '#8a887f';
+const GRAY = '#8a887f';
 const PALE = '#dcdad0';
 
 /* Seventeen grades, hardest to softest, and how dark each one lays down.
@@ -107,18 +107,18 @@ export default function GrafitPage() {
   return (
     <div
       className={s.page}
-      // Colour, declared where the stylesheet's own rule already declares it -
-      // inline so it wins, and so a re-colour has one place to write. The
+      // Color, declared where the stylesheet's own rule already declares it -
+      // inline so it wins, and so a re-color has one place to write. The
       // authored defaults stay in grafit.module.css as the fallback.
       style={{
         '--paper': PAPER,
         '--ink': INK,
         '--ochre': OCHRE,
-        '--grey': GREY,
+        '--gray': GRAY,
         '--pale': PALE,
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,ochre,grey,pale"
+      data-edit-vars="paper,ink,ochre,gray,pale"
     >
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -145,7 +145,7 @@ export default function GrafitPage() {
           <div className={s.heroField} aria-hidden="true" data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2">
             <TabbiedPattern
               pattern={reeding}
-              palette={['transparent', PALE, GREY, OCHRE]}
+              palette={['transparent', PALE, GRAY, OCHRE]}
               fit="grid"
               cellSize={144}
               redrawInterval={6000}
@@ -155,7 +155,7 @@ export default function GrafitPage() {
           <p className={s.heroKicker} data-edit="hero.kicker" data-edit-max="52">Pencil works / Nuremberg / since 1868</p>
           <h1 className={s.heroType}>
             {/* Two spans rather than one accented run: the second is tinted by
-                the page's accent colour, so each is its own editable line. */}
+                the page's accent color, so each is its own editable line. */}
             <span data-edit="hero.title.0" data-edit-max="24">Nine H</span>
             <span className={s.ochre} data-edit="hero.title.1" data-edit-max="24">to nine B.</span>
           </h1>
@@ -180,7 +180,7 @@ export default function GrafitPage() {
               key={g}
               className={s.grade}
               // var(), not the constant: an inline style built from the JS
-              // value would keep the authored ink after a re-colour, because
+              // value would keep the authored ink after a re-color, because
               // applyEdits rewrites custom properties and cannot reach a hex
               // that was interpolated at render time.
               style={{ background: `color-mix(in srgb, var(--ink) ${k}%, var(--pale))` }}
@@ -223,7 +223,7 @@ export default function GrafitPage() {
           <div className={s.factsField} aria-hidden="true" data-edit-pattern="facts.field" data-edit-roles="transparent,3,4">
             <TabbiedPattern
               pattern={bevelset}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={96}
               redrawInterval={5600}
@@ -255,7 +255,7 @@ export default function GrafitPage() {
         <div className={s.band} aria-hidden="true" data-edit-pattern="band.field" data-edit-roles="transparent,2,4,3">
           <TabbiedPattern
             pattern={louvre}
-            palette={['transparent', OCHRE, PALE, GREY]}
+            palette={['transparent', OCHRE, PALE, GRAY]}
             fit="grid"
             cellSize={112}
             redrawInterval={4200}
@@ -275,7 +275,7 @@ export default function GrafitPage() {
                 <div className={s.mPlate} aria-hidden="true" data-edit-pattern={`making.${i}.field`} data-edit-roles="transparent,3,2">
                   <TabbiedPattern
                     pattern={m.art}
-                    palette={['transparent', GREY, OCHRE]}
+                    palette={['transparent', GRAY, OCHRE]}
                     fit="grid"
                     cellSize={58}
                     redrawInterval={5400}
@@ -313,7 +313,7 @@ export default function GrafitPage() {
           <div className={s.quoteField} aria-hidden="true" data-edit-pattern="quote.field" data-edit-roles="transparent,2,3">
             <TabbiedPattern
               pattern={charcoal}
-              palette={['transparent', OCHRE, GREY]}
+              palette={['transparent', OCHRE, GRAY]}
               fit="grid"
               cellSize={122}
               redrawInterval={4600}
@@ -349,7 +349,7 @@ export default function GrafitPage() {
           <div className={s.shopField} aria-hidden="true" data-edit-pattern="shop.field" data-edit-roles="transparent,3,4">
             <TabbiedPattern
               pattern={nosing}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={106}
               redrawInterval={6400}
@@ -385,7 +385,7 @@ export default function GrafitPage() {
       <div className={s.coda} aria-hidden="true" data-edit-pattern="coda.field" data-edit-roles="transparent,4,2,3">
         <TabbiedPattern
           pattern={kerf}
-          palette={['transparent', PALE, OCHRE, GREY]}
+          palette={['transparent', PALE, OCHRE, GRAY]}
           fit="grid"
           cellSize={100}
           redrawInterval={5000}

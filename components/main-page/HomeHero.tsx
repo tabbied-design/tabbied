@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import useMediaQuery from 'lib/useMediaQuery';
 import {
   PALETTE_ACCENTS,
@@ -193,7 +194,7 @@ export default function HomeHero({
             <span className={styles.statLabel}>
               Patterns
               <span className={styles.statArrow} aria-hidden="true">
-                &rarr;
+                <ArrowRight size={18} />
               </span>
             </span>
           </Link>
@@ -205,7 +206,7 @@ export default function HomeHero({
             <span className={styles.statLabel}>
               Free website templates
               <span className={styles.statArrow} aria-hidden="true">
-                &rarr;
+                <ArrowRight size={18} />
               </span>
             </span>
           </Link>

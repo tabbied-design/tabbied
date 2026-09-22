@@ -64,7 +64,7 @@ export type PatternSizing = {
    * boundary on a fraction of a pixel - which the browser seams, however
    * exact the outer grid is. Only the three designs that mask with a nested
    * `@doodle` need it: subdivide (2), fractal (3), matryoshka (4). Defaults
-   * to 2, which also keeps centred rules and strokes off half-pixels.
+   * to 2, which also keeps centerd rules and strokes off half-pixels.
    */
   cellMultiple?: number;
 };

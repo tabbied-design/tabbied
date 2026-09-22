@@ -45,7 +45,7 @@
     }
   ],
   "code": {
-    "style": "--rule: ( @size: 100% 150%; position: absolute; background: @m(50, ( linear-gradient(transparent, @p(var(--color1), var(--color2), var(--color3))) @r(0%, 100%) @r(0%, 100%) / @r(1px, 2px) @r(10vmin, 26vmin) no-repeat )); will-change: transform; animation: tidewashBands 20s linear infinite; animation-delay: calc(-20s / @size * @i); @keyframes tidewashBands { from { transform: translateY(-100%); } to { transform: translateY(100%); } } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "style": "--rule: ( @size: 100% 150%; position: absolute; background: @m(50, ( linear-gradient(transparent, @p(var(--color1), var(--color2), var(--color3))) @r(0%, 100%) @r(0%, 100%) / @r(1px, 2px) @r(10vmin, 26vmin) no-repeat )); transform: translateY(calc(-100% + 200% / @size * @i)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; position:relative; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
   },
   "svgExport": false

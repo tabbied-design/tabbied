@@ -17,16 +17,16 @@ model means giving that up, so the two are pinned separately on purpose.
 
 ```
   data/image-prompts.json        <- 1. author the PROJECT (palette + style), then its prompts
-            │
+            -
             ▼  scripts/generate-images.mjs      (OpenAI Batch API, gpt-image-2, quality: low;
-            │                                    cutout: true adds background: "transparent")
+            -                                    cutout: true adds background: "transparent")
   generated-images/<id>.png      <- 2. candidates, gitignored, local scratch -
-            │                         cut-outs arrive with a real alpha channel
+            -                         cut-outs arrive with a real alpha channel
             ▼  scripts/promote-images.mjs       (sharp -> WebP q92; verifies a cut-out
-            │                                    actually has transparent pixels)
+            -                                    actually has transparent pixels)
   public/images/sites/<id>[-cutout].webp <- 3. COMMITTED. This file IS what browsers download.
   lib/generated/images.js                <-    manifest: slug -> {hash, width, height}
-            │
+            -
             ▼
   <Figure slug="..." />               <- 4. components/Figure.tsx, composited over a Tabbied pattern
 ```
@@ -72,13 +72,13 @@ Every field resolves through a cascade - **prompt -> set -> project ->
 Two palette modes:
 
 - `hex` - flat graphic styles (risograph, flat vector, isometric, gouache):
-  the palette is rendered as a literal ink list, "use these colours and no
+  the palette is rendered as a literal ink list, "use these colors and no
   others".
 - `scene` - photographic styles: each hex is anchored to a **material**
   ("golden baked crust", "shell jackets and rope accents"), because a bare hex
   has nothing to attach to in a photograph. When a set changes medium
   (portraits inside a photo project), it re-anchors the same hexes with new
-  `as` notes - never new colours.
+  `as` notes - never new colors.
 
 Rules that keep the results usable:
 
@@ -204,7 +204,7 @@ tiles are the strongest use of the pipeline; keep every portrait in one `set`.
    stream them line by line; don't "simplify" that away.
 3. Expensive failures happen on the **retrieval** side, after the paid work.
    Keep the retry wrappers on every GET.
-4. A palette-coloured backdrop or a baked drop shadow ruins a cut-out (§ above).
+4. A palette-colored backdrop or a baked drop shadow ruins a cut-out (§ above).
 5. Faces are where `low` shows first; portraits are the first candidates for a
    per-set `quality: "medium"`.
 6. Two copies of a palette drift - the JSON project palette and the page's

@@ -1,4 +1,4 @@
-/* The masthead. Its colours are tokens on the bar itself, redefined for the
+/* The masthead. Its colors are tokens on the bar itself, redefined for the
    dark tone, so the one stylesheet draws both the paper and the ink version
    and the sections below never reach in. The menus are portaled to <body>,
    so they take the light treatment in both tones, as the artboards do. */
@@ -54,7 +54,7 @@
   --n-pill: oklch(1 0 0 / 0.22);
   --n-pill-hover: oklch(1 0 0 / 0.5);
   /* The dark shell's own ground (#0e0e13), at the same opacity. Written as
-     rgb so it is exactly that colour: the shell declares it as a hex, and an
+     rgb so it is exactly that color: the shell declares it as a hex, and an
      oklch conversion of it is a value nobody can check by reading. */
   --n-bg: rgb(14 14 19 / 0.94);
 

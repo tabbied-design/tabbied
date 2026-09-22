@@ -27,9 +27,9 @@
 }
 
 /* :where() zeroes this rule's specificity so button/link classes below can set
-   their own colour without being outranked by the page-level default.
+   their own color without being outranked by the page-level default.
    Because it no longer outranks the global `a:hover`, every anchor class below
-   declares its own :hover colour rather than inheriting the global pink. */
+   declares its own :hover color rather than inheriting the global pink. */
 .page :where(a) {
   color: inherit;
 }
@@ -275,7 +275,7 @@
   margin: 0 auto;
 }
 
-/* a flat colour change, not rules, marks this band off from its neighbours */
+/* a flat color change, not rules, marks this band off from its neighbors */
 .sectionAlt {
   max-width: none;
   background: var(--slate-2);
@@ -918,9 +918,9 @@
   color: var(--teal);
 }
 
-/* ----- enquire - full-bleed ridgeline field ----- */
+/* ----- inquire - full-bleed ridgeline field ----- */
 
-.enquire {
+.inquire {
   position: relative;
   isolation: isolate;
   background: var(--slate);

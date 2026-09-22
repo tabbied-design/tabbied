@@ -36,7 +36,7 @@ const SHOWS = [
   {
     time: '21:00',
     name: 'Deep Field',
-    detail: 'One patch of apparently empty sky, magnified until it holds ten thousand galaxies. Quiet, enormous, and our staff favourite.',
+    detail: 'One patch of apparently empty sky, magnified until it holds ten thousand galaxies. Quiet, enormous, and our staff favorite.',
     dur: '45 MIN · AGES 12+',
   },
 ];
@@ -44,7 +44,7 @@ const SHOWS = [
 const TONIGHT = [
   { obj: 'Saturn', coords: 'RA 23h 04m · DEC −07° 41′', note: 'rings tilted 11°, best after 22:30' },
   { obj: 'M31 · Andromeda', coords: 'RA 00h 42m · DEC +41° 16′', note: 'naked-eye from the ridge on clear nights' },
-  { obj: 'Albireo', coords: 'RA 19h 30m · DEC +27° 57′', note: 'gold-and-sapphire double star, crowd favourite' },
+  { obj: 'Albireo', coords: 'RA 19h 30m · DEC +27° 57′', note: 'gold-and-sapphire double star, crowd favorite' },
   { obj: 'Waxing Moon', coords: 'RA 14h 11m · DEC −12° 03′', note: 'terminator craters through the 20 cm refractor' },
 ];
 
@@ -53,7 +53,7 @@ const EXHIBITS = [
     slug: 'zenith-planet-cutout',
     alt: 'Model of a ringed gas giant planet',
     name: 'The Ring Room',
-    copy: 'A four-metre ringed giant you can walk beneath. Stand under the ring plane and watch it thin to a knife-edge, the same trick Saturn plays every fifteen years.',
+    copy: 'A four-meter ringed giant you can walk beneath. Stand under the ring plane and watch it thin to a knife-edge, the same trick Saturn plays every fifteen years.',
   },
   {
     slug: 'zenith-comet-cutout',
@@ -65,7 +65,7 @@ const EXHIBITS = [
     slug: 'zenith-moon-cutout',
     alt: 'Crescent moon model showing crater detail along the terminator',
     name: 'Terminator Line',
-    copy: 'A crescent moon two storeys tall, lit by a slow artificial sun. Watch shadows crawl across crater floors: a lunar day compressed into eight minutes.',
+    copy: 'A crescent moon two stories tall, lit by a slow artificial sun. Watch shadows crawl across crater floors: a lunar day compressed into eight minutes.',
   },
 ];
 
@@ -107,7 +107,7 @@ const TIERS = [
 export default function ZenithObservatoryPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--space': '#10002b',
@@ -136,7 +136,7 @@ export default function ZenithObservatoryPage() {
           palette={SKY_PALETTE}
           seed="zen-sky-07"
           fit="cover"
-          density={2}
+          density={0.5}
           style={{ position: 'absolute', inset: 0 }}
         />
         <div className={styles.heroVeil} aria-hidden="true" />
@@ -292,9 +292,9 @@ export default function ZenithObservatoryPage() {
                 The Meridian Eye
               </h2>
               <p data-edit="telescope.scopeCopy" data-edit-max="240" data-edit-multiline className={styles.scopeCopy}>
-                Our main instrument is a 0.61-metre Cassegrain, installed in
+                Our main instrument is a 0.61-meter Cassegrain, installed in
                 1974 and resurfaced twice since. It has watched two comets
-                arrive unannounced, one supernova in a neighbouring galaxy, and
+                arrive unannounced, one supernova in a neighboring galaxy, and
                 roughly four hundred thousand first looks at Saturn, which
                 remain, by unanimous staff vote, the best part of the job.
               </p>

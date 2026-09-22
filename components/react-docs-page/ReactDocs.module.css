@@ -79,7 +79,7 @@
   color: var(--h-teal);
 }
 
-/* The version, the licence, and the two places the package lives: a row of
+/* The version, the license, and the two places the package lives: a row of
    the design's mono pills. The facts are plain chips; the destinations take
    the ink and a hairline that darkens on hover. */
 .meta {
@@ -368,8 +368,8 @@
 /* ---- Code panels ---- */
 
 /* The dark shell, inverted back inside the light page: the homepage's ground
-   and card colours, its hairline, and its mint and cyan for the two kinds of
-   token that are worth a colour. */
+   and card colors, its hairline, and its mint and cyan for the two kinds of
+   token that are worth a color. */
 .codePanel {
   overflow: hidden;
   color: var(--h-fg);

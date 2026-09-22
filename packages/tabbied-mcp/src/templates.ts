@@ -8,7 +8,7 @@
 // editable-section spec (docs/editable-templates.md) is exactly the list of
 // what may be swapped.
 //
-// Both tools are thin readers over artefacts the site already generates, so an
+// Both tools are thin readers over artifacts the site already generates, so an
 // agent and the web builder are looking at the same bytes. Neither needs a
 // browser, which is why - unlike `render_design` - they work over the remote
 // transport as well as stdio.
@@ -50,9 +50,9 @@ const USAGE = {
     'dev`. The page ships as authored source with the same data-edit ids in ' +
     'it, so grep an id to find the element that renders it.',
   colors:
-    'Colour lives in one place: the element carrying data-edit-root holds ' +
+    'Color lives in one place: the element carrying data-edit-root holds ' +
     '--brand-0 (the ground) upward as inline custom properties, and the ' +
-    'stylesheet only reads var(--...). Re-colour by rewriting those. A pattern ' +
+    'stylesheet only reads var(--...). Re-color by rewriting those. A pattern ' +
     'field with data-edit-roles follows the brand palette through that map; a ' +
     'literal "transparent" in the map must stay literal, because it is what ' +
     'lets the field read over a photograph.',

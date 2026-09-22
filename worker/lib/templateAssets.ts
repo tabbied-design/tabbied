@@ -1,19 +1,19 @@
 import type { TemplateSpec } from 'tabbied-templates';
 import type { Env } from '../env';
 
-// The template artefacts, read through the assets binding.
+// The template artifacts, read through the assets binding.
 //
 // Same doctrine as the catalog and the studio index: the Worker describes and
 // authors against exactly the bytes this deployment serves, so a template
 // re-packaged in this commit cannot be missing from, or disagree with, what
 // the model is handed. The specs and pages are read fresh each time: there
-// are 77 slugs each read rarely. What is memoised is the page's hash (and the
+// are 77 slugs each read rarely. What is memoized is the page's hash (and the
 // design catalog below), for the same reason the catalog is: an isolate lives
 // inside one deployment, so a value that changes only with a deploy cannot go
 // stale within it - and a site read by link re-hashed a whole packaged page
 // on every visit.
 
-type CatalogEntry = { slug: string; copyRoles?: string[] };
+type CatalogEntry = { slug: string; name?: string; copyRoles?: string[] };
 type EditableCatalog = { templates: CatalogEntry[] };
 type DesignCatalog = { designs: { slug: string }[] };
 
@@ -66,7 +66,7 @@ export async function loadEditableCatalog(env: Env, request: Request): Promise<E
   return (await readAsset(env, request, '/editable-catalog.json')).json() as Promise<EditableCatalog>;
 }
 
-// The design catalog is the one asset here that is memoised, the way the
+// The design catalog is the one asset here that is memoized, the way the
 // studio index is: it is read on every save that swaps a pattern, and it
 // changes only with a deploy, which is a new isolate. Cached as the promise
 // so concurrent first reads share one fetch, and dropped on failure so a
@@ -103,7 +103,7 @@ export async function loadTemplateSpec(env: Env, request: Request, slug: string)
 }
 
 /**
- * The packaged page, `out/downloads/<slug>/index.html`: the artefact previewed
+ * The packaged page, `out/downloads/<slug>/index.html`: the artifact previewed
  * and shipped. Asked for as `/downloads/<slug>/`, the URL the asset router
  * serves it under, which is also what the browser-side preview fetches
  * (`packagedTemplateUrl` in lib/studioPreview.ts). Asking for `index.html`

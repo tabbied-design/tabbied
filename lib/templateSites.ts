@@ -46,7 +46,7 @@ export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'caldera-rail', name: 'Caldera', topic: 'Scenic railway journeys', patternSlug: 'cascade', pattern: cascade, paletteName: 'Gouache travel', palette: ['#F0EAD6', '#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51'], seed: 'dir-cl' },
 
   // Swiss-minimal set: one design language, five grids. Inter throughout.
-  { slug: 'konzerthaus-halden', name: 'Konzerthaus Halden', topic: 'Concert hall', patternSlug: 'crescendo', pattern: crescendo, paletteName: 'Programme red', palette: ['#F2F1EE', '#E1261C'], seed: 'dir-kh' },
+  { slug: 'konzerthaus-halden', name: 'Konzerthaus Halden', topic: 'Concert hall', patternSlug: 'crescendo', pattern: crescendo, paletteName: 'Program red', palette: ['#F2F1EE', '#E1261C'], seed: 'dir-kh' },
   { slug: 'institut-vollmer', name: 'Institut Vollmer', topic: 'Materials research', patternSlug: 'perforate', pattern: perforate, paletteName: 'Signal blue', palette: ['#FFFFFF', '#1A1A1A', '#0B4EE0', '#9AA0A6', '#E9EBEE', '#4A4F55'], seed: 'dir-iv' },
   { slug: 'linie-nord', name: 'Linie Nord', topic: 'Regional transit', patternSlug: 'bothways', pattern: bothways, paletteName: 'Signal yellow', palette: ['#F1F1EF', '#17181A', '#FFD400', '#7E858C', '#DCDEDE', '#2A2E33'], seed: 'dir-ln' },
   { slug: 'chronometrie-bex', name: 'Chronométrie Bex', topic: 'Watch manufacture', patternSlug: 'torsion', pattern: torsion, paletteName: 'Bone and steel', palette: ['#EDEDEB', '#0E0E0E', '#FF5A1F', '#9C9C98', '#DAD9D5', '#3A3A38'], seed: 'dir-cb' },
@@ -88,7 +88,7 @@ export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'grafit', name: 'Grafit', topic: 'Pencil works', patternSlug: 'reeding', pattern: reeding, paletteName: 'Pencil ochre', palette: ['#EEEDE7', '#131313', '#E5A000', '#8A887F', '#DCDAD0'], seed: 'bold-gf' },
   { slug: 'falzbogen', name: 'Falzbogen', topic: 'Trade bookbindery', patternSlug: 'miura', pattern: miura, paletteName: 'Bookcloth crimson', palette: ['#F2EEE4', '#171310', '#B0003A', '#8B857A', '#E0DACB'], seed: 'bold-fb' },
   { slug: 'kubus', name: 'Kubus', topic: 'Kunsthalle', patternSlug: 'lintel', pattern: lintel, paletteName: 'Achromatic', palette: ['#080808', '#FAFAF8', '#8A8A86', '#1C1C1C'], seed: 'bold-kb' },
-  { slug: 'tiefsee', name: 'Tiefsee', topic: 'Deep-sea research programme', patternSlug: 'dipole', pattern: dipole, paletteName: 'Bioluminescent cyan', palette: ['#04121A', '#E6EEF0', '#00D2E0', '#5D7480', '#0A1F2B'], seed: 'bold-ts' },
+  { slug: 'tiefsee', name: 'Tiefsee', topic: 'Deep-sea research program', patternSlug: 'dipole', pattern: dipole, paletteName: 'Bioluminescent cyan', palette: ['#04121A', '#E6EEF0', '#00D2E0', '#5D7480', '#0A1F2B'], seed: 'bold-ts' },
 
   // Swiss-bold, with photography: the same full-bleed grid and poster type as
   // the set above, but each page also carries generated imagery. Scenes run
@@ -111,7 +111,7 @@ export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'betonpark', name: 'Betonpark', topic: 'Indoor skatepark', patternSlug: 'bracket', pattern: bracket, paletteName: 'Concrete and safety green', palette: ['#EDEDEA', '#0B0B0B', '#2BD32B', '#7A7A76', '#D2D2CC'], seed: 'set-bp' },
   { slug: 'revue-marges', name: 'Revue Marges', topic: 'Literary quarterly', patternSlug: 'moleskin', pattern: moleskin, paletteName: 'Cream and oxblood', palette: ['#F6F1E7', '#1E1A17', '#7A1F2B', '#8A8177', '#DED4C3'], seed: 'set-rm' },
   { slug: 'orbital-lounge', name: 'Orbital', topic: 'Listening bar', patternSlug: 'disque', pattern: disque, paletteName: 'Space-age orange', palette: ['#FFF4E3', '#1D1B2B', '#FF6B2C', '#0FA3B1', '#8B8478'], seed: 'set-ol' },
-  { slug: 'pixelmelt', name: 'Pixelmelt', topic: 'Independent game studio', patternSlug: 'spectrum', pattern: spectrum, paletteName: 'Vapour pink and cyan', palette: ['#12081F', '#F4EEFF', '#FF5FD2', '#38E0FF', '#7C6F94'], seed: 'set-pm' },
+  { slug: 'pixelmelt', name: 'Pixelmelt', topic: 'Independent game studio', patternSlug: 'spectrum', pattern: spectrum, paletteName: 'Vapor pink and cyan', palette: ['#12081F', '#F4EEFF', '#FF5FD2', '#38E0FF', '#7C6F94'], seed: 'set-pm' },
   { slug: 'birk-mobler', name: 'Birk Mobler', topic: 'Furniture maker', patternSlug: 'ninon', pattern: ninon, paletteName: 'Oak on white', palette: ['#FAFAF8', '#1F1F1D', '#B8895A', '#9A9994', '#E6E4DF'], seed: 'set-bm' },
   { slug: 'werkstatt-neun', name: 'Werkstatt Neun', topic: 'Design school workshop', patternSlug: 'bauhaus', pattern: bauhaus, paletteName: 'Three primaries', palette: ['#F2EFE6', '#141414', '#D7263D', '#1F5FBF', '#F2C230'], seed: 'set-wn' },
   { slug: 'hotel-meridien', name: 'Hotel Meridien', topic: 'Grand hotel', patternSlug: 'capstan', pattern: capstan, paletteName: 'Deco gold on green', palette: ['#0E1F1B', '#F3EBD9', '#C9A24B', '#7E8A82', '#1B2F2A'], seed: 'set-hm' },
@@ -127,5 +127,5 @@ export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'tidy-ledger', name: 'Tidy Ledger', topic: 'Bookkeeping app', patternSlug: 'sound', pattern: sound, paletteName: 'Violet and mint', palette: ['#FBFAFF', '#1B1A2E', '#6D5DF5', '#2ED3A5', '#7D7A94', '#ECEAFB'], seed: 'set-tl' },
   { slug: 'atelier-vane', name: 'Atelier Vane', topic: 'Fashion label', patternSlug: 'cornerbite', pattern: cornerbite, paletteName: 'Black on white', palette: ['#FFFFFF', '#000000', '#8C8C8C', '#E4E4E4'], seed: 'set-av' },
   { slug: 'mesa-outfitters', name: 'Mesa Outfitters', topic: 'Desert trail guides', patternSlug: 'fractal', pattern: fractal, paletteName: 'Terracotta and sky', palette: ['#F7EEDF', '#2B1F16', '#C75B2A', '#3B8EA5', '#8C7E6E', '#E4D5BE'], seed: 'set-mo' },
-  { slug: 'velo-criterium', name: 'Velo Criterium', topic: 'City-centre cycling race', patternSlug: 'pinwheel', pattern: pinwheel, paletteName: 'Lime and electric blue', palette: ['#0B1220', '#F2F5FF', '#C6FF3D', '#2F6BFF', '#6C7590'], seed: 'set-vc' },
+  { slug: 'velo-criterium', name: 'Velo Criterium', topic: 'City-center cycling race', patternSlug: 'pinwheel', pattern: pinwheel, paletteName: 'Lime and electric blue', palette: ['#0B1220', '#F2F5FF', '#C6FF3D', '#2F6BFF', '#6C7590'], seed: 'set-vc' },
 ];

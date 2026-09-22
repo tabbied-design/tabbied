@@ -30,7 +30,13 @@
     // POST to the platform tier (sign-in, projects, AI tasks) would otherwise
     // be answered with a redirect before the Worker ever saw it. Any new
     // non-asset route must join this list.
-    "run_worker_first": ["/mcp", "/mcp/*", "/health", "/api", "/api/*"]
+    //
+    // /downloads is the one asset folder that goes through the Worker: a
+    // template zip is a signed-in act counted against the month's cap
+    // (worker/lib/downloads.ts), and the edge would otherwise serve it to
+    // anyone without asking. The Worker hands everything else under the
+    // folder (the packaged pages the previews read) back to the binding.
+    "run_worker_first": ["/mcp", "/mcp/*", "/health", "/api", "/api/*", "/downloads/*"]
   },
 
   "observability": {

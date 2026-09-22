@@ -16,7 +16,7 @@ export const metadata = {
    the plates, the plate itself - is what shows through the drawing. */
 const INK = '#16180f';
 const ACCENT = '#6b7f1e';
-const GREY = '#8c8b7c';
+const GRAY = '#8c8b7c';
 const PANEL = '#dedcce';
 
 /* Last year's list. Anything under twenty birds is in the appendix, not here. */
@@ -43,7 +43,7 @@ const PRINCIPLES = [
   {
     art: baste,
     img: 'ringmark-tile-rings-cutout',
-    alt: 'A small coil of plain aluminium bird rings on a wire loop',
+    alt: 'A small coil of plain aluminum bird rings on a wire loop',
     n: 'I',
     t: 'Every bird, every day',
     d: 'The station has been manned on every single day since 1909, through two wars and one evacuation. A gap in a hundred-and-seventeen-year series is worth more than any one season in it.',
@@ -78,7 +78,7 @@ const TOTALS = [
 ];
 
 const RECORD = [
-  ['Ring', 'Aluminium, size 0 to 6', 'Fitted with pliers', 'Never re-used'],
+  ['Ring', 'Aluminum, size 0 to 6', 'Fitted with pliers', 'Never re-used'],
   ['Wing', 'Maximum chord', 'To 0.5 mm', 'Stopped rule'],
   ['Weight', 'To 0.1 g', 'In a cone or a bag', 'Spring balance, tared'],
   ['Fat', 'Score 0 to 8', 'Furcular hollow', 'By eye, one observer'],
@@ -94,7 +94,7 @@ const VISIT = [
   ['Station', 'Am Fallberg, 27498 Helgoland. Twenty minutes up from the harbour.'],
   ['Watching', 'Anyone may follow a round. Ask at the door; nobody has ever been turned away.'],
   ['Volunteers', 'Two-week placements, March to November. Bunk, food and no wages at all.'],
-  ['Data', 'Every record since 1909 is public. The paper ledgers are digitised to 1962 so far.'],
+  ['Data', 'Every record since 1909 is public. The paper ledgers are digitized to 1962 so far.'],
 ];
 
 /* What the letter is, answered before anyone has to ask. */
@@ -107,17 +107,17 @@ const SIGNUP_META: [string, string][] = [
 export default function RingmarkPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--ground': '#efede3',
         '--ink': '#16180f',
         '--accent': '#6b7f1e',
-        '--grey': '#8c8b7c',
+        '--gray': '#8c8b7c',
         '--panel': '#dedcce',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="ground,ink,accent,grey,panel"
+      data-edit-vars="ground,ink,accent,gray,panel"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -144,7 +144,7 @@ export default function RingmarkPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={birdsmouth}
-              palette={['transparent', PANEL, GREY, ACCENT]}
+              palette={['transparent', PANEL, GRAY, ACCENT]}
               fit="grid"
               cellSize={148}
               redrawInterval={6200}
@@ -176,7 +176,7 @@ export default function RingmarkPage() {
             alt="A large timber and netting Heligoland funnel trap running through low dune scrub"
             priority
           />
-          <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>The funnel, from the wide end. Sixty metres to the catching box.</figcaption>
+          <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>The funnel, from the wide end. Sixty meters to the catching box.</figcaption>
         </figure>
 
         {/* --------------------------------------------------------- SPECIES
@@ -211,7 +211,7 @@ export default function RingmarkPage() {
           </p>
           <div className={s.statementMeta}>
             <p data-edit="statement.body" data-edit-max="240" data-edit-multiline>
-              Ringmark is a working ringing station, not a visitor centre.
+              Ringmark is a working ringing station, not a visitor center.
               Three staff, six volunteers at a time, one trap and a hut that
               has been rebuilt four times.
             </p>
@@ -282,7 +282,7 @@ export default function RingmarkPage() {
                   <div data-edit-pattern={`pr.field.${i}`} data-edit-roles="transparent,3,2" className={s.pField} aria-hidden="true">
                     <TabbiedPattern
                       pattern={p.art}
-                      palette={['transparent', GREY, ACCENT]}
+                      palette={['transparent', GRAY, ACCENT]}
                       fit="grid"
                       cellSize={62}
                       redrawInterval={5400}
@@ -323,7 +323,7 @@ export default function RingmarkPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={wander}
-              palette={['transparent', ACCENT, GREY]}
+              palette={['transparent', ACCENT, GRAY]}
               fit="grid"
               cellSize={116}
               redrawInterval={4600}
@@ -360,7 +360,7 @@ export default function RingmarkPage() {
           <div data-edit-pattern="visit.field" data-edit-roles="transparent,3,4" className={s.visitField} aria-hidden="true">
             <TabbiedPattern
               pattern={baste}
-              palette={['transparent', GREY, PANEL]}
+              palette={['transparent', GRAY, PANEL]}
               fit="grid"
               cellSize={102}
               redrawInterval={5400}
@@ -409,7 +409,7 @@ export default function RingmarkPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={cleat}
-          palette={['transparent', ACCENT, PANEL, GREY]}
+          palette={['transparent', ACCENT, PANEL, GRAY]}
           fit="grid"
           cellSize={102}
           redrawInterval={5000}
@@ -423,7 +423,7 @@ export default function RingmarkPage() {
             <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2" className={s.footPlateField} aria-hidden="true">
               <TabbiedPattern
                 pattern={curl}
-                palette={['transparent', GREY, ACCENT]}
+                palette={['transparent', GRAY, ACCENT]}
                 fit="grid"
                 cellSize={72}
                 redrawInterval={6000}

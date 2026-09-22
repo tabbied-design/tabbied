@@ -2,7 +2,7 @@
 
 // A results card's Preview, without leaving the page.
 //
-// It shows the same artefact the full preview route shows - the packaged
+// It shows the same artifact the full preview route shows - the packaged
 // download with the card's direction applied by the edits engine - for the
 // same reason: the live /template/<slug>/ page mounts its patterns through
 // React and ignores an attribute written from outside, while the package has

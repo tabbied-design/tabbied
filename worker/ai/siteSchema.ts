@@ -102,7 +102,7 @@ export const reviseJsonSchema = (slots: SiteSlot[]) => ({
       },
     },
     palette: {
-      // Null when the colours are not what was asked about.
+      // Null when the colors are not what was asked about.
       anyOf: [
         { type: 'null' },
         {
@@ -112,7 +112,7 @@ export const reviseJsonSchema = (slots: SiteSlot[]) => ({
           items: { type: 'string', pattern: '^#[0-9a-fA-F]{6}$' },
         },
       ],
-      description: 'Background first, then inks; null unless the request was about colours.',
+      description: 'Background first, then inks; null unless the request was about colors.',
     },
     note: {
       type: 'string',

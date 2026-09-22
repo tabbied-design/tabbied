@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 import styles from './HomeTemplates.module.css';
 
@@ -71,7 +72,7 @@ export default function HomeTemplates({
         <div className={styles.rowHeader}>
           <span className={styles.eyebrow}>Website templates</span>
           <Link href="/templates" prefetch={false} className={styles.browseAll}>
-            Browse all sites &rarr;
+            Browse all sites <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
 
@@ -107,7 +108,7 @@ export default function HomeTemplates({
         <Link href="/templates" prefetch={false} className={styles.cta}>
           <span>Explore all {templateCount} templates</span>
           <span className={styles.ctaArrow} aria-hidden="true">
-            &rarr;
+            <ArrowRight size={18} />
           </span>
         </Link>
       </div>

@@ -2,7 +2,7 @@
 
 The 77 template sites are finished, hand-designed pages. This is the machinery
 that lets somebody change the *brand* in one - the words, the photographs, the
-colours, the pattern fields - without understanding the page, and without
+colors, the pattern fields - without understanding the page, and without
 being able to break its layout.
 
 Three parties use the same contract: a person in a template editor, a coding
@@ -103,16 +103,16 @@ pages carry them (one component, so one edit covered all five) and the 72
 bespoke pages do not - the same batching the annotations themselves went
 through.
 
-## Colour: one edit point, not three copies
+## Color: one edit point, not three copies
 
-Colour enters a page **once**, as custom properties on the `data-edit-root`
-element; the stylesheet only ever says `var(--...)`. Re-colouring is then a
+Color enters a page **once**, as custom properties on the `data-edit-root`
+element; the stylesheet only ever says `var(--...)`. Re-coloring is then a
 property rewrite rather than a search-and-replace through a stylesheet.
 
 Some of what the page needs is *derived* from the palette rather than in it -
 the ink that stays legible on the page ground, the card and panel tints. Those
-are functions of the palette, so a re-colour must recompute them; leaving them
-behind is how a re-coloured page ends up with unreadable body copy. The
+are functions of the palette, so a re-color must recompute them; leaving them
+behind is how a re-colored page ends up with unreadable body copy. The
 `data-edit-root` value names which derivation to use:
 
 - **`direct`** - `--brand-0...n` and nothing else.
@@ -122,28 +122,28 @@ behind is how a re-coloured page ends up with unreadable body copy. The
   `data-edit-vars`. This is what the 72 bespoke pages use; see below.
 
 `derivePaletteProperties()` is the single implementation, shared by
-`TemplateSite.tsx` (first render) and `applyEdits` (re-colour). They must agree
-exactly, which is why the maths moved out of the component.
+`TemplateSite.tsx` (first render) and `applyEdits` (re-color). They must agree
+exactly, which is why the math moved out of the component.
 
-**Pattern fields keep literal colours** (css-doodle palettes are serialized
-into `data-palette`, and the SVG exporter parses concrete colours), so a
+**Pattern fields keep literal colors** (css-doodle palettes are serialized
+into `data-palette`, and the SVG exporter parses concrete colors), so a
 pattern slot declares a **role map**: `data-edit-roles="transparent,1,3"` means
 position 0 is the literal `transparent` and positions 1-2 follow brand roles 1
 and 3. A numeric role wraps if the palette is short.
 
-`transparent` in colour 0 is the one that matters: it is what leaves real
+`transparent` in color 0 is the one that matters: it is what leaves real
 negative space so a field reads *over* a photograph. It is a literal precisely
-so that re-colouring can never fill it in. An off-palette accent stays literal
+so that re-coloring can never fill it in. An off-palette accent stays literal
 for the same reason - it is not part of the brand, so it must not move when the
 brand does.
 
 **31 of the 434 pattern fields carry no role map, and cannot.** They take a
 per-item palette from a data array (`palette={p.palette}`) or a conditional
-(``palette={[..., i % 4 === 0 ? ACID : GREY, ...]}``), so one static map could
+(``palette={[..., i % 4 === 0 ? ACID : GRAY, ...]}``), so one static map could
 not describe what a single JSX node renders differently on each pass. Those
-fields are still slots - swappable, re-seedable, and re-colourable by an
+fields are still slots - swappable, re-seedable, and re-colorable by an
 explicit `palette` in the edits document, which `PatternEdit` supports for
-exactly this case. They just do not follow a brand re-colour on their own. The
+exactly this case. They just do not follow a brand re-color on their own. The
 codemod names each one rather than leaving it to be discovered.
 
 ## The `{em}` accent
@@ -193,7 +193,7 @@ All 77 are annotated today: 13,886 text, 374 image, and 528 pattern slots.
 runs in the browser (the builder's live preview and its client-side export),
 in Node (the generator and its gate), and in tests.
 
-- `planEdits(spec, document)` -> `{operations, problems}`. Pure: every judgement
+- `planEdits(spec, document)` -> `{operations, problems}`. Pure: every judgment
   lives here - validation, palette resolution, option ranges, attribute
   serialization - so it is covered by `node --test` with no browser.
 - `applyEdits(root, spec, document)` executes that plan against a DOM. Short
@@ -209,7 +209,7 @@ hides the mistake from a pipeline that could otherwise correct itself.
 one edit that names something outside the page. `patterns[id].slug` is
 written as `data-pattern`; the old design's `data-options` are removed with
 it (option ids belong to the design that declared them) and the seed and
-palette are kept, so a re-colour still reaches the new design through the
+palette are kept, so a re-color still reaches the new design through the
 slot's roles. Two things hold it together. `planEdits` takes `{ designs }`,
 the catalog's slugs, and refuses a slug outside it - the runtime would warn
 and draw a blank otherwise, which is the silent failure this scheme exists to
@@ -233,12 +233,12 @@ download with the matching rule missing.
   palette derivation, exhaustively and without a browser.
 - `e2e/editable.spec.ts` - the real engine against the real packaged download,
   once per palette derivation: annotations survived the export and the
-  packager, ids still find their elements, and a re-colour reaches both the
+  packager, ids still find their elements, and a re-color reaches both the
   custom properties and the pattern fields.
 
 ## The two palette derivations
 
-The 72 bespoke pages already kept their colour in one place before any of this
+The 72 bespoke pages already kept their color in one place before any of this
 existed: each declares `--paper`, `--ink`, `--ochre`... on its root rule and its
 stylesheet only reads `var(--...)`. Renaming those to `--brand-N` would have
 meant a codemod over 72 stylesheets to gain nothing, so instead the page
@@ -249,13 +249,13 @@ declares which name each role owns:
      style="--paper:#eeede7;--ink:#131313;...">
 ```
 
-A re-colour writes those names. The properties are set **inline**, which is
+A re-color writes those names. The properties are set **inline**, which is
 what makes an edit win over the authored defaults still sitting in the class
 rule - so a page with no edits applied looks exactly as it always did.
 
-One trap the bespoke pages carry: colour interpolated into an inline style in
+One trap the bespoke pages carry: color interpolated into an inline style in
 JavaScript (`` style={{ background: `...${INK}...` }} ``) is baked at render time
-and a DOM-level re-colour cannot reach it. Write those as `var(--ink)` instead;
+and a DOM-level re-color cannot reach it. Write those as `var(--ink)` instead;
 custom properties resolve at computed-value time, so the inline style then
 follows the override.
 
@@ -296,16 +296,16 @@ Its correctness claim is that it changes nothing a visitor sees. That was
 checked the only way worth checking: building the export before and after and
 diffing the rendered text of all 57 pages, which came back identical.
 
-Two things it resolves that are easy to miss, because both hide a colour one
+Two things it resolves that are easy to miss, because both hide a color one
 indirection away from the pattern that uses it:
 
 - **Aliased constants** - `const TILE_A = STEEL`. About twenty pages name their
-  tile colours that way, and not chasing the alias left those fields with no
+  tile colors that way, and not chasing the alias left those fields with no
   role map at all.
 - **Array constants** - `palette={FULL}` where `const FULL = [PARCHMENT, NAVY,
   ...]`, rather than an array written inline.
 
-Missing those two left 109 of 434 fields unable to re-colour. Resolving them
+Missing those two left 109 of 434 fields unable to re-color. Resolving them
 brings it to 31, all of which are genuinely dynamic.
 
 Slot ids come from the element's own class name where it has one - those are

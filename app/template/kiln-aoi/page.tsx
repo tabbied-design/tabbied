@@ -9,12 +9,12 @@ export const metadata = {
 };
 
 /* Soft ink, a clay and a moss. Every field takes `transparent` in the
-   background slot so the scorch and the mosaic sit in the warm grey of the
+   background slot so the scorch and the mosaic sit in the warm gray of the
    page rather than on a plate laid over it. */
 const INK = '#2B2926';
 const CLAY = '#9C6B4E';
 const MOSS = '#6F7A5C';
-const GREY = '#A19C93';
+const GRAY = '#A19C93';
 /* Tiles pin their doodle to a whole multiple of the cell (9 x 72px) and let
    the plate clip it, so every grid track is a whole pixel. */
 const TILE_BOX = 648;
@@ -97,7 +97,7 @@ const GLAZES: Glaze[] = [
   {
     name: 'Shino',
     made: 'Feldspar and clay, put on thick',
-    body: 'White, with pinholes and a crawl at the edges. It traps carbon in the first days of the firing and comes out grey and orange where the smoke got under it.',
+    body: 'White, with pinholes and a crawl at the edges. It traps carbon in the first days of the firing and comes out gray and orange where the smoke got under it.',
   },
   {
     name: 'Hai-kaburi',
@@ -131,7 +131,7 @@ type Course = {
 
 const CLASSES: Course[] = [
   { title: 'A tea bowl in a day', when: 'Saturdays: 16 Jan, 13 Mar, 12 Jun, 9 Oct', length: 'Four hours', fee: '9 000 yen', body: 'Six people. You throw three bowls, keep one, and we glaze and fire it in the next wood firing. Collect it, or we post it.' },
-  { title: 'The wheel, six evenings', when: 'Tuesdays from 2 Feb, 4 May, 7 Sep', length: 'Six weeks, 18.30 to 21.00', fee: '36 000 yen', body: 'Four people at four wheels. Centring, cylinders, bowls, a lid. Clay and firing included; most people leave with about a dozen pieces.' },
+  { title: 'The wheel, six evenings', when: 'Tuesdays from 2 Feb, 4 May, 7 Sep', length: 'Six weeks, 18.30 to 21.00', fee: '36 000 yen', body: 'Four people at four wheels. Centering, cylinders, bowls, a lid. Clay and firing included; most people leave with about a dozen pieces.' },
   { title: 'Glazing day', when: 'The Sunday before each wood firing', length: 'Five hours', fee: '7 000 yen', body: 'Bring bisqued work of your own or use ours. Four glazes, a talk about what each will do, and a place in the kiln for three pieces.' },
   { title: "Children's afternoon", when: 'School holidays, Wednesdays', length: 'Two hours', fee: '3 000 yen', body: 'Ages six to twelve, with an adult. Pinch pots and a plate, fired in the electric kiln and ready in a fortnight.' },
 ];
@@ -152,23 +152,23 @@ type Note = {
 const NOTES: Note[] = [
   { date: '14 Aug 2026', title: 'The kiln shed', body: 'The roof over the kiln was re-tiled this week with tiles from a house being taken down in Nomachi. They are older than the kiln and they fit better than the ones we bought.' },
   { date: '2 Jun 2026', title: 'The May firing', body: 'Cooler on the left than we wanted, which gave us twelve dry shino bowls and one hai-kaburi vase that is the best thing to come out of the kiln in three years. It is not for sale.' },
-  { date: '19 Mar 2026', title: 'A clay from Noto', body: 'A farmer near Wajima sent two sacks of a red clay from a bank behind his barn. It throws short and cracks if you hurry, and under kaki it is the colour of the barn.' },
+  { date: '19 Mar 2026', title: 'A clay from Noto', body: 'A farmer near Wajima sent two sacks of a red clay from a bank behind his barn. It throws short and cracks if you hurry, and under kaki it is the color of the barn.' },
 ];
 
 export default function KilnAoiPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#efeae2',
         '--ink': '#2b2926',
         '--clay': '#9c6b4e',
         '--moss': '#6f7a5c',
-        '--grey': '#a19c93',
+        '--gray': '#a19c93',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,clay,moss,grey"
+      data-edit-vars="paper,ink,clay,moss,gray"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -192,7 +192,7 @@ export default function KilnAoiPage() {
         {/* ------------------------------------------------------------ HERO
             The scorch reaches in from the top right; the words sit low and
             left, and a vertical label stands at the edge like a hanging
-            scroll. Nothing is centred. */}
+            scroll. Nothing is centerd. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,1,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
@@ -236,7 +236,7 @@ export default function KilnAoiPage() {
               <div data-edit-pattern={`group.field.${i}`} data-edit-roles="transparent,2,3,4" className={s.tile} aria-hidden="true">
                 <TabbiedPattern
                   pattern={gully}
-                  palette={['transparent', CLAY, MOSS, GREY]}
+                  palette={['transparent', CLAY, MOSS, GRAY]}
                   fit="grid"
                   cellSize={72}
                   redrawInterval={5600 + i * 400}
@@ -293,7 +293,7 @@ export default function KilnAoiPage() {
           <div data-edit-pattern="firings.field" data-edit-roles="transparent,4,3" className={s.firingsField} aria-hidden="true">
             <TabbiedPattern
               pattern={giornata}
-              palette={['transparent', GREY, MOSS]}
+              palette={['transparent', GRAY, MOSS]}
               fit="grid"
               cellSize={96}
               redrawInterval={7000}

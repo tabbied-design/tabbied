@@ -121,7 +121,7 @@ const REPRESENTATIVE = [
 //   fractional pixels - 60.66px at 6x9 - so every one of those edges lands
 //   mid-device-pixel, where CSS snaps and SVG anti-aliases. This is a property
 //   of the geometry, not of the design: swept at a fractional cell size the
-//   shipped batch-11 catalogue lands in the same 0.5-1.8% band (toning 1.84%,
+//   shipped batch-11 catalog lands in the same 0.5-1.8% band (toning 1.84%,
 //   dimmer 1.71%, tinting 1.36%). See docs/svg-export.md.
 const MAX_BAD_FRACTION = 0.01;
 const PER_PATTERN_MAX: Record<string, number> = {

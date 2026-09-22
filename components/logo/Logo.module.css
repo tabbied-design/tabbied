@@ -1,5 +1,5 @@
 /* The lockup: the mark, then the wordmark, on one baseline.
-   Colour comes from the parent - every masthead sets its own ink. */
+   Color comes from the parent - every masthead sets its own ink. */
 .lockup {
   display: inline-flex;
   align-items: center;

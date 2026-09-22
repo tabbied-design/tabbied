@@ -8,12 +8,12 @@ export const metadata = {
     'The Hotel Meridien has stood on the Promenade des Anglais since 1927. Ninety-two rooms, a restaurant with one tasting menu, a bar with a piano, and the sea across the road.',
 };
 
-/* Cream, gold, a grey for the small print and the pale green of the panels.
+/* Cream, gold, a gray for the small print and the pale green of the panels.
    Every field takes `transparent` in the background slot so the beads and
    steps sit in the deep green of the page, the way gilding sits on lacquer. */
 const INK = '#F3EBD9';
 const GOLD = '#C9A24B';
-const GREY = '#7E8A82';
+const GRAY = '#7E8A82';
 const PALE = '#1B2F2A';
 
 const NAV = [
@@ -113,17 +113,17 @@ const LOCATION = [
 export default function HotelMeridienPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#0e1f1b',
         '--ink': '#f3ebd9',
         '--gold': '#c9a24b',
-        '--grey': '#7e8a82',
+        '--gray': '#7e8a82',
         '--pale': '#1b2f2a',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,gold,grey,pale"
+      data-edit-vars="paper,ink,gold,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -146,13 +146,13 @@ export default function HotelMeridienPage() {
 
       <main id="top">
         {/* ------------------------------------------------------------ HERO
-            Symmetric: the beads of the field radiate from the centre, and the
-            words sit in a stepped panel at the same centre. */}
+            Symmetric: the beads of the field radiate from the center, and the
+            words sit in a stepped panel at the same center. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,4" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={capstan}
-              palette={['transparent', GOLD, GREY, PALE]}
+              palette={['transparent', GOLD, GRAY, PALE]}
               fit="grid"
               cellSize={160}
               redrawInterval={6200}
@@ -238,7 +238,7 @@ export default function HotelMeridienPage() {
           <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,3" className={s.bandField}>
             <TabbiedPattern
               pattern={arriccio}
-              palette={['transparent', GOLD, PALE, GREY]}
+              palette={['transparent', GOLD, PALE, GRAY]}
               fit="grid"
               cellSize={144}
               redrawInterval={4800}
@@ -274,7 +274,7 @@ export default function HotelMeridienPage() {
           <div data-edit-pattern="history.field" data-edit-roles="transparent,4,3" className={s.historyField} aria-hidden="true">
             <TabbiedPattern
               pattern={capstan}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={104}
               redrawInterval={6800}
@@ -354,7 +354,7 @@ export default function HotelMeridienPage() {
         <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.codaField}>
           <TabbiedPattern
             pattern={ziggurat}
-            palette={['transparent', GOLD, PALE, GREY]}
+            palette={['transparent', GOLD, PALE, GRAY]}
             fit="grid"
             cellSize={96}
             redrawInterval={5400}

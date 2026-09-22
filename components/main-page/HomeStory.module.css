@@ -15,7 +15,7 @@
   padding-left: var(--h-pad);
 }
 
-/* ── Backdrop ────────────────────────────────────────────────────────────── */
+/* -- Backdrop -------------------------------------------------------------- */
 
 .backdrop {
   position: absolute;
@@ -30,7 +30,7 @@
   transition: opacity 1300ms ease;
 }
 
-/* A zero-size anchor at the centre; the ring hangs off it, so one rotation
+/* A zero-size anchor at the center; the ring hangs off it, so one rotation
    here carries all fourteen squares round. */
 .orbit {
   position: absolute;
@@ -59,7 +59,7 @@
   }
 }
 
-/* ── Copy ────────────────────────────────────────────────────────────────── */
+/* -- Copy ------------------------------------------------------------------ */
 
 /* The section's name, in the violet the design gives this one section and
    nothing else on the page. */
@@ -86,7 +86,7 @@
   color: var(--h-ink-muted);
 }
 
-/* ── Stats ───────────────────────────────────────────────────────────────── */
+/* -- Stats ----------------------------------------------------------------- */
 
 .stats {
   display: grid;

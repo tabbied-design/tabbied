@@ -34,8 +34,8 @@ const imageId = (
 //
 // The palette roles a pattern field follows. A field drawn on the page's own
 // ground takes the whole palette; one drawn *over* something keeps
-// `transparent` in colour0 - that literal is what leaves real negative space
-// for the photograph underneath, so it must never be re-coloured.
+// `transparent` in color0 - that literal is what leaves real negative space
+// for the photograph underneath, so it must never be re-colored.
 const fullRoles = (site: Site) => site.colors.map((_, i) => i).join(',');
 const overlayRoles = (site: Site) =>
   ['transparent', ...site.colors.slice(1).map((_, i) => i + 1)].join(',');
@@ -84,7 +84,7 @@ function artAt(site: Site, patterns: ArtMap, i: number): PatternDefinition {
 }
 
 // Decorative accent: cover fit (no stretch), re-seeds over time.
-function Decor({ def, palette, density = 1 }: { def: PatternDefinition; palette: string[]; density?: 0 | 1 | 2 | 3 | 4 }) {
+function Decor({ def, palette, density = 0.25 }: { def: PatternDefinition; palette: string[]; density?: number }) {
   return <TabbiedPattern pattern={def} palette={palette} fit="cover" density={density} redrawInterval={4200} className={s.doodle} />;
 }
 
@@ -92,16 +92,16 @@ function Decor({ def, palette, density = 1 }: { def: PatternDefinition; palette:
 export default function TemplateSite({ site, patterns }: Props) {
   const { colors } = site;
 
-  // Colour enters the page exactly once, here, as custom properties. The
+  // Color enters the page exactly once, here, as custom properties. The
   // derivation moved into `tabbied-templates` because applyEdits has to
-  // recompute these same variables when somebody re-colours a downloaded copy:
+  // recompute these same variables when somebody re-colors a downloaded copy:
   // `--ink` and the card tints are functions of the palette rather than
-  // members of it, and a second implementation of that maths is how a
-  // re-coloured page ends up with body copy nobody can read.
+  // members of it, and a second implementation of that math is how a
+  // re-colored page ends up with body copy nobody can read.
   const vars: Record<string, string> = {
     ...derivePaletteProperties(colors, 'templateSite', {
       // A flat-section site drops the alternating band tone entirely: every
-      // section sits on the page colour, and rhythm comes from spacing alone.
+      // section sits on the page color, and rhythm comes from spacing alone.
       flatSections: site.flatSections,
     }),
     '--display': site.fonts.display,
@@ -126,8 +126,8 @@ export default function TemplateSite({ site, patterns }: Props) {
     <div
       className={`${s.site} ${kitClass}`}
       style={vars as CSSProperties}
-      // Names the palette derivation, so a page is self-describing: re-colouring
-      // a packaged copy needs the markup and the new colours, nothing else.
+      // Names the palette derivation, so a page is self-describing: re-coloring
+      // a packaged copy needs the markup and the new colors, nothing else.
       data-edit-root="templateSite"
       {...(site.flatSections ? { 'data-edit-flat': '' } : {})}
     >
@@ -244,7 +244,7 @@ function About({ site, patterns, content }: Ctx & { content: NonNullable<Ctx['co
         {content.aboutImage ? (
           <ImageCard editId="about.photo" id={imageId(site, 'about', 0)} prompt={content.aboutImage} colors={site.colors} />
         ) : (
-          <Decor def={artAt(site, patterns, 2)} palette={site.colors} density={1} />
+          <Decor def={artAt(site, patterns, 2)} palette={site.colors} density={0.25} />
         )}
       </div>
     </section>
@@ -254,7 +254,7 @@ function About({ site, patterns, content }: Ctx & { content: NonNullable<Ctx['co
 function Manifesto({ site, patterns, data }: Ctx & { data: NonNullable<NonNullable<Ctx['sec']>['manifesto']> }) {
   return (
     <section className={s.manifesto}>
-      <div className={s.abs} style={{ opacity: 0.16 }} data-edit-pattern="manifesto.field" data-edit-roles={fullRoles(site)}><Decor def={artAt(site, patterns, 2)} palette={site.colors} density={1} /></div>
+      <div className={s.abs} style={{ opacity: 0.16 }} data-edit-pattern="manifesto.field" data-edit-roles={fullRoles(site)}><Decor def={artAt(site, patterns, 2)} palette={site.colors} density={0.25} /></div>
       <div className={s.manifestoInner}>
         <div className={s.eyebrow} data-edit="manifesto.kicker" data-edit-max="28">{data.kicker}</div>
         <p data-edit="manifesto.text" data-edit-multiline data-edit-max="280">{data.text}</p>
@@ -492,7 +492,7 @@ function Team({ site, data }: Ctx & { data: NonNullable<NonNullable<Ctx['sec']>[
 function BigQuote({ site, patterns, data }: Ctx & { data: NonNullable<NonNullable<Ctx['sec']>['bigQuote']> }) {
   return (
     <section className={s.bigQuote}>
-      <div className={s.abs} style={{ opacity: 0.18 }} data-edit-pattern="bigQuote.field" data-edit-roles={fullRoles(site)}><Decor def={artAt(site, patterns, 3)} palette={site.colors} density={1} /></div>
+      <div className={s.abs} style={{ opacity: 0.18 }} data-edit-pattern="bigQuote.field" data-edit-roles={fullRoles(site)}><Decor def={artAt(site, patterns, 3)} palette={site.colors} density={0.25} /></div>
       <div className={s.bigQuoteScrim} />
       <figure className={s.bigQuoteInner}>
         <blockquote data-edit="bigQuote.quote" data-edit-multiline data-edit-max="260">"{data.quote}"</blockquote>
@@ -546,7 +546,7 @@ function Band({ site, patterns, index = 0 }: Ctx & { index?: number }) {
   return (
     <section className={s.band}>
       <div className={s.doodleBox} style={{ position: 'absolute', inset: 0 }} data-edit-pattern="band.field" data-edit-roles={fullRoles(site)}>
-        <Decor def={artAt(site, patterns, index)} palette={site.colors} density={1} />
+        <Decor def={artAt(site, patterns, index)} palette={site.colors} density={0.25} />
       </div>
       <div className={s.bandScrim} />
       <div className={s.bandInner}>
@@ -608,7 +608,7 @@ function SplitHero({ site, patterns, heroImage, overlay }: HeroProps) {
  */
 function HeroArt({ site, patterns, heroImage, overlay }: HeroProps) {
   if (!heroImage) {
-    return <Decor def={artAt(site, patterns, 0)} palette={site.colors} density={1} />;
+    return <Decor def={artAt(site, patterns, 0)} palette={site.colors} density={0.25} />;
   }
 
   const def = (overlay && patterns[overlay]) ?? artAt(site, patterns, site.patterns.length - 1);

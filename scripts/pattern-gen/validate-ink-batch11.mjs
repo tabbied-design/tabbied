@@ -3,14 +3,14 @@
 // validate-batch11.mjs asks whether a design *paints* - it reads computed
 // styles, so a cell with a background counts even when a mask hides all of it.
 // This one asks whether the paint is *visible*, by rendering the design and
-// measuring how much of the sheet its single most common colour takes up.
+// measuring how much of the sheet its single most common color takes up.
 //
-// A design that is one flat colour is a blank sheet - a mask that never opens,
+// A design that is one flat color is a blank sheet - a mask that never opens,
 // two shapes intersected to nothing, a sector aimed out of its own cell. All
 // three render without error and export without error, which is exactly why
 // neither of the other validators catches them.
 //
-// The dominant-colour measure is used rather than "pixels differing from the
+// The dominant-color measure is used rather than "pixels differing from the
 // background" because plenty of good designs here are full-bleed: two inks
 // meeting edge to edge cover the sheet completely and show none of it.
 //
@@ -120,7 +120,7 @@ for (let i = 0; i < slugs.length; i += PER_PAGE) {
         const h = Math.round(r.height);
         const data = g.getImageData(Math.round(r.left), Math.round(r.top), w, h).data;
         // Quantized to 5 bits a channel so anti-aliased edges do not read as
-        // hundreds of distinct colours.
+        // hundreds of distinct colors.
         const counts = new Map();
         for (let p = 0; p < data.length; p += 4) {
           const key =
@@ -145,14 +145,14 @@ const failures = results.filter((r) => r.dominant > MAX_DOMINANT);
 results.sort((a, b) => b.dominant - a.dominant);
 console.log('most nearly blank:');
 for (const r of results.slice(0, 10)) {
-  console.log(`  ${(r.dominant * 100).toFixed(1)}% one colour   ${r.slug}`);
+  console.log(`  ${(r.dominant * 100).toFixed(1)}% one color   ${r.slug}`);
 }
 
 if (failures.length) {
   console.log(`\nFAILURES (${failures.length}):`);
   for (const f of failures) {
     console.log(
-      `  ${f.slug} -> ${(f.dominant * 100).toFixed(2)}% of the sheet is a single colour`
+      `  ${f.slug} -> ${(f.dominant * 100).toFixed(2)}% of the sheet is a single color`
     );
   }
   process.exit(1);

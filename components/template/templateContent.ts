@@ -179,7 +179,7 @@ export const TEMPLATE_CONTENT: Record<string, TemplateContent> = {
 zest: {
     about: {
       eyebrow: 'How Zest works',
-      title: 'Short lists, big flavour',
+      title: 'Short lists, big flavor',
       body: [
         'Every recipe is built around a handful of ingredients you can actually find and a cook time that fits a weeknight. We test each one until a tired person can nail it.',
         'No ten-step reductions, no shopping for one obscure thing. Just fast food that tastes like you tried.',

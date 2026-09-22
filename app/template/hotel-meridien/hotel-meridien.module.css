@@ -1,7 +1,7 @@
 /* ==========================================================================
    HOTEL MERIDIEN - grand hotel on the Promenade, Nice, since 1927
    Deep green ground, cream type, gold for the rules and the numerals.
-   Everything is centred on one axis: the headings, the double hairlines
+   Everything is centerd on one axis: the headings, the double hairlines
    under them, the panels with their stepped frames. Cinzel carries the
    capitals, letterspaced; Cormorant carries the sentences at a size a
    guest can read across a breakfast table.
@@ -11,7 +11,7 @@
   --paper: #0e1f1b;
   --ink: #f3ebd9;
   --gold: #c9a24b;
-  --grey: #7e8a82;
+  --gray: #7e8a82;
   --pale: #1b2f2a;
   --gut: clamp(1.25rem, 4vw, 3.5rem);
   --max: 64rem;
@@ -94,7 +94,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .barRight { text-align: right; }
@@ -198,7 +198,7 @@
 .cta:hover { background: var(--gold); color: var(--paper); }
 
 /* ------------------------------------------------------------ section frame
-   A roman numeral, the heading, the double hairline and a note, all centred. */
+   A roman numeral, the heading, the double hairline and a note, all centerd. */
 
 .sec {
   max-width: var(--max);
@@ -263,7 +263,7 @@
 .roomMeta,
 .roomView {
   font-size: 1rem;
-  color: var(--grey);
+  color: var(--gray);
   font-variant-numeric: tabular-nums;
 }
 
@@ -284,7 +284,7 @@
 }
 
 /* -------------------------------------------------------------- restaurant
-   The menu as a printed card: centred, a numeral over each course, the
+   The menu as a printed card: centerd, a numeral over each course, the
    price above and the pairing under it in the small capitals. */
 
 .menuFrame {
@@ -309,7 +309,7 @@
   margin: 0.5rem 0 0;
   font-size: 1rem;
   font-style: italic;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .menu {
@@ -343,7 +343,7 @@
   padding-top: 1.4rem;
   border-top: 3px double var(--gold);
   font-size: 0.98rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- band */
@@ -634,7 +634,7 @@
   margin: 0;
   font-size: 1rem;
   font-style: italic;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footGrid {
@@ -688,7 +688,7 @@
 .footFine p {
   margin: 0;
   font-size: 0.92rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footFine a {

@@ -19,7 +19,7 @@ const DARK = '#2A2E33';
 const NETWORK_FIGURES = [
   { value: '6', label: 'Lines in service' },
   { value: '91', label: 'Stops served' },
-  { value: '214', label: 'Route kilometres' },
+  { value: '214', label: 'Route kilometers' },
   { value: '41', label: 'Vehicles in the fleet' },
   { value: '18.4 m', label: 'Journeys, year to June 2026' },
   { value: '94.6 %', label: 'Punctual within 3 minutes' },
@@ -270,7 +270,7 @@ const UPDATES = [
 export default function LinieNordPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--concrete': '#f1f1ef',
@@ -357,7 +357,7 @@ export default function LinieNordPage() {
             <Figure editId="photo.linie-hero"
               slug="linie-hero"
               priority
-              alt="A two-car regional railcar standing at an open platform under a flat grey sky"
+              alt="A two-car regional railcar standing at an open platform under a flat gray sky"
               className={styles.img}
             />
           </div>
@@ -387,7 +387,7 @@ export default function LinieNordPage() {
               </p>
               <p data-edit="network.body2" data-edit-max="240" data-edit-multiline>
                 Track gauge is 1435 mm throughout. Electrification at 15 kV
-                covers 178 of the 214 route kilometres; the Grenselund
+                covers 178 of the 214 route kilometers; the Grenselund
                 extension remains diesel worked until 2029. Every line meets
                 every other line at Steinhafen Hbf or at Ostmole, so no journey
                 inside the four fare zones requires more than one change.
@@ -813,7 +813,7 @@ export default function LinieNordPage() {
               <div className={styles.frameWide}>
                 <Figure editId="photo.linie-interior"
                   slug="linie-interior"
-                  alt="The interior of a modern railcar with grey seating, grab poles and daylight from wide windows"
+                  alt="The interior of a modern railcar with gray seating, grab poles and daylight from wide windows"
                   className={styles.img}
                 />
               </div>

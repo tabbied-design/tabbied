@@ -1,29 +1,28 @@
 'use client';
 
-// The account's front page: the sites a person has customized, and where the
-// AI tier stands.
+// The account's front page: the month's template downloads against the cap,
+// where the AI tier stands, and the sites a person has customized.
 //
-// One read - the sites - because that is the whole of what a person can make
-// for the first launch. The generation flow is held back, so the history no
-// longer merges generations in beside the sites and no longer tags a row with
-// which kind of request it was: every row is a site.
-//
-// Usage is not read either. Every cap in worker/lib/quota.ts belongs to a
-// generation endpoint, so with that flow held back the ring and the meters
-// could only ever read zero - and a gauge reading a number nobody can move is
-// worse than none, which is the same reason the artboard's template-download
-// counter is not drawn. The artboard says what to draw instead: the AI card
-// carrying "Not yet available" and a sentence about a later release.
+// Two reads: the sites, which are the whole of what a person can make for
+// the first launch (the generation flow is held back, so the history no
+// longer merges generations in beside them), and the usage, for the one
+// number the artboard's ring meters, the template downloads the Worker
+// counts (worker/lib/downloads.ts). The AI card beside the ring carries "Not
+// yet available" and a sentence about a later release, because every AI cap
+// belongs to an endpoint nothing links to.
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown, Info } from 'lucide-react';
 import type { SiteSummary } from 'lib/studioDocument';
 import { apiFetch } from 'lib/apiFetch';
 import AccountPage from './AccountPage';
 import shell from './account.module.css';
 import styles from './AccountOverview.module.css';
 
-type Loaded = { sites: SiteSummary[] };
+/** What /api/account/usage says about the month's template downloads. */
+type Downloads = { used: number; cap: number; resetsAt: string };
+
+type Loaded = { sites: SiteSummary[]; downloads: Downloads | null };
 
 type State = { status: 'loading' } | { status: 'error' } | ({ status: 'ready' } & Loaded);
 
@@ -38,7 +37,7 @@ type Row = {
   action: string;
 };
 
-/** "Today, 6:42 PM" · "Yesterday, 9:18 PM" · "Aug 31, 2:14 PM". */
+/** "Today, 6:42 PM", "Yesterday, 9:18 PM", "Aug 31, 2:14 PM". */
 function when(value: Date): string {
   const now = new Date();
   const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
@@ -59,7 +58,41 @@ function when(value: Date): string {
   return `${day}, ${time}`;
 }
 
-const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+/** "Oct 1": the day the month's count starts over. */
+const resetsOn = (iso: string) =>
+  new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+
+/**
+ * The artboard's ring: a track and an arc over it, rotated a quarter turn so
+ * the arc starts at twelve. The dash array is the arc's length against the
+ * rest of the circumference, so a full cap closes the ring exactly.
+ */
+function Gauge({ used, cap }: { used: number; cap: number }) {
+  const r = 41;
+  const circumference = 2 * Math.PI * r;
+  const arc = cap > 0 ? Math.min(1, used / cap) * circumference : 0;
+
+  return (
+    <div className={styles.gauge}>
+      <svg width="96" height="96" viewBox="0 0 96 96" aria-hidden="true">
+        <circle cx="48" cy="48" r={r} fill="none" stroke="oklch(0 0 0 / 0.09)" strokeWidth="9" />
+        {arc > 0 ? (
+          <circle
+            cx="48"
+            cy="48"
+            r={r}
+            fill="none"
+            stroke="#0e0e13"
+            strokeWidth="9"
+            strokeLinecap="round"
+            strokeDasharray={`${arc} ${circumference - arc}`}
+          />
+        ) : null}
+      </svg>
+      <span className={styles.gaugeValue}>{used}</span>
+    </div>
+  );
+}
 
 function toRows({ sites }: Loaded): Row[] {
   return sites
@@ -68,7 +101,7 @@ function toRows({ sites }: Loaded): Row[] {
       title: site.title,
       at: new Date(site.updatedAt),
       palette: site.palette,
-      detail: `${site.stance ? `${site.stance} · ` : ''}${site.templateName} · ${plural(site.revisions, 'revision')}`,
+      detail: site.stance ? `${site.stance} on ${site.templateName}` : site.templateName,
       href: `/studio/site/?id=${site.id}`,
       action: 'Open site',
     }))
@@ -78,13 +111,25 @@ function toRows({ sites }: Loaded): Row[] {
 export default function AccountOverview() {
   const [state, setState] = useState<State>({ status: 'loading' });
   const [newestFirst, setNewestFirst] = useState(true);
+  // A download link answered by the Worker with "the cap is spent" lands
+  // here with ?downloads=capped. Read after mount, the way the gallery reads
+  // its page: a search param read during render bails the static route out.
+  const [capped, setCapped] = useState(false);
+
+  useEffect(() => {
+    setCapped(new URLSearchParams(window.location.search).get('downloads') === 'capped');
+  }, []);
 
   useEffect(() => {
     let live = true;
 
-    apiFetch<{ sites: SiteSummary[] }>('/api/studio/sites')
-      .then(({ sites }) => {
-        if (live) setState({ status: 'ready', sites });
+    Promise.all([
+      apiFetch<{ sites: SiteSummary[] }>('/api/studio/sites'),
+      // The usage failing should not take the sites with it.
+      apiFetch<{ downloads?: Downloads }>('/api/account/usage').catch(() => null),
+    ])
+      .then(([{ sites }, usage]) => {
+        if (live) setState({ status: 'ready', sites, downloads: usage?.downloads ?? null });
       })
       .catch(() => {
         if (live) setState({ status: 'error' });
@@ -97,22 +142,59 @@ export default function AccountOverview() {
 
   const rows = useMemo(() => (state.status === 'ready' ? toRows(state) : []), [state]);
   const ordered = newestFirst ? rows : [...rows].reverse();
+  const downloads = state.status === 'ready' ? state.downloads : null;
 
   return (
     <AccountPage
       eyebrow="My account"
-      title="Your account"
+      title="Usage this month"
       badge="Free plan"
       lede="Tabbied is free while we're in beta. There are no paid tiers yet, so every account gets the same limits."
     >
-      {/* The artboard's AI card, and only it. Its neighbour there is a
-          template-download counter over a month, which nothing counts; the
-          ring that stood here instead metered the `site` generation endpoint,
-          and that cannot move while the flow is held back. So the card the
-          artboard already wrote for this moment spans the box: the name, a
-          "Not yet available" pill opposite it, the credits it will meter, a
-          hatched track standing in for the bar, and the sentence. */}
+      {capped ? (
+        <p className={styles.notice} role="status">
+          You have used all {downloads?.cap ?? 30} template downloads for this month.
+          {downloads ? ` The count starts over on ${resetsOn(downloads.resetsAt)}.` : ''}
+        </p>
+      ) : null}
+
+      {/* One bordered box split in two, as the artboard draws it: the ring on
+          paper counting the month's template downloads, and the AI card in
+          ink, which spans its half with the name, a "Not yet available" pill
+          opposite it, the credits it will meter, a hatched track standing in
+          for the bar, and the sentence. */}
       <div className={styles.cards}>
+        <div className={styles.gaugeCard}>
+          {downloads ? (
+            <>
+              <Gauge used={downloads.used} cap={downloads.cap} />
+              <div>
+                <p className={styles.gaugeLabel}>
+                  Template downloads
+                  <span
+                    className={styles.gaugeInfo}
+                    title="Each template counts once a month, however many times you take it and in either format. Customizing itself is free."
+                    aria-label="Each template counts once a month, however many times you take it and in either format. Customizing itself is free."
+                    role="img"
+                  >
+                    <Info size={14} aria-hidden="true" />
+                  </span>
+                </p>
+                <p className={styles.gaugeCount}>
+                  {downloads.used} of {downloads.cap} this month
+                </p>
+                <p className={styles.gaugeResets}>Resets {resetsOn(downloads.resetsAt)}</p>
+              </div>
+            </>
+          ) : (
+            <p className={shell.quiet}>
+              {state.status === 'loading'
+                ? "Reading this month's downloads..."
+                : 'Downloads are not available right now.'}
+            </p>
+          )}
+        </div>
+
         <div className={styles.dark}>
           <div className={styles.darkHead}>
             <p className={styles.cardLabel}>AI usage</p>
@@ -189,7 +271,7 @@ export default function AccountOverview() {
                 {row.detail}
               </p>
               <Link href={row.href} prefetch={false} className={shell.rowAction}>
-                {row.action} &rarr;
+                {row.action} <ArrowRight size={14} aria-hidden="true" />
               </Link>
             </div>
           ))
@@ -197,7 +279,7 @@ export default function AccountOverview() {
       </div>
 
       <p className={shell.footnote}>
-        Customizing a template's colours and patterns is free and is not counted.
+        Customizing a template's colors and patterns is free and is not counted.
       </p>
     </AccountPage>
   );

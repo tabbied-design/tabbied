@@ -3,12 +3,12 @@
 // conic-gradient is the only thing in CSS that sweeps a value round an angle,
 // and it is also the one gradient SVG has no primitive for. The distinction
 // that matters is *hard stop* versus sweep: a span whose two ends are the same
-// colour is a sector, and the converter emits it as a path; a span whose ends
+// color is a sector, and the converter emits it as a path; a span whose ends
 // differ is a smooth angular blend, and the converter refuses it. Four designs
-// in the catalogue are marked "no SVG export" for exactly that reason.
+// in the catalog are marked "no SVG export" for exactly that reason.
 //
 // Every conic here is a hard stop, used as a mask, so the part that is not the
-// sector is a genuine hole rather than a fill in the background colour. What
+// sector is a genuine hole rather than a fill in the background color. What
 // separates one design from the next is where the apex sits, how wide the
 // sector opens, how many of them there are, and whether the middle is bored
 // out.

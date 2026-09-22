@@ -12,7 +12,7 @@
   --paper: #f6f1e7;
   --ink: #1e1a17;
   --oxblood: #7a1f2b;
-  --grey: #8a8177;
+  --gray: #8a8177;
   --pale: #ded4c3;
   --hair: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
   --gut: clamp(1.25rem, 4vw, 3.5rem);
@@ -117,7 +117,7 @@
 }
 
 .barFolio {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------------- hero */
@@ -195,7 +195,7 @@
 
 .figures dd {
   margin: 0.5rem 0 0;
-  color: var(--grey);
+  color: var(--gray);
   line-height: 1.5;
 }
 
@@ -230,7 +230,7 @@
 }
 
 .folioLabel {
-  color: var(--grey);
+  color: var(--gray);
   padding-top: 0.5rem;
   border-top: var(--hair);
 }
@@ -241,7 +241,7 @@
 
 .smallCaps {
   margin: 0 0 0.9rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .h2 {
@@ -328,7 +328,7 @@
 
 .tocNote {
   font-size: 0.9rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .tocPage {
@@ -338,7 +338,7 @@
 }
 
 /* --------------------------------------------------------------- columns
-   The quiet field: batiste well back and washed with the paper colour
+   The quiet field: batiste well back and washed with the paper color
    across the middle, where the copy sits. */
 
 .columns {
@@ -397,7 +397,7 @@
 
 .columnPages {
   margin: 0.2rem 0 0.7rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .columnBody {
@@ -467,7 +467,7 @@
 
 .tierUnit {
   margin: 0.6rem 0 0.9rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .tierBody {
@@ -493,7 +493,7 @@
 
 .terms dt,
 .masthead dt {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .terms dd,
@@ -583,7 +583,7 @@
 .shopStreet {
   grid-column: 2;
   font-size: 0.86rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------------- coda */

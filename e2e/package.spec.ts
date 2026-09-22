@@ -140,7 +140,7 @@ test.describe('tabbied package (component test page)', () => {
     // The adapted render matches the host's aspect ratio, so the scaled canvas
     // covers the wide box instead of overflowing vertically (the old fixed
     // 800×800 render was ~72% cropped at this shape). It overshoots by under
-    // one scaled cell: the scale is quantised so a cell lands on a whole
+    // one scaled cell: the scale is quantized so a cell lands on a whole
     // device pixel, which rounds up and is what cover crops for.
     const hostBox = (await page.locator(selector).boundingBox())!;
     const doodleBox = (await doodle.boundingBox())!;
@@ -158,10 +158,10 @@ test.describe('tabbied package (component test page)', () => {
     expect(doodleBox.width - hostBox.width).toBeLessThan(cell * scale);
     expect(doodleBox.height - hostBox.height).toBeLessThan(cell * scale);
 
-    // The invariant the quantisation exists for: a cell edge lands on a whole
+    // The invariant the quantization exists for: a cell edge lands on a whole
     // pixel after the transform. Snapping the render box alone does not give
     // this - an isolated test measured 6 interior seams with integral tracks
-    // under a fractional scale, and 0 once the scale was quantised.
+    // under a fractional scale, and 0 once the scale was quantized.
     const scaledCell = cell * scale;
     expect(Math.abs(scaledCell - Math.round(scaledCell))).toBeLessThan(0.02);
 
@@ -313,7 +313,7 @@ test.describe('tabbied package (component test page)', () => {
     expect(canvas.width).toBeCloseTo(240, 0);
     expect(canvas.height).toBeCloseTo(360, 0);
 
-    // An unknown slug is skipped without taking its neighbours down.
+    // An unknown slug is skipped without taking its neighbors down.
     await expect(
       page.locator('#hydrate-unknown css-doodle')
     ).toHaveCount(0);

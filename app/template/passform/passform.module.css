@@ -1,7 +1,7 @@
 /* ==========================================================================
    PASSFORM - bespoke tailoring, Hamburg
    Built like a pattern sheet: a wide left column of numbered stages, an hours
-   column flush right, and nothing centred anywhere. The fields take
+   column flush right, and nothing centerd anywhere. The fields take
    `transparent` in the background slot so the linen paper reads through the
    weave rather than behind it.
    ========================================================================== */
@@ -10,7 +10,7 @@
   --linen: #f5f1ea;
   --ink: #191512;
   --rust: #c1440e;
-  --grey: #9a9086;
+  --gray: #9a9086;
   --pale: #e5dfd4;
   --gut: clamp(1.15rem, 4vw, 3.25rem);
   --max: 78rem;
@@ -81,7 +81,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -124,9 +124,9 @@
 }
 
 .hero /* The muted second line sits over the hero pattern; plain
-     var(--grey) measured under AA on the glyph pixels. */
+     var(--gray) measured under AA on the glyph pixels. */
   h1 span {
-  color: color-mix(in srgb, var(--grey) 75%, var(--ink));
+  color: color-mix(in srgb, var(--gray) 75%, var(--ink));
 }
 
 .lede {
@@ -154,7 +154,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .bleed figcaption {
@@ -223,7 +223,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- headings */
@@ -419,7 +419,7 @@
 
 .pNote {
   font-size: 0.86rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------------- bench */
@@ -460,7 +460,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   margin-bottom: 0.4rem;
 }
 
@@ -559,7 +559,7 @@
   font-size: 0.64rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey) !important;
+  color: var(--gray) !important;
   padding-bottom: 0.4rem !important;
 }
 
@@ -573,7 +573,7 @@
 .idxList li > :last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .faqList {

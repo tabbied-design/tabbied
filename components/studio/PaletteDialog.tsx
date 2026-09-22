@@ -1,24 +1,24 @@
 'use client';
 
-// Editing the colours of one palette, for this site. The rail's rows choose a
-// palette wholesale; this is the way to change one of its colours - which is
+// Editing the colors of one palette, for this site. The rail's rows choose a
+// palette wholesale; this is the way to change one of its colors - which is
 // what the rail used to be before the list took its place, so nothing a person
 // could do before has gone away.
 //
 // It edits a copy and commits on Save, unlike the rail's rows, which apply as
-// they are clicked: a colour picker fires an event per drag frame, and planning
+// they are clicked: a color picker fires an event per drag frame, and planning
 // and re-running the whole page on each of them is what made the first version
 // of this unusable.
 import { useEffect, useState } from 'react';
 import { Dialog } from '@base-ui-components/react/dialog';
 import { Check, X } from 'lucide-react';
-// A colour the picker cannot show is kept as authored rather than filled in;
+// A color the picker cannot show is kept as authored rather than filled in;
 // the same test the rail's palette fitting uses.
 import { isTransparent } from 'lib/studioPalettes';
 import styles from './PaletteDialog.module.css';
 
 /** `abc` and `#abc` both mean `#aabbcc`; anything else leaves the value alone. */
-function normalise(raw: string, fallback: string): string {
+function normalize(raw: string, fallback: string): string {
   const value = raw.trim().toLowerCase().replace(/^#/, '');
 
   if (/^[0-9a-f]{3}$/.test(value)) {
@@ -42,7 +42,7 @@ export default function PaletteDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
-  /** The colours to start from, ground first. */
+  /** The colors to start from, ground first. */
   colors: readonly string[];
   /** One label per role, from the template's own spec. */
   labels: readonly string[];
@@ -51,13 +51,13 @@ export default function PaletteDialog({
   const [draft, setDraft] = useState<string[]>([...colors]);
 
   // Re-seed whenever the dialog is opened, or opening it a second time would
-  // show the previous row's colours.
+  // show the previous row's colors.
   useEffect(() => {
     if (open) setDraft([...colors]);
   }, [open, colors]);
 
   const set = (index: number, value: string) =>
-    setDraft((previous) => previous.map((colour, i) => (i === index ? value : colour)));
+    setDraft((previous) => previous.map((color, i) => (i === index ? value : color)));
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -66,23 +66,23 @@ export default function PaletteDialog({
         <Dialog.Popup className={styles.popup}>
           <Dialog.Title className={styles.title}>{title}</Dialog.Title>
           <Dialog.Description className={styles.lede}>
-            Each colour sets one part of the page.
+            Each color sets one part of the page.
           </Dialog.Description>
 
           <div className={styles.rows}>
-            {draft.map((colour, index) => {
-              const clear = isTransparent(colour);
+            {draft.map((color, index) => {
+              const clear = isTransparent(color);
               const label = labels[index] ?? (index === 0 ? 'Ground' : `Ink ${index}`);
 
               return (
                 <div key={index} className={styles.row}>
                   <label
                     className={clear ? `${styles.swatch} ${styles.swatchClear}` : styles.swatch}
-                    style={clear ? undefined : { background: colour }}
+                    style={clear ? undefined : { background: color }}
                   >
                     <input
                       type="color"
-                      value={clear ? '#ffffff' : colour}
+                      value={clear ? '#ffffff' : color}
                       aria-label={label}
                       onChange={(event) => set(index, event.target.value)}
                     />
@@ -90,7 +90,7 @@ export default function PaletteDialog({
                   <span className={styles.label}>{label}</span>
                   <input
                     className={styles.hex}
-                    value={colour}
+                    value={color}
                     aria-label={`${label} value`}
                     autoCapitalize="none"
                     autoCorrect="off"
@@ -99,7 +99,7 @@ export default function PaletteDialog({
                     onBlur={(event) =>
                       set(index, isTransparent(event.target.value)
                         ? event.target.value.trim().toLowerCase()
-                        : normalise(event.target.value, colors[index] ?? '#000000'))
+                        : normalize(event.target.value, colors[index] ?? '#000000'))
                     }
                   />
                 </div>
@@ -116,10 +116,10 @@ export default function PaletteDialog({
               className={styles.save}
               onClick={() => {
                 onSave(
-                  draft.map((colour, index) =>
-                    isTransparent(colour)
-                      ? colour.trim().toLowerCase()
-                      : normalise(colour, colors[index] ?? '#000000')
+                  draft.map((color, index) =>
+                    isTransparent(color)
+                      ? color.trim().toLowerCase()
+                      : normalize(color, colors[index] ?? '#000000')
                   )
                 );
                 onOpenChange(false);

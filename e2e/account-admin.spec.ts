@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const REPO_ROOT = path.join(__dirname, '..');
-const REQUIRED = ['account/sites', 'account/usage', 'admin', 'admin/users'].map((route) =>
+const REQUIRED = ['account/sites', 'account/downloads', 'account/usage', 'admin', 'admin/users'].map((route) =>
   path.join(REPO_ROOT, 'out', route, 'index.html')
 );
 
@@ -55,17 +55,64 @@ test.describe('account and admin pages', () => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ resetsAt: '2026-09-03T00:00:00Z', usage: [{ endpoint: 'site', label: 'sites', used: 2, cap: 10 }], recent: [] }),
+        body: JSON.stringify({
+          resetsAt: '2026-09-03T00:00:00Z',
+          usage: [{ endpoint: 'site', label: 'sites', used: 2, cap: 10 }],
+          recent: [],
+          downloads: { used: 4, cap: 30, resetsAt: '2026-10-01T00:00:00Z' },
+        }),
       })
     );
 
     await page.goto('/account/sites/');
     await expect(page.getByRole('navigation', { name: 'Account' })).toBeVisible();
     await expect(page.getByRole('link', { name: /Ye Joo Park/ })).toHaveAttribute('href', '/studio/site/?id=abc');
-    await expect(page.getByText('3 revisions')).toBeVisible();
+
+    // The masthead's menu: a member gets no way into the admin area.
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Settings' })).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'Admin' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    // The table names the site's direction and template, and no longer
+    // counts its revisions.
+    await expect(page.getByText('Warmly Grounded on Verdant')).toBeVisible();
+    await expect(page.getByText(/revisions?$/)).toHaveCount(0);
+
+    // The overview draws the artboard's ring: the month's template
+    // downloads against the cap, and the day the count starts over.
+    await page.goto('/account/');
+    await expect(page.getByText('Template downloads')).toBeVisible();
+    await expect(page.getByText('4 of 30 this month')).toBeVisible();
+    await expect(page.getByText('Resets Oct 1')).toBeVisible();
+    await expect(page.getByRole('status')).toHaveCount(0);
+
+    // A download click the Worker turned away lands here with the reason.
+    await page.goto('/account/?downloads=capped');
+    await expect(page.getByRole('status')).toContainText('all 30 template downloads for this month');
 
     await page.goto('/account/usage/');
     await expect(page.getByText('2 / 10 today')).toBeVisible();
+
+    // The downloads page: what was taken lately, named, with the way back.
+    await page.route('**/api/account/downloads', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          months: 6,
+          downloads: [
+            { slug: 'verdant', name: 'Verdant: Garden studio, Champaign', format: 'react', createdAt: '2026-09-20T15:12:00Z' },
+            { slug: 'verdant', name: 'Verdant: Garden studio, Champaign', format: 'html', createdAt: '2026-09-02T09:00:00Z' },
+          ],
+        }),
+      })
+    );
+    await page.goto('/account/downloads/');
+    await expect(page.getByRole('navigation', { name: 'Account' }).getByRole('link', { name: 'Downloads' })).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByText('Verdant', { exact: true })).toHaveCount(2);
+    await expect(page.getByText('React', { exact: true })).toBeVisible();
+    await expect(page.getByText('HTML', { exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Open' }).first()).toHaveAttribute('href', '/templates/verdant/');
   });
 
   test('the admin tier is "Not found" to a member and a dashboard to an admin', async ({ page }) => {
@@ -94,6 +141,12 @@ test.describe('account and admin pages', () => {
     await expect(page.getByRole('navigation', { name: 'Admin' })).toBeVisible();
     await expect(page.getByText('42')).toBeVisible();
     await expect(page.getByText('12%')).toBeVisible();
+
+    // And an admin's masthead menu names the way in.
+    await page.goto('/account/');
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Admin' })).toHaveAttribute('href', '/admin/');
+    await page.keyboard.press('Escape');
 
     await page.goto('/admin/users/');
     await expect(page.getByRole('link', { name: 'sam@example.com' })).toBeVisible();

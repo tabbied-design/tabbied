@@ -30,9 +30,9 @@ export type StudioEntry = {
   moods: string[];
   tags: string[];
   density: string;
-  /** Hues present in the palette, for colour words in the description. */
+  /** Hues present in the palette, for color words in the description. */
   hues: number[];
-  /** True when the palette is essentially greyscale. */
+  /** True when the palette is essentially grayscale. */
   neutral: boolean;
 };
 
@@ -87,7 +87,7 @@ const MOOD_WORDS: Record<string, string[]> = {
   editorial: ['technical', 'elegant'], swiss: ['technical'],
 };
 
-/** Colour words to a representative hue angle, matched against the palettes. */
+/** Color words to a representative hue angle, matched against the palettes. */
 const HUE_WORDS: Record<string, number> = {
   red: 0, crimson: 0, scarlet: 5, ruby: 0, cherry: 355,
   orange: 30, amber: 40, rust: 25, terracotta: 25, apricot: 35, coral: 15,
@@ -102,7 +102,7 @@ const HUE_WORDS: Record<string, number> = {
 };
 
 const NEUTRAL_WORDS = new Set([
-  'black', 'white', 'grey', 'gray', 'monochrome', 'mono', 'greyscale',
+  'black', 'white', 'gray', 'gray', 'monochrome', 'mono', 'grayscale',
   'grayscale', 'neutral', 'charcoal', 'slate', 'ink', 'stone',
 ]);
 
@@ -116,7 +116,7 @@ const DENSITY_WORDS: Record<string, string> = {
 /**
  * Crude suffix stripping - enough that "families" reaches "family" and
  * "bakeries" reaches "bakery". Only used for topic matching, where the words
- * are ordinary nouns; the mood and colour maps are looked up on raw words.
+ * are ordinary nouns; the mood and color maps are looked up on raw words.
  */
 export function stem(word: string): string {
   if (word.endsWith('ies') && word.length > 4) {
@@ -142,7 +142,7 @@ export function tokenize(text: string): string[] {
     .filter((word) => word.length >= 3 && !STOPWORDS.has(word));
 }
 
-/** Hue angle of a #rrggbb colour, or null when it is close to greyscale. */
+/** Hue angle of a #rrggbb color, or null when it is close to grayscale. */
 export function hexHue(hex: string): number | null {
   // Palettes may carry a literal `transparent` in slot 0 - that is what lets a
   // pattern field read over a photograph - so anything that is not a six-digit
@@ -159,7 +159,7 @@ export function hexHue(hex: string): number | null {
   const min = Math.min(r, g, b);
   const chroma = max - min;
 
-  // Below this the colour reads as a neutral and its hue is meaningless.
+  // Below this the color reads as a neutral and its hue is meaningless.
   if (chroma < 0.08) {
     return null;
   }
@@ -197,7 +197,7 @@ function hash(text: string): number {
 
 const WEIGHT = { topic: 4, mood: 3, hue: 2, tag: 2, density: 1 } as const;
 
-/** How close two hues must be for a colour word to count as matched. */
+/** How close two hues must be for a color word to count as matched. */
 const HUE_TOLERANCE = 30;
 
 type Wanted = {
@@ -298,7 +298,7 @@ function scoreEntry(entry: StudioEntry, wanted: Wanted) {
 
 /**
  * Three sites that read as three different directions rather than three near
- * copies: after the best match, a candidate is penalised for repeating a mood
+ * copies: after the best match, a candidate is penalized for repeating a mood
  * or sitting within a hue of one already chosen.
  */
 export function matchDirections(

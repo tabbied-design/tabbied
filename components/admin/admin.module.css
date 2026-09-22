@@ -1,5 +1,5 @@
 /* The admin tier's shell and pieces: a sidebar with the sections, a sticky
-   topbar, and a grey working surface with white cards on it. The admin pages
+   topbar, and a gray working surface with white cards on it. The admin pages
    carry no other chrome, so the tokens live here. */
 
 .shell {
@@ -35,7 +35,7 @@
   color: var(--a-ink);
 }
 
-/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+/* -- Sidebar --------------------------------------------------------------- */
 
 .sidebar {
   position: sticky;
@@ -141,7 +141,7 @@
   color: var(--a-dim);
 }
 
-/* ── Topbar and main ─────────────────────────────────────────────────────── */
+/* -- Topbar and main ------------------------------------------------------- */
 
 .mainCol {
   min-width: 0;
@@ -249,7 +249,7 @@
   font: 400 12px var(--a-mono);
 }
 
-/* ── Buttons and pills ───────────────────────────────────────────────────── */
+/* -- Buttons and pills ----------------------------------------------------- */
 
 .button {
   padding: 10px 20px;
@@ -361,7 +361,7 @@
   outline: none;
 }
 
-/* ── Stats ───────────────────────────────────────────────────────────────── */
+/* -- Stats ----------------------------------------------------------------- */
 
 .stats {
   display: grid;
@@ -410,7 +410,7 @@
   color: oklch(0.8 0.01 260);
 }
 
-/* ── The growth chart ────────────────────────────────────────────────────── */
+/* -- The growth chart ------------------------------------------------------ */
 
 .card {
   box-sizing: border-box;
@@ -489,7 +489,7 @@
   white-space: nowrap;
 }
 
-/* ── Tables ──────────────────────────────────────────────────────────────── */
+/* -- Tables ---------------------------------------------------------------- */
 
 .panel {
   overflow: hidden;
@@ -805,7 +805,7 @@
   gap: 18px;
 }
 
-/* ── Narrow screens ──────────────────────────────────────────────────────── */
+/* -- Narrow screens -------------------------------------------------------- */
 
 @media (max-width: 1000px) {
   .shell {

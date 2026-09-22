@@ -1,16 +1,16 @@
 /* ==========================================================================
    ATELIER VANE - fashion label, Antwerp
-   A monochrome look-book. White paper, black ink, two greys, and nothing
+   A monochrome look-book. White paper, black ink, two grays, and nothing
    else. Bodoni Moda at very large sizes and a light hand for the display,
    Inter Tight small for everything that has to be read. Extreme negative
    space, hairline rules, blocks that sit flush right as often as left. The
-   three patterns are the only imagery and draw in ink and grey on nothing.
+   three patterns are the only imagery and draw in ink and gray on nothing.
    ========================================================================== */
 
 .page {
   --paper: #ffffff;
   --ink: #000000;
-  --grey: #8c8c8c;
+  --gray: #8c8c8c;
   --pale: #e4e4e4;
   --gut: clamp(1.25rem, 5vw, 5rem);
   --max: 88rem;
@@ -58,13 +58,13 @@
 }
 
 /* The uppercase micro-label used everywhere a section or a column needs
-   naming. Wide tracking, small, grey. */
+   naming. Wide tracking, small, gray. */
 .micro {
   margin: 0 0 1rem;
   font-size: 0.66rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------ top bar */
@@ -114,7 +114,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- hero */
@@ -233,7 +233,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------- sections */
@@ -303,7 +303,7 @@
 .lookNo {
   font-size: 0.66rem;
   letter-spacing: 0.3em;
-  color: var(--grey);
+  color: var(--gray);
   font-variant-numeric: tabular-nums;
 }
 
@@ -369,7 +369,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ---------------------------------------------------------- stockists
@@ -432,7 +432,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .stockShop {
@@ -474,7 +474,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .showWhat {
@@ -561,7 +561,7 @@
 
 .personSince {
   font-size: 0.72rem;
-  color: var(--grey);
+  color: var(--gray);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
@@ -593,7 +593,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .pressList dd {
@@ -667,7 +667,7 @@
 }
 
 .footLinks a:hover {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footAddr {
@@ -691,7 +691,7 @@
 .footFine p {
   margin: 0;
   font-size: 0.74rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footFine p:last-child {
@@ -705,7 +705,7 @@
 }
 
 .footFine a:hover {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------- responsive */

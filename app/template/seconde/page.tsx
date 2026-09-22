@@ -11,11 +11,11 @@ export const metadata = {
     'Seconde times races. Photo finish to one ten-thousandth, transponder splits, and results published before the athletes reach the barrier.',
 };
 
-/* Paper, ink, one magenta, two greys. Every field takes `transparent` in the
+/* Paper, ink, one magenta, two grays. Every field takes `transparent` in the
    background slot so the paper reads through. */
 const INK = '#101010';
 const MAGENTA = '#FF0059';
-const GREY = '#8E8E8E';
+const GRAY = '#8E8E8E';
 const PALE = '#D6D6D2';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,12 +23,12 @@ const PALE = '#D6D6D2';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PALE;
 
 
 const SYSTEMS = [
-  { code: 'PF-4', name: 'Photo finish', res: '1 / 10 000 s', body: 'A 10,000 fps line-scan camera on the finish plane, levelled to 0.2 mm over 8 metres. The image is the result; everything else is a convenience.' },
+  { code: 'PF-4', name: 'Photo finish', res: '1 / 10 000 s', body: 'A 10,000 fps line-scan camera on the finish plane, levelled to 0.2 mm over 8 meters. The image is the result; everything else is a convenience.' },
   { code: 'TR-2', name: 'Transponder', res: '1 / 1 000 s', body: 'Passive tags read by loops in the surface. Ninety-nine point nine nine per cent read rate over 40,000 passings last season.' },
   { code: 'GT-1', name: 'Light gate', res: '1 / 1 000 s', body: 'Twin-beam gates for sprints and training. Sends the split to the coach before the athlete has stopped running.' },
   { code: 'ST-3', name: 'Start detection', res: '1 / 1 000 s', body: 'Force-sensing blocks with a 100 ms reaction threshold. The trace is kept for every start, contested or not.' },
@@ -61,17 +61,17 @@ const FACTS = [
 export default function SecondePage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f7f7f5',
         '--ink': '#101010',
         '--magenta': '#ff0059',
-        '--grey': '#8e8e8e',
+        '--gray': '#8e8e8e',
         '--pale': '#d6d6d2',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,magenta,grey,pale"
+      data-edit-vars="paper,ink,magenta,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -182,7 +182,7 @@ export default function SecondePage() {
           <div data-edit-pattern="laneBand.field" data-edit-roles="transparent,2,1,3" className={s.laneField}>
             <TabbiedPattern
               pattern={tailoff}
-              palette={['transparent', MAGENTA, INK, GREY]}
+              palette={['transparent', MAGENTA, INK, GRAY]}
               fit="grid"
               cellSize={104}
               redrawInterval={2400}
@@ -196,7 +196,7 @@ export default function SecondePage() {
           <div data-edit-pattern="results.field" data-edit-roles="transparent,4,3" className={s.resField} aria-hidden="true">
             <TabbiedPattern
               pattern={taper}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={120}
               redrawInterval={5000}
@@ -254,7 +254,7 @@ export default function SecondePage() {
           <div data-edit-pattern="book.field" data-edit-roles="transparent,2,3" className={s.bookField} aria-hidden="true">
             <TabbiedPattern
               pattern={dotset}
-              palette={['transparent', MAGENTA, GREY]}
+              palette={['transparent', MAGENTA, GRAY]}
               fit="grid"
               cellSize={52}
               redrawInterval={3600}
@@ -324,7 +324,7 @@ export default function SecondePage() {
                 </div>
                 <p data-edit="tiles.tileN" data-edit-max="240" data-edit-multiline className={s.tileN}>01</p>
                 <h3 data-edit="tiles.title2" data-edit-max="40">The finish plane</h3>
-                <p data-edit="tiles.tileBody" data-edit-max="240" data-edit-multiline className={s.tileBody}>Levelled to 0.2 mm over eight metres. A finish line that is two millimetres out of plumb is worth more than most tailwinds.</p>
+                <p data-edit="tiles.tileBody" data-edit-max="240" data-edit-multiline className={s.tileBody}>Levelled to 0.2 mm over eight meters. A finish line that is two millimeters out of plumb is worth more than most tailwinds.</p>
               </article>
               <article key="02">
                 <div data-edit-pattern="tiles.field2" data-edit-roles="transparent,3,4" className={s.tilePlate} aria-hidden="true">
@@ -369,7 +369,7 @@ export default function SecondePage() {
                   <Figure editId="photo.seconde-tile-chip-cutout" slug="seconde-tile-chip-cutout" alt="" cutout className={s.tileObject} />
                 </div>
                 <p data-edit="tiles.tileN3" data-edit-max="240" data-edit-multiline className={s.tileN}>03</p>
-                <h3 data-edit="tiles.title4" data-edit-max="40">Synchronisation</h3>
+                <h3 data-edit="tiles.title4" data-edit-max="40">Synchronization</h3>
                 <p data-edit="tiles.tileBody3" data-edit-max="240" data-edit-multiline className={s.tileBody}>One clock, distributed by cable, never by wireless. Two clocks agreeing is not the same as one clock being right.</p>
               </article>
           </div>
@@ -419,7 +419,7 @@ export default function SecondePage() {
               <li key="Cable, distribution">
                 <span data-edit="index.text25" data-edit-max="60">Cable, distribution</span>
                 <span data-edit="index.text26" data-edit-max="60">1 200 m</span>
-                <span data-edit="index.text27" data-edit-max="60">Fibre and copper</span>
+                <span data-edit="index.text27" data-edit-max="60">Fiber and copper</span>
                 <span data-edit="index.text28" data-edit-max="60">140 kg</span>
               </li>
           </ol>
@@ -427,7 +427,7 @@ export default function SecondePage() {
 
         {/* ------------------------------------------------------------ FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
-          <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked by organisers</h2>
+          <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked by organizers</h2>
           <dl className={s.faqList}>
               <div key="How long do you need on ">
                 <dt data-edit="faq.term" data-edit-max="28">How long do you need on site?</dt>
@@ -457,7 +457,7 @@ export default function SecondePage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
             <TabbiedPattern
               pattern={hairpin}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={110}
               redrawInterval={4970}
@@ -487,7 +487,7 @@ export default function SecondePage() {
             </ul>
           </div>
           <div className={s.footCol}>
-            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Organisers</h2>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Organizers</h2>
             <ul className={s.footLinks}>
               <li>
                 <a data-edit="footer.book" data-edit-max="28" href="#book">Book the timing</a>

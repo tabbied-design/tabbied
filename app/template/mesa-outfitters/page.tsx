@@ -13,7 +13,7 @@ export const metadata = {
 const INK = '#2B1F16';
 const TERRACOTTA = '#C75B2A';
 const SKY = '#3B8EA5';
-const GREY = '#8C7E6E';
+const GRAY = '#8C7E6E';
 const PALE = '#E4D5BE';
 /* Tiles pin their doodle to a whole multiple of the cell (6 x 72px) and let
    the plate clip it, so every grid track lands on a whole pixel. */
@@ -66,7 +66,7 @@ const TRIPS: Trip[] = [
     difficulty: 'Moderate',
     time: '7 hours',
     price: '$145',
-    body: 'Down a side canyon to the Colorado, lunch on a sandbar, and back up a route the cattle used. Four litres of water each, carried by us.',
+    body: 'Down a side canyon to the Colorado, lunch on a sandbar, and back up a route the cattle used. Four liters of water each, carried by us.',
   },
   {
     name: 'Dry Fork Overnight',
@@ -140,7 +140,7 @@ const SEASONS: Season[] = [
 ];
 
 const GEAR_OURS = [
-  'Water, four litres a person a day, carried by the guide',
+  'Water, four liters a person a day, carried by the guide',
   'Lunch, and dinner and breakfast on overnights',
   'Tents, sleeping pads and a stove',
   'Harness, helmet and ropes on the slot canyon',
@@ -152,8 +152,8 @@ const GEAR_OURS = [
 const GEAR_YOURS = [
   'Boots you have walked in before, with ankle support',
   'A sun hat with a brim, not a cap',
-  'Long sleeves in a light colour',
-  'A daypack of 20 to 30 litres',
+  'Long sleeves in a light color',
+  'A daypack of 20 to 30 liters',
   'A sleeping bag rated to 30 F on overnights, or rent ours for $15',
   'Your own snacks, if you are particular',
   'A change of clothes for the slot in spring',
@@ -235,18 +235,18 @@ const HOURS = [
 export default function MesaOutfittersPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f7eedf',
         '--ink': '#2b1f16',
         '--terracotta': '#c75b2a',
         '--sky': '#3b8ea5',
-        '--grey': '#8c7e6e',
+        '--gray': '#8c7e6e',
         '--pale': '#e4d5be',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,terracotta,sky,grey,pale"
+      data-edit-vars="paper,ink,terracotta,sky,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

@@ -555,7 +555,7 @@
 }
 
 /* Sawtooth edges, cut with one conic gradient per tile: a 90° wedge of
-   transparent from the mid-point of the joining edge, colour everywhere else.
+   transparent from the mid-point of the joining edge, color everywhere else.
    Tiled at twice the height, the leftover corners meet across the tile seam and
    read as one row of triangles. */
 .zigTopBlue,

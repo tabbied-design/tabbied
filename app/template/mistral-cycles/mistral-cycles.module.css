@@ -9,7 +9,7 @@
   --ice: #e0fbfc;
   --orange: #ff7b00;
   --yellow: #ffd23f;
-  --grey: #eaeaea;
+  --gray: #eaeaea;
   --hairline: rgba(224, 251, 252, 0.16);
   --hairline-strong: rgba(224, 251, 252, 0.32);
   --ink-dim: rgba(224, 251, 252, 0.72);
@@ -21,7 +21,7 @@
     linear-gradient(rgba(27, 152, 224, 0.045) 1px, transparent 1px) 0 0 / 100% 56px,
     linear-gradient(90deg, rgba(27, 152, 224, 0.045) 1px, transparent 1px) 0 0 / 56px 100%,
     var(--navy);
-  color: var(--grey);
+  color: var(--gray);
   line-height: 1.6;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
@@ -579,7 +579,7 @@
   font-family: var(--mono);
   font-size: 0.74rem;
   letter-spacing: 0.05em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .specList li {
@@ -704,7 +704,7 @@
 }
 
 .geoTable td {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .geoTable tbody tr:hover td,
@@ -1190,7 +1190,7 @@
 }
 
 .footerCol a {
-  color: var(--grey);
+  color: var(--gray);
   text-decoration: none;
   text-decoration: underline;
   text-decoration-color: var(--hairline-strong);

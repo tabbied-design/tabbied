@@ -28,7 +28,7 @@ export function seededRandom(seed: number): Rand {
 const pick = <T,>(rand: Rand, list: readonly T[]): T =>
   list[Math.floor(rand() * list.length)];
 
-// ── Palettes ─────────────────────────────────────────────────────────────────
+// -- Palettes -----------------------------------------------------------------
 // The dark sections cycle through these four, which is what makes the hero read
 // as a live pattern engine rather than a static header: the skyline recolors and
 // the stat numbers follow it.
@@ -101,7 +101,7 @@ export function stopForCell(palette: PaletteName, col: number, row: number) {
   return `linear-gradient(135deg,${from},${to})`;
 }
 
-// ── Silhouettes ──────────────────────────────────────────────────────────────
+// -- Silhouettes --------------------------------------------------------------
 // The design's "geometric" vocabulary: full squares, right triangles, and
 // quarter-rounds. Every shape tiles its cell edge to edge, which is what lets
 // the grid stay seamless however the cells land.
@@ -158,7 +158,7 @@ export function randomMarginCell(rand: Rand, palette: PaletteName): MarginCell {
   return { ...randomSilhouette(rand), bg: randomFill(rand, palette) };
 }
 
-// ── Timings ──────────────────────────────────────────────────────────────────
+// -- Timings ------------------------------------------------------------------
 // "Calm" in the source design: slow enough that the page is never distracting
 // while you read it, quick enough that it is obviously alive.
 

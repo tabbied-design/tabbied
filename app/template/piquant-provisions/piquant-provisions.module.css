@@ -408,7 +408,7 @@
 }
 
 /* the pattern still reads at the tile edges, but the middle goes quiet so the
-   bottle/jar/chilli silhouette is instantly legible */
+   bottle/jar/chili silhouette is instantly legible */
 .sauceVeil {
   position: absolute;
   inset: 0;
@@ -595,7 +595,7 @@
   color: rgba(15, 26, 32, 0.8);
 }
 
-/* a riso-dot medallion, with a calm centre so the chilli reads clean on it */
+/* a riso-dot medallion, with a calm center so the chili reads clean on it */
 .heatChili {
   position: relative;
   width: min(100%, 17rem);

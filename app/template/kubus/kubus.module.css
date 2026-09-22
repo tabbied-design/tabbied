@@ -1,15 +1,15 @@
 /* ==========================================================================
    KUBUS - kunsthalle
-   The only page in the batch with no accent colour at all. A building that
-   shows other people's work has no business having a house colour, so the
+   The only page in the batch with no accent color at all. A building that
+   shows other people's work has no business having a house color, so the
    whole hierarchy is carried by size, weight and the ground: black, white,
-   and one grey between them. No rules anywhere. Inter, tracked in.
+   and one gray between them. No rules anywhere. Inter, tracked in.
    ========================================================================== */
 
 .page {
   --black: #080808;
   --white: #fafaf8;
-  --grey: #8a8a86;
+  --gray: #8a8a86;
   --mid: #1c1c1c;
 
   --edge: clamp(1.15rem, 3.4vw, 4.5rem);
@@ -78,7 +78,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero
@@ -109,7 +109,7 @@
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  /* Not grey: six-point caps over a full-strength pattern field need the
+  /* Not gray: six-point caps over a full-strength pattern field need the
      paper value to survive at all. */
   color: color-mix(in srgb, var(--white) 80%, transparent);
 }
@@ -150,7 +150,7 @@
 }
 
 .cta:hover {
-  background: var(--grey);
+  background: var(--gray);
 }
 
 /* ------------------------------------------------------- section headings */
@@ -227,7 +227,7 @@
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .sTitle {
@@ -266,7 +266,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------- statement */
@@ -359,7 +359,7 @@
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.22em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .pGrid h3 {
@@ -438,7 +438,7 @@
   font-size: 0.74rem;
   letter-spacing: 0.11em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------------- quote */
@@ -530,7 +530,7 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .supportList dd,
@@ -612,7 +612,7 @@
 
 .hoursShut dt,
 .hoursShut dd {
-  color: var(--grey);
+  color: var(--gray);
   font-weight: 400;
 }
 
@@ -621,7 +621,7 @@
   max-width: 34ch;
   font-size: 0.86rem;
   line-height: 1.5;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .contactPre {
@@ -630,7 +630,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 
@@ -680,7 +680,7 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footGrid ul {

@@ -14,7 +14,7 @@ export const metadata = {
    slot so the paper of the page is the paper of the pattern. */
 const INK = '#0c0d10';
 const BLUE = '#1f3cff';
-const GREY = '#8a8f99';
+const GRAY = '#8a8f99';
 const PALE = '#e8eaf0';
 
 const HEADLINE = [
@@ -37,7 +37,7 @@ const METHODS = [
     art: lattice,
     n: '01',
     t: 'Published whole',
-    d: 'A figure goes out with its confidence interval, its sample size and the date it was collected. A number without those three is a rumour with a decimal point.',
+    d: 'A figure goes out with its confidence interval, its sample size and the date it was collected. A number without those three is a rumor with a decimal point.',
   },
   {
     art: dotfade,
@@ -53,7 +53,7 @@ const METHODS = [
   },
 ];
 
-const CATALOGUE = [
+const CATALOG = [
   ['VK-001', 'Resident population by commune', 'Monthly', '1962-', 'CSV, JSON, Parquet'],
   ['VK-004', 'Births, deaths, migration', 'Monthly', '1876-', 'CSV, JSON'],
   ['VK-011', 'Registered unemployment', 'Monthly', '1991-', 'CSV, JSON, Parquet'],
@@ -87,7 +87,7 @@ const CALENDAR = [
 
 const DESKS = [
   ['Population', 'Nadia Christen', '7 staff'],
-  ['Labour', 'Émile Roux', '6 staff'],
+  ['Labor', 'Émile Roux', '6 staff'],
   ['Prices', 'Bettina Suter', '5 staff'],
   ['Construction', 'Jorge Almeida', '4 staff'],
   ['Mobility', 'Anneke de Wit', '5 staff'],
@@ -95,9 +95,9 @@ const DESKS = [
 ];
 
 const REUSE = [
-  ['Licence', 'CC BY 4.0. Attribute the bureau, not the individual analyst.'],
+  ['License', 'CC BY 4.0. Attribute the bureau, not the individual analyst.'],
   ['API', 'One endpoint per series, versioned, no key, no rate limit worth mentioning.'],
-  ['Bulk', 'The whole catalogue as Parquet, rebuilt nightly, about 4 GB.'],
+  ['Bulk', 'The whole catalog as Parquet, rebuilt nightly, about 4 GB.'],
   ['Citation', 'Every series page carries a citation string with the exact revision.'],
 ];
 
@@ -115,17 +115,17 @@ export default function BureauVektorPage() {
 
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#ffffff',
         '--ink': '#0c0d10',
         '--blue': '#1f3cff',
-        '--grey': '#8a8f99',
+        '--gray': '#8a8f99',
         '--pale': '#e8eaf0',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,blue,grey,pale"
+      data-edit-vars="paper,ink,blue,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -141,7 +141,7 @@ export default function BureauVektorPage() {
         </a>
         <nav aria-label="Sections">
           <a data-edit="bar.indicators" data-edit-max="28" href="#indicators">Indicators</a>
-          <a data-edit="bar.catalogue" data-edit-max="28" href="#catalogue">Catalogue</a>
+          <a data-edit="bar.catalogue" data-edit-max="28" href="#catalogue">Catalog</a>
           <a data-edit="bar.calendar" data-edit-max="28" href="#calendar">Calendar</a>
           <a data-edit="bar.reuse" data-edit-max="28" href="#reuse">Reuse</a>
         </nav>
@@ -154,7 +154,7 @@ export default function BureauVektorPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={gutter}
-              palette={['transparent', PALE, GREY, BLUE]}
+              palette={['transparent', PALE, GRAY, BLUE]}
               fit="grid"
               cellSize={148}
               redrawInterval={6000}
@@ -175,7 +175,7 @@ export default function BureauVektorPage() {
               the method attached and nothing held back for a press conference.
             </p>
             <a data-edit="hero.cta" data-edit-max="28" className={s.cta} href="#catalogue">
-              Browse the catalogue
+              Browse the catalog
             </a>
           </div>
         </section>
@@ -187,7 +187,7 @@ export default function BureauVektorPage() {
           <div data-edit-pattern="indicators.field" data-edit-roles="transparent,3,4" className={s.indicatorsField} aria-hidden="true">
             <TabbiedPattern
               pattern={lattice}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={92}
               redrawInterval={5600}
@@ -228,7 +228,7 @@ export default function BureauVektorPage() {
         </section>
 
         {/* ----------------------------------------------------------- CHART
-            A twelve-bar chart built out of divs and the accent colour. It is
+            A twelve-bar chart built out of divs and the accent color. It is
             the same data as VK-042 in the table below, and it is the largest
             thing on the page for the same reason a poster has a picture. */}
         <section className={s.chart} aria-labelledby="chart-h">
@@ -258,7 +258,7 @@ export default function BureauVektorPage() {
         <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={stylobate}
-            palette={['transparent', BLUE, PALE, GREY]}
+            palette={['transparent', BLUE, PALE, GRAY]}
             fit="grid"
             cellSize={118}
             redrawInterval={4200}
@@ -278,7 +278,7 @@ export default function BureauVektorPage() {
                 <div data-edit-pattern={`methods.field.${i}`} data-edit-roles="transparent,3,2" className={s.mPlate} aria-hidden="true">
                   <TabbiedPattern
                     pattern={m.art}
-                    palette={['transparent', GREY, BLUE]}
+                    palette={['transparent', GRAY, BLUE]}
                     fit="grid"
                     cellSize={60}
                     redrawInterval={5600}
@@ -293,14 +293,14 @@ export default function BureauVektorPage() {
           </div>
         </section>
 
-        {/* ------------------------------------------------------- CATALOGUE */}
+        {/* ------------------------------------------------------- CATALOG */}
         <section id="catalogue" className={s.listing} aria-labelledby="cat-h">
           <div className={s.secHead}>
             <h2 data-edit="catalogue.title" data-edit-max="60" id="cat-h">Seventy series</h2>
             <p data-edit="catalogue.body" data-edit-max="240" data-edit-multiline>Fourteen of them below. Every one is downloadable in full, back to its first year.</p>
           </div>
           <ol className={s.table}>
-            {CATALOGUE.map((r, i) => (
+            {CATALOG.map((r, i) => (
               <li key={r[0]}>
                 <span data-edit={`catalogue.tId.${i}`} data-edit-max="60" className={s.tId}>{r[0]}</span>
                 <span data-edit={`catalogue.tName.${i}`} data-edit-max="60" className={s.tName}>{r[1]}</span>
@@ -336,7 +336,7 @@ export default function BureauVektorPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,4,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={grainfall}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={118}
               redrawInterval={4800}
@@ -354,7 +354,7 @@ export default function BureauVektorPage() {
           <div data-edit-pattern="desks.field" data-edit-roles="transparent,4,3" className={s.desksField} aria-hidden="true">
             <TabbiedPattern
               pattern={speckfield}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={110}
               redrawInterval={6400}
@@ -384,7 +384,7 @@ export default function BureauVektorPage() {
           <div data-edit-pattern="reuse.field" data-edit-roles="transparent,3,4" className={s.reuseField} aria-hidden="true">
             <TabbiedPattern
               pattern={blindfold}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={104}
               redrawInterval={5600}
@@ -421,7 +421,7 @@ export default function BureauVektorPage() {
               <div data-edit-pattern="contact.field" data-edit-roles="transparent,3,2" className={s.locatorField}>
                 <TabbiedPattern
                   pattern={blindfold}
-                  palette={['transparent', GREY, BLUE]}
+                  palette={['transparent', GRAY, BLUE]}
                   fit="grid"
                   cellSize={132}
                   redrawInterval={6200}
@@ -450,7 +450,7 @@ export default function BureauVektorPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={dotfade}
-          palette={['transparent', BLUE, PALE, GREY]}
+          palette={['transparent', BLUE, PALE, GRAY]}
           fit="grid"
           cellSize={100}
           redrawInterval={5200}
@@ -466,9 +466,9 @@ export default function BureauVektorPage() {
           <div>
             <h2 data-edit="footer.title" data-edit-max="60">Data</h2>
             <ul>
-              <li><a data-edit="footer.catalogue" data-edit-max="28" href="#catalogue">Series catalogue</a></li>
+              <li><a data-edit="footer.catalogue" data-edit-max="28" href="#catalogue">Series catalog</a></li>
               <li><a data-edit="footer.calendar" data-edit-max="28" href="#calendar">Release calendar</a></li>
-              <li><a data-edit="footer.reuse" data-edit-max="28" href="#reuse">Licence and API</a></li>
+              <li><a data-edit="footer.reuse" data-edit-max="28" href="#reuse">License and API</a></li>
             </ul>
           </div>
           <div>

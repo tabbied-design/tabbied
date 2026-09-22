@@ -1,11 +1,11 @@
 /* ==========================================================================
    NORRBOLT - fastener wholesaler, Gothenburg
-   A catalogue, not a brochure. Light grey paper, near-black ink, safety
+   A catalog, not a brochure. Light gray paper, near-black ink, safety
    yellow, two steels. Barlow Condensed in its heavy weights for anything that
    is a heading or a number; Barlow for the rest. Everything is squared off,
    every table is striped, every label is stamped (uppercase, letterspaced,
    bordered), and the hazard stripe is a repeating gradient in the page's own
-   colours. The patterns draw on a transparent ground in the paper colour, so
+   colors. The patterns draw on a transparent ground in the paper color, so
    they read as stencils on the floor of the shed rather than as pictures.
    ========================================================================== */
 
@@ -13,7 +13,7 @@
   --paper: #f1f1ee;
   --ink: #15171a;
   --yellow: #ffc300;
-  --grey: #6f7378;
+  --gray: #6f7378;
   --steel: #a9aeb4;
   --display: 'Barlow Condensed', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
   --body: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
@@ -198,7 +198,7 @@
   letter-spacing: -0.005em;
 }
 
-/* The accent is a highlighter block, not a colour change: yellow behind ink
+/* The accent is a highlighter block, not a color change: yellow behind ink
    is how the depot labels its own racks. */
 .accent {
   display: inline-block;
@@ -247,7 +247,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ---------------------------------------------------------- section heads */
@@ -263,12 +263,12 @@
   color: var(--soft);
 }
 
-/* --------------------------------------------------------------- catalogue
+/* --------------------------------------------------------------- catalog
    A real table: ink head, striped body, part numbers in the display face,
    prices flush right. It scrolls sideways inside its wrapper on a phone
-   rather than collapsing, because a catalogue row is a row. */
+   rather than collapsing, because a catalog row is a row. */
 
-.catalogue,
+.catalog,
 .standards,
 .account,
 .depot {
@@ -350,7 +350,7 @@
   margin-top: 1.2rem;
   max-width: 44rem;
   font-size: 0.86rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- band
@@ -387,7 +387,7 @@
 
 /* --------------------------------------------------------------- standards
    Ten squared cards in a five-column grid, the ISO number stamped in the
-   corner and the DIN it replaced beside it in grey. */
+   corner and the DIN it replaced beside it in gray. */
 
 .stdGrid {
   list-style: none;
@@ -435,7 +435,7 @@
   font-weight: 600;
   font-size: 0.95rem;
   letter-spacing: 0.06em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .std h3 {
@@ -445,7 +445,7 @@
 
 .std p {
   font-size: 0.84rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .classes {
@@ -776,7 +776,7 @@
   font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--grey);
+  color: var(--gray);
   margin-top: 0.3rem;
 }
 
@@ -798,7 +798,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .contact dd {

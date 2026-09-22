@@ -2,7 +2,7 @@
 //
 // These values used to live in components/template/TemplateSite.tsx and are
 // now shared with applyEdits, so the thing worth pinning is that the shared
-// implementation still produces what that component produced - a re-colour and
+// implementation still produces what that component produced - a re-color and
 // a first render must agree, or a downloaded page differs from the one it was
 // downloaded from.
 import test from 'node:test';
@@ -93,7 +93,7 @@ test('a role past the end of a short palette wraps rather than blanking', () => 
   ]);
 });
 
-test('the colour helpers agree with the component they came from', () => {
+test('the color helpers agree with the component they came from', () => {
   assert.ok(luminance('#ffffff') > 0.99);
   assert.ok(luminance('#000000') < 0.01);
   assert.equal(mix('#000000', '#ffffff', 0.5), 'rgb(128, 128, 128)');

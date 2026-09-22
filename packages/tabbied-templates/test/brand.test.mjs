@@ -113,7 +113,7 @@ test('carries a usable palette and drops one that is not', () => {
   });
   assert.deepEqual(good.edits.palette, ['#0B1B2B', '#EFEAE0', '#00B37A']);
 
-  // One colour is a ground with no ink; `planEdits` rejects it, so it must not
+  // One color is a ground with no ink; `planEdits` rejects it, so it must not
   // reach the document at all.
   assert.equal(directionToEdits(fullSpec(), { copy, palette: ['#0B1B2B'] }).edits.palette, undefined);
   assert.equal(directionToEdits(fullSpec(), { copy, palette: ['red', 'white'] }).edits.palette, undefined);

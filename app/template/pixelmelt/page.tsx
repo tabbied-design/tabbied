@@ -14,7 +14,7 @@ export const metadata = {
 const INK = '#F4EEFF';
 const PINK = '#FF5FD2';
 const CYAN = '#38E0FF';
-const GREY = '#7C6F94';
+const GRAY = '#7C6F94';
 /* The tiles pin their doodle to a whole multiple of the cell (9 x 72px) and
    let the plate clip it. A fluid box gives fractional grid tracks and a
    hairline seam at every cell edge. */
@@ -70,7 +70,7 @@ const GAMES: Game[] = [
 
 const ENGINE_STATS = [
   ['2.1 MB', 'runtime', 'The whole executable, art not included'],
-  ['64', 'colours a scene', 'A hard limit, and the reason everything looks like this'],
+  ['64', 'colors a scene', 'A hard limit, and the reason everything looks like this'],
   ['4 ms', 'frame budget', 'At 240 Hz, on a laptop from 2019'],
   ['31 000', 'lines of C', 'And no scripting language, on purpose'],
   ['0', 'dependencies', 'Beyond the window the platform gives us'],
@@ -104,7 +104,7 @@ const DEVLOG: Post[] = [
   {
     date: '21 Aug 2026',
     tag: 'Meltdown',
-    title: 'Sixty-four colours, revisited',
+    title: 'Sixty-four colors, revisited',
     body: 'Every year somebody asks whether the palette limit can go. Every year the answer is that the limit is the art direction. This year the answer came with a chart.',
   },
   {
@@ -117,7 +117,7 @@ const DEVLOG: Post[] = [
     date: '02 Jul 2026',
     tag: 'Meltdown',
     title: 'Why there is no scripting language',
-    body: 'Levels are data. Behaviour is C. Hot reload takes 80 milliseconds. We tried the other way in 2020 and the game got slower and the bugs got stranger.',
+    body: 'Levels are data. Behavior is C. Hot reload takes 80 milliseconds. We tried the other way in 2020 and the game got slower and the bugs got stranger.',
   },
   {
     date: '12 Jun 2026',
@@ -148,17 +148,17 @@ const STUDIO = [
 export default function PixelmeltPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#12081f',
         '--ink': '#f4eeff',
         '--pink': '#ff5fd2',
         '--cyan': '#38e0ff',
-        '--grey': '#7c6f94',
+        '--gray': '#7c6f94',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,pink,cyan,grey"
+      data-edit-vars="paper,ink,pink,cyan,gray"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -192,7 +192,7 @@ export default function PixelmeltPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,4" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={spectrum}
-              palette={['transparent', PINK, CYAN, GREY]}
+              palette={['transparent', PINK, CYAN, GRAY]}
               fit="grid"
               cellSize={136}
               redrawInterval={5000}
@@ -246,7 +246,7 @@ export default function PixelmeltPage() {
                 <div data-edit-pattern={`games.field.${i}`} data-edit-roles="transparent,2,3,4" className={s.gamePlate} aria-hidden="true">
                   <TabbiedPattern
                     pattern={bengaline}
-                    palette={['transparent', PINK, CYAN, GREY]}
+                    palette={['transparent', PINK, CYAN, GRAY]}
                     fit="grid"
                     cellSize={72}
                     redrawInterval={5800}
@@ -278,7 +278,7 @@ export default function PixelmeltPage() {
             <p data-edit="engine.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The engine</p>
             <h2 data-edit="engine.h2" data-edit-max="60" className={s.h2} id="engine-h">Meltdown</h2>
             <p data-edit="engine.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
-              A software rasteriser with a palette limit, written in C by one
+              A software rasterizer with a palette limit, written in C by one
               person and read by six. Every game we have shipped runs on it
               and so does the tool that makes the levels.
             </p>
@@ -295,7 +295,7 @@ export default function PixelmeltPage() {
           <div className={s.engineText}>
             <p data-edit="engine.body" data-edit-max="240" data-edit-multiline>
               Meltdown draws every frame into a 480 by 270 buffer with a
-              sixty-four colour palette and scales it up by whole numbers.
+              sixty-four color palette and scales it up by whole numbers.
               There is no anti-aliasing, no bloom and no shader, and the
               glow you see in the games is dithering that Liisa drew by hand.
             </p>

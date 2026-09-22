@@ -3,7 +3,7 @@
 // Same seam as e2e/studio-preview.spec.ts, one document up: the route fetches
 // a stored *revision* rather than deriving three strings from a direction, and
 // what has to hold is that a full document - every text slot - lands on the
-// packaged page, that the owner can change its colours and patterns through
+// packaged page, that the owner can change its colors and patterns through
 // the engine live, and that the page says what it knows about the document's
 // state.
 import { test, expect } from '@playwright/test';
@@ -114,7 +114,7 @@ test.describe('studio site', () => {
     await expect(page.getByText('has been updated since this site was made')).toBeVisible();
   });
 
-  test('the owner gets the customizer, and a colour reaches the page live', async ({ page }) => {
+  test('the owner gets the customizer, and a color reaches the page live', async ({ page }) => {
     await page.route('**/api/studio/sites/**', (route) =>
       route.fulfill({
         status: 200,
@@ -141,13 +141,13 @@ test.describe('studio site', () => {
     const rail = page.getByRole('complementary', { name: 'Customize this site' });
     await expect(rail).toBeVisible();
 
-    // The first release changes colours and patterns; words and pictures are
+    // The first release changes colors and patterns; words and pictures are
     // named as not editable here, not offered and broken.
-    await expect(rail.getByRole('tab', { name: 'Colours' })).toHaveAttribute('aria-selected', 'true');
+    await expect(rail.getByRole('tab', { name: 'Colors' })).toHaveAttribute('aria-selected', 'true');
     await expect(page.getByRole('region', { name: 'Ask for changes' })).toHaveCount(0);
     await rail.getByRole('tab', { name: 'Content' }).click();
     await expect(rail.getByText("can't be edited here yet")).toBeVisible();
-    await rail.getByRole('tab', { name: 'Colours' }).click();
+    await rail.getByRole('tab', { name: 'Colors' }).click();
 
     const groundProperty = () =>
       frame
@@ -161,14 +161,14 @@ test.describe('studio site', () => {
     await expect(own).toHaveAttribute('aria-pressed', 'false');
     await expect(cobalt).toHaveAttribute('aria-pressed', 'false');
 
-    // Picking a palette recolours the whole page: the ground lands on the
+    // Picking a palette recolors the whole page: the ground lands on the
     // page's root as an inline property before anything is saved.
     await cobalt.click();
     await expect.poll(groundProperty).toBe('#0a1a3f');
     await expect(cobalt).toHaveAttribute('aria-pressed', 'true');
 
     // The per-role pickers did not go away with the list - the pencil on a row
-    // opens them, seeded with the colours the page is wearing.
+    // opens them, seeded with the colors the page is wearing.
     await rail.getByRole('button', { name: 'Edit Cobalt' }).click();
     const dialog = page.getByRole('dialog');
     await expect(dialog.getByLabel('Ground value')).toHaveValue('#0a1a3f');
@@ -242,6 +242,65 @@ test.describe('studio site', () => {
     await expect
       .poll(() => hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern'))))
       .toEqual(before);
+  });
+
+  test('one field can be given a design of its own, and put back on its own', async ({
+    page,
+  }) => {
+    await page.route('**/api/studio/sites/**', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(siteDocument({ mine: true })),
+      })
+    );
+
+    await page.goto('/studio/site/?id=e2esite');
+
+    const frame = page.frameLocator('iframe');
+    const hosts = frame.locator('[data-edit-pattern] [data-pattern]');
+    await expect(hosts.first()).toBeAttached({ timeout: 15_000 });
+
+    const before = await hosts.evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute('data-pattern'))
+    );
+    const target = before.includes('radius') ? 'lobe' : 'radius';
+    const targetName = target === 'radius' ? 'Radius' : 'Lobe';
+
+    const rail = page.getByRole('complementary', { name: 'Customize this site' });
+    await rail.getByRole('tab', { name: 'Patterns' }).click();
+
+    // Every row carries a pencil; none carries an undo until it has changed.
+    const rows = rail.locator('li');
+    await expect(rows).toHaveCount(before.length);
+    await expect(rail.getByRole('button', { name: /^Change the .* pattern$/ })).toHaveCount(before.length);
+    await expect(rail.getByRole('button', { name: /^Reset the .* pattern$/ })).toHaveCount(0);
+
+    // The pencil opens the library for that field; a search narrows it and
+    // choosing a design applies it to that field alone, live.
+    await rows.first().getByRole('button', { name: /^Change the .* pattern$/ }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: /^Change the .* pattern$/ })).toBeVisible();
+    await dialog.getByLabel('Search patterns').fill(targetName);
+    await dialog.getByRole('button', { name: targetName, exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+
+    await expect.poll(() => hosts.first().getAttribute('data-pattern')).toBe(target);
+    const after = await hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern')));
+    expect(after.slice(1)).toEqual(before.slice(1));
+    await expect(rows.first().locator('img')).toHaveAttribute('src', `/previews/${target}.webp`);
+    await expect(rail.getByRole('button', { name: 'Save changes' })).toBeEnabled();
+
+    // The changed row, and only that row, offers its own way back.
+    const undo = rail.getByRole('button', { name: /^Reset the .* pattern$/ });
+    await expect(undo).toHaveCount(1);
+    await expect(rows.first().getByRole('button', { name: /^Reset the .* pattern$/ })).toBeVisible();
+    await undo.click();
+
+    await expect
+      .poll(() => hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern'))))
+      .toEqual(before);
+    await expect(rail.getByRole('button', { name: /^Reset the .* pattern$/ })).toHaveCount(0);
   });
 
   test('a visitor by link gets the page and no editor', async ({ page }) => {

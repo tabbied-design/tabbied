@@ -15,7 +15,7 @@ export const metadata = {
    `transparent` in the background slot. */
 const INK = '#101010';
 const RED = '#C8102E';
-const GREY = '#8A8880';
+const GRAY = '#8A8880';
 const PALE = '#D9D6CC';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,7 +23,7 @@ const PALE = '#D9D6CC';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PALE;
 
 
@@ -37,11 +37,11 @@ const DEVELOP = [
 ];
 
 const PRINTS = [
-  { size: '18 × 24 cm', paper: 'Fibre, glossy', price: '€28' },
-  { size: '24 × 30 cm', paper: 'Fibre, glossy or matt', price: '€38' },
-  { size: '30 × 40 cm', paper: 'Fibre, glossy or matt', price: '€54' },
-  { size: '40 × 50 cm', paper: 'Fibre, matt only', price: '€86' },
-  { size: '50 × 60 cm', paper: 'Fibre, matt only', price: '€128' },
+  { size: '18 × 24 cm', paper: 'Fiber, glossy', price: '€28' },
+  { size: '24 × 30 cm', paper: 'Fiber, glossy or matt', price: '€38' },
+  { size: '30 × 40 cm', paper: 'Fiber, glossy or matt', price: '€54' },
+  { size: '40 × 50 cm', paper: 'Fiber, matt only', price: '€86' },
+  { size: '50 × 60 cm', paper: 'Fiber, matt only', price: '€128' },
 ];
 
 const HOUSE = [
@@ -54,17 +54,17 @@ const HOUSE = [
 export default function SilbersalzPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--bone': '#edebe4',
         '--ink': '#101010',
         '--red': '#c8102e',
-        '--grey': '#8a8880',
+        '--gray': '#8a8880',
         '--pale': '#d9d6cc',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="bone,ink,red,grey,pale"
+      data-edit-vars="bone,ink,red,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -93,7 +93,7 @@ export default function SilbersalzPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={halftone}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={40}
               redrawInterval={3000}
@@ -110,14 +110,14 @@ export default function SilbersalzPage() {
               <span>by somebody.</span>
             </h1>
             <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
-              Black and white, colour negative and transparency. Silver gelatin
+              Black and white, color negative and transparency. Silver gelatin
               prints made under an enlarger by a person who looks at them.
             </p>
           </div>
         </section>
 
         {/* The darkroom, full width. Red safelight against a bone page: the
-            one place the accent colour is allowed to fill the frame. */}
+            one place the accent color is allowed to fill the frame. */}
         <figure className={s.bleed}>
           <Figure editId="photo.silbersalz-darkroom"
             slug="silbersalz-darkroom"
@@ -157,7 +157,7 @@ export default function SilbersalzPage() {
           <div data-edit-pattern="grainBand.field" data-edit-roles="transparent,1,2,3" className={s.grainField}>
             <TabbiedPattern
               pattern={grainfield}
-              palette={['transparent', INK, RED, GREY]}
+              palette={['transparent', INK, RED, GRAY]}
               fit="grid"
               cellSize={112}
               redrawInterval={2400}
@@ -171,7 +171,7 @@ export default function SilbersalzPage() {
           <div data-edit-pattern="print.field" data-edit-roles="transparent,3,4" className={s.printField} aria-hidden="true">
             <TabbiedPattern
               pattern={dustfall}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={54}
               redrawInterval={5200}
@@ -204,7 +204,7 @@ export default function SilbersalzPage() {
                   sheet is quoted, and we will tell you before we start.
                 </p>
                 <p data-edit="print.body2" data-edit-max="240" data-edit-multiline>
-                  Fibre paper only. We stopped stocking resin coated in 2014 and
+                  Fiber paper only. We stopped stocking resin coated in 2014 and
                   have not been asked for it since 2017.
                 </p>
               </div>
@@ -256,7 +256,7 @@ export default function SilbersalzPage() {
           <div data-edit-pattern="counter.field" data-edit-roles="transparent,2,3" className={s.counterField} aria-hidden="true">
             <TabbiedPattern
               pattern={peppering}
-              palette={['transparent', RED, GREY]}
+              palette={['transparent', RED, GRAY]}
               fit="grid"
               cellSize={38}
               redrawInterval={4200}
@@ -412,7 +412,7 @@ export default function SilbersalzPage() {
                 <span data-edit="index.text24" data-edit-max="60">€18.40</span>
               </li>
               <li key="Ilford MG fibre">
-                <span data-edit="index.text25" data-edit-max="60">Ilford MG fibre</span>
+                <span data-edit="index.text25" data-edit-max="60">Ilford MG fiber</span>
                 <span data-edit="index.text26" data-edit-max="60">24 × 30, 50 sheets</span>
                 <span data-edit="index.text27" data-edit-max="60">n/a</span>
                 <span data-edit="index.text28" data-edit-max="60">€96</span>
@@ -430,7 +430,7 @@ export default function SilbersalzPage() {
               </div>
               <div key="Do you push and pull?">
                 <dt data-edit="faq.term2" data-edit-max="28">Do you push and pull?</dt>
-                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>Two stops either way on black and white, one on colour negative. Tell us on the note; we cannot tell by looking.</dd>
+                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>Two stops either way on black and white, one on color negative. Tell us on the note; we cannot tell by looking.</dd>
               </div>
               <div key="Will you scan as well?">
                 <dt data-edit="faq.term3" data-edit-max="28">Will you scan as well?</dt>
@@ -452,7 +452,7 @@ export default function SilbersalzPage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
             <TabbiedPattern
               pattern={grain}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={104}
               redrawInterval={4928}

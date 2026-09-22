@@ -14,7 +14,7 @@ export const metadata = {
 const INK = '#1D1B2B';
 const ORANGE = '#FF6B2C';
 const TEAL = '#0FA3B1';
-const GREY = '#8B8478';
+const GRAY = '#8B8478';
 /* The tiles pin their doodle to a whole multiple of the cell (9 x 72px) and
    let the round plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
@@ -23,7 +23,7 @@ const TILE_BOX = 648;
 const NAV = [
   ['Room', '#room'],
   ['Sound', '#sound'],
-  ['Programme', '#programme'],
+  ['Program', '#program'],
   ['Menu', '#menu'],
   ['Membership', '#membership'],
   ['Hours', '#hours'],
@@ -90,7 +90,7 @@ type Night = {
   body: string;
 };
 
-const PROGRAMME: Night[] = [
+const PROGRAM: Night[] = [
   { day: 'Tue', name: 'Slow Tuesday', selector: 'Inês Carvalho', from: 'From 19:00', body: 'Ambient, minimalism, long pieces. The record plays to the end, whatever the end is.' },
   { day: 'Wed', name: 'Jazz on wax', selector: 'Rui Matos', from: 'From 19:00', body: 'Hard bop to spiritual, original pressings, sleeves out on the counter for anyone who asks.' },
   { day: 'Thu', name: 'The Brazilian shelf', selector: 'Marta Sequeira', from: 'From 20:00', body: 'Tropicália, bossa, MPB, and whatever arrived in the post from São Paulo this month.' },
@@ -101,8 +101,8 @@ const PROGRAMME: Night[] = [
 
 const VIEWS = [
   ['The console', 'Two decks, one lamp, the log book'],
-  ['Ring one', 'Twenty chairs at 3.2 metres'],
-  ['The horns', 'Orange, from Porto, 1.2 metres across'],
+  ['Ring one', 'Twenty chairs at 3.2 meters'],
+  ['The horns', 'Orange, from Porto, 1.2 meters across'],
 ];
 
 type Item = {
@@ -115,7 +115,7 @@ const DRINKS: Item[] = [
   { name: 'Vinho verde, glass', price: '5', note: 'Minho, whatever the grocer has this week' },
   { name: 'House negroni', price: '9', note: 'Made in a batch on Tuesday and left alone' },
   { name: 'Ginjinha', price: '4', note: 'With the cherry, from a bottle with no label' },
-  { name: 'Draught lager', price: '4', note: 'Cold, small, and nothing else to say about it' },
+  { name: 'Draft lager', price: '4', note: 'Cold, small, and nothing else to say about it' },
   { name: 'Whisky highball', price: '8', note: 'Tall, one ice sphere, soda from a siphon' },
   { name: 'Tonic, alone', price: '3', note: 'The most ordered thing on a Tuesday' },
   { name: 'Filter coffee', price: '2.50', note: 'Until 21:00, after that you are on your own' },
@@ -172,17 +172,17 @@ const FIND = [
 export default function OrbitalPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#fff4e3',
         '--ink': '#1d1b2b',
         '--orange': '#ff6b2c',
         '--teal': '#0fa3b1',
-        '--grey': '#8b8478',
+        '--gray': '#8b8478',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,orange,teal,grey"
+      data-edit-vars="paper,ink,orange,teal,gray"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -260,7 +260,7 @@ export default function OrbitalPage() {
             <p data-edit="room.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The room</p>
             <h2 data-edit="room.h2" data-edit-max="60" className={s.h2} id="room-h">Three rings, one sweet spot</h2>
             <p data-edit="room.panelNote" data-edit-max="240" data-edit-multiline className={s.panelNote}>
-              Eighty-four square metres under a five-metre ceiling, with the
+              Eighty-four square meters under a five-meter ceiling, with the
               chairs in arcs around the console. Capacity is forty-eight and
               there is no standing, because standing people talk.
             </p>
@@ -299,7 +299,7 @@ export default function OrbitalPage() {
           </ol>
         </section>
 
-        {/* ------------------------------------------------------ PROGRAMME */}
+        {/* ------------------------------------------------------ PROGRAM */}
         <section id="programme" className={s.panel} aria-labelledby="programme-h">
           <div className={s.panelHead}>
             <p data-edit="programme.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The week</p>
@@ -310,7 +310,7 @@ export default function OrbitalPage() {
             </p>
           </div>
           <ol className={s.week}>
-            {PROGRAMME.map((n, i) => (
+            {PROGRAM.map((n, i) => (
               <li key={n.day}>
                 <span data-edit={`programme.dayBadge.${i}`} data-edit-max="60" className={s.dayBadge}>{n.day}</span>
                 <div className={s.nightBody}>

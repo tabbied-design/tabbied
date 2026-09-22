@@ -1,5 +1,5 @@
 /**
- * Split a list on a separator at paren depth zero, so a CSS colour that
+ * Split a list on a separator at paren depth zero, so a CSS color that
  * carries the separator inside its own parentheses - `rgb(0, 0, 0)` - stays
  * one item. Shared by the declarative attributes (hydrate.ts) and the CLI's
  * `--palette`; the SVG exporter keeps its own copy because that module

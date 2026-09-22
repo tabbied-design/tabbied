@@ -8,14 +8,14 @@ import s from './frequenz.module.css';
 export const metadata = {
   title: 'Frequenz 94,6: Freies Radio, Graz',
   description:
-    'Frequenz 94,6 broadcasts from Graz, twenty-four hours a day, on air since 1979. Ninety-one programmes, all of them made by people who are not paid to.',
+    'Frequenz 94,6 broadcasts from Graz, twenty-four hours a day, on air since 1979. Ninety-one programs, all of them made by people who are not paid to.',
 };
 
 /* Dark ground, cream type, one amber that stands for the on-air lamp. All
    pattern fields take `transparent` in the background slot. */
 const CREAM = '#F2EFE6';
 const AMBER = '#FFA200';
-const GREY = '#6B6560';
+const GRAY = '#6B6560';
 const PANEL = '#1D1A20';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,7 +23,7 @@ const PANEL = '#1D1A20';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PANEL;
 
 
@@ -41,32 +41,32 @@ const SCHEDULE = [
 
 const STRANDS = [
   { n: '01', t: 'Live music, weekly', d: 'A band in the small studio every Thursday since 1984. Two takes, one microphone pair, whatever happens happens.' },
-  { n: '02', t: 'The archive', d: 'Eleven thousand hours on tape, digitised at four hours a week by two volunteers who refuse to be thanked in public.' },
-  { n: '03', t: 'Open desk', d: 'Anyone can propose a programme. About one in five gets a slot, and the first one is always at three in the morning.' },
+  { n: '02', t: 'The archive', d: 'Eleven thousand hours on tape, digitized at four hours a week by two volunteers who refuse to be thanked in public.' },
+  { n: '03', t: 'Open desk', d: 'Anyone can propose a program. About one in five gets a slot, and the first one is always at three in the morning.' },
   { n: '04', t: 'No advertising', d: 'Funded by 2,140 members at €5 a month. If that number drops below 1,800 we go back to twelve hours a day and say so.' },
 ];
 
 const NUMBERS = [
   ['94,6', 'MHz, Graz and Umgebung'],
   ['1979', 'On air since'],
-  ['91', 'Programmes'],
+  ['91', 'Programs'],
   ['2 140', 'Members'],
 ];
 
 export default function FrequenzPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--dark': '#121014',
         '--cream': '#f2efe6',
         '--amber': '#ffa200',
-        '--grey': '#6b6560',
+        '--gray': '#6b6560',
         '--panel': '#1d1a20',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="dark,cream,amber,grey,panel"
+      data-edit-vars="dark,cream,amber,gray,panel"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -98,7 +98,7 @@ export default function FrequenzPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={flux}
-              palette={['transparent', AMBER, GREY]}
+              palette={['transparent', AMBER, GRAY]}
               fit="grid"
               cellSize={136}
               redrawInterval={2600}
@@ -166,7 +166,7 @@ export default function FrequenzPage() {
           <div data-edit-pattern="carrier.field" data-edit-roles="transparent,2,1,3" className={s.carrierField}>
             <TabbiedPattern
               pattern={ribline}
-              palette={['transparent', AMBER, CREAM, GREY]}
+              palette={['transparent', AMBER, CREAM, GRAY]}
               fit="grid"
               cellSize={104}
               redrawInterval={2200}
@@ -180,7 +180,7 @@ export default function FrequenzPage() {
           <div data-edit-pattern="strands.field" data-edit-roles="transparent,3,2" className={s.strandsField} aria-hidden="true">
             <TabbiedPattern
               pattern={streaking}
-              palette={['transparent', GREY, AMBER]}
+              palette={['transparent', GRAY, AMBER]}
               fit="grid"
               cellSize={116}
               redrawInterval={5200}
@@ -226,7 +226,7 @@ export default function FrequenzPage() {
           </h2>
           <div className={s.supGrid}>
             <p data-edit="support.big" data-edit-max="240" data-edit-multiline className={s.big}>
-              Five euro a month keeps the transmitter on, the licence paid and
+              Five euro a month keeps the transmitter on, the license paid and
               the coffee tin full. There is no other tier and no premium feed.
             </p>
             <div className={s.supCol}>
@@ -256,7 +256,7 @@ export default function FrequenzPage() {
           <div data-edit-pattern="studio.field" data-edit-roles="transparent,2,3" className={s.studioField} aria-hidden="true">
             <TabbiedPattern
               pattern={dotwash}
-              palette={['transparent', AMBER, GREY]}
+              palette={['transparent', AMBER, GRAY]}
               fit="grid"
               cellSize={44}
               redrawInterval={3800}
@@ -389,13 +389,13 @@ export default function FrequenzPage() {
               </li>
               <li key="Studio desk 1">
                 <span data-edit="index.text9" data-edit-max="60">Studio desk 1</span>
-                <span data-edit="index.text10" data-edit-max="60">Analogue, 24 channel</span>
+                <span data-edit="index.text10" data-edit-max="60">Analog, 24 channel</span>
                 <span data-edit="index.text11" data-edit-max="60">1998</span>
                 <span data-edit="index.text12" data-edit-max="60">Channel 7 crackles</span>
               </li>
               <li key="Studio desk 2">
                 <span data-edit="index.text13" data-edit-max="60">Studio desk 2</span>
-                <span data-edit="index.text14" data-edit-max="60">Analogue, 16 channel</span>
+                <span data-edit="index.text14" data-edit-max="60">Analog, 16 channel</span>
                 <span data-edit="index.text15" data-edit-max="60">1991</span>
                 <span data-edit="index.text16" data-edit-max="60">Spare, and fine</span>
               </li>
@@ -409,7 +409,7 @@ export default function FrequenzPage() {
                 <span data-edit="index.text21" data-edit-max="60">Archive, tape</span>
                 <span data-edit="index.text22" data-edit-max="60">11 000 hours</span>
                 <span data-edit="index.text23" data-edit-max="60">1979</span>
-                <span data-edit="index.text24" data-edit-max="60">Digitising, slowly</span>
+                <span data-edit="index.text24" data-edit-max="60">Digitizing, slowly</span>
               </li>
               <li key="Stream">
                 <span data-edit="index.text25" data-edit-max="60">Stream</span>
@@ -425,12 +425,12 @@ export default function FrequenzPage() {
           <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Getting involved</h2>
           <dl className={s.faqList}>
               <div key="How do I propose a progr">
-                <dt data-edit="faq.term" data-edit-max="28">How do I propose a programme?</dt>
+                <dt data-edit="faq.term" data-edit-max="28">How do I propose a program?</dt>
                 <dd data-edit="faq.body" data-edit-max="200" data-edit-multiline>Come to the open desk on the first Monday of the month with an idea and, ideally, twenty minutes of something you have already made.</dd>
               </div>
               <div key="Will I be paid?">
                 <dt data-edit="faq.term2" data-edit-max="28">Will I be paid?</dt>
-                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>No. Nobody here is, including the people who have been doing it since the eighties. The membership pays the transmitter and the licence.</dd>
+                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>No. Nobody here is, including the people who have been doing it since the eighties. The membership pays the transmitter and the license.</dd>
               </div>
               <div key="Do I need experience?">
                 <dt data-edit="faq.term3" data-edit-max="28">Do I need experience?</dt>
@@ -438,7 +438,7 @@ export default function FrequenzPage() {
               </div>
               <div key="Can I play whatever I wa">
                 <dt data-edit="faq.term4" data-edit-max="28">Can I play whatever I want?</dt>
-                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Within the licence, yes. Nobody vets a running order and nobody ever has.</dd>
+                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Within the license, yes. Nobody vets a running order and nobody ever has.</dd>
               </div>
           </dl>
         </section>
@@ -452,7 +452,7 @@ export default function FrequenzPage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,1,3" className={s.codaField}>
             <TabbiedPattern
               pattern={comet}
-              palette={['transparent', CREAM, GREY]}
+              palette={['transparent', CREAM, GRAY]}
               fit="grid"
               cellSize={114}
               redrawInterval={4998}

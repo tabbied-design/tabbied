@@ -20,7 +20,7 @@
 // geometry to the cell's corners and edges instead - a shore held against one
 // side, a frame hugging the perimeter, a light thrown in from an edge. The
 // helpers below exist for that: `farthest-side` radials so a stop at 100%
-// means "one cell side" wherever the centre sits, and hard linear bands that
+// means "one cell side" wherever the center sits, and hard linear bands that
 // read as bars without needing a pseudo-element.
 //
 // The house rules inherited from batches 6-12 still apply and are enforced by
@@ -64,18 +64,18 @@ import { batch12 } from '../pattern-defs-12.mjs';
 // A name should never come to mean two different things.
 export const TAKEN13 = new Set([...TAKEN12, ...batch12.map((d) => d.slug)]);
 
-// ── anchored radials ───────────────────────────────────────────────────────
+// -- anchored radials -------------------------------------------------------
 // `farthest-side` makes a percentage stop mean "that fraction of one cell
-// side" no matter where the centre sits - `closest-side` collapses to zero
-// the moment the centre reaches a corner, and the default `farthest-corner`
-// quietly rescales as the centre moves. Every layer paints #000/transparent
+// side" no matter where the center sits - `closest-side` collapses to zero
+// the moment the center reaches a corner, and the default `farthest-corner`
+// quietly rescales as the center moves. Every layer paints #000/transparent
 // only, so the ink stays a transitionable background-color underneath.
 
-/** A solid disc of radius `r`, centred at `at`. */
+/** A solid disc of radius `r`, centerd at `at`. */
 export const discL = (r, at = '50% 50%') =>
   `radial-gradient(circle farthest-side at ${at}, #000 ${r}, transparent ${r})`;
 
-/** The band between two radii, centred at `at`, sized against one cell side. */
+/** The band between two radii, centerd at `at`, sized against one cell side. */
 export const bandFS = (inner, outer, at = '50% 50%') =>
   `radial-gradient(circle farthest-side at ${at}, transparent ${inner}, #000 ${inner} ${outer}, transparent ${outer})`;
 
@@ -83,7 +83,7 @@ export const bandFS = (inner, outer, at = '50% 50%') =>
 export const boreFS = (r, at = '50% 50%') =>
   `radial-gradient(circle farthest-side at ${at}, transparent ${r}, #000 ${r})`;
 
-// ── hard linear bands ──────────────────────────────────────────────────────
+// -- hard linear bands ------------------------------------------------------
 // A bar as a mask layer rather than a pseudo-element: the strip between two
 // stops, at any angle. Composable - msk(a, b) adds bars into crosses and
 // frames, mskI(a, b) intersects them.
@@ -96,7 +96,7 @@ export const bandLin = (angle, from, to) =>
 export const slabLin = (angle, to) =>
   `linear-gradient(${angle}, #000 0 ${to}, transparent ${to})`;
 
-// ── stepped radial ─────────────────────────────────────────────────────────
+// -- stepped radial ---------------------------------------------------------
 
 /**
  * The radial counterpart of stepFade(): a falloff from `at` posterized into
@@ -117,7 +117,7 @@ export const stepGlow = (at, steps, span = 100) => {
   return `radial-gradient(circle farthest-side at ${at}, ${stops.join(', ')})`;
 };
 
-// ── tiled layers ───────────────────────────────────────────────────────────
+// -- tiled layers -----------------------------------------------------------
 // A gradient smaller than its box tiles, and the converter turns the layer
 // into an SVG <pattern> holding one tile.
 

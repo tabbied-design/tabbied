@@ -3,14 +3,14 @@
    Directional throughout: the logo carries an arrow, section rules run left to
    right in the accent green, and the type is set at the sizes a sign would
    use. Pattern fields take `transparent` in the background slot, so the
-   concourse colour of the page runs through the route diagrams.
+   concourse color of the page runs through the route diagrams.
    ========================================================================== */
 
 .page {
   --paper: #f4f4f1;
   --ink: #131416;
   --green: #00843d;
-  --grey: #8e9094;
+  --gray: #8e9094;
   --pale: #e2e2de;
   --gut: clamp(1.15rem, 4vw, 3.25rem);
   --max: 80rem;
@@ -92,7 +92,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -163,7 +163,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .bleed figcaption {
@@ -232,7 +232,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- headings */
@@ -371,7 +371,7 @@
   font-size: 0.65rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey) !important;
+  color: var(--gray) !important;
   padding-bottom: 0.4rem !important;
 }
 
@@ -460,7 +460,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   margin-bottom: 0.4rem;
 }
 
@@ -559,7 +559,7 @@
   font-size: 0.64rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey) !important;
+  color: var(--gray) !important;
   padding-bottom: 0.4rem !important;
 }
 
@@ -573,7 +573,7 @@
 .idxList li > :last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .faqList {

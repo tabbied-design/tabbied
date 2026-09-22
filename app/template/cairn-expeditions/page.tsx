@@ -48,7 +48,7 @@ const trips = [
     slug: 'cairn-valley',
     alt: 'Yellow expedition tents pitched on a rocky moraine below glaciated peaks',
     blurb:
-      'Six days above 3,000 metres, hut to hut, with one night on the moraine at Camp Autans. The classic first 4,000er, walked at a pace your legs will thank you for.',
+      'Six days above 3,000 meters, hut to hut, with one night on the moraine at Camp Autans. The classic first 4,000er, walked at a pace your legs will thank you for.',
     includes: 'All huts and the moraine camp, glacier kit, rope fees, luggage shuttle.',
   },
   {
@@ -110,7 +110,7 @@ const gearList = [
 
 const rentals = [
   { slug: 'cairn-axe-cutout', alt: 'Classic mountaineering ice axe with steel head and orange grip', name: 'Ice axe', spec: '58 cm · steel head', price: '€9 / day', tall: true },
-  { slug: 'cairn-boots-cutout', alt: 'Pair of rigid grey and orange mountaineering boots', name: 'B3 boots', spec: 'EU 36 to 48 · fitted', price: '€14 / day', tall: false },
+  { slug: 'cairn-boots-cutout', alt: 'Pair of rigid gray and orange mountaineering boots', name: 'B3 boots', spec: 'EU 36 to 48 · fitted', price: '€14 / day', tall: false },
 ];
 
 const guides = [
@@ -120,7 +120,7 @@ const guides = [
     name: 'Lena Aubry-Storli',
     cert: 'IFMGA · since 2011',
     home: 'Valsorde, b. Tromsø',
-    line: 'Reads a lenticular cloud the way other people read a timetable. Leads the ski programme and most north faces.',
+    line: 'Reads a lenticular cloud the way other people read a timetable. Leads the ski program and most north faces.',
   },
   {
     slug: 'cairn-guide-2',
@@ -172,7 +172,7 @@ const bookingSteps = [
 export default function CairnExpeditionsPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--slate': '#10222e',
@@ -210,7 +210,7 @@ export default function CairnExpeditionsPage() {
           <a data-edit="topbar.safety" data-edit-max="28" href="#safety">Safety</a>
         </nav>
         <a data-edit="topbar.navCta" data-edit-max="28" className={styles.navCta} href="#enquire">
-          Enquire
+          Inquire
         </a>
       </header>
 
@@ -310,7 +310,7 @@ export default function CairnExpeditionsPage() {
                   <div className={styles.tripFoot}>
                     <span data-edit={`tripCard.tripPrice.${i}`} data-edit-max="60" className={styles.tripPrice}>{trip.price}</span>
                     <a data-edit={`tripCard.tripLink.${i}`} data-edit-max="28" className={styles.tripLink} href="#enquire">
-                      Reserve a rope &rarr;
+                      Reserve a rope
                     </a>
                   </div>
                 </div>
@@ -326,7 +326,7 @@ export default function CairnExpeditionsPage() {
             palette={[SLATE, ICE, TEAL, EMBER, MIST]}
             seed="cairn-approach"
             fit="cover"
-            density={1}
+            density={0.25}
             className={styles.approachField}
           />
           <div className={styles.approachScrim} aria-hidden="true" />
@@ -349,7 +349,7 @@ export default function CairnExpeditionsPage() {
             <blockquote className={styles.quote}>
               <p data-edit="approach.body" data-edit-max="240" data-edit-multiline>
                 "Nobody remembers a fast ascent. Everybody remembers feeling looked after at
-                4,000 metres."
+                4,000 meters."
               </p>
               <cite data-edit="approach.attribution" data-edit-max="48">The line we hire guides by</cite>
             </blockquote>
@@ -419,7 +419,7 @@ export default function CairnExpeditionsPage() {
                 <Figure editId="photo.cairn-pack-cutout"
                   slug="cairn-pack-cutout"
                   cutout
-                  alt="Orange 38-litre alpine climbing pack with ice-axe loops"
+                  alt="Orange 38-liter alpine climbing pack with ice-axe loops"
                   className={styles.packImg}
                 />
                 <p data-edit="gear.packCaption" data-edit-max="240" data-edit-multiline className={styles.packCaption}>The house 38 L pack · €7 / day</p>
@@ -504,20 +504,20 @@ export default function CairnExpeditionsPage() {
           </p>
         </section>
 
-        {/* ENQUIRE */}
-        <section data-edit-pattern="enquire.field" data-edit-roles="0,6,3,5,7" id="enquire" className={styles.enquire} aria-labelledby="enquire-title">
+        {/* INQUIRE */}
+        <section data-edit-pattern="enquire.field" data-edit-roles="0,6,3,5,7" id="enquire" className={styles.inquire} aria-labelledby="enquire-title">
           <TabbiedPattern
             pattern={ridgeline}
             palette={[SLATE, TEAL, ICE, EMBER, MIST]}
-            seed="cairn-enquire"
+            seed="cairn-inquire"
             fit="cover"
-            density={1}
+            density={0.25}
             className={styles.enquireField}
           />
           <div className={styles.enquireScrim} aria-hidden="true" />
           <div className={styles.enquireInner}>
             <header className={styles.sectionHead}>
-              <p data-edit="sectionHead.sectionIndex6" data-edit-max="240" data-edit-multiline className={styles.sectionIndex}>06 / Enquire</p>
+              <p data-edit="sectionHead.sectionIndex6" data-edit-max="240" data-edit-multiline className={styles.sectionIndex}>06 / Inquire</p>
               <h2 data-edit="sectionHead.sectionTitle6" data-edit-max="60" id="enquire-title" className={styles.sectionTitle}>
                 Plan a season with us
               </h2>
@@ -582,7 +582,7 @@ export default function CairnExpeditionsPage() {
             <a data-edit="footer.gear" data-edit-max="28" href="#gear">Gear</a>
             <a data-edit="footer.guides" data-edit-max="28" href="#guides">Guides</a>
             <a data-edit="footer.safety" data-edit-max="28" href="#safety">Safety</a>
-            <a data-edit="footer.enquire" data-edit-max="28" href="#enquire">Enquire</a>
+            <a data-edit="footer.enquire" data-edit-max="28" href="#enquire">Inquire</a>
           </nav>
           <p data-edit="footer.footerFine" data-edit-max="240" data-edit-multiline className={styles.footerFine}>
             Cairn Expeditions Sàrl · 14 Route des Séracs, 1974 Valsorde · Guiding under IFMGA

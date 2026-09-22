@@ -34,7 +34,7 @@ export default function SiteShare() {
       if (!id) throw new Error('no id');
 
       // Encoded: an id shaped like a path (`../generations/x`) otherwise
-      // normalised to a different endpoint and a confusing failure.
+      // normalized to a different endpoint and a confusing failure.
       const site = await apiFetch<SiteDocument>(`/api/studio/sites/${encodeURIComponent(id)}`);
       const revision =
         Number.isInteger(n) && n >= 1 && n !== site.latest.n

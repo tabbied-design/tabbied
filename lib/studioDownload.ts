@@ -126,7 +126,15 @@ export async function buildCustomisedArchive(options: {
   const response = await fetch(`/downloads/${slug}-html.zip`);
 
   if (!response.ok) {
-    throw new Error(`The ${slug} package is not available (${response.status}).`);
+    // The zip goes through the Worker, which counts it against the month's
+    // template downloads and answers a fetch in JSON when it will not serve
+    // one: signed out, or the cap spent. That sentence is the toast.
+    const said = await response
+      .json()
+      .then((body: { error?: string }) => body.error)
+      .catch(() => undefined);
+
+    throw new Error(said ?? `The ${slug} package is not available (${response.status}).`);
   }
 
   const entries = unzipSync(new Uint8Array(await response.arrayBuffer()));

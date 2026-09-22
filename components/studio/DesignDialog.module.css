@@ -1,0 +1,209 @@
+/* The pattern picker, opened from the pencil beside a field on the rail's
+   Patterns tab. The rail lists what the page draws; this is where one field
+   is given a design of its own. */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background-color: oklch(0.22 0.005 260 / 0.55);
+  backdrop-filter: blur(3px);
+}
+
+/* Portaled to <body>, so Studio's tokens on the page are not in scope; the
+   ones this dialog reads are declared again here, as PaletteDialog does. */
+.popup {
+  --s-ink: #0e0e13;
+  --s-muted: oklch(0.4 0.01 260);
+  --s-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --s-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --s-mono: var(--font-plex-mono, ui-monospace), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 111;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: calc(100vw - 48px);
+  max-width: 760px;
+  height: min(720px, calc(100vh - 48px));
+  padding: 30px 32px 26px;
+  color: var(--s-ink);
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 30px 80px oklch(0 0 0 / 0.35);
+  transform: translate(-50%, -50%);
+}
+
+.head {
+  display: flex;
+  flex: none;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.title {
+  margin: 0 0 6px;
+  font: 700 24px var(--s-display);
+  letter-spacing: -0.015em;
+}
+
+.lede {
+  margin: 0 0 20px;
+  font: 400 13.5px / 1.6 var(--s-sans);
+  color: var(--s-muted);
+}
+
+.close {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  margin: -6px -8px 0 0;
+  color: var(--s-muted);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--s-ink);
+  background-color: oklch(0 0 0 / 0.05);
+}
+
+.search {
+  display: flex;
+  flex: none;
+  gap: 10px;
+  align-items: center;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  padding: 0 14px;
+  color: var(--s-muted);
+  background-color: oklch(0.97 0.002 260);
+  border-radius: 9px;
+}
+
+.search:focus-within {
+  box-shadow: inset 0 0 0 1px var(--s-ink);
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 0;
+  font: 400 13.5px var(--s-sans);
+  color: var(--s-ink);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.search input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+/* The list takes what the head and the search leave, and scrolls inside
+   that; the negative margin lets a tile's ring reach past the text column. */
+.scroll {
+  flex: 1;
+  min-height: 0;
+  margin: 0 -8px;
+  padding: 0 8px 8px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0 0 0 / 0.22) transparent;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 6px 6px 8px;
+  font: 400 12px var(--s-sans);
+  color: var(--s-ink);
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+  cursor: pointer;
+}
+
+.tile:hover {
+  background-color: oklch(0 0 0 / 0.04);
+}
+
+.tileOn,
+.tileOn:hover {
+  color: #fff;
+  background-color: var(--s-ink);
+  box-shadow: none;
+}
+
+.tile:focus-visible {
+  outline: 2px solid var(--s-ink);
+  outline-offset: 2px;
+}
+
+.thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag {
+  font: 400 11px var(--s-mono);
+  color: oklch(0.55 0.01 260);
+}
+
+.tileOn .tag {
+  color: oklch(0.8 0.01 260);
+}
+
+.empty {
+  margin: 24px 0;
+  font: 400 13px var(--s-sans);
+  color: var(--s-muted);
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .popup {
+    padding: 22px 18px 18px;
+  }
+
+  .tiles {
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  }
+}

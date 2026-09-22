@@ -8,16 +8,16 @@ export const metadata = {
     'Norrbolt is a trade fastener wholesaler on Ringön, Gothenburg. 14,200 lines to ISO and DIN, 96 percent on the shelf, out of the door the same day if you order before four.',
 };
 
-/* Near-black ink on light grey paper, safety yellow, two steels. Every field
+/* Near-black ink on light gray paper, safety yellow, two steels. Every field
    takes `transparent` in the background slot so the pattern sits in the page
-   colour like a stencil sprayed on the floor, not a picture hung on the wall. */
+   color like a stencil sprayed on the floor, not a picture hung on the wall. */
 const INK = '#15171A';
 const YELLOW = '#FFC300';
-const GREY = '#6F7378';
+const GRAY = '#6F7378';
 const STEEL = '#A9AEB4';
 
 const NAV = [
-  ['Catalogue', '#catalogue'],
+  ['Catalog', '#catalog'],
   ['Standards', '#standards'],
   ['Stock', '#stock'],
   ['Delivery', '#delivery'],
@@ -26,7 +26,7 @@ const NAV = [
 ];
 
 const FIGURES = [
-  ['14 200', 'Lines in the catalogue'],
+  ['14 200', 'Lines in the catalog'],
   ['96%', 'On the shelf today'],
   ['16.00', 'Cut-off for same-day'],
   ['1979', 'Trading since'],
@@ -41,7 +41,7 @@ type Part = {
   price: string;
 };
 
-const CATALOGUE: Part[] = [
+const CATALOG: Part[] = [
   { no: '4014-M10-060', desc: 'Hex bolt, partial thread, ISO 4014', thread: 'M10 x 60', material: 'Steel 8.8, zinc', pack: '100', price: '312.00' },
   { no: '4017-M08-025', desc: 'Hex set screw, full thread, ISO 4017', thread: 'M8 x 25', material: 'Steel 8.8, zinc', pack: '200', price: '248.00' },
   { no: '4762-M06-020', desc: 'Socket head cap screw, ISO 4762', thread: 'M6 x 20', material: 'Steel 12.9, black', pack: '200', price: '186.00' },
@@ -138,17 +138,17 @@ const HOURS = [
 export default function NorrboltPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f1f1ee',
         '--ink': '#15171a',
         '--yellow': '#ffc300',
-        '--grey': '#6f7378',
+        '--gray': '#6f7378',
         '--steel': '#a9aeb4',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,yellow,grey,steel"
+      data-edit-vars="paper,ink,yellow,gray,steel"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -170,13 +170,13 @@ export default function NorrboltPage() {
 
       <main id="top">
         {/* ------------------------------------------------------------ HERO
-            Gesso in steel and yellow over the grey, the loudest field on the
+            Gesso in steel and yellow over the gray, the loudest field on the
             page, fading under the copy so the headline reads on paper. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={gesso}
-              palette={['transparent', STEEL, GREY, YELLOW]}
+              palette={['transparent', STEEL, GRAY, YELLOW]}
               fit="grid"
               cellSize={112}
               redrawInterval={4800}
@@ -195,7 +195,7 @@ export default function NorrboltPage() {
             <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Fourteen thousand lines of bolts, nuts, washers and anchors to
               ISO and DIN, racked in one shed on Ringön. Trade counter, own
-              vans, no minimum order, and the catalogue is the price list.
+              vans, no minimum order, and the catalog is the price list.
             </p>
             <dl className={s.figures}>
               {FIGURES.map(([v, k], i) => (
@@ -209,13 +209,13 @@ export default function NorrboltPage() {
           <div className={s.hazard} aria-hidden="true" />
         </section>
 
-        {/* ------------------------------------------------------- CATALOGUE */}
-        <section id="catalogue" className={s.catalogue} aria-labelledby="catalogue-h">
+        {/* ------------------------------------------------------- CATALOG */}
+        <section id="catalogue" className={s.catalog} aria-labelledby="catalogue-h">
           <div className={s.secHead}>
             <p data-edit="catalogue.stamp" data-edit-max="240" data-edit-multiline className={s.stamp}>Section 01</p>
             <h2 data-edit="catalogue.title" data-edit-max="60" id="catalogue-h">Ten lines from the shelf</h2>
             <p data-edit="catalogue.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
-              The full catalogue is 412 pages and comes with the account.
+              The full catalog is 412 pages and comes with the account.
               These ten are the fastest moving this quarter. Prices are per
               pack, ex VAT, and the part number is the order.
             </p>
@@ -230,7 +230,7 @@ export default function NorrboltPage() {
                 </tr>
               </thead>
               <tbody>
-                {CATALOGUE.map((p, i) => (
+                {CATALOG.map((p, i) => (
                   <tr key={p.no}>
                     <td data-edit={`catalogue.partNo.${i}`} className={s.partNo}>{p.no}</td>
                     <td data-edit={`catalogue.partDesc.${i}`} className={s.partDesc}>{p.desc}</td>
@@ -307,7 +307,7 @@ export default function NorrboltPage() {
               <p data-edit="stock.stamp" data-edit-max="240" data-edit-multiline className={s.stamp}>Section 03</p>
               <h2 data-edit="stock.title" data-edit-max="60" id="stock-h">Stock bands and lead times</h2>
               <p data-edit="stock.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
-                Every line in the catalogue is marked A, B, C or M. The letter
+                Every line in the catalog is marked A, B, C or M. The letter
                 tells you where it is and how long it takes, and the website
                 and the counter read from the same count.
               </p>
@@ -346,7 +346,7 @@ export default function NorrboltPage() {
           <div data-edit-pattern="delivery.field" data-edit-roles="transparent,4,3" className={s.deliveryField} aria-hidden="true">
             <TabbiedPattern
               pattern={gesso}
-              palette={['transparent', STEEL, GREY]}
+              palette={['transparent', STEEL, GRAY]}
               fit="grid"
               cellSize={128}
               redrawInterval={6400}
@@ -385,7 +385,7 @@ export default function NorrboltPage() {
               <h2 data-edit="account.title" data-edit-max="60" id="account-h">Trade account terms</h2>
               <p data-edit="account.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 An account takes one form and one day. It gets you thirty days,
-                the printed catalogue, the rebate, and a name at the counter
+                the printed catalog, the rebate, and a name at the counter
                 who knows what you usually order.
               </p>
               <a data-edit="account.button" data-edit-max="28" className={s.button} href="mailto:konto@norrbolt.example">Open an account</a>
@@ -452,7 +452,7 @@ export default function NorrboltPage() {
         <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,2,3" className={s.codaField}>
           <TabbiedPattern
             pattern={jibboom}
-            palette={['transparent', STEEL, YELLOW, GREY]}
+            palette={['transparent', STEEL, YELLOW, GRAY]}
             fit="grid"
             cellSize={104}
             redrawInterval={5200}
@@ -471,7 +471,7 @@ export default function NorrboltPage() {
             </p>
           </div>
           <div className={s.footCol}>
-            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Catalogue</h2>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Catalog</h2>
             <ul className={s.footLinks}>
               <li><a data-edit="footer.catalogue" data-edit-max="28" href="#catalogue">Ten lines</a></li>
               <li><a data-edit="footer.standards" data-edit-max="28" href="#standards">Standards</a></li>

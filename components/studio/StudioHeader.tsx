@@ -3,9 +3,9 @@ import StudioSpark from 'components/main-page/StudioSpark';
 import styles from './StudioHeader.module.css';
 
 /**
- * Shared by both Studio screens: a back link on the left, the wordmark centred.
- * The three-column grid is what keeps "Studio" centred on the page rather than
- * centred on whatever is left over beside the back link.
+ * Shared by both Studio screens: a back link on the left, the wordmark centerd.
+ * The three-column grid is what keeps "Studio" centerd on the page rather than
+ * centerd on whatever is left over beside the back link.
  */
 export default function StudioHeader({
   backHref,

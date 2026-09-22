@@ -1,7 +1,7 @@
 /* ==========================================================================
    THE HARBOUR LEDGER - local newspaper, Whitby
    A broadsheet. Off-white newsprint, black ink, one red for the folio line
-   and the kickers, greys for everything that is not the story. Old Standard
+   and the kickers, grays for everything that is not the story. Old Standard
    for the nameplate, the headlines and the section heads (small caps on a
    double rule), Libre Franklin for the body, set justified in columns with
    a hairline rule between them. The patterns are the ribbing and the stripe
@@ -12,7 +12,7 @@
   --paper: #f7f5ee;
   --ink: #111111;
   --red: #b3261e;
-  --grey: #6b6b66;
+  --gray: #6b6b66;
   --pale: #dcd9cf;
   --gut: clamp(1.1rem, 4vw, 3.5rem);
   --max: 78rem;
@@ -125,12 +125,12 @@
 }
 
 .barMeta {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ---------------------------------------------------------------- masthead
-   Tall, centred, ruled top and bottom. The field behind is washed with the
-   paper colour across the middle so the nameplate sits on clean ground. */
+   Tall, centerd, ruled top and bottom. The field behind is washed with the
+   paper color across the middle so the nameplate sits on clean ground. */
 
 .masthead {
   position: relative;
@@ -194,7 +194,7 @@
   font-family: var(--display);
   font-style: italic;
   font-size: 1.05rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- sections */
@@ -254,7 +254,7 @@
   padding-bottom: 0.5rem;
   border-bottom: var(--hair);
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .leadBody,
@@ -315,7 +315,7 @@
 .index dd {
   margin: 0;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .indexNote {
@@ -428,7 +428,7 @@
 .letterFrom {
   margin: 0;
   font-size: 0.82rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .letterNote {
@@ -436,7 +436,7 @@
   padding-top: 0.6rem;
   border-top: var(--hair);
   font-size: 0.85rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- subscribe
@@ -501,7 +501,7 @@
 .per {
   margin-left: 0.4rem;
   font-style: italic;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .offerBody {
@@ -534,7 +534,7 @@
 .subscribeNote {
   margin: 0;
   font-size: 0.88rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------------- about
@@ -646,7 +646,7 @@
 
 .officeList dt {
   font-weight: 600;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .officeList dd {

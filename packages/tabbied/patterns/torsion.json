@@ -3,7 +3,7 @@
   "slug": "torsion",
   "galleryOrder": 638,
   "galleryWhite": true,
-  "description": "One square per cell, each turned a fixed fraction further than its neighbour, so the grid twists a full quarter-turn corner to corner.",
+  "description": "One square per cell, each turned a fixed fraction further than its neighbor, so the grid twists a full quarter-turn corner to corner.",
   "tags": [
     "squares",
     "grid",

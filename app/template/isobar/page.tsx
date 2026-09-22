@@ -14,7 +14,7 @@ export const metadata = {
    background slot so the weather chart runs through the page itself. */
 const INK = '#0d1418';
 const VIOLET = '#6b2be0';
-const GREY = '#7c8792';
+const GRAY = '#7c8792';
 const PALE = '#d3dae1';
 
 const DAYS = [
@@ -52,7 +52,7 @@ const METHOD = [
     art: beamspread,
     n: '03',
     t: 'Say how sure',
-    d: 'Every forecast carries a confidence. A confident wrong forecast costs more than an uncertain one, and pretending to certainty is the failure this service was reorganised to stop in 1994.',
+    d: 'Every forecast carries a confidence. A confident wrong forecast costs more than an uncertain one, and pretending to certainty is the failure this service was reorganized to stop in 1994.',
   },
 ];
 
@@ -92,7 +92,7 @@ const SERVICE = [
   ['Free', 'Every observation and every forecast, as an API and as a file.'],
   ['Marine', 'A separate coastal product, issued four times a day, in Norwegian and English.'],
   ['Aviation', 'TAF and METAR for six aerodromes, on the international schedule.'],
-  ['Archive', 'Daily observations back to 1867, digitised from the ledgers by hand.'],
+  ['Archive', 'Daily observations back to 1867, digitized from the ledgers by hand.'],
 ];
 
 /* x and y are percentages of the locator box, not coordinates -
@@ -117,18 +117,18 @@ export default function IsobarPage() {
 
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#e9edf0',
         '--ink': '#0d1418',
         '--violet': '#6b2be0',
-        '--grey': '#7c8792',
+        '--gray': '#7c8792',
         '--pale': '#d3dae1',
         '--white': '#f7f9fa',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,violet,grey,pale,white"
+      data-edit-vars="paper,ink,violet,gray,pale,white"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -155,7 +155,7 @@ export default function IsobarPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={annulus}
-              palette={['transparent', PALE, GREY, VIOLET]}
+              palette={['transparent', PALE, GRAY, VIOLET]}
               fit="grid"
               cellSize={172}
               redrawInterval={6200}
@@ -217,7 +217,7 @@ export default function IsobarPage() {
             <p data-edit="statement.body2" data-edit-max="240" data-edit-multiline>
               Everything the service produces is free to use, including the
               observations, the model output and the mistakes, which are
-              catalogued in the same archive as everything else.
+              catalogd in the same archive as everything else.
             </p>
           </div>
         </section>
@@ -226,7 +226,7 @@ export default function IsobarPage() {
         <section id="method" className={s.method} aria-labelledby="method-h">
           <div className={s.secHead}>
             <h2 data-edit="method.title" data-edit-max="60" id="method-h">How a forecast is made</h2>
-            <p data-edit="method.body" data-edit-max="240" data-edit-multiline>Three steps, and the third is the one that took a reorganisation to get right.</p>
+            <p data-edit="method.body" data-edit-max="240" data-edit-multiline>Three steps, and the third is the one that took a reorganization to get right.</p>
           </div>
           <div className={s.mGrid}>
             {METHOD.map((m, i) => (
@@ -234,7 +234,7 @@ export default function IsobarPage() {
                 <div data-edit-pattern={`method.field.${i}`} data-edit-roles="transparent,3,2" className={s.mPlate} aria-hidden="true">
                   <TabbiedPattern
                     pattern={m.art}
-                    palette={['transparent', GREY, VIOLET]}
+                    palette={['transparent', GRAY, VIOLET]}
                     fit="grid"
                     cellSize={68}
                     redrawInterval={5600}
@@ -253,7 +253,7 @@ export default function IsobarPage() {
         <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={rimband}
-            palette={['transparent', VIOLET, PALE, GREY]}
+            palette={['transparent', VIOLET, PALE, GRAY]}
             fit="grid"
             cellSize={124}
             redrawInterval={4200}
@@ -265,7 +265,7 @@ export default function IsobarPage() {
         <section id="warnings" className={s.listing} aria-labelledby="warn-h">
           <div className={s.secHead}>
             <h2 data-edit="warnings.title" data-edit-max="60" id="warn-h">In force this week</h2>
-            <p data-edit="warnings.body" data-edit-max="240" data-edit-multiline>Colour is severity. The percentage is how likely the event is, not how bad it will be.</p>
+            <p data-edit="warnings.body" data-edit-max="240" data-edit-multiline>Color is severity. The percentage is how likely the event is, not how bad it will be.</p>
           </div>
           <ol className={s.table}>
             {WARNINGS.map((r, i) => (
@@ -328,7 +328,7 @@ export default function IsobarPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={softedge}
-              palette={['transparent', VIOLET, GREY]}
+              palette={['transparent', VIOLET, GRAY]}
               fit="grid"
               cellSize={120}
               redrawInterval={4800}
@@ -365,7 +365,7 @@ export default function IsobarPage() {
           <div data-edit-pattern="service.field" data-edit-roles="transparent,3,4" className={s.serviceField} aria-hidden="true">
             <TabbiedPattern
               pattern={dotdrift}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={104}
               redrawInterval={6400}
@@ -404,7 +404,7 @@ export default function IsobarPage() {
               <div data-edit-pattern="contact.field" data-edit-roles="transparent,3,2" className={s.locatorField}>
                 <TabbiedPattern
                   pattern={ringfield}
-                  palette={['transparent', GREY, VIOLET]}
+                  palette={['transparent', GRAY, VIOLET]}
                   fit="grid"
                   cellSize={128}
                   redrawInterval={6200}
@@ -433,7 +433,7 @@ export default function IsobarPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={shading}
-          palette={['transparent', VIOLET, PALE, GREY]}
+          palette={['transparent', VIOLET, PALE, GRAY]}
           fit="grid"
           cellSize={110}
           redrawInterval={5000}

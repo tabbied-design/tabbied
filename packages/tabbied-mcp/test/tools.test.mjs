@@ -95,7 +95,7 @@ test('search narrows with AND across and within fields', async () => {
   );
 });
 
-test('search honours the limit but still reports the true total', async () => {
+test('search honors the limit but still reports the true total', async () => {
   const result = parse(await call('search_designs', { limit: 3 }));
   assert.equal(result.designs.length, 3);
   assert.equal(result.returned, 3);

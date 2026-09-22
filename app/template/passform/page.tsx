@@ -15,7 +15,7 @@ export const metadata = {
    `transparent` in the background slot, so the linen shows through the weave. */
 const INK = '#191512';
 const RUST = '#C1440E';
-const GREY = '#9A9086';
+const GRAY = '#9A9086';
 const PALE = '#E5DFD4';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,7 +23,7 @@ const PALE = '#E5DFD4';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PALE;
 
 
@@ -53,17 +53,17 @@ const NUMBERS = [
 export default function PassformPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--linen': '#f5f1ea',
         '--ink': '#191512',
         '--rust': '#c1440e',
-        '--grey': '#9a9086',
+        '--gray': '#9a9086',
         '--pale': '#e5dfd4',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="linen,ink,rust,grey,pale"
+      data-edit-vars="linen,ink,rust,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -92,7 +92,7 @@ export default function PassformPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={stitch}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={52}
               redrawInterval={4400}
@@ -174,7 +174,7 @@ export default function PassformPage() {
           <div data-edit-pattern="weaveBand.field" data-edit-roles="transparent,1,2,3" className={s.weaveField}>
             <TabbiedPattern
               pattern={damier}
-              palette={['transparent', INK, RUST, GREY]}
+              palette={['transparent', INK, RUST, GRAY]}
               fit="grid"
               cellSize={112}
               redrawInterval={3800}
@@ -188,7 +188,7 @@ export default function PassformPage() {
           <div data-edit-pattern="cloth.field" data-edit-roles="transparent,3,4" className={s.clothField} aria-hidden="true">
             <TabbiedPattern
               pattern={bias}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={88}
               redrawInterval={5600}
@@ -262,7 +262,7 @@ export default function PassformPage() {
           <div data-edit-pattern="bench.field" data-edit-roles="transparent,2,3" className={s.benchField} aria-hidden="true">
             <TabbiedPattern
               pattern={taper}
-              palette={['transparent', RUST, GREY]}
+              palette={['transparent', RUST, GRAY]}
               fit="grid"
               cellSize={104}
               redrawInterval={4800}
@@ -440,7 +440,7 @@ export default function PassformPage() {
               </div>
               <div key="Can I supply my own clot">
                 <dt data-edit="faq.term3" data-edit-max="28">Can I supply my own cloth?</dt>
-                <dd data-edit="faq.body3" data-edit-max="200" data-edit-multiline>Yes, and we will tell you honestly if it is not enough or not suitable. Three and a half metres for a two-piece, more if it has a check.</dd>
+                <dd data-edit="faq.body3" data-edit-max="200" data-edit-multiline>Yes, and we will tell you honestly if it is not enough or not suitable. Three and a half meters for a two-piece, more if it has a check.</dd>
               </div>
               <div key="What if I change shape?">
                 <dt data-edit="faq.term4" data-edit-max="28">What if I change shape?</dt>
@@ -458,7 +458,7 @@ export default function PassformPage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
             <TabbiedPattern
               pattern={dogtooth}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={102}
               redrawInterval={4914}

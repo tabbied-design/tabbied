@@ -21,7 +21,7 @@ const TOKEN_CLASS: Record<Exclude<TokenKind, 'plain'>, string> = {
 };
 
 // A presentational code panel with a label bar, a copy button and light
-// syntax colouring. Server component apart from the CopyButton island: the
+// syntax coloring. Server component apart from the CopyButton island: the
 // tokens are computed once, at build time.
 export default function CodeBlock({
   code,
@@ -35,7 +35,7 @@ export default function CodeBlock({
   lang?: CodeLang;
   className?: string;
 }) {
-  // A shell line has no grammar worth colouring.
+  // A shell line has no grammar worth coloring.
   const tokens: Token[] =
     lang === 'sh' ? [{ kind: 'plain', text: code }] : tokenize(code);
 

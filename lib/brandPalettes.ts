@@ -44,10 +44,10 @@ export const STORAGE_KEY = 'tabbied.brandPalettes.v1';
 
 /**
  * The gallery's "Random per pattern" option, kept in the same slot as a
- * palette id because it is chosen from the same list. It names no colours of
+ * palette id because it is chosen from the same list. It names no colors of
  * its own: the gallery draws one library palette per card, and the editor
  * opens a pattern with whatever palette its card was wearing (carried in the
- * link), or with the pattern's own colours on a bare visit.
+ * link), or with the pattern's own colors on a bare visit.
  */
 export const RANDOM_PALETTE_ID = 'random';
 
@@ -297,7 +297,7 @@ const libraryAsBrand = (library: LibraryPalette): BrandPalette => ({
  * palette, so the gallery is themed by one palette rather than each pattern's
  * own colors. Null when the random spread is active - there is no one palette
  * to hand out, and a consumer with nothing else to go on shows the pattern's
- * own colours - and in the impossible case that the default id has been
+ * own colors - and in the impossible case that the default id has been
  * dropped from the library.
  */
 export const resolveActivePalette = (

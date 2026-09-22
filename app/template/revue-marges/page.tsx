@@ -13,7 +13,7 @@ export const metadata = {
    way the stock shows through a letterpress tint. */
 const INK = '#1E1A17';
 const OXBLOOD = '#7A1F2B';
-const GREY = '#8A8177';
+const GRAY = '#8A8177';
 const PALE = '#DED4C3';
 
 const NAV = [
@@ -76,7 +76,7 @@ const COLUMNS: Column[] = [
     name: 'Le Cahier',
     by: 'A guest each issue',
     pages: 'sixteen pages, inserted',
-    body: 'A sixteen-page insert on a heavier, greyer stock, given to one writer or one artist with no brief. It is bound in at the centre and can be cut out without loss.',
+    body: 'A sixteen-page insert on a heavier, grayer stock, given to one writer or one artist with no brief. It is bound in at the center and can be cut out without loss.',
   },
   {
     name: 'La Dernière Page',
@@ -170,17 +170,17 @@ const STOCKISTS: Shop[] = [
 export default function RevueMargesPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f6f1e7',
         '--ink': '#1e1a17',
         '--oxblood': '#7a1f2b',
-        '--grey': '#8a8177',
+        '--gray': '#8a8177',
         '--pale': '#ded4c3',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,oxblood,grey,pale"
+      data-edit-vars="paper,ink,oxblood,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -212,7 +212,7 @@ export default function RevueMargesPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={moleskin}
-              palette={['transparent', PALE, GREY, OXBLOOD]}
+              palette={['transparent', PALE, GRAY, OXBLOOD]}
               fit="grid"
               cellSize={128}
               redrawInterval={5600}
@@ -320,7 +320,7 @@ export default function RevueMargesPage() {
           <div data-edit-pattern="columns.field" data-edit-roles="transparent,4,3" className={s.columnsField} aria-hidden="true">
             <TabbiedPattern
               pattern={batiste}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={96}
               redrawInterval={6600}
@@ -392,7 +392,7 @@ export default function RevueMargesPage() {
               ))}
             </dl>
             <p data-edit="subscribe.subscribeNote" data-edit-max="240" data-edit-multiline className={s.subscribeNote}>
-              Orders by letter to the address below, with a cheque, or by
+              Orders by letter to the address below, with a check, or by
               transfer once we have written back with the details. We do not
               take cards and we are not sorry.
             </p>
@@ -471,7 +471,7 @@ export default function RevueMargesPage() {
         <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
           <TabbiedPattern
             pattern={moleskin}
-            palette={['transparent', PALE, GREY]}
+            palette={['transparent', PALE, GRAY]}
             fit="grid"
             cellSize={104}
             redrawInterval={5000}

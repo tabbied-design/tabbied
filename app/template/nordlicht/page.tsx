@@ -48,7 +48,7 @@ const SERVICES = [
   {
     k: 'B',
     title: 'Airborne and terrestrial lidar',
-    body: 'Point clouds at 40 to 400 points per square metre, classified and delivered as LAZ with a terrain model on top. We fly our own missions between March and October.',
+    body: 'Point clouds at 40 to 400 points per square meter, classified and delivered as LAZ with a terrain model on top. We fly our own missions between March and October.',
     unit: '400 pt/m²',
   },
   {
@@ -60,8 +60,8 @@ const SERVICES = [
   {
     k: 'D',
     title: 'Cartographic production',
-    body: 'Everything above turned into a sheet somebody can fold in a wind. Colour, hierarchy and generalisation are decided by a cartographer, not a default style.',
-    unit: '6 colours',
+    body: 'Everything above turned into a sheet somebody can fold in a wind. Color, hierarchy and generalization are decided by a cartographer, not a default style.',
+    unit: '6 colors',
   },
 ];
 
@@ -76,7 +76,7 @@ const FIELD = [
 export default function NordlichtPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#fcfcfa',
@@ -247,12 +247,12 @@ export default function NordlichtPage() {
           <div className={s.terrainInner}>
             <div className={s.secHead}>
               <span data-edit="terrain.secNo" data-edit-max="60" className={s.secNo}>03</span>
-              <h2 data-edit="terrain.title" data-edit-max="60" id="terrain-h">Terrain, honestly generalised</h2>
+              <h2 data-edit="terrain.title" data-edit-max="60" id="terrain-h">Terrain, honestly generalized</h2>
             </div>
             <div className={s.terrainGrid}>
               <p data-edit="terrain.big" data-edit-max="240" data-edit-multiline className={s.big}>
                 A contour is an opinion about where a slope stops being one
-                slope. We publish ours at three generalisation levels and say
+                slope. We publish ours at three generalization levels and say
                 which one you are looking at.
               </p>
               <div className={s.terrainCol}>
@@ -263,8 +263,8 @@ export default function NordlichtPage() {
                 </p>
                 <p data-edit="terrain.body2" data-edit-max="240" data-edit-multiline>
                   Where the point cloud is thin, the sheet says so. There is a
-                  small grey tint on the reverse index for every square
-                  kilometre we would not stake a boat on.
+                  small gray tint on the reverse index for every square
+                  kilometer we would not stake a boat on.
                 </p>
               </div>
             </div>
@@ -340,7 +340,7 @@ export default function NordlichtPage() {
                 </dd>
               </div>
               <div>
-                <dt data-edit="office.term2" data-edit-max="28">Enquiries</dt>
+                <dt data-edit="office.term2" data-edit-max="28">Inquiries</dt>
                 <dd>
                   <a data-edit="office.link" data-edit-max="28" href="mailto:post@nordlicht.example">post@nordlicht.example</a>
                   <br />
@@ -368,8 +368,8 @@ export default function NordlichtPage() {
         </section>
         {/* ---------------------------------------------------------- TILES */}
         <section id="tiles" className={s.tiles} aria-labelledby="tiles-h">
-          <h2 data-edit="tiles.title" data-edit-max="60" id="tiles-h">How a sheet is coloured</h2>
-          <p data-edit="tiles.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>Three tints, printed in that order. Every sheet in the catalogue uses the same three and nothing else.</p>
+          <h2 data-edit="tiles.title" data-edit-max="60" id="tiles-h">How a sheet is colored</h2>
+          <p data-edit="tiles.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>Three tints, printed in that order. Every sheet in the catalog uses the same three and nothing else.</p>
           <div className={s.tileGrid}>
               <article key="01">
                 <div data-edit-pattern="tiles.field" data-edit-roles="transparent,3,4" className={s.tilePlate} aria-hidden="true">
@@ -499,7 +499,7 @@ export default function NordlichtPage() {
           <dl className={s.faqList}>
               <div key="Why is my house not on t">
                 <dt data-edit="faq.term" data-edit-max="28">Why is my house not on the sheet?</dt>
-                <dd data-edit="faq.body" data-edit-max="200" data-edit-multiline>Buildings under twelve square metres are omitted at 1:25 000 and everything is omitted at 1:50 000. It is on the survey; it is not on the print.</dd>
+                <dd data-edit="faq.body" data-edit-max="200" data-edit-multiline>Buildings under twelve square meters are omitted at 1:25 000 and everything is omitted at 1:50 000. It is on the survey; it is not on the print.</dd>
               </div>
               <div key="Can I have the data inst">
                 <dt data-edit="faq.term2" data-edit-max="28">Can I have the data instead of the sheet?</dt>

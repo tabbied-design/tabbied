@@ -5,9 +5,9 @@ import {
 import s from './tiefsee.module.css';
 
 export const metadata = {
-  title: 'Tiefsee: Deep-sea research programme',
+  title: 'Tiefsee: Deep-sea research program',
   description:
-    'A deep-ocean research programme with one ship and two vehicles. Five depth zones, forty years of station data, everything published within a year.',
+    'A deep-ocean research program with one ship and two vehicles. Five depth zones, forty years of station data, everything published within a year.',
 };
 
 /* Deep water, bone, one cyan. Every field takes `transparent` in the
@@ -15,7 +15,7 @@ export const metadata = {
    the page gets darker the further down it you read. */
 const BONE = '#e6eef0';
 const CYAN = '#00d2e0';
-const GREY = '#5d7480';
+const GRAY = '#5d7480';
 const DEEP = '#0a1f2b';
 
 /* The spine of the page: five zones, each one a section with its own ground.
@@ -63,7 +63,7 @@ const ZONES = [
     shade: 66,
     art: sandfield,
     body:
-      'Flat, cold and enormous: most of the sea floor on the planet is this, a plain of soft sediment that takes a thousand years to lay down a centimetre. Also where the nodule licences are.',
+      'Flat, cold and enormous: most of the sea floor on the planet is this, a plain of soft sediment that takes a thousand years to lay down a centimeter. Also where the nodule licenses are.',
     facts: [['1 cm', 'Sediment per 1 000 years'], ['600 bar', 'At 6 000 m'], ['44', 'Stations held']],
   },
   {
@@ -74,14 +74,14 @@ const ZONES = [
     shade: 88,
     art: quoit,
     body:
-      'Twenty-seven separate trenches, each one effectively an island: too deep for anything to cross between them. The last full-depth dive from this programme was in 2024 and it lasted eleven hours.',
+      'Twenty-seven separate trenches, each one effectively an island: too deep for anything to cross between them. The last full-depth dive from this program was in 2024 and it lasted eleven hours.',
     facts: [['27', 'Trench systems'], ['11 h', 'Longest dive'], ['9', 'Stations held']],
   },
 ];
 
 const FLEET = [
   ['RV Meridian', 'Research vessel', '78 m, ice class 1B', '2009', '32 crew, 24 scientists'],
-  ['Nautilus 6000', 'Remote vehicle', 'Rated 6 000 m', '2018', 'Fibre tether, 8 km'],
+  ['Nautilus 6000', 'Remote vehicle', 'Rated 6 000 m', '2018', 'Fiber tether, 8 km'],
   ['Kelpie', 'Autonomous glider', 'Rated 1 000 m', '2021', '90-day endurance'],
   ['Vollmer II', 'Crewed submersible', 'Rated 11 000 m', '2023', 'Three seats'],
   ['Lander A - F', 'Free-fall landers', 'Rated 11 000 m', '2016 - 2024', 'Six units, ballast release'],
@@ -104,12 +104,12 @@ const POLICY = [
   ['Publication', 'Every dataset is public within twelve months of the ship docking. No exceptions have been granted since 2011.'],
   ['Imagery', 'All video and stills are CC BY. Sixteen thousand hours of it, indexed by station.'],
   ['Berths', 'Four berths on every cruise are held for early-career scientists from outside the consortium.'],
-  ['Mining', 'The programme surveys licence areas and publishes what it finds. It does not consult for licence holders.'],
+  ['Mining', 'The program surveys license areas and publishes what it finds. It does not consult for license holders.'],
 ];
 
 const NUMBERS = [
   ['128', 'Stations held'],
-  ['11 034', 'Metres, deepest dive'],
+  ['11 034', 'Meters, deepest dive'],
   ['16 000', 'Hours of seabed video, public'],
   ['12', 'Months, maximum embargo'],
 ];
@@ -126,17 +126,17 @@ const OFFICES = [
 export default function TiefseePage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--water': '#04121a',
         '--bone': '#e6eef0',
         '--cyan': '#00d2e0',
-        '--grey': '#5d7480',
+        '--gray': '#5d7480',
         '--deep': '#0a1f2b',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="water,bone,cyan,grey,deep"
+      data-edit-vars="water,bone,cyan,gray,deep"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -154,7 +154,7 @@ export default function TiefseePage() {
           <a data-edit="bar.cruises" data-edit-max="28" href="#cruises">Cruises</a>
           <a data-edit="bar.policy" data-edit-max="28" href="#policy">Data</a>
         </nav>
-        <span data-edit="bar.now" data-edit-max="60" className={s.now}>Deep-sea programme</span>
+        <span data-edit="bar.now" data-edit-max="60" className={s.now}>Deep-sea program</span>
       </header>
 
       <main id="top">
@@ -163,7 +163,7 @@ export default function TiefseePage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={dipole}
-              palette={['transparent', DEEP, GREY, CYAN]}
+              palette={['transparent', DEEP, GRAY, CYAN]}
               fit="grid"
               cellSize={168}
               redrawInterval={6400}
@@ -174,7 +174,7 @@ export default function TiefseePage() {
           <h1 className={s.heroType}>
             <span data-edit="hero.text" data-edit-max="60">Eleven</span>
             <span data-edit="hero.text2" data-edit-max="60">thousand</span>
-            <span data-edit="hero.cyan" data-edit-max="60" className={s.cyan}>metres down.</span>
+            <span data-edit="hero.cyan" data-edit-max="60" className={s.cyan}>meters down.</span>
           </h1>
           <div className={s.heroFoot}>
             <p data-edit="hero.body" data-edit-max="240" data-edit-multiline>
@@ -201,7 +201,7 @@ export default function TiefseePage() {
               <div data-edit-pattern={`zone.field.${i}`} data-edit-roles="transparent,2,3,1" className={s.zoneField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={z.art}
-                  palette={['transparent', CYAN, GREY, BONE]}
+                  palette={['transparent', CYAN, GRAY, BONE]}
                   fit="grid"
                   cellSize={128 - i * 8}
                   redrawInterval={5200 + i * 340}
@@ -234,14 +234,14 @@ export default function TiefseePage() {
         {/* ------------------------------------------------------- STATEMENT */}
         <section className={s.statement}>
           <p data-edit="statement.big" data-edit-max="240" data-edit-multiline className={s.big}>
-            Below a thousand metres there is no seasonality, no daylight and
+            Below a thousand meters there is no seasonality, no daylight and
             almost no data. Four fifths of the living space on this planet is
             down there and we have looked at a fraction of one per cent of it
             with our own eyes.
           </p>
           <div className={s.statementMeta}>
             <p data-edit="statement.body" data-edit-max="240" data-edit-multiline>
-              Tiefsee is a consortium programme: one ship, two crewed and
+              Tiefsee is a consortium program: one ship, two crewed and
               uncrewed vehicles, six landers, and a hundred and twenty-eight
               stations that have been reoccupied on the same coordinates since
               1986.
@@ -255,11 +255,11 @@ export default function TiefseePage() {
         </section>
 
         {/* --------------------------------------------------------- NUMBERS */}
-        <section className={s.numbers} aria-label="The programme in numbers">
+        <section className={s.numbers} aria-label="The program in numbers">
           <div data-edit-pattern="numbers.field" data-edit-roles="transparent,3,4" className={s.numbersField} aria-hidden="true">
             <TabbiedPattern
               pattern={sandfield}
-              palette={['transparent', GREY, DEEP]}
+              palette={['transparent', GRAY, DEEP]}
               fit="grid"
               cellSize={92}
               redrawInterval={5600}
@@ -298,7 +298,7 @@ export default function TiefseePage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3,1" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={comet}
-              palette={['transparent', CYAN, GREY, BONE]}
+              palette={['transparent', CYAN, GRAY, BONE]}
               fit="grid"
               cellSize={126}
               redrawInterval={4600}
@@ -306,7 +306,7 @@ export default function TiefseePage() {
             />
           </div>
           <blockquote>
-            <p data-edit="quote.body" data-edit-max="240" data-edit-multiline>We have better maps of Mars. Mars does not have four kilometres of water on top of it.</p>
+            <p data-edit="quote.body" data-edit-max="240" data-edit-multiline>We have better maps of Mars. Mars does not have four kilometers of water on top of it.</p>
             <cite data-edit="quote.attribution" data-edit-max="48">Dr Salla Vainio, chief scientist</cite>
           </blockquote>
         </section>
@@ -335,7 +335,7 @@ export default function TiefseePage() {
           <div data-edit-pattern="policy.field" data-edit-roles="transparent,3,2" className={s.policyField} aria-hidden="true">
             <TabbiedPattern
               pattern={dustfall}
-              palette={['transparent', GREY, CYAN]}
+              palette={['transparent', GRAY, CYAN]}
               fit="grid"
               cellSize={104}
               redrawInterval={6400}
@@ -374,7 +374,7 @@ export default function TiefseePage() {
               <div data-edit-pattern="contact.field" data-edit-roles="transparent,3,2" className={s.locatorField}>
                 <TabbiedPattern
                   pattern={bowl}
-                  palette={['transparent', GREY, CYAN]}
+                  palette={['transparent', GRAY, CYAN]}
                   fit="grid"
                   cellSize={124}
                   redrawInterval={6200}
@@ -404,7 +404,7 @@ export default function TiefseePage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,1,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={sparkle}
-          palette={['transparent', CYAN, BONE, GREY]}
+          palette={['transparent', CYAN, BONE, GRAY]}
           fit="grid"
           cellSize={110}
           redrawInterval={5000}
@@ -426,7 +426,7 @@ export default function TiefseePage() {
             </ul>
           </div>
           <div>
-            <h2 data-edit="footer.title2" data-edit-max="60">Programme</h2>
+            <h2 data-edit="footer.title2" data-edit-max="60">Program</h2>
             <ul>
               <li><a data-edit="footer.fleet" data-edit-max="28" href="#fleet">The fleet</a></li>
               <li><a data-edit="footer.policy2" data-edit-max="28" href="#policy">Berths</a></li>
@@ -445,7 +445,7 @@ export default function TiefseePage() {
           </div>
         </div>
         <div className={s.footFine}>
-          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional research programme. Ships, cruises and figures are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional research program. Ships, cruises and figures are invented.</p>
           <p>
             Patterns by{' '}
             <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">

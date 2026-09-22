@@ -290,7 +290,7 @@ test('pseudoBoxFor positions an absolute pseudo against the padding box', () => 
     pseudoBoxFor(CELL, BORDERED_HOST, absolute({ left: '11.96px', top: '11.96px', right: '11.96px', bottom: '11.96px' })),
     { x: 18.96, y: 18.96, w: 22.08, h: 22.08 }
   );
-  // Anchored from the far side, and centred with neither side set.
+  // Anchored from the far side, and centerd with neither side set.
   assert.deepEqual(
     pseudoBoxFor(CELL, BORDERED_HOST, absolute({ right: '4px', bottom: '4px', width: '10px', height: '10px' })),
     { x: 39, y: 39, w: 10, h: 10 }
@@ -301,7 +301,7 @@ test('pseudoBoxFor positions an absolute pseudo against the padding box', () => 
   );
 });
 
-test('pseudoBoxFor centres a static pseudo in the content box', () => {
+test('pseudoBoxFor centers a static pseudo in the content box', () => {
   const staticPseudo = { position: 'static', width: '20px', height: '10px' };
   assert.deepEqual(pseudoBoxFor(CELL, BORDERED_HOST, staticPseudo), {
     x: 20,
@@ -333,8 +333,8 @@ test('pseudoBoxFor leaves a borderless host untouched', () => {
   );
 });
 
-// ── SVG-export tiers ───────────────────────────────────────────────────────
-// The tier metadata drives real behaviour: `svgExport: false` disables the
+// -- SVG-export tiers -------------------------------------------------------
+// The tier metadata drives real behavior: `svgExport: false` disables the
 // download, `svgExportNote` puts a warning dialog in front of it. It is also
 // easy to lose - the batch generators rewrite every pattern file they own, so
 // a tier that exists only in the generated JSON disappears the next time
@@ -349,12 +349,12 @@ const PATTERNS_DIR = path.join(
   '..',
   'patterns'
 );
-const catalogue = fs
+const catalog = fs
   .readdirSync(PATTERNS_DIR)
   .filter((file) => file.endsWith('.json'))
   .map((file) => JSON.parse(fs.readFileSync(path.join(PATTERNS_DIR, file), 'utf8')));
 
-const slugsWhere = (predicate) => catalogue.filter(predicate).map((a) => a.slug).sort();
+const slugsWhere = (predicate) => catalog.filter(predicate).map((a) => a.slug).sort();
 
 test('tier 1 - the designs SVG cannot represent still opt out', () => {
   // The four conic sweeps, plus the 28 from the September drop: ten the
@@ -427,9 +427,9 @@ test('tier 3 - no design makes its export tier conditional on an option', () => 
 test('no pattern paints a box-shadow through an option', () => {
   // What the removed toggle actually injected. A design wanting a shadow now
   // has to bake it in and take a definition-level note (as neon, lantern and
-  // terrain do), which is visible in the catalogue instead of hidden behind
+  // terrain do), which is visible in the catalog instead of hidden behind
   // a switch that defaults differently per design.
-  for (const pattern of catalogue) {
+  for (const pattern of catalog) {
     for (const option of pattern.options) {
       assert.ok(
         !/box-shadow/.test(option.code ?? ''),
@@ -442,7 +442,7 @@ test('no pattern paints a box-shadow through an option', () => {
 test('a tier-1 design never also carries a note', () => {
   // The editor disables the download outright for these, so a note would
   // never be shown - carrying one means the tier was set by mistake.
-  for (const pattern of catalogue) {
+  for (const pattern of catalog) {
     if (pattern.svgExport === false) {
       assert.equal(supportsSvgExport(pattern), false);
       assert.equal(pattern.svgExportNote, undefined, pattern.slug);

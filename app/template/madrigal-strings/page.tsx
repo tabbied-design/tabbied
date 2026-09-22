@@ -136,7 +136,7 @@ const MOVEMENTS = [
     numeral: 'III',
     title: 'Costruzione',
     tempo: 'andante, five months',
-    copy: 'Five months at the bench, then a summer in the varnish room, where coats are laid on in the morning and cured in the south window. We send three photographs during this time and answer no questions about the colour.',
+    copy: 'Five months at the bench, then a summer in the varnish room, where coats are laid on in the morning and cured in the south window. We send three photographs during this time and answer no questions about the color.',
   },
   {
     numeral: 'IV',
@@ -168,7 +168,7 @@ function Ornament() {
 export default function MadrigalStringsPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--aubergine': '#2d132c',
@@ -199,7 +199,7 @@ export default function MadrigalStringsPage() {
           Madrigal
         </a>
         <p data-edit="masthead.mastheadSub" data-edit-max="240" data-edit-multiline className={styles.mastheadSub}>Atelier di Liuteria · Casteldoro</p>
-        <nav aria-label="Programme" className={styles.mastheadNav}>
+        <nav aria-label="Program" className={styles.mastheadNav}>
           <a data-edit="masthead.history" data-edit-max="28" href="#history">History</a>
           <a data-edit="masthead.instruments" data-edit-max="28" href="#instruments">Instruments</a>
           <a data-edit="masthead.varnish" data-edit-max="28" href="#varnish">Varnish</a>
@@ -393,7 +393,7 @@ export default function MadrigalStringsPage() {
                 thumbprint and give it back.
               </p>
               <p data-edit="varnish.prose2" data-edit-max="240" data-edit-multiline className={styles.prose}>
-                Colour is the wood's decision. We only escort it: a
+                Color is the wood's decision. We only escort it: a
                 golden ground, then reds laid over like late light on brick.
                 Asked to match a photograph, we decline politely and pour the
                 visitor more coffee.
@@ -429,7 +429,7 @@ export default function MadrigalStringsPage() {
           </h2>
           <p data-edit="commission.prose" data-edit-max="240" data-edit-multiline className={styles.prose}>
             From first letter to delivered instrument is, at present, a little
-            under two years. The programme is unchanged since 1994 and is
+            under two years. The program is unchanged since 1994 and is
             performed without intermission.
           </p>
           <ol className={styles.movements}>
@@ -505,7 +505,7 @@ export default function MadrigalStringsPage() {
               className={styles.framedImg}
             />
             <figcaption data-edit="concerts.caption" data-edit-max="120" data-edit-multiline className={styles.caption}>
-              The Merle Quartet at the Teatro Aurelio, spring programme, 2026.
+              The Merle Quartet at the Teatro Aurelio, spring program, 2026.
             </figcaption>
           </figure>
           <p data-edit="concerts.prose" data-edit-max="240" data-edit-multiline className={styles.prose}>
@@ -599,7 +599,7 @@ export default function MadrigalStringsPage() {
             MCMLXVIII
           </p>
           <p className={styles.colophonFine}>
-            This programme is set in Garamond's manner; the engravings
+            This program is set in Garamond's manner; the engravings
             are cut fresh at every printing by{' '}
             <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
