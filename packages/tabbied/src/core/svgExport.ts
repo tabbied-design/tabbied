@@ -24,6 +24,16 @@
 export type SvgExportOptions = {
   /** Decimal places for coordinates (default 3). */
   precision?: number;
+  /**
+   * Keep only the top-left `width x height` CSS px of the drawing: the
+   * viewBox becomes that box and the geometry beyond it is clipped away
+   * rather than left outside the artboard for a design tool to find. A
+   * `grid` fit oversizes its canvas to whole tracks and lets the host clip
+   * the rest, and the editor's plate does the same, so this is what makes the
+   * file show what the page showed. A clip no smaller than the canvas on
+   * either axis changes nothing.
+   */
+  clip?: { width: number; height: number };
 };
 
 export type SvgExportResult = {
@@ -2169,11 +2179,39 @@ export function doodleToSvg(
     for (const probe of probes) probe.remove();
   }
 
+  // The visible box: the canvas, or the caller's clip where that is smaller.
+  let viewWidth = width;
+  let viewHeight = height;
+  if (options.clip) {
+    const clipWidth = Math.min(width, options.clip.width);
+    const clipHeight = Math.min(height, options.clip.height);
+    if (clipWidth > 0 && clipHeight > 0 && (clipWidth < width || clipHeight < height)) {
+      viewWidth = clipWidth;
+      viewHeight = clipHeight;
+      const clipId = addDef(ctx, {
+        tag: 'clipPath',
+        attrs: {},
+        children: [
+          {
+            tag: 'rect',
+            attrs: {
+              x: 0,
+              y: 0,
+              width: fmtNum(clipWidth, ctx.precision),
+              height: fmtNum(clipHeight, ctx.precision),
+            },
+          },
+        ],
+      });
+      bodyNodes = [{ tag: 'g', attrs: { 'clip-path': `url(#${clipId})` }, children: bodyNodes }];
+    }
+  }
+
   const root: SvgNode = {
     tag: 'svg',
     attrs: {
       xmlns: 'http://www.w3.org/2000/svg',
-      viewBox: `0 0 ${fmtNum(width, ctx.precision)} ${fmtNum(height, ctx.precision)}`,
+      viewBox: `0 0 ${fmtNum(viewWidth, ctx.precision)} ${fmtNum(viewHeight, ctx.precision)}`,
       style: ctx.usesBlend ? 'isolation:isolate' : undefined,
     },
     children: [
@@ -2193,7 +2231,7 @@ export function doodleToSvg(
         .replace(/&amp;/g, '&')
   );
 
-  return { svg, width, height, warnings: [...ctx.warnings] };
+  return { svg, width: viewWidth, height: viewHeight, warnings: [...ctx.warnings] };
 }
 
 /** Private: exposed for unit tests only. Not part of the public API. */

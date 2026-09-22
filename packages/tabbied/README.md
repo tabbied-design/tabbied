@@ -89,7 +89,10 @@ export function Example() {
 `<rect>`/`<path>`/gradient elements, no `<foreignObject>` - so the file opens
 in design tools and scales to any resolution. It resolves with
 `{ svg, width, height, warnings }`; pass `{ download: true }` to also save a
-`.svg` file. A few designs paint smooth conic-gradient sweeps that SVG cannot
+`.svg` file, and `{ clip: { width, height } }` to keep only the top-left box
+of a canvas the host clips (the `grid` fit oversizes its canvas to whole
+tracks, so this is what makes the file show what the page showed). A few
+designs paint smooth conic-gradient sweeps that SVG cannot
 represent - they set `svgExport: false` on their definition, and
 `supportsSvgExport(pattern)` tells you whether to offer the option. Effects
 exported through SVG filters (blur, glow shadows, blend modes) render

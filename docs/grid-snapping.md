@@ -85,10 +85,12 @@ and a quarter turn of an oblong swaps its axes: a 120 × 124 cell paints
 seam between blocks even though every track is exact and every cell divides.
 
 Cobalt Works' coda band was the case that proved it - 12 × 120px across,
-2 × 124px down, both exact, and visibly lined. `applyGridSnap` takes the
-larger of the two snapped cells and uses it on both axes; both are already
-multiples of `cellMultiple`, so the max is too, and the canvas still covers
-the host because the cell only ever grows.
+2 × 124px down, both exact, and visibly lined. `snapCellToBox` in
+`core/sizing.ts` is the two snaps and the squaring together: the larger of
+the two snapped cells, used on both axes. Both are already multiples of
+`cellMultiple`, so the max is too, and the canvas still covers the host
+because the cell only ever grows. `applyGridSnap` runs it on the host, the
+`cover` fit on its render box, and the editor on its plate (below).
 
 Rounding *down* would satisfy the first property too, but would leave up to a
 full cell of the container uncovered - far more visible on a background field
@@ -157,10 +159,18 @@ overshoots its host by 3px across and 10px down on a 1152 × 320 box, under
 
 ## What this does not cover
 
-- **`fit: "fixed"`** sizes the canvas to an explicit width/height that the
-  caller chose; the editor's 364×546 preview at a 6×9 grid gives 60.66px cells
-  by construction. `docs/svg-export.md` ("Cell boundaries: integer vs
-  fractional") covers what that means for export fidelity.
+- **`fit: "fixed"`** sizes the canvas to the explicit width/height the caller
+  chose, at the grid the caller chose, so whole cells are the caller's to
+  arrange. The editor's plate is the caller that matters, and it used to get
+  this wrong by construction: a 3:2 plate at 15 x 10 drew 58.2px tracks, with
+  a hairline seam down every column, while a 1:1 plate happened to land on
+  60. It now draws the way a `grid` host does: the plate is the ratio's box,
+  the canvas in it is `fit: "fixed"` at `snapCellToBox`'s size, and the frame
+  clips the overflow. Both exports are cut to the plate, the PNG on a canvas
+  and the SVG through the converter's `clip` option, so the file is what the
+  stage showed at the ratio that was picked. `docs/svg-export.md` ("Cell
+  boundaries: integer vs fractional") covers what a fractional cell means for
+  export fidelity.
 
 ## Verification
 

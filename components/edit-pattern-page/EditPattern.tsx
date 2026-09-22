@@ -28,6 +28,7 @@ import {
   deriveGridForBox,
   isAspectRatioId,
   randomSeed,
+  snapCellToBox,
   supportsSvgExport,
 } from 'tabbied';
 import { TabbiedPattern, type TabbiedPatternHandle } from 'tabbied/react';
@@ -93,17 +94,26 @@ const loadImage = (url: string) =>
     image.src = url;
   });
 
-/** The pattern's PNG over the picture, cover-fitted, at the export's size. */
-const compositeOverImage = async (
+/**
+ * The pattern's PNG cut to `width x height` from its top-left corner, over
+ * the picture (cover-fitted) when there is one. css-doodle exports the whole
+ * canvas, and the plate's canvas is larger than the plate: the plate snapped
+ * to whole cells, with the frame clipping the rest (see `canvas` in the
+ * editor). The file is the plate as the stage showed it.
+ */
+const cropExport = async (
   patternPng: Blob,
   width: number,
   height: number,
-  imageUrl: string
+  imageUrl: string | null
 ): Promise<Blob> => {
   const patternUrl = URL.createObjectURL(patternPng);
 
   try {
-    const [photo, patternImage] = await Promise.all([loadImage(imageUrl), loadImage(patternUrl)]);
+    const [patternImage, photo] = await Promise.all([
+      loadImage(patternUrl),
+      imageUrl ? loadImage(imageUrl) : null,
+    ]);
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
@@ -111,12 +121,17 @@ const compositeOverImage = async (
 
     if (!context) throw new Error('no 2d context');
 
-    const cover = Math.max(width / photo.naturalWidth, height / photo.naturalHeight);
-    const photoWidth = photo.naturalWidth * cover;
-    const photoHeight = photo.naturalHeight * cover;
+    if (photo) {
+      const cover = Math.max(width / photo.naturalWidth, height / photo.naturalHeight);
+      const photoWidth = photo.naturalWidth * cover;
+      const photoHeight = photo.naturalHeight * cover;
 
-    context.drawImage(photo, (width - photoWidth) / 2, (height - photoHeight) / 2, photoWidth, photoHeight);
-    context.drawImage(patternImage, 0, 0, width, height);
+      context.drawImage(photo, (width - photoWidth) / 2, (height - photoHeight) / 2, photoWidth, photoHeight);
+    }
+
+    // At its own size, so what lands on the canvas is the pattern's top-left
+    // corner: the part of it the frame showed.
+    context.drawImage(patternImage, 0, 0);
 
     return await new Promise<Blob>((resolve, reject) =>
       canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error('toBlob failed'))), 'image/png')
@@ -405,6 +420,21 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     ? pinnedGrid.current ??
       deriveGridForBox(width, height, densityToCellPx(density), pattern.sizing)
     : null;
+
+  // The plate is the ratio's box; the canvas drawn in it is that box snapped
+  // to whole, square cells (`snapCellToBox`, the arithmetic `fit="grid"` runs
+  // on a container) and the frame clips the sub-cell overflow, up to a cell
+  // or so at the right and bottom edges. Drawn at the box's own size the
+  // cells are `width / cols` wide, which a plate of any ratio but the grid's
+  // makes fractional and oblong: a 3:2 plate at 15x10 had 58.2px tracks and
+  // a hairline seam down every column, while 1:1 happened to land on 60. A
+  // design with no grid option has no cell count to snap to and is drawn at
+  // the box.
+  const cell = grid
+    ? snapCellToBox(width, height, grid.cols, grid.rows, pattern.sizing?.cellMultiple)
+    : null;
+  const canvas =
+    grid && cell ? { width: grid.cols * cell, height: grid.rows * cell } : { width, height };
 
   // Sync component state FROM the URL search params when they change externally.
   useEffect(() => {
@@ -803,24 +833,21 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     const scale = Math.ceil(3000 / Math.max(width, height));
 
     try {
-      if (!backgroundImage) {
-        await doodleRef.current?.exportImage({ scale, download: true });
-        toaster.add({ title: 'PNG downloaded' });
-        return;
-      }
-
-      // css-doodle's export draws the pattern alone, with the transparent
-      // ground it was given; the picture is put under it here, cover-fitted
-      // the way the stage shows it.
+      // css-doodle's export draws the whole canvas, the pattern alone with
+      // the ground it was given. The file is cut to the plate (the canvas
+      // overflows it; see `canvas`), over the picture when there is one,
+      // cover-fitted the way the stage shows it.
       const result = (await doodleRef.current?.exportImage({ scale, detail: true })) as
-        | { width: number; height: number; blob: Blob }
+        | { blob: Blob }
         | undefined;
 
       if (!result) throw new Error('nothing to export');
 
-      const png = await compositeOverImage(result.blob, result.width, result.height, backgroundImage);
+      const png = await cropExport(result.blob, width * scale, height * scale, backgroundImage);
       saveBlob(png, `${pattern.slug}.png`);
-      toaster.add({ title: 'PNG downloaded, with the background image' });
+      toaster.add({
+        title: backgroundImage ? 'PNG downloaded, with the background image' : 'PNG downloaded',
+      });
     } catch {
       toaster.add({ title: 'Could not export the PNG' });
     }
@@ -843,9 +870,13 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   const [svgConfirmOpen, setSvgConfirmOpen] = useState(false);
 
   const downloadSvg = () => runExport(async () => {
+    // The canvas overflows the plate (see `canvas`); the export is clipped to
+    // the plate, so the file shows what the stage showed.
+    const clip = { width, height };
+
     try {
       if (!backgroundImage) {
-        await doodleRef.current?.exportSvg({ download: true });
+        await doodleRef.current?.exportSvg({ download: true, clip });
         toaster.add({ title: 'SVG downloaded' });
         return;
       }
@@ -853,7 +884,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       // The picture goes in as the first child of the root, embedded rather
       // than linked: a file that points at an object URL is broken the moment
       // the tab closes.
-      const result = await doodleRef.current?.exportSvg({});
+      const result = await doodleRef.current?.exportSvg({ clip });
 
       if (!result) throw new Error('nothing to export');
 
@@ -1266,14 +1297,21 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           </button>
 
           <figure className={styles.stage}>
-            <div className={styles.doodleFrame} style={imageStyle}>
+            {/* The frame is the plate, at the ratio's size. The canvas in it
+                is snapped to whole cells and overflows it (see `canvas`); the
+                frame's overflow: hidden clips the rest. Sized only once the
+                stage is measured, like the pattern it holds. */}
+            <div
+              className={styles.doodleFrame}
+              style={previewSize ? { ...imageStyle, width, height } : imageStyle}
+            >
               {previewSize && (
                 <TabbiedPattern
                   ref={doodleRef}
                   {...patternProps}
                   fit="fixed"
-                  width={width}
-                  height={height}
+                  width={canvas.width}
+                  height={canvas.height}
                   decorative={false}
                 />
               )}

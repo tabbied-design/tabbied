@@ -115,8 +115,19 @@ for (const slug of slugs) {
       const el = document.querySelector(`div[data-pattern="${s}"] css-doodle`);
       const grid = el.shadowRoot.querySelector('cssd-grid');
       const gr = grid.getBoundingClientRect();
+      // The plate's canvas is snapped to whole cells and overflows the plate,
+      // which clips it: what the browser painted is the grid's rect cut to
+      // every clipping ancestor, and the export is clipped to match.
+      let right = gr.right;
+      let bottom = gr.bottom;
+      for (let node = el.parentElement; node; node = node.parentElement) {
+        if (getComputedStyle(node).overflow === 'visible') continue;
+        const box = node.getBoundingClientRect();
+        right = Math.min(right, box.right);
+        bottom = Math.min(bottom, box.bottom);
+      }
       // Viewport screenshots share getBoundingClientRect's coordinate space.
-      return { dx: gr.left, dy: gr.top, w: gr.width, h: gr.height };
+      return { dx: gr.left, dy: gr.top, w: right - gr.left, h: bottom - gr.top };
     }, slug);
 
     await page.addScriptTag({ content: script });
@@ -127,7 +138,9 @@ for (const slug of slugs) {
 
         let res;
         try {
-          res = window.__svgx.doodleToSvg(el);
+          res = window.__svgx.doodleToSvg(el, {
+            clip: { width: gridOffset.w, height: gridOffset.h },
+          });
         } catch (e) {
           return { error: `doodleToSvg: ${e.message}` };
         }

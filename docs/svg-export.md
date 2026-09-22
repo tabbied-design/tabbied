@@ -224,15 +224,19 @@ Chromium measures slightly different AA/shadow falloff than local builds).
 ### Cell boundaries: integer vs fractional
 
 The batch sweeps draw each design in a square box, so a square grid gives
-cells at an exact integer size (300px / 5x5 = 60.0px). The editor does not: at
-the default 6x9 grid the pattern page renders a 364x546 element, and the cells
-come out **60.66px**. That one difference is worth knowing about, because a
-design whose hard edges land on integer boundaries in the sweep lands
-mid-device-pixel in the editor - and mid-pixel is exactly where CSS snaps an
-edge and SVG anti-aliases it.
+cells at an exact integer size (300px / 5x5 = 60.0px). The editor used not
+to: at the default 6x9 grid the pattern page rendered a 364x546 element, and
+the cells came out **60.66px**. The plate snaps its canvas to whole, square
+cells now and clips the overflow, the way a `fit: "grid"` host does (see
+docs/grid-snapping.md), and its export is cut to the plate with the
+converter's `clip` option, so the editor's cells are whole too. A fractional
+cell is the exception now, a `fit: "fixed"` canvas whose caller did not snap
+it, and it is still worth knowing about: a design whose hard edges land on
+integer boundaries in the sweep lands mid-device-pixel at such a cell - and
+mid-pixel is exactly where CSS snaps an edge and SVG anti-aliases it.
 
 `SVG_CELL=301` makes the sweep use a box that does not divide evenly, which
-reproduces the editor's condition. Under it the *whole shipped catalog*
+reproduces that condition. Under it the *whole shipped catalog*
 moves into a 0.5-1.8% band wherever a design draws many hard edges per cell -
 batch 11's `toning` measures 1.84%, `dimmer` 1.71%, `tinting` 1.36%,
 `housing` 1.31%. These are the same designs that sit at 0.00% on integer
@@ -241,9 +245,10 @@ boundaries.
 So: the 0.4% budget below is calibrated for the integer-cell default, where it
 is a tight and stable signal for real authoring mistakes - abutments, wrong
 geometry, gradient aliasing. It is *not* a claim that any design holds 0.4% at
-every grid the editor offers. When a design is edge-dense enough to matter,
-the e2e's `PER_PATTERN_MAX` carries the documented headroom (`glyph`,
-`stepramp`).
+a fractional cell. When a design is edge-dense enough to matter, the e2e's
+`PER_PATTERN_MAX` carries the documented headroom (`glyph`, `stepramp`),
+measured while the editor still drew fractional cells and kept, since a
+threshold is a maximum.
 
 One thing the fractional pass does catch that the default misses: repeating
 *smooth* ramps alias badly once the period falls to a handful of pixels. Two
