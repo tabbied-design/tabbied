@@ -98,6 +98,84 @@ option whenever `fit === 'grid'`.
 shipped prop, not a new one. Section 3.1 has the package side and section
 8, item 14, the silent case it creates.
 
+### 2.1 The density discussion: why one number from 0 to 1
+
+The first draft of this plan kept the package's five density levels (the
+integer `density` prop, 0 to 4, each naming a cell size in
+`DENSITY_CELL_PX`). The owner asked whether density could instead be a
+range from 0 to 1, as the more intuitive control. It can, and the plan takes
+it. This subsection records what was weighed so the choice is not re-made
+in the implementation.
+
+**What density has to mean here.** Once the plate is fluid (section 2), the
+grid is derived from the box at a target cell size, so whatever the control
+is called it resolves to a cell size in px. A number from 0 to 1 therefore
+needs one thing: a mapping to px that makes 0 and 1 mean something and
+keeps today's authored looks reachable.
+
+**The candidates.**
+
+1. *Five levels*, the first draft. Discrete and identical to today's
+   slider, but the prop is opaque to a reader (what is level 3?) and the
+   scale cannot be extended without renumbering.
+2. *A count along the long edge*, which is what `deriveGrid` did with
+   `LONG_EDGE_COUNTS`: level 2 is nine cells along the plate's long edge on
+   any screen. It keeps today's look everywhere and makes exports
+   predictable, but an embed cannot be told this: the package's `density`
+   and `cellSize` are px, so the copied snippet could only approximate it.
+   Rejected; section 8, item 5, keeps it as the fallback if the phone band
+   reads too coarse.
+3. *One number from 0 to 1 mapped to px*, chosen. Two mappings were
+   considered:
+   - Harmonic, `cell = 360 / (2 + 8 * density)`: the cells across the
+     original 360px plate go from 2 to 10 linearly with the number, so the
+     five former stops sit exactly at 0, 0.25, 0.5, 0.75 and 1, and every
+     migrated value is a round one. Chosen.
+   - Geometric, `cell = 180 * (36 / 180) ^ density`: perceptually even
+     (each equal step multiplies the cell count by the same factor), but
+     0.5 lands on an 80px cell rather than the 60px most designs open at,
+     so the old stops map to odd decimals and the migration in section 8,
+     item 14, gets harder to check by eye. Over a five-fold span the two
+     feel much the same; the harmonic one wins on migration and on being
+     explainable in one sentence.
+
+| Former level | Density | Cell (px) | Cells across the 360px reference |
+| --- | --- | --- | --- |
+| 0 | 0 | 180 | 2 |
+| 1 | 0.25 | 90 | 4 |
+| 2 | 0.5 | 60 | 6 |
+| 3 | 0.75 | 45 | 8 |
+| 4 | 1 | 36 | 10 |
+
+**What 0 and 1 mean.** 0 is the coarsest cell the slider draws, 1 the
+finest; the range is the one the editor offered, not the package's wider
+`sizing` bounds (24 to 220px by default), and `cellSize` remains the way to
+ask for a cell outside it. A design's own `minCellPx` and `maxCellPx` clamp
+the target as they do today, so a design with a floor keeps its floor.
+`DEFAULT_CELL_PX` stays 36px, which is density 1: a consumer that passes
+nothing draws what it always drew.
+
+**Why the same prop, rescaled, and not a new one.** `density` already
+means "how fine" in the package, the docs page and the MCP hints, and a
+second name for the same axis would leave two ways to say one thing (the
+catalog's `density: sparse | medium | dense` search vocabulary is already a
+second use of the word, on a different axis). The cost is that a shipped
+prop changes scale under existing callers: section 8, item 14, has the
+call-site list, the one silent case (a legacy value of exactly 1), and the
+warning the controller logs for values above 1.
+
+**Precision.** The slider steps by 0.05 (the frequency slider beside it
+steps by 0.1); the URL, the copied snippet and `densityFromGrid` carry two
+decimals. Each step that changes the derived `cols x rows` redraws the
+arrangement, which the frequency slider already does live; section 8, item
+15, names the commit-on-release fallback.
+
+**Where the number appears.** The editor's slider and caption, the
+`density=` share-link parameter, the copied `density={0.5}` prop,
+`data-density` in packaged templates, the `/docs/react` props table, and
+the llms.txt share-link scheme. The customizer does not expose density and
+is unchanged.
+
 ## 3. The package: `packages/tabbied`
 
 ### 3.1 Additions to `src/core/sizing.ts`, and the `density` rescale, with tests
