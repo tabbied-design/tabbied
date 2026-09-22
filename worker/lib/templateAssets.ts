@@ -13,7 +13,7 @@ import type { Env } from '../env';
 // stale within it - and a site read by link re-hashed a whole packaged page
 // on every visit.
 
-type CatalogEntry = { slug: string; copyRoles?: string[] };
+type CatalogEntry = { slug: string; name?: string; copyRoles?: string[] };
 type EditableCatalog = { templates: CatalogEntry[] };
 type DesignCatalog = { designs: { slug: string }[] };
 

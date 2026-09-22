@@ -1,0 +1,16 @@
+.columns {
+  grid-template-columns: minmax(0, 2fr) 90px minmax(0, 1.2fr) 110px;
+}
+
+.template {
+  min-width: 0;
+}
+
+.title {
+  display: block;
+  overflow: hidden;
+  font: 600 16px / 1.3 var(--s-sans);
+  color: var(--s-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -41,7 +41,7 @@ import journal from './migrations/meta/_journal.json';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import { requireUser } from './lib/session';
-import { downloadStatus, parseDownloadName, recordDownload } from './lib/downloads';
+import { downloadStatus, downloadedThisMonth, parseDownloadName, recordDownload } from './lib/downloads';
 import media from './routes/media';
 import account from './routes/account';
 import admin from './routes/admin';
@@ -355,7 +355,9 @@ app.get('/downloads/:file', async (c, next) => {
   const db = drizzle(c.env.DB, { schema });
   const status = await downloadStatus(db, userId);
 
-  if (!status.ok) {
+  // A template already among the month's is free to take again, in either
+  // format: the cap counts templates, not zips.
+  if (!status.ok && !(await downloadedThisMonth(db, userId, named.slug))) {
     if (isNavigation(request)) {
       return c.redirect('/account/?downloads=capped', 302);
     }

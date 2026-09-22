@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const REPO_ROOT = path.join(__dirname, '..');
-const REQUIRED = ['account/sites', 'account/usage', 'admin', 'admin/users'].map((route) =>
+const REQUIRED = ['account/sites', 'account/downloads', 'account/usage', 'admin', 'admin/users'].map((route) =>
   path.join(REPO_ROOT, 'out', route, 'index.html')
 );
 
@@ -92,6 +92,27 @@ test.describe('account and admin pages', () => {
 
     await page.goto('/account/usage/');
     await expect(page.getByText('2 / 10 today')).toBeVisible();
+
+    // The downloads page: what was taken lately, named, with the way back.
+    await page.route('**/api/account/downloads', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          months: 6,
+          downloads: [
+            { slug: 'verdant', name: 'Verdant: Garden studio, Champaign', format: 'react', createdAt: '2026-09-20T15:12:00Z' },
+            { slug: 'verdant', name: 'Verdant: Garden studio, Champaign', format: 'html', createdAt: '2026-09-02T09:00:00Z' },
+          ],
+        }),
+      })
+    );
+    await page.goto('/account/downloads/');
+    await expect(page.getByRole('navigation', { name: 'Account' }).getByRole('link', { name: 'Downloads' })).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByText('Verdant', { exact: true })).toHaveCount(2);
+    await expect(page.getByText('React', { exact: true })).toBeVisible();
+    await expect(page.getByText('HTML', { exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Open' }).first()).toHaveAttribute('href', '/templates/verdant/');
   });
 
   test('the admin tier is "Not found" to a member and a dashboard to an admin', async ({ page }) => {

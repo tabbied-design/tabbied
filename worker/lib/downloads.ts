@@ -1,4 +1,4 @@
-import { and, eq, gt, gte, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, gte, sql } from 'drizzle-orm';
 import { download, user } from '../db/schema';
 import type { Db } from './quota';
 
@@ -10,8 +10,11 @@ import type { Db } from './quota';
 // for). Thirty is the number the account page's artboard drew, and every
 // account gets it while the site is free.
 //
-// The count is exact for the same reason the daily ledger is: it sums rows
-// in D1 that are written only after the zip was served. An admin's reset is a
+// The count is exact for the same reason the daily ledger is: it reads rows
+// in D1 that are written only after the zip was served. What it counts is
+// templates, not zips: a template taken twice in a month, or in both formats,
+// is one of the thirty, since the second copy costs nothing and a person who
+// re-downloads after a fix should not pay for it. An admin's reset is a
 // timestamp on the person's row, not a deletion, so the ledger keeps saying
 // what was taken and the month's count simply starts again from there.
 
@@ -61,18 +64,20 @@ async function countedSince(db: Db, userId: string): Promise<{ since: Date; afte
     : { since: month, afterReset: false };
 }
 
-/** This month's downloads against the cap. */
+/** The rows that count this month: this person's, since the month started. */
+const thisMonth = (userId: string, since: Date, afterReset: boolean) =>
+  and(
+    eq(download.userId, userId),
+    afterReset ? gt(download.createdAt, since) : gte(download.createdAt, since)
+  );
+
+/** This month's templates against the cap. */
 export async function downloadStatus(db: Db, userId: string): Promise<DownloadStatus> {
   const { since, afterReset } = await countedSince(db, userId);
   const [row] = await db
-    .select({ used: sql<number>`count(*)` })
+    .select({ used: sql<number>`count(distinct ${download.slug})` })
     .from(download)
-    .where(
-      and(
-        eq(download.userId, userId),
-        afterReset ? gt(download.createdAt, since) : gte(download.createdAt, since)
-      )
-    );
+    .where(thisMonth(userId, since, afterReset));
   const used = Number(row?.used ?? 0);
 
   return {
@@ -81,6 +86,36 @@ export async function downloadStatus(db: Db, userId: string): Promise<DownloadSt
     resetsAt: startOfNextUtcMonth(),
     ok: used < TEMPLATE_DOWNLOADS_PER_MONTH,
   };
+}
+
+/** Whether this template is already one of the month's: taking it again is free. */
+export async function downloadedThisMonth(db: Db, userId: string, slug: string): Promise<boolean> {
+  const { since, afterReset } = await countedSince(db, userId);
+  const [row] = await db
+    .select({ id: download.id })
+    .from(download)
+    .where(and(thisMonth(userId, since, afterReset), eq(download.slug, slug)))
+    .limit(1);
+
+  return row !== undefined;
+}
+
+export type DownloadRow = { slug: string; format: string; createdAt: Date };
+
+/** How far back the history a person can see reaches. */
+export const HISTORY_MONTHS = 6;
+
+/** Every zip this person took in the last HISTORY_MONTHS months, newest first. */
+export async function recentDownloads(db: Db, userId: string): Promise<DownloadRow[]> {
+  const now = new Date();
+  const since = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - HISTORY_MONTHS, now.getUTCDate()));
+
+  return db
+    .select({ slug: download.slug, format: download.format, createdAt: download.createdAt })
+    .from(download)
+    .where(and(eq(download.userId, userId), gte(download.createdAt, since)))
+    .orderBy(desc(download.createdAt))
+    .limit(500);
 }
 
 /** Write the row for a download that was served. */

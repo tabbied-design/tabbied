@@ -173,8 +173,8 @@ export default function AccountOverview() {
                   Template downloads
                   <span
                     className={styles.gaugeInfo}
-                    title="Every zip you take counts, HTML or React, from the gallery, a template's page or the customizer. Customizing itself is free."
-                    aria-label="Every zip you take counts, HTML or React, from the gallery, a template's page or the customizer. Customizing itself is free."
+                    title="Each template counts once a month, however many times you take it and in either format. Customizing itself is free."
+                    aria-label="Each template counts once a month, however many times you take it and in either format. Customizing itself is free."
                     role="img"
                   >
                     <Info size={14} aria-hidden="true" />

@@ -760,13 +760,24 @@ gallery's pills, a template's page or the customizer's Download menu, and the
 account overview draws the count as the artboard's ring. Four things worth
 not re-litigating:
 
-- **The count lives where the bytes leave.** `/downloads/*` is in
-  `run_worker_first`, and `GET /downloads/<slug>-<format>.zip` in
-  `worker/index.ts` requires a session, reads the month's count
-  (`worker/lib/downloads.ts`), serves the zip through `env.ASSETS` and only
-  then writes the `download` row, so a zip the packager never wrote costs
-  nothing and every row is bytes that went out. Counting in the client, with
-  the zips left static, would have counted clicks and gated nothing.
+- **The count lives where the bytes leave, and it counts templates.**
+  `/downloads/*` is in `run_worker_first`, and `GET
+  /downloads/<slug>-<format>.zip` in `worker/index.ts` requires a session,
+  reads the month's count (`worker/lib/downloads.ts`), serves the zip through
+  `env.ASSETS` and only then writes the `download` row, so a zip the packager
+  never wrote costs nothing and every row is bytes that went out. Counting in
+  the client, with the zips left static, would have counted clicks and gated
+  nothing. The count is `count(distinct slug)` over the month's rows: a
+  template taken twice, or in both formats, is one of the thirty, and a
+  template already among the month's is served past the cap
+  (`downloadedThisMonth`), since the second copy costs nothing and a person
+  re-downloading after a fix should not pay for it.
+- **The history is six months, named from the catalog.** `GET
+  /api/account/downloads` lists the person's rows since six months ago,
+  newest first, with each slug's name read from `/editable-catalog.json`
+  through the assets binding (a slug the catalog no longer has is shown as
+  itself), and `/account/downloads/` draws it. The rows are the record of
+  what was taken, so the page shows every zip, not the deduplicated count.
 - **A click and a fetch are answered differently.** A navigation (a download
   link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
   `/sign-in/?next=` with the page it came from, or to `/account/?downloads=

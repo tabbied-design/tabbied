@@ -11,6 +11,7 @@ import styles from './account.module.css';
 const LINKS = [
   ['/account/', 'Overview'],
   ['/account/sites/', 'Custom sites'],
+  ['/account/downloads/', 'Downloads'],
   ['/account/settings/', 'Settings'],
 ] as const;
 
