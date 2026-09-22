@@ -510,8 +510,8 @@ not obvious from the diff:
 - **Shuffle shuffles the layout.** The three scopes (layout, colours, both)
   and the remembered default are gone with `shuffleActions.ts`; the colours
   are chosen from the list under the swatches. Grid density is a slider
-  from 0 to 1 over the cell size (see "The editor's density" below), its
-  readout the grid the plate resolves to at that cell.
+  from 0 to 1 over the cell size (see "The editor's density" below), read
+  out as that number; the plate's caption names the grid it resolves to.
 - **The editor on a phone: no caption, no export sheet, a strip and a sheet.**
   Export is the same dropdown as the desktop. The palettes are the first
   thirty (and the one in use) in a swipeable row, and "View all" opens

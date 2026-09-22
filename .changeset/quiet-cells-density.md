@@ -23,4 +23,4 @@
 - `densityFromGrid("colsxrows")`: the density whose cell that grid had on the original 360x540 plate (6x9 is 0.5, 10x15 is 1), or null for anything that is not a grid. This is what reads an older editor link's `grid=` parameter.
 - `DENSITY_REFERENCE_PX`, the 360px the mapping is defined against.
 
-The Tabbied editor's grid control is now this density: a slider from 0 to 1 whose readout is the grid the plate resolves to at that cell size, with the aspect ratio picker unchanged. Share links carry `density=` in place of the grid; an older `grid=8x12` link still opens at the density it had.
+The Tabbied editor's grid control is now this density: a slider from 0 to 1, read out as that number, with the grid the plate resolves to at that cell size named in the plate's caption and the aspect ratio picker unchanged. Share links carry `density=` in place of the grid; an older `grid=8x12` link still opens at the density it had.

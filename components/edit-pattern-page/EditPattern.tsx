@@ -1051,9 +1051,10 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     const onChange = (next: OptionValue) => setOptionByIndex(index, next);
 
     if (option.type === 'ButtonSelectGroup') {
-      // The grid is a density slider, 0 coarse to 1 fine, its readout the
-      // grid the plate resolves to at that cell size. The other select
-      // groups stay chips.
+      // The grid is a density slider, 0 coarse to 1 fine, read out as that
+      // number the way the frequency slider beside it is; the grid the plate
+      // resolves to at that cell size is named in the plate's caption. The
+      // other select groups stay chips.
       if (option.id === GRID_OPTION_ID) {
         if (!grid) return null;
 
@@ -1061,9 +1062,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           <div key={option.id} className={styles.sliderBlock}>
             <div className={styles.layoutRow}>
               <span className={styles.layoutLabel}>Grid density</span>
-              <span className={styles.layoutValue}>
-                {`${grid.cols}\u00D7${grid.rows}`}
-              </span>
+              <span className={styles.layoutValue}>{density.toFixed(2)}</span>
             </div>
             <ValueSlider
               min={0}

@@ -323,13 +323,14 @@ test.describe('Tabbied site', () => {
     ).toBeVisible();
 
     // Option controls coming from the pattern definition: the grid is a
-    // "Grid density" slider, 0 to 1, whose readout names the grid the plate
-    // resolves to at that cell size. The count depends on the viewport, so
-    // only its shape is asserted; the slider's value is the stable number.
+    // "Grid density" slider, 0 to 1, read out as that number; the grid the
+    // plate resolves to at that cell size is named in the caption. The count
+    // depends on the viewport, so only its shape is asserted there.
     await expect(page.getByText('Grid density')).toBeVisible();
     const slider = page.getByRole('slider', { name: 'Grid density' });
     await expect(slider).toBeVisible();
     await expect(slider).toHaveAttribute('aria-valuenow', '0.5');
+    await expect(page.getByText('0.50', { exact: true })).toBeVisible();
     await expect(page.locator('figcaption').getByText(/\d+\u00D7\d+ grid/)).toBeVisible();
 
     // Regression guard: the generative grid must actually paint its cells.
@@ -375,6 +376,7 @@ test.describe('Tabbied site', () => {
       'aria-valuenow',
       '0.45'
     );
+    await expect(page.getByText('0.45', { exact: true })).toBeVisible();
   });
 
   test('the density slider sets the cell size, and the grid follows the plate', async ({
