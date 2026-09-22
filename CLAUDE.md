@@ -1091,6 +1091,27 @@ whatever text Studio wrote, so putting them back is a UI change.
   `npm run admin:grant -- you@example.com` (a D1 UPDATE; `--remote` for
   production); after that `/admin/users` does it through the client plugin.
   The caps page is read-only because the caps are constants.
+- **`ADMIN_EMAILS` promotes in front of the endpoint, not in a session hook,
+  and `/api/health` counts it.** Three things make this setting look broken
+  when it is working, and all three are now answerable. It takes effect on the
+  *next sign-in*, so a reload on a session minted before the setting existed
+  does nothing. It has to be a **Secret**, not a plain-text variable: a Text
+  variable added in the dashboard is replaced by this repo's own `vars` block
+  on the next `wrangler deploy`, silently, while a Secret survives - so
+  `/api/health` reports `adminEmails`, the count of configured addresses and
+  never the addresses, and a zero there with the variable visibly set on the
+  Worker is the whole diagnosis. And the promotion runs from a `hooks.before`
+  middleware on `/sign-in/email` rather than from `databaseHooks.session
+  .create.after`, because `signInEmail` reads the user row, creates the
+  session, and only then calls `setSessionCookie` with the row it read
+  *first*: with `cookieCache` on, a role written from the session hook lands
+  in D1 and is missing from the very session that triggered it, so the nav
+  drew no Admin link and `/admin` said "Not found" for five minutes after
+  doing everything right. The session hook stays as the catch-all for paths
+  that learn the address too late (a social callback, a verification link);
+  one `grantConfiguredAdmin` statement serves both, so the rule has one
+  implementation. `worker/test/admin.test.ts` pins the *session*, not just
+  the row - the row passing is what let this ship.
 
 Two things about the tests. `worker/test/*.test.ts` sign up real users and
 follow the verification link out of `dev_mail`; run them **after** a build,

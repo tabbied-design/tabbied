@@ -34,7 +34,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { createMcpHandler } from '@modelcontextprotocol/server';
-import { buildAuth, configuredProviders } from './auth';
+import { buildAuth, configuredAdmins, configuredProviders } from './auth';
 import type { Env } from './env';
 import { isDev } from './env';
 import journal from './migrations/meta/_journal.json';
@@ -410,10 +410,22 @@ api.use('*', async (c, next) => {
   })(c, next);
 });
 
-// Liveness for the API tier, plus the one deploy-time fact nothing else
-// reports: whether the database has had this build's migrations applied.
-// `degraded` here, with `schema.applied` behind `schema.expected`, is the
-// whole diagnosis of a Studio that answers 503 on every site route.
+// Liveness for the API tier, plus the two deploy-time facts nothing else
+// reports: whether the database has had this build's migrations applied, and
+// how many addresses ADMIN_EMAILS names. `degraded` here, with
+// `schema.applied` behind `schema.expected`, is the whole diagnosis of a
+// Studio that answers 503 on every site route.
+//
+// `adminEmails` is a count and never the addresses - the setting is a secret,
+// and the count is the only part of it that is a fact about the deployment.
+// Zero here, with the variable visibly set on the Worker, is the whole
+// diagnosis of an admin-by-configuration that never happens: the name is
+// misspelled, it was added to another Worker or environment, or it was added
+// as a plain-text variable, which `wrangler deploy` replaces with this repo's
+// own `vars` block on the next deploy (a Secret survives that; a Text variable
+// does not). Without this the only way to tell a deploy that has the setting
+// from one that silently lost it is to sign in and see whether anything
+// happened.
 api.get('/health', async (c) => {
   const schema = await schemaStatus(c.env);
 
@@ -422,6 +434,7 @@ api.get('/health', async (c) => {
     service: 'tabbied-api',
     version: 1,
     schema,
+    adminEmails: configuredAdmins(c.env).length,
   });
 });
 
