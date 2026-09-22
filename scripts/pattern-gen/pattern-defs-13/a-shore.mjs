@@ -8,8 +8,8 @@
 // to transparent and the sheet shows through every inlet.
 //
 // `farthest-side` radials are what keep the geometry honest at the edge: a
-// stop at 100% means "one cell side" wherever the centre sits, where the
-// default `farthest-corner` would quietly rescale as the centre moved.
+// stop at 100% means "one cell side" wherever the center sits, where the
+// default `farthest-corner` would quietly rescale as the center moved.
 import {
   section,
   F,

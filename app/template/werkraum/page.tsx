@@ -11,12 +11,12 @@ export const metadata = {
     'Werkraum is an architecture practice in Basel. Eleven people, one room, forty-two built projects since 2009. Housing, schools, and the occasional bridge.',
 };
 
-/* Site colours. Every pattern field draws its inks from this set; the
+/* Site colors. Every pattern field draws its inks from this set; the
    background slot is always `transparent`, so the pattern sits *in* the page
-   colour rather than on a plate of its own. */
+   color rather than on a plate of its own. */
 const INK = '#16161A';
 const RED = '#D6001C';
-const GREY = '#8E8E88';
+const GRAY = '#8E8E88';
 const PALE = '#C9C8C1';
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
@@ -37,21 +37,21 @@ type Project = {
   no: string;
   name: string;
   place: string;
-  programme: string;
+  program: string;
   year: string;
   area: string;
   status: string;
 };
 
 const WORK: Project[] = [
-  { no: '42', name: 'Wohnhaus Sperrstrasse', place: 'Basel', programme: 'Housing, 24 units', year: '2026', area: '3,180 m²', status: 'On site' },
-  { no: '41', name: 'Primarschule Rüti', place: 'Rüti ZH', programme: 'Primary school', year: '2025', area: '5,940 m²', status: 'Built' },
-  { no: '39', name: 'Werkhof Kleinhüningen', place: 'Basel', programme: 'Depot and workshops', year: '2025', area: '2,410 m²', status: 'Built' },
-  { no: '37', name: 'Steg über die Birs', place: 'Münchenstein', programme: 'Footbridge, 46 m span', year: '2024', area: '46 m', status: 'Built' },
-  { no: '35', name: 'Umbau Haus Vogelsang', place: 'Riehen', programme: 'Conversion, single house', year: '2024', area: '260 m²', status: 'Built' },
-  { no: '33', name: 'Genossenschaft Feldrain', place: 'Bern', programme: 'Housing, 61 units', year: '2023', area: '7,720 m²', status: 'Built' },
-  { no: '31', name: 'Bibliothek Aarwangen', place: 'Aarwangen', programme: 'Library and archive', year: '2022', area: '1,860 m²', status: 'Built' },
-  { no: '28', name: 'Atelierhaus Klybeck', place: 'Basel', programme: 'Studios, 14 units', year: '2021', area: '2,090 m²', status: 'Built' },
+  { no: '42', name: 'Wohnhaus Sperrstrasse', place: 'Basel', program: 'Housing, 24 units', year: '2026', area: '3,180 m²', status: 'On site' },
+  { no: '41', name: 'Primarschule Rüti', place: 'Rüti ZH', program: 'Primary school', year: '2025', area: '5,940 m²', status: 'Built' },
+  { no: '39', name: 'Werkhof Kleinhüningen', place: 'Basel', program: 'Depot and workshops', year: '2025', area: '2,410 m²', status: 'Built' },
+  { no: '37', name: 'Steg über die Birs', place: 'Münchenstein', program: 'Footbridge, 46 m span', year: '2024', area: '46 m', status: 'Built' },
+  { no: '35', name: 'Umbau Haus Vogelsang', place: 'Riehen', program: 'Conversion, single house', year: '2024', area: '260 m²', status: 'Built' },
+  { no: '33', name: 'Genossenschaft Feldrain', place: 'Bern', program: 'Housing, 61 units', year: '2023', area: '7,720 m²', status: 'Built' },
+  { no: '31', name: 'Bibliothek Aarwangen', place: 'Aarwangen', program: 'Library and archive', year: '2022', area: '1,860 m²', status: 'Built' },
+  { no: '28', name: 'Atelierhaus Klybeck', place: 'Basel', program: 'Studios, 14 units', year: '2021', area: '2,090 m²', status: 'Built' },
 ];
 
 const METHOD = [
@@ -93,8 +93,8 @@ const PEOPLE = [
 
 const MATERIALS = [
   { n: 'A', name: 'Fair-faced concrete', art: 'chase', body: 'Board-marked where it is touched, plain where it is not. We draw the tie grid ourselves and it is always on the drawing before tender.', img: 'werkraum-tile-concrete-cutout' },
-  { n: 'B', name: 'Untreated timber', art: 'mortise', body: 'Silver-fir cladding, left to grey. Clients are shown a five-year-old sample and asked to agree to it in writing.', img: 'werkraum-tile-timber-cutout' },
-  { n: 'C', name: 'Screed and terrazzo', art: 'quire', body: 'Poured on site, ground twice. The aggregate comes from within forty kilometres, which is a constraint and also the whole idea.', img: 'werkraum-tile-terrazzo-cutout' },
+  { n: 'B', name: 'Untreated timber', art: 'mortise', body: 'Silver-fir cladding, left to gray. Clients are shown a five-year-old sample and asked to agree to it in writing.', img: 'werkraum-tile-timber-cutout' },
+  { n: 'C', name: 'Screed and terrazzo', art: 'quire', body: 'Poured on site, ground twice. The aggregate comes from within forty kilometers, which is a constraint and also the whole idea.', img: 'werkraum-tile-terrazzo-cutout' },
 ];
 
 const AWARDS = [
@@ -107,7 +107,7 @@ const AWARDS = [
 ];
 
 const QUESTIONS = [
-  { q: 'Do you work outside Switzerland?', a: 'No. Everything is built with people we can visit on a Tuesday, and the furthest site from this desk is one hundred and sixty kilometres.' },
+  { q: 'Do you work outside Switzerland?', a: 'No. Everything is built with people we can visit on a Tuesday, and the furthest site from this desk is one hundred and sixty kilometers.' },
   { q: 'Will you do a house?', a: 'Sometimes. We take one or two a year, usually a conversion, and we are honest that a small house costs proportionally more of our time than a block of twenty-four flats.' },
   { q: 'How much does a competition entry cost you?', a: 'About six weeks of one person, which is why we enter four a year rather than fifteen. We would rather lose slowly than badly.' },
   { q: 'Who draws the details?', a: 'Whoever is running the project, at the same table as everyone else. There is no separate technical department and there never will be.' },
@@ -123,17 +123,17 @@ const FACTS = [
 export default function WerkraumPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f4f3ef',
         '--ink': '#16161a',
         '--red': '#d6001c',
-        '--grey': '#8e8e88',
+        '--gray': '#8e8e88',
         '--pale': '#c9c8c1',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,red,grey,pale"
+      data-edit-vars="paper,ink,red,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -164,7 +164,7 @@ export default function WerkraumPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3" className={s.field} aria-hidden="true">
             <TabbiedPattern
               pattern={ortho}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={132}
               redrawInterval={5200}
@@ -232,7 +232,7 @@ export default function WerkraumPage() {
               <p data-edit="practice.body2" data-edit-max="240" data-edit-multiline>
                 Everything is built in Switzerland with people we can visit on a
                 Tuesday. The furthest site from this desk is one hundred and
-                sixty kilometres, and we would rather it stayed that way.
+                sixty kilometers, and we would rather it stayed that way.
               </p>
             </div>
             <div className={s.pair}>
@@ -246,7 +246,7 @@ export default function WerkraumPage() {
               <figure>
                 <Figure editId="photo.werkraum-model"
                   slug="werkraum-model"
-                  alt="A grey cardboard massing model of six housing blocks on a plywood base"
+                  alt="A gray cardboard massing model of six housing blocks on a plywood base"
                 />
                 <figcaption data-edit="practice.caption2" data-edit-max="120" data-edit-multiline>Massing study, 1:500, Feldrain.</figcaption>
               </figure>
@@ -259,7 +259,7 @@ export default function WerkraumPage() {
           <div data-edit-pattern="band.field" data-edit-roles="transparent,1,2,3" className={s.bandField}>
             <TabbiedPattern
               pattern={windowpane}
-              palette={['transparent', INK, RED, GREY]}
+              palette={['transparent', INK, RED, GRAY]}
               fit="grid"
               cellSize={144}
               redrawInterval={4400}
@@ -284,7 +284,7 @@ export default function WerkraumPage() {
                 <span data-edit="work.text2" data-edit-max="60">No.</span>
                 <span data-edit="work.text3" data-edit-max="60">Project</span>
                 <span data-edit="work.text4" data-edit-max="60">Place</span>
-                <span data-edit="work.text5" data-edit-max="60">Programme</span>
+                <span data-edit="work.text5" data-edit-max="60">Program</span>
                 <span data-edit="work.text6" data-edit-max="60">Area</span>
                 <span data-edit="work.text7" data-edit-max="60">Year</span>
               </li>
@@ -298,7 +298,7 @@ export default function WerkraumPage() {
                     </i>
                   </span>
                   <span data-edit={`work.text8.${i}`} data-edit-max="60">{p.place}</span>
-                  <span data-edit={`work.text9.${i}`} data-edit-max="60">{p.programme}</span>
+                  <span data-edit={`work.text9.${i}`} data-edit-max="60">{p.program}</span>
                   <span data-edit={`work.num.${i}`} data-edit-max="60" className={s.num}>{p.area}</span>
                   <span data-edit={`work.num2.${i}`} data-edit-max="60" className={s.num}>{p.year}</span>
                 </li>
@@ -335,7 +335,7 @@ export default function WerkraumPage() {
           <div data-edit-pattern="method.field" data-edit-roles="transparent,3,4" className={s.methodField} aria-hidden="true">
             <TabbiedPattern
               pattern={keyway}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={104}
               redrawInterval={6100}
@@ -403,7 +403,7 @@ export default function WerkraumPage() {
                   <div data-edit-pattern={`materials.field.${i}`} data-edit-roles="transparent,3,4" className={s.matTile} aria-hidden="true">
                     <TabbiedPattern
                       pattern={m.art === 'chase' ? chase : m.art === 'mortise' ? mortise : quire}
-                      palette={['transparent', GREY, PALE]}
+                      palette={['transparent', GRAY, PALE]}
                       fit="grid"
                       cellSize={72}
                       redrawInterval={5600}
@@ -534,7 +534,7 @@ export default function WerkraumPage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
             <TabbiedPattern
               pattern={spandrel}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={104}
               redrawInterval={4928}

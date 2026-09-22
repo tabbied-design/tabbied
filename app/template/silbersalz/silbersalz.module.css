@@ -9,7 +9,7 @@
   --bone: #edebe4;
   --ink: #101010;
   --red: #c8102e;
-  --grey: #8a8880;
+  --gray: #8a8880;
   --pale: #d9d6cc;
   --gut: clamp(1.15rem, 4vw, 3.25rem);
   --max: 78rem;
@@ -69,7 +69,7 @@
   font-weight: 400;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .bar nav {
@@ -127,9 +127,9 @@
 }
 
 .hero /* The muted second line sits over the hero pattern; plain
-     var(--grey) measured under AA on the glyph pixels. */
+     var(--gray) measured under AA on the glyph pixels. */
   h1 span {
-  color: color-mix(in srgb, var(--grey) 75%, var(--ink));
+  color: color-mix(in srgb, var(--gray) 75%, var(--ink));
 }
 
 .lede {
@@ -157,7 +157,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .bleed figcaption {
@@ -232,7 +232,7 @@
   font-size: 0.65rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey) !important;
+  color: var(--gray) !important;
   padding-bottom: 0.4rem !important;
 }
 
@@ -351,7 +351,7 @@
 .pPaper {
   grid-column: 1;
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .pPrice {
@@ -456,7 +456,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   margin-bottom: 0.4rem;
 }
 
@@ -555,7 +555,7 @@
   font-size: 0.64rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey) !important;
+  color: var(--gray) !important;
   padding-bottom: 0.4rem !important;
 }
 
@@ -569,7 +569,7 @@
 .idxList li > :last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .faqList {

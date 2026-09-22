@@ -177,7 +177,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   const brandPalettes = brandState.palettes;
   // The active palette shared with the gallery - a saved palette or a curated
   // library palette (opening a pattern picks up whatever the gallery previews).
-  // Memoised on the store snapshot: the resolver builds a fresh object, and an
+  // Memoized on the store snapshot: the resolver builds a fresh object, and an
   // effect keyed on it re-ran every render.
   const activeCustomPalette = useMemo(
     () => resolveActivePalette(brandState),
@@ -186,8 +186,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   const draftPreview = useDraftPreview();
 
-  // The palette a link carries, when it carries a usable one: a colour count
-  // the pattern can take, every entry a colour. `?palette=red`, or a stray
+  // The palette a link carries, when it carries a usable one: a color count
+  // the pattern can take, every entry a color. `?palette=red`, or a stray
   // `}`, used to reach css-doodle's source (which painted nothing, silently)
   // and the copied React snippet verbatim.
   const linkedPaletteFromQuery = (): string[] | null => {
@@ -216,7 +216,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   // Which palette (if any) the editor's swatches currently reflect, driving the
   // chip outline. 'pattern'/'custom' highlight no chip; a palette id highlights
   // that chip. Any manual swatch edit switches this to 'custom'. A link's
-  // colours start as 'custom' and the lookup below names them if it can.
+  // colors start as 'custom' and the lookup below names them if it can.
   const [paletteSource, setPaletteSource] = useState<PaletteSource>(() =>
     urlHadPaletteAtMount.current ? 'custom' : 'pattern'
   );
@@ -366,11 +366,11 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   // arrangement rather than re-rolling it at the larger plate's cell count.
   const pinnedGrid = useRef<{ cols: number; rows: number } | null>(null);
 
-  // A picture behind the pattern instead of a colour. It is a local object
+  // A picture behind the pattern instead of a color. It is a local object
   // URL and nothing else: it goes in no query string, no saved palette and no
   // shared link, which the share action says out loud. Choosing one makes the
   // ground transparent so the picture shows through wherever the design
-  // paints nothing, and clearing it puts the colour back if there was one.
+  // paints nothing, and clearing it puts the color back if there was one.
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
   const bgWasOpaque = useRef(false);
 
@@ -463,7 +463,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   // Apply the gallery's selected palette on first load, once, and mark it as the
   // active chip. A shared link that carries its own palette wins: it is
-  // applied by the state initialisers, and named (or not) by the lookup below.
+  // applied by the state initializers, and named (or not) by the lookup below.
   useEffect(() => {
     if (initialCustomApplied.current) return;
 
@@ -483,7 +483,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCustomPalette]);
 
-  // A link's colours are looked up in the list, so a link from the gallery's
+  // A link's colors are looked up in the list, so a link from the gallery's
   // random spread (or one shared from a named palette) lights that palette's
   // row; anything else stays "custom". Two things about the lookup. The
   // gallery fits a palette to the pattern before putting it in the link
@@ -634,7 +634,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   };
 
   // Shuffle draws the layout again and nothing else. It used to be a menu of
-  // three scopes (layout, colours, both); the colours are chosen from the
+  // three scopes (layout, colors, both); the colors are chosen from the
   // list under the swatches, and a control that could also reroll them read
   // as noise beside it.
   const randomizeSeed = () => {
@@ -752,7 +752,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       return;
     }
 
-    // Remember whether there was a colour to come back to, once, when the
+    // Remember whether there was a color to come back to, once, when the
     // first picture goes in; swapping one picture for another keeps it.
     if (!backgroundImage) {
       bgWasOpaque.current = !isTransparentHex(palette[0] ?? '');
@@ -982,7 +982,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   // ---- Grouped inspector controls ----
 
   // One merged chip list: custom palettes first, then the read-only library.
-  // Memoised on the saved palettes: every slider tick and colour-picker drag
+  // Memoized on the saved palettes: every slider tick and color-picker drag
   // re-renders the editor, and merging, filtering and searching 437 palettes
   // on each of them was the bulk of that render.
   const mergedChips = useMemo(
@@ -1386,7 +1386,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                       {bgIsTransparent && <Check size={15} />}
                     </button>
                     )}
-                    {/* A picture instead of a colour. While one is set it
+                    {/* A picture instead of a color. While one is set it
                         stands in for both the swatch and the transparent
                         toggle, showing the picture; choosing again replaces
                         it, and the link under the caption clears it. */}

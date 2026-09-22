@@ -2,7 +2,7 @@
    MESA OUTFITTERS - desert trail guides, Moab
    Southwestern: sand paper, dark brown ink, terracotta and a sky blue. Alfa
    Slab One for anything that shouts, Rubik for the rest. Stripe bands in the
-   role colours, a terrace-cut divider, cards with a thick terracotta top,
+   role colors, a terrace-cut divider, cards with a thick terracotta top,
    and one sun-and-mesa drawn in CSS. The patterns draw on transparent so
    the sand runs straight through them.
    ========================================================================== */
@@ -12,7 +12,7 @@
   --ink: #2b1f16;
   --terracotta: #c75b2a;
   --sky: #3b8ea5;
-  --grey: #8c7e6e;
+  --gray: #8c7e6e;
   --pale: #e4d5be;
   --gut: clamp(1.25rem, 4vw, 3.5rem);
   --max: 76rem;
@@ -327,13 +327,13 @@
 .facts dd {
   margin: 0.35rem 0 0;
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 /* ------------------------------------------------------------ stripes
-   The stripe band: four role colours in hard repeats, the width of the
+   The stripe band: four role colors in hard repeats, the width of the
    page. It sits under the hero and over the footer. */
 
 .stripes {
@@ -443,7 +443,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .tripSpecs dd {
@@ -493,7 +493,7 @@
 
 /* ------------------------------------------------------------ seasons
    A twelve-month bar with the four seasons as stripes, then four cards
-   each carrying its stripe colour on the left edge. */
+   each carrying its stripe color on the left edge. */
 
 .seasonBar {
   display: grid;
@@ -537,7 +537,7 @@
 .seasonTemps {
   margin: 0.15rem 0 0.9rem;
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
   font-variant-numeric: tabular-nums;
 }
 
@@ -563,8 +563,8 @@
 }
 
 .spanWinter {
-  background: var(--grey);
-  border-left-color: var(--grey);
+  background: var(--gray);
+  border-left-color: var(--gray);
 }
 
 .season.spanSpring,
@@ -674,7 +674,7 @@
   font-size: 0.74rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .guideBody {
@@ -861,7 +861,7 @@
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .hours dd {

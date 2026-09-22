@@ -104,7 +104,7 @@
 /* Scoped under .site on purpose: `.site a { color: inherit }` above is (0,1,1)
    and would otherwise outrank a bare `.navCta` (0,1,0), painting the label in
    --ink on the --c1 pill - which on a dark-accent palette is text you cannot
-   read. Every coloured control below is scoped for the same reason. */
+   read. Every colored control below is scoped for the same reason. */
 .site .navCta {
   padding: 10px 20px;
   border-radius: 100px;
@@ -750,7 +750,7 @@
   color: var(--ink);
   /* Was an outlined chip on a translucent wash. It is a solid chip now, so it
      still reads as a control against whatever image sits behind it, and the
-     hover state moves to fill rather than to a border colour that no longer
+     hover state moves to fill rather than to a border color that no longer
      exists. */
   background: color-mix(in srgb, var(--ink) 16%, var(--bg));
   border-radius: 8px;
@@ -1013,7 +1013,7 @@
 }
 /* The manifesto carries a full-bleed pattern of its own, and on the boutique
    layouts it follows a hero that does too - two fields meeting on a hard edge
-   with nothing between them. A band of page colour separates them so each
+   with nothing between them. A band of page color separates them so each
    reads as its own gesture. */
 header + .manifesto {
   margin-top: clamp(72px, 10vw, 150px);

@@ -131,7 +131,7 @@ describe('candidate assembly', () => {
   const entries = [
     'bakery in a coastal town',
     'structural engineering consultancy',
-    'children bookshop with bright colours',
+    'children bookshop with bright colors',
   ].map((topic, i) => ({
     slug: `site-${i}`,
     name: `Site ${i}`,

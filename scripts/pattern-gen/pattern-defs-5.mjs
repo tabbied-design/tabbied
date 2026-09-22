@@ -185,7 +185,7 @@ add('Hoop', 2, 'Clean open rings floating on the grid, each hoop re-inking on ev
   rule: `${F} { width: 86%; height: 86%; margin: 7%; border-radius: 50%; background: ${ink(c)}; :after { content: ''; position: absolute; inset: 28%; border-radius: 50%; background: var(--color0);${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
 
-add('Pellet', 4, 'A field of small discs swelling and shrinking from cell to cell, re-colouring on reseed.', (c) => ({
+add('Pellet', 4, 'A field of small discs swelling and shrinking from cell to cell, re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: @rand(28%, 76%); ${xf('translate(-50%, -50%)')} border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
@@ -200,7 +200,7 @@ add('Quaver', 1, 'Quarter-disc fills tucked into a rotating corner, the wedge sp
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('circle(96% at 0 100%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Pip', 9, 'Concentric dot-in-ring targets, the bullseye re-colouring against its halo on reseed.', (c) => ({
+add('Pip', 9, 'Concentric dot-in-ring targets, the bullseye re-coloring against its halo on reseed.', (c) => ({
   vars: '',
   rule: `${F} { width: 84%; height: 84%; margin: 8%; border-radius: 50%; background: ${ink(c)}; :after { content: ''; position: absolute; inset: 32%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
@@ -210,7 +210,7 @@ add('Wheelarc', 3, 'Three-quarter arcs leaving a gap that rolls around the rim e
   rule: `--rot: ${R4}; ${F} { width: 84%; height: 84%; margin: 8%; border-radius: 50%; background: ${ink(c)}; ${rot('@var(--rot)')} ${cp('polygon(0 0, 100% 0, 100% 100%, 50% 100%, 50% 50%, 0 50%)')} }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
 
-add('Iris', 14, 'A soft glowing eye - a bright pupil ringed by a luminous halo, pulsing colour on reseed.', (c) => ({
+add('Iris', 14, 'A soft glowing eye - a bright pupil ringed by a luminous halo, pulsing color on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: 30%; margin: -15%; border-radius: 50%; background: ${ink(c)}; box-shadow: 0 0 calc(70px / @Y) calc(16px / @Y) ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.88 });
@@ -225,7 +225,7 @@ add('Cinch', 20, 'Twin arcs pinched at the waist into a bowtie of curves, re-tin
   rule: `--rot: ${R2}; ${F} { overflow: hidden; ${rot('@var(--rot)')} :before { content: ''; position: absolute; @size: 130%; left: -65%; top: -15%; border-radius: 50%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; @size: 130%; right: -65%; top: -15%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
 
-add('Rondure', 6, 'Plump discs packed tight with a small punched centre, re-inking ring and core on reseed.', (c) => ({
+add('Rondure', 6, 'Plump discs packed tight with a small punched center, re-inking ring and core on reseed.', (c) => ({
   vars: '',
   rule: `${F} { width: 94%; height: 94%; margin: 3%; border-radius: 50%; background: ${ink(c)}; :after { content: ''; position: absolute; inset: 40%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
@@ -240,12 +240,12 @@ add('Halfpenny', 23, 'Coins half-sunk past the edge, the visible arc rotating to
   rule: `--rot: ${R4}; ${F} { overflow: hidden; ${rot('@var(--rot)')} :after { content: ''; position: absolute; @size: 150%; left: -25%; top: 55%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Mandorla', 38, 'Pointed almond eyes formed where two circles cross, the lens re-colouring on reseed.', (c) => ({
+add('Mandorla', 38, 'Pointed almond eyes formed where two circles cross, the lens re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `--rot: ${R2}; ${F} { background: ${ink(c)}; ${cp('polygon(50% 0, 90% 50%, 50% 100%, 10% 50%)')} border-radius: 50%; ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.92 });
 
-add('Roundel', 19, 'Bold target roundels of two concentric tones, re-banding their colours on each seed.', (c) => ({
+add('Roundel', 19, 'Bold target roundels of two concentric tones, re-banding their colors on each seed.', (c) => ({
   vars: '',
   rule: `${F} { width: 92%; height: 92%; margin: 4%; border-radius: 50%; background: ${ink(c)}; :before { content: ''; position: absolute; inset: 22%; border-radius: 50%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; inset: 42%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
@@ -255,7 +255,7 @@ add('Gibbous', 24, 'Discs gnawed by a curved bite from the side, the crescent sh
   rule: `${F} { width: 84%; height: 84%; margin: 8%; border-radius: 50%; background: ${ink(c)}; :after { content: ''; position: absolute; @size: 100%; left: @pick(-46%, -24%, 24%, 46%); top: 0; border-radius: 50%; background: var(--color0);${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
 
-add('Cresset', 32, 'A bright bead set in a deep ring socket, each lamp re-lighting its colour on reseed.', (c) => ({
+add('Cresset', 32, 'A bright bead set in a deep ring socket, each lamp re-lighting its color on reseed.', (c) => ({
   vars: '',
   rule: `${F} { width: 86%; height: 86%; margin: 7%; border-radius: 50%; background: ${ink(c)}; :after { content: ''; position: absolute; left: 50%; top: 50%; @size: 30%; margin: -15%; border-radius: 50%; background: ${ink(c)}; box-shadow: 0 0 calc(40px / @Y) ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
@@ -265,12 +265,12 @@ add('Quoit', 41, 'Flat throwing rings overlapping in a loose stack, each quoit r
   rule: `--rot: ${R4}; ${F} { width: 96%; height: 64%; margin: 18% 2%; border-radius: 999px; background: ${ink(c)}; ${rot('@var(--rot)')} :after { content: ''; position: absolute; inset: 22%; border-radius: 999px; background: var(--color0);${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
 
-add('Pebbledot', 7, 'Soft rounded blobs scattered dense, each pebble re-rounding and re-colouring on reseed.', (c) => ({
+add('Pebbledot', 7, 'Soft rounded blobs scattered dense, each pebble re-rounding and re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `${F} { width: 86%; height: 86%; margin: 7%; background: ${ink(c)}; border-radius: @rand(38%, 50%) @rand(38%, 50%) @rand(38%, 50%) @rand(38%, 50%); }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-add('Bezel', 30, 'Gem-set discs ringed by a contrasting bezel, the stone re-cutting its colour on reseed.', (c) => ({
+add('Bezel', 30, 'Gem-set discs ringed by a contrasting bezel, the stone re-cutting its color on reseed.', (c) => ({
   vars: '',
   rule: `${F} { width: 88%; height: 88%; margin: 6%; border-radius: 50%; background: ${ink(c)}; border: calc(20px / @Y) solid var(--color0); box-sizing: border-box; :after { content: ''; position: absolute; inset: 34%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
@@ -324,7 +324,7 @@ add('Cusp', 33, 'Notched arrowheads with a bitten base, the barb rotating to a n
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(50% 0, 100% 100%, 50% 66%, 0 100%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Spearhead', 13, 'Slim spear blades on the diagonal, each head re-angling and re-colouring on reseed.', (c) => ({
+add('Spearhead', 13, 'Slim spear blades on the diagonal, each head re-angling and re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(50% 0, 78% 46%, 50% 100%, 22% 46%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -334,7 +334,7 @@ add('Pediment', 34, 'Low wide gable triangles like temple pediments, re-shading 
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(50% 26%, 100% 100%, 0 100%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Splittri', 6, 'Squares sliced corner to corner into two colours, the seam flipping diagonal on reseed.', (c) => ({
+add('Splittri', 6, 'Squares sliced corner to corner into two colors, the seam flipping diagonal on reseed.', (c) => ({
   vars: '',
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${rot('@var(--rot)')} :after { content: ''; position: absolute; inset: 0; background: ${ink(c)}; ${cp('polygon(0 0, 100% 0, 0 100%)')}${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
@@ -344,7 +344,7 @@ add('Dogtooth', 28, 'Interlocking hound\'s-tooth notches re-keying their teeth o
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(0 0, 60% 0, 60% 40%, 100% 40%, 100% 100%, 40% 100%, 40% 60%, 0 60%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Wingtri', 9, 'Paired triangles flaring open like wings, each pair re-spreading its colours on reseed.', (c) => ({
+add('Wingtri', 9, 'Paired triangles flaring open like wings, each pair re-spreading its colors on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :before { content: ''; position: absolute; inset: 0; background: ${ink(c)}; ${cp('polygon(0 0, 46% 50%, 0 100%)')}${pt} } :after { content: ''; position: absolute; inset: 0; background: ${ink(c)}; ${cp('polygon(100% 0, 54% 50%, 100% 100%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -394,7 +394,7 @@ add('Trishard', 1, 'Scattered triangular shards in random spin and shade, re-sha
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(@rand(0%, 30%) @rand(0%, 30%), @rand(70%, 100%) @rand(0%, 40%), @rand(20%, 100%) @rand(70%, 100%))')} opacity: @rand(0.7, 1); }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-add('Quadrant', 3, 'Triangles pointing in to the centre from each edge, the arrow re-aiming on reseed.', (c) => ({
+add('Quadrant', 3, 'Triangles pointing in to the center from each edge, the arrow re-aiming on reseed.', (c) => ({
   vars: '',
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(0 0, 100% 0, 50% 50%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
@@ -413,7 +413,7 @@ add('Trapezoid', 12, 'Stacked trapezoids tapering in alternating directions, re-
   rule: `--rot: ${R2}; ${F} { background: ${ink(c)}; ${cp('polygon(22% 14%, 78% 14%, 100% 86%, 0 86%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Hextile', 14, 'A honeycomb of solid hexagons, each cell re-glazing its colour on reseed.', (c) => ({
+add('Hextile', 14, 'A honeycomb of solid hexagons, each cell re-glazing its color on reseed.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(50% 2%, 95% 26%, 95% 74%, 50% 98%, 5% 74%, 5% 26%)')} opacity: @rand(0.8, 1); }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.98 });
@@ -423,7 +423,7 @@ add('Penta', 30, 'Upright pentagons tiling in rows, each one re-inking on every 
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(50% 4%, 96% 40%, 78% 96%, 22% 96%, 4% 40%)')} opacity: @rand(0.8, 1); }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Sixstar', 0, 'Six-point stars from two crossed triangles, the colours swapping between blades on reseed.', (c) => ({
+add('Sixstar', 0, 'Six-point stars from two crossed triangles, the colors swapping between blades on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :before { content: ''; position: absolute; inset: 0; background: ${ink(c)}; ${cp('polygon(50% 4%, 93% 78%, 7% 78%)')}${pt} } :after { content: ''; position: absolute; inset: 0; background: ${ink(c)}; ${cp('polygon(50% 96%, 7% 22%, 93% 22%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
@@ -443,7 +443,7 @@ add('Diadem', 32, 'Diamonds set with a smaller diamond core, re-jewelling their 
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(50% 4%, 96% 50%, 50% 96%, 4% 50%)')} :after { content: ''; position: absolute; inset: 30%; background: ${ink(c)}; ${cp('polygon(50% 4%, 96% 50%, 50% 96%, 4% 50%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Crystal', 38, 'Tall faceted gems standing upright, each crystal re-cutting its colour on reseed.', (c) => ({
+add('Crystal', 38, 'Tall faceted gems standing upright, each crystal re-cutting its color on reseed.', (c) => ({
   vars: '',
   rule: `--rot: ${R2}; ${F} { background: ${ink(c)}; ${cp('polygon(50% 2%, 88% 30%, 88% 72%, 50% 98%, 12% 72%, 12% 30%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -468,17 +468,17 @@ add('Gemcut', 9, 'Diamonds scored with a bright facet line, the cut re-catching 
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(50% 4%, 96% 50%, 50% 96%, 4% 50%)')} :after { content: ''; position: absolute; inset: 0; background: ${ink(c)}; ${cp('polygon(50% 4%, 96% 50%, 50% 50%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Spark', 46, 'Eight-point sparks burning at the centre of each cell, re-pointing on reseed.', (c) => ({
+add('Spark', 46, 'Eight-point sparks burning at the center of each cell, re-pointing on reseed.', (c) => ({
   vars: '',
   rule: `--rot: ${R2}; ${F} { background: ${ink(c)}; ${cp('polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Diadot', 41, 'A net of tiny centred diamonds, each pip re-tinting on reseed.', (c) => ({
+add('Diadot', 41, 'A net of tiny centerd diamonds, each pip re-tinting on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: @rand(40%, 72%); ${xf('translate(-50%, -50%)')} background: ${ink(c)}; ${cp('polygon(50% 0, 100% 50%, 50% 100%, 0 50%)')}${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-add('Pentafan', 35, 'Pentagons nested two-deep, the inner face re-colouring against its frame on reseed.', (c) => ({
+add('Pentafan', 35, 'Pentagons nested two-deep, the inner face re-coloring against its frame on reseed.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(50% 4%, 96% 40%, 78% 96%, 22% 96%, 4% 40%)')} :after { content: ''; position: absolute; inset: 28%; background: ${ink(c)}; ${cp('polygon(50% 4%, 96% 40%, 78% 96%, 22% 96%, 4% 40%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.92 });
@@ -503,12 +503,12 @@ add('Rhomboid', 21, 'Full slanted squares leaning together, each parallelogram r
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(28% 0, 100% 0, 72% 100%, 0 100%)')} opacity: @rand(0.8, 1); }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Trianglet', 24, 'A scatter of tiny centred triangles in varying size and spin, re-seeding their shower each redraw.', (c) => ({
+add('Trianglet', 24, 'A scatter of tiny centerd triangles in varying size and spin, re-seeding their shower each redraw.', (c) => ({
   vars: '',
   rule: `--rot: ${R8}; ${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: @rand(40%, 78%); ${xf('translate(-50%, -50%) rotate(@var(--rot))')} background: ${ink(c)}; ${cp('polygon(50% 0, 100% 100%, 0 100%)')}${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-add('Hexdot', 16, 'Small hexagon studs centred in each cell, re-tinting on reseed.', (c) => ({
+add('Hexdot', 16, 'Small hexagon studs centerd in each cell, re-tinting on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: @rand(46%, 78%); ${xf('translate(-50%, -50%)')} background: ${ink(c)}; ${cp('polygon(50% 2%, 95% 26%, 95% 74%, 50% 98%, 5% 74%, 5% 26%)')}${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
@@ -527,7 +527,7 @@ add('Tickmark', 27, 'Short ticks flicking to one of four headings, re-aiming and
   rule: `--rot: ${R4}; ${F} { width: 14%; height: 56%; margin: 22% 43%; border-radius: 99px; background: ${ink(c)}; ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-add('Plumb', 17, 'Plumb lines weighted with a bob, each line re-colouring on reseed.', (c) => ({
+add('Plumb', 17, 'Plumb lines weighted with a bob, each line re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :before { content: ''; position: absolute; left: 48%; top: 6%; width: 4%; height: 66%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; left: 50%; top: 70%; @size: 26%; margin-left: -13%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -552,7 +552,7 @@ add('Pulsebar', 14, 'A level-meter of bars rising to random heights, each re-rea
   rule: `${F} { :after { content: ''; position: absolute; left: 18%; bottom: 0; width: 64%; height: @rand(24%, 96%); background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-add('Crossbar', 19, 'Bold plus-bars crossing at the centre, each arm re-tinting on reseed.', (c) => ({
+add('Crossbar', 19, 'Bold plus-bars crossing at the center, each arm re-tinting on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :before { content: ''; position: absolute; left: 45%; top: 12%; width: 10%; height: 76%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; left: 12%; top: 45%; width: 76%; height: 10%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -572,7 +572,7 @@ add('Sliver', 33, 'Thin slivers strewn at every angle, re-scattering their spin 
   rule: `--rot: ${R8}; ${F} { width: 8%; height: 80%; margin: 10% 46%; border-radius: 99px; background: ${ink(c)}; ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Notchbar', 6, 'Broken bars split by a centre gap, the two stubs re-tinting and turning on reseed.', (c) => ({
+add('Notchbar', 6, 'Broken bars split by a center gap, the two stubs re-tinting and turning on reseed.', (c) => ({
   vars: '',
   rule: `--rot: ${R2}; ${F} { ${rot('@var(--rot)')} :before { content: ''; position: absolute; left: 8%; top: 44%; width: 36%; height: 12%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; right: 8%; top: 44%; width: 36%; height: 12%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -602,7 +602,7 @@ add('Gridline', 31, 'Thin crosshairs ruling every cell, the lines re-inking on r
   rule: `${F} { :before { content: ''; position: absolute; left: 50%; top: 0; width: 6%; height: 100%; margin-left: -3%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; left: 0; top: 50%; width: 100%; height: 6%; margin-top: -3%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.98 });
 
-add('Dotdash', 9, 'A dot and a dash per cell like keyed code, re-keying their colours on reseed.', (c) => ({
+add('Dotdash', 9, 'A dot and a dash per cell like keyed code, re-keying their colors on reseed.', (c) => ({
   vars: '',
   rule: `--rot: ${R2}; ${F} { ${rot('@var(--rot)')} :before { content: ''; position: absolute; left: 12%; top: 42%; width: 34%; height: 16%; border-radius: 99px; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; right: 16%; top: 40%; @size: 20%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -661,7 +661,7 @@ add('Offsetbox', 7, 'A small block hopping to a random corner of each cell on re
   rule: `${F} { :after { content: ''; position: absolute; left: @pick(8%, 52%); top: @pick(8%, 52%); @size: 40%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-add('Insetstep', 14, 'Concentric squares stepping inward, every ring re-colouring on reseed.', (c) => ({
+add('Insetstep', 14, 'Concentric squares stepping inward, every ring re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; :before { content: ''; position: absolute; inset: 20%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; inset: 40%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -676,7 +676,7 @@ add('Splithz', 36, 'Cells split top and bottom into two inks, re-pairing on ever
   rule: `${F} { background: ${ink(c)}; :after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.98 });
 
-add('Pinhole', 0, 'A small square punched from the centre of each ink tile, re-inking the field on reseed.', (c) => ({
+add('Pinhole', 0, 'A small square punched from the center of each ink tile, re-inking the field on reseed.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; :after { content: ''; position: absolute; inset: 34%; background: var(--color0);${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
@@ -720,7 +720,7 @@ add('Tatami', 16, 'Tatami mats with seams turning a quarter-turn between mats, r
   rule: `${F} { background: ${ink(c)}; :after { content: ''; position: absolute; left: 0; top: 32%; width: 100%; height: 7%; background: var(--color0);${pt} } } @match((@x + @y) % 2 == 0) { :after { left: 32%; top: 0; width: 7%; height: 100%; } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.98 });
 
-add('Pinweave', 1, 'Over-and-under plain weave, warp and weft re-threading their colours on reseed.', (c) => ({
+add('Pinweave', 1, 'Over-and-under plain weave, warp and weft re-threading their colors on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :after { content: ''; position: absolute; left: 0; top: 34%; width: 100%; height: 32%; background: ${ink(c)};${pt} } } @match((@x + @y) % 2 == 0) { :after { left: 34%; top: 0; width: 32%; height: 100%; } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.98 });
@@ -750,7 +750,7 @@ add('Caneweave', 19, 'Caned lattice of crossed diagonals, the canes re-tinting o
   rule: `${F} { :before { content: ''; position: absolute; left: 50%; top: 50%; width: 132%; height: 10%; ${xf('translate(-50%, -50%) rotate(45deg)')} background: ${ink(c)};${pt} } :after { content: ''; position: absolute; left: 50%; top: 50%; width: 132%; height: 10%; ${xf('translate(-50%, -50%) rotate(-45deg)')} background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Pavers', 34, 'Bevelled pavers with a lit corner and a centre stud, re-laying their colours on reseed.', (c) => ({
+add('Pavers', 34, 'Bevelled pavers with a lit corner and a center stud, re-laying their colors on reseed.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; :before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.2); ${cp('polygon(0 0, 100% 0, 0 100%)')}${pt} } :after { content: ''; position: absolute; inset: 36%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -790,7 +790,7 @@ add('Twill', 3, 'A diagonal twill rib stepping across the weave, re-shading on r
   rule: `${F} { background: ${ink(c)}; } @match((@x + @y) % 3 == 0) { background: var(--color0); }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.98 });
 
-add('Draughts', 0, 'A two-tone checkerboard, the light and dark squares re-dyeing on reseed.', (c) => ({
+add('Drafts', 0, 'A two-tone checkerboard, the light and dark squares re-dyeing on reseed.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; } @match((@x + @y) % 2 == 0) { background: ${ink(c)}; }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.98 });
@@ -809,17 +809,17 @@ add('Brokenbond', 20, 'A broken bond of bricks in random lengths, re-coursing on
 // G. Op-art, facets & 3-D shading
 // ════════════════════════════════════════════════════════════════════════════
 
-add('Bevel', 5, 'Raised bevelled buttons catching light on two edges, re-facing their colour on reseed.', (c) => ({
+add('Bevel', 5, 'Raised bevelled buttons catching light on two edges, re-facing their color on reseed.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; :before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.24); ${cp('polygon(0 0, 100% 0, 80% 20%, 20% 20%, 20% 80%, 0 100%)')}${pt} } :after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.28); ${cp('polygon(100% 0, 100% 100%, 0 100%, 20% 80%, 80% 80%, 80% 20%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Emboss', 14, 'Shaded spheres bulging off the grid, each ball re-lighting its colour on reseed.', (c) => ({
+add('Emboss', 14, 'Shaded spheres bulging off the grid, each ball re-lighting its color on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :after { content: ''; position: absolute; inset: 12%; border-radius: 50%; background: ${ink(c)}; box-shadow: inset calc(-14px / @Y) calc(-14px / @Y) calc(26px / @Y) rgba(0,0,0,0.4), inset calc(10px / @Y) calc(10px / @Y) calc(20px / @Y) rgba(255,255,255,0.4);${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Convex', 21, 'Puffed pillow tiles bulging at the centre, re-inking on every redraw.', (c) => ({
+add('Convex', 21, 'Puffed pillow tiles bulging at the center, re-inking on every redraw.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; box-shadow: inset calc(14px / @Y) calc(14px / @Y) calc(30px / @Y) rgba(255,255,255,0.32), inset calc(-14px / @Y) calc(-14px / @Y) calc(30px / @Y) rgba(0,0,0,0.38); }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -829,7 +829,7 @@ add('Cube', 13, 'Isometric tumbling cubes built from three lit faces, re-shading
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(50% 52%, 96% 28%, 96% 72%, 50% 96%)')} :before { content: ''; position: absolute; inset: 0; background: ${ink(c)}; ${cp('polygon(50% 4%, 96% 28%, 50% 52%, 4% 28%)')}${pt} } :after { content: ''; position: absolute; inset: 0; background: ${ink(c)}; ${cp('polygon(4% 28%, 50% 52%, 50% 96%, 4% 72%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.92 });
 
-add('Swellbox', 18, 'Squares swelling from small to large across the field, re-colouring on reseed.', (c) => ({
+add('Swellbox', 18, 'Squares swelling from small to large across the field, re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: calc(90% * (0.25 + 0.75 * (@x + @y) / (@X + @Y))); ${xf('translate(-50%, -50%)')} background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '8x12', tg: '7x7', tf: 0.95 });
@@ -879,7 +879,7 @@ add('Step3d', 17, 'Stepped corners climbing toward the light like ziggurat stair
   rule: `${F} { background: ${ink(c)}; :before { content: ''; position: absolute; left: 0; top: 0; width: 66%; height: 66%; background: rgba(255,255,255,0.2);${pt} } :after { content: ''; position: absolute; left: 0; top: 0; width: 33%; height: 33%; background: rgba(255,255,255,0.36);${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Diamond3d', 19, 'Raised gems lit on the upper facet and shaded below, re-cutting their colour on reseed.', (c) => ({
+add('Diamond3d', 19, 'Raised gems lit on the upper facet and shaded below, re-cutting their color on reseed.', (c) => ({
   vars: '',
   rule: `${F} { background: var(--color0); :before { content: ''; position: absolute; inset: 0; background: ${ink(c)}; filter: brightness(1.25); ${cp('polygon(50% 4%, 96% 50%, 50% 50%, 4% 50%)')}${pt} } :after { content: ''; position: absolute; inset: 0; background: ${ink(c)}; filter: brightness(0.8); ${cp('polygon(50% 50%, 96% 50%, 50% 96%, 4% 50%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -898,7 +898,7 @@ add('Bud', 15, 'Plump buds tilting at every angle, each one re-tinting on reseed
   rule: `--rot: ${R8}; ${F} { width: 58%; height: 74%; margin: 13% 21%; background: ${ink(c)}; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Bloom', 25, 'Four-petal blooms from two crossed ellipses, re-colouring petal by petal on reseed.', (c) => ({
+add('Bloom', 25, 'Four-petal blooms from two crossed ellipses, re-coloring petal by petal on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :before { content: ''; position: absolute; left: 30%; top: 8%; width: 40%; height: 84%; border-radius: 50%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; left: 8%; top: 30%; width: 84%; height: 40%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.92 });
@@ -918,7 +918,7 @@ add('Frond', 15, 'Single leaves veined down the middle, the blade turning to a n
   rule: `--rot: ${R4}; ${F} { width: 84%; height: 84%; margin: 8%; background: ${ink(c)}; border-radius: 0 100% 0 100%; ${rot('@var(--rot)')} :after { content: ''; position: absolute; left: 8%; top: 48%; width: 84%; height: 5%; background: var(--color0); ${xf('rotate(45deg)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Pondring', 14, 'Ripples spreading in concentric rings around a centre drop, re-tinting on reseed.', (c) => ({
+add('Pondring', 14, 'Ripples spreading in concentric rings around a center drop, re-tinting on reseed.', (c) => ({
   vars: '',
   rule: `${F} { width: 90%; height: 90%; margin: 5%; border-radius: 50%; border: calc(7px / @Y) solid ${ink(c)}; box-sizing: border-box; :before { content: ''; position: absolute; left: 50%; top: 50%; @size: 18%; margin: -9%; border-radius: 50%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; inset: 28%; border-radius: 50%; border: calc(7px / @Y) solid ${ink(c)}; box-sizing: border-box;${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.92 });
@@ -928,7 +928,7 @@ add('Scale', 8, 'Fish-scale shells shingled in offset rows, re-glazing scale by 
   rule: `${F} { background: ${ink(c)}; border-radius: 0 0 50% 50%; } @match(@y % 2 == 0) { ${xf('translateX(50%)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.98 });
 
-add('Sprig', 16, 'Two-leaf sprigs unfurling from the centre, re-tinting on reseed.', (c) => ({
+add('Sprig', 16, 'Two-leaf sprigs unfurling from the center, re-tinting on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :before { content: ''; position: absolute; left: 28%; top: 30%; @size: 42%; border-radius: 0 100%; background: ${ink(c)}; ${xf('rotate(-30deg)')}${pt} } :after { content: ''; position: absolute; right: 28%; top: 30%; @size: 42%; border-radius: 100% 0; background: ${ink(c)}; ${xf('rotate(30deg)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -943,7 +943,7 @@ add('Pod', 11, 'Seed pods split down the middle, re-tinting on every redraw.', (
   rule: `--rot: ${R8}; ${F} { ${rot('@var(--rot)')} :after { content: ''; position: absolute; left: 50%; top: 50%; width: 34%; height: 82%; margin: -41% -17%; border-radius: 50%; background: ${ink(c)};${pt} } :before { content: ''; position: absolute; left: 50%; top: 50%; width: 6%; height: 60%; margin: -30% -3%; background: var(--color0);${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Berry', 9, 'Clusters of three berries bunched together, re-ripening their colours on reseed.', (c) => ({
+add('Berry', 9, 'Clusters of three berries bunched together, re-ripening their colors on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :before { content: ''; position: absolute; left: 18%; top: 16%; @size: 40%; border-radius: 50%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; left: 44%; top: 40%; @size: 44%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
@@ -958,7 +958,7 @@ add('Cattail', 16, 'Reedmace cattails standing in a marsh, the heads re-tinting 
   rule: `${F} { :before { content: ''; position: absolute; left: 47%; top: 8%; width: 6%; height: 84%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; left: 38%; top: 16%; width: 24%; height: 40%; border-radius: 99px; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Heart', 32, 'Plump hearts dotting the grid, re-colouring on reseed.', (c) => ({
+add('Heart', 32, 'Plump hearts dotting the grid, re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(50% 96%, 8% 52%, 8% 26%, 28% 8%, 50% 24%, 72% 8%, 92% 26%, 92% 52%)')} opacity: @rand(0.8, 1); }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
@@ -1022,7 +1022,7 @@ add('Bubble', 2, 'Hollow soap-bubble rings drifting at random sizes, re-tinting 
   rule: `${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: @rand(36%, 82%); ${xf('translate(-50%, -50%)')} border-radius: 50%; border: calc(8px / @Y) solid ${ink(c)}; box-sizing: border-box;${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-add('Spore', 14, 'Glowing spores haloed in soft light, each one re-colouring on reseed.', (c) => ({
+add('Spore', 14, 'Glowing spores haloed in soft light, each one re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: 24%; margin: -12%; border-radius: 50%; background: ${ink(c)}; box-shadow: 0 0 calc(38px / @Y) ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.9 });
@@ -1067,7 +1067,7 @@ add('Polkapair', 25, 'Alternating large and small polka dots in two tones, re-do
   rule: `${F} { background: ${ink(c)}; border-radius: 50%; } @match((@x + @y) % 2 == 0) { background: ${ink(c)}; ${xf('scale(0.55)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.98 });
 
-add('Ringdot', 21, 'Dots ringed by a haloing band, the eye re-colouring on reseed.', (c) => ({
+add('Ringdot', 21, 'Dots ringed by a haloing band, the eye re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: 40%; margin: -20%; border-radius: 50%; background: ${ink(c)}; box-shadow: 0 0 0 calc(7px / @Y) var(--color0), 0 0 0 calc(15px / @Y) ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.92 });
@@ -1131,12 +1131,12 @@ add('Windowframe', 17, 'Four-light window panes mullioned by a cross, re-glazing
   rule: `${F} { background: ${ink(c)}; :before { content: ''; position: absolute; left: 45%; top: 6%; width: 10%; height: 88%; background: var(--color0);${pt} } :after { content: ''; position: absolute; left: 6%; top: 45%; width: 88%; height: 10%; background: var(--color0);${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-add('Crosshair', 23, 'Targeting crosshairs ringing a centre, the reticle re-inking on reseed.', (c) => ({
+add('Crosshair', 23, 'Targeting crosshairs ringing a center, the reticle re-inking on reseed.', (c) => ({
   vars: '',
   rule: `${F} { width: 84%; height: 84%; margin: 8%; border-radius: 50%; border: calc(7px / @Y) solid ${ink(c)}; box-sizing: border-box; :before { content: ''; position: absolute; left: 46%; top: -12%; width: 8%; height: 124%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; left: -12%; top: 46%; width: 124%; height: 8%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.92 });
 
-add('Quincunx', 13, 'Five-spot quincunx dots like dice, re-rolling their colours and turning on reseed.', (c) => ({
+add('Quincunx', 13, 'Five-spot quincunx dots like dice, re-rolling their colors and turning on reseed.', (c) => ({
   vars: '',
   rule: `--rot: ${R2}; ${F} { background: radial-gradient(circle at 26% 26%, ${ink(c)} 16%, transparent 18%), radial-gradient(circle at 74% 26%, ${ink(c)} 16%, transparent 18%), radial-gradient(circle at 50% 50%, ${ink(c)} 16%, transparent 18%), radial-gradient(circle at 26% 74%, ${ink(c)} 16%, transparent 18%), radial-gradient(circle at 74% 74%, ${ink(c)} 16%, transparent 18%); ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });

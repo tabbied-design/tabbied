@@ -6,7 +6,7 @@
 //
 // The transparent-background pass matters here the way it did in batch 12:
 // this batch cuts every void with a mask or a clip, and a void is only a real
-// hole if nothing behind it is painted in the background colour. Contact
+// hole if nothing behind it is painted in the background color. Contact
 // sheets land in /tmp/sheet-b13-*.png, the transparent pass over a
 // checkerboard so a cut that is genuinely see-through looks it.
 //

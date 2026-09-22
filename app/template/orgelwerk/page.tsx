@@ -16,7 +16,7 @@ export const metadata = {
    the plates, the plate itself - is what shows through the drawing. */
 const INK = '#141614';
 const ACCENT = '#1d6f5c';
-const GREY = '#87887f';
+const GRAY = '#87887f';
 const PANEL = '#dfdcd0';
 
 /* Twelve speaking lengths. `ft` drives the height of the pipe drawn for each,
@@ -107,17 +107,17 @@ const CARE = [
 export default function OrgelwerkPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--ground': '#f1efe7',
         '--ink': '#141614',
         '--accent': '#1d6f5c',
-        '--grey': '#87887f',
+        '--gray': '#87887f',
         '--panel': '#dfdcd0',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="ground,ink,accent,grey,panel"
+      data-edit-vars="ground,ink,accent,gray,panel"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -144,7 +144,7 @@ export default function OrgelwerkPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={battlement}
-              palette={['transparent', PANEL, GREY, ACCENT]}
+              palette={['transparent', PANEL, GRAY, ACCENT]}
               fit="grid"
               cellSize={156}
               redrawInterval={6200}
@@ -225,7 +225,7 @@ export default function OrgelwerkPage() {
         <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={mutule}
-            palette={['transparent', ACCENT, PANEL, GREY]}
+            palette={['transparent', ACCENT, PANEL, GRAY]}
             fit="grid"
             cellSize={120}
             redrawInterval={4200}
@@ -280,7 +280,7 @@ export default function OrgelwerkPage() {
                   <div data-edit-pattern={`pr.field.${i}`} data-edit-roles="transparent,3,2" className={s.pField} aria-hidden="true">
                     <TabbiedPattern
                       pattern={p.art}
-                      palette={['transparent', GREY, ACCENT]}
+                      palette={['transparent', GRAY, ACCENT]}
                       fit="grid"
                       cellSize={66}
                       redrawInterval={5400}
@@ -321,7 +321,7 @@ export default function OrgelwerkPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={cornercut}
-              palette={['transparent', ACCENT, GREY]}
+              palette={['transparent', ACCENT, GRAY]}
               fit="grid"
               cellSize={118}
               redrawInterval={4600}
@@ -358,7 +358,7 @@ export default function OrgelwerkPage() {
           <div data-edit-pattern="care.field" data-edit-roles="transparent,3,4" className={s.visitField} aria-hidden="true">
             <TabbiedPattern
               pattern={arris}
-              palette={['transparent', GREY, PANEL]}
+              palette={['transparent', GRAY, PANEL]}
               fit="grid"
               cellSize={102}
               redrawInterval={5400}
@@ -392,7 +392,7 @@ export default function OrgelwerkPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={lobeform}
-          palette={['transparent', ACCENT, PANEL, GREY]}
+          palette={['transparent', ACCENT, PANEL, GRAY]}
           fit="grid"
           cellSize={106}
           redrawInterval={5000}
@@ -406,7 +406,7 @@ export default function OrgelwerkPage() {
             <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2" className={s.footPlateField} aria-hidden="true">
               <TabbiedPattern
                 pattern={mutule}
-                palette={['transparent', GREY, ACCENT]}
+                palette={['transparent', GRAY, ACCENT]}
                 fit="grid"
                 cellSize={74}
                 redrawInterval={6000}

@@ -8,13 +8,13 @@ export const metadata = {
     'Betonpark is an indoor skatepark in a former warehouse on the Maashaven, Rotterdam. Mini ramp, vert wall, street plaza and a bowl, open seven days, day passes from nine euros.',
 };
 
-/* Site colours. Every field takes `transparent` in the background slot so the
+/* Site colors. Every field takes `transparent` in the background slot so the
    pattern is drawn straight onto the chalk of the page rather than onto a
    plate of its own. The green is the one accent and it is a safety green:
-   the colour of the tape on the coping. */
+   the color of the tape on the coping. */
 const INK = '#0B0B0B';
 const GREEN = '#2BD32B';
-const GREY = '#7A7A76';
+const GRAY = '#7A7A76';
 const PALE = '#D2D2CC';
 
 const NAV = [
@@ -194,7 +194,7 @@ const FAQ = [
 const FIND = [
   ['Address', 'Loods 7, Maashaven Oostzijde 230, 3072 HS Rotterdam'],
   ['Tram', '2, 20 and 25 to Maashaven, then four minutes on foot along the quay'],
-  ['Metro', 'Maashaven on lines D and E, exit towards the water'],
+  ['Metro', 'Maashaven on lines D and E, exit toward the water'],
   ['Bike', 'Racks for 120 bikes under the canopy, free, lit'],
   ['Car', 'Pay parking on the quay, 2 euros an hour, cheaper than the fine'],
   ['The door', 'The green one, under the crane'],
@@ -203,17 +203,17 @@ const FIND = [
 export default function BetonparkPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#ededea',
         '--ink': '#0b0b0b',
         '--green': '#2bd32b',
-        '--grey': '#7a7a76',
+        '--gray': '#7a7a76',
         '--pale': '#d2d2cc',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,green,grey,pale"
+      data-edit-vars="paper,ink,green,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -247,7 +247,7 @@ export default function BetonparkPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,2,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={bracket}
-              palette={['transparent', INK, GREEN, GREY]}
+              palette={['transparent', INK, GREEN, GRAY]}
               fit="grid"
               cellSize={120}
               redrawInterval={5200}
@@ -262,7 +262,7 @@ export default function BetonparkPage() {
           </h1>
           <div className={s.heroPlate}>
             <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
-              Two thousand four hundred square metres of concrete, ply and
+              Two thousand four hundred square meters of concrete, ply and
               Skatelite in a former grain warehouse on the south bank. A mini
               ramp, a vert wall, a street plaza and a bowl. Open seven days,
               heated in winter, nine euros on the door.
@@ -402,7 +402,7 @@ export default function BetonparkPage() {
           <div data-edit-pattern="rules.field" data-edit-roles="transparent,3,4" className={s.rulesField} aria-hidden="true">
             <TabbiedPattern
               pattern={gorge}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={96}
               redrawInterval={6400}
@@ -476,7 +476,7 @@ export default function BetonparkPage() {
         <div data-edit-pattern="coda.field" data-edit-roles="transparent,1,2,3" className={s.codaField}>
           <TabbiedPattern
             pattern={gorge}
-            palette={['transparent', INK, GREEN, GREY]}
+            palette={['transparent', INK, GREEN, GRAY]}
             fit="grid"
             cellSize={112}
             redrawInterval={4800}

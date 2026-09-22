@@ -1,9 +1,9 @@
 /* ==========================================================================
-   VELO CRITERIUM - city-centre cycling race, Ghent
+   VELO CRITERIUM - city-center cycling race, Ghent
    A kinetic sports poster on a night ground. Archivo in heavy italic for
    anything that has to be read from across a square, Archivo Narrow for
    the rest. Big numbers, panels cut on the diagonal, labels skewed like
-   they are already moving, speed lines in the role colours. The patterns
+   they are already moving, speed lines in the role colors. The patterns
    draw on transparent so the navy runs straight through them.
    ========================================================================== */
 
@@ -12,7 +12,7 @@
   --ink: #f2f5ff;
   --lime: #c6ff3d;
   --blue: #2f6bff;
-  --grey: #6c7590;
+  --gray: #6c7590;
   --gut: clamp(1.25rem, 4vw, 3.5rem);
   --max: 76rem;
   --display: 'Archivo', 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
@@ -277,7 +277,7 @@
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------- sections */
@@ -311,7 +311,7 @@
 
 /* ----------------------------------------------------------- schedule
    The race-day timeline: a vertical rule with a marker per slot, the
-   races in lime and the rest in grey. */
+   races in lime and the rest in gray. */
 
 .timeline {
   list-style: none;
@@ -337,7 +337,7 @@
   top: 1.15rem;
   width: 12px;
   height: 12px;
-  background: var(--grey);
+  background: var(--gray);
   transform: skewX(-12deg);
 }
 
@@ -491,7 +491,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   border-bottom: 1px solid var(--line);
 }
 
@@ -562,7 +562,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .resultName {
@@ -633,7 +633,7 @@
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: color-mix(in srgb, var(--paper) 70%, var(--grey));
+  background: color-mix(in srgb, var(--paper) 70%, var(--gray));
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1.2rem), calc(100% - 1.2rem) 100%, 0 100%);
   margin-bottom: 1rem;
 }
@@ -805,7 +805,7 @@
   font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 0.16em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footLinks {
@@ -845,7 +845,7 @@
 .footFine p {
   margin: 0;
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footFine a {

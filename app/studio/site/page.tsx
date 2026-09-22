@@ -7,7 +7,7 @@ import styles from 'components/studio/studio.module.css';
 
 export const metadata: Metadata = {
   title: 'Customize your site - Tabbied',
-  description: 'A website on the template it was built on, with its colours and patterns yours to change.',
+  description: 'A website on the template it was built on, with its colors and patterns yours to change.',
   robots: { index: false, follow: false },
 };
 

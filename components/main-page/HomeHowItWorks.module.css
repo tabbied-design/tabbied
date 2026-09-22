@@ -99,7 +99,7 @@
 /* Only the picker is inset as a proportion of the card; the other two panels
    fill the card and inset themselves with padding, as the design has them. The
    auto margins used to sit on .panelBody, where they outlived the width they
-   centred: a panel that reset `width` to auto still absorbed its free space
+   centerd: a panel that reset `width` to auto still absorbed its free space
    into those margins, so its slider and chips shrink-wrapped and floated in
    the middle of the card instead of spanning it. */
 .paletteBody {

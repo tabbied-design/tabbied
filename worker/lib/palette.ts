@@ -5,7 +5,7 @@ import { contrastRatio, isHexColor, mix, onColor } from 'tabbied-templates';
 //
 // The two rules are the palette library's own, not new ones invented here: no
 // ink may equal its background, and at least one ink must clear ~3:1 against
-// colour 0. A palette that fails is *repaired* deterministically - one pass,
+// color 0. A palette that fails is *repaired* deterministically - one pass,
 // nudging the nearest ink away from the ground - and only a palette repair
 // cannot save is discarded for the template's authored one. Regenerating
 // instead would spend money to re-roll dice we can simply load.
@@ -13,7 +13,7 @@ import { contrastRatio, isHexColor, mix, onColor } from 'tabbied-templates';
 /** The contrast an ink needs against the background to count as legible. */
 const MIN_CONTRAST = 3;
 
-/** How far a repair is allowed to travel before it is a different colour. */
+/** How far a repair is allowed to travel before it is a different color. */
 const MAX_REPAIR_STEPS = 8;
 const REPAIR_STEP = 0.12;
 
@@ -25,11 +25,11 @@ export type PaletteVerdict = {
 
 /**
  * Lowercase, and expand `#abc` to `#aabbcc`. Shorthand is a perfectly valid
- * colour - `isHexColor` accepts it and `toRgb` reads it - but everything
+ * color - `isHexColor` accepts it and `toRgb` reads it - but everything
  * downstream stores and renders the six-digit form, so it is expanded here
  * rather than left for each consumer to handle differently.
  */
-function normalise(hex: string): string {
+function normalize(hex: string): string {
   const value = hex.trim().toLowerCase();
 
   return value.length === 4
@@ -44,7 +44,7 @@ function normalise(hex: string): string {
 /**
  * Push `ink` away from `background` until it clears MIN_CONTRAST, by mixing it
  * toward whichever of black/white the background is not. Returns null when the
- * ink cannot get there - which happens for a colour already at the far end.
+ * ink cannot get there - which happens for a color already at the far end.
  */
 function repairInk(ink: string, background: string): string | null {
   const target = onColor(background);
@@ -75,7 +75,7 @@ export function ensurePalette(
   }
 
   const colors = proposed.map((value) =>
-    typeof value === 'string' ? normalise(value) : ''
+    typeof value === 'string' ? normalize(value) : ''
   );
 
   if (!colors.every(isHexColor)) {

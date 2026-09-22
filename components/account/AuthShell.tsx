@@ -5,7 +5,7 @@ import AuthBackLink from './AuthBackLink';
 import styles from './AuthShell.module.css';
 
 // The frame around the five account forms: a bar with the way back and the
-// lockup, and one card centred under it.
+// lockup, and one card centerd under it.
 //
 // A server component, deliberately. Only two things here read the query
 // string - the back link and the form - and each sits in its own Suspense

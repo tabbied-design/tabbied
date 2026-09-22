@@ -114,7 +114,7 @@ const PLATFORMS: Platform[] = [
 /**
  * Six research areas, six spreads. Each carries its own generated plate and its
  * own pattern, so the six panels never repeat a pattern; the palettes all come
- * out of the same six site colours, which is what keeps the run coherent.
+ * out of the same six site colors, which is what keeps the run coherent.
  */
 type ResearchArea = {
   code: string;
@@ -277,7 +277,7 @@ function SectionHeader({
 export default function QuantaRoboticsPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--void': '#0b0e14',

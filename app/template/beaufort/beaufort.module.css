@@ -10,7 +10,7 @@
   --navy: #0b1b2b;
   --bone: #efeae0;
   --green: #00b37a;
-  --grey: #6e808f;
+  --gray: #6e808f;
   --deep: #14293d;
 
   --edge: clamp(1.15rem, 3.4vw, 4.5rem);
@@ -79,7 +79,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -363,7 +363,7 @@
   font-size: 0.74rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .rowFrom {
@@ -482,8 +482,8 @@
   overflow: hidden;
 }
 
-/* No ground of its own - the band sits on the page colour, and the pattern
-   drawn on a transparent slot is what separates it from its neighbours. */
+/* No ground of its own - the band sits on the page color, and the pattern
+   drawn on a transparent slot is what separates it from its neighbors. */
 .quoteField {
   position: absolute;
   inset: 0;
@@ -613,7 +613,7 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .field input,
@@ -668,7 +668,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 

@@ -34,7 +34,7 @@
           "hex": "#FFD23F",
           "as": "an occasional flash on tools and tape"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#EAEAEA",
           "as": "brushed steel and the concrete floor"
         }
@@ -220,7 +220,7 @@
           "hex": "#D6001C",
           "as": "one small saturated accent, a door or a marker"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8E8E88",
           "as": "fair-faced concrete and screed floors"
         },
@@ -249,7 +249,7 @@
         },
         "Steel": {
           "hex": "#8A9098",
-          "as": "brushed aluminium, tripods and grey water"
+          "as": "brushed aluminum, tripods and gray water"
         },
         "Pale": {
           "hex": "#C3CBD4",
@@ -274,9 +274,9 @@
           "hex": "#FF3B14",
           "as": "one saturated accent on a proof mark or a machine"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#9A9A9A",
-          "as": "brushed steel and grey card"
+          "as": "brushed steel and gray card"
         },
         "Pale": {
           "hex": "#EDEDED",
@@ -357,7 +357,7 @@
         },
         "Steel": {
           "hex": "#8C9096",
-          "as": "galvanised steel and concrete"
+          "as": "galvanized steel and concrete"
         },
         "Pale": {
           "hex": "#E1E0DA",
@@ -382,9 +382,9 @@
           "hex": "#FF0059",
           "as": "one saturated accent on a timing beam or a lane marker"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8E8E8E",
-          "as": "aluminium tripods and cabling"
+          "as": "aluminum tripods and cabling"
         },
         "Pale": {
           "hex": "#E4E4E1",
@@ -436,9 +436,9 @@
           "hex": "#E10600",
           "as": "one small saturated accent on a switch or a label"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#9EA2A6",
-          "as": "polished steel and aluminium"
+          "as": "polished steel and aluminum"
         },
         "Pale": {
           "hex": "#F0F0EE",
@@ -461,7 +461,7 @@
         },
         "Stone": {
           "hex": "#6E6A60",
-          "as": "grey stone, crates and shadow"
+          "as": "gray stone, crates and shadow"
         },
         "Pale": {
           "hex": "#D8D5CA",
@@ -490,7 +490,7 @@
           "hex": "#FFA200",
           "as": "the on-air lamp and warm indicator light"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#6B6560",
           "as": "equipment housings and cable"
         },
@@ -517,9 +517,9 @@
           "hex": "#4C6B2F",
           "as": "one muted accent on a box label or a door"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8C8F84",
-          "as": "steel shelving and grey board"
+          "as": "steel shelving and gray board"
         },
         "Pale": {
           "hex": "#DEDED4",
@@ -544,9 +544,9 @@
           "hex": "#C1440E",
           "as": "one accent on thread, chalk or a pin cushion"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#9A9086",
-          "as": "steel shears and grey worsted"
+          "as": "steel shears and gray worsted"
         },
         "Pale": {
           "hex": "#E5DFD4",
@@ -571,7 +571,7 @@
           "hex": "#2B3FAE",
           "as": "the dyed yarn and one painted machine panel"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8E8A7E",
           "as": "steel machinery and concrete"
         },
@@ -586,7 +586,7 @@
       "style": "architectural photograph",
       "paletteMode": "scene",
       "palette": {
-        "Grey": {
+        "Gray": {
           "hex": "#E9E9E6",
           "as": "fair-faced concrete and overcast daylight"
         },
@@ -600,7 +600,7 @@
         },
         "Steel": {
           "hex": "#8B8B87",
-          "as": "rebar, props and grey machinery"
+          "as": "rebar, props and gray machinery"
         },
         "Pale": {
           "hex": "#D3D3CE",
@@ -679,7 +679,7 @@
           "hex": "#F5E663",
           "as": "the warm light itself, lamps and pools of glow"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#6A6A64",
           "as": "concrete and metal in half light"
         },
@@ -706,7 +706,7 @@
           "hex": "#C8102E",
           "as": "the safelight and one red accent"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8A8880",
           "as": "stainless tanks and enlarger bodies"
         },
@@ -733,9 +733,9 @@
           "hex": "#00843D",
           "as": "the directional accent on signs and floor graphics"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8E9094",
-          "as": "brushed aluminium and concrete"
+          "as": "brushed aluminum and concrete"
         },
         "Pale": {
           "hex": "#E2E2DE",
@@ -807,7 +807,7 @@
       "palette": {
         "Paper": {
           "hex": "#F2F1EE",
-          "as": "pale plaster, programme paper and daylight"
+          "as": "pale plaster, program paper and daylight"
         },
         "Ink": {
           "hex": "#111111",
@@ -817,7 +817,7 @@
           "hex": "#E1261C",
           "as": "the seating upholstery and signage"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8C8C88",
           "as": "fair-faced concrete and acoustic panels"
         },
@@ -850,7 +850,7 @@
         },
         "Steel": {
           "hex": "#9AA0A6",
-          "as": "brushed stainless and aluminium"
+          "as": "brushed stainless and aluminum"
         },
         "Pale": {
           "hex": "#E9EBEE",
@@ -858,7 +858,7 @@
         },
         "Graphite": {
           "hex": "#4A4F55",
-          "as": "mid greys in the machinery"
+          "as": "mid grays in the machinery"
         }
       }
     },
@@ -920,7 +920,7 @@
         },
         "Shadow": {
           "hex": "#3A3A38",
-          "as": "mid greys in the movement"
+          "as": "mid grays in the movement"
         }
       }
     },
@@ -947,7 +947,7 @@
         },
         "Pale": {
           "hex": "#E7E5DC",
-          "as": "pale grey card"
+          "as": "pale gray card"
         },
         "Umber": {
           "hex": "#6B6656",
@@ -979,7 +979,7 @@
       }
     },
     "facet": {
-      "title": "Facet - fine jewellery",
+      "title": "Facet - fine jewelry",
       "style": "macro product photograph",
       "paletteMode": "scene",
       "palette": {
@@ -1054,7 +1054,7 @@
       "palette": {
         "Night": {
           "hex": "#141210",
-          "as": "the unlit depth of the casting hall and the mould pit"
+          "as": "the unlit depth of the casting hall and the mold pit"
         },
         "Paper": {
           "hex": "#F0EAD8",
@@ -1064,13 +1064,13 @@
           "hex": "#C89B3C",
           "as": "cast bronze, molten metal glow and polished bell lips"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#7C736A",
           "as": "soot-darkened brick, iron fixtures and gantries"
         },
         "Deep": {
           "hex": "#221D18",
-          "as": "loam moulds and the shadowed roof structure"
+          "as": "loam molds and the shadowed roof structure"
         }
       }
     },
@@ -1091,7 +1091,7 @@
           "hex": "#1D6F5C",
           "as": "the painted green of an organ case and the workshop doors"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#87887F",
           "as": "tin-lead pipe metal and zinc"
         },
@@ -1118,7 +1118,7 @@
           "hex": "#C2456B",
           "as": "the pink of the brine standing in the crystallising pans"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8C8A90",
           "as": "weathered wood, tools and flat sea light"
         },
@@ -1145,7 +1145,7 @@
           "hex": "#6B7F1E",
           "as": "dune vegetation and the painted green of the trap frames"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8C8B7C",
           "as": "weathered netting poles and overcast sea light"
         },
@@ -1170,9 +1170,9 @@
         },
         "Copper": {
           "hex": "#B4552D",
-          "as": "hot and polished copper sheet, the colour the whole mill takes"
+          "as": "hot and polished copper sheet, the color the whole mill takes"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#7A736D",
           "as": "steel rolls, gantries and concrete"
         },
@@ -1199,7 +1199,7 @@
           "hex": "#5E2750",
           "as": "the dye itself: skeins, vat surface and stained timber"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8B8279",
           "as": "weathered beams, zinc and stone"
         },
@@ -1214,7 +1214,7 @@
     "mistral-gear": {
       "style": "product photograph",
       "cutout": true,
-      "backdrop": "The product stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The product stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
       "palette": {
         "Navy": {
           "hex": "#0D1B2A",
@@ -1239,7 +1239,7 @@
       "size": "1024x1536",
       "cutout": false,
       "description": "Head-and-shoulders portrait, framed at the same distance, subject facing the camera with a relaxed, friendly expression. Soft large-source key light from camera left, gentle fill, natural skin texture, 85mm lens look with a shallow depth of field.",
-      "backdrop": "Plain steel-grey studio wall, softly lit with a gentle falloff into shadow behind the subject's shoulders, no props in frame.",
+      "backdrop": "Plain steel-gray studio wall, softly lit with a gentle falloff into shadow behind the subject's shoulders, no props in frame.",
       "palette": {
         "Navy": {
           "hex": "#0D1B2A",
@@ -1253,7 +1253,7 @@
           "hex": "#E0FBFC",
           "as": "bright highlights"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#EAEAEA",
           "as": "warm neutral tones in the clothing"
         }
@@ -1262,11 +1262,11 @@
     "zenith-objects": {
       "cutout": true,
       "size": "1024x1024",
-      "backdrop": "The subject sits alone, centred on a plain flat pale background with nothing else in frame."
+      "backdrop": "The subject sits alone, centerd on a plain flat pale background with nothing else in frame."
     },
     "ambre-flacons": {
       "cutout": true,
-      "backdrop": "The bottle stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The bottle stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
       "palette": {
         "Ink": {
           "hex": "#141210",
@@ -1289,7 +1289,7 @@
     "cairn-gear": {
       "style": "product photograph",
       "cutout": true,
-      "backdrop": "The gear stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The gear stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
       "palette": {
         "Ember": {
           "hex": "#E8734A",
@@ -1310,7 +1310,7 @@
       "size": "1024x1536",
       "cutout": false,
       "description": "Head-and-shoulders portrait, framed at the same distance, subject facing the camera with a calm, weathered, friendly expression. Soft overcast daylight, gentle fill, natural skin texture, 85mm lens look with a shallow depth of field.",
-      "backdrop": "Plain cool slate-grey studio wall, evenly lit with a gentle falloff into shadow behind the subject's shoulders, no props in frame.",
+      "backdrop": "Plain cool slate-gray studio wall, evenly lit with a gentle falloff into shadow behind the subject's shoulders, no props in frame.",
       "palette": {
         "Ember": {
           "hex": "#E8734A",
@@ -1329,17 +1329,17 @@
     "hopscotch-props": {
       "cutout": true,
       "size": "1024x1024",
-      "backdrop": "The subject sits alone, centred on a plain flat pale background with nothing else in frame."
+      "backdrop": "The subject sits alone, centerd on a plain flat pale background with nothing else in frame."
     },
     "cerulean-flatlay": {
       "style": "product flat-lay photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The product lies flat, alone, on a plain neutral light-grey seamless backdrop, photographed from directly above, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The product lies flat, alone, on a plain neutral light-gray seamless backdrop, photographed from directly above, evenly lit, with no cast shadow and nothing else in frame.",
       "palette": {
         "Lagoon": {
           "hex": "#0FA3B1",
-          "as": "the main fabric colour"
+          "as": "the main fabric color"
         },
         "Coral": {
           "hex": "#FF8266",
@@ -1353,7 +1353,7 @@
     },
     "oxbow-pieces": {
       "cutout": true,
-      "backdrop": "The piece stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The piece stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
       "palette": {
         "Oak": {
           "hex": "#A9713C",
@@ -1396,12 +1396,12 @@
     },
     "piquant-cutouts": {
       "cutout": true,
-      "backdrop": "The subject sits alone, centred on a plain flat off-white background with nothing else in frame."
+      "backdrop": "The subject sits alone, centerd on a plain flat off-white background with nothing else in frame."
     },
     "quanta-units": {
       "cutout": true,
       "size": "1024x1024",
-      "backdrop": "The machine sits alone, centred on a plain flat pale background with nothing else in frame."
+      "backdrop": "The machine sits alone, centerd on a plain flat pale background with nothing else in frame."
     },
     "quanta-research": {
       "size": "1024x1024",
@@ -1410,7 +1410,7 @@
     "madrigal-instruments": {
       "style": "product photograph",
       "cutout": true,
-      "backdrop": "The instrument stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The instrument stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
       "palette": {
         "Crimson": {
           "hex": "#C72C41",
@@ -1433,7 +1433,7 @@
     "caldera-props": {
       "cutout": true,
       "size": "1024x1024",
-      "backdrop": "The subject sits alone, centred on a plain flat parchment-coloured background with nothing else in frame."
+      "backdrop": "The subject sits alone, centerd on a plain flat parchment-colored background with nothing else in frame."
     },
     "halden-people": {
       "style": "portrait photograph",
@@ -1482,7 +1482,7 @@
       "size": "1024x1536",
       "cutout": false,
       "description": "Head-and-shoulders portrait, framed at the same distance, subject facing the camera with a friendly, workmanlike expression. Soft large-source key light from camera left, gentle fill, natural skin texture, 85mm lens look with a shallow depth of field.",
-      "backdrop": "Plain cool grey wall, evenly lit with a gentle falloff behind the subject's shoulders, no props in frame.",
+      "backdrop": "Plain cool gray wall, evenly lit with a gentle falloff behind the subject's shoulders, no props in frame.",
       "palette": {
         "Ink": {
           "hex": "#17181A",
@@ -1503,7 +1503,7 @@
       "size": "1024x1536",
       "cutout": false,
       "description": "Head-and-shoulders portrait, framed at the same distance, subject facing the camera with a quiet, focused expression. Soft large-source key light from camera left, gentle fill, natural skin texture, 85mm lens look with a shallow depth of field.",
-      "backdrop": "Plain warm bone-grey wall, evenly lit with a soft falloff behind the subject's shoulders, no props in frame.",
+      "backdrop": "Plain warm bone-gray wall, evenly lit with a soft falloff behind the subject's shoulders, no props in frame.",
       "palette": {
         "Ink": {
           "hex": "#0E0E0E",
@@ -1543,7 +1543,7 @@
     "bex-pieces": {
       "cutout": true,
       "size": "1024x1024",
-      "backdrop": "The watch stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame. The dial is completely blank, with no numerals, markings or branding of any kind.",
+      "backdrop": "The watch stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame. The dial is completely blank, with no numerals, markings or branding of any kind.",
       "palette": {
         "Ink": {
           "hex": "#0E0E0E",
@@ -1562,7 +1562,7 @@
     "bogen-stock": {
       "cutout": true,
       "size": "1024x1024",
-      "backdrop": "The stock stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The stock stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
       "palette": {
         "Paper": {
           "hex": "#FAFAF7",
@@ -1606,7 +1606,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Bone": {
           "hex": "#F6F4EE",
@@ -1634,7 +1634,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Paper": {
           "hex": "#F0F0E8",
@@ -1648,9 +1648,9 @@
           "hex": "#4C6B2F",
           "as": "one muted accent on a box label or a door"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8C8F84",
-          "as": "steel shelving and grey board"
+          "as": "steel shelving and gray board"
         },
         "Pale": {
           "hex": "#DEDED4",
@@ -1662,7 +1662,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Dark": {
           "hex": "#121014",
@@ -1676,7 +1676,7 @@
           "hex": "#FFA200",
           "as": "the on-air lamp and warm indicator light"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#6B6560",
           "as": "equipment housings and cable"
         },
@@ -1690,7 +1690,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Dark": {
           "hex": "#101215",
@@ -1718,7 +1718,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "White": {
           "hex": "#FFFFFF",
@@ -1732,9 +1732,9 @@
           "hex": "#FF3B14",
           "as": "one saturated accent on a proof mark or a machine"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#9A9A9A",
-          "as": "brushed steel and grey card"
+          "as": "brushed steel and gray card"
         },
         "Pale": {
           "hex": "#EDEDED",
@@ -1746,7 +1746,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Pale": {
           "hex": "#F2F6F6",
@@ -1774,7 +1774,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Void": {
           "hex": "#08090B",
@@ -1802,7 +1802,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Paper": {
           "hex": "#F4F4F1",
@@ -1816,9 +1816,9 @@
           "hex": "#00843D",
           "as": "the directional accent on signs and floor graphics"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8E9094",
-          "as": "brushed aluminium and concrete"
+          "as": "brushed aluminum and concrete"
         },
         "Pale": {
           "hex": "#E2E2DE",
@@ -1830,7 +1830,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Dark": {
           "hex": "#0A0A0A",
@@ -1844,7 +1844,7 @@
           "hex": "#F5E663",
           "as": "the warm light itself, lamps and pools of glow"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#6A6A64",
           "as": "concrete and metal in half light"
         },
@@ -1858,7 +1858,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Paper": {
           "hex": "#F2F1ED",
@@ -1874,7 +1874,7 @@
         },
         "Steel": {
           "hex": "#8C9096",
-          "as": "galvanised steel and concrete"
+          "as": "galvanized steel and concrete"
         },
         "Pale": {
           "hex": "#E1E0DA",
@@ -1886,7 +1886,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Ecru": {
           "hex": "#EFEBE1",
@@ -1900,7 +1900,7 @@
           "hex": "#2B3FAE",
           "as": "the dyed yarn and one painted machine panel"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8E8A7E",
           "as": "steel machinery and concrete"
         },
@@ -1914,7 +1914,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Night": {
           "hex": "#0B0E1A",
@@ -1942,7 +1942,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Paper": {
           "hex": "#FCFCFA",
@@ -1958,7 +1958,7 @@
         },
         "Steel": {
           "hex": "#8A9098",
-          "as": "brushed aluminium, tripods and grey water"
+          "as": "brushed aluminum, tripods and gray water"
         },
         "Pale": {
           "hex": "#C3CBD4",
@@ -1970,7 +1970,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "White": {
           "hex": "#FFFFFF",
@@ -1984,9 +1984,9 @@
           "hex": "#E10600",
           "as": "one small saturated accent on a switch or a label"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#9EA2A6",
-          "as": "polished steel and aluminium"
+          "as": "polished steel and aluminum"
         },
         "Pale": {
           "hex": "#F0F0EE",
@@ -1998,7 +1998,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Linen": {
           "hex": "#F5F1EA",
@@ -2012,9 +2012,9 @@
           "hex": "#C1440E",
           "as": "one accent on thread, chalk or a pin cushion"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#9A9086",
-          "as": "steel shears and grey worsted"
+          "as": "steel shears and gray worsted"
         },
         "Pale": {
           "hex": "#E5DFD4",
@@ -2026,7 +2026,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Bone": {
           "hex": "#EFEDE6",
@@ -2038,7 +2038,7 @@
         },
         "Stone": {
           "hex": "#6E6A60",
-          "as": "grey stone, crates and shadow"
+          "as": "gray stone, crates and shadow"
         },
         "Pale": {
           "hex": "#D8D5CA",
@@ -2054,7 +2054,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Paper": {
           "hex": "#F7F7F5",
@@ -2068,9 +2068,9 @@
           "hex": "#FF0059",
           "as": "one saturated accent on a timing beam or a lane marker"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8E8E8E",
-          "as": "aluminium tripods and cabling"
+          "as": "aluminum tripods and cabling"
         },
         "Pale": {
           "hex": "#E4E4E1",
@@ -2082,9 +2082,9 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
-        "Grey": {
+        "Gray": {
           "hex": "#E9E9E6",
           "as": "fair-faced concrete and overcast daylight"
         },
@@ -2098,7 +2098,7 @@
         },
         "Steel": {
           "hex": "#8B8B87",
-          "as": "rebar, props and grey machinery"
+          "as": "rebar, props and gray machinery"
         },
         "Pale": {
           "hex": "#D3D3CE",
@@ -2110,7 +2110,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Bone": {
           "hex": "#EDEBE4",
@@ -2124,7 +2124,7 @@
           "hex": "#C8102E",
           "as": "the safelight and one red accent"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8A8880",
           "as": "stainless tanks and enlarger bodies"
         },
@@ -2138,7 +2138,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Paper": {
           "hex": "#F4F3EF",
@@ -2152,7 +2152,7 @@
           "hex": "#D6001C",
           "as": "one small saturated accent, a door or a marker"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8E8E88",
           "as": "fair-faced concrete and screed floors"
         },
@@ -2166,11 +2166,11 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Night": {
           "hex": "#141210",
-          "as": "the unlit depth of the casting hall and the mould pit"
+          "as": "the unlit depth of the casting hall and the mold pit"
         },
         "Paper": {
           "hex": "#F0EAD8",
@@ -2180,13 +2180,13 @@
           "hex": "#C89B3C",
           "as": "cast bronze, molten metal glow and polished bell lips"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#7C736A",
           "as": "soot-darkened brick, iron fixtures and gantries"
         },
         "Deep": {
           "hex": "#221D18",
-          "as": "loam moulds and the shadowed roof structure"
+          "as": "loam molds and the shadowed roof structure"
         }
       }
     },
@@ -2194,7 +2194,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Bone": {
           "hex": "#F1EFE7",
@@ -2208,7 +2208,7 @@
           "hex": "#1D6F5C",
           "as": "the painted green of an organ case and the workshop doors"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#87887F",
           "as": "tin-lead pipe metal and zinc"
         },
@@ -2222,7 +2222,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "White": {
           "hex": "#FBFAF7",
@@ -2236,7 +2236,7 @@
           "hex": "#C2456B",
           "as": "the pink of the brine standing in the crystallising pans"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8C8A90",
           "as": "weathered wood, tools and flat sea light"
         },
@@ -2250,7 +2250,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Sand": {
           "hex": "#EFEDE3",
@@ -2264,7 +2264,7 @@
           "hex": "#6B7F1E",
           "as": "dune vegetation and the painted green of the trap frames"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8C8B7C",
           "as": "weathered netting poles and overcast sea light"
         },
@@ -2278,7 +2278,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Night": {
           "hex": "#15100E",
@@ -2290,9 +2290,9 @@
         },
         "Copper": {
           "hex": "#B4552D",
-          "as": "hot and polished copper sheet, the colour the whole mill takes"
+          "as": "hot and polished copper sheet, the color the whole mill takes"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#7A736D",
           "as": "steel rolls, gantries and concrete"
         },
@@ -2306,7 +2306,7 @@
       "style": "product photograph",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The object sits alone on a plain neutral light-grey seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
+      "backdrop": "The object sits alone on a plain neutral light-gray seamless backdrop, photographed straight on, evenly lit, with no cast shadow, no hands, no props and nothing else whatsoever in frame.",
       "palette": {
         "Cream": {
           "hex": "#F4F0E6",
@@ -2320,7 +2320,7 @@
           "hex": "#5E2750",
           "as": "the dye itself: skeins, vat surface and stained timber"
         },
-        "Grey": {
+        "Gray": {
           "hex": "#8B8279",
           "as": "weathered beams, zinc and stone"
         },
@@ -2401,7 +2401,7 @@
       "project": "mistral-cycles",
       "set": "mistral-team",
       "slot": "about",
-      "subject": "a South Asian man in his thirties with a trimmed beard and tied-back hair, wearing a grey canvas apron over a white tee"
+      "subject": "a South Asian man in his thirties with a trimmed beard and tied-back hair, wearing a gray canvas apron over a white tee"
     },
     {
       "id": "zenith-hero",
@@ -2491,7 +2491,7 @@
       "set": "ambre-flacons",
       "slot": "product",
       "size": "1024x1024",
-      "subject": "a small cylindrical travel atomiser in brushed gold"
+      "subject": "a small cylindrical travel atomizer in brushed gold"
     },
     {
       "id": "ambre-nose",
@@ -2542,7 +2542,7 @@
       "set": "cairn-gear",
       "slot": "kit",
       "size": "1024x1024",
-      "subject": "a pair of grey mountaineering boots with orange laces, one slightly ahead of the other"
+      "subject": "a pair of gray mountaineering boots with orange laces, one slightly ahead of the other"
     },
     {
       "id": "cairn-pack",
@@ -2612,7 +2612,7 @@
       "project": "hopscotch-museum",
       "set": "hopscotch-props",
       "slot": "exhibit",
-      "subject": "a triangular prism splitting a single beam into a fanned rainbow of flat colour bands"
+      "subject": "a triangular prism splitting a single beam into a fanned rainbow of flat color bands"
     },
     {
       "id": "cerulean-hero",
@@ -2759,13 +2759,13 @@
       "project": "oxbow-workshop",
       "set": "oxbow-makers",
       "slot": "about",
-      "subject": "a broad-shouldered man in his fifties with a grey beard and cropped hair, wearing a rust-brown chore coat"
+      "subject": "a broad-shouldered man in his fifties with a gray beard and cropped hair, wearing a rust-brown chore coat"
     },
     {
       "id": "piquant-hero",
       "project": "piquant-provisions",
       "slot": "hero",
-      "subject": "a crowded market stall stacked with crates of chilli peppers under a striped awning, strings of dried chillies hanging from the frame"
+      "subject": "a crowded market stall stacked with crates of chili peppers under a striped awning, strings of dried chilies hanging from the frame"
     },
     {
       "id": "piquant-kitchen",
@@ -2795,7 +2795,7 @@
       "set": "piquant-cutouts",
       "slot": "product",
       "size": "1024x1024",
-      "subject": "a single curling chilli pepper with its stem"
+      "subject": "a single curling chili pepper with its stem"
     },
     {
       "id": "piquant-taco",
@@ -2811,7 +2811,7 @@
       "set": "piquant-cutouts",
       "slot": "product",
       "size": "1024x1024",
-      "subject": "a small wooden crate piled with mixed chilli peppers"
+      "subject": "a small wooden crate piled with mixed chili peppers"
     },
     {
       "id": "werkraum-hero",
@@ -2832,7 +2832,7 @@
       "project": "werkraum",
       "slot": "project",
       "size": "1024x1024",
-      "subject": "a primary school courtyard with a concrete colonnade and pale timber soffits, empty on a grey afternoon"
+      "subject": "a primary school courtyard with a concrete colonnade and pale timber soffits, empty on a gray afternoon"
     },
     {
       "id": "werkraum-bridge",
@@ -2853,7 +2853,7 @@
       "project": "werkraum",
       "slot": "story",
       "size": "1024x1024",
-      "subject": "a grey cardboard massing model of six housing blocks on a plywood base, lit from one side on a workshop table"
+      "subject": "a gray cardboard massing model of six housing blocks on a plywood base, lit from one side on a workshop table"
     },
     {
       "id": "nordlicht-coast",
@@ -2881,7 +2881,7 @@
       "project": "nordlicht",
       "slot": "field",
       "size": "1024x1536",
-      "subject": "a survey tripod and total station standing on bare rock high above a fjord, no people, low grey cloud"
+      "subject": "a survey tripod and total station standing on bare rock high above a fjord, no people, low gray cloud"
     },
     {
       "id": "halbfett-wall",
@@ -2944,14 +2944,14 @@
       "project": "klangwerk",
       "slot": "hero",
       "size": "1536x1024",
-      "subject": "a large analogue mixing desk in a darkened studio, faders catching a single green indicator glow, no people"
+      "subject": "a large analog mixing desk in a darkened studio, faders catching a single green indicator glow, no people"
     },
     {
       "id": "klangwerk-modular",
       "project": "klangwerk",
       "slot": "story",
       "size": "1024x1024",
-      "subject": "a wall of modular synthesiser panels with patch cables, lit low"
+      "subject": "a wall of modular synthesizer panels with patch cables, lit low"
     },
     {
       "id": "klangwerk-chamber",
@@ -3042,7 +3042,7 @@
       "project": "cobalt-works",
       "slot": "story",
       "size": "1024x1024",
-      "subject": "a fan of painted colour chip cards ranging from pale to deep blue on a plain surface"
+      "subject": "a fan of painted color chip cards ranging from pale to deep blue on a plain surface"
     },
     {
       "id": "cobalt-drums",
@@ -3073,7 +3073,7 @@
       "subject": "an empty temperature-controlled measurement laboratory, white surfaces and one red switch"
     },
     {
-      "id": "nullpunkt-artefact",
+      "id": "nullpunkt-artifact",
       "project": "nullpunkt",
       "slot": "story",
       "size": "1024x1024",
@@ -3105,7 +3105,7 @@
       "project": "sammlung-weiss",
       "slot": "story",
       "size": "1024x1024",
-      "subject": "a rough grey stone sculpture on a plain white plinth in a bare room"
+      "subject": "a rough gray stone sculpture on a plain white plinth in a bare room"
     },
     {
       "id": "frequenz-studio",
@@ -3140,7 +3140,7 @@
       "project": "fonds-aubert",
       "slot": "hero",
       "size": "1536x1024",
-      "subject": "long rows of grey archive boxes on steel shelving in a quiet repository, receding into the distance"
+      "subject": "long rows of gray archive boxes on steel shelving in a quiet repository, receding into the distance"
     },
     {
       "id": "aubert-reading",
@@ -3621,7 +3621,7 @@
       "size": "1024x1536",
       "cutout": true,
       "style": "product photograph",
-      "backdrop": "The instrument stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The instrument stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
       "subject": "a cello standing upright on its endpin, front view"
     },
     {
@@ -3669,7 +3669,7 @@
       "slot": "research",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The samples sit alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The samples sit alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
       "subject": "a neat row of five small polished material sample discs in different metals and ceramics"
     },
     {
@@ -3678,7 +3678,7 @@
       "slot": "research",
       "size": "1024x1024",
       "cutout": true,
-      "backdrop": "The instrument stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
+      "backdrop": "The instrument stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame.",
       "subject": "a precision benchtop measuring instrument with a blank display panel and a single dial"
     },
     {
@@ -3700,7 +3700,7 @@
       "project": "institut-vollmer",
       "slot": "story",
       "size": "1024x1024",
-      "subject": "a polished metal cross-section at high magnification, greyscale, scattered with small dark irregular pores of varying size and roundness across a finely mottled matrix. The micrograph fills the entire frame edge to edge: no monitor, screen, bezel, instrument, room, desk or person anywhere in the image, and no scale bar",
+      "subject": "a polished metal cross-section at high magnification, grayscale, scattered with small dark irregular pores of varying size and roundness across a finely mottled matrix. The micrograph fills the entire frame edge to edge: no monitor, screen, bezel, instrument, room, desk or person anywhere in the image, and no scale bar",
       "style": "scientific micrograph"
     },
     {
@@ -3708,7 +3708,7 @@
       "project": "institut-vollmer",
       "slot": "story",
       "size": "1536x1024",
-      "subject": "four researchers in white coats grouped around a laboratory bench in conversation, seen from a short distance in even daylight, faces turned away from camera towards the work"
+      "subject": "four researchers in white coats grouped around a laboratory bench in conversation, seen from a short distance in even daylight, faces turned away from camera toward the work"
     },
     {
       "id": "linie-hero",
@@ -3741,7 +3741,7 @@
       "size": "1024x1536",
       "cutout": true,
       "style": "product photograph",
-      "backdrop": "The unit stands alone on a plain neutral light-grey seamless backdrop, evenly lit, with no cast shadow and nothing else in frame. Every panel and screen is completely blank.",
+      "backdrop": "The unit stands alone on a plain neutral light-gray seamless backdrop, evenly lit, with no cast shadow and nothing else in frame. Every panel and screen is completely blank.",
       "subject": "a freestanding ticket validator column with a blank screen and a plain reader panel"
     },
     {
@@ -3756,13 +3756,13 @@
       "project": "linie-nord",
       "set": "linie-people",
       "slot": "people",
-      "subject": "a South Asian man in his fifties with grey at the temples, wearing a navy uniform jacket"
+      "subject": "a South Asian man in his fifties with gray at the temples, wearing a navy uniform jacket"
     },
     {
       "id": "bex-hero",
       "project": "chronometrie-bex",
       "slot": "hero",
-      "subject": "a watchmaker's bench under a single task lamp, a loupe, fine tweezers and movement plates laid out in order on a bone-coloured mat"
+      "subject": "a watchmaker's bench under a single task lamp, a loupe, fine tweezers and movement plates laid out in order on a bone-colored mat"
     },
     {
       "id": "bex-movement",
@@ -3804,7 +3804,7 @@
       "project": "chronometrie-bex",
       "set": "bex-people",
       "slot": "people",
-      "subject": "a woman in her forties with dark hair in a low bun, wearing a bone-coloured work coat"
+      "subject": "a woman in her forties with dark hair in a low bun, wearing a bone-colored work coat"
     },
     {
       "id": "bogen-hero",
@@ -3823,7 +3823,7 @@
       "project": "bogen-papier",
       "slot": "stock",
       "size": "1024x1024",
-      "subject": "an extreme close-up of the cut edges of a stack of sheets, showing the fibre and slight colour variation"
+      "subject": "an extreme close-up of the cut edges of a stack of sheets, showing the fiber and slight color variation"
     },
     {
       "id": "bogen-swatches",
@@ -3880,7 +3880,7 @@
       "project": "fonds-aubert",
       "set": "fonds-aubert-tile",
       "slot": "tile",
-      "subject": "a grey archival document box, lid on, seen three-quarters"
+      "subject": "a gray archival document box, lid on, seen three-quarters"
     },
     {
       "id": "fonds-aubert-tile-folders",
@@ -4279,7 +4279,7 @@
       "project": "ember-and-oak",
       "slot": "template",
       "size": "1024x1024",
-      "subject": "a woman in her fifties with grey curls pinned up and sleeves pushed back, in chef whites, standing in the open kitchen of a wood-fired restaurant, turned slightly to camera, the hearth burning out of focus behind her. Photographed on a real camera with natural depth of field and true skin texture: visible pores, stray hairs, small asymmetries. Hands are anatomically correct with five fingers, natural joints and a plausible grip on anything held."
+      "subject": "a woman in her fifties with gray curls pinned up and sleeves pushed back, in chef whites, standing in the open kitchen of a wood-fired restaurant, turned slightly to camera, the hearth burning out of focus behind her. Photographed on a real camera with natural depth of field and true skin texture: visible pores, stray hairs, small asymmetries. Hands are anatomically correct with five fingers, natural joints and a plausible grip on anything held."
     },
     {
       "id": "eo-team-1",
@@ -4328,7 +4328,7 @@
       "project": "nocturne",
       "slot": "template",
       "size": "1024x1024",
-      "subject": "a fine mist leaving the atomiser of a violet glass perfume bottle, a hand pressing the sprayer, caught against a dark ground. Photographed on a real camera with natural depth of field and true skin texture: visible pores, stray hairs, small asymmetries. Hands are anatomically correct with five fingers, natural joints and a plausible grip on anything held."
+      "subject": "a fine mist leaving the atomizer of a violet glass perfume bottle, a hand pressing the sprayer, caught against a dark ground. Photographed on a real camera with natural depth of field and true skin texture: visible pores, stray hairs, small asymmetries. Hands are anatomically correct with five fingers, natural joints and a plausible grip on anything held."
     },
     {
       "id": "solstice-alt-0",
@@ -4356,14 +4356,14 @@
       "project": "glockenhof",
       "slot": "hero",
       "size": "1536x1024",
-      "subject": "the casting hall of a bell foundry seen from a gantry, a row of loam bell moulds set into a sand floor, high windows throwing daylight across it"
+      "subject": "the casting hall of a bell foundry seen from a gantry, a row of loam bell molds set into a sand floor, high windows throwing daylight across it"
     },
     {
       "id": "glockenhof-pour",
       "project": "glockenhof",
       "slot": "story",
       "size": "1024x1536",
-      "subject": "molten bronze running from a tilted crucible into a mould in a dark foundry, sparks lifting"
+      "subject": "molten bronze running from a tilted crucible into a mold in a dark foundry, sparks lifting"
     },
     {
       "id": "glockenhof-lathe",
@@ -4391,7 +4391,7 @@
       "project": "glockenhof",
       "set": "glockenhof-tile",
       "slot": "tile",
-      "subject": "a wooden strickle board used to sweep a bell mould, worn at the edge"
+      "subject": "a wooden strickle board used to sweep a bell mold, worn at the edge"
     },
     {
       "id": "orgelwerk-rack",
@@ -4503,7 +4503,7 @@
       "project": "ringmark",
       "set": "ringmark-tile",
       "slot": "tile",
-      "subject": "a small coil of plain unmarked aluminium bird rings threaded on a wire loop"
+      "subject": "a small coil of plain unmarked aluminum bird rings threaded on a wire loop"
     },
     {
       "id": "ringmark-tile-pliers",

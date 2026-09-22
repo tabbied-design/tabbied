@@ -2,7 +2,7 @@
 //
 // Where batch 7 works in the idiom of the hand-drawn originals - a clip-path
 // polygon typed out by hand, a border-radius, a pseudo-element - this batch is
-// organised around the generators css-doodle ships with, and each design here
+// organized around the generators css-doodle ships with, and each design here
 // is one of them:
 //
 //   * @shape() walks a polar or parametric equation and hands back a
@@ -38,7 +38,7 @@
 //     a gradient or an @svg would snap instead;
 //   * a randomized custom prop read more than once goes through @var(--x);
 //   * nothing paints var(--color0). A hole knocked out in the background
-//     colour is a fake hole - set the background slot to transparent and it
+//     color is a fake hole - set the background slot to transparent and it
 //     stops erasing anything. validate-batch8.mjs re-renders the batch over a
 //     checkerboard with the background slot set to #00000000 and requires
 //     byte-identical cells.

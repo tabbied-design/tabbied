@@ -11,12 +11,12 @@
 
 .page {
   /* The five values every page in this batch is built from: the ground it is
-     printed on, the ink it is printed in, one accent, one grey, and one panel
-     tone a shade off the ground. Nothing else is coloured. */
+     printed on, the ink it is printed in, one accent, one gray, and one panel
+     tone a shade off the ground. Nothing else is colored. */
   --ground: #f1efe7;
   --ink: #141614;
   --accent: #1d6f5c;
-  --grey: #87887f;
+  --gray: #87887f;
   --panel: #dfdcd0;
 
   --edge: clamp(1.15rem, 3.4vw, 4.5rem);
@@ -91,7 +91,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -192,7 +192,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .bleed figcaption {
@@ -278,7 +278,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------- statement */
@@ -515,8 +515,8 @@
 
 /* ------------------------------------------------------------------- quote */
 
-/* No ground of its own: the band sits on the page colour and is separated
-   from its neighbours by the pattern alone, which is drawn on a transparent
+/* No ground of its own: the band sits on the page color and is separated
+   from its neighbors by the pattern alone, which is drawn on a transparent
    slot so the page shows straight through it. */
 .quote {
   position: relative;
@@ -525,7 +525,7 @@
   overflow: hidden;
 }
 
-/* Held well down and cleared through the middle: the page colour is what
+/* Held well down and cleared through the middle: the page color is what
    shows through the pattern, so it reads as a texture on the ground rather
    than as a panel laid over it, and the words sit on clean paper. */
 .quoteField {
@@ -578,7 +578,7 @@
   overflow: hidden;
 }
 
-/* Was a panel-coloured slab. Now the page ground with a pattern held well
+/* Was a panel-colored slab. Now the page ground with a pattern held well
    down, so the column grid reads against a texture rather than a change of
    surface. */
 .visitField {
@@ -633,7 +633,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .contactMail {

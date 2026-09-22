@@ -430,7 +430,7 @@
   line-height: 1.35;
 }
 
-/* the eleven stocked shades, every tone mixed from the six palette colours */
+/* the eleven stocked shades, every tone mixed from the six palette colors */
 .t1 { --tone: var(--paper); --on-tone: var(--umber); }
 .t2 { --tone: var(--pale); --on-tone: var(--umber); }
 .t3 { --tone: color-mix(in srgb, var(--warm) 45%, var(--paper)); --on-tone: var(--umber); }

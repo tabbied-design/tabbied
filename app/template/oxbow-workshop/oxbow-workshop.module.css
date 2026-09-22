@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------
-   OXBOW WORKSHOP - gallery catalogue
+   OXBOW WORKSHOP - gallery catalog
    bone ground / enormous margins / numbered plates / thin keylines
    ---------------------------------------------------------------- */
 
@@ -511,7 +511,7 @@
 }
 
 /* the portraits are opaque plates, matted and keylined like every other
-   figure in the catalogue - no pattern behind a face */
+   figure in the catalog - no pattern behind a face */
 .makerMat {
   border: var(--keyline);
   padding: clamp(0.6rem, 1.5vw, 1rem);

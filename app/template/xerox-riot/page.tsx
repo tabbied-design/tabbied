@@ -8,21 +8,21 @@ export const metadata = {
     'Xerox Riot is a one-day zine fair in a former print works in the east end of Glasgow. Eighty-four tables, three talks, a workshop, a readings hour, free entry, no sponsors.',
 };
 
-/* Black ink on off-white paper, one red, two greys. Every field takes
+/* Black ink on off-white paper, one red, two grays. Every field takes
    `transparent` in the background slot so the pattern sits in the page
-   colour like toner on a photocopy, not a picture pasted over it. */
+   color like toner on a photocopy, not a picture pasted over it. */
 const INK = '#0A0A0A';
 const RED = '#FF1E1E';
-const GREY = '#6B6B6B';
+const GRAY = '#6B6B6B';
 const PALE = '#CFCFC8';
-/* The programme tiles pin their doodle to a whole multiple of the cell
+/* The program tiles pin their doodle to a whole multiple of the cell
    (9 x 72px) and let the plate clip it. A fluid box gives fractional grid
    tracks and a hairline seam at every cell edge. */
 const TILE_BOX = 648;
 
 const NAV = [
   ['Exhibitors', '#exhibitors'],
-  ['Programme', '#programme'],
+  ['Program', '#program'],
   ['Tables', '#tables'],
   ['Rules', '#rules'],
   ['Venue', '#venue'],
@@ -73,7 +73,7 @@ type Strand = {
   slots: Slot[];
 };
 
-const PROGRAMME: Strand[] = [
+const PROGRAM: Strand[] = [
   {
     n: '01',
     name: 'Talks',
@@ -146,7 +146,7 @@ const RULES = [
 const VENUE = [
   ['Doors', '11.00 to 18.00, Saturday 14 November 2026'],
   ['Set-up', 'From 09.00, through the loading bay on Camlachie Street'],
-  ['After', 'From 19.00 at the Bell, 200 metres up the road, until they throw us out'],
+  ['After', 'From 19.00 at the Bell, 200 meters up the road, until they throw us out'],
   ['Access', 'Step-free through the loading bay; lift to the mezzanine; two gender-neutral toilets; a quiet room by the office'],
   ['Getting there', 'Bellgrove station, 8 minutes on foot. Buses 2, 60, 61 to Gallowgate. Bike racks inside the bay'],
   ['Food', 'A veggie stall in the yard from noon; two cafes and a chippy within three minutes'],
@@ -172,17 +172,17 @@ const PAST: Edition[] = [
 export default function XeroxRiotPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f4f4f0',
         '--ink': '#0a0a0a',
         '--red': '#ff1e1e',
-        '--grey': '#6b6b6b',
+        '--gray': '#6b6b6b',
         '--pale': '#cfcfc8',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,red,grey,pale"
+      data-edit-vars="paper,ink,red,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -204,13 +204,13 @@ export default function XeroxRiotPage() {
 
       <main id="top">
         {/* ------------------------------------------------------------ HERO
-            Mirrorblack's fans in grey and red at full bleed, the loud field,
+            Mirrorblack's fans in gray and red at full bleed, the loud field,
             with the title cut out of three different papers on top. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={mirrorblack}
-              palette={['transparent', PALE, GREY, RED]}
+              palette={['transparent', PALE, GRAY, RED]}
               fit="grid"
               cellSize={104}
               redrawInterval={4200}
@@ -258,12 +258,12 @@ export default function XeroxRiotPage() {
           </ol>
         </section>
 
-        {/* ------------------------------------------------------- PROGRAMME
+        {/* ------------------------------------------------------- PROGRAM
             Three strands, each with a larmier tile standing in for the
             photograph a nicer fair would have taken. */}
-        <section id="programme" className={s.programme} aria-labelledby="programme-h">
+        <section id="programme" className={s.program} aria-labelledby="programme-h">
           <div className={s.secHead}>
-            <h2 data-edit="programme.barHead" data-edit-max="60" id="programme-h" className={s.barHead}>The programme</h2>
+            <h2 data-edit="programme.barHead" data-edit-max="60" id="programme-h" className={s.barHead}>The program</h2>
             <p data-edit="programme.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
               Everything is free apart from the workshop materials. Nothing is
               ticketed; if the room is full it is full, and the talks are
@@ -271,12 +271,12 @@ export default function XeroxRiotPage() {
             </p>
           </div>
           <div className={s.strands}>
-            {PROGRAMME.map((st, i) => (
+            {PROGRAM.map((st, i) => (
               <article key={st.n} className={s.strand}>
                 <div data-edit-pattern={`strand.field.${i}`} data-edit-roles="transparent,1,3,4" className={s.tile} aria-hidden="true">
                   <TabbiedPattern
                     pattern={larmier}
-                    palette={['transparent', INK, GREY, PALE]}
+                    palette={['transparent', INK, GRAY, PALE]}
                     fit="grid"
                     cellSize={72}
                     redrawInterval={5400}
@@ -315,7 +315,7 @@ export default function XeroxRiotPage() {
           <div data-edit-pattern="band.field" data-edit-roles="transparent,1,2,3" className={s.bandField}>
             <TabbiedPattern
               pattern={fustian}
-              palette={['transparent', INK, RED, GREY]}
+              palette={['transparent', INK, RED, GRAY]}
               fit="grid"
               cellSize={96}
               redrawInterval={3900}
@@ -424,7 +424,7 @@ export default function XeroxRiotPage() {
         <div data-edit-pattern="coda.field" data-edit-roles="transparent,3,4" className={s.codaField}>
           <TabbiedPattern
             pattern={mirrorblack}
-            palette={['transparent', GREY, PALE]}
+            palette={['transparent', GRAY, PALE]}
             fit="grid"
             cellSize={88}
             redrawInterval={6000}
@@ -446,7 +446,7 @@ export default function XeroxRiotPage() {
             <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>The day</h2>
             <ul className={s.footLinks}>
               <li><a data-edit="footer.exhibitors" data-edit-max="28" href="#exhibitors">Exhibitors</a></li>
-              <li><a data-edit="footer.programme" data-edit-max="28" href="#programme">Programme</a></li>
+              <li><a data-edit="footer.programme" data-edit-max="28" href="#programme">Program</a></li>
               <li><a data-edit="footer.venue" data-edit-max="28" href="#venue">Venue and access</a></li>
             </ul>
           </div>

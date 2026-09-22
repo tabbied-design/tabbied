@@ -77,7 +77,7 @@ export function buildPrompt(m) {
   return [
     `A product photograph of ${m.subject}.`,
     'The pattern in the provided image is the printed design on it:',
-    'reproduce that pattern faithfully, keeping its exact colours, geometry and',
+    'reproduce that pattern faithfully, keeping its exact colors, geometry and',
     'proportions, wrapped naturally over the surface with the scene\'s own',
     'lighting, perspective and any folds or curvature.',
     'Nothing else in the frame carries the pattern.',

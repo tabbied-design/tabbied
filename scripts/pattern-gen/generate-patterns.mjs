@@ -2,7 +2,7 @@
 // prints the galleryThumbnails.ts entries to insert.
 //
 // HISTORICAL - DO NOT RUN. The definitions in pattern-defs-1/2/3.mjs are a
-// snapshot of how batches 1-3 were first produced, and the catalogue has moved
+// snapshot of how batches 1-3 were first produced, and the catalog has moved
 // on without them. Running this today would:
 //
 //   * recreate 105 designs retired since (see "retire 15 designs", #41, and
@@ -31,7 +31,7 @@ import { batch3 } from './pattern-defs-3.mjs';
 
 if (!process.env.I_KNOW_THIS_REWRITES_THE_CATALOGUE) {
   console.error(
-    'generate-patterns.mjs is historical and would corrupt the catalogue - see the note at the top of this file.'
+    'generate-patterns.mjs is historical and would corrupt the catalog - see the note at the top of this file.'
   );
   process.exit(1);
 }

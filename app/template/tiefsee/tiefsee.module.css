@@ -1,5 +1,5 @@
 /* ==========================================================================
-   TIEFSEE - deep-sea research programme
+   TIEFSEE - deep-sea research program
    The page is the water column: five full-bleed zone bands, each one darker
    than the one above it, so scrolling down is descending. Bone type on deep
    water, one cyan, and nothing enclosed by a rule anywhere on the page.
@@ -10,7 +10,7 @@
   --water: #04121a;
   --bone: #e6eef0;
   --cyan: #00d2e0;
-  --grey: #5d7480;
+  --gray: #5d7480;
   --deep: #0a1f2b;
 
   --edge: clamp(1.15rem, 3.4vw, 4.5rem);
@@ -79,7 +79,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -210,7 +210,7 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .zBody h2 {
@@ -227,7 +227,7 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .zText {
@@ -258,7 +258,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------- statement */
@@ -562,7 +562,7 @@
   margin: 0;
   font-size: 0.78rem;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* A locator, not a map: the pattern stands in for the ground and the offices
@@ -616,7 +616,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 

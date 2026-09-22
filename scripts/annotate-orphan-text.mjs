@@ -7,13 +7,13 @@
 // forever. Cobalt Works' headline is the shape:
 //
 //     <h1>
-//       Colour is a <br />
+//       Color is a <br />
 //       <span data-edit="hero.text">material</span> before <br />
 //       it is an effect.
 //     </h1>
 //
 // Rewriting hero.text replaced "material" and left the rest of the sentence
-// standing, so a generated site read "Colour is a Find your place. before it is
+// standing, so a generated site read "Color is a Find your place. before it is
 // an effect." - the template's words with the model's spliced in.
 //
 // Two shapes are fixed, matching what the five shared TemplateSite pages
@@ -138,7 +138,7 @@ function realChildren(element) {
  * The id prefix this part of the page already uses.
  *
  * Read off the page's own annotations rather than re-derived from class names:
- * these files are already annotated, so the neighbours are the definition of
+ * these files are already annotated, so the neighbors are the definition of
  * what this section is called, and a fresh derivation could disagree with them.
  */
 function sectionPrefixOf(code, element) {

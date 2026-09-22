@@ -8,14 +8,14 @@
 // the same composition at a different resolution.
 //
 // That needs three things css-doodle gives you and the earlier batches never
-// used: real maths on the cell's coordinates (@sqrt for distance from the
-// centre of the sheet, @atan2 for its bearing, @sin for the wave fields),
+// used: real math on the cell's coordinates (@sqrt for distance from the
+// center of the sheet, @atan2 for its bearing, @sin for the wave fields),
 // conic gradients, which are the only way to sweep a value round an angle, and
 // SVG *stroke* - line art rather than filled shapes.
 //
-//   A. Radial fields      distance from the centre of the *canvas* drives the
+//   A. Radial fields      distance from the center of the *canvas* drives the
 //                         cell (Epicentre, Pivot, Fulcrum, Centroid).
-//   B. Angular fields     @atan2 gives every cell its bearing from the centre,
+//   B. Angular fields     @atan2 gives every cell its bearing from the center,
 //                         so the field points or swirls as a whole (Flux,
 //                         Gyre, Maelstrom, Nutation, Gimbal, Dipole).
 //   C. Conic              conic-gradient as a mask, so the wedge is a real
@@ -39,7 +39,7 @@
 //     snap instead of morphing;
 //   * a randomized custom prop read more than once goes through @var(--x);
 //   * nothing paints var(--color0). A hole knocked out in the background
-//     colour is a fake hole - set the background slot to transparent and it
+//     color is a fake hole - set the background slot to transparent and it
 //     stops erasing anything. Every gap here is a mask, a clip-path hole, or
 //     a gap between elements, and validate-batch9.mjs re-renders the whole
 //     batch over a checkerboard with the background slot set to #00000000 and
@@ -88,7 +88,7 @@ const u = (v) => `calc(${v}px * 6 / @size-col)`;
 // put the origin at the middle of the *canvas*, so a design written against
 // them holds its composition at any grid density.
 //
-// One hard constraint shapes how they are written. css-doodle's @calc honours
+// One hard constraint shapes how they are written. css-doodle's @calc honors
 // operator precedence, but a *bare grouping paren* does not survive it -
 // `@calc(90 - 74 * (2 * @x / @X - 1))` quietly evaluates the group to zero and
 // the whole field goes flat. Only a function call's own parentheses are safe,
@@ -100,13 +100,13 @@ const u = (v) => `calc(${v}px * 6 / @size-col)`;
 // custom property and reading it back with @var() also comes out flat, so the
 // expressions are inlined at every use even though it makes the CSS long.
 
-// Distance from the vertical / horizontal centreline: 0 in the middle of the
+// Distance from the vertical / horizontal centerline: 0 in the middle of the
 // canvas, about 1 at an edge.
 const AX = '@abs(2 * @x / @X - 1 - 1 / @X)';
 const AY = '@abs(2 * @y / @Y - 1 - 1 / @Y)';
-// 0 at the centre of the canvas, 1 at the middle of an edge, ~1.41 at a corner.
+// 0 at the center of the canvas, 1 at the middle of an edge, ~1.41 at a corner.
 const RAD = `@sqrt(${AX} * ${AX} + ${AY} * ${AY})`;
-// Bearing from the centre, in degrees.
+// Bearing from the center, in degrees.
 const ANG = '@atan2(2 * @y / @Y - 1 - 1 / @Y, 2 * @x / @X - 1 - 1 / @X) * 57.2958';
 // A sweep across the sheet, left to right and top to bottom.
 const RX = '@x / @X';
@@ -135,7 +135,7 @@ const pieMask = (deg, from = '0deg') =>
 // stroke width, which reads as a rounded terminal on an open stroke - right
 // for these designs, but wrong on a path that stops at a corner, where the
 // overhang shows as a thorn poking out past the join. A design like that
-// wants `butt` and a neighbouring miter join to fill the corner instead.
+// wants `butt` and a neighboring miter join to fill the corner instead.
 const strokePath = (d, w) =>
   svgMask(`viewBox: 0 0 100 100; path { d: ${d}; fill: none; stroke: #000; stroke-width: ${w}; stroke-linecap: round; }`);
 
@@ -388,7 +388,7 @@ const add = (name, palIdx, description, build, cfg = {}) => {
 };
 
 // ══════════════════════════════════════════════════════════════════════════
-// A. Radial fields - distance from the centre of the *canvas* drives the cell.
+// A. Radial fields - distance from the center of the *canvas* drives the cell.
 // ══════════════════════════════════════════════════════════════════════════
 
 add('Epicentre', 1, 'Discs at their largest in the middle of the sheet and shrinking all the way to the corners.', (c) => ({
@@ -478,7 +478,7 @@ add('Reedpen', 62, 'A reed pen: three strokes of the same length, laid down side
 //    axis, so the composition is symmetrical however many cells it has.
 // ══════════════════════════════════════════════════════════════════════════
 
-add('Bilateral', 1, 'The sheet folded down its middle: everything past the centreline is the mirror of what came before it.', (c) => ({
+add('Bilateral', 1, 'The sheet folded down its middle: everything past the centerline is the mirror of what came before it.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(0 0, 100% 0, 62% 100%, 0 100%)')} @match(@x > @X / 2) { ${xf('scaleX(-1)')} } }${TR}`,
 }), { tg: '6x6' });
@@ -488,7 +488,7 @@ add('Axial', 40, 'A single fold about the horizontal, with the shape running off
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(0 0, 101% 0, 101% 46%, 40% 101%, 0 101%)')} @match(@y > @Y / 2) { ${xf('scaleY(-1)')} } }${TR}`,
 }), { tg: '6x6' });
 
-add('Foldback', 54, 'Arcs folded back on themselves at the centreline of the sheet.', (c) => ({
+add('Foldback', 54, 'Arcs folded back on themselves at the centerline of the sheet.', (c) => ({
   vars: '',
   rule: `${F} { ${A(`inset: 0; background: ${ink(c)}; border-radius: 0 100% 0 0;`)} @match(@x > @X / 2) { ${xf('scaleX(-1)')} } @match(@y > @Y / 2) { ${xf('scaleY(-1)')} } }${TR}`,
 }), { tg: '6x6' });

@@ -23,7 +23,7 @@ The result is a plausible pattern that is not ours, which defeats the point of
 a mockup: the whole job is to show *this* design on an object.
 
 **Rendering the pattern and passing the pixels does work.** The pattern is
-rasterised in a headless browser, and that PNG is sent to the image **edits**
+rasterized in a headless browser, and that PNG is sent to the image **edits**
 endpoint as the reference. The model then draws the object with that pattern
 printed on it. This is the pipeline below.
 
@@ -108,7 +108,7 @@ The prompt is scene direction plus one clause that does the actual work:
 
 > A product photograph of *[subject]*. **The pattern in the provided image is
 > the printed design on it: reproduce that pattern faithfully, keeping its
-> exact colours, geometry and proportions, wrapped naturally over the surface
+> exact colors, geometry and proportions, wrapped naturally over the surface
 > with the scene's own lighting, perspective and any folds or curvature.**
 > Nothing else in the frame carries the pattern. No text, letters, numbers, or
 > logos.
@@ -126,10 +126,10 @@ this document, because it tells you which designs to pick.
 | Mockup | Design | Surface | Outcome |
 |---|---|---|---|
 | `mockup-compact-cosmetics` | `fluting` | domed enamel lid | **Excellent.** Basketweave blocks, stripe direction and palette all held, wrapped over the dome with correct specular highlights. |
-| `mockup-van-wrap` | `ziggy` | large curved panels | **Excellent.** Chevrons and the exact five-colour palette held across doors, wheel arches and panel seams. Arrangement re-composed, which is invisible on a livery. |
+| `mockup-van-wrap` | `ziggy` | large curved panels | **Excellent.** Chevrons and the exact five-color palette held across doors, wheel arches and panel seams. Arrangement re-composed, which is invisible on a livery. |
 | `mockup-poster-gallery` | `bauhaus` | flat, framed | **Good.** Quarter-circles and leaf forms in the right inks. Re-composed, so use tier 1 if a specific composition matters. |
 | `mockup-tin-packaging` | `annulus` | cylinder | **Partial.** Rings and palette held, but `annulus`'s defining feature, rings thickening row by row down the canvas, flattened into a uniform grid. |
-| `mockup-tote-textile` | `lattice` | fabric with folds | **Partial.** Read the coloured pips and the palette, but lost the diagonal argyle lattice and rebuilt it as square blocks. |
+| `mockup-tote-textile` | `lattice` | fabric with folds | **Partial.** Read the colored pips and the palette, but lost the diagonal argyle lattice and rebuilt it as square blocks. |
 
 The pattern in those results:
 
@@ -187,7 +187,7 @@ existing template imagery is unaffected.
   site renders live patterns anyway) and the difference reads as photography
   rather than as error.
 - Palette can shift a shade under scene lighting. That is usually desirable,
-  since a perfectly flat colour match looks pasted on.
+  since a perfectly flat color match looks pasted on.
 - The model will occasionally add plausible product details you did not ask
   for (the compact's gold rim, the tin's brushed lid). Usually welcome; worth a
   look before shipping.

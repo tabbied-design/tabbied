@@ -1,5 +1,5 @@
 /* ============================================================
-   MADRIGAL - concert-programme classicism
+   MADRIGAL - concert-program classicism
    aubergine #2D132C · wine #801336 · carmine #C72C41
    vermilion #EE4540 · gold #F0C419 · parchment #FFE9C7
    ============================================================ */
@@ -158,7 +158,7 @@
   isolation: isolate;
 }
 
-/* Centred in the arch, with the height pulled in so the crown's curve
+/* Centerd in the arch, with the height pulled in so the crown's curve
    never crops the scroll. */
 .heroViolin {
   position: absolute;
@@ -174,7 +174,7 @@
 }
 
 /* the title sits on a cartouche laid over the lunette field, the way a
-   programme's title panel sits on its printed cover */
+   program's title panel sits on its printed cover */
 .heroCartouche {
   position: relative;
   max-width: 44rem;
@@ -411,7 +411,7 @@
   position: relative;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  /* Each plate keeps a trace of its instrument's colour, pulled most of the way
+  /* Each plate keeps a trace of its instrument's color, pulled most of the way
      back to the page's aubergine so three plates read as one set. */
   background-color: color-mix(in srgb, var(--plate-tint, var(--wine)) 24%, var(--aubergine));
   background-image: radial-gradient(
@@ -429,7 +429,7 @@
   aspect-ratio: 5 / 4;
 }
 
-/* Centred in the plate rather than hung off its foot, so the whole
+/* Centerd in the plate rather than hung off its foot, so the whole
    instrument sits inside the pattern field with even margins around it. */
 .cutoutTall {
   position: absolute;

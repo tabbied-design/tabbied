@@ -156,7 +156,7 @@ for (const slug of slugs) {
       derivation: root.derivation,
       ...(root.flatSections ? { flatSections: true } : {}),
       // A `vars` page owns its property names, so the spec has to carry them:
-      // without them a re-colour would compute the right colours and write
+      // without them a re-color would compute the right colors and write
       // them nowhere.
       ...(root.varNames ? { varNames: root.varNames } : {}),
     },
@@ -211,7 +211,7 @@ const entryOf = (spec) => ({
     ],
     // Which pieces of brand copy this template can be handed. Studio reads
     // this to decide whether a generated direction can be previewed *as* the
-    // business, or only as the template in its colours - see brand.ts.
+    // business, or only as the template in its colors - see brand.ts.
     copyRoles: declaredCopyRoles(spec),
     slots: {
       text: counts(spec, 'text'),

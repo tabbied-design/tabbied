@@ -13,7 +13,7 @@
   --ink: #1d1b2b;
   --orange: #ff6b2c;
   --teal: #0fa3b1;
-  --grey: #8b8478;
+  --gray: #8b8478;
   --tint: color-mix(in srgb, var(--ink) 5%, var(--paper));
   --line: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
   --gut: clamp(1rem, 3.5vw, 3rem);
@@ -171,7 +171,7 @@
   padding: clamp(4rem, 12vw, 9rem) var(--gut) clamp(3rem, 7vw, 5rem);
 }
 
-/* The wash: the disc pattern behind the copy, with a cream glow centred on
+/* The wash: the disc pattern behind the copy, with a cream glow centerd on
    the headline so it stays readable, and the field clear at the edges. */
 .heroField {
   position: absolute;
@@ -267,7 +267,7 @@
 .badges dd {
   margin: 0;
   font-size: 0.6rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ---------------------------------------------------------------- panel
@@ -406,7 +406,7 @@
 .ringWhere {
   margin: 0.2rem 0 0.7rem;
   font-size: 0.9rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .ringBody {
@@ -450,7 +450,7 @@
   color: color-mix(in srgb, var(--paper) 74%, transparent);
 }
 
-/* ------------------------------------------------------------ programme */
+/* ------------------------------------------------------------ program */
 
 .week {
   list-style: none;
@@ -507,7 +507,7 @@
 
 .nightFrom {
   margin: 0.15rem 0 0.6rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .nightText {
@@ -553,7 +553,7 @@
 
 .viewCaption {
   margin: 0.3rem 0 0;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------------- menu */
@@ -614,7 +614,7 @@
   grid-column: 1 / -1;
   font-size: 0.86rem;
   font-weight: 300;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------- membership */
@@ -658,7 +658,7 @@
 
 .tierUnit {
   margin: 0.4rem 0 1rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .tierBody {

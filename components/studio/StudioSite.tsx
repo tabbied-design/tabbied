@@ -1,11 +1,11 @@
 'use client';
 
 // The customizer: a site's latest revision on its template, and the two things
-// a person changes about it in this release - its colours and its patterns.
+// a person changes about it in this release - its colors and its patterns.
 //
 // Everything a person does here is planned and applied by the edits engine
 // against the iframe's document, live, the same engine the canvas was drawn
-// with. A colour change plans the properties and the pattern-host rewrites,
+// with. A color change plans the properties and the pattern-host rewrites,
 // then asks the runtime inside the iframe to draw its patterns again, since a
 // rewritten attribute is not a re-render. A shuffle swaps every field's design
 // the same way. Saving posts the whole document as the next revision, and the
@@ -180,7 +180,7 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
    * the iframe's document, and ask the runtime inside to draw its patterns
    * again. Whole, not the changed part: the planner gives a field's own
    * palette precedence over the brand palette only when both are in the
-   * document it plans, so a palette change planned alone re-coloured a field
+   * document it plans, so a palette change planned alone re-colored a field
    * the saved document leaves alone, and the canvas disagreed with what Save
    * would store and Download would build. Text operations are idempotent, so
    * planning them again costs nothing. What the engine could not place is
@@ -244,7 +244,7 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
   // A whole palette at a time: a row in the rail, or the dialog's Save. The
   // spec's role count is the shape the page reads, so a shorter or longer
   // array never reaches the document. The template's own row is the way back
-  // to its colours: they are written as inline properties, the same values
+  // to its colors: they are written as inline properties, the same values
   // the class rule holds, so the page reads as it did.
   const setPalette = (colors: string[]) => {
     const next = spec.palette.colors.map((authored, index) => colors[index] ?? authored);

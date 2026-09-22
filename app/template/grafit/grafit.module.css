@@ -9,7 +9,7 @@
   --paper: #eeede7;
   --ink: #131313;
   --ochre: #e5a000;
-  --grey: #8a887f;
+  --gray: #8a887f;
   --pale: #dcdad0;
 
   --edge: clamp(1.15rem, 3.4vw, 4.5rem);
@@ -78,7 +78,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -342,7 +342,7 @@
   font-size: 0.74rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .rowPrice {
@@ -452,7 +452,7 @@
   font-size: 0.78rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------------- quote */
@@ -566,7 +566,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .contactMail {

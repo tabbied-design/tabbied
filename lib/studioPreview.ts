@@ -1,6 +1,6 @@
 // Turning a packaged template into a preview of a generated direction.
 //
-// The artefact previewed is the *download* - out/downloads/<slug>/index.html,
+// The artifact previewed is the *download* - out/downloads/<slug>/index.html,
 // the same bytes the Download button hands over. That is deliberate on both
 // counts. It is the only version of a template with no framework left in it,
 // so its patterns are `[data-pattern]` placeholders the edits engine can
@@ -23,7 +23,7 @@
 //   4. Every relative stylesheet, image and script reference is spelled out
 //      as an absolute path under the package. The <base> already resolves
 //      them correctly, but Chromium's speculative preload scanner does not
-//      honour a <base> in an about:srcdoc document: it fetched each
+//      honor a <base> in an about:srcdoc document: it fetched each
 //      stylesheet and preloaded image against the *page's* URL first
 //      (`/studio/results/styles/base.css` - a 404, then `ERR_ABORTED` once
 //      the parser caught up and fetched the right one). Nothing broke, and

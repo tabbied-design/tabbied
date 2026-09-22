@@ -8,10 +8,10 @@ export const metadata = {
     'Atelier Vane is a fashion label in Antwerp. One collection a season, twelve looks, cut and sewn in a room on Kloosterstraat by six people.',
 };
 
-/* Ink and two greys, nothing else. Every field draws on a transparent ground
+/* Ink and two grays, nothing else. Every field draws on a transparent ground
    so the white of the page runs straight through it. */
 const INK = '#000000';
-const GREY = '#8C8C8C';
+const GRAY = '#8C8C8C';
 const PALE = '#E4E4E4';
 
 const NAV = [
@@ -41,9 +41,9 @@ const LOOKS: Look[] = [
   { no: '01', name: 'Long coat', fabric: 'Double-faced wool, charcoal', note: 'Unlined, the seams bound by hand, a single button at the throat.' },
   { no: '02', name: 'Cape', fabric: 'Boiled wool, black', note: 'Cut from one piece with no shoulder seam. It closes with weight.' },
   { no: '03', name: 'Shirt', fabric: 'Cotton poplin, white', note: 'A collar that stands without a stiffener, because the cloth was chosen for it.' },
-  { no: '04', name: 'Trouser', fabric: 'Wool flannel, mid grey', note: 'Wide leg, single pleat, a hem left three centimetres long to be finished at the shop.' },
+  { no: '04', name: 'Trouser', fabric: 'Wool flannel, mid gray', note: 'Wide leg, single pleat, a hem left three centimeters long to be finished at the shop.' },
   { no: '05', name: 'Knit', fabric: 'Lambswool, undyed', note: 'Two ply, plain, with a neck that is the same on both sides.' },
-  { no: '06', name: 'Dress', fabric: 'Silk crepe, black', note: 'Bias cut, no fastening, a hem that touches the floor at 172 centimetres.' },
+  { no: '06', name: 'Dress', fabric: 'Silk crepe, black', note: 'Bias cut, no fastening, a hem that touches the floor at 172 centimeters.' },
   { no: '07', name: 'Jacket', fabric: 'Wool serge, black', note: 'Three buttons, the middle one worn. The pockets are jetted and sewn shut.' },
   { no: '08', name: 'Skirt', fabric: 'Wool flannel, charcoal', note: 'Straight, to the shin, a slit at the back seam and a hook rather than a zip.' },
   { no: '09', name: 'Overshirt', fabric: 'Moleskin, off black', note: 'A shirt cut like a jacket and worn like neither. Two chest pockets.' },
@@ -129,16 +129,16 @@ const PRESS = [
 export default function AtelierVanePage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#ffffff',
         '--ink': '#000000',
-        '--grey': '#8c8c8c',
+        '--gray': '#8c8c8c',
         '--pale': '#e4e4e4',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,grey,pale"
+      data-edit-vars="paper,ink,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -166,7 +166,7 @@ export default function AtelierVanePage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,2,1" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={cornerbite}
-              palette={['transparent', PALE, GREY, INK]}
+              palette={['transparent', PALE, GRAY, INK]}
               fit="grid"
               cellSize={104}
               redrawInterval={6400}
@@ -248,12 +248,12 @@ export default function AtelierVanePage() {
 
         {/* ------------------------------------------------------- STOCKISTS
             The quiet field: the pattern at low strength under a wash of the
-            paper colour, so the list reads over it. */}
+            paper color, so the list reads over it. */}
         <section id="stockists" className={s.stockists} aria-labelledby="stockists-h">
           <div data-edit-pattern="stockists.field" data-edit-roles="transparent,3,2" className={s.stockField} aria-hidden="true">
             <TabbiedPattern
               pattern={radius}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={128}
               redrawInterval={5800}
@@ -362,7 +362,7 @@ export default function AtelierVanePage() {
         <div data-edit-pattern="coda.field" data-edit-roles="transparent,1,2,3" className={s.codaField}>
           <TabbiedPattern
             pattern={coil}
-            palette={['transparent', INK, GREY, PALE]}
+            palette={['transparent', INK, GRAY, PALE]}
             fit="grid"
             cellSize={144}
             redrawInterval={5200}

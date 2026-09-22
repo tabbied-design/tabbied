@@ -13,7 +13,7 @@
   --paper: #050807;
   --ink: #d9f5e3;
   --green: #2cff7a;
-  --grey: #5c7365;
+  --gray: #5c7365;
   --pale: #0e1713;
   --gut: clamp(1rem, 4vw, 3rem);
   --max: 76rem;
@@ -58,20 +58,20 @@
 .button::before {
   content: '$ ';
   font-weight: 400;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .nav a::before,
 .footLinks a::before,
 .sectionCmd::before {
   content: '> ';
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .heroLede::before,
 .sectionFoot::before {
   content: '# ';
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .nav a:hover,
@@ -81,7 +81,7 @@
   color: var(--green);
 }
 
-/* A ruled grid: cells painted in the page colour over the pale tone, with a
+/* A ruled grid: cells painted in the page color over the pale tone, with a
    1px gap that reads as the rule between them. */
 .ruled {
   display: grid;
@@ -131,7 +131,7 @@
 }
 
 .barMeta {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -144,9 +144,9 @@
 }
 
 /* combed at full strength would swallow the headline, so the field is held
-   to half and fades out where the facts sit. Colour 0 is transparent: the
+   to half and fades out where the facts sit. Color 0 is transparent: the
    near-black shows through every gap. The mask only cares about alpha, so
-   any opaque colour will do for its solid stop. */
+   any opaque color will do for its solid stop. */
 .heroField {
   position: absolute;
   inset: 0;
@@ -164,7 +164,7 @@
 .heroPrompt {
   margin: 0 0 clamp(1.4rem, 4vw, 2.6rem);
   font-size: 0.82rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .heroTitle {
@@ -207,7 +207,7 @@
 .facts dd {
   margin: 0.5rem 0 0;
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- sections
@@ -243,14 +243,14 @@
 .sectionCmd {
   margin: 0;
   font-size: 0.82rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .sectionFoot {
   margin: clamp(1.4rem, 3vw, 2rem) 0 0;
   max-width: 68ch;
   font-size: 0.86rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------------ table
@@ -279,7 +279,7 @@
 
 .table th {
   font-weight: 500;
-  color: var(--grey);
+  color: var(--gray);
   background: var(--pale);
   border-bottom: var(--rule);
 }
@@ -317,7 +317,7 @@
 
 .cellDate {
   width: 12ch;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .sevCritical,
@@ -337,7 +337,7 @@
 }
 
 .sevLow {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- band
@@ -384,7 +384,7 @@
 
 .toolGrid h3::before {
   content: './';
-  color: var(--grey);
+  color: var(--gray);
   font-weight: 400;
 }
 
@@ -398,11 +398,11 @@
 .toolMeta {
   margin: 0;
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------- disclosure
-   A text-bearing field: low opacity, and the page colour pooled under the
+   A text-bearing field: low opacity, and the page color pooled under the
    steps so the pattern shows at the margins and gets out of the way where
    the reading happens. */
 
@@ -456,7 +456,7 @@
 .policyDay {
   display: block;
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
   margin-bottom: 0.6rem;
 }
 
@@ -505,7 +505,7 @@
 
 .talkCity,
 .talkWho {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .talkWho {
@@ -540,12 +540,12 @@
 
 .memberHandle::before {
   content: '~';
-  color: var(--grey);
+  color: var(--gray);
   font-weight: 400;
 }
 
 .memberSince {
-  color: var(--grey);
+  color: var(--gray);
   text-align: right;
   font-size: 0.8rem;
 }
@@ -578,7 +578,7 @@
 }
 
 .contactList dt {
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .contactList dd {
@@ -668,7 +668,7 @@
   margin: 0 0 0.8rem;
   font-size: 0.76rem;
   font-weight: 500;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footHead::before {
@@ -706,7 +706,7 @@
 .footFine p {
   margin: 0;
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footFine a {

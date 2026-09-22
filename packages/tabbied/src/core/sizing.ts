@@ -129,7 +129,7 @@ export function resolveBoxStyle(size: PatternBoxSize = {}): PatternBoxStyle {
     style.height = cssLength(height);
   } else if (fill && aspectRatio == null) {
     // With an aspect ratio the height is derived from the width - pinning it
-    // to 100% would override the ratio rather than honour it.
+    // to 100% would override the ratio rather than honor it.
     style.height = '100%';
   }
 
@@ -224,7 +224,7 @@ export function deriveGridForBox(
  * pixel - which seams however exact the outer grid is. Sichtbeton's hero was
  * a clean 8 × 180 across and 3 × 197 down, and 197 halves to 98.5.
  *
- * The default of 2 covers centred rules and strokes; the three designs that
+ * The default of 2 covers centerd rules and strokes; the three designs that
  * mask with a nested `@doodle` declare their own (see `PatternSizing`).
  *
  * The returned span overflows the box by less than two cells, which the host
@@ -340,21 +340,21 @@ export function fitRenderToBox(
   // Land every cell edge on a whole pixel *after* the transform. Snapping the
   // render box is not enough on its own: a scaled canvas maps exact layout
   // tracks onto fractional device pixels, and the browser seams there. An
-  // isolated test - same grid, same colour in every cell - measured 6 interior
+  // isolated test - same grid, same color in every cell - measured 6 interior
   // seams both with fractional tracks and with integral ones under a 1.44
-  // scale, and 0 once the scale was quantised so `cell * scale` was a whole
+  // scale, and 0 once the scale was quantized so `cell * scale` was a whole
   // number. The scale rounds up, which only ever crops further - and the box
   // is filled either way, so the ratio is unaffected.
   if (cellPx && cellPx > 0 && Number.isFinite(scale)) {
-    const quantised = Math.ceil(cellPx * scale);
+    const quantized = Math.ceil(cellPx * scale);
 
-    if (quantised >= 1) {
-      scale = quantised / cellPx;
+    if (quantized >= 1) {
+      scale = quantized / cellPx;
     }
   }
 
   // The offset has to be whole too - half a pixel of translation puts every
-  // boundary back on a fraction, which is the thing the quantised scale just
+  // boundary back on a fraction, which is the thing the quantized scale just
   // bought.
   return {
     scale,

@@ -2,7 +2,7 @@
 
 // The rail beside the canvas: the site's name, and three tabs.
 //
-// Colours and Patterns are the first release of the customizer, and they are
+// Colors and Patterns are the first release of the customizer, and they are
 // the whole of what it changes: one palette for the page, and one design per
 // pattern field. Content is a tab so the person can see where words and
 // pictures will be edited, and reads that they are not edited here yet - the
@@ -15,8 +15,8 @@
 // own, beside the page-wide Reset. The pencil is the same control the palette
 // rows carry, so the two tabs read as one rail.
 //
-// Colours is a list of palettes rather than a row of colour pickers because
-// picking four colours that work together is the hard part and the library
+// Colors is a list of palettes rather than a row of color pickers because
+// picking four colors that work together is the hard part and the library
 // has already done it 437 times. The pickers did not go away - the pencil on
 // a row opens them, seeded with that palette. There is no "Reset palette":
 // the template's own palette is the first row, and choosing it is the reset.
@@ -32,7 +32,7 @@ import DesignDialog from './DesignDialog';
 import PaletteDialog from './PaletteDialog';
 import styles from './SiteRail.module.css';
 
-type RailTab = 'colours' | 'patterns' | 'content';
+type RailTab = 'colors' | 'patterns' | 'content';
 
 export type SaveState = 'clean' | 'dirty' | 'saving' | 'saved';
 
@@ -44,7 +44,7 @@ const SAVE_LABEL: Record<SaveState, string> = {
 };
 
 const TABS: [RailTab, string][] = [
-  ['colours', 'Colours'],
+  ['colors', 'Colors'],
   ['patterns', 'Patterns'],
   ['content', 'Content'],
 ];
@@ -56,7 +56,7 @@ const sectionOf = (id: string) => {
   return head.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, (c) => c.toUpperCase());
 };
 
-/** What a colour role is called: the spec's own name where it has one. */
+/** What a color role is called: the spec's own name where it has one. */
 const roleLabel = (spec: TemplateSpec, index: number): string =>
   spec.palette.names?.[index] ?? (index === 0 ? 'Ground' : `Ink ${index}`);
 
@@ -87,9 +87,9 @@ export default function SiteRail({
   onRename: (title: string) => void;
   spec: TemplateSpec;
   designs: readonly DesignChoice[];
-  /** The colours the page wears now, ground first. */
+  /** The colors the page wears now, ground first. */
   palette: readonly string[];
-  /** Re-colour the whole page. Always a full role-length array. */
+  /** Re-color the whole page. Always a full role-length array. */
   onPalette: (colors: string[]) => void;
   patternSlots: readonly PatternSlot[];
   /** The design a field draws now, by slot id. */
@@ -107,7 +107,7 @@ export default function SiteRail({
   saveState: SaveState;
   onSave: () => void;
 }) {
-  const [tab, setTab] = useState<RailTab>('colours');
+  const [tab, setTab] = useState<RailTab>('colors');
   const [name, setName] = useState(title);
   /** The row whose pencil was pressed, or null when the dialog is shut. */
   const [editing, setEditing] = useState<string | null>(null);
@@ -147,7 +147,7 @@ export default function SiteRail({
     }
   };
 
-  // Memoised: the rail re-renders on every palette click, shuffle tick and
+  // Memoized: the rail re-renders on every palette click, shuffle tick and
   // save-state change, and rebuilt a 338-entry map on each of them.
   const names = useMemo(() => new Map(designs.map((design) => [design.slug, design.name])), [designs]);
   const fieldLabel = (slot: PatternSlot) => slot.label ?? sectionOf(slot.id);
@@ -202,9 +202,9 @@ export default function SiteRail({
         ))}
       </div>
 
-      {tab === 'colours' ? (
-        <section className={`${styles.panel} ${styles.panelColours}`} aria-label="Colours">
-          <p className={styles.hint}>Pick a palette and the whole page recolours.</p>
+      {tab === 'colors' ? (
+        <section className={`${styles.panel} ${styles.panelColors}`} aria-label="Colors">
+          <p className={styles.hint}>Pick a palette and the whole page recolors.</p>
 
           <div className={styles.paletteScroll}>
             <ul role="list" className={styles.palettes}>
@@ -221,8 +221,8 @@ export default function SiteRail({
                     >
                       <span className={styles.paletteName}>{choice.name}</span>
                       <span className={styles.chips} aria-hidden="true">
-                        {choice.colors.slice(0, 5).map((colour, index) => (
-                          <span key={index} className={styles.chip} style={{ background: colour }} />
+                        {choice.colors.slice(0, 5).map((color, index) => (
+                          <span key={index} className={styles.chip} style={{ background: color }} />
                         ))}
                       </span>
                     </button>
@@ -252,7 +252,7 @@ export default function SiteRail({
             title={`Edit ${(editingChoice?.name ?? '').replace(' (default)', '')}`}
             colors={
               // The row being edited, except when it is the one already on the
-              // page - then it is the page's colours, so an edit builds on the
+              // page - then it is the page's colors, so an edit builds on the
               // last one rather than starting over.
               editingChoice && editingChoice.id === active ? palette : editingChoice?.colors ?? palette
             }

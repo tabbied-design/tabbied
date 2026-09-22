@@ -8,11 +8,11 @@ export const metadata = {
     'Birk Mobler makes six pieces of furniture in oak, ash and elm, one at a time, in a workshop by the harbour in Aarhus. Prices in DKK, delivery included in the city.',
 };
 
-/* Site colours. Every field takes `transparent` in the background slot, so
+/* Site colors. Every field takes `transparent` in the background slot, so
    the dots sit in the paper rather than on a plate laid over it. */
 const INK = '#1F1F1D';
 const OAK = '#B8895A';
-const GREY = '#9A9994';
+const GRAY = '#9A9994';
 const PALE = '#E6E4DF';
 
 const NAV = [
@@ -193,17 +193,17 @@ const FACTS = [
 export default function BirkMoblerPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#fafaf8',
         '--ink': '#1f1f1d',
         '--oak': '#b8895a',
-        '--grey': '#9a9994',
+        '--gray': '#9a9994',
         '--pale': '#e6e4df',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,oak,grey,pale"
+      data-edit-vars="paper,ink,oak,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -230,7 +230,7 @@ export default function BirkMoblerPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,4,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={ninon}
-              palette={['transparent', OAK, PALE, GREY]}
+              palette={['transparent', OAK, PALE, GRAY]}
               fit="grid"
               cellSize={120}
               redrawInterval={6400}
@@ -317,7 +317,7 @@ export default function BirkMoblerPage() {
 
         {/* ------------------------------------------------------------ BAND
             The loudest field on the page, and it is still quiet: feathered
-            dots in the oak colour, edge to edge, nothing to read. */}
+            dots in the oak color, edge to edge, nothing to read. */}
         <div className={s.band} aria-hidden="true">
           <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4" className={s.bandField}>
             <TabbiedPattern
@@ -336,7 +336,7 @@ export default function BirkMoblerPage() {
           <div data-edit-pattern="making.field" data-edit-roles="transparent,4,3" className={s.makingField} aria-hidden="true">
             <TabbiedPattern
               pattern={tulle}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={64}
               redrawInterval={6800}

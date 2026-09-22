@@ -2,7 +2,7 @@
    WERKRAUM - architecture practice, Basel
    A twelve-column page with a hard left rail. Every section number sits in
    that rail; the text column never moves. Patterns are full-bleed fields with
-   a transparent background slot, so they read as texture in the paper colour
+   a transparent background slot, so they read as texture in the paper color
    rather than as pictures laid on top of it.
    ========================================================================== */
 
@@ -10,7 +10,7 @@
   --paper: #f4f3ef;
   --ink: #16161a;
   --red: #d6001c;
-  --grey: #8e8e88;
+  --gray: #8e8e88;
   --pale: #c9c8c1;
   --rail: 5.5rem;
   --gut: clamp(1.25rem, 4vw, 3.5rem);
@@ -83,7 +83,7 @@
 .nav a span {
   font-variant-numeric: tabular-nums;
   font-size: 0.68rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .nav a:hover {
@@ -94,7 +94,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -106,7 +106,7 @@
 }
 
 /* The pattern runs the full width of the section behind everything. Because
-   its colour0 is `transparent`, the paper below shows through the gaps and
+   its color0 is `transparent`, the paper below shows through the gaps and
    the opacity here decides how loud the texture is. */
 .field {
   position: absolute;
@@ -126,7 +126,7 @@
   font-size: 0.74rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--grey) 66%, var(--ink));
+  color: color-mix(in srgb, var(--gray) 66%, var(--ink));
 }
 
 .heroTitle {
@@ -174,7 +174,7 @@
   font-size: 0.74rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------ photography
@@ -205,7 +205,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .pair figcaption,
@@ -251,7 +251,7 @@
   gap: 0.7rem;
   font-size: 0.72rem;
   letter-spacing: 0.18em;
-  color: var(--grey);
+  color: var(--gray);
   font-variant-numeric: tabular-nums;
 }
 
@@ -330,7 +330,7 @@
   margin: -0.8rem 0 2rem;
   max-width: 34rem;
   font-size: 0.86rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .table {
@@ -352,7 +352,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   padding-bottom: 0.5rem;
 }
 
@@ -369,7 +369,7 @@
 
 .rowNo {
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .rowName {
@@ -384,7 +384,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   margin-top: 0.25rem;
 }
 
@@ -405,7 +405,7 @@
 }
 
 /* Text-bearing fields get two things the decorative band does not: a low
-   opacity, and a wash of the paper colour concentrated where the copy sits.
+   opacity, and a wash of the paper color concentrated where the copy sits.
    The pattern stays legible at the margins and gets out of the way in the
    middle. */
 .methodField {
@@ -500,7 +500,7 @@
 
 .pSince {
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
@@ -586,7 +586,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .contact dd {
@@ -681,7 +681,7 @@
 
 .aYear {
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .aWhat {
@@ -698,7 +698,7 @@
   font-size: 0.78rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   text-align: right;
 }
 
@@ -872,7 +872,7 @@
   .row > :nth-child(5) {
     grid-column: 2;
     font-size: 0.82rem;
-    color: var(--grey);
+    color: var(--gray);
   }
 
   .officeApply {

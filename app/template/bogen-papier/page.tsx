@@ -66,9 +66,9 @@ const RANGE: Swatch[] = [
   { ref: 'B.08', name: 'Kohle', tone: 't8', surface: 'Smooth', weights: W3,
     price: '112.00', gloss: 'The darkest we hold, dyed through' },
   { ref: 'B.09', name: 'Nebel', tone: 't9', surface: 'Smooth', weights: W4L,
-    price: '80.00', gloss: 'Cool grey, sized for offset' },
+    price: '80.00', gloss: 'Cool gray, sized for offset' },
   { ref: 'B.10', name: 'Farn', tone: 't10', surface: 'Matt',
-    weights: '170 · 250', price: '118.00', gloss: 'The one colour in the range' },
+    weights: '170 · 250', price: '118.00', gloss: 'The one color in the range' },
   { ref: 'B.11', name: 'Torf', tone: 't11', surface: 'Laid', weights: W3,
     price: '116.00', gloss: 'Peat, ordered mostly for boxes' },
 ];
@@ -85,16 +85,16 @@ const WEIGHTS = [
 const MILL_FACTS: [string, string][] = [
   ['Mill', 'Papierfabrik Ottenbach, Reuss valley'],
   ['Making paper since', '1878'],
-  ['Machines', 'Two, both cylinder mould'],
+  ['Machines', 'Two, both cylinder mold'],
   ['Water', 'Drawn from the Reuss, returned within 1.4 °C'],
-  ['Fibre', '68% recycled, 32% certified virgin'],
+  ['Fiber', '68% recycled, 32% certified virgin'],
   ['Shortest run', '2 tonnes, roughly 34 000 sheets'],
 ];
 
 const SPECIMENS = [
-  { no: '01', year: '2025', title: 'Kunsthalle Winterthur, winter programme',
+  { no: '01', year: '2025', title: 'Kunsthalle Winterthur, winter program',
     stock: 'B.03 Hafer, 250 gsm',
-    detail: 'Two colours, letterpress, 3 000 copies' },
+    detail: 'Two colors, letterpress, 3 000 copies' },
   { no: '02', year: '2024', title: 'Ottenbach mill, centenary account',
     stock: 'B.01 Natur, 120 gsm and B.06 Umbra, 350 gsm',
     detail: 'Sewn section, uncoated cover, 800 copies' },
@@ -104,7 +104,7 @@ const SPECIMENS = [
 ];
 
 const FIGURES = [
-  { value: '68', unit: '%', label: 'Recycled fibre across the range',
+  { value: '68', unit: '%', label: 'Recycled fiber across the range',
     note: 'Weighted by tonnage delivered in 2025.' },
   { value: '1.4', unit: '°C', label: 'Ceiling on returned water temperature',
     note: 'Measured at the mill outfall, hourly.' },
@@ -160,7 +160,7 @@ const PATTERN_CELL_INDEX = 6;
 export default function BogenPapierPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#fafaf7',
@@ -288,7 +288,7 @@ export default function BogenPapierPage() {
                   carried more than a dozen shades.
                 </p>
                 <p data-edit="statement.body2" data-edit-max="240" data-edit-multiline className={styles.body}>
-                  A large catalogue is a way of avoiding a decision. Our range
+                  A large catalog is a way of avoiding a decision. Our range
                   is edited once a year, in January. A shade stays if printers
                   keep asking for it and the mill can still make it to the same
                   shade. Two papers were dropped in 2025, one for fading in
@@ -299,7 +299,7 @@ export default function BogenPapierPage() {
                     <span data-edit="statement.principleNo" data-edit-max="60" className={styles.principleNo}>i</span>
                     <span data-edit="statement.principleText" data-edit-max="60" className={styles.principleText}>
                       Every shade is dyed through, so a cut edge matches the
-                      face. We do not stock surface-coloured board.
+                      face. We do not stock surface-colored board.
                     </span>
                   </li>
                   <li className={styles.principle}>
@@ -342,7 +342,7 @@ export default function BogenPapierPage() {
                   Everything is held at 700 x 1000 mm and cut down on request.
                   Weights run from 90 to 350 gsm; not every shade is made in
                   every weight, and the weights that exist are listed under each
-                  swatch. Colours below are printed representations. Order the
+                  swatch. Colors below are printed representations. Order the
                   sample box before you commit a run.
                 </p>
               </div>
@@ -473,11 +473,11 @@ export default function BogenPapierPage() {
               </div>
               <div className={styles.millBody}>
                 <h2 data-edit="mill.h2" data-edit-max="60" className={styles.h2} id="mill-title">
-                  Everything we sell is made 38 kilometres away.
+                  Everything we sell is made 38 kilometers away.
                 </h2>
                 <p data-edit="mill.body" data-edit-max="240" data-edit-multiline className={styles.body}>
                   The Ottenbach mill has run on the Reuss since 1878 and has
-                  made our range since 1961. Two cylinder mould machines, one
+                  made our range since 1961. Two cylinder mold machines, one
                   for the light weights and one for board. We visit on the first
                   Tuesday of the month and watch the make.
                 </p>

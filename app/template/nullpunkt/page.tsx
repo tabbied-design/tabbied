@@ -15,7 +15,7 @@ export const metadata = {
    take `transparent` in the background slot; nothing here is tinted. */
 const INK = '#0A0A0A';
 const RED = '#E10600';
-const GREY = '#9EA2A6';
+const GRAY = '#9EA2A6';
 const PALE = '#DBDBD9';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,7 +23,7 @@ const PALE = '#DBDBD9';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PALE;
 
 
@@ -53,17 +53,17 @@ const TURNAROUND = [
 export default function NullpunktPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--white': '#ffffff',
         '--ink': '#0a0a0a',
         '--red': '#e10600',
-        '--grey': '#9ea2a6',
+        '--gray': '#9ea2a6',
         '--pale': '#dbdbd9',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="white,ink,red,grey,pale"
+      data-edit-vars="white,ink,red,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -93,7 +93,7 @@ export default function NullpunktPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={ortho}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={160}
               redrawInterval={7000}
@@ -156,7 +156,7 @@ export default function NullpunktPage() {
           <div data-edit-pattern="zeroBand.field" data-edit-roles="transparent,1,2,3" className={s.zeroField}>
             <TabbiedPattern
               pattern={ring}
-              palette={['transparent', INK, RED, GREY]}
+              palette={['transparent', INK, RED, GRAY]}
               fit="grid"
               cellSize={112}
               redrawInterval={4000}
@@ -170,7 +170,7 @@ export default function NullpunktPage() {
           <div data-edit-pattern="principles.field" data-edit-roles="transparent,3,4" className={s.prField} aria-hidden="true">
             <TabbiedPattern
               pattern={gimbal}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={106}
               redrawInterval={5600}
@@ -205,11 +205,11 @@ export default function NullpunktPage() {
             <figcaption data-edit="top.caption2" data-edit-max="120" data-edit-multiline>CMM 2, granite table, 20.0 °C ± 0.1.</figcaption>
           </figure>
           <figure>
-            <Figure editId="photo.nullpunkt-artefact"
-              slug="nullpunkt-artefact"
+            <Figure editId="photo.nullpunkt-artifact"
+              slug="nullpunkt-artifact"
               alt="A polished metal cylinder standing under a glass bell jar on a black granite table"
             />
-            <figcaption data-edit="top.caption3" data-edit-max="120" data-edit-multiline>Transfer artefact, checked every ninety days.</figcaption>
+            <figcaption data-edit="top.caption3" data-edit-max="120" data-edit-multiline>Transfer artifact, checked every ninety days.</figcaption>
           </figure>
         </div>
 
@@ -229,7 +229,7 @@ export default function NullpunktPage() {
           </ol>
           <p data-edit="turnaround.turnNote" data-edit-max="240" data-edit-multiline className={s.turnNote}>
             The clock starts when the instrument reaches the laboratory and has
-            reached room temperature, which for a steel artefact from a cold van
+            reached room temperature, which for a steel artifact from a cold van
             is not the same morning.
           </p>
         </section>
@@ -239,7 +239,7 @@ export default function NullpunktPage() {
           <div data-edit-pattern="lab.field" data-edit-roles="transparent,2,3" className={s.labField} aria-hidden="true">
             <TabbiedPattern
               pattern={dipole}
-              palette={['transparent', RED, GREY]}
+              palette={['transparent', RED, GRAY]}
               fit="grid"
               cellSize={124}
               redrawInterval={4800}
@@ -451,7 +451,7 @@ export default function NullpunktPage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
             <TabbiedPattern
               pattern={nutation}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={106}
               redrawInterval={4942}

@@ -16,7 +16,7 @@ export const metadata = {
    plate itself - is what shows through the drawing. */
 const INK = '#191317';
 const ACCENT = '#5e2750';
-const GREY = '#8b8279';
+const GRAY = '#8b8279';
 const PANEL = '#e2dbcb';
 
 /* Fourteen dips of one skein in one vat. The mordant changes at the seventh,
@@ -27,10 +27,10 @@ const DIPS = [
 ];
 
 const STEPS = [
-  { n: '01', t: 'Scour', d: 'Two hours in soda ash at a rolling simmer. Grease left in the fibre is the reason most dyeing goes patchy', hrs: '2 h' },
-  { n: '02', t: 'Mordant', d: 'Alum for the clear side of the range, iron for the sad side. The mordant, not the dye, decides what colour you get', hrs: '4 h' },
+  { n: '01', t: 'Scour', d: 'Two hours in soda ash at a rolling simmer. Grease left in the fiber is the reason most dyeing goes patchy', hrs: '2 h' },
+  { n: '02', t: 'Mordant', d: 'Alum for the clear side of the range, iron for the sad side. The mordant, not the dye, decides what color you get', hrs: '4 h' },
   { n: '03', t: 'Build the vat', d: 'Cochineal, madder or logwood, brought up slowly and never boiled, because boiling takes the red out of everything', hrs: '6 h' },
-  { n: '04', t: 'Dip', d: 'Twenty minutes in, twenty minutes out in the air. The air is where the colour actually happens', hrs: '× 14' },
+  { n: '04', t: 'Dip', d: 'Twenty minutes in, twenty minutes out in the air. The air is where the color actually happens', hrs: '× 14' },
   { n: '05', t: 'Wash and dry', d: 'Rinsed until the water runs clear, then a fortnight on the rack out of direct sun', hrs: '14 days' },
 ];
 
@@ -70,7 +70,7 @@ const DYES = [
   ['Weld', 'Reseda luteola', 'Whole plant, grown here', 'Alum', 'Clear yellow'],
   ['Woad', 'Isatis tinctoria', 'Leaf, fermented vat', 'None', 'Blue, by oxidation'],
   ['Walnut', 'Juglans regia', 'Hull, gathered', 'None', 'Warm brown'],
-  ['Oak gall', 'Quercus infectoria', 'Gall, imported', 'Iron', 'Grey to black'],
+  ['Oak gall', 'Quercus infectoria', 'Gall, imported', 'Iron', 'Gray to black'],
   ['Onion', 'Allium cepa', 'Skin, from the market', 'Alum', 'Ochre'],
 ];
 
@@ -87,8 +87,8 @@ const BATCHES = [
 
 const BUYING = [
   ['By the skein', '100 g skeins from the current batch, at the door and by post.'],
-  ['By the metre', 'Linen and silk dyed to a batch, cut from the piece. Twelve metre minimum.'],
-  ['Commission', 'Your fibre, our vat. Send a sample first; some wool simply will not take.'],
+  ['By the meter', 'Linen and silk dyed to a batch, cut from the piece. Twelve meter minimum.'],
+  ['Commission', 'Your fiber, our vat. Send a sample first; some wool simply will not take.'],
   ['Teaching', 'Four people at a time, three days, twice a year. It is mostly washing.'],
 ];
 
@@ -107,17 +107,17 @@ const HOURS: [string, string, boolean?][] = [
 export default function PurpurhausPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--ground': '#f4f0e6',
         '--ink': '#191317',
         '--accent': '#5e2750',
-        '--grey': '#8b8279',
+        '--gray': '#8b8279',
         '--panel': '#e2dbcb',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="ground,ink,accent,grey,panel"
+      data-edit-vars="ground,ink,accent,gray,panel"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -144,7 +144,7 @@ export default function PurpurhausPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={prismfold}
-              palette={['transparent', PANEL, GREY, ACCENT]}
+              palette={['transparent', PANEL, GRAY, ACCENT]}
               fit="grid"
               cellSize={154}
               redrawInterval={6200}
@@ -159,7 +159,7 @@ export default function PurpurhausPage() {
           <div className={s.heroFoot}>
             <p data-edit="hero.body" data-edit-max="240" data-edit-multiline>
               Plants, insects and iron. No synthetic correction, no boiling,
-              and a published recipe for every colour that has ever left this
+              and a published recipe for every color that has ever left this
               building.
             </p>
             <a data-edit="hero.cta" data-edit-max="28" className={s.cta} href="#ladder">
@@ -187,7 +187,7 @@ export default function PurpurhausPage() {
             <p data-edit="ladder.body" data-edit-max="240" data-edit-multiline>
               The same wool, the same cochineal vat, dipped again and again.
               The mordant changes at the eighth, which is why the second rank
-              turns towards plum instead of getting darker red.
+              turns toward plum instead of getting darker red.
             </p>
           </div>
           <div className={s.ladderGrid}>
@@ -217,7 +217,7 @@ export default function PurpurhausPage() {
         {/* ------------------------------------------------------- STATEMENT */}
         <section className={s.statement}>
           <p data-edit="statement.big" data-edit-max="240" data-edit-multiline className={s.big}>
-            A natural dye is not a colour you choose. It is a colour you arrive
+            A natural dye is not a color you choose. It is a color you arrive
             at, from a particular insect, in a particular water, at a
             temperature you hold for six hours, and the honest thing to do with
             the result is to number it and sell it as itself.
@@ -225,13 +225,13 @@ export default function PurpurhausPage() {
           <div className={s.statementMeta}>
             <p data-edit="statement.body" data-edit-max="240" data-edit-multiline>
               Purpurhaus has dyed on the Rua de Miragaia since 1954. Six of us,
-              four vats, a drying loft, and a water supply we have had analysed
+              four vats, a drying loft, and a water supply we have had analyzed
               every year since 1971 because the water is half the recipe.
             </p>
             <p data-edit="statement.body2" data-edit-max="240" data-edit-multiline>
               We are not a natural alternative to industrial dyeing. We are a
               slower, more expensive and less repeatable process that produces
-              colours industry cannot make, and that is the entire offer.
+              colors industry cannot make, and that is the entire offer.
             </p>
           </div>
         </section>
@@ -295,7 +295,7 @@ export default function PurpurhausPage() {
                   <div data-edit-pattern={`pr.field.${i}`} data-edit-roles="transparent,3,2" className={s.pField} aria-hidden="true">
                     <TabbiedPattern
                       pattern={p.art}
-                      palette={['transparent', GREY, ACCENT]}
+                      palette={['transparent', GRAY, ACCENT]}
                       fit="grid"
                       cellSize={64}
                       redrawInterval={5400}
@@ -336,7 +336,7 @@ export default function PurpurhausPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={dimetric}
-              palette={['transparent', ACCENT, GREY]}
+              palette={['transparent', ACCENT, GRAY]}
               fit="grid"
               cellSize={118}
               redrawInterval={4600}
@@ -344,7 +344,7 @@ export default function PurpurhausPage() {
             />
           </div>
           <blockquote>
-            <p data-edit="quote.body" data-edit-max="240" data-edit-multiline>Anyone can match a colour. The difficult thing is admitting, in writing, that you did not.</p>
+            <p data-edit="quote.body" data-edit-max="240" data-edit-multiline>Anyone can match a color. The difficult thing is admitting, in writing, that you did not.</p>
             <cite data-edit="quote.attribution" data-edit-max="48">Idalina Freire, dyer</cite>
           </blockquote>
         </section>
@@ -353,7 +353,7 @@ export default function PurpurhausPage() {
         <section id="batches" className={s.listing} aria-labelledby="batches-h">
           <div className={s.secHead}>
             <h2 data-edit="batches.title" data-edit-max="60" id="batches-h">Batches, numbered</h2>
-            <p data-edit="batches.body" data-edit-max="240" data-edit-multiline>Every band carries its batch number. When a batch is gone, that colour is gone with it.</p>
+            <p data-edit="batches.body" data-edit-max="240" data-edit-multiline>Every band carries its batch number. When a batch is gone, that color is gone with it.</p>
           </div>
           <ol className={s.table}>
             {BATCHES.map((r, i) => (
@@ -373,7 +373,7 @@ export default function PurpurhausPage() {
           <div data-edit-pattern="buying.field" data-edit-roles="transparent,3,4" className={s.visitField} aria-hidden="true">
             <TabbiedPattern
               pattern={evolute}
-              palette={['transparent', GREY, PANEL]}
+              palette={['transparent', GRAY, PANEL]}
               fit="grid"
               cellSize={102}
               redrawInterval={5400}
@@ -414,7 +414,7 @@ export default function PurpurhausPage() {
             </dl>
             <p data-edit="contact.hoursNote" data-edit-max="240" data-edit-multiline className={s.hoursNote}>
               An indigo vat is fed on Monday and left alone; anything dipped
-              that day comes out the colour of an apology.
+              that day comes out the color of an apology.
             </p>
           </div>
         </section>
@@ -423,7 +423,7 @@ export default function PurpurhausPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={elbow}
-          palette={['transparent', ACCENT, PANEL, GREY]}
+          palette={['transparent', ACCENT, PANEL, GRAY]}
           fit="grid"
           cellSize={104}
           redrawInterval={5000}
@@ -437,7 +437,7 @@ export default function PurpurhausPage() {
             <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2" className={s.footPlateField} aria-hidden="true">
               <TabbiedPattern
                 pattern={spiralblock}
-                palette={['transparent', GREY, ACCENT]}
+                palette={['transparent', GRAY, ACCENT]}
                 fit="grid"
                 cellSize={76}
                 redrawInterval={6000}
@@ -446,7 +446,7 @@ export default function PurpurhausPage() {
             </div>
             <Figure editId="photo.purpurhaus-tile-swatch-cutout" slug="purpurhaus-tile-swatch-cutout" alt="A fan of dyed wool swatch cards spread open" cutout className={s.footCut} />
           </div>
-          <p data-edit="footer.footLine" data-edit-max="240" data-edit-multiline className={s.footLine}>Every colour here can be named, sourced and made again next year.</p>
+          <p data-edit="footer.footLine" data-edit-max="240" data-edit-multiline className={s.footLine}>Every color here can be named, sourced and made again next year.</p>
         </div>
         <div className={s.footGrid}>
           <div>

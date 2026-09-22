@@ -8,12 +8,12 @@ export const metadata = {
     'Tidy Ledger is bookkeeping for shops with one till. The point of sale, the bank and the VAT return in one place, reconciled every evening in about two minutes.',
 };
 
-/* Product colours. The background slot of every pattern is `transparent`, so
+/* Product colors. The background slot of every pattern is `transparent`, so
    a field draws straight onto the lilac paper rather than onto a plate. */
 const INK = '#1B1A2E';
 const VIOLET = '#6D5DF5';
 const MINT = '#2ED3A5';
-const GREY = '#7D7A94';
+const GRAY = '#7D7A94';
 const PALE = '#ECEAFB';
 /* Tiles pin their doodle to a whole multiple of the cell (6 x 72px) and let
    the card clip it, so every grid track is a whole pixel. */
@@ -244,7 +244,7 @@ const FAQ: Faq[] = [
   },
   {
     q: 'Do you sell my data to anyone?',
-    a: 'No. We charge for the software so we do not have to. The bank connections are read-only, the feeds are held in a data centre in Amsterdam, and the privacy page says exactly which three subprocessors we use.',
+    a: 'No. We charge for the software so we do not have to. The bank connections are read-only, the feeds are held in a data center in Amsterdam, and the privacy page says exactly which three subprocessors we use.',
   },
 ];
 
@@ -262,18 +262,18 @@ const FOOT_COLUMNS: FootColumn[] = [
 export default function TidyLedgerPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#fbfaff',
         '--ink': '#1b1a2e',
         '--violet': '#6d5df5',
         '--mint': '#2ed3a5',
-        '--grey': '#7d7a94',
+        '--gray': '#7d7a94',
         '--pale': '#eceafb',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,violet,mint,grey,pale"
+      data-edit-vars="paper,ink,violet,mint,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

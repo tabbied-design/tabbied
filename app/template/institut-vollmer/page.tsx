@@ -6,10 +6,10 @@ import s from './institut-vollmer.module.css';
 export const metadata = {
   title: 'Institut Vollmer: materials research, Basel',
   description:
-    'Institut Vollmer is an independent materials research institute founded in 1951. Four research programmes, 148 staff, 112 peer-reviewed papers in 2025, and contract testing for industry.',
+    'Institut Vollmer is an independent materials research institute founded in 1951. Four research programs, 148 staff, 112 peer-reviewed papers in 2025, and contract testing for industry.',
 };
 
-/* Six house colours. Every pattern field on the page is drawn from this set
+/* Six house colors. Every pattern field on the page is drawn from this set
    and no other: the fields differ only in which of the six leads. */
 const WHITE = '#FFFFFF';
 const INK = '#1A1A1A';
@@ -42,7 +42,7 @@ const AREAS = [
     key: 'A',
     title: 'Fatigue and fracture',
     lead: 'Metals under cyclic load, from 10³ to 10⁹ cycles.',
-    body: 'Crack initiation and closure in wrought and additively manufactured steels, with variable amplitude spectra taken from real service records rather than laboratory blocks. The programme runs three servohydraulic rigs continuously and publishes its raw load histories.',
+    body: 'Crack initiation and closure in wrought and additively manufactured steels, with variable amplitude spectra taken from real service records rather than laboratory blocks. The program runs three servohydraulic rigs continuously and publishes its raw load histories.',
     facts: [
       ['Head', 'Dr Katrin Reuss'],
       ['Started', '1974'],
@@ -54,7 +54,7 @@ const AREAS = [
     key: 'B',
     title: 'Thin films and coatings',
     lead: 'Adhesion, residual stress and wear at thicknesses below 5 µm.',
-    body: 'Physical and chemical vapour deposition on tool steels, glass and polymer substrates. Work concentrates on the failure of the interface rather than on the film itself, using nanoindentation, scratch testing and cross-sectional microscopy.',
+    body: 'Physical and chemical vapor deposition on tool steels, glass and polymer substrates. Work concentrates on the failure of the interface rather than on the film itself, using nanoindentation, scratch testing and cross-sectional microscopy.',
     facts: [
       ['Head', 'Prof. Samuel Ndiaye'],
       ['Started', '1996'],
@@ -64,9 +64,9 @@ const AREAS = [
   },
   {
     key: 'C',
-    title: 'Polymer ageing',
+    title: 'Polymer aging',
     lead: 'Thermal, oxidative and photochemical degradation over decades.',
-    body: 'Accelerated ageing correlated against field samples recovered from buildings, vehicles and buried pipe. The institute holds a reference archive of 2,900 dated specimens, the oldest exposed in 1963, and adds roughly 60 a year.',
+    body: 'Accelerated aging correlated against field samples recovered from buildings, vehicles and buried pipe. The institute holds a reference archive of 2,900 dated specimens, the oldest exposed in 1963, and adds roughly 60 a year.',
     facts: [
       ['Head', 'Dr Miriam Aeberhard'],
       ['Started', '1963'],
@@ -120,7 +120,7 @@ const FACILITIES = [
     access: 'Trained users',
   },
   {
-    name: 'Thermogravimetric analyser',
+    name: 'Thermogravimetric analyzer',
     detail: 'To 1,600 °C, coupled mass spectrometry',
     year: '2018',
     access: 'Staff operated',
@@ -164,7 +164,7 @@ const PUBLICATIONS = [
     year: '2025',
     authors: 'Aeberhard, M., Lutz, C., Perrin, N.',
     title:
-      'Sixty-two years of polyethylene: field ageing against the accelerated model',
+      'Sixty-two years of polyethylene: field aging against the accelerated model',
     source: 'Polymer Degradation and Stability 231, 110724',
   },
   {
@@ -192,7 +192,7 @@ const PUBLICATIONS = [
     year: '2024',
     authors: 'Perrin, N., Aeberhard, M.',
     title:
-      'Photo-oxidation of glass fibre reinforced polyamide in alpine exposure',
+      'Photo-oxidation of glass fiber reinforced polyamide in alpine exposure',
     source: 'Polymer Testing 138, 108211',
   },
   {
@@ -205,7 +205,7 @@ const PUBLICATIONS = [
     year: '2023',
     authors: 'Lutz, C., Reuss, K.',
     title:
-      'Digital image correlation at the scale of a single grain: limits and artefacts',
+      'Digital image correlation at the scale of a single grain: limits and artifacts',
     source: 'Experimental Mechanics 63, 1411',
   },
 ];
@@ -213,7 +213,7 @@ const PUBLICATIONS = [
 const PEOPLE = [
   {
     slug: 'vollmer-researcher-1',
-    alt: 'Studio portrait of Dr Katrin Reuss in a white laboratory coat against a grey wall',
+    alt: 'Studio portrait of Dr Katrin Reuss in a white laboratory coat against a gray wall',
     name: 'Dr Katrin Reuss',
     role: 'Head, Fatigue and fracture',
     body: 'At the institute since 2011. Chairs the working group on load spectrum disclosure and teaches the fracture mechanics course at the technical university two afternoons a week.',
@@ -223,7 +223,7 @@ const PEOPLE = [
     alt: 'Studio portrait of Prof. Samuel Ndiaye in a white laboratory coat and wire-framed glasses',
     name: 'Prof. Samuel Ndiaye',
     role: 'Head, Thin films and coatings',
-    body: 'At the institute since 2003, director since 2021. Responsible for the clean room, for the industry programme and for the decision that all raw data leaves the building with the report.',
+    body: 'At the institute since 2003, director since 2021. Responsible for the clean room, for the industry program and for the decision that all raw data leaves the building with the report.',
   },
 ];
 
@@ -291,7 +291,7 @@ function LabelColumn({
 export default function InstitutVollmerPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--white': '#ffffff',
@@ -357,7 +357,7 @@ export default function InstitutVollmerPage() {
               <p data-edit="tHero.lead" data-edit-max="240" data-edit-multiline className={s.lead}>
                 Institut Vollmer tests metals, coatings, polymers and ceramics
                 for anyone willing to pay for an honest number. We are a
-                foundation, not a department. Four research programmes, 148
+                foundation, not a department. Four research programs, 148
                 staff, and a rule that raw data leaves the building with every
                 report.
               </p>
@@ -400,10 +400,10 @@ export default function InstitutVollmerPage() {
               <LabelColumn
                 no="01"
                 label="Research"
-                note="Four programmes, reviewed every five years"
+                note="Four programs, reviewed every five years"
               />
               <h2 data-edit="research.sectionTitle" data-edit-max="60" id="t-research" className={s.sectionTitle}>
-                Four programmes. No fifth one until one of these closes.
+                Four programs. No fifth one until one of these closes.
               </h2>
             </div>
 
@@ -443,7 +443,7 @@ export default function InstitutVollmerPage() {
               <figure className={s.researchArt}>
                 <Figure editId="photo.vollmer-porosity"
                   slug="vollmer-porosity"
-                  alt="A greyscale micrograph of a polished cross-section scattered with dark pores"
+                  alt="A grayscale micrograph of a polished cross-section scattered with dark pores"
                   className={s.photo}
                 />
                 <figcaption data-edit="research.caption2" data-edit-max="120" data-edit-multiline className={s.caption}>
@@ -558,7 +558,7 @@ export default function InstitutVollmerPage() {
                 note="148 staff, 22 nationalities, 63 doctoral"
               />
               <h2 data-edit="people.sectionTitle" data-edit-max="60" id="t-people" className={s.sectionTitle}>
-                Programme heads.
+                Program heads.
               </h2>
             </div>
             <div className={`${s.grid} ${s.peopleRow}`}>
@@ -583,7 +583,7 @@ export default function InstitutVollmerPage() {
                 />
                 <figcaption data-edit="people.caption" data-edit-max="120" data-edit-multiline className={s.caption}>
                   Fig. 3. The fatigue group at the Tuesday bench review. Ninety-two
-                  of the 148 staff sit in one programme; the rest work across all four.
+                  of the 148 staff sit in one program; the rest work across all four.
                 </figcaption>
               </figure>
             </div>
@@ -725,7 +725,7 @@ export default function InstitutVollmerPage() {
               </p>
             </div>
             <div className={s.footContact}>
-              <p data-edit="footer.footLabel" data-edit-max="240" data-edit-multiline className={s.footLabel}>Enquiries</p>
+              <p data-edit="footer.footLabel" data-edit-max="240" data-edit-multiline className={s.footLabel}>Inquiries</p>
               <p>
                 <a data-edit="footer.link" data-edit-max="28" href="tel:+41617204000">+41 61 720 40 00</a>
                 <br />

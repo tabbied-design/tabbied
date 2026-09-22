@@ -217,7 +217,7 @@ export async function api(pathname, { method = 'GET', body, key } = {}) {
     const code = json?.code ?? res.status;
 
     if (code === 429) {
-      // Give the window time to drain, honouring Retry-After when present.
+      // Give the window time to drain, honoring Retry-After when present.
       const retryAfter = Number(res.headers.get('retry-after'));
       const backoff = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : RATE_WINDOW_MS;
       // Delay the whole schedule, not just this caller, so the queued requests

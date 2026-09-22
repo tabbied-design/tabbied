@@ -10,7 +10,7 @@
   --white: #ffffff;
   --ink: #000000;
   --red: #ff3b14;
-  --grey: #9a9a9a;
+  --gray: #9a9a9a;
   --pale: #dcdcdc;
   --gut: clamp(1.1rem, 4vw, 3.5rem);
   --max: 84rem;
@@ -129,8 +129,8 @@
 
 .hero1 span {
   /* The muted second line sits over the hero pattern; plain
-     var(--grey) measured under AA on the glyph pixels. */
-  color: color-mix(in srgb, var(--grey) 75%, var(--ink));
+     var(--gray) measured under AA on the glyph pixels. */
+  color: color-mix(in srgb, var(--gray) 75%, var(--ink));
 }
 
 .heroLede {
@@ -171,13 +171,13 @@
 .head p {
   margin: 0;
   font-size: 0.9rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ----------------------------------------------------------------- library */
 
 .library,
-.licences {
+.licenses {
   max-width: var(--max);
   margin: 0 auto;
   padding: clamp(3rem, 8vw, 6rem) var(--gut);
@@ -226,7 +226,7 @@
 .fMeta,
 .fYear {
   font-size: 0.78rem;
-  color: var(--grey);
+  color: var(--gray);
   font-variant-numeric: tabular-nums;
 }
 
@@ -295,7 +295,7 @@
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.12em;
-  color: var(--grey);
+  color: var(--gray);
   font-variant-numeric: tabular-nums;
 }
 
@@ -313,7 +313,7 @@
   overflow: hidden;
 }
 
-/* On the black band the pattern is the only colour: ortho is sparse enough to
+/* On the black band the pattern is the only color: ortho is sparse enough to
    run near full strength without touching the glyph grid's legibility. */
 .glyphField {
   position: absolute;
@@ -368,10 +368,10 @@
 .trioWrap figcaption {
   margin-top: 0.55rem;
   font-size: 0.72rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
-/* ---------------------------------------------------------------- licences */
+/* ---------------------------------------------------------------- licenses */
 
 .lic {
   display: grid;
@@ -397,7 +397,7 @@
 .licUnit {
   margin: 0;
   font-size: 0.74rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .licPrice {
@@ -433,7 +433,7 @@
 }
 
 /* thickset draws heavy blocks, so it is held right back and cut away from the
-   centre where the copy sits. */
+   center where the copy sits. */
 .studioField {
   position: absolute;
   inset: 0;
@@ -491,7 +491,7 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   margin-bottom: 0.25rem;
 }
 
@@ -590,7 +590,7 @@
   font-size: 0.64rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey) !important;
+  color: var(--gray) !important;
   padding-bottom: 0.4rem !important;
 }
 
@@ -604,7 +604,7 @@
 .idxList li > :last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .faqList {

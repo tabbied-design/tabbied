@@ -549,7 +549,7 @@
   position: relative;
   margin: clamp(3rem, 7vw, 5.5rem) 0 0;
   padding: clamp(4rem, 9vw, 7rem) clamp(1.25rem, 4vw, 3rem);
-  /* The page colour, so the pattern's transparent ground blends into the
+  /* The page color, so the pattern's transparent ground blends into the
      section either side of it rather than reading as a slab dropped in. */
   background: var(--foam);
   overflow: hidden;

@@ -20,7 +20,7 @@ export function PreviewNotices({ problems }: { problems: Problem[] }) {
       {shell.length > 0 ? (
         <p className={styles.notice} role="status">
           The template package has changed shape and its patterns cannot be
-          drawn here. The text and colours below are still applied.
+          drawn here. The text and colors below are still applied.
         </p>
       ) : null}
       {engine.length > 0 ? (

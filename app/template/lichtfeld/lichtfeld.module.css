@@ -10,7 +10,7 @@
   --dark: #0a0a0a;
   --white: #fafaf5;
   --warm: #f5e663;
-  --grey: #6a6a64;
+  --gray: #6a6a64;
   --panel: #151515;
   --gut: clamp(1.15rem, 4vw, 3.25rem);
   --max: 78rem;
@@ -81,7 +81,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -152,7 +152,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .bleed figcaption {
@@ -216,7 +216,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- headings */
@@ -258,12 +258,12 @@
   font-size: 0.64rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   padding-bottom: 0.4rem !important;
 }
 
 .code {
-  color: var(--grey);
+  color: var(--gray);
   font-variant-numeric: tabular-nums;
 }
 
@@ -286,7 +286,7 @@
 }
 
 .year {
-  color: var(--grey);
+  color: var(--gray);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
@@ -449,7 +449,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   margin-bottom: 0.4rem;
 }
 
@@ -548,7 +548,7 @@
   font-size: 0.64rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey) !important;
+  color: var(--gray) !important;
   padding-bottom: 0.4rem !important;
 }
 
@@ -562,7 +562,7 @@
 .idxList li > :last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .faqList {
@@ -614,7 +614,7 @@
    hairline. The patterns have had the whole page to speak already. */
 
 /* Page and footer were within 1.15:1 of each other - near enough that the
-   seam read as a mistake, so the footer takes the page colour exactly.
+   seam read as a mistake, so the footer takes the page color exactly.
    The light-page sites keep their dark footers: that contrast is the design. */
 .footer {
   background: var(--dark);

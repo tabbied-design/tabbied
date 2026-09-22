@@ -1,5 +1,5 @@
-/* The per-role colour editor, opened from the pencil beside a palette row.
-   The rail chooses a palette; this is where one of its colours is changed. */
+/* The per-role color editor, opened from the pencil beside a palette row.
+   The rail chooses a palette; this is where one of its colors is changed. */
 
 .backdrop {
   position: fixed;
@@ -76,7 +76,7 @@
 }
 
 /* A transparent role is drawn as the chequerboard the editor uses elsewhere,
-   so "no colour" does not read as "white". */
+   so "no color" does not read as "white". */
 .swatchClear {
   background-image: linear-gradient(45deg, oklch(0 0 0 / 0.1) 25%, transparent 25%),
     linear-gradient(-45deg, oklch(0 0 0 / 0.1) 25%, transparent 25%),

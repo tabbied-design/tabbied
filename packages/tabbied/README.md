@@ -294,7 +294,7 @@ all up with one call:
 ```
 
 The attributes are readable rather than a JSON blob - the point is that
-somebody editing a page can change a colour or a slug without decoding
+somebody editing a page can change a color or a slug without decoding
 anything. Values are typed by the pattern's own option metadata, so a
 `ButtonSelectGroup` choice that looks numeric stays a string.
 

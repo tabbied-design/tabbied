@@ -64,7 +64,7 @@ add(
 
 add(
   'Dustfall',
-  'A fine field on a close pitch, settling towards one edge.',
+  'A fine field on a close pitch, settling toward one edge.',
   (c) => ({ rule: thinned(c, dotsL('24%', '10%'), fade('0deg', '0%', '100%')) }),
   { pal: 66 }
 );

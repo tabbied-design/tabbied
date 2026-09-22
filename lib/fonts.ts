@@ -10,7 +10,7 @@ import {
  *
  * Declared here and applied per route rather than in the root layout, so only
  * the routes that use it preload it - the legal pages are still the older
- * light theme and never ask for it. next/font memoises by call site, so
+ * light theme and never ask for it. next/font memoizes by call site, so
  * importing this from several pages emits one font, not one per page.
  */
 export const plexMono = IBM_Plex_Mono({

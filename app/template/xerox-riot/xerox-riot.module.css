@@ -1,11 +1,11 @@
 /* ==========================================================================
    XEROX RIOT - zine fair, Glasgow
    A photocopied flyer, blown up. Off-white paper, black ink, one red, two
-   greys. Anton for anything shouted, Courier Prime for everything typed.
+   grays. Anton for anything shouted, Courier Prime for everything typed.
    Headline blocks are tilted, section heads are black bars with reversed
    type, borders are dashed like a cut line, stamps are uppercase and boxed,
    and the margins are deliberately uneven, as if each section were pasted
-   down by a different hand. The patterns draw in the paper colour on a
+   down by a different hand. The patterns draw in the paper color on a
    transparent ground, so they read as toner and halftone, not as pictures.
    ========================================================================== */
 
@@ -13,7 +13,7 @@
   --paper: #f4f4f0;
   --ink: #0a0a0a;
   --red: #ff1e1e;
-  --grey: #6b6b6b;
+  --gray: #6b6b6b;
   --pale: #cfcfc8;
   --display: 'Anton', Impact, 'Arial Narrow Bold', sans-serif;
   --body: 'Courier Prime', 'Courier New', Courier, monospace;
@@ -288,7 +288,7 @@
    whole list shoved right of the heading. */
 
 .exhibitors,
-.programme,
+.program,
 .tables,
 .venue,
 .past {
@@ -322,7 +322,7 @@
 
 .exNo {
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .exName {
@@ -330,14 +330,14 @@
 }
 
 .exCity {
-  color: var(--grey);
+  color: var(--gray);
 }
 
-/* --------------------------------------------------------------- programme
+/* --------------------------------------------------------------- program
    Three strands in a row, each pasted down at a slightly different angle,
    with a larmier tile above where a photograph would go. */
 
-.programme {
+.program {
   padding-left: clamp(1.1rem, 8vw, 7rem);
 }
 
@@ -386,7 +386,7 @@
 
 .strandWhere {
   font-size: 0.82rem;
-  color: var(--grey);
+  color: var(--gray);
   margin-top: 0.3rem;
 }
 
@@ -424,7 +424,7 @@
 
 .slotWho {
   font-size: 0.82rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- band
@@ -525,7 +525,7 @@
 
 .priceSize {
   grid-area: size;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .priceAmt {
@@ -618,7 +618,7 @@
 
 /* -------------------------------------------------------------------- past
    Seven editions as a typed ledger, the year in Anton, the table count
-   flush right, the note underneath in grey. */
+   flush right, the note underneath in gray. */
 
 .past {
   padding-left: clamp(1.1rem, 9vw, 8rem);
@@ -671,7 +671,7 @@
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .edNote {
@@ -862,7 +862,7 @@
   }
 
   .rulesInner,
-  .programme,
+  .program,
   .past {
     padding-left: var(--gut);
   }

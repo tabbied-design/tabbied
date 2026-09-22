@@ -15,7 +15,7 @@ export const metadata = {
    pattern is the ground here, not a picture pasted onto it. */
 const INK = '#101014';
 const RED = '#ff2d00';
-const GREY = '#8b8b85';
+const GRAY = '#8b8b85';
 const PALE = '#dedcd4';
 
 const SEASON = [
@@ -72,7 +72,7 @@ const SEASON = [
 const FIGURES = [
   ['14', 'Dancers under contract'],
   ['6', 'New pieces a year'],
-  ['1 200', 'Square metres of floor'],
+  ['1 200', 'Square meters of floor'],
   ['0', 'Pieces made anywhere else'],
 ];
 
@@ -130,7 +130,7 @@ const PRINCIPLES = [
     art: foldback,
     n: 'II',
     t: 'Nothing is explained',
-    d: 'There is no programme note telling you what a section is about. If the movement needs a paragraph to land, the movement is not finished and we go back into the room.',
+    d: 'There is no program note telling you what a section is about. If the movement needs a paragraph to land, the movement is not finished and we go back into the room.',
   },
   {
     art: hourglass,
@@ -171,17 +171,17 @@ const NEXT_UP: [string, string, string][] = [
 export default function SalzhausPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f3f1ec',
         '--ink': '#101014',
         '--red': '#ff2d00',
-        '--grey': '#8b8b85',
+        '--gray': '#8b8b85',
         '--pale': '#dedcd4',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,red,grey,pale"
+      data-edit-vars="paper,ink,red,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -210,7 +210,7 @@ export default function SalzhausPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={pivot}
-              palette={['transparent', PALE, GREY, RED]}
+              palette={['transparent', PALE, GRAY, RED]}
               fit="grid"
               cellSize={160}
               redrawInterval={5200}
@@ -315,7 +315,7 @@ export default function SalzhausPage() {
           <div data-edit-pattern="figures.field" data-edit-roles="transparent,3,4" className={s.figuresField} aria-hidden="true">
             <TabbiedPattern
               pattern={hourglass}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={96}
               redrawInterval={5600}
@@ -329,7 +329,7 @@ export default function SalzhausPage() {
           <div data-edit-pattern="work.field" data-edit-roles="transparent,4,3" className={s.workField} aria-hidden="true">
             <TabbiedPattern
               pattern={skewblock}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={124}
               redrawInterval={6200}
@@ -381,7 +381,7 @@ export default function SalzhausPage() {
                 <div data-edit-pattern={`principles.field.${i}`} data-edit-roles="transparent,3,4,2" className={s.pPlate} aria-hidden="true">
                   <TabbiedPattern
                     pattern={p.art}
-                    palette={['transparent', GREY, PALE, RED]}
+                    palette={['transparent', GRAY, PALE, RED]}
                     fit="grid"
                     cellSize={72}
                     redrawInterval={5800}
@@ -473,7 +473,7 @@ export default function SalzhausPage() {
           <div data-edit-pattern="visit.field" data-edit-roles="transparent,3,4" className={s.visitField} aria-hidden="true">
             <TabbiedPattern
               pattern={foldback}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={104}
               redrawInterval={5600}
@@ -525,7 +525,7 @@ export default function SalzhausPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,4,3,2" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={sheared}
-          palette={['transparent', PALE, GREY, RED]}
+          palette={['transparent', PALE, GRAY, RED]}
           fit="grid"
           cellSize={112}
           redrawInterval={5000}

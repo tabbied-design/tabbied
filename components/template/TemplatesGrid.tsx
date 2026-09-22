@@ -35,7 +35,7 @@ const MAX_SWATCHES = 4;
  * business and its inks sit under it with the palette and pattern named at
  * the right; the download row closes it. Each card carries its accent as a
  * custom property, which tints the hover, so mousing across the grid previews
- * each site's colour before you open it.
+ * each site's color before you open it.
  */
 function Card({ c }: { c: TemplateCard }) {
   const vars = { '--accent': c.colors[1] ?? c.colors[0] } as CSSProperties;

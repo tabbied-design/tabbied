@@ -316,7 +316,7 @@ export default function StudioResults({ entries }: { entries: StudioEntry[] }) {
                   </p>
 
                   <div className={styles.swatches} aria-hidden="true">
-                    {/* By position: a model-authored palette may repeat a colour. */}
+                    {/* By position: a model-authored palette may repeat a color. */}
                     {direction.palette.slice(0, SWATCHES).map((color, index) => (
                       <span key={index} style={{ background: color }} />
                     ))}

@@ -298,7 +298,7 @@ export function createPattern(
     doodleCode: string;
     seed: string;
     renderBox: CoverRender | null;
-    /** Layout cell size of a cover render, for scale quantisation. */
+    /** Layout cell size of a cover render, for scale quantization. */
     cellPx: number | null;
   } | null = null;
 
@@ -418,7 +418,7 @@ export function createPattern(
       // Snap the render box the same way a grid canvas is snapped: whole,
       // divisible, square cells. On its own this does nothing for a scaled
       // canvas (measured: 6 seams either way), but it is what gives
-      // fitRenderToBox a whole `cell` to quantise the scale against, and the
+      // fitRenderToBox a whole `cell` to quantize the scale against, and the
       // pair together take the seams to zero.
       const multiple = definition.sizing?.cellMultiple;
       const cell = Math.max(

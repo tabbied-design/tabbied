@@ -1,9 +1,9 @@
 /* ==========================================================================
    KILN AOI - ceramics studio on a hill, Kanazawa
-   Warm grey paper, a soft ink, a clay and a moss. Small type, thin rules,
+   Warm gray paper, a soft ink, a clay and a moss. Small type, thin rules,
    and columns that do not line up on purpose: a tile on the left for one
    group and on the right for the next, a glaze pushed down half a step
-   from its neighbour, a note set off to one side. The rhythm is vertical
+   from its neighbor, a note set off to one side. The rhythm is vertical
    and slow. Mincho for the few words at display size; the gothic for
    everything that has to be read.
    ========================================================================== */
@@ -13,7 +13,7 @@
   --ink: #2b2926;
   --clay: #9c6b4e;
   --moss: #6f7a5c;
-  --grey: #a19c93;
+  --gray: #a19c93;
   --gut: clamp(1.25rem, 5vw, 4rem);
   --max: 68rem;
   --air: clamp(4.5rem, 12vw, 10rem);
@@ -92,7 +92,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -145,7 +145,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .heroTitle {
@@ -221,7 +221,7 @@
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: color-mix(in srgb, var(--grey) 22%, var(--paper));
+  background: color-mix(in srgb, var(--gray) 22%, var(--paper));
 }
 
 .groupText { padding-top: 0.4rem; }
@@ -367,7 +367,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .firing {
@@ -418,7 +418,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   padding-top: 0.2rem;
 }
 
@@ -551,7 +551,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .contactList dd {
@@ -604,7 +604,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footLinks {

@@ -1,6 +1,6 @@
 // The edit engine's decisions, with no DOM in sight.
 //
-// planEdits is where every judgement lives - what validates, what a palette
+// planEdits is where every judgment lives - what validates, what a palette
 // change implies for a pattern field, which attributes get written. Pinning it
 // here is what lets apply.ts stay a dull executor and be covered by one e2e
 // case rather than a matrix of them.
@@ -66,7 +66,7 @@ const spec = {
       id: 'band.field',
       kind: 'pattern',
       config: { slug: 'blossom', palette: ['#F5F1E8', '#A9713C'] },
-      // No paletteRoles: a literal field a re-colour must leave alone.
+      // No paletteRoles: a literal field a re-color must leave alone.
     },
   ],
 };
@@ -147,13 +147,13 @@ test('a palette edit writes brand roles and the derived variables', () => {
   assert.match(properties['--ink'], /^rgb\(/);
 });
 
-test('a re-colour moves pattern fields that follow the brand palette', () => {
+test('a re-color moves pattern fields that follow the brand palette', () => {
   const plan = planEdits(
     spec,
     document({ palette: ['#0B2545', '#EEF4ED', '#13A8A8'] })
   );
 
-  // hero.field declares roles, so it re-colours; its literal `transparent`
+  // hero.field declares roles, so it re-colors; its literal `transparent`
   // survives, which is what keeps the field readable over a photograph.
   assert.deepEqual(operationFor(plan, 'pattern', 'hero.field').attributes, {
     'data-palette': 'transparent, #EEF4ED',

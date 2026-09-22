@@ -1,4 +1,4 @@
-// O. Fresco - the fall of ink quantised into counted levels.
+// O. Fresco - the fall of ink quantized into counted levels.
 //
 // `stepFade()` writes a linear fall as flat translucent levels; `stepGlow()`
 // does the same on a circle. Every stop pair sits at the same position, so

@@ -109,7 +109,7 @@ export const TEMPLATE_SECTIONS: Record<string, SectionContent> = {
       tiers: [
         { name: 'Shared room', price: '$2,400', unit: 'per person', body: 'Two guests to a room, both beds facing the water.', includes: ['Seven nights', 'All meals and practices', 'Shuttle from the airport'], cta: 'Check dates' },
         { name: 'Private room', price: '$3,200', unit: 'per person', body: 'Your own room, your own deck, the same long table.', includes: ['Everything in Shared', 'Private ocean-view room', 'One session with a teacher, just you'], cta: 'Check dates', featured: true },
-        { name: 'Whole house', price: '$26,000', unit: 'per week', body: 'Take the property for your studio, family, or team.', includes: ['Twelve guests', 'A schedule built with you', 'Dedicated chef and two teachers'], cta: 'Enquire' },
+        { name: 'Whole house', price: '$26,000', unit: 'per week', body: 'Take the property for your studio, family, or team.', includes: ['Twelve guests', 'A schedule built with you', 'Dedicated chef and two teachers'], cta: 'Inquire' },
       ],
     },
     manifesto: {
@@ -162,7 +162,7 @@ export const TEMPLATE_SECTIONS: Record<string, SectionContent> = {
       portraitScene:
         'in the open kitchen of a wood-fired restaurant, warm firelight from the hearth behind them',
       people: [
-        { name: 'Sofia Marchetti', role: 'Chef, owner', bio: 'Learned fire cooking in Piedmont, then spent a decade getting it wrong before this room.', look: 'a woman in her fifties with grey curls pinned up, sleeves pushed back, chef whites' },
+        { name: 'Sofia Marchetti', role: 'Chef, owner', bio: 'Learned fire cooking in Piedmont, then spent a decade getting it wrong before this room.', look: 'a woman in her fifties with gray curls pinned up, sleeves pushed back, chef whites' },
         { name: 'Daniel Osei', role: 'Head of hearth', bio: 'Runs the coals, and has opinions about oak he will share unprompted.', look: 'a Black man in his forties with a shaved head and a heavy canvas apron' },
         { name: 'Reiko Tanaka', role: 'Pastry', bio: 'Bakes in the falling heat after service, which is why the bread tastes like that.', look: 'a Japanese woman in her thirties with straight hair under a bandana, pastry whites' },
         { name: 'Marco Silva', role: 'General manager', bio: 'Front of house, the wine list, and the person who finds you a table.', look: 'a man in his forties in a dark shirt, warm and unhurried' },
@@ -213,7 +213,7 @@ export const TEMPLATE_SECTIONS: Record<string, SectionContent> = {
       rows: [
         { k: 'Gold', v: '18 carat, recycled, refined in the UK. We have not bought newly mined gold since 2019.' },
         { k: 'Diamonds', v: 'Lab grown as standard. Natural stones only from single-mine traceable sources.' },
-        { k: 'Coloured stones', v: 'Bought at origin in Sri Lanka and Malawi, with no auction house in between.' },
+        { k: 'Colored stones', v: 'Bought at origin in Sri Lanka and Malawi, with no auction house in between.' },
         { k: 'Setting', v: 'Set by hand in the studio. Nothing is sent out to a trade bench.' },
         { k: 'Sizing', v: 'Free for two years, then at cost. Most bands move two sizes either way.' },
         { k: 'Boxes', v: 'Ash and wool felt, made forty miles away, designed to be kept rather than binned.' },
@@ -256,8 +256,8 @@ export const TEMPLATE_SECTIONS: Record<string, SectionContent> = {
       title: 'What each plant actually needs',
       sub: 'The honest version, rather than a tag that says easy care on everything.',
       rows: [
-        { k: 'Light', v: 'Bright indirect means within two metres of a window it can see sky from.' },
-        { k: 'Water', v: 'When the top five centimetres are dry. Not Sundays. Plants cannot read a calendar.' },
+        { k: 'Light', v: 'Bright indirect means within two meters of a window it can see sky from.' },
+        { k: 'Water', v: 'When the top five centimeters are dry. Not Sundays. Plants cannot read a calendar.' },
         { k: 'Humidity', v: 'Most of these want about 50 percent. A grouped shelf beats any amount of misting.' },
         { k: 'Repotting', v: 'Every second spring, one size up. Bigger is not kinder, it just holds water.' },
         { k: 'Feeding', v: 'Half strength, fortnightly, March to September. Nothing at all over winter.' },
@@ -270,7 +270,7 @@ export const TEMPLATE_SECTIONS: Record<string, SectionContent> = {
       sub: 'The part most plant shops would rather not talk about.',
       steps: [
         { title: 'Picked wet', body: 'Watered the night before, so it travels damp rather than soaked, and never dry.' },
-        { title: 'Braced', body: 'Root ball bagged, stem cradled in moulded pulp, nothing loose rattling around.' },
+        { title: 'Braced', body: 'Root ball bagged, stem cradled in molded pulp, nothing loose rattling around.' },
         { title: 'Sent Monday', body: 'Only at the start of the week, so nothing sits in a depot over a weekend.' },
         { title: 'Two weeks off', body: 'Leave it somewhere bright and do nothing. Repotting on day one is what kills them.' },
       ],
@@ -370,7 +370,7 @@ zest: {
     },
     manifesto: {
       kicker: 'The Zest rule',
-      text: 'If a tired person cannot cook it on a Tuesday, it does not go in the box. Short lists, big flavour, every time.',
+      text: 'If a tired person cannot cook it on a Tuesday, it does not go in the box. Short lists, big flavor, every time.',
     },
     iconFeatures: [
       { icon: 'Timer', title: '30 minutes', body: 'Most recipes, start to plate, in half an hour.' },

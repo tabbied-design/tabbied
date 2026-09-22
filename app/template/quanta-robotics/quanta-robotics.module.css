@@ -549,7 +549,7 @@
   background: var(--void);
   min-height: 0;
   /* The plates are square; cropping them to 5:4 keeps six full-width spreads
-     from running the section past four screens. Each subject sits centred with
+     from running the section past four screens. Each subject sits centerd with
      room around it, so the crop takes only empty floor. */
   aspect-ratio: 5 / 4;
 }
@@ -572,7 +572,7 @@
   align-items: center;
 }
 
-/* The pattern is a texture, not a picture: two washes of the panel colour hold
+/* The pattern is a texture, not a picture: two washes of the panel color hold
    it well back of the copy, densest under the text block itself. */
 .researchScrim {
   position: absolute;
@@ -690,7 +690,7 @@
   font-weight: 400;
 }
 
-/* real gutters instead of 1px hairline gaps over a line-coloured field */
+/* real gutters instead of 1px hairline gaps over a line-colored field */
 .telemetryGrid {
   margin: 0;
   display: grid;

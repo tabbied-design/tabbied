@@ -48,7 +48,7 @@ const LOOKS = [
   {
     kind: 'photo' as const,
     slug: 'cerulean-print-undertow',
-    alt: 'The darker Undertow colourway of the same repeat, with occasional arcs in coral',
+    alt: 'The darker Undertow colorway of the same repeat, with occasional arcs in coral',
     caption: 'Print · "Undertow", coral thread',
     wide: false,
   },
@@ -59,7 +59,7 @@ const LOOKS = [
 const SWIMS = [
   { place: 'Baia dei Saraceni', where: 'Finale Ligure', temp: '19-24°C', season: 'May to October', note: 'Flat by seven, busy by ten. Enter off the left-hand rocks.' },
   { place: 'Punta Chiappa', where: 'Camogli', temp: '17-23°C', season: 'June to September', note: 'Deep straight off the shelf. The current runs west after noon.' },
-  { place: 'Lido di Sestri', where: 'Sestri Levante', temp: '18-25°C', season: 'May to October', note: 'Our own bay. Two buoys, four hundred metres apart.' },
+  { place: 'Lido di Sestri', where: 'Sestri Levante', temp: '18-25°C', season: 'May to October', note: 'Our own bay. Two buoys, four hundred meters apart.' },
   { place: 'Cala Cipolla', where: 'Sardinia', temp: '20-26°C', season: 'June to October', note: 'Warmest water we publish. Shallow for a long way out.' },
   { place: 'Bagni Blu', where: 'Genova Nervi', temp: '16-22°C', season: 'All year, if you insist', note: 'The winter swim. Somebody is always already in.' },
 ];
@@ -75,8 +75,8 @@ const SIZES = [
 
 const QUESTIONS = [
   { q: 'Which cut should I order?', a: 'If you swim lengths or race, take High tide and your usual size. If you swim to float, read a book and get wet, take Low tide. Between the two, the torso length is the thing that changes, not the width.' },
-  { q: 'What happens between sizes?', a: 'Size down for a training fit, up for comfort. The knit gives about a centimetre in the water and takes it back when it dries.' },
-  { q: 'Will chlorine finish it?', a: 'Eventually, as it finishes everything. Aqualith holds colour through two hundred and forty hours of testing, which is about three summers of daily lengths. Rinse cold and it will outlast that.' },
+  { q: 'What happens between sizes?', a: 'Size down for a training fit, up for comfort. The knit gives about a centimeter in the water and takes it back when it dries.' },
+  { q: 'Will chlorine finish it?', a: 'Eventually, as it finishes everything. Aqualith holds color through two hundred and forty hours of testing, which is about three summers of daily lengths. Rinse cold and it will outlast that.' },
   { q: 'Do you take returns?', a: 'Thirty days, unworn, hygiene strip intact. Post it back in the bag it came in; the bag is the return envelope, which is why it looks like that.' },
   { q: 'Do you make anything for men?', a: 'Trunks in the same two cuts, from spring. The waistband took eleven goes and is still not right.' },
 ];
@@ -164,7 +164,7 @@ const STOCKISTS = [
 export default function CeruleanSwimPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--foam': '#f2fbfc',
@@ -295,7 +295,7 @@ export default function CeruleanSwimPage() {
             </h2>
             <p data-edit="secHead.secLede2" data-edit-max="240" data-edit-multiline className={styles.secLede}>
               Everything below is sewn in editions of a few hundred. When a
-              colour is gone it waits for next summer, like the rest of us.
+              color is gone it waits for next summer, like the rest of us.
             </p>
           </header>
           <div className={styles.shopGrid}>
@@ -351,7 +351,7 @@ export default function CeruleanSwimPage() {
                 Every Cerulean piece is knitted from Aqualith™, a regenerated
                 nylon spun from recovered fishing nets and carpet offcuts. It
                 arrives on our cutting tables in Sestri as a dense, matte knit
-                that holds its colour through two hundred and forty hours of
+                that holds its color through two hundred and forty hours of
                 chlorine testing, roughly three summers of daily lengths.
               </p>
               <p className={styles.fabricBody}>
@@ -359,7 +359,7 @@ export default function CeruleanSwimPage() {
                 leg, open back, for floating and warm bays.{' '}
                 <strong data-edit="fabric.emphasis2">High tide</strong> is our training cut: locked seams,
                 full back, straps that stay crossed at the flip turn. Both are
-                sewn flat so nothing chafes at kilometre three.
+                sewn flat so nothing chafes at kilometer three.
               </p>
               <p data-edit="fabric.fabricFine" data-edit-max="240" data-edit-multiline className={styles.fabricFine}>
                 Offcuts go back into the loop; last season we returned 312 kg.
@@ -455,7 +455,7 @@ export default function CeruleanSwimPage() {
               alt="A stone jetty running into flat clear sea at first light, a marker buoy offshore"
               className={styles.coverImg}
             />
-            <figcaption data-edit="swims.caption" data-edit-max="120" data-edit-multiline>Lido di Sestri, 06.40. The near buoy is two hundred metres.</figcaption>
+            <figcaption data-edit="swims.caption" data-edit-max="120" data-edit-multiline>Lido di Sestri, 06.40. The near buoy is two hundred meters.</figcaption>
           </figure>
         </section>
 
@@ -486,7 +486,7 @@ export default function CeruleanSwimPage() {
               <p data-edit="atelier.fabricBody2" data-edit-max="240" data-edit-multiline className={styles.fabricBody}>
                 The seams are flatlocked rather than overlocked: the join sits
                 flush with the cloth instead of standing proud of it, so there
-                is nothing to rub at kilometre three. It takes about four times
+                is nothing to rub at kilometer three. It takes about four times
                 as long and it is the only part of the process we will not
                 move.
               </p>
@@ -508,11 +508,11 @@ export default function CeruleanSwimPage() {
               Size &amp; <em>fit</em>
             </h2>
             <p data-edit="secHead.secLede5" data-edit-max="240" data-edit-multiline className={styles.secLede}>
-              Measurements in centimetres, taken on the body rather than on the
+              Measurements in centimeters, taken on the body rather than on the
               garment. Torso is the loop from shoulder, through, and back.
             </p>
           </header>
-          <div className={styles.sizeTable} role="table" aria-label="Size chart in centimetres">
+          <div className={styles.sizeTable} role="table" aria-label="Size chart in centimeters">
             <div className={`${styles.sizeRow} ${styles.sizeHead}`} role="row">
               <span data-edit="sizing.text" data-edit-max="60" role="columnheader">Size</span>
               <span data-edit="sizing.text2" data-edit-max="60" role="columnheader">Bust</span>

@@ -11,7 +11,7 @@ export const metadata = {
     'Sichtbeton advises on fair-faced concrete: mix design, formwork, curing, and the site trials that decide whether a wall is acceptable before it is poured.',
 };
 
-/* Grey paper, near-black ink, one safety orange. Every pattern field takes
+/* Gray paper, near-black ink, one safety orange. Every pattern field takes
    `transparent` in its background slot. */
 const INK = '#131313';
 const ORANGE = '#FF5A00';
@@ -35,7 +35,7 @@ const CLASSES = [
 ];
 
 const CHECKS = [
-  { n: '01', t: 'Mix before form', d: 'A mix is chosen for colour, workability and bleed before anyone draws a panel layout. Doing it the other way round is how walls come out mottled.' },
+  { n: '01', t: 'Mix before form', d: 'A mix is chosen for color, workability and bleed before anyone draws a panel layout. Doing it the other way round is how walls come out mottled.' },
   { n: '02', t: 'One cement, one quarry', d: 'A single delivery source for the whole visible surface. Change the quarry mid-pour and no amount of curing will hide it.' },
   { n: '03', t: 'Trial panels, full height', d: 'Two panels, cast on site, in the weather the real pour will get. Signed off by the architect before the first real lift.' },
   { n: '04', t: 'Curing is the finish', d: 'The wall is decided in the first seven days. We write the curing regime into the contract and inspect it, because nobody else will.' },
@@ -51,17 +51,17 @@ const NUMBERS = [
 export default function SichtbetonPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
-        '--grey-p': '#e9e9e6',
+        '--gray-p': '#e9e9e6',
         '--ink': '#131313',
         '--orange': '#ff5a00',
         '--steel': '#8b8b87',
         '--pale': '#d3d3ce',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="grey-p,ink,orange,steel,pale"
+      data-edit-vars="gray-p,ink,orange,steel,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -246,7 +246,7 @@ export default function SichtbetonPage() {
               slug="sichtbeton-cylinder"
               alt="Concrete test cylinders standing on a laboratory bench beside a compression machine"
             />
-            <figcaption data-edit="trials.caption" data-edit-max="120" data-edit-multiline>Cubes at 7 and 28 days. Colour is judged on the panel, not on these.</figcaption>
+            <figcaption data-edit="trials.caption" data-edit-max="120" data-edit-multiline>Cubes at 7 and 28 days. Color is judged on the panel, not on these.</figcaption>
           </figure>
         </section>
 
@@ -341,7 +341,7 @@ export default function SichtbetonPage() {
                 </div>
                 <p data-edit="tiles.tileN2" data-edit-max="240" data-edit-multiline className={s.tileN}>02</p>
                 <h3 data-edit="tiles.title3" data-edit-max="40">The pour</h3>
-                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>Rate, vibration and lift height. Most blowholes and most colour variation are decided in the ninety minutes the concrete is moving.</p>
+                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>Rate, vibration and lift height. Most blowholes and most color variation are decided in the ninety minutes the concrete is moving.</p>
               </article>
               <article key="03">
                 <div data-edit-pattern="tiles.field3" data-edit-roles="transparent,3,4" className={s.tilePlate} aria-hidden="true">
@@ -437,7 +437,7 @@ export default function SichtbetonPage() {
               </div>
               <div key="Can defects be repaired?">
                 <dt data-edit="faq.term4" data-edit-max="28">Can defects be repaired?</dt>
-                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Small blowholes, sometimes, by a specialist, on a sample first. Colour variation across a lift, no. That one is permanent.</dd>
+                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Small blowholes, sometimes, by a specialist, on a sample first. Color variation across a lift, no. That one is permanent.</dd>
               </div>
           </dl>
         </section>

@@ -3,7 +3,7 @@
 // `stepFade()` writes a fall as a handful of flat translucent levels, every
 // stop pair sitting at the same position. It is a hard-stop gradient that
 // reads as a ramp, and it is the one place in the batch where the *amount* of
-// ink is quantised rather than the geometry - the cell goes down in counted
+// ink is quantized rather than the geometry - the cell goes down in counted
 // stages instead of sliding.
 //
 // The alpha is carried by the mask, not by the ink, so the levels stay real

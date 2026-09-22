@@ -72,11 +72,11 @@ export function buildPrompt(r) {
   if (!entries.length) return head;
 
   // A hex list is a constraint a flat graphic style can satisfy; a photograph needs
-  // each colour anchored to a material before it has any purchase.
+  // each color anchored to a material before it has any purchase.
   const header =
     r.paletteMode === "scene"
       ? "Palette - render these as the scene's real materials, surfaces, and light:"
-      : "Palette - use these colours and no others:";
+      : "Palette - use these colors and no others:";
   const lines = entries.map(([name, v]) =>
     typeof v === "string" ? `${name}: ${v}` : `${name}: ${v.hex}${v.as ? ` - ${v.as}` : ""}`,
   );

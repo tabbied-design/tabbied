@@ -34,8 +34,8 @@ const imageId = (
 //
 // The palette roles a pattern field follows. A field drawn on the page's own
 // ground takes the whole palette; one drawn *over* something keeps
-// `transparent` in colour0 - that literal is what leaves real negative space
-// for the photograph underneath, so it must never be re-coloured.
+// `transparent` in color0 - that literal is what leaves real negative space
+// for the photograph underneath, so it must never be re-colored.
 const fullRoles = (site: Site) => site.colors.map((_, i) => i).join(',');
 const overlayRoles = (site: Site) =>
   ['transparent', ...site.colors.slice(1).map((_, i) => i + 1)].join(',');
@@ -92,16 +92,16 @@ function Decor({ def, palette, density = 0.25 }: { def: PatternDefinition; palet
 export default function TemplateSite({ site, patterns }: Props) {
   const { colors } = site;
 
-  // Colour enters the page exactly once, here, as custom properties. The
+  // Color enters the page exactly once, here, as custom properties. The
   // derivation moved into `tabbied-templates` because applyEdits has to
-  // recompute these same variables when somebody re-colours a downloaded copy:
+  // recompute these same variables when somebody re-colors a downloaded copy:
   // `--ink` and the card tints are functions of the palette rather than
-  // members of it, and a second implementation of that maths is how a
-  // re-coloured page ends up with body copy nobody can read.
+  // members of it, and a second implementation of that math is how a
+  // re-colored page ends up with body copy nobody can read.
   const vars: Record<string, string> = {
     ...derivePaletteProperties(colors, 'templateSite', {
       // A flat-section site drops the alternating band tone entirely: every
-      // section sits on the page colour, and rhythm comes from spacing alone.
+      // section sits on the page color, and rhythm comes from spacing alone.
       flatSections: site.flatSections,
     }),
     '--display': site.fonts.display,
@@ -126,8 +126,8 @@ export default function TemplateSite({ site, patterns }: Props) {
     <div
       className={`${s.site} ${kitClass}`}
       style={vars as CSSProperties}
-      // Names the palette derivation, so a page is self-describing: re-colouring
-      // a packaged copy needs the markup and the new colours, nothing else.
+      // Names the palette derivation, so a page is self-describing: re-coloring
+      // a packaged copy needs the markup and the new colors, nothing else.
       data-edit-root="templateSite"
       {...(site.flatSections ? { 'data-edit-flat': '' } : {})}
     >

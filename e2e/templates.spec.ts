@@ -196,7 +196,7 @@ for (const fixture of FIXTURES) {
       .toEqual([]);
 
     // Braces balance - the trim walks the sheet by hand, and a comment
-    // containing a literal `{` once desynchronised it.
+    // containing a literal `{` once desynchronized it.
     expect((withoutComments.match(/\{/g) ?? []).length).toBe(
       (withoutComments.match(/\}/g) ?? []).length
     );

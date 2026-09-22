@@ -233,7 +233,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const clampedPage = Math.min(page, pageCount);
-  // Memoised because the flush effect below is keyed on it: a fresh slice per
+  // Memoized because the flush effect below is keyed on it: a fresh slice per
   // render would measure the grid again on every palette click.
   const visible = useMemo(
     () => filtered.slice((clampedPage - 1) * PER_PAGE, clampedPage * PER_PAGE),
@@ -360,7 +360,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
             </div>
 
             {/* Numbers only, as the design draws it: the window always shows
-                the neighbours of the current page, so there is nothing an
+                the neighbors of the current page, so there is nothing an
                 arrow would reach that a number does not. */}
             {pageCount > 1 && (
               <nav className={styles.pagination} aria-label="Pages">

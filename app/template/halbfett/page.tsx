@@ -11,11 +11,11 @@ export const metadata = {
     'Halbfett is a type foundry in Zürich. Eleven families, drawn slowly, licensed plainly. Trials are free and never expire.',
 };
 
-/* Black, white, one vermilion, two greys. Every pattern field takes
+/* Black, white, one vermilion, two grays. Every pattern field takes
    `transparent` in the background slot so the white page shows through. */
 const INK = '#000000';
 const RED = '#FF3B14';
-const GREY = '#9A9A9A';
+const GRAY = '#9A9A9A';
 const PALE = '#DCDCDC';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,7 +23,7 @@ const PALE = '#DCDCDC';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PALE;
 
 
@@ -47,7 +47,7 @@ const WEIGHTS = [
   ['800', 'Extrafett'],
 ];
 
-const LICENCES = [
+const LICENSES = [
   { name: 'Desktop', unit: 'per style, 5 users', price: 'CHF 60', body: 'Install and set anything. Print, logos, packaging. No annual renewal, ever.' },
   { name: 'Web', unit: 'per style, 500k views / month', price: 'CHF 60', body: 'Self-hosted WOFF2. We do not run a CDN and will not watch your traffic.' },
   { name: 'App', unit: 'per style, per app', price: 'CHF 240', body: 'Embed in a shipped binary. Updates included for the life of the app.' },
@@ -59,17 +59,17 @@ const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ÄÖÜÆØÅßfiflÐÞ&@#§'
 export default function HalbfettPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--white': '#ffffff',
         '--ink': '#000000',
         '--red': '#ff3b14',
-        '--grey': '#9a9a9a',
+        '--gray': '#9a9a9a',
         '--pale': '#dcdcdc',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="white,ink,red,grey,pale"
+      data-edit-vars="white,ink,red,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -84,7 +84,7 @@ export default function HalbfettPage() {
         <nav aria-label="Sections">
           <a data-edit="bar.library" data-edit-max="28" href="#library">Library</a>
           <a data-edit="bar.specimen" data-edit-max="28" href="#specimen">Specimen</a>
-          <a data-edit="bar.licences" data-edit-max="28" href="#licences">Licences</a>
+          <a data-edit="bar.licences" data-edit-max="28" href="#licences">Licenses</a>
           <a data-edit="bar.studio" data-edit-max="28" href="#studio">Studio</a>
         </nav>
         <a data-edit="bar.trial" data-edit-max="28" className={s.trial} href="#licences">
@@ -98,7 +98,7 @@ export default function HalbfettPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={dotmatrix}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={34}
               redrawInterval={3200}
@@ -157,7 +157,7 @@ export default function HalbfettPage() {
           <div data-edit-pattern="specimen.field" data-edit-roles="transparent,3,4" className={s.specField} aria-hidden="true">
             <TabbiedPattern
               pattern={halftone}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={46}
               redrawInterval={4600}
@@ -216,17 +216,17 @@ export default function HalbfettPage() {
           </figure>
         </div>
 
-        {/* ------------------------------------------------------ LICENCES */}
-        <section id="licences" className={s.licences} aria-labelledby="licences-h">
+        {/* ------------------------------------------------------ LICENSES */}
+        <section id="licences" className={s.licenses} aria-labelledby="licences-h">
           <div className={s.head}>
-            <h2 data-edit="licences.title" data-edit-max="60" id="licences-h">Licences, in plain terms</h2>
+            <h2 data-edit="licences.title" data-edit-max="60" id="licences-h">Licenses, in plain terms</h2>
             <p data-edit="licences.body" data-edit-max="240" data-edit-multiline>
               One page, no legal counsel required. Buy once, use forever; we have
-              never revoked a licence and would not know how.
+              never revoked a license and would not know how.
             </p>
           </div>
           <div className={s.lic}>
-            {LICENCES.map((l, i) => (
+            {LICENSES.map((l, i) => (
               <article key={l.name}>
                 <h3 data-edit={`licences.title2.${i}`} data-edit-max="40">{l.name}</h3>
                 <p data-edit={`licences.licUnit.${i}`} data-edit-max="240" data-edit-multiline className={s.licUnit}>{l.unit}</p>
@@ -333,7 +333,7 @@ export default function HalbfettPage() {
                 </div>
                 <p data-edit="tiles.tileN2" data-edit-max="240" data-edit-multiline className={s.tileN}>02</p>
                 <h3 data-edit="tiles.title3" data-edit-max="40">Hinting and rendering</h3>
-                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>Every style through four rasterisers at eight sizes. We keep the ugly screenshots and fix them rather than filing them.</p>
+                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>Every style through four rasterizers at eight sizes. We keep the ugly screenshots and fix them rather than filing them.</p>
               </article>
               <article key="03">
                 <div data-edit-pattern="tiles.field3" data-edit-roles="transparent,3,4" className={s.tilePlate} aria-hidden="true">
@@ -421,7 +421,7 @@ export default function HalbfettPage() {
               </div>
               <div key="What counts as one app?">
                 <dt data-edit="faq.term2" data-edit-max="28">What counts as one app?</dt>
-                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>One product on one storefront. Ship it on three platforms and it is still one app; ship a second product and it is a second licence.</dd>
+                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>One product on one storefront. Ship it on three platforms and it is still one app; ship a second product and it is a second license.</dd>
               </div>
               <div key="Do you do exclusive comm">
                 <dt data-edit="faq.term3" data-edit-max="28">Do you do exclusive commissions?</dt>
@@ -443,7 +443,7 @@ export default function HalbfettPage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
             <TabbiedPattern
               pattern={kern}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={120}
               redrawInterval={5040}

@@ -2,7 +2,7 @@
 //
 // A template site is a finished, hand-designed page. This spec describes the
 // part of it that is *brand* rather than *layout* - the headline, the
-// photographs, the colours, the pattern fields - so that a person in the
+// photographs, the colors, the pattern fields - so that a person in the
 // editor, a coding agent holding the downloaded zip, and the branding service
 // can all change those things without understanding the page, and without
 // being able to break it.
@@ -43,7 +43,7 @@ export const EDIT_PATTERN_ATTRIBUTE = 'data-edit-pattern';
 /**
  * The element carrying the site's brand custom properties. Its value names the
  * palette derivation (see PaletteDerivation), so a page is self-describing:
- * applying a palette needs the page and the new colours, nothing else.
+ * applying a palette needs the page and the new colors, nothing else.
  */
 export const EDIT_ROOT_ATTRIBUTE = 'data-edit-root';
 
@@ -129,8 +129,8 @@ export type ImageSlot = {
 /**
  * One position in a pattern's palette.
  *
- * A number is an index into the brand palette, so re-colouring the site
- * re-colours the pattern field with it. A string is a literal that never
+ * A number is an index into the brand palette, so re-coloring the site
+ * re-colors the pattern field with it. A string is a literal that never
  * moves - overwhelmingly `"transparent"`, which is how a pattern is drawn over
  * a photograph or a section background rather than over its own ground.
  */
@@ -172,7 +172,7 @@ export type PatternSlot = {
   config: PatternSlotConfig;
   /**
    * How this field's palette is built from the brand palette. Absent means the
-   * palette is literal and a brand re-colour leaves it alone.
+   * palette is literal and a brand re-color leaves it alone.
    */
   paletteRoles?: PaletteRole[];
   /** The design's options, for validation and for building controls. */
@@ -185,36 +185,36 @@ export type Slot = TextSlot | ImageSlot | PatternSlot;
 // ---- palette --------------------------------------------------------------
 
 /**
- * How brand colours become CSS custom properties on the page root.
+ * How brand colors become CSS custom properties on the page root.
  *
  * `direct` writes `--brand-0...n` and nothing else: the stylesheet consumes the
  * roles as authored. `templateSite` additionally recomputes the derived
  * variables the shared TemplateSite component works in (`--ink`, `--card`,
  * `--soft`, ...), which are functions of the palette rather than members of it -
- * so a re-colour has to recompute them or the page keeps its old contrast.
+ * so a re-color has to recompute them or the page keeps its old contrast.
  */
 export type PaletteDerivation = 'direct' | 'templateSite' | 'vars';
 
 export type PaletteSpec = {
-  /** Colours, background (role 0) first - the shape used everywhere else. */
+  /** Colors, background (role 0) first - the shape used everywhere else. */
   colors: string[];
   derivation: PaletteDerivation;
   /** Optional authored names, for an editor's swatch labels. */
   names?: string[];
   /**
    * `templateSite` only: the site drops the alternating band tone, so `--band`
-   * resolves to the page colour.
+   * resolves to the page color.
    */
   flatSections?: boolean;
   /**
    * `vars` only: the page's own custom-property names, in role order - so role
    * 0 writes `--<varNames[0]>`.
    *
-   * The 52 bespoke template pages already had their colour in one place before
+   * The 52 bespoke template pages already had their color in one place before
    * any of this existed: each declares `--paper`, `--ink`, `--ochre`... on its
    * root rule and the stylesheet only ever reads `var(--...)`. Renaming those to
    * `--brand-N` would have meant a codemod over 52 stylesheets to gain nothing,
-   * so instead the page declares which name each role owns and a re-colour
+   * so instead the page declares which name each role owns and a re-color
    * writes those. An inline property beats the class rule that holds the
    * authored default, so the page keeps working with no edits applied.
    */
@@ -251,7 +251,7 @@ export type PatternEdit = {
   slug?: string;
   /**
    * Literal palette override. Normally left unset: a pattern slot with
-   * `paletteRoles` re-colours from the brand palette automatically.
+   * `paletteRoles` re-colors from the brand palette automatically.
    */
   palette?: string[];
   options?: Record<string, string | number | boolean>;

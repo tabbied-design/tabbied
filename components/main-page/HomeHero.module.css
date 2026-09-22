@@ -90,7 +90,7 @@
 /* "Free patterns" and "websites" are links to the two galleries, each in a
    gradient, so the headline names the product and takes you to it. The
    underline is drawn rather than inherited: a text-decoration under
-   gradient-filled type paints in the fill colour, which is transparent. */
+   gradient-filled type paints in the fill color, which is transparent. */
 .titleLink {
   position: relative;
   display: inline-block;
@@ -222,7 +222,7 @@ a.stat:hover .statArrow {
   font: 700 64px var(--h-display);
   line-height: 1;
   color: var(--h-fg);
-  /* Colour is the one thing the palette cycle animates directly. */
+  /* Color is the one thing the palette cycle animates directly. */
   transition: color 1200ms ease;
 }
 

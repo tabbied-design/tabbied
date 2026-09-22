@@ -17,7 +17,7 @@ type SiteSchema = { properties: { text: { required: string[] } } };
 /**
  * A fake upstream that reads the slot ids out of the strict schema it was
  * sent and writes one line per slot, the way a compliant Responses API does.
- * `mode` selects the first turn's behaviour: `good` answers the contract,
+ * `mode` selects the first turn's behavior: `good` answers the contract,
  * `repair` answers wrongly once and correctly when chained, `hopeless` never
  * answers correctly.
  */
@@ -66,7 +66,7 @@ async function generate(cookie: string): Promise<string> {
   const response = await SELF.fetch(`${ORIGIN}/api/studio/directions`, {
     method: 'POST',
     headers: { ...json, cookie },
-    body: JSON.stringify({ description: 'A pigment maker in Sheffield: dry colour, sold by the jar.' }),
+    body: JSON.stringify({ description: 'A pigment maker in Sheffield: dry color, sold by the jar.' }),
   });
   expect(response.status, await response.clone().text()).toBe(200);
 

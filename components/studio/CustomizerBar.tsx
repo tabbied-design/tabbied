@@ -8,7 +8,7 @@
 //
 // Download is a menu because there are two packages and they are not the
 // same thing. The static package is rebuilt in the browser with the site's
-// colours and patterns in it (lib/studioDownload.ts); the React package is the
+// colors and patterns in it (lib/studioDownload.ts); the React package is the
 // template's source, which the customizer's document cannot be applied to,
 // and the menu says so rather than implying otherwise. The design draws a
 // gauge of downloads used above the two; nothing counts downloads yet (the
@@ -76,7 +76,7 @@ export default function CustomizerBar({
           <Menu.Portal>
             <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
               <Menu.Popup className={styles.menu}>
-                <div className={styles.menuHead}>Includes your colours and patterns</div>
+                <div className={styles.menuHead}>Includes your colors and patterns</div>
                 <Menu.Item className={styles.option} onClick={onDownloadHtml}>
                   <span className={styles.optionTitle}>Static HTML &amp; CSS</span>
                   <span className={styles.optionNote}>One folder, drop on any host</span>
@@ -89,7 +89,7 @@ export default function CustomizerBar({
                 >
                   <span className={styles.optionTitle}>React project</span>
                   <span className={styles.optionNote}>
-                    Source components; your colours and patterns are not applied here yet
+                    Source components; your colors and patterns are not applied here yet
                   </span>
                 </Menu.Item>
               </Menu.Popup>

@@ -15,7 +15,7 @@ export const metadata = {
    Every field takes `transparent` in the background slot. */
 const WHITE = '#FAFAF5';
 const WARM = '#F5E663';
-const GREY = '#6A6A64';
+const GRAY = '#6A6A64';
 const PANEL = '#151515';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,7 +23,7 @@ const PANEL = '#151515';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PANEL;
 
 
@@ -38,7 +38,7 @@ const WORK = [
 const POSITIONS = [
   { n: '01', t: 'Mock up before you draw', d: 'We build the condition full size, on site, at night, and look at it. Every scheme we have regretted was one that went to drawings first.' },
   { n: '02', t: 'Dark is a material', d: 'The brief usually asks how bright. The useful question is what should stay unlit, and it is almost always more than the client expects.' },
-  { n: '03', t: 'One colour temperature', d: 'A single CCT per space, held across every fixture and every replacement lamp for the life of the building. Written into the O&M manual.' },
+  { n: '03', t: 'One color temperature', d: 'A single CCT per space, held across every fixture and every replacement lamp for the life of the building. Written into the O&M manual.' },
   { n: '04', t: 'Measure, then argue', d: 'We bring a meter to every handover. An opinion about a lighting scheme is worth having; a reading is worth acting on.' },
 ];
 
@@ -52,17 +52,17 @@ const NUMBERS = [
 export default function LichtfeldPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--dark': '#0a0a0a',
         '--white': '#fafaf5',
         '--warm': '#f5e663',
-        '--grey': '#6a6a64',
+        '--gray': '#6a6a64',
         '--panel': '#151515',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="dark,white,warm,grey,panel"
+      data-edit-vars="dark,white,warm,gray,panel"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -91,7 +91,7 @@ export default function LichtfeldPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={falloff}
-              palette={['transparent', WARM, GREY]}
+              palette={['transparent', WARM, GRAY]}
               fit="grid"
               cellSize={168}
               redrawInterval={5800}
@@ -162,7 +162,7 @@ export default function LichtfeldPage() {
           <div data-edit-pattern="glowBand.field" data-edit-roles="transparent,2,1,3" className={s.glowField}>
             <TabbiedPattern
               pattern={radiance}
-              palette={['transparent', WARM, WHITE, GREY]}
+              palette={['transparent', WARM, WHITE, GRAY]}
               fit="grid"
               cellSize={136}
               redrawInterval={3400}
@@ -176,7 +176,7 @@ export default function LichtfeldPage() {
           <div data-edit-pattern="positions.field" data-edit-roles="transparent,3,2" className={s.posField} aria-hidden="true">
             <TabbiedPattern
               pattern={sunray}
-              palette={['transparent', GREY, WARM]}
+              palette={['transparent', GRAY, WARM]}
               fit="grid"
               cellSize={140}
               redrawInterval={6200}
@@ -253,7 +253,7 @@ export default function LichtfeldPage() {
           <div data-edit-pattern="studio.field" data-edit-roles="transparent,2,3" className={s.studioField} aria-hidden="true">
             <TabbiedPattern
               pattern={dimmer}
-              palette={['transparent', WARM, GREY]}
+              palette={['transparent', WARM, GRAY]}
               fit="grid"
               cellSize={86}
               redrawInterval={4600}
@@ -449,7 +449,7 @@ export default function LichtfeldPage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,1,3" className={s.codaField}>
             <TabbiedPattern
               pattern={beamspread}
-              palette={['transparent', WHITE, GREY]}
+              palette={['transparent', WHITE, GRAY]}
               fit="grid"
               cellSize={116}
               redrawInterval={5012}

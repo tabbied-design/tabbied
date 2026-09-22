@@ -1,8 +1,8 @@
 // Batch 11 - 55 designs that export as native SVG with no caveat at all.
 //
-// The earlier batches were organised around a motif: batch 9 asked what
+// The earlier batches were organized around a motif: batch 9 asked what
 // happens when the canvas is the unit rather than the cell, batch 10 built
-// drawings larger than the cell they start in. This one is organised around a
+// drawings larger than the cell they start in. This one is organized around a
 // *format*. Native SVG export shipped with three tiers - four designs it
 // cannot represent, eighteen it exports with a caveat the user has to be shown
 // first, and the rest clean - and this batch is 55 more of the clean tier.
@@ -45,7 +45,7 @@
 // @random(${shapeFrequency}) gate per design; every design samples a
 // transition-able ink per cell so a reseed morphs; a randomized custom prop
 // read more than once goes through @var(--x); nothing paints var(--color0),
-// because a hole knocked out in the background colour stops being a hole the
+// because a hole knocked out in the background color stops being a hole the
 // moment the background is transparent.
 import { RESERVED, TAKEN } from './pattern-defs-11/shared.mjs';
 import { sectionA } from './pattern-defs-11/a-split.mjs';

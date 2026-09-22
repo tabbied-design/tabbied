@@ -1,4 +1,4 @@
-/* Colours come from custom properties so the same mark works on the dark shell
+/* Colors come from custom properties so the same mark works on the dark shell
    (mint -> cyan, its default) and on Studio's own white pages, which override
    them with the teal pair. */
 .spark {

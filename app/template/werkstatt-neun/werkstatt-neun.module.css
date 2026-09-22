@@ -229,7 +229,7 @@
 }
 
 /* ---------------------------------------------------------- section head
-   One number in a coloured square, the heading in capitals beside it, and
+   One number in a colored square, the heading in capitals beside it, and
    a note in the third column of a strict three-part grid. The small label
    below is shared by every term and role on the page: one size, one
    tracking, so the lists read as one system. */
@@ -286,7 +286,7 @@
 /* --------------------------------------------------------------- workshops
    Four cards on a two-by-two grid. Each takes its own primary on a thick
    top bar, in the order red, blue, yellow, ink, and the tile is the picture:
-   a mosaic of quarter circles and triangles in the same three colours. */
+   a mosaic of quarter circles and triangles in the same three colors. */
 
 .wsGrid {
   display: grid;

@@ -25,8 +25,8 @@ export function directionsSystemPrompt(candidates: StudioDirection[]): string {
     '- Choose only from the shortlist, by slug. Never invent a slug.',
     '- Choose three templates that read as three genuinely different',
     '  directions - not three variations of one idea. Vary the mood, the',
-    '  motif and the colour temperature.',
-    '- Each palette starts with the background colour, then inks. At least one',
+    '  motif and the color temperature.',
+    '- Each palette starts with the background color, then inks. At least one',
     '  ink must be clearly legible on that background; a palette where',
     "  everything is close in tone will be rejected and replaced with the",
     "  template's own.",
@@ -57,8 +57,8 @@ export function directionImagePrompt(
   return [
     `A single photographic still life representing a business described as: ${description.slice(0, 240)}`,
     `The brand direction is "${direction.stance}" - ${direction.why}`,
-    `Colour it from this palette, as real materials and surfaces rather than flat swatches: ${direction.palette.join(', ')}.`,
-    'One subject, centred, three-quarter view, soft even studio light.',
+    `Color it from this palette, as real materials and surfaces rather than flat swatches: ${direction.palette.join(', ')}.`,
+    'One subject, centerd, three-quarter view, soft even studio light.',
     'No cast shadow. No text, letters, numbers, or logos.',
   ].join(' ');
 }
@@ -144,11 +144,11 @@ export function siteImagePrompt(options: {
       ? `The template used this picture as: "${options.slotAlt.slice(0, 160)}". Make the equivalent for this business.`
       : 'Make a picture that suits this business.',
     `The brand direction is "${options.stance}" - ${options.why}`,
-    `Colour it from this palette, as real materials and surfaces rather than flat swatches: ${options.palette.join(', ')}.`,
+    `Color it from this palette, as real materials and surfaces rather than flat swatches: ${options.palette.join(', ')}.`,
     options.references > 0
       ? 'Draw the subject, materials and setting from the reference pictures provided.'
       : '',
-    'One subject, centred, three-quarter view, soft even studio light, nothing touching the edge of the frame.',
+    'One subject, centerd, three-quarter view, soft even studio light, nothing touching the edge of the frame.',
     'No cast shadow. No text, letters, numbers, or logos.',
   ]
     .filter((line) => line !== '')
@@ -171,7 +171,7 @@ export function reviseSystemPrompt(direction: StoredDirection, templateName: str
     '  must not appear in your answer.',
     '- Keep each value the kind of thing it was and within its length budget.',
     '- Only a slot marked as allowing it may contain {em}...{/em}.',
-    '- Set palette only if the request is about colours; otherwise null.',
+    '- Set palette only if the request is about colors; otherwise null.',
     '- Do not invent facts about the business.',
     '- In "note", tell the owner in one sentence what you changed.',
     '',

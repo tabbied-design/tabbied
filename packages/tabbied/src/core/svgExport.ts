@@ -465,12 +465,12 @@ function emulatePremultipliedInterpolation(stops: GradientStop[]): GradientStop[
   for (let i = 0; i < stops.length; i++) {
     const previous = stops[i - 1];
     const next = stops[i + 1];
-    // A fully transparent stop between two different opaque colours: CSS
+    // A fully transparent stop between two different opaque colors: CSS
     // fades the first out and the second in, so it becomes two coincident
-    // stops, each the transparent form of its neighbour. Rewritten as one
-    // stop it took the second neighbour's colour, and the first segment
+    // stops, each the transparent form of its neighbor. Rewritten as one
+    // stop it took the second neighbor's color, and the first segment
     // interpolated between the two hues in non-premultiplied space - a haze
-    // of the mixed colour where CSS shows none.
+    // of the mixed color where CSS shows none.
     if (
       stops[i].color.a === 0 &&
       previous &&
@@ -538,7 +538,7 @@ function stopNodes(stops: GradientStop[], ctx: Ctx, offsetMap?: (p: number) => n
 /**
  * Angle for `to <side-or-corner>` forms, in degrees (CSS bearing). A corner
  * form's gradient line is perpendicular to the diagonal joining the two
- * neighbouring corners (CSS Images 3), so for `to top right` it points along
+ * neighboring corners (CSS Images 3), so for `to top right` it points along
  * (h, w): a bearing of atan2(h, w). On a 200 by 100 box that is 26.57deg;
  * atan2(w, h), which this had, gave 63.43deg. The two agree only on a
  * square, which is why the cell-by-cell parity sweep did not see it.
@@ -1885,7 +1885,7 @@ function boxShadowFilterUrl(cs: CSSStyleDeclaration, box: Box, env: WalkEnv): st
  *
  * Neither kind of pseudo is laid out against the border box: an
  * absolutely-positioned one resolves its offsets against the padding box, a
- * static one is centred in the content box. On a borderless host the three
+ * static one is centerd in the content box. On a borderless host the three
  * coincide - which is every pattern that predates batch 11's frames - but on a
  * bordered one, using the border box displaces the pseudo by the border width.
  *

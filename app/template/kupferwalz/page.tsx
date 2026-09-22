@@ -8,7 +8,7 @@ import s from './kupferwalz.module.css';
 export const metadata = {
   title: 'Kupferwalz: Copper rolling mill, Liège',
   description:
-    'A copper rolling mill working to ten gauges, from roofing sheet to a hundredth of a millimetre. Cast, hot rolled, cold rolled, annealed and cut here.',
+    'A copper rolling mill working to ten gauges, from roofing sheet to a hundredth of a millimeter. Cast, hot rolled, cold rolled, annealed and cut here.',
 };
 
 /* Night ground, warm paper, one copper. Every decorative field takes
@@ -16,7 +16,7 @@ export const metadata = {
    the plates, the plate itself - is what shows through the drawing. */
 const INK = '#efe7de';
 const ACCENT = '#b4552d';
-const GREY = '#7a736d';
+const GRAY = '#7a736d';
 const PANEL = '#231a16';
 
 /* Ten gauges. `mm` drives the drawn thickness of each bar, at forty times
@@ -103,17 +103,17 @@ const ORDERING = [
 export default function KupferwalzPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--ground': '#15100e',
         '--ink': '#efe7de',
         '--accent': '#b4552d',
-        '--grey': '#7a736d',
+        '--gray': '#7a736d',
         '--panel': '#231a16',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="ground,ink,accent,grey,panel"
+      data-edit-vars="ground,ink,accent,gray,panel"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -140,7 +140,7 @@ export default function KupferwalzPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={rolloff}
-              palette={['transparent', PANEL, GREY, ACCENT]}
+              palette={['transparent', PANEL, GRAY, ACCENT]}
               fit="grid"
               cellSize={158}
               redrawInterval={6200}
@@ -150,7 +150,7 @@ export default function KupferwalzPage() {
           <p data-edit="hero.heroKicker" data-edit-max="240" data-edit-multiline className={s.heroKicker}>Copper rolling mill / Liège / since 1889</p>
           <h1 className={s.heroType}>
             <span data-edit="hero.text" data-edit-max="60">Three</span>
-            <span data-edit="hero.text2" data-edit-max="60">millimetres</span>
+            <span data-edit="hero.text2" data-edit-max="60">millimeters</span>
             <span data-edit="hero.hi" data-edit-max="60" className={s.hi}>to a twentieth.</span>
           </h1>
           <div className={s.heroFoot}>
@@ -231,7 +231,7 @@ export default function KupferwalzPage() {
         <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={decay}
-            palette={['transparent', ACCENT, PANEL, GREY]}
+            palette={['transparent', ACCENT, PANEL, GRAY]}
             fit="grid"
             cellSize={118}
             redrawInterval={4200}
@@ -286,7 +286,7 @@ export default function KupferwalzPage() {
                   <div data-edit-pattern={`pr.field.${i}`} data-edit-roles="transparent,3,2" className={s.pField} aria-hidden="true">
                     <TabbiedPattern
                       pattern={p.art}
-                      palette={['transparent', GREY, ACCENT]}
+                      palette={['transparent', GRAY, ACCENT]}
                       fit="grid"
                       cellSize={66}
                       redrawInterval={5400}
@@ -327,7 +327,7 @@ export default function KupferwalzPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={shearpair}
-              palette={['transparent', ACCENT, GREY]}
+              palette={['transparent', ACCENT, GRAY]}
               fit="grid"
               cellSize={120}
               redrawInterval={4600}
@@ -364,7 +364,7 @@ export default function KupferwalzPage() {
           <div data-edit-pattern="ordering.field" data-edit-roles="transparent,3,4" className={s.visitField} aria-hidden="true">
             <TabbiedPattern
               pattern={roundcut}
-              palette={['transparent', GREY, PANEL]}
+              palette={['transparent', GRAY, PANEL]}
               fit="grid"
               cellSize={102}
               redrawInterval={5400}
@@ -433,7 +433,7 @@ export default function KupferwalzPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={quarterfall}
-          palette={['transparent', ACCENT, PANEL, GREY]}
+          palette={['transparent', ACCENT, PANEL, GRAY]}
           fit="grid"
           cellSize={106}
           redrawInterval={5000}
@@ -447,7 +447,7 @@ export default function KupferwalzPage() {
             <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2" className={s.footPlateField} aria-hidden="true">
               <TabbiedPattern
                 pattern={decay}
-                palette={['transparent', GREY, ACCENT]}
+                palette={['transparent', GRAY, ACCENT]}
                 fit="grid"
                 cellSize={76}
                 redrawInterval={6000}
@@ -456,7 +456,7 @@ export default function KupferwalzPage() {
             </div>
             <Figure editId="photo.kupferwalz-tile-micrometer-cutout" slug="kupferwalz-tile-micrometer-cutout" alt="A deep-throat sheet micrometer for measuring rolled copper strip" cutout className={s.footCut} />
           </div>
-          <p data-edit="footer.footLine" data-edit-max="240" data-edit-multiline className={s.footLine}>A hundredth of a millimetre either way is the whole of this trade.</p>
+          <p data-edit="footer.footLine" data-edit-max="240" data-edit-multiline className={s.footLine}>A hundredth of a millimeter either way is the whole of this trade.</p>
         </div>
         <div className={s.footGrid}>
           <div>

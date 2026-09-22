@@ -126,10 +126,10 @@ async function handleMcp(request: Request, env: Env): Promise<Response> {
     };
   };
 
-  // The template tools read the same generated artefacts the site serves, so
+  // The template tools read the same generated artifacts the site serves, so
   // an agent and the web builder see one set of bytes - and a template
   // annotated in this commit cannot be missing from the index an agent
-  // queries. Unlike the catalog these are not worth memoising per isolate: the
+  // queries. Unlike the catalog these are not worth memoizing per isolate: the
   // per-slug specs are many and each is read rarely, and the index is small.
   const fetchTemplateCatalog = async () =>
     (await readAsset(env, request, '/editable-catalog.json')).json() as

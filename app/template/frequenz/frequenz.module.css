@@ -10,7 +10,7 @@
   --dark: #121014;
   --cream: #f2efe6;
   --amber: #ffa200;
-  --grey: #6b6560;
+  --gray: #6b6560;
   --panel: #1d1a20;
   --gut: clamp(1.15rem, 4vw, 3.25rem);
   --max: 76rem;
@@ -138,9 +138,9 @@
 }
 
 .hero /* The muted second line sits over the hero pattern; plain
-     var(--grey) measured under AA on the glyph pixels. */
+     var(--gray) measured under AA on the glyph pixels. */
   h1 span {
-  color: color-mix(in srgb, var(--grey) 75%, var(--cream));
+  color: color-mix(in srgb, var(--gray) 75%, var(--cream));
 }
 
 /* The one boxed element on the page, because it is the only thing that
@@ -170,7 +170,7 @@
 
 .nowShow b {
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
   font-weight: 500;
   margin-right: 0.5rem;
 }
@@ -199,7 +199,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .bleed figcaption {
@@ -264,7 +264,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* --------------------------------------------------------------- headings */
@@ -326,7 +326,7 @@
 
 .gNote {
   font-size: 0.86rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------ carrier band
@@ -487,7 +487,7 @@
   font-size: 0.66rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
   margin-bottom: 0.4rem;
 }
 
@@ -586,7 +586,7 @@
   font-size: 0.64rem !important;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--grey) !important;
+  color: var(--gray) !important;
   padding-bottom: 0.4rem !important;
 }
 
@@ -600,7 +600,7 @@
 .idxList li > :last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .faqList {
@@ -652,7 +652,7 @@
    hairline. The patterns have had the whole page to speak already. */
 
 /* Page and footer were within 1.15:1 of each other - near enough that the
-   seam read as a mistake, so the footer takes the page colour exactly.
+   seam read as a mistake, so the footer takes the page color exactly.
    The light-page sites keep their dark footers: that contrast is the design. */
 .footer {
   background: var(--dark);

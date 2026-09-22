@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 /* Pale water, dark ink, one aqua. Every pattern field takes `transparent` in
-   the background slot so the page colour reads through. */
+   the background slot so the page color reads through. */
 const INK = '#0F1A1D';
 const AQUA = '#00A6A6';
 const STEEL = '#7E9296';
@@ -37,10 +37,10 @@ const TODAY = [
 ];
 
 const CHAIN = [
-  { n: '01', t: 'Source', d: 'Fourteen wells in the Uppsala esker, drawing from an aquifer recharged by the Fyris river through two kilometres of glacial sand.' },
+  { n: '01', t: 'Source', d: 'Fourteen wells in the Uppsala esker, drawing from an aquifer recharged by the Fyris river through two kilometers of glacial sand.' },
   { n: '02', t: 'Aeration', d: 'Cascade aeration to raise oxygen and drive off carbon dioxide, in the open, in whatever weather Uppland provides.' },
-  { n: '03', t: 'Filtration', d: 'Rapid sand, then slow sand at 0.1 metres an hour. The slow filters are biological and are cleaned by hand, twice a year.' },
-  { n: '04', t: 'UV and distribution', d: 'UV disinfection, no chlorine in normal operation, then 940 kilometres of main to 91,000 households.' },
+  { n: '03', t: 'Filtration', d: 'Rapid sand, then slow sand at 0.1 meters an hour. The slow filters are biological and are cleaned by hand, twice a year.' },
+  { n: '04', t: 'UV and distribution', d: 'UV disinfection, no chlorine in normal operation, then 940 kilometers of main to 91,000 households.' },
 ];
 
 const NUMBERS = [
@@ -59,7 +59,7 @@ const WORKS = [
 export default function KaellaPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--pale': '#f2f6f6',
@@ -117,7 +117,7 @@ export default function KaellaPage() {
             </h1>
             <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Fourteen wells in the esker, three works, nine hundred and forty
-              kilometres of main. No chlorine in normal operation, because the
+              kilometers of main. No chlorine in normal operation, because the
               water does not need it.
             </p>
           </div>
@@ -129,7 +129,7 @@ export default function KaellaPage() {
             alt="A still rectangular water treatment basin seen from a walkway at dawn with mist on the surface"
             priority
           />
-          <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>Slow filter 3, Galgbacken. 0.1 metres an hour, since 1957.</figcaption>
+          <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>Slow filter 3, Galgbacken. 0.1 meters an hour, since 1957.</figcaption>
         </figure>
 
         {/* ---------------------------------------------------------- TODAY */}
@@ -278,7 +278,7 @@ export default function KaellaPage() {
                 </dd>
               </div>
               <div>
-                <dt data-edit="contact.term4" data-edit-max="28">Discoloured water</dt>
+                <dt data-edit="contact.term4" data-edit-max="28">Discolored water</dt>
                 <dd data-edit="contact.body2" data-edit-max="200" data-edit-multiline>Run the cold tap for five minutes. If it persists, call the number above.</dd>
               </div>
             </dl>
@@ -364,7 +364,7 @@ export default function KaellaPage() {
         {/* ---------------------------------------------------------- INDEX */}
         <section id="index" className={s.idx} aria-labelledby="idx-h">
           <h2 data-edit="index.title" data-edit-max="60" id="idx-h">Network</h2>
-          <p data-edit="index.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>What the nine hundred and forty kilometres are actually made of, oldest first.</p>
+          <p data-edit="index.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>What the nine hundred and forty kilometers are actually made of, oldest first.</p>
           <ol className={s.idxList}>
             <li className={s.idxHead} aria-hidden="true">
                 <span data-edit="index.text" data-edit-max="60">Material</span>
@@ -479,7 +479,7 @@ export default function KaellaPage() {
                 <a data-edit="footer.contact" data-edit-max="28" href="#contact">Report a fault</a>
               </li>
               <li>
-                <a data-edit="footer.contact2" data-edit-max="28" href="#contact">Discoloured water</a>
+                <a data-edit="footer.contact2" data-edit-max="28" href="#contact">Discolored water</a>
               </li>
               <li>
                 <a data-edit="footer.today2" data-edit-max="28" href="#today">The archive</a>

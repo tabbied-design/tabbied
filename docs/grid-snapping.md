@@ -22,7 +22,7 @@ gives **130.906px** tracks, and every one of the 10 interior boundaries lands
 mid-pixel.
 
 The result is a faint grid of hairlines over the pattern, in the pattern's own
-colours or the page background, depending on which way the boundary rounds.
+colors or the page background, depending on which way the boundary rounds.
 It reads as a rendering bug, not a design.
 
 This was not rare. A sweep of the 36 template pages - reading
@@ -62,8 +62,8 @@ down, every outer track exact, and still visibly gapped. `subdivide` masks
 each cell with a nested `@doodle(@grid: 2)`, and 197 halves to **98.5**.
 
 `PatternSizing.cellMultiple` carries the divisor. It defaults to 2 - which
-also keeps centred rules and strokes off half-pixels - and only three designs
-in the catalogue need more, the three that mask with a nested `@doodle`:
+also keeps centerd rules and strokes off half-pixels - and only three designs
+in the catalog need more, the three that mask with a nested `@doodle`:
 
 | Design | Nested grid | `cellMultiple` |
 |---|---|---|
@@ -123,8 +123,8 @@ size through a drag and either gap or over-cover the host.
 transform, which makes it a different problem: the transform maps exact layout
 tracks onto fractional device pixels, and the browser seams there.
 
-An isolated test settles it. Seven cells, every one the same colour, so any
-column that is not that colour is a seam and nothing else:
+An isolated test settles it. Seven cells, every one the same color, so any
+column that is not that color is a seam and nothing else:
 
 | Case | Interior seams | Worst delta |
 |---|---|---|
@@ -134,22 +134,22 @@ column that is not that colour is a seam and nothing else:
 | `scale(1.4444...)`, `cell × scale = 143` | **0** | 0 |
 
 Two things fall out of that. Without a transform the browser abuts identical
-neighbours cleanly even on fractional boundaries - so the grid fix works
+neighbors cleanly even on fractional boundaries - so the grid fix works
 because there is no transform, not because layout rounding is inherently
 fatal. And snapping the render box *on its own does nothing*: six seams
-either way, same severity. Only quantising the scale removes them.
+either way, same severity. Only quantizing the scale removes them.
 
 So both halves are needed, and `applyGridSnap`'s work is the enabler rather
 than the fix:
 
 1. The adaptive cover render box is snapped to whole, divisible, square cells,
-   which is what gives step 2 a whole `cell` to quantise against.
-2. `fitRenderToBox` quantises the scale so `cell × scale` is a whole number,
+   which is what gives step 2 a whole `cell` to quantize against.
+2. `fitRenderToBox` quantizes the scale so `cell × scale` is a whole number,
    rounding **up** (cover crops anyway). The ratio is untouched, so the
    drawing is never distorted - only cropped slightly further.
 
 The translate is rounded too - half a pixel of offset puts every boundary
-back on a fraction and undoes the quantised scale.
+back on a fraction and undoes the quantized scale.
 
 The cost is a slightly larger crop. On the package test page the canvas
 overshoots its host by 3px across and 10px down on a 1152 × 320 box, under

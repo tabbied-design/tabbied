@@ -96,7 +96,7 @@
   transition: opacity 1100ms ease;
 }
 
-/* Inset by a pixel so neighbouring triangles meet without a hairline between. */
+/* Inset by a pixel so neighboring triangles meet without a hairline between. */
 .demoTriangle {
   position: absolute;
   inset: -1px;

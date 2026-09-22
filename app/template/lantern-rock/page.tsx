@@ -8,13 +8,13 @@ export const metadata = {
     'Lantern Rock is a four-room inn in the keepers\' cottages of a working lighthouse on the north Pembrokeshire coast. Breakfast, the light, the coast path from the door, and a tide table on the wall.',
 };
 
-/* Navy ink on off-white paper, one red, a grey and a pale blue. Every field
+/* Navy ink on off-white paper, one red, a gray and a pale blue. Every field
    takes `transparent` in the background slot: on the paper the pattern reads
    as a chart's hatching, and on a navy panel it reads as the same hatching
    cut in the other direction. */
 const INK = '#0F2440';
 const RED = '#C8102E';
-const GREY = '#7B8794';
+const GRAY = '#7B8794';
 const PALE = '#D9DFE5';
 
 const NAV = [
@@ -52,7 +52,7 @@ const ROOMS: Room[] = [
     view: 'The tower and the open sea, west',
     bed: 'Six foot bed, bath and shower',
     rate: '185',
-    note: 'The old principal keeper\'s parlour. The lamp turns across the ceiling all night, and most people ask for it twice.',
+    note: 'The old principal keeper\'s parlor. The lamp turns across the ceiling all night, and most people ask for it twice.',
   },
   {
     name: 'Rowe',
@@ -88,9 +88,9 @@ type Event = {
 const TIMELINE: Event[] = [
   { year: '1861', what: 'Tower first lit, 14 June, with a fixed white light visible for 17 miles. Josiah Trevethan appointed principal keeper at 65 pounds a year.' },
   { year: '1874', what: 'Fog bell hung on the seaward gallery after the loss of the schooner Mary Ellis on the Bitches, with all hands but one.' },
-  { year: '1902', what: 'Paraffin vapour burner replaces the oil lamps. The light becomes occulting, one long eclipse every fifteen seconds, which it still is.' },
+  { year: '1902', what: 'Paraffin vapor burner replaces the oil lamps. The light becomes occulting, one long eclipse every fifteen seconds, which it still is.' },
   { year: '1922', what: 'Keepers\' cottages rebuilt in the present form, two dwellings under one roof, with the garden wall raised to eight feet after the winter of 1920.' },
-  { year: '1941', what: 'The light is shown only on Admiralty request. The keepers spend the war painting the tower grey and, later, white again.' },
+  { year: '1941', what: 'The light is shown only on Admiralty request. The keepers spend the war painting the tower gray and, later, white again.' },
   { year: '1963', what: 'Electrified from the mains, with a diesel set in the engine room. The fog bell is replaced by a horn that can be heard in Trefin.' },
   { year: '1988', what: 'Automated. Idris Gwyther locks the tower door on 30 September and walks up the lane, and the cottages stand empty for a decade.' },
   { year: '1998', what: 'The cottages are sold and opened as an inn with three rooms. The tower stays with the lighthouse authority, and the light stays lit.' },
@@ -138,7 +138,7 @@ const TIDES = [
 ];
 
 const NOTES = [
-  'Springs here run to seven metres; the cove is gone within forty minutes of the turn.',
+  'Springs here run to seven meters; the cove is gone within forty minutes of the turn.',
   'A south-westerly over force 6 closes the steps and puts spray on the Trevethan window.',
   'Fog comes in from the south in June and July, and the horn sounds every thirty seconds until it lifts.',
   'The forecast on the wall is the Met Office inshore waters, St Davids Head to Great Orme, read out at 07.00.',
@@ -165,17 +165,17 @@ const HERE = [
 export default function LanternRockPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f5f3ec',
         '--ink': '#0f2440',
         '--red': '#c8102e',
-        '--grey': '#7b8794',
+        '--gray': '#7b8794',
         '--pale': '#d9dfe5',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,red,grey,pale"
+      data-edit-vars="paper,ink,red,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -203,7 +203,7 @@ export default function LanternRockPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,1" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={bowsprit}
-              palette={['transparent', PALE, GREY, INK]}
+              palette={['transparent', PALE, GRAY, INK]}
               fit="grid"
               cellSize={128}
               redrawInterval={5600}
@@ -318,7 +318,7 @@ export default function LanternRockPage() {
           <div data-edit-pattern="band.field" data-edit-roles="transparent,4,2,3" className={s.bandField}>
             <TabbiedPattern
               pattern={bowsprit}
-              palette={['transparent', PALE, RED, GREY]}
+              palette={['transparent', PALE, RED, GRAY]}
               fit="grid"
               cellSize={96}
               redrawInterval={4400}
@@ -355,7 +355,7 @@ export default function LanternRockPage() {
           <div data-edit-pattern="walks.field" data-edit-roles="transparent,3,4" className={s.walksField} aria-hidden="true">
             <TabbiedPattern
               pattern={bobbinet}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={72}
               redrawInterval={6600}
@@ -469,7 +469,7 @@ export default function LanternRockPage() {
         </section>
       </main>
 
-      {/* A coda: mercerising's dots with a lustre band on the bias, the last
+      {/* A coda: mercerising's dots with a luster band on the bias, the last
           thing before the footer, with nothing to read. */}
       <section className={s.coda} aria-hidden="true">
         <div data-edit-pattern="coda.field" data-edit-roles="transparent,1,2,4" className={s.codaField}>

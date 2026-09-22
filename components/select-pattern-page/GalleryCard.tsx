@@ -10,7 +10,7 @@ import styles from './SelectPattern.module.css';
 
 // One gallery card: a live thumbnail with its name below it (no overlay).
 // Client-side because the preview follows the selected palette (localStorage),
-// applied to every design in the grid. Memoised: the gallery re-renders on
+// applied to every design in the grid. Memoized: the gallery re-renders on
 // every keystroke in the search and every palette click, and a card whose
 // props have not changed has nothing to do - re-rendering it handed
 // TabbiedPattern a fresh palette array and rebuilt the doodle's source only to
@@ -25,7 +25,7 @@ function GalleryCard({
   /**
    * This card's own palette, ground first: the random spread gives every card
    * one. Nothing stored knows it, so the link carries it and the editor opens
-   * the pattern in the colours the card was wearing.
+   * the pattern in the colors the card was wearing.
    */
   palette?: string[];
   /**

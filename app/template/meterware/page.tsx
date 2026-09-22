@@ -8,14 +8,14 @@ import s from './meterware.module.css';
 export const metadata = {
   title: 'Meterware: Weberei seit 1908, Vorarlberg',
   description:
-    'Meterware weaves cloth by the metre in Vorarlberg. Forty-one qualities on the shelf, indigo dyed in the house, minimum order one metre.',
+    'Meterware weaves cloth by the meter in Vorarlberg. Forty-one qualities on the shelf, indigo dyed in the house, minimum order one meter.',
 };
 
 /* Ecru cloth, dark ink, one indigo. Every field takes `transparent` in the
    background slot so the ecru shows through the weave. */
 const INK = '#14161F';
 const INDIGO = '#2B3FAE';
-const GREY = '#8E8A7E';
+const GRAY = '#8E8A7E';
 const PALE = '#DCD7C9';
 /* The two inks the decorative tiles draw with: always the quiet pair, so a
    tile reads as a sample rather than as another headline. */
@@ -23,7 +23,7 @@ const PALE = '#DCD7C9';
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
-const TILE_A = GREY;
+const TILE_A = GRAY;
 const TILE_B = PALE;
 
 
@@ -37,10 +37,10 @@ const QUALITIES = [
 ];
 
 const HOUSE = [
-  { n: '01', t: 'We dye before we weave', d: 'Yarn-dyed, not piece-dyed. It costs more, it fades in a way people like, and it is why our indigo goes grey rather than patchy.' },
-  { n: '02', t: 'One metre is a real order', d: 'The minimum is one metre and always has been. A cutting length is not a nuisance; it is how people find out whether they want forty.' },
+  { n: '01', t: 'We dye before we weave', d: 'Yarn-dyed, not piece-dyed. It costs more, it fades in a way people like, and it is why our indigo goes gray rather than patchy.' },
+  { n: '02', t: 'One meter is a real order', d: 'The minimum is one meter and always has been. A cutting length is not a nuisance; it is how people find out whether they want forty.' },
   { n: '03', t: 'Forty-one qualities, no seasons', d: 'The book does not change in spring. Articles are retired only when a yarn stops being made, and we announce it a year ahead.' },
-  { n: '04', t: 'The loom is the limit', d: 'One hundred and fifty centimetres, because that is the reed. Anything wider is somebody else\'s mill and we will tell you which.' },
+  { n: '04', t: 'The loom is the limit', d: 'One hundred and fifty centimeters, because that is the reed. Anything wider is somebody else\'s mill and we will tell you which.' },
 ];
 
 const NUMBERS = [
@@ -53,17 +53,17 @@ const NUMBERS = [
 export default function MeterwarePage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--ecru': '#efebe1',
         '--ink': '#14161f',
         '--indigo': '#2b3fae',
-        '--grey': '#8e8a7e',
+        '--gray': '#8e8a7e',
         '--pale': '#dcd7c9',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="ecru,ink,indigo,grey,pale"
+      data-edit-vars="ecru,ink,indigo,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -92,7 +92,7 @@ export default function MeterwarePage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={weave}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={56}
               redrawInterval={5200}
@@ -102,15 +102,15 @@ export default function MeterwarePage() {
           <div className={s.heroInner}>
             <p data-edit="hero.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Weberei seit 1908 / Bregenzerwald</p>
             <h1 data-edit="hero.text" data-edit-format="emphasis" data-edit-max="70">
-              Cloth by the metre,
+              Cloth by the meter,
               <br />
-              and one metre
+              and one meter
               <br />
               <span>is a real order.</span>
             </h1>
             <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Forty-one qualities, yarn-dyed in the house, woven on looms a
-              hundred and fifty centimetres wide because that is the reed.
+              hundred and fifty centimeters wide because that is the reed.
             </p>
           </div>
         </section>
@@ -121,7 +121,7 @@ export default function MeterwarePage() {
             alt="A wide industrial loom mid-weave with warp threads stretched under even light"
             priority
           />
-          <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>Loom 4, article 2208. Eleven metres an hour, on a good day.</figcaption>
+          <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>Loom 4, article 2208. Eleven meters an hour, on a good day.</figcaption>
         </figure>
 
         <dl className={s.numbers}>
@@ -165,7 +165,7 @@ export default function MeterwarePage() {
           <div data-edit-pattern="warpBand.field" data-edit-roles="transparent,2,1,3" className={s.warpField}>
             <TabbiedPattern
               pattern={plait}
-              palette={['transparent', INDIGO, INK, GREY]}
+              palette={['transparent', INDIGO, INK, GRAY]}
               fit="grid"
               cellSize={112}
               redrawInterval={3600}
@@ -179,7 +179,7 @@ export default function MeterwarePage() {
           <div data-edit-pattern="house.field" data-edit-roles="transparent,3,4" className={s.houseField} aria-hidden="true">
             <TabbiedPattern
               pattern={corduroy}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={44}
               redrawInterval={6000}
@@ -256,7 +256,7 @@ export default function MeterwarePage() {
           <div data-edit-pattern="order.field" data-edit-roles="transparent,2,3" className={s.orderField} aria-hidden="true">
             <TabbiedPattern
               pattern={damier}
-              palette={['transparent', INDIGO, GREY]}
+              palette={['transparent', INDIGO, GRAY]}
               fit="grid"
               cellSize={78}
               redrawInterval={4400}
@@ -342,7 +342,7 @@ export default function MeterwarePage() {
                 </div>
                 <p data-edit="tiles.tileN2" data-edit-max="240" data-edit-multiline className={s.tileN}>02</p>
                 <h3 data-edit="tiles.title3" data-edit-max="40">The dye</h3>
-                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>Yarn dyed, in the house, before warping. It costs more and it is the only way to get an indigo that goes grey rather than patchy.</p>
+                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>Yarn dyed, in the house, before warping. It costs more and it is the only way to get an indigo that goes gray rather than patchy.</p>
               </article>
               <article key="03">
                 <div data-edit-pattern="tiles.field3" data-edit-roles="transparent,3,4" className={s.tilePlate} aria-hidden="true">
@@ -365,7 +365,7 @@ export default function MeterwarePage() {
                 </div>
                 <p data-edit="tiles.tileN3" data-edit-max="240" data-edit-multiline className={s.tileN}>03</p>
                 <h3 data-edit="tiles.title4" data-edit-max="40">The sett</h3>
-                <p data-edit="tiles.tileBody3" data-edit-max="240" data-edit-multiline className={s.tileBody}>Ends per centimetre. Too open and it grins; too close and it boards. This is the number that takes the longest to get right.</p>
+                <p data-edit="tiles.tileBody3" data-edit-max="240" data-edit-multiline className={s.tileBody}>Ends per centimeter. Too open and it grins; too close and it boards. This is the number that takes the longest to get right.</p>
               </article>
           </div>
         </section>
@@ -434,11 +434,11 @@ export default function MeterwarePage() {
               </div>
               <div key="Can you weave my design?">
                 <dt data-edit="faq.term3" data-edit-max="28">Can you weave my design?</dt>
-                <dd data-edit="faq.body3" data-edit-max="200" data-edit-multiline>Above four hundred metres, yes, on 150 cm. Below that it is our book or another mill, and we will tell you which mill.</dd>
+                <dd data-edit="faq.body3" data-edit-max="200" data-edit-multiline>Above four hundred meters, yes, on 150 cm. Below that it is our book or another mill, and we will tell you which mill.</dd>
               </div>
               <div key="Will it shrink?">
                 <dt data-edit="faq.term4" data-edit-max="28">Will it shrink?</dt>
-                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Everything is finished before sale, so about one per cent. Wash the sample we send you before you cut forty metres.</dd>
+                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Everything is finished before sale, so about one per cent. Wash the sample we send you before you cut forty meters.</dd>
               </div>
           </dl>
         </section>
@@ -452,7 +452,7 @@ export default function MeterwarePage() {
           <div data-edit-pattern="coda.field" data-edit-roles="transparent,4,3" className={s.codaField}>
             <TabbiedPattern
               pattern={quilt}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={108}
               redrawInterval={4956}
@@ -504,7 +504,7 @@ export default function MeterwarePage() {
               <br />
               weberei@meterware.example
               <br />
-              Minimum order one metre
+              Minimum order one meter
             </p>
           </div>
         </div>

@@ -51,7 +51,7 @@ export default function YourSites() {
       ) : state.sites.length === 0 ? (
         <p className={shell.empty}>
           No sites yet. Pick a <Link href="/templates">template</Link> and customize its
-          colours and patterns.
+          colors and patterns.
         </p>
       ) : (
         state.sites.map((site) => (

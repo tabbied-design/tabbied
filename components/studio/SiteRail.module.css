@@ -157,7 +157,7 @@
   overflow-y: auto;
 }
 
-/* Except Colours, where the palette list is the long part and scrolls inside
+/* Except Colors, where the palette list is the long part and scrolls inside
    the panel; a scroll here as well would put one inside the other. So the
    panel is told not to scroll - and `visible` rather than `hidden`, because
    the rows below reach 12px past this box on each side and `hidden` clips
@@ -167,7 +167,7 @@
    cut off. Nothing can actually overflow here to need the clip - the list is
    `flex: 1; min-height: 0` over a scroller - and .rail's own `hidden` is the
    backstop. */
-.panelColours {
+.panelColors {
   overflow: visible;
 }
 
@@ -458,7 +458,7 @@
   color: var(--s-ink);
 }
 
-/* A filled, square-cornered button on the faintest grey: quieter than the
+/* A filled, square-cornered button on the faintest gray: quieter than the
    ringed pill, since it is the only control on the tab. */
 .shuffle {
   display: inline-flex;

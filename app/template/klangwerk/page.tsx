@@ -83,7 +83,7 @@ const SERIES = [
 export default function KlangwerkPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--void': '#08090b',
@@ -148,7 +148,7 @@ export default function KlangwerkPage() {
         <figure className={s.bleed}>
           <Figure editId="photo.klangwerk-desk"
             slug="klangwerk-desk"
-            alt="A large analogue mixing desk in a darkened studio lit by a single green indicator glow"
+            alt="A large analog mixing desk in a darkened studio lit by a single green indicator glow"
             priority
           />
           <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>Studio Zwei, 02.40. Reel two of four.</figcaption>
@@ -184,7 +184,7 @@ export default function KlangwerkPage() {
             <figure>
               <Figure editId="photo.klangwerk-modular"
                 slug="klangwerk-modular"
-                alt="A wall of modular synthesiser panels with patch cables, lit low"
+                alt="A wall of modular synthesizer panels with patch cables, lit low"
               />
               <figcaption data-edit="rooms.caption" data-edit-max="120" data-edit-multiline>The wall in Studio Zwei. Patched by whoever is in.</figcaption>
             </figure>
@@ -509,7 +509,7 @@ export default function KlangwerkPage() {
             </ul>
           </div>
           <div className={s.footCol}>
-            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Programme</h2>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Program</h2>
             <ul className={s.footLinks}>
               <li>
                 <a data-edit="footer.residencies" data-edit-max="28" href="#residencies">Residencies</a>

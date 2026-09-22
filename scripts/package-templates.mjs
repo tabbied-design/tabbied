@@ -2,7 +2,7 @@
 //
 // The static export is the source of truth: `next build` already renders every
 // template page to complete HTML, so a template is derived from that rather
-// than hand-ported. A hand-port is four artefacts per site to keep in step,
+// than hand-ported. A hand-port is four artifacts per site to keep in step,
 // and within two edits the download and the live site disagree - which is why
 // this whole file reads out/ instead of any source tree (see the
 // "Downloadable templates" section of CLAUDE.md).
@@ -147,7 +147,7 @@ const stripNextRuntime = (html) =>
     .replace(/<link[^>]*\bas="script"[^>]*>/g, '')
     .replace(/<link[^>]*href="\/_next\/[^"]*"[^>]*>/g, '');
 
-// Tabbied's own favicons, manifest, tile and theme colour. They resolve
+// Tabbied's own favicons, manifest, tile and theme color. They resolve
 // against tabbied.com and would 404 in a template; the site's identity isn't
 // the template's to carry either.
 const stripSiteChrome = (html) =>
@@ -417,7 +417,7 @@ function trimUnusedRules(css, usedClasses) {
 
   // Scanning has to skip comments, not just count braces. This codebase
   // documents its CSS heavily and at least one comment contains a literal
-  // `{ color: inherit }` as an example - counted naively, that desynchronises
+  // `{ color: inherit }` as an example - counted naively, that desynchronizes
   // the brace depth for the rest of the file and the output is silently wrong.
   const COMMENT = /\/\*[\s\S]*?\*\//g;
 
@@ -541,7 +541,7 @@ const LOCAL_IMPORTS = new Map([
   ['components/template/ImageCard', { from: 'components/template/ImageCard.tsx', to: 'ImageCard.tsx' }],
 ]);
 
-/** Strip the one Next-ism and point local imports at their copied neighbours. */
+/** Strip the one Next-ism and point local imports at their copied neighbors. */
 function toStandaloneComponent(source, componentName) {
   let out = source
     .replace(/^import type \{ Metadata \}[^\n]*\n/m, '')
@@ -634,7 +634,7 @@ Blocks of pattern are \`<TabbiedPattern>\` elements from
 \`\`\`
 
 Swap \`pattern\` for any of the ${DESIGN_COUNT} designs (see https://tabbied.com), change
-\`palette\` to recolour, or set \`seed\` to pin one arrangement.
+\`palette\` to recolor, or set \`seed\` to pin one arrangement.
 
 ## Images
 
@@ -859,7 +859,7 @@ that describes itself in \`data-\` attributes:
      data-fit="grid" data-redraw-interval="5200"></div>
 \`\`\`
 
-Change \`data-palette\` to recolour it, \`data-pattern\` to swap the design
+Change \`data-palette\` to recolor it, \`data-pattern\` to swap the design
 (${DESIGN_COUNT} to choose from - see https://tabbied.com), \`data-seed\` to pin a
 particular arrangement, or drop \`data-redraw-interval\` to hold it still.
 The script at the bottom of \`index.html\` is what brings them to life; remove

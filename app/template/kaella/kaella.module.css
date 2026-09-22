@@ -3,7 +3,7 @@
    A public-information page: the day's readings come first, before any prose,
    and the layout is wide and shallow the way a service reservoir is. Pattern
    fields are all ring and ripple designs on a `transparent` ground, so the
-   pale water colour of the page carries through them.
+   pale water color of the page carries through them.
    ========================================================================== */
 
 .page {
@@ -106,7 +106,7 @@
   mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 100%);
 }
 
-/* A wash of the page colour under the copy. The pattern still reads at the
+/* A wash of the page color under the copy. The pattern still reads at the
    margins, but the headline and lede sit on close-to-flat paper - the rings
    are busiest exactly where the second headline line falls. */
 .heroScrim {

@@ -232,7 +232,7 @@ mid-device-pixel in the editor - and mid-pixel is exactly where CSS snaps an
 edge and SVG anti-aliases it.
 
 `SVG_CELL=301` makes the sweep use a box that does not divide evenly, which
-reproduces the editor's condition. Under it the *whole shipped catalogue*
+reproduces the editor's condition. Under it the *whole shipped catalog*
 moves into a 0.5-1.8% band wherever a design draws many hard edges per cell -
 batch 11's `toning` measures 1.84%, `dimmer` 1.71%, `tinting` 1.36%,
 `housing` 1.31%. These are the same designs that sit at 0.00% on integer
@@ -307,10 +307,10 @@ The sweep script needs `npm run build --workspace tabbied` first (it injects
   page's inherited text color (the `curl` calc()-ramp incident).
 - **Borders shift the boxes inside them.** An absolutely-positioned
   pseudo-element resolves its offsets against its host's *padding* box, a
-  static one is centred in the content box, and a background layer is
+  static one is centerd in the content box, and a background layer is
   positioned in the origin box (padding-box by default) even though it is
   clipped to the border box. All three coincide on a borderless element,
-  which every pattern in the catalogue currently is - so this has no live
+  which every pattern in the catalog currently is - so this has no live
   parity coverage and is held by unit tests instead (`originBox` and
   `pseudoBoxFor` in the package's test suite). The converter used the border
   box for all three until batch 11, and anything placed inside a frame came

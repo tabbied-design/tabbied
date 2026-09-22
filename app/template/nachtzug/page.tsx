@@ -39,7 +39,7 @@ const LINES = [
 const BERTHS = [
   { name: 'Couchette, six', price: 'from €49', body: 'Six bunks, a curtain, and the entirely reasonable expectation that somebody will snore.' },
   { name: 'Couchette, four', price: 'from €69', body: 'Four bunks, a washbasin, and enough room to change without choreography.' },
-  { name: 'Sleeper, two', price: 'from €139', body: 'Two berths, a proper bed, a door that locks and a window that opens twelve centimetres.' },
+  { name: 'Sleeper, two', price: 'from €139', body: 'Two berths, a proper bed, a door that locks and a window that opens twelve centimeters.' },
   { name: 'Sleeper, single', price: 'from €219', body: 'One berth, one lamp, and the whole compartment. Booked out three months ahead in summer.' },
 ];
 
@@ -54,7 +54,7 @@ const RULES = [
 export default function NachtzugPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--night': '#0b0e1a',
@@ -418,7 +418,7 @@ export default function NachtzugPage() {
               </div>
               <div key="Does the window really o">
                 <dt data-edit="faq.term4" data-edit-max="28">Does the window really open?</dt>
-                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Twelve centimetres, in every sleeper and every couchette. We have replaced entire carriages and kept the mechanism.</dd>
+                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Twelve centimeters, in every sleeper and every couchette. We have replaced entire carriages and kept the mechanism.</dd>
               </div>
           </dl>
         </section>

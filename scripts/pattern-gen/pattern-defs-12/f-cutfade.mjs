@@ -40,7 +40,7 @@ add(
 
 add(
   'Fadedbar',
-  'A bar cut on the slant, thinning towards one end.',
+  'A bar cut on the slant, thinning toward one end.',
   (c) => ({
     rule: cutFade(
       c,

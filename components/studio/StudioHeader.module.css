@@ -27,7 +27,7 @@
 
 .back svg {
   display: block;
-  /* Optically centres the chevron in the circle. */
+  /* Optically centers the chevron in the circle. */
   margin-left: -1px;
 }
 

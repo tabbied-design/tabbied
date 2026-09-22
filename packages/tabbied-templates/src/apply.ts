@@ -135,7 +135,7 @@ function runOperation(root: Root, operation: EditOperation): Problem | null {
         return {
           level: 'error',
           path: 'palette',
-          message: `no [${EDIT_ROOT_ATTRIBUTE}] element to write brand colours onto`,
+          message: `no [${EDIT_ROOT_ATTRIBUTE}] element to write brand colors onto`,
         };
       }
 

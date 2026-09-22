@@ -3,9 +3,9 @@ import { bluff, garret, pinwheel } from 'tabbied/patterns';
 import s from './velo-criterium.module.css';
 
 export const metadata = {
-  title: 'Velo Criterium: City-centre cycling race, Ghent',
+  title: 'Velo Criterium: City-center cycling race, Ghent',
   description:
-    'Velo Criterium is a one-day criterium on a 1.4 km loop through the centre of Ghent. Seven races from sign-on to the elite finals, on Saturday 19 September 2026.',
+    'Velo Criterium is a one-day criterium on a 1.4 km loop through the center of Ghent. Seven races from sign-on to the elite finals, on Saturday 19 September 2026.',
 };
 
 /* Night ground, bone type, a lime and an electric blue. Every field draws on
@@ -14,7 +14,7 @@ export const metadata = {
 const INK = '#F2F5FF';
 const LIME = '#C6FF3D';
 const BLUE = '#2F6BFF';
-const GREY = '#6C7590';
+const GRAY = '#6C7590';
 /* Tiles pin their doodle to a whole multiple of the cell (6 x 72px) and let
    the plate clip it, so every grid track is a whole pixel. */
 const TILE_BOX = 432;
@@ -66,7 +66,7 @@ type Corner = {
 
 const CORNERS: Corner[] = [
   { n: '1', name: 'Korenmarkt', turn: 'Start and finish', note: 'A 220 m straight on setts, the finish line under the arch of the post office.' },
-  { n: '2', name: 'Graslei hook', turn: 'Left, tight', note: 'From four riders wide to two in thirty metres, along the water. Where the elite race is lost.' },
+  { n: '2', name: 'Graslei hook', turn: 'Left, tight', note: 'From four riders wide to two in thirty meters, along the water. Where the elite race is lost.' },
   { n: '3', name: 'Sint-Michielsbrug', turn: 'Rise, 4 percent', note: 'Over the bridge and down the other side. The only climb, and it is done sixty times.' },
   { n: '4', name: 'The kettle', turn: 'Right, wide', note: 'A fast sweep off the bridge onto Sint-Michielsplein. The best place to make up ten places.' },
   { n: '5', name: 'Veldstraat chicane', turn: 'Left then right', note: 'Two tram lines crossed at an angle. Barriered both sides and gritted at seven.' },
@@ -85,13 +85,13 @@ type Category = {
 };
 
 const CATEGORIES: Category[] = [
-  { name: 'Under 15', fee: 'EUR 5', laps: '20', km: '28', start: '08:30', note: 'Licence or day permit' },
-  { name: 'Under 17', fee: 'EUR 8', laps: '25', km: '35', start: '09:30', note: 'Licence or day permit' },
+  { name: 'Under 15', fee: 'EUR 5', laps: '20', km: '28', start: '08:30', note: 'License or day permit' },
+  { name: 'Under 17', fee: 'EUR 8', laps: '25', km: '35', start: '09:30', note: 'License or day permit' },
   { name: 'Women, amateur', fee: 'EUR 15', laps: '30', km: '42', start: '10:30', note: 'Day permit at sign-on, EUR 5' },
   { name: 'Men, amateur', fee: 'EUR 15', laps: '35', km: '49', start: '11:45', note: 'Day permit at sign-on, EUR 5' },
   { name: 'Kids lap', fee: 'Free', laps: '1', km: '1.4', start: '13:30', note: 'Under 12, helmet, a parent at the fence' },
-  { name: 'Women, elite', fee: 'EUR 25', laps: '40', km: '56', start: '14:15', note: 'Elite or U23 licence, 120 places' },
-  { name: 'Men, elite', fee: 'EUR 25', laps: '60', km: '84', start: '16:30', note: 'Elite or U23 licence, 120 places' },
+  { name: 'Women, elite', fee: 'EUR 25', laps: '40', km: '56', start: '14:15', note: 'Elite or U23 license, 120 places' },
+  { name: 'Men, elite', fee: 'EUR 25', laps: '60', km: '84', start: '16:30', note: 'Elite or U23 license, 120 places' },
 ];
 
 type Result = {
@@ -122,7 +122,7 @@ const PARTNERS: Partner[] = [
   { name: 'Fietsen Verhaeghe', role: 'Course partner, neutral service at corner 4' },
   { name: 'Bakkerij Ten Bos', role: 'The sign-on tent breakfast' },
   { name: 'Koffiebranderij Ruys', role: 'Coffee for the marshals, from six' },
-  { name: 'Drukkerij Standaert', role: 'Numbers, posters, the programme' },
+  { name: 'Drukkerij Standaert', role: 'Numbers, posters, the program' },
   { name: 'Hotel Ampère', role: 'Team accommodation, Friday and Saturday' },
   { name: 'Garage Lievens', role: 'The lead car and the broom wagon' },
   { name: 'Stad Gent', role: 'Roads, barriers, and permission' },
@@ -156,7 +156,7 @@ const CLOSURES = [
   ['Korenmarkt, Graslei, Sint-Michielshelling', '06:00 to 19:30'],
   ['Sint-Michielsplein, Veldstraat to Kouter', '06:00 to 19:30'],
   ['Kouter, Ketelvest, Kalandeberg', '06:00 to 19:30'],
-  ['Tram lines 1 and 4 through the centre', 'Diverted 06:00 to 20:00'],
+  ['Tram lines 1 and 4 through the center', 'Diverted 06:00 to 20:00'],
   ['Residents inside the loop', 'Out before 06:00, back after 19:30, by pass'],
 ];
 
@@ -167,7 +167,7 @@ const TRAVEL = [
 ];
 
 const CONTACT = [
-  ['Organiser', 'vzw Velo Criterium Gent'],
+  ['Organizer', 'vzw Velo Criterium Gent'],
   ['Entries', 'entries@velocriterium.example'],
   ['Press', 'press@velocriterium.example'],
   ['Partners', 'partners@velocriterium.example'],
@@ -178,17 +178,17 @@ const CONTACT = [
 export default function VeloCriteriumPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#0b1220',
         '--ink': '#f2f5ff',
         '--lime': '#c6ff3d',
         '--blue': '#2f6bff',
-        '--grey': '#6c7590',
+        '--gray': '#6c7590',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,lime,blue,grey"
+      data-edit-vars="paper,ink,lime,blue,gray"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -214,7 +214,7 @@ export default function VeloCriteriumPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,2,4" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={pinwheel}
-              palette={['transparent', BLUE, LIME, GREY]}
+              palette={['transparent', BLUE, LIME, GRAY]}
               fit="grid"
               cellSize={128}
               redrawInterval={4200}
@@ -289,7 +289,7 @@ export default function VeloCriteriumPage() {
           <div className={s.courseInner}>
             <div className={s.secHead}>
               <p data-edit="course.skewTag" data-edit-max="240" data-edit-multiline className={s.skewTag}>The loop</p>
-              <h2 data-edit="course.title" data-edit-max="60" id="course-h">1.4 kilometres, eight corners</h2>
+              <h2 data-edit="course.title" data-edit-max="60" id="course-h">1.4 kilometers, eight corners</h2>
               <p data-edit="course.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 Setts on the straight, tarmac on the rest, one bridge. Ridden
                 anticlockwise, which puts the water on the right for the whole
@@ -396,7 +396,7 @@ export default function VeloCriteriumPage() {
             <p data-edit="spectators.skewTag" data-edit-max="240" data-edit-multiline className={s.skewTag}>Watching</p>
             <h2 data-edit="spectators.title" data-edit-max="60" id="spectators-h">Where to stand</h2>
             <p data-edit="spectators.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
-              Every metre of the loop is barriered and every metre is free.
+              Every meter of the loop is barriered and every meter is free.
               Three places are better than the rest.
             </p>
           </div>
@@ -407,7 +407,7 @@ export default function VeloCriteriumPage() {
                 <div data-edit-pattern={`spectators.field.${i}`} data-edit-roles="transparent,4,3" className={s.spotTile} aria-hidden="true">
                   <TabbiedPattern
                     pattern={bluff}
-                    palette={['transparent', GREY, BLUE]}
+                    palette={['transparent', GRAY, BLUE]}
                     fit="grid"
                     cellSize={72}
                     redrawInterval={5000 + i * 500}
@@ -482,7 +482,7 @@ export default function VeloCriteriumPage() {
         <div className={s.footGrid}>
           <div className={s.footBrand}>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Velo Criterium</p>
-            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>A city-centre criterium in Ghent, run by volunteers since 2019. Eighth edition, Saturday 19 September 2026.</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>A city-center criterium in Ghent, run by volunteers since 2019. Eighth edition, Saturday 19 September 2026.</p>
           </div>
           <div className={s.footCol}>
             <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>The race</h2>
@@ -503,7 +503,7 @@ export default function VeloCriteriumPage() {
             </ul>
           </div>
           <div className={s.footCol}>
-            <h2 data-edit="footer.footHead3" data-edit-max="60" className={s.footHead}>Organiser</h2>
+            <h2 data-edit="footer.footHead3" data-edit-max="60" className={s.footHead}>Organizer</h2>
             <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
               vzw Velo Criterium Gent
               <br />

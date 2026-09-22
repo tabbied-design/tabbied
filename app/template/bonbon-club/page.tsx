@@ -175,7 +175,7 @@ const SIGNUP: Step[] = [
 export default function BonbonClubPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#fff8e7',
@@ -319,7 +319,7 @@ export default function BonbonClubPage() {
         </section>
 
         {/* ---------------------------------------------------------- BAND
-            guernsey: a sawtooth skyline in flat colour, the loudest field on
+            guernsey: a sawtooth skyline in flat color, the loudest field on
             the page, with nothing to read. */}
         <section className={s.band} aria-hidden="true">
           <div data-edit-pattern="band.field" data-edit-roles="transparent,2,4,3,5" className={s.bandField} aria-hidden="true">
@@ -402,7 +402,7 @@ export default function BonbonClubPage() {
           <div className={s.sectionHead}>
             <h2 data-edit="staff.title" data-edit-max="60" id="staff-h">Five of us</h2>
             <p data-edit="staff.sectionLede" data-edit-max="240" data-edit-multiline className={s.sectionLede}>
-              Everyone is on the enhanced DBS list, paediatric first aid
+              Everyone is on the enhanced DBS list, pediatric first aid
               trained, and re-checked every three years. Ratios are one adult
               to eight children, always.
             </p>

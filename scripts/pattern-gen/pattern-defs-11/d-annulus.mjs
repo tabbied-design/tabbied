@@ -26,14 +26,14 @@ const { add, all } = section('D. Annulus');
 
 add(
   'Rimband',
-  'The ring runs right to the edge of the cell, so it meets its neighbours.',
+  'The ring runs right to the edge of the cell, so it meets its neighbors.',
   (c) => ({ rule: `${F} { background: ${ink(c)}; ${msk(bandL('40%', '100%'))} }${TR}` }),
   { pal: 13 }
 );
 
 add(
   'Bangle',
-  'The ring is drawn on the corner rather than the centre, so only an arc of it lands in the cell.',
+  'The ring is drawn on the corner rather than the center, so only an arc of it lands in the cell.',
   (c) => ({
     rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${msk(bandAt('44%', '58%', '0% 0%'))} ${rot('@var(--rot)')} }${TR}`,
   }),
@@ -49,7 +49,7 @@ add(
 
 add(
   'Tidering',
-  'The rings are centred on the bottom edge, so each cell shows a run of arcs rather than circles.',
+  'The rings are centerd on the bottom edge, so each cell shows a run of arcs rather than circles.',
   (c) => ({
     rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${msk(ringsL('6%', '15%', '50% 100%'))} ${rot('@var(--rot)')} }${TR}`,
   }),

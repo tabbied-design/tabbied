@@ -74,7 +74,7 @@ const SAUCES: Sauce[] = [
     size: '100 ml',
     pairs: 'One drop per taco · dares · apologies',
     slug: 'piquant-chili-cutout',
-    alt: 'A single glossy red scorpion chilli, stem up',
+    alt: 'A single glossy red scorpion chili, stem up',
     palette: [FLAME, INK, YOLK, BONE],
     seed: 'pq-lineup-07',
   },
@@ -112,7 +112,7 @@ const PROCESS = [
   {
     step: '01',
     title: 'The market run',
-    copy: 'Every Thursday, 6 a.m., Beckoner Street market. We buy chillies by the crate from the same four growers we started with, and we squeeze every pepper like it owes us money.',
+    copy: 'Every Thursday, 6 a.m., Beckoner Street market. We buy chilies by the crate from the same four growers we started with, and we squeeze every pepper like it owes us money.',
   },
   {
     step: '02',
@@ -122,7 +122,7 @@ const PROCESS = [
   {
     step: '03',
     title: 'The blend',
-    copy: 'Small kettles, wooden spoons, a radio permanently tuned to the wrong station. Nothing thickened, nothing stabilised, nothing you cannot pronounce with your mouth on fire.',
+    copy: 'Small kettles, wooden spoons, a radio permanently tuned to the wrong station. Nothing thickened, nothing stabilized, nothing you cannot pronounce with your mouth on fire.',
   },
   {
     step: '04',
@@ -181,7 +181,7 @@ function HeatMeter({ level, label }: { level: number; label: string }) {
 export default function PiquantProvisionsPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--ink': '#0f1a20',
@@ -350,7 +350,7 @@ export default function PiquantProvisionsPage() {
               <p data-edit="heat.heatLede" data-edit-max="240" data-edit-multiline className={styles.heatLede}>
                 Every batch is tasted by the same three people in the same order
                 on the same stools. It is not science, but it is rigorous, and
-                two of us have notarised the results.
+                two of us have notarized the results.
               </p>
               <div className={styles.heatChili}>
                 <div data-edit-pattern="heat.field" data-edit-roles="4,3,2,1,5" className={styles.heatChiliArt}>
@@ -367,7 +367,7 @@ export default function PiquantProvisionsPage() {
                 <Figure editId="photo.piquant-chili-cutout"
                   slug="piquant-chili-cutout"
                   cutout
-                  alt="A single bright red chilli with a curled green stem"
+                  alt="A single bright red chili with a curled green stem"
                   className={styles.heatChiliImg}
                 />
                 <p data-edit="heat.body" data-edit-max="240" data-edit-multiline className={styles.heatChiliStamp} aria-hidden="true">
@@ -417,7 +417,7 @@ export default function PiquantProvisionsPage() {
             <figure className={styles.processFigureA}>
               <Figure editId="photo.piquant-hero"
                 slug="piquant-hero"
-                alt="A market stall stacked with crates of red, orange and green chillies, printed in riso style"
+                alt="A market stall stacked with crates of red, orange and green chilies, printed in riso style"
                 className={styles.processImg}
               />
               <figcaption data-edit="process.caption" data-edit-max="120" data-edit-multiline>Beckoner Street market, Thursday, before coffee.</figcaption>
@@ -435,7 +435,7 @@ export default function PiquantProvisionsPage() {
               <Figure editId="photo.piquant-crate-cutout"
                 slug="piquant-crate-cutout"
                 cutout
-                alt="A wooden crate piled high with fresh chillies"
+                alt="A wooden crate piled high with fresh chilies"
                 className={styles.processCrateImg}
               />
             </div>
@@ -505,7 +505,7 @@ export default function PiquantProvisionsPage() {
           <div className={styles.sectionHead}>
             <p data-edit="stockists.sectionKicker" data-edit-max="240" data-edit-multiline className={styles.sectionKicker}>Stockists</p>
             <h2 data-edit="stockists.sectionTitle" data-edit-max="60" id="stockists-title" className={styles.sectionTitle}>
-              Shops with excellent judgement
+              Shops with excellent judgment
             </h2>
           </div>
           <ul className={styles.stockistGrid}>
@@ -518,7 +518,7 @@ export default function PiquantProvisionsPage() {
             ))}
           </ul>
           <p className={styles.stockistFoot}>
-            Somewhere we should be? Tell your favourite shop to write to{' '}
+            Somewhere we should be? Tell your favorite shop to write to{' '}
             <a data-edit="stockists.link" data-edit-max="28" href="mailto:shelves@piquant.example">shelves@piquant.example</a>.
           </p>
         </section>

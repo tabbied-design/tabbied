@@ -14,7 +14,7 @@ export const metadata = {
    background slot so the water of the page runs through the pattern. */
 const BONE = '#efeae0';
 const GREEN = '#00b37a';
-const GREY = '#6e808f';
+const GRAY = '#6e808f';
 const DEEP = '#14293d';
 
 /* The scale the loft is named after, and the spine of the whole page. Every
@@ -37,7 +37,7 @@ const SCALE = [
 
 const WORK = [
   { n: '01', t: 'Cruising', d: 'Cross-cut and radial wardrobes in Dacron and laminate, cut to be reefed', lead: '6 weeks', from: '€ 3 400' },
-  { n: '02', t: 'Racing', d: 'Membrane mains and headsails, moulded on our own floor', lead: '9 weeks', from: '€ 7 900' },
+  { n: '02', t: 'Racing', d: 'Membrane mains and headsails, molded on our own floor', lead: '9 weeks', from: '€ 7 900' },
   { n: '03', t: 'Classic', d: 'Cotton and flax for boats that predate synthetics, hand-roped', lead: '14 weeks', from: '€ 9 200' },
   { n: '04', t: 'Repair', d: 'Anything, including sails we did not make and would not have made', lead: '4 days', from: '€ 90' },
   { n: '05', t: 'Covers', d: 'Stack packs, sprayhoods, winch and wheel covers in acrylic', lead: '3 weeks', from: '€ 640' },
@@ -82,7 +82,7 @@ const CRAFT = [
     art: fanned,
     n: 'II',
     t: 'Cut on the floor',
-    d: 'Eight hundred square metres of flat floor, which is the whole reason the loft is where it is. Panels are broadseamed by eye and checked against the plot before they are joined.',
+    d: 'Eight hundred square meters of flat floor, which is the whole reason the loft is where it is. Panels are broadseamed by eye and checked against the plot before they are joined.',
   },
   {
     art: overbar,
@@ -109,17 +109,17 @@ const NEXT_UP: [string, string, string][] = [
 export default function BeaufortPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--navy': '#0b1b2b',
         '--bone': '#efeae0',
         '--green': '#00b37a',
-        '--grey': '#6e808f',
+        '--gray': '#6e808f',
         '--deep': '#14293d',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="navy,bone,green,grey,deep"
+      data-edit-vars="navy,bone,green,gray,deep"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -146,7 +146,7 @@ export default function BeaufortPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={sail}
-              palette={['transparent', DEEP, GREY, GREEN]}
+              palette={['transparent', DEEP, GRAY, GREEN]}
               fit="grid"
               cellSize={158}
               redrawInterval={5800}
@@ -162,7 +162,7 @@ export default function BeaufortPage() {
           <div className={s.heroFoot}>
             <p data-edit="hero.body" data-edit-max="240" data-edit-multiline>
               A sail cut for the wind you get, not the wind in the brochure.
-              Eight hundred square metres of floor on the Blavet and fifty-five
+              Eight hundred square meters of floor on the Blavet and fifty-five
               years of doing it here.
             </p>
             <a data-edit="hero.cta" data-edit-max="28" className={s.cta} href="#work">
@@ -244,7 +244,7 @@ export default function BeaufortPage() {
         <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={quoinwedge}
-            palette={['transparent', GREEN, DEEP, GREY]}
+            palette={['transparent', GREEN, DEEP, GRAY]}
             fit="grid"
             cellSize={118}
             redrawInterval={4200}
@@ -264,7 +264,7 @@ export default function BeaufortPage() {
                 <div data-edit-pattern={`craft.field.${i}`} data-edit-roles="transparent,3,2" className={s.cPlate} aria-hidden="true">
                   <TabbiedPattern
                     pattern={c.art}
-                    palette={['transparent', GREY, GREEN]}
+                    palette={['transparent', GRAY, GREEN]}
                     fit="grid"
                     cellSize={66}
                     redrawInterval={5400}
@@ -303,7 +303,7 @@ export default function BeaufortPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={mitre}
-              palette={['transparent', GREEN, GREY]}
+              palette={['transparent', GREEN, GRAY]}
               fit="grid"
               cellSize={124}
               redrawInterval={4600}
@@ -340,7 +340,7 @@ export default function BeaufortPage() {
           <div data-edit-pattern="visit.field" data-edit-roles="transparent,2,3" className={s.visitField} aria-hidden="true">
             <TabbiedPattern
               pattern={angleoff}
-              palette={['transparent', GREEN, GREY]}
+              palette={['transparent', GREEN, GRAY]}
               fit="grid"
               cellSize={112}
               redrawInterval={6400}
@@ -419,7 +419,7 @@ export default function BeaufortPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={skewback}
-          palette={['transparent', GREEN, DEEP, GREY]}
+          palette={['transparent', GREEN, DEEP, GRAY]}
           fit="grid"
           cellSize={108}
           redrawInterval={5000}

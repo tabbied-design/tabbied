@@ -548,7 +548,7 @@
   color: oklch(0.5 0.01 260);
 }
 
-/* The one long paragraph on the page, at the design's measure and colour;
+/* The one long paragraph on the page, at the design's measure and color;
    .quiet elsewhere is a one-line aside and keeps its own. */
 .settings .quiet {
   max-width: 620px;

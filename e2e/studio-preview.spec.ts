@@ -11,7 +11,7 @@
 //
 // The generation is the one thing stubbed: it needs D1 and a session, and
 // worker/test/api.test.ts already owns that. Everything else here is the real
-// exported artefact.
+// exported artifact.
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -109,7 +109,7 @@ test.describe('studio preview', () => {
     expect(style).toContain('--brand-0: #F7F4EF');
     expect(style).toMatch(/--ink:/);
 
-    // And it reaches the pattern fields, which re-colour through their declared
+    // And it reaches the pattern fields, which re-color through their declared
     // role map rather than from an explicit per-field palette.
     const patternPalette = await frame
       .locator('[data-pattern]')
@@ -169,7 +169,7 @@ test.describe('studio preview', () => {
   });
 
   test('asks for nothing relative to the route', async ({ page }) => {
-    // Chromium's preload scanner does not honour the injected <base> in a
+    // Chromium's preload scanner does not honor the injected <base> in a
     // srcdoc document: with relative hrefs it fetched every stylesheet and
     // preloaded image against this route first - `/studio/preview/styles/...`,
     // a 404 and a console full of errors for a preview that then drew fine.

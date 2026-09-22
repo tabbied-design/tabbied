@@ -55,7 +55,7 @@ const EAUX = [
     form: 'Parfum de voyage · 3 × 10 ml',
     price: '€95',
     slug: 'ambre-bottle-3-cutout',
-    alt: 'Slender gold travel atomiser, cap removed',
+    alt: 'Slender gold travel atomizer, cap removed',
     line: 'The bright one. Citrus at altitude, honeyed blossom below, made to be refilled, never finished.',
     notes: {
       tete: 'Yuzu, néroli',
@@ -120,7 +120,7 @@ const STOCKISTS = [
 export default function MaisonAmbrePage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--noir': '#141210',

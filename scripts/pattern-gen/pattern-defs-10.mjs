@@ -11,7 +11,7 @@
 // mask cutting one sector out of a solid cell - turned out to be the most
 // liked design in batch 9, because of the way the sector *spreads*: a shape
 // that starts at a point and opens. Section A is thirty-six variations on
-// that: sectors from the centre, from a corner, from an edge, annular ones
+// that: sectors from the center, from a corner, from an edge, annular ones
 // with the apex bored out, nested ones, paired ones, whole fans, and sectors
 // whose angle is driven by where the cell sits on the sheet. Every one of them
 // is a real hole, because a conic mask cuts rather than paints.
@@ -27,7 +27,7 @@
 //   F. Chains            links that run from cell to cell.
 //   G. Corners           everything built off the corner of the cell rather
 //                        than its middle.
-//   H. Bands             mouldings and banding, run across the sheet.
+//   H. Bands             moldings and banding, run across the sheet.
 //
 // House rules (inherited from every earlier batch, enforced by
 // generate-batch10.mjs and validate-batch10.mjs):
@@ -41,7 +41,7 @@
 //     snap instead of morphing;
 //   * a randomized custom prop read more than once goes through @var(--x);
 //   * nothing paints var(--color0). A hole knocked out in the background
-//     colour is a fake hole - set the background slot to transparent and it
+//     color is a fake hole - set the background slot to transparent and it
 //     stops erasing anything. Every gap here is a mask, a clip-path hole or a
 //     gap between elements, and validate-batch10.mjs re-renders the whole
 //     batch over a checkerboard with the background slot set to #00000000 and
@@ -291,7 +291,7 @@ export const TAKEN = new Set(
     'impeller impost incense incline indent inkblot inlay inset insetstep ' +
     'intaglio interval involute iris isobar isocube isometry isopleth ivy ' +
     'jacquard jali jalousie jelly jewel judder jumble junction kaleido ' +
-    'karst kasuri kerb kerf kern kernel keyhole keyline keypad keystone ' +
+    'karst kasuri curb kerf kern kernel keyhole keyline keypad keystone ' +
     'keyway keywork khatam kikko kilim kintsugi kirigami kite knell koch ' +
     'koi kufic ladybird lagoon lantern lapse lattice laundry lava ledger ' +
     'lemniscate lens lentil levels lierne ligature lightface lily limacon ' +
@@ -497,7 +497,7 @@ const plates = (c, dx, dy, w = 66) =>
 //    continuous rather than a set of separate marks.
 // ════════════════════════════════════════════════════════════════════════════
 
-add('Chain', 1, 'Oval links running edge to edge, each one overlapping its neighbours.', (c) => ({
+add('Chain', 1, 'Oval links running edge to edge, each one overlapping its neighbors.', (c) => ({
   vars: '',
   rule: `--rot: ${R2}; ${F} { ${A(`left: -20%; top: 22%; width: 140%; height: 56%; border-radius: 999px; background: ${ink(c)}; ${ringMask('72%')}`)} ${rot('@var(--rot)')} }${TR}`,
 }), { tg: '5x5' });
@@ -528,8 +528,8 @@ add('Abutment', 27, 'An abutment: the mass at the end of the arch that takes the
 }), { tg: '5x5' });
 
 // ════════════════════════════════════════════════════════════════════════════
-// H. Bands - mouldings and banding run across the sheet. The whole vocabulary
-//    of a moulded edge, one profile per design.
+// H. Bands - moldings and banding run across the sheet. The whole vocabulary
+//    of a molded edge, one profile per design.
 // ════════════════════════════════════════════════════════════════════════════
 
 const bandOf = (c, tops) =>

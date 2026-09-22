@@ -105,7 +105,7 @@ export default function AccountOverview() {
       badge="Free plan"
       lede="Tabbied is free while we're in beta. There are no paid tiers yet, so every account gets the same limits."
     >
-      {/* The artboard's AI card, and only it. Its neighbour there is a
+      {/* The artboard's AI card, and only it. Its neighbor there is a
           template-download counter over a month, which nothing counts; the
           ring that stood here instead metered the `site` generation endpoint,
           and that cannot move while the flow is held back. So the card the
@@ -197,7 +197,7 @@ export default function AccountOverview() {
       </div>
 
       <p className={shell.footnote}>
-        Customizing a template's colours and patterns is free and is not counted.
+        Customizing a template's colors and patterns is free and is not counted.
       </p>
     </AccountPage>
   );

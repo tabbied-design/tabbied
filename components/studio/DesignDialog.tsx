@@ -6,7 +6,7 @@
 // the site and was missing here.
 //
 // It applies on click and closes, like the rail's palette rows rather than
-// the colour editor: a design is one choice, not a set of values that reads
+// the color editor: a design is one choice, not a set of values that reads
 // better committed together, and the canvas answering at once is the point of
 // previewing. The list is the catalog the shuffle draws from, searched by
 // name, each design shown by its committed preview.

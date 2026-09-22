@@ -11,7 +11,7 @@ export const metadata = {
     'The Weiss collection holds 411 works of postwar abstraction. Open eleven days a year, by ballot, twelve visitors at a time.',
 };
 
-/* Achromatic except for the paper's warmth. No accent colour anywhere: the
+/* Achromatic except for the paper's warmth. No accent color anywhere: the
    pattern fields, all on a `transparent` ground, are the only figure. */
 const INK = '#111111';
 const STONE = '#6E6A60';
@@ -54,7 +54,7 @@ const DAYS = [
 export default function SammlungWeissPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--bone': '#efede6',
@@ -207,7 +207,7 @@ export default function SammlungWeissPage() {
               <figure>
                 <Figure editId="photo.weiss-plinth"
                   slug="weiss-plinth"
-                  alt="A rough grey stone sculpture on a plain white plinth in a bare room"
+                  alt="A rough gray stone sculpture on a plain white plinth in a bare room"
                 />
                 <figcaption data-edit="rooms.caption" data-edit-max="120" data-edit-multiline>Room III. One work, one bench, no label.</figcaption>
               </figure>
@@ -256,12 +256,12 @@ export default function SammlungWeissPage() {
           </div>
           <div className={s.resInner}>
             <h2 data-edit="research.h2" data-edit-max="60" className={s.h2} id="research-h">
-              Research and enquiries
+              Research and inquiries
             </h2>
             <div className={s.resGrid}>
               <p data-edit="research.big" data-edit-max="240" data-edit-multiline className={s.big}>
-                The full catalogue is on paper, in one copy, in the reading room.
-                We have been meaning to digitise it since 2009.
+                The full catalog is on paper, in one copy, in the reading room.
+                We have been meaning to digitize it since 2009.
               </p>
               <dl>
                 <div>
@@ -286,7 +286,7 @@ export default function SammlungWeissPage() {
                 </div>
                 <div>
                   <dt data-edit="research.term4" data-edit-max="28">Loans</dt>
-                  <dd data-edit="research.body2" data-edit-max="200" data-edit-multiline>Two a year, to public institutions, for exhibitions with a catalogue.</dd>
+                  <dd data-edit="research.body2" data-edit-max="200" data-edit-multiline>Two a year, to public institutions, for exhibitions with a catalog.</dd>
                 </div>
               </dl>
             </div>
@@ -371,7 +371,7 @@ export default function SammlungWeissPage() {
                 </div>
                 <p data-edit="tiles.tileN3" data-edit-max="240" data-edit-multiline className={s.tileN}>III</p>
                 <h3 data-edit="tiles.title4" data-edit-max="40">Handling</h3>
-                <p data-edit="tiles.tileBody3" data-edit-max="240" data-edit-multiline className={s.tileBody}>Two people, cotton, no jewellery, and a written condition report before and after every movement, including the ones inside the building.</p>
+                <p data-edit="tiles.tileBody3" data-edit-max="240" data-edit-multiline className={s.tileBody}>Two people, cotton, no jewelry, and a written condition report before and after every movement, including the ones inside the building.</p>
               </article>
           </div>
         </section>
@@ -436,7 +436,7 @@ export default function SammlungWeissPage() {
               </div>
               <div key="Can I see a specific wor">
                 <dt data-edit="faq.term2" data-edit-max="28">Can I see a specific work?</dt>
-                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>If it is catalogued and not on display, yes, twice a year, in writing, with a reason. Uncatalogued material we cannot retrieve reliably and we say so.</dd>
+                <dd data-edit="faq.body2" data-edit-max="200" data-edit-multiline>If it is catalogd and not on display, yes, twice a year, in writing, with a reason. Uncatalogued material we cannot retrieve reliably and we say so.</dd>
               </div>
               <div key="Why is entry free?">
                 <dt data-edit="faq.term3" data-edit-max="28">Why is entry free?</dt>
@@ -444,7 +444,7 @@ export default function SammlungWeissPage() {
               </div>
               <div key="Do you lend?">
                 <dt data-edit="faq.term4" data-edit-max="28">Do you lend?</dt>
-                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Two loans a year, to public institutions, for exhibitions with a catalogue. Nothing travels in January or August.</dd>
+                <dd data-edit="faq.body4" data-edit-max="200" data-edit-multiline>Two loans a year, to public institutions, for exhibitions with a catalog. Nothing travels in January or August.</dd>
               </div>
           </dl>
         </section>

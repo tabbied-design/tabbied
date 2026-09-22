@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 /* Dark ground, bone type, signal yellow. Pattern fields take `transparent`
-   in the background slot so the night colour of the page shows through. */
+   in the background slot so the night color of the page shows through. */
 const BONE = '#F0EFEA';
 const YELLOW = '#FFD400';
 const STEEL = '#6E747C';
@@ -61,7 +61,7 @@ const GATE = [
 export default function HafenSechsPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--dark': '#101215',
@@ -120,7 +120,7 @@ export default function HafenSechsPage() {
             <br />
             Nineteen hundred
             <br />
-            <span>and eighty metres.</span>
+            <span>and eighty meters.</span>
           </h1>
           <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
             The deepwater terminal at the mouth of the Weser. Two point one
@@ -368,8 +368,8 @@ export default function HafenSechsPage() {
                   <Figure editId="photo.hafen-sechs-tile-cleat-cutout" slug="hafen-sechs-tile-cleat-cutout" alt="" cutout className={s.tileObject} />
                 </div>
                 <p data-edit="tiles.tileN2" data-edit-max="240" data-edit-multiline className={s.tileN}>02</p>
-                <h3 data-edit="tiles.title3" data-edit-max="40">Draught and tide</h3>
-                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>Sixteen and a half metres at the berth, but the approach channel decides. Deep-laden arrivals take the tide, and the tide does not negotiate.</p>
+                <h3 data-edit="tiles.title3" data-edit-max="40">Draft and tide</h3>
+                <p data-edit="tiles.tileBody2" data-edit-max="240" data-edit-multiline className={s.tileBody}>Sixteen and a half meters at the berth, but the approach channel decides. Deep-laden arrivals take the tide, and the tide does not negotiate.</p>
               </article>
               <article key="03">
                 <div data-edit-pattern="tiles.field3" data-edit-roles="transparent,1,3" className={s.tilePlate} aria-hidden="true">

@@ -44,7 +44,7 @@
 //     or border-color), so a reseed morphs rather than snapping;
 //   * a randomized custom property read more than once goes through @var(--x);
 //   * nothing paints var(--color0) - a hole knocked out in the background
-//     colour stops being a hole the moment the background is transparent.
+//     color stops being a hole the moment the background is transparent.
 
 export { TAKEN, RESERVED } from '../pattern-defs-10.mjs';
 
@@ -89,10 +89,10 @@ export const R2 = '@pick(0deg, 90deg)';
 export const R4 = '@pick(0deg, 90deg, 180deg, 270deg)';
 
 // ── mask layers: the geometry is cut, the ink is a plain background ────────
-// Every layer here paints in #000/transparent only. Keeping colour out of the
+// Every layer here paints in #000/transparent only. Keeping color out of the
 // mask means the ink stays a transitionable background-color, and it keeps the
 // conic parser on the hard-stop path it supports (a span between two *different*
-// colours is a smooth sweep, which the converter rejects).
+// colors is a smooth sweep, which the converter rejects).
 //
 // Layers are plain gradient strings so they compose: msk(a, b) adds them,
 // mskI(a, b) intersects them.
@@ -110,8 +110,8 @@ export const bandL = (inner, outer, at = '50% 50%') =>
   `radial-gradient(circle closest-side at ${at}, transparent ${inner}, #000 ${inner} ${outer}, transparent ${outer})`;
 
 /**
- * A band around an arbitrary centre. `closest-side` collapses to a zero
- * radius once the centre reaches an edge, so off-centre rings size themselves
+ * A band around an arbitrary center. `closest-side` collapses to a zero
+ * radius once the center reaches an edge, so off-center rings size themselves
  * to the farthest corner instead and read their stops as a fraction of that.
  */
 export const bandAt = (inner, outer, at) =>

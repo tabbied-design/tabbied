@@ -1,7 +1,7 @@
 /* ==========================================================================
    PRESSE NEUN - hand screenprint workshop, Rotterdam
    The overprint page. Two pattern fields sit on top of each other in
-   `multiply`, which is literally what a second colour does to a sheet that
+   `multiply`, which is literally what a second color does to a sheet that
    is already printed, and the ink rack runs the full width as nine flat
    blocks with nothing drawn round them. Inter, tracked in.
    ========================================================================== */
@@ -10,7 +10,7 @@
   --paper: #f4f2ea;
   --ink: #141210;
   --pink: #ff2d78;
-  --grey: #8c8a82;
+  --gray: #8c8a82;
   --pale: #e2dfd4;
 
   --edge: clamp(1.15rem, 3.4vw, 4.5rem);
@@ -79,7 +79,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- hero */
@@ -108,7 +108,7 @@
 }
 
 /* The second pull. Multiply is the whole point: where the two fields cross,
-   a third colour appears that neither screen carries. */
+   a third color appears that neither screen carries. */
 .heroLayerTwo {
   mix-blend-mode: multiply;
   opacity: 0.5;
@@ -121,7 +121,7 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   /* Ink, not pink: the kicker sits on top of a pink field and would vanish
-     into it. The wordmark below can afford the colour; six-point caps can't. */
+     into it. The wordmark below can afford the color; six-point caps can't. */
   color: var(--ink);
 }
 
@@ -175,7 +175,7 @@
 
 /* ------------------------------------------------------------------- inks
    Nine flat blocks, full width, no gap and no rule. This is the ink rack,
-   and it is also the only place the page is allowed to be colourful. */
+   and it is also the only place the page is allowed to be colorful. */
 
 .inks {
   display: grid;
@@ -315,7 +315,7 @@
   font-size: 0.74rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .rowFrom {
@@ -604,7 +604,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 

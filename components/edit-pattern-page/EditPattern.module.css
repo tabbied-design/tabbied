@@ -75,7 +75,7 @@
   color: #0e0e13;
   letter-spacing: 0.24em;
   /* Tracking adds space after the last letter too; the indent puts the word
-     back on its own centre. */
+     back on its own center. */
   text-indent: 0.24em;
   text-transform: uppercase;
 }

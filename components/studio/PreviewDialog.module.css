@@ -1,6 +1,6 @@
 /* The preview a results card opens: the packaged template, with the card's
    direction applied, in a dialog over the page. Portaled to <body>, so it
-   carries its own type and colour rather than reading Studio's tokens. */
+   carries its own type and color rather than reading Studio's tokens. */
 
 .backdrop {
   position: fixed;

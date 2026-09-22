@@ -42,13 +42,13 @@ const routes = [
     duration: '7 h 05 m',
     distance: '172 km',
     fare: 'from €78',
-    note: 'Up and over the Col du Miroir on a one-in-forty grade. Blankets in every parlour car from October; the summit halt serves chocolate at 1,940 metres.',
+    note: 'Up and over the Col du Miroir on a one-in-forty grade. Blankets in every parlor car from October; the summit halt serves chocolate at 1,940 meters.',
   },
   {
     no: 'No. 3',
     name: 'The Vineyard Arc',
     img: 'caldera-vineyard',
-    alt: 'Gouache illustration of terraced vineyards in autumn colour with a train curving between them',
+    alt: 'Gouache illustration of terraced vineyards in autumn color with a train curving between them',
     path: 'Casteldoro to Miradora',
     days: 'Fri to Sun',
     duration: '4 h 25 m',
@@ -98,7 +98,7 @@ const stops = [
 
 const cabins = [
   {
-    name: 'Parlour Seat',
+    name: 'Parlor Seat',
     fare: 'included',
     desc: 'Wide armchairs in pairs, fold-down writing tables, windows that open to the elbow.',
   },
@@ -192,7 +192,7 @@ const timetable = [
 export default function CalderaRailPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--parchment': '#f0ead6',
@@ -658,7 +658,7 @@ export default function CalderaRailPage() {
               <p data-edit="timetable.body2" data-edit-max="240" data-edit-multiline>
                 Telephone (0)55 214 88, or write to reservations@caldera.rail.
                 Reserved fares hold for seven days; the seat map is drawn by
-                hand and honoured absolutely.
+                hand and honored absolutely.
               </p>
             </div>
             <div className={styles.bookingCard}>

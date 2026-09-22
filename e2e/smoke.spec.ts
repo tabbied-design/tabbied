@@ -468,7 +468,7 @@ test.describe('Tabbied site', () => {
     await expect(addButton).toBeDisabled();
   });
 
-  test('a background image sits behind the pattern, and leaves with the colour back', async ({
+  test('a background image sits behind the pattern, and leaves with the color back', async ({
     page,
   }) => {
     await page.goto('/patterns/radius?seed=0000');
@@ -504,7 +504,7 @@ test.describe('Tabbied site', () => {
       .poll(() => new URL(page.url()).searchParams.getAll('palette')[0])
       .toMatch(/00$/);
 
-    // Removing it brings the colour back exactly as it was.
+    // Removing it brings the color back exactly as it was.
     await removeImage.click();
     await expect(page.locator('input[type="color"]')).toHaveCount(6);
     await expect

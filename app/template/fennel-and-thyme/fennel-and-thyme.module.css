@@ -3,7 +3,7 @@
    Cream paper, deep green ink, sage and honey. Cormorant Garamond carries the
    display with an italic accent; Karla sets everything you have to read at
    speed. Rounded corners, hairline rules, small-caps labels with wide
-   tracking, and air between everything. The patterns sit in the paper colour
+   tracking, and air between everything. The patterns sit in the paper color
    on a transparent ground, so they read as pressed specimens rather than as
    pictures.
    ========================================================================== */
@@ -13,7 +13,7 @@
   --ink: #22302a;
   --sage: #5f8063;
   --honey: #c9a16f;
-  --grey: #8e9689;
+  --gray: #8e9689;
   --pale: #dde3d8;
   --display: 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif;
   --body: 'Karla', 'Helvetica Neue', Arial, sans-serif;
@@ -91,7 +91,7 @@
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* Prices, in the display face and honey, with the pound sign drawn by CSS so
@@ -123,7 +123,7 @@
   font-family: var(--display);
   font-style: italic;
   font-size: 1.05rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ---------------------------------------------------------------- top bar */
@@ -181,7 +181,7 @@
 }
 
 /* Full-bleed and loud at the top, thinning to nothing by the lede. The mask
-   uses an opaque page colour only for its alpha; any opaque stop would do. */
+   uses an opaque page color only for its alpha; any opaque stop would do. */
 .heroField {
   position: absolute;
   inset: 0;
@@ -257,7 +257,7 @@
   margin: 0.35rem 0 0;
   font-size: 0.82rem;
   letter-spacing: 0.04em;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* ------------------------------------------------------------ section heads */
@@ -341,7 +341,7 @@
   margin-top: clamp(1.4rem, 3vw, 2rem);
   max-width: 40rem;
   font-size: 0.88rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 /* -------------------------------------------------------------------- teas
@@ -645,7 +645,7 @@
 }
 
 .hours dd {
-  color: var(--grey);
+  color: var(--gray);
   font-variant-numeric: tabular-nums;
 }
 
@@ -814,7 +814,7 @@
 
 .footFine p {
   font-size: 0.8rem;
-  color: var(--grey);
+  color: var(--gray);
 }
 
 .footFine a {

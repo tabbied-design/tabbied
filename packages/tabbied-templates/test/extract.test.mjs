@@ -250,7 +250,7 @@ test('the brand palette is read back off the root inline style', () => {
 
 test('a gap in the brand roles stops the palette rather than compacting it', () => {
   // Compacting would silently renumber the inks, so role 2 in a saved edits
-  // document would land on a different colour than the page it was made from.
+  // document would land on a different color than the page it was made from.
   assert.deepEqual(parseBrandColors('--brand-0:#fff;--brand-2:#000'), ['#fff']);
 });
 
@@ -259,14 +259,14 @@ test('a gap in the brand roles stops the palette rather than compacting it', () 
 // The 52 bespoke pages predate the {em} convention and each accents with
 // whichever tag its stylesheet targets. Cobalt Works styles `.hero h1 span`,
 // so reading its headline as though the accent were an <em> loses the accent
-// and rebuilding it as one loses the colour. Both halves take the tag now.
+// and rebuilding it as one loses the color. Both halves take the tag now.
 
 test('htmlToTextValue marks up the page\'s own accent tag', () => {
-  const html = 'Colour is a<br/><span class="x">material</span> before<br/>it is an effect.';
+  const html = 'Color is a<br/><span class="x">material</span> before<br/>it is an effect.';
 
   assert.equal(
     htmlToTextValue(html, 'span'),
-    'Colour is a {em}material{/em} before it is an effect.'
+    'Color is a {em}material{/em} before it is an effect.'
   );
 });
 
@@ -298,7 +298,7 @@ test('an emphasis slot carries the tag it was read with', () => {
   const html =
     '<html><body><div data-edit-root="vars" data-edit-vars="ink">' +
     '<h1 data-edit="hero.text" data-edit-format="emphasis">' +
-    'Colour is a<br/><span class="hashed">material</span> before</h1>' +
+    'Color is a<br/><span class="hashed">material</span> before</h1>' +
     '</div></body></html>';
 
   const { slots } = extractFromHtml(html, { designOptions: () => [] });
@@ -307,5 +307,5 @@ test('an emphasis slot carries the tag it was read with', () => {
   assert.equal(slot.format, 'emphasis');
   assert.equal(slot.emphasisTag, 'span');
   assert.equal(slot.emphasisClass, 'hashed');
-  assert.equal(slot.value, 'Colour is a {em}material{/em} before');
+  assert.equal(slot.value, 'Color is a {em}material{/em} before');
 });

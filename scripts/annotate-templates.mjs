@@ -7,9 +7,9 @@
 // lines of it - and hand-editing them is neither feasible nor reviewable. But
 // they are far more uniform than they look, in the ways that matter:
 //
-//   1. Every page declares its colour once, as custom properties on its root
+//   1. Every page declares its color once, as custom properties on its root
 //      rule (`--paper`, `--ink`, ...), and the stylesheet only reads `var(--...)`.
-//      So a re-colour is already a property rewrite - it just needs those
+//      So a re-color is already a property rewrite - it just needs those
 //      properties set *inline*, where an edit can override them. There is no
 //      hex-to-var() codemod to write, which was the riskiest part of the job.
 //   2. No wrapper in the corpus holds two <TabbiedPattern>s, so a pattern slot
@@ -164,14 +164,14 @@ const sourceOf = (code, node) => code.slice(node.start, node.end);
  *
  * Read from the stylesheet rather than from the page's own `const INK = ...`
  * declarations, because the stylesheet is what actually paints the page - and
- * most pages declare a colour in CSS (the paper) that has no JS constant at
+ * most pages declare a color in CSS (the paper) that has no JS constant at
  * all, since nothing but CSS needed it until now.
  */
 function readPalette(cssPath) {
   if (!existsSync(cssPath)) return null;
 
   const css = readFileSync(cssPath, 'utf8');
-  // The first rule declaring colour custom properties is the page root by
+  // The first rule declaring color custom properties is the page root by
   // construction: these stylesheets open with `.page { --...: #...; }`.
   const rule = /\{([^}]*--[a-z][\w-]*\s*:\s*#[0-9a-f]{3,8}[^}]*)\}/i.exec(css);
 
@@ -190,10 +190,10 @@ function readPalette(cssPath) {
 }
 
 /**
- * Module-scope colour constants, by identifier.
+ * Module-scope color constants, by identifier.
  *
- * Aliases are resolved: `const TILE_A = STEEL` is as much a colour constant as
- * `const STEEL = '#9C9C98'`, and about twenty pages name their tile colours
+ * Aliases are resolved: `const TILE_A = STEEL` is as much a color constant as
+ * `const STEEL = '#9C9C98'`, and about twenty pages name their tile colors
  * that way. Missing that is what left 109 pattern fields with no role map on
  * the first pass - they had ordinary palettes, just written one indirection
  * away.
@@ -239,11 +239,11 @@ function readColorConstants(program) {
 }
 
 /**
- * Module-scope arrays of colours, by identifier - `const FULL = [NAVY, ICE]`.
+ * Module-scope arrays of colors, by identifier - `const FULL = [NAVY, ICE]`.
  *
  * Several pages pass one of these straight to a pattern (`palette={FULL}`)
  * rather than writing the array inline, so resolving them is what lets those
- * fields follow a re-colour.
+ * fields follow a re-color.
  */
 function readColorArrays(program, constants) {
   const arrays = new Map();
@@ -587,7 +587,7 @@ function annotate(slug) {
   const constants = readColorConstants(program);
   const repeated = repeatedComponents(program);
 
-  // Which role each JS colour constant is, so a pattern's palette can be
+  // Which role each JS color constant is, so a pattern's palette can be
   // expressed as a role map instead of frozen hexes.
   const roleOfHex = new Map(
     palette.colors.map((color, index) => [color.toLowerCase(), index])
@@ -649,7 +649,7 @@ function annotate(slug) {
     });
   };
 
-  // A colour becomes a role when it is one of the page's, and stays a literal
+  // A color becomes a role when it is one of the page's, and stays a literal
   // when it is not - an off-palette accent is not part of the brand and must
   // not move when the brand does. `transparent` is the important literal: it
   // is what leaves real negative space so a field reads over what is beneath.
@@ -740,7 +740,7 @@ function annotate(slug) {
       root = node;
 
       addBlock(node, [
-        '// Colour, declared inline so an edit can override it. The authored',
+        '// Color, declared inline so an edit can override it. The authored',
         '// defaults stay in the stylesheet as the fallback.',
         'style={{',
         ...palette.varNames.map(
@@ -792,7 +792,7 @@ function annotate(slug) {
 
           if (!roles) {
             notes.push(
-              `${slug}: the pattern in ${base} has a palette that maps to no roles - it will not re-colour`
+              `${slug}: the pattern in ${base} has a palette that maps to no roles - it will not re-color`
             );
           }
 

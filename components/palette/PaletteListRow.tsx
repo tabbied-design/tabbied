@@ -9,7 +9,7 @@ const MAX_CHIPS = 6;
 /**
  * One palette in a list: the name, then its inks as a run of chips, then the
  * pencil (and, for a palette the person made, a delete mark). The ground
- * colour is not drawn - the design shows the colours a pattern is painted
+ * color is not drawn - the design shows the colors a pattern is painted
  * *with*, and the ground is what the page around the list already shows under
  * every thumbnail. The active row is an ink pill. Shared by the gallery's rail
  * and the editor's palette list, so the two read as one control.

@@ -1,5 +1,5 @@
 /* The admin tier's shell and pieces: a sidebar with the sections, a sticky
-   topbar, and a grey working surface with white cards on it. The admin pages
+   topbar, and a gray working surface with white cards on it. The admin pages
    carry no other chrome, so the tokens live here. */
 
 .shell {

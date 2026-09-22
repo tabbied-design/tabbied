@@ -14,7 +14,7 @@ export const metadata = {
    slot so the sheet of the page runs through the pattern. */
 const INK = '#171310';
 const RED = '#b0003a';
-const GREY = '#8b857a';
+const GRAY = '#8b857a';
 const PALE = '#e0dacb';
 
 /* A sixteen-page signature, imposed. Two formes, eight pages each, and the
@@ -73,14 +73,14 @@ const STRUCTURES = [
 ];
 
 const MATERIALS = [
-  ['Buckram', 'Bamberger Kaliko', '18 colours held', 'Cloth', 'Held'],
-  ['Book cloth', 'Van Heek Scholco', '31 colours held', 'Cloth', 'Held'],
+  ['Buckram', 'Bamberger Kaliko', '18 colors held', 'Cloth', 'Held'],
+  ['Book cloth', 'Van Heek Scholco', '31 colors held', 'Cloth', 'Held'],
   ['Goatskin', 'Harmatan', 'To order, by skin', 'Leather', 'To order'],
   ['Calf', 'Hewit', 'To order, by skin', 'Leather', 'To order'],
   ['Vellum', 'Cowley', 'To order, by skin', 'Leather', 'To order'],
-  ['Zerkall', '145 gsm', 'Mould made, endpapers', 'Paper', 'Held'],
-  ['Hahnemühle Bugra', '90 gsm', '14 colours, endpapers', 'Paper', 'Held'],
-  ['Grey board', '2.0 / 2.5 / 3.0 mm', 'Boards', 'Board', 'Held'],
+  ['Zerkall', '145 gsm', 'Mold made, endpapers', 'Paper', 'Held'],
+  ['Hahnemühle Bugra', '90 gsm', '14 colors, endpapers', 'Paper', 'Held'],
+  ['Gray board', '2.0 / 2.5 / 3.0 mm', 'Boards', 'Board', 'Held'],
   ['Archival board', '1.5 mm', 'Boxes, conservation', 'Board', 'Held'],
   ['Linen thread', 'No. 18 / 25 / 30', 'Sewing', 'Thread', 'Held'],
   ['Wheat starch', 'Made weekly', 'Conservation adhesive', 'Adhesive', 'Made here'],
@@ -108,17 +108,17 @@ const SHOP = [
 export default function FalzbogenPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f2eee4',
         '--ink': '#171310',
         '--red': '#b0003a',
-        '--grey': '#8b857a',
+        '--gray': '#8b857a',
         '--pale': '#e0dacb',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,red,grey,pale"
+      data-edit-vars="paper,ink,red,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -145,7 +145,7 @@ export default function FalzbogenPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={miura}
-              palette={['transparent', PALE, GREY, RED]}
+              palette={['transparent', PALE, GRAY, RED]}
               fit="grid"
               cellSize={152}
               redrawInterval={6000}
@@ -265,7 +265,7 @@ export default function FalzbogenPage() {
                 <div data-edit-pattern={`folds.field.${i}`} data-edit-roles="transparent,3,2" className={s.fPlate} aria-hidden="true">
                   <TabbiedPattern
                     pattern={f.art}
-                    palette={['transparent', GREY, RED]}
+                    palette={['transparent', GRAY, RED]}
                     fit="grid"
                     cellSize={62}
                     redrawInterval={5400}
@@ -304,7 +304,7 @@ export default function FalzbogenPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={ogee}
-              palette={['transparent', RED, GREY]}
+              palette={['transparent', RED, GRAY]}
               fit="grid"
               cellSize={120}
               redrawInterval={4600}
@@ -360,7 +360,7 @@ export default function FalzbogenPage() {
           <div data-edit-pattern="shop.field" data-edit-roles="transparent,3,4" className={s.shopField} aria-hidden="true">
             <TabbiedPattern
               pattern={frieze}
-              palette={['transparent', GREY, PALE]}
+              palette={['transparent', GRAY, PALE]}
               fit="grid"
               cellSize={108}
               redrawInterval={6400}
@@ -431,7 +431,7 @@ export default function FalzbogenPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,4,2,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={axial}
-          palette={['transparent', PALE, RED, GREY]}
+          palette={['transparent', PALE, RED, GRAY]}
           fit="grid"
           cellSize={104}
           redrawInterval={5000}

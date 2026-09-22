@@ -115,7 +115,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   /* Minimal scrollbar: a slim, low-contrast thumb that fades into the white
-     rail. Firefox honours the two `scrollbar-*` props; WebKit/Chromium use the
+     rail. Firefox honors the two `scrollbar-*` props; WebKit/Chromium use the
      pseudo-elements below. */
   scrollbar-width: thin;
   scrollbar-color: #d4d9df transparent;

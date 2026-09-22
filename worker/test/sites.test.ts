@@ -178,7 +178,7 @@ describe('a site straight from the gallery', () => {
     expect(site.title).toBe('Verdant');
     expect(site.templateName).toBe('Verdant');
     expect(site.stance).toBe('');
-    // The template's own colours, since nothing has been changed yet.
+    // The template's own colors, since nothing has been changed yet.
     expect(site.palette.length).toBeGreaterThan(1);
     expect(site.generationId).toBeNull();
     expect(site.directionIndex).toBeNull();
@@ -263,7 +263,7 @@ describe('a site straight from the gallery', () => {
     });
     expect(saved.status, await saved.clone().text()).toBe(200);
 
-    // The listing now shows the colours the site wears, not the template's.
+    // The listing now shows the colors the site wears, not the template's.
     const list = (await SELF.fetch(`${ORIGIN}/api/studio/sites`, { headers: { cookie } }).then((r) =>
       r.json()
     )) as { sites: { id: string; palette: string[] }[] };

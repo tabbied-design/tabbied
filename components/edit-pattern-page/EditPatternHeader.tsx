@@ -25,7 +25,7 @@ import styles from './EditPatternHeader.module.css';
 type EditPatternHeaderProps = {
   patternName: string;
   /**
-   * Draw the layout again. One action, not a menu of scopes: the colours are
+   * Draw the layout again. One action, not a menu of scopes: the colors are
    * chosen from the rail, so a shuffle only ever rearranges the cells.
    */
   onShuffle: () => void;

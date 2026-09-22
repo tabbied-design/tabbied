@@ -85,7 +85,7 @@ export const directionsJsonSchema = (slugs: string[]) => ({
             maxItems: 6,
             items: { type: 'string', pattern: '^#[0-9a-fA-F]{6}$' },
             description:
-              'Background colour first, then inks. At least one ink must be clearly legible on the background.',
+              'Background color first, then inks. At least one ink must be clearly legible on the background.',
           },
           copy: {
             type: 'object',

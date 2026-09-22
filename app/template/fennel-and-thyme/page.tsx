@@ -15,7 +15,7 @@ export const metadata = {
 const INK = '#22302A';
 const SAGE = '#5F8063';
 const HONEY = '#C9A16F';
-const GREY = '#8E9689';
+const GRAY = '#8E9689';
 const PALE = '#DDE3D8';
 
 const NAV = [
@@ -113,7 +113,7 @@ const TEAS: Tea[] = [
   {
     name: 'Bath Stone',
     leaves: 'Peppermint, liquorice root, ginger, cardamom',
-    note: 'Warm and sweet without sugar. Named for the colour it goes in the cup.',
+    note: 'Warm and sweet without sugar. Named for the color it goes in the cup.',
     weight: '60 g',
     price: '6.90',
   },
@@ -220,13 +220,13 @@ const GROWERS: Grower[] = [
     farm: 'Wyeside Organics',
     place: 'Ross-on-Wye, Herefordshire',
     grows: 'Elder, hawthorn, nettle, hops',
-    note: 'Hedgerow crops from twelve acres they have never ploughed.',
+    note: 'Hedgerow crops from twelve acres they have never plowed.',
   },
   {
     farm: 'Ty Mawr Lavender',
     place: 'Brecon, Powys',
     grows: 'Lavender, thyme, sage',
-    note: 'The Mediterranean herbs, grown on a south slope at 300 metres.',
+    note: 'The Mediterranean herbs, grown on a south slope at 300 meters.',
   },
   {
     farm: 'Coombe Orchards',
@@ -253,18 +253,18 @@ const FIND = [
 export default function FennelAndThymePage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f4f1e8',
         '--ink': '#22302a',
         '--sage': '#5f8063',
         '--honey': '#c9a16f',
-        '--grey': '#8e9689',
+        '--gray': '#8e9689',
         '--pale': '#dde3d8',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,sage,honey,grey,pale"
+      data-edit-vars="paper,ink,sage,honey,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -460,7 +460,7 @@ export default function FennelAndThymePage() {
           <div data-edit-pattern="sourcing.field" data-edit-roles="transparent,5,4" className={s.sourcingField} aria-hidden="true">
             <TabbiedPattern
               pattern={cendal}
-              palette={['transparent', PALE, GREY]}
+              palette={['transparent', PALE, GRAY]}
               fit="grid"
               cellSize={104}
               redrawInterval={6200}

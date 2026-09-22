@@ -12,7 +12,7 @@ export const metadata = {
    the near-black of the page rather than on a plate of its own. */
 const INK = '#D9F5E3';
 const GREEN = '#2CFF7A';
-const GREY = '#5C7365';
+const GRAY = '#5C7365';
 const PALE = '#0E1713';
 
 const NAV = [
@@ -166,17 +166,17 @@ const CONTACT = [
 export default function NullsecPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#050807',
         '--ink': '#d9f5e3',
         '--green': '#2cff7a',
-        '--grey': '#5c7365',
+        '--gray': '#5c7365',
         '--pale': '#0e1713',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,green,grey,pale"
+      data-edit-vars="paper,ink,green,gray,pale"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -209,7 +209,7 @@ export default function NullsecPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,4,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={combed}
-              palette={['transparent', GREY, PALE, GREEN]}
+              palette={['transparent', GRAY, PALE, GREEN]}
               fit="grid"
               cellSize={120}
               redrawInterval={5400}
@@ -297,7 +297,7 @@ export default function NullsecPage() {
           <div data-edit-pattern="band.field" data-edit-roles="transparent,2,3,1" className={s.bandField} aria-hidden="true">
             <TabbiedPattern
               pattern={basse}
-              palette={['transparent', GREEN, GREY, INK]}
+              palette={['transparent', GREEN, GRAY, INK]}
               fit="grid"
               cellSize={96}
               redrawInterval={4200}
@@ -330,12 +330,12 @@ export default function NullsecPage() {
 
         {/* ---------------------------------------------------- DISCLOSURE
             slashbar as a quiet wash: sparse bars at low opacity, with the
-            paper colour pooled under the steps so the policy stays legible. */}
+            paper color pooled under the steps so the policy stays legible. */}
         <section id="disclosure" className={s.disclosure} aria-labelledby="disclosure-h">
           <div data-edit-pattern="disclosure.field" data-edit-roles="transparent,3,4,1" className={s.washField} aria-hidden="true">
             <TabbiedPattern
               pattern={slashbar}
-              palette={['transparent', GREY, PALE, INK]}
+              palette={['transparent', GRAY, PALE, INK]}
               fit="grid"
               cellSize={88}
               redrawInterval={6600}
@@ -443,12 +443,12 @@ export default function NullsecPage() {
       </main>
 
       {/* A coda: combed at a small cell, so it reads as the raw data stream
-          the rest of the page was summarising. Nothing to read. */}
+          the rest of the page was summarizing. Nothing to read. */}
       <section className={s.coda} aria-hidden="true">
         <div data-edit-pattern="coda.field" data-edit-roles="transparent,3,2,4" className={s.codaField} aria-hidden="true">
           <TabbiedPattern
             pattern={combed}
-            palette={['transparent', GREY, GREEN, PALE]}
+            palette={['transparent', GRAY, GREEN, PALE]}
             fit="grid"
             cellSize={72}
             redrawInterval={3900}

@@ -34,7 +34,7 @@ export async function generateMetadata({
   return {
     title: entry ? `${entry.name} - Template preview - Tabbied` : 'Template preview - Tabbied',
     description: entry
-      ? `${entry.name}, a ${entry.topic.toLowerCase()} website template built on a Tabbied pattern. Customize its colours and patterns, or download it as it is.`
+      ? `${entry.name}, a ${entry.topic.toLowerCase()} website template built on a Tabbied pattern. Customize its colors and patterns, or download it as it is.`
       : undefined,
   };
 }

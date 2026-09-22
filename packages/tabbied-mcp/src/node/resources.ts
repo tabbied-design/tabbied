@@ -103,7 +103,7 @@ export async function fetchDocs(): Promise<string> {
  * The editable-template index and one site's spec.
  *
  * These come from the network with no local fallback, and that is not an
- * oversight: they are *site* artefacts, generated from the static export
+ * oversight: they are *site* artifacts, generated from the static export
  * (docs/editable-templates.md), and the `tabbied` package does not contain
  * them. There is nothing local to prefer.
  */

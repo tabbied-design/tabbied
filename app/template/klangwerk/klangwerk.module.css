@@ -671,7 +671,7 @@
    hairline. The patterns have had the whole page to speak already. */
 
 /* Page and footer were within 1.15:1 of each other - near enough that the
-   seam read as a mistake, so the footer takes the page colour exactly.
+   seam read as a mistake, so the footer takes the page color exactly.
    The light-page sites keep their dark footers: that contrast is the design. */
 .footer {
   background: var(--void);

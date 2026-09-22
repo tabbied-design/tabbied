@@ -111,7 +111,7 @@ Three things that are explicit here and were implicit or automatic on Vercel:
 
 The Worker routes with Hono (`worker/index.ts`). That was added for the
 platform tier - the right shape for two routes was the wrong one for twenty -
-and it changed no behaviour: same MCP handler, same statelessness, same
+and it changed no behavior: same MCP handler, same statelessness, same
 `env.ASSETS` fallthrough. `/api` is scaffolding today (`/api/health` and a
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
@@ -190,7 +190,7 @@ and that shape is forced by both ends of the problem:
 
 - The packager *reads* the export, so it can only run after a build. It has no
   framework-free source to copy from - deriving from the export is the whole
-  strategy: a hand-port is four artefacts per site to keep in step, and within
+  strategy: a hand-port is four artifacts per site to keep in step, and within
   two edits the download and the live site disagree.
 - The deploy has to *ship* what it writes, and the host decides when it stops
   looking. This shape was forced by Vercel, where writing into `out/` after the
@@ -244,7 +244,7 @@ The two formats are built in opposite directions, and that is the point:
   metadata`; there is no next/image, next/link, `'use client'` or
   `generateStaticParams` anywhere. So `page.tsx` ships as authored and only the
   frame changes: metadata lifted into `index.html`, workspace imports pointed
-  at copied neighbours, plus a Vite scaffold. Vite resolves `.module.css`
+  at copied neighbors, plus a Vite scaffold. Vite resolves `.module.css`
   natively, so the React package needs **no CSS transform at all** - only the
   bundler-less HTML package needs `composes:`/`:global()` flattened.
 
@@ -298,7 +298,7 @@ Two traps that trimmer already fell into, both silent:
 
 - **Comments containing braces.** This codebase documents its CSS heavily and
   one comment contains a literal `{ color: inherit }` as an example. Counted
-  naively that desynchronises brace depth for the rest of the file, so the
+  naively that desynchronizes brace depth for the rest of the file, so the
   walker skips comments when scanning. Do not "simplify" it back to
   `indexOf('{')`.
 - **Comments containing class names**, which poison the selector parsed out of
@@ -334,11 +334,11 @@ Four things worth not re-litigating:
   properties. `trimUnusedRules` ships a stylesheet trimmed to the classes the
   markup already uses, and that is safe *only* because nothing adds one after
   load.
-- **Colour derivation has one implementation.** `derivePaletteProperties()` is
-  shared by `TemplateSite.tsx` (first render) and `applyEdits` (re-colour); a
-  second copy of that maths is how a re-coloured page gets unreadable body
-  copy. Pattern fields re-colour through a declared role map, and a literal
-  `transparent` in colour 0 must survive it - that is what lets a field read
+- **Color derivation has one implementation.** `derivePaletteProperties()` is
+  shared by `TemplateSite.tsx` (first render) and `applyEdits` (re-color); a
+  second copy of that math is how a re-colored page gets unreadable body
+  copy. Pattern fields re-color through a declared role map, and a literal
+  `transparent` in color 0 must survive it - that is what lets a field read
   over a photograph.
 - **One slot id may sit on several elements** (brand name in masthead and
   footer) and an edit reaches all of them; the generator fails the build if
@@ -358,7 +358,7 @@ run, so a heading with mixed inline content was passed over and only its
 annotatable *descendants* got ids - leaving the container's own words with
 nothing addressing them. Cobalt Works' headline was the shape: `hero.text` sat
 on the accent `<span>`, so a generated site rewrote "material" and left the
-rest, reading "Colour is a Find your place. before it is an effect." The
+rest, reading "Color is a Find your place. before it is an effect." The
 masthead was worse - neither its text nor its `<i>` was annotated at all, so
 the brand name could not be reached by anything.
 
@@ -375,7 +375,7 @@ the design already fits, or the template's own words warn against themselves.
 
 87 runs are deliberately left: text beside a link, or beside an expression in a
 `.map()` (`{h.d} on the year`). Wrapping those in a span is not safe in
-general - a page that styles `.hero h1 span` would colour the wrapper too - and
+general - a page that styles `.hero h1 span` would color the wrapper too - and
 most of them are units and connectives rather than copy, so they want a person.
 
 **The accent tag is read off the page, never assumed.** `writeText` used to
@@ -390,9 +390,9 @@ together.
 
 When resolving a pattern's palette into a role map it chases **aliased
 constants** (`const TILE_A = STEEL`) and **array constants** (`palette={FULL}`);
-not doing so left 109 of 434 fields unable to re-colour. The 31 that remain
+not doing so left 109 of 434 fields unable to re-color. The 31 that remain
 take a per-item palette from a data array or a conditional, so no static map
-can describe them - they re-colour only through an explicit `palette` in the
+can describe them - they re-color only through an explicit `palette` in the
 edits document.
 
 **Two palette derivations, and the bespoke one is not `--brand-N`.** Those 72
@@ -400,8 +400,8 @@ pages each declare their own property names on their root rule (`--paper`,
 `--ink`, ...) with the stylesheet reading `var(--...)`, so they use
 `data-edit-root="vars"` plus `data-edit-vars` naming the role order. The
 properties are written *inline*, which is what makes an edit beat the authored
-default still in the class rule. A colour interpolated into an inline style in
-JS is baked at render time and a re-colour cannot reach it - write those as
+default still in the class rule. A color interpolated into an inline style in
+JS is baked at render time and a re-color cannot reach it - write those as
 `var(--ink)`.
 
 `page.tsx` sources that import `tabbied-templates` get it added to the React
@@ -486,14 +486,14 @@ not obvious from the diff:
 - **"Random per pattern" is the gallery's default, and it lives in the
   palette store.** `RANDOM_PALETTE_ID` sits in `activePaletteId` beside a
   saved or library id, because it is chosen from the same list. It names no
-  colours: `SelectPattern` draws one library palette per card
+  colors: `SelectPattern` draws one library palette per card
   (`lib/randomPalettes.ts`, a seeded shuffle keyed by the card's place in the
   whole catalog, so a page change keeps each design in its palette), and the
   seed is the session's - drawn after mount, never during render, and kept
   until the option is chosen again, so coming back from the editor shows the
   cards as they were. `resolveActivePalette` returns null for it, which is
-  what makes a bare editor visit open in the pattern's own colours; a card's
-  link carries its palette instead, and the editor looks the linked colours up
+  what makes a bare editor visit open in the pattern's own colors; a card's
+  link carries its palette instead, and the editor looks the linked colors up
   in the list so the row lights. `fitToColorBounds` cuts or pads a palette to
   what the pattern can take, for the card and the link alike.
 - **The masonry is the grid's own dense placement, plus one JS step.** Every
@@ -507,8 +507,8 @@ not obvious from the diff:
   editor, and saving a library palette's edit is how a new one is made; the
   editor's desktop rail keeps its "+ New Palette" text, the only place the
   design still draws one.
-- **Shuffle shuffles the layout.** The three scopes (layout, colours, both)
-  and the remembered default are gone with `shuffleActions.ts`; the colours
+- **Shuffle shuffles the layout.** The three scopes (layout, colors, both)
+  and the remembered default are gone with `shuffleActions.ts`; the colors
   are chosen from the list under the swatches. Grid density is a slider
   from 0 to 1 over the cell size (see "The editor's density" below), read
   out as that number; the plate's caption names the grid it resolves to.
@@ -603,12 +603,12 @@ paper rule and well) are what the article reads, and the code panels are the
 dark shell turned back on (`--h-bg`, `--h-card`, mint for strings, cyan for
 keywords). Two things about it:
 
-- **The code colouring is a tokenizer, not a highlighter**
+- **The code coloring is a tokenizer, not a highlighter**
   (`components/react-docs-page/highlight.ts`): comments, strings, a short
   keyword list and JSX tag openings, scanned left to right so an apostrophe
   in a comment never opens a string. It runs at build time over the page's
   own samples and leaves anything it is unsure of plain. Do not reach for a
-  grammar library to colour a dozen snippets.
+  grammar library to color a dozen snippets.
 - **The section numbers come from the `SECTIONS` array**, in the contents
   rail and above each heading alike, so reordering a section renumbers both;
   a heading that is not in the array has no index and no rail entry, which is
@@ -820,7 +820,7 @@ things that shape follows from:
 - **There is no `choices[0].message.content`.** The answer is an item in an
   `output` array that also carries reasoning items, so it is walked, and a
   `refusal` part is reported as a refusal rather than as absence.
-- **Continuity is an optimisation, never a dependency.** `store: true` is what
+- **Continuity is an optimization, never a dependency.** `store: true` is what
   makes an id resolvable - and means prompts and answers are retained upstream,
   which is a deliberate trade. An upstream that stores nothing returns no id and
   both callers restate in full, so `responseId` is nullable and a stale one is a
@@ -838,9 +838,9 @@ things that shape follows from:
   check ownership, and there is no listing endpoint to enumerate.
 - **Palettes are the one field the model authors freely**, so they are checked
   against the palette library's two rules and repaired deterministically with
-  `tabbied-templates`' own colour maths. Shorthand hex is expanded first -
-  `#fff` and `#ffffff` are one colour, and comparing them as strings let an
-  invisible ink get "repaired" into a colour nobody chose.
+  `tabbied-templates`' own color math. Shorthand hex is expanded first -
+  `#fff` and `#ffffff` are one color, and comparing them as strings let an
+  invisible ink get "repaired" into a color nobody chose.
 - **Imagery is lazy, idempotent and separately capped**: one image per
   direction, on request, never three up front. `gpt-image-2.5-flare` emits real
   alpha, which is why this reaches one vendor and not two
@@ -871,7 +871,7 @@ the template and shows the result.
   unambiguous on every page. Only the five `TemplateSite` pages carry them so
   far; `/editable-catalog.json` publishes `copyRoles` per site and the results
   page reads it to decide whether a card's Preview can promise a rebrand.
-- **The artefact previewed is the download, not the live page.** `/template/
+- **The artifact previewed is the download, not the live page.** `/template/
   <slug>/` mounts its patterns through React, which ignores a `data-*` write
   from outside - `applyPlan` deliberately does not re-mount anything, because
   re-mounting is `hydratePatterns()`'s job. The packaged `out/downloads/<slug>/`
@@ -946,7 +946,7 @@ the template and shows the result.
 **The customizer, and what surrounds it.** `/studio/site/?id=` is where a
 site is worked on. For its owner (the read says `mine`, decided by session)
 a rail sits beside the canvas; a visitor by link gets the page alone. The
-first release of the customizer changes two things, **colours and patterns**,
+first release of the customizer changes two things, **colors and patterns**,
 and says so: the rail's third tab, Content, reads that words and pictures are
 not edited here yet. The Worker keeps the routes that would edit them
 (`revise`, `images`, text slots on a saved revision) and the document keeps
@@ -979,17 +979,17 @@ whatever text Studio wrote, so putting them back is a UI change.
   `POST /api/studio/sites/:id/revisions` with the whole document, validated
   by `planEdits` server-side with the catalog's slugs as `designs`; a swap to
   a design the catalog does not have is a 422, not a blank field.
-- **Colours is a list of palettes, not a row of pickers.** The rail offers the
+- **Colors is a list of palettes, not a row of pickers.** The rail offers the
   template's own palette and then all 437 in `lib/paletteLibrary.ts`; the
   pickers are still there, behind the pencil on a row (`PaletteDialog`), which
-  is what keeps a colour nobody shipped reachable. A library palette carries
-  3-7 colours and a template declares as many roles as its stylesheet reads,
+  is what keeps a color nobody shipped reachable. A library palette carries
+  3-7 colors and a template declares as many roles as its stylesheet reads,
   so `lib/studioPalettes.ts` fits one to the other by cycling the inks - and
   leaves a role the template authored as `transparent` alone, because that is
   what lets a field read over a photograph.
 - **The preview runtime carries the whole catalog.** It used to bundle the
   231 designs the packaged templates mount, which was right while a preview
-  could only re-colour a field; a shuffle can swap to any of the 338, and a
+  could only re-color a field; a shuffle can swap to any of the 338, and a
   design missing from the bundle hydrates to nothing with a console warning.
 - **The download is rebuilt where the changes are.** The customizer's
   Download menu fetches the packaged `<slug>-html.zip`, applies the document
@@ -1002,7 +1002,7 @@ whatever text Studio wrote, so putting them back is a UI change.
 - **A site's title is its own.** `PATCH /api/studio/sites/:id {title}`
   renames it; the rail's name field commits on blur or Enter, and nothing on
   the page reads the title, so no revision is written. The listing's
-  swatches are the colours the site wears now - the latest revision's palette
+  swatches are the colors the site wears now - the latest revision's palette
   where one was saved - read in one query that qualifies its subquery's
   columns by hand (see the drizzle note above).
 - **The 2026 designs for the new pages** (agent-outputs has none; the source
@@ -1130,9 +1130,9 @@ columns than that silently rescales the cell and puts the seams back.
 
 `cover` scales its render box with a transform, so snapping alone does nothing
 there - measured: 6 interior seams with integral tracks under a fractional
-scale, 0 once `fitRenderToBox` quantised the scale so `cell × scale` is whole
+scale, 0 once `fitRenderToBox` quantized the scale so `cell × scale` is whole
 (rounded up, translate rounded). Both halves are required; the render-box snap
-only exists to give the quantiser a whole cell.
+only exists to give the quantizer a whole cell.
 
 ## Importing a pattern authored outside this repo
 
@@ -1146,7 +1146,7 @@ is mostly mechanical, and four things are not:
   substitutes every `var()` inside it. A helper property the host does not
   define makes the whole declaration invalid at computed-value time, and the
   design paints *nothing* - no console error, no partial render, just the
-  ground colour. That is why the house rule says a rule-local custom property
+  ground color. That is why the house rule says a rule-local custom property
   is read with css-doodle's `@var(--x)`, which resolves at generation time,
   before CSS sees it. Exactly 12 of the 43 arrived with `var(--x)` and all 12
   were blank; nothing else in the batch was. An editor that splices the rule
@@ -1154,7 +1154,7 @@ is mostly mechanical, and four things are not:
   look finished and still be un-mountable here.
   Two relatives of the same failure: `@var()` is not expanded inside the
   `@size` directive, and a `var(--colorN)` past the end of the palette is the
-  same invalid value (`softbubbles` picked `--color5` with five colours).
+  same invalid value (`softbubbles` picked `--color5` with five colors).
 - **The grid belongs to `fit: "grid"`, not to the design.** `buildSource`
   overrides the grid option with tracks derived from the host, so a design
   that treats cell count as "how many things to scatter" gets whatever number
@@ -1169,7 +1169,7 @@ is mostly mechanical, and four things are not:
   arrived nesting a `@doodle` on a 10,000px (one on a 100,000px) canvas, the
   editor trick that rotates a huge tile so it covers any host; css-doodle
   renders a sized nested doodle as an SVG image, and on WebKit (Safari, and
-  every browser on iOS) it rasterises that to a PNG canvas of the declared
+  every browser on iOS) it rasterizes that to a PNG canvas of the declared
   size first, 400 MB at 10,000px and beyond any canvas limit at 100,000px.
   Seven arrived with keyframe animations, four of them authored
   `animation-play-state: paused`: an animated cell is a compositing layer
@@ -1272,14 +1272,14 @@ rendered patterns to true vector SVG. Rules that must not regress:
 
 ## The pattern editor's background image
 
-`/patterns/<slug>` can put a picture behind the pattern instead of a colour:
+`/patterns/<slug>` can put a picture behind the pattern instead of a color:
 a third chip beside the ground swatch and the transparent toggle. Three things
 follow from how the ground is actually painted:
 
 - **Choosing a picture makes the ground transparent**, because every design
   paints `--color0` on its own container inside the doodle, so nothing behind
-  the host shows unless colour 0 is `#rrggbb00`. The picture is drawn on the
-  stage frame around the host, cover-fitted. Removing it puts the colour back
+  the host shows unless color 0 is `#rrggbb00`. The picture is drawn on the
+  stage frame around the host, cover-fitted. Removing it puts the color back
   only if there was one (a ground that was already transparent stays so), and
   a palette chip applied while a picture is set keeps the ground transparent
   rather than covering the picture.

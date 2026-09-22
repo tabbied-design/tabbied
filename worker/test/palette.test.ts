@@ -58,7 +58,7 @@ describe('ensurePalette', () => {
     });
   });
 
-  it('normalises case rather than treating it as a different colour', () => {
+  it('normalizes case rather than treating it as a different color', () => {
     const result = ensurePalette(['#FFFFFF', '#1A1A1A'], FALLBACK);
 
     expect(result.status).toBe('clean');
@@ -73,9 +73,9 @@ describe('ensurePalette', () => {
   });
 
   it('treats shorthand equal to the background as equal to it', () => {
-    // `#fff` and `#ffffff` are one colour. Before shorthand was expanded these
+    // `#fff` and `#ffffff` are one color. Before shorthand was expanded these
     // compared as different strings, and an invisible ink was "repaired" into
-    // a colour nobody chose instead of being rejected.
+    // a color nobody chose instead of being rejected.
     const result = ensurePalette(['#ffffff', '#fff'], FALLBACK);
 
     expect(result.status).toBe('rejected');

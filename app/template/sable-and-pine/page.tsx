@@ -5,7 +5,7 @@ import s from './sable-and-pine.module.css';
 export const metadata = {
   title: 'Sable and Pine: Interiors atelier, Melbourne',
   description:
-    'Sable and Pine is an interiors atelier in Fitzroy North, Melbourne. Whole houses, kitchens and joinery, colour and styling, since 2011. Sixty-one projects, three designers, three cabinetmakers.',
+    'Sable and Pine is an interiors atelier in Fitzroy North, Melbourne. Whole houses, kitchens and joinery, color and styling, since 2011. Sixty-one projects, three designers, three cabinetmakers.',
 };
 
 /* Sand, ink and three mid-century accents. Every field draws on
@@ -15,7 +15,7 @@ const INK = '#2A241E';
 const MUSTARD = '#D9A428';
 const OLIVE = '#5F6B3A';
 const TERRACOTTA = '#C6633B';
-const GREY = '#8F8577';
+const GRAY = '#8F8577';
 /* The tiles pin their doodle to a whole multiple of the cell (8 x 72px)
    and let the rounded frame clip it. A fluid box gives fractional grid
    tracks and a hairline seam at every cell edge. */
@@ -55,14 +55,14 @@ const SERVICES: Service[] = [
   {
     no: '02',
     name: 'Kitchen and joinery',
-    body: 'One room drawn to the millimetre and built by one of three cabinetmakers we have worked with for a decade.',
+    body: 'One room drawn to the millimeter and built by one of three cabinetmakers we have worked with for a decade.',
     fee: 'AUD 12,000 to 40,000',
     basis: 'Design fee, build separate',
   },
   {
     no: '03',
-    name: 'Colour consultation',
-    body: 'Half a day in the house with the fan decks, then a schedule that names every surface, its colour and its finish.',
+    name: 'Color consultation',
+    body: 'Half a day in the house with the fan decks, then a schedule that names every surface, its color and its finish.',
     fee: 'AUD 650 a room',
     basis: 'AUD 1,900 for a whole house',
   },
@@ -88,7 +88,7 @@ const PROJECTS: Project[] = [
   { name: 'The Long Room', suburb: 'Eltham', kind: 'Extension interiors', year: '2025' },
   { name: 'Kerr Street', suburb: 'Fitzroy', kind: 'Terrace, three floors', year: '2025' },
   { name: 'Hillside', suburb: 'Warrandyte', kind: 'Whole house', year: '2024' },
-  { name: 'Bay Street Flat', suburb: 'Brighton', kind: 'Colour and styling', year: '2024' },
+  { name: 'Bay Street Flat', suburb: 'Brighton', kind: 'Color and styling', year: '2024' },
   { name: 'Surgery on Rathdowne', suburb: 'Carlton North', kind: 'Commercial fit-out', year: '2023' },
   { name: 'Lorne Weekender', suburb: 'Lorne', kind: 'Whole house', year: '2022' },
 ];
@@ -141,7 +141,7 @@ const HOURS = [
 export default function SableAndPinePage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f3ebdd',
@@ -149,10 +149,10 @@ export default function SableAndPinePage() {
         '--mustard': '#d9a428',
         '--olive': '#5f6b3a',
         '--terracotta': '#c6633b',
-        '--grey': '#8f8577',
+        '--gray': '#8f8577',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,mustard,olive,terracotta,grey"
+      data-edit-vars="paper,ink,mustard,olive,terracotta,gray"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -185,7 +185,7 @@ export default function SableAndPinePage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,4,2,1,5" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={grosgrain}
-              palette={['transparent', OLIVE, TERRACOTTA, MUSTARD, INK, GREY]}
+              palette={['transparent', OLIVE, TERRACOTTA, MUSTARD, INK, GRAY]}
               fit="grid"
               cellSize={128}
               redrawInterval={5800}
@@ -204,7 +204,7 @@ export default function SableAndPinePage() {
               </h1>
               <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
                 Sable and Pine is three designers and a drawing board on St
-                Georges Road. Whole houses, kitchens, colour and the last
+                Georges Road. Whole houses, kitchens, color and the last
                 fortnight of styling, drawn at 1:20 and built by people we
                 have known for a decade.
               </p>
@@ -278,7 +278,7 @@ export default function SableAndPinePage() {
           <div data-edit-pattern="band.field" data-edit-roles="transparent,1,5,2,4,3" className={s.bandField} aria-hidden="true">
             <TabbiedPattern
               pattern={rebate}
-              palette={['transparent', INK, GREY, MUSTARD, TERRACOTTA, OLIVE]}
+              palette={['transparent', INK, GRAY, MUSTARD, TERRACOTTA, OLIVE]}
               fit="grid"
               cellSize={96}
               redrawInterval={4600}
@@ -303,7 +303,7 @@ export default function SableAndPinePage() {
                 <div data-edit-pattern={`library.field.${i}`} data-edit-roles="transparent,1,4,3,5" className={s.tile} aria-hidden="true">
                   <TabbiedPattern
                     pattern={alcove}
-                    palette={['transparent', INK, TERRACOTTA, OLIVE, GREY]}
+                    palette={['transparent', INK, TERRACOTTA, OLIVE, GRAY]}
                     fit="grid"
                     cellSize={72}
                     redrawInterval={6400}
@@ -373,8 +373,8 @@ export default function SableAndPinePage() {
                 ))}
               </dl>
             </div>
-            <div className={s.enquire}>
-              <p data-edit="studio.label" data-edit-max="240" data-edit-multiline className={s.label}>How to enquire</p>
+            <div className={s.inquire}>
+              <p data-edit="studio.label" data-edit-max="240" data-edit-multiline className={s.label}>How to inquire</p>
               <h3 data-edit="studio.title2" data-edit-max="40">Write first, then we visit</h3>
               <p data-edit="studio.enquireBody" data-edit-max="240" data-edit-multiline className={s.enquireBody}>
                 Send the address of the house, what you would like done, and
@@ -415,7 +415,7 @@ export default function SableAndPinePage() {
         <div data-edit-pattern="coda.field" data-edit-roles="transparent,5,3,2" className={s.codaField} aria-hidden="true">
           <TabbiedPattern
             pattern={grosgrain}
-            palette={['transparent', GREY, OLIVE, MUSTARD]}
+            palette={['transparent', GRAY, OLIVE, MUSTARD]}
             fit="grid"
             cellSize={80}
             redrawInterval={5000}
@@ -457,7 +457,7 @@ export default function SableAndPinePage() {
                 <a data-edit="footer.studio" data-edit-max="28" href="#studio">Hours</a>
               </li>
               <li>
-                <a data-edit="footer.studio2" data-edit-max="28" href="#studio">Enquire</a>
+                <a data-edit="footer.studio2" data-edit-max="28" href="#studio">Inquire</a>
               </li>
             </ul>
           </div>

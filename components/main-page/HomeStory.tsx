@@ -7,7 +7,7 @@ import { seededRandom, type Rand } from './homeMotion';
 import styles from './HomeStory.module.css';
 
 // Near-white squares drifting behind the copy, plus one slow ring of them
-// orbiting the centre. The section is about the work being generative, so the
+// orbiting the center. The section is about the work being generative, so the
 // background is generated rather than placed.
 
 const SQUARE_COUNT = 20;

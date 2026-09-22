@@ -9,12 +9,12 @@ export const metadata = {
     'Konzerthaus Halden, Haldenplatz 4. Ninety-two concerts between September 2026 and June 2027 in a 1,412-seat hall of 1964. Tickets from CHF 15, under 30 flat rate CHF 15.',
 };
 
-/* The six house colours. Every pattern field on the page draws from this set
+/* The six house colors. Every pattern field on the page draws from this set
    and nothing else: fields differ only in which of the six leads. */
 const PAPER = '#F2F1EE';
 const INK = '#111111';
 const RED = '#E1261C';
-const GREY = '#8C8C88';
+const GRAY = '#8C8C88';
 const PALE = '#D8D7D2';
 const WARM = '#B9B4A8';
 
@@ -22,14 +22,14 @@ const WARM = '#B9B4A8';
    red leads only where the accent is meant to be read. */
 const FIELD_HERO = [PAPER, RED];
 const FIELD_QUIET = [PALE, INK];
-const FIELD_BAND = [PAPER, WARM, PALE, GREY];
-const FIELD_STRIP = [PAPER, INK, GREY, PALE, WARM];
-const FIELD_EDU = [PAPER, RED, GREY, PALE];
-const FIELD_DARK = [INK, RED, WARM, GREY, PALE, PAPER];
+const FIELD_BAND = [PAPER, WARM, PALE, GRAY];
+const FIELD_STRIP = [PAPER, INK, GRAY, PALE, WARM];
+const FIELD_EDU = [PAPER, RED, GRAY, PALE];
+const FIELD_DARK = [INK, RED, WARM, GRAY, PALE, PAPER];
 
 const NAV = [
   { no: '01', label: 'Season', href: '#season' },
-  { no: '02', label: 'Programme', href: '#programme' },
+  { no: '02', label: 'Program', href: '#program' },
   { no: '03', label: 'Hall', href: '#hall' },
   { no: '04', label: 'Artists', href: '#artists' },
   { no: '05', label: 'Education', href: '#education' },
@@ -49,7 +49,7 @@ type Concert = {
   price: string;
 };
 
-const PROGRAMME: Concert[] = [
+const PROGRAM: Concert[] = [
   {
     no: '01',
     day: 'Fri',
@@ -191,7 +191,7 @@ const ORGAN_SPECS = [
 const RESIDENTS = [
   {
     slug: 'halden-conductor',
-    alt: 'Studio portrait of conductor Ines Vogler, short grey hair, dark jacket with a red collar',
+    alt: 'Studio portrait of conductor Ines Vogler, short gray hair, dark jacket with a red collar',
     name: 'Ines Vogler',
     role: 'Chief Conductor',
     since: 'Appointed 2023, contract to 2030',
@@ -203,7 +203,7 @@ const RESIDENTS = [
     name: 'Junia Halvorsen',
     role: 'Artist in Residence 2026/27',
     since: 'One season, six appearances',
-    body: 'Halvorsen plays the Shostakovich in January, two chamber programmes in the Kammersaal, and three unannounced 20-minute recitals in the foyer. Foyer recitals are free and are not listed in advance.',
+    body: 'Halvorsen plays the Shostakovich in January, two chamber programs in the Kammersaal, and three unannounced 20-minute recitals in the foyer. Foyer recitals are free and are not listed in advance.',
   },
 ];
 
@@ -216,7 +216,7 @@ const EDUCATION = [
   },
   {
     no: '02',
-    title: 'Schools programme',
+    title: 'Schools program',
     body: 'Years 3 to 9. Two visits from a player, then a concert in the hall. Transport paid within the canton.',
     figure: '42 schools, 6,100 pupils',
   },
@@ -267,18 +267,18 @@ function SectionNumber({ n }: { n: string }) {
 export default function KonzerthausHaldenPage() {
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--paper': '#f2f1ee',
         '--ink': '#111111',
         '--red': '#e1261c',
-        '--grey': '#8c8c88',
+        '--gray': '#8c8c88',
         '--pale': '#d8d7d2',
         '--warm': '#b9b4a8',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="paper,ink,red,grey,pale,warm"
+      data-edit-vars="paper,ink,red,gray,pale,warm"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link
@@ -335,7 +335,7 @@ export default function KonzerthausHaldenPage() {
                 </p>
                 <p className={s.heroActions}>
                   <a data-edit="tHero.button" data-edit-max="28" className={s.button} href="#programme">
-                    See the programme
+                    See the program
                   </a>
                   <a data-edit="tHero.textLink" data-edit-max="28" className={s.textLink} href="#tickets">
                     Subscriptions and prices
@@ -375,7 +375,7 @@ export default function KonzerthausHaldenPage() {
               </h2>
               <div className={s.seasonBodyA}>
                 <p data-edit="season.body" data-edit-max="240" data-edit-multiline>
-                  We programme in arcs. The autumn is late romantic and loud
+                  We program in arcs. The autumn is late romantic and loud
                   because the hall was designed for that repertoire and still
                   answers to it. Winter narrows: chamber music in the Kammersaal,
                   the organ, one long evening of Feldman. Spring opens out again
@@ -455,7 +455,7 @@ export default function KonzerthausHaldenPage() {
           </div>
         </div>
 
-        {/* 02 Programme */}
+        {/* 02 Program */}
         <section
           id="programme"
           className={s.section}
@@ -465,7 +465,7 @@ export default function KonzerthausHaldenPage() {
             <div className={s.grid}>
               <SectionNumber n="02" />
               <h2 data-edit="programme.sectionTitle" data-edit-max="60" id="t-programme" className={s.sectionTitle}>
-                Programme, September 2026 to April 2027.
+                Program, September 2026 to April 2027.
               </h2>
               <p data-edit="programme.sectionNote" data-edit-max="240" data-edit-multiline className={s.sectionNote}>
                 Ten of ninety-two dates. Times are start times. Prices are the
@@ -476,14 +476,14 @@ export default function KonzerthausHaldenPage() {
             <div className={s.programmeHead} aria-hidden="true">
               <span data-edit="programme.colDate" data-edit-max="60" className={s.colDate}>Date</span>
               <span data-edit="programme.colTime" data-edit-max="60" className={s.colTime}>Time</span>
-              <span data-edit="programme.colWork" data-edit-max="60" className={s.colWork}>Programme</span>
+              <span data-edit="programme.colWork" data-edit-max="60" className={s.colWork}>Program</span>
               <span data-edit="programme.colArtist" data-edit-max="60" className={s.colArtist}>Artists</span>
               <span data-edit="programme.colPrice" data-edit-max="60" className={s.colPrice}>Price</span>
             </div>
             <span className={s.rule} aria-hidden="true" />
 
-            <ol className={s.programme}>
-              {PROGRAMME.map((c, i) => (
+            <ol className={s.program}>
+              {PROGRAM.map((c, i) => (
                 <li key={c.no} className={s.concert}>
                   <span className={s.colDate}>
                     <span data-edit={`programme.concertNo.${i}`} data-edit-max="60" className={s.concertNo}>{c.no}</span>
@@ -788,7 +788,7 @@ export default function KonzerthausHaldenPage() {
               </div>
             </div>
             <p data-edit="footer.footFine" data-edit-max="240" data-edit-multiline className={s.footFine}>
-              This is a fictional organisation built to demonstrate Tabbied
+              This is a fictional organization built to demonstrate Tabbied
               patterns. Prices, dates and people are invented.
             </p>
           </div>

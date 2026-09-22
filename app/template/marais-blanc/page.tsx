@@ -16,7 +16,7 @@ export const metadata = {
    the plates, the plate itself - is what shows through the drawing. */
 const INK = '#171519';
 const ACCENT = '#c2456b';
-const GREY = '#8c8a90';
+const GRAY = '#8c8a90';
 const PANEL = '#e4e1dc';
 
 /* Thirty-six pans in three ranks, tinted by the density of the brine standing
@@ -50,7 +50,7 @@ const PRINCIPLES = [
     alt: 'A small linen sack of coarse sea salt, open at the top',
     n: 'II',
     t: 'Nothing is added',
-    d: 'No anti-caking agent, no iodine, no bleaching. Our salt clumps in a damp kitchen, which is the correct behaviour of salt and not a defect.',
+    d: 'No anti-caking agent, no iodine, no bleaching. Our salt clumps in a damp kitchen, which is the correct behavior of salt and not a defect.',
   },
   {
     art: petalcut,
@@ -63,8 +63,8 @@ const PRINCIPLES = [
 ];
 
 const GRADES = [
-  ['Gros sel', 'Coarse, grey', 'Raked from the floor', '1 kg, 5 kg', '€ 4.20 / kg'],
-  ['Gros sel', 'Coarse, grey', 'Raked from the floor', '25 kg sack', '€ 2.90 / kg'],
+  ['Gros sel', 'Coarse, gray', 'Raked from the floor', '1 kg, 5 kg', '€ 4.20 / kg'],
+  ['Gros sel', 'Coarse, gray', 'Raked from the floor', '25 kg sack', '€ 2.90 / kg'],
   ['Fleur de sel', 'Fine, white', 'Skimmed from the surface', '125 g', '€ 9.50 / 125 g'],
   ['Fleur de sel', 'Fine, white', 'Skimmed from the surface', '250 g', '€ 17.00 / 250 g'],
   ['Sel fin', 'Ground once', 'Gros sel, milled here', '500 g', '€ 5.80 / 500 g'],
@@ -110,17 +110,17 @@ export default function MaraisBlancPage() {
 
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--ground': '#fbfaf7',
         '--ink': '#171519',
         '--accent': '#c2456b',
-        '--grey': '#8c8a90',
+        '--gray': '#8c8a90',
         '--panel': '#e4e1dc',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="ground,ink,accent,grey,panel"
+      data-edit-vars="ground,ink,accent,gray,panel"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -147,7 +147,7 @@ export default function MaraisBlancPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={clipcorner}
-              palette={['transparent', PANEL, GREY, ACCENT]}
+              palette={['transparent', PANEL, GRAY, ACCENT]}
               fit="grid"
               cellSize={150}
               redrawInterval={6200}
@@ -272,7 +272,7 @@ export default function MaraisBlancPage() {
                 slug="marais-blanc-rake"
                 alt="A long-handled wooden salt rake resting across a clay bund beside a shallow brine pan"
               />
-              <figcaption data-edit="making.caption" data-edit-max="120" data-edit-multiline>The lousse. Five metres of wood and no metal anywhere on it.</figcaption>
+              <figcaption data-edit="making.caption" data-edit-max="120" data-edit-multiline>The lousse. Five meters of wood and no metal anywhere on it.</figcaption>
             </figure>
             <figure>
               <Figure editId="photo.marais-blanc-mound"
@@ -297,7 +297,7 @@ export default function MaraisBlancPage() {
                   <div data-edit-pattern={`pr.field.${i}`} data-edit-roles="transparent,3,2" className={s.pField} aria-hidden="true">
                     <TabbiedPattern
                       pattern={p.art}
-                      palette={['transparent', GREY, ACCENT]}
+                      palette={['transparent', GRAY, ACCENT]}
                       fit="grid"
                       cellSize={64}
                       redrawInterval={5400}
@@ -338,7 +338,7 @@ export default function MaraisBlancPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={pindot}
-              palette={['transparent', ACCENT, GREY]}
+              palette={['transparent', ACCENT, GRAY]}
               fit="grid"
               cellSize={112}
               redrawInterval={4600}
@@ -375,7 +375,7 @@ export default function MaraisBlancPage() {
           <div data-edit-pattern="visit.field" data-edit-roles="transparent,3,4" className={s.visitField} aria-hidden="true">
             <TabbiedPattern
               pattern={snipcorner}
-              palette={['transparent', GREY, PANEL]}
+              palette={['transparent', GRAY, PANEL]}
               fit="grid"
               cellSize={102}
               redrawInterval={5400}
@@ -420,7 +420,7 @@ export default function MaraisBlancPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={fadein}
-          palette={['transparent', ACCENT, PANEL, GREY]}
+          palette={['transparent', ACCENT, PANEL, GRAY]}
           fit="grid"
           cellSize={104}
           redrawInterval={5000}

@@ -3,7 +3,7 @@
 // A radial-gradient mask is a glow with none of the machinery of one: no
 // blur, no shadow, no filter - just stops on a circle. That matters here more
 // than anywhere else in the batch, because a glow is exactly the effect the
-// catalogue already had four caveated designs for (`bokeh`, `neon`, `lantern`,
+// catalog already had four caveated designs for (`bokeh`, `neon`, `lantern`,
 // `terrain` all reach for box-shadow or blur and all carry an svgExportNote).
 // Written as stops it exports as a <radialGradient> and needs no note at all.
 //
@@ -20,7 +20,7 @@ const turned = (c, layer, turns = R4) =>
 
 add(
   'Radiance',
-  'The light comes from one corner of the cell rather than the centre of it.',
+  'The light comes from one corner of the cell rather than the center of it.',
   (c) => ({
     rule: turned(c, 'radial-gradient(circle at 0% 100%, #000 0%, transparent 82%)'),
   }),

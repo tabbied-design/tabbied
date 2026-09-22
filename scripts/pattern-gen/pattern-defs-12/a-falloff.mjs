@@ -7,9 +7,9 @@
 // with a flat step, or shut the whole thing inside a bar so it fades along its
 // own length.
 //
-// The ramp is always a mask over a solid background-color, never a two-colour
+// The ramp is always a mask over a solid background-color, never a two-color
 // background image. That is what keeps the ink transitionable (a reseed morphs
-// through the colour) and the faded end a real hole rather than a blend into
+// through the color) and the faded end a real hole rather than a blend into
 // whatever happens to be behind it.
 import {
   section,

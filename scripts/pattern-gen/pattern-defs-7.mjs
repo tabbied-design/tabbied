@@ -61,7 +61,7 @@ const R4 = '@pick(0deg, 90deg, 180deg, 270deg)';
 const R8 = '@pick(0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg)';
 
 // ── the originals' own shape library ───────────────────────────────────────
-// Radius picks between four corner circles and a centred one; Mixtape adds the
+// Radius picks between four corner circles and a centerd one; Mixtape adds the
 // four half-square triangles. Section A draws from the same short list rather
 // than inventing a new outline per cell.
 const CORNER = 'circle(100% at 0 0), circle(100% at 100% 0), circle(100% at 100% 100%), circle(100% at 0 100%)';
@@ -77,7 +77,7 @@ const poly = (pts) => `polygon(${P(pts)})`;
 const withHole = (inner) =>
   `polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, ${P(inner)}, ${P([inner[0]])})`;
 
-// Centred rectangular hole inset `x`% horizontally and `y`% vertically.
+// Centerd rectangular hole inset `x`% horizontally and `y`% vertically.
 const rectHole = (x, y) => [
   [x, y],
   [x, 100 - y],
@@ -320,7 +320,7 @@ add('Chip', 12, 'Squares with two opposite corners knocked off, a few left whole
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(34% 0, 100% 0, 100% 66%, 66% 100%, 0 100%, 0 34%)')} ${rot('@var(--rot)')} @random(0.35) { ${cp('polygon(0 0, 100% 0, 100% 100%, 0 100%)')} } }${TR}`,
 }), { grid: '8x12', tg: '6x6' });
 
-add('Shatter', 33, "Mixtape's whole library at once - corner circles, half-square triangles, a centred disc - and one cell in five raked through with cut slots.", (c) => ({
+add('Shatter', 33, "Mixtape's whole library at once - corner circles, half-square triangles, a centerd disc - and one cell in five raked through with cut slots.", (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; ${cp(`@pick(${CORNER}, ${TRI}, circle(50% at 50% 50%))`)} @random(0.2) { ${slotMask('45deg', '7%', '17%')} } }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
@@ -350,7 +350,7 @@ add('Drift', 26, 'Triangles all leaning the same way within a row and flipping o
 //    breached so the gap walks around the rim.
 // ══════════════════════════════════════════════════════════════════════════
 
-add('Cupola', 17, 'Domed blocks turning to face all four quarters, each one rolled a quarter turn from its neighbour.', (c) => ({
+add('Cupola', 17, 'Domed blocks turning to face all four quarters, each one rolled a quarter turn from its neighbor.', (c) => ({
   vars: '',
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; border-radius: 100% 100% 0 0; ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
@@ -361,7 +361,7 @@ add('Lagoon', 38, 'Thick rings breached on one side, the gap swinging round the 
 }), { grid: '6x9', tg: '4x4' });
 
 // ══════════════════════════════════════════════════════════════════════════
-// C. Mouldings & openings - the profiles a mason cuts, and the holes a wall is
+// C. Moldings & openings - the profiles a mason cuts, and the holes a wall is
 //    built around.
 // ══════════════════════════════════════════════════════════════════════════
 

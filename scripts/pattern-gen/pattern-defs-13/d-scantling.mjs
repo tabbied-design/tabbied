@@ -1,6 +1,6 @@
 // D. Scantling - the two halves of a rebated joint.
 //
-// One block with a step ploughed out of its corner, and the block that step
+// One block with a step plowed out of its corner, and the block that step
 // was cut to receive. They are the same carpentry read from either side, and
 // putting them next to each other in a grid is the point: at any frequency
 // the field mixes both halves, so the cells look like timber waiting to be
@@ -18,7 +18,7 @@ const profile = (c, shape, turns = R4) =>
 
 add(
   'Rabbet',
-  'A block with a step ploughed out of one corner, ready to take its neighbour.',
+  'A block with a step plowed out of one corner, ready to take its neighbor.',
   (c) => ({
     rule: profile(
       c,

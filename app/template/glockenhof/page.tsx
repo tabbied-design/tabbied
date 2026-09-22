@@ -17,7 +17,7 @@ export const metadata = {
    pattern painting its own backdrop over it. */
 const INK = '#f0ead8';
 const ACCENT = '#c89b3c';
-const GREY = '#7c736a';
+const GRAY = '#7c736a';
 const PANEL = '#221d18';
 
 /* The house peal. `mm` drives the diameter of the circle drawn for each bell,
@@ -34,10 +34,10 @@ const PEAL = [
 ];
 
 const OPERATIONS = [
-  { n: '01', t: 'Strickle the loam', d: 'The mould is swept, not carved: a shaped board turned on a spindle takes the profile out of wet loam', days: '9 days' },
+  { n: '01', t: 'Strickle the loam', d: 'The mold is swept, not carved: a shaped board turned on a spindle takes the profile out of wet loam', days: '9 days' },
   { n: '02', t: 'Build the false bell', d: 'A clay bell is built on the core, dressed with tallow, and the cope is built over it', days: '14 days' },
   { n: '03', t: 'Bake and lift', d: 'Fired for four days, the cope lifted, the false bell broken out, the void left is the bell', days: '6 days' },
-  { n: '04', t: 'Pour', d: 'Seventy-eight parts copper, twenty-two tin, at 1 150 °C, into a mould buried to the neck in sand', days: '1 hour' },
+  { n: '04', t: 'Pour', d: 'Seventy-eight parts copper, twenty-two tin, at 1 150 °C, into a mold buried to the neck in sand', days: '1 hour' },
   { n: '05', t: 'Tune', d: 'Mounted mouth-up and cut from the inside until all five partials fall where they should', days: '11 days' },
 ];
 
@@ -48,7 +48,7 @@ const PRINCIPLES = [
     alt: 'A small plain cast bronze bell',
     n: 'I',
     t: 'One pour, one bell',
-    d: 'Nothing is cast twice from a mould. The loam is broken to get the bell out, which means every bell we have ever made had a mould made for it alone and no other.',
+    d: 'Nothing is cast twice from a mold. The loam is broken to get the bell out, which means every bell we have ever made had a mold made for it alone and no other.',
   },
   {
     art: ovolo,
@@ -61,7 +61,7 @@ const PRINCIPLES = [
   {
     art: scotia,
     img: 'glockenhof-tile-strickle-cutout',
-    alt: 'A wooden strickle board used to sweep a bell mould',
+    alt: 'A wooden strickle board used to sweep a bell mold',
     n: 'III',
     t: 'The profile is not for sale',
     d: 'Our strickle boards are cut from a drawing revised eleven times since 1782 and never published. They are the only thing in the building that is locked away.',
@@ -97,7 +97,7 @@ const TUNING = [
 const VISIT = [
   ['Foundry', 'Höttinger Au 41, 6020 Innsbruck. Pours are announced a week ahead.'],
   ['Watching', 'Anyone may watch a pour from the gantry. Children over eight, closed shoes.'],
-  ['Lead time', 'Fourteen to twenty months. The mould alone is a month of it.'],
+  ['Lead time', 'Fourteen to twenty months. The mold alone is a month of it.'],
   ['Recasting', 'We will recast a cracked bell using its own metal, and we will tell you honestly whether it is worth it.'],
 ];
 
@@ -116,17 +116,17 @@ export default function GlockenhofPage() {
 
   return (
     <div
-      // Colour, declared inline so an edit can override it. The authored
+      // Color, declared inline so an edit can override it. The authored
       // defaults stay in the stylesheet as the fallback.
       style={{
         '--ground': '#141210',
         '--ink': '#f0ead8',
         '--accent': '#c89b3c',
-        '--grey': '#7c736a',
+        '--gray': '#7c736a',
         '--panel': '#221d18',
       } as React.CSSProperties}
       data-edit-root="vars"
-      data-edit-vars="ground,ink,accent,grey,panel"
+      data-edit-vars="ground,ink,accent,gray,panel"
       className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -153,7 +153,7 @@ export default function GlockenhofPage() {
           <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,3,2" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={cupola}
-              palette={['transparent', PANEL, GREY, ACCENT]}
+              palette={['transparent', PANEL, GRAY, ACCENT]}
               fit="grid"
               cellSize={162}
               redrawInterval={6200}
@@ -167,7 +167,7 @@ export default function GlockenhofPage() {
           </h1>
           <div className={s.heroFoot}>
             <p data-edit="hero.body" data-edit-max="240" data-edit-multiline>
-              Cast in loam, broken out of its own mould, and tuned by taking
+              Cast in loam, broken out of its own mold, and tuned by taking
               metal away until all five partials agree.
             </p>
             <a data-edit="hero.cta" data-edit-max="28" className={s.cta} href="#making">
@@ -182,10 +182,10 @@ export default function GlockenhofPage() {
         <figure className={s.bleed}>
           <Figure editId="photo.glockenhof-hall"
             slug="glockenhof-hall"
-            alt="The casting hall of a bell foundry seen from a gantry, loam moulds set into a sand floor"
+            alt="The casting hall of a bell foundry seen from a gantry, loam molds set into a sand floor"
             priority
           />
-          <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>The hall, moulds set into the floor. Nine of them, all different.</figcaption>
+          <figcaption data-edit="top.caption" data-edit-max="120" data-edit-multiline>The hall, molds set into the floor. Nine of them, all different.</figcaption>
         </figure>
 
         {/* ------------------------------------------------------------ PEAL
@@ -242,7 +242,7 @@ export default function GlockenhofPage() {
         <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={bangle}
-            palette={['transparent', ACCENT, PANEL, GREY]}
+            palette={['transparent', ACCENT, PANEL, GRAY]}
             fit="grid"
             cellSize={124}
             redrawInterval={4200}
@@ -254,7 +254,7 @@ export default function GlockenhofPage() {
         <section id="making" className={s.making} aria-labelledby="making-h">
           <div className={s.secHead}>
             <h2 data-edit="making.title" data-edit-max="60" id="making-h">Five operations</h2>
-            <p data-edit="making.body" data-edit-max="240" data-edit-multiline>Forty days of mould-making for one hour of pouring, and then eleven days of cutting it back.</p>
+            <p data-edit="making.body" data-edit-max="240" data-edit-multiline>Forty days of mold-making for one hour of pouring, and then eleven days of cutting it back.</p>
           </div>
           <ol className={s.rows}>
             {OPERATIONS.map((o, i) => (
@@ -270,9 +270,9 @@ export default function GlockenhofPage() {
             <figure>
               <Figure editId="photo.glockenhof-pour"
                 slug="glockenhof-pour"
-                alt="Molten bronze running from a tilted crucible into a mould in a dark foundry"
+                alt="Molten bronze running from a tilted crucible into a mold in a dark foundry"
               />
-              <figcaption data-edit="making.caption" data-edit-max="120" data-edit-multiline>1 150 °C. The mould is buried to the neck in sand for this.</figcaption>
+              <figcaption data-edit="making.caption" data-edit-max="120" data-edit-multiline>1 150 °C. The mold is buried to the neck in sand for this.</figcaption>
             </figure>
             <figure>
               <Figure editId="photo.glockenhof-lathe"
@@ -300,7 +300,7 @@ export default function GlockenhofPage() {
                   <div data-edit-pattern={`pr.field.${i}`} data-edit-roles="transparent,3,2" className={s.pField} aria-hidden="true">
                     <TabbiedPattern
                       pattern={p.art}
-                      palette={['transparent', GREY, ACCENT]}
+                      palette={['transparent', GRAY, ACCENT]}
                       fit="grid"
                       cellSize={68}
                       redrawInterval={5400}
@@ -341,7 +341,7 @@ export default function GlockenhofPage() {
           <div data-edit-pattern="quote.field" data-edit-roles="transparent,2,3" className={s.quoteField} aria-hidden="true">
             <TabbiedPattern
               pattern={haunch}
-              palette={['transparent', ACCENT, GREY]}
+              palette={['transparent', ACCENT, GRAY]}
               fit="grid"
               cellSize={122}
               redrawInterval={4600}
@@ -378,7 +378,7 @@ export default function GlockenhofPage() {
           <div data-edit-pattern="visit.field" data-edit-roles="transparent,3,4" className={s.visitField} aria-hidden="true">
             <TabbiedPattern
               pattern={scotia}
-              palette={['transparent', GREY, PANEL]}
+              palette={['transparent', GRAY, PANEL]}
               fit="grid"
               cellSize={102}
               redrawInterval={5400}
@@ -423,7 +423,7 @@ export default function GlockenhofPage() {
       <div data-edit-pattern="page.field" data-edit-roles="transparent,2,4,3" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={chain}
-          palette={['transparent', ACCENT, PANEL, GREY]}
+          palette={['transparent', ACCENT, PANEL, GRAY]}
           fit="grid"
           cellSize={108}
           redrawInterval={5000}
@@ -437,7 +437,7 @@ export default function GlockenhofPage() {
             <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2" className={s.footPlateField} aria-hidden="true">
               <TabbiedPattern
                 pattern={bangle}
-                palette={['transparent', GREY, ACCENT]}
+                palette={['transparent', GRAY, ACCENT]}
                 fit="grid"
                 cellSize={78}
                 redrawInterval={6000}
