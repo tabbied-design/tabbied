@@ -60,7 +60,7 @@ export function paletteChoices(templateName: string, authored: readonly string[]
   const library: LibraryPalette[] = PALETTE_LIBRARY;
 
   return [
-    { id: 'template', name: `${templateName} (template default)`, colors: [...authored] },
+    { id: 'template', name: `${templateName} (default)`, colors: [...authored] },
     ...library.map((palette) => ({
       id: palette.id,
       name: palette.name,

@@ -118,8 +118,16 @@ export default function SiteNav({
       <div className={styles.end}>
         {user ? (
           <Menu.Root>
-            <Menu.Trigger className={styles.avatar} aria-label="Account menu">
-              {initials(user.name, user.email)}
+            {/* The artboards draw the person as a pill: the initials in a
+                circle and, beside them, the two rules that say it opens.
+                Below 768px it is also the only way into the menu, so the
+                affordance has to be on it. */}
+            <Menu.Trigger className={styles.account} aria-label="Account menu">
+              <span className={styles.avatar}>{initials(user.name, user.email)}</span>
+              <span className={styles.lines} aria-hidden="true">
+                <span />
+                <span />
+              </span>
             </Menu.Trigger>
             <Menu.Portal>
               <Menu.Positioner

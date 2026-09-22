@@ -722,12 +722,18 @@ test.describe('Template preview and customize', () => {
     );
   });
 
-  test('the gallery leads to the framed preview and offers Customize per card', async ({ page }) => {
+  test('the gallery leads to the framed preview and offers both downloads per card', async ({ page }) => {
     await page.goto('/templates');
 
     const card = page.locator('a[href="/templates/verdant/"]').first();
     await expect(card).toBeAttached();
-    await expect(page.locator('a[href="/studio/customize/?slug=verdant"]').first()).toBeAttached();
+
+    // The artboard's card footer is the DOWNLOAD label and the two formats.
+    // Customize is not on a card: taking a template from the gallery is
+    // downloading it, and the customizer is reached from the framed preview.
+    await expect(page.locator('a[href="/downloads/verdant-html.zip"]').first()).toBeAttached();
+    await expect(page.locator('a[href="/downloads/verdant-react.zip"]').first()).toBeAttached();
+    await expect(page.locator('a[href="/studio/customize/?slug=verdant"]')).toHaveCount(0);
   });
 
   test('customizing while signed out goes to sign-in with the way back', async ({ page }) => {

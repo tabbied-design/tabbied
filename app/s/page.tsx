@@ -6,15 +6,15 @@ import SiteShare from 'components/studio/SiteShare';
 import styles from 'components/studio/studio.module.css';
 
 export const metadata: Metadata = {
-  title: 'Shared site - Studio',
-  description: 'A website made in Tabbied Studio.',
+  title: 'Shared site - Tabbied',
+  description: 'A website made with Tabbied.',
   robots: { index: false, follow: false },
 };
 
 export default function SharePage() {
   return (
     <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
-      <StudioHeader backHref="/studio" backLabel="Make your own in Studio" title="Shared" />
+      <StudioHeader backHref="/templates" backLabel="Make your own from a template" title="Shared" />
       <Suspense>
         <SiteShare />
       </Suspense>

@@ -9,10 +9,15 @@ import styles from './SelectPattern.module.css';
 
 const DEFAULT_RENDER = { width: 800, height: 800 };
 
-// Each card redraws every 2.5-4s; the random spread keeps the cards out of
+// Each card redraws every 6-9s; the random spread keeps the cards out of
 // phase so the gallery shimmers card by card instead of strobing in unison.
-const REDRAW_INTERVAL_MS = 2500;
-const REDRAW_STAGGER_MS = 1500;
+//
+// It was 2.5-4s, which on a page holding this many cards at once reads as
+// constant movement rather than as each design turning over. A template page
+// runs its one or two fields at 4.2-6.6s; the gallery has far more in view,
+// so it sits past the slow end of that.
+const REDRAW_INTERVAL_MS = 6000;
+const REDRAW_STAGGER_MS = 3000;
 
 export default function GalleryDoodleInner({
   item,

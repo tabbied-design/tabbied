@@ -158,9 +158,17 @@
 }
 
 /* Except Colours, where the palette list is the long part and scrolls inside
-   the panel; a scroll here as well would put one inside the other. */
+   the panel; a scroll here as well would put one inside the other. So the
+   panel is told not to scroll - and `visible` rather than `hidden`, because
+   the rows below reach 12px past this box on each side and `hidden` clips
+   them there. That clip is what drew the selected row as a square slab with
+   its name flush against the cut: the pill's two rounded ends were outside
+   the panel and the 14px that insets the name was spent on the part that got
+   cut off. Nothing can actually overflow here to need the clip - the list is
+   `flex: 1; min-height: 0` over a scroller - and .rail's own `hidden` is the
+   backstop. */
 .panelColours {
-  overflow: hidden;
+  overflow: visible;
 }
 
 .hint,

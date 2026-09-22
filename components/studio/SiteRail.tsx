@@ -230,7 +230,7 @@ export default function SiteRail({
             onOpenChange={(next) => {
               if (!next) setEditing(null);
             }}
-            title={`Edit ${(editingChoice?.name ?? '').replace(' (template default)', '')}`}
+            title={`Edit ${(editingChoice?.name ?? '').replace(' (default)', '')}`}
             colors={
               // The row being edited, except when it is the one already on the
               // page - then it is the page's colours, so an edit builds on the

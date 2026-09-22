@@ -74,7 +74,6 @@ export default function TemplatesGallery() {
               flat ground with only its vignette over it. */}
           <div className={s.heroScrim} />
           <div className={s.heroInner}>
-            <div className={s.pre}>Made with Tabbied</div>
             <h1>
               {TOTAL} sites,<br />
               <span>one pattern engine</span>

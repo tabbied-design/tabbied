@@ -2,8 +2,9 @@
    grid on a near-white sheet with a hairline between them. */
 .gallery {
   /* Height of the masthead: the fixed rail starts below it, and the main
-     column is inset by it. One number, two consumers. */
-  --gallery-bar-h: 75px;
+     column is inset by it. One number, two consumers - and it is the light
+     tone's `min-height` in SiteNav.module.css, so the two move together. */
+  --gallery-bar-h: 62px;
   /* Width of the rail, read by the rail itself and by the column beside it. */
   --gallery-rail-w: clamp(268px, 20vw, 340px);
 
