@@ -6,7 +6,7 @@ prints and posters, and the pattern editor's canvas ratio is a print idea: a
 plate that is 2:3 or 1:1 before it is anything else. This plan removes that
 idea end to end and says what the editor draws instead. Section 8 is the
 summary of potential issues; section 9 lists the decisions this plan takes
-so nothing needs re-deciding, and the few that are the owner's.
+so nothing needs re-deciding, and the three that are the owner's.
 
 Everything below was read off the code at commit `74ed15f` (main, 2026-09-22).
 
@@ -37,9 +37,8 @@ everything that reads it:
 `AGENTS.md`, `llms.txt`, `/docs/react`, the MCP `sizing` hint). It is CSS
 `aspect-ratio` on the element an embed renders into, the documented answer to
 the number-one integration mistake (a parent that sizes to content), and it
-is the digital-medium feature rather than the print one. If the intent was to
-remove this too, that is a separate, larger, breaking change to the package
-API and wants its own plan.
+is the digital-medium feature rather than the print one. The owner confirmed
+on 2026-09-22 that the picker is the target and the box prop stays.
 
 Also untouched, because they only share the words: the CSS `aspect-ratio`
 declarations in template stylesheets and site CSS (thumbnails, gallery
@@ -447,7 +446,7 @@ with no strip beyond it.
 
 Taken in this plan, not to be re-opened by the implementing agent:
 
-- The `aspectRatio` box prop stays (section 1).
+- The `aspectRatio` box prop stays (section 1), confirmed by the owner.
 - The plate is `fit="fixed"` with a snapped-down whole-cell canvas, not
   `fit="grid"` (section 2).
 - Density is the package's five px levels; the snippet carries `density`.
@@ -460,12 +459,11 @@ Taken in this plan, not to be re-opened by the implementing agent:
 
 For the owner, each with the default the plan assumes:
 
-- (a) Confirm the box prop stays. Default: yes.
-- (b) Should a link be able to pin a grid (`grid=CxR` honoured verbatim, so
+- (a) Should a link be able to pin a grid (`grid=CxR` honoured verbatim, so
   a link reproduces one image)? Default: no.
-- (c) Scale the target cell on the phone band so the preview stays as fine
+- (b) Scale the target cell on the phone band so the preview stays as fine
   as today? Default: no; px semantics everywhere.
-- (d) A "download at a size" export later? Default: not in this PR.
+- (c) A "download at a size" export later? Default: not in this PR.
 
 ## 10. Order of work
 
