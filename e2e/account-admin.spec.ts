@@ -55,14 +55,34 @@ test.describe('account and admin pages', () => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ resetsAt: '2026-09-03T00:00:00Z', usage: [{ endpoint: 'site', label: 'sites', used: 2, cap: 10 }], recent: [] }),
+        body: JSON.stringify({
+          resetsAt: '2026-09-03T00:00:00Z',
+          usage: [{ endpoint: 'site', label: 'sites', used: 2, cap: 10 }],
+          recent: [],
+          downloads: { used: 4, cap: 30, resetsAt: '2026-10-01T00:00:00Z' },
+        }),
       })
     );
 
     await page.goto('/account/sites/');
     await expect(page.getByRole('navigation', { name: 'Account' })).toBeVisible();
     await expect(page.getByRole('link', { name: /Ye Joo Park/ })).toHaveAttribute('href', '/studio/site/?id=abc');
-    await expect(page.getByText('3 revisions')).toBeVisible();
+    // The table names the site's direction and template, and no longer
+    // counts its revisions.
+    await expect(page.getByText('Warmly Grounded on Verdant')).toBeVisible();
+    await expect(page.getByText(/revisions?$/)).toHaveCount(0);
+
+    // The overview draws the artboard's ring: the month's template
+    // downloads against the cap, and the day the count starts over.
+    await page.goto('/account/');
+    await expect(page.getByText('Template downloads')).toBeVisible();
+    await expect(page.getByText('4 of 30 this month')).toBeVisible();
+    await expect(page.getByText('Resets Oct 1')).toBeVisible();
+    await expect(page.getByRole('status')).toHaveCount(0);
+
+    // A download click the Worker turned away lands here with the reason.
+    await page.goto('/account/?downloads=capped');
+    await expect(page.getByRole('status')).toContainText('all 30 template downloads for this month');
 
     await page.goto('/account/usage/');
     await expect(page.getByText('2 / 10 today')).toBeVisible();

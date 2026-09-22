@@ -7,6 +7,7 @@ import { aiUsage, devMail, generation, revision, site, upload, user } from '../d
 import type { Env } from '../env';
 import { buildAuth } from '../auth';
 import { isDev } from '../env';
+import { TEMPLATE_DOWNLOADS_PER_MONTH, downloadStatus, resetDownloads } from '../lib/downloads';
 import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
 import { authConfigured } from '../lib/session';
 import { loadEditableCatalog } from '../lib/templateAssets';
@@ -155,7 +156,7 @@ admin.get('/users/:id', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  const [sites, generations, usage] = await Promise.all([
+  const [sites, generations, usage, downloads] = await Promise.all([
     db
       .select({ id: site.id, slug: site.slug, title: site.title, updatedAt: site.updatedAt })
       .from(site)
@@ -173,6 +174,7 @@ admin.get('/users/:id', async (c) => {
       .from(aiUsage)
       .where(and(eq(aiUsage.userId, id), gte(aiUsage.createdAt, startOfUtcDay())))
       .groupBy(aiUsage.endpoint),
+    downloadStatus(db, id),
   ]);
 
   return c.json({
@@ -180,7 +182,27 @@ admin.get('/users/:id', async (c) => {
     sites,
     generations,
     usageToday: usage.map((u) => ({ ...u, calls: Number(u.calls), cost: Number(u.cost), cap: DAILY_CAPS[u.endpoint as keyof typeof DAILY_CAPS]?.calls ?? null })),
+    downloads: { used: downloads.used, cap: downloads.cap, resetsAt: downloads.resetsAt, resetAt: row.downloadsResetAt },
   });
+});
+
+// Give a person the month's template downloads back. A timestamp on their
+// row, not a deletion: the ledger keeps saying what was taken, and the count
+// starts again from now (see lib/downloads.ts).
+admin.post('/users/:id/downloads/reset', async (c) => {
+  const db = drizzle(c.env.DB, { schema });
+  const id = c.req.param('id');
+
+  const [row] = await db.select({ id: user.id }).from(user).where(eq(user.id, id)).limit(1);
+
+  if (!row) {
+    return c.json({ error: 'Not found' }, 404);
+  }
+
+  await resetDownloads(db, id);
+  const downloads = await downloadStatus(db, id);
+
+  return c.json({ downloads: { used: downloads.used, cap: downloads.cap, resetsAt: downloads.resetsAt } });
 });
 
 admin.get('/usage', async (c) => {
@@ -347,7 +369,10 @@ admin.get('/quotas', (c) =>
     // Read-only for now: the caps are constants in worker/lib/quota.ts and the
     // burst windows in the routes. Editing them from here means a `setting`
     // table and a read on every call; the page says so.
-    caps: DAILY_CAPS,
+    caps: {
+      ...DAILY_CAPS,
+      'template-download': { calls: TEMPLATE_DOWNLOADS_PER_MONTH, label: 'template downloads a month' },
+    },
     editable: false,
   })
 );

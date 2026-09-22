@@ -19,7 +19,7 @@ const createdAt = () =>
     .notNull()
     .default(sql`(unixepoch())`);
 
-// ── better-auth ─────────────────────────────────────────────────────────────
+// -- better-auth -------------------------------------------------------------
 
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
@@ -40,6 +40,13 @@ export const user = sqliteTable('user', {
   banned: integer('banned', { mode: 'boolean' }),
   banReason: text('ban_reason'),
   banExpires: integer('ban_expires', { mode: 'timestamp' }),
+  /**
+   * When an admin last reset this person's template downloads. The month's
+   * count is the downloads since the later of this and the month's start, so
+   * a reset gives the whole cap back without deleting the ledger rows that
+   * say what was taken. Null until an admin has ever reset it.
+   */
+  downloadsResetAt: integer('downloads_reset_at', { mode: 'timestamp' }),
 });
 
 export const session = sqliteTable(
@@ -112,7 +119,7 @@ export const verification = sqliteTable(
   (table) => [index('verification_identifier_idx').on(table.identifier)]
 );
 
-// ── Studio ──────────────────────────────────────────────────────────────────
+// -- Studio ------------------------------------------------------------------
 
 /**
  * One answered description. Immutable once written, with a single declared
@@ -285,6 +292,29 @@ export const devMail = sqliteTable('dev_mail', {
   body: text('body').notNull(),
   createdAt: createdAt(),
 });
+
+/**
+ * One template download: the zip a person took, and when. Summed per user
+ * per UTC month against the cap in lib/downloads.ts. A row is written only
+ * for a download that was allowed and served, so the count is exact, and the
+ * rows stay after an admin reset (see `user.downloadsResetAt`) because they
+ * are the record of what was taken, not the counter.
+ */
+export const download = sqliteTable(
+  'download',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    /** The template's slug. */
+    slug: text('slug').notNull(),
+    /** 'html' | 'react': which package was taken. */
+    format: text('format').notNull(),
+    createdAt: createdAt(),
+  },
+  (table) => [index('download_user_created_idx').on(table.userId, table.createdAt)]
+);
 
 /** A file in R2 under up/<userId>/<uuid>. The bytes never touch D1. */
 export const upload = sqliteTable(

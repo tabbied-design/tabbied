@@ -5,7 +5,7 @@
 // admin endpoints via the client plugin.
 import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
-import { ChevronDown } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpDown, ChevronDown, ChevronUp } from 'lucide-react';
 import { ApiError, apiFetch, apiUrl } from 'lib/apiFetch';
 import { authClient } from 'lib/authClient';
 import { initials } from 'components/nav';
@@ -128,7 +128,7 @@ export function OverviewPanel() {
       <div className={styles.sectionHead}>
         <h2 className={styles.h2}>Recent users</h2>
         <Link href="/admin/users/" prefetch={false} className={styles.pill}>
-          All users &rarr;
+          All users <ArrowRight size={13} aria-hidden="true" />
         </Link>
       </div>
       <UsersDirectory pageSize={8} compact />
@@ -277,7 +277,9 @@ export function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: 
             title="Sort by status"
           >
             <span>Status</span>
-            <span>{statusSort === 0 ? '⇅' : statusSort === 1 ? '▲' : '▼'}</span>
+            <span aria-hidden="true">
+              {statusSort === 0 ? <ArrowUpDown size={13} /> : statusSort === 1 ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+            </span>
           </button>
           <div />
         </div>
@@ -345,7 +347,7 @@ export function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: 
           </p>
           <div className={styles.pages}>
             <button type="button" className={styles.page} disabled={current === 0} onClick={() => setPage(current - 1)} aria-label="Previous page">
-              &larr;
+              <ArrowLeft size={14} aria-hidden="true" />
             </button>
             {Array.from({ length: pageCount }, (_, i) => (
               <button
@@ -359,7 +361,7 @@ export function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: 
               </button>
             ))}
             <button type="button" className={styles.page} disabled={current >= pageCount - 1} onClick={() => setPage(current + 1)} aria-label="Next page">
-              &rarr;
+              <ArrowRight size={14} aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -382,14 +384,27 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function UserDetailPanel({ id }: { id: string }) {
-  const { data, error } = useAdminData<{
+  const { data, error, reload } = useAdminData<{
     user: UserRow & { banReason: string | null; banExpires: string | null };
     sites: { id: string; slug: string; title: string; updatedAt: string }[];
     generations: { id: string; description: string; source: string; model: string; createdAt: string }[];
     usageToday: { endpoint: string; calls: number; cost: number; cap: number | null }[];
+    downloads: { used: number; cap: number; resetsAt: string; resetAt: string | null };
   }>(`/api/admin/users/${id}`);
+  const [resetting, setResetting] = useState(false);
 
   if (!data) return <Load error={error} />;
+
+  // The month's count starts again from now; the ledger rows stay.
+  const resetDownloads = async () => {
+    setResetting(true);
+    try {
+      await apiFetch(`/api/admin/users/${id}/downloads/reset`, { method: 'POST' });
+      reload();
+    } finally {
+      setResetting(false);
+    }
+  };
 
   return (
     <div className={styles.cards}>
@@ -404,11 +419,21 @@ export function UserDetailPanel({ id }: { id: string }) {
           </div>
         </div>
         <p className={styles.quiet} style={{ marginTop: 16, marginBottom: 0 }}>
-          Joined {when(data.user.createdAt)} · {data.user.role === 'admin' ? 'Admin' : 'Member'} ·{' '}
+          Joined {when(data.user.createdAt)}, {data.user.role === 'admin' ? 'admin' : 'member'},{' '}
           {data.user.emailVerified ? 'verified' : 'unverified'}
-          {data.user.banned ? ` · banned${data.user.banReason ? `: ${data.user.banReason}` : ''}` : ''}
+          {data.user.banned ? `, banned${data.user.banReason ? `: ${data.user.banReason}` : ''}` : ''}
         </p>
       </div>
+
+      <Section title="Template downloads">
+        <p className={styles.quiet} style={{ margin: '0 0 14px' }}>
+          {data.downloads.used} of {data.downloads.cap} this month, starting over {when(data.downloads.resetsAt)}
+          {data.downloads.resetAt ? `; last reset ${when(data.downloads.resetAt)}` : ''}.
+        </p>
+        <button type="button" className={styles.button} disabled={resetting} onClick={() => void resetDownloads()}>
+          {resetting ? 'Resetting...' : 'Reset downloads'}
+        </button>
+      </Section>
 
       <Section title="Today">
         {data.usageToday.length === 0 ? (
@@ -418,7 +443,7 @@ export function UserDetailPanel({ id }: { id: string }) {
             {data.usageToday.map((u) => (
               <li key={u.endpoint}>
                 {u.endpoint}: {u.calls}
-                {u.cap ? ` / ${u.cap}` : ''} · {money(u.cost)}
+                {u.cap ? ` / ${u.cap}` : ''}, {money(u.cost)}
               </li>
             ))}
           </ul>
@@ -432,7 +457,7 @@ export function UserDetailPanel({ id }: { id: string }) {
           <ul className={styles.plain}>
             {data.sites.map((s) => (
               <li key={s.id}>
-                <Link href={`/studio/site/?id=${s.id}`} prefetch={false}>{s.title}</Link> · {s.slug} · {when(s.updatedAt)}
+                <Link href={`/studio/site/?id=${s.id}`} prefetch={false}>{s.title}</Link>, {s.slug}, {when(s.updatedAt)}
               </li>
             ))}
           </ul>
@@ -446,7 +471,7 @@ export function UserDetailPanel({ id }: { id: string }) {
           <ul className={styles.plain}>
             {data.generations.map((g) => (
               <li key={g.id}>
-                <Link href={`/admin/generations/?id=${g.id}`} prefetch={false}>{g.description.slice(0, 80)}</Link> · {g.source} · {when(g.createdAt)}
+                <Link href={`/admin/generations/?id=${g.id}`} prefetch={false}>{g.description.slice(0, 80)}</Link>, {g.source}, {when(g.createdAt)}
               </li>
             ))}
           </ul>
@@ -522,7 +547,7 @@ export function UsagePanel() {
               <ul className={styles.plain}>
                 {data.topUsers.map((u) => (
                   <li key={u.userId}>
-                    <Link href={`/admin/users/?id=${u.userId}`} prefetch={false}>{u.email}</Link> · {u.calls} calls · {money(u.cost)}
+                    <Link href={`/admin/users/?id=${u.userId}`} prefetch={false}>{u.email}</Link>, {u.calls} calls, {money(u.cost)}
                   </li>
                 ))}
               </ul>
@@ -583,8 +608,8 @@ export function GenerationDetailPanel({ id }: { id: string }) {
     <div className={styles.cards}>
       <div className={styles.card}>
         <p className={styles.quiet}>
-          {data.userEmail} · {when(data.createdAt)} · {data.source} · {data.model}
-          {data.responseId ? ` · ${data.responseId}` : ''}
+          {data.userEmail}, {when(data.createdAt)}, {data.source}, {data.model}
+          {data.responseId ? `, ${data.responseId}` : ''}
         </p>
         <p style={{ margin: '0 0 12px', font: '400 16px / 1.6 var(--a-sans)' }}>{data.description}</p>
         <p className={styles.quiet} style={{ margin: 0 }}>
@@ -598,7 +623,7 @@ export function GenerationDetailPanel({ id }: { id: string }) {
           <ul className={styles.plain}>
             {data.sites.map((s) => (
               <li key={s.id}>
-                <Link href={`/studio/site/?id=${s.id}`} prefetch={false}>{s.title}</Link> · {s.slug} · {s.revisions} revisions
+                <Link href={`/studio/site/?id=${s.id}`} prefetch={false}>{s.title}</Link>, {s.slug}, {s.revisions} revisions
               </li>
             ))}
           </ul>

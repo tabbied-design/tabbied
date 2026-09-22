@@ -38,6 +38,10 @@ import { buildAuth, configuredProviders } from './auth';
 import type { Env } from './env';
 import { isDev } from './env';
 import journal from './migrations/meta/_journal.json';
+import { drizzle } from 'drizzle-orm/d1';
+import * as schema from './db/schema';
+import { requireUser } from './lib/session';
+import { downloadStatus, parseDownloadName, recordDownload } from './lib/downloads';
 import media from './routes/media';
 import account from './routes/account';
 import admin from './routes/admin';
@@ -295,6 +299,88 @@ app.onError(async (error, c) => {
 });
 
 app.get('/health', (c) => c.text('ok'));
+
+// ---- template downloads --------------------------------------------------
+// The zips are static assets, and `run_worker_first` sends /downloads/*
+// here so that taking one is a signed-in act counted against the month's
+// cap (worker/lib/downloads.ts). Everything else under the folder (the
+// packaged pages the customizer and the previews read) passes straight to
+// the assets binding.
+//
+// Two kinds of caller, told apart by the fetch metadata a browser sends: a
+// navigation (a click on a download link) is sent where the answer is, to
+// sign in or to the account page that says the cap is spent; a fetch (the
+// customizer building a customized zip from the packaged one) gets JSON and
+// a status it can put in a toast.
+
+const isNavigation = (request: Request): boolean => {
+  const mode = request.headers.get('sec-fetch-mode');
+
+  if (mode) return mode === 'navigate';
+
+  return (request.headers.get('accept') ?? '').includes('text/html');
+};
+
+/** Where to come back to after signing in: the page the link was on, if it was ours. */
+const backTo = (request: Request): string => {
+  const referer = request.headers.get('referer');
+
+  if (!referer) return '/templates/';
+
+  try {
+    const url = new URL(referer);
+
+    return url.origin === new URL(request.url).origin ? `${url.pathname}${url.search}` : '/templates/';
+  } catch {
+    return '/templates/';
+  }
+};
+
+app.get('/downloads/:file', async (c, next) => {
+  const named = parseDownloadName(c.req.param('file'));
+
+  if (!named) return next();
+
+  const request = c.req.raw;
+  const userId = await requireUser(c.env, request.headers);
+
+  if (!userId) {
+    if (isNavigation(request)) {
+      return c.redirect(`/sign-in/?next=${encodeURIComponent(backTo(request))}`, 302);
+    }
+
+    return c.json({ error: 'Sign in to download a template.' }, 401);
+  }
+
+  const db = drizzle(c.env.DB, { schema });
+  const status = await downloadStatus(db, userId);
+
+  if (!status.ok) {
+    if (isNavigation(request)) {
+      return c.redirect('/account/?downloads=capped', 302);
+    }
+
+    return c.json(
+      {
+        error: `You have used all ${status.cap} template downloads for this month. The count starts over on ${status.resetsAt.toISOString().slice(0, 10)}.`,
+        used: status.used,
+        cap: status.cap,
+        resetsAt: status.resetsAt,
+      },
+      429
+    );
+  }
+
+  // Serve first, count second: a zip the packager never wrote is a 404 that
+  // costs nothing, and a row is only ever written for bytes that went out.
+  const zip = await c.env.ASSETS.fetch(request);
+
+  if (zip.ok) {
+    await recordDownload(db, userId, named.slug, named.format);
+  }
+
+  return zip;
+});
 
 // ---- the platform tier ----------------------------------------------------
 // Identity, Studio's generation endpoints, and R2 media. Everything here is

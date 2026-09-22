@@ -1,15 +1,87 @@
 /* The overview's own pieces: the two summary cards,
    and the history rows. */
 
-/* One card while the AI tier is held back (see AccountOverview.tsx). The
-   artboard's second half is a template-download counter over a month, and
-   nothing counts downloads. */
+/* The artboard's box: the download ring on paper, the AI card in ink. */
 .cards {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   overflow: hidden;
   border: 1px solid oklch(0 0 0 / 0.1);
   border-radius: 14px;
+}
+
+/* The Worker sent a download click here because the month's cap is spent. */
+.notice {
+  margin: 0 0 20px;
+  padding: 14px 18px;
+  font: 400 14px / 1.5 var(--s-sans);
+  color: oklch(0.32 0.05 70);
+  background-color: oklch(0.965 0.045 88);
+  border: 1px solid oklch(0.87 0.07 82);
+  border-radius: 12px;
+}
+
+/* The paper half: the ring beside what it is counting. */
+.gaugeCard {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  padding: 32px;
+  background-color: #fff;
+  border-right: 1px solid oklch(0 0 0 / 0.08);
+}
+
+.gauge {
+  position: relative;
+  flex: none;
+  width: 96px;
+  height: 96px;
+}
+
+/* A quarter turn left, so the arc starts at twelve rather than at three. */
+.gauge svg {
+  display: block;
+  transform: rotate(-90deg);
+}
+
+.gaugeValue {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 28px var(--s-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--s-ink);
+}
+
+.gaugeLabel {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 8px;
+  font: 400 15px var(--s-sans);
+  color: var(--s-ink);
+}
+
+/* The artboard's small (i): what counts, on hover. */
+.gaugeInfo {
+  display: inline-flex;
+  align-items: center;
+  color: oklch(0.58 0.01 260);
+  cursor: help;
+}
+
+.gaugeCount {
+  margin: 0 0 6px;
+  font: 400 14px var(--s-sans);
+  color: oklch(0.45 0.01 260);
+}
+
+.gaugeResets {
+  margin: 0;
+  font: 400 13px var(--s-sans);
+  color: oklch(0.58 0.01 260);
 }
 
 .cardLabel {
@@ -75,9 +147,9 @@
   color: oklch(0.68 0.01 260);
 }
 
-/* ── Counts ──────────────────────────────────────────────────────────────── */
+/* -- Counts ---------------------------------------------------------------- */
 
-/* ── Recents ─────────────────────────────────────────────────────────────── */
+/* -- Recents --------------------------------------------------------------- */
 
 .recentsHead {
   display: flex;
@@ -169,12 +241,25 @@
 }
 
 @media (max-width: 900px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .gaugeCard {
+    border-right: none;
+    border-bottom: 1px solid oklch(0 0 0 / 0.1);
+  }
+
   .recentsHead {
     margin-top: 48px;
   }
 }
 
 @media (max-width: 560px) {
+  .gaugeCard {
+    padding: 24px;
+  }
+
   .dark {
     padding: 24px;
   }

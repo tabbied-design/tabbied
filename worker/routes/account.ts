@@ -4,11 +4,13 @@ import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
 import { aiUsage } from '../db/schema';
 import type { Env } from '../env';
+import { downloadStatus } from '../lib/downloads';
 import { DAILY_CAPS, startOfUtcDay, type Endpoint } from '../lib/quota';
 import { requireUser } from '../lib/session';
 
 // A person's own account data beyond what better-auth serves: today's spend
-// against the caps, and the recent ledger. Session-scoped throughout.
+// against the caps, the month's template downloads against theirs, and the
+// recent ledger. Session-scoped throughout.
 
 const account = new Hono<{ Bindings: Env }>();
 
@@ -51,7 +53,14 @@ account.get('/usage', async (c) => {
     .orderBy(desc(aiUsage.createdAt))
     .limit(30);
 
-  return c.json({ resetsAt: new Date(since.getTime() + 86_400_000), usage, recent });
+  const downloads = await downloadStatus(db, userId);
+
+  return c.json({
+    resetsAt: new Date(since.getTime() + 86_400_000),
+    usage,
+    recent,
+    downloads: { used: downloads.used, cap: downloads.cap, resetsAt: downloads.resetsAt },
+  });
 });
 
 export default account;

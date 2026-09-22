@@ -86,8 +86,8 @@ runs it before anything else. Run it before committing.
 The site is a static export served by Workers static assets. `wrangler.jsonc`
 points `assets.directory` at `out/`; Cloudflare serves anything that matches a
 file there **without invoking the Worker**, so `worker/index.ts` runs for
-exactly two paths (`/mcp`, `/health`) and hands everything else to
-`env.ASSETS`.
+the paths `run_worker_first` names (`/mcp`, `/health`, `/api`, and
+`/downloads`, below) and hands everything else to `env.ASSETS`.
 
 Three things that are explicit here and were implicit or automatic on Vercel:
 
@@ -107,7 +107,11 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   an MCP client's POST breaks it. `/api` is listed for exactly the same reason
   and it is not optional: every POST to the platform tier would otherwise be
   answered with a redirect before the Worker saw it. **Any new non-asset route
-  must join this list.**
+  must join this list.** `/downloads/*` is the one asset folder on it: a
+  template zip is a signed-in act counted against the month's cap (see "The
+  template downloads cap" below), and the edge would otherwise hand it to
+  anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
+  under the folder, the packaged pages the previews read, back to the binding.
 
 The Worker routes with Hono (`worker/index.ts`). That was added for the
 platform tier - the right shape for two routes was the wrong one for twenty -
@@ -534,18 +538,19 @@ not obvious from the diff:
   palette row is the reset. Below 768px the rail is hidden and a notice says
   customizing wants a larger screen, with the site full bleed to preview and
   download; the canvas-first layout that pinned the page at half the viewport
-  is gone. The design's "4 of 30 downloads used" is not drawn: nothing counts
-  downloads (the account's usage page says the same), and a gauge reading a
-  number nobody keeps is worse than none. It waits for a counter.
-- **The account overview draws the artboard's AI card and nothing beside
-  it.** The same reasoning reached the ring that used to sit there: it
-  metered the `site` generation endpoint, and with that flow held back it can
-  only read zero. The artboard had already written the card for this moment -
-  "AI usage", a "Not yet available" pill opposite it, "AI credits: words and
-  pictures" over a hatched track, and a sentence about a later release - so
-  that is what is drawn, and the overview reads only `/api/studio/sites`. Its
-  list is "Custom sites", with no request-type column, because every row is
-  now a site.
+  is gone. The design's "4 of 30 downloads used" is drawn on the account
+  overview now that the Worker counts downloads (see "The template downloads
+  cap" below), and only there; the customizer's rail does not repeat it.
+- **The account overview draws the artboard's ring and its AI card.** The
+  ring meters the month's template downloads, the one cap a person can spend
+  today (the ring that stood there before metered the `site` generation
+  endpoint, which the held-back flow left reading zero). Beside it the card
+  the artboard wrote for this moment: "AI usage", a "Not yet available" pill
+  opposite it, "AI credits: words and pictures" over a hatched track, and a
+  sentence about a later release. The overview reads `/api/studio/sites` and
+  `/api/account/usage`, the second tolerated failing. Its list is "Custom
+  sites", with no request-type column and no revision count, because every
+  row is now a site and the count said nothing a person acts on.
 
 ## The editor's density - one number, the cell's size
 
@@ -746,6 +751,38 @@ Things worth not re-litigating:
 - **The session type is narrowed once**, in `lib/authClient.ts`. better-auth
   infers it from the *server* config, which lives in `worker/` and is outside
   the site's tsconfig on purpose, so the client types `data` as `never`.
+
+## The template downloads cap - thirty a month, counted where the bytes go
+
+Every account may take thirty template zips a month, HTML or React, from the
+gallery's pills, a template's page or the customizer's Download menu, and the
+account overview draws the count as the artboard's ring. Four things worth
+not re-litigating:
+
+- **The count lives where the bytes leave.** `/downloads/*` is in
+  `run_worker_first`, and `GET /downloads/<slug>-<format>.zip` in
+  `worker/index.ts` requires a session, reads the month's count
+  (`worker/lib/downloads.ts`), serves the zip through `env.ASSETS` and only
+  then writes the `download` row, so a zip the packager never wrote costs
+  nothing and every row is bytes that went out. Counting in the client, with
+  the zips left static, would have counted clicks and gated nothing.
+- **A click and a fetch are answered differently.** A navigation (a download
+  link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
+  `/sign-in/?next=` with the page it came from, or to `/account/?downloads=
+  capped`, which the overview reads after mount and says out loud. A fetch
+  (the customizer building a customized zip from the packaged one) gets JSON
+  and a 401 or 429, and `buildCustomisedArchive` puts that sentence in the
+  toast. The customizer's download counts, because it is a download.
+- **The month is UTC, and an admin's reset is a timestamp, not a deletion.**
+  `user.downloads_reset_at` (migration 0006) moves the start of a person's
+  month forward; `download` rows stay, since they are the record of what was
+  taken. `POST /api/admin/users/:id/downloads/reset` sets it, the admin's
+  user page has the button, and the caps page lists the cap beside the
+  daily ones, read-only like them.
+- **The e2e suite never sees the gate.** `serve out` has no Worker, so the
+  zips are plain files there and `e2e/templates.spec.ts` keeps proving the
+  packages; `worker/test/downloads.test.ts` is where the gate is proved,
+  against the assets binding, thirty times over.
 
 ## Studio - matching, then generating
 
