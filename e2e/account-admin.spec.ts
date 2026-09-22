@@ -67,6 +67,12 @@ test.describe('account and admin pages', () => {
     await page.goto('/account/sites/');
     await expect(page.getByRole('navigation', { name: 'Account' })).toBeVisible();
     await expect(page.getByRole('link', { name: /Ye Joo Park/ })).toHaveAttribute('href', '/studio/site/?id=abc');
+
+    // The masthead's menu: a member gets no way into the admin area.
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Settings' })).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'Admin' })).toHaveCount(0);
+    await page.keyboard.press('Escape');
     // The table names the site's direction and template, and no longer
     // counts its revisions.
     await expect(page.getByText('Warmly Grounded on Verdant')).toBeVisible();
@@ -114,6 +120,12 @@ test.describe('account and admin pages', () => {
     await expect(page.getByRole('navigation', { name: 'Admin' })).toBeVisible();
     await expect(page.getByText('42')).toBeVisible();
     await expect(page.getByText('12%')).toBeVisible();
+
+    // And an admin's masthead menu names the way in.
+    await page.goto('/account/');
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Admin' })).toHaveAttribute('href', '/admin');
+    await page.keyboard.press('Escape');
 
     await page.goto('/admin/users/');
     await expect(page.getByRole('link', { name: 'sam@example.com' })).toBeVisible();

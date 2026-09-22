@@ -143,6 +143,11 @@ export default function SiteNav({
                   {narrow && item('/patterns', 'Patterns')}
                   {narrow && item('/templates', 'Websites')}
                   {item('/account/settings', 'Settings')}
+                  {/* The admin area, for the people whose row says so. The
+                      role rides in the session the client already holds;
+                      every /api/admin route reads it again for itself, so
+                      this decides only whether the way in is drawn. */}
+                  {user.role === 'admin' && item('/admin', 'Admin')}
                   <Menu.Separator className={styles.menuRule} />
                   <Menu.Item
                     className={styles.menuItem}
