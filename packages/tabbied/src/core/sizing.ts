@@ -245,6 +245,41 @@ export function snapSpanToTracks(
   return Math.ceil(span / unit) * unit;
 }
 
+/**
+ * The cell that lets a `cols x rows` grid cover a `width x height` box with
+ * whole, divisible, square cells: each axis is snapped with
+ * `snapSpanToTracks`, and the larger of the two cells is used on both. A
+ * canvas of `cols * cell` by `rows * cell` then covers the box, and the host
+ * clips what overflows it (under `cellMultiple` px per track on the axis
+ * that decided the cell, plus what squaring added on the other).
+ *
+ * Square, not merely whole. Well over a hundred designs rotate their cell by
+ * a quarter turn (`transform: rotate(@pick(0deg, 90deg, 180deg, 270deg))`),
+ * and a quarter turn of an oblong swaps its axes: a 120 x 124 cell paints
+ * 124 x 120 once rotated, leaving 2px uncovered top and bottom. That reads as
+ * a seam between blocks even though every track is exact. Cobalt Works' coda
+ * band was the case that proved it, 12 x 120 across and 2 x 124 down. Both
+ * snapped cells are multiples of `cellMultiple`, so the larger is too.
+ *
+ * `applyGridSnap` runs this on a `grid` fit's host and the `cover` fit on its
+ * render box; the editor runs it on its plate, which is why it is exported.
+ */
+export function snapCellToBox(
+  width: number,
+  height: number,
+  cols: number,
+  rows: number,
+  cellMultiple = 2
+): number {
+  const c = cols > 0 ? cols : 1;
+  const r = rows > 0 ? rows : 1;
+
+  return Math.max(
+    snapSpanToTracks(width, c, cellMultiple) / c,
+    snapSpanToTracks(height, r, cellMultiple) / r
+  );
+}
+
 // Parse a "colsxrows" grid option value (e.g. "6x9").
 export function parseGridValue(
   value: string

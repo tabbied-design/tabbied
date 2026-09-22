@@ -18,7 +18,7 @@ import {
   densityToCellPx,
   deriveGridForBox,
   fitRenderToBox,
-  snapSpanToTracks,
+  snapCellToBox,
   type CoverRender,
 } from './sizing.js';
 import type { SvgExportOptions, SvgExportResult } from './svgExport.js';
@@ -420,10 +420,12 @@ export function createPattern(
       // canvas (measured: 6 seams either way), but it is what gives
       // fitRenderToBox a whole `cell` to quantize the scale against, and the
       // pair together take the seams to zero.
-      const multiple = definition.sizing?.cellMultiple;
-      const cell = Math.max(
-        snapSpanToTracks(renderBox.width, cols, multiple) / cols,
-        snapSpanToTracks(renderBox.height, rows, multiple) / rows
+      const cell = snapCellToBox(
+        renderBox.width,
+        renderBox.height,
+        cols,
+        rows,
+        definition.sizing?.cellMultiple
       );
 
       renderBox = { ...renderBox, width: cols * cell, height: rows * cell };
@@ -474,18 +476,15 @@ export function createPattern(
       resolved.definition.sizing
     );
 
-    const cellMultiple = resolved.definition.sizing?.cellMultiple;
-    const cellW = snapSpanToTracks(hostSize.width, cols, cellMultiple) / cols;
-    const cellH = snapSpanToTracks(hostSize.height, rows, cellMultiple) / rows;
-
-    // Square the cell. Well over a hundred designs rotate their cell by a quarter
-    // turn (`transform: rotate(@pick(0deg, 90deg, ...))`), and a quarter turn
-    // of an oblong swaps its axes: a 120x124 cell paints 124x120 once rotated,
-    // leaving 2px uncovered top and bottom. That reads as a seam between
-    // blocks even though every track is exact. Taking the larger of the two
-    // keeps the canvas covering the host, and both are already multiples of
-    // cellMultiple so the max is too.
-    const cell = Math.max(cellW, cellH);
+    // Whole, divisible and square (snapCellToBox says why square): the larger
+    // of the two snapped cells keeps the canvas covering the host.
+    const cell = snapCellToBox(
+      hostSize.width,
+      hostSize.height,
+      cols,
+      rows,
+      resolved.definition.sizing?.cellMultiple
+    );
 
     element.style.width = `${cols * cell}px`;
     element.style.height = `${rows * cell}px`;

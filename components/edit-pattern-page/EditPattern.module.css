@@ -52,10 +52,15 @@
   margin: 0;
 }
 
+/* The frame is the plate. The canvas inside it is snapped to whole, square
+   cells and overflows the plate by up to a cell or so at the right and
+   bottom (see `canvas` in EditPattern.tsx); the frame clips it, the way a
+   fit="grid" host clips its own oversized canvas. */
 .doodleFrame {
   display: inline-block;
   min-height: 0;
   line-height: 0;
+  overflow: hidden;
   box-shadow:
     0 1px 1px oklch(0 0 0 / 0.08),
     0 22px 30px -22px oklch(0 0 0 / 0.42);

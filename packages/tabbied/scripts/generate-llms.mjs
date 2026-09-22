@@ -393,8 +393,10 @@ ${designs.filter((design) => !design.svgExport.supported).length} \`[no SVG]\` d
 
 \`exportSvg()\` produces a **native vector SVG** (real \`<rect>\`/\`<path>\`/gradient
 elements, no \`<foreignObject>\`), resolving with
-\`{ svg, width, height, warnings }\`. Pass \`{ download: true }\` to save a file.
-The converter (~21 KB gzipped) is loaded on demand, so apps that never export
+\`{ svg, width, height, warnings }\`. Pass \`{ download: true }\` to save a file,
+and \`{ clip: { width, height } }\` to keep only the top-left box of a canvas
+the host clips (the \`grid\` fit oversizes its canvas to whole tracks). The
+converter (~21 KB gzipped) is loaded on demand, so apps that never export
 pay nothing.
 
 Call \`supportsSvgExport(pattern)\` before offering the option: ${

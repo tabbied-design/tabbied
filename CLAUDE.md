@@ -585,6 +585,16 @@ not re-litigating:
   warns once per page on a value above 1; a legacy `1` (90px then, 36px
   now) is the silent case nothing can tell apart. Every call site in this
   repo migrated level n to n / 4 in the same change.
+- **The plate is clipped, the way a `fit: "grid"` field is.** The plate is
+  the ratio's box; the canvas drawn in it is that box snapped to whole,
+  square cells (`snapCellToBox`, the arithmetic `applyGridSnap` runs on a
+  container) and the frame clips the sub-cell overflow. Drawn at the box's
+  own size, a plate of any ratio but the grid's has fractional, oblong
+  cells: a 3:2 plate at 15 x 10 drew 58.2px tracks with a hairline seam
+  down every column, while 1:1 happened to land on 60. Both exports are cut
+  to the plate (the PNG on a canvas, the SVG through the converter's `clip`
+  option), so the file is what the stage showed, at the ratio that was
+  picked.
 
 ## The homepage - its own shell, and a hydration rule
 

@@ -6,6 +6,7 @@ import {
   densityFromGrid,
   densityToCellPx,
   deriveGridForBox,
+  snapCellToBox,
   snapSpanToTracks,
 } from '../dist/core/sizing.js';
 
@@ -77,6 +78,62 @@ test('a snapped box divides evenly by its derived grid', () => {
       assert.equal((snapSpanToTracks(height, rows) / rows) % 2, 0);
     }
   }
+});
+
+// The cell both fits use, and the editor's plate: whole on both axes, and
+// square, because a quarter-turned oblong cell leaves a strip of its box
+// uncovered however exact the tracks are.
+test('snapCellToBox is a whole, divisible, square cell that covers the box', async (t) => {
+  await t.test('an exact, square grid is left alone', () => {
+    assert.equal(snapCellToBox(780, 780, 13, 13), 60);
+    assert.equal(snapCellToBox(1440, 240, 12, 2), 120);
+  });
+
+  await t.test('the editor plate that seamed: a 3:2 plate at 15x10', () => {
+    // 873 / 15 and 582 / 10 are both 58.2: every boundary on a sub-pixel.
+    const cell = snapCellToBox(873, 582, 15, 10);
+
+    assert.equal(cell, 60);
+    assert.ok(15 * cell >= 873);
+    assert.ok(10 * cell >= 582);
+  });
+
+  await t.test('an oblong cell is squared to the larger axis', () => {
+    // Cobalt Works' coda: 12 x 120 across and 2 x 124 down, both exact and
+    // still seamed once the cells were rotated. The squared cell is 124.
+    assert.equal(snapCellToBox(1440, 248, 12, 2), 124);
+  });
+
+  await t.test('the cell is a multiple of cellMultiple and the canvas covers the box', () => {
+    const boxes = [
+      [1440, 240],
+      [1440, 355.78],
+      [873, 582],
+      [1024, 613],
+      [768, 297],
+      [390, 812],
+    ];
+
+    for (const [width, height] of boxes) {
+      for (const target of [36, 48, 60, 72, 104, 120, 144]) {
+        for (const multiple of [2, 3, 4]) {
+          const { cols, rows } = deriveGridForBox(width, height, target);
+          const cell = snapCellToBox(width, height, cols, rows, multiple);
+
+          assert.equal(cell % multiple, 0);
+          assert.ok(cols * cell >= width);
+          assert.ok(rows * cell >= height);
+          // Under a multiple beyond the larger of the two natural cells: the
+          // overflow the host clips stays a sliver, not a whole cell.
+          assert.ok(cell < Math.max(width / cols, height / rows) + multiple);
+        }
+      }
+    }
+  });
+
+  await t.test('a degenerate grid is treated as one cell', () => {
+    assert.equal(snapCellToBox(100, 50, 0, 0), 100);
+  });
 });
 
 

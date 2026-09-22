@@ -117,12 +117,14 @@ const REPRESENTATIVE = [
 //   CI vs 0.99% locally).
 // - stepramp: the same phenomenon as glyph, from edge *density* rather than
 //   contrast. It draws four full-width hard edges in every cell (one per alpha
-//   level), and the editor's default grid puts the cell boundaries on
-//   fractional pixels - 60.66px at 6x9 - so every one of those edges lands
-//   mid-device-pixel, where CSS snaps and SVG anti-aliases. This is a property
-//   of the geometry, not of the design: swept at a fractional cell size the
-//   shipped batch-11 catalog lands in the same 0.5-1.8% band (toning 1.84%,
-//   dimmer 1.71%, tinting 1.36%). See docs/svg-export.md.
+//   level). The headroom was measured when the editor's plate still put its
+//   cell boundaries on fractional pixels (60.66px at 6x9), where every one of
+//   those edges landed mid-device-pixel, CSS snapping and SVG anti-aliasing.
+//   The plate snaps its cells to whole pixels now (docs/grid-snapping.md),
+//   which can only lower the measurement; the allowance stays because it is
+//   a property of the geometry, not of the design: swept at a fractional cell
+//   size the shipped batch-11 catalog lands in the same 0.5-1.8% band (toning
+//   1.84%, dimmer 1.71%, tinting 1.36%). See docs/svg-export.md.
 const MAX_BAD_FRACTION = 0.01;
 const PER_PATTERN_MAX: Record<string, number> = {
   fractal: 0.03,
@@ -169,7 +171,18 @@ test.describe('native SVG export', () => {
       const gridRect = await page.evaluate((s) => {
         const el = document.querySelector(`div[data-pattern="${s}"] css-doodle`)!;
         const rect = el.shadowRoot!.querySelector('cssd-grid')!.getBoundingClientRect();
-        return { x: rect.left, y: rect.top, w: rect.width, h: rect.height };
+        // The plate's canvas is snapped to whole cells and overflows the
+        // plate, which clips it: what the browser painted is the grid's rect
+        // cut to every clipping ancestor, and the export is clipped to match.
+        let right = rect.right;
+        let bottom = rect.bottom;
+        for (let node = el.parentElement; node; node = node.parentElement) {
+          if (getComputedStyle(node).overflow === 'visible') continue;
+          const box = node.getBoundingClientRect();
+          right = Math.min(right, box.right);
+          bottom = Math.min(bottom, box.bottom);
+        }
+        return { x: rect.left, y: rect.top, w: right - rect.left, h: bottom - rect.top };
       }, slug);
 
       await page.addScriptTag({ content: injectedConverter });
@@ -182,14 +195,17 @@ test.describe('native SVG export', () => {
           ) as HTMLElement;
           const res = (window as never as {
             __svgx: {
-              doodleToSvg: (el: HTMLElement) => {
+              doodleToSvg: (
+                el: HTMLElement,
+                options?: { clip?: { width: number; height: number } }
+              ) => {
                 svg: string;
                 width: number;
                 height: number;
                 warnings: string[];
               };
             };
-          }).__svgx.doodleToSvg(el);
+          }).__svgx.doodleToSvg(el, { clip: { width: gridRect.w, height: gridRect.h } });
 
           const scale = 2;
           const W = Math.round(res.width * scale);

@@ -482,8 +482,10 @@ const HANDLE: { name: string; description: ReactNode }[] = [
       <>
         Native vector SVG export (no <Code>foreignObject</Code>). Resolves with{' '}
         <Code>{'{ svg, width, height, warnings }'}</Code>;{' '}
-        <Code>{'{ download: true }'}</Code> saves a file. Unavailable for
-        definitions with <Code>svgExport: false</Code>.
+        <Code>{'{ download: true }'}</Code> saves a file, and{' '}
+        <Code>{'{ clip: { width, height } }'}</Code> keeps the top-left box of
+        a canvas the host clips. Unavailable for definitions with{' '}
+        <Code>svgExport: false</Code>.
       </>
     ),
   },
