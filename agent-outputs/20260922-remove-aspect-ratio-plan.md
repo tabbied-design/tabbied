@@ -75,20 +75,32 @@ whole square cells before handing it over. Two reasons this is not simply
   reaching the stage's edge. It also puts the parity harness into the
   integer-cell regime docs/svg-export.md calls the tight one.
 
-Density keeps its five stops and its meaning on screen. `DENSITY_CELL_PX` is
-`[180, 90, 60, 45, 36]`, which is the original 360px-wide plate at 2, 4, 6,
-8 and 10 cells across, so level 2 draws 60px cells today and after. What
-changes is the extent: a desktop plate shows more of them and a phone band
-fewer (section 8, item 5). The copied React snippet carries the level as the
-package's `density` prop, and an embed under the default grid fit then draws
-the cells the editor showed at the size it showed them, which is the point
-of previewing on a fluid plate. Today the snippet writes
-`options={{ grid: '6x9', ... }}`, and under the default fit that key is dead:
-`buildSource` overrides the grid option whenever `fit === 'grid'`.
+Density becomes one number from 0 to 1 (the owner's request, 2026-09-22),
+in the package and in the editor alike: 0 is the coarsest cell the slider
+draws, 1 the finest. The mapping keeps today's five stops exact, so nothing
+authored moves. The original plate was 360px wide and showed 2, 4, 6, 8 or
+10 cells across at its five stops (180, 90, 60, 45 and 36px cells), and a
+density walks that span continuously:
+
+    cellPx = 360 / (2 + 8 * density)
+
+so the former levels 0 to 4 sit at 0, 0.25, 0.5, 0.75 and 1, and 0.5 is the
+60px cell most designs open at today. What changes on screen is the extent:
+a desktop plate shows more cells and a phone band fewer (section 8, item 5).
+The copied React snippet carries the number as the package's `density` prop,
+and an embed under the default grid fit then draws the cells the editor
+showed at the size it showed them, which is the point of previewing on a
+fluid plate. Today the snippet writes `options={{ grid: '6x9', ... }}`, and
+under the default fit that key is dead: `buildSource` overrides the grid
+option whenever `fit === 'grid'`.
+
+`density` exists today as an integer level 0 to 4, so this is a rescale of a
+shipped prop, not a new one. Section 3.1 has the package side and section
+8, item 14, the silent case it creates.
 
 ## 3. The package: `packages/tabbied`
 
-### 3.1 Two additions to `src/core/sizing.ts`, with tests
+### 3.1 Additions to `src/core/sizing.ts`, and the `density` rescale, with tests
 
 Beside `snapSpanToTracks`, unit-tested in `test/sizing.test.mjs`:
 
@@ -117,11 +129,23 @@ export function fitGridToBox(
   return { cols, rows, cellPx, width: cols * cellPx, height: rows * cellPx };
 }
 
+// The original editor plate: 360px wide, 2 to 10 cells across over its five
+// density stops. A density in [0, 1] walks that span continuously, so the
+// former levels 0..4 sit at 0, 0.25, 0.5, 0.75 and 1.
+export const DENSITY_REFERENCE_PX = 360;
+
+/** Target cell size for a density in [0, 1]: 180px at 0, 36px at 1. */
+export function densityToCellPx(density: number): number {
+  const d = Math.min(Math.max(density, 0), 1);
+
+  return DENSITY_REFERENCE_PX / (2 + 8 * d);
+}
+
 /**
- * The density level whose long-edge count is nearest a "colsxrows" grid, or
- * null when the value is not one. Reads a preset's authored default and the
- * old editor's `grid=8x12` links. The counts are the five levels on the
- * original 360x540 plate, the same provenance as DENSITY_CELL_PX.
+ * The density whose cell, on the original 360x540 plate, has the long edge
+ * of a "colsxrows" grid; null when the value is not one. Reads a preset's
+ * authored default and the old editor's `grid=8x12` links: 6x9 is 0.5,
+ * 10x15 is 1, and anything finer clamps to 1.
  */
 export function densityFromGrid(grid: string): number | null {
   const parsed = parseGridValue(grid);
@@ -129,24 +153,29 @@ export function densityFromGrid(grid: string): number | null {
   if (!parsed) return null;
 
   const longEdge = Math.max(parsed.cols, parsed.rows);
-  const counts = [3, 6, 9, 12, 15];
-  let best = 0;
+  const cellPx = 540 / longEdge;
+  const density = (DENSITY_REFERENCE_PX / cellPx - 2) / 8;
 
-  counts.forEach((count, level) => {
-    if (Math.abs(count - longEdge) < Math.abs(counts[best] - longEdge)) {
-      best = level;
-    }
-  });
-
-  return best;
+  return Math.round(Math.min(Math.max(density, 0), 1) * 100) / 100;
 }
 ```
+
+The rescale, in `createPattern.ts` and `react/TabbiedPattern.tsx`:
+`clampDensity` clamps to [0, 1] without rounding, `targetCellPx` reads
+`densityToCellPx(config.density)`, `DENSITY_CELL_PX` is deleted, the React
+prop becomes `density?: number` with the doc comment "0 coarse to 1 fine, an
+alternative to cellSize", and the controller logs one `console.warn` per
+page when a density above 1 arrives, naming the old-to-new mapping.
+`hydrate.ts` and `tabbied-templates` pass the number through and need no
+change. Section 8, item 14, lists what has to migrate.
 
 Tests to write: the fitted canvas never exceeds the box; `cellPx` is a
 multiple of `cellMultiple` (2 default, 3 for fractal, 4 for matryoshka);
 `pinned` is honoured and only the cell changes; a box smaller than one
-multiple still returns a positive cell. For `densityFromGrid`: `2x3` is 0,
-`6x9` is 2, `8x12` is 3, `10x15` is 4, `80x1` is 4, `9x9` is 2, `8` is null.
+multiple still returns a positive cell. For `densityToCellPx`: 0 is 180,
+0.25 is 90, 0.5 is 60, 0.75 is 45, 1 is 36, and a value outside the range
+clamps. For `densityFromGrid`: `2x3` is 0, `6x9` is 0.5, `8x12` is 0.75,
+`10x15` is 1, `80x1` is 1, `9x9` is 0.5, `7x7` is 0.33, `8` is null.
 
 ### 3.2 Removals
 
@@ -161,8 +190,10 @@ multiple still returns a positive cell. For `densityFromGrid`: `2x3` is 0,
 
 ### 3.3 Comments that name the old plate, values that stay
 
-- `DENSITY_CELL_PX`: the comment cites `aspectRatio.ts` and the editor's
-  360x540 base box. Keep the provenance, drop the file reference.
+- `DENSITY_CELL_PX` goes with the levels; its provenance (the 360px plate
+  at 2 to 10 cells across) lives on `DENSITY_REFERENCE_PX`. `DEFAULT_CELL_PX`
+  stays 36, which is now `densityToCellPx(1)`: a consumer that passes
+  neither `cellSize` nor `density` sees no change.
 - `DEFAULT_FIXED_SIZE`: "the editor's original 2:3 preview footprint". The
   value stays: `fit: "fixed"` consumers that pass no size rely on it, and
   `/docs/react` documents 360x540. Reword to say it is the package default.
@@ -191,7 +222,7 @@ design record, so its output loses the key for the 10 designs.
 
 1. **Imports.** Drop `AspectRatioId`, `ASPECT_RATIOS`, `ASPECT_RATIO_IDS`,
    `DEFAULT_ASPECT_RATIO`, `deriveGrid`, `getGridOptions`, `gridToLevel`,
-   `isAspectRatioId`. Add `DENSITY_CELL_PX`, `DEFAULT_FIXED_SIZE`,
+   `isAspectRatioId`. Add `densityToCellPx`, `DEFAULT_FIXED_SIZE`,
    `fitGridToBox`, `densityFromGrid`. The local `GRID_OPTION_ID` can be the
    package's export of the same name. Delete `fitToBox`, `RATIO_GLYPH_SIZE`,
    `defaultAspectRatio`, `aspectRatioFromQuery`, the `aspectRatio` state,
@@ -199,9 +230,10 @@ design record, so its output loses the key for the 10 designs.
    the Layout group.
 
 2. **Density state.** `gridIndex` and `hasGrid` as now. A `density` state
-   (0 to 4) initialised by `densityFromQuery()`: the `density` param when it
-   is an integer in range; else a legacy `grid=CxR` param through
-   `densityFromGrid`; else `densityFromGrid(String(option.default)) ?? 2`.
+   (0 to 1) initialised by `densityFromQuery()`: the `density` param when it
+   parses as a number in range, rounded to two decimals; else a legacy
+   `grid=CxR` param through `densityFromGrid`; else
+   `densityFromGrid(String(option.default)) ?? 0.5`.
    The grid option's slot in `optionValues` stops being state: keep the
    array shape, but `optionFromQuery` returns `option.default` for it, the
    two sync effects skip it, and nothing reads it.
@@ -219,7 +251,7 @@ design record, so its output loses the key for the 10 designs.
      ? fitGridToBox(
          box.width,
          box.height,
-         DENSITY_CELL_PX[density],
+         densityToCellPx(density),
          pattern.sizing,
          pinnedGrid.current ?? undefined
        )
@@ -252,9 +284,13 @@ design record, so its output loses the key for the 10 designs.
 7. **Caption.** `captionParts` is the palette name and, when `hasGrid`,
    `${cols}\u00D7${rows} grid`. No ratio.
 
-8. **Layout controls.** The grid option's slider is `min 0`, `max 4`,
-   `step 1`, `value={density}`, `onChange={setDensity}`, readout the plate's
-   `cols x rows`. Other option types are unchanged. Render the Layout
+8. **Layout controls.** The grid option's slider is `min 0`, `max 1`,
+   `step 0.05`, `value={density}`, `onChange={setDensity}`, readout the
+   plate's `cols x rows`; the frequency slider beside it steps by 0.1 over
+   0.2 to 1, so the two read as one kind of control. A tick that changes
+   `cols x rows` redraws the arrangement live, as a frequency tick does;
+   section 8, item 15, says what to do if that reads as flicker. Other
+   option types are unchanged. Render the Layout
    `<section>` only when it has content: 12 designs have no options at all
    and 16 have no grid option, and the ratio picker was the only thing that
    guaranteed the group a control.
@@ -272,8 +308,9 @@ design record, so its output loses the key for the 10 designs.
 
 - `packages/tabbied/scripts/generate-llms.mjs`, the "Share links" section:
   the scheme becomes
-  `/patterns/<slug>/?seed=<seed>&palette=<color0>&palette=<color1>&...&density=<0-4>&<optionId>=<value>`,
-  `density` is one of the five levels (the same scale as the `density` prop),
+  `/patterns/<slug>/?seed=<seed>&palette=<color0>&palette=<color1>&...&density=<0-1>&<optionId>=<value>`,
+  `density` is a number from 0 (coarse) to 1 (fine), the same scale as the
+  `density` prop,
   the `grid` option is derived from the viewer's screen and not part of a
   link, and unknown or out-of-range values still fall back to defaults. Drop
   the sentence naming the ratio ids. `npm run llms` regenerates the site
@@ -293,8 +330,15 @@ design record, so its output loses the key for the 10 designs.
   a cell size in px because that is the embed's unit and it keeps the copied
   snippet honest; expand pins the grid; the `aspectRatio` box prop is a
   different thing and stays.
-- `app/docs/react/page.tsx` says `fixed` is "what the Tabbied editor uses".
-  Still true; no change.
+- `app/docs/react/page.tsx`: the props table types `density` as
+  `0 | 1 | 2 | 3 | 4` with default `4`, and the fit-modes list says
+  "`density` (0-4)". Make it `number`, default `1`, "0 is the coarsest cell
+  (180px), 1 the finest (36px); 0.5 is the 60px cell most designs open at".
+  Its three `density={1}` samples become `0.25`. The sentence that `fixed`
+  is "what the Tabbied editor uses" stays true. The doc comments on the
+  `density` field in `createPattern.ts` and `TabbiedPattern.tsx` say "level
+  0..4" and change with the type; the README and llms.txt attribute tables
+  only name `data-density` and need nothing.
 
 ## 7. Tests
 
@@ -302,25 +346,29 @@ design record, so its output loses the key for the 10 designs.
 line in `test/catalog.test.mjs` asserting no design carries
 `defaultAspectRatio` (codegen does not reject unknown keys, so a JSON that
 re-adds it would flow into the runtime bundle unnoticed).
+`test/hydrate.test.mjs` round-trips `density: 2`; make it `0.5`. In
+`tabbied-templates`, `test/extract.test.mjs` reads `data-density="1"`; make
+it `0.25` (pass-through either way, but the fixture should not teach the
+old scale).
 
 **e2e smoke** (`e2e/smoke.spec.ts`), five tests encode the old scheme:
 
 - "pattern editor renders the css-doodle and controls": the readout is no
   longer a literal `6x9`; assert it matches `/^\d+\u00D7\d+$/`.
-- "changing an option syncs to the URL query": expect `density=2`, then
-  ArrowLeft gives `density=1` and a changed readout.
+- "changing an option syncs to the URL query": expect `density=0.5`, then
+  ArrowLeft gives `density=0.45` and a changed readout.
 - "changing the aspect ratio remaps the grid to keep square cells": delete.
   Replace with "the plate fits the stage on whole-pixel cells": read the
   shadow grid's tracks the way `e2e/package.spec.ts`'s `gridTrackPx` does,
   assert every track is an integer and the canvas sits inside
   `.previewWrapper`.
 - "gallery cards link with a seed so edits sync to the URL": ArrowRight gives
-  `density=3`, not `grid=8x12`.
+  `density=0.55`, not `grid=8x12`.
 - "editor opens directly in the state described by a shared URL": open
-  `?seed=ZZZZ&density=2` and assert the slider's `aria-valuenow` is 2. Add a
-  legacy case: `?seed=ZZZZ&grid=9x9&aspectRatio=1%3A1` opens at
-  `aria-valuenow` 2 and the URL is rewritten to carry `density=2` and no
-  `aspectRatio`.
+  `?seed=ZZZZ&density=0.5` and assert the slider's `aria-valuenow` is 0.5.
+  Add a legacy case: `?seed=ZZZZ&grid=9x9&aspectRatio=1%3A1` opens at
+  `aria-valuenow` 0.5 and the URL is rewritten to carry `density=0.5` and
+  no `aspectRatio`.
 
 The readout depends on the viewport now, so assert `aria-valuenow` and the
 URL's `density=`, never a literal grid.
@@ -344,8 +392,9 @@ with no strip beyond it.
 ## 8. Potential issues
 
 1. **It is a breaking change to the published `tabbied` package.** Eleven
-   exports removed, a definition field removed, and `catalog.json` loses a
-   key on 10 entries. JavaScript callers of a removed export get `undefined`
+   exports removed, `DENSITY_CELL_PX` removed, a definition field removed,
+   `catalog.json` loses a key on 10 entries, and the `density` prop changes
+   scale (item 14). JavaScript callers of a removed export get `undefined`
    silently; TypeScript callers get an error. The precedent is #55 (0.5.0),
    which removed a fit mode and four helpers as a minor with a "Breaking
    changes" list; do the same and name everything.
@@ -377,11 +426,11 @@ with no strip beyond it.
 
 5. **Density is now a cell size, and a phone shows fewer cells.** Today the
    2:3 plate is scaled into the phone band (about 200x300 at 6x9, so 33px
-   cells). After, level 2 is 60px cells in a plate of about 322x268: 5x4.
+   cells). After, 0.5 is 60px cells in a plate of about 322x268: 5x4.
    That is what an embed on that phone draws, which is the point, but the
-   phone preview reads coarser than today. The alternative (a level is a
+   phone preview reads coarser than today. The alternative (density as a
    count along the long edge, as `LONG_EDGE_COUNTS` was) keeps today's look
-   on every screen and makes exports predictable (9 across at level 2), but
+   on every screen and makes exports predictable (9 across at 0.5), but
    the copied snippet cannot then express it honestly, because `density`
    and `cellSize` are px. The plan takes px. If the phone preview is judged
    too coarse, scale the target cell by `min(1, shortEdge / 360)` on the
@@ -394,7 +443,7 @@ with no strip beyond it.
    stop is `12x12`), and `gridToLevel('8')` is 0, so the eleven
    single-number designs open at the coarsest stop. After, every one gets a
    derived two-dimensional grid, as they already do under `fit: "grid"` on
-   every template page, and `densityFromGrid` falls back to level 2 for a
+   every template page, and `densityFromGrid` falls back to 0.5 for a
    single-number default. Look at all 27 after the change. A design that
    only reads right as one strip (`driftspiral`, `marbledarcs`,
    `radiantswirl`, `spiralrosette`, `turbulentsunburst`, `confettidotfield`,
@@ -442,6 +491,32 @@ with no strip beyond it.
     (excluding `node_modules`, `out`, `public/downloads`) before opening
     the PR: the only hits left should be the box prop.
 
+14. **`density` is a shipped prop, and its scale changes underneath it.**
+    Today it is an integer level 0 to 4; after, a number 0 to 1. A legacy
+    `density={2}` clamps to 1 and draws 36px cells instead of 60px. A
+    legacy `density={1}` is the silent case: 90px today, 36px after, and
+    nothing can tell the two apart. What bounds it: every known use is in
+    this repo, about twenty call sites that `grep -rn "density={" app
+    components` lists (eleven in `app/template`, six plus the `Decor`
+    default and its `0 | 1 | 2 | 3 | 4` type in
+    `components/template/TemplateSite.tsx`, one each in `LazyPattern.tsx`
+    and `StudioResults.tsx`, three in the docs page), and they migrate in
+    the same PR, level n to n / 4. The packaged downloads and the React zips
+    are derived from those pages at build time, so they follow. Nothing
+    stored carries a density: `planEdits` and `applyEdits` never touch it
+    and the Worker stores none. A template someone downloaded earlier keeps
+    working because its bootstrap pins `tabbied` on esm.sh. For everyone
+    else the changeset names the rescale with the mapping table, and
+    `createPattern` warns once on a value above 1; it cannot warn on 1.
+
+15. **A continuous slider re-rolls the arrangement as it moves.** Every tick
+    that changes `cols x rows` is a new layout (item 4), and with twenty
+    stops a drag crosses several. The frequency slider already redraws live
+    on every 0.1 step and reads fine, so the plan keeps `onChange` live. If
+    it flickers in use, base-ui's `Slider.Root` takes an `onValueCommitted`;
+    add it to `components/ValueSlider` and apply the density on release
+    while the readout follows the thumb.
+
 ## 9. Decisions
 
 Taken in this plan, not to be re-opened by the implementing agent:
@@ -449,11 +524,14 @@ Taken in this plan, not to be re-opened by the implementing agent:
 - The `aspectRatio` box prop stays (section 1), confirmed by the owner.
 - The plate is `fit="fixed"` with a snapped-down whole-cell canvas, not
   `fit="grid"` (section 2).
-- Density is the package's five px levels; the snippet carries `density`.
+- Density is one number from 0 to 1 (the owner, 2026-09-22), mapped so the
+  five former stops sit at 0, 0.25, 0.5, 0.75 and 1; the snippet carries
+  `density`.
 - Legacy `grid=CxR` links are read as a density for at least one release;
   `aspectRatio=` is ignored.
 - Expand pins the grid; a plain resize does not.
-- `DEFAULT_FIXED_SIZE` and `DENSITY_CELL_PX` keep their values.
+- `DEFAULT_FIXED_SIZE` and `DEFAULT_CELL_PX` keep their values; the default
+  cell is density 1.
 - `tabbied` takes a minor bump with a named breaking-changes list;
   `tabbied-mcp` a patch.
 
@@ -467,11 +545,14 @@ For the owner, each with the default the plan assumes:
 
 ## 10. Order of work
 
-1. Package: add `fitGridToBox` and `densityFromGrid` with tests; delete the
-   ratio module and field; codegen, the 10 JSON files, the llms generator;
+1. Package: add `fitGridToBox`, `densityToCellPx` and `densityFromGrid`
+   with tests; rescale `density` in `createPattern.ts` and the React prop
+   type; delete the ratio module and field; codegen, the 10 JSON files, the
+   llms generator;
    `npm run typecheck --workspace tabbied && npm run build:packages && npm test --workspace tabbied`.
 2. MCP type; `npm test --workspace tabbied-mcp`.
-3. Editor and its stylesheet; `npm run dev` and the manual pass in section 7.
+3. Editor and its stylesheet, and the density call sites in section 8, item
+   14; `npm run dev` and the manual pass in section 7.
 4. e2e rewrites; `npm run build && npm run test:e2e`; the full SVG sweep.
 5. Docs, CLAUDE.md, changesets; `npm run check:typography`; the final grep
    in section 8, item 13.
