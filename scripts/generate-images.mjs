@@ -93,7 +93,7 @@ function printHelp() {
   console.log(src.slice(src.indexOf("/**"), src.indexOf("*/") + 2).replace(/^\/\*\*?|\*\/$|^ \* ?/gm, "").trim());
 }
 
-// ── Cost estimation ─────────────────────────────────────────────────────────
+// -- Cost estimation ---------------------------------------------------------
 // Image output tokens per request, measured against gpt-image-2 on 2026-07-28.
 // 1024x1536 is assumed equal to 1536x1024 (same pixel count) - verify before a
 // large portrait run.
@@ -130,7 +130,7 @@ function requestBody(e, opts, model) {
   return body;
 }
 
-// ── OpenAI helpers ──────────────────────────────────────────────────────────
+// -- OpenAI helpers ----------------------------------------------------------
 function requireKey() {
   const key = process.env.OPENAI_API_KEY;
   if (!key) { console.error("OPENAI_API_KEY is not set."); process.exit(1); }
@@ -184,7 +184,7 @@ function decodeImage(respBody) {
   return Buffer.from(b64, "base64");
 }
 
-// ── Commands ────────────────────────────────────────────────────────────────
+// -- Commands ----------------------------------------------------------------
 function cmdDryRun(entries, opts) {
   const ext = outputExt(opts);
   console.log(
@@ -193,7 +193,7 @@ function cmdDryRun(entries, opts) {
   );
   for (const e of entries) {
     console.log(
-      `── ${e.id}.${ext}  (${e.project}${e.slot ? `/${e.slot}` : ""} · ` +
+      `-- ${e.id}.${ext}  (${e.project}${e.slot ? `/${e.slot}` : ""} · ` +
         `${sizeOf(e, opts)} · ${qualityOf(e, opts)} · ${e.cutout ? "cutout" : "full-bleed"})`,
     );
     console.log(e.prompt.replace(/^/gm, "   "));

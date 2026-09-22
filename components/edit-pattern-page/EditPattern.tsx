@@ -74,7 +74,7 @@ const STRIP_LIMIT = 30;
 // palette - neither highlights any chip.
 type PaletteSource = 'pattern' | 'custom' | string;
 
-// Largest width/height for `ratio` that fits inside a maxW × maxH box.
+// Largest width/height for `ratio` that fits inside a maxW x maxH box.
 const fitToBox = (ratio: AspectRatioId, maxW: number, maxH: number) => {
   const [rw, rh] = ASPECT_RATIOS[ratio];
   const scale = Math.min(maxW / rw, maxH / rh);
@@ -1285,7 +1285,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
             <figcaption className={styles.stageCaption}>
               <span className={styles.stageName}>{pattern.name}</span>
               <span className={styles.stageMeta}>
-                {captionParts.join(' \u00B7 ')}
+                {captionParts.join(', ')}
               </span>
             </figcaption>
           </figure>

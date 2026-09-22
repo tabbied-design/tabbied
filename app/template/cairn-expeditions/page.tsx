@@ -310,7 +310,7 @@ export default function CairnExpeditionsPage() {
                   <div className={styles.tripFoot}>
                     <span data-edit={`tripCard.tripPrice.${i}`} data-edit-max="60" className={styles.tripPrice}>{trip.price}</span>
                     <a data-edit={`tripCard.tripLink.${i}`} data-edit-max="28" className={styles.tripLink} href="#enquire">
-                      Reserve a rope &rarr;
+                      Reserve a rope
                     </a>
                   </div>
                 </div>

@@ -89,7 +89,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
   // (not useSearchParams) so the page keeps its server-rendered first paint
   // instead of deopting to client-only rendering. Starts at 1 for SSR.
   const [page, setPage] = useState(1);
-  // Mobile only: the "All ›" chip-shelf pill swaps in the embedded browser.
+  // Mobile only: the "All >" chip-shelf pill swaps in the embedded browser.
   const [browserOpen, setBrowserOpen] = useState(false);
 
   // Read the page from the URL on mount and on back/forward.

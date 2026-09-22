@@ -57,7 +57,7 @@ const ink = (c, s = 1) => {
   return `@p(${a.join(', ')})`;
 };
 
-// ── shared snippets ────────────────────────────────────────────────────────
+// -- shared snippets --------------------------------------------------------
 const F = '@random(${shapeFrequency})';
 const TR = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
 const cp = (p) => `-webkit-clip-path: ${p}; clip-path: ${p};`;
@@ -68,7 +68,7 @@ const msk = (v) => `-webkit-mask: ${v}; mask: ${v};`;
 const R2 = '@pick(0deg, 90deg)';
 const R4 = '@pick(0deg, 90deg, 180deg, 270deg)';
 
-// ── the shape maker ────────────────────────────────────────────────────────
+// -- the shape maker --------------------------------------------------------
 const sh = (spec) => cp(`@shape(${spec})`);
 
 // A parametric curve, x and y in terms of `t`.
@@ -84,7 +84,7 @@ const para = (x, y, { points = 240, rotate, scale, frame } = {}) =>
     .filter(Boolean)
     .join('; ');
 
-// ── masks ──────────────────────────────────────────────────────────────────
+// -- masks ------------------------------------------------------------------
 // @svg() returns a data-URI usable as a mask, so the SVG decides the holes
 // while the paint stays a plain, sampled background-color.
 const svgMask = (body) => msk(`@svg(${body})`);
@@ -98,7 +98,7 @@ const innerMask = (grid, body) => {
   return `-webkit-mask: ${d}; mask: ${d}; -webkit-mask-size: 100% 100%; mask-size: 100% 100%;`;
 };
 
-// ── palette bank ───────────────────────────────────────────────────────────
+// -- palette bank -----------------------------------------------------------
 // color0 = background. Palettes may repeat across designs (they are different
 // patterns).
 const PAL = [
@@ -324,19 +324,19 @@ const add = (name, palIdx, description, build, cfg = {}) => {
   });
 };
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // A. Computed outlines - @shape() walking an equation into a clip-path.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Evolute', 11, 'The evolute of an ellipse: an astroid stretched, so its four cusps stop being square.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; ${sh(para('1.3 * cos(t)^3', '0.75 * sin(t)^3', { scale: 0.9 }))} ${rot(R2)} }${TR}`,
 }), { tg: '5x5' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // B. SVG masks - inline SVG decides the holes; the paint stays a sampled
 //    background-color.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Linocut', 32, 'Linocut gouges: broad chisel strokes with rounded ends.', (c) => ({
   vars: '',
@@ -353,10 +353,10 @@ add('Gravure', 19, 'Photogravure cells: a grid of square wells with the walls le
   rule: `${F} { background: ${ink(c)}; ${msk('repeating-linear-gradient(0deg, #000 0 15%, transparent 15% 20%), repeating-linear-gradient(90deg, #000 0 15%, transparent 15% 20%)')} -webkit-mask-composite: source-in; mask-composite: intersect; }${TR}`,
 }), { tg: '5x5' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // C. Rule-driven fields - @match against the cell's own address, so the
 //    pattern is computed rather than rolled.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Parity', 12, 'A checker that keeps changing its mind: the parity of the column decides the shape, the parity of the row decides the turn.', (c) => ({
   vars: '',
@@ -373,9 +373,9 @@ add('Hairpin', 39, 'A hairpin bend - the road doubling back on itself - turning 
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(10% 10%, 90% 10%, 90% 46%, 34% 46%, 34% 56%, 90% 56%, 90% 90%, 10% 90%, 10% 56%, 66% 56%, 66% 46%, 10% 46%)')} ${xf('rotate(@calc(@x % 4 * 90)deg)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // D. Nested doodles - a whole second doodle used as the mask.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Matryoshka', 18, 'A doodle inside a doodle: each cell holds a whole second grid, and only some of its cells are open.', (c) => ({
   vars: '',

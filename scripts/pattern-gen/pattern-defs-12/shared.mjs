@@ -68,7 +68,7 @@ import { batch11 } from '../pattern-defs-11.mjs';
 // should never come to mean two different things.
 export const TAKEN12 = new Set([...TAKEN, ...batch11.map((d) => d.slug)]);
 
-// ── smooth ramps: the mask layers this batch is built on ───────────────────
+// -- smooth ramps: the mask layers this batch is built on -------------------
 // Every one of these paints in #000 and transparent only. Keeping color out
 // of the mask is what makes the ink a transitionable background-color, and it
 // keeps each layer composable: msk(a, b) adds them, mskI(a, b) intersects.
@@ -107,7 +107,7 @@ export const stepFade = (angle, steps, span = 100) => {
   return `linear-gradient(${angle}, ${stops.join(', ')})`;
 };
 
-// ── tiled fields ───────────────────────────────────────────────────────────
+// -- tiled fields -----------------------------------------------------------
 // A gradient smaller than its box tiles, and the converter turns the layer
 // into an SVG <pattern> holding one tile.
 
@@ -119,7 +119,7 @@ export const dotsL = (r, pitch, offset = '0 0') =>
 export const softDotsL = (core, r, pitch, offset = '0 0') =>
   `radial-gradient(circle at 50% 50%, #000 ${core}, transparent ${r}) ${offset} / ${pitch} ${pitch}`;
 
-// ── declaration-level shorthands ───────────────────────────────────────────
+// -- declaration-level shorthands -------------------------------------------
 
 /** One ink, cut by the layers added together. */
 export const faded = (c, ...layers) => `background: ${ink(c)}; ${msk(...layers)}`;

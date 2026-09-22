@@ -10,7 +10,7 @@
   padding-left: var(--h-pad);
 }
 
-/* ── Margin columns ──────────────────────────────────────────────────────── */
+/* -- Margin columns -------------------------------------------------------- */
 /* The strips either side of the 1280px column are filled with the same cells
    the skyline uses, at low opacity - the page bleeding pattern into its own
    gutters. Purely decorative, and never in the way of a pointer. */
@@ -52,7 +52,7 @@
   transition: border-radius 600ms ease, clip-path 600ms ease;
 }
 
-/* ── Headline ────────────────────────────────────────────────────────────── */
+/* -- Headline -------------------------------------------------------------- */
 
 .heroPad {
   padding: 100px 0 60px;
@@ -141,7 +141,7 @@
   color: oklch(0.78 0.01 260);
 }
 
-/* ── Skyline ─────────────────────────────────────────────────────────────── */
+/* -- Skyline --------------------------------------------------------------- */
 
 .skylineRow {
   display: flex;
@@ -167,7 +167,7 @@
   transition: border-radius 600ms ease, clip-path 600ms ease;
 }
 
-/* ── Stats strip ─────────────────────────────────────────────────────────── */
+/* -- Stats strip ----------------------------------------------------------- */
 
 .stats {
   position: relative;
@@ -242,7 +242,7 @@ a.stat:hover .statArrow {
   color: var(--h-nav);
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
+/* -- Responsive ------------------------------------------------------------ */
 
 /* The display sizes step down twice. Without the middle step the 96px headline
    runs to four lines between 768px and the desktop layout, which is where a

@@ -242,7 +242,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
           <input
             type="password"
             autoComplete={mode === 'sign-up' ? 'new-password' : 'current-password'}
-            placeholder={'\u2022'.repeat(8)}
+            placeholder="At least 8 characters"
             required
             minLength={8}
             value={password}

@@ -61,7 +61,7 @@ const ink = (c, s = 1) => {
   return `@p(${a.join(', ')})`;
 };
 
-// ── shared snippets ────────────────────────────────────────────────────────
+// -- shared snippets --------------------------------------------------------
 const F = '@random(${shapeFrequency})';
 const TR = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
 const pt = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
@@ -90,7 +90,7 @@ const ramp = (a, b, t) =>
 const rampDeg = (a, b, t) =>
   `@calc(${a} ${b >= a ? '+' : '-'} ${Math.abs(b - a)} * ${t})deg`;
 
-// ── A: the spread ──────────────────────────────────────────────────────────
+// -- A: the spread ----------------------------------------------------------
 // One sector of a circle, opening from a point. conic-gradient is the only
 // thing in CSS that sweeps a value round an angle, and used as a *mask* the
 // sector is cut rather than painted - so the part that is not the wedge is a
@@ -115,13 +115,13 @@ const arcSector = (deg, bore, { from = '0deg', at = '50% 50%' } = {}) =>
 const arcFan = (on, period, bore, { from = '0deg', at = '50% 50%' } = {}) =>
   `-webkit-mask: repeating-conic-gradient(from ${from} at ${at}, #000 0 ${on}, transparent ${on} ${period}), radial-gradient(circle closest-side at ${at}, transparent ${bore}, #000 0); mask: repeating-conic-gradient(from ${from} at ${at}, #000 0 ${on}, transparent ${on} ${period}), radial-gradient(circle closest-side at ${at}, transparent ${bore}, #000 0); -webkit-mask-composite: source-in; mask-composite: intersect;`;
 
-// ── other masks ────────────────────────────────────────────────────────────
+// -- other masks ------------------------------------------------------------
 const ringMask = (bore) =>
   msk(`radial-gradient(circle closest-side at 50% 50%, transparent ${bore}, #000 ${bore})`);
 const slotMask = (angle, on, off) =>
   msk(`repeating-linear-gradient(${angle}, #000 0 ${on}, transparent ${on} ${off})`);
 
-// ── real holes, cut by hand ────────────────────────────────────────────────
+// -- real holes, cut by hand ------------------------------------------------
 const P = (pts) => pts.map(([x, y]) => `${(+x).toFixed(1)}% ${(+y).toFixed(1)}%`).join(', ');
 const poly = (pts) => `polygon(${P(pts)})`;
 const withHole = (inner) =>
@@ -148,14 +148,14 @@ const ringPoly = (outer, inner) =>
 const SQUARE = [[0, 0], [100, 0], [100, 100], [0, 100]];
 const DIAMOND = [[50, 0], [100, 50], [50, 100], [0, 50]];
 
-// ── super-tiles ────────────────────────────────────────────────────────────
+// -- super-tiles ------------------------------------------------------------
 // A motif spread over an n x n block of cells: each cell draws its own quarter
 // (or ninth) of the drawing, chosen by where it sits in the block. `q(n)` is
 // the cell's position within the block, counting from zero.
 const qx = (n) => `@x % ${n}`;
 const qy = (n) => `@y % ${n}`;
 
-// ── palette bank ───────────────────────────────────────────────────────────
+// -- palette bank -----------------------------------------------------------
 // color0 = background. Palettes may repeat across designs (they are different
 // patterns).
 const PAL = [
@@ -422,11 +422,11 @@ const add = (name, palIdx, description, build, cfg = {}) => {
 };
 
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // A. Spread - one sector of a circle, opening from a point. Thirty-six ways to
 //    move the apex, change the angle, bore out the middle, pair the sectors up
 //    or open them into a whole fan.
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Sunray', 33, 'A broad sector opening from one corner, so the light comes in across the whole cell.', (c) => ({
   vars: '',
@@ -438,7 +438,7 @@ add('Spray', 32, 'A wide spray thrown from one edge, the cone opening to nearly 
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${pie('96deg', { from: '312deg', at: '50% 100%' })} ${rot('@var(--rot)')} }${TR}`,
 }), { tg: '5x5' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // B. Super-tiles - the motif spans a two-by-two block of cells. Each cell
 //    draws the same quarter and the flips assemble it, so what you see is one
 //    drawing four cells wide rather than four copies of a small one.
@@ -447,7 +447,7 @@ add('Spray', 32, 'A wide spray thrown from one edge, the cone opening to nearly 
 //    the whole transform, because two branches that each set `transform`
 //    would overwrite one another. `@x % 2 + @y % 2 == 0` is how the both-even
 //    corner is reached without needing a && in the expression.
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 const quad = `${xf('scale(1, 1)')} @match(@x % 2 == 0) { ${xf('scale(-1, 1)')} } @match(@y % 2 == 0) { ${xf('scale(1, -1)')} } @match(@x % 2 + @y % 2 == 0) { ${xf('scale(-1, -1)')} }`;
 
@@ -456,10 +456,10 @@ add('Frieze', 12, 'A running frieze two cells deep: the upper half of the motif 
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(0 22%, 100% 0, 100% 78%, 0 100%)')} ${quad} }${TR}`,
 }), { grid: '8x12', tg: '6x6' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // C. Interlock - figure and ground both inked, so no background shows through
 //    at all and each shape keys into the ones beside it.
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 const both = (c, a, b) => `${B(`inset: 0; background: ${ink(c)}; ${cp(a)}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp(b)}`)}`;
 
@@ -468,10 +468,10 @@ add('Plait', 49, 'Three strands plaited, the one on top changing every row.', (c
   rule: `${F} { ${both(c, 'polygon(0 0, 100% 60%, 100% 100%, 0 40%)', 'polygon(0 60%, 100% 0, 100% 40%, 0 100%)')} @even { :before { z-index: 2; } } }${TR}`,
 }), { grid: '8x12', tg: '6x6' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // D. Counterform - the drawing is the hole. The cell is solid and the motif is
 //    cut out of it, so what you read is the shape of what is missing.
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Fenestrate', 18, 'Windowed: four small openings cut where the panes would be.', (c) => ({
   vars: '',
@@ -483,19 +483,19 @@ add('Perforate', 31, 'A field of small perforations on a square pitch.', (c) => 
   rule: `${F} { background: ${ink(c)}; ${msk('radial-gradient(circle closest-side at 50% 50%, transparent 48%, #000 48%) 0 0 / 25% 25%')} }${TR}`,
 }), { tg: '5x5' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // E. Stacks - layered plates, offset from one another. No projection and no
 //    shading: the depth comes from nothing but the offset and the order the
 //    plates are painted in.
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 const plates = (c, dx, dy, w = 66) =>
   `${B(`left: 6%; top: 6%; width: ${w}%; height: ${w}%; background: ${ink(c)};`)} ${A(`left: ${6 + dx}%; top: ${6 + dy}%; width: ${w}%; height: ${w}%; background: ${ink(c)};`)}`;
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // F. Chains - links that run out of one cell and into the next, so the row is
 //    continuous rather than a set of separate marks.
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Chain', 1, 'Oval links running edge to edge, each one overlapping its neighbors.', (c) => ({
   vars: '',
@@ -507,10 +507,10 @@ add('Staple', 53, 'A staple driven into the board, both legs showing.', (c) => (
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(14% 16%, 86% 16%, 86% 88%, 68% 88%, 68% 36%, 32% 36%, 32% 88%, 14% 88%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { tg: '5x5' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // G. Corners - everything anchored at a corner of the cell rather than in the
 //    middle of it, so the drawing happens where four cells meet.
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Haunch', 58, 'The haunch of an arch: the corner filled with a curve rather than a bracket.', (c) => ({
   vars: '',
@@ -527,10 +527,10 @@ add('Abutment', 27, 'An abutment: the mass at the end of the arch that takes the
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(0 0, 46% 0, 68% 44%, 100% 100%, 0 100%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { tg: '5x5' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // H. Bands - moldings and banding run across the sheet. The whole vocabulary
 //    of a molded edge, one profile per design.
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 const bandOf = (c, tops) =>
   tops.map(([t, h], i) => (i === 0

@@ -5,10 +5,10 @@
  * The flow is render-then-EDIT, not text-to-image:
  *
  *   packages/tabbied/patterns/<design>.json
- *      │  scripts/render-pattern.mjs (headless Chromium)
+ *      -  scripts/render-pattern.mjs (headless Chromium)
  *      ▼
  *   generated-images/refs/<id>-ref.png     <- the actual pattern, exact pixels
- *      │  POST /v1/images/edits  (multipart; the ref is the `image` field)
+ *      -  POST /v1/images/edits  (multipart; the ref is the `image` field)
  *      ▼
  *   generated-images/mockups/<id>.png      <- the object wearing the pattern
  *

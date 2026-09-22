@@ -136,7 +136,7 @@ const timetable = [
   {
     service: '101',
     route: 'Coast Cantata',
-    dir: 'Terra Alta \u2192 Port Lumen',
+    dir: 'Terra Alta to Port Lumen',
     days: 'Daily',
     dep: '08:12',
     arr: '14:52',
@@ -145,7 +145,7 @@ const timetable = [
   {
     service: '102',
     route: 'Coast Cantata',
-    dir: 'Port Lumen \u2192 Terra Alta',
+    dir: 'Port Lumen to Terra Alta',
     days: 'Daily',
     dep: '15:40',
     arr: '22:18',
@@ -154,7 +154,7 @@ const timetable = [
   {
     service: '201',
     route: 'Alpine Ascent',
-    dir: 'Terra Alta \u2192 Vespergate',
+    dir: 'Terra Alta to Vespergate',
     days: 'Tue · Thu · Sat',
     dep: '07:35',
     arr: '14:40',
@@ -163,7 +163,7 @@ const timetable = [
   {
     service: '202',
     route: 'Alpine Ascent',
-    dir: 'Vespergate \u2192 Terra Alta',
+    dir: 'Vespergate to Terra Alta',
     days: 'Wed · Fri · Sun',
     dep: '09:10',
     arr: '16:15',
@@ -172,7 +172,7 @@ const timetable = [
   {
     service: '301',
     route: 'Vineyard Arc',
-    dir: 'Casteldoro \u2192 Miradora',
+    dir: 'Casteldoro to Miradora',
     days: 'Fri to Sun',
     dep: '13:05',
     arr: '17:30',
@@ -181,7 +181,7 @@ const timetable = [
   {
     service: '901',
     route: 'Night Vespers',
-    dir: 'Terra Alta \u2192 Vespergate',
+    dir: 'Terra Alta to Vespergate',
     days: 'Fri only',
     dep: '21:50',
     arr: '06:05',

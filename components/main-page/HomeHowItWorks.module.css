@@ -61,7 +61,7 @@
   color: var(--h-ink-muted);
 }
 
-/* ── The panels ──────────────────────────────────────────────────────────── */
+/* -- The panels ------------------------------------------------------------ */
 
 .panel {
   display: flex;
@@ -94,7 +94,7 @@
   padding: 6px 0 24px;
 }
 
-/* ── 01 · palette picker ─────────────────────────────────────────────────── */
+/* -- 01 · palette picker --------------------------------------------------- */
 
 /* Only the picker is inset as a proportion of the card; the other two panels
    fill the card and inset themselves with padding, as the design has them. The
@@ -158,7 +158,7 @@
   border: 1px solid oklch(1 0 0 / 0.18);
 }
 
-/* ── 02 · frequency ──────────────────────────────────────────────────────── */
+/* -- 02 · frequency -------------------------------------------------------- */
 
 .frequencyBody {
   flex-direction: column;
@@ -212,7 +212,7 @@
   border-color: var(--h-ink);
 }
 
-/* ── 03 · download ───────────────────────────────────────────────────────── */
+/* -- 03 · download --------------------------------------------------------- */
 
 .downloadBody {
   flex-direction: column;
@@ -274,7 +274,7 @@
   }
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
+/* -- Responsive ------------------------------------------------------------ */
 
 @media (max-width: 1023.98px) {
   .panel {

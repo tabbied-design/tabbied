@@ -333,7 +333,7 @@ test('pseudoBoxFor leaves a borderless host untouched', () => {
   );
 });
 
-// ── SVG-export tiers ───────────────────────────────────────────────────────
+// -- SVG-export tiers -------------------------------------------------------
 // The tier metadata drives real behavior: `svgExport: false` disables the
 // download, `svgExportNote` puts a warning dialog in front of it. It is also
 // easy to lose - the batch generators rewrite every pattern file they own, so

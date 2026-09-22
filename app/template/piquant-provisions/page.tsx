@@ -325,7 +325,7 @@ export default function PiquantProvisionsPage() {
                     <div>
                       <dt data-edit={`lineup.term.${i}`} data-edit-max="28">Bottle</dt>
                       <dd>
-                        {sauce.size} &middot; {sauce.price}
+                        {sauce.size}, {sauce.price}
                       </dd>
                     </div>
                     <div>
@@ -463,7 +463,7 @@ export default function PiquantProvisionsPage() {
                   Midnight tacos
                 </h2>
                 <p data-edit="recipe.recipeMeta" data-edit-max="240" data-edit-multiline className={styles.recipeMeta}>
-                  Serves 2, generously &middot; 25 minutes &middot; uses № 04
+                  Serves 2, generously. 25 minutes. Uses № 04
                   Deep Cut
                 </p>
               </div>

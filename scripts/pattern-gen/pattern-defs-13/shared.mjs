@@ -64,7 +64,7 @@ import { batch12 } from '../pattern-defs-12.mjs';
 // A name should never come to mean two different things.
 export const TAKEN13 = new Set([...TAKEN12, ...batch12.map((d) => d.slug)]);
 
-// ── anchored radials ───────────────────────────────────────────────────────
+// -- anchored radials -------------------------------------------------------
 // `farthest-side` makes a percentage stop mean "that fraction of one cell
 // side" no matter where the center sits - `closest-side` collapses to zero
 // the moment the center reaches a corner, and the default `farthest-corner`
@@ -83,7 +83,7 @@ export const bandFS = (inner, outer, at = '50% 50%') =>
 export const boreFS = (r, at = '50% 50%') =>
   `radial-gradient(circle farthest-side at ${at}, transparent ${r}, #000 ${r})`;
 
-// ── hard linear bands ──────────────────────────────────────────────────────
+// -- hard linear bands ------------------------------------------------------
 // A bar as a mask layer rather than a pseudo-element: the strip between two
 // stops, at any angle. Composable - msk(a, b) adds bars into crosses and
 // frames, mskI(a, b) intersects them.
@@ -96,7 +96,7 @@ export const bandLin = (angle, from, to) =>
 export const slabLin = (angle, to) =>
   `linear-gradient(${angle}, #000 0 ${to}, transparent ${to})`;
 
-// ── stepped radial ─────────────────────────────────────────────────────────
+// -- stepped radial ---------------------------------------------------------
 
 /**
  * The radial counterpart of stepFade(): a falloff from `at` posterized into
@@ -117,7 +117,7 @@ export const stepGlow = (at, steps, span = 100) => {
   return `radial-gradient(circle farthest-side at ${at}, ${stops.join(', ')})`;
 };
 
-// ── tiled layers ───────────────────────────────────────────────────────────
+// -- tiled layers -----------------------------------------------------------
 // A gradient smaller than its box tiles, and the converter turns the layer
 // into an SVG <pattern> holding one tile.
 

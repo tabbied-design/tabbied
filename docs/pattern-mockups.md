@@ -29,13 +29,13 @@ printed on it. This is the pipeline below.
 
 ```
   packages/tabbied/patterns/<design>.json
-       │  scripts/render-pattern.mjs   (headless Chromium, real css-doodle)
+       -  scripts/render-pattern.mjs   (headless Chromium, real css-doodle)
        ▼
   generated-images/refs/<id>-ref.png          <- the pattern, exact pixels. Free.
-       │  scripts/generate-mockups.mjs -> POST /v1/images/edits (multipart)
+       -  scripts/generate-mockups.mjs -> POST /v1/images/edits (multipart)
        ▼
   generated-images/mockups/<id>.png           <- the object wearing it
-       │  sharp -> WebP q92
+       -  sharp -> WebP q92
        ▼
   public/images/mockups/<id>.webp             <- COMMITTED, served
   lib/generated/images.js                     <-  manifest entry, base: /images/mockups

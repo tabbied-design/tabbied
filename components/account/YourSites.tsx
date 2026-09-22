@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import type { SiteSummary } from 'lib/studioDocument';
 import { apiFetch } from 'lib/apiFetch';
 import shell from './account.module.css';
@@ -39,8 +40,7 @@ export default function YourSites() {
     <div className={shell.panel}>
       <div className={`${shell.tableHead} ${styles.columns}`} aria-hidden="true">
         <div>Site</div>
-        <div>Direction · template</div>
-        <div>Revisions</div>
+        <div>Direction and template</div>
         <div />
       </div>
 
@@ -70,14 +70,10 @@ export default function YourSites() {
               </span>
             </Link>
             <span className={shell.rowValue}>
-              {site.stance ? `${site.stance} · ` : ''}
-              {site.templateName}
-            </span>
-            <span className={shell.rowValue}>
-              {site.revisions === 1 ? '1 revision' : `${site.revisions} revisions`}
+              {site.stance ? `${site.stance} on ${site.templateName}` : site.templateName}
             </span>
             <Link href={`/studio/site/?id=${site.id}`} prefetch={false} className={shell.rowAction}>
-              Open &rarr;
+              Open <ArrowRight size={14} aria-hidden="true" />
             </Link>
           </div>
         ))

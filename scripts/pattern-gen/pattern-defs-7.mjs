@@ -45,7 +45,7 @@ const ink = (c, s = 1) => {
   return `@p(${a.join(', ')})`;
 };
 
-// ── shared snippets ────────────────────────────────────────────────────────
+// -- shared snippets --------------------------------------------------------
 const F = '@random(${shapeFrequency})';
 const TR = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
 const pt = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
@@ -60,14 +60,14 @@ const R2 = '@pick(0deg, 90deg)';
 const R4 = '@pick(0deg, 90deg, 180deg, 270deg)';
 const R8 = '@pick(0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg)';
 
-// ── the originals' own shape library ───────────────────────────────────────
+// -- the originals' own shape library ---------------------------------------
 // Radius picks between four corner circles and a centerd one; Mixtape adds the
 // four half-square triangles. Section A draws from the same short list rather
 // than inventing a new outline per cell.
 const CORNER = 'circle(100% at 0 0), circle(100% at 100% 0), circle(100% at 100% 100%), circle(100% at 0 100%)';
 const TRI = 'polygon(0 0, 100% 0, 100% 100%), polygon(0 0, 100% 0, 0 100%), polygon(0 0, 100% 100%, 0 100%), polygon(100% 0, 100% 100%, 0 100%)';
 
-// ── real holes, not painted-over ones ──────────────────────────────────────
+// -- real holes, not painted-over ones --------------------------------------
 // A polygon whose outer ring runs clockwise and whose inner ring runs
 // counter-clockwise, joined by a zero-width slit: under the nonzero fill rule
 // the inner ring is a genuine hole, so whatever sits behind the canvas shows
@@ -100,7 +100,7 @@ const coveBite = (r, corner = 'tl', steps = 16) => {
   return poly(pts.map(([x, y]) => [flipX ? 100 - x : x, flipY ? 100 - y : y]));
 };
 
-// ── masks that cut real gaps ───────────────────────────────────────────────
+// -- masks that cut real gaps -----------------------------------------------
 // A ring with a genuinely transparent bore: the fill stays a plain,
 // transition-able background-color and the mask cuts the hole.
 const ringMask = (bore) =>
@@ -111,7 +111,7 @@ const ringMask = (bore) =>
 const slotMask = (angle, on, off) =>
   msk(`repeating-linear-gradient(${angle}, #000 0 ${on}, transparent ${on} ${off})`);
 
-// ── palette bank ───────────────────────────────────────────────────────────
+// -- palette bank -----------------------------------------------------------
 // color0 = background. Spans neon, jewel, earth, pastel, mono, retro and
 // forest families so the gallery stays varied; palettes may repeat across
 // designs (they are different patterns).
@@ -300,10 +300,10 @@ const add = (name, palIdx, description, build, cfg = {}) => {
   });
 };
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // A. After Radius, Mixtape and Veil - one shape per cell, its outline rolled
 //    out of a short, deliberately chosen library.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Quarterfall', 3, 'Radius hollowed out: the same rolled quarter-discs, but half of them keep only their outer band, so filled corners and open ones fall through the grid together.', (c) => ({
   vars: '',
@@ -345,10 +345,10 @@ add('Drift', 26, 'Triangles all leaning the same way within a row and flipping o
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(0 0, 101% 0, 0 101%)')} @match(@y % 2 == 1) { ${cp('polygon(101% 0, 101% 101%, 0 101%)')} } @random(0.28) { ${cp('polygon(0 0, 101% 0, 101% 101%)')} } }${TR}`,
 }), { grid: '10x15', tg: '8x8' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // B. After Bloks and Ring - turned blocks under the Shadow switch, and rings
 //    breached so the gap walks around the rim.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Cupola', 17, 'Domed blocks turning to face all four quarters, each one rolled a quarter turn from its neighbor.', (c) => ({
   vars: '',
@@ -360,10 +360,10 @@ add('Lagoon', 38, 'Thick rings breached on one side, the gap swinging round the 
   rule: `--rot: ${R8}; ${F} { width: 82%; height: 82%; margin: 9%; border-radius: 50%; background: ${ink(c)}; ${ringMask('56%')} ${cp('polygon(0 0, 100% 0, 100% 42%, 56% 42%, 56% 100%, 0 100%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '4x4' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // C. Moldings & openings - the profiles a mason cuts, and the holes a wall is
 //    built around.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Scotia', 11, 'The scotia - a quarter-round hollow scooped out of the block, its arc springing from one corner of the cell and landing on the next.', (c) => ({
   vars: '',
@@ -385,9 +385,9 @@ add('Cavetto', 55, 'A hollow quarter-round run along the edge of every block, tu
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; border-radius: 0 0 0 100%; ${rot('@var(--rot)')} @random(0.3) { border-radius: 0 0 100% 100%; } }${TR}`,
 }), { grid: '8x12', tg: '6x6' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // D. Rulings - what happens when two sets of parallel lines meet.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Moire', 23, 'Two rulings laid over each other a few degrees apart, so the beat between them draws its own pattern.', (c) => ({
   vars: '',
@@ -399,9 +399,9 @@ add('Schist', 12, 'Schistosity: parallel planes of mica that split the rock into
   rule: `${F} { ${A(`inset: 0; background: ${ink(c)}; ${slotMask('@pick(4deg, 8deg, 172deg, 176deg)', '9%', '21%')}`)} }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // E. Type & print - the shapes a compositor thinks in.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Kern', 45, 'Two letters tucked into each other\'s space until the gap between them reads even.', (c) => ({
   vars: '',
@@ -413,18 +413,18 @@ add('Quire', 56, 'Folded sheets nested inside one another, the way a gathering i
   rule: `--rot: ${R4}; ${F} { ${B(`inset: 4%; background: ${ink(c)}; ${cp('polygon(0 0, 100% 0, 100% 22%, 22% 22%, 22% 100%, 0 100%)')}`)} ${A(`inset: 32%; background: ${ink(c)}; ${cp('polygon(0 0, 100% 0, 100% 30%, 30% 30%, 30% 100%, 0 100%)')}`)} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // F. Stone - what a rock looks like when you cut it open.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Karst', 60, 'Limestone pavement: solid clints with the grikes weathered clean through between them.', (c) => ({
   vars: '',
   rule: `${F} { background: ${ink(c)}; ${cp('@pick(polygon(0 0, 88% 0, 100% 88%, 12% 100%), polygon(10% 0, 100% 6%, 92% 100%, 0 90%), polygon(0 8%, 90% 0, 100% 92%, 8% 100%))')} }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 // G. Folded paper & machined parts - a sheet creased, and a part bored.
-// ══════════════════════════════════════════════════════════════════════════
+// --------------------------------------------------------------------------
 
 add('Miura', 58, 'The Miura fold: a tessellation of parallelograms that opens and closes in one pull.', (c) => ({
   vars: '',

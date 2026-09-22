@@ -97,7 +97,7 @@ const add = (name, palIdx, description, build, cfg = {}) => {
   });
 };
 
-// ── A. Arcs, circles & curves ────────────────────────────────────────────
+// -- A. Arcs, circles & curves --------------------------------------------
 add('Truchet', 0, 'Interlocking quarter-arc tiles that wire themselves into endless looping mazes, re-routing on every redraw.', (c) => ({
   vars: '',
   rule: `--rot: @pick(0deg, 90deg); @random(\${shapeFrequency}) { overflow: hidden; -webkit-transform: rotate(@var(--rot)); transform: rotate(@var(--rot)); :before { content: ''; position: absolute; @size: 100%; left: -50%; top: -50%; border: 9px solid ${ink(c)}; border-radius: 50%;${pt} } :after { content: ''; position: absolute; @size: 100%; left: 50%; top: 50%; border: 9px solid ${ink(c)}; border-radius: 50%;${pt} } }${TR}`,
@@ -160,7 +160,7 @@ add('Vinyl', 24, 'Spinning records with a re-colored label, the disc turning a s
   rule: `--rot: @pick(0deg, 90deg, 180deg, 270deg); @random(\${shapeFrequency}) { width: 92%; height: 92%; margin: 4%; border-radius: 50%; background: var(--color1); -webkit-transform: rotate(@var(--rot)); transform: rotate(@var(--rot)); :before { content: ''; position: absolute; inset: 30%; border-radius: 50%; background: ${ink(c, 2)};${pt} } :after { content: ''; position: absolute; inset: 46%; border-radius: 50%; background: var(--color0);${pt} } }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
 
-// ── B. Triangles & polygons (non half-square) ──────────────────────────────
+// -- B. Triangles & polygons (non half-square) ------------------------------
 add('Pennant', 5, 'Triangular pennants strung point-down, the bunting flipping to new corners on reseed.', (c) => ({
   vars: '',
   rule: `--rot: @pick(0deg, 180deg); @random(\${shapeFrequency}) { background: ${ink(c)}; -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%); clip-path: polygon(0 0, 100% 0, 50% 100%); -webkit-transform: rotate(@var(--rot)); transform: rotate(@var(--rot)); }${TR}`,
@@ -236,7 +236,7 @@ add('Triquetra', 16, 'Three-bladed triskelions spinning between quantized angles
   rule: `--rot: @pick(0deg, 120deg, 240deg); @random(\${shapeFrequency}) { width: 88%; height: 88%; margin: 6%; border-radius: 50%; background: conic-gradient(from 0deg, ${ink(c)} 0 60deg, var(--color0) 60deg 120deg, ${ink(c)} 120deg 180deg, var(--color0) 180deg 240deg, ${ink(c)} 240deg 300deg, var(--color0) 300deg 360deg); -webkit-transform: rotate(@var(--rot)); transform: rotate(@var(--rot)); }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
 
-// ── C. Stars & radial ──────────────────────────────────────────────────────
+// -- C. Stars & radial ------------------------------------------------------
 add('Northstar', 0, 'Four-point compass stars, each re-inking and the field twinkling on reseed.', (c) => ({
   vars: '',
   rule: `@random(\${shapeFrequency}) { background: ${ink(c)}; -webkit-clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); }${TR}`,
@@ -277,7 +277,7 @@ add('Asterisk', 24, 'Radiating asterisk spokes, the burst re-angling a notch on 
   rule: `--rot: @pick(0deg, 30deg, 60deg); @random(\${shapeFrequency}) { width: 90%; height: 90%; margin: 5%; border-radius: 50%; background: conic-gradient(from 0deg, ${ink(c)} 0 8%, var(--color0) 8% 25%, ${ink(c)} 25% 33%, var(--color0) 33% 50%, ${ink(c)} 50% 58%, var(--color0) 58% 75%, ${ink(c)} 75% 83%, var(--color0) 83%); -webkit-transform: rotate(@var(--rot)); transform: rotate(@var(--rot)); }${TR}`,
 }), { grid: '6x9', tg: '4x4', tf: 0.9 });
 
-// ── D. Crosses, plus, L-shapes & tetrominoes ───────────────────────────────
+// -- D. Crosses, plus, L-shapes & tetrominoes -------------------------------
 add('Plus', 20, 'Plump plus signs filling the grid, each cross re-inking on reseed.', (c) => ({
   vars: '',
   rule: `@random(\${shapeFrequency}) { background: ${ink(c)}; -webkit-clip-path: polygon(35% 0, 65% 0, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0 65%, 0 35%, 35% 35%); clip-path: polygon(35% 0, 65% 0, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0 65%, 0 35%, 35% 35%); }${TR}`,
@@ -333,7 +333,7 @@ add('Chalice', 9, 'Goblet silhouettes alternating upright and inverted, a stippl
   rule: `--rot: @pick(0deg, 180deg); @random(\${shapeFrequency}) { background: ${ink(c)}; -webkit-clip-path: polygon(20% 0, 80% 0, 62% 45%, 62% 82%, 85% 82%, 85% 100%, 15% 100%, 15% 82%, 38% 82%, 38% 45%); clip-path: polygon(20% 0, 80% 0, 62% 45%, 62% 82%, 85% 82%, 85% 100%, 15% 100%, 15% 82%, 38% 82%, 38% 45%); -webkit-transform: rotate(@var(--rot)); transform: rotate(@var(--rot)); }${TR}`,
 }));
 
-// ── E. Squares, frames & windows ───────────────────────────────────────────
+// -- E. Squares, frames & windows -------------------------------------------
 add('Quadrille', 4, 'Each cell split into four color quadrants, a little mosaic that re-inks on reseed.', (c) => ({
   vars: '',
   rule: `@random(\${shapeFrequency}) { background: ${ink(c)}; :before { content: ''; position: absolute; left: 0; top: 0; @size: 50%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; right: 0; bottom: 0; @size: 50%; background: ${ink(c)};${pt} } }${TR}`,
@@ -394,7 +394,7 @@ add('Portal', 2, 'Arched doorways topped with a semicircle, the openings re-tint
   rule: `@random(\${shapeFrequency}) { :after { content: ''; position: absolute; left: 14%; bottom: 0; width: 72%; height: 88%; border-radius: 999px 999px 0 0; background: ${ink(c)};${pt} } }${TR}`,
 }));
 
-// ── F. Lines & strokes ─────────────────────────────────────────────────────
+// -- F. Lines & strokes -----------------------------------------------------
 add('Crosshatch', 0, 'Cells crossed by both diagonals into an X-hatch, the strokes re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `@random(\${shapeFrequency}) { background: linear-gradient(45deg, transparent 43%, ${ink(c)} 43% 57%, transparent 57%), linear-gradient(-45deg, transparent 43%, ${ink(c)} 43% 57%, transparent 57%); :after { content: ''; position: absolute; left: 44%; top: 44%; @size: 12%; background: ${ink(c)};${pt} } }${TR}`,
@@ -445,7 +445,7 @@ add('Tally', 25, 'Bundles of upright tally strokes with the odd diagonal cross-o
   rule: `@random(\${shapeFrequency}) { background: repeating-linear-gradient(90deg, ${ink(c)} 0 12%, var(--color0) 12% 25%); } @random(0.25) { :after { content: ''; position: absolute; inset: 10% 0; background: ${ink(c)}; -webkit-clip-path: polygon(0 78%, 100% 12%, 100% 26%, 0 92%); clip-path: polygon(0 78%, 100% 12%, 100% 26%, 0 92%);${pt} } }${TR}`,
 }));
 
-// ── G. Diamonds & lozenges ─────────────────────────────────────────────────
+// -- G. Diamonds & lozenges -------------------------------------------------
 add('Lattice', 5, 'A diamond lattice of crossing diagonals with a colored pip in each lozenge - argyle, re-pipped on reseed.', (c) => ({
   vars: '',
   rule: `@random(\${shapeFrequency}) { background: ${ink(c)}; :after { content: ''; position: absolute; inset: 26%; background: ${ink(c)}; -webkit-clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);${pt} } }${TR}`,
@@ -476,7 +476,7 @@ add('Jewel', 13, 'Faceted gem diamonds with a bright table and shadowed pavilion
   rule: `@random(\${shapeFrequency}) { background: var(--color0); :before { content: ''; position: absolute; inset: 0; background: ${ink(c)}; -webkit-clip-path: polygon(50% 5%, 80% 35%, 50% 50%, 20% 35%); clip-path: polygon(50% 5%, 80% 35%, 50% 50%, 20% 35%);${pt} } :after { content: ''; position: absolute; inset: 0; background: ${ink(c)}; -webkit-clip-path: polygon(20% 35%, 50% 50%, 80% 35%, 50% 95%); clip-path: polygon(20% 35%, 50% 50%, 80% 35%, 50% 95%);${pt} } }${TR}`,
 }));
 
-// ── H. Chevrons, zigzags & steps (distinct shapes) ─────────────────────────
+// -- H. Chevrons, zigzags & steps (distinct shapes) -------------------------
 add('Flight', 19, 'Flying-geese blocks - a big triangle flanked by two small ones, re-aiming on each seed.', (c) => ({
   vars: '',
   rule: `--rot: @pick(0deg, 90deg, 180deg, 270deg); @random(\${shapeFrequency}) { background: ${ink(c)}; -webkit-transform: rotate(@var(--rot)); transform: rotate(@var(--rot)); :after { content: ''; position: absolute; inset: 0; background: ${ink(c)}; -webkit-clip-path: polygon(50% 0, 100% 100%, 0 100%); clip-path: polygon(50% 0, 100% 100%, 0 100%);${pt} } }${TR}`,
@@ -517,7 +517,7 @@ add('Ascent', 18, 'Right-triangle ramps climbing in four directions, an op-art s
   rule: `--rot: @pick(0deg, 90deg, 180deg, 270deg); @random(\${shapeFrequency}) { background: ${ink(c)}; -webkit-clip-path: polygon(0 100%, 100% 100%, 100% 0); clip-path: polygon(0 100%, 100% 100%, 100% 0); -webkit-transform: rotate(@var(--rot)); transform: rotate(@var(--rot)); }${TR}`,
 }));
 
-// ── I. Bricks, weaves & herringbone ────────────────────────────────────────
+// -- I. Bricks, weaves & herringbone ----------------------------------------
 add('Brickwork', 11, 'Running-bond bricks offset row by row, each course re-coloring on reseed.', (c) => ({
   vars: '',
   rule: `@random(\${shapeFrequency}) { width: 96%; height: 70%; margin: 15% 2%; border-radius: 6%; background: ${ink(c)}; } @match(y % 2 == 0) { :after { content: ''; position: absolute; left: -50%; top: 15%; width: 96%; height: 70%; border-radius: 6%; background: ${ink(c)};${pt} } }${TR}`,
@@ -548,7 +548,7 @@ add('Weft', 28 % 28, 'Over-under basket weave - horizontal and vertical bands in
   rule: `@random(\${shapeFrequency}) { background: var(--color0); :before { content: ''; position: absolute; left: 0; top: 28%; width: 100%; height: 44%; background: ${ink(c)};${pt} } } @match((x + y) % 2 == 0) { :before { left: 28%; top: 0; width: 44%; height: 100%; } }${TR}`,
 }));
 
-// ── J. Op-art & gradient facets ────────────────────────────────────────────
+// -- J. Op-art & gradient facets --------------------------------------------
 add('Facetgrad', 0, 'Each tile a two-stop diagonal gradient, the facets re-lighting and re-aiming on reseed.', (c) => ({
   vars: '',
   rule: `--rot: @pick(0deg, 90deg, 180deg, 270deg); @random(\${shapeFrequency}) { background: linear-gradient(135deg, ${ink(c)}, ${ink(c)}); -webkit-transform: rotate(@var(--rot)); transform: rotate(@var(--rot)); }${TR}`,

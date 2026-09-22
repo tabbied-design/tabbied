@@ -17,16 +17,16 @@ model means giving that up, so the two are pinned separately on purpose.
 
 ```
   data/image-prompts.json        <- 1. author the PROJECT (palette + style), then its prompts
-            │
+            -
             ▼  scripts/generate-images.mjs      (OpenAI Batch API, gpt-image-2, quality: low;
-            │                                    cutout: true adds background: "transparent")
+            -                                    cutout: true adds background: "transparent")
   generated-images/<id>.png      <- 2. candidates, gitignored, local scratch -
-            │                         cut-outs arrive with a real alpha channel
+            -                         cut-outs arrive with a real alpha channel
             ▼  scripts/promote-images.mjs       (sharp -> WebP q92; verifies a cut-out
-            │                                    actually has transparent pixels)
+            -                                    actually has transparent pixels)
   public/images/sites/<id>[-cutout].webp <- 3. COMMITTED. This file IS what browsers download.
   lib/generated/images.js                <-    manifest: slug -> {hash, width, height}
-            │
+            -
             ▼
   <Figure slug="..." />               <- 4. components/Figure.tsx, composited over a Tabbied pattern
 ```

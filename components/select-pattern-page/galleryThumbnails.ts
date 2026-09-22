@@ -53,7 +53,7 @@ export const galleryThumbnails: Record<string, ThumbnailConfig> = {
   terrain: {
     palette: ['#232529', '#3E434B', '#3E8BFF', '#3FFFB2', '#275AA6', '#3EECFF'],
     options: { grid: '4x4', frequency: 0.85 },
-    // Shape size is a fixed px formula (÷ column count); rendering smaller makes
+    // Shape size is a fixed px formula (/ column count); rendering smaller makes
     // the shapes read large against the card, matching the bold original.
     render: { width: 360, height: 360 },
   },

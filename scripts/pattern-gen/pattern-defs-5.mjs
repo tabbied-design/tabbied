@@ -28,7 +28,7 @@ const ink = (c, s = 1) => {
   return `@p(${a.join(', ')})`;
 };
 
-// ── shared snippets ────────────────────────────────────────────────────────
+// -- shared snippets --------------------------------------------------------
 const F = '@random(${shapeFrequency})';
 const TR = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
 const pt = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
@@ -171,9 +171,9 @@ const add = (name, palIdx, description, build, cfg = {}) => {
   });
 };
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // A. Arcs, rings & circles
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Lune', 0, 'Slim crescents bitten by an offset disc, the shadow swinging to a new diagonal each seed.', (c) => ({
   vars: '',
@@ -285,9 +285,9 @@ add('Discus', 13, 'Tilted ovals catching the throw mid-spin, each discus re-angl
   rule: `--rot: ${R8}; ${F} { width: 92%; height: 50%; margin: 25% 4%; border-radius: 50%; background: ${ink(c)}; ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // B. Triangles, chevrons & wedges
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Prow', 5, 'Bold triangles aimed like ships\' prows, each one swinging to a new heading on reseed.', (c) => ({
   vars: '',
@@ -399,9 +399,9 @@ add('Quadrant', 3, 'Triangles pointing in to the center from each edge, the arro
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(0 0, 100% 0, 50% 50%)')} ${rot('@var(--rot)')} }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // C. Polygons, diamonds & stars
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Lozenge', 8, 'Plain diamonds packed point to point, each lozenge re-tinting on reseed.', (c) => ({
   vars: '',
@@ -513,9 +513,9 @@ add('Hexdot', 16, 'Small hexagon studs centerd in each cell, re-tinting on resee
   rule: `${F} { :after { content: ''; position: absolute; left: 50%; top: 50%; @size: @rand(46%, 78%); ${xf('translate(-50%, -50%)')} background: ${ink(c)}; ${cp('polygon(50% 2%, 95% 26%, 95% 74%, 50% 98%, 5% 74%, 5% 26%)')}${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // D. Lines, bars, stripes & ticks
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Barline', 23, 'Tall bars of varying width standing in columns, each post re-tinting on reseed.', (c) => ({
   vars: '',
@@ -607,9 +607,9 @@ add('Dotdash', 9, 'A dot and a dash per cell like keyed code, re-keying their co
   rule: `--rot: ${R2}; ${F} { ${rot('@var(--rot)')} :before { content: ''; position: absolute; left: 12%; top: 42%; width: 34%; height: 16%; border-radius: 99px; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; right: 16%; top: 40%; @size: 20%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // E. Grid splits & corner cuts
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Ell', 5, 'L-shaped brackets locking the grid together, each one spinning to a new corner on reseed.', (c) => ({
   vars: '',
@@ -701,9 +701,9 @@ add('Celleye', 34, 'Square donuts with a round eye punched out, re-inking the ri
   rule: `${F} { background: ${ink(c)}; :after { content: ''; position: absolute; inset: 30%; border-radius: 50%; background: var(--color0);${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // F. Tiles, bricks & weaves
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Bond', 11, 'Running-bond brickwork, the courses re-glazing brick by brick on reseed.', (c) => ({
   vars: '',
@@ -805,9 +805,9 @@ add('Brokenbond', 20, 'A broken bond of bricks in random lengths, re-coursing on
   rule: `${F} { background: ${ink(c)}; width: @rand(58%, 96%); height: 78%; margin: 11% auto; border-radius: 6%; }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.98 });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // G. Op-art, facets & 3-D shading
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Bevel', 5, 'Raised bevelled buttons catching light on two edges, re-facing their color on reseed.', (c) => ({
   vars: '',
@@ -889,9 +889,9 @@ add('Lozengegrad', 38, 'Diamonds half in light and half in shadow, the cut turni
   rule: `--rot: ${R4}; ${F} { background: ${ink(c)}; ${cp('polygon(50% 2%, 98% 50%, 50% 98%, 2% 50%)')} ${rot('@var(--rot)')} :after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.26); ${cp('polygon(50% 2%, 98% 50%, 50% 98%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // H. Organic - leaves, blooms, waves & drops
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Bud', 15, 'Plump buds tilting at every angle, each one re-tinting on reseed.', (c) => ({
   vars: '',
@@ -1003,9 +1003,9 @@ add('Thistle', 46, 'Spiky thistle heads on stout bases, re-tinting on reseed.', 
   rule: `${F} { :before { content: ''; position: absolute; left: 34%; bottom: 8%; width: 32%; height: 42%; border-radius: 0 0 50% 50%; background: ${ink(c)};${pt} } :after { content: ''; position: absolute; left: 28%; top: 12%; width: 44%; height: 44%; background: ${ink(c)}; ${cp('polygon(50% 0, 60% 30%, 92% 18%, 68% 48%, 100% 60%, 64% 64%, 72% 100%, 50% 72%, 28% 100%, 36% 64%, 0 60%, 32% 48%, 8% 18%, 40% 30%)')}${pt} } }${TR}`,
 }), { grid: '6x9', tg: '5x5', tf: 0.95 });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // I. Dots, scatter & texture
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Scatterdot', 0, 'Dots jittering to a new spot in each cell on every redraw.', (c) => ({
   vars: '',
@@ -1097,9 +1097,9 @@ add('Mote', 17, 'Bright motes paired with a faint shadow twin for depth, re-tint
   rule: `${F} { :before { content: ''; position: absolute; left: 22%; top: 22%; @size: 50%; border-radius: 50%; background: ${ink(c)}; opacity: 0.3;${pt} } :after { content: ''; position: absolute; left: 40%; top: 40%; @size: 34%; border-radius: 50%; background: ${ink(c)};${pt} } }${TR}`,
 }), { grid: '8x12', tg: '6x6', tf: 0.95 });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // J. Symbols, glyphs & frames
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Arrow', 5, 'Block arrows pointing to a new heading on every redraw.', (c) => ({
   vars: '',

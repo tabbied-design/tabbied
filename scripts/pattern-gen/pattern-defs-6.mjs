@@ -43,7 +43,7 @@ const ink = (c, s = 1) => {
   return `@p(${a.join(', ')})`;
 };
 
-// ── shared snippets ────────────────────────────────────────────────────────
+// -- shared snippets --------------------------------------------------------
 const F = '@random(${shapeFrequency})';
 const TR = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
 const pt = ' -webkit-transition: ease 450ms; transition: ease 450ms;';
@@ -53,7 +53,7 @@ const xf = (v) => `-webkit-transform: ${v}; transform: ${v};`;
 const B = (css) => `:before { content: ''; position: absolute; ${css}${pt} }`;
 const A = (css) => `:after { content: ''; position: absolute; ${css}${pt} }`;
 
-// ── real holes, not painted-over ones ──────────────────────────────────────
+// -- real holes, not painted-over ones --------------------------------------
 // A polygon whose outer ring runs clockwise and whose inner ring runs
 // counter-clockwise, joined by a zero-width slit: under the nonzero fill rule
 // the inner ring is a genuine hole, so whatever is behind the canvas shows
@@ -278,9 +278,9 @@ const add = (name, palIdx, description, build, cfg = {}) => {
   });
 };
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // A. Ribs & bands
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Louvre', 44, 'Angled shutter slats set at one constant tilt, so the whole canvas rakes the same way and only the finish changes. The gaps between slats are open, not painted.', (c) => ({
   vars: '',
@@ -292,9 +292,9 @@ add('Kerf', 21, 'Saw slots cut clean through solid blocks, the kerf biting from 
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(0 0, 44% 0, 44% 58%, 56% 58%, 56% 0, 100% 0, 100% 100%, 0 100%)')} @match(@y % 2 == 1) { ${cp('polygon(0 0, 100% 0, 100% 100%, 56% 100%, 56% 42%, 44% 42%, 44% 100%, 0 100%)')} } }${TR}`,
 }), { grid: '8x12', tg: '6x6' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // B. Checkers, bonds & tilings
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Damier', 19, 'A strict checkerboard - filled squares keyed to their neighbors, the open squares holding a single pip so the field still reads when the ground drops away.', (c) => ({
   vars: '',
@@ -316,9 +316,9 @@ add('Isocube', 39, 'Tumbling blocks: one hexagon per cell shaded as a lit top an
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%)')} ${B(`inset: 0; background: ${ink(c)}; ${cp('polygon(50% 0, 100% 25%, 50% 50%, 0 25%)')}`)} ${A(`inset: 0; background: ${ink(c)}; ${cp('polygon(50% 50%, 100% 25%, 100% 75%, 50% 100%)')}`)} }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // C. Frames & architecture
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Lintel', 34, 'A post-and-lintel opening cut from every block, the doorways lining up into a colonnaded wall.', (c) => ({
   vars: '',
@@ -330,9 +330,9 @@ add('Lunette', 45, 'Half-round lunette windows, each pair of panes parted by an 
   rule: `${F} { ${B(`left: 5%; top: 18%; width: 43%; height: 78%; border-radius: 999px 0 0 0; background: ${ink(c)};`)} ${A(`left: 52%; top: 18%; width: 43%; height: 78%; border-radius: 0 999px 0 0; background: ${ink(c)};`)} }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // D. Rounds & arcs
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Annulus', 36, 'Rings that thicken row by row down the canvas - the same circle, walked through its whole range, bored right through.', (c) => ({
   vars: '',
@@ -349,9 +349,9 @@ add('Cove', 36, 'A deep circular scoop cut out of every block, the cove swapping
   rule: `${F} { background: ${ink(c)}; ${cp(coveBite(66, 'tl'))} @match(@y % 2 == 1) { ${cp(coveBite(66, 'br'))} } }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // E. Joinery & plates
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Mortise', 30, 'A mortise cut square through each block, standing upright in one column and lying flat in the next.', (c) => ({
   vars: '',
@@ -363,9 +363,9 @@ add('Rafter', 18, 'One diagonal member per cell, meeting end to end into unbroke
   rule: `${F} { background: ${ink(c)}; ${cp('polygon(0 58%, 58% 0, 100% 0, 100% 42%, 42% 100%, 0 100%)')} }${TR}`,
 }), { grid: '8x12', tg: '6x6' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // F. Cloth
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Ogee', 19, 'An ogee lattice - every tile rounded on one pair of opposite corners, flipping with the checker to draw the onion curve.', (c) => ({
   vars: '',
@@ -377,18 +377,18 @@ add('Buttonhole', 24, 'Worked buttonholes cut right through the placket, upright
   rule: `${F} { background: ${ink(c)}; ${cp(withHole(stadiumHole(30, 14)))} @match(@x % 2 == 1) { ${cp(withHole(transposeRing(stadiumHole(30, 14))))} } }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // G. Print & measures
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Gutter', 28, 'Two text columns with a clean gutter between them, the page grid repeated spread after spread.', (c) => ({
   vars: '',
   rule: `${F} { ${B(`left: 6%; top: 8%; width: 38%; height: 84%; background: ${ink(c)};`)} ${A(`left: 56%; top: 8%; width: 38%; height: 84%; background: ${ink(c)};`)} }${TR}`,
 }), { grid: '6x9', tg: '5x5' });
 
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 // H. Ramps & optical order
-// ════════════════════════════════════════════════════════════════════════════
+// ----------------------------------------------------------------------------
 
 add('Diminuendo', 18, 'A field of squares fading out row by row on a straight ramp, top to bottom, without a single step out of place.', (c) => ({
   vars: '',

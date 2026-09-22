@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import useMediaQuery from 'lib/useMediaQuery';
 import { PALETTE_POOLS, TIMING, seededRandom, type PaletteName } from './homeMotion';
 import styles from './HomePatternLibrary.module.css';
@@ -133,7 +134,7 @@ export default function HomePatternLibrary({
         <div className={styles.rowHeader}>
           <span className={styles.eyebrow}>Pattern library</span>
           <Link href="/patterns" prefetch={false} className={styles.viewAll}>
-            View all {patternCount} &rarr;
+            View all {patternCount} <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
 
@@ -147,7 +148,7 @@ export default function HomePatternLibrary({
             <Link href="/patterns" prefetch={false} className={styles.cta}>
               <span>Make your pattern</span>
               <span className={styles.ctaArrow} aria-hidden="true">
-                &rarr;
+                <ArrowRight size={18} />
               </span>
             </Link>
           </div>
