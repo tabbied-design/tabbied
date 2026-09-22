@@ -1,7 +1,8 @@
 import { betterAuth } from 'better-auth';
 import { admin } from 'better-auth/plugins';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { eq } from 'drizzle-orm';
+import { createAuthMiddleware } from 'better-auth/api';
+import { and, eq, inArray, sql, type SQL } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import type { Env } from './env';
@@ -54,14 +55,62 @@ export function configuredProviders(env: Env): string[] {
   return ['google', 'apple', 'github'].filter((name) => name in configured);
 }
 
-/** Is this address in ADMIN_EMAILS? Empty or unset means nobody is. */
-export function isConfiguredAdmin(env: Env, email: string): boolean {
-  const configured = (env.ADMIN_EMAILS ?? '')
+/**
+ * The addresses named in ADMIN_EMAILS, lower-cased, in the order given. Empty
+ * or unset means nobody is an admin by configuration. Exported so `/api/health`
+ * can report *how many* there are: a deploy that has the setting and a deploy
+ * that silently lost it are otherwise indistinguishable from outside, which is
+ * the whole diagnosis of "I added my address and I still am not an admin". The
+ * addresses themselves are never reported.
+ */
+export function configuredAdmins(env: Env): string[] {
+  return (env.ADMIN_EMAILS ?? '')
     .split(',')
     .map((entry) => entry.trim().toLowerCase())
     .filter((entry) => entry.length > 0);
+}
 
-  return configured.includes(email.trim().toLowerCase());
+/** Is this address in ADMIN_EMAILS? Empty or unset means nobody is. */
+export function isConfiguredAdmin(env: Env, email: string): boolean {
+  return configuredAdmins(env).includes(email.trim().toLowerCase());
+}
+
+/**
+ * The one statement behind admins-by-configuration: give the role to the row
+ * `where` names, if that row is named in ADMIN_EMAILS and does not have it
+ * yet. Both call sites below pass a different `where` - the address a sign-in
+ * arrived with, or the id a new session belongs to - and neither restates the
+ * rule, so a promotion cannot mean one thing on one path and another on the
+ * next.
+ *
+ * It is one UPDATE rather than a read and a write, which makes it atomic and
+ * idempotent: it runs on every sign-in by a configured address and writes
+ * nothing once the role is there. better-auth stores addresses lower-cased,
+ * but the comparison says `lower()` anyway rather than trust that.
+ */
+async function grantConfiguredAdmin(
+  env: Env,
+  db: ReturnType<typeof drizzle>,
+  where: SQL
+): Promise<void> {
+  const named = configuredAdmins(env);
+
+  // Nobody configured: no statement at all, rather than one that cannot match.
+  if (named.length === 0) return;
+
+  await db
+    .update(schema.user)
+    .set({ role: 'admin' })
+    .where(
+      and(
+        where,
+        inArray(sql`lower(${schema.user.email})`, named),
+        // `role <> 'admin'` alone is NULL for the NULL role that every account
+        // predating the admin plugin's migration carries - i.e. exactly the
+        // accounts this exists to promote - so it would match none of them.
+        sql`(${schema.user.role} is null or ${schema.user.role} <> 'admin')`
+      )
+    );
 }
 
 export function buildAuth(env: Env) {
@@ -81,11 +130,40 @@ export function buildAuth(env: Env) {
     // hiding themselves is cosmetic.
     plugins: [admin()],
 
-    // Admins by configuration. `ADMIN_EMAILS` names accounts that get the role
-    // without anyone running the grant script: set on the row as it is
-    // created, and - for an account that predates the setting - set the next
-    // time that person signs in. Compared case-insensitively, since an email
-    // is.
+    // Admins by configuration, promoted *before* the session is minted.
+    //
+    // `ADMIN_EMAILS` names accounts that get the role without anyone running
+    // the grant script, and there are two moments to catch: the account being
+    // created, and an account that predates the setting signing in. The first
+    // is a database hook below. The second has to run here, in front of the
+    // endpoint, and not in a `session.create` hook, because of what the role
+    // is read from afterwards.
+    //
+    // `signInEmail` reads the user row, creates the session, and only then
+    // calls `setSessionCookie(ctx, { session, user })` with the row it read
+    // *first*. With `cookieCache` on, that row is what the browser is handed
+    // and what `getSession` answers from for the cache's lifetime - so a
+    // promotion written from `session.create.after` lands in D1 and is absent
+    // from the very session it was triggered by. The nav drew no Admin link
+    // and /admin rendered "Not found" for five minutes after doing everything
+    // right, which is indistinguishable from the setting not working at all.
+    // Promoting here means the row the endpoint goes on to read already says
+    // admin. `worker/test/admin.test.ts` pins the session, not just the row.
+    hooks: {
+      before: createAuthMiddleware(async (ctx) => {
+        // Only the one endpoint, and only when there is something to do: this
+        // runs in front of every /api/auth/* request.
+        if (ctx.path !== '/sign-in/email') return;
+        if (!env.ADMIN_EMAILS) return;
+
+        const email = (ctx.body as { email?: unknown } | undefined)?.email;
+
+        if (typeof email !== 'string') return;
+
+        await grantConfiguredAdmin(env, db, sql`lower(${schema.user.email}) = ${email.trim().toLowerCase()}`);
+      }),
+    },
+
     databaseHooks: {
       user: {
         create: {
@@ -97,22 +175,12 @@ export function buildAuth(env: Env) {
       session: {
         create: {
           after: async (created) => {
-            // Nothing to grant when nobody is configured: skip the read that
-            // otherwise ran on every sign-in.
-            if (!env.ADMIN_EMAILS) return;
-
-            const [row] = await db
-              .select({ email: schema.user.email, role: schema.user.role })
-              .from(schema.user)
-              .where(eq(schema.user.id, created.userId))
-              .limit(1);
-
-            if (row && row.role !== 'admin' && isConfiguredAdmin(env, row.email)) {
-              await db
-                .update(schema.user)
-                .set({ role: 'admin' })
-                .where(eq(schema.user.id, created.userId));
-            }
+            // The catch-all, for a session minted by any path the hook above
+            // does not see: a social callback, where the address is not known
+            // until the provider answers, or the auto-sign-in on a
+            // verification link. Those pay the cookie cache's few minutes
+            // before the role shows in the session; nothing goes unpromoted.
+            await grantConfiguredAdmin(env, db, eq(schema.user.id, created.userId));
           },
         },
       },

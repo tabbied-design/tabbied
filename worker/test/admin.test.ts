@@ -94,5 +94,29 @@ describe('admins by configuration', () => {
 
     const row = await env.DB.prepare('SELECT role FROM user WHERE email = ?').bind('root@example.com').first<{ role: string | null }>();
     expect(row?.role).toBe('admin');
+
+    // And the session says so, which the row passing does not imply. The
+    // pages read the role off the session the browser holds, not off the
+    // row: the nav draws the Admin link from it and AdminPage renders "Not
+    // found" without it. With the promotion written after the session was
+    // minted, `setSessionCookie` cached the row as it was read *before* it,
+    // so this answered null for the cookie cache's five minutes while every
+    // /api/admin route already answered 200. That is the shape of "I added my
+    // address and the admin page still is not there".
+    const session = (await SELF.fetch(`${ORIGIN}/api/auth/get-session`, { headers: { cookie } }).then((r) => r.json())) as {
+      user?: { role?: string | null };
+    } | null;
+    expect(session?.user?.role).toBe('admin');
+  });
+});
+
+describe('the api health report', () => {
+  it('counts the configured admin addresses without naming them', async () => {
+    const body = await SELF.fetch(`${ORIGIN}/api/health`).then((r) => r.json()) as Record<string, unknown>;
+
+    // Two, from the vitest config's ADMIN_EMAILS. Zero on a deployment whose
+    // setting never arrived, which is the fact this exists to report.
+    expect(body.adminEmails).toBe(2);
+    expect(JSON.stringify(body)).not.toContain('example.com');
   });
 });
