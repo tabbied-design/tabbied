@@ -395,9 +395,39 @@
 
 .fieldMeta {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+}
+
+/* The row's own controls: the pencil that opens the library for this field,
+   and, once the field no longer draws the template's own design, an undo.
+   The same 22px square the palette rows' pencil is. */
+.fieldActions {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  align-items: center;
+}
+
+.fieldAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  color: oklch(0.62 0.01 260);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.fieldAction:hover {
+  color: var(--s-ink);
+  background-color: oklch(0 0 0 / 0.08);
 }
 
 .fieldDesign {

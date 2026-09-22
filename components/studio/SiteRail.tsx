@@ -9,6 +9,12 @@
 // download is where copy changes today. Every change is planned and applied
 // by the parent; this only says what was asked for.
 //
+// Patterns lists one row per field on the page. Shuffle draws a new set for
+// all of them; the pencil on a row opens the library for that one field, and
+// a row that no longer draws the template's own design gets an undo of its
+// own, beside the page-wide Reset. The pencil is the same control the palette
+// rows carry, so the two tabs read as one rail.
+//
 // Colours is a list of palettes rather than a row of colour pickers because
 // picking four colours that work together is the hard part and the library
 // has already done it 437 times. The pickers did not go away - the pencil on
@@ -18,10 +24,11 @@
 // Save sits at the foot of the rail rather than in the bar: it belongs beside
 // the controls that make the changes it saves.
 import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
-import { Pencil, Save } from 'lucide-react';
+import { Pencil, Save, Undo2 } from 'lucide-react';
 import type { PatternSlot, TemplateSpec } from 'tabbied-templates';
 import type { DesignChoice } from 'lib/designCatalog';
 import { activeChoice, paletteChoices } from 'lib/studioPalettes';
+import DesignDialog from './DesignDialog';
 import PaletteDialog from './PaletteDialog';
 import styles from './SiteRail.module.css';
 
@@ -63,6 +70,9 @@ export default function SiteRail({
   onPalette,
   patternSlots,
   designOn,
+  fieldChanged,
+  onFieldDesign,
+  onResetField,
   patternsChanged,
   shuffling,
   onShuffle,
@@ -84,6 +94,12 @@ export default function SiteRail({
   patternSlots: readonly PatternSlot[];
   /** The design a field draws now, by slot id. */
   designOn: (slot: PatternSlot) => string;
+  /** Whether a field draws something other than the template authored. */
+  fieldChanged: (slot: PatternSlot) => boolean;
+  /** Give one field a design chosen from the library. */
+  onFieldDesign: (slot: PatternSlot, slug: string) => void;
+  /** Put one field back to the template's own design. */
+  onResetField: (slot: PatternSlot) => void;
   patternsChanged: boolean;
   shuffling: boolean;
   onShuffle: () => void;
@@ -95,6 +111,8 @@ export default function SiteRail({
   const [name, setName] = useState(title);
   /** The row whose pencil was pressed, or null when the dialog is shut. */
   const [editing, setEditing] = useState<string | null>(null);
+  /** The pattern field whose pencil was pressed, or null when the picker is shut. */
+  const [picking, setPicking] = useState<PatternSlot | null>(null);
 
   const choices = useMemo(
     () => paletteChoices(templateName, spec.palette.colors),
@@ -132,6 +150,7 @@ export default function SiteRail({
   // Memoised: the rail re-renders on every palette click, shuffle tick and
   // save-state change, and rebuilt a 338-entry map on each of them.
   const names = useMemo(() => new Map(designs.map((design) => [design.slug, design.name])), [designs]);
+  const fieldLabel = (slot: PatternSlot) => slot.label ?? sectionOf(slot.id);
 
   return (
     <aside className={styles.rail} aria-label="Customize this site">
@@ -246,8 +265,8 @@ export default function SiteRail({
       {tab === 'patterns' ? (
         <section className={styles.panel} aria-label="Patterns">
           <p className={styles.hint}>
-            The patterns currently placed on the page. Shuffle to draw a new set
-            from the pattern library.
+            The patterns currently placed on the page. Change any one of them,
+            or shuffle to draw a new set from the pattern library.
           </p>
           {patternSlots.length === 0 ? (
             <p className={styles.hint}>This template has no pattern fields.</p>
@@ -257,6 +276,8 @@ export default function SiteRail({
             <ul role="list" className={`${styles.fields} ${shuffling ? styles.fieldsBusy : ''}`}>
               {patternSlots.map((slot) => {
                 const slug = designOn(slot);
+                const label = fieldLabel(slot);
+                const changed = fieldChanged(slot);
 
                 return (
                   <li key={slot.id} className={styles.field}>
@@ -271,13 +292,48 @@ export default function SiteRail({
                     />
                     <span className={styles.fieldMeta}>
                       <span className={styles.fieldDesign}>{names.get(slug) ?? slug}</span>
-                      <span className={styles.fieldSlot}>{slot.label ?? sectionOf(slot.id)}</span>
+                      <span className={styles.fieldSlot}>{label}</span>
+                    </span>
+                    <span className={styles.fieldActions}>
+                      {changed ? (
+                        <button
+                          type="button"
+                          className={styles.fieldAction}
+                          title={`Reset the ${label} pattern`}
+                          aria-label={`Reset the ${label} pattern`}
+                          onClick={() => onResetField(slot)}
+                        >
+                          <Undo2 size={13} aria-hidden="true" />
+                        </button>
+                      ) : null}
+                      <button
+                        type="button"
+                        className={styles.fieldAction}
+                        title={`Change the ${label} pattern`}
+                        aria-label={`Change the ${label} pattern`}
+                        onClick={() => setPicking(slot)}
+                      >
+                        <Pencil size={13} aria-hidden="true" />
+                      </button>
                     </span>
                   </li>
                 );
               })}
             </ul>
           )}
+          <DesignDialog
+            open={picking !== null}
+            onOpenChange={(next) => {
+              if (!next) setPicking(null);
+            }}
+            fieldLabel={picking ? fieldLabel(picking) : ''}
+            designs={designs}
+            current={picking ? designOn(picking) : ''}
+            authored={picking?.config.slug ?? ''}
+            onPick={(slug) => {
+              if (picking) onFieldDesign(picking, slug);
+            }}
+          />
           {/* Shuffle has the row to itself until the page has been changed;
               then Reset appears beside it, the way back to the template's own. */}
           <div className={styles.patternActions}>

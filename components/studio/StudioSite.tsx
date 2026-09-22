@@ -36,7 +36,7 @@ import type { DesignChoice } from 'lib/designCatalog';
 import type { SiteDocument } from 'lib/studioDocument';
 import { apiFetch, ApiError } from 'lib/apiFetch';
 import { archiveNameFor, buildCustomisedArchive, saveArchive } from 'lib/studioDownload';
-import { designOn, patternsChanged, shuffleDesigns } from 'lib/studioPatterns';
+import { designOn, patternChanged, patternsChanged, pickDesign, shuffleDesigns } from 'lib/studioPatterns';
 import {
   buildPreviewDocument,
   packagedTemplateUrl,
@@ -279,6 +279,27 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
     toaster.add({ title: `Back to ${site.templateName}'s own patterns` });
   };
 
+  // One field at a time: a design chosen from the picker, or the field put
+  // back to the template's own. The same two paths as the page-wide actions,
+  // so a pick applies live through the engine and a reset rebuilds, since
+  // only the package still holds the authored seed and options.
+  const setFieldDesign = (slot: PatternSlot, slug: string) => {
+    const patterns = pickDesign(patternSlots, draft.edits.patterns, slot.id, slug);
+    const { patterns: _dropped, ...rest } = draft.edits;
+    const document = { ...draft, edits: patterns ? { ...rest, patterns } : rest };
+
+    touch(document);
+
+    if (slug === slot.config.slug) {
+      rebuild(document);
+      return;
+    }
+
+    applyDocument(document);
+  };
+
+  const resetFieldDesign = (slot: PatternSlot) => setFieldDesign(slot, slot.config.slug);
+
   // The handlers below update state functionally. Each closes over the render
   // it was created in, and the rail stays live while its request is out: a
   // palette click during a save, or a reset during a rename, used to be
@@ -401,6 +422,9 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
               onPalette={setPalette}
               patternSlots={patternSlots}
               designOn={(slot) => designOn(slot, patternEdit(slot))}
+              fieldChanged={(slot) => patternChanged(slot, patternEdit(slot))}
+              onFieldDesign={setFieldDesign}
+              onResetField={resetFieldDesign}
               patternsChanged={fieldsChanged}
               shuffling={shuffling}
               onShuffle={shuffle}

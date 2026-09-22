@@ -55,18 +55,43 @@ export function shuffleDesigns(
   return next;
 }
 
+/** True when this field draws something other than what the template authored. */
+export const patternChanged = (slot: PatternSlot, edit: PatternEdit | undefined): boolean => {
+  if (!edit) return false;
+
+  const swapped = edit.slug != null && edit.slug !== slot.config.slug;
+  const reseeded = edit.seed != null && edit.seed !== slot.config.seed;
+
+  return swapped || reseeded;
+};
+
 /** True when any field draws something other than what the template authored. */
 export const patternsChanged = (
   slots: readonly PatternSlot[],
   current: Record<string, PatternEdit> | undefined
-): boolean =>
-  slots.some((slot) => {
-    const edit = current?.[slot.id];
+): boolean => slots.some((slot) => patternChanged(slot, current?.[slot.id]));
 
-    if (!edit) return false;
+/**
+ * Give one field a design a person chose, with a fresh seed as a shuffle
+ * gives; the other fields keep whatever they draw. Choosing the template's
+ * own design is the field's reset: its entry leaves the document, so the
+ * authored seed and options come back with it rather than a fresh seed on
+ * the authored design. The caller rebuilds the canvas in that case, since a
+ * plan without the entry cannot put those attributes back.
+ */
+export function pickDesign(
+  slots: readonly PatternSlot[],
+  current: Record<string, PatternEdit> | undefined,
+  slotId: string,
+  slug: string,
+  random: () => number = Math.random
+): Record<string, PatternEdit> | undefined {
+  const slot = slots.find((candidate) => candidate.id === slotId);
+  const { [slotId]: _dropped, ...rest } = current ?? {};
 
-    const swapped = edit.slug != null && edit.slug !== slot.config.slug;
-    const reseeded = edit.seed != null && edit.seed !== slot.config.seed;
+  if (!slot || slug === slot.config.slug) {
+    return Object.keys(rest).length > 0 ? rest : undefined;
+  }
 
-    return swapped || reseeded;
-  });
+  return { ...rest, [slotId]: { slug, seed: randomSeed(random) } };
+}

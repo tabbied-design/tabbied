@@ -244,6 +244,65 @@ test.describe('studio site', () => {
       .toEqual(before);
   });
 
+  test('one field can be given a design of its own, and put back on its own', async ({
+    page,
+  }) => {
+    await page.route('**/api/studio/sites/**', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(siteDocument({ mine: true })),
+      })
+    );
+
+    await page.goto('/studio/site/?id=e2esite');
+
+    const frame = page.frameLocator('iframe');
+    const hosts = frame.locator('[data-edit-pattern] [data-pattern]');
+    await expect(hosts.first()).toBeAttached({ timeout: 15_000 });
+
+    const before = await hosts.evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute('data-pattern'))
+    );
+    const target = before.includes('radius') ? 'lobe' : 'radius';
+    const targetName = target === 'radius' ? 'Radius' : 'Lobe';
+
+    const rail = page.getByRole('complementary', { name: 'Customize this site' });
+    await rail.getByRole('tab', { name: 'Patterns' }).click();
+
+    // Every row carries a pencil; none carries an undo until it has changed.
+    const rows = rail.locator('li');
+    await expect(rows).toHaveCount(before.length);
+    await expect(rail.getByRole('button', { name: /^Change the .* pattern$/ })).toHaveCount(before.length);
+    await expect(rail.getByRole('button', { name: /^Reset the .* pattern$/ })).toHaveCount(0);
+
+    // The pencil opens the library for that field; a search narrows it and
+    // choosing a design applies it to that field alone, live.
+    await rows.first().getByRole('button', { name: /^Change the .* pattern$/ }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: /^Change the .* pattern$/ })).toBeVisible();
+    await dialog.getByLabel('Search patterns').fill(targetName);
+    await dialog.getByRole('button', { name: targetName, exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+
+    await expect.poll(() => hosts.first().getAttribute('data-pattern')).toBe(target);
+    const after = await hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern')));
+    expect(after.slice(1)).toEqual(before.slice(1));
+    await expect(rows.first().locator('img')).toHaveAttribute('src', `/previews/${target}.webp`);
+    await expect(rail.getByRole('button', { name: 'Save changes' })).toBeEnabled();
+
+    // The changed row, and only that row, offers its own way back.
+    const undo = rail.getByRole('button', { name: /^Reset the .* pattern$/ });
+    await expect(undo).toHaveCount(1);
+    await expect(rows.first().getByRole('button', { name: /^Reset the .* pattern$/ })).toBeVisible();
+    await undo.click();
+
+    await expect
+      .poll(() => hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern'))))
+      .toEqual(before);
+    await expect(rail.getByRole('button', { name: /^Reset the .* pattern$/ })).toHaveCount(0);
+  });
+
   test('a visitor by link gets the page and no editor', async ({ page }) => {
     await page.route('**/api/studio/sites/**', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(siteDocument()) })
