@@ -1,3 +1,5 @@
+import { existsSync, readdirSync } from 'node:fs';
+import path from 'node:path';
 import type { Metadata } from 'next';
 import type { PatternDefinition } from 'tabbied';
 import {
@@ -15,6 +17,8 @@ import { pageMetadata } from 'lib/seo';
 import home from 'components/main-page/home.module.css';
 import s from './templates.module.css';
 
+const SHOTS_DIR = path.join(process.cwd(), 'public', 'template-shots');
+
 // Derived, never written out: adding a site can't leave a stale number behind.
 const TOTAL = TEMPLATE_SITES.length + NEW_TEMPLATE_SITES.length;
 
@@ -30,6 +34,17 @@ const ART: Record<string, PatternDefinition> = {
   // The second collection's patterns, keyed by preset slug.
   ...Object.fromEntries(NEW_TEMPLATE_SITES.map((x) => [x.patternSlug, x.pattern])),
 };
+
+// The templates with a screenshot of their first screen, read off the files
+// in public/template-shots at build time, so a shot added there is on its
+// card with nothing else to change (scripts/generate-template-shots.mjs).
+const SHOTS = new Set(
+  existsSync(SHOTS_DIR)
+    ? readdirSync(SHOTS_DIR)
+        .filter((file) => file.endsWith('.webp'))
+        .map((file) => file.slice(0, -'.webp'.length))
+    : []
+);
 
 export default function TemplatesGallery() {
   // One list, numbered straight through: the gallery shows a single grid
@@ -58,6 +73,7 @@ export default function TemplatesGallery() {
   ].map((c, i) => ({
     ...c,
     n: i + 1,
+    shot: SHOTS.has(c.slug) ? `/template-shots/${c.slug}.webp` : undefined,
     art: ART[c.pattern],
     // Throws for a site the category table has not met, which fails the
     // export rather than shipping a card no filter reaches.

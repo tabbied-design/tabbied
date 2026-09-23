@@ -25,6 +25,8 @@ export type TemplateCard = {
   colors: string[];
   seed: string;
   category: TemplateCategory;
+  /** A screenshot of the site's first screen, where one has been taken. */
+  shot?: string;
 };
 
 /** The most swatches a card shows; the inks, never the ground. */
@@ -47,7 +49,20 @@ function Card({ c }: { c: TemplateCard }) {
     <div className={s.card} style={vars}>
       <a className={s.cardLink} href={c.href}>
         <div className={s.thumb}>
-          <LazyPattern pattern={c.art} palette={c.colors} seed={c.seed} />
+          {c.shot ? (
+            // A pilot: the site itself, with its pattern as the accent in the
+            // corner. A template with no shot is the pattern alone, as before
+            // (scripts/generate-template-shots.mjs).
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element -- a committed file under public/ */}
+              <img className={s.shot} src={c.shot} alt="" loading="lazy" decoding="async" />
+              <span className={s.accent} aria-hidden="true">
+                <LazyPattern pattern={c.art} palette={c.colors} seed={c.seed} />
+              </span>
+            </>
+          ) : (
+            <LazyPattern pattern={c.art} palette={c.colors} seed={c.seed} />
+          )}
           <span className={s.num}>{String(c.n).padStart(2, '0')}</span>
         </div>
         <div className={s.body}>

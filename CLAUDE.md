@@ -448,6 +448,19 @@ agree) behind a "Menu" toggle. Four things it depends on:
   header hides must be in a visible menu that fits on the screen. A new
   template that hides its nav fails it until it carries the menu.
 
+## Template screenshots on the gallery cards - a pilot
+
+A `/templates` card drew only its pattern, so a person choosing a website
+could not see one. `scripts/generate-template-shots.mjs <slug> ...` renders a
+site's first screen from `out/` (1280x960, the card's own 4:3, so nothing is
+cropped) into `public/template-shots/<slug>.webp`, and a card with a file
+there shows the site with its live pattern as a tile in the corner. The set
+is whatever files exist, read at build time, so a card with no shot is the
+pattern alone as before. Six are shot (solstice, werkraum, hopscotch-museum,
+cobalt-works, zenith-observatory, mistral-cycles). Committed like the
+previews, because the deploy build has no browser; reshoot after a hero
+changes.
+
 ## The mark, and the font that travels with it
 
 `components/logo/` is the whole of the brand mark: `LogoMark` is the glyph,
