@@ -172,13 +172,17 @@ export function deriveGridForBox(
 
   const minCell = sizing?.minCellPx ?? DEFAULT_MIN_CELL_PX;
   const maxCell = sizing?.maxCellPx ?? DEFAULT_MAX_CELL_PX;
+  const maxCells = sizing?.maxCells;
   const bounded = Math.min(Math.max(targetCellPx, minCell), maxCell);
   const cell = Math.max(
     // A cell floor above the short edge would force cells far from square
     // (e.g. a 200px floor in a 5000×100 banner); squareness wins there.
     Math.min(bounded, width, height),
     width / MAX_GRID_EDGE,
-    height / MAX_GRID_EDGE
+    height / MAX_GRID_EDGE,
+    // A design whose cells are a count of things (rings, rays, bars) is held
+    // to the count it was drawn for: the smallest cell that fits no more.
+    maxCells ? Math.sqrt((width * height) / maxCells) : 0
   );
 
   const axisCandidates = (span: number): number[] => {
@@ -192,6 +196,8 @@ export function deriveGridForBox(
 
   for (const cols of axisCandidates(width)) {
     for (const rows of axisCandidates(height)) {
+      if (maxCells && cols * rows > maxCells) continue;
+
       const cellW = width / cols;
       const cellH = height / rows;
       const score =
@@ -203,6 +209,15 @@ export function deriveGridForBox(
         best = { cols, rows, score };
       }
     }
+  }
+
+  // Every candidate over the cap: a box so long that even its short edge
+  // holds one cell and the long one more than the cap. Keep the one row (or
+  // column) and as many cells along it as the cap allows.
+  if (best.score === Infinity && maxCells) {
+    return width >= height
+      ? { cols: Math.max(1, Math.min(maxCells, MAX_GRID_EDGE)), rows: 1 }
+      : { cols: 1, rows: Math.max(1, Math.min(maxCells, MAX_GRID_EDGE)) };
   }
 
   return { cols: best.cols, rows: best.rows };

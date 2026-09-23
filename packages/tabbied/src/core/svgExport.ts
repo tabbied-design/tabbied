@@ -1024,13 +1024,34 @@ function paintImageLayer(
 
   const tiles = areaW < box.w - 0.5 || areaH < box.h - 0.5;
   const repeats = repeat.startsWith('repeat');
-  if (tiles && !repeats) {
-    warn(ctx, 'no-repeat background layer smaller than its box');
-  }
+  // A no-repeat layer smaller than its box is painted once, in its own area,
+  // and nothing around it. An SVG gradient pads its end colors out across
+  // whatever it fills, so filling the whole shape with it (what this did,
+  // with a warning) spread the layer's edge color over the box: a mask made
+  // of quarter-cell squares exported as a solid cell.
+  const once = tiles && !repeats;
+  // Where a layer may paint: the shape, cut to the layer's area when it is
+  // painted once. Null when the two do not meet.
+  const paintRegion = (): { node: SvgNode; clip: string | null } | null => {
+    if (!once) return { node: shapeNode(shape, {}, ctx.precision), clip: null };
+    if (shape.kind === 'rect') {
+      const x0 = Math.max(area.x, shape.box.x);
+      const y0 = Math.max(area.y, shape.box.y);
+      const x1 = Math.min(area.x + area.w, shape.box.x + shape.box.w);
+      const y1 = Math.min(area.y + area.h, shape.box.y + shape.box.h);
+      if (x1 <= x0 || y1 <= y0) return null;
+      return { node: shapeNode({ kind: 'rect', box: { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } }, {}, ctx.precision), clip: null };
+    }
+    const clip = addDef(ctx, { tag: 'clipPath', attrs: {}, children: [shapeNode(shape, {}, ctx.precision)] });
+    return { node: shapeNode({ kind: 'rect', box: area }, {}, ctx.precision), clip };
+  };
 
-  const fillShapeWith = (fill: string): SvgNode[] => [
-    shapeNode(shape, { fill }, ctx.precision),
-  ];
+  const fillShapeWith = (fill: string): SvgNode[] => {
+    const region = paintRegion();
+    if (!region) return [];
+    const node = { ...region.node, attrs: { ...region.node.attrs, fill } };
+    return region.clip ? [{ tag: 'g', attrs: { 'clip-path': `url(#${region.clip})` }, children: [node] }] : [node];
+  };
 
   if (fn === 'linear-gradient' || fn === 'repeating-linear-gradient') {
     const repeating = fn.startsWith('repeating');
@@ -1084,10 +1105,12 @@ function paintImageLayer(
     const cx = area.x + resolveLength(cxTok, area.w);
     const cy = area.y + resolveLength(cyTok, area.h);
     const radius = Math.hypot(Math.max(cx - box.x, box.x + box.w - cx), Math.max(cy - box.y, box.y + box.h - cy)) + 1;
+    const region = paintRegion();
+    if (!region) return [];
     const clipId = addDef(ctx, {
       tag: 'clipPath',
       attrs: {},
-      children: [shapeNode(shape, {}, ctx.precision)],
+      children: [region.node],
     });
     // Adjacent sectors are painted with a hair of angular overlap: two
     // abutting SVG paths anti-alias against each other and leave a seam the
@@ -1107,7 +1130,10 @@ function paintImageLayer(
           },
         };
       });
-    return [{ tag: 'g', attrs: { 'clip-path': `url(#${clipId})` }, children: paths }];
+    const sectorsNode: SvgNode = { tag: 'g', attrs: { 'clip-path': `url(#${clipId})` }, children: paths };
+    return region.clip
+      ? [{ tag: 'g', attrs: { 'clip-path': `url(#${region.clip})` }, children: [sectorsNode] }]
+      : [sectorsNode];
   }
 
   if (fn === 'repeating-conic-gradient') {

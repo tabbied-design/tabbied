@@ -60,7 +60,7 @@
     }
   ],
   "code": {
-    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-mask: @svg(viewBox: 0 0 100 100; path*3 { d: M-10 90 L90 -10; fill: none; stroke: #000; stroke-width: 22; stroke-linecap: round; transform: translate(calc(@n(-1) * 36) 0) }); mask: @svg(viewBox: 0 0 100 100; path*3 { d: M-10 90 L90 -10; fill: none; stroke: #000; stroke-width: 22; stroke-linecap: round; transform: translate(calc(@n(-1) * 36) 0) }); -webkit-transform: rotate(@pick(0deg, 90deg)); transform: rotate(@pick(0deg, 90deg)); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
-    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box } :container { background: var(--color0); overflow:hidden; }"
+    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-mask: @var(--texture); mask: @var(--texture); -webkit-transform: rotate(@pick(0deg, 90deg)); transform: rotate(@pick(0deg, 90deg)); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; --texture: @svg(viewBox: 0 0 100 100; path*3 { d: M-10 90 L90 -10; fill: none; stroke: #000; stroke-width: 22; stroke-linecap: round; transform: translate(calc(@n(-1) * 36) 0) }) } :container { background: var(--color0); overflow:hidden; }"
   }
 }

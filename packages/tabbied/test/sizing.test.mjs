@@ -198,3 +198,34 @@ test('densityFromGrid reads an authored grid back as a density', async (t) => {
     assert.equal(densityFromGrid('axb'), null);
   });
 });
+
+// A design whose cells are a count of things (radiantswirl's rings) is held
+// to the count it was drawn for, however fine the density asks for.
+test('maxCells caps a derived grid at the design\'s own count', () => {
+  const boxes = [
+    [418, 646],
+    [1440, 900],
+    [300, 260],
+    [2000, 120],
+    [120, 2000],
+    [5000, 40],
+  ];
+
+  for (const maxCells of [6, 16, 28, 120]) {
+    for (const [width, height] of boxes) {
+      for (const target of [36, 60, 180]) {
+        const { cols, rows } = deriveGridForBox(width, height, target, { maxCells });
+
+        assert.ok(cols >= 1 && rows >= 1);
+        assert.ok(cols * rows <= maxCells, `${width}x${height} @${target}: ${cols}x${rows} > ${maxCells}`);
+      }
+    }
+  }
+
+  // The editor's densest plate: 187 rings uncapped, 28 at most capped, and
+  // a coarse density under the cap is left as it was.
+  assert.deepEqual(deriveGridForBox(418, 646, 36), { cols: 11, rows: 17 });
+  const capped = deriveGridForBox(418, 646, 36, { maxCells: 28 });
+  assert.ok(capped.cols * capped.rows <= 28 && capped.cols * capped.rows >= 20);
+  assert.deepEqual(deriveGridForBox(418, 646, 180, { maxCells: 28 }), deriveGridForBox(418, 646, 180));
+});

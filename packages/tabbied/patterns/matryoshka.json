@@ -32,7 +32,6 @@
     "max": 6,
     "default": 6
   },
-  "svgExportNote": "The nested mask is exported as clean vector shapes - the faint seams visible on screen come from browser rasterization and won't appear in the SVG, so it can differ from the screen by a hair.",
   "options": [
     {
       "id": "grid",
@@ -60,7 +59,7 @@
     }
   ],
   "code": {
-    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); -webkit-mask: @doodle(@grid: 4 / 100%; background: @p(#000, #000, #0000);); mask: @doodle(@grid: 4 / 100%; background: @p(#000, #000, #0000);); -webkit-mask-size: 100% 100%; mask-size: 100% 100%; } -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "style": "--rule: ( @random(${shapeFrequency}) { background: @p(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5)); mask: @m(4, linear-gradient(90deg, @p(#000, #000, #0000) 0 25%, @p(#000, #000, #0000) 0 50%, @p(#000, #000, #0000) 0 75%, @p(#000, #000, #0000) 0) 0 calc((@n - 1) * 100% / 3) / 100% 25% no-repeat); } -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box } :container { background: var(--color0); overflow:hidden; }"
   },
   "sizing": {

@@ -75,6 +75,12 @@ jobs:
       # site into out/, which `npm start` (the Playwright webServer) serves.
       - name: Build site (static export)
         run: npm run build
+      # What each design costs css-doodle to generate at the editor's densest
+      # grid: the stylesheet it writes and the nodes it makes, never timings.
+      # A design over budget is copying a value into every cell that could be
+      # computed once (see scripts/pattern-cost.mjs).
+      - name: Pattern cost budget
+        run: npm run check:pattern-cost
       # The Worker suite reads the packaged templates through the assets
       # binding, so it needs out/ and runs after the build, never during one
       # (next build empties out/ first). It was not run anywhere before this

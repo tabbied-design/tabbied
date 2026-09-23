@@ -1235,8 +1235,8 @@ back to `width: 100%`.
 The cell is snapped to a whole multiple of `sizing.cellMultiple` (default 2),
 not merely to a whole pixel: a design that subdivides its cell seams at
 `cell / n` if the cell doesn't divide, however exact the outer track is. Only
-`subdivide` (2), `fractal` (3) and `matryoshka` (4) - the three that mask with
-a nested `@doodle` - declare their own.
+`subdivide` (2), `fractal` (3) and `matryoshka` (4) - the three that mask the
+cell with a 2, 3 or 4 grid of their own - declare their own.
 
 The cell is also **squared** - `applyGridSnap` uses the larger of the two
 snapped cells on both axes. Well over a hundred designs rotate a cell by a quarter
@@ -1256,6 +1256,43 @@ there - measured: 6 interior seams with integral tracks under a fractional
 scale, 0 once `fitRenderToBox` quantized the scale so `cell × scale` is whole
 (rounded up, translate rounded). Both halves are required; the render-box snap
 only exists to give the quantizer a whole cell.
+
+## What a design costs to generate - once, not per cell
+
+css-doodle evaluates `--rule` once per cell and writes the result into a
+block of its own, so a value that is the same in every cell is copied into
+every cell: evolute's 240-point `@shape`, written twice, came to 3.4 MB of CSS
+at the editor's densest plate; blossom and sparkle, on gallery page 1, 1.7 MB
+each. `scripts/pattern-cost.mjs` measures every design the way the editor
+draws it (418x646, 36px cells, through `createPattern`) and `npm run
+check:pattern-cost` fails CI on any over 300 KB of CSS or 800 nodes. Three
+things keep a design under it:
+
+- **Compute a shared value once, on `:doodle`, and read it with `@var`.**
+  `:doodle { --shape: @shape(...) }` in the design's `code.doodle`, then
+  `clip-path: @var(--shape)` in the rule: the host holds the value and every
+  cell inherits it. `@var`, never `var()`: the latter is substituted when the
+  host computes `--rule`, before `:doodle` exists, and the design paints
+  nothing (see below). Pixel-identical for evolute, blossom, sparkle, fractal,
+  drypoint, charcoal, linocut, reedpen, crosslattice (inside its nested doodle)
+  and sunsetrings, whose 50-ring stacks depend only on the row's and the
+  cell's parity and are four `:doodle` values picked by `@match`. PNG export
+  carries it: css-doodle copies the host's computed custom properties onto
+  the exported `.host`.
+- **A per-cell random mask is gradient layers, not a nested `@doodle`.**
+  matryoshka and subdivide drew a random 4x4 and 2x2 `@doodle` per cell, and
+  twice (`-webkit-mask` and `mask` each rolled their own, and only the second
+  painted): 374 images to rasterize, a second to generate. `@m(4, linear-
+  gradient(90deg, @p(...) 0 25%, ...))` is the same distribution with no
+  image at all. It re-rolled their pictures (the previews were regenerated),
+  and it needed the SVG exporter to paint a small `no-repeat` layer once
+  rather than across the box (docs/svg-export.md).
+- **A design whose cells are a count of things declares `sizing.maxCells`.**
+  radiantswirl's rings, driftspiral's dots, turbulentsunburst's rays: every
+  cell is a full-canvas layer placed by `@i`, and the density a grid is
+  derived from knows nothing of that, so the editor's finest density drew 187
+  rings where the design offers 12 to 28. The cap is the largest count the
+  grid option offers; the eight such designs carry one.
 
 ## Importing a pattern authored outside this repo
 
@@ -1359,10 +1396,10 @@ rendered patterns to true vector SVG. Rules that must not regress:
   designs SVG cannot represent: the original four smooth conic sweeps (coil,
   spectrum, pinwheel, wedge) plus 28 from the September drop, and the editor
   *disables* "Download SVG" for all of them. `"svgExportNote"` on a definition
-  (11 designs) documents limitations - filter-based effects or ≤1px
+  (9 designs) documents limitations - filter-based effects or ≤1px
   deviations. The option-level form still works but no design uses it: the
   Shadow toggle that was its only user was removed rather than left as an
-  export trap. Everything else (295) is clean.
+  export trap. Everything else (297) is clean.
   See docs/svg-export.md for the complete lists and reasons.
 - **The tier is measured, not read off the source.** Ten of the drop's
   designs throw; eighteen more export a plausible SVG that is not what the
