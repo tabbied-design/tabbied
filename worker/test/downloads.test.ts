@@ -101,6 +101,48 @@ describe('template downloads', () => {
     expect((await SELF.fetch(`${ORIGIN}/api/account/downloads`)).status).toBe(401);
   });
 
+  it('a HEAD, or a range resuming a copy, answers without counting', async () => {
+    const cookie = await signIn('prober@example.com');
+
+    for (let i = 0; i < 10; i += 1) {
+      const probe = await SELF.fetch(zipFor('verdant'), { method: 'HEAD', headers: asFetch(cookie) });
+      expect(probe.status).toBe(200);
+    }
+
+    const resumed = await SELF.fetch(ZIP, { headers: { ...asFetch(cookie), range: 'bytes=100-' } });
+    expect(resumed.ok).toBe(true);
+
+    const [usage, history] = await Promise.all([
+      SELF.fetch(`${ORIGIN}/api/account/usage`, { headers: { cookie } }).then((r) => r.json()),
+      SELF.fetch(`${ORIGIN}/api/account/downloads`, { headers: { cookie } }).then((r) => r.json()),
+    ]);
+    expect((usage as { downloads: { used: number } }).downloads.used).toBe(0);
+    expect((history as { downloads: unknown[] }).downloads).toHaveLength(0);
+
+    // Signed out, a HEAD is refused like a GET.
+    expect((await SELF.fetch(ZIP, { method: 'HEAD', headers: asFetch() })).status).toBe(401);
+  });
+
+  it('holds the cap when every request arrives at once', async () => {
+    const cookie = await signIn('stampede@example.com');
+    const { templates } = (await SELF.fetch(`${ORIGIN}/editable-catalog.json`).then((r) => r.json())) as {
+      templates: { slug: string }[];
+    };
+    const slugs = templates.map((t) => t.slug).slice(0, CAP + 12);
+    expect(slugs.length).toBeGreaterThan(CAP);
+
+    const statuses = await Promise.all(
+      slugs.map((slug) => SELF.fetch(zipFor(slug), { headers: asFetch(cookie) }).then((r) => r.status))
+    );
+    expect(statuses.filter((status) => status === 200)).toHaveLength(CAP);
+    expect(statuses.filter((status) => status === 429)).toHaveLength(slugs.length - CAP);
+
+    const usage = (await SELF.fetch(`${ORIGIN}/api/account/usage`, { headers: { cookie } }).then((r) => r.json())) as {
+      downloads: { used: number };
+    };
+    expect(usage.downloads.used).toBe(CAP);
+  });
+
   it('other files under /downloads are plain assets', async () => {
     const page = await SELF.fetch(`${ORIGIN}/downloads/verdant/`, { headers: asNavigation() });
     expect(page.status).toBe(200);
