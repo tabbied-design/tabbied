@@ -3,9 +3,10 @@
 // A template in a frame, with one thing to do with it: use it.
 //
 // "Use this template" is the only action. Signed in, it opens a menu of the
-// three ways to take a template: customize it (a link, not a call, since
-// /studio/customize/ makes the site), download it as it is, or export the
-// React project. Signed out, the same button opens a card that asks for a
+// three ways to take a template: customize it (a link to /studio/customize/,
+// which opens a draft and makes nothing until it is saved), download it as
+// it is, or export the React project. On a phone the customizer's rail is
+// not offered at all, so neither is Customize: the menu is the two downloads. Signed out, the same button opens a card that asks for a
 // sign-in first, with the customizer as the way back, so a first visitor sees
 // one button and one ask rather than two actions with different rules. The
 // gate is this page's: the packaged zips are static assets, and Studio's
@@ -18,6 +19,7 @@ import { ChevronDown } from 'lucide-react';
 import { initials } from 'components/nav';
 import { signOut, useSessionUser } from 'lib/authClient';
 import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
+import useMediaQuery from 'lib/useMediaQuery';
 import styles from './TemplatePreview.module.css';
 
 export default function TemplatePreview({
@@ -33,6 +35,8 @@ export default function TemplatePreview({
 }) {
   const { user, isPending } = useSessionUser();
   const router = useRouter();
+  // The width SiteWorkspace.module.css hides the customizer's rail below.
+  const narrow = useMediaQuery('(max-width: 768px)');
 
   const customizeHref = `/studio/customize/?slug=${slug}`;
   const next = encodeURIComponent(customizeHref);
@@ -48,6 +52,12 @@ export default function TemplatePreview({
     <div
       className={`${styles.page} ${plexMono.variable} ${plexSans.variable} ${ebGaramond.variable}`}
     >
+      {/* The page's heading, for a screen reader and an outline: the bar is
+          chrome and the template is in a frame, so nothing else names it. */}
+      <h1 className={styles.srOnly}>
+        {name}, a {topic.toLowerCase()} website template
+      </h1>
+
       <header className={styles.bar}>
         <Link href="/templates" prefetch={false} className={styles.back} aria-label="All templates">
           <span className={styles.backCircle} aria-hidden="true">
@@ -74,14 +84,18 @@ export default function TemplatePreview({
               <Menu.Portal>
                 <Menu.Positioner className={styles.positioner} side="bottom" align="end" sideOffset={10}>
                   <Menu.Popup className={styles.menu}>
-                    <Menu.Item
-                      className={styles.option}
-                      render={<Link href={customizeHref} prefetch={false} />}
-                    >
-                      <span className={styles.optionTitle}>Customize</span>
-                      <span className={styles.optionNote}>Change colors and patterns</span>
-                    </Menu.Item>
-                    <Menu.Separator className={styles.menuRule} />
+                    {narrow ? null : (
+                      <>
+                        <Menu.Item
+                          className={styles.option}
+                          render={<Link href={customizeHref} prefetch={false} />}
+                        >
+                          <span className={styles.optionTitle}>Customize</span>
+                          <span className={styles.optionNote}>Change colors and patterns</span>
+                        </Menu.Item>
+                        <Menu.Separator className={styles.menuRule} />
+                      </>
+                    )}
                     <Menu.Item
                       className={styles.option}
                       render={<a href={`/downloads/${slug}-html.zip`} download />}

@@ -3,6 +3,7 @@ import {
   blindfold, dotfade, grainfall, gutter, lattice, speckfield, stylobate,
 } from 'tabbied/patterns';
 import s from './bureau-vektor.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Bureau Vektor: Public statistics',
@@ -146,6 +147,12 @@ export default function BureauVektorPage() {
           <a data-edit="bar.reuse" data-edit-max="28" href="#reuse">Reuse</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Office of statistics</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.indicators" data-edit-max="28" href="#indicators">Indicators</a>
+          <a data-edit="bar.catalogue" data-edit-max="28" href="#catalogue">Catalog</a>
+          <a data-edit="bar.calendar" data-edit-max="28" href="#calendar">Calendar</a>
+          <a data-edit="bar.reuse" data-edit-max="28" href="#reuse">Reuse</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { bloks, disque, odessa } from 'tabbied/patterns';
 import s from './orbital-lounge.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Orbital: Listening bar, Lisbon',
@@ -206,6 +207,13 @@ export default function OrbitalPage() {
         <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#membership">
           Book a seat
         </a>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
+              {label}
+            </a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

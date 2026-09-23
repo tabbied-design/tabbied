@@ -32,6 +32,7 @@
     "previews": "node scripts/generate-previews.mjs",
     "check:previews": "node scripts/check-previews.mjs",
     "check:typography": "node scripts/check-typography.mjs",
+    "check:pattern-cost": "node scripts/pattern-cost.mjs --budget",
     "start": "serve out -l 3000 --no-clipboard",
     "test:e2e": "playwright test",
     "images:extract": "node scripts/images/extract-prompts.mjs",

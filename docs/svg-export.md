@@ -99,13 +99,13 @@ rather than from reading the source:
 | `horizonbands`, `tealboomerang`, `midnightblossoms` | 3.7%, 1.8%, 1.3% |
 
 The last three are near misses rather than broken exports, and are the
-candidates to promote to tier 2 first: the route is the one `fractal`,
-`matryoshka` and `subdivide` took, namely understand the deviation, write it
-down, and give it a `PER_PATTERN_MAX` entry. Until somebody does that work the
+candidates to promote to tier 2 first: the route is the one `fractal` took,
+namely understand the deviation, write it down, and give it a
+`PER_PATTERN_MAX` entry. Until somebody does that work the
 export stays off, because a download that quietly differs from the canvas is
 the thing this whole file exists to prevent.
 
-### 2. Limited support - `"svgExportNote"` on the definition (11)
+### 2. Limited support - `"svgExportNote"` on the definition (9)
 
 Export works and is parity-verified, but with a caveat the user must be told
 about (see the dialog contract below). Two sub-groups:
@@ -124,7 +124,7 @@ reports these in the result's `warnings`:
 
 | Pattern | Deviation |
 | --- | --- |
-| `fractal`, `matryoshka`, `subdivide` | Live rendering shows hairline seams from rasterizing the nested `@doodle` mask; the vector export is intentionally seam-free |
+| `fractal` | Live rendering shows hairline seams from rasterizing the nested `@doodle` mask; the vector export is intentionally seam-free |
 | `drypoint` | `@svg` mask sub-pixel rounding; its payload uses `calc()` in SVG attributes, which some design tools don't evaluate |
 | `windowpane` | CSS blends mixed-width borders progressively around rounded corners; per-side arc strokes junction within ≤1 px |
 | `glyph` | Wall-to-wall maximum-contrast quadrant edges; anti-aliasing varies across Chromium builds |
@@ -142,7 +142,7 @@ design that needs a conditional effect can use it. It is currently unexercised
 by any pattern, which is why `e2e/svg-export.spec.ts` no longer has a case for
 it: there is no fixture to point one at.
 
-### 4. Full support - everything else (295)
+### 4. Full support - everything else (297)
 
 Solid fills, border-radius shapes, per-side borders, clip-paths,
 linear/radial/repeating gradients (incl. `calc(% ± px)` ramps and
@@ -300,6 +300,13 @@ The sweep script needs `npm run build --workspace tabbied` first (it injects
   first->last stop run.
 - **Conic sectors**: abutting sector paths get a hair of angular overlap
   (adjacent AA edges otherwise leave seams CSS doesn't have).
+- **A `no-repeat` layer smaller than its box paints once, in its own
+  area.** An SVG gradient pads its end colors out across whatever it fills,
+  so filling the element's whole shape with a quarter-cell layer spread that
+  layer's edge color over the cell. It used to, with only a warning;
+  matryoshka's and subdivide's masks (a grid of small gradient layers) are
+  what it broke, 22-31% of their pixels. The fill is cut to the layer's
+  area, intersected with the shape.
 - **Masks**: CSS alpha masking -> SVG luminance masking by painting mask
   content white × source alpha. `mask-composite: intersect` nests masks.
   Nested-`@doodle` masks are re-rendered in a hidden shadow root and walked

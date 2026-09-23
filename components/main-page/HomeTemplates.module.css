@@ -149,25 +149,29 @@
   object-position: top center;
 }
 
-.bars {
+.caption {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 10px 10px 12px;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 10px 12px 12px;
+  white-space: nowrap;
 }
 
-.bars span {
-  height: 4px;
+.captionName {
+  overflow: hidden;
+  font: 500 14px var(--h-sans);
+  color: var(--h-fg);
+  text-overflow: ellipsis;
 }
 
-.bars span:first-child {
-  width: 60%;
-  background-color: oklch(1 0 0 / 0.16);
-}
-
-.bars span:last-child {
-  width: 38%;
-  background-color: oklch(1 0 0 / 0.08);
+.captionTopic {
+  overflow: hidden;
+  font: 400 11px var(--h-mono);
+  color: oklch(0.7 0.01 260);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
 }
 
 /* -- Closing CTA ----------------------------------------------------------- */

@@ -413,6 +413,34 @@ download's dependencies automatically - `EXTERNAL_DEPENDENCIES` in
 `scripts/package-templates.mjs` is derived from the shipped source, not
 maintained by hand.
 
+## A template's links on a phone - TemplateMenu
+
+57 of the 77 templates hid their header nav below a breakpoint and put
+nothing in its place, so a phone visitor, on the site or on a site shipped
+from the download, had the footer and nothing else. Each of them now renders
+`components/template/TemplateMenu` in its header: a copy of the nav's links
+(same `data-edit` ids, which is allowed, and the editable gate checks they
+agree) behind a "Menu" toggle. Four things it depends on:
+
+- **It is a `<details>`, because the HTML package has no React left.** Open
+  and shut are the browser's own there. Closing on a followed link, an
+  outside click and Escape is the component's effect on the site and in the
+  React package, and `MENU_SCRIPT` in `scripts/package-templates.mjs` in the
+  HTML package: a plain script, not part of the esm.sh bootstrap, because the
+  Studio preview replaces that bootstrap and this should survive into it.
+- **Its shape is in `styles/globals.css`** (`.template-menu*`), the one
+  global sheet every package ships as `base.css`, since a page may ship only
+  one module of its own. `e2e/templates.spec.ts` allowlists those classes.
+- **Each page supplies the rest through the class it passes** (`siteMenu` by
+  convention): `display: none` by default and `display: block` in the same
+  media query that hides its nav, plus `--template-menu-bg`, the ground the
+  panel sits on, taken from the header's own background variable so a
+  re-colored page re-colors its menu. The panel inherits the header's type
+  and color.
+- **`e2e/template-menus.spec.ts` is the gate.** At 390px, every link a
+  header hides must be in a visible menu that fits on the screen. A new
+  template that hides its nav fails it until it carries the menu.
+
 ## The mark, and the font that travels with it
 
 `components/logo/` is the whole of the brand mark: `LogoMark` is the glyph,
@@ -461,10 +489,16 @@ Four things worth not re-litigating:
   generation flow is held back from the first launch (see below), and the
   footer's Product list is the artboard's own - Patterns, Websites, My
   Account.
-- **It renders the signed-out chrome until a session says otherwise.** The
-  export cannot know who is looking, and most visitors are nobody; a ghost
-  in the right-hand slot while the session resolves would leave the phone
-  layout with no menu at all until the fetch returned.
+- **It renders the signed-out chrome until a session says otherwise, unless
+  this browser was signed in last time.** The export cannot know who is
+  looking, and most visitors are nobody; a ghost in the right-hand slot for
+  everyone while the session resolves would leave the phone layout with no
+  menu at all until the fetch returned. But a signed-in person saw "Sign in"
+  flash to their initials on every page, so `useSessionUser` keeps a hint in
+  localStorage (`SESSION_HINT_KEY`) and a script inline in the bar marks it
+  `data-session="likely"` as the page is parsed, which swaps "Sign in" for a
+  placeholder circle; state keeps it until the session answers. Only a
+  browser with the hint gets the ghost, and a wrong hint costs one fetch.
 
 The stroke is authored at 17 units in a 391-unit viewBox, which is what keeps
 it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
@@ -773,9 +807,16 @@ not re-litigating:
 - **The count lives where the bytes leave, and it counts templates.**
   `/downloads/*` is in `run_worker_first`, and `GET
   /downloads/<slug>-<format>.zip` in `worker/index.ts` requires a session,
-  reads the month's count (`worker/lib/downloads.ts`), serves the zip through
-  `env.ASSETS` and only then writes the `download` row, so a zip the packager
-  never wrote costs nothing and every row is bytes that went out. Counting in
+  claims the `download` row in the same statement that checks the month's
+  count (`claimDownload` in `worker/lib/downloads.ts`), serves the zip through
+  `env.ASSETS`, and gives the row back if the asset was a miss, so a zip the
+  packager never wrote costs nothing and every row is bytes that went out.
+  The check and the write must stay one `INSERT ... SELECT ... WHERE`: read,
+  compare, then write let 154 concurrent requests all read a count under
+  thirty, and one account took 51. A HEAD (Hono answers it with the GET
+  handler) or a Range resuming past byte 0 is gated the same way and writes
+  nothing (`takesCopy`); a link checker once took an account past the cap
+  with nothing downloaded. Counting in
   the client, with the zips left static, would have counted clicks and gated
   nothing. The count is `count(distinct slug)` over the month's rows: a
   template taken twice, or in both formats, is one of the thirty, and a
@@ -1012,10 +1053,18 @@ not edited here yet. The Worker keeps the routes that would edit them
 whatever text Studio wrote, so putting them back is a UI change.
 
 - **A site starts from a direction or from the gallery.** `POST
-  /api/studio/sites` takes `{generationId, index}` as before, or `{slug}`: a
-  copy of the template with an empty first revision, no model call and no
-  daily cap (the burst limiter still applies), and `generationId` and
-  `directionIndex` null. Migration 0005 made those columns nullable by
+  /api/studio/sites` takes `{generationId, index}` as before, or `{slug,
+  edits?, title?}`: a copy of the template whose first revision is the
+  document sent (checked by the same `refuseDocument` as a revision) or empty,
+  no model call and no daily cap (the burst limiter still applies), and
+  `generationId` and `directionIndex` null. **A gallery site is made on its
+  first Save, never on the visit.** `/studio/customize/` renders the
+  customizer on an unsaved draft (`StudioSite` with `template`), and the Save
+  that makes the site moves the address to `/studio/site/?id=` with
+  `history.replaceState`, so the canvas is not reloaded; making it on the
+  visit left one copy in the account per look at a template, phones
+  included. `DELETE /api/studio/sites/:id` removes a site, its revisions and
+  its R2 pictures, from the Custom sites list. Migration 0005 made those columns nullable by
   rebuilding `site` and `revision` **child first**: SQLite cannot alter a
   column's constraint and D1 cannot switch foreign keys off, and dropping a
   parent under enforced keys runs an implicit DELETE that would cascade every
@@ -1192,8 +1241,8 @@ back to `width: 100%`.
 The cell is snapped to a whole multiple of `sizing.cellMultiple` (default 2),
 not merely to a whole pixel: a design that subdivides its cell seams at
 `cell / n` if the cell doesn't divide, however exact the outer track is. Only
-`subdivide` (2), `fractal` (3) and `matryoshka` (4) - the three that mask with
-a nested `@doodle` - declare their own.
+`subdivide` (2), `fractal` (3) and `matryoshka` (4) - the three that mask the
+cell with a 2, 3 or 4 grid of their own - declare their own.
 
 The cell is also **squared** - `applyGridSnap` uses the larger of the two
 snapped cells on both axes. Well over a hundred designs rotate a cell by a quarter
@@ -1213,6 +1262,43 @@ there - measured: 6 interior seams with integral tracks under a fractional
 scale, 0 once `fitRenderToBox` quantized the scale so `cell × scale` is whole
 (rounded up, translate rounded). Both halves are required; the render-box snap
 only exists to give the quantizer a whole cell.
+
+## What a design costs to generate - once, not per cell
+
+css-doodle evaluates `--rule` once per cell and writes the result into a
+block of its own, so a value that is the same in every cell is copied into
+every cell: evolute's 240-point `@shape`, written twice, came to 3.4 MB of CSS
+at the editor's densest plate; blossom and sparkle, on gallery page 1, 1.7 MB
+each. `scripts/pattern-cost.mjs` measures every design the way the editor
+draws it (418x646, 36px cells, through `createPattern`) and `npm run
+check:pattern-cost` fails CI on any over 300 KB of CSS or 800 nodes. Three
+things keep a design under it:
+
+- **Compute a shared value once, on `:doodle`, and read it with `@var`.**
+  `:doodle { --shape: @shape(...) }` in the design's `code.doodle`, then
+  `clip-path: @var(--shape)` in the rule: the host holds the value and every
+  cell inherits it. `@var`, never `var()`: the latter is substituted when the
+  host computes `--rule`, before `:doodle` exists, and the design paints
+  nothing (see below). Pixel-identical for evolute, blossom, sparkle, fractal,
+  drypoint, charcoal, linocut, reedpen, crosslattice (inside its nested doodle)
+  and sunsetrings, whose 50-ring stacks depend only on the row's and the
+  cell's parity and are four `:doodle` values picked by `@match`. PNG export
+  carries it: css-doodle copies the host's computed custom properties onto
+  the exported `.host`.
+- **A per-cell random mask is gradient layers, not a nested `@doodle`.**
+  matryoshka and subdivide drew a random 4x4 and 2x2 `@doodle` per cell, and
+  twice (`-webkit-mask` and `mask` each rolled their own, and only the second
+  painted): 374 images to rasterize, a second to generate. `@m(4, linear-
+  gradient(90deg, @p(...) 0 25%, ...))` is the same distribution with no
+  image at all. It re-rolled their pictures (the previews were regenerated),
+  and it needed the SVG exporter to paint a small `no-repeat` layer once
+  rather than across the box (docs/svg-export.md).
+- **A design whose cells are a count of things declares `sizing.maxCells`.**
+  radiantswirl's rings, driftspiral's dots, turbulentsunburst's rays: every
+  cell is a full-canvas layer placed by `@i`, and the density a grid is
+  derived from knows nothing of that, so the editor's finest density drew 187
+  rings where the design offers 12 to 28. The cap is the largest count the
+  grid option offers; the eight such designs carry one.
 
 ## Importing a pattern authored outside this repo
 
@@ -1316,10 +1402,10 @@ rendered patterns to true vector SVG. Rules that must not regress:
   designs SVG cannot represent: the original four smooth conic sweeps (coil,
   spectrum, pinwheel, wedge) plus 28 from the September drop, and the editor
   *disables* "Download SVG" for all of them. `"svgExportNote"` on a definition
-  (11 designs) documents limitations - filter-based effects or ≤1px
+  (9 designs) documents limitations - filter-based effects or ≤1px
   deviations. The option-level form still works but no design uses it: the
   Shadow toggle that was its only user was removed rather than left as an
-  export trap. Everything else (295) is clean.
+  export trap. Everything else (297) is clean.
   See docs/svg-export.md for the complete lists and reasons.
 - **The tier is measured, not read off the source.** Ten of the drop's
   designs throw; eighteen more export a plausible SVG that is not what the

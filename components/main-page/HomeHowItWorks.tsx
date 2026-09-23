@@ -73,7 +73,7 @@ function FrequencyPanel({ value }: { value: number }) {
 function DownloadPanel() {
   return (
     <div className={`${styles.panelBody} ${styles.downloadBody}`}>
-      <span className={styles.formats}>PNG · SVG · PDF</span>
+      <span className={styles.formats}>PNG · SVG</span>
       <span className={styles.downloadButton}>
         <span className={styles.gauge} />
         <span>Download</span>
@@ -143,7 +143,7 @@ export default function HomeHowItWorks() {
     },
     {
       title: 'Download for free',
-      body: 'Export high-res files ready for web, print, or product.',
+      body: 'Export a 3000px PNG or a vector SVG, ready for web, print, or product.',
       panel: <DownloadPanel />,
     },
   ];

@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './passform.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Passform: Maßschneiderei, Hamburg',
@@ -84,6 +85,12 @@ export default function PassformPage() {
           <a data-edit="bar.bench" data-edit-max="28" href="#bench">Bench</a>
         </nav>
         <span data-edit="bar.since" data-edit-max="60" className={s.since}>Maßschneiderei seit 1972</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.how" data-edit-max="28" href="#how">How</a>
+          <a data-edit="bar.cloth" data-edit-max="28" href="#cloth">Cloth</a>
+          <a data-edit="bar.prices" data-edit-max="28" href="#prices">Prices</a>
+          <a data-edit="bar.bench" data-edit-max="28" href="#bench">Bench</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

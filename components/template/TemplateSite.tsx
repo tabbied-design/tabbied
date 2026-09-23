@@ -12,6 +12,7 @@ import type { TemplateSite as Site } from './templateData';
 import { TEMPLATE_CONTENT } from './templateContent';
 import { TEMPLATE_SECTIONS, type Kit, type SectionKey } from './templateSections';
 import ImageCard from './ImageCard';
+import { TemplateMenu } from './TemplateMenu';
 import s from './TemplateSite.module.css';
 
 // Stable id for one image slot, shared with the batch pipeline: it is the
@@ -187,6 +188,11 @@ function Nav({ site }: { site: Site }) {
         ))}
       </ul>
       <a className={s.navCta} href="#" data-edit="cta.primary" data-edit-max="20">{site.primaryCta}</a>
+      <TemplateMenu className={s.siteMenu}>
+        {site.nav.map((n, i) => (
+          <a key={n} href="#" data-edit={`nav.${i}`} data-edit-max="18">{n}</a>
+        ))}
+      </TemplateMenu>
     </nav>
   );
 }

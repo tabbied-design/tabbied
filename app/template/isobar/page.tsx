@@ -3,6 +3,7 @@ import {
   annulus, beamspread, dotdrift, rimband, ringfield, shading, softedge, spray,
 } from 'tabbied/patterns';
 import s from './isobar.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Isobar: Meteorological service, Bergen',
@@ -147,6 +148,12 @@ export default function IsobarPage() {
           <a data-edit="bar.climate" data-edit-max="28" href="#climate">Climate</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Meteorologisk / Bergen</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.forecast" data-edit-max="28" href="#forecast">Forecast</a>
+          <a data-edit="bar.warnings" data-edit-max="28" href="#warnings">Warnings</a>
+          <a data-edit="bar.stations" data-edit-max="28" href="#stations">Stations</a>
+          <a data-edit="bar.climate" data-edit-max="28" href="#climate">Climate</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

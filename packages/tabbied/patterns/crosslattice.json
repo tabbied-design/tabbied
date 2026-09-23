@@ -30,7 +30,7 @@
   },
   "options": [],
   "code": {
-    "style": "--rule: ( background: @doodle( background-color: var(--color1); background-size: 160px 160px; background-image: @doodle( :doodle { @grid: 3 / 100%; transform: scale(calc(3 / 2)); } :after, :before { content: ''; @size: 100%; border-radius: 50%; position: absolute; border: 3px double var(--color2); background: @doodle( @grid: 1 / 100%; @shape: clover 4; background: var(--color2); ); background-size: 45% 45%; background-repeat: no-repeat; background-position: 50% 52%; } :before { transform: translate(50%, 50%); } ); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
+    "style": "--rule: ( background: @doodle( background-color: var(--color1); background-size: 160px 160px; background-image: @doodle( :doodle { @grid: 3 / 100%; transform: scale(calc(3 / 2)); --clover: @doodle( @grid: 1 / 100%; @shape: clover 4; background: var(--color2); ); } :after, :before { content: ''; @size: 100%; border-radius: 50%; position: absolute; border: 3px double var(--color2); background: @var(--clover); background-size: 45% 45%; background-repeat: no-repeat; background-position: 50% 52%; } :before { transform: translate(50%, 50%); } ); ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: 1 / 100%; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
   },
   "svgExport": false

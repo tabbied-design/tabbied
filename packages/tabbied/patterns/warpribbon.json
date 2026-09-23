@@ -48,5 +48,8 @@
     "style": "--rule: ( @size: 74% 1px; justify-self: center; --t: calc(@i / @size); background: color-mix(in srgb, var(--color1) calc((1 - @var(--t)) * 100%), var(--color2) calc(@var(--t) * 100%)); opacity: calc(.35 + .65 * @var(--t)); transform: rotate(-8deg) translateX(calc(@sin(@i / 5) * π * ${width} * 0.018)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; text-align:center; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
   },
-  "svgExport": false
+  "svgExport": false,
+  "sizing": {
+    "maxCells": 104
+  }
 }

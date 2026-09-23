@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { bight, cendal, spit } from 'tabbied/patterns';
 import s from './fennel-and-thyme.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Fennel and Thyme: Herbal apothecary, Bath',
@@ -282,6 +283,11 @@ export default function FennelAndThymePage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Bath, since 2011</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

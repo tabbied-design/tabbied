@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './frequenz.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Frequenz 94,6: Freies Radio, Graz',
@@ -90,6 +91,12 @@ export default function FrequenzPage() {
           <span aria-hidden="true" />
           On air
         </p>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.schedule" data-edit-max="28" href="#schedule">Programm</a>
+          <a data-edit="bar.strands" data-edit-max="28" href="#strands">What we do</a>
+          <a data-edit="bar.support" data-edit-max="28" href="#support">Support</a>
+          <a data-edit="bar.studio" data-edit-max="28" href="#studio">Studio</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

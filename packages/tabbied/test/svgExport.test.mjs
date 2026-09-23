@@ -403,10 +403,8 @@ test('tier 2 - the designs that export with a caveat still carry their note', ()
     'fractal',
     'glyph',
     'lantern',
-    'matryoshka',
     'misprint',
     'neon',
-    'subdivide',
     'terrain',
     'windowpane',
   ]);

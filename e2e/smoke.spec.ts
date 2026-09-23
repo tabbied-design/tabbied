@@ -84,11 +84,18 @@ test.describe('Tabbied site', () => {
     await page.goto('/patterns');
 
     // Jump to page 2 - the URL gains ?page=2 and the grid shows a new design.
-    const firstCard = page.locator('main a[href^="/patterns/"] h3').first();
+    // The numbers are links to each page, and following one from the foot of
+    // the grid lands at the top of the next page, heading focused.
+    const firstCard = page.locator('main a[href^="/patterns/"] h2').first();
     const beforeName = await firstCard.textContent();
-    await page.getByRole('button', { name: '2', exact: true }).click();
+    const two = page.getByRole('link', { name: 'Page 2', exact: true });
+    await expect(two).toHaveAttribute('href', '/patterns/?page=2');
+    await two.scrollIntoViewIfNeeded();
+    await two.click();
     await expect(page).toHaveURL(/[?&]page=2/);
     await expect(firstCard).not.toHaveText(beforeName ?? '');
+    await expect(page.getByRole('heading', { level: 1, name: 'Pick a pattern' })).toBeFocused();
+    await expect(page.getByRole('heading', { level: 1, name: 'Pick a pattern' })).toBeInViewport();
     const page2Name = await firstCard.textContent();
 
     // A reload lands directly on page 2 (the URL is the source of truth).
@@ -128,7 +135,7 @@ test.describe('Tabbied site', () => {
     // The grid is the div whose direct children are the card links.
     const grid = page
       .locator('main div')
-      .filter({ has: page.locator('> a h3') })
+      .filter({ has: page.locator('> a h2') })
       .first();
     await expect(grid).toBeVisible();
 
@@ -851,6 +858,32 @@ test.describe('Shared site header', () => {
     await expect(page.locator('header a[aria-current="page"]')).toHaveCount(0);
   });
 
+  test('a browser that was signed in draws a placeholder, not Sign in, until the session answers', async ({
+    page,
+  }) => {
+    await page.addInitScript(() => window.localStorage.setItem('tabbied:signed-in', '1'));
+    // Hold the session back, then answer that nobody is signed in.
+    let answer: (() => void) | null = null;
+    await page.route('**/api/auth/get-session', async (route) => {
+      await new Promise<void>((resolve) => {
+        answer = resolve;
+      });
+      await route.fulfill({ status: 200, contentType: 'application/json', body: 'null' });
+    });
+
+    await page.goto('/templates');
+    const bar = page.locator('header[data-tone]').first();
+    await expect(bar).toHaveAttribute('data-session', 'likely');
+    await expect(page.getByRole('link', { name: 'Sign in' })).toBeHidden();
+
+    await expect.poll(() => answer !== null).toBe(true);
+    answer!();
+    await expect(page.getByRole('link', { name: 'Sign in' })).toBeVisible();
+    await expect(bar).not.toHaveAttribute('data-session', 'likely');
+    // The wrong hint is cleared, so the next page draws Sign in at once.
+    expect(await page.evaluate(() => window.localStorage.getItem('tabbied:signed-in'))).toBeNull();
+  });
+
   test('the gallery pins the bar over its own rail', async ({ page }) => {
     await page.goto('/patterns');
 
@@ -875,6 +908,39 @@ test.describe('Shared site header', () => {
 
     // ...and never renders the shared site nav.
     await expect(page.getByRole('navigation', { name: 'Main' })).toHaveCount(0);
+  });
+});
+
+test.describe('Share cards and canonical URLs', () => {
+  const head = async (page: import('@playwright/test').Page, path: string) => {
+    await page.goto(path, { waitUntil: 'domcontentloaded' });
+    return page.evaluate(() => ({
+      canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null,
+      image: document.querySelector('meta[property="og:image"]')?.getAttribute('content') ?? null,
+      card: document.querySelector('meta[name="twitter:card"]')?.getAttribute('content') ?? null,
+      title: document.title,
+    }));
+  };
+
+  test('the site\'s pages carry them, and a template page does not', async ({ page }) => {
+    expect(await head(page, '/')).toMatchObject({
+      canonical: 'https://tabbied.com/',
+      image: 'https://tabbied.com/og.png',
+      card: 'summary_large_image',
+    });
+    expect(await head(page, '/patterns/radius/')).toMatchObject({
+      canonical: 'https://tabbied.com/patterns/radius/',
+      image: 'https://tabbied.com/previews/radius.webp',
+      title: 'Customize Radius - Tabbied',
+    });
+    expect(await head(page, '/templates/verdant/')).toMatchObject({
+      canonical: 'https://tabbied.com/templates/verdant/',
+    });
+    expect((await head(page, '/patterns/')).title).toBe('Pick a pattern - Tabbied');
+
+    // The template page is what the downloads are made from: tabbied.com's
+    // card and canonical would ride into every site built on it.
+    expect(await head(page, '/template/verdant/')).toMatchObject({ canonical: null, image: null, card: null });
   });
 });
 

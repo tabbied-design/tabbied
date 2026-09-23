@@ -1,4 +1,4 @@
-import { SELF } from 'cloudflare:test';
+import { SELF, env } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { ORIGIN, json, signIn } from './helpers';
 
@@ -282,6 +282,89 @@ describe('a site straight from the gallery', () => {
     expect(unknown.status).toBe(422);
     const { problems } = (await unknown.json()) as { problems: { path: string }[] };
     expect(problems[0].path).toBe(`patterns.${field.id}.slug`);
+  });
+});
+
+describe('a template site saved from a draft', () => {
+  it('is made on the first Save, with that document as revision 1 and the name given', async () => {
+    const cookie = await signIn('drafter@example.com');
+    const spec = (await SELF.fetch(`${ORIGIN}/editable/verdant.json`).then((r) => r.json())) as {
+      specVersion: number;
+      slots: { id: string; kind: string }[];
+    };
+    const field = spec.slots.find((slot) => slot.kind === 'pattern')!;
+    const palette = ['#0B2545', '#EEF4ED', '#8DA9C4', '#13315C'];
+    const document = {
+      specVersion: spec.specVersion,
+      slug: 'verdant',
+      edits: { palette, patterns: { [field.id]: { slug: 'radius', seed: 'draft-1' } } },
+    };
+
+    const made = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
+      method: 'POST',
+      headers: { ...json, cookie },
+      body: JSON.stringify({ slug: 'verdant', edits: document, title: '  Harbour Plants  ' }),
+    });
+    expect(made.status, await made.clone().text()).toBe(200);
+    const { id, revision } = (await made.json()) as { id: string; revision: number };
+    expect(revision).toBe(1);
+
+    const site = (await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`).then((r) => r.json())) as {
+      title: string;
+      revisions: number;
+      palette: string[];
+      latest: { n: number; edits: typeof document };
+    };
+    expect(site.title).toBe('Harbour Plants');
+    expect(site.latest.n).toBe(1);
+    expect(site.latest.edits).toEqual(document);
+    expect(site.palette).toEqual(palette);
+
+    // Held to the same checks as a revision: the template's own document
+    // only, designs from the catalog, images from the template.
+    const refusals = [
+      { ...document, slug: 'solstice' },
+      { ...document, edits: { patterns: { [field.id]: { slug: 'no-such-design' } } } },
+      { ...document, edits: { images: { 'hero.image': { src: 'https://example.com/x.png' } } } },
+    ];
+
+    // Someone else each time: the burst limiter counts an attempt to make a
+    // site before the document is read, and allows three a minute.
+    for (const [index, edits] of refusals.entries()) {
+      const refused = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
+        method: 'POST',
+        headers: { ...json, cookie: await signIn(`refused-${index}@example.com`) },
+        body: JSON.stringify({ slug: 'verdant', edits }),
+      });
+      expect([400, 422], await refused.clone().text()).toContain(refused.status);
+    }
+  });
+});
+
+describe('deleting a site', () => {
+  it('is its owner\'s to do, and takes the revisions with it', async () => {
+    const cookie = await signIn('deleter@example.com');
+    const made = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
+      method: 'POST',
+      headers: { ...json, cookie },
+      body: JSON.stringify({ slug: 'verdant' }),
+    });
+    const { id } = (await made.json()) as { id: string };
+
+    const other = await signIn('not-the-deleter@example.com');
+    expect((await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`, { method: 'DELETE', headers: { cookie: other } })).status).toBe(403);
+    expect((await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`, { method: 'DELETE' })).status).toBe(401);
+
+    const deleted = await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`, { method: 'DELETE', headers: { cookie } });
+    expect(deleted.status, await deleted.clone().text()).toBe(200);
+
+    expect((await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`)).status).toBe(404);
+    const revisions = await env.DB.prepare('SELECT count(*) AS n FROM revision WHERE site_id = ?').bind(id).first<{ n: number }>();
+    expect(revisions?.n).toBe(0);
+    const list = (await SELF.fetch(`${ORIGIN}/api/studio/sites`, { headers: { cookie } }).then((r) => r.json())) as {
+      sites: { id: string }[];
+    };
+    expect(list.sites.map((row) => row.id)).not.toContain(id);
   });
 });
 

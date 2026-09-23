@@ -3,6 +3,7 @@ import {
   axial, crease, frieze, halving, miura, ogee, waterbomb,
 } from 'tabbied/patterns';
 import s from './falzbogen.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Falzbogen: Bookbindery, Leipzig',
@@ -137,6 +138,12 @@ export default function FalzbogenPage() {
           <a data-edit="bar.recent" data-edit-max="28" href="#recent">Recent</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Buchbinderei / Leipzig</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.work" data-edit-max="28" href="#work">Work</a>
+          <a data-edit="bar.folds" data-edit-max="28" href="#folds">Folding</a>
+          <a data-edit="bar.structures" data-edit-max="28" href="#structures">Structures</a>
+          <a data-edit="bar.recent" data-edit-max="28" href="#recent">Recent</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

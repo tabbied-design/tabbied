@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './nullpunkt.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Nullpunkt: Institut für Messtechnik',
@@ -85,6 +86,12 @@ export default function NullpunktPage() {
           <a data-edit="bar.lab" data-edit-max="28" href="#lab">Laboratory</a>
         </nav>
         <span data-edit="bar.accred" data-edit-max="60" className={s.accred}>Akkreditiert · D-K-00000-00-00</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.scope" data-edit-max="28" href="#scope">Scope</a>
+          <a data-edit="bar.principles" data-edit-max="28" href="#principles">Principles</a>
+          <a data-edit="bar.turnaround" data-edit-max="28" href="#turnaround">Turnaround</a>
+          <a data-edit="bar.lab" data-edit-max="28" href="#lab">Laboratory</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

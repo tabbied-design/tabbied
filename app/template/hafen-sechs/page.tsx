@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './hafen-sechs.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Hafen Sechs: Container Terminal, Bremerhaven',
@@ -99,6 +100,12 @@ export default function HafenSechsPage() {
           <span aria-hidden="true" />
           Operating normally
         </p>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.berths" data-edit-max="28" href="#berths">Berths</a>
+          <a data-edit="bar.schedule" data-edit-max="28" href="#schedule">Schedule</a>
+          <a data-edit="bar.gate" data-edit-max="28" href="#gate">Gate</a>
+          <a data-edit="bar.contact" data-edit-max="28" href="#contact">Contact</a>
+        </TemplateMenu>
       </header>
 
       <main>

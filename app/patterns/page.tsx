@@ -4,7 +4,7 @@ import SelectPattern from 'components/select-pattern-page/SelectPattern';
 import { getGalleryItems } from 'lib/pattern';
 
 export const metadata: Metadata = {
-  title: 'Make your art - Tabbied',
+  title: 'Pick a pattern - Tabbied',
 };
 
 export default async function SelectPatternPage() {

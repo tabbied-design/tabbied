@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { bobbinet, bowsprit, mercerising } from 'tabbied/patterns';
 import s from './lantern-rock.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Lantern Rock: Lighthouse keepers\' inn, Pembrokeshire',
@@ -193,6 +194,11 @@ export default function LanternRockPage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Trefin, Pembrokeshire</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

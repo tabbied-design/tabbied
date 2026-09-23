@@ -3,8 +3,8 @@
 
 /* ---- Filters ---- */
 
-/* One row that scrolls sideways rather than wrapping, fading out at the
-   right edge so the cut-off chip reads as "more this way". */
+/* On a phone, one row that scrolls sideways rather than wrapping, fading out
+   at the right edge so the cut-off chip reads as "more this way". */
 .filterWrap {
   position: relative;
   margin-bottom: 40px;
@@ -56,6 +56,21 @@
   color: var(--h-ink);
   background-color: var(--h-fg);
   border-color: var(--h-fg);
+}
+
+/* Above a phone the row wraps instead: a desktop has no swipe, the scrollbar
+   is hidden, and a mouse wheel scrolls vertically, so "Wellness & sport" and
+   "Media" sat behind the fade at 1024px with no way to reach them. */
+@media (min-width: 768px) {
+  .filters {
+    flex-wrap: wrap;
+    padding-right: 0;
+    overflow-x: visible;
+  }
+
+  .filterFade {
+    display: none;
+  }
 }
 
 .filter:focus-visible {
@@ -112,6 +127,14 @@
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: var(--h-card);
+}
+
+/* One card per row on a phone, and 77 of them: at 4:3 the list ran to some
+   38,000px. A wider field keeps the pattern legible at a third less height. */
+@media (max-width: 768px) {
+  .thumb {
+    aspect-ratio: 16 / 9;
+  }
 }
 
 /* The pattern fills the tile; the number badge must keep its intrinsic size,

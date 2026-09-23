@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { eyot, percale, wale } from 'tabbied/patterns';
 import s from './harbour-ledger.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'The Harbour Ledger: Local newspaper, Whitby',
@@ -225,6 +226,13 @@ export default function HarbourLedgerPage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Whitby, every Friday</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
+              {label}
+            </a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

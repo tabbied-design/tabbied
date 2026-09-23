@@ -50,6 +50,12 @@
   border-bottom: 3px solid var(--yolk);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--ink);
+}
+
 .brand {
   font-family: var(--display);
   font-size: 1.35rem;
@@ -108,8 +114,20 @@
   .nav {
     display: none;
   }
+
+  .siteMenu {
+    display: block;
+  }
+
   .topbarCta {
     margin-left: auto;
+  }
+}
+
+/* Brand, the wholesale button and the menu on one line down to 360px. */
+@media (max-width: 400px) {
+  .topbar {
+    gap: 0.75rem;
   }
 }
 

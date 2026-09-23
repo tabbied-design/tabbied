@@ -3,6 +3,7 @@ import {
   bevelset, charcoal, drypoint, kerf, louvre, nosing, reeding, schist,
 } from 'tabbied/patterns';
 import s from './grafit.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Grafit: Pencil works, Nuremberg',
@@ -137,6 +138,12 @@ export default function GrafitPage() {
           <a href="#history" data-edit="nav.3" data-edit-max="16">History</a>
         </nav>
         <span className={s.now} data-edit="brand.tagline" data-edit-max="40">Bleistiftfabrik / Nürnberg</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a href="#grades" data-edit="nav.0" data-edit-max="16">Grades</a>
+          <a href="#lines" data-edit="nav.1" data-edit-max="16">Lines</a>
+          <a href="#making" data-edit="nav.2" data-edit-max="16">Making</a>
+          <a href="#history" data-edit="nav.3" data-edit-max="16">History</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

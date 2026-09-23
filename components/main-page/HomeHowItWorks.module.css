@@ -71,6 +71,10 @@
   overflow: hidden;
   background-color: var(--h-paper-well);
   border-radius: 12px;
+  /* An illustration of the editor, not a piece of it: the Download pill and
+     the slider do nothing, so nothing here answers a pointer as if it would. */
+  pointer-events: none;
+  user-select: none;
 }
 
 .panelChrome {

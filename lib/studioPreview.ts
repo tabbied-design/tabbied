@@ -65,20 +65,28 @@ const bootstrap =
   'hydrate();\n' +
   // Handed to the parent so the editor can re-draw the patterns after it has
   // rewritten their attributes. Same origin, so the parent can reach it.
-  'window.__tabbied = { rehydrate };\n' +
-  // A `#work` link in a srcdoc document is a navigation, not a scroll. The
-  // document's own URL is `about:srcdoc`, and the link resolves against the
-  // <base> to `/downloads/<slug>/#work` - never the same URL, so the browser
-  // navigates the frame there: the raw package, with the rebrand gone and the
-  // esm.sh bootstrap back. A sandbox does not stop a frame navigating itself.
-  // So fragment links are handled here, as the scroll the template meant.
-  'document.addEventListener("click", (event) => {\n' +
-  '  const link = event.target instanceof Element ? event.target.closest(\'a[href^="#"]\') : null;\n' +
+  'window.__tabbied = { rehydrate };\n';
+
+/**
+ * A `#work` link in a srcdoc document is a navigation, not a scroll. The
+ * document's own URL is `about:srcdoc`, and the link resolves against the
+ * <base> to `/downloads/<slug>/#work` - never the same URL, so the browser
+ * navigates the frame there: the raw package, with the rebrand gone and the
+ * esm.sh bootstrap back. A sandbox does not stop a frame navigating itself.
+ * So fragment links are handled here, as the scroll the template meant.
+ *
+ * A classic script of its own, not a line of the module above: a module
+ * waits on its import, and a link clicked before the runtime arrived was a
+ * navigation. This runs as the parser reaches it.
+ */
+const linkScript =
+  'document.addEventListener("click", function (event) {\n' +
+  '  var link = event.target instanceof Element ? event.target.closest(\'a[href^="#"]\') : null;\n' +
   '  if (!link || event.defaultPrevented || event.button !== 0) return;\n' +
   '  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;\n' +
   '  event.preventDefault();\n' +
-  '  const id = decodeURIComponent(link.getAttribute("href").slice(1));\n' +
-  '  const target = id ? document.getElementById(id) : null;\n' +
+  '  var id = decodeURIComponent(link.getAttribute("href").slice(1));\n' +
+  '  var target = id ? document.getElementById(id) : null;\n' +
   '  if (target) target.scrollIntoView();\n' +
   '  else if (!id || id === "top") window.scrollTo(0, 0);\n' +
   '});\n';
@@ -111,6 +119,10 @@ function rewriteBootstrap(documentEl: Document): Problem[] {
     // One script does the hydrating; any further one is a duplicate mount.
     script.textContent = index === 0 ? bootstrap : '';
   });
+
+  const links = documentEl.createElement('script');
+  links.textContent = linkScript;
+  scripts[0].before(links);
 
   return [];
 }

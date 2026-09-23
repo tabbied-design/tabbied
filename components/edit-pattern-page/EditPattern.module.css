@@ -92,6 +92,12 @@
 }
 
 /* Checkerboard behind zero-alpha (transparent-background) previews. */
+/* Expanded to the screen: the plate is centerd in it rather than hung from
+   the top of a stage under a header. */
+.previewWrapper:fullscreen {
+  align-items: center;
+}
+
 .previewTransparent {
   background-image: repeating-conic-gradient(#e3e6ea 0% 25%, #f8f9fa 0% 50%);
   background-size: 18px 18px;
@@ -755,6 +761,15 @@
   .previewWrapper {
     height: 48vh;
     min-height: 280px;
+  }
+}
+
+/* A short phone (a 375x667 SE) left the controls 287px under that, with
+   Colors already scrolled out of it; there the plate gives up some share. */
+@media (max-width: 767.98px) and (max-height: 700px) {
+  .previewWrapper {
+    height: 40vh;
+    min-height: 240px;
   }
 }
 

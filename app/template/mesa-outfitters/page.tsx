@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { bench, fractal, jerkinhead } from 'tabbied/patterns';
 import s from './mesa-outfitters.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Mesa Outfitters: Desert trail guides, Moab',
@@ -267,6 +268,11 @@ export default function MesaOutfittersPage() {
           ))}
         </nav>
         <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#book">Book a trip</a>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

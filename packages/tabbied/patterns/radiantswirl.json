@@ -52,5 +52,8 @@
     "style": "--rule: ( @place-cell: 50%; @size: 100%; transform: rotate(calc(-2turn / @size * @i)); background: @svg( viewBox: 0 0 100 100; defs { linearGradient { id: gradient; stop { stop-color: var(--color0); offset: 0; } @M10(stop { stop-color: @p(var(--color1), var(--color2), var(--color3), var(--color4)); offset: @r.1; }) stop { stop-color: var(--color3); offset: @r1; } stop { stop-color: var(--color4); offset: 1; } } } circle { cx, cy: 50; r: @calc(4.3 + 30 / @size * @i); fill: none; stroke: url(#gradient); stroke-linecap: round; stroke-width: @r(.5, 1.5); stroke-dasharray: @calc(10 + 90 / @size * @i); } ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
   },
-  "svgExport": false
+  "svgExport": false,
+  "sizing": {
+    "maxCells": 28
+  }
 }

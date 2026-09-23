@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { fustian, larmier, mirrorblack } from 'tabbied/patterns';
 import s from './xerox-riot.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Xerox Riot: Zine fair, Glasgow',
@@ -200,6 +201,11 @@ export default function XeroxRiotPage() {
           ))}
         </nav>
         <span data-edit="bar.barDate" data-edit-max="60" className={s.barDate}>Sat 14 Nov 2026</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

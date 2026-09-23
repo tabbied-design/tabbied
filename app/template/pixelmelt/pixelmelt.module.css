@@ -155,6 +155,12 @@
   box-shadow: 0 1px 24px color-mix(in srgb, var(--pink) 25%, transparent);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
 .mark {
   font-family: var(--display);
   font-size: 1.2rem;
@@ -724,11 +730,15 @@
 
 @media (max-width: 700px) {
   .bar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
   }
 
   .nav {
     display: none;
+  }
+
+  .siteMenu {
+    display: block;
   }
 
   .gameGrid,

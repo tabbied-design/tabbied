@@ -131,6 +131,12 @@
   border-bottom: 3px dashed var(--paper);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--ink);
+}
+
 .mark {
   font-family: var(--display);
   font-size: 1.6rem;
@@ -832,11 +838,15 @@
 
 @media (max-width: 760px) {
   .bar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
   }
 
   .nav {
     display: none;
+  }
+
+  .siteMenu {
+    display: block;
   }
 
   .heroInner {

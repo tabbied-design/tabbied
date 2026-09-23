@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { glyph, polkadot } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import styles from './hopscotch-museum.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Hopscotch · The Children\'s Discovery Museum',
@@ -229,6 +230,13 @@ export default function HopscotchMuseumPage() {
           <a data-edit="header.ticketBtn" data-edit-max="28" href="#visit" className={styles.ticketBtn}>
             Get tickets
           </a>
+          <TemplateMenu className={styles.siteMenu}>
+            <a data-edit="header.exhibits" data-edit-max="28" href="#exhibits">Exhibits</a>
+            <a data-edit="header.visit" data-edit-max="28" href="#visit">Visit</a>
+            <a data-edit="header.birthdays" data-edit-max="28" href="#birthdays">Birthdays</a>
+            <a data-edit="header.membership" data-edit-max="28" href="#membership">Membership</a>
+            <a data-edit="header.faq" data-edit-max="28" href="#faq">FAQ</a>
+          </TemplateMenu>
         </div>
       </header>
 

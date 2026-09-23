@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './sichtbeton.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Sichtbeton: Betontechnologie, Zürich',
@@ -82,6 +83,12 @@ export default function SichtbetonPage() {
           <a data-edit="bar.office" data-edit-max="28" href="#office">Office</a>
         </nav>
         <span data-edit="bar.meta" data-edit-max="60" className={s.meta}>Betontechnologie / Zürich</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.classes" data-edit-max="28" href="#classes">Classes</a>
+          <a data-edit="bar.checks" data-edit-max="28" href="#checks">Checks</a>
+          <a data-edit="bar.trials" data-edit-max="28" href="#trials">Trials</a>
+          <a data-edit="bar.office" data-edit-max="28" href="#office">Office</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

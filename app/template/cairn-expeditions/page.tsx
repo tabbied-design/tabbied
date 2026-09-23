@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { ridgeline, terrain } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import styles from './cairn-expeditions.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Cairn Expeditions · IFMGA Alpine Guiding, Valsorde',
@@ -212,6 +213,13 @@ export default function CairnExpeditionsPage() {
         <a data-edit="topbar.navCta" data-edit-max="28" className={styles.navCta} href="#enquire">
           Inquire
         </a>
+        <TemplateMenu className={styles.siteMenu}>
+          <a data-edit="topbar.expeditions" data-edit-max="28" href="#expeditions">Expeditions</a>
+          <a data-edit="topbar.approach" data-edit-max="28" href="#approach">Approach</a>
+          <a data-edit="topbar.gear" data-edit-max="28" href="#gear">Gear</a>
+          <a data-edit="topbar.guides" data-edit-max="28" href="#guides">Guides</a>
+          <a data-edit="topbar.safety" data-edit-max="28" href="#safety">Safety</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

@@ -51,6 +51,12 @@
   backdrop-filter: blur(12px);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
 .mark {
   font-size: clamp(1rem, 1.5vw, 1.25rem);
   font-weight: 800;
@@ -866,11 +872,15 @@
   }
 
   .bar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
   }
 
   .bar nav {
     display: none;
+  }
+
+  .siteMenu {
+    display: block;
   }
 
   .mGrid,

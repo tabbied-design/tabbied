@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { bengaline, facetgrad, spectrum } from 'tabbied/patterns';
 import s from './pixelmelt.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Pixelmelt: Independent game studio, Tallinn',
@@ -182,6 +183,13 @@ export default function PixelmeltPage() {
         <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#wishlist">
           Wishlist
         </a>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
+              {label}
+            </a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

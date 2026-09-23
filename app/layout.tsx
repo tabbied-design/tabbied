@@ -2,6 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import 'styles/globals.css';
 
 export const metadata: Metadata = {
+  // Resolves the relative share-card and canonical paths the site's pages
+  // set (lib/seo.ts). It emits nothing on its own, so the template pages
+  // under this layout, and the downloads made from them, carry no trace of it.
+  metadataBase: new URL('https://tabbied.com'),
   title: 'Tabbied',
   description:
     'Tabbied lets you easily create timeless and beautifully generated patterns to use for wall art, websites, print materials and more.',

@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { bluff, garret, pinwheel } from 'tabbied/patterns';
 import s from './velo-criterium.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Velo Criterium: City-center cycling race, Ghent',
@@ -206,6 +207,11 @@ export default function VeloCriteriumPage() {
           ))}
         </nav>
         <span data-edit="bar.barDate" data-edit-max="60" className={s.barDate}>Sat 19.09.2026</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

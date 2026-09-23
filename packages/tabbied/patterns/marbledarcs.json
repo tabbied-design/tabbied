@@ -51,5 +51,8 @@
     "style": "--rule: ( @place-cell: center; border-radius: 50%; transform: rotate(@r(-.5deg, .5deg)); height: 20%; width: calc(100% - (@i - 1) * 100% / @size); background: @pick(var(--color1), var(--color2), var(--color3), var(--color4)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; background: var(--color0); overflow:hidden; box-sizing:border-box; } :container { @size: 125%; transform: scale(3) translateY(15%) translateX(12%) rotate(45deg); background: var(--color0); overflow:hidden; }"
   },
-  "svgExport": false
+  "svgExport": false,
+  "sizing": {
+    "maxCells": 140
+  }
 }

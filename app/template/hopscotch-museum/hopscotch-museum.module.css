@@ -47,6 +47,12 @@
   border-bottom: 3px solid var(--ink);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--cream);
+}
+
 .headerInner {
   max-width: 74rem;
   margin: 0 auto;
@@ -1195,6 +1201,10 @@
 @media (max-width: 620px) {
   .nav {
     display: none;
+  }
+
+  .siteMenu {
+    display: block;
   }
 
   .ticketBtn {

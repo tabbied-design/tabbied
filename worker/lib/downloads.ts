@@ -11,7 +11,8 @@ import type { Db } from './quota';
 // account gets it while the site is free.
 //
 // The count is exact for the same reason the daily ledger is: it reads rows
-// in D1 that are written only after the zip was served. What it counts is
+// in D1, claimed in the statement that checks the cap and kept only for a
+// zip that was served (`claimDownload`). What it counts is
 // templates, not zips: a template taken twice in a month, or in both formats,
 // is one of the thirty, since the second copy costs nothing and a person who
 // re-downloads after a fix should not pay for it. An admin's reset is a
@@ -118,14 +119,66 @@ export async function recentDownloads(db: Db, userId: string): Promise<DownloadR
     .limit(500);
 }
 
-/** Write the row for a download that was served. */
-export async function recordDownload(
+/**
+ * Take one download against the cap: write its row if the template is
+ * already among the month's or the month is under the cap, and report
+ * whether it was written. Null means the cap is spent.
+ *
+ * The check and the write are one statement, and must stay that way. Read
+ * the count, compare, then insert was the first version, and a person who
+ * fired a hundred requests at once had every one of them read the same
+ * count under thirty before any of them wrote: fifty-one templates went out
+ * against a cap of thirty. D1 runs one statement at a time, so an INSERT
+ * whose own WHERE does the counting is exact however many arrive together.
+ *
+ * The row is written before the zip is served, so the caller releases it
+ * (`releaseDownload`) when the asset turns out not to exist: a row is still
+ * only ever kept for bytes that went out.
+ */
+export async function claimDownload(
   db: Db,
   userId: string,
   slug: string,
   format: DownloadFormat
-): Promise<void> {
-  await db.insert(download).values({ id: crypto.randomUUID(), userId, slug, format });
+): Promise<string | null> {
+  const { since, afterReset } = await countedSince(db, userId);
+  const id = crypto.randomUUID();
+  // Unix seconds, the column's own unit (see `countedSince` for why the
+  // comparison differs after a reset).
+  const from = Math.floor(since.getTime() / 1000);
+  const after = sql.raw(afterReset ? '>' : '>=');
+  const result = await db.run(sql`
+    insert into download (id, user_id, slug, format)
+    select ${id}, ${userId}, ${slug}, ${format}
+    where exists (
+      select 1 from download
+      where user_id = ${userId} and created_at ${after} ${from} and slug = ${slug}
+    ) or (
+      select count(distinct slug) from download
+      where user_id = ${userId} and created_at ${after} ${from}
+    ) < ${TEMPLATE_DOWNLOADS_PER_MONTH}
+  `);
+
+  return (result.meta.changes ?? 0) > 0 ? id : null;
+}
+
+/** Give back a claimed download whose zip was never served. */
+export async function releaseDownload(db: Db, id: string): Promise<void> {
+  await db.delete(download).where(eq(download.id, id));
+}
+
+/**
+ * Whether a request takes a copy of the zip, and so counts. A HEAD asks
+ * about the file without taking it (a link checker, a download manager
+ * sizing it up), and a Range that starts past the first byte resumes a copy
+ * whose first request already counted.
+ */
+export function takesCopy(request: Request): boolean {
+  if (request.method !== 'GET') return false;
+
+  const range = request.headers.get('range');
+
+  return !range || /^bytes=0-/.test(range.trim());
 }
 
 /** Give a person the whole month's cap back, from now. */

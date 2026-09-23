@@ -48,5 +48,8 @@
     "style": "--rule: ( @place-cell: center; @size: 140% calc(${width} * 6 / @size); background: @pd(var(--color1), var(--color2), var(--color3)); transform-origin: 1% center; transform: translateX(50%) rotate(calc(@i * 360deg / @size)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; position: relative; transform: scale(1.4); transform-origin: center; filter: @svg-filter(<svg><filter x=\"-70%\" y=\"-70%\" width=\"240%\" height=\"240%\"><feTurbulence type=\"fractalNoise\" baseFrequency=\".08\" numOctaves=\"3\" /><feDisplacementMap in=\"SourceGraphic\" scale=\"170\" /></filter></svg>); box-sizing:border-box; } :container { background: var(--color0); }"
   },
-  "svgExport": false
+  "svgExport": false,
+  "sizing": {
+    "maxCells": 70
+  }
 }

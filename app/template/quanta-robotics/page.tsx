@@ -5,6 +5,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import styles from './quanta-robotics.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Quanta Robotics Laboratory · Machines That Learn by Touching',
@@ -318,6 +319,12 @@ export default function QuantaRoboticsPage() {
           <a data-edit="statusBar.careers" data-edit-max="28" href="#careers">careers</a>
         </nav>
         <p data-edit="statusBar.statusClock" data-edit-max="240" data-edit-multiline className={styles.statusClock}>T+2412d</p>
+        <TemplateMenu className={styles.siteMenu}>
+          <a data-edit="statusBar.platforms" data-edit-max="28" href="#platforms">platforms</a>
+          <a data-edit="statusBar.research" data-edit-max="28" href="#research">research</a>
+          <a data-edit="statusBar.pubs" data-edit-max="28" href="#pubs">pubs</a>
+          <a data-edit="statusBar.careers" data-edit-max="28" href="#careers">careers</a>
+        </TemplateMenu>
       </header>
 
       <main id="sys-top">

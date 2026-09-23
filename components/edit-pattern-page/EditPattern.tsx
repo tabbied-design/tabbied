@@ -55,6 +55,7 @@ import {
   useDraftPreview,
   type BrandPalette,
 } from 'lib/brandPalettes';
+import { revealPressed } from 'components/palette/revealPressed';
 import styles from './EditPattern.module.css';
 
 // The density a design opens at when its authored grid says nothing usable
@@ -551,15 +552,46 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   // Expanding pins the grid the plate shows now, and collapsing releases it;
   // the grid is otherwise the plate's, at whatever size the stage is.
+  //
+  // It also takes the screen where the browser allows it. Hiding the panel
+  // frees width only, and a 1:1 or 2:3 plate is bound by the stage's height,
+  // so on its own Expand hid the controls and drew the same plate. Where
+  // there is no fullscreen (an iPhone), it is the wider stage, as before.
   const expand = () => {
     pinnedGrid.current = grid;
     setIsExpanded(true);
+
+    const stage = previewRef.current;
+
+    if (stage && document.fullscreenEnabled && !document.fullscreenElement) {
+      stage.requestFullscreen().catch(() => {
+        // Refused (no gesture, a policy): the wider stage still stands.
+      });
+    }
   };
 
   const collapse = () => {
     pinnedGrid.current = null;
     setIsExpanded(false);
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
   };
+
+  // The browser takes Escape for itself in fullscreen, and leaving
+  // fullscreen any way at all is collapsing.
+  useEffect(() => {
+    if (!isExpanded) return;
+
+    const onChange = () => {
+      if (!document.fullscreenElement) collapse();
+    };
+
+    document.addEventListener('fullscreenchange', onChange);
+
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, [isExpanded]);
 
   // Escape came free with the dialog; expanding in place has to bind it.
   useEffect(() => {
@@ -1039,6 +1071,14 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     return head;
   }, [mergedChips, paletteSource]);
   const listedRows = isMobile ? stripPalettes : paletteList.shown;
+
+  // On a phone the palettes are one swipeable row, and the one in use could
+  // sit well off its right edge: scroll it into the row.
+  const stripRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (isMobile && stripRef.current) revealPressed(stripRef.current);
+  }, [isMobile, paletteSource]);
 
   // The plate's caption names what it is: the palette it wears (when it wears
   // a named one), its grid and its ratio - the three things the rail changes.
@@ -1532,7 +1572,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                     the editor on every phone visit - for a slice it never
                     showed. It gets the desktop list only. */}
                 <div
-                  ref={isMobile ? undefined : paletteList.listRef}
+                  ref={isMobile ? stripRef : paletteList.listRef}
                   className={isMobile ? `${styles.paletteList} ${styles.paletteStrip}` : styles.paletteList}
                   onScroll={isMobile ? undefined : paletteList.onScroll}
                 >
@@ -1595,8 +1635,10 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
             <h2 className={styles.groupTitle}>Layout</h2>
 
             <div className={styles.layoutField}>
-              <span className={styles.layoutLabel}>Aspect ratio</span>
-              <div className={styles.ratioTiles}>
+              <span id="aspect-ratio-label" className={styles.layoutLabel}>
+                Aspect ratio
+              </span>
+              <div className={styles.ratioTiles} role="group" aria-labelledby="aspect-ratio-label">
                 {ASPECT_RATIO_IDS.map((id) => renderRatioTile(id))}
               </div>
             </div>

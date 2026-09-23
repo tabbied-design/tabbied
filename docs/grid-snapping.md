@@ -58,12 +58,13 @@ indivisible cell lands *that* boundary on a fraction of a pixel - which the
 browser seams however exact the outer grid is.
 
 Sichtbeton's hero was the case that proved it: 8 × 180px across and 3 × 197px
-down, every outer track exact, and still visibly gapped. `subdivide` masks
-each cell with a nested `@doodle(@grid: 2)`, and 197 halves to **98.5**.
+down, every outer track exact, and still visibly gapped. `subdivide` masked
+each cell with a nested `@doodle(@grid: 2)` (a 2 × 2 of gradient layers
+now, with the same boundaries), and 197 halves to **98.5**.
 
 `PatternSizing.cellMultiple` carries the divisor. It defaults to 2 - which
 also keeps centerd rules and strokes off half-pixels - and only three designs
-in the catalog need more, the three that mask with a nested `@doodle`:
+in the catalog need more, the three that mask the cell with a grid of its own:
 
 | Design | Nested grid | `cellMultiple` |
 |---|---|---|

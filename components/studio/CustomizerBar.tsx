@@ -22,29 +22,41 @@ import { initials } from 'components/nav';
 import { signOut, useSessionUser } from 'lib/authClient';
 import styles from './CustomizerBar.module.css';
 
+/** Where the way back leads, by who is looking at what. */
+const BACK = {
+  mine: { href: '/account/sites/', label: 'My account', aria: 'Back to your sites' },
+  visitor: { href: '/templates', label: 'Templates', aria: 'Back to the templates' },
+};
+
 export default function CustomizerBar({
   mine,
+  template,
   downloading,
   onDownloadHtml,
   reactHref,
 }: {
   /** The viewer owns the site: the way back is the account. */
   mine: boolean;
+  /**
+   * The template slug of a site not saved yet: the way back is the template
+   * it was opened from, since the account has nothing of it to show.
+   */
+  template?: string;
   downloading: boolean;
   onDownloadHtml: () => void;
   reactHref: string;
 }) {
   const { user, isPending } = useSessionUser();
   const router = useRouter();
+  const back = template
+    ? { href: `/templates/${template}/`, label: 'Template', aria: 'Back to the template' }
+    : mine
+      ? BACK.mine
+      : BACK.visitor;
 
   return (
     <header className={styles.bar}>
-      <Link
-        href={mine ? '/account/sites/' : '/templates'}
-        prefetch={false}
-        className={styles.back}
-        aria-label={mine ? 'Back to your sites' : 'Back to the templates'}
-      >
+      <Link href={back.href} prefetch={false} className={styles.back} aria-label={back.aria}>
         <span className={styles.backCircle} aria-hidden="true">
           <svg
             viewBox="0 0 24 24"
@@ -59,7 +71,7 @@ export default function CustomizerBar({
             <path d="M14.5 5.5 8 12l6.5 6.5" />
           </svg>
         </span>
-        <span className={styles.backLabel}>{mine ? 'My account' : 'Templates'}</span>
+        <span className={styles.backLabel}>{back.label}</span>
       </Link>
 
       <div className={styles.actions}>

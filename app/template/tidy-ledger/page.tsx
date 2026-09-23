@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { fadedwedge, lucarne, sound } from 'tabbied/patterns';
 import s from './tidy-ledger.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Tidy Ledger: Bookkeeping app for small shops',
@@ -297,6 +298,12 @@ export default function TidyLedgerPage() {
           <a data-edit="bar.barLink" data-edit-max="28" className={s.barLink} href="#top">Sign in</a>
           <a data-edit="bar.pill" data-edit-max="28" className={s.pill} href="#start">Start free</a>
         </div>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+          <a data-edit="bar.barLink" data-edit-max="28" href="#top">Sign in</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

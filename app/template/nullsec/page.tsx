@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { basse, combed, slashbar } from 'tabbied/patterns';
 import s from './nullsec.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Nullsec: Security research collective, Berlin',
@@ -198,6 +199,13 @@ export default function NullsecPage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>berlin / utc+02:00</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
+              {label}
+            </a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

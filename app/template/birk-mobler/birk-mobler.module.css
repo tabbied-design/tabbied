@@ -64,6 +64,12 @@
   backdrop-filter: blur(10px);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
 .mark {
   font-variant-caps: all-small-caps;
   font-size: 1.1rem;
@@ -680,11 +686,15 @@
 
 @media (max-width: 720px) {
   .bar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
   }
 
   .nav {
     display: none;
+  }
+
+  .siteMenu {
+    display: block;
   }
 
   .facts {

@@ -32,6 +32,7 @@ import {
   hasErrors,
   formatProblems,
   declaredCopyRoles,
+  decodeEntities,
 } from 'tabbied-templates';
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -78,7 +79,26 @@ const titleOf = (html) => {
   const match = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html);
 
   // The separator before the site name: a middle dot, a pipe or a hyphen.
-  return match ? match[1].replace(/\s*[\u00b7|-]\s*Tabbied\s*$/i, '').trim() : '';
+  return match
+    ? decodeEntities(match[1].replace(/\s*[\u00b7|-]\s*Tabbied\s*$/i, '')).trim()
+    : '';
+};
+
+// The name the gallery shows, read off the framed preview page's
+// `tabbied:template-name` meta (app/templates/[slug]/page.tsx). A template's
+// own <title> is a whole line with a tagline after a dot, a pipe or a colon,
+// and it is markup: taken raw it put "The Children&#x27;s Discovery Museum"
+// in front of people on the account's downloads list.
+const galleryNameOf = (slug) => {
+  const previewPath = path.join(repoRoot, 'out', 'templates', slug, 'index.html');
+
+  if (!existsSync(previewPath)) return '';
+
+  const match = /<meta\s+name="tabbied:template-name"\s+content="([^"]*)"/i.exec(
+    readFileSync(previewPath, 'utf8')
+  );
+
+  return match ? decodeEntities(match[1]).trim() : '';
 };
 
 const fontsOf = (html) => {
@@ -149,7 +169,11 @@ for (const slug of slugs) {
     specVersion: SPEC_VERSION,
     site: {
       slug,
-      name: (brand && brand.kind === 'text' ? brand.value : '') || titleOf(html) || slug,
+      name:
+        galleryNameOf(slug) ||
+        (brand && brand.kind === 'text' ? brand.value : '') ||
+        titleOf(html) ||
+        slug,
     },
     palette: {
       colors: root.colors,

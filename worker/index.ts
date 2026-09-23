@@ -41,7 +41,14 @@ import journal from './migrations/meta/_journal.json';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import { requireUser } from './lib/session';
-import { downloadStatus, downloadedThisMonth, parseDownloadName, recordDownload } from './lib/downloads';
+import {
+  claimDownload,
+  downloadStatus,
+  downloadedThisMonth,
+  parseDownloadName,
+  releaseDownload,
+  takesCopy,
+} from './lib/downloads';
 import media from './routes/media';
 import account from './routes/account';
 import admin from './routes/admin';
@@ -353,14 +360,24 @@ app.get('/downloads/:file', async (c, next) => {
   }
 
   const db = drizzle(c.env.DB, { schema });
-  const status = await downloadStatus(db, userId);
+  const counts = takesCopy(request);
 
-  // A template already among the month's is free to take again, in either
-  // format: the cap counts templates, not zips.
-  if (!status.ok && !(await downloadedThisMonth(db, userId, named.slug))) {
+  // A request that takes a copy claims its row in the same statement that
+  // checks the cap (see `claimDownload`), so concurrent requests cannot all
+  // slip under it. A HEAD or a resumed range is answered by the same gate
+  // but writes nothing. A template already among the month's is free to
+  // take again, in either format: the cap counts templates, not zips.
+  const claimed = counts ? await claimDownload(db, userId, named.slug, named.format) : null;
+  const allowed = counts
+    ? claimed !== null
+    : (await downloadStatus(db, userId)).ok || (await downloadedThisMonth(db, userId, named.slug));
+
+  if (!allowed) {
     if (isNavigation(request)) {
       return c.redirect('/account/?downloads=capped', 302);
     }
+
+    const status = await downloadStatus(db, userId);
 
     return c.json(
       {
@@ -373,12 +390,19 @@ app.get('/downloads/:file', async (c, next) => {
     );
   }
 
-  // Serve first, count second: a zip the packager never wrote is a 404 that
-  // costs nothing, and a row is only ever written for bytes that went out.
-  const zip = await c.env.ASSETS.fetch(request);
+  // A zip the packager never wrote is a 404 that costs nothing: the claim is
+  // given back, so a row is only ever kept for bytes that went out.
+  let zip: Response;
 
-  if (zip.ok) {
-    await recordDownload(db, userId, named.slug, named.format);
+  try {
+    zip = await c.env.ASSETS.fetch(request);
+  } catch (error) {
+    if (claimed) await releaseDownload(db, claimed);
+    throw error;
+  }
+
+  if (claimed && !zip.ok) {
+    await releaseDownload(db, claimed);
   }
 
   return zip;

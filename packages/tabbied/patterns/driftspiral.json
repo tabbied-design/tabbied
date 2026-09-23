@@ -51,5 +51,8 @@
     "style": "--rule: ( @size: @r(4%, 100%); @place: @plot(r: .5); @random(.3) { filter: blur(2px); } background-size: 35%; background-image: @svg( viewBox: 0 0 10 10; circle { r: @r(0, .5); cx, cy: 9 5; fill: @p(var(--color1), var(--color2), var(--color3), var(--color4)); } ); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
   },
-  "svgExport": false
+  "svgExport": false,
+  "sizing": {
+    "maxCells": 120
+  }
 }

@@ -16,12 +16,14 @@ import {
 } from 'components/react-docs-page/sections';
 import home from 'components/main-page/home.module.css';
 import styles from 'components/react-docs-page/ReactDocs.module.css';
+import { pageMetadata } from 'lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Documentation - Tabbied',
   description:
     'Documentation for the tabbied npm package: render, resize, recolor, reseed, and export Tabbied generative patterns in React or vanilla JavaScript.',
-};
+  path: '/docs/react/',
+});
 
 const NPM_URL = 'https://www.npmjs.com/package/tabbied';
 const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';

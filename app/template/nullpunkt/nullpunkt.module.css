@@ -56,6 +56,12 @@
   backdrop-filter: blur(10px);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--white);
+}
+
 .mark {
   display: flex;
   align-items: center;
@@ -738,11 +744,15 @@
 
 @media (max-width: 680px) {
   .bar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
   }
 
   .bar nav {
     display: none;
+  }
+
+  .siteMenu {
+    display: block;
   }
 
   .pair {

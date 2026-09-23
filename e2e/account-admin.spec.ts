@@ -78,6 +78,18 @@ test.describe('account and admin pages', () => {
     await expect(page.getByText('Warmly Grounded on Verdant')).toBeVisible();
     await expect(page.getByText(/revisions?$/)).toHaveCount(0);
 
+    // A site can be deleted, after a second press that says so.
+    const deletes: string[] = [];
+    await page.route('**/api/studio/sites/abc', (route) => {
+      deletes.push(route.request().method());
+      return route.fulfill({ status: 200, contentType: 'application/json', body: '{"deleted":"abc"}' });
+    });
+    await page.getByRole('button', { name: 'Delete Ye Joo Park', exact: true }).click();
+    expect(deletes).toHaveLength(0);
+    await page.getByRole('button', { name: 'Delete Ye Joo Park for good' }).click();
+    await expect(page.getByRole('link', { name: /Ye Joo Park/ })).toHaveCount(0);
+    expect(deletes).toEqual(['DELETE']);
+
     // The overview draws the artboard's ring: the month's template
     // downloads against the cap, and the day the count starts over.
     await page.goto('/account/');

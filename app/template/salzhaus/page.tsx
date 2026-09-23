@@ -3,6 +3,7 @@ import {
   bilateral, cinch, drift, foldback, hourglass, pivot, sheared, skewblock,
 } from 'tabbied/patterns';
 import s from './salzhaus.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Salzhaus: Contemporary dance, Basel',
@@ -200,6 +201,12 @@ export default function SalzhausPage() {
           <a data-edit="bar.visit" data-edit-max="28" href="#visit">Visit</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Spielzeit 26 / 27</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.season" data-edit-max="28" href="#season">Season</a>
+          <a data-edit="bar.work" data-edit-max="28" href="#work">Work</a>
+          <a data-edit="bar.ensemble" data-edit-max="28" href="#ensemble">Ensemble</a>
+          <a data-edit="bar.visit" data-edit-max="28" href="#visit">Visit</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

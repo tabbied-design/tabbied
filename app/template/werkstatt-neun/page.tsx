@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { bauhaus, mixtape, tetro } from 'tabbied/patterns';
 import s from './werkstatt-neun.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Werkstatt Neun: Design school summer workshop, Dessau',
@@ -177,6 +178,14 @@ export default function WerkstattNeunPage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Dessau, Halle Neun</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([no, label, href], i) => (
+            <a key={href} href={href}>
+              <span data-edit={`bar.text.${i}`} data-edit-max="60">{no}</span>
+              {label}
+            </a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

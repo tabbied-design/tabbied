@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './kupferwalz.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Kupferwalz: Copper rolling mill, Liège',
@@ -132,6 +133,12 @@ export default function KupferwalzPage() {
           <a data-edit="bar.shipped" data-edit-max="28" href="#shipped">Shipped</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Laminoir / Liège</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.gauge" data-edit-max="28" href="#gauge">Gauges</a>
+          <a data-edit="bar.making" data-edit-max="28" href="#making">The line</a>
+          <a data-edit="bar.spec" data-edit-max="28" href="#spec">Specification</a>
+          <a data-edit="bar.shipped" data-edit-max="28" href="#shipped">Shipped</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

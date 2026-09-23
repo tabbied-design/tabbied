@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { createAuthClient } from 'better-auth/react';
 import { adminClient } from 'better-auth/client/plugins';
 import { API_BASE } from './apiFetch';
@@ -50,8 +51,50 @@ export function useSessionUser(): {
 } {
   const { data, isPending } = authClient.useSession();
   const session = data as unknown as { user?: SessionUser } | null;
+  const user = session?.user ?? null;
 
-  return { user: session?.user ?? null, isPending };
+  // Keep the hint the masthead reads before the session has answered (see
+  // SESSION_HINT_KEY): set while someone is signed in, cleared once the
+  // session says nobody is.
+  useEffect(() => {
+    if (isPending) return;
+
+    try {
+      if (user) window.localStorage.setItem(SESSION_HINT_KEY, '1');
+      else window.localStorage.removeItem(SESSION_HINT_KEY);
+    } catch {
+      // Storage refused (a private window, a blocked site): no hint, which
+      // is the signed-out chrome it would have shown anyway.
+    }
+  }, [user, isPending]);
+
+  return { user, isPending };
 }
 
-export const signOut = () => authClient.signOut({});
+/**
+ * A browser that was signed in last time, remembered so the masthead can
+ * draw a placeholder instead of "Sign in" while the session is fetched. The
+ * export cannot know who is looking, so every page is prerendered signed
+ * out, and a signed-in person saw "Home ... Sign in" flash to their own
+ * initials on every page load. Only a hint: the session still decides, and
+ * a wrong hint costs a placeholder for the length of one fetch.
+ */
+export const SESSION_HINT_KEY = 'tabbied:signed-in';
+
+export function readSessionHint(): boolean {
+  try {
+    return window.localStorage.getItem(SESSION_HINT_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export const signOut = async () => {
+  try {
+    window.localStorage.removeItem(SESSION_HINT_KEY);
+  } catch {
+    // As above.
+  }
+
+  return authClient.signOut({});
+};

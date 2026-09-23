@@ -53,7 +53,7 @@ function GalleryCard({
       <div className={styles.tile}>
         <GalleryDoodle item={item} palette={palette} />
       </div>
-      <h3 className={styles.cardName}>{item.name}</h3>
+      <h2 className={styles.cardName}>{item.name}</h2>
     </Link>
   );
 }

@@ -61,6 +61,12 @@
   backdrop-filter: blur(8px);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: #0b1822;
+}
+
 .brand {
   font-family: var(--display);
   font-weight: 700;
@@ -1186,6 +1192,10 @@
 @media (max-width: 700px) {
   .nav {
     display: none;
+  }
+
+  .siteMenu {
+    display: block;
   }
 
   .navCta {

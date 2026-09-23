@@ -50,5 +50,8 @@
   "code": {
     "style": "--rule: ( @place-cell: center; @size: calc(100% - (100% / @size) * @i); border-radius: 50%; transform: rotate(calc(@i * 8deg)); border: 1px solid @p(var(--color1), var(--color2), var(--color3)); opacity: calc(.35 + .65 * (@i / @size)); -webkit-transition: ease 450ms; transition: ease 450ms; );",
     "doodle": ":doodle { @grid: ${grid}; @size: ${width} ${height}; overflow:hidden; box-sizing:border-box; } :container { background: var(--color0); overflow:hidden; }"
+  },
+  "sizing": {
+    "maxCells": 18
   }
 }

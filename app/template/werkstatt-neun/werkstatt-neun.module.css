@@ -57,6 +57,12 @@
   border-bottom: 3px solid var(--ink);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
 .brand { display: inline-flex; align-items: center; gap: 0.7rem; }
 
 .markSquare {
@@ -708,8 +714,13 @@
 }
 
 @media (max-width: 720px) {
-  .bar { grid-template-columns: 1fr auto; }
+  .bar { grid-template-columns: 1fr auto auto; }
   .nav { display: none; }
+
+  .siteMenu {
+    display: block;
+  }
+
   .secHead { grid-template-columns: 3.2rem minmax(0, 1fr); }
   .secNote { grid-column: 2; }
   .ws { grid-template-columns: 1fr; grid-template-rows: auto; }

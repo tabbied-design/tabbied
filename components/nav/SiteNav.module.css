@@ -136,6 +136,21 @@
   color: var(--n-fg);
 }
 
+/* A browser that was signed in last time, while the session is fetched: a
+   placeholder where the pill will be, not "Sign in" (see SiteNav.tsx). */
+.nav[data-session='likely'] .signIn,
+.nav[data-session='likely'] .hamburger {
+  display: none;
+}
+
+.nav[data-session='likely'] .end::after {
+  width: 34px;
+  height: 34px;
+  content: '';
+  background-color: var(--n-pill);
+  border-radius: 50%;
+}
+
 /* The pill: the circle, a gap, and the two rules. 42px tall against the
    bar's 61px (light) and 66px (dark) content box, so it sits inside the
    height .nav states rather than setting it. */

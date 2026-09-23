@@ -3,6 +3,7 @@ import {
   bowl, comet, dipole, dustfall, lantern, quoit, sandfield, sparkle,
 } from 'tabbied/patterns';
 import s from './tiefsee.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Tiefsee: Deep-sea research program',
@@ -155,6 +156,12 @@ export default function TiefseePage() {
           <a data-edit="bar.policy" data-edit-max="28" href="#policy">Data</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Deep-sea program</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.zones" data-edit-max="28" href="#zones">Zones</a>
+          <a data-edit="bar.fleet" data-edit-max="28" href="#fleet">Fleet</a>
+          <a data-edit="bar.cruises" data-edit-max="28" href="#cruises">Cruises</a>
+          <a data-edit="bar.policy" data-edit-max="28" href="#policy">Data</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

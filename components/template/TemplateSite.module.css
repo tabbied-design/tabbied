@@ -114,8 +114,26 @@
   font-weight: 600;
   font-size: 14px;
 }
+/* The small-screen menu (TemplateMenu): the links the bar hides below 760px. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--bg);
+}
 @media (max-width: 760px) {
   .navLinks {
+    display: none;
+  }
+  .siteMenu {
+    display: block;
+  }
+  .site .navCta {
+    margin-left: auto;
+  }
+}
+/* The bar's call to action is the hero's first button too, a line below, so
+   on a phone it gives its room to the menu rather than wrapping in two. */
+@media (max-width: 480px) {
+  .site .navCta {
     display: none;
   }
 }

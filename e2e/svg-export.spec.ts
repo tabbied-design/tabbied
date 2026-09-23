@@ -102,9 +102,10 @@ const REPRESENTATIVE = [
 
 // Differing pixels tolerated (after anti-aliasing forgiveness). A few
 // patterns run looser, for documented sub-CSS-pixel deviations:
-// - fractal/matryoshka/subdivide: css-doodle's live rendering shows hairline
-//   seams from rasterizing the nested foreignObject @doodle mask, which the
-//   clean vector export intentionally does not reproduce.
+// - fractal: css-doodle's live rendering shows hairline seams from
+//   rasterizing the nested foreignObject @doodle mask, which the clean vector
+//   export intentionally does not reproduce. (matryoshka and subdivide used to
+//   share this; their masks are gradient layers now, and export exactly.)
 // - drypoint: the browser rasterizes the @svg mask image with slightly
 //   different sub-pixel rounding than the inlined symbol (≤1 CSS px).
 // - windowpane: CSS blends mixed-width borders progressively around rounded
@@ -128,8 +129,6 @@ const REPRESENTATIVE = [
 const MAX_BAD_FRACTION = 0.01;
 const PER_PATTERN_MAX: Record<string, number> = {
   fractal: 0.03,
-  matryoshka: 0.03,
-  subdivide: 0.035,
   drypoint: 0.02,
   windowpane: 0.02,
   glyph: 0.015,

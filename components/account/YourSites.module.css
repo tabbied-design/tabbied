@@ -1,5 +1,51 @@
 .columns {
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) 110px;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) 150px;
+}
+
+.actions {
+  display: inline-flex;
+  gap: 14px;
+  align-items: baseline;
+  justify-content: flex-end;
+}
+
+.quietAction,
+.danger {
+  padding: 0;
+  font: 500 14px var(--s-sans);
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.quietAction {
+  color: oklch(0.5 0.01 260);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.quietAction:hover {
+  color: var(--s-ink);
+}
+
+.danger {
+  color: oklch(0.52 0.19 27);
+}
+
+.danger:hover {
+  color: oklch(0.45 0.19 27);
+}
+
+.quietAction:disabled,
+.danger:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    justify-content: flex-start;
+  }
 }
 
 .link {

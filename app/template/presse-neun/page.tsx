@@ -3,6 +3,7 @@ import {
   bias, chip, notch, octagon, pennantbox, quaver, scramble, swapcut,
 } from 'tabbied/patterns';
 import s from './presse-neun.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Presse Neun: Screenprint workshop, Rotterdam',
@@ -196,6 +197,12 @@ export default function PresseNeunPage() {
           <a data-edit="bar.editions" data-edit-max="28" href="#editions">Editions</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Zeefdruk / Rotterdam</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.work" data-edit-max="28" href="#work">Work</a>
+          <a data-edit="bar.process" data-edit-max="28" href="#process">Process</a>
+          <a data-edit="bar.prices" data-edit-max="28" href="#prices">Prices</a>
+          <a data-edit="bar.editions" data-edit-max="28" href="#editions">Editions</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">
