@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { maline, ninon, tulle } from 'tabbied/patterns';
 import s from './birk-mobler.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Birk Mobler: Furniture maker, Aarhus',
@@ -221,6 +222,11 @@ export default function BirkMoblerPage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Aarhus</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

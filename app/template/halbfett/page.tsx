@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './halbfett.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Halbfett: Schriftgiesserei, Zürich',
@@ -90,6 +91,12 @@ export default function HalbfettPage() {
         <a data-edit="bar.trial" data-edit-max="28" className={s.trial} href="#licences">
           Free trial fonts
         </a>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.library" data-edit-max="28" href="#library">Library</a>
+          <a data-edit="bar.specimen" data-edit-max="28" href="#specimen">Specimen</a>
+          <a data-edit="bar.licences" data-edit-max="28" href="#licences">Licenses</a>
+          <a data-edit="bar.studio" data-edit-max="28" href="#studio">Studio</a>
+        </TemplateMenu>
       </header>
 
       <main>

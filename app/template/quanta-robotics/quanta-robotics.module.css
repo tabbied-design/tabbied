@@ -60,6 +60,12 @@
   letter-spacing: 0.04em;
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: rgb(5, 7, 11);
+}
+
 .wordmark {
   font-weight: 700;
   font-size: 0.95rem;
@@ -131,7 +137,23 @@
   .statusNav {
     display: none;
   }
+
+  .siteMenu {
+    display: block;
+  }
+
   .statusClock {
+    margin-left: auto;
+  }
+}
+
+/* The mission clock gives way to the menu on a phone. */
+@media (max-width: 440px) {
+  .statusClock {
+    display: none;
+  }
+
+  .siteMenu {
     margin-left: auto;
   }
 }

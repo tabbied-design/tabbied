@@ -3,6 +3,7 @@ import {
   cove, fenestrate, housing, lintel, loophole, mullion, notchblock, twohalf,
 } from 'tabbied/patterns';
 import s from './kubus.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Kubus: Kunsthalle',
@@ -160,6 +161,12 @@ export default function KubusPage() {
           <a data-edit="bar.visit" data-edit-max="28" href="#visit">Visit</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Kunsthalle</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.shows" data-edit-max="28" href="#shows">Exhibitions</a>
+          <a data-edit="bar.rooms" data-edit-max="28" href="#rooms">Rooms</a>
+          <a data-edit="bar.programme" data-edit-max="28" href="#programme">Program</a>
+          <a data-edit="bar.visit" data-edit-max="28" href="#visit">Visit</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

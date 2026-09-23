@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './klangwerk.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Klangwerk: Studio für elektroakustische Musik',
@@ -114,6 +115,12 @@ export default function KlangwerkPage() {
           <a data-edit="bar.apply" data-edit-max="28" href="#apply">Apply</a>
         </nav>
         <span data-edit="bar.hz" data-edit-max="60" className={s.hz}>90 Hz to 20 kHz</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.rooms" data-edit-max="28" href="#rooms">Räume</a>
+          <a data-edit="bar.residencies" data-edit-max="28" href="#residencies">Residencies</a>
+          <a data-edit="bar.series" data-edit-max="28" href="#series">Reihe</a>
+          <a data-edit="bar.apply" data-edit-max="28" href="#apply">Apply</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

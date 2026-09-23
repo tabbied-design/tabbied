@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { gesso, jibboom, wedge } from 'tabbied/patterns';
 import s from './norrbolt.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Norrbolt: Fastener wholesaler, Gothenburg',
@@ -166,6 +167,11 @@ export default function NorrboltPage() {
           ))}
         </nav>
         <span data-edit="bar.barStamp" data-edit-max="60" className={s.barStamp}>Trade only</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

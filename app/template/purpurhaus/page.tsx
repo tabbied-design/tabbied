@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './purpurhaus.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Purpurhaus: Natural dye works, Porto',
@@ -136,6 +137,12 @@ export default function PurpurhausPage() {
           <a data-edit="bar.batches" data-edit-max="28" href="#batches">Batches</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Tinturaria / Porto</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.ladder" data-edit-max="28" href="#ladder">The ladder</a>
+          <a data-edit="bar.making" data-edit-max="28" href="#making">Dyeing</a>
+          <a data-edit="bar.dyes" data-edit-max="28" href="#dyes">Dyestuffs</a>
+          <a data-edit="bar.batches" data-edit-max="28" href="#batches">Batches</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

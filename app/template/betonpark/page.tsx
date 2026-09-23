@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { bracket, casing, gorge } from 'tabbied/patterns';
 import s from './betonpark.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Betonpark: Indoor skatepark, Rotterdam',
@@ -237,6 +238,13 @@ export default function BetonparkPage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Rotterdam Zuid</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
+              {label}
+            </a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

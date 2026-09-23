@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './lichtfeld.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Lichtfeld: Lichtplanung, München',
@@ -83,6 +84,12 @@ export default function LichtfeldPage() {
           <a data-edit="bar.studio" data-edit-max="28" href="#studio">Studio</a>
         </nav>
         <span data-edit="bar.tag" data-edit-max="60" className={s.tag}>Lichtplanung / München</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.work" data-edit-max="28" href="#work">Work</a>
+          <a data-edit="bar.positions" data-edit-max="28" href="#positions">Positions</a>
+          <a data-edit="bar.method" data-edit-max="28" href="#method">Method</a>
+          <a data-edit="bar.studio" data-edit-max="28" href="#studio">Studio</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { giornata, gully, raku } from 'tabbied/patterns';
 import s from './kiln-aoi.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Kiln Aoi: Ceramics studio, Kanazawa',
@@ -186,6 +187,11 @@ export default function KilnAoiPage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Kanazawa</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

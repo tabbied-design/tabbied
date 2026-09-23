@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './glockenhof.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Glockenhof: Bell foundry, Innsbruck',
@@ -145,6 +146,12 @@ export default function GlockenhofPage() {
           <a data-edit="bar.tuning" data-edit-max="28" href="#tuning">Tuning</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Glockengiesserei / Innsbruck</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.peal" data-edit-max="28" href="#peal">The peal</a>
+          <a data-edit="bar.making" data-edit-max="28" href="#making">Making</a>
+          <a data-edit="bar.cast" data-edit-max="28" href="#cast">Cast here</a>
+          <a data-edit="bar.tuning" data-edit-max="28" href="#tuning">Tuning</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

@@ -187,7 +187,15 @@ for (const fixture of FIXTURES) {
     // icon classes, and the `figure`/`figure--cutout` markers the Figure
     // component puts on every image for pages that want to target them.
     // A page that styles neither is not missing anything.
-    const HOOKS = new Set(['figure', 'figure--cutout']);
+    const HOOKS = new Set([
+      'figure',
+      'figure--cutout',
+      // TemplateMenu's shape, declared in base.css (styles/globals.css).
+      'template-menu',
+      'template-menu__toggle',
+      'template-menu__icon',
+      'template-menu__panel',
+    ]);
     const orphans = [...onPage].filter(
       (name) =>
         !declared.has(name) && !name.startsWith('lucide') && !HOOKS.has(name)

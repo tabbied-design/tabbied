@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { arriccio, capstan, ziggurat } from 'tabbied/patterns';
 import s from './hotel-meridien.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Hotel Meridien: Grand hotel since 1927, Nice',
@@ -142,6 +143,12 @@ export default function HotelMeridienPage() {
             <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+          <a data-edit="bar.barRight" data-edit-max="28" href="#reservations">Reserve</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

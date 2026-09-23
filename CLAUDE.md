@@ -413,6 +413,34 @@ download's dependencies automatically - `EXTERNAL_DEPENDENCIES` in
 `scripts/package-templates.mjs` is derived from the shipped source, not
 maintained by hand.
 
+## A template's links on a phone - TemplateMenu
+
+57 of the 77 templates hid their header nav below a breakpoint and put
+nothing in its place, so a phone visitor, on the site or on a site shipped
+from the download, had the footer and nothing else. Each of them now renders
+`components/template/TemplateMenu` in its header: a copy of the nav's links
+(same `data-edit` ids, which is allowed, and the editable gate checks they
+agree) behind a "Menu" toggle. Four things it depends on:
+
+- **It is a `<details>`, because the HTML package has no React left.** Open
+  and shut are the browser's own there. Closing on a followed link, an
+  outside click and Escape is the component's effect on the site and in the
+  React package, and `MENU_SCRIPT` in `scripts/package-templates.mjs` in the
+  HTML package: a plain script, not part of the esm.sh bootstrap, because the
+  Studio preview replaces that bootstrap and this should survive into it.
+- **Its shape is in `styles/globals.css`** (`.template-menu*`), the one
+  global sheet every package ships as `base.css`, since a page may ship only
+  one module of its own. `e2e/templates.spec.ts` allowlists those classes.
+- **Each page supplies the rest through the class it passes** (`siteMenu` by
+  convention): `display: none` by default and `display: block` in the same
+  media query that hides its nav, plus `--template-menu-bg`, the ground the
+  panel sits on, taken from the header's own background variable so a
+  re-colored page re-colors its menu. The panel inherits the header's type
+  and color.
+- **`e2e/template-menus.spec.ts` is the gate.** At 390px, every link a
+  header hides must be in a visible menu that fits on the screen. A new
+  template that hides its nav fails it until it carries the menu.
+
 ## The mark, and the font that travels with it
 
 `components/logo/` is the whole of the brand mark: `LogoMark` is the glyph,

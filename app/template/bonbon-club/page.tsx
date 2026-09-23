@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { guernsey, shatter, ziggy } from 'tabbied/patterns';
 import s from './bonbon-club.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Bonbon Club: After-school club, Brighton',
@@ -210,6 +211,13 @@ export default function BonbonClubPage() {
         <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#signup">
           Sign up
         </a>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
+              {label}
+            </a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

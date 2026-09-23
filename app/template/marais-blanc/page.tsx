@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './marais-blanc.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Marais Blanc: Sea salt works, Guérande',
@@ -139,6 +140,12 @@ export default function MaraisBlancPage() {
           <a data-edit="bar.calendar" data-edit-max="28" href="#calendar">Calendar</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Paludier / Guérande</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.marsh" data-edit-max="28" href="#marsh">The marsh</a>
+          <a data-edit="bar.making" data-edit-max="28" href="#making">The year</a>
+          <a data-edit="bar.grades" data-edit-max="28" href="#grades">Grades</a>
+          <a data-edit="bar.calendar" data-edit-max="28" href="#calendar">Calendar</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

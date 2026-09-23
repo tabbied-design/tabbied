@@ -3,6 +3,7 @@ import {
   halfmast, parity, raking, reedpen, seamband, stepramp, subside, thirdstop,
 } from 'tabbied/patterns';
 import s from './zwoelfton.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Zwölfton: New-music ensemble, Vienna',
@@ -173,6 +174,12 @@ export default function ZwoelftonPage() {
           <a data-edit="bar.records" data-edit-max="28" href="#records">Records</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Wien / 26-27</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.season" data-edit-max="28" href="#season">Season</a>
+          <a data-edit="bar.players" data-edit-max="28" href="#players">Players</a>
+          <a data-edit="bar.commissions" data-edit-max="28" href="#commissions">Commissions</a>
+          <a data-edit="bar.records" data-edit-max="28" href="#records">Records</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

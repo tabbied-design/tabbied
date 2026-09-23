@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { karst, linocut, misprint } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import styles from './piquant-provisions.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Piquant Provisions · Small-Batch Hot Sauce',
@@ -220,6 +221,13 @@ export default function PiquantProvisionsPage() {
         <a data-edit="topbar.topbarCta" data-edit-max="28" href="#wholesale" className={styles.topbarCta}>
           Wholesale
         </a>
+        <TemplateMenu className={styles.siteMenu}>
+          <a data-edit="topbar.lineup" data-edit-max="28" href="#lineup">The Lineup</a>
+          <a data-edit="topbar.heat" data-edit-max="28" href="#heat">Heat Scale</a>
+          <a data-edit="topbar.process" data-edit-max="28" href="#process">How It's Made</a>
+          <a data-edit="topbar.recipe" data-edit-max="28" href="#recipe">Recipe</a>
+          <a data-edit="topbar.stockists" data-edit-max="28" href="#stockists">Stockists</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

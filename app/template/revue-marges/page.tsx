@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { batiste, moleskin, strand } from 'tabbied/patterns';
 import s from './revue-marges.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Revue Marges: Literary quarterly, Lyon',
@@ -202,6 +203,13 @@ export default function RevueMargesPage() {
           ))}
         </nav>
         <span data-edit="bar.barFolio" data-edit-max="60" className={s.barFolio}>No 47 / Automne 2026</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
+              {label}
+            </a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { coil, cornerbite, radius } from 'tabbied/patterns';
 import s from './atelier-vane.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Atelier Vane: Fashion label, Antwerp',
@@ -156,6 +157,11 @@ export default function AtelierVanePage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Antwerpen</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

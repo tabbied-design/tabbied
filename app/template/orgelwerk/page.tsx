@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './orgelwerk.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Orgelwerk: Pipe organ builders, Ghent',
@@ -136,6 +137,12 @@ export default function OrgelwerkPage() {
           <a data-edit="bar.built" data-edit-max="28" href="#built">Built here</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Orgelbouw / Gent</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.ranks" data-edit-max="28" href="#ranks">Ranks</a>
+          <a data-edit="bar.making" data-edit-max="28" href="#making">Building</a>
+          <a data-edit="bar.stoplist" data-edit-max="28" href="#stoplist">Stop list</a>
+          <a data-edit="bar.built" data-edit-max="28" href="#built">Built here</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

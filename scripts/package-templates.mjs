@@ -539,6 +539,7 @@ const LOCAL_IMPORTS = new Map([
   ['components/template/templateSections', { from: 'components/template/templateSections.ts', to: 'templateSections.ts' }],
   ['components/template/generatedImages', { from: 'components/template/generatedImages.ts', to: 'generatedImages.ts' }],
   ['components/template/ImageCard', { from: 'components/template/ImageCard.tsx', to: 'ImageCard.tsx' }],
+  ['components/template/TemplateMenu', { from: 'components/template/TemplateMenu.tsx', to: 'TemplateMenu.tsx' }],
 ]);
 
 /** Strip the one Next-ism and point local imports at their copied neighbors. */
@@ -892,6 +893,31 @@ const bootstrapScript = (version, slugs) => `
     </script>
 `;
 
+// The small-screen menu (components/template/TemplateMenu) opens and shuts
+// as a <details> with nothing running; on the site and in the React package
+// the component also closes it on a followed link, a click outside and
+// Escape. This is that, for the package with no framework left in it, so
+// the menu does not stay open over the section it just scrolled to. A plain
+// script, and not part of the bootstrap: the Studio preview replaces the
+// esm.sh bootstrap with its own, and this should survive into it.
+const MENU_SCRIPT = `
+    <!-- Closes the small-screen menu on a followed link, a click outside, or Escape. -->
+    <script>
+      document.addEventListener('click', function (event) {
+        document.querySelectorAll('details.template-menu[open]').forEach(function (menu) {
+          if (!menu.contains(event.target) || event.target.closest('a')) menu.open = false;
+        });
+      });
+      document.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape') return;
+        document.querySelectorAll('details.template-menu[open]').forEach(function (menu) {
+          menu.open = false;
+          menu.querySelector('summary').focus();
+        });
+      });
+    </script>
+`;
+
 async function packageSite(slug, outDir, version) {
   const source = path.join(exportDir, 'template', slug, 'index.html');
 
@@ -927,7 +953,10 @@ async function packageSite(slug, outDir, version) {
     '<link rel="stylesheet" href="./styles/base.css"/>' +
       `<link rel="stylesheet" href="./styles/${slug}.css"/></head>`
   );
-  html = html.replace('</body>', `${bootstrapScript(version, slugs)}  </body>`);
+  html = html.replace(
+    '</body>',
+    `${html.includes('template-menu') ? MENU_SCRIPT : ''}${bootstrapScript(version, slugs)}  </body>`
+  );
 
   // Write the folder.
   const siteDir = path.join(outDir, slug);

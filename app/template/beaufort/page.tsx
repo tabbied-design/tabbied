@@ -3,6 +3,7 @@ import {
   angleoff, fanned, gnomonwedge, mitre, overbar, quoinwedge, sail, skewback,
 } from 'tabbied/patterns';
 import s from './beaufort.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Ateliers Beaufort: Sailmakers, Lorient',
@@ -138,6 +139,12 @@ export default function BeaufortPage() {
           <a data-edit="bar.built" data-edit-max="28" href="#built">Built here</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Voilerie / Lorient</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.scale" data-edit-max="28" href="#scale">The scale</a>
+          <a data-edit="bar.work" data-edit-max="28" href="#work">Work</a>
+          <a data-edit="bar.cloth" data-edit-max="28" href="#cloth">Cloth</a>
+          <a data-edit="bar.built" data-edit-max="28" href="#built">Built here</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

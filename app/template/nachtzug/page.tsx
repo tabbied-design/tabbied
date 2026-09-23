@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './nachtzug.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Nachtzug: Schlafwagen quer durch Europa',
@@ -85,6 +86,12 @@ export default function NachtzugPage() {
           <a data-edit="bar.book" data-edit-max="28" href="#book">Book</a>
         </nav>
         <span data-edit="bar.tag" data-edit-max="60" className={s.tag}>Schlafwagen seit 1994</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.lines" data-edit-max="28" href="#lines">Lines</a>
+          <a data-edit="bar.berths" data-edit-max="28" href="#berths">Berths</a>
+          <a data-edit="bar.aboard" data-edit-max="28" href="#aboard">Aboard</a>
+          <a data-edit="bar.book" data-edit-max="28" href="#book">Book</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

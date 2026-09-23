@@ -1,6 +1,7 @@
 import { TabbiedPattern } from 'tabbied/react';
 import { alcove, grosgrain, rebate } from 'tabbied/patterns';
 import s from './sable-and-pine.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Sable and Pine: Interiors atelier, Melbourne',
@@ -174,6 +175,13 @@ export default function SableAndPinePage() {
           ))}
         </nav>
         <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Fitzroy North, est. 2011</span>
+        <TemplateMenu className={s.siteMenu}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
+              {label}
+            </a>
+          ))}
+        </TemplateMenu>
       </header>
 
       <main id="top">

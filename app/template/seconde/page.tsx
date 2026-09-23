@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './seconde.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Seconde: Chronométrage Sportif, Lausanne',
@@ -92,6 +93,12 @@ export default function SecondePage() {
           <a data-edit="bar.book" data-edit-max="28" href="#book">Book</a>
         </nav>
         <span data-edit="bar.clock" data-edit-max="60" className={s.clock}>Chronométrage sportif</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.systems" data-edit-max="28" href="#systems">Systems</a>
+          <a data-edit="bar.results" data-edit-max="28" href="#results">Results</a>
+          <a data-edit="bar.season" data-edit-max="28" href="#season">Season</a>
+          <a data-edit="bar.book" data-edit-max="28" href="#book">Book</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

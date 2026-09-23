@@ -79,6 +79,12 @@
   border-bottom: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
 .mark {
   font-family: var(--display);
   font-size: 1.05rem;
@@ -728,7 +734,17 @@
 }
 
 @media (max-width: 640px) {
+  .bar {
+    grid-template-columns: 1fr auto;
+    justify-items: start;
+  }
+
   .nav { display: none; }
+
+  .siteMenu {
+    display: block;
+    justify-self: end;
+  }
 
   .heroPanel {
     box-shadow:

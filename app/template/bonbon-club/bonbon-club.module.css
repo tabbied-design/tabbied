@@ -141,6 +141,12 @@
   border-bottom: var(--outline);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
 .mark {
   font-family: var(--display);
   font-weight: 700;
@@ -816,11 +822,15 @@
 
 @media (max-width: 820px) {
   .bar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
   }
 
   .nav {
     display: none;
+  }
+
+  .siteMenu {
+    display: block;
   }
 
   .sectionHead,

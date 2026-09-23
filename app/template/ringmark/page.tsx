@@ -4,6 +4,7 @@ import {
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './ringmark.module.css';
+import { TemplateMenu } from 'components/template/TemplateMenu';
 
 export const metadata = {
   title: 'Ringmark: Bird observatory, Helgoland',
@@ -136,6 +137,12 @@ export default function RingmarkPage() {
           <a data-edit="bar.record" data-edit-max="28" href="#record">What we record</a>
         </nav>
         <span data-edit="bar.now" data-edit-max="60" className={s.now}>Vogelwarte / Helgoland</span>
+        <TemplateMenu className={s.siteMenu}>
+          <a data-edit="bar.species" data-edit-max="28" href="#species">Species</a>
+          <a data-edit="bar.making" data-edit-max="28" href="#making">The day</a>
+          <a data-edit="bar.totals" data-edit-max="28" href="#totals">Totals</a>
+          <a data-edit="bar.record" data-edit-max="28" href="#record">What we record</a>
+        </TemplateMenu>
       </header>
 
       <main id="top">

@@ -129,6 +129,12 @@
   border-bottom: 4px solid var(--yellow);
 }
 
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--ink);
+}
+
 .mark {
   font-family: var(--display);
   font-weight: 900;
@@ -991,11 +997,15 @@
 
 @media (max-width: 820px) {
   .bar {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
   }
 
   .nav {
     display: none;
+  }
+
+  .siteMenu {
+    display: block;
   }
 
   .figures {
@@ -1029,6 +1039,13 @@
 
   .footBrand {
     grid-column: 1 / -1;
+  }
+}
+
+/* The mark, the stamp and the menu on one line down to 360px. */
+@media (max-width: 400px) {
+  .bar {
+    gap: 0.75rem;
   }
 }
 
