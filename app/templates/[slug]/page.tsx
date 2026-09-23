@@ -36,6 +36,11 @@ export async function generateMetadata({
     description: entry
       ? `${entry.name}, a ${entry.topic.toLowerCase()} website template built on a Tabbied pattern. Customize its colors and patterns, or download it as it is.`
       : undefined,
+    // The name the gallery shows, for scripts/generate-editable.mjs: the
+    // template's own <title> is a whole line ("Hopscotch - The Children's
+    // Discovery Museum"), and this is what the account's downloads list, the
+    // customizer and the MCP catalog should call it.
+    other: entry ? { 'tabbied:template-name': entry.name } : undefined,
   };
 }
 
