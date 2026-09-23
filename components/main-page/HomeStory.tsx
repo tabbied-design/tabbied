@@ -181,13 +181,17 @@ export default function HomeStory({
           combinations that work, and turn inspiration into something useful.
         </p>
 
-        {/* Plain elements rather than a <dl>: two of the four are links, and an
-            anchor is not a permitted child of a description list. */}
+        {/* Plain elements rather than a <dl>: three of the four are links, and
+            an anchor is not a permitted child of a description list. The
+            palettes are browsed and applied from the pattern library's rail,
+            so that is where their count leads. */}
         <div className={styles.stats}>
-          <div className={styles.stat}>
+          <Link href="/patterns" prefetch={false} className={styles.stat}>
             <span className={styles.statNumber}>{paletteCount}</span>
-            <span className={styles.statLabel}>Color palettes</span>
-          </div>
+            <span className={`${styles.statLabel} ${styles.statLink}`}>
+              Color palettes
+            </span>
+          </Link>
 
           <Link href="/patterns" prefetch={false} className={styles.stat}>
             <span className={styles.statNumber}>{patternCount}</span>

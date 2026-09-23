@@ -259,13 +259,45 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     return () => observer.disconnect();
   }, [visible]);
 
+  // The column's heading, which a page change and a search bring back into
+  // view: a page number is clicked at the foot of the grid, and without this
+  // the next page opened on its last row. The heading's scroll-margin keeps
+  // it clear of the pinned bar (and, on a phone, the palette shelf).
+  const headerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const pendingScroll = useRef<'page' | 'search' | null>(null);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    const reason = pendingScroll.current;
+
+    pendingScroll.current = null;
+    if (!header || !reason) return;
+
+    if (reason === 'page') {
+      header.scrollIntoView({ block: 'start' });
+      // Keyboard and screen-reader users land on the new page, not on a
+      // page number that has moved.
+      titleRef.current?.focus({ preventScroll: true });
+      return;
+    }
+
+    // A search that shortens the grid can leave the heading under the bar.
+    const margin = parseFloat(getComputedStyle(header).scrollMarginTop) || 0;
+    if (header.getBoundingClientRect().top < margin) {
+      header.scrollIntoView({ block: 'start' });
+    }
+  }, [page, search]);
+
   const goToPage = (nextPage: number) => {
     const clamped = Math.min(Math.max(1, nextPage), pageCount);
+    if (clamped !== page) pendingScroll.current = 'page';
     setPage(clamped);
     writePageToUrl(clamped);
   };
 
   const onSearchChange = (value: string) => {
+    pendingScroll.current = 'search';
     setSearch(value);
     // A new search resets to page 1 - clear the page param (not a page nav).
     setPage(1);
@@ -335,8 +367,10 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
       )}
 
       <div className={styles.mainColumn}>
-        <div className={styles.mainHeader}>
-          <h1 className={styles.title}>Pick a pattern</h1>
+        <div ref={headerRef} className={styles.mainHeader}>
+          <h1 ref={titleRef} className={styles.title} tabIndex={-1}>
+            Pick a pattern
+          </h1>
           <p className={styles.intro}>
             {filtered.length} {filtered.length === 1 ? 'pattern' : 'patterns'},
             each drawn live in your browser. Pick a color palette to recolor
@@ -361,7 +395,9 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
 
             {/* Numbers only, as the design draws it: the window always shows
                 the neighbors of the current page, so there is nothing an
-                arrow would reach that a number does not. */}
+                arrow would reach that a number does not. Real links, so each
+                page is a URL a crawler can follow and a person can open in a
+                tab; a plain click stays in the page. */}
             {pageCount > 1 && (
               <nav className={styles.pagination} aria-label="Pages">
                 {pages.map((p, index) =>
@@ -374,19 +410,26 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
                       ...
                     </span>
                   ) : (
-                    <button
+                    <a
                       key={p}
-                      type="button"
+                      href={p === 1 ? '/patterns/' : `/patterns/?page=${p}`}
                       className={
                         p === clampedPage
                           ? `${styles.pageNumber} ${styles.pageNumberCurrent}`
                           : styles.pageNumber
                       }
-                      onClick={() => goToPage(p)}
+                      onClick={(event) => {
+                        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+                          return;
+                        }
+                        event.preventDefault();
+                        goToPage(p);
+                      }}
+                      aria-label={`Page ${p}`}
                       aria-current={p === clampedPage ? 'page' : undefined}
                     >
                       {p}
-                    </button>
+                    </a>
                   )
                 )}
               </nav>

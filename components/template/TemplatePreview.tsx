@@ -52,6 +52,12 @@ export default function TemplatePreview({
     <div
       className={`${styles.page} ${plexMono.variable} ${plexSans.variable} ${ebGaramond.variable}`}
     >
+      {/* The page's heading, for a screen reader and an outline: the bar is
+          chrome and the template is in a frame, so nothing else names it. */}
+      <h1 className={styles.srOnly}>
+        {name}, a {topic.toLowerCase()} website template
+      </h1>
+
       <header className={styles.bar}>
         <Link href="/templates" prefetch={false} className={styles.back} aria-label="All templates">
           <span className={styles.backCircle} aria-hidden="true">

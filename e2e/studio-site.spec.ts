@@ -289,6 +289,8 @@ test.describe('studio site', () => {
     const after = await hosts.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pattern')));
     expect(after.slice(1)).toEqual(before.slice(1));
     await expect(rows.first().locator('img')).toHaveAttribute('src', `/previews/${target}.webp`);
+    // And over it the design drawn live, in the colors the field wears.
+    await expect(rows.first().locator('css-doodle')).toBeAttached({ timeout: 15_000 });
     await expect(rail.getByRole('button', { name: 'Save changes' })).toBeEnabled();
 
     // The changed row, and only that row, offers its own way back.

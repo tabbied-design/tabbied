@@ -41,21 +41,26 @@ function Card({ site, clone = false }: { site: Site; clone?: boolean }) {
       <span className={styles.thumb}>
         {/* A plain img: the export runs with images unoptimized, so
             next/image added its client runtime to the homepage to do what
-            object-fit does. */}
+            object-fit does. Eager, not lazy: the track is translated into
+            view by an animation, which lazy loading does not see as the image
+            approaching, so the second copy of each row scrolled in blank.
+            There are ten files, and the first copy asks for all of them. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`/previews/${site.patternSlug}.webp`}
           alt=""
-          loading="lazy"
+          loading="eager"
+          fetchPriority="low"
           decoding="async"
           className={styles.thumbImage}
         />
       </span>
-      {/* The card stands in for a site rather than listing it - the name is on
-          the link itself, for anyone not reading the picture. */}
-      <span className={styles.bars} aria-hidden="true">
-        <span />
-        <span />
+      {/* The name under the picture, where two grey bars used to stand in for
+          it and read as a card still loading. The link carries it too, for
+          anyone not reading the card. */}
+      <span className={styles.caption} aria-hidden="true">
+        <span className={styles.captionName}>{site.name}</span>
+        <span className={styles.captionTopic}>{site.topic}</span>
       </span>
     </Link>
   );

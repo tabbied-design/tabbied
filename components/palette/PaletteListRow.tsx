@@ -1,5 +1,6 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import { Pencil, X } from 'lucide-react';
 import styles from './PaletteListRow.module.css';
 
@@ -7,11 +8,11 @@ import styles from './PaletteListRow.module.css';
 const MAX_CHIPS = 6;
 
 /**
- * One palette in a list: the name, then its inks as a run of chips, then the
- * pencil (and, for a palette the person made, a delete mark). The ground
- * color is not drawn - the design shows the colors a pattern is painted
- * *with*, and the ground is what the page around the list already shows under
- * every thumbnail. The active row is an ink pill. Shared by the gallery's rail
+ * One palette in a list: the name, then its ground and its inks as a run of
+ * chips, then the pencil (and, for a palette the person made, a delete mark).
+ * The ground comes first and set apart from the inks: it was left out on the
+ * grounds that the thumbnails already show it, which is true only of the
+ * palette in use. The active row is an ink pill. Shared by the gallery's rail
  * and the editor's palette list, so the two read as one control.
  *
  * The row is a group of real buttons: the pill (name and inks) applies the
@@ -53,6 +54,7 @@ export default function PaletteListRow({
       >
         <span className={styles.name}>{name}</span>
         <span className={styles.chips} aria-hidden="true">
+          <span className={styles.ground} style={{ '--ground': colors[0] } as CSSProperties} />
           {colors.slice(1, 1 + MAX_CHIPS).map((color, index) => (
             <span key={`${color}-${index}`} style={{ background: color }} />
           ))}

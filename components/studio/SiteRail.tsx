@@ -29,6 +29,7 @@ import type { PatternSlot, TemplateSpec } from 'tabbied-templates';
 import type { DesignChoice } from 'lib/designCatalog';
 import { activeChoice, paletteChoices } from 'lib/studioPalettes';
 import DesignDialog from './DesignDialog';
+import FieldThumb from './FieldThumb';
 import PaletteDialog from './PaletteDialog';
 import styles from './SiteRail.module.css';
 
@@ -70,6 +71,8 @@ export default function SiteRail({
   onPalette,
   patternSlots,
   designOn,
+  fieldPalette,
+  fieldSeed,
   fieldChanged,
   onFieldDesign,
   onResetField,
@@ -94,6 +97,10 @@ export default function SiteRail({
   patternSlots: readonly PatternSlot[];
   /** The design a field draws now, by slot id. */
   designOn: (slot: PatternSlot) => string;
+  /** The colors a field wears now, ground first, for its thumbnail. */
+  fieldPalette: (slot: PatternSlot) => readonly string[] | undefined;
+  /** The seed a field draws with now, for its thumbnail. */
+  fieldSeed: (slot: PatternSlot) => string | undefined;
   /** Whether a field draws something other than the template authored. */
   fieldChanged: (slot: PatternSlot) => boolean;
   /** Give one field a design chosen from the library. */
@@ -191,9 +198,11 @@ export default function SiteRail({
         {TABS.map(([key, label]) => (
           <button
             key={key}
+            id={`rail-tab-${key}`}
             type="button"
             role="tab"
             aria-selected={tab === key}
+            aria-controls={`rail-panel-${key}`}
             className={`${styles.tab} ${tab === key ? styles.tabOn : ''}`}
             onClick={() => setTab(key)}
           >
@@ -203,7 +212,12 @@ export default function SiteRail({
       </div>
 
       {tab === 'colors' ? (
-        <section className={`${styles.panel} ${styles.panelColors}`} aria-label="Colors">
+        <section
+          id="rail-panel-colors"
+          role="tabpanel"
+          aria-labelledby="rail-tab-colors"
+          className={`${styles.panel} ${styles.panelColors}`}
+        >
           <p className={styles.hint}>Pick a palette and the whole page recolors.</p>
 
           <div className={styles.paletteScroll}>
@@ -263,7 +277,12 @@ export default function SiteRail({
       ) : null}
 
       {tab === 'patterns' ? (
-        <section className={styles.panel} aria-label="Patterns">
+        <section
+          id="rail-panel-patterns"
+          role="tabpanel"
+          aria-labelledby="rail-tab-patterns"
+          className={styles.panel}
+        >
           <p className={styles.hint}>
             The patterns currently placed on the page. Change any one of them,
             or shuffle to draw a new set from the pattern library.
@@ -281,14 +300,11 @@ export default function SiteRail({
 
                 return (
                   <li key={slot.id} className={styles.field}>
-                    {/* eslint-disable-next-line @next/next/no-img-element -- a committed preview under public/, no loader needed */}
-                    <img
-                      className={styles.fieldThumb}
-                      src={`/previews/${slug}.webp`}
-                      alt=""
-                      loading="lazy"
-                      width="56"
-                      height="44"
+                    <FieldThumb
+                      slug={slug}
+                      palette={fieldPalette(slot)}
+                      seed={fieldSeed(slot)}
+                      ground={palette[0] ?? 'transparent'}
                     />
                     <span className={styles.fieldMeta}>
                       <span className={styles.fieldDesign}>{names.get(slug) ?? slug}</span>
@@ -385,7 +401,12 @@ export default function SiteRail({
       ) : null}
 
       {tab === 'content' ? (
-        <section className={styles.panel} aria-label="Content">
+        <section
+          id="rail-panel-content"
+          role="tabpanel"
+          aria-labelledby="rail-tab-content"
+          className={styles.panel}
+        >
           <p className={styles.hint}>
             Copy and images can&apos;t be edited here yet. Download the site and
             change the text and photos in your own editor. AI editing arrives in

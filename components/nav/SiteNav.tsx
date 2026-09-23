@@ -5,7 +5,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
 import { Logo } from 'components/logo';
 import { plexMono } from 'lib/fonts';
-import { signOut, useSessionUser } from 'lib/authClient';
+import { useSyncExternalStore } from 'react';
+import { SESSION_HINT_KEY, readSessionHint, signOut, useSessionUser } from 'lib/authClient';
 import useMediaQuery from 'lib/useMediaQuery';
 import styles from './SiteNav.module.css';
 
@@ -24,6 +25,22 @@ import styles from './SiteNav.module.css';
 //
 // GitHub and Docs are not up here; the footer carries them. The masthead is
 // for the three places a visitor goes, not for everything the site links to.
+//
+// Until the session answers, the export's signed-out chrome is what draws,
+// since a prerendered page cannot know who is looking. For a browser that
+// was signed in last time (SESSION_HINT_KEY) that meant "Sign in" flashing
+// to the person's initials on every load, so the bar marks itself
+// `data-session="likely"` and draws a placeholder in that slot instead: from
+// a script inline in the bar, before the page hydrates, and from state once
+// it has. A browser with no hint keeps the signed-out chrome throughout,
+// menu and all.
+
+/** Runs as the bar is parsed: the hint, before React has done anything. */
+const HINT_SCRIPT = `try{localStorage.getItem(${JSON.stringify(
+  SESSION_HINT_KEY
+)})==='1'&&document.currentScript.parentElement.setAttribute('data-session','likely')}catch(e){}`;
+
+const noSubscription = () => () => {};
 
 export type NavTone = 'dark' | 'light';
 
@@ -59,7 +76,9 @@ export default function SiteNav({
   sticky?: boolean;
   className?: string;
 }) {
-  const { user } = useSessionUser();
+  const { user, isPending } = useSessionUser();
+  const hinted = useSyncExternalStore(noSubscription, readSessionHint, () => false);
+  const likely = !user && isPending && hinted;
   const router = useRouter();
   const rawPathname = usePathname() ?? '/';
   const pathname = normalize(rawPathname);
@@ -95,7 +114,12 @@ export default function SiteNav({
         .filter(Boolean)
         .join(' ')}
       data-tone={tone}
+      data-session={likely ? 'likely' : undefined}
+      // The inline script may have set data-session before hydration.
+      suppressHydrationWarning
     >
+      <script dangerouslySetInnerHTML={{ __html: HINT_SCRIPT }} />
+
       <Link href="/" className={styles.logo} aria-label="Tabbied home" prefetch={false}>
         {/* A hair larger on the dark ground, which eats a little of the
             hairline stroke. */}

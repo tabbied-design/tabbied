@@ -489,10 +489,16 @@ Four things worth not re-litigating:
   generation flow is held back from the first launch (see below), and the
   footer's Product list is the artboard's own - Patterns, Websites, My
   Account.
-- **It renders the signed-out chrome until a session says otherwise.** The
-  export cannot know who is looking, and most visitors are nobody; a ghost
-  in the right-hand slot while the session resolves would leave the phone
-  layout with no menu at all until the fetch returned.
+- **It renders the signed-out chrome until a session says otherwise, unless
+  this browser was signed in last time.** The export cannot know who is
+  looking, and most visitors are nobody; a ghost in the right-hand slot for
+  everyone while the session resolves would leave the phone layout with no
+  menu at all until the fetch returned. But a signed-in person saw "Sign in"
+  flash to their initials on every page, so `useSessionUser` keeps a hint in
+  localStorage (`SESSION_HINT_KEY`) and a script inline in the bar marks it
+  `data-session="likely"` as the page is parsed, which swaps "Sign in" for a
+  placeholder circle; state keeps it until the session answers. Only a
+  browser with the hint gets the ghost, and a wrong hint costs one fetch.
 
 The stroke is authored at 17 units in a 391-unit viewBox, which is what keeps
 it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.

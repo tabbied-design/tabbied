@@ -35,6 +35,7 @@
 @media (pointer: coarse) {
   .control {
     height: 32px;
+    padding: 0 9px;
   }
 }
 
@@ -64,4 +65,14 @@
 .thumb:focus-visible {
   outline: 2px solid var(--blue-medium);
   outline-offset: 2px;
+}
+
+/* A thumb a finger can see it is holding: at 12px it read as a dot. After
+   the base rule, which it overrides; the control's inset above is half of
+   it, so it still never spills past the track. */
+@media (pointer: coarse) {
+  .thumb {
+    width: 18px;
+    height: 18px;
+  }
 }

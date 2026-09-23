@@ -35,6 +35,7 @@ import {
   emptyEdits,
   isPatternSlot,
   planEdits,
+  resolvePaletteRoles,
   type EditsDocument,
   type PatternEdit,
   type PatternSlot,
@@ -528,6 +529,14 @@ export default function StudioSite({
               onPalette={setPalette}
               patternSlots={patternSlots}
               designOn={(slot) => designOn(slot, patternEdit(slot))}
+              fieldPalette={(slot) =>
+                // The planner's own precedence (tabbied-templates plan.ts): an
+                // explicit override, else the page's palette through the
+                // field's roles, else what the template authored.
+                patternEdit(slot)?.palette ??
+                (slot.paletteRoles ? resolvePaletteRoles(slot.paletteRoles, palette) : slot.config.palette)
+              }
+              fieldSeed={(slot) => patternEdit(slot)?.seed ?? slot.config.seed}
               fieldChanged={(slot) => patternChanged(slot, patternEdit(slot))}
               onFieldDesign={setFieldDesign}
               onResetField={resetFieldDesign}

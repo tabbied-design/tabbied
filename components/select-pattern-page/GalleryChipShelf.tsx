@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { revealPressed } from 'components/palette/revealPressed';
 import { ArrowLeftRight, ChevronRight, Pencil, X } from 'lucide-react';
 import { RANDOM_PALETTE_ID, type BrandPalette } from 'lib/brandPalettes';
 import type { LibraryPalette } from 'lib/paletteLibrary';
@@ -73,8 +74,16 @@ export default function GalleryChipShelf({
 
   const randomActive = selectedId === RANDOM_PALETTE_ID;
 
+  // The palette in use is scrolled into the row: at thirty chips it could sit
+  // at x = 600 on a 390px phone, and nothing said which one was applied.
+  const shelf = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (shelf.current) revealPressed(shelf.current);
+  }, [selectedId]);
+
   return (
-    <div className={className ? `${styles.shelf} ${className}` : styles.shelf}>
+    <div ref={shelf} className={className ? `${styles.shelf} ${className}` : styles.shelf}>
       <button
         type="button"
         className={
@@ -117,6 +126,7 @@ export default function GalleryChipShelf({
             >
               <span className={styles.name}>{name}</span>
               <span className={styles.chips} aria-hidden="true">
+                <span className={styles.ground} style={{ '--ground': palette.colors[0] } as CSSProperties} />
                 {palette.colors.slice(1, 1 + MAX_CHIPS).map((color, index) => (
                   <span key={`${color}-${index}`} style={{ background: color }} />
                 ))}
