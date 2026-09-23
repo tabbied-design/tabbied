@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
+import { pageMetadata } from 'lib/seo';
 import LazyTile from './LazyTile';
 import s from './template.module.css';
 
@@ -11,10 +12,11 @@ const SITES = NEW_TEMPLATE_SITES;
 // never leave a stale number in the copy.
 const N = SITES.length;
 
-export const metadata: Metadata = {
-  title: `Template: ${N} sites built on Tabbied patterns`,
+export const metadata: Metadata = pageMetadata({
+  title: `${N} template sites built on Tabbied patterns - Tabbied`,
   description: `${N} fictional brand sites (a concert hall, a watch manufacture, an observatory, a railway) each designed around a different Tabbied generative pattern.`,
-};
+  path: '/template/',
+});
 
 export default function TemplateIndexPage() {
   return (

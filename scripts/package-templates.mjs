@@ -152,6 +152,12 @@ const stripNextRuntime = (html) =>
 // the template's to carry either.
 const stripSiteChrome = (html) =>
   html
+    // tabbied.com's share card and canonical URL, which a site made from the
+    // template must not carry. The template pages set none (lib/seo.ts is
+    // for the site's own pages), so this is the second line, not the first.
+    .replace(/<meta[^>]*property="og:[^"]*"[^>]*>/g, '')
+    .replace(/<meta[^>]*name="twitter:[^"]*"[^>]*>/g, '')
+    .replace(/<link[^>]*rel="canonical"[^>]*>/g, '')
     .replace(/<link[^>]*rel="manifest"[^>]*>/g, '')
     .replace(/<link[^>]*rel="(icon|apple-touch-icon|mask-icon)"[^>]*>/g, '')
     .replace(/<meta[^>]*name="msapplication-TileColor"[^>]*>/g, '')

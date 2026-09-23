@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { ebGaramond, plexMono, plexSans } from 'lib/fonts';
 import { getAllPatternIds, getPattern } from 'lib/pattern';
+import { pageMetadata, previewImage } from 'lib/seo';
 import EditPattern from 'components/edit-pattern-page/EditPattern';
 
 // Replicates the old `getStaticPaths` with `fallback: false` - only the
@@ -22,9 +23,14 @@ export async function generateMetadata({
   const { id } = await params;
   const pattern = await getPattern(id);
 
-  return {
-    title: `Customize ${pattern.name}`,
-  };
+  return pageMetadata({
+    title: `Customize ${pattern.name} - Tabbied`,
+    description: pattern.description
+      ? `${pattern.description} Recolor it, reseed it and download it as a PNG or SVG, free.`
+      : `Customize the ${pattern.name} pattern and download it as a PNG or SVG, free.`,
+    path: `/patterns/${id}/`,
+    image: previewImage(id, pattern.name),
+  });
 }
 
 export default async function PatternPage({

@@ -11,16 +11,18 @@ import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 import { categoryOf } from 'lib/templateCategories';
 import { plexMono, plexSans } from 'lib/fonts';
+import { pageMetadata } from 'lib/seo';
 import home from 'components/main-page/home.module.css';
 import s from './templates.module.css';
 
 // Derived, never written out: adding a site can't leave a stale number behind.
 const TOTAL = TEMPLATE_SITES.length + NEW_TEMPLATE_SITES.length;
 
-export const metadata: Metadata = {
-  title: `Made with Tabbied, ${TOTAL} Template Websites`,
-  description: `${TOTAL} sample websites using Tabbied generative patterns as design accents, each built with the TabbiedPattern React component.`,
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Website templates - Tabbied',
+  description: `${TOTAL} free website templates, each built around a Tabbied generative pattern. Preview them, customize their colors and patterns, or download them as HTML or React.`,
+  path: '/templates/',
+});
 
 const ART: Record<string, PatternDefinition> = {
   lobe, windowpane, prisma, foliage, veil, blossom, spark, frond, chamfer,
