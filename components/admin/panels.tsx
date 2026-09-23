@@ -658,7 +658,7 @@ export function TemplatesPanel() {
           {data.templates.map((t) => (
             <tr key={t.slug}>
               <td>
-                <Link href={`/template/${t.slug}/`} prefetch={false}>{t.name}</Link>
+                <Link href={`/templates/${t.slug}/site/`} prefetch={false}>{t.name}</Link>
               </td>
               <td>{t.sites}</td>
               <td>{t.copyRoles.length ? t.copyRoles.join(', ') : ' - '}</td>

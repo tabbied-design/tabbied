@@ -44,7 +44,7 @@ import { parse } from '@babel/parser';
 // From the script's own location, like its siblings: run from any other
 // directory this reported every slug as "skipped: no page.tsx" and exited 0.
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const templateDir = path.join(repoRoot, 'app', 'template');
+const templateDir = path.join(repoRoot, 'app', 'templates');
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const only = args.filter((arg) => !arg.startsWith('-'));
@@ -210,7 +210,7 @@ function classify(element) {
 }
 
 function annotate(slug) {
-  const pagePath = path.join(templateDir, slug, 'page.tsx');
+  const pagePath = path.join(templateDir, slug, 'site', 'page.tsx');
 
   if (!existsSync(pagePath)) return { slug, skipped: 'no page.tsx' };
 
@@ -355,6 +355,9 @@ function annotate(slug) {
 const slugs = readdirSync(templateDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
+  // A template site is app/templates/<slug>/site/page.tsx; the folder also
+  // holds the framed preview's [slug] route.
+  .filter((slug) => existsSync(path.join(templateDir, slug, 'site', 'page.tsx')))
   .filter((slug) => (only.length === 0 ? true : only.includes(slug)))
   .sort();
 

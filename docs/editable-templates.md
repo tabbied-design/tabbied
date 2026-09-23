@@ -162,7 +162,7 @@ has the hashed CSS-module name, the download package has the de-hashed `em`.
 
 ## Generating the spec
 
-`npm run editable` reads `out/template/<slug>/index.html` and writes
+`npm run editable` reads `out/templates/<slug>/site/index.html` and writes
 `public/editable/<slug>.json` plus the aggregate `public/editable-catalog.json`.
 It runs inside `npm run build`, between the two `next build` passes, so the
 second pass exports it like any other static asset - the same shape, and for

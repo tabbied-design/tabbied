@@ -27,7 +27,7 @@ const templateCatalog = {
     {
       slug: 'solstice',
       name: 'Solstice',
-      href: '/template/solstice/',
+      href: '/templates/solstice/site/',
       spec: '/editable/solstice.json',
       palette: ['#2b1d3a', '#ff6b6b'],
       patterns: ['lobe', 'blossom'],
@@ -40,7 +40,7 @@ const templateCatalog = {
     {
       slug: 'verdant',
       name: 'Verdant',
-      href: '/template/verdant/',
+      href: '/templates/verdant/site/',
       spec: '/editable/verdant.json',
       palette: ['#f4faf0', '#2d6a4f'],
       patterns: ['frond'],
@@ -143,7 +143,7 @@ test('list_templates returns every annotated site with its editable counts', asy
     image: 9,
     pattern: 4,
   });
-  assert.equal(result.templates[0].url, 'https://tabbied.com/template/solstice/');
+  assert.equal(result.templates[0].url, 'https://tabbied.com/templates/solstice/site/');
 });
 
 test('list_templates filters on slug or name', async () => {

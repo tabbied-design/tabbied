@@ -734,7 +734,7 @@ test.describe('Studio', () => {
     expect(previews).toHaveLength(3);
 
     for (const href of previews) {
-      expect(href).toMatch(/^\/template\/[a-z0-9-]+\/$/);
+      expect(href).toMatch(/^\/templates\/[a-z0-9-]+\/site\/$/);
       const response = await page.request.get(href);
       expect(response.status(), `${href} should be a real page`).toBe(200);
     }
@@ -775,7 +775,7 @@ test.describe('Template preview and customize', () => {
     // would wait for them through the iframe. The bar is what is asserted.
     await page.goto('/templates/verdant/', { waitUntil: 'domcontentloaded' });
 
-    await expect(page.locator('iframe')).toHaveAttribute('src', '/template/verdant/');
+    await expect(page.locator('iframe')).toHaveAttribute('src', '/templates/verdant/site/');
     // next/link writes the export's trailing slash.
     await expect(page.getByRole('link', { name: 'All templates' })).toHaveAttribute('href', '/templates/');
 
@@ -940,7 +940,7 @@ test.describe('Share cards and canonical URLs', () => {
 
     // The template page is what the downloads are made from: tabbied.com's
     // card and canonical would ride into every site built on it.
-    expect(await head(page, '/template/verdant/')).toMatchObject({ canonical: null, image: null, card: null });
+    expect(await head(page, '/templates/verdant/site/')).toMatchObject({ canonical: null, image: null, card: null });
   });
 });
 

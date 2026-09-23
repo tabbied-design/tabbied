@@ -113,6 +113,13 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
   under the folder, the packaged pages the previews read, back to the binding.
 
+**Redirects live in `public/_redirects`**, beside `_headers` and read the
+same way. The template sites moved from `/template/<slug>/` to
+`/templates/<slug>/site/` (one noun, one tree: the framed preview is
+`/templates/<slug>/` and the site it frames is under it), and the old paths
+301 there. A route under `run_worker_first` never reaches this file, so a
+redirect for one of those belongs in the Worker.
+
 The Worker routes with Hono (`worker/index.ts`). That was added for the
 platform tier - the right shape for two routes was the wrong one for twenty -
 and it changed no behavior: same MCP handler, same statelessness, same
@@ -889,7 +896,7 @@ below. The matcher was not replaced by it.)
   and shareable, and the match is a pure function of it. Ties break on a hash of
   the text, which is what makes an empty or unmatched description still return a
   stable spread rather than the same three every time.
-- **Every card leads somewhere that exists**: Preview to `/template/<slug>/`,
+- **Every card leads somewhere that exists**: Preview to `/templates/<slug>/site/`,
   Download to `/downloads/<slug>-html.zip`. `e2e/smoke.spec.ts` fetches each
   preview href and asserts a 200 - that guard is the whole difference between
   this and the mockup it came from.
@@ -971,8 +978,8 @@ the template and shows the result.
   unambiguous on every page. Only the five `TemplateSite` pages carry them so
   far; `/editable-catalog.json` publishes `copyRoles` per site and the results
   page reads it to decide whether a card's Preview can promise a rebrand.
-- **The artifact previewed is the download, not the live page.** `/template/
-  <slug>/` mounts its patterns through React, which ignores a `data-*` write
+- **The artifact previewed is the download, not the live page.** `/templates/
+  <slug>/site/` mounts its patterns through React, which ignores a `data-*` write
   from outside - `applyPlan` deliberately does not re-mount anything, because
   re-mounting is `hydratePatterns()`'s job. The packaged `out/downloads/<slug>/`
   has no framework left in it, so the engine's attribute rewrites are exactly

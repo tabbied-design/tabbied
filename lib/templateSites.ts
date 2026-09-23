@@ -28,7 +28,7 @@ export type NewTemplateSite = {
 
 /**
  * The second template collection: fifty-six single-page brand
- * sites under /template/<slug>/, each designed around one Tabbied pattern and
+ * sites under /templates/<slug>/site/, each designed around one Tabbied pattern and
  * AI-generated imagery (see docs/image-pipeline.md). Listed on /template and
  * /templates; palettes here mirror each page's own constants.
  */

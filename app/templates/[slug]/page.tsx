@@ -7,7 +7,7 @@ import { pageMetadata, previewImage } from 'lib/seo';
 
 // A template, framed: the live page in a browser chrome under a bar with the
 // two things a person does with a template - customize it, or download it as
-// it is. The page itself stays at /template/<slug>/, unframed, which is what
+// it is. The page itself is at /templates/<slug>/site/, unframed, which is what
 // the packager derives the download from; this route adds chrome *around*
 // it, so nothing here can end up inside a download.
 

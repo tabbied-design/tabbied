@@ -1,0 +1,9 @@
+# Read by Workers static assets (wrangler consumes it; it is not served).
+# The template sites moved from /template/<slug>/ to /templates/<slug>/site/
+# so there is one noun and one tree for a template; the old index is the
+# gallery now. Kept for the links, search results and shipped sites that
+# still point at the old paths.
+/template /templates/ 301
+/template/ /templates/ 301
+/template/:slug /templates/:slug/site/ 301
+/template/:slug/ /templates/:slug/site/ 301

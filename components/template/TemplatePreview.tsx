@@ -30,7 +30,7 @@ export default function TemplatePreview({
   slug: string;
   name: string;
   /** Not drawn in the bar any more - both still name the frame for a screen
-      reader, which "tabbied.com/template/<slug>/" does not. */
+      reader, which "tabbied.com/templates/<slug>/site/" does not. */
   topic: string;
 }) {
   const { user, isPending } = useSessionUser();
@@ -185,14 +185,14 @@ export default function TemplatePreview({
             <span className={styles.dot} aria-hidden="true" />
             <span className={styles.dot} aria-hidden="true" />
             <span className={styles.dot} aria-hidden="true" />
-            <span className={styles.pill}>tabbied.com/template/{slug}/</span>
-            <a className={styles.open} href={`/template/${slug}/`}>
+            <span className={styles.pill}>tabbied.com/templates/{slug}/site/</span>
+            <a className={styles.open} href={`/templates/${slug}/site/`}>
               Open the page
             </a>
           </div>
           <iframe
             className={styles.iframe}
-            src={`/template/${slug}/`}
+            src={`/templates/${slug}/site/`}
             title={`${name} - the ${topic.toLowerCase()} template`}
           />
         </div>

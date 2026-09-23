@@ -229,8 +229,9 @@ for (const fixture of FIXTURES) {
   const EXPORTED_PAGE = path.join(
     REPO_ROOT,
     'out',
-    'template',
+    'templates',
     fixture.slug,
+    'site',
     'index.html'
   );
 
@@ -389,7 +390,7 @@ test.describe('the /templates gallery offers both formats', () => {
     // Vite resolves CSS modules itself, so unlike the HTML package the
     // stylesheet ships exactly as authored.
     const authored = fs.readFileSync(
-      path.join(REPO_ROOT, 'app/template/werkraum/werkraum.module.css'),
+      path.join(REPO_ROOT, 'app/templates/werkraum/site/werkraum.module.css'),
       'utf-8'
     );
     expect(fs.readFileSync(path.join(dir, 'src', 'werkraum.module.css'), 'utf-8'))
