@@ -2,51 +2,38 @@
 
 // The one door into the customizer from a template: /studio/customize/?slug=.
 //
-// A gallery card, a template preview and the account's "Create new site" all
-// link here rather than each holding the make-a-site call, so there is one
-// implementation of it and one place the sign-in detour lives. Signed out,
-// the person is sent to sign in with this page as the way back; signed in, a
-// site is made from the template and the customizer opens on it. Each visit
-// is a new copy - that is what "Create new site" means - so the call is made
-// once per mount and never on a re-render.
-import { useEffect, useRef, useState } from 'react';
+// The template preview's "Use this template" links here rather than holding
+// the customizer itself, so there is one place the sign-in detour lives.
+// Signed out, the person is sent to sign in with this page as the way back;
+// signed in, the customizer opens on the template as an unsaved draft.
+// Nothing is written until its first Save (see StudioSite): opening this page
+// and leaving used to leave a copy of the template in the account, one per
+// visit, phones included, where customizing is not even offered.
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { apiFetch, ApiError } from 'lib/apiFetch';
+import type { DesignChoice } from 'lib/designCatalog';
 import { useSessionUser } from 'lib/authClient';
+import StudioSite from './StudioSite';
 import styles from './StudioPreview.module.css';
 
 const SLUG = /^[a-z0-9-]{1,80}$/;
 
-export default function StudioCustomize() {
+export default function StudioCustomize({ designs }: { designs: readonly DesignChoice[] }) {
   const params = useSearchParams();
-  const slug = params.get('slug') ?? '';
+  // Read once: the draft's first Save moves the address to the site's own
+  // (/studio/site/?id=) in place, and the slug leaves the query with it.
+  const [slug] = useState(() => params.get('slug') ?? '');
   const router = useRouter();
   const { user, isPending } = useSessionUser();
-  const [error, setError] = useState<string | null>(null);
-  const started = useRef(false);
 
   const valid = SLUG.test(slug);
 
   useEffect(() => {
-    if (!valid || isPending || started.current) return;
+    if (!valid || isPending || user) return;
 
-    if (!user) {
-      const next = encodeURIComponent(`/studio/customize/?slug=${slug}`);
-      router.replace(`/sign-in?next=${next}`);
-      return;
-    }
-
-    started.current = true;
-
-    apiFetch<{ id: string }>('/api/studio/sites', {
-      method: 'POST',
-      body: JSON.stringify({ slug }),
-    })
-      .then(({ id }) => router.replace(`/studio/site/?id=${id}`))
-      .catch((cause) => {
-        setError(cause instanceof ApiError ? cause.message : 'Could not start from this template.');
-      });
+    const next = encodeURIComponent(`/studio/customize/?slug=${slug}`);
+    router.replace(`/sign-in?next=${next}`);
   }, [valid, isPending, user, slug, router]);
 
   if (!valid) {
@@ -61,21 +48,13 @@ export default function StudioCustomize() {
     );
   }
 
-  if (error) {
+  if (isPending || !user) {
     return (
-      <p className={styles.notice} role="alert">
-        {error}{' '}
-        <Link href={`/templates/${slug}/`} className={styles.back} prefetch={false}>
-          Back to the template
-        </Link>
-        .
+      <p className={styles.notice} role="status">
+        Checking your session...
       </p>
     );
   }
 
-  return (
-    <p className={styles.notice} role="status">
-      {isPending || !user ? 'Checking your session...' : 'Making your copy of the template...'}
-    </p>
-  );
+  return <StudioSite designs={designs} template={slug} />;
 }

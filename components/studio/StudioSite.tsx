@@ -19,11 +19,20 @@
 // Nor is the editor offered on a phone. Below 768px the rail is hidden, a
 // notice says customizing wants a larger screen, and the page is the site
 // alone, full bleed, to preview and download.
+//
+// A site started from a template is a draft until its first Save. Opening
+// Customize used to make the site on the visit, so every look at a template
+// left a copy of it in the account ("Real Estate" three times over, none of
+// them touched). Now /studio/customize/ renders this with `template` and a
+// document held here; the first Save makes the site with that document as
+// revision 1 and moves the address to /studio/site/?id= in place, without a
+// navigation, so the canvas and the rail stay as they are.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
   applyPlan,
+  emptyEdits,
   isPatternSlot,
   planEdits,
   type EditsDocument,
@@ -66,9 +75,54 @@ type Frame = HTMLIFrameElement & {
 /** How long the canvas dims while a shuffle draws, so the change reads as one. */
 const SHUFFLE_BEAT_MS = 700;
 
-export default function StudioSite({ designs }: { designs: readonly DesignChoice[] }) {
+/**
+ * A site that does not exist yet: the template as it ships, owned by the
+ * person looking at it, with no id until the first Save gives it one.
+ */
+function draftDocument(spec: TemplateSpec): SiteDocument {
+  const now = new Date().toISOString();
+
+  return {
+    id: '',
+    slug: spec.site.slug,
+    templateName: spec.site.name,
+    title: spec.site.name,
+    stance: '',
+    palette: spec.palette.colors,
+    revisions: 0,
+    createdAt: now,
+    updatedAt: now,
+    mine: true,
+    generationId: null,
+    directionIndex: null,
+    description: null,
+    specVersion: spec.specVersion,
+    templateChanged: false,
+    latest: {
+      n: 0,
+      edits: emptyEdits(spec),
+      instruction: null,
+      source: 'manual',
+      model: 'none',
+      createdAt: now,
+    },
+  };
+}
+
+export default function StudioSite({
+  designs,
+  template,
+}: {
+  designs: readonly DesignChoice[];
+  /** A template slug to open as an unsaved draft, when there is no site id. */
+  template?: string;
+}) {
   const searchParams = useSearchParams();
   const siteId = searchParams.get('id');
+  // The id a draft was saved as. Its first Save rewrites the address to
+  // ?id=, which is a change of `siteId`; the site is already loaded, so that
+  // change is not a reason to load it again.
+  const adopted = useRef<string | null>(null);
 
   const [state, setState] = useState<State>({ status: 'loading' });
   const [draft, setDraft] = useState<EditsDocument | null>(null);
@@ -93,27 +147,38 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
   );
 
   useEffect(() => {
+    if (siteId && siteId === adopted.current) return;
+
     let live = true;
 
     setState({ status: 'loading' });
 
     (async (): Promise<State> => {
-      if (!siteId) {
+      if (!siteId && !template) {
         return { status: 'error', message: 'That site link is incomplete.' };
       }
 
-      const site = await apiFetch<SiteDocument>(`/api/studio/sites/${encodeURIComponent(siteId)}`);
+      const stored = siteId
+        ? await apiFetch<SiteDocument>(`/api/studio/sites/${encodeURIComponent(siteId)}`)
+        : null;
+      const slug = stored?.slug ?? template!;
 
       const [specResponse, htmlResponse] = await Promise.all([
-        fetch(templateSpecUrl(site.slug)),
-        fetch(`${packagedTemplateUrl(site.slug)}index.html`),
+        fetch(templateSpecUrl(slug)),
+        fetch(`${packagedTemplateUrl(slug)}index.html`),
       ]);
 
       if (!specResponse.ok || !htmlResponse.ok) {
-        return { status: 'error', message: `The ${site.templateName} template is no longer available.` };
+        return {
+          status: 'error',
+          message: stored
+            ? `The ${stored.templateName} template is no longer available.`
+            : 'That template is not available.',
+        };
       }
 
       const spec = (await specResponse.json()) as TemplateSpec;
+      const site = stored ?? draftDocument(spec);
       const packaged = await htmlResponse.text();
       const { html, problems } = buildPreviewDocument({
         html: packaged,
@@ -149,7 +214,22 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
     return () => {
       live = false;
     };
-  }, [siteId]);
+  }, [siteId, template]);
+
+  // Unsaved changes are asked about before the page goes: a draft has
+  // nowhere else to be kept, and a saved site's latest changes are not in
+  // it until Save.
+  useEffect(() => {
+    if (saveState !== 'dirty') return;
+
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener('beforeunload', warn);
+
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [saveState]);
 
   const ready = state.status === 'ready' ? state : null;
   const spec = ready?.spec ?? null;
@@ -238,6 +318,7 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
   }
 
   const { site } = ready;
+  const unsaved = site.id === '';
   const palette = draft.edits.palette ?? spec.palette.colors;
   const fieldsChanged = patternsChanged(patternSlots, draft.edits.patterns);
 
@@ -311,10 +392,25 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
     setSaveState('saving');
 
     try {
-      const { revision } = await apiFetch<{ revision: number }>(
-        `/api/studio/sites/${encodeURIComponent(site.id)}/revisions`,
-        { method: 'POST', body: JSON.stringify({ edits: saving }) }
-      );
+      // A draft's first Save is the site's making, with this document as
+      // revision 1; after it, the page is the site's own, at its own address.
+      const { revision, id } = unsaved
+        ? await apiFetch<{ id: string; revision: number }>('/api/studio/sites', {
+            method: 'POST',
+            body: JSON.stringify({ slug: site.slug, edits: saving, title: site.title }),
+          })
+        : {
+            id: site.id,
+            ...(await apiFetch<{ revision: number }>(
+              `/api/studio/sites/${encodeURIComponent(site.id)}/revisions`,
+              { method: 'POST', body: JSON.stringify({ edits: saving }) }
+            )),
+          };
+
+      if (unsaved) {
+        adopted.current = id;
+        window.history.replaceState(null, '', `/studio/site/?id=${encodeURIComponent(id)}`);
+      }
 
       setState((prev) =>
         prev.status !== 'ready'
@@ -323,6 +419,7 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
               ...prev,
               site: {
                 ...prev.site,
+                id,
                 revisions: revision,
                 palette: saving.edits.palette ?? prev.spec.palette.colors,
                 latest: {
@@ -347,6 +444,14 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
   };
 
   const rename = async (title: string) => {
+    // A draft keeps its name until the Save that makes it, and naming it is
+    // a change worth saving.
+    if (unsaved) {
+      setState((prev) => (prev.status === 'ready' ? { ...prev, site: { ...prev.site, title } } : prev));
+      setSaveState('dirty');
+      return;
+    }
+
     try {
       await apiFetch<{ title: string }>(`/api/studio/sites/${encodeURIComponent(site.id)}`, {
         method: 'PATCH',
@@ -385,6 +490,7 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
     <>
       <CustomizerBar
         mine={site.mine}
+        template={unsaved ? site.slug : undefined}
         downloading={downloading}
         onDownloadHtml={() => void downloadHtml()}
         reactHref={`/downloads/${site.slug}-react.zip`}
@@ -467,7 +573,9 @@ export default function StudioSite({ designs }: { designs: readonly DesignChoice
               <span className={styles.dot} aria-hidden="true" />
               <span className={styles.dot} aria-hidden="true" />
               <span className={styles.pill}>
-                {site.title} on {site.templateName}
+                {/* "Solstice on Solstice" said nothing: the template is named
+                    only when the site is called something else. */}
+                {site.title === site.templateName ? site.title : `${site.title} on ${site.templateName}`}
                 {site.latest.n > 1 ? ` (revision ${site.latest.n})` : ''}
               </span>
               {site.mine ? (

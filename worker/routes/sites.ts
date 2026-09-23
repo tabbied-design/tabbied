@@ -60,10 +60,11 @@ import {
 //   the template rewritten for the business. The directions call picks three
 //   from a scored dozen and writes three strings each; this is the second,
 //   dearer stage, and it is behind a click for that reason.
-// - Straight from the template gallery, with nothing written: revision 1 is
-//   an empty document, and the customizer's colors and patterns are the
-//   whole of what changes. No model is called, so no daily cap applies; the
-//   burst limiter still does.
+// - Straight from the template gallery, with nothing written for the
+//   business: the customizer's colors and patterns are the whole of what
+//   changes, and the site is made on the first Save with that document as
+//   revision 1. No model is called, so no daily cap applies; the burst
+//   limiter still does.
 //
 // Nothing here reaches the 52 unannotated pages any differently from the five
 // annotated ones: the document is keyed by slot id, and every template has
@@ -91,7 +92,43 @@ const MAX_REFERENCES = 4;
 /** Over-estimate for an upstream that omitted `usage`, as in studio.ts. */
 const ESTIMATED_TOKENS = { prompt: 8_000, completion: 4_000 };
 
-// A direction to make, or a template to start from bare.
+// Bounded throughout: the planner treats a value over a slot's budget as a
+// warning, not an error, so without these a megabyte of text under a real
+// slot id was stored verbatim. The bounds are generous against anything the
+// customizer writes; a color is a hex string, a design slug is short (the
+// planner, not the schema, refuses one the catalog lacks, with its reason),
+// an option key is an identifier.
+const slotId = z.string().min(1).max(120);
+const color = z.string().max(32);
+const editsDocumentSchema = z.object({
+  specVersion: z.number().int(),
+  slug: z.string().min(1).max(80),
+  edits: z.object({
+    text: z.record(slotId, z.string().max(4_000)).optional(),
+    images: z
+      .record(slotId, z.object({ src: z.string().min(1).max(512), alt: z.string().max(300).optional() }))
+      .optional(),
+    patterns: z
+      .record(
+        slotId,
+        z.object({
+          slug: z.string().max(64).optional(),
+          palette: z.array(color).max(16).optional(),
+          options: z
+            .record(z.string().max(64), z.union([z.string().max(64), z.number(), z.boolean()]))
+            .optional(),
+          seed: z.string().max(64).optional(),
+        })
+      )
+      .optional(),
+    palette: z.array(color).max(16).optional(),
+  }),
+});
+
+// A direction to make, or a template to start from. A template site is
+// made on its first Save, not on the visit (the customizer holds the draft
+// until then), so it arrives with the document to store as revision 1 and
+// whatever name the person gave it; a bare {slug} is still revision 1 empty.
 const requestSchema = z.union([
   z.object({
     generationId: z.string().min(8).max(64),
@@ -102,6 +139,8 @@ const requestSchema = z.union([
       .string()
       .regex(/^[a-z0-9-]+$/)
       .max(80),
+    edits: editsDocumentSchema.optional(),
+    title: z.string().trim().min(1).max(80).optional(),
   }),
 ]);
 
@@ -262,6 +301,11 @@ sites.post('/', async (c) => {
     return c.json({ error: 'Sign in to make a site.' }, 401);
   }
 
+  // The first document of a template site rides on this call.
+  if (Number(c.req.header('content-length') ?? 0) > MAX_REVISION_BYTES) {
+    return c.json({ error: 'That document is too large to be one.' }, 413);
+  }
+
   const parsed = requestSchema.safeParse(await c.req.json().catch(() => null));
 
   if (!parsed.success) {
@@ -272,11 +316,13 @@ sites.post('/', async (c) => {
 
   // ---- from the gallery ---------------------------------------------------
   // Nothing is written for the business; the person starts from the template
-  // as it is and changes its colors and patterns. Not idempotent: each
-  // Customize is a new copy, which is what the account's "Create new site"
-  // means.
+  // as it is and changes its colors and patterns. The customizer calls this
+  // on the first Save, with the document it has been holding: opening
+  // Customize and leaving writes nothing, where it used to leave a copy of
+  // the template in the account for every visit. Not idempotent: each Save
+  // of a new draft is a new site.
   if ('slug' in parsed.data) {
-    const { slug } = parsed.data;
+    const { slug, title } = parsed.data;
     const entry = await templateEntry(c.env, c.req.raw, slug);
 
     if (!entry) {
@@ -295,6 +341,13 @@ sites.post('/', async (c) => {
       loadTemplateSpec(c.env, c.req.raw, slug),
       hashPackagedHtml(c.env, c.req.raw, slug),
     ]);
+    const edits = (parsed.data.edits as EditsDocument | undefined) ?? emptyEdits(spec);
+    const refused = await refuseDocument(c.env, c.req.raw, { spec, slug, siteId: null, edits });
+
+    if (refused) {
+      return c.json(refused.body, refused.status);
+    }
+
     const id = newId();
     const now = new Date();
 
@@ -304,7 +357,7 @@ sites.post('/', async (c) => {
       generationId: null,
       directionIndex: null,
       slug,
-      title: entry.name,
+      title: title ?? entry.name,
       specVersion: spec.specVersion,
       templateHash,
       createdAt: now,
@@ -315,7 +368,7 @@ sites.post('/', async (c) => {
       id: newId(),
       siteId: id,
       n: 1,
-      edits: JSON.stringify(emptyEdits(spec)),
+      edits: JSON.stringify(edits),
       instruction: null,
       source: 'manual',
       model: 'none',
@@ -323,7 +376,7 @@ sites.post('/', async (c) => {
       createdAt: now,
     });
 
-    return c.json({ id, source: 'template' });
+    return c.json({ id, source: 'template', revision: 1, title: title ?? entry.name });
   }
 
   // ---- from a direction ---------------------------------------------------
@@ -690,6 +743,48 @@ sites.patch('/:id', async (c) => {
   return c.json({ title: parsed.data.title });
 });
 
+/**
+ * Delete a site, its owner only: the row, every revision (they cascade), and
+ * the pictures Studio generated for it, which R2 does not cascade and which
+ * nothing could reach once the site is gone. There was no way to do this at
+ * all, so a site made by accident stayed in the account for good.
+ */
+sites.delete('/:id', async (c) => {
+  const userId = await requireUser(c.env, c.req.raw.headers);
+
+  if (!userId) {
+    return c.json({ error: 'Sign in to delete a site.' }, 401);
+  }
+
+  const db = drizzle(c.env.DB, { schema });
+  const row = await loadSite(db, c.req.param('id'));
+
+  if (!row) {
+    return c.json({ error: 'Not found' }, 404);
+  }
+
+  if (row.site.userId !== userId) {
+    return c.json({ error: 'Not yours to change.' }, 403);
+  }
+
+  const prefix = `gen/site/${row.site.id}/`;
+  let cursor: string | undefined;
+
+  do {
+    const listed = await c.env.MEDIA.list({ prefix, cursor });
+
+    if (listed.objects.length > 0) {
+      await c.env.MEDIA.delete(listed.objects.map((object) => object.key));
+    }
+
+    cursor = listed.truncated ? listed.cursor : undefined;
+  } while (cursor);
+
+  await db.delete(site).where(eq(site.id, row.site.id));
+
+  return c.json({ deleted: row.site.id });
+});
+
 const imageRequestSchema = z.object({
   slot: z.string().min(1).max(120),
   referenceIds: z.array(z.string().min(8).max(64)).max(MAX_REFERENCES).optional(),
@@ -826,40 +921,7 @@ sites.post('/:id/images', async (c) => {
   return c.json({ key, slot: slot.id, revision: written.n });
 });
 
-// Bounded throughout: the planner treats a value over a slot's budget as a
-// warning, not an error, so without these a megabyte of text under a real
-// slot id was stored verbatim. The bounds are generous against anything the
-// customizer writes; a color is a hex string, a design slug is short (the
-// planner, not the schema, refuses one the catalog lacks, with its reason),
-// an option key is an identifier.
-const slotId = z.string().min(1).max(120);
-const color = z.string().max(32);
-const revisionRequestSchema = z.object({
-  edits: z.object({
-    specVersion: z.number().int(),
-    slug: z.string().min(1).max(80),
-    edits: z.object({
-      text: z.record(slotId, z.string().max(4_000)).optional(),
-      images: z
-        .record(slotId, z.object({ src: z.string().min(1).max(512), alt: z.string().max(300).optional() }))
-        .optional(),
-      patterns: z
-        .record(
-          slotId,
-          z.object({
-            slug: z.string().max(64).optional(),
-            palette: z.array(color).max(16).optional(),
-            options: z
-              .record(z.string().max(64), z.union([z.string().max(64), z.number(), z.boolean()]))
-              .optional(),
-            seed: z.string().max(64).optional(),
-          })
-        )
-        .optional(),
-      palette: z.array(color).max(16).optional(),
-    }),
-  }),
-});
+const revisionRequestSchema = z.object({ edits: editsDocumentSchema });
 
 /**
  * Where a saved document's images may point: this site's own generated
@@ -869,11 +931,61 @@ const revisionRequestSchema = z.object({
 const TEMPLATE_FILE = /^\.\/[A-Za-z0-9._-]+(\/[A-Za-z0-9._-]+)*$/;
 
 /**
- * A manual revision: the editor's document, whole. Validated by the same
- * planner the page applies it with, so what is stored is what will render -
- * a document the engine would reject is refused here with its reasons rather
- * than saved and discovered as a blank slot.
+ * Why a document cannot be stored on a site of this template, or null when
+ * it can. Validated by the same planner the page applies it with, so what is
+ * stored is what will render: a document the engine would reject is refused
+ * with its reasons rather than saved and discovered as a blank slot.
+ *
+ * `siteId` is the site whose own generated media the document may point at;
+ * a site not made yet has none, so only the template's own files pass.
  */
+async function refuseDocument(
+  env: Env,
+  request: Request,
+  options: {
+    spec: Awaited<ReturnType<typeof loadTemplateSpec>>;
+    slug: string;
+    siteId: string | null;
+    edits: EditsDocument;
+  }
+): Promise<{ body: Record<string, unknown>; status: 400 | 422 } | null> {
+  const { spec, slug, siteId, edits } = options;
+
+  if (edits.slug !== slug) {
+    return { body: { error: 'That document is for a different template.' }, status: 400 };
+  }
+
+  // An image src may only point at this site's own media or the template's
+  // own files: the document is applied into a page, and a src is a fetch.
+  // "This site's", not any site's: the prefix used to stop at gen/site/.
+  const ownMedia = siteId ? `/api/media/gen/site/${siteId}/` : null;
+  const foreign = Object.values(edits.edits.images ?? {}).find(
+    (image) => !((ownMedia && image.src.startsWith(ownMedia)) || TEMPLATE_FILE.test(image.src))
+  );
+
+  if (foreign) {
+    return { body: { error: 'Images must come from this site or its template.' }, status: 400 };
+  }
+
+  // A pattern swap is held to the catalog being served: a slug outside it
+  // hydrates to a blank field with a console warning, which is the silent
+  // failure the planner exists to refuse.
+  const plan = planEdits(spec, edits, { designs: await loadDesignSlugs(env, request) });
+
+  if (hasErrors(plan.problems)) {
+    return {
+      body: {
+        error: 'Some of that could not be placed on the template.',
+        problems: plan.problems.filter((problem) => problem.level === 'error'),
+      },
+      status: 422,
+    };
+  }
+
+  return null;
+}
+
+/** A manual revision: the editor's document, whole (see `refuseDocument`). */
 sites.post('/:id/revisions', async (c) => {
   const userId = await requireUser(c.env, c.req.raw.headers);
 
@@ -918,36 +1030,15 @@ sites.post('/:id/revisions', async (c) => {
 
   const spec = await loadTemplateSpec(c.env, c.req.raw, row.site.slug);
   const edits = parsed.data.edits as EditsDocument;
+  const refused = await refuseDocument(c.env, c.req.raw, {
+    spec,
+    slug: row.site.slug,
+    siteId: row.site.id,
+    edits,
+  });
 
-  if (edits.slug !== row.site.slug) {
-    return c.json({ error: 'That document is for a different template.' }, 400);
-  }
-
-  // An image src may only point at this site's own media or the template's
-  // own files: the document is applied into a page, and a src is a fetch.
-  // "This site's", not any site's: the prefix used to stop at gen/site/.
-  const ownMedia = `/api/media/gen/site/${row.site.id}/`;
-  const foreign = Object.values(edits.edits.images ?? {}).find(
-    (image) => !(image.src.startsWith(ownMedia) || TEMPLATE_FILE.test(image.src))
-  );
-
-  if (foreign) {
-    return c.json({ error: 'Images must come from this site or its template.' }, 400);
-  }
-
-  // A pattern swap is held to the catalog being served: a slug outside it
-  // hydrates to a blank field with a console warning, which is the silent
-  // failure the planner exists to refuse.
-  const plan = planEdits(spec, edits, { designs: await loadDesignSlugs(c.env, c.req.raw) });
-
-  if (hasErrors(plan.problems)) {
-    return c.json(
-      {
-        error: 'Some of that could not be placed on the template.',
-        problems: plan.problems.filter((problem) => problem.level === 'error'),
-      },
-      422
-    );
+  if (refused) {
+    return c.json(refused.body, refused.status);
   }
 
   const written = await appendRevision(db, {

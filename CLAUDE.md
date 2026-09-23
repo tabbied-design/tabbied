@@ -773,9 +773,16 @@ not re-litigating:
 - **The count lives where the bytes leave, and it counts templates.**
   `/downloads/*` is in `run_worker_first`, and `GET
   /downloads/<slug>-<format>.zip` in `worker/index.ts` requires a session,
-  reads the month's count (`worker/lib/downloads.ts`), serves the zip through
-  `env.ASSETS` and only then writes the `download` row, so a zip the packager
-  never wrote costs nothing and every row is bytes that went out. Counting in
+  claims the `download` row in the same statement that checks the month's
+  count (`claimDownload` in `worker/lib/downloads.ts`), serves the zip through
+  `env.ASSETS`, and gives the row back if the asset was a miss, so a zip the
+  packager never wrote costs nothing and every row is bytes that went out.
+  The check and the write must stay one `INSERT ... SELECT ... WHERE`: read,
+  compare, then write let 154 concurrent requests all read a count under
+  thirty, and one account took 51. A HEAD (Hono answers it with the GET
+  handler) or a Range resuming past byte 0 is gated the same way and writes
+  nothing (`takesCopy`); a link checker once took an account past the cap
+  with nothing downloaded. Counting in
   the client, with the zips left static, would have counted clicks and gated
   nothing. The count is `count(distinct slug)` over the month's rows: a
   template taken twice, or in both formats, is one of the thirty, and a
@@ -1012,10 +1019,18 @@ not edited here yet. The Worker keeps the routes that would edit them
 whatever text Studio wrote, so putting them back is a UI change.
 
 - **A site starts from a direction or from the gallery.** `POST
-  /api/studio/sites` takes `{generationId, index}` as before, or `{slug}`: a
-  copy of the template with an empty first revision, no model call and no
-  daily cap (the burst limiter still applies), and `generationId` and
-  `directionIndex` null. Migration 0005 made those columns nullable by
+  /api/studio/sites` takes `{generationId, index}` as before, or `{slug,
+  edits?, title?}`: a copy of the template whose first revision is the
+  document sent (checked by the same `refuseDocument` as a revision) or empty,
+  no model call and no daily cap (the burst limiter still applies), and
+  `generationId` and `directionIndex` null. **A gallery site is made on its
+  first Save, never on the visit.** `/studio/customize/` renders the
+  customizer on an unsaved draft (`StudioSite` with `template`), and the Save
+  that makes the site moves the address to `/studio/site/?id=` with
+  `history.replaceState`, so the canvas is not reloaded; making it on the
+  visit left one copy in the account per look at a template, phones
+  included. `DELETE /api/studio/sites/:id` removes a site, its revisions and
+  its R2 pictures, from the Custom sites list. Migration 0005 made those columns nullable by
   rebuilding `site` and `revision` **child first**: SQLite cannot alter a
   column's constraint and D1 cannot switch foreign keys off, and dropping a
   parent under enforced keys runs an implicit DELETE that would cascade every

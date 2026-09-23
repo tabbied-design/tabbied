@@ -303,6 +303,66 @@ test.describe('studio site', () => {
     await expect(rail.getByRole('button', { name: /^Reset the .* pattern$/ })).toHaveCount(0);
   });
 
+  test('customizing a template makes nothing until the first Save', async ({ page }) => {
+    await page.route('**/api/auth/get-session', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          session: { id: 's', userId: 'u1', expiresAt: '2030-01-01T00:00:00Z' },
+          user: { id: 'u1', name: 'Pat', email: 'pat@example.com', emailVerified: true, role: null },
+        }),
+      })
+    );
+
+    const made: unknown[] = [];
+    await page.route('**/api/studio/sites', (route) => {
+      if (route.request().method() !== 'POST') return route.fallback();
+      made.push(route.request().postDataJSON());
+
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ id: 'e2edraft', source: 'template', revision: 1, title: 'Harbour Plants' }),
+      });
+    });
+
+    await page.goto(`/studio/customize/?slug=${SLUG}`);
+
+    const frame = page.frameLocator('iframe');
+    await expect(frame.locator('[data-edit-root]')).toBeAttached({ timeout: 15_000 });
+
+    // Opened, looked at, and not saved: nothing was made, and the page is
+    // still the template's, named once rather than "Verdant on Verdant".
+    const rail = page.getByRole('complementary', { name: 'Customize this site' });
+    await expect(rail.getByRole('button', { name: 'No changes to save' })).toBeDisabled();
+    await expect(page.getByText('Verdant', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('Verdant on Verdant')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Back to the template' })).toHaveAttribute(
+      'href',
+      `/templates/${SLUG}/`
+    );
+    expect(made).toHaveLength(0);
+
+    // A name and a palette, then Save: one site, with this document as its
+    // first revision, and the page moves to the site's own address in place.
+    await rail.getByLabel('Your site name').fill('Harbour Plants');
+    await rail.getByLabel('Your site name').press('Enter');
+    await rail.getByRole('button', { name: 'Cobalt', exact: true }).click();
+    await rail.getByRole('button', { name: 'Save changes' }).click();
+
+    await expect(page.getByRole('button', { name: 'Saved to your custom sites' })).toBeVisible();
+    expect(made).toHaveLength(1);
+    expect(made[0]).toMatchObject({
+      slug: SLUG,
+      title: 'Harbour Plants',
+      edits: { slug: SLUG, edits: { palette: expect.any(Array) } },
+    });
+    await expect(page).toHaveURL(/\/studio\/site\/\?id=e2edraft$/);
+    await expect(page.getByText('Harbour Plants on Verdant')).toBeVisible();
+    await expect(frame.locator('[data-edit-root]')).toBeAttached();
+  });
+
   test('a visitor by link gets the page and no editor', async ({ page }) => {
     await page.route('**/api/studio/sites/**', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(siteDocument()) })
