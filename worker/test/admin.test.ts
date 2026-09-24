@@ -117,6 +117,7 @@ describe('the api health report', () => {
     // Two, from the vitest config's ADMIN_EMAILS. Zero on a deployment whose
     // setting never arrived, which is the fact this exists to report.
     expect(body.adminEmails).toBe(2);
+    expect(body.mail).toEqual({ provider: 'dev-mail', teamInboxes: 1 });
     expect(JSON.stringify(body)).not.toContain('example.com');
   });
 });

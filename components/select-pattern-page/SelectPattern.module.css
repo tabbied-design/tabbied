@@ -255,11 +255,12 @@
   }
 }
 
-/* The masthead folds at 768px and loses 4px of padding each side: 16px, a
-   34px right-hand slot, 16px and its rule. */
+/* The masthead folds at 768px to the phone bar, 56px with its rule
+   (SiteNav.module.css). This said 67px, and the shelf pinned 11px below the
+   bar with the grid scrolling through the strip between them. */
 @media (max-width: 767.98px) {
   .gallery {
-    --gallery-bar-h: 67px;
+    --gallery-bar-h: 56px;
   }
 }
 

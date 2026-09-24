@@ -21,6 +21,9 @@ import {
   type Problem,
   type TemplateSpec,
 } from 'tabbied-templates';
+import { apiFetch } from 'lib/apiFetch';
+import type { SiteDocument } from 'lib/studioDocument';
+import { templateSpecUrl } from 'lib/studioPreview';
 
 /** `zip`'s default and fflate's, the level the packager writes at. */
 const ZIP_LEVEL = 6;
@@ -126,9 +129,10 @@ export async function buildCustomisedArchive(options: {
   const response = await fetch(`/downloads/${slug}-html.zip`);
 
   if (!response.ok) {
-    // The zip goes through the Worker, which counts it against the month's
-    // template downloads and answers a fetch in JSON when it will not serve
-    // one: signed out, or the cap spent. That sentence is the toast.
+    // The zip goes through the Worker, which makes the template one of the
+    // person's and answers a fetch in JSON when it will not serve one:
+    // signed out, or every template they may choose already chosen. That
+    // sentence is the toast.
     const said = await response
       .json()
       .then((body: { error?: string }) => body.error)
@@ -182,4 +186,23 @@ export function saveArchive(bytes: Uint8Array, fileName: string): void {
   anchor.click();
   // Revoking synchronously can abort the just-started download.
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
+}
+
+/**
+ * A saved site's customized HTML download, from anywhere a site id is known:
+ * the account's table and the gallery's cards. The same build the
+ * customizer's Download menu runs, on the site's latest saved revision.
+ */
+export async function downloadCustomisedSite(siteId: string): Promise<void> {
+  const site = await apiFetch<SiteDocument>(`/api/studio/sites/${encodeURIComponent(siteId)}`);
+  const specResponse = await fetch(templateSpecUrl(site.slug));
+
+  if (!specResponse.ok) {
+    throw new Error(`The ${site.templateName} template is not available right now.`);
+  }
+
+  const spec = (await specResponse.json()) as TemplateSpec;
+  const { bytes } = await buildCustomisedArchive({ slug: site.slug, spec, edits: site.latest.edits });
+
+  saveArchive(bytes, `${archiveNameFor(site.title)}-html.zip`);
 }

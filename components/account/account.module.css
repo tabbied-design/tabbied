@@ -13,31 +13,18 @@
 }
 
 /* The area's own pages, as a quiet row under the masthead. */
-.nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 28px;
-  padding: 18px 0;
+.backLink {
+  display: inline-block;
+  margin: 0 0 28px;
   font: 400 12px var(--s-mono);
-  letter-spacing: 0.1em;
+  color: oklch(0.45 0.01 260);
+  letter-spacing: 0.14em;
+  text-decoration: none;
   text-transform: uppercase;
-  border-bottom: 1px solid var(--s-rule);
 }
 
-.navLink {
-  padding: 4px 0;
-  color: oklch(0.5 0.01 260);
-  border-bottom: 1px solid transparent;
-  transition: color 150ms ease, border-color 150ms ease;
-}
-
-.navLink:hover {
+.backLink:hover {
   color: var(--s-ink);
-}
-
-.navOn {
-  color: var(--s-ink);
-  border-bottom-color: var(--s-ink);
 }
 
 .head {

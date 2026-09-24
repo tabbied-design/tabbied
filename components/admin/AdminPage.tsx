@@ -19,6 +19,7 @@ import styles from './admin.module.css';
 const LINKS = [
   ['/admin/', 'Overview'],
   ['/admin/users/', 'Users'],
+  ['/admin/requests/', 'Requests'],
   ['/admin/usage/', 'AI usage'],
   ['/admin/generations/', 'Generations'],
   ['/admin/templates/', 'Templates'],
@@ -37,6 +38,8 @@ type UserRow = {
   createdAt: string;
   sites: number;
   generations: number;
+  chosen: number;
+  allowance: number;
 };
 
 /**
@@ -62,7 +65,7 @@ const EXPORT_PAGE = 200;
  */
 async function exportUsers() {
   const { users } = await apiFetch<{ users: UserRow[] }>(`/api/admin/users?limit=${EXPORT_PAGE}`);
-  const header = ['id', 'name', 'email', 'verified', 'role', 'banned', 'joined', 'sites', 'generations'];
+  const header = ['id', 'name', 'email', 'verified', 'role', 'banned', 'joined', 'templates_chosen', 'template_allowance', 'sites', 'generations'];
   const lines = users.map((user) =>
     [
       user.id,
@@ -72,6 +75,8 @@ async function exportUsers() {
       user.role ?? 'user',
       Boolean(user.banned),
       user.createdAt,
+      user.chosen,
+      user.allowance,
       user.sites,
       user.generations,
     ]

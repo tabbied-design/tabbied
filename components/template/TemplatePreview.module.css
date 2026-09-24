@@ -2,7 +2,7 @@
    The bar is dark so the chrome reads apart from whatever the template is -
    most of them open on a pale ground, and a white bar over a white page
    left nothing between the site and the site it was showing. The iframe
-   shows the live /template/<slug>/ route, which is the page the packager
+   shows the live /templates/<slug>/site/ route, which is the page the packager
    derives the download from; nothing in this file reaches it. */
 
 /* The tokens are declared on the page and again on the two popups, because
@@ -64,20 +64,10 @@
   color: #fff;
 }
 
-.backCircle {
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.22);
-}
-
-.backCircle svg {
+.backMark {
   display: block;
-  margin-left: -1px;
+  flex: none;
+  margin-left: 6px;
 }
 
 .backLabel {
@@ -157,6 +147,30 @@
   color: oklch(0.45 0.01 260);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.useMenu {
+  width: 320px;
+}
+
+/* The menu's header: the count of chosen templates, its bar, and what
+   taking this one costs. */
+.usage {
+  padding: 12px 12px 6px;
+}
+
+.usageNote {
+  margin: 0;
+  font: 400 12.5px/1.5 var(--s-sans);
+  color: oklch(0.5 0.01 260);
+}
+
+.menuLabel {
+  padding: 9px 12px 4px;
+  font: 600 11px var(--s-sans);
+  color: oklch(0.5 0.01 260);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .menuRule {

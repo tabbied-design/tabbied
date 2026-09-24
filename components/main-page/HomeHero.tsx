@@ -126,11 +126,6 @@ export default function HomeHero({
 
         <div className={styles.heroPad}>
           <div className={styles.inner}>
-            <div className={styles.eyebrowRow}>
-              <span className={styles.eyebrow}>About tabbied</span>
-              <span className={styles.scrollHint}>(scroll)</span>
-            </div>
-
             {/* The two things the site offers are links to them, each in
                 its own gradient; the rest of the sentence is plain type.
                 The break is authored: the design sets the second line on
@@ -146,14 +141,16 @@ export default function HomeHero({
               </Link>{' '}
               and{' '}
               <br className={styles.titleBreak} />
-              <Link
-                href="/templates"
-                prefetch={false}
-                className={`${styles.titleLink} ${styles.titleLinkSites}`}
-              >
-                websites
-              </Link>
-              , yours to shape.
+              <span className={styles.titleLine}>
+                <Link
+                  href="/templates"
+                  prefetch={false}
+                  className={`${styles.titleLink} ${styles.titleLinkSites}`}
+                >
+                  websites
+                </Link>
+                , yours to shape.
+              </span>
             </h1>
 
             <p className={styles.lede}>
@@ -194,7 +191,7 @@ export default function HomeHero({
             <span className={styles.statLabel}>
               Patterns
               <span className={styles.statArrow} aria-hidden="true">
-                <ArrowRight size={18} />
+                <ArrowRight size={16} />
               </span>
             </span>
           </Link>
@@ -206,7 +203,7 @@ export default function HomeHero({
             <span className={styles.statLabel}>
               Free website templates
               <span className={styles.statArrow} aria-hidden="true">
-                <ArrowRight size={18} />
+                <ArrowRight size={16} />
               </span>
             </span>
           </Link>

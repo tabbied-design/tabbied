@@ -170,11 +170,11 @@ test.describe('Tabbied site', () => {
       .waitFor({ state: 'attached', timeout: 15000 });
 
     // The rail is fixed to the window, so scrolling the grid leaves its pinned
-    // "Random per pattern" row in place. (There is no "New palette" button any
-    // more: the pencil on a row is the way to a new one.)
+    // "Mixed" row (a random palette per pattern) in place. (There is no "New
+    // palette" button any more: the pencil on a row is the way to a new one.)
     const random = page
       .locator('aside')
-      .getByRole('button', { name: 'Random per pattern' });
+      .getByRole('button', { name: /^Mixed/ });
     await expect(page.locator('aside').getByRole('button', { name: /New Palette/ })).toHaveCount(0);
     const before = await random.boundingBox();
     await page.evaluate(() => window.scrollTo(0, 1400));
@@ -635,12 +635,12 @@ test.describe('Tabbied site (mobile viewport)', () => {
     await page.goto('/patterns');
 
     // The fixed rail is hidden below the two-column breakpoint; the palettes
-    // become a horizontal chip shelf, "Random per pattern" first, with a
+    // become a horizontal chip shelf, "Mixed" first, with a
     // trailing "All ›" browser pill. No "New palette" anywhere: the pencil
     // on a chip is the way to a new one.
     await expect(page.locator('aside')).toBeHidden();
     await expect(
-      page.getByRole('button', { name: 'Random per pattern' })
+      page.getByRole('button', { name: /^Mixed/ })
     ).toBeVisible({ timeout: 15000 });
     await expect(page.getByRole('button', { name: 'New Palette' })).toHaveCount(0);
 
@@ -664,7 +664,7 @@ test.describe('Tabbied site (mobile viewport)', () => {
     // footer, not up here.
     const trigger = page.getByRole('button', { name: 'Menu' });
     await expect(trigger).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Sign in' })).toBeHidden();
+    await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeHidden();
 
     await trigger.click();
 
@@ -798,18 +798,56 @@ test.describe('Template preview and customize', () => {
     );
   });
 
-  test('the gallery leads to the framed preview and offers both downloads per card', async ({ page }) => {
+  test('the gallery leads to the framed preview, and a visitor is asked to sign in', async ({ page }) => {
     await page.goto('/templates');
 
     const card = page.locator('a[href="/templates/verdant/"]').first();
     await expect(card).toBeAttached();
 
-    // The artboard's card footer is the DOWNLOAD label and the two formats.
-    // Customize is not on a card: taking a template from the gallery is
-    // downloading it, and the customizer is reached from the framed preview.
-    await expect(page.locator('a[href="/downloads/verdant-html.zip"]').first()).toBeAttached();
-    await expect(page.locator('a[href="/downloads/verdant-react.zip"]').first()).toBeAttached();
+    // The artboard's guest footer: "HTML . React" and "Sign in to use". The
+    // zips and the customizer are behind a sign-in, and a template spends
+    // one of the person's five when it is first taken.
+    await expect(page.getByRole('link', { name: 'Sign in to use' }).first()).toBeVisible();
+    await expect(page.locator('a[href^="/downloads/"]')).toHaveCount(0);
     await expect(page.locator('a[href="/studio/customize/?slug=verdant"]')).toHaveCount(0);
+  });
+
+  test('signed in, the menu says what taking a template costs and asks first', async ({ page }) => {
+    await page.route('**/api/auth/get-session', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          session: { id: 's', userId: 'u1', expiresAt: '2030-01-01T00:00:00Z' },
+          user: { id: 'u1', name: 'Pat', email: 'pat@example.com', emailVerified: true, role: null },
+        }),
+      })
+    );
+    await page.route('**/api/account/templates', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          used: 4,
+          total: 5,
+          left: 1,
+          chosen: ['solstice', 'werkraum', 'cobalt-works', 'mistral-cycles'].map((slug) => ({ slug, chosenAt: '2026-09-01T00:00:00Z', site: null })),
+          request: null,
+        }),
+      })
+    );
+    await page.goto('/templates/verdant/', { waitUntil: 'domcontentloaded' });
+
+    await page.getByRole('button', { name: 'Use this template' }).click();
+    const menu = page.getByRole('menu');
+    await expect(menu.getByText('4 of 5 templates chosen')).toBeVisible();
+    await expect(menu.getByText(/uses your last template/)).toBeVisible();
+
+    // A download of a template not yet theirs goes through the dialog.
+    await menu.getByRole('menuitem', { name: /Static HTML/ }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByText('This uses your last template.', { exact: false })).toBeVisible();
+    await expect(dialog.getByRole('button', { name: 'Use template & download' })).toBeVisible();
   });
 
   test('customizing while signed out goes to sign-in with the way back', async ({ page }) => {
@@ -835,7 +873,7 @@ test.describe('Shared site header', () => {
     const nav = page.getByRole('navigation', { name: 'Main' });
     await expect(nav.getByRole('link', { name: 'Home' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Sign in' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Tabbied on GitHub' })).toHaveCount(0);
 
     // At desktop widths the inline nav replaces the hamburger entirely.
@@ -874,11 +912,11 @@ test.describe('Shared site header', () => {
     await page.goto('/templates');
     const bar = page.locator('header[data-tone]').first();
     await expect(bar).toHaveAttribute('data-session', 'likely');
-    await expect(page.getByRole('link', { name: 'Sign in' })).toBeHidden();
+    await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeHidden();
 
     await expect.poll(() => answer !== null).toBe(true);
     answer!();
-    await expect(page.getByRole('link', { name: 'Sign in' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeVisible();
     await expect(bar).not.toHaveAttribute('data-session', 'likely');
     // The wrong hint is cleared, so the next page draws Sign in at once.
     expect(await page.evaluate(() => window.localStorage.getItem('tabbied:signed-in'))).toBeNull();

@@ -92,6 +92,7 @@ export default function TemplatesGallery() {
               flat ground with only its vignette over it. */}
           <div className={s.heroScrim} />
           <div className={s.heroInner}>
+            <p className={s.eyebrow}>Website templates</p>
             <h1>
               {TOTAL} sites,<br />
               <span>one pattern engine</span>

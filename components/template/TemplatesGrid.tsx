@@ -1,17 +1,27 @@
 'use client';
 
-import { useState, type CSSProperties } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
+import Link from 'next/link';
+import { Menu } from '@base-ui-components/react/menu';
 import type { PatternDefinition } from 'tabbied';
 import {
   TEMPLATE_CATEGORIES,
   type TemplateCategory,
 } from 'lib/templateCategories';
+import Toaster, { toaster } from 'components/Toaster';
+import { ApiError } from 'lib/apiFetch';
+import { chosenOf, customizeHref, type MyTemplatesState } from 'lib/myTemplates';
+import { downloadCustomisedSite } from 'lib/studioDownload';
+import { useTemplateGate, type TemplateAction } from './ChooseTemplate';
 import LazyPattern from './LazyPattern';
 import s from './TemplatesGrid.module.css';
 
 // The template gallery's body: a row of category chips and the cards they
-// filter. Client-side for the one piece of state the chips hold; everything
-// on a card was decided on the server and arrives as plain data.
+// filter. Client-side for the chips and for the one thing the server cannot
+// know, which templates are the visitor's: a card's footer is "Sign in to
+// use" for a visitor, "Choose template" for a template a person may still
+// choose, "Customize" and "Download" once it is theirs, and "Request more"
+// when every one they may choose is chosen (lib/myTemplates.ts).
 
 export type TemplateCard = {
   slug: string;
@@ -32,20 +42,140 @@ export type TemplateCard = {
 /** The most swatches a card shows; the inks, never the ground. */
 const MAX_SWATCHES = 4;
 
+type Guard = (slug: string, name: string, action: TemplateAction, run: () => void) => void;
+
+async function saveCustomised(siteId: string) {
+  try {
+    toaster.add({ title: 'Preparing your customized download...' });
+    await downloadCustomisedSite(siteId);
+  } catch (cause) {
+    toaster.add({ title: cause instanceof ApiError || cause instanceof Error ? cause.message : 'Could not build the download.' });
+  }
+}
+
+/**
+ * The card's footer, in the four states the account puts it in. The zips
+ * are links to the Worker's gated route, which makes the template the
+ * person's on its first download; the dialog before that is the page's
+ * courtesy, not the rule.
+ */
+function Footer({ c, templates, guard }: { c: TemplateCard; templates: MyTemplatesState; guard: Guard }) {
+  const chosen = chosenOf(templates, c.slug);
+
+  if (templates.status !== 'ready') {
+    // Signed out, or not known yet: the artboard's guest footer. While the
+    // session resolves it is drawn the same, so the row never jumps.
+    const next = encodeURIComponent('/templates/');
+
+    return (
+      <div className={s.dl}>
+        <span className={s.formats}>
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 4v11" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M5 20h14" />
+          </svg>
+          HTML &#xB7; React
+        </span>
+        {templates.status === 'signed-out' ? (
+          <Link href={`/sign-in?next=${next}`} prefetch={false} className={s.pill}>
+            Sign in to use
+          </Link>
+        ) : (
+          <span className={`${s.pill} ${s.pillGhost}`} aria-hidden="true">
+            Sign in to use
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  if (chosen) {
+    return (
+      <div className={s.dl}>
+        <Link href={customizeHref(c.slug, chosen)} prefetch={false} className={s.textLink}>
+          Customize &#x2192;
+        </Link>
+        <Menu.Root>
+          <Menu.Trigger className={s.pill}>
+            Download <span className={s.caret} aria-hidden="true">&#x25BE;</span>
+          </Menu.Trigger>
+          <Menu.Portal>
+            <Menu.Positioner side="top" align="end" sideOffset={8} className={s.positioner}>
+              <Menu.Popup className={s.menu}>
+                {chosen.site ? (
+                  <>
+                    <Menu.Group>
+                      <Menu.GroupLabel className={s.menuLabel}>Your customized version</Menu.GroupLabel>
+                      <Menu.Item className={s.menuItem} onClick={() => saveCustomised(chosen.site!.id)}>
+                        HTML &amp; CSS
+                      </Menu.Item>
+                    </Menu.Group>
+                    <Menu.Separator className={s.menuRule} />
+                  </>
+                ) : null}
+                <Menu.Group>
+                  <Menu.GroupLabel className={s.menuLabel}>
+                    {chosen.site ? `Original ${c.name}` : `${c.name} (original)`}
+                  </Menu.GroupLabel>
+                  <Menu.Item className={s.menuItem} render={<a href={`/downloads/${c.slug}-html.zip`} download />}>
+                    HTML &amp; CSS
+                  </Menu.Item>
+                  <Menu.Item className={s.menuItem} render={<a href={`/downloads/${c.slug}-react.zip`} download />}>
+                    React project
+                  </Menu.Item>
+                </Menu.Group>
+              </Menu.Popup>
+            </Menu.Positioner>
+          </Menu.Portal>
+        </Menu.Root>
+      </div>
+    );
+  }
+
+  if (templates.left > 0) {
+    return (
+      <div className={s.dl}>
+        <a href={c.href} className={s.quietLink}>
+          Preview &#x2192;
+        </a>
+        <button type="button" className={`${s.pill} ${s.pillSolid}`} onClick={() => guard(c.slug, c.name, 'choose', () => {})}>
+          Choose template
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className={s.dl}>
+      <span className={s.quiet}>All {templates.total} chosen</span>
+      {templates.request ? (
+        <a href={c.href} className={s.pill}>
+          Preview
+        </a>
+      ) : (
+        <Link href="/account/?request=1" prefetch={false} className={s.pill}>
+          Request more
+        </Link>
+      )}
+    </div>
+  );
+}
+
 /**
  * A card: the pattern takes the whole top, numbered; the name, the kind of
  * business and its inks sit under it with the palette and pattern named at
- * the right; the download row closes it. Each card carries its accent as a
- * custom property, which tints the hover, so mousing across the grid previews
- * each site's color before you open it.
+ * the right; the footer closes it. Each card carries its accent as a custom
+ * property, which tints the hover, so mousing across the grid previews each
+ * site's color before you open it.
  */
-function Card({ c }: { c: TemplateCard }) {
+function Card({ c, templates, guard }: { c: TemplateCard; templates: MyTemplatesState; guard: Guard }) {
   const vars = { '--accent': c.colors[1] ?? c.colors[0] } as CSSProperties;
+  const mine = chosenOf(templates, c.slug) !== null;
 
   return (
-    // A <div>, not an <a>: the download row holds anchors of its own and an
-    // anchor cannot nest inside another. The card link covers everything
-    // above that row.
+    // A <div>, not an <a>: the footer holds anchors of its own and an anchor
+    // cannot nest inside another. The card link covers everything above it.
     <div className={s.card} style={vars}>
       <a className={s.cardLink} href={c.href}>
         <div className={s.thumb}>
@@ -63,7 +193,17 @@ function Card({ c }: { c: TemplateCard }) {
           ) : (
             <LazyPattern pattern={c.art} palette={c.colors} seed={c.seed} />
           )}
-          <span className={s.num}>{String(c.n).padStart(2, '0')}</span>
+          <span className={s.num}>
+            <span className={s.numN}>{String(c.n).padStart(2, '0')}</span>
+            {mine ? (
+              <span className={s.yours}>
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="m5 12 5 5L20 7" />
+                </svg>
+                Yours
+              </span>
+            ) : null}
+          </span>
         </div>
         <div className={s.body}>
           <div className={s.main}>
@@ -81,41 +221,36 @@ function Card({ c }: { c: TemplateCard }) {
           </div>
         </div>
       </a>
-      {/* Both formats are built by `npm run templates` into out/downloads/,
-          so these are plain static files served next to the site. `download`
-          saves the zip rather than navigating to it. The label sits hard left
-          and the two pills hard right, which is the artboard's footer: taking
-          a template from a card is downloading it, and the two formats are
-          the whole of the choice. */}
-      <div className={s.dl}>
-        <span className={s.dlLabel}>Download</span>
-        <div className={s.dlPills}>
-          <a className={s.pill} href={`/downloads/${c.slug}-html.zip`} download>
-            HTML
-          </a>
-          <a className={s.pill} href={`/downloads/${c.slug}-react.zip`} download>
-            React
-          </a>
-        </div>
-      </div>
+      <Footer c={c} templates={templates} guard={guard} />
     </div>
   );
 }
 
+type Filter = TemplateCategory | 'All' | 'Yours';
+
 export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
-  const [filter, setFilter] = useState<TemplateCategory | 'All'>('All');
+  const [filter, setFilter] = useState<Filter>('All');
+  const names = useMemo(() => Object.fromEntries(cards.map((c) => [c.slug, c.name])), [cards]);
+  const { guard, dialog, templates } = useTemplateGate(names);
 
   // Only the categories that have a site, in the vocabulary's order.
   const categories = TEMPLATE_CATEGORIES.filter((category) =>
     cards.some((c) => c.category === category)
   );
-  const shown = filter === 'All' ? cards : cards.filter((c) => c.category === filter);
+  const yours = templates.status === 'ready' ? templates.chosen.length : 0;
+  const shown =
+    filter === 'All'
+      ? cards
+      : filter === 'Yours'
+        ? cards.filter((c) => chosenOf(templates, c.slug))
+        : cards.filter((c) => c.category === filter);
+  const filters: Filter[] = templates.status === 'ready' ? ['All', 'Yours', ...categories] : ['All', ...categories];
 
   return (
     <>
       <div className={s.filterWrap}>
         <div className={s.filters} role="group" aria-label="Filter by kind of site">
-          {(['All', ...categories] as const).map((category) => (
+          {filters.map((category) => (
             <button
               key={category}
               type="button"
@@ -123,7 +258,7 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
               aria-pressed={filter === category}
               onClick={() => setFilter(category)}
             >
-              {category}
+              {category === 'Yours' ? `Yours (${yours})` : category}
             </button>
           ))}
         </div>
@@ -132,9 +267,15 @@ export default function TemplatesGrid({ cards }: { cards: TemplateCard[] }) {
 
       <div className={s.grid}>
         {shown.map((c) => (
-          <Card key={c.slug} c={c} />
+          <Card key={c.slug} c={c} templates={templates} guard={guard} />
         ))}
       </div>
+      {filter === 'Yours' && shown.length === 0 ? (
+        <p className={s.none}>No templates chosen yet. Choose one from All.</p>
+      ) : null}
+
+      {dialog}
+      <Toaster />
     </>
   );
 }

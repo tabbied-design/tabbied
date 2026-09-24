@@ -108,9 +108,9 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   and it is not optional: every POST to the platform tier would otherwise be
   answered with a redirect before the Worker saw it. **Any new non-asset route
   must join this list.** `/downloads/*` is the one asset folder on it: a
-  template zip is a signed-in act counted against the month's cap (see "The
-  template downloads cap" below), and the edge would otherwise hand it to
-  anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
+  template zip is a signed-in act that makes the template one of the
+  person's five (see "Five templates per account" below), and the edge
+  would otherwise hand it to anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
   under the folder, the packaged pages the previews read, back to the binding.
 
 **Redirects live in `public/_redirects`**, beside `_headers` and read the
@@ -575,12 +575,12 @@ not obvious from the diff:
   Export is the same dropdown as the desktop. The palettes are the first
   thirty (and the one in use) in a swipeable row, and "View all" opens
   `PaletteBrowser` in a fullscreen `Dialog`; the rail search is desktop only.
-- **The template preview has one action, and the sign-in gate is the
-  page's.** "Use this template" opens Customize / Download as-is / Export
-  React project when signed in, and a card asking for a sign-in (with the
-  customizer as `?next=`) when not. The zips stay static assets and Studio's
-  results page still links them; gating them at the edge would mean routing
-  `/downloads/*` through the Worker, which nothing asked for.
+- **The template preview has one action.** "Use this template" opens, when
+  signed in, a menu headed by the count of chosen templates and what taking
+  this one costs, then Customize and the two original downloads; a template
+  not yet the person's asks first (`ChooseTemplate.tsx`). Signed out it is a
+  card asking for a sign-in, with the customizer as `?next=`. The bar's left
+  edge is the Tabbied mark and "Websites", the way back to the gallery.
 - **Popups are portaled, so they carry their own tokens.** The preview's
   menus and the customizer's are rendered under `<body>`, outside the page
   wrapper that declares `--s-*`; a `font:` or `background-color:` naming an
@@ -593,19 +593,19 @@ not obvious from the diff:
   palette row is the reset. Below 768px the rail is hidden and a notice says
   customizing wants a larger screen, with the site full bleed to preview and
   download; the canvas-first layout that pinned the page at half the viewport
-  is gone. The design's "4 of 30 downloads used" is drawn on the account
-  overview now that the Worker counts downloads (see "The template downloads
-  cap" below), and only there; the customizer's rail does not repeat it.
-- **The account overview draws the artboard's ring and its AI card.** The
-  ring meters the month's template downloads, the one cap a person can spend
-  today (the ring that stood there before metered the `site` generation
-  endpoint, which the held-back flow left reading zero). Beside it the card
-  the artboard wrote for this moment: "AI usage", a "Not yet available" pill
-  opposite it, "AI credits: words and pictures" over a hatched track, and a
-  sentence about a later release. The overview reads `/api/studio/sites` and
-  `/api/account/usage`, the second tolerated failing. Its list is "Custom
-  sites", with no request-type column and no revision count, because every
-  row is now a site and the count said nothing a person acts on.
+  is gone. The count of chosen templates is drawn on the account overview
+  and in the preview's menu, not in the customizer's rail.
+- **The account overview is "Your templates"** (the 23 September designs).
+  The ring counts the chosen templates against the allowance, with an (i)
+  saying what counts; beside it the AI card ("Not yet available", a hatched
+  track, a sentence about a later release). Under them the chosen templates
+  as a table: name and kind, when it was last customized and when it was
+  added, a Download menu (the customized version's HTML when a site was
+  saved, then the original's HTML and React) and Customize, which opens the
+  newest saved site or a fresh draft. Then either the empty slot, leading to
+  the gallery, or, at the limit, "Request more". There is no account
+  sub-navigation: pages beyond the overview (settings, sites) carry one
+  "Account overview" link back, and the downloads history page is gone.
 
 ## The editor's density - one number, the cell's size
 
@@ -817,55 +817,60 @@ Things worth not re-litigating:
   infers it from the *server* config, which lives in `worker/` and is outside
   the site's tsconfig on purpose, so the client types `data` as `never`.
 
-## The template downloads cap - thirty a month, counted where the bytes go
+## Five templates per account - chosen once, then unlimited
 
-Every account may take thirty template zips a month, HTML or React, from the
-gallery's pills, a template's page or the customizer's Download menu, and the
-account overview draws the count as the artboard's ring. Four things worth
-not re-litigating:
+During the beta every account chooses five website templates. Choosing is
+explicit ("Choose template" on a gallery card) or implicit (the first
+download of a template, or the first customizer Save of it), and once a
+template is chosen its colors and patterns can be changed and it can be
+downloaded as often as the person likes. This replaced a cap of thirty
+distinct templates a month (migration 0007 carries every template a person
+had already downloaded or saved into the new table, more than five for an
+early account if so; nothing taken is taken back, they just cannot choose
+another). Five things worth not re-litigating:
 
-- **The count lives where the bytes leave, and it counts templates.**
-  `/downloads/*` is in `run_worker_first`, and `GET
-  /downloads/<slug>-<format>.zip` in `worker/index.ts` requires a session,
-  claims the `download` row in the same statement that checks the month's
-  count (`claimDownload` in `worker/lib/downloads.ts`), serves the zip through
-  `env.ASSETS`, and gives the row back if the asset was a miss, so a zip the
-  packager never wrote costs nothing and every row is bytes that went out.
-  The check and the write must stay one `INSERT ... SELECT ... WHERE`: read,
-  compare, then write let 154 concurrent requests all read a count under
-  thirty, and one account took 51. A HEAD (Hono answers it with the GET
-  handler) or a Range resuming past byte 0 is gated the same way and writes
-  nothing (`takesCopy`); a link checker once took an account past the cap
-  with nothing downloaded. Counting in
-  the client, with the zips left static, would have counted clicks and gated
-  nothing. The count is `count(distinct slug)` over the month's rows: a
-  template taken twice, or in both formats, is one of the thirty, and a
-  template already among the month's is served past the cap
-  (`downloadedThisMonth`), since the second copy costs nothing and a person
-  re-downloading after a fix should not pay for it.
-- **The history is six months, named from the catalog.** `GET
-  /api/account/downloads` lists the person's rows since six months ago,
-  newest first, with each slug's name read from `/editable-catalog.json`
-  through the assets binding (a slug the catalog no longer has is shown as
-  itself), and `/account/downloads/` draws it. The rows are the record of
-  what was taken, so the page shows every zip, not the deduplicated count.
+- **The claim lives where the bytes leave.** `/downloads/*` is in
+  `run_worker_first`, and `GET /downloads/<slug>-<format>.zip` in
+  `worker/index.ts` requires a session and runs `claimTemplate`
+  (`worker/lib/templates.ts`) before serving the zip through `env.ASSETS`;
+  a miss gives a choice this request made back, so a zip the packager never
+  wrote costs nothing. The check and the write are one `INSERT OR IGNORE
+  ... SELECT ... WHERE count < allowance`, over a unique `(user, slug)`
+  index: read, compare, then write let 154 concurrent requests all read a
+  count under the old cap, and one account took 51. A HEAD or a Range
+  resuming past byte 0 is answered by the same rule and writes nothing
+  (`takesCopy`). `POST /api/studio/sites {slug}` (the customizer's first
+  Save) and `POST /api/account/templates {slug}` make the same claim.
+- **The dialog is the page's, the rule is the Worker's.** Every way to take
+  a template that is not yet the person's asks first
+  (`components/template/ChooseTemplate.tsx`): how many are chosen, what this
+  one costs, and at the limit the chosen ones and "Request more". The page
+  learns what is chosen from `GET /api/account/templates`, read once per
+  page into a small store (`lib/myTemplates.ts`) the 77 gallery cards
+  share. Someone who opens a zip's URL directly is held to the same five.
 - **A click and a fetch are answered differently.** A navigation (a download
   link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
-  `/sign-in/?next=` with the page it came from, or to `/account/?downloads=
-  capped`, which the overview reads after mount and says out loud. A fetch
-  (the customizer building a customized zip from the packaged one) gets JSON
-  and a 401 or 429, and `buildCustomisedArchive` puts that sentence in the
-  toast. The customizer's download counts, because it is a download.
-- **The month is UTC, and an admin's reset is a timestamp, not a deletion.**
-  `user.downloads_reset_at` (migration 0006) moves the start of a person's
-  month forward; `download` rows stay, since they are the record of what was
-  taken. `POST /api/admin/users/:id/downloads/reset` sets it, the admin's
-  user page has the button, and the caps page lists the cap beside the
-  daily ones, read-only like them.
+  `/sign-in/?next=` with the page it came from, or to `/account/?templates=
+  full`, which the overview reads after mount and says out loud. A fetch
+  (the customizer building a customized zip) gets JSON and a 401 or 403,
+  and `buildCustomisedArchive` puts that sentence in a toast. The
+  `download` table is now a log of served zips, nothing more.
+- **"Request more" is one message, answered by an admin.** At the limit the
+  overview offers it: `POST /api/account/templates/request {note}` writes
+  the person's one `template_request` row (unique per user, so a second is a
+  409) and mails the team (`TEAM_EMAIL`, else `ADMIN_EMAILS`) with the
+  person as Reply-To. `/admin/requests/` lists them by status; granting adds
+  1 to 20 templates to the person's allowance while the status says
+  `granted`, declining adds none, Undo puts it back to pending, and every
+  decision but an undo mails the person. The row is the source of truth: a
+  failed send is logged and reported (`mailed: false`), never unwound.
 - **The e2e suite never sees the gate.** `serve out` has no Worker, so the
-  zips are plain files there and `e2e/templates.spec.ts` keeps proving the
-  packages; `worker/test/downloads.test.ts` is where the gate is proved,
-  against the assets binding, thirty times over.
+  zips are plain files there and the specs stub the session and
+  `/api/account/templates`; `worker/test/templates.test.ts` is where the
+  claim, the concurrency, the customizer save and the request are proved.
+
+Mail itself (Resend, `MAIL_FROM`, `TEAM_EMAIL`, the DNS records and what
+`/api/health` reports) is `docs/email.md`.
 
 ## Studio - matching, then generating
 

@@ -77,7 +77,8 @@ export default function HomeTemplates({
         <div className={styles.rowHeader}>
           <span className={styles.eyebrow}>Website templates</span>
           <Link href="/templates" prefetch={false} className={styles.browseAll}>
-            Browse all sites <ArrowRight size={14} aria-hidden="true" />
+            Browse all sites
+            <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
 

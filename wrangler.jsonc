@@ -123,7 +123,10 @@
   }
 
   // Secrets (never in this file): AI_API_KEY, BETTER_AUTH_SECRET, RESEND_API_KEY,
-  // GITHUB_CLIENT_ID/SECRET, GOOGLE_CLIENT_ID/SECRET.
+  // GITHUB_CLIENT_ID/SECRET, GOOGLE_CLIENT_ID/SECRET, and the mail settings
+  // MAIL_FROM and TEAM_EMAIL (docs/email.md). Put the last two as Secrets too:
+  // a Text variable added in the dashboard is replaced by this file's `vars`
+  // on the next deploy.
   // Locally they live in .dev.vars (gitignored); in production,
   // `wrangler secret put <NAME>`.
 

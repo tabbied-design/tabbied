@@ -1,76 +1,64 @@
 'use client';
 
-// The account's front page: the month's template downloads against the cap,
-// where the AI tier stands, and the sites a person has customized.
+// The account's front page: the templates a person has chosen.
 //
-// Two reads: the sites, which are the whole of what a person can make for
-// the first launch (the generation flow is held back, so the history no
-// longer merges generations in beside them), and the usage, for the one
-// number the artboard's ring meters, the template downloads the Worker
-// counts (worker/lib/downloads.ts). The AI card beside the ring carries "Not
-// yet available" and a sentence about a later release, because every AI cap
-// belongs to an endpoint nothing links to.
-import { useEffect, useMemo, useState } from 'react';
+// During the beta every account chooses five website templates, and once a
+// template is chosen its colors and patterns can be changed and it can be
+// downloaded as often as the person likes (worker/lib/templates.ts). So the
+// page is that: a ring counting the chosen against the allowance, the AI
+// card beside it ("Not yet available", every AI cap belongs to an endpoint
+// nothing links to), and a table of the chosen templates, each with its
+// Download menu (the customized version when there is a saved site, and the
+// original in both formats) and the way into the customizer. Below the rows
+// is either the empty slot, leading to the gallery, or, at the limit, the
+// one "Request more" message the beta allows.
+//
+// Two query parameters arrive from elsewhere and are read after mount (a
+// search param read during render bails the static route out):
+// `?templates=full`, where the Worker sends a download click it refused,
+// and `?request=1`, the choose dialog's "Request more".
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, ChevronDown, Info } from 'lucide-react';
-import type { SiteSummary } from 'lib/studioDocument';
-import { apiFetch } from 'lib/apiFetch';
+import { Dialog } from '@base-ui-components/react/dialog';
+import { Menu } from '@base-ui-components/react/menu';
+import { ArrowRight } from 'lucide-react';
+import Toaster, { toaster } from 'components/Toaster';
+import { ApiError, apiFetch } from 'lib/apiFetch';
+import { useSessionUser } from 'lib/authClient';
+import {
+  FREE_TEMPLATES,
+  customizeHref,
+  refreshMyTemplates,
+  useMyTemplates,
+  type ChosenTemplate,
+  type MyTemplates,
+} from 'lib/myTemplates';
+import { downloadCustomisedSite } from 'lib/studioDownload';
+import type { TemplateIndexEntry } from 'lib/templateIndex';
 import AccountPage from './AccountPage';
 import shell from './account.module.css';
 import styles from './AccountOverview.module.css';
 
-/** What /api/account/usage says about the month's template downloads. */
-type Downloads = { used: number; cap: number; resetsAt: string };
+/** "Sep 22", or "Sep 22, 2025" outside this year. */
+function day(value: string | Date): string {
+  const date = new Date(value);
 
-type Loaded = { sites: SiteSummary[]; downloads: Downloads | null };
-
-type State = { status: 'loading' } | { status: 'error' } | ({ status: 'ready' } & Loaded);
-
-/** One row of the list: a site the person customized. */
-type Row = {
-  key: string;
-  title: string;
-  at: Date;
-  palette: string[];
-  detail: string;
-  href: string;
-  action: string;
-};
-
-/** "Today, 6:42 PM", "Yesterday, 9:18 PM", "Aug 31, 2:14 PM". */
-function when(value: Date): string {
-  const now = new Date();
-  const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
-  const time = value.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-
-  if (sameDay(value, now)) return `Today, ${time}`;
-
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-  if (sameDay(value, yesterday)) return `Yesterday, ${time}`;
-
-  const day = value.toLocaleDateString(undefined, {
+  return date.toLocaleDateString(undefined, {
     month: 'short',
     day: 'numeric',
-    ...(value.getFullYear() === now.getFullYear() ? {} : { year: 'numeric' }),
+    ...(date.getFullYear() === new Date().getFullYear() ? {} : { year: 'numeric' }),
   });
-
-  return `${day}, ${time}`;
 }
-
-/** "Oct 1": the day the month's count starts over. */
-const resetsOn = (iso: string) =>
-  new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 
 /**
  * The artboard's ring: a track and an arc over it, rotated a quarter turn so
  * the arc starts at twelve. The dash array is the arc's length against the
- * rest of the circumference, so a full cap closes the ring exactly.
+ * rest of the circumference, so a full allowance closes the ring exactly.
  */
-function Gauge({ used, cap }: { used: number; cap: number }) {
+function Gauge({ used, total }: { used: number; total: number }) {
   const r = 41;
   const circumference = 2 * Math.PI * r;
-  const arc = cap > 0 ? Math.min(1, used / cap) * circumference : 0;
+  const arc = total > 0 ? Math.min(1, used / total) * circumference : 0;
 
   return (
     <div className={styles.gauge}>
@@ -94,103 +82,266 @@ function Gauge({ used, cap }: { used: number; cap: number }) {
   );
 }
 
-function toRows({ sites }: Loaded): Row[] {
-  return sites
-    .map<Row>((site) => ({
-      key: `site:${site.id}`,
-      title: site.title,
-      at: new Date(site.updatedAt),
-      palette: site.palette,
-      detail: site.stance ? `${site.stance} on ${site.templateName}` : site.templateName,
-      href: `/studio/site/?id=${site.id}`,
-      action: 'Open site',
-    }))
-    .sort((a, b) => b.at.getTime() - a.at.getTime());
+/**
+ * A small tile in the template's own colors: its ground under a motif in
+ * its first ink. Which motif is a function of the slug, so a template keeps
+ * its tile; the artboard drew the same four.
+ */
+function Thumb({ entry }: { entry: TemplateIndexEntry | undefined }) {
+  const ground = entry?.colors[0] ?? '#f4f4f3';
+  const ink = entry?.colors[1] ?? '#0e0e13';
+  const soft = `color-mix(in oklab, ${ink} 55%, ${ground})`;
+  const motif = [...(entry?.slug ?? '')].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % 4;
+  const image = [
+    `repeating-radial-gradient(circle at 20% 118%, ${soft} 0 1px, transparent 1px 9px)`,
+    `repeating-linear-gradient(-45deg, ${soft} 0 5px, transparent 5px 14px)`,
+    `radial-gradient(${soft} 1.5px, transparent 1.7px) 0 0 / 12px 12px`,
+    `repeating-linear-gradient(0deg, ${soft} 0 1px, transparent 1px 16px), repeating-linear-gradient(90deg, ${soft} 0 1px, transparent 1px 16px)`,
+  ][motif];
+
+  return <span className={styles.thumb} style={{ background: `${image}, ${ground}` }} aria-hidden="true" />;
 }
 
-export default function AccountOverview() {
-  const [state, setState] = useState<State>({ status: 'loading' });
-  const [newestFirst, setNewestFirst] = useState(true);
-  // A download link answered by the Worker with "the cap is spent" lands
-  // here with ?downloads=capped. Read after mount, the way the gallery reads
-  // its page: a search param read during render bails the static route out.
-  const [capped, setCapped] = useState(false);
+async function saveCustomised(siteId: string) {
+  try {
+    toaster.add({ title: 'Preparing your customized download...' });
+    await downloadCustomisedSite(siteId);
+  } catch (cause) {
+    toaster.add({ title: cause instanceof Error ? cause.message : 'Could not build the download.' });
+  }
+}
+
+/** One chosen template: its name and kind, when it was customized and added, and what to do with it. */
+function TemplateRow({ row, entry }: { row: ChosenTemplate; entry: TemplateIndexEntry | undefined }) {
+  const name = entry?.name ?? row.slug;
+
+  return (
+    <div className={`${shell.row} ${styles.columns}`}>
+      <div className={styles.templateCell}>
+        <Thumb entry={entry} />
+        <div className={styles.templateText}>
+          <Link href={`/templates/${row.slug}/`} prefetch={false} className={shell.rowTitle}>
+            {name}
+          </Link>
+          <p className={shell.rowMeta}>
+            {entry?.topic ?? 'Template'}
+            <span className={styles.narrowOnly}>
+              {' '}
+              &#xB7; {row.site ? `Customized ${day(row.site.updatedAt)}` : 'Not customized yet'}
+            </span>
+          </p>
+        </div>
+      </div>
+      <p className={`${styles.date} ${row.site ? '' : styles.dateQuiet}`}>
+        {row.site ? day(row.site.updatedAt) : 'Not yet'}
+      </p>
+      <p className={styles.date}>{day(row.chosenAt)}</p>
+      <div className={styles.rowActions}>
+        <Menu.Root>
+          <Menu.Trigger className={styles.download}>
+            Download <span className={styles.caret} aria-hidden="true">&#x25BE;</span>
+          </Menu.Trigger>
+          <Menu.Portal>
+            <Menu.Positioner side="bottom" align="end" sideOffset={8} className={styles.positioner}>
+              <Menu.Popup className={styles.menu}>
+                {row.site ? (
+                  <>
+                    <Menu.Group>
+                      <Menu.GroupLabel className={styles.menuLabel}>Your customized version</Menu.GroupLabel>
+                      <Menu.Item className={styles.menuItem} onClick={() => saveCustomised(row.site!.id)}>
+                        HTML &amp; CSS
+                      </Menu.Item>
+                    </Menu.Group>
+                    <Menu.Separator className={styles.menuRule} />
+                  </>
+                ) : null}
+                <Menu.Group>
+                  <Menu.GroupLabel className={styles.menuLabel}>
+                    {row.site ? `Original ${name}` : `${name} (original)`}
+                  </Menu.GroupLabel>
+                  <Menu.Item className={styles.menuItem} render={<a href={`/downloads/${row.slug}-html.zip`} download />}>
+                    HTML &amp; CSS
+                  </Menu.Item>
+                  <Menu.Item className={styles.menuItem} render={<a href={`/downloads/${row.slug}-react.zip`} download />}>
+                    React project
+                  </Menu.Item>
+                </Menu.Group>
+              </Menu.Popup>
+            </Menu.Positioner>
+          </Menu.Portal>
+        </Menu.Root>
+        <Link href={customizeHref(row.slug, row)} prefetch={false} className={shell.rowAction}>
+          Customize <ArrowRight size={14} aria-hidden="true" />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+/** "Request more": the one message the beta allows, in a dialog. */
+function RequestDialog({
+  open,
+  onOpenChange,
+  mine,
+  email,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  mine: MyTemplates;
+  email: string;
+}) {
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(false);
+  const sent = mine.request !== null;
+
+  const send = async () => {
+    setBusy(true);
+
+    try {
+      await apiFetch('/api/account/templates/request', { method: 'POST', body: JSON.stringify({ note }) });
+      await refreshMyTemplates();
+    } catch (cause) {
+      toaster.add({ title: cause instanceof ApiError ? cause.message : 'Could not send that. Try again.' });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      <Dialog.Portal>
+        <Dialog.Backdrop className={styles.backdrop} />
+        <Dialog.Popup className={styles.dialog}>
+          <Dialog.Close className={styles.dialogClose} aria-label="Close">
+            &#xD7;
+          </Dialog.Close>
+          <p className={styles.dialogCount}>
+            {mine.used} of {mine.total} chosen &#xB7; {mine.left} left
+          </p>
+          <Dialog.Title className={styles.dialogTitle}>Need more templates?</Dialog.Title>
+          {sent ? (
+            <>
+              <div className={styles.sent}>
+                <p className={styles.sentTitle}>
+                  {mine.request!.status === 'granted'
+                    ? `Granted: ${mine.request!.granted} more`
+                    : mine.request!.status === 'declined'
+                      ? 'We could not add more this time'
+                      : 'Message sent'}
+                </p>
+                <p className={styles.sentBody}>
+                  {mine.request!.status === 'pending'
+                    ? `We'll reply to ${email} within a few days. You can send one message during beta.`
+                    : 'You can send one message during beta, and we have answered yours by email.'}
+                </p>
+              </div>
+              <div className={styles.dialogActions}>
+                <Dialog.Close className={styles.primary}>Done</Dialog.Close>
+              </div>
+            </>
+          ) : (
+            <>
+              <Dialog.Description className={styles.dialogBody}>
+                You&apos;ve chosen all {mine.total} templates. Tell us what you&apos;re building and what
+                you&apos;d need from Tabbied, and we&apos;ll reply by email.
+              </Dialog.Description>
+              <textarea
+                className={styles.textarea}
+                rows={4}
+                maxLength={2000}
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                placeholder="Your projects, how you use Tabbied, what would help"
+                aria-label="Your message"
+              />
+              <div className={styles.dialogActions}>
+                <Dialog.Close className={styles.secondary}>Cancel</Dialog.Close>
+                <button type="button" className={styles.primary} onClick={send} disabled={busy || !note.trim()}>
+                  Send
+                </button>
+              </div>
+            </>
+          )}
+        </Dialog.Popup>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+export default function AccountOverview({ index }: { index: TemplateIndexEntry[] }) {
+  const templates = useMyTemplates();
+  const { user } = useSessionUser();
+  const [full, setFull] = useState(false);
+  const [asking, setAsking] = useState(false);
+  const [tipOpen, setTipOpen] = useState(false);
+  const bySlug = new Map(index.map((entry) => [entry.slug, entry]));
+  const mine = templates.status === 'ready' ? templates : null;
 
   useEffect(() => {
-    setCapped(new URLSearchParams(window.location.search).get('downloads') === 'capped');
+    const params = new URLSearchParams(window.location.search);
+
+    setFull(params.get('templates') === 'full');
+    setAsking(params.get('request') === '1');
   }, []);
 
-  useEffect(() => {
-    let live = true;
-
-    Promise.all([
-      apiFetch<{ sites: SiteSummary[] }>('/api/studio/sites'),
-      // The usage failing should not take the sites with it.
-      apiFetch<{ downloads?: Downloads }>('/api/account/usage').catch(() => null),
-    ])
-      .then(([{ sites }, usage]) => {
-        if (live) setState({ status: 'ready', sites, downloads: usage?.downloads ?? null });
-      })
-      .catch(() => {
-        if (live) setState({ status: 'error' });
-      });
-
-    return () => {
-      live = false;
-    };
-  }, []);
-
-  const rows = useMemo(() => (state.status === 'ready' ? toRows(state) : []), [state]);
-  const ordered = newestFirst ? rows : [...rows].reverse();
-  const downloads = state.status === 'ready' ? state.downloads : null;
+  const used = mine?.used ?? 0;
+  const total = mine?.total ?? FREE_TEMPLATES;
+  const left = mine?.left ?? FREE_TEMPLATES;
+  const names = mine?.chosen.map((row) => bySlug.get(row.slug)?.name ?? row.slug) ?? [];
+  const tip = 'A template counts once, the first time you customize or download it. After that, downloads are unlimited.';
 
   return (
     <AccountPage
-      eyebrow="My account"
-      title="Usage this month"
-      badge="Free plan"
-      lede="Tabbied is free while we're in beta. There are no paid tiers yet, so every account gets the same limits."
+      eyebrow="Account overview"
+      title="Your templates"
+      back={false}
+      badge="Free beta"
+      lede={`Choose ${total} website templates for free during beta. Once you choose one, you can change its colors and patterns and download it as often as you like.`}
     >
-      {capped ? (
+      {full && mine && mine.left === 0 ? (
         <p className={styles.notice} role="status">
-          You have used all {downloads?.cap ?? 30} template downloads for this month.
-          {downloads ? ` The count starts over on ${resetsOn(downloads.resetsAt)}.` : ''}
+          You have chosen all {total} of your templates. Keep customizing and downloading those,
+          or ask for more below.
         </p>
       ) : null}
 
       {/* One bordered box split in two, as the artboard draws it: the ring on
-          paper counting the month's template downloads, and the AI card in
-          ink, which spans its half with the name, a "Not yet available" pill
-          opposite it, the credits it will meter, a hatched track standing in
-          for the bar, and the sentence. */}
+          paper counting the chosen templates, and the AI card in ink. */}
       <div className={styles.cards}>
         <div className={styles.gaugeCard}>
-          {downloads ? (
+          {mine ? (
             <>
-              <Gauge used={downloads.used} cap={downloads.cap} />
+              <Gauge used={used} total={total} />
               <div>
-                <p className={styles.gaugeLabel}>
-                  Template downloads
-                  <span
-                    className={styles.gaugeInfo}
-                    title="Each template counts once a month, however many times you take it and in either format. Customizing itself is free."
-                    aria-label="Each template counts once a month, however many times you take it and in either format. Customizing itself is free."
-                    role="img"
-                  >
-                    <Info size={14} aria-hidden="true" />
+                <div className={styles.gaugeLabel}>
+                  Templates chosen
+                  <span className={styles.tipWrap}>
+                    <button
+                      type="button"
+                      className={styles.tipButton}
+                      aria-label="How templates are counted"
+                      aria-expanded={tipOpen}
+                      onClick={() => setTipOpen((open) => !open)}
+                      onBlur={() => setTipOpen(false)}
+                    >
+                      i
+                    </button>
+                    {tipOpen ? (
+                      <span className={styles.tip} role="tooltip">
+                        {tip}
+                      </span>
+                    ) : null}
                   </span>
-                </p>
+                </div>
                 <p className={styles.gaugeCount}>
-                  {downloads.used} of {downloads.cap} this month
+                  {used} of {total} chosen &#xB7; {left} left
                 </p>
-                <p className={styles.gaugeResets}>Resets {resetsOn(downloads.resetsAt)}</p>
+                {names.length > 0 ? <p className={styles.gaugeNames}>{names.join(', ')}</p> : null}
               </div>
             </>
           ) : (
             <p className={shell.quiet}>
-              {state.status === 'loading'
-                ? "Reading this month's downloads..."
-                : 'Downloads are not available right now.'}
+              {templates.status === 'error' ? 'Your templates are not available right now.' : 'Reading your templates...'}
             </p>
           )}
         </div>
@@ -209,78 +360,76 @@ export default function AccountOverview() {
       </div>
 
       <div className={styles.recentsHead}>
-        <h2 className={shell.h2}>Custom sites</h2>
-        <div className={styles.recentsActions}>
-          <button
-            type="button"
-            className={styles.sort}
-            onClick={() => setNewestFirst((value) => !value)}
-            aria-label={newestFirst ? 'Sorted newest first. Show oldest first' : 'Sorted oldest first. Show newest first'}
-          >
-            <span>{newestFirst ? 'Newest first' : 'Oldest first'}</span>
-            <ChevronDown className={styles.sortGlyph} size={14} aria-hidden="true" />
-          </button>
-          {/* The artboard sends this to the gallery: a site starts from a
-              template, which is the one door into the customizer. */}
-          <Link href="/templates" prefetch={false} className={shell.cta}>
-            + Create new site
-          </Link>
+        <div className={styles.recentsTitle}>
+          <h2 className={shell.h2}>Chosen templates</h2>
+          <span className={styles.count}>
+            {used} of {total}
+          </span>
         </div>
+        {left > 0 ? (
+          <Link href="/templates" prefetch={false} className={shell.cta}>
+            Browse templates
+          </Link>
+        ) : null}
       </div>
 
       <div className={shell.panel}>
-        <div className={`${shell.tableHead} ${styles.columns}`} aria-hidden="true">
-          <div>Site</div>
-          <div>Details</div>
-          <div />
+        <div className={`${styles.head} ${styles.columns}`} aria-hidden="true">
+          <span>Template</span>
+          <span>Customized</span>
+          <span>Added</span>
+          <span />
         </div>
 
-        {state.status === 'loading' ? (
+        {templates.status === 'loading' ? (
           [0, 1].map((i) => (
             <div key={i} className={`${shell.row} ${styles.columns}`} aria-hidden="true">
-              <div>
-                <div className={styles.skeleton} style={{ width: '60%', marginBottom: 8 }} />
-                <div className={styles.skeleton} style={{ width: '30%', height: 12 }} />
-              </div>
-              <div className={styles.skeleton} style={{ width: '70%' }} />
+              <div className={styles.skeleton} style={{ width: '60%' }} />
+              <div className={styles.skeleton} style={{ width: '50%' }} />
+              <div className={styles.skeleton} style={{ width: '50%' }} />
               <div />
             </div>
           ))
-        ) : state.status === 'error' ? (
-          <p className={shell.empty}>Could not load your history right now.</p>
-        ) : ordered.length === 0 ? (
-          <p className={shell.empty}>
-            Nothing yet. Pick a <Link href="/templates">template</Link> and the site you
-            make from it will be here to come back to.
-          </p>
-        ) : (
-          ordered.map((row) => (
-            <div key={row.key} className={`${shell.row} ${styles.columns}`}>
-              <div>
-                <p className={shell.rowTitle}>{row.title}</p>
-                <p className={shell.rowMeta}>{when(row.at)}</p>
-              </div>
-              <p className={styles.detail}>
-                {row.palette.length > 0 ? (
-                  <span className={styles.swatches} aria-hidden="true">
-                    {row.palette.slice(0, 4).map((color, index) => (
-                      <span key={`${color}-${index}`} style={{ background: color }} />
-                    ))}
+        ) : templates.status === 'error' ? (
+          <p className={shell.empty}>Could not load your templates right now.</p>
+        ) : mine ? (
+          <>
+            {mine.chosen.map((row) => (
+              <TemplateRow key={row.slug} row={row} entry={bySlug.get(row.slug)} />
+            ))}
+            {mine.left > 0 ? (
+              <Link href="/templates" prefetch={false} className={styles.slot}>
+                <span className={styles.slotPlus} aria-hidden="true">
+                  +
+                </span>
+                <span>
+                  <span className={styles.slotTitle}>
+                    {mine.left === 1 ? '1 template left' : `${mine.left} templates left`}
                   </span>
-                ) : null}
-                {row.detail}
-              </p>
-              <Link href={row.href} prefetch={false} className={shell.rowAction}>
-                {row.action} <ArrowRight size={14} aria-hidden="true" />
+                  <span className={styles.slotNote}>
+                    Choose {mine.left === 1 ? 'it' : 'them'} from the template library
+                  </span>
+                </span>
               </Link>
-            </div>
-          ))
-        )}
+            ) : (
+              <div className={styles.limit}>
+                <div>
+                  <p className={styles.limitTitle}>You&apos;ve chosen all {mine.total} templates</p>
+                  <p className={styles.limitNote}>Keep customizing and downloading these as often as you like.</p>
+                </div>
+                <button type="button" className={styles.primary} onClick={() => setAsking(true)}>
+                  {mine.request ? 'Message sent' : 'Request more'}
+                </button>
+              </div>
+            )}
+          </>
+        ) : null}
       </div>
 
-      <p className={shell.footnote}>
-        Customizing a template's colors and patterns is free and is not counted.
-      </p>
+      {mine && mine.left === 0 ? (
+        <RequestDialog open={asking} onOpenChange={setAsking} mine={mine} email={user?.email ?? 'you'} />
+      ) : null}
+      <Toaster />
     </AccountPage>
   );
 }

@@ -302,56 +302,103 @@ for (const fixture of FIXTURES) {
   });
 }
 
-test.describe('the /templates gallery offers both formats', () => {
+// The gallery's cards follow the account (lib/myTemplates.ts): a visitor is
+// asked to sign in, a person sees Choose template or, for a template of
+// theirs, Customize and a Download menu of the two zips. The session and the
+// person's templates are stubbed, since `serve out` has no Worker.
+const signedIn = {
+  session: { id: 's', userId: 'u1', expiresAt: '2030-01-01T00:00:00Z' },
+  user: { id: 'u1', name: 'Pat', email: 'pat@example.com', emailVerified: true, role: null },
+};
+
+test.describe('the /templates gallery', () => {
   test.skip(
     !fs.existsSync(path.join(REPO_ROOT, 'out', 'downloads', 'werkraum-html.zip')),
     'run `node scripts/package-templates.mjs` first'
   );
 
-  test('every card links to an HTML and a React zip that exist', async ({
-    page,
-  }) => {
+  test.beforeEach(async ({ page }) => {
+    await page.route(/https:\/\/(use\.typekit\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)\//, (route) => route.abort());
+  });
+
+  test('a visitor is asked to sign in, and every card has both zips behind it', async ({ page }) => {
+    await page.route('**/api/auth/get-session', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
+    );
     await page.goto('/templates/');
 
-    const html = page.getByRole('link', { name: 'HTML', exact: true });
-    const react = page.getByRole('link', { name: 'React', exact: true });
-
-    const count = await html.count();
+    const asks = page.getByRole('link', { name: 'Sign in to use' });
+    await expect(asks.first()).toHaveAttribute('href', /^\/sign-in\/?\?next=%2Ftemplates%2F$/);
+    const count = await asks.count();
     expect(count).toBeGreaterThan(50);
-    await expect(react).toHaveCount(count);
 
-    // Every href must resolve to a file the packager actually wrote - a card
-    // for a site the packager skipped would otherwise be a dead button.
-    for (const link of [...(await html.all()), ...(await react.all())]) {
-      const href = await link.getAttribute('href');
-      expect(href).toMatch(/^\/downloads\/[a-z0-9-]+-(html|react)\.zip$/);
-      expect(
-        fs.existsSync(path.join(REPO_ROOT, 'out', href!.replace(/^\//, ''))),
-        `${href} should exist`
-      ).toBe(true);
+    // Every card's template has both packages: a card for a site the
+    // packager skipped would be a dead download once the template is chosen.
+    const slugs = await page.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
+      [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
+    );
+    expect(slugs.length).toBe(count);
+    for (const slug of slugs) {
+      for (const format of ['html', 'react']) {
+        expect(fs.existsSync(path.join(REPO_ROOT, 'out', 'downloads', `${slug}-${format}.zip`)), `${slug}-${format}.zip`).toBe(true);
+      }
     }
   });
 
-  test('clicking a button downloads a real zip', async ({ page }) => {
-    await page.goto('/templates/');
+  test('a chosen template downloads a real zip, and choosing another asks first', async ({ page }) => {
+    const chosen = ['werkraum'];
+    const posted: unknown[] = [];
 
-    for (const label of ['HTML', 'React']) {
-      const link = page.getByRole('link', { name: label, exact: true }).first();
+    await page.route('**/api/auth/get-session', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(signedIn) })
+    );
+    await page.route('**/api/account/templates', (route) => {
+      if (route.request().method() === 'POST') {
+        const body = route.request().postDataJSON() as { slug: string };
+        posted.push(body);
+        chosen.push(body.slug);
+        return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ slug: body.slug, chosen: true }) });
+      }
+
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          used: chosen.length,
+          total: 5,
+          left: 5 - chosen.length,
+          chosen: chosen.map((slug) => ({ slug, chosenAt: '2026-09-01T00:00:00Z', site: null })),
+          request: null,
+        }),
+      });
+    });
+
+    await page.goto('/templates/');
+    await expect(page.getByRole('button', { name: /^Yours \(1\)/ })).toBeVisible();
+    await page.getByRole('button', { name: /^Yours/ }).click();
+
+    const card = page.locator('a[href="/templates/werkraum/"]').locator('..');
+    await expect(card.getByText('Yours', { exact: true })).toBeVisible();
+    await expect(card.getByRole('link', { name: /Customize/ })).toHaveAttribute('href', '/studio/customize/?slug=werkraum');
+
+    for (const [label, format] of [
+      ['HTML & CSS', 'html'],
+      ['React project', 'react'],
+    ] as const) {
+      await card.getByRole('button', { name: /Download/ }).click();
+      const item = page.getByRole('menuitem', { name: label });
+      await expect(item).toHaveAttribute('href', `/downloads/werkraum-${format}.zip`);
       const download = page.waitForEvent('download');
-      await link.click();
+      await item.click();
       const file = await download;
-      expect(file.suggestedFilename()).toMatch(
-        new RegExp(`-${label.toLowerCase()}\\.zip$`)
-      );
+      expect(file.suggestedFilename()).toBe(`werkraum-${format}.zip`);
       const bytes = fs.readFileSync(await file.path());
-      expect(bytes.byteLength).toBeGreaterThan(2000);
 
       // Actually parse it. A size check alone passes on a corrupt archive, and
       // the packager writes these itself now (fflate, not the `zip` binary -
       // Cloudflare's build image has no `zip`), so nothing else would notice a
-      // malformed one: the deploy would happily serve 114 unopenable
-      // downloads. unzipSync throws on a bad central directory, and CRCs are
-      // checked per entry on inflate.
+      // malformed one. unzipSync throws on a bad central directory, and CRCs
+      // are checked per entry on inflate.
       const entries = unzipSync(bytes);
       const names = Object.keys(entries);
       expect(names.length).toBeGreaterThan(3);
@@ -361,6 +408,20 @@ test.describe('the /templates gallery offers both formats', () => {
       expect(roots.size).toBe(1);
       expect(names).toContain(`${[...roots][0]}/index.html`);
     }
+
+    // Another template: Choose template asks, and only the confirm spends one.
+    await page.getByRole('button', { name: 'All', exact: true }).click();
+    await page.getByRole('button', { name: 'Choose template' }).first().click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByText('1 of 5 templates chosen')).toBeVisible();
+    await expect(dialog.getByRole('heading', { name: /as one of your templates\?$/ })).toBeVisible();
+    await dialog.getByRole('button', { name: 'Cancel' }).click();
+    expect(posted).toEqual([]);
+
+    await page.getByRole('button', { name: 'Choose template' }).first().click();
+    await page.getByRole('dialog').getByRole('button', { name: 'Choose template' }).click();
+    await expect(page.getByRole('button', { name: /^Yours \(2\)/ })).toBeVisible();
+    expect(posted).toHaveLength(1);
   });
 
   test('the React package is a runnable Vite app', async () => {

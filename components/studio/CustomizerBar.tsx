@@ -24,7 +24,7 @@ import styles from './CustomizerBar.module.css';
 
 /** Where the way back leads, by who is looking at what. */
 const BACK = {
-  mine: { href: '/account/sites/', label: 'My account', aria: 'Back to your sites' },
+  mine: { href: '/account/', label: 'My account', aria: 'Back to your templates' },
   visitor: { href: '/templates', label: 'Templates', aria: 'Back to the templates' },
 };
 
@@ -126,8 +126,11 @@ export default function CustomizerBar({
                   <Menu.Item className={styles.menuItem} render={<Link href="/account/" prefetch={false} />}>
                     My account
                   </Menu.Item>
-                  <Menu.Item className={styles.menuItem} render={<Link href="/account/sites/" prefetch={false} />}>
-                    Custom sites
+                  <Menu.Item className={styles.menuItem} render={<Link href="/patterns/" prefetch={false} />}>
+                    Patterns
+                  </Menu.Item>
+                  <Menu.Item className={styles.menuItem} render={<Link href="/templates/" prefetch={false} />}>
+                    Websites
                   </Menu.Item>
                   <Menu.Item className={styles.menuItem} render={<Link href="/account/settings/" prefetch={false} />}>
                     Settings

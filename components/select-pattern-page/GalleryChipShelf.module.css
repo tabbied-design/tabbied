@@ -3,9 +3,9 @@
    header), so `position: sticky` pins it under the masthead across the whole
    grid scroll; the offset is the gallery's `--gallery-bar-h`, set where the
    shelf is placed (SelectPattern.module.css). The rows are the rail's rows
-   laid side by side; the trailing "All" pill opens the browser. Solid white
-   behind the chips, fading out over its bottom edge so the pinned bar melts
-   into the grid scrolling beneath it rather than sitting on a visible line. */
+   laid side by side; the trailing "All" pill opens the browser. Solid white,
+   closed by a hairline like the masthead above it: the fade it had read as a
+   drop shadow over the grid. */
 .shelf {
   position: sticky;
   top: 0;
@@ -13,13 +13,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 20px 18px;
-  background: linear-gradient(
-    to bottom,
-    #ffffff 0%,
-    #ffffff 76%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  padding: 10px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid oklch(0 0 0 / 0.08);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;

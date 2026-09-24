@@ -637,6 +637,147 @@
   color: var(--a-dim);
 }
 
+/* Every template the person may choose is chosen: the people who write in. */
+.statusFull::before {
+  background-color: oklch(0.78 0.14 75);
+}
+
+.plainList {
+  margin: 0;
+  padding: 0;
+  font: 400 14px / 1.9 var(--a-sans);
+  list-style: none;
+}
+
+/* -- Requests ----------------------------------------------------------------- */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 22px;
+}
+
+.tab {
+  padding: 9px 16px;
+  font: 500 14px var(--a-sans);
+  color: var(--a-ink);
+  background: #fff;
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.tab[aria-pressed='true'] {
+  color: #fff;
+  background: var(--a-ink);
+  border-color: var(--a-ink);
+}
+
+.requests {
+  display: grid;
+  gap: 14px;
+}
+
+.request {
+  padding: 22px 24px;
+  background: #fff;
+  border: 1px solid oklch(0 0 0 / 0.1);
+  border-radius: 14px;
+}
+
+.requestHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.requestMeta {
+  margin: 3px 0 0;
+  font: 400 13px var(--a-sans);
+  color: var(--a-dim);
+}
+
+.requestNote {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  font: 400 14.5px / 1.6 var(--a-sans);
+  color: var(--a-ink);
+  white-space: pre-wrap;
+  background: oklch(0 0 0 / 0.028);
+  border-radius: 10px;
+}
+
+.decide {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 999px;
+}
+
+.stepper button {
+  width: 32px;
+  height: 34px;
+  font: 400 16px var(--a-sans);
+  color: var(--a-ink);
+  background: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.stepper button:disabled {
+  color: oklch(0 0 0 / 0.25);
+  cursor: default;
+}
+
+.stepper span {
+  min-width: 22px;
+  font: 600 14px var(--a-sans);
+  text-align: center;
+}
+
+.grant {
+  padding: 8px 16px;
+  font: 600 13.5px var(--a-sans);
+  color: #fff;
+  background: var(--a-ink);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.outcome {
+  padding: 6px 12px;
+  font: 500 13px var(--a-sans);
+  color: oklch(0.4 0.01 260);
+  background: oklch(0 0 0 / 0.05);
+  border-radius: 999px;
+}
+
+.outcomeGranted {
+  color: oklch(0.35 0.1 168);
+  background: oklch(0.95 0.05 168);
+}
+
+.undo {
+  font: 400 13px var(--a-sans);
+  color: var(--a-dim);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
 .actions {
   display: flex;
   gap: 6px;

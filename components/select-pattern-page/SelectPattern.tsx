@@ -21,6 +21,7 @@ import {
 import { usePaletteEditor } from 'components/palette/usePaletteEditor';
 import PaletteEditorDialog from 'components/palette/PaletteEditorDialog';
 import GalleryTopBar from './GalleryTopBar';
+import { mixedPairs } from 'components/palette/MixedSwatches';
 import GalleryRail from './GalleryRail';
 import GalleryMobileHeader from './GalleryMobileHeader';
 import GalleryChipShelf from './GalleryChipShelf';
@@ -199,6 +200,13 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     [gallery, randomSpread]
   );
 
+  // The "Mixed" option's swatches: two colors each from the spread's first
+  // few palettes, so the option shows the spread it will apply.
+  const mixed = useMemo(
+    () => mixedPairs(randomSpread.slice(0, 12).map((palette) => palette?.colors)),
+    [randomSpread]
+  );
+
   // The palette every card wears when the spread is off, resolved once here
   // rather than by each card from the same store snapshot.
   const activePalette = useMemo(() => previewPalette(brandState), [brandState]);
@@ -325,6 +333,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
         selectedId={selectedId}
         onApply={(id) => applyPalette(id)}
         onRandom={chooseRandom}
+        mixed={mixed}
         onEditCustom={onEditCustom}
         onEditLibrary={onEditLibrary}
         onDelete={removePalette}
@@ -359,6 +368,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
           selectedId={selectedId}
           onApply={(id) => applyPalette(id)}
           onRandom={chooseRandom}
+          mixed={mixed}
           onEditCustom={onEditCustom}
           onEditLibrary={onEditLibrary}
           onDelete={removePalette}

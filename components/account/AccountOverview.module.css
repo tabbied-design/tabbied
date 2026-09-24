@@ -1,7 +1,7 @@
-/* The overview's own pieces: the two summary cards,
-   and the history rows. */
+/* The overview's own pieces: the two summary cards, the chosen templates,
+   and the "Request more" dialog. */
 
-/* The artboard's box: the download ring on paper, the AI card in ink. */
+/* The artboard's box: the chosen-templates ring on paper, the AI card in ink. */
 .cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -10,7 +10,7 @@
   border-radius: 14px;
 }
 
-/* The Worker sent a download click here because the month's cap is spent. */
+/* The Worker sent a download click here because every template is chosen. */
 .notice {
   margin: 0 0 20px;
   padding: 14px 18px;
@@ -64,12 +64,46 @@
   color: var(--s-ink);
 }
 
-/* The artboard's small (i): what counts, on hover. */
-.gaugeInfo {
+/* The artboard's small (i): what counts, on a click. */
+.tipWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.tipButton {
   display: inline-flex;
   align-items: center;
-  color: oklch(0.58 0.01 260);
-  cursor: help;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  font: italic 500 11px Georgia, serif;
+  color: oklch(0.5 0.01 260);
+  background: none;
+  border: 1px solid oklch(0 0 0 / 0.18);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.tipButton:hover,
+.tipButton[aria-expanded='true'] {
+  color: var(--s-ink);
+  border-color: var(--s-ink);
+}
+
+.tip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  z-index: 5;
+  width: 250px;
+  padding: 12px 14px;
+  font: 400 13px / 1.5 var(--s-sans);
+  color: #eef0f6;
+  background: #0e0e13;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px oklch(0 0 0 / 0.25);
+  transform: translateX(-50%);
 }
 
 .gaugeCount {
@@ -78,10 +112,10 @@
   color: oklch(0.45 0.01 260);
 }
 
-.gaugeResets {
+.gaugeNames {
   margin: 0;
-  font: 400 13px var(--s-sans);
-  color: oklch(0.58 0.01 260);
+  font: 400 13px / 1.5 var(--s-sans);
+  color: oklch(0.45 0.01 260);
 }
 
 .cardLabel {
@@ -147,9 +181,7 @@
   color: oklch(0.68 0.01 260);
 }
 
-/* -- Counts ---------------------------------------------------------------- */
-
-/* -- Recents --------------------------------------------------------------- */
+/* -- Chosen templates ------------------------------------------------------ */
 
 .recentsHead {
   display: flex;
@@ -159,65 +191,359 @@
   margin: 64px 0 20px;
 }
 
+.recentsTitle {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+}
+
 .recentsHead h2 {
   margin: 0;
 }
 
-.recentsActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-}
-
-.sort {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 10px 18px;
+.count {
   font: 400 14px var(--s-sans);
-  color: var(--s-ink);
-  background: none;
-  border: 1px solid oklch(0 0 0 / 0.14);
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background-color 150ms ease;
-}
-
-.sort:hover {
-  background-color: oklch(0 0 0 / 0.035);
-}
-
-.sortGlyph {
-  flex: none;
-  opacity: 0.55;
+  color: oklch(0.5 0.01 260);
 }
 
 .columns {
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr) 130px;
+  grid-template-columns: minmax(0, 2.3fr) minmax(0, 0.8fr) minmax(0, 0.8fr) 250px;
 }
 
-.detail {
+/* The artboard's header row: plain sans, not the mono of the other tables. */
+.head {
+  display: grid;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 26px;
+  font: 400 12.5px var(--s-sans);
+  color: oklch(0.45 0.01 260);
+  background-color: oklch(0 0 0 / 0.028);
+}
+
+.templateCell {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  min-width: 0;
+}
+
+.templateText {
+  min-width: 0;
+}
+
+.templateText a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.templateText a:hover {
+  text-decoration: underline;
+}
+
+.thumb {
+  flex: none;
+  width: 64px;
+  height: 44px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.08);
+}
+
+.date {
   margin: 0;
-  overflow: hidden;
-  font: 400 14px / 1.5 var(--s-sans);
-  color: oklch(0.42 0.01 260);
-  text-overflow: ellipsis;
+  font: 400 14px var(--s-sans);
+  color: var(--s-ink);
 }
 
-.swatches {
+.dateQuiet {
+  color: oklch(0.58 0.01 260);
+}
+
+/* The status repeats under the name once the columns are gone. */
+.narrowOnly {
+  display: none;
+}
+
+.rowActions {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.download {
   display: inline-flex;
-  flex-shrink: 0;
-  gap: 3px;
-  margin-right: 10px;
-  vertical-align: -2px;
+  gap: 6px;
+  align-items: center;
+  padding: 7px 14px;
+  font: 400 14px var(--s-sans);
+  color: var(--s-ink);
+  white-space: nowrap;
+  background: #fff;
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 999px;
+  cursor: pointer;
 }
 
-.swatches span {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+.download:hover,
+.download[data-popup-open] {
+  background-color: oklch(0 0 0 / 0.04);
+}
+
+.caret {
+  font-size: 9px;
+  opacity: 0.6;
+}
+
+/* The Download menu, portaled under <body>: it names its fonts outright. */
+.positioner {
+  z-index: 60;
+}
+
+.menu {
+  box-sizing: border-box;
+  width: 250px;
+  padding: 7px;
+  color: #0e0e13;
+  background: #fff;
+  border-radius: 14px;
+  outline: none;
+  box-shadow: 0 16px 40px oklch(0 0 0 / 0.18), 0 0 0 1px oklch(0 0 0 / 0.06);
+}
+
+.menuLabel {
+  padding: 9px 12px 4px;
+  font: 600 11px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: oklch(0.5 0.01 260);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.menuItem {
+  display: block;
+  padding: 9px 12px;
+  font: 500 13.5px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: #0e0e13;
+  text-decoration: none;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+.menuItem:hover,
+.menuItem[data-highlighted] {
+  color: #0e0e13;
+  background: oklch(0 0 0 / 0.05);
+}
+
+.menuRule {
+  height: 1px;
+  margin: 5px 12px;
+  background: oklch(0 0 0 / 0.08);
+}
+
+/* The empty slot: the way to the gallery while there are templates left. */
+.slot {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 26px;
+  color: var(--s-ink);
+  text-decoration: none;
+  border-top: 1px solid oklch(0 0 0 / 0.08);
+}
+
+.slot:hover {
+  color: var(--s-ink);
+  background-color: oklch(0 0 0 / 0.02);
+}
+
+.slotPlus {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 44px;
+  font: 300 20px var(--s-sans);
+  color: oklch(0.5 0.01 260);
+  border: 1px dashed oklch(0 0 0 / 0.22);
+  border-radius: 8px;
+}
+
+.slotTitle {
+  display: block;
+  margin-bottom: 3px;
+  font: 600 15px var(--s-sans);
+}
+
+.slotNote {
+  display: block;
+  font: 400 14px var(--s-sans);
+  color: oklch(0.5 0.01 260);
+}
+
+/* At the limit: what that means, and the one message the beta allows. */
+.limit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 26px;
+  background-color: oklch(0 0 0 / 0.028);
+  border-top: 1px solid oklch(0 0 0 / 0.08);
+}
+
+.limitTitle {
+  margin: 0 0 4px;
+  font: 600 15px var(--s-sans);
+  color: var(--s-ink);
+}
+
+.limitNote {
+  margin: 0;
+  font: 400 14px var(--s-sans);
+  color: oklch(0.45 0.01 260);
+}
+
+.primary,
+.secondary {
+  padding: 11px 20px;
+  font: 600 14px var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova', sans-serif;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.primary {
+  color: #fff;
+  background: #0e0e13;
+}
+
+.primary:hover:enabled {
+  background: #25252e;
+}
+
+.primary:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.secondary {
+  font-weight: 500;
+  color: #0e0e13;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.16);
+}
+
+.secondary:hover {
+  background: oklch(0 0 0 / 0.04);
+}
+
+/* -- "Request more" ----------------------------------------------------------
+   Portaled under <body>: the fonts are named outright. */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: oklch(0.1 0.01 260 / 0.55);
+}
+
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 91;
+  box-sizing: border-box;
+  width: min(480px, calc(100vw - 40px));
+  padding: 30px;
+  color: #0e0e13;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px oklch(0 0 0 / 0.3);
+  transform: translate(-50%, -50%);
+}
+
+.dialogClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  font: 400 20px / 1 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: oklch(0.45 0.01 260);
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dialogClose:hover {
+  background: oklch(0 0 0 / 0.05);
+}
+
+.dialogCount {
+  margin: 0 0 8px;
+  font: 400 11px var(--font-plex-mono, 'IBM Plex Mono'), ui-monospace, monospace;
+  color: oklch(0.4 0.13 175);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.dialogTitle {
+  margin: 0 0 10px;
+  font: 700 24px / 1.2 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.dialogBody {
+  margin: 0 0 16px;
+  font: 400 15px / 1.6 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: oklch(0.45 0.01 260);
+}
+
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  font: 400 14px / 1.5 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: #0e0e13;
+  resize: vertical;
+  border: 1px solid oklch(0 0 0 / 0.16);
+  border-radius: 10px;
+  outline: none;
+}
+
+.textarea:focus {
+  border-color: #0e0e13;
+}
+
+.dialogActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.sent {
+  margin: 6px 0 20px;
+  padding: 14px 16px;
+  background: oklch(0.96 0.03 168);
+  border-radius: 12px;
+}
+
+.sentTitle {
+  margin: 0 0 4px;
+  font: 600 15px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+}
+
+.sentBody {
+  margin: 0;
+  font: 400 14px / 1.5 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: oklch(0.4 0.01 260);
 }
 
 /* Shown while the three requests are in flight. Two rows' worth, so the page
@@ -255,9 +581,31 @@
   }
 }
 
+@media (max-width: 768px) {
+  /* A template per block: name and status, then its two actions. */
+  .head {
+    display: none;
+  }
+
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .date {
+    display: none;
+  }
+
+  .narrowOnly {
+    display: inline;
+  }
+
+  .rowActions {
+    justify-content: flex-start;
+  }
+}
+
 @media (max-width: 560px) {
-  /* The heading over its controls, not squeezed beside them: at 390px
-     "Custom sites" broke onto two lines next to the sort and the button. */
+  /* The heading over its button, not squeezed beside it. */
   .recentsHead {
     flex-direction: column;
     align-items: flex-start;
@@ -278,10 +626,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sort {
-    transition: none;
-  }
-
   .skeleton {
     animation: none;
   }

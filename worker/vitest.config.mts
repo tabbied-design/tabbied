@@ -22,6 +22,7 @@ export default defineConfig(async () => ({
           BETTER_AUTH_SECRET: 'test-secret-not-used-for-anything-real',
           DEV: '1',
           ADMIN_EMAILS: 'root@example.com, Second@Example.com',
+          TEAM_EMAIL: 'team@example.com',
         },
       },
     }),

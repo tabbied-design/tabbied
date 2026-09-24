@@ -44,6 +44,7 @@ import {
 import { ensurePalette } from '../lib/palette';
 import { checkQuota, recordUsage } from '../lib/quota';
 import { consume } from '../lib/ratelimit';
+import { claimTemplate, limitMessage, templateStatus } from '../lib/templates';
 import { requireUser } from '../lib/session';
 import { loadStudioIndex } from '../lib/studioIndex';
 import {
@@ -346,6 +347,17 @@ sites.post('/', async (c) => {
 
     if (refused) {
       return c.json(refused.body, refused.status);
+    }
+
+    // Saving a customized copy makes the template one of the person's, the
+    // same claim a first download makes (lib/templates.ts). A template
+    // already theirs is free to save again, as another site.
+    const claim = await claimTemplate(db, userId, slug);
+
+    if (!claim.ok) {
+      const status = await templateStatus(db, userId);
+
+      return c.json({ error: limitMessage(status.total), used: status.used, total: status.total }, 403);
     }
 
     const id = newId();

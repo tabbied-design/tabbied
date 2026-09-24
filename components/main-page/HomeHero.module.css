@@ -58,33 +58,32 @@
   padding: 100px 0 60px;
 }
 
-.eyebrowRow {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 40px;
-}
-
-.eyebrow,
-.scrollHint {
-  font: 400 12px var(--h-mono);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.eyebrow {
-  color: var(--h-mint);
-}
-
-.scrollHint {
-  color: oklch(0.7 0.01 260);
-}
-
 .title {
   margin: 0 0 24px;
   font: 700 96px / 1.02 var(--h-display);
   color: var(--h-fg);
   letter-spacing: -0.02em;
+}
+
+/* Wider than the lede's measure, into the column's right padding, so the
+   headline sets on two lines as the artboard has it; the size follows the
+   viewport below 1400px so the second line still fits. Measured: the line
+   runs 11.4 times its font size in the fallback sans, a little less in
+   proxima-nova. */
+@media (min-width: 768px) {
+  .title {
+    margin-right: calc(-1 * var(--h-pad));
+    font-size: clamp(64px, 6.9vw, 96px);
+  }
+}
+
+/* Two lines from a tablet up, as the artboard sets it: the second is held
+   together, and the size follows the viewport so it fits the column rather
+   than breaking before "shape." A phone lets it wrap. */
+@media (min-width: 768px) {
+  .titleLine {
+    white-space: nowrap;
+  }
 }
 
 /* "Free patterns" and "websites" are links to the two galleries, each in a
@@ -201,11 +200,16 @@ a.stat:hover {
 }
 
 /* The arrow rides the label rather than a corner of the cell, so the label
-   reads as the link it is. */
+   reads as the link it is. A box centered on the label's line, not a glyph
+   on its baseline: inline, the icon sat below the middle of the caps. */
 .statArrow {
-  font: 400 13px var(--h-sans);
-  line-height: inherit;
+  display: flex;
+  align-items: center;
   transition: transform 200ms ease;
+}
+
+.statArrow svg {
+  display: block;
 }
 
 a.stat:hover .statArrow {
@@ -249,7 +253,7 @@ a.stat:hover .statArrow {
    portrait tablet sits. */
 @media (max-width: 1023.98px) {
   .title {
-    font-size: 64px;
+    font-size: min(64px, 7.8vw);
   }
 }
 
@@ -265,11 +269,6 @@ a.stat:hover .statArrow {
 
   .titleBreak {
     display: none;
-  }
-
-  .eyebrowRow {
-    flex-wrap: wrap;
-    gap: 10px;
   }
 
   .statsGrid {

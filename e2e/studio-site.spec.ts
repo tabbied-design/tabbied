@@ -388,6 +388,6 @@ test.describe('studio site', () => {
     await page.goto('/studio/site/?id=nope');
 
     await expect(page.getByText('does not exist or was removed')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Custom sites', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Your templates', exact: true })).toBeVisible();
   });
 });

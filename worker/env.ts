@@ -32,6 +32,16 @@ export type Env = {
   AI_API_KEY?: string;
   RESEND_API_KEY?: string;
   /**
+   * The From line every message goes out as, e.g. `Tabbied <hello@tabbied.com>`.
+   * Its domain has to be verified in Resend. Defaults to that address.
+   */
+  MAIL_FROM?: string;
+  /**
+   * Comma-separated inboxes that hear about "Request more" messages. Falls
+   * back to ADMIN_EMAILS, then to MAIL_FROM's own address.
+   */
+  TEAM_EMAIL?: string;
+  /**
    * Comma-separated emails that are admins by configuration: granted the role
    * when the account is created and, for an account that already exists,
    * the next time it signs in. The alternative is the grant script against

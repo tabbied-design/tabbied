@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 import TemplatePreview from 'components/template/TemplatePreview';
+import { TEMPLATE_NAMES } from 'lib/templateIndex';
 import { pageMetadata, previewImage } from 'lib/seo';
 
 // A template, framed: the live page in a browser chrome under a bar with the
@@ -64,5 +65,5 @@ export default async function TemplatePreviewPage({
 
   if (!entry) notFound();
 
-  return <TemplatePreview slug={entry.slug} name={entry.name} topic={entry.topic} />;
+  return <TemplatePreview slug={entry.slug} name={entry.name} topic={entry.topic} names={TEMPLATE_NAMES} />;
 }

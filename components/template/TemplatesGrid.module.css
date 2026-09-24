@@ -176,12 +176,28 @@
   top: 14px;
   left: 14px;
   z-index: 3;
-  padding: 5px 9px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
   font: 600 11px var(--h-mono);
   color: var(--h-ink);
   letter-spacing: 0.06em;
   background: oklch(1 0 0 / 0.92);
   border-radius: 6px;
+}
+
+.numN {
+  padding: 5px 9px;
+}
+
+/* One of the person's templates: a mint tab joined to the number. */
+.yours {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 5px 9px 5px 8px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #3ff0b2, #2ee6f0);
 }
 
 .body {
@@ -245,40 +261,75 @@
   color: oklch(0.55 0.01 260);
 }
 
-/* ---- The download row ---- */
+/* ---- The footer ---- */
 
 .dl {
   display: flex;
   gap: 14px;
   align-items: center;
   justify-content: space-between;
+  min-height: 32px;
   margin-top: auto;
   padding: 14px 18px;
   border-top: 1px solid oklch(1 0 0 / 0.1);
 }
 
-.dlLabel {
-  font: 300 11px var(--h-mono);
-  color: oklch(0.6 0.01 260);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-/* The two formats travel together, so space-between has one thing to push
-   right rather than three to spread out. */
-.dlPills {
-  display: flex;
-  flex: none;
+/* The guest's "HTML . React": what a download is, before the ask to sign in. */
+.formats {
+  display: inline-flex;
   gap: 8px;
   align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  font: 400 12.5px var(--h-sans);
+  color: oklch(0.6 0.01 260);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.textLink,
+.quietLink,
+.quiet {
+  font: 400 12.5px var(--h-sans);
+  white-space: nowrap;
+}
+
+.textLink {
+  color: var(--h-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.textLink:hover,
+.textLink:focus-visible {
+  color: var(--h-mint, #3fffb2);
+}
+
+.quietLink {
+  color: oklch(0.66 0.01 260);
+  text-decoration: none;
+}
+
+.quietLink:hover,
+.quietLink:focus-visible {
+  color: var(--h-fg);
+}
+
+.quiet {
+  color: oklch(0.6 0.01 260);
 }
 
 .pill {
+  display: inline-flex;
   flex: none;
+  gap: 6px;
+  align-items: center;
   padding: 7px 14px;
   font: 400 12.5px var(--h-sans);
   color: var(--h-fg);
+  white-space: nowrap;
   text-decoration: none;
+  background: transparent;
   border: 1px solid oklch(1 0 0 / 0.24);
   border-radius: 999px;
   cursor: pointer;
@@ -286,9 +337,90 @@
 }
 
 .pill:hover,
-.pill:focus-visible {
+.pill:focus-visible,
+.pill[data-popup-open] {
   color: var(--h-fg);
   background: oklch(1 0 0 / 0.1);
+}
+
+/* "Choose template": the one filled pill, the card's first step. */
+.pillSolid {
+  font-weight: 500;
+  color: #0e0e13;
+  background: #eef0f6;
+  border-color: #eef0f6;
+}
+
+.pillSolid:hover,
+.pillSolid:focus-visible {
+  color: #0e0e13;
+  background: #fff;
+}
+
+/* Drawn while the session resolves, so the row does not jump. */
+.pillGhost {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.caret {
+  font-size: 9px;
+  opacity: 0.6;
+}
+
+.none {
+  margin: 8px 0 0;
+  font: 400 14px var(--h-sans);
+  color: oklch(0.66 0.01 260);
+}
+
+/* The Download menu. Portaled under <body>, outside the page wrapper that
+   declares --h-*, so it names its fonts outright. */
+.positioner {
+  z-index: 60;
+}
+
+.menu {
+  box-sizing: border-box;
+  width: 250px;
+  padding: 7px;
+  color: #0e0e13;
+  text-align: left;
+  background: #fff;
+  border-radius: 14px;
+  outline: none;
+  box-shadow: 0 16px 40px oklch(0 0 0 / 0.45);
+}
+
+.menuLabel {
+  padding: 9px 12px 4px;
+  font: 600 11px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: oklch(0.5 0.01 260);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.menuItem {
+  display: block;
+  padding: 9px 12px;
+  font: 500 13.5px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: #0e0e13;
+  text-decoration: none;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+.menuItem:hover,
+.menuItem[data-highlighted] {
+  color: #0e0e13;
+  background: oklch(0 0 0 / 0.05);
+}
+
+.menuRule {
+  height: 1px;
+  margin: 5px 12px;
+  background: oklch(0 0 0 / 0.08);
 }
 
 @media (prefers-reduced-motion: reduce) {

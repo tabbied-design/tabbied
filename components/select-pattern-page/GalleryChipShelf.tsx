@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import { revealPressed } from 'components/palette/revealPressed';
-import { ArrowLeftRight, ChevronRight, Pencil, X } from 'lucide-react';
+import { ChevronRight, Pencil, Shuffle, X } from 'lucide-react';
+import MixedSwatches from 'components/palette/MixedSwatches';
 import { RANDOM_PALETTE_ID, type BrandPalette } from 'lib/brandPalettes';
 import type { LibraryPalette } from 'lib/paletteLibrary';
 import { mergePalettes } from 'lib/paletteList';
@@ -22,7 +23,8 @@ const SHELF_LIMIT = 30;
 
 /**
  * Mobile: the merged palette list as a horizontal, scrollable shelf of the
- * rail's rows - "Random per pattern" first, then name, inks, pencil - laid
+ * rail's rows - "Mixed" (a random palette per pattern) first, then name,
+ * inks, pencil - laid
  * side by side. Custom chips carry a delete mark (single-click delete);
  * library chips a pencil (edit-as-copy). A trailing "All" pill opens the
  * embedded palette browser.
@@ -39,6 +41,7 @@ export default function GalleryChipShelf({
   selectedId,
   onApply,
   onRandom,
+  mixed,
   onEditCustom,
   onEditLibrary,
   onDelete,
@@ -51,6 +54,8 @@ export default function GalleryChipShelf({
   onApply: (id: string) => void;
   /** Draw a new random spread and make it the gallery's palette. */
   onRandom: () => void;
+  /** The swatches the "Mixed" option draws (MixedSwatches). */
+  mixed: [string, string][];
   onEditCustom: (palette: BrandPalette) => void;
   onEditLibrary: (palette: LibraryPalette) => void;
   onDelete: (id: string) => void;
@@ -92,12 +97,14 @@ export default function GalleryChipShelf({
             : `${styles.chip} ${styles.chipMain}`
         }
         aria-pressed={randomActive}
+        aria-label="Mixed: a random palette for every pattern"
         title="A random palette for every pattern"
         onClick={onRandom}
       >
-        <span className={styles.name}>Random per pattern</span>
+        <span className={styles.name}>Mixed</span>
+        <MixedSwatches pairs={mixed} className={styles.chips} />
         <span className={styles.randomMark} aria-hidden="true">
-          <ArrowLeftRight size={13} strokeWidth={1.8} />
+          <Shuffle size={13} strokeWidth={1.8} />
         </span>
       </button>
 
