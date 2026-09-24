@@ -262,6 +262,15 @@ describe('"Request more"', () => {
     for (const slug of slugs.slice(FREE, FREE * 2)) await choose(cookie, slug);
     expect((await ask(cookie, SECOND)).status).toBe(200);
 
+    // The directory reads the same allowance rule as the person's own page.
+    // It once read one grant row and counted 'granted' alone, so an account
+    // that had followed the emailed link showed "10 / 5" there.
+    const directory = async () =>
+      ((await SELF.fetch(`${ORIGIN}/api/admin/users?q=asker2`, { headers: { cookie: boss } }).then((r) => r.json())) as {
+        users: { email: string; chosen: number; allowance: number }[];
+      }).users.find((row) => row.email === 'asker2@example.com')!;
+    expect(await directory()).toMatchObject({ chosen: FREE * 2, allowance: FREE * 2 });
+
     type Listed = { counts: Record<string, number>; requests: { id: string; email: string; round: number; chosen: number; allowance: number; firstActivatedAt: string | null; need: string }[] };
     const list = async (tab: string) =>
       (await SELF.fetch(`${ORIGIN}/api/admin/requests?tab=${tab}`, { headers: { cookie: boss } }).then((r) => r.json())) as Listed;
@@ -284,6 +293,7 @@ describe('"Request more"', () => {
     const granted = await decide(request.id, { status: 'granted', granted: 3 });
     expect(await granted.json()).toMatchObject({ request: { status: 'granted', granted: 3 }, mailed: true });
     expect(await mine(cookie)).toMatchObject({ used: FREE * 2, total: FREE * 2 + 3, left: 3 });
+    expect(await directory()).toMatchObject({ chosen: FREE * 2, allowance: FREE * 2 + 3 });
     expect((await linkFor('asker2@example.com')).subject).toBe('You have more Tabbied templates');
 
     // Undo takes the grant away; nothing already chosen is taken back.
@@ -292,20 +302,39 @@ describe('"Request more"', () => {
     expect(await mine(cookie)).toMatchObject({ used: FREE * 2 + 1, total: FREE * 2, left: 0 });
   });
 
-  it('a resent link replaces the old one, and a lapsed link says so', async () => {
+  it('a resent link replaces the old one, once the first is due, and a lapsed link says so', async () => {
     const cookie = await signIn('resender@example.com');
+    const me = await userId('resender@example.com');
     for (const slug of await otherSlugs(FREE)) await choose(cookie, slug);
     await ask(cookie, FIRST);
     const old = (await linkFor('resender@example.com')).url;
+    const resend = () =>
+      SELF.fetch(`${ORIGIN}/api/account/templates/request/resend`, { method: 'POST', headers: { ...json, cookie } });
 
-    const resend = await SELF.fetch(`${ORIGIN}/api/account/templates/request/resend`, { method: 'POST', headers: { ...json, cookie } });
-    expect(resend.status, await resend.clone().text()).toBe(200);
+    // Not before the first email is due: Resend still holds that message,
+    // and a new token now would make the link in it dead on arrival.
+    const early = await resend();
+    expect(early.status, await early.clone().text()).toBe(409);
+    expect((await linkFor('resender@example.com')).url).toBe(old);
+
+    await env.DB.prepare('UPDATE template_request SET send_at = unixepoch() - 60 WHERE user_id = ?').bind(me).run();
+    const sent = await resend();
+    expect(sent.status, await sent.clone().text()).toBe(200);
     const fresh = (await linkFor('resender@example.com')).url;
     expect(fresh).not.toBe(old);
     expect((await follow(old)).headers.get('location')).toBe('/account/?activated=unknown');
 
-    await env.DB.prepare('UPDATE template_request SET expires_at = unixepoch() - 60 WHERE user_id = ?').bind(await userId('resender@example.com')).run();
-    expect((await follow(fresh)).headers.get('location')).toBe('/account/?activated=expired');
+    // Each resend is a real email, so a few in a row is a burst: three tries
+    // in ten minutes, the refused one above included.
+    expect((await resend()).status).toBe(200);
+    const limited = await resend();
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get('retry-after')).toMatch(/^\d+$/);
+    const newest = (await linkFor('resender@example.com')).url;
+    expect(newest).not.toBe(fresh);
+
+    await env.DB.prepare('UPDATE template_request SET expires_at = unixepoch() - 60 WHERE user_id = ?').bind(me).run();
+    expect((await follow(newest)).headers.get('location')).toBe('/account/?activated=expired');
     expect((await mine(cookie)).total).toBe(FREE);
   });
 });

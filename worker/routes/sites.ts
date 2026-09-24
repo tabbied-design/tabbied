@@ -44,7 +44,7 @@ import {
 import { ensurePalette } from '../lib/palette';
 import { checkQuota, recordUsage } from '../lib/quota';
 import { consume } from '../lib/ratelimit';
-import { claimTemplate, limitMessage, templateStatus } from '../lib/templates';
+import { claimTemplate, limitMessage, releaseTemplate, templateStatus } from '../lib/templates';
 import { requireUser } from '../lib/session';
 import { loadStudioIndex } from '../lib/studioIndex';
 import {
@@ -363,30 +363,45 @@ sites.post('/', async (c) => {
     const id = newId();
     const now = new Date();
 
-    await db.insert(site).values({
-      id,
-      userId,
-      generationId: null,
-      directionIndex: null,
-      slug,
-      title: title ?? entry.name,
-      specVersion: spec.specVersion,
-      templateHash,
-      createdAt: now,
-      updatedAt: now,
-    });
+    // One batch, so a site cannot exist without its first revision. And a
+    // claim this request made is given back if the write fails, as the
+    // download route gives back a claim whose zip was a miss: a D1 error
+    // here would otherwise spend one of the five on a site never saved.
+    try {
+      await db.batch([
+        db.insert(site).values({
+          id,
+          userId,
+          generationId: null,
+          directionIndex: null,
+          slug,
+          title: title ?? entry.name,
+          specVersion: spec.specVersion,
+          templateHash,
+          createdAt: now,
+          updatedAt: now,
+        }),
+        db.insert(revision).values({
+          id: newId(),
+          siteId: id,
+          n: 1,
+          edits: JSON.stringify(edits),
+          instruction: null,
+          source: 'manual',
+          model: 'none',
+          responseId: null,
+          createdAt: now,
+        }),
+      ]);
+    } catch (error) {
+      if (claim.id) {
+        await releaseTemplate(db, claim.id).catch((cause) =>
+          console.error('[templates] could not give back the claim after a failed save', cause)
+        );
+      }
 
-    await db.insert(revision).values({
-      id: newId(),
-      siteId: id,
-      n: 1,
-      edits: JSON.stringify(edits),
-      instruction: null,
-      source: 'manual',
-      model: 'none',
-      responseId: null,
-      createdAt: now,
-    });
+      throw error;
+    }
 
     return c.json({ id, source: 'template', revision: 1, title: title ?? entry.name });
   }

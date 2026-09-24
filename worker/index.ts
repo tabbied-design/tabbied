@@ -396,7 +396,11 @@ app.get('/downloads/:file', async (c, next) => {
     throw error;
   }
 
-  if (!zip.ok) await giveBack();
+  // Bytes went out, or the browser already holds them (a 304 to a
+  // conditional request): the choice stands. Anything else served nothing,
+  // whether the 404 for a zip the packager never wrote or an error from the
+  // binding, so the template is given back.
+  if (!zip.ok && zip.status !== 304) await giveBack();
 
   return zip;
 });

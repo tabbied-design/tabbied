@@ -65,7 +65,8 @@ export type MyTemplatesState =
 export const FREE_TEMPLATES = 5;
 
 let state: MyTemplatesState = { status: 'loading' };
-let inflight: Promise<void> | null = null;
+/** The newest read; an older one that answers after it is ignored. */
+let newest: Promise<void> | null = null;
 let loadedFor: string | null = null;
 const listeners = new Set<() => void>();
 
@@ -74,16 +75,26 @@ function set(next: MyTemplatesState) {
   listeners.forEach((listener) => listener());
 }
 
-/** Read the person's templates again, e.g. after a choice made elsewhere. */
+/**
+ * Read the person's templates again, e.g. after a choice. Every call is a
+ * new request and only the newest one settles the store. Sharing a read
+ * already in flight looked like a saving and was a bug: the read had left
+ * before the choice was posted, so it answered from before it, and a card
+ * kept saying "Choose template" for a template the toast had just called
+ * theirs.
+ */
 export function refreshMyTemplates(): Promise<void> {
-  inflight ??= apiFetch<MyTemplates>('/api/account/templates')
-    .then((body) => set({ status: 'ready', ...body }))
-    .catch(() => set({ status: 'error' }))
-    .finally(() => {
-      inflight = null;
+  const read: Promise<void> = apiFetch<MyTemplates>('/api/account/templates')
+    .then((body) => {
+      if (newest === read) set({ status: 'ready', ...body });
+    })
+    .catch(() => {
+      if (newest === read) set({ status: 'error' });
     });
 
-  return inflight;
+  newest = read;
+
+  return read;
 }
 
 /**

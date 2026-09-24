@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono, type Context } from 'hono';
 import { and, desc, eq, gte, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { drizzle } from 'drizzle-orm/d1';
@@ -23,6 +23,7 @@ import {
   templateStatus,
 } from '../lib/templates';
 import { DAILY_CAPS, startOfUtcDay, type Endpoint } from '../lib/quota';
+import { consume } from '../lib/ratelimit';
 import { requireUser } from '../lib/session';
 
 // A person's own account data beyond what better-auth serves: today's spend
@@ -30,6 +31,24 @@ import { requireUser } from '../lib/session';
 // message, and the recent ledger. Session-scoped throughout.
 
 const account = new Hono<{ Bindings: Env }>();
+
+/**
+ * Burst gates, one atomic statement each (lib/ratelimit.ts). Both request
+ * routes send a real email, and a resend could otherwise be looped for as
+ * many messages as a script cared to send; a request is already held to
+ * one open at a time, so its gate is roomy enough for a form answered a few
+ * times over. Choosing sends nothing and is idempotent, and gets the same
+ * generous gate a manual save has.
+ */
+const BURST = {
+  choose: { max: 30, windowSeconds: 60 },
+  request: { max: 10, windowSeconds: 60 },
+  resend: { max: 3, windowSeconds: 10 * 60 },
+};
+
+/** The answer every gate here gives, with how long to wait. */
+const tooFast = (c: Context<{ Bindings: Env }>, retryAfter: number, message = 'Too fast. Try again in a minute.') =>
+  c.json({ error: message }, 429, { 'retry-after': String(retryAfter) });
 
 account.get('/usage', async (c) => {
   const userId = await requireUser(c.env, c.req.raw.headers);
@@ -102,15 +121,18 @@ account.get('/templates', async (c) => {
   }
 
   const db = drizzle(c.env.DB, { schema });
-  const [status, sites, request] = await Promise.all([
+  const [status, sites, history] = await Promise.all([
     templateStatus(db, userId),
     db
       .select({ id: site.id, slug: site.slug, updatedAt: site.updatedAt })
       .from(site)
       .where(eq(site.userId, userId))
       .orderBy(desc(site.updatedAt)),
-    requestOf(db, userId),
+    // Newest first: the latest request is what the page shows, and the
+    // whole history says whether the emailed-link round has been used.
+    requestsOf(db, userId),
   ]);
+  const request = history[0] ?? null;
 
   const newest = new Map<string, { id: string; updatedAt: Date }>();
 
@@ -130,7 +152,7 @@ account.get('/templates', async (c) => {
     request: request ? publicRequest(request) : null,
     // Whether the emailed-link round has been used: a first request is
     // answered by the person, every later one by the team.
-    firstUsed: request !== null && (await requestsOf(db, userId)).some((row) => row.round === 1),
+    firstUsed: history.some((row) => row.round === 1),
   });
 });
 
@@ -142,6 +164,11 @@ account.post('/templates', async (c) => {
   if (!userId) {
     return c.json({ error: 'Sign in to choose a template.' }, 401);
   }
+
+  const db = drizzle(c.env.DB, { schema });
+  const burst = await consume(db, { key: `choose:${userId}`, ...BURST.choose });
+
+  if (!burst.ok) return tooFast(c, burst.retryAfter);
 
   const body = (await c.req.json().catch(() => null)) as { slug?: unknown } | null;
   const slug = typeof body?.slug === 'string' ? body.slug : '';
@@ -156,7 +183,6 @@ account.post('/templates', async (c) => {
     return c.json({ error: 'No such template.' }, 404);
   }
 
-  const db = drizzle(c.env.DB, { schema });
   const claim = await claimTemplate(db, userId, slug);
   const status = await templateStatus(db, userId);
   const counts = { used: status.used, total: status.total, left: status.left };
@@ -198,7 +224,12 @@ const requestSchema = z.object({
   note: z.string().trim().max(REQUEST_NOTE_MAX).optional(),
 });
 
-/** The link in a first request's email: the Worker's own route, on this origin. */
+/**
+ * The link in a first request's email: the Worker's own route, on the
+ * configured origin. Never the host the request arrived on: under `npm run
+ * dev` that is the Worker's port and not the site's, and on a preview alias
+ * it is the alias, which is what would then be mailed out.
+ */
 const activationUrl = (origin: string, token: string) =>
   `${origin}/api/account/templates/activate?token=${encodeURIComponent(token)}`;
 
@@ -228,13 +259,17 @@ account.post('/templates/request', async (c) => {
     return c.json({ error: 'Sign in to ask for more templates.' }, 401);
   }
 
+  const db = drizzle(c.env.DB, { schema });
+  const burst = await consume(db, { key: `request:${userId}`, ...BURST.request });
+
+  if (!burst.ok) return tooFast(c, burst.retryAfter);
+
   const parsed = requestSchema.safeParse(await c.req.json().catch(() => null));
 
   if (!parsed.success) {
     return c.json({ error: 'Choose one of the answers offered for each question.' }, 400);
   }
 
-  const db = drizzle(c.env.DB, { schema });
   const [status, history, person] = await Promise.all([
     templateStatus(db, userId),
     requestsOf(db, userId),
@@ -254,7 +289,7 @@ account.post('/templates/request', async (c) => {
   const answers = parsed.data;
   const first = !history.some((row) => row.round === 1);
   const last = history[0];
-  const origin = new URL(c.req.url).origin;
+  const origin = c.env.PUBLIC_ORIGIN;
 
   if (first) {
     if (!answers.role || !answers.building || !answers.sites) {
@@ -343,14 +378,29 @@ account.post('/templates/request/resend', async (c) => {
   }
 
   const db = drizzle(c.env.DB, { schema });
+  const burst = await consume(db, { key: `resend:${userId}`, ...BURST.resend });
+
+  if (!burst.ok) {
+    return tooFast(c, burst.retryAfter, 'You have asked for a new link a few times already. Try again in a few minutes.');
+  }
+
   const [request, person, status] = await Promise.all([requestOf(db, userId), personOf(db, userId), templateStatus(db, userId)]);
 
   if (!request || request.round !== 1 || request.status !== 'sent' || !person) {
     return c.json({ error: 'There is no link waiting to be sent.' }, 409);
   }
 
-  const { token, hash } = await newLinkToken();
   const now = new Date();
+
+  // Not before the first email is due. Resend still holds that message, and
+  // a new token now would make the link in it dead on arrival; the account
+  // page offers the button only once the email should have come, and this
+  // holds a caller that did not wait to the same.
+  if (request.sendAt && request.sendAt.getTime() > now.getTime()) {
+    return c.json({ error: 'Your email has not gone out yet. You can send a new one once it is due.' }, 409);
+  }
+
+  const { token, hash } = await newLinkToken();
 
   await db
     .update(schema.templateRequest)
@@ -361,7 +411,7 @@ account.post('/templates/request/resend', async (c) => {
     await sendApprovalLink(c.env, {
       email: person.email,
       name: person.name,
-      url: activationUrl(new URL(c.req.url).origin, token),
+      url: activationUrl(c.env.PUBLIC_ORIGIN, token),
       granted: FIRST_REQUEST_GRANT,
       total: status.total + FIRST_REQUEST_GRANT,
     });

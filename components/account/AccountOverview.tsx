@@ -20,7 +20,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Dialog } from '@base-ui-components/react/dialog';
-import { Menu } from '@base-ui-components/react/menu';
 import { ArrowRight } from 'lucide-react';
 import Toaster, { toaster } from 'components/Toaster';
 import { ApiError, apiFetch } from 'lib/apiFetch';
@@ -35,8 +34,8 @@ import {
   type ChosenTemplate,
   type MyTemplates,
 } from 'lib/myTemplates';
-import { downloadCustomisedSite } from 'lib/studioDownload';
 import type { TemplateIndexEntry } from 'lib/templateIndex';
+import DownloadMenu, { type DownloadMenuClasses } from 'components/template/DownloadMenu';
 import AccountPage from './AccountPage';
 import shell from './account.module.css';
 import styles from './AccountOverview.module.css';
@@ -104,14 +103,16 @@ function Thumb({ entry }: { entry: TemplateIndexEntry | undefined }) {
   return <span className={styles.thumb} style={{ background: `${image}, ${ground}` }} aria-hidden="true" />;
 }
 
-async function saveCustomised(siteId: string) {
-  try {
-    toaster.add({ title: 'Preparing your customized download...' });
-    await downloadCustomisedSite(siteId);
-  } catch (cause) {
-    toaster.add({ title: cause instanceof Error ? cause.message : 'Could not build the download.' });
-  }
-}
+/** The Download menu in this module's shape; the menu itself is DownloadMenu's. */
+const MENU: DownloadMenuClasses = {
+  trigger: styles.download,
+  caret: styles.caret,
+  positioner: styles.positioner,
+  menu: styles.menu,
+  menuLabel: styles.menuLabel,
+  menuItem: styles.menuItem,
+  menuRule: styles.menuRule,
+};
 
 /** One chosen template: its name and kind, when it was customized and added, and what to do with it. */
 function TemplateRow({ row, entry }: { row: ChosenTemplate; entry: TemplateIndexEntry | undefined }) {
@@ -139,39 +140,7 @@ function TemplateRow({ row, entry }: { row: ChosenTemplate; entry: TemplateIndex
       </p>
       <p className={styles.date}>{day(row.chosenAt)}</p>
       <div className={styles.rowActions}>
-        <Menu.Root>
-          <Menu.Trigger className={styles.download}>
-            Download <span className={styles.caret} aria-hidden="true">&#x25BE;</span>
-          </Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner side="bottom" align="end" sideOffset={8} className={styles.positioner}>
-              <Menu.Popup className={styles.menu}>
-                {row.site ? (
-                  <>
-                    <Menu.Group>
-                      <Menu.GroupLabel className={styles.menuLabel}>Your customized version</Menu.GroupLabel>
-                      <Menu.Item className={styles.menuItem} onClick={() => saveCustomised(row.site!.id)}>
-                        HTML &amp; CSS
-                      </Menu.Item>
-                    </Menu.Group>
-                    <Menu.Separator className={styles.menuRule} />
-                  </>
-                ) : null}
-                <Menu.Group>
-                  <Menu.GroupLabel className={styles.menuLabel}>
-                    {row.site ? `Original ${name}` : `${name} (original)`}
-                  </Menu.GroupLabel>
-                  <Menu.Item className={styles.menuItem} render={<a href={`/downloads/${row.slug}-html.zip`} download />}>
-                    HTML &amp; CSS
-                  </Menu.Item>
-                  <Menu.Item className={styles.menuItem} render={<a href={`/downloads/${row.slug}-react.zip`} download />}>
-                    React project
-                  </Menu.Item>
-                </Menu.Group>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
+        <DownloadMenu name={name} chosen={row} side="bottom" classes={MENU} />
         <Link href={customizeHref(row.slug, row)} prefetch={false} className={shell.rowAction}>
           Customize <ArrowRight size={14} aria-hidden="true" />
         </Link>

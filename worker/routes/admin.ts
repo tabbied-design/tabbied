@@ -8,7 +8,7 @@ import type { Env } from '../env';
 import { buildAuth } from '../auth';
 import { isDev } from '../env';
 import { notifyRequestDecision } from '../lib/mail';
-import { FREE_TEMPLATES, MAX_GRANT, templateStatus } from '../lib/templates';
+import { FREE_TEMPLATES, MAX_GRANT, allowanceSql, templateStatus } from '../lib/templates';
 import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
 import { authConfigured } from '../lib/session';
 import { loadEditableCatalog } from '../lib/templateAssets';
@@ -145,7 +145,9 @@ admin.get('/users', async (c) => {
       sites: sql<number>`(select count(*) from ${site} where ${site}.user_id = ${user}.id)`,
       generations: sql<number>`(select count(*) from ${generation} where ${generation}.user_id = ${user}.id)`,
       chosen: sql<number>`(select count(*) from ${templateChoice} where ${templateChoice}.user_id = ${user}.id)`,
-      allowance: sql<number>`(${FREE_TEMPLATES} + coalesce((select granted from ${templateRequest} where ${templateRequest}.user_id = ${user}.id and ${templateRequest}.status = 'granted'), 0))`,
+      // The same rule the person's own page and the claim apply
+      // (lib/templates.ts), correlated to this row.
+      allowance: sql<number>`${allowanceSql(sql`${user}.id`)}`,
     })
     .from(user)
     .where(q ? or(like(user.email, `%${q}%`), like(user.name, `%${q}%`)) : undefined)
@@ -263,7 +265,7 @@ admin.get('/requests', async (c) => {
         decidedAt: templateRequest.decidedAt,
         createdAt: templateRequest.createdAt,
         chosen: sql<number>`(select count(*) from ${templateChoice} where ${templateChoice}.user_id = ${templateRequest}.user_id)`,
-        allowance: sql<number>`(${FREE_TEMPLATES} + coalesce((select sum(r2.granted) from ${templateRequest} r2 where r2.user_id = ${templateRequest}.user_id and r2.status in ('activated', 'granted')), 0))`,
+        allowance: sql<number>`${allowanceSql(sql`${templateRequest}.user_id`)}`,
         // The person's emailed-link request, for "+5 via email link on ...".
         firstActivatedAt: sql<number | null>`(select r1.decided_at from ${templateRequest} r1 where r1.user_id = ${templateRequest}.user_id and r1.round = 1 and r1.status = 'activated')`,
       })
@@ -332,7 +334,10 @@ admin.post('/requests/:id', async (c) => {
       status: decision.status,
       granted,
       total: status.total,
-      origin: new URL(c.req.url).origin,
+      // The configured origin, as the sign-up and password mails use, never
+      // the host this request arrived on: a preview alias would otherwise
+      // be what gets mailed out.
+      origin: c.env.PUBLIC_ORIGIN,
     })
       .then(() => true)
       .catch((error) => {

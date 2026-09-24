@@ -834,7 +834,8 @@ another). Five things worth not re-litigating:
   `worker/index.ts` requires a session and runs `claimTemplate`
   (`worker/lib/templates.ts`) before serving the zip through `env.ASSETS`;
   a miss gives a choice this request made back, so a zip the packager never
-  wrote costs nothing. The check and the write are one `INSERT OR IGNORE
+  wrote costs nothing (a 304 is not a miss: the browser already holds the
+  bytes, and the choice stands). The check and the write are one `INSERT OR IGNORE
   ... SELECT ... WHERE count < allowance`, over a unique `(user, slug)`
   index: read, compare, then write let 154 concurrent requests all read a
   count under the old cap, and one account took 51. A HEAD or a Range
@@ -863,7 +864,11 @@ another). Five things worth not re-litigating:
   single-use link, `GET /api/account/templates/activate?token=`, that adds
   5 and lands on `/account/?activated=5`. Only the token's SHA-256 is kept,
   the link lapses after 7 days, and a resend mints a new one (the old link
-  stops working). The five-minute wait is the design's, so the request
+  stops working). A resend is refused until the first email is due, since
+  Resend still holds that message and a new token would make its link dead
+  on arrival, and is held to three in ten minutes; every route here that
+  sends mail sits behind a `consume` burst gate, because each call is a
+  real message. The five-minute wait is the design's, so the request
   reads as looked at rather than paid out; the account row says "on its
   way" until the send time, then "approved" with a Resend button. Every
   later request carries those answers forward and adds how many, whether
@@ -872,7 +877,13 @@ another). Five things worth not re-litigating:
   `/admin/requests/`, where granting adds 1 to 20, declining adds none, Undo
   puts it back, and a decision mails the person. One request may be open at
   a time, checked in the insert itself (`openRequest`). The allowance is
-  five plus every `granted` whose status is `activated` or `granted`.
+  five plus every `granted` whose status is `activated` or `granted`, and
+  that rule is one `allowanceSql`, read by the person's page, the claim and
+  both admin lists alike; the users directory once carried a copy of its
+  own that read a single grant row and left `activated` out, so an account
+  that had followed the link showed 10 / 5 there. Emailed links are built
+  on `PUBLIC_ORIGIN`, as the auth mails are, never on the host a request
+  arrived on.
   Migration 0008 rebuilt `template_request` for this by hand: drizzle's
   output copied columns the old table did not have and switched foreign
   keys off, which D1 does not allow.
