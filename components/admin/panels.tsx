@@ -30,6 +30,10 @@ type Overview = {
   aiCallsToday: number;
   aiCostToday: number;
   imagesThisWeek: number;
+  templatesChosen: number;
+  averageChosen: number;
+  freeTemplates: number;
+  pendingRequests: number;
   /** Absent on rows from before the chart existed - read as no sign-ups. */
   signupsByDay?: { day: string; n: number }[];
 };
@@ -103,6 +107,13 @@ export function OverviewPanel() {
   const stats: { label: string; value: string; note: string; dark?: boolean }[] = [
     { label: 'Total users', value: data.users.toLocaleString(), note: `+${data.newUsersThisWeek} this week` },
     { label: 'New users', value: data.newUsersThisWeek.toLocaleString(), note: 'In the last 7 days' },
+    { label: 'Templates chosen', value: data.templatesChosen.toLocaleString(), note: 'Across all users' },
+    {
+      label: 'Average chosen',
+      value: data.averageChosen.toLocaleString(undefined, { maximumFractionDigits: 1 }),
+      note: `Of ${data.freeTemplates} templates per user`,
+    },
+    { label: 'Requests', value: data.pendingRequests.toLocaleString(), note: 'Waiting for an answer' },
     { label: 'Generations', value: data.generationsThisWeek.toLocaleString(), note: 'Direction sets this week' },
     { label: 'Sites made', value: data.sitesThisWeek.toLocaleString(), note: 'Full documents this week' },
     { label: 'Fallback rate', value: `${Math.round(data.fallbackRate * 100)}%`, note: 'Of this week\'s generations' },
@@ -148,15 +159,22 @@ type UserRow = {
   createdAt: string;
   sites: number;
   generations: number;
+  /** Templates chosen, against the person's allowance (five plus any grant). */
+  chosen: number;
+  allowance: number;
 };
 
-const FILTERS = ['All users', 'Active', 'Banned', 'Admins', 'Unverified'] as const;
+const FILTERS = ['All users', 'Active', 'All chosen', 'Banned', 'Admins', 'Unverified'] as const;
 type Filter = (typeof FILTERS)[number];
+
+const allChosen = (row: UserRow) => row.chosen >= row.allowance;
 
 const matchesFilter = (row: UserRow, filter: Filter) =>
   filter === 'All users'
     ? true
-    : filter === 'Active'
+    : filter === 'All chosen'
+      ? allChosen(row)
+      : filter === 'Active'
       ? !row.banned && row.emailVerified
       : filter === 'Banned'
         ? Boolean(row.banned)
@@ -164,10 +182,11 @@ const matchesFilter = (row: UserRow, filter: Filter) =>
           ? row.role === 'admin'
           : !row.emailVerified;
 
-/** Active, banned, or not yet verified - in that order of what matters. */
+/** Banned, unverified, at the limit, or active - in that order of what matters. */
 function Status({ row }: { row: UserRow }) {
   if (row.banned) return <span className={`${styles.status} ${styles.statusBanned}`}>Banned</span>;
   if (!row.emailVerified) return <span className={`${styles.status} ${styles.statusQuiet}`}>Unverified</span>;
+  if (allChosen(row)) return <span className={`${styles.status} ${styles.statusFull}`}>All {row.allowance} chosen</span>;
   return <span className={styles.status}>Active</span>;
 }
 
@@ -191,7 +210,7 @@ export function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: 
   const rows = useMemo(() => {
     const filtered = (data?.users ?? []).filter((row) => matchesFilter(row, filter));
     if (!statusSort) return filtered;
-    const rank = (row: UserRow) => (row.banned ? 2 : row.emailVerified ? 0 : 1);
+    const rank = (row: UserRow) => (row.banned ? 3 : !row.emailVerified ? 2 : allChosen(row) ? 1 : 0);
     return [...filtered].sort((a, b) => (statusSort === 1 ? rank(b) - rank(a) : rank(a) - rank(b)) || a.name.localeCompare(b.name));
   }, [data, filter, statusSort]);
 
@@ -264,8 +283,8 @@ export function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: 
           <div>User</div>
           <div>Role</div>
           <div>Registered</div>
-          <div>Sites</div>
-          <div>Generations</div>
+          <div>Templates chosen</div>
+          <div>Remaining</div>
           <button
             type="button"
             className={styles.sortHead}
@@ -304,8 +323,10 @@ export function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: 
               </div>
               <div className={styles.cell} data-label="Role">{row.role === 'admin' ? 'Admin' : 'Member'}</div>
               <div className={`${styles.cell} ${styles.cellDim}`} data-label="Registered">{day(row.createdAt)}</div>
-              <div className={styles.cell} data-label="Sites">{row.sites}</div>
-              <div className={styles.cell} data-label="Generations">{row.generations}</div>
+              <div className={styles.cell} data-label="Templates chosen">
+                {row.chosen} / {row.allowance}
+              </div>
+              <div className={styles.cell} data-label="Remaining">{Math.max(0, row.allowance - row.chosen)}</div>
               <Status row={row} />
               <div className={styles.actions}>
                 <button
@@ -384,27 +405,15 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function UserDetailPanel({ id }: { id: string }) {
-  const { data, error, reload } = useAdminData<{
+  const { data, error } = useAdminData<{
     user: UserRow & { banReason: string | null; banExpires: string | null };
     sites: { id: string; slug: string; title: string; updatedAt: string }[];
     generations: { id: string; description: string; source: string; model: string; createdAt: string }[];
     usageToday: { endpoint: string; calls: number; cost: number; cap: number | null }[];
-    downloads: { used: number; cap: number; resetsAt: string; resetAt: string | null };
+    templates: { used: number; total: number; left: number; chosen: { slug: string; createdAt: string }[] };
   }>(`/api/admin/users/${id}`);
-  const [resetting, setResetting] = useState(false);
 
   if (!data) return <Load error={error} />;
-
-  // The month's count starts again from now; the ledger rows stay.
-  const resetDownloads = async () => {
-    setResetting(true);
-    try {
-      await apiFetch(`/api/admin/users/${id}/downloads/reset`, { method: 'POST' });
-      reload();
-    } finally {
-      setResetting(false);
-    }
-  };
 
   return (
     <div className={styles.cards}>
@@ -425,14 +434,23 @@ export function UserDetailPanel({ id }: { id: string }) {
         </p>
       </div>
 
-      <Section title="Template downloads">
+      <Section title="Templates">
         <p className={styles.quiet} style={{ margin: '0 0 14px' }}>
-          {data.downloads.used} of {data.downloads.cap} this month, starting over {when(data.downloads.resetsAt)}
-          {data.downloads.resetAt ? `; last reset ${when(data.downloads.resetAt)}` : ''}.
+          {data.templates.used} of {data.templates.total} chosen, {data.templates.left} left.
+          {data.templates.total > 5 ? ' Includes a granted request.' : ''}
         </p>
-        <button type="button" className={styles.button} disabled={resetting} onClick={() => void resetDownloads()}>
-          {resetting ? 'Resetting...' : 'Reset downloads'}
-        </button>
+        {data.templates.chosen.length > 0 ? (
+          <ul className={styles.plainList}>
+            {data.templates.chosen.map((row) => (
+              <li key={row.slug}>
+                <Link href={`/templates/${row.slug}/`} prefetch={false}>
+                  {row.slug}
+                </Link>{' '}
+                <span className={styles.cellDim}>chosen {day(row.createdAt)}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </Section>
 
       <Section title="Today">
@@ -658,7 +676,7 @@ export function TemplatesPanel() {
           {data.templates.map((t) => (
             <tr key={t.slug}>
               <td>
-                <Link href={`/template/${t.slug}/`} prefetch={false}>{t.name}</Link>
+                <Link href={`/templates/${t.slug}/site/`} prefetch={false}>{t.name}</Link>
               </td>
               <td>{t.sites}</td>
               <td>{t.copyRoles.length ? t.copyRoles.join(', ') : ' - '}</td>
@@ -796,4 +814,241 @@ export function MailPanel() {
       </table>
     </div>
   );
+}
+
+// ---- requests ---------------------------------------------------------------
+
+type RequestRow = {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  round: number;
+  status: 'sent' | 'activated' | 'pending' | 'granted' | 'declined';
+  granted: number;
+  role: string | null;
+  building: string | null;
+  sites: string | null;
+  need: string | null;
+  pay: string | null;
+  fairPrice: string | null;
+  link: string | null;
+  note: string;
+  sendAt: string | null;
+  decidedAt: string | null;
+  createdAt: string;
+  chosen: number;
+  allowance: number;
+  firstActivatedAt: string | null;
+};
+
+type RequestTab = 'review' | 'link' | 'granted' | 'declined';
+
+const REQUEST_TABS: { tab: RequestTab; label: string }[] = [
+  { tab: 'review', label: 'Needs review' },
+  { tab: 'link', label: 'Link sent' },
+  { tab: 'granted', label: 'Granted' },
+  { tab: 'declined', label: 'Declined' },
+];
+
+/** The most templates one answer can add; the Worker holds the same number. */
+const MAX_GRANT = 20;
+
+/** A link someone typed, made followable without trusting its scheme. */
+const hrefFor = (link: string) => (/^https?:\/\//i.test(link) ? link : `https://${link}`);
+
+/**
+ * "Request more". A first request is answered by the person following the
+ * link its email carries, so it sits under Link sent with no decision to
+ * make; every later one waits under Needs review, where granting adds the
+ * stepper's number to the person's allowance and mails them, declining
+ * mails them too, and Undo puts it back. Replies beyond that go by email,
+ * from the team inbox the request's notice arrived in.
+ */
+export function RequestsPanel() {
+  const [tab, setTab] = useState<RequestTab>('review');
+  const [amounts, setAmounts] = useState<Record<string, number>>({});
+  const [busy, setBusy] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const { data, error, reload } = useAdminData<{
+    free: number;
+    counts: Record<RequestTab, number>;
+    requests: RequestRow[];
+  }>(`/api/admin/requests?tab=${tab}`);
+
+  const decide = async (row: RequestRow, body: { status: 'pending' | 'granted' | 'declined'; granted?: number }) => {
+    setBusy(row.id);
+    setMessage(null);
+
+    try {
+      const answer = await apiFetch<{ mailed: boolean | null }>(`/api/admin/requests/${row.id}`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      if (answer.mailed === false) {
+        setMessage(`Saved, but the email to ${row.email} did not send. Reply to them by hand.`);
+      }
+      reload();
+    } catch (cause) {
+      setMessage(cause instanceof ApiError ? cause.message : 'That did not work.');
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const amount = (id: string) => amounts[id] ?? 5;
+  const step = (id: string, by: number) =>
+    setAmounts((current) => ({ ...current, [id]: Math.min(MAX_GRANT, Math.max(1, amount(id) + by)) }));
+
+  return (
+    <>
+      <div className={styles.tabs} role="group" aria-label="Filter requests">
+        {REQUEST_TABS.map((item) => (
+          <button
+            key={item.tab}
+            type="button"
+            className={styles.tab}
+            aria-pressed={tab === item.tab}
+            onClick={() => setTab(item.tab)}
+          >
+            {item.label} &#xB7; {data?.counts[item.tab] ?? 0}
+          </button>
+        ))}
+      </div>
+
+      {message ? (
+        <p className={styles.error} role="alert">
+          {message}
+        </p>
+      ) : null}
+
+      {!data ? (
+        <Load error={error} />
+      ) : data.requests.length === 0 ? (
+        <p className={styles.quiet}>Nothing here.</p>
+      ) : (
+        <div className={styles.requests}>
+          {data.requests.map((row) => {
+            const reviewed = row.round > 1;
+            const answers = [row.role, row.building, row.sites ? `${row.sites} sites in the next 3 months` : null]
+              .filter(Boolean)
+              .join(' \u00B7 ');
+
+            return (
+              <div key={row.id} className={styles.request}>
+                <div className={styles.requestHead}>
+                  <div className={styles.person}>
+                    <span className={styles.avatar} aria-hidden="true">
+                      {initials(row.name, row.email)}
+                    </span>
+                    <div className={styles.personText}>
+                      <p className={styles.personName}>
+                        {row.name || row.email}{' '}
+                        <span className={`${styles.roundBadge} ${reviewed ? styles.roundSecond : ''}`}>
+                          {reviewed ? `${ordinal(row.round)} request` : '1st request'}
+                        </span>
+                      </p>
+                      <p className={styles.requestMeta}>
+                        <a href={`mailto:${row.email}`}>{row.email}</a> &#xB7; Sent {day(row.createdAt)} &#xB7; Using{' '}
+                        {row.chosen} of {row.allowance} &#xB7;{' '}
+                        <Link href={`/admin/users/?id=${row.userId}`} prefetch={false}>
+                          Profile
+                        </Link>
+                      </p>
+                      {reviewed ? (
+                        <p className={styles.requestMeta}>
+                          Needs {row.need ?? '?'} more &#xB7; Would pay: {row.pay ?? '?'}
+                          {row.fairPrice ? ` (${row.fairPrice})` : ''}
+                          {row.link ? (
+                            <>
+                              {' '}
+                              &#xB7;{' '}
+                              <a href={hrefFor(row.link)} target="_blank" rel="noopener noreferrer nofollow">
+                                {row.link}
+                              </a>
+                            </>
+                          ) : null}
+                        </p>
+                      ) : null}
+                      {answers ? (
+                        <p className={styles.requestMeta}>
+                          {answers}
+                          {reviewed && row.firstActivatedAt ? ` \u00B7 +5 via email link on ${day(row.firstActivatedAt)}` : ''}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {row.status === 'pending' ? (
+                    <div className={styles.decide}>
+                      <button
+                        type="button"
+                        className={styles.small}
+                        disabled={busy !== null}
+                        onClick={() => void decide(row, { status: 'declined' })}
+                      >
+                        Decline
+                      </button>
+                      <div className={styles.stepper}>
+                        <button type="button" aria-label="One fewer" disabled={amount(row.id) <= 1} onClick={() => step(row.id, -1)}>
+                          &#x2212;
+                        </button>
+                        <span aria-live="polite">{amount(row.id)}</span>
+                        <button type="button" aria-label="One more" disabled={amount(row.id) >= MAX_GRANT} onClick={() => step(row.id, 1)}>
+                          +
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        className={styles.grant}
+                        disabled={busy !== null}
+                        onClick={() => void decide(row, { status: 'granted', granted: amount(row.id) })}
+                      >
+                        Grant {amount(row.id)}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className={styles.decide}>
+                      <span
+                        className={`${styles.outcome} ${
+                          row.status === 'declined' || (row.status === 'sent' && !row.decidedAt) ? '' : styles.outcomeGranted
+                        }`}
+                      >
+                        {row.status === 'activated'
+                          ? `Link clicked \u00B7 +${row.granted} on ${day(row.decidedAt!)}`
+                          : row.status === 'sent'
+                            ? row.sendAt && new Date(row.sendAt).getTime() > Date.now()
+                              ? 'Email scheduled'
+                              : 'Link sent \u00B7 not clicked yet'
+                            : row.status === 'granted'
+                              ? `Granted ${row.granted} template${row.granted === 1 ? '' : 's'}`
+                              : 'Declined'}
+                      </span>
+                      {reviewed ? (
+                        <button
+                          type="button"
+                          className={styles.undo}
+                          disabled={busy !== null}
+                          onClick={() => void decide(row, { status: 'pending' })}
+                        >
+                          Undo
+                        </button>
+                      ) : null}
+                    </div>
+                  )}
+                </div>
+                {row.note ? <p className={styles.requestNote}>{row.note}</p> : null}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </>
+  );
+}
+
+/** "2nd", "3rd", "4th": a request's round, as the badge says it. */
+function ordinal(n: number): string {
+  const tail = n % 100 >= 11 && n % 100 <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th';
+  return `${n}${tail}`;
 }

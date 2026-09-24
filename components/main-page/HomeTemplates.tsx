@@ -23,7 +23,7 @@ type Site = (typeof SHOWCASE)[number];
 function Card({ site, clone = false }: { site: Site; clone?: boolean }) {
   return (
     <Link
-      // The framed preview, not /template/<slug>/ itself: the frame carries
+      // The framed preview, not /templates/<slug>/site/ itself: the frame carries
       // the way back to the gallery and the actions for taking the template,
       // which the bare page has none of. Same destination as a gallery card.
       href={`/templates/${site.slug}/`}
@@ -77,7 +77,8 @@ export default function HomeTemplates({
         <div className={styles.rowHeader}>
           <span className={styles.eyebrow}>Website templates</span>
           <Link href="/templates" prefetch={false} className={styles.browseAll}>
-            Browse all sites <ArrowRight size={14} aria-hidden="true" />
+            Browse all sites
+            <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
 

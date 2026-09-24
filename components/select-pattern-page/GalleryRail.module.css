@@ -15,19 +15,23 @@
   width: var(--gallery-rail-w, 300px);
   height: calc(100vh - var(--gallery-bar-h, 62px));
   height: calc(100dvh - var(--gallery-bar-h, 62px));
-  padding: 20px 20px 0 26px;
+  /* 36px, plus the rows' own 12px, puts the search, "Mixed" and every
+     palette name on the masthead lockup's left edge (48px), as the artboard
+     rules them; the pills' ink reaches 12px past that line. */
+  padding: 20px 20px 0 36px;
   background: #ffffff;
   overflow: hidden;
 }
 
 .top {
   flex: none;
-  padding-right: 6px;
 }
 
-/* A field with only a bottom rule, the magnifier after it. */
+/* A field with only a bottom rule, the magnifier after it. Inset by the
+   rows' own padding, so the placeholder starts where the palette names do. */
 .search {
   display: flex;
+  margin-left: 12px;
   align-items: center;
   gap: 10px;
   padding: 6px 0 9px;
@@ -56,17 +60,18 @@
   flex: none;
 }
 
-/* "Random per pattern": drawn as a palette row, inked when it is the choice,
-   with the swap arrows where a row carries its pencil. Pulled out to the
-   rows' edges like the list below it, so the two read as one column. */
+/* "Mixed" (a random palette per pattern): drawn as a palette row, with the
+   rows' geometry exactly (PaletteListRow.module.css), so its name, its
+   swatches and its mark line up with the list under it. Inked when it is
+   the choice. */
 .random {
   display: flex;
   gap: 8px;
   align-items: center;
   box-sizing: border-box;
-  width: calc(100% + 24px);
-  margin: 12px -12px 4px;
-  padding: 7px 7px 7px 12px;
+  width: 100%;
+  margin: 12px 0 2px;
+  padding: 7px 12px;
   font-family: var(--font-sans-serif);
   font-size: 13px;
   color: #0e0e13;
@@ -100,9 +105,34 @@
   text-overflow: ellipsis;
 }
 
-.random svg {
+.randomChips {
+  display: flex;
   flex: none;
-  margin-right: 5px;
+  gap: 3px;
+  align-items: stretch;
+  height: 18px;
+}
+
+.randomChips > span {
+  flex: none;
+  width: 12px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.22);
+}
+
+.random[data-active] .randomChips > span {
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.55);
+}
+
+/* Where a row carries its pencil. */
+.randomMark {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  opacity: 0.6;
 }
 
 /* ---- Scrolling palette list ---- */

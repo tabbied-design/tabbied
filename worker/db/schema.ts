@@ -12,7 +12,7 @@
 // The rest are Studio's. Dates are stored as unix seconds (SQLite has no date
 // type); Drizzle's `timestamp` mode hands JS Dates to both sides of that.
 import { sql } from 'drizzle-orm';
-import { index, integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { index, integer, real, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 const createdAt = () =>
   integer('created_at', { mode: 'timestamp' })
@@ -40,13 +40,6 @@ export const user = sqliteTable('user', {
   banned: integer('banned', { mode: 'boolean' }),
   banReason: text('ban_reason'),
   banExpires: integer('ban_expires', { mode: 'timestamp' }),
-  /**
-   * When an admin last reset this person's template downloads. The month's
-   * count is the downloads since the later of this and the month's start, so
-   * a reset gives the whole cap back without deleting the ledger rows that
-   * say what was taken. Null until an admin has ever reset it.
-   */
-  downloadsResetAt: integer('downloads_reset_at', { mode: 'timestamp' }),
 });
 
 export const session = sqliteTable(
@@ -294,11 +287,9 @@ export const devMail = sqliteTable('dev_mail', {
 });
 
 /**
- * One template download: the zip a person took, and when. Summed per user
- * per UTC month against the cap in lib/downloads.ts. A row is written only
- * for a download that was allowed and served, so the count is exact, and the
- * rows stay after an admin reset (see `user.downloadsResetAt`) because they
- * are the record of what was taken, not the counter.
+ * One template download: the zip a person took, and when. A log, not a
+ * counter: what a person may take is decided by `templateChoice`, and a row is
+ * written only for a zip that was allowed and served.
  */
 export const download = sqliteTable(
   'download',
@@ -314,6 +305,80 @@ export const download = sqliteTable(
     createdAt: createdAt(),
   },
   (table) => [index('download_user_created_idx').on(table.userId, table.createdAt)]
+);
+
+/**
+ * A template a person has made theirs: one of the five an account may choose
+ * during the beta (lib/templates.ts). A template is chosen explicitly, or on
+ * the first download or the first customizer save of it, and after that it is
+ * downloaded and customized without limit. Unique per person and template, so
+ * choosing twice is one row, and the claim that writes it checks the count in
+ * the same statement.
+ */
+export const templateChoice = sqliteTable(
+  'template_choice',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    slug: text('slug').notNull(),
+    createdAt: createdAt(),
+  },
+  (table) => [uniqueIndex('template_choice_user_slug_idx').on(table.userId, table.slug)]
+);
+
+/**
+ * "Request more": a person asking for templates beyond their five, and what
+ * came of it (lib/templates.ts). Two kinds, told apart by `round`:
+ *
+ * - Round 1, a person's first request, answers three questions and is
+ *   granted by the person themselves: an email carrying a single-use link
+ *   goes out a few minutes later (`sendAt`), and following it adds 5
+ *   (`status` 'sent', then 'activated'). Only the link's SHA-256 is kept.
+ * - Every later round is read by a person on the team, who grants any
+ *   number or declines ('pending', then 'granted' or 'declined').
+ *
+ * `granted` counts toward the allowance while the status is 'activated' or
+ * 'granted'. A person has at most one open request at a time; the route
+ * checks that, since the rows themselves are a history.
+ */
+export const templateRequest = sqliteTable(
+  'template_request',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    /** 1 for the emailed link, 2 and up for a reviewed request. */
+    round: integer('round').notNull().default(1),
+    /** 'sent' | 'activated' (round 1); 'pending' | 'granted' | 'declined'. */
+    status: text('status').notNull().default('pending'),
+    /** Extra templates, counted only while the status is 'activated' or 'granted'. */
+    granted: integer('granted').notNull().default(0),
+    // The answers. Round 1 asks the first three; a later round carries them
+    // forward and adds the rest.
+    role: text('role'),
+    building: text('building'),
+    sites: text('sites'),
+    need: text('need'),
+    pay: text('pay'),
+    fairPrice: text('fair_price'),
+    link: text('link'),
+    note: text('note').notNull().default(''),
+    /** Round 1: SHA-256 of the emailed link's token, and when the link lapses. */
+    tokenHash: text('token_hash'),
+    expiresAt: integer('expires_at', { mode: 'timestamp' }),
+    /** Round 1: when the email is scheduled to arrive. */
+    sendAt: integer('send_at', { mode: 'timestamp' }),
+    decidedAt: integer('decided_at', { mode: 'timestamp' }),
+    createdAt: createdAt(),
+  },
+  (table) => [
+    index('template_request_status_created_idx').on(table.status, table.createdAt),
+    index('template_request_user_created_idx').on(table.userId, table.createdAt),
+    index('template_request_token_idx').on(table.tokenHash),
+  ]
 );
 
 /** A file in R2 under up/<userId>/<uuid>. The bytes never touch D1. */

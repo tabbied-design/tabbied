@@ -12,7 +12,7 @@
 // the image or the prompt. It is read straight off the tag so the two sides
 // cannot disagree.
 //
-//   npm run build            # writes out/template/<slug>/index.html
+//   npm run build            # writes out/templates/<slug>/site/index.html
 //   node scripts/images/extract-prompts.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -24,7 +24,7 @@ const args = argv();
 // every image already generated, and renaming 174 files to drop a redundant
 // segment would be churn for its own sake.
 const SOURCES = [
-  { stack: 'react', dir: path.join(ROOT, 'out/template'), hint: 'npm run build' },
+  { stack: 'react', dir: path.join(ROOT, 'out/templates'), hint: 'npm run build' },
 ];
 
 const unescapeHtml = (s) =>
@@ -49,7 +49,7 @@ for (const { stack, dir, hint } of SOURCES) {
   }
   const sites = fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory());
   for (const entry of sites.sort((a, b) => a.name.localeCompare(b.name))) {
-    const file = path.join(dir, entry.name, 'index.html');
+    const file = path.join(dir, entry.name, 'site', 'index.html');
     if (!fs.existsSync(file)) continue;
     const html = fs.readFileSync(file, 'utf8');
 

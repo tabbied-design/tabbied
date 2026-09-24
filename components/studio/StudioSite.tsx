@@ -299,8 +299,8 @@ export default function StudioSite({
     return (
       <p className={styles.notice} role="alert">
         {state.message}{' '}
-        <Link href="/account/sites/" className={styles.back} prefetch={false}>
-          Custom sites
+        <Link href="/account/" className={styles.back} prefetch={false}>
+          Your templates
         </Link>
         .
       </p>
@@ -437,7 +437,7 @@ export default function StudioSite({
       // in flight has already marked the draft dirty, and the button saying
       // "Saved to your custom sites" over unsaved changes was a lie.
       setSaveState((current) => (current === 'saving' ? 'saved' : current));
-      toaster.add({ title: 'Saved. Find it under Custom sites.' });
+      toaster.add({ title: 'Saved. It is under Your templates in your account.' });
     } catch (cause) {
       setSaveState('dirty');
       toaster.add({ title: cause instanceof ApiError ? cause.message : 'Could not save.' });

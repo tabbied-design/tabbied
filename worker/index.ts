@@ -41,14 +41,9 @@ import journal from './migrations/meta/_journal.json';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './db/schema';
 import { requireUser } from './lib/session';
-import {
-  claimDownload,
-  downloadStatus,
-  downloadedThisMonth,
-  parseDownloadName,
-  releaseDownload,
-  takesCopy,
-} from './lib/downloads';
+import { forgetDownload, logDownload, parseDownloadName, takesCopy } from './lib/downloads';
+import { teamRecipients } from './lib/mail';
+import { claimTemplate, limitMessage, mayTake, releaseTemplate, templateStatus } from './lib/templates';
 import media from './routes/media';
 import account from './routes/account';
 import admin from './routes/admin';
@@ -309,16 +304,18 @@ app.get('/health', (c) => c.text('ok'));
 
 // ---- template downloads --------------------------------------------------
 // The zips are static assets, and `run_worker_first` sends /downloads/*
-// here so that taking one is a signed-in act counted against the month's
-// cap (worker/lib/downloads.ts). Everything else under the folder (the
+// here so that taking one is a signed-in act: the first download of a
+// template makes it one of the person's chosen templates, and a template
+// they have not chosen cannot be taken once every one they may choose is
+// chosen (worker/lib/templates.ts). Everything else under the folder (the
 // packaged pages the customizer and the previews read) passes straight to
 // the assets binding.
 //
 // Two kinds of caller, told apart by the fetch metadata a browser sends: a
 // navigation (a click on a download link) is sent where the answer is, to
-// sign in or to the account page that says the cap is spent; a fetch (the
-// customizer building a customized zip from the packaged one) gets JSON and
-// a status it can put in a toast.
+// sign in or to the account page that says every template is chosen; a
+// fetch (the customizer building a customized zip from the packaged one)
+// gets JSON and a status it can put in a toast.
 
 const isNavigation = (request: Request): boolean => {
   const mode = request.headers.get('sec-fetch-mode');
@@ -362,48 +359,44 @@ app.get('/downloads/:file', async (c, next) => {
   const db = drizzle(c.env.DB, { schema });
   const counts = takesCopy(request);
 
-  // A request that takes a copy claims its row in the same statement that
-  // checks the cap (see `claimDownload`), so concurrent requests cannot all
-  // slip under it. A HEAD or a resumed range is answered by the same gate
-  // but writes nothing. A template already among the month's is free to
-  // take again, in either format: the cap counts templates, not zips.
-  const claimed = counts ? await claimDownload(db, userId, named.slug, named.format) : null;
-  const allowed = counts
-    ? claimed !== null
-    : (await downloadStatus(db, userId)).ok || (await downloadedThisMonth(db, userId, named.slug));
+  // A request that takes a copy claims the template in the same statement
+  // that checks the allowance (see `claimTemplate`), so concurrent requests
+  // cannot all slip under it. A HEAD or a resumed range is answered by the
+  // same rule but writes nothing.
+  const claim = counts ? await claimTemplate(db, userId, named.slug) : null;
+  const allowed = claim ? claim.ok : await mayTake(db, userId, named.slug);
 
   if (!allowed) {
     if (isNavigation(request)) {
-      return c.redirect('/account/?downloads=capped', 302);
+      return c.redirect('/account/?templates=full', 302);
     }
 
-    const status = await downloadStatus(db, userId);
+    const status = await templateStatus(db, userId);
 
-    return c.json(
-      {
-        error: `You have used all ${status.cap} template downloads for this month. The count starts over on ${status.resetsAt.toISOString().slice(0, 10)}.`,
-        used: status.used,
-        cap: status.cap,
-        resetsAt: status.resetsAt,
-      },
-      429
-    );
+    return c.json({ error: limitMessage(status.total), used: status.used, total: status.total }, 403);
   }
 
-  // A zip the packager never wrote is a 404 that costs nothing: the claim is
-  // given back, so a row is only ever kept for bytes that went out.
+  const logged = counts ? await logDownload(db, userId, named.slug, named.format) : null;
+  const newChoice = claim?.ok ? claim.id : null;
+
+  // A zip the packager never wrote is a 404 that costs nothing: a template
+  // chosen by this request is given back and the log row removed, so both
+  // only ever record bytes that went out.
+  const giveBack = async () => {
+    if (logged) await forgetDownload(db, logged);
+    if (newChoice) await releaseTemplate(db, newChoice);
+  };
+
   let zip: Response;
 
   try {
     zip = await c.env.ASSETS.fetch(request);
   } catch (error) {
-    if (claimed) await releaseDownload(db, claimed);
+    await giveBack();
     throw error;
   }
 
-  if (claimed && !zip.ok) {
-    await releaseDownload(db, claimed);
-  }
+  if (!zip.ok) await giveBack();
 
   return zip;
 });
@@ -450,6 +443,10 @@ api.use('*', async (c, next) => {
 // does not). Without this the only way to tell a deploy that has the setting
 // from one that silently lost it is to sign in and see whether anything
 // happened.
+//
+// `mail` says the same about the email service, without the key: whether
+// RESEND_API_KEY is set (with it unset in production, sign-up throws), and
+// how many inboxes hear about "Request more" messages.
 api.get('/health', async (c) => {
   const schema = await schemaStatus(c.env);
 
@@ -459,6 +456,10 @@ api.get('/health', async (c) => {
     version: 1,
     schema,
     adminEmails: configuredAdmins(c.env).length,
+    mail: {
+      provider: c.env.RESEND_API_KEY ? 'resend' : isDev(c.env) ? 'dev-mail' : 'none',
+      teamInboxes: teamRecipients(c.env).length,
+    },
   });
 });
 

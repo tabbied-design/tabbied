@@ -134,7 +134,8 @@ export default function HomePatternLibrary({
         <div className={styles.rowHeader}>
           <span className={styles.eyebrow}>Pattern library</span>
           <Link href="/patterns" prefetch={false} className={styles.viewAll}>
-            View all {patternCount} <ArrowRight size={14} aria-hidden="true" />
+            View all {patternCount}
+            <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
 

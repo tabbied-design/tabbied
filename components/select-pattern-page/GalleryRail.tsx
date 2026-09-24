@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { ArrowLeftRight, Search } from 'lucide-react';
+import { Search, Shuffle } from 'lucide-react';
+import MixedSwatches from 'components/palette/MixedSwatches';
 import PaletteListRow from 'components/palette/PaletteListRow';
 import { usePaletteReveal } from 'components/palette/usePaletteReveal';
 import type { BrandPalette } from 'lib/brandPalettes';
@@ -17,7 +18,8 @@ const PAGE = 24;
 
 /**
  * The gallery's desktop palette rail: one search that filters both the
- * palette list and the design grid, then "Random per pattern" above the full
+ * palette list and the design grid, then "Mixed" (a random palette per
+ * pattern) above the full
  * merged palette list (custom first, then the read-only library) scrolling in
  * a single column. It fills the height under the masthead - the artboard drew
  * it as a fixed box with a fade, and the list is the whole point of the rail,
@@ -33,6 +35,7 @@ export default function GalleryRail({
   selectedId,
   onApply,
   onRandom,
+  mixed,
   onEditCustom,
   onEditLibrary,
   onDelete,
@@ -45,6 +48,8 @@ export default function GalleryRail({
   onApply: (id: string) => void;
   /** Draw a new random spread and make it the gallery's palette. */
   onRandom: () => void;
+  /** The swatches the "Mixed" option draws (MixedSwatches). */
+  mixed: [string, string][];
   onEditCustom: (palette: BrandPalette) => void;
   onEditLibrary: (palette: LibraryPalette) => void;
   onDelete: (id: string) => void;
@@ -79,18 +84,23 @@ export default function GalleryRail({
         </label>
 
         {/* The random spread is chosen from the same list as a palette, so it
-            sits where a palette would, above the rest and pinned: choosing it
-            again draws a new spread. */}
+            sits where a palette would, drawn as one ("Mixed", its swatches
+            split between the spread's palettes), above the rest and pinned:
+            choosing it again draws a new spread. */}
         <button
           type="button"
           className={styles.random}
           data-active={randomActive || undefined}
           aria-pressed={randomActive}
+          aria-label="Mixed: a random palette for every pattern"
           onClick={onRandom}
           title="A random palette for every pattern"
         >
-          <span className={styles.randomLabel}>Random per pattern</span>
-          <ArrowLeftRight size={13} strokeWidth={1.8} aria-hidden="true" />
+          <span className={styles.randomLabel}>Mixed</span>
+          <MixedSwatches pairs={mixed} className={styles.randomChips} />
+          <span className={styles.randomMark} aria-hidden="true">
+            <Shuffle size={14} strokeWidth={1.8} />
+          </span>
         </button>
       </div>
 

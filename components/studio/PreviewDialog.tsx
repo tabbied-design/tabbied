@@ -4,7 +4,7 @@
 //
 // It shows the same artifact the full preview route shows - the packaged
 // download with the card's direction applied by the edits engine - for the
-// same reason: the live /template/<slug>/ page mounts its patterns through
+// same reason: the live /templates/<slug>/site/ page mounts its patterns through
 // React and ignores an attribute written from outside, while the package has
 // no framework left in it. The card's link still points at the full page, so
 // a middle-click, a copied URL and a browser with scripting off all land

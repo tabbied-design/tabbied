@@ -34,7 +34,12 @@ PUBLIC_ORIGIN=http://localhost:8787
 # takes none | low | medium | high | xhigh | max.
 # AI_REASONING_EFFORT=low
 
+# Mail (docs/email.md). With no key in dev every message is written to the
+# dev_mail table instead of sent. MAIL_FROM's domain must be verified in Resend;
+# TEAM_EMAIL is who hears about "Request more" (falls back to ADMIN_EMAILS).
 # RESEND_API_KEY=
+# MAIL_FROM=Tabbied <hello@tabbied.com>
+# TEAM_EMAIL=you@example.com
 # GITHUB_CLIENT_ID=
 # GITHUB_CLIENT_SECRET=
 # GOOGLE_CLIENT_ID=

@@ -69,30 +69,3 @@
   }
 }
 
-/* The two hairlines that run the full height of the page at the edges of the
-   1280px column, tying the sections together. Decorative and non-interactive,
-   so they sit above the content but never take a click. Dropped on mobile,
-   where they would land inside the text measure. */
-.columnRule {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  z-index: 50;
-  width: 1px;
-  background-color: oklch(0.6 0 0 / 0.35);
-  pointer-events: none;
-}
-
-.columnRuleLeft {
-  left: max(24px, calc(50% - 640px));
-}
-
-.columnRuleRight {
-  right: max(24px, calc(50% - 640px));
-}
-
-@media (max-width: 767.98px) {
-  .columnRule {
-    display: none;
-  }
-}

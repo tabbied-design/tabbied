@@ -20,11 +20,6 @@ export const metadata: Metadata = pageMetadata({
 export default function Home() {
   return (
     <div className={`${styles.home} ${plexMono.variable} ${plexSans.variable}`}>
-      {/* The two hairlines marking the edges of the 1280px column, running the
-          full height of the page behind every section. */}
-      <div className={`${styles.columnRule} ${styles.columnRuleLeft}`} aria-hidden="true" />
-      <div className={`${styles.columnRule} ${styles.columnRuleRight}`} aria-hidden="true" />
-
       <HomeNav />
 
       <HomeHero patternCount={PATTERN_COUNT} templateCount={TEMPLATE_COUNT} />

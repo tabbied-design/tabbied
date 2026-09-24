@@ -244,7 +244,7 @@ test.describe('results preview dialog', () => {
 
     const preview = page.getByRole('link', { name: 'Preview' }).first();
     const href = await preview.getAttribute('href');
-    expect(href).toMatch(/^\/template\/[a-z0-9-]+\/$/);
+    expect(href).toMatch(/^\/templates\/[a-z0-9-]+\/site\/$/);
 
     // A plain click opens the dialog rather than following the link.
     await preview.click();

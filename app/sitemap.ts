@@ -19,13 +19,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '',
     'patterns',
     'templates',
-    'template',
     'docs/react',
     'privacy-policy',
     'terms-of-service',
     ...patternIds.map((slug) => `patterns/${slug}`),
     // The framed previews, which are the templates' canonical pages: they
-    // say what the template is and how to take it. The bare /template/<slug>/
+    // say what the template is and how to take it. The bare /templates/<slug>/site/
     // pages are the sites themselves, a fictional business each, and are
     // left for the previews to frame rather than listed on their own.
     ...TEMPLATE_SITES.map((site) => `templates/${site.slug}`),

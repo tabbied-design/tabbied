@@ -5,7 +5,7 @@
 // counts. It is the only version of a template with no framework left in it,
 // so its patterns are `[data-pattern]` placeholders the edits engine can
 // rewrite and a plain `hydratePatterns()` can mount, where the live
-// /template/<slug>/ page mounts its patterns through React and would ignore an
+// /templates/<slug>/site/ page mounts its patterns through React and would ignore an
 // attribute written from outside. And previewing what is actually downloaded
 // is the difference between a preview and a mockup.
 //

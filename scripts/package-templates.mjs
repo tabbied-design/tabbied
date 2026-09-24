@@ -57,7 +57,7 @@ const escapeHtml = (text) =>
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
-const templateDir = path.join(repoRoot, 'app', 'template');
+const templateDir = path.join(repoRoot, 'app', 'templates');
 const publicDir = path.join(repoRoot, 'public');
 const globalsCss = path.join(repoRoot, 'styles', 'globals.css');
 
@@ -229,7 +229,7 @@ function dehashClassNames(html, slug) {
  * which is shipped trimmed to what the page can match (see trimUnusedRules).
  */
 async function resolveStylesheet(slug, moduleName) {
-  const own = path.join(templateDir, slug, `${slug}.module.css`);
+  const own = path.join(templateDir, slug, 'site', `${slug}.module.css`);
 
   try {
     return { css: await fs.readFile(own, 'utf-8'), shared: false };
@@ -650,7 +650,7 @@ The photography is AI-generated and ships with this template.
 
 async function packageReactSite(slug, outDir, version, name, images) {
   const pageSource = await fs.readFile(
-    path.join(templateDir, slug, 'page.tsx'),
+    path.join(templateDir, slug, 'site', 'page.tsx'),
     'utf-8'
   );
 
@@ -722,7 +722,7 @@ async function packageReactSite(slug, outDir, version, name, images) {
 
   // The page's own stylesheet, byte-for-byte - Vite handles CSS modules, so
   // nothing here needs the flattening the HTML package does.
-  const own = path.join(templateDir, slug, `${slug}.module.css`);
+  const own = path.join(templateDir, slug, 'site', `${slug}.module.css`);
   if (fsSync.existsSync(own)) {
     await fs.copyFile(own, path.join(srcDir, `${slug}.module.css`));
   }
@@ -925,7 +925,7 @@ const MENU_SCRIPT = `
 `;
 
 async function packageSite(slug, outDir, version) {
-  const source = path.join(exportDir, 'template', slug, 'index.html');
+  const source = path.join(exportDir, 'templates', slug, 'site', 'index.html');
 
   let html;
 
@@ -1056,9 +1056,12 @@ const version =
         )
       ).version;
 
+// A template site is app/templates/<slug>/site/page.tsx; the folder also
+// holds the framed preview's [slug] route.
 const packageable = (await fs.readdir(templateDir, { withFileTypes: true }))
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
+  .filter((slug) => fsSync.existsSync(path.join(templateDir, slug, 'site', 'page.tsx')))
   .sort();
 
 const targets = requested.length > 0 ? requested : packageable;

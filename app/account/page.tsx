@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { plexMono, plexSans } from 'lib/fonts';
 import AccountOverview from 'components/account/AccountOverview';
+import { TEMPLATE_INDEX } from 'lib/templateIndex';
 import styles from 'components/studio/studio.module.css';
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
-      <AccountOverview />
+      <AccountOverview index={TEMPLATE_INDEX} />
     </div>
   );
 }

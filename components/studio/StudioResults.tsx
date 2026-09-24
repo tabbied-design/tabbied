@@ -101,7 +101,7 @@ function DirectionPreview({
 const previewHref = (generationId: string | null, direction: Direction, index: number) =>
   generationId && direction.copyRoles?.includes('brandName')
     ? `/studio/preview/?g=${generationId}&i=${index}`
-    : `/template/${direction.slug}/`;
+    : `/templates/${direction.slug}/site/`;
 
 const downloadHref = (direction: Direction) => `/downloads/${direction.slug}-html.zip`;
 

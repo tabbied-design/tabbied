@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Derive each template site's editable-section spec from the static export.
 //
-// Everything here is read out of out/template/<slug>/index.html - the current
+// Everything here is read out of out/templates/<slug>/site/index.html - the current
 // text, the image sources, the pattern configuration, the brand palette. That
 // is the same doctrine as the download packager (see the "Downloadable
 // templates" section of CLAUDE.md): the spec is generated from the
@@ -36,7 +36,7 @@ import {
 } from 'tabbied-templates';
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const exportDir = path.join(repoRoot, 'out', 'template');
+const exportDir = path.join(repoRoot, 'out', 'templates');
 const outDir = path.join(repoRoot, 'public', 'editable');
 const catalogPath = path.join(repoRoot, 'public', 'editable-catalog.json');
 const designCatalogPath = path.join(
@@ -50,7 +50,7 @@ const only = process.argv.slice(2).filter((arg) => !arg.startsWith('-'));
 
 if (!existsSync(exportDir)) {
   console.error(
-    'editable: out/template is missing - run `next build` first ' +
+    'editable: out/templates is missing - run `next build` first ' +
       '(`npm run build` does this for you).'
   );
   process.exit(1);
@@ -112,6 +112,8 @@ const fontsOf = (html) => {
 const slugs = readdirSync(exportDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
+  // out/templates/<slug>/ is the framed preview; the site is its site/.
+  .filter((slug) => existsSync(path.join(exportDir, slug, 'site', 'index.html')))
   .filter((slug) => (only.length === 0 ? true : only.includes(slug)))
   .sort();
 
@@ -134,7 +136,7 @@ const specs = [];
 let skipped = 0;
 
 for (const slug of slugs) {
-  const pagePath = path.join(exportDir, slug, 'index.html');
+  const pagePath = path.join(exportDir, slug, 'site', 'index.html');
 
   if (!existsSync(pagePath)) continue;
 
@@ -223,7 +225,7 @@ const counts = (spec, kind) =>
 const entryOf = (spec) => ({
     slug: spec.site.slug,
     name: spec.site.name,
-    href: `/template/${spec.site.slug}/`,
+    href: `/templates/${spec.site.slug}/site/`,
     spec: `/editable/${spec.site.slug}.json`,
     palette: spec.palette.colors,
     patterns: [

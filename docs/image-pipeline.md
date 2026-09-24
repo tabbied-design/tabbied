@@ -1,6 +1,6 @@
 # Template imagery: GPT Image 2 (native alpha) -> committed WebP
 
-How the imagery on the `/template/...` sites is produced, reviewed, and
+How the imagery on the `/templates/<slug>/site/` sites is produced, reviewed, and
 committed. This documents the pipeline as implemented in this repo; the
 scripts live at the repo root under `scripts/`. (The older `scripts/images/`
 pipeline is retired - see its README - and **image generation uses the GPT

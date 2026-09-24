@@ -16,12 +16,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const REPO_ROOT = path.join(__dirname, '..');
-const TEMPLATE_DIR = path.join(REPO_ROOT, 'out', 'template');
+const TEMPLATE_DIR = path.join(REPO_ROOT, 'out', 'templates');
 const SLUGS = fs.existsSync(TEMPLATE_DIR)
   ? fs
       .readdirSync(TEMPLATE_DIR, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
+      .filter((slug) => fs.existsSync(path.join(TEMPLATE_DIR, slug, 'site', 'index.html')))
   : [];
 
 test.describe('template headers on a phone', () => {
@@ -40,7 +41,7 @@ test.describe('template headers on a phone', () => {
     const failures: string[] = [];
 
     for (const slug of SLUGS) {
-      await page.goto(`/template/${slug}/`, { waitUntil: 'domcontentloaded' });
+      await page.goto(`/templates/${slug}/site/`, { waitUntil: 'domcontentloaded' });
 
       const hidden = await page.evaluate(() => {
         const header = document.querySelector('header') ?? document.querySelector('nav');

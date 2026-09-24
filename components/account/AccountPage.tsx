@@ -4,12 +4,13 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { useSessionUser } from 'lib/authClient';
 import AccountHeader from './AccountHeader';
-import AccountNav from './AccountNav';
 import styles from './account.module.css';
 
 /**
- * The frame every account page sits in: the light masthead, the area's own
- * nav, then an eyebrow, a title and the page. It waits for the session and
+ * The frame every account page sits in: the light masthead, then an eyebrow,
+ * a title and the page. There is no sub-navigation: the overview is the
+ * account, and a page beyond it (settings, sites) carries one link back to
+ * it, as the 2026 designs draw it. It waits for the session and
  * turns a signed-out visitor away with a link. Shared so the five pages
  * differ only in their body.
  *
@@ -23,6 +24,7 @@ export default function AccountPage({
   badge,
   lede,
   action,
+  back = true,
   children,
 }: {
   eyebrow?: string;
@@ -32,6 +34,8 @@ export default function AccountPage({
   lede?: ReactNode;
   /** Something to do, beside the title - the "+ New Studio request" pill. */
   action?: { href: string; label: string };
+  /** The link back to the overview; the overview itself has none. */
+  back?: boolean;
   children: ReactNode;
 }) {
   const { user, isPending } = useSessionUser();
@@ -57,7 +61,11 @@ export default function AccountPage({
           </div>
         ) : (
           <>
-            <AccountNav />
+            {back ? (
+              <Link href="/account/" prefetch={false} className={styles.backLink}>
+                &#x2190; Account overview
+              </Link>
+            ) : null}
             <div className={styles.head}>
               <div>
                 <p className={styles.eyebrow}>{eyebrow}</p>

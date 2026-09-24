@@ -28,8 +28,16 @@
 }
 
 .browseAll {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
   font: 400 13px var(--h-sans);
   color: var(--h-fg);
+}
+
+.browseAll svg {
+  display: block;
+  flex: none;
 }
 
 .browseAll:hover {
@@ -201,8 +209,14 @@
 }
 
 .ctaArrow {
-  font-size: 16px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* An icon is a box, not a glyph on the baseline: drawn inline it sits on
+   the text's baseline and reads a few pixels low beside the words. */
+.ctaArrow svg {
+  display: block;
 }
 
 @media (max-width: 1023.98px) {

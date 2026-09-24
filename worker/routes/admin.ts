@@ -3,11 +3,12 @@ import { and, desc, eq, gte, like, or, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 import { z } from 'zod';
 import * as schema from '../db/schema';
-import { aiUsage, devMail, generation, revision, site, upload, user } from '../db/schema';
+import { aiUsage, devMail, generation, revision, site, templateChoice, templateRequest, upload, user } from '../db/schema';
 import type { Env } from '../env';
 import { buildAuth } from '../auth';
 import { isDev } from '../env';
-import { TEMPLATE_DOWNLOADS_PER_MONTH, downloadStatus, resetDownloads } from '../lib/downloads';
+import { notifyRequestDecision } from '../lib/mail';
+import { FREE_TEMPLATES, MAX_GRANT, templateStatus } from '../lib/templates';
 import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
 import { authConfigured } from '../lib/session';
 import { loadEditableCatalog } from '../lib/templateAssets';
@@ -59,7 +60,7 @@ admin.get('/overview', async (c) => {
 
   const fortnight = daysAgo(14);
 
-  const [[users], [newUsers], [generations], [sites], [fallbacks], [spend], [images], signups] = await Promise.all([
+  const [[users], [newUsers], [generations], [sites], [fallbacks], [spend], [images], signups, [chosen], [pending]] = await Promise.all([
     db.select({ n: sql<number>`count(*)` }).from(user),
     db.select({ n: sql<number>`count(*)` }).from(user).where(gte(user.createdAt, week)),
     db.select({ n: sql<number>`count(*)` }).from(generation).where(gte(generation.createdAt, week)),
@@ -85,10 +86,16 @@ admin.get('/overview', async (c) => {
       .where(gte(user.createdAt, fortnight))
       .groupBy(sql`date(${user.createdAt}, 'unixepoch')`)
       .orderBy(sql`date(${user.createdAt}, 'unixepoch')`),
+    db.select({ n: sql<number>`count(*)` }).from(templateChoice),
+    db.select({ n: sql<number>`count(*)` }).from(templateRequest).where(eq(templateRequest.status, 'pending')),
   ]);
 
   return c.json({
     users: Number(users.n),
+    templatesChosen: Number(chosen.n),
+    averageChosen: Number(users.n) ? Number(chosen.n) / Number(users.n) : 0,
+    freeTemplates: FREE_TEMPLATES,
+    pendingRequests: Number(pending.n),
     newUsersThisWeek: Number(newUsers.n),
     generationsThisWeek: Number(generations.n),
     sitesThisWeek: Number(sites.n),
@@ -137,13 +144,23 @@ admin.get('/users', async (c) => {
       // *site*.id and counts nothing. `${site}` alone is the table name.
       sites: sql<number>`(select count(*) from ${site} where ${site}.user_id = ${user}.id)`,
       generations: sql<number>`(select count(*) from ${generation} where ${generation}.user_id = ${user}.id)`,
+      chosen: sql<number>`(select count(*) from ${templateChoice} where ${templateChoice}.user_id = ${user}.id)`,
+      allowance: sql<number>`(${FREE_TEMPLATES} + coalesce((select granted from ${templateRequest} where ${templateRequest}.user_id = ${user}.id and ${templateRequest}.status = 'granted'), 0))`,
     })
     .from(user)
     .where(q ? or(like(user.email, `%${q}%`), like(user.name, `%${q}%`)) : undefined)
     .orderBy(desc(user.createdAt))
     .limit(limit);
 
-  return c.json({ users: rows.map((row) => ({ ...row, sites: Number(row.sites), generations: Number(row.generations) })) });
+  return c.json({
+    users: rows.map((row) => ({
+      ...row,
+      sites: Number(row.sites),
+      generations: Number(row.generations),
+      chosen: Number(row.chosen),
+      allowance: Number(row.allowance),
+    })),
+  });
 });
 
 admin.get('/users/:id', async (c) => {
@@ -156,7 +173,7 @@ admin.get('/users/:id', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  const [sites, generations, usage, downloads] = await Promise.all([
+  const [sites, generations, usage, templates] = await Promise.all([
     db
       .select({ id: site.id, slug: site.slug, title: site.title, updatedAt: site.updatedAt })
       .from(site)
@@ -174,7 +191,7 @@ admin.get('/users/:id', async (c) => {
       .from(aiUsage)
       .where(and(eq(aiUsage.userId, id), gte(aiUsage.createdAt, startOfUtcDay())))
       .groupBy(aiUsage.endpoint),
-    downloadStatus(db, id),
+    templateStatus(db, id),
   ]);
 
   return c.json({
@@ -182,27 +199,149 @@ admin.get('/users/:id', async (c) => {
     sites,
     generations,
     usageToday: usage.map((u) => ({ ...u, calls: Number(u.calls), cost: Number(u.cost), cap: DAILY_CAPS[u.endpoint as keyof typeof DAILY_CAPS]?.calls ?? null })),
-    downloads: { used: downloads.used, cap: downloads.cap, resetsAt: downloads.resetsAt, resetAt: row.downloadsResetAt },
+    templates: {
+      used: templates.used,
+      total: templates.total,
+      left: templates.left,
+      chosen: templates.chosen,
+    },
   });
 });
 
-// Give a person the month's template downloads back. A timestamp on their
-// row, not a deletion: the ledger keeps saying what was taken, and the count
-// starts again from now (see lib/downloads.ts).
-admin.post('/users/:id/downloads/reset', async (c) => {
+// ---- "Request more" --------------------------------------------------------
+// The requests people at their limit sent (lib/templates.ts). A first
+// request is granted by the person following its emailed link and is only
+// listed here; a later one takes the admin's answer. A grant adds its number
+// to the person's allowance while the status says 'granted'; declining, or
+// undoing back to pending, takes it away again.
+// Every decision but an undo mails the person (lib/mail.ts), after the row
+// is written, and a failed send is reported in the answer rather than
+// unwinding the decision.
+
+// The tabs of the Requests page: what each shows, as a WHERE clause.
+// First requests are answered by the person following the emailed link, so
+// they have a tab of their own and no decision; the rest wait for a person.
+const REQUEST_TABS = {
+  review: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'pending'`,
+  link: sql`${templateRequest.round} = 1`,
+  granted: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'granted'`,
+  declined: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'declined'`,
+} as const;
+
+type RequestTab = keyof typeof REQUEST_TABS;
+
+const requestQuery = z.object({
+  tab: z.enum(Object.keys(REQUEST_TABS) as [RequestTab, ...RequestTab[]]).default('review'),
+});
+
+admin.get('/requests', async (c) => {
+  const query = requestQuery.safeParse({ tab: c.req.query('tab') });
+
+  if (!query.success) return badQuery(c);
+
+  const db = drizzle(c.env.DB, { schema });
+  const tabs = Object.keys(REQUEST_TABS) as RequestTab[];
+  const [rows, ...counts] = await Promise.all([
+    db
+      .select({
+        id: templateRequest.id,
+        userId: templateRequest.userId,
+        name: user.name,
+        email: user.email,
+        round: templateRequest.round,
+        status: templateRequest.status,
+        granted: templateRequest.granted,
+        role: templateRequest.role,
+        building: templateRequest.building,
+        sites: templateRequest.sites,
+        need: templateRequest.need,
+        pay: templateRequest.pay,
+        fairPrice: templateRequest.fairPrice,
+        link: templateRequest.link,
+        note: templateRequest.note,
+        sendAt: templateRequest.sendAt,
+        decidedAt: templateRequest.decidedAt,
+        createdAt: templateRequest.createdAt,
+        chosen: sql<number>`(select count(*) from ${templateChoice} where ${templateChoice}.user_id = ${templateRequest}.user_id)`,
+        allowance: sql<number>`(${FREE_TEMPLATES} + coalesce((select sum(r2.granted) from ${templateRequest} r2 where r2.user_id = ${templateRequest}.user_id and r2.status in ('activated', 'granted')), 0))`,
+        // The person's emailed-link request, for "+5 via email link on ...".
+        firstActivatedAt: sql<number | null>`(select r1.decided_at from ${templateRequest} r1 where r1.user_id = ${templateRequest}.user_id and r1.round = 1 and r1.status = 'activated')`,
+      })
+      .from(templateRequest)
+      .innerJoin(user, eq(user.id, templateRequest.userId))
+      .where(REQUEST_TABS[query.data.tab])
+      .orderBy(desc(templateRequest.createdAt))
+      .limit(200),
+    ...tabs.map((tab) => db.select({ n: sql<number>`count(*)` }).from(templateRequest).where(REQUEST_TABS[tab])),
+  ]);
+
+  return c.json({
+    free: FREE_TEMPLATES,
+    counts: Object.fromEntries(tabs.map((tab, i) => [tab, Number(counts[i][0]?.n ?? 0)])),
+    requests: rows.map((row) => ({
+      ...row,
+      chosen: Number(row.chosen),
+      allowance: Number(row.allowance),
+      firstActivatedAt: row.firstActivatedAt ? new Date(Number(row.firstActivatedAt) * 1000) : null,
+    })),
+  });
+});
+
+const decisionSchema = z.discriminatedUnion('status', [
+  z.object({ status: z.literal('granted'), granted: z.number().int().min(1).max(MAX_GRANT) }),
+  z.object({ status: z.literal('declined') }),
+  z.object({ status: z.literal('pending') }),
+]);
+
+admin.post('/requests/:id', async (c) => {
+  const parsed = decisionSchema.safeParse(await c.req.json().catch(() => null));
+
+  if (!parsed.success) {
+    return c.json({ error: `Grant 1 to ${MAX_GRANT} templates, decline, or undo.` }, 400);
+  }
+
   const db = drizzle(c.env.DB, { schema });
   const id = c.req.param('id');
+  const decision = parsed.data;
+  const granted = decision.status === 'granted' ? decision.granted : 0;
 
-  const [row] = await db.select({ id: user.id }).from(user).where(eq(user.id, id)).limit(1);
+  // Only a reviewed request takes a decision: a first request's grant is
+  // the person's own, by the emailed link.
+  const [row] = await db
+    .update(templateRequest)
+    .set({
+      status: decision.status,
+      granted,
+      decidedAt: decision.status === 'pending' ? null : new Date(),
+    })
+    .where(and(eq(templateRequest.id, id), sql`${templateRequest.round} > 1`))
+    .returning();
 
   if (!row) {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  await resetDownloads(db, id);
-  const downloads = await downloadStatus(db, id);
+  let mailed: boolean | null = null;
 
-  return c.json({ downloads: { used: downloads.used, cap: downloads.cap, resetsAt: downloads.resetsAt } });
+  if (decision.status !== 'pending') {
+    const [person] = await db.select({ email: user.email }).from(user).where(eq(user.id, row.userId)).limit(1);
+    const status = await templateStatus(db, row.userId);
+
+    mailed = await notifyRequestDecision(c.env, {
+      email: person.email,
+      status: decision.status,
+      granted,
+      total: status.total,
+      origin: new URL(c.req.url).origin,
+    })
+      .then(() => true)
+      .catch((error) => {
+        console.error('[mail] request decision failed', error);
+        return false;
+      });
+  }
+
+  return c.json({ request: { id: row.id, status: row.status, granted: row.granted, decidedAt: row.decidedAt }, mailed });
 });
 
 admin.get('/usage', async (c) => {
@@ -371,7 +510,7 @@ admin.get('/quotas', (c) =>
     // table and a read on every call; the page says so.
     caps: {
       ...DAILY_CAPS,
-      'template-download': { calls: TEMPLATE_DOWNLOADS_PER_MONTH, label: 'template downloads a month' },
+      'template-choice': { calls: FREE_TEMPLATES, label: 'templates an account may choose' },
     },
     editable: false,
   })

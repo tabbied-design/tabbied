@@ -50,6 +50,20 @@
       "when": 1790049881774,
       "tag": "0006_template_downloads",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1790215486478,
+      "tag": "0007_template_choices",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1790272513990,
+      "tag": "0008_template_request_rounds",
+      "breakpoints": true
     }
   ]
 }
