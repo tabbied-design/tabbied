@@ -17,10 +17,13 @@ import { Dialog } from '@base-ui-components/react/dialog';
 import { toaster } from 'components/Toaster';
 import { ApiError } from 'lib/apiFetch';
 import {
+  FIRST_REQUEST_GRANT,
   FREE_TEMPLATES,
   chooseTemplate,
   chosenOf,
+  isOpen,
   useMyTemplates,
+  type MyTemplates,
   type MyTemplatesState,
 } from 'lib/myTemplates';
 import styles from './ChooseTemplate.module.css';
@@ -36,6 +39,21 @@ const CTA: Record<TemplateAction, string> = {
 };
 
 const plural = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`;
+
+/** What more there is to ask for, once every template is chosen. */
+function limitNote(templates: MyTemplates): string {
+  const request = templates.request;
+
+  if (isOpen(request)) {
+    return request!.round === 1
+      ? 'Your request is in: the link that adds 5 more is on its way to your inbox.'
+      : 'Your request is with our team, and we will reply by email within 2 business days.';
+  }
+
+  return templates.firstUsed
+    ? 'You can ask for more from your account, and our team will review it personally.'
+    : `You can request ${FIRST_REQUEST_GRANT} more from your account. It takes under a minute, and approval arrives by email.`;
+}
 
 /** "Choosing Kalla uses 1 of your 3 remaining templates.", for a menu's header. */
 export function choiceNote(templates: MyTemplatesState, slug: string, name: string): string {
@@ -131,7 +149,7 @@ export function useTemplateGate(names: Readonly<Record<string, string>>): {
           </Dialog.Title>
           <Dialog.Description className={styles.body}>
             {atLimit
-              ? `${name} isn't one of them. During beta, each account gets ${total} templates. You can keep customizing and downloading the ones you have.`
+              ? `${name} isn't one of them. ${limitNote(ready)}`
               : `${left === 1 ? 'This uses your last template.' : `You have ${plural(left, 'template')} left.`} Once ${name} is yours, you can change its colors and patterns and download it as often as you like.`}
           </Dialog.Description>
 
@@ -148,7 +166,7 @@ export function useTemplateGate(names: Readonly<Record<string, string>>): {
                 <Link href="/account/" prefetch={false} className={styles.secondary}>
                   View my templates
                 </Link>
-                {ready.request ? null : (
+                {isOpen(ready.request) ? null : (
                   <Link href="/account/?request=1" prefetch={false} className={styles.primary}>
                     Request more
                   </Link>

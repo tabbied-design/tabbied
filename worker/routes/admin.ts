@@ -8,7 +8,7 @@ import type { Env } from '../env';
 import { buildAuth } from '../auth';
 import { isDev } from '../env';
 import { notifyRequestDecision } from '../lib/mail';
-import { FREE_TEMPLATES, MAX_GRANT, REQUEST_STATUSES, templateStatus, type RequestStatus } from '../lib/templates';
+import { FREE_TEMPLATES, MAX_GRANT, templateStatus } from '../lib/templates';
 import { DAILY_CAPS, startOfUtcDay } from '../lib/quota';
 import { authConfigured } from '../lib/session';
 import { loadEditableCatalog } from '../lib/templateAssets';
@@ -209,53 +209,81 @@ admin.get('/users/:id', async (c) => {
 });
 
 // ---- "Request more" --------------------------------------------------------
-// The messages people at their limit sent, and the admin's answer to each.
-// A grant adds its number to the person's five while the status says
-// 'granted'; declining, or undoing back to pending, takes it away again.
+// The requests people at their limit sent (lib/templates.ts). A first
+// request is granted by the person following its emailed link and is only
+// listed here; a later one takes the admin's answer. A grant adds its number
+// to the person's allowance while the status says 'granted'; declining, or
+// undoing back to pending, takes it away again.
 // Every decision but an undo mails the person (lib/mail.ts), after the row
 // is written, and a failed send is reported in the answer rather than
 // unwinding the decision.
 
+// The tabs of the Requests page: what each shows, as a WHERE clause.
+// First requests are answered by the person following the emailed link, so
+// they have a tab of their own and no decision; the rest wait for a person.
+const REQUEST_TABS = {
+  review: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'pending'`,
+  link: sql`${templateRequest.round} = 1`,
+  granted: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'granted'`,
+  declined: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'declined'`,
+} as const;
+
+type RequestTab = keyof typeof REQUEST_TABS;
+
 const requestQuery = z.object({
-  status: z.enum(REQUEST_STATUSES as [RequestStatus, ...RequestStatus[]]).default('pending'),
+  tab: z.enum(Object.keys(REQUEST_TABS) as [RequestTab, ...RequestTab[]]).default('review'),
 });
 
 admin.get('/requests', async (c) => {
-  const query = requestQuery.safeParse({ status: c.req.query('status') });
+  const query = requestQuery.safeParse({ tab: c.req.query('tab') });
 
   if (!query.success) return badQuery(c);
 
   const db = drizzle(c.env.DB, { schema });
-  const [rows, counts] = await Promise.all([
+  const tabs = Object.keys(REQUEST_TABS) as RequestTab[];
+  const [rows, ...counts] = await Promise.all([
     db
       .select({
         id: templateRequest.id,
         userId: templateRequest.userId,
         name: user.name,
         email: user.email,
-        note: templateRequest.note,
+        round: templateRequest.round,
         status: templateRequest.status,
         granted: templateRequest.granted,
+        role: templateRequest.role,
+        building: templateRequest.building,
+        sites: templateRequest.sites,
+        need: templateRequest.need,
+        pay: templateRequest.pay,
+        fairPrice: templateRequest.fairPrice,
+        link: templateRequest.link,
+        note: templateRequest.note,
+        sendAt: templateRequest.sendAt,
         decidedAt: templateRequest.decidedAt,
         createdAt: templateRequest.createdAt,
         chosen: sql<number>`(select count(*) from ${templateChoice} where ${templateChoice}.user_id = ${templateRequest}.user_id)`,
+        allowance: sql<number>`(${FREE_TEMPLATES} + coalesce((select sum(r2.granted) from ${templateRequest} r2 where r2.user_id = ${templateRequest}.user_id and r2.status in ('activated', 'granted')), 0))`,
+        // The person's emailed-link request, for "+5 via email link on ...".
+        firstActivatedAt: sql<number | null>`(select r1.decided_at from ${templateRequest} r1 where r1.user_id = ${templateRequest}.user_id and r1.round = 1 and r1.status = 'activated')`,
       })
       .from(templateRequest)
       .innerJoin(user, eq(user.id, templateRequest.userId))
-      .where(eq(templateRequest.status, query.data.status))
+      .where(REQUEST_TABS[query.data.tab])
       .orderBy(desc(templateRequest.createdAt))
       .limit(200),
-    db
-      .select({ status: templateRequest.status, n: sql<number>`count(*)` })
-      .from(templateRequest)
-      .groupBy(templateRequest.status),
+    ...tabs.map((tab) => db.select({ n: sql<number>`count(*)` }).from(templateRequest).where(REQUEST_TABS[tab])),
   ]);
-  const byStatus = new Map(counts.map((row) => [row.status, Number(row.n)]));
 
   return c.json({
     free: FREE_TEMPLATES,
-    counts: Object.fromEntries(REQUEST_STATUSES.map((status) => [status, byStatus.get(status) ?? 0])),
-    requests: rows.map((row) => ({ ...row, chosen: Number(row.chosen) })),
+    counts: Object.fromEntries(tabs.map((tab, i) => [tab, Number(counts[i][0]?.n ?? 0)])),
+    requests: rows.map((row) => ({
+      ...row,
+      chosen: Number(row.chosen),
+      allowance: Number(row.allowance),
+      firstActivatedAt: row.firstActivatedAt ? new Date(Number(row.firstActivatedAt) * 1000) : null,
+    })),
   });
 });
 
@@ -277,6 +305,8 @@ admin.post('/requests/:id', async (c) => {
   const decision = parsed.data;
   const granted = decision.status === 'granted' ? decision.granted : 0;
 
+  // Only a reviewed request takes a decision: a first request's grant is
+  // the person's own, by the emailed link.
   const [row] = await db
     .update(templateRequest)
     .set({
@@ -284,7 +314,7 @@ admin.post('/requests/:id', async (c) => {
       granted,
       decidedAt: decision.status === 'pending' ? null : new Date(),
     })
-    .where(eq(templateRequest.id, id))
+    .where(and(eq(templateRequest.id, id), sql`${templateRequest.round} > 1`))
     .returning();
 
   if (!row) {

@@ -855,15 +855,27 @@ another). Five things worth not re-litigating:
   (the customizer building a customized zip) gets JSON and a 401 or 403,
   and `buildCustomisedArchive` puts that sentence in a toast. The
   `download` table is now a log of served zips, nothing more.
-- **"Request more" is one message, answered by an admin.** At the limit the
-  overview offers it: `POST /api/account/templates/request {note}` writes
-  the person's one `template_request` row (unique per user, so a second is a
-  409) and mails the team (`TEAM_EMAIL`, else `ADMIN_EMAILS`) with the
-  person as Reply-To. `/admin/requests/` lists them by status; granting adds
-  1 to 20 templates to the person's allowance while the status says
-  `granted`, declining adds none, Undo puts it back to pending, and every
-  decision but an undo mails the person. The row is the source of truth: a
-  failed send is logged and reported (`mailed: false`), never unwound.
+- **"Request more" comes in two rounds** (the 24 September designs). The
+  first request answers three questions (role, what they build, how many
+  sites) and is granted by the person: `POST /api/account/templates/request`
+  writes a round-1 row and schedules an email for five minutes later
+  (Resend's `scheduled_at`, so nothing here has to wake up) carrying a
+  single-use link, `GET /api/account/templates/activate?token=`, that adds
+  5 and lands on `/account/?activated=5`. Only the token's SHA-256 is kept,
+  the link lapses after 7 days, and a resend mints a new one (the old link
+  stops working). The five-minute wait is the design's, so the request
+  reads as looked at rather than paid out; the account row says "on its
+  way" until the send time, then "approved" with a Resend button. Every
+  later request carries those answers forward and adds how many, whether
+  the person would pay, a link and a note; it goes to the team (`TEAM_EMAIL`,
+  else `ADMIN_EMAILS`, with the person as Reply-To) and waits under
+  `/admin/requests/`, where granting adds 1 to 20, declining adds none, Undo
+  puts it back, and a decision mails the person. One request may be open at
+  a time, checked in the insert itself (`openRequest`). The allowance is
+  five plus every `granted` whose status is `activated` or `granted`.
+  Migration 0008 rebuilt `template_request` for this by hand: drizzle's
+  output copied columns the old table did not have and switched foreign
+  keys off, which D1 does not allow.
 - **The e2e suite never sees the gate.** `serve out` has no Worker, so the
   zips are plain files there and the specs stub the session and
   `/api/account/templates`; `worker/test/templates.test.ts` is where the

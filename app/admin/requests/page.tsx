@@ -8,8 +8,8 @@ export default function Page() {
   return (
     <AdminPage
       eyebrow="Beta access"
-      title="Messages from users at the limit"
-      lede="Messages from people who have chosen all of their templates. Each person can send one. Reply by email, and choose how many templates to grant."
+      title="Template requests"
+      lede="First requests get an email after about 5 minutes, and the 5 templates are added when the person follows its link. Later requests, from people who have used those too, wait here for review. Reply by email and choose how many to grant."
     >
       <RequestsPanel />
     </AdminPage>

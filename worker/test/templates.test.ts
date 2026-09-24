@@ -184,76 +184,128 @@ describe('choosing templates', () => {
 });
 
 describe('"Request more"', () => {
-  it('is one message, sent at the limit, that an admin grants or declines', async () => {
-    const cookie = await signIn('asker@example.com');
-    const boss = await signIn('granter@example.com');
-    await env.DB.prepare("UPDATE user SET role = 'admin' WHERE email = ?").bind('granter@example.com').run();
+  const ask = (cookie: string, body: Record<string, string>) =>
+    SELF.fetch(`${ORIGIN}/api/account/templates/request`, {
+      method: 'POST',
+      headers: { ...json, cookie },
+      body: JSON.stringify(body),
+    });
 
-    const ask = (note: string) =>
-      SELF.fetch(`${ORIGIN}/api/account/templates/request`, {
-        method: 'POST',
-        headers: { ...json, cookie },
-        body: JSON.stringify({ note }),
-      });
+  /** The link in the person's latest dev mail (the approval email). */
+  const linkFor = async (email: string) => {
+    const row = await env.DB.prepare('SELECT subject, url FROM dev_mail WHERE email = ?').bind(email).first<{ subject: string; url: string }>();
+    return row!;
+  };
+
+  const follow = (url: string) => SELF.fetch(url, { redirect: 'manual' });
+
+  const FIRST = { role: 'Freelancer', building: 'Client sites', sites: '3-10' };
+  const SECOND = { need: '10', pay: 'Maybe', fairPrice: '$10/month', link: 'studio.example', note: 'Six cafes in Portland.' };
+
+  it('a first request emails a single-use link that adds five', async () => {
+    const cookie = await signIn('asker@example.com');
+    const slugs = await otherSlugs(FREE * 2 + 1);
 
     // Not before every template is chosen.
-    expect((await ask('A studio in Portland.')).status).toBe(409);
+    expect((await ask(cookie, FIRST)).status).toBe(409);
+    for (const slug of slugs.slice(0, FREE)) expect((await choose(cookie, slug)).status).toBe(200);
 
-    const slugs = await otherSlugs(FREE + 2);
+    expect((await ask(cookie, { role: 'Freelancer' })).status).toBe(400);
+    expect((await ask(cookie, { ...FIRST, role: 'Astronaut' })).status).toBe(400);
 
-    for (const slug of slugs.slice(0, FREE)) {
-      expect((await choose(cookie, slug)).status).toBe(200);
-    }
-
-    expect((await ask('')).status).toBe(400);
-    const sent = await ask('A studio in Portland building sites for cafes.');
+    const before = Date.now();
+    const sent = await ask(cookie, { ...FIRST, note: 'Mostly restaurants.' });
     expect(sent.status, await sent.clone().text()).toBe(200);
-    expect((await ask('And another thing.')).status).toBe(409);
-    expect((await mine(cookie)).request).toMatchObject({ status: 'pending', granted: 0 });
+    const { request } = (await sent.json()) as { request: { round: number; status: string; sendAt: string } };
+    expect(request).toMatchObject({ round: 1, status: 'sent' });
+    // The email is scheduled a few minutes out, as the page promises.
+    expect(new Date(request.sendAt).getTime()).toBeGreaterThanOrEqual(before + 4 * 60_000);
 
-    // The team heard about it (dev mail, since the tests hold no mail key).
-    const notice = await env.DB.prepare('SELECT subject, body FROM dev_mail WHERE email = ?')
-      .bind('team@example.com')
-      .first<{ subject: string; body: string }>();
+    // One open request at a time.
+    expect((await ask(cookie, FIRST)).status).toBe(409);
+
+    const mail = await linkFor('asker@example.com');
+    expect(mail.subject).toBe('Your 5 extra templates are ready');
+    expect(mail.url).toMatch(/\/api\/account\/templates\/activate\?token=/);
+
+    // Following it (no session needed) adds five, once.
+    const first = await follow(mail.url);
+    expect(first.status).toBe(302);
+    expect(first.headers.get('location')).toBe('/account/?activated=5');
+    expect(await mine(cookie)).toMatchObject({ used: FREE, total: FREE * 2, left: FREE });
+    expect((await follow(mail.url)).headers.get('location')).toBe('/account/?activated=used');
+    expect((await follow(`${ORIGIN}/api/account/templates/activate?token=nope`)).headers.get('location')).toBe('/account/?activated=unknown');
+    expect((await mine(cookie)).total).toBe(FREE * 2);
+
+    // A second request goes to the team, with more to say.
+    for (const slug of slugs.slice(FREE, FREE * 2)) expect((await choose(cookie, slug)).status).toBe(200);
+    expect((await ask(cookie, { need: '10' })).status).toBe(400);
+    const second = await ask(cookie, SECOND);
+    expect(second.status, await second.clone().text()).toBe(200);
+    expect(await second.json()).toMatchObject({ request: { round: 2, status: 'pending', role: 'Freelancer' } });
+
+    const notice = await env.DB.prepare('SELECT subject, body FROM dev_mail WHERE email = ?').bind('team@example.com').first<{ subject: string; body: string }>();
     expect(notice?.subject).toContain('More templates');
-    expect(notice?.body).toContain('cafes');
+    expect(notice?.body).toContain('Six cafes');
+    expect(notice?.body).toContain('Needs 10 more. Would pay: Maybe ($10/month)');
+  });
 
-    const list = (await SELF.fetch(`${ORIGIN}/api/admin/requests`, { headers: { cookie: boss } }).then((r) => r.json())) as {
-      counts: Record<string, number>;
-      requests: { id: string; email: string; chosen: number }[];
-    };
-    const request = list.requests.find((row) => row.email === 'asker@example.com')!;
-    expect(request).toMatchObject({ chosen: FREE });
-    expect(list.counts.pending).toBeGreaterThanOrEqual(1);
+  it('an admin answers the reviewed round, not the emailed one', async () => {
+    const cookie = await signIn('asker2@example.com');
+    const boss = await signIn('granter@example.com');
+    await env.DB.prepare("UPDATE user SET role = 'admin' WHERE email = ?").bind('granter@example.com').run();
+    const slugs = await otherSlugs(FREE * 2 + 1);
 
-    const decide = (body: unknown, who = boss) =>
-      SELF.fetch(`${ORIGIN}/api/admin/requests/${request.id}`, {
-        method: 'POST',
-        headers: { ...json, cookie: who },
-        body: JSON.stringify(body),
-      });
+    for (const slug of slugs.slice(0, FREE)) await choose(cookie, slug);
+    await ask(cookie, FIRST);
+    await follow((await linkFor('asker2@example.com')).url);
+    for (const slug of slugs.slice(FREE, FREE * 2)) await choose(cookie, slug);
+    expect((await ask(cookie, SECOND)).status).toBe(200);
 
-    expect((await decide({ status: 'granted', granted: 2 }, cookie)).status).toBe(404);
-    expect((await decide({ status: 'granted', granted: 0 })).status).toBe(400);
+    type Listed = { counts: Record<string, number>; requests: { id: string; email: string; round: number; chosen: number; allowance: number; firstActivatedAt: string | null; need: string }[] };
+    const list = async (tab: string) =>
+      (await SELF.fetch(`${ORIGIN}/api/admin/requests?tab=${tab}`, { headers: { cookie: boss } }).then((r) => r.json())) as Listed;
 
-    const granted = await decide({ status: 'granted', granted: 2 });
-    expect(granted.status, await granted.clone().text()).toBe(200);
-    expect(await granted.json()).toMatchObject({ request: { status: 'granted', granted: 2 }, mailed: true });
-    expect(await mine(cookie)).toMatchObject({ used: FREE, total: FREE + 2, left: 2 });
-    expect((await choose(cookie, slugs[FREE])).status).toBe(200);
+    const review = await list('review');
+    const request = review.requests.find((row) => row.email === 'asker2@example.com')!;
+    expect(request).toMatchObject({ round: 2, chosen: FREE * 2, allowance: FREE * 2, need: '10' });
+    expect(request.firstActivatedAt).not.toBeNull();
+    const linked = (await list('link')).requests.find((row) => row.email === 'asker2@example.com')!;
+    expect(linked.round).toBe(1);
 
-    const told = await env.DB.prepare('SELECT subject FROM dev_mail WHERE email = ?')
-      .bind('asker@example.com')
-      .first<{ subject: string }>();
-    expect(told?.subject).toBe('You have more Tabbied templates');
+    const decide = (id: string, body: unknown, who = boss) =>
+      SELF.fetch(`${ORIGIN}/api/admin/requests/${id}`, { method: 'POST', headers: { ...json, cookie: who }, body: JSON.stringify(body) });
+
+    expect((await decide(request.id, { status: 'granted', granted: 3 }, cookie)).status).toBe(404);
+    expect((await decide(request.id, { status: 'granted', granted: 0 })).status).toBe(400);
+    // The emailed round is the person's to take, not the admin's.
+    expect((await decide(linked.id, { status: 'declined' })).status).toBe(404);
+
+    const granted = await decide(request.id, { status: 'granted', granted: 3 });
+    expect(await granted.json()).toMatchObject({ request: { status: 'granted', granted: 3 }, mailed: true });
+    expect(await mine(cookie)).toMatchObject({ used: FREE * 2, total: FREE * 2 + 3, left: 3 });
+    expect((await linkFor('asker2@example.com')).subject).toBe('You have more Tabbied templates');
 
     // Undo takes the grant away; nothing already chosen is taken back.
-    expect((await decide({ status: 'pending' })).status).toBe(200);
-    expect(await mine(cookie)).toMatchObject({ used: FREE + 1, total: FREE, left: 0 });
+    await choose(cookie, slugs[FREE * 2]);
+    expect((await decide(request.id, { status: 'pending' })).status).toBe(200);
+    expect(await mine(cookie)).toMatchObject({ used: FREE * 2 + 1, total: FREE * 2, left: 0 });
+  });
 
-    const detail = (await SELF.fetch(`${ORIGIN}/api/admin/users/${await userId('asker@example.com')}`, {
-      headers: { cookie: boss },
-    }).then((r) => r.json())) as { templates: { used: number; total: number } };
-    expect(detail.templates).toMatchObject({ used: FREE + 1, total: FREE });
+  it('a resent link replaces the old one, and a lapsed link says so', async () => {
+    const cookie = await signIn('resender@example.com');
+    for (const slug of await otherSlugs(FREE)) await choose(cookie, slug);
+    await ask(cookie, FIRST);
+    const old = (await linkFor('resender@example.com')).url;
+
+    const resend = await SELF.fetch(`${ORIGIN}/api/account/templates/request/resend`, { method: 'POST', headers: { ...json, cookie } });
+    expect(resend.status, await resend.clone().text()).toBe(200);
+    const fresh = (await linkFor('resender@example.com')).url;
+    expect(fresh).not.toBe(old);
+    expect((await follow(old)).headers.get('location')).toBe('/account/?activated=unknown');
+
+    await env.DB.prepare('UPDATE template_request SET expires_at = unixepoch() - 60 WHERE user_id = ?').bind(await userId('resender@example.com')).run();
+    expect((await follow(fresh)).headers.get('location')).toBe('/account/?activated=expired');
+    expect((await mine(cookie)).total).toBe(FREE);
   });
 });

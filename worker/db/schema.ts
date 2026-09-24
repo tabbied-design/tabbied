@@ -329,11 +329,19 @@ export const templateChoice = sqliteTable(
 );
 
 /**
- * "Request more": the one message a person at the limit may send during the
- * beta, and an admin's answer to it. `granted` templates are added to the
- * person's five once the status is 'granted'; declining or undoing leaves the
- * allowance where it was. One row per person, so a second message is an
- * update the route refuses rather than a second row.
+ * "Request more": a person asking for templates beyond their five, and what
+ * came of it (lib/templates.ts). Two kinds, told apart by `round`:
+ *
+ * - Round 1, a person's first request, answers three questions and is
+ *   granted by the person themselves: an email carrying a single-use link
+ *   goes out a few minutes later (`sendAt`), and following it adds 5
+ *   (`status` 'sent', then 'activated'). Only the link's SHA-256 is kept.
+ * - Every later round is read by a person on the team, who grants any
+ *   number or declines ('pending', then 'granted' or 'declined').
+ *
+ * `granted` counts toward the allowance while the status is 'activated' or
+ * 'granted'. A person has at most one open request at a time; the route
+ * checks that, since the rows themselves are a history.
  */
 export const templateRequest = sqliteTable(
   'template_request',
@@ -341,17 +349,36 @@ export const templateRequest = sqliteTable(
     id: text('id').primaryKey(),
     userId: text('user_id')
       .notNull()
-      .unique()
       .references(() => user.id, { onDelete: 'cascade' }),
-    note: text('note').notNull(),
-    /** 'pending' | 'granted' | 'declined'. */
+    /** 1 for the emailed link, 2 and up for a reviewed request. */
+    round: integer('round').notNull().default(1),
+    /** 'sent' | 'activated' (round 1); 'pending' | 'granted' | 'declined'. */
     status: text('status').notNull().default('pending'),
-    /** Extra templates, counted only while the status is 'granted'. */
+    /** Extra templates, counted only while the status is 'activated' or 'granted'. */
     granted: integer('granted').notNull().default(0),
+    // The answers. Round 1 asks the first three; a later round carries them
+    // forward and adds the rest.
+    role: text('role'),
+    building: text('building'),
+    sites: text('sites'),
+    need: text('need'),
+    pay: text('pay'),
+    fairPrice: text('fair_price'),
+    link: text('link'),
+    note: text('note').notNull().default(''),
+    /** Round 1: SHA-256 of the emailed link's token, and when the link lapses. */
+    tokenHash: text('token_hash'),
+    expiresAt: integer('expires_at', { mode: 'timestamp' }),
+    /** Round 1: when the email is scheduled to arrive. */
+    sendAt: integer('send_at', { mode: 'timestamp' }),
     decidedAt: integer('decided_at', { mode: 'timestamp' }),
     createdAt: createdAt(),
   },
-  (table) => [index('template_request_status_created_idx').on(table.status, table.createdAt)]
+  (table) => [
+    index('template_request_status_created_idx').on(table.status, table.createdAt),
+    index('template_request_user_created_idx').on(table.userId, table.createdAt),
+    index('template_request_token_idx').on(table.tokenHash),
+  ]
 );
 
 /** A file in R2 under up/<userId>/<uuid>. The bytes never touch D1. */

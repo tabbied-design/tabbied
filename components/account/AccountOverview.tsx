@@ -26,8 +26,10 @@ import Toaster, { toaster } from 'components/Toaster';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import {
+  FIRST_REQUEST_GRANT,
   FREE_TEMPLATES,
   customizeHref,
+  isOpen,
   refreshMyTemplates,
   useMyTemplates,
   type ChosenTemplate,
@@ -178,7 +180,54 @@ function TemplateRow({ row, entry }: { row: ChosenTemplate; entry: TemplateIndex
   );
 }
 
-/** "Request more": the one message the beta allows, in a dialog. */
+/** The answers the request forms offer; the Worker accepts only these. */
+const ROLES = ['Freelancer', 'Agency', 'Business owner', 'Designer', 'Developer', 'Student', 'Other'];
+const BUILDING = ['Client sites', 'My own business', 'Personal projects', 'School or learning'];
+const SITES = ['1-2', '3-10', '10+'];
+const NEED = ['5', '10', '20+'];
+const PAY = ['Yes', 'Maybe', 'Not right now'];
+
+/** One question answered by a row of chips, one of which may be chosen. */
+function Chips({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: string[];
+  value: string | null;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <fieldset className={styles.question}>
+      <legend className={styles.questionLabel}>{label}</legend>
+      <div className={styles.chipRow}>
+        {options.map((option) => (
+          <button
+            key={option}
+            type="button"
+            className={styles.chip}
+            aria-pressed={value === option}
+            onClick={() => onChange(option)}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+/**
+ * "Request more", in the two shapes the 24 September designs give it. A
+ * first request is three quick questions, answered by an emailed link that
+ * adds 5 (so it says "Get 5 more templates" and "Send request"); a later one
+ * carries those answers forward (with an Edit) and asks how many, whether
+ * the person would pay, a link and what they are for, and goes to the team
+ * ("Send for review"). After sending, the dialog says which of the two
+ * happens next.
+ */
 function RequestDialog({
   open,
   onOpenChange,
@@ -190,15 +239,48 @@ function RequestDialog({
   mine: MyTemplates;
   email: string;
 }) {
+  const second = mine.firstUsed;
+  const last = mine.request;
+  const [role, setRole] = useState<string | null>(null);
+  const [building, setBuilding] = useState<string | null>(null);
+  const [sites, setSites] = useState<string | null>(null);
+  const [editPrior, setEditPrior] = useState(false);
+  const [need, setNeed] = useState<string | null>(null);
+  const [pay, setPay] = useState<string | null>(null);
+  const [fairPrice, setFairPrice] = useState('');
+  const [link, setLink] = useState('');
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
-  const sent = mine.request !== null;
+  const [sent, setSent] = useState(false);
+
+  // A later request starts from the last one's answers.
+  const prior = second && last?.role ? { role: last.role, building: last.building, sites: last.sites } : null;
+  const showFirstFields = !prior || editPrior;
+  const answers = {
+    role: role ?? (showFirstFields ? null : prior?.role ?? null),
+    building: building ?? (showFirstFields ? null : prior?.building ?? null),
+    sites: sites ?? (showFirstFields ? null : prior?.sites ?? null),
+  };
+  const ready = second
+    ? Boolean(need && pay && note.trim()) && (!showFirstFields || Boolean(answers.role && answers.building && answers.sites))
+    : Boolean(answers.role && answers.building && answers.sites);
 
   const send = async () => {
     setBusy(true);
 
     try {
-      await apiFetch('/api/account/templates/request', { method: 'POST', body: JSON.stringify({ note }) });
+      const body: Record<string, string> = { note: note.trim() };
+      if (answers.role) body.role = answers.role;
+      if (answers.building) body.building = answers.building;
+      if (answers.sites) body.sites = answers.sites;
+      if (second) {
+        body.need = need!;
+        body.pay = pay!;
+        if (fairPrice.trim()) body.fairPrice = fairPrice.trim();
+        if (link.trim()) body.link = link.trim();
+      }
+      await apiFetch('/api/account/templates/request', { method: 'POST', body: JSON.stringify(body) });
+      setSent(true);
       await refreshMyTemplates();
     } catch (cause) {
       toaster.add({ title: cause instanceof ApiError ? cause.message : 'Could not send that. Try again.' });
@@ -206,6 +288,8 @@ function RequestDialog({
       setBusy(false);
     }
   };
+
+  const title = sent ? 'Request received' : second ? 'Request more templates' : `Get ${FIRST_REQUEST_GRANT} more templates`;
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -218,21 +302,15 @@ function RequestDialog({
           <p className={styles.dialogCount}>
             {mine.used} of {mine.total} chosen &#xB7; {mine.left} left
           </p>
-          <Dialog.Title className={styles.dialogTitle}>Need more templates?</Dialog.Title>
+          <Dialog.Title className={styles.dialogTitle}>{title}</Dialog.Title>
           {sent ? (
             <>
               <div className={styles.sent}>
-                <p className={styles.sentTitle}>
-                  {mine.request!.status === 'granted'
-                    ? `Granted: ${mine.request!.granted} more`
-                    : mine.request!.status === 'declined'
-                      ? 'We could not add more this time'
-                      : 'Message sent'}
-                </p>
+                <p className={styles.sentTitle}>{second ? 'Sent for review' : 'Check your inbox soon'}</p>
                 <p className={styles.sentBody}>
-                  {mine.request!.status === 'pending'
-                    ? `We'll reply to ${email} within a few days. You can send one message during beta.`
-                    : 'You can send one message during beta, and we have answered yours by email.'}
+                  {second
+                    ? `This is your second request, so someone on our team will read it. We'll reply to ${email} within 2 business days.`
+                    : `We'll email ${email} within about 5 minutes. Click the link in that email to add ${FIRST_REQUEST_GRANT} more templates to your account.`}
                 </p>
               </div>
               <div className={styles.dialogActions}>
@@ -242,22 +320,100 @@ function RequestDialog({
           ) : (
             <>
               <Dialog.Description className={styles.dialogBody}>
-                You&apos;ve chosen all {mine.total} templates. Tell us what you&apos;re building and what
-                you&apos;d need from Tabbied, and we&apos;ll reply by email.
+                {second
+                  ? `You've used your ${mine.total} templates. A person on our team reads every second request and replies within 2 business days.`
+                  : `Answer three quick questions and we'll email you a link that adds ${FIRST_REQUEST_GRANT} more templates, usually within 5 minutes.`}
               </Dialog.Description>
-              <textarea
-                className={styles.textarea}
-                rows={4}
-                maxLength={2000}
-                value={note}
-                onChange={(event) => setNote(event.target.value)}
-                placeholder="Your projects, how you use Tabbied, what would help"
-                aria-label="Your message"
-              />
+
+              <div className={styles.form}>
+                {prior && !editPrior ? (
+                  <div className={styles.prior}>
+                    <div>
+                      <p className={styles.priorLabel}>From your last request</p>
+                      <p className={styles.priorSummary}>
+                        {[prior.role, prior.building, prior.sites ? `${prior.sites} sites in 3 months` : null]
+                          .filter(Boolean)
+                          .join(' \u00B7 ')}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.priorEdit}
+                      onClick={() => {
+                        setRole(prior.role);
+                        setBuilding(prior.building);
+                        setSites(prior.sites);
+                        setEditPrior(true);
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                ) : null}
+
+                {showFirstFields ? (
+                  <>
+                    <Chips label="What best describes you?" options={ROLES} value={answers.role} onChange={setRole} />
+                    <Chips label="What are you building?" options={BUILDING} value={answers.building} onChange={setBuilding} />
+                    <Chips
+                      label="How many sites do you expect to make in the next 3 months?"
+                      options={SITES}
+                      value={answers.sites}
+                      onChange={setSites}
+                    />
+                  </>
+                ) : null}
+
+                {second ? (
+                  <>
+                    <Chips label="How many more do you need?" options={NEED} value={need} onChange={setNeed} />
+                    <Chips label="Would you pay for more templates?" options={PAY} value={pay} onChange={setPay} />
+                    {pay === 'Yes' || pay === 'Maybe' ? (
+                      <input
+                        className={styles.input}
+                        value={fairPrice}
+                        maxLength={120}
+                        onChange={(event) => setFairPrice(event.target.value)}
+                        placeholder="What would feel fair? (optional)"
+                        aria-label="What would feel fair?"
+                      />
+                    ) : null}
+                    <label className={styles.question}>
+                      <span className={styles.questionLabel}>Link to your work (optional)</span>
+                      <input
+                        className={styles.input}
+                        value={link}
+                        maxLength={300}
+                        onChange={(event) => setLink(event.target.value)}
+                        placeholder="yourstudio.com"
+                      />
+                    </label>
+                  </>
+                ) : null}
+
+                <label className={styles.question}>
+                  <span className={styles.questionLabel}>
+                    {second ? 'What would you use more templates for?' : 'Anything else we should know? (optional)'}
+                  </span>
+                  <textarea
+                    className={styles.textarea}
+                    rows={3}
+                    maxLength={2000}
+                    value={note}
+                    onChange={(event) => setNote(event.target.value)}
+                    placeholder={
+                      second
+                        ? 'The projects or clients you have lined up'
+                        : 'A link to your work, or what would make Tabbied more useful'
+                    }
+                  />
+                </label>
+              </div>
+
               <div className={styles.dialogActions}>
                 <Dialog.Close className={styles.secondary}>Cancel</Dialog.Close>
-                <button type="button" className={styles.primary} onClick={send} disabled={busy || !note.trim()}>
-                  Send
+                <button type="button" className={styles.primary} onClick={send} disabled={busy || !ready}>
+                  {second ? 'Send for review' : 'Send request'}
                 </button>
               </div>
             </>
@@ -268,12 +424,88 @@ function RequestDialog({
   );
 }
 
+/** What the row under a full table says, from where the person's request stands. */
+function limitState(mine: MyTemplates, email: string, now: number) {
+  const request = mine.request;
+
+  if (request?.round === 1 && request.status === 'sent') {
+    const due = request.sendAt ? new Date(request.sendAt).getTime() : 0;
+    const lapsed = request.expiresAt ? new Date(request.expiresAt).getTime() < now : false;
+
+    if (lapsed) {
+      return {
+        dot: 'wait' as const,
+        title: 'Your link has expired',
+        body: `Send a new one to ${email} and follow it within 7 days to add ${FIRST_REQUEST_GRANT} more templates.`,
+        action: 'resend' as const,
+      };
+    }
+
+    return due > now
+      ? {
+          dot: 'wait' as const,
+          title: 'Request received',
+          body: `Your email is on its way to ${email}. It usually arrives within 5 minutes.`,
+          action: null,
+        }
+      : {
+          dot: 'ok' as const,
+          title: 'Request approved',
+          body: `We sent a link to ${email}. Open it to add ${FIRST_REQUEST_GRANT} more templates.`,
+          action: 'resend' as const,
+        };
+  }
+
+  if (request?.status === 'pending') {
+    return {
+      dot: 'wait' as const,
+      title: 'Request in review',
+      body: `Our team is reviewing your request. We'll reply to ${email} within 2 business days.`,
+      action: null,
+    };
+  }
+
+  return mine.firstUsed
+    ? {
+        dot: null,
+        title: `You've chosen all ${mine.total} templates`,
+        body: 'Need more? Send a request and our team will review it personally.',
+        action: 'request' as const,
+      }
+    : {
+        dot: null,
+        title: `You've chosen all ${mine.total} templates`,
+        body: `Request ${FIRST_REQUEST_GRANT} more for free. It takes under a minute, and approval arrives by email.`,
+        action: 'request' as const,
+      };
+}
+
+/** "Kalla, Lucid, Motomo, Nectar, Ripple, +5 more": five names, then a count. */
+function namesLine(names: string[]): string {
+  return names.length > 5 ? `${names.slice(0, 5).join(', ')}, +${names.length - 5} more` : names.join(', ');
+}
+
+/** What following the emailed link came to, as the account page says it. */
+const ACTIVATION_NOTES: Record<string, string> = {
+  used: 'That link has already been used. Your templates are below.',
+  expired: 'That link has expired. You can send yourself a new one below.',
+  unknown: 'That link is no longer valid. If you asked for a new one, use the newest email.',
+};
+
 export default function AccountOverview({ index }: { index: TemplateIndexEntry[] }) {
   const templates = useMyTemplates();
   const { user } = useSessionUser();
   const [full, setFull] = useState(false);
   const [asking, setAsking] = useState(false);
+  const [wantsRequest, setWantsRequest] = useState(false);
+  // `?activated=5` after the emailed link worked, or why it did not.
+  const [activated, setActivated] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+  // The clock the limit row reads: a first request's email is "on its way"
+  // until its send time, then "sent". Ticks while that wait is on screen.
+  const [now, setNow] = useState(() => Date.now());
   const [tipOpen, setTipOpen] = useState(false);
+  const [dismissed, setDismissed] = useState<string | null>(null);
   const bySlug = new Map(index.map((entry) => [entry.slug, entry]));
   const mine = templates.status === 'ready' ? templates : null;
 
@@ -281,8 +513,44 @@ export default function AccountOverview({ index }: { index: TemplateIndexEntry[]
     const params = new URLSearchParams(window.location.search);
 
     setFull(params.get('templates') === 'full');
-    setAsking(params.get('request') === '1');
+    setWantsRequest(params.get('request') === '1');
+    setActivated(params.get('activated'));
   }, []);
+
+  // `?request=1` (a gallery card's "Request more") opens the form once the
+  // templates are read, and only when a request can be made: with one
+  // already open, the row under the table says where it stands.
+  useEffect(() => {
+    if (!wantsRequest || !mine) return;
+    setWantsRequest(false);
+    if (mine.left === 0 && !isOpen(mine.request)) setAsking(true);
+  }, [wantsRequest, mine]);
+
+  const waitingOnEmail =
+    mine?.request?.round === 1 && mine.request.status === 'sent' && mine.request.sendAt
+      ? new Date(mine.request.sendAt).getTime()
+      : 0;
+
+  useEffect(() => {
+    if (waitingOnEmail <= Date.now()) return;
+    const timer = setTimeout(() => setNow(Date.now()), waitingOnEmail - Date.now() + 1000);
+    return () => clearTimeout(timer);
+  }, [waitingOnEmail, now]);
+
+  const resend = async () => {
+    setResending(true);
+
+    try {
+      await apiFetch('/api/account/templates/request/resend', { method: 'POST' });
+      await refreshMyTemplates();
+      setNow(Date.now());
+      toaster.add({ title: `Sent again to ${user?.email ?? 'your inbox'}` });
+    } catch (cause) {
+      toaster.add({ title: cause instanceof ApiError ? cause.message : 'Could not send that. Try again.' });
+    } finally {
+      setResending(false);
+    }
+  };
 
   const used = mine?.used ?? 0;
   const total = mine?.total ?? FREE_TEMPLATES;
@@ -296,8 +564,32 @@ export default function AccountOverview({ index }: { index: TemplateIndexEntry[]
       title="Your templates"
       back={false}
       badge="Free beta"
-      lede={`Choose ${total} website templates for free during beta. Once you choose one, you can change its colors and patterns and download it as often as you like.`}
+      lede={`Choose ${FREE_TEMPLATES} website templates for free during beta. Once you choose one, you can change its colors and patterns and download it as often as you like.`}
     >
+      {activated && /^\d+$/.test(activated) && dismissed !== activated ? (
+        <div className={styles.added} role="status">
+          <span className={styles.addedMark} aria-hidden="true">
+            &#x2713;
+          </span>
+          <div className={styles.addedText}>
+            <p className={styles.addedTitle}>{activated} more templates added</p>
+            <p className={styles.addedBody}>
+              You can now choose up to {total} templates. Everything you&apos;ve already customized stays as it is.
+            </p>
+          </div>
+          <Link href="/templates" prefetch={false} className={styles.addedAction}>
+            Choose a template
+          </Link>
+          <button type="button" className={styles.addedClose} aria-label="Dismiss" onClick={() => setDismissed(activated)}>
+            &#xD7;
+          </button>
+        </div>
+      ) : activated && ACTIVATION_NOTES[activated] ? (
+        <p className={styles.notice} role="status">
+          {ACTIVATION_NOTES[activated]}
+        </p>
+      ) : null}
+
       {full && mine && mine.left === 0 ? (
         <p className={styles.notice} role="status">
           You have chosen all {total} of your templates. Keep customizing and downloading those,
@@ -336,7 +628,7 @@ export default function AccountOverview({ index }: { index: TemplateIndexEntry[]
                 <p className={styles.gaugeCount}>
                   {used} of {total} chosen &#xB7; {left} left
                 </p>
-                {names.length > 0 ? <p className={styles.gaugeNames}>{names.join(', ')}</p> : null}
+                {names.length > 0 ? <p className={styles.gaugeNames}>{namesLine(names)}</p> : null}
               </div>
             </>
           ) : (
@@ -412,22 +704,47 @@ export default function AccountOverview({ index }: { index: TemplateIndexEntry[]
                 </span>
               </Link>
             ) : (
-              <div className={styles.limit}>
-                <div>
-                  <p className={styles.limitTitle}>You&apos;ve chosen all {mine.total} templates</p>
-                  <p className={styles.limitNote}>Keep customizing and downloading these as often as you like.</p>
-                </div>
-                <button type="button" className={styles.primary} onClick={() => setAsking(true)}>
-                  {mine.request ? 'Message sent' : 'Request more'}
-                </button>
-              </div>
+              (() => {
+                const state = limitState(mine, user?.email ?? 'your inbox', now);
+
+                return (
+                  <div className={styles.limit}>
+                    <div className={styles.limitText}>
+                      {state.dot ? (
+                        <span className={state.dot === 'ok' ? styles.dotOk : styles.dotWait} aria-hidden="true" />
+                      ) : null}
+                      <div>
+                        <p className={styles.limitTitle}>{state.title}</p>
+                        <p className={styles.limitNote}>{state.body}</p>
+                      </div>
+                    </div>
+                    {state.action === 'request' ? (
+                      <button type="button" className={styles.primary} onClick={() => setAsking(true)}>
+                        {mine.firstUsed ? 'Request more' : `Request ${FIRST_REQUEST_GRANT} more`}
+                      </button>
+                    ) : state.action === 'resend' ? (
+                      <button type="button" className={styles.secondary} onClick={resend} disabled={resending}>
+                        {resending ? 'Sending...' : 'Resend email'}
+                      </button>
+                    ) : null}
+                  </div>
+                );
+              })()
             )}
           </>
         ) : null}
       </div>
 
+      {/* Opened from the row's button or by ?request=1 from a gallery card.
+          Keyed so a reopened form starts empty. */}
       {mine && mine.left === 0 ? (
-        <RequestDialog open={asking} onOpenChange={setAsking} mine={mine} email={user?.email ?? 'you'} />
+        <RequestDialog
+          key={String(asking)}
+          open={asking}
+          onOpenChange={setAsking}
+          mine={mine}
+          email={user?.email ?? 'you'}
+        />
       ) : null}
       <Toaster />
     </AccountPage>

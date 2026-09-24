@@ -6,8 +6,15 @@ The Worker sends four kinds of message, all through `worker/lib/mail.ts`:
 | --- | --- | --- |
 | Confirm your Tabbied account | the person | sign-up (better-auth) |
 | Reset your Tabbied password | the person | "Forgot password" (better-auth) |
-| More templates: <name> | the team | a person at their five sends "Request more" |
-| You have more Tabbied templates / About your request | the person | an admin grants or declines it |
+| Your 5 extra templates are ready | the person | five minutes after a first "Request more"; HTML, with a single-use link that adds 5 |
+| More templates: <name> | the team | a later request, for review |
+| You have more Tabbied templates / About your request | the person | an admin grants or declines a reviewed request |
+
+The first-request email is scheduled with Resend's `scheduled_at` rather than
+sent at once, which is the design's "usually within 5 minutes". Scheduled
+messages show in Resend's dashboard under Emails until they go, and can be
+cancelled there. In dev (no key) it is written to `dev_mail` immediately,
+with its link in the `url` column, which is how the tests follow it.
 
 The provider is [Resend](https://resend.com), over its HTTP API. Receiving
 mail at hello@tabbied.com is a separate setup on Cloudflare Email Routing,

@@ -818,50 +818,65 @@ export function MailPanel() {
 
 // ---- requests ---------------------------------------------------------------
 
-type RequestStatus = 'pending' | 'granted' | 'declined';
-
 type RequestRow = {
   id: string;
   userId: string;
   name: string;
   email: string;
-  note: string;
-  status: RequestStatus;
+  round: number;
+  status: 'sent' | 'activated' | 'pending' | 'granted' | 'declined';
   granted: number;
+  role: string | null;
+  building: string | null;
+  sites: string | null;
+  need: string | null;
+  pay: string | null;
+  fairPrice: string | null;
+  link: string | null;
+  note: string;
+  sendAt: string | null;
   decidedAt: string | null;
   createdAt: string;
   chosen: number;
+  allowance: number;
+  firstActivatedAt: string | null;
 };
 
-const REQUEST_TABS: { status: RequestStatus; label: string }[] = [
-  { status: 'pending', label: 'Pending' },
-  { status: 'granted', label: 'Granted' },
-  { status: 'declined', label: 'Declined' },
+type RequestTab = 'review' | 'link' | 'granted' | 'declined';
+
+const REQUEST_TABS: { tab: RequestTab; label: string }[] = [
+  { tab: 'review', label: 'Needs review' },
+  { tab: 'link', label: 'Link sent' },
+  { tab: 'granted', label: 'Granted' },
+  { tab: 'declined', label: 'Declined' },
 ];
 
 /** The most templates one answer can add; the Worker holds the same number. */
 const MAX_GRANT = 20;
 
+/** A link someone typed, made followable without trusting its scheme. */
+const hrefFor = (link: string) => (/^https?:\/\//i.test(link) ? link : `https://${link}`);
+
 /**
- * "Request more": the messages from people who have chosen every template
- * they may, one each. Granting adds the stepper's number to the person's
- * allowance and mails them; declining mails them too; Undo puts the message
- * back in Pending and takes a grant away (nothing already chosen is taken
- * back). Replies beyond that go by email, from the team inbox the request's
- * notice arrived in.
+ * "Request more". A first request is answered by the person following the
+ * link its email carries, so it sits under Link sent with no decision to
+ * make; every later one waits under Needs review, where granting adds the
+ * stepper's number to the person's allowance and mails them, declining
+ * mails them too, and Undo puts it back. Replies beyond that go by email,
+ * from the team inbox the request's notice arrived in.
  */
 export function RequestsPanel() {
-  const [tab, setTab] = useState<RequestStatus>('pending');
+  const [tab, setTab] = useState<RequestTab>('review');
   const [amounts, setAmounts] = useState<Record<string, number>>({});
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const { data, error, reload } = useAdminData<{
     free: number;
-    counts: Record<RequestStatus, number>;
+    counts: Record<RequestTab, number>;
     requests: RequestRow[];
-  }>(`/api/admin/requests?status=${tab}`);
+  }>(`/api/admin/requests?tab=${tab}`);
 
-  const decide = async (row: RequestRow, body: { status: RequestStatus; granted?: number }) => {
+  const decide = async (row: RequestRow, body: { status: 'pending' | 'granted' | 'declined'; granted?: number }) => {
     setBusy(row.id);
     setMessage(null);
 
@@ -881,7 +896,7 @@ export function RequestsPanel() {
     }
   };
 
-  const amount = (id: string) => amounts[id] ?? 2;
+  const amount = (id: string) => amounts[id] ?? 5;
   const step = (id: string, by: number) =>
     setAmounts((current) => ({ ...current, [id]: Math.min(MAX_GRANT, Math.max(1, amount(id) + by)) }));
 
@@ -890,13 +905,13 @@ export function RequestsPanel() {
       <div className={styles.tabs} role="group" aria-label="Filter requests">
         {REQUEST_TABS.map((item) => (
           <button
-            key={item.status}
+            key={item.tab}
             type="button"
             className={styles.tab}
-            aria-pressed={tab === item.status}
-            onClick={() => setTab(item.status)}
+            aria-pressed={tab === item.tab}
+            onClick={() => setTab(item.tab)}
           >
-            {item.label} &#xB7; {data?.counts[item.status] ?? 0}
+            {item.label} &#xB7; {data?.counts[item.tab] ?? 0}
           </button>
         ))}
       </div>
@@ -913,76 +928,127 @@ export function RequestsPanel() {
         <p className={styles.quiet}>Nothing here.</p>
       ) : (
         <div className={styles.requests}>
-          {data.requests.map((row) => (
-            <div key={row.id} className={styles.request}>
-              <div className={styles.requestHead}>
-                <div className={styles.person}>
-                  <span className={styles.avatar} aria-hidden="true">
-                    {initials(row.name, row.email)}
-                  </span>
-                  <div className={styles.personText}>
-                    <p className={styles.personName}>{row.name || row.email}</p>
-                    <p className={styles.requestMeta}>
-                      <a href={`mailto:${row.email}`}>{row.email}</a> &#xB7; Sent {day(row.createdAt)} &#xB7; Using{' '}
-                      {row.chosen} of {data.free + (row.status === 'granted' ? row.granted : 0)} &#xB7;{' '}
-                      <Link href={`/admin/users/?id=${row.userId}`} prefetch={false}>
-                        Profile
-                      </Link>
-                    </p>
-                  </div>
-                </div>
+          {data.requests.map((row) => {
+            const reviewed = row.round > 1;
+            const answers = [row.role, row.building, row.sites ? `${row.sites} sites in the next 3 months` : null]
+              .filter(Boolean)
+              .join(' \u00B7 ');
 
-                {row.status === 'pending' ? (
-                  <div className={styles.decide}>
-                    <button
-                      type="button"
-                      className={styles.small}
-                      disabled={busy !== null}
-                      onClick={() => void decide(row, { status: 'declined' })}
-                    >
-                      Decline
-                    </button>
-                    <div className={styles.stepper}>
-                      <button type="button" aria-label="One fewer" disabled={amount(row.id) <= 1} onClick={() => step(row.id, -1)}>
-                        &#x2212;
+            return (
+              <div key={row.id} className={styles.request}>
+                <div className={styles.requestHead}>
+                  <div className={styles.person}>
+                    <span className={styles.avatar} aria-hidden="true">
+                      {initials(row.name, row.email)}
+                    </span>
+                    <div className={styles.personText}>
+                      <p className={styles.personName}>
+                        {row.name || row.email}{' '}
+                        <span className={`${styles.roundBadge} ${reviewed ? styles.roundSecond : ''}`}>
+                          {reviewed ? `${ordinal(row.round)} request` : '1st request'}
+                        </span>
+                      </p>
+                      <p className={styles.requestMeta}>
+                        <a href={`mailto:${row.email}`}>{row.email}</a> &#xB7; Sent {day(row.createdAt)} &#xB7; Using{' '}
+                        {row.chosen} of {row.allowance} &#xB7;{' '}
+                        <Link href={`/admin/users/?id=${row.userId}`} prefetch={false}>
+                          Profile
+                        </Link>
+                      </p>
+                      {reviewed ? (
+                        <p className={styles.requestMeta}>
+                          Needs {row.need ?? '?'} more &#xB7; Would pay: {row.pay ?? '?'}
+                          {row.fairPrice ? ` (${row.fairPrice})` : ''}
+                          {row.link ? (
+                            <>
+                              {' '}
+                              &#xB7;{' '}
+                              <a href={hrefFor(row.link)} target="_blank" rel="noopener noreferrer nofollow">
+                                {row.link}
+                              </a>
+                            </>
+                          ) : null}
+                        </p>
+                      ) : null}
+                      {answers ? (
+                        <p className={styles.requestMeta}>
+                          {answers}
+                          {reviewed && row.firstActivatedAt ? ` \u00B7 +5 via email link on ${day(row.firstActivatedAt)}` : ''}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {row.status === 'pending' ? (
+                    <div className={styles.decide}>
+                      <button
+                        type="button"
+                        className={styles.small}
+                        disabled={busy !== null}
+                        onClick={() => void decide(row, { status: 'declined' })}
+                      >
+                        Decline
                       </button>
-                      <span aria-live="polite">{amount(row.id)}</span>
-                      <button type="button" aria-label="One more" disabled={amount(row.id) >= MAX_GRANT} onClick={() => step(row.id, 1)}>
-                        +
+                      <div className={styles.stepper}>
+                        <button type="button" aria-label="One fewer" disabled={amount(row.id) <= 1} onClick={() => step(row.id, -1)}>
+                          &#x2212;
+                        </button>
+                        <span aria-live="polite">{amount(row.id)}</span>
+                        <button type="button" aria-label="One more" disabled={amount(row.id) >= MAX_GRANT} onClick={() => step(row.id, 1)}>
+                          +
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        className={styles.grant}
+                        disabled={busy !== null}
+                        onClick={() => void decide(row, { status: 'granted', granted: amount(row.id) })}
+                      >
+                        Grant {amount(row.id)}
                       </button>
                     </div>
-                    <button
-                      type="button"
-                      className={styles.grant}
-                      disabled={busy !== null}
-                      onClick={() => void decide(row, { status: 'granted', granted: amount(row.id) })}
-                    >
-                      Grant {amount(row.id)}
-                    </button>
-                  </div>
-                ) : (
-                  <div className={styles.decide}>
-                    <span className={`${styles.outcome} ${row.status === 'granted' ? styles.outcomeGranted : ''}`}>
-                      {row.status === 'granted'
-                        ? `Granted ${row.granted} template${row.granted === 1 ? '' : 's'}`
-                        : 'Declined'}
-                    </span>
-                    <button
-                      type="button"
-                      className={styles.undo}
-                      disabled={busy !== null}
-                      onClick={() => void decide(row, { status: 'pending' })}
-                    >
-                      Undo
-                    </button>
-                  </div>
-                )}
+                  ) : (
+                    <div className={styles.decide}>
+                      <span
+                        className={`${styles.outcome} ${
+                          row.status === 'declined' || (row.status === 'sent' && !row.decidedAt) ? '' : styles.outcomeGranted
+                        }`}
+                      >
+                        {row.status === 'activated'
+                          ? `Link clicked \u00B7 +${row.granted} on ${day(row.decidedAt!)}`
+                          : row.status === 'sent'
+                            ? row.sendAt && new Date(row.sendAt).getTime() > Date.now()
+                              ? 'Email scheduled'
+                              : 'Link sent \u00B7 not clicked yet'
+                            : row.status === 'granted'
+                              ? `Granted ${row.granted} template${row.granted === 1 ? '' : 's'}`
+                              : 'Declined'}
+                      </span>
+                      {reviewed ? (
+                        <button
+                          type="button"
+                          className={styles.undo}
+                          disabled={busy !== null}
+                          onClick={() => void decide(row, { status: 'pending' })}
+                        >
+                          Undo
+                        </button>
+                      ) : null}
+                    </div>
+                  )}
+                </div>
+                {row.note ? <p className={styles.requestNote}>{row.note}</p> : null}
               </div>
-              <p className={styles.requestNote}>{row.note}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </>
   );
+}
+
+/** "2nd", "3rd", "4th": a request's round, as the badge says it. */
+function ordinal(n: number): string {
+  const tail = n % 100 >= 11 && n % 100 <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th';
+  return `${n}${tail}`;
 }

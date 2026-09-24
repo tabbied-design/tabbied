@@ -98,7 +98,7 @@ test.describe('account and admin pages', () => {
     await expect(page.getByText('2 / 10 today')).toBeVisible();
   });
 
-  test('the overview is the chosen templates, and the one "Request more" at the limit', async ({ page }) => {
+  test('the overview is the chosen templates, and "Request more" in two rounds', async ({ page }) => {
     await stubSession(page, null);
     const mine = {
       used: 2,
@@ -108,7 +108,8 @@ test.describe('account and admin pages', () => {
         { slug: 'verdant', chosenAt: '2026-06-30T00:00:00Z', site: { id: 'abc', updatedAt: '2026-09-22T00:00:00Z' } },
         { slug: 'solstice', chosenAt: '2026-07-12T00:00:00Z', site: null },
       ],
-      request: null as null | { status: string; granted: number; createdAt: string },
+      request: null as null | Record<string, unknown>,
+      firstUsed: false,
     };
     await page.route('**/api/account/templates', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mine) })
@@ -135,7 +136,7 @@ test.describe('account and admin pages', () => {
 
     await expect(page.getByRole('link', { name: /3 templates left/ })).toHaveAttribute('href', '/templates/');
 
-    // At the limit: the slot becomes the one message the beta allows.
+    // At the limit: the slot becomes the first request, answered by email.
     Object.assign(mine, {
       used: 5,
       left: 0,
@@ -143,8 +144,19 @@ test.describe('account and admin pages', () => {
     });
     const sent: unknown[] = [];
     await page.route('**/api/account/templates/request', (route) => {
-      sent.push(route.request().postDataJSON());
-      mine.request = { status: 'pending', granted: 0, createdAt: '2026-09-23T00:00:00Z' };
+      const body = route.request().postDataJSON() as Record<string, string>;
+      sent.push(body);
+      mine.request = {
+        round: mine.firstUsed ? 2 : 1,
+        status: mine.firstUsed ? 'pending' : 'sent',
+        granted: 0,
+        role: body.role ?? 'Freelancer',
+        building: body.building ?? 'Client sites',
+        sites: body.sites ?? '3-10',
+        sendAt: new Date(Date.now() + 5 * 60_000).toISOString(),
+        expiresAt: new Date(Date.now() + 7 * 86_400_000).toISOString(),
+        createdAt: new Date().toISOString(),
+      };
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ request: mine.request }) });
     });
 
@@ -153,14 +165,54 @@ test.describe('account and admin pages', () => {
     await expect(page.getByRole('status')).toContainText('chosen all 5 of your templates');
     await expect(page.getByText("You've chosen all 5 templates")).toBeVisible();
 
+    await page.getByRole('button', { name: 'Request 5 more' }).click();
+    let dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: 'Get 5 more templates' })).toBeVisible();
+    const sendRequest = dialog.getByRole('button', { name: 'Send request' });
+    await expect(sendRequest).toBeDisabled();
+    await dialog.getByRole('button', { name: 'Designer' }).click();
+    await dialog.getByRole('button', { name: 'Client sites' }).click();
+    await dialog.getByRole('button', { name: '3-10' }).click();
+    await sendRequest.click();
+    await expect(dialog.getByText('Check your inbox soon')).toBeVisible();
+    expect(sent).toEqual([{ note: '', role: 'Designer', building: 'Client sites', sites: '3-10' }]);
+    await dialog.getByRole('button', { name: 'Done' }).click();
+
+    // While the email is due, the row says it is on its way.
+    await expect(page.getByText('Request received')).toBeVisible();
+    await expect(page.getByText(/on its way to pat@example.com/)).toBeVisible();
+
+    // The emailed link lands here: the banner, with the new allowance.
+    Object.assign(mine, { total: 10, left: 5, firstUsed: true, request: { ...mine.request, status: 'activated', granted: 5 } });
+    await page.goto('/account/?activated=5');
+    await expect(page.getByText('5 more templates added')).toBeVisible();
+    await expect(page.getByText('You can now choose up to 10 templates', { exact: false })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Choose a template' })).toHaveAttribute('href', '/templates/');
+    await page.getByRole('button', { name: 'Dismiss' }).click();
+    await expect(page.getByText('5 more templates added')).toHaveCount(0);
+
+    // All ten chosen: the next request is reviewed, with the first answers carried.
+    Object.assign(mine, {
+      used: 10,
+      left: 0,
+      chosen: [...mine.chosen, ...['mistral-cycles', 'zenith-observatory', 'maison-ambre', 'nocturne', 'betonpark'].map((slug) => ({ slug, chosenAt: '2026-09-01T00:00:00Z', site: null }))],
+    });
+    await page.goto('/account/');
+    await expect(page.getByText(/\+5 more$/)).toBeVisible();
     await page.getByRole('button', { name: 'Request more' }).click();
-    const dialog = page.getByRole('dialog');
-    await expect(dialog.getByRole('heading', { name: 'Need more templates?' })).toBeVisible();
-    await expect(dialog.getByRole('button', { name: 'Send' })).toBeDisabled();
-    await dialog.getByRole('textbox').fill('A studio in Portland building sites for cafes.');
-    await dialog.getByRole('button', { name: 'Send' }).click();
-    await expect(dialog.getByText('Message sent')).toBeVisible();
-    expect(sent).toEqual([{ note: 'A studio in Portland building sites for cafes.' }]);
+    dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: 'Request more templates' })).toBeVisible();
+    await expect(dialog.getByText('Designer', { exact: false })).toBeVisible();
+    const review = dialog.getByRole('button', { name: 'Send for review' });
+    await dialog.getByRole('button', { name: '10', exact: true }).click();
+    await dialog.getByRole('button', { name: 'Maybe' }).click();
+    await expect(review).toBeDisabled();
+    await dialog.getByRole('textbox', { name: 'What would you use more templates for?' }).fill('Six cafes in Portland.');
+    await review.click();
+    await expect(dialog.getByText('Sent for review')).toBeVisible();
+    expect(sent[1]).toEqual({ note: 'Six cafes in Portland.', role: 'Designer', building: 'Client sites', sites: '3-10', need: '10', pay: 'Maybe' });
+    await dialog.getByRole('button', { name: 'Done' }).click();
+    await expect(page.getByText('Request in review')).toBeVisible();
   });
 
   test('the admin tier is "Not found" to a member and a dashboard to an admin', async ({ page }) => {
@@ -212,8 +264,15 @@ test.describe('account and admin pages', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           free: 5,
-          counts: { pending: 1, granted: 0, declined: 0 },
-          requests: [{ id: 'r1', userId: 'u2', name: 'Sam', email: 'sam@example.com', note: 'Six cafes in Portland.', status: 'pending', granted: 0, decidedAt: null, createdAt: '2026-09-22T00:00:00Z', chosen: 5 }],
+          counts: { review: 1, link: 0, granted: 0, declined: 0 },
+          requests: [
+            {
+              id: 'r1', userId: 'u2', name: 'Sam', email: 'sam@example.com', round: 2, status: 'pending', granted: 0,
+              role: 'Agency', building: 'Client sites', sites: '10+', need: '20+', pay: 'Yes', fairPrice: '$15/month',
+              link: 'northfold.studio', note: 'Six cafes in Portland.', sendAt: null, decidedAt: null,
+              createdAt: '2026-09-22T00:00:00Z', chosen: 10, allowance: 10, firstActivatedAt: '2026-08-30T00:00:00Z',
+            },
+          ],
         }),
       })
     );
@@ -223,7 +282,11 @@ test.describe('account and admin pages', () => {
     });
     await page.goto('/admin/requests/');
     await expect(page.getByText('Six cafes in Portland.')).toBeVisible();
-    await page.getByRole('button', { name: 'One more' }).click();
+    await expect(page.getByText('2nd request')).toBeVisible();
+    await expect(page.getByText(/Needs 20\+ more/)).toBeVisible();
+    await expect(page.getByRole('link', { name: 'northfold.studio' })).toHaveAttribute('href', 'https://northfold.studio');
+    await page.getByRole('button', { name: 'One fewer' }).click();
+    await page.getByRole('button', { name: 'One fewer' }).click();
     await page.getByRole('button', { name: 'Grant 3' }).click();
     await expect.poll(() => decisions).toEqual([{ status: 'granted', granted: 3 }]);
   });

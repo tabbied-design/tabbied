@@ -700,6 +700,23 @@
   color: var(--a-dim);
 }
 
+.roundBadge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 3px 9px;
+  font: 500 11.5px var(--a-sans);
+  color: oklch(0.45 0.01 260);
+  white-space: nowrap;
+  vertical-align: 2px;
+  background: oklch(0 0 0 / 0.05);
+  border-radius: 999px;
+}
+
+.roundSecond {
+  color: oklch(0.42 0.1 65);
+  background: oklch(0.95 0.06 80);
+}
+
 .requestNote {
   margin: 16px 0 0;
   padding: 14px 16px;

@@ -149,15 +149,11 @@ function Footer({ c, templates, guard }: { c: TemplateCard; templates: MyTemplat
   return (
     <div className={s.dl}>
       <span className={s.quiet}>All {templates.total} chosen</span>
-      {templates.request ? (
-        <a href={c.href} className={s.pill}>
-          Preview
-        </a>
-      ) : (
-        <Link href="/account/?request=1" prefetch={false} className={s.pill}>
-          Request more
-        </Link>
-      )}
+      {/* The account page says where a request stands, so the card always
+          leads there, open request or not. */}
+      <Link href="/account/?request=1" prefetch={false} className={s.pill}>
+        Request more
+      </Link>
     </div>
   );
 }

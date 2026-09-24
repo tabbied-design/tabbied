@@ -20,7 +20,23 @@ export type ChosenTemplate = {
   site: { id: string; updatedAt: string } | null;
 };
 
-export type TemplateRequest = { status: 'pending' | 'granted' | 'declined'; granted: number; createdAt: string };
+/**
+ * A person's latest "Request more". Round 1 is answered by an emailed link
+ * ('sent', then 'activated'); later rounds by the team ('pending', then
+ * 'granted' or 'declined'). See worker/lib/templates.ts.
+ */
+export type TemplateRequest = {
+  round: number;
+  status: 'sent' | 'activated' | 'pending' | 'granted' | 'declined';
+  granted: number;
+  role: string | null;
+  building: string | null;
+  sites: string | null;
+  /** Round 1: when the email is due, and when its link lapses. */
+  sendAt: string | null;
+  expiresAt: string | null;
+  createdAt: string;
+};
 
 export type MyTemplates = {
   used: number;
@@ -28,7 +44,16 @@ export type MyTemplates = {
   left: number;
   chosen: ChosenTemplate[];
   request: TemplateRequest | null;
+  /** Whether the emailed-link request has been made: every later one is reviewed. */
+  firstUsed: boolean;
 };
+
+/** What a first request's link adds. */
+export const FIRST_REQUEST_GRANT = 5;
+
+/** Whether a request is still waiting on something: the email, or the team. */
+export const isOpen = (request: TemplateRequest | null) =>
+  request !== null && (request.status === 'sent' || request.status === 'pending');
 
 export type MyTemplatesState =
   | { status: 'signed-out' }
