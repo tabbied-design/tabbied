@@ -267,7 +267,7 @@ export default function TinRoofGuitarsPage() {
               </ul>
             </div>
           </div>
-          <p className={s.wallNote}>The wall changes every week. Ask at the counter for what is in the back, or for the left-handed ones.</p>
+          <p className={s.wallNote}>Eight of this week's forty. The wall changes every Tuesday; ask at the counter for what is in the back, or for the left-handed ones.</p>
         </section>
 
         {/* --------------------------------------------------------- REPAIRS
