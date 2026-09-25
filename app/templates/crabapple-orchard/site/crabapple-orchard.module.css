@@ -336,11 +336,12 @@
 }
 
 .months {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.months span {
+.months > span:not(.now) {
   padding-left: 0.6rem;
 }
 
@@ -364,6 +365,7 @@
 }
 
 .track {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
   align-self: stretch;
@@ -372,7 +374,20 @@
   background-size: 25% 100%;
 }
 
+.track::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: -1px;
+  left: calc(100% * var(--now) / 8);
+  width: 2px;
+  background: var(--red);
+  pointer-events: none;
+}
+
 .span {
+  position: relative;
+  z-index: 1;
   grid-row: 1;
   margin: 0.6rem 0.25rem;
   padding: 0.3rem 0.8rem;
@@ -399,9 +414,10 @@
 .now {
   position: absolute;
   top: -1.6rem;
-  bottom: 0;
-  left: calc(var(--name-w) + (100% - var(--name-w)) * var(--now) / 8);
+  bottom: -0.7rem;
+  left: calc(100% * var(--now) / 8);
   width: 2px;
+  padding: 0;
   background: var(--red);
   pointer-events: none;
 }
@@ -1000,10 +1016,6 @@
   .ripe {
     border-radius: 1rem;
     text-align: left;
-  }
-
-  .chart {
-    --name-w: 0rem;
   }
 
   .chartCorner {

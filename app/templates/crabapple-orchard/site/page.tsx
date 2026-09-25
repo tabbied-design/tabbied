@@ -199,6 +199,9 @@ export default function CrabappleOrchardPage() {
                 {MONTHS.map((m) => (
                   <span key={m}>{m}</span>
                 ))}
+                <span className={s.now}>
+                  <span className={s.nowLabel}>This week</span>
+                </span>
               </div>
             </div>
             <ul className={s.rowsList}>
@@ -219,9 +222,6 @@ export default function CrabappleOrchardPage() {
                 </li>
               ))}
             </ul>
-            <span className={s.now} aria-hidden="true">
-              <span className={s.nowLabel}>This week</span>
-            </span>
           </div>
           <ul className={s.legend}>
             <li data-kind="apple">Apples</li>

@@ -163,9 +163,9 @@
   background: linear-gradient(
     to bottom,
     var(--pale) 0%,
-    color-mix(in srgb, var(--pale) 82%, transparent) 16%,
-    color-mix(in srgb, var(--pale) 45%, transparent) 30%,
-    transparent 43%
+    color-mix(in srgb, var(--pale) 85%, transparent) 17%,
+    color-mix(in srgb, var(--pale) 55%, transparent) 32%,
+    transparent 47%
   );
 }
 
@@ -864,7 +864,20 @@
   }
 
   .heroText {
-    padding-top: 5.5rem;
+    padding-top: 6rem;
+  }
+
+  .mark {
+    font-size: 1.2rem;
+    white-space: nowrap;
+  }
+
+  .nextUp {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: fit-content;
+    margin: 1.8rem var(--gut) 0;
   }
 
   .heroArt {
@@ -877,12 +890,6 @@
 
   .title {
     font-size: clamp(3rem, 15vw, 4rem);
-  }
-
-  .nextUp {
-    left: var(--gut);
-    right: auto;
-    bottom: 1.2rem;
   }
 
   .boardRow[data-head='yes'] {

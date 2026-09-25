@@ -12,7 +12,6 @@ export const metadata = {
 
 /* Site colors. The noodle loops behind the hero are mostly the pale tone
    with the odd gold one; the band of stacked bowls is chili and gold. */
-const PAPER = '#F5EFE4';
 const INK = '#161311';
 const CHILI = '#C8102E';
 const GOLD = '#D9A441';
@@ -216,7 +215,7 @@ export default function HachiRamenPage() {
 
       <header className={s.bar}>
         <a className={s.brand} href="#top">
-          <span className={s.brandMark} aria-hidden="true">{'八'}</span>
+          <span className={s.brandMark} aria-hidden="true">{'\u516B'}</span>
           <span className={s.brandName}>Hachi Ramen</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
@@ -492,7 +491,7 @@ export default function HachiRamenPage() {
       <footer className={s.footer}>
         <div className={s.footInner}>
           <div className={s.footBrand}>
-            <span className={s.footMark} aria-hidden="true">{'八'}</span>
+            <span className={s.footMark} aria-hidden="true">{'\u516B'}</span>
             <div>
               <p className={s.footName}>Hachi Ramen</p>
               <p className={s.footTag}>Eight hours of broth, one bowl. 8 Canal Street.</p>
