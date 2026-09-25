@@ -76,10 +76,19 @@ test.describe('pictures that follow the palette', () => {
           continue;
         }
 
+        // Some pictures are drawn only at other widths (Saltline's margin
+        // catch appears from 1330px); there is nothing to compare here.
+        if (!(await picture.isVisible())) {
+          before.push(null);
+          continue;
+        }
+
         await picture.scrollIntoViewIfNeeded();
         await page.waitForTimeout(150);
         before.push(await picture.screenshot({ animations: 'disabled' }));
       }
+
+      expect(before.some(Boolean) || kinds.some((kind) => kind.includes('artwork--fill')), `${slug}: no picture to compare`).toBe(true);
 
       await recolor(page);
 
