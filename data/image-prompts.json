@@ -1567,6 +1567,131 @@
       "title": "Pinewood RV Park - campground",
       "style": "flat vector-style illustration",
       "palette": {}
+    },
+    "cleaver-and-co": {
+      "title": "Cleaver and Co. - butcher shop",
+      "style": "single-color ink illustration",
+      "palette": {}
+    },
+    "pressed-juice": {
+      "title": "Pressed - juice bar",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "double-stack-burgers": {
+      "title": "Double Stack - burger joint",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "the-rialto-cinema": {
+      "title": "The Rialto - independent cinema",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "crabapple-orchard": {
+      "title": "Crabapple Orchard - pick-your-own orchard",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "hive-and-honey": {
+      "title": "Hive and Honey - honey farm and shop",
+      "style": "single-color ink illustration",
+      "palette": {}
+    },
+    "little-fins-swim": {
+      "title": "Little Fins - swim school for kids",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "green-light-driving": {
+      "title": "Green Light - driving school",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "cacao-and-co": {
+      "title": "Cacao and Co. - chocolate shop",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "brim-hat-shop": {
+      "title": "Brim - hat shop",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "live-wire-electric": {
+      "title": "Live Wire Electric - electrician",
+      "style": "single-color ink illustration",
+      "palette": {}
+    },
+    "hachi-ramen": {
+      "title": "Hachi Ramen - ramen shop",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "crux-climbing": {
+      "title": "Crux - climbing gym",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "pointe-and-pulse": {
+      "title": "Pointe and Pulse - dance school",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "coral-cove-beach-club": {
+      "title": "Coral Cove - beach club",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "meeple-and-mug": {
+      "title": "Meeple and Mug - board game cafe",
+      "style": "single-color ink illustration",
+      "palette": {}
+    },
+    "clear-view-optical": {
+      "title": "Clear View Optical - optician and eyewear",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "veil-and-vow": {
+      "title": "Veil and Vow - bridal boutique",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "satchel-and-strap": {
+      "title": "Satchel and Strap - leather goods maker",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "harbor-light-tours": {
+      "title": "Harbor Light Tours - boat tours",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "parkside-family-medicine": {
+      "title": "Parkside Family Medicine - family doctor's practice",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "the-gimlet": {
+      "title": "The Gimlet - cocktail bar",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "polish-nail-bar": {
+      "title": "Polish - nail salon",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "tin-roof-guitars": {
+      "title": "Tin Roof Guitars - guitar shop",
+      "style": "black-and-white photograph",
+      "palette": {}
+    },
+    "heron-point-golf": {
+      "title": "Heron Point - golf club",
+      "style": "black-and-white photograph",
+      "palette": {}
     }
   },
   "sets": {
@@ -6183,6 +6308,482 @@
       "set": "art-bg-photo",
       "slot": "art",
       "subject": "a stone fire ring with log benches in a clearing ringed by tall pines, no fire lit"
+    },
+    {
+      "id": "cleaver-and-co-pig",
+      "project": "cleaver-and-co",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a pig seen from the side, engraving style"
+    },
+    {
+      "id": "cleaver-and-co-cow",
+      "project": "cleaver-and-co",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a cow seen from the side, engraving style"
+    },
+    {
+      "id": "cleaver-and-co-cleaver",
+      "project": "cleaver-and-co",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a butcher's cleaver, engraving style"
+    },
+    {
+      "id": "pressed-juice-orange",
+      "project": "pressed-juice",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a halved orange"
+    },
+    {
+      "id": "pressed-juice-bottle",
+      "project": "pressed-juice",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a glass bottle of juice with a leaf on the label"
+    },
+    {
+      "id": "pressed-juice-pineapple",
+      "project": "pressed-juice",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a pineapple"
+    },
+    {
+      "id": "double-stack-burgers-burger",
+      "project": "double-stack-burgers",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a double cheeseburger with lettuce and tomato"
+    },
+    {
+      "id": "double-stack-burgers-fries",
+      "project": "double-stack-burgers",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a paper carton of french fries"
+    },
+    {
+      "id": "double-stack-burgers-shake",
+      "project": "double-stack-burgers",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a milkshake in a tall glass with a straw"
+    },
+    {
+      "id": "the-rialto-cinema-projector",
+      "project": "the-rialto-cinema",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a vintage film projector with two reels"
+    },
+    {
+      "id": "the-rialto-cinema-popcorn",
+      "project": "the-rialto-cinema",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a striped paper box of popcorn"
+    },
+    {
+      "id": "the-rialto-cinema-seats",
+      "project": "the-rialto-cinema",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a row of three folding velvet cinema seats"
+    },
+    {
+      "id": "crabapple-orchard-rows",
+      "project": "crabapple-orchard",
+      "set": "art-bg-layers",
+      "slot": "art",
+      "subject": "rows of apple trees across rolling hills"
+    },
+    {
+      "id": "crabapple-orchard-barn",
+      "project": "crabapple-orchard",
+      "set": "art-bg-layers",
+      "slot": "art",
+      "subject": "a red barn with a silo beside an orchard"
+    },
+    {
+      "id": "hive-and-honey-bee",
+      "project": "hive-and-honey",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a honey bee seen from above, engraving style"
+    },
+    {
+      "id": "hive-and-honey-skep",
+      "project": "hive-and-honey",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a traditional straw bee skep, engraving style"
+    },
+    {
+      "id": "hive-and-honey-dipper",
+      "project": "hive-and-honey",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a wooden honey dipper dripping honey, engraving style"
+    },
+    {
+      "id": "little-fins-swim-fish",
+      "project": "little-fins-swim",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a small friendly cartoon fish"
+    },
+    {
+      "id": "little-fins-swim-goggles",
+      "project": "little-fins-swim",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a pair of swimming goggles"
+    },
+    {
+      "id": "little-fins-swim-duck",
+      "project": "little-fins-swim",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a rubber duck"
+    },
+    {
+      "id": "green-light-driving-car",
+      "project": "green-light-driving",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a small hatchback car seen from the side"
+    },
+    {
+      "id": "green-light-driving-light",
+      "project": "green-light-driving",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a traffic light"
+    },
+    {
+      "id": "green-light-driving-sign",
+      "project": "green-light-driving",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a round road sign on a post"
+    },
+    {
+      "id": "cacao-and-co-bar",
+      "project": "cacao-and-co",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a bar of dark chocolate with a few squares broken off"
+    },
+    {
+      "id": "cacao-and-co-truffles",
+      "project": "cacao-and-co",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "three round chocolate truffles"
+    },
+    {
+      "id": "cacao-and-co-pod",
+      "project": "cacao-and-co",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a cacao pod split open showing the beans"
+    },
+    {
+      "id": "brim-hat-shop-fedora",
+      "project": "brim-hat-shop",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a felt fedora hat"
+    },
+    {
+      "id": "brim-hat-shop-straw",
+      "project": "brim-hat-shop",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a wide-brimmed straw sun hat with a ribbon band"
+    },
+    {
+      "id": "brim-hat-shop-cap",
+      "project": "brim-hat-shop",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a tweed flat cap"
+    },
+    {
+      "id": "live-wire-electric-bulb",
+      "project": "live-wire-electric",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a light bulb, bold icon"
+    },
+    {
+      "id": "live-wire-electric-plug",
+      "project": "live-wire-electric",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "an electrical plug with its cable, bold icon"
+    },
+    {
+      "id": "live-wire-electric-pliers",
+      "project": "live-wire-electric",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a pair of lineman's pliers, bold icon"
+    },
+    {
+      "id": "hachi-ramen-bowl",
+      "project": "hachi-ramen",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a bowl of ramen with noodles, a halved egg and chopsticks, seen from the side"
+    },
+    {
+      "id": "hachi-ramen-lantern",
+      "project": "hachi-ramen",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a round paper lantern"
+    },
+    {
+      "id": "hachi-ramen-gyoza",
+      "project": "hachi-ramen",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "three gyoza dumplings"
+    },
+    {
+      "id": "crux-climbing-holds",
+      "project": "crux-climbing",
+      "set": "art-masks-3",
+      "slot": "art",
+      "subject": "a cluster of climbing holds on a wall panel"
+    },
+    {
+      "id": "crux-climbing-carabiner",
+      "project": "crux-climbing",
+      "set": "art-masks-3",
+      "slot": "art",
+      "subject": "a carabiner clipped to a coil of rope"
+    },
+    {
+      "id": "crux-climbing-chalk",
+      "project": "crux-climbing",
+      "set": "art-masks-3",
+      "slot": "art",
+      "subject": "a chalk bag"
+    },
+    {
+      "id": "pointe-and-pulse-ballet",
+      "project": "pointe-and-pulse",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a ballet dancer in a full-length arabesque pose"
+    },
+    {
+      "id": "pointe-and-pulse-hiphop",
+      "project": "pointe-and-pulse",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a hip hop dancer mid-jump, full length"
+    },
+    {
+      "id": "coral-cove-beach-club-beach",
+      "project": "coral-cove-beach-club",
+      "set": "art-bg-masks",
+      "slot": "art",
+      "subject": "a sandy beach with palm trees and striped umbrellas at the water's edge"
+    },
+    {
+      "id": "coral-cove-beach-club-pier",
+      "project": "coral-cove-beach-club",
+      "set": "art-bg-masks",
+      "slot": "art",
+      "subject": "a wooden pier on posts running out to a small beach hut, over a calm sea drawn as a solid blue band across the whole bottom third of the frame"
+    },
+    {
+      "id": "meeple-and-mug-die",
+      "project": "meeple-and-mug",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a six-sided die showing five, bold icon"
+    },
+    {
+      "id": "meeple-and-mug-knight",
+      "project": "meeple-and-mug",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a chess knight, bold icon"
+    },
+    {
+      "id": "meeple-and-mug-mug",
+      "project": "meeple-and-mug",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a coffee mug with steam rising, bold icon"
+    },
+    {
+      "id": "clear-view-optical-round",
+      "project": "clear-view-optical",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a pair of round eyeglasses"
+    },
+    {
+      "id": "clear-view-optical-sun",
+      "project": "clear-view-optical",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a pair of sunglasses"
+    },
+    {
+      "id": "clear-view-optical-cateye",
+      "project": "clear-view-optical",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a pair of cat-eye glasses"
+    },
+    {
+      "id": "veil-and-vow-gown",
+      "project": "veil-and-vow",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a wedding gown on a dress form"
+    },
+    {
+      "id": "veil-and-vow-bouquet",
+      "project": "veil-and-vow",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a bridal bouquet of roses"
+    },
+    {
+      "id": "satchel-and-strap-satchel",
+      "project": "satchel-and-strap",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a leather satchel bag with a buckle"
+    },
+    {
+      "id": "satchel-and-strap-tote",
+      "project": "satchel-and-strap",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a leather tote bag"
+    },
+    {
+      "id": "satchel-and-strap-wallet",
+      "project": "satchel-and-strap",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a folded leather wallet"
+    },
+    {
+      "id": "harbor-light-tours-harbor",
+      "project": "harbor-light-tours",
+      "set": "art-bg-photo",
+      "slot": "art",
+      "subject": "a harbor with sailboats moored at a wooden dock"
+    },
+    {
+      "id": "harbor-light-tours-coast",
+      "project": "harbor-light-tours",
+      "set": "art-bg-photo",
+      "slot": "art",
+      "subject": "a rocky coastline with a lighthouse on the headland"
+    },
+    {
+      "id": "parkside-family-medicine-stethoscope",
+      "project": "parkside-family-medicine",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a stethoscope"
+    },
+    {
+      "id": "parkside-family-medicine-kit",
+      "project": "parkside-family-medicine",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a first aid kit"
+    },
+    {
+      "id": "parkside-family-medicine-heart",
+      "project": "parkside-family-medicine",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a heart with a pulse line across it"
+    },
+    {
+      "id": "the-gimlet-coupe",
+      "project": "the-gimlet",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a coupe cocktail glass with a lime twist"
+    },
+    {
+      "id": "the-gimlet-shaker",
+      "project": "the-gimlet",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a cocktail shaker"
+    },
+    {
+      "id": "the-gimlet-bottle",
+      "project": "the-gimlet",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a bottle of gin"
+    },
+    {
+      "id": "polish-nail-bar-bottle",
+      "project": "polish-nail-bar",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a bottle of nail polish"
+    },
+    {
+      "id": "polish-nail-bar-hand",
+      "project": "polish-nail-bar",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a manicured hand resting flat, palm down"
+    },
+    {
+      "id": "tin-roof-guitars-acoustic",
+      "project": "tin-roof-guitars",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "an acoustic guitar standing upright"
+    },
+    {
+      "id": "tin-roof-guitars-electric",
+      "project": "tin-roof-guitars",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "an electric guitar standing upright"
+    },
+    {
+      "id": "tin-roof-guitars-ukulele",
+      "project": "tin-roof-guitars",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a ukulele standing upright"
+    },
+    {
+      "id": "heron-point-golf-fairway",
+      "project": "heron-point-golf",
+      "set": "art-bg-photo",
+      "slot": "art",
+      "subject": "a golf fairway lined with tall trees"
+    },
+    {
+      "id": "heron-point-golf-green",
+      "project": "heron-point-golf",
+      "set": "art-bg-photo",
+      "slot": "art",
+      "subject": "a golf green with a flag on the pin and a pond in front"
     }
   ]
 }
