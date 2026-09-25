@@ -477,6 +477,44 @@ plumber. Four things worth knowing before editing one:
   for `foliage` for that reason; a primary pattern that ignores the palette
   breaks the customizer's promise.
 
+## Pictures that follow the palette - Artwork
+
+The 45 templates after the minimal set are built around generated pictures
+that re-color with the page: `components/Artwork.tsx`, fed by
+`lib/generated/artwork.js` and `public/images/art/`, which
+`scripts/promote-artwork.mjs` derives from prompts carrying `recolor`
+(`docs/image-pipeline.md`, "Recolorable artwork"). A file holds only shape
+or tone; every color is an ink the page passes (`var(--ink)`), written as
+an inline `--art-*` property. That is the whole trick, and it is why the
+edits engine needed no change: a re-color rewrites the root's custom
+properties and the pictures follow. Five sites (High Pass Lodge through
+Pinewood RV) put one full-bleed behind their hero with `fit="cover"`, the
+generated sky left transparent so the section's own color is the sky.
+Five things worth not re-litigating:
+
+- **Never a hex in `inks`**, and never `hue-rotate`: a color not taken from
+  the palette is one a re-color cannot reach, and a filter can only shift
+  hues, not land on one.
+- **Layer inks are keyed by layer name** (`{ red: 'var(--accent)' }`), not
+  by position: a picture may lack one of its prompt's key colors, and a
+  list would shift every ink after it.
+- **The duotone in CSS is two masks, not blend modes.** Multiply-then-
+  lighten only works while the shadow ink is the darker one; a re-color to
+  a dark palette flipped it and painted a flat box. `mode="tint"` is the
+  mask version, correct either way round; the default is an SVG filter.
+- **The HTML package inlines every `--artwork-mask`** as a data URI
+  (`inlineArtworkMasks` in the packager). A CSS mask is a CORS fetch, and
+  a page opened from disk, as its README says to, is refused every one.
+- **A pattern fill's pattern is the Artwork's only child**, and the
+  annotator treats the Artwork as the pattern's wrapper, so the
+  `data-edit-pattern` and `data-edit-roles` it writes land on `<Artwork>`,
+  which forwards every `data-*` prop to the element it renders. That is how
+  a fill re-colors: through its pattern, by the engine, not through CSS.
+
+`e2e/recolor.spec.ts` is the gate: every page with artwork is re-colored
+through its root palette properties and each picture's pixels must move; a
+fill must carry its role map; the HTML package must carry its masks inline.
+
 ## Template screenshots on the cards
 
 Every template has a screenshot in `public/template-shots/<slug>.webp`: the

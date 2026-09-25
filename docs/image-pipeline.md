@@ -203,6 +203,62 @@ cut-out object sits on it.** Scenes stay full-bleed with the pattern living
 under a scene, which fights it for the same job. Portrait grids over pattern
 tiles are the strongest use of the pipeline; keep every portrait in one `set`.
 
+## Recolorable artwork (pictures that follow the palette)
+
+A picture promoted by `promote-images.mjs` is a photograph with its colors
+baked in: re-color the page in the customizer and it keeps the old ones.
+A prompt with a `recolor` field is promoted by `scripts/promote-artwork.mjs`
+instead, which keeps only what a palette cannot supply and leaves the color
+to CSS: `components/Artwork.tsx` paints it with inks the page passes,
+normally `var(--ink)` and the like, so a re-color moves the picture with
+the page. (The reasoning, and what was ruled out, is
+`agent-outputs/20260925-recolorable-images-plan.md`.)
+
+Three kinds, set on the prompt or its set:
+
+| `recolor` | Generate | Promoted to `public/images/art/` | Drawn as |
+|---|---|---|---|
+| `mono` | one black ink | `<id>-mono.webp`: alpha = ink darkness | a CSS mask, one ink |
+| `layers` | a flat illustration in the set's `keys` (hex -> layer name) | pixels snapped to the nearest key; `render: "vector"` traces each key to SVG paths (imagetracerjs) into the manifest, `render: "masks"` writes `<id>-<layer>.webp` per key | inline SVG, or stacked masks, one ink per layer |
+| `tone` | a black-and-white photograph | `<id>-tone.webp`: luminance levelled to the full range, with the alpha | a duotone (SVG filter), a tint (CSS masks), or a pattern cut to its silhouette |
+
+All three are generated on a transparent ground (`cutout: true`, which the
+prompt loader enforces). The manifest is `lib/generated/artwork.js`
+(committed, like `lib/generated/images.js`), and a vector entry carries its
+paths there. `build-image-manifest.mjs` does not scan `art/`, so these
+never appear to `Figure`.
+
+```bash
+OPENAI_API_KEY=... node scripts/generate-images.mjs sync --only <ids> --model gpt-image-2.5-flare --quality low
+node scripts/promote-artwork.mjs --only <ids>
+```
+
+What was learned making the first 135:
+
+- **The model keeps to key colors.** Pure red, blue, yellow and black on a
+  transparent ground came back with at most 1.14% of pixels far from every
+  key. Promotion refuses a candidate over 6%, so a separation never
+  silently turns one color into another.
+- **Ask a photograph for nothing around it, in words.** "Studio photograph"
+  plus "a full range of tones" drew smoky, vignetted grounds on a
+  transparent canvas: partial alpha on up to 69% of the frame, which a
+  duotone paints as colored fog. "A cleanly isolated cut-out: no smoke,
+  haze, fog, glow, vignette, reflection, cast shadow or background texture"
+  took the same subjects to 0%. For a full-bleed scene, "the sky is
+  completely empty and clear: no clouds, no mist, no haze".
+- **Blend modes are not a duotone.** Multiply-then-lighten maps shadows to
+  one ink only while that ink is the darker; a re-color to a dark palette
+  flips them and paints a flat box. The CSS version is two masks instead
+  (the shadow ink through the alpha, the light ink through the luminance),
+  correct either way round.
+- **Masks are a CORS fetch.** From a page opened from disk every CSS mask
+  is refused, so the packager inlines `--artwork-mask` URLs as data URIs in
+  the HTML package; an SVG `<image>` (the duotone) and an `<img>` (a fill's
+  shading) are ordinary fetches and need nothing.
+- **`e2e/recolor.spec.ts` is the gate**: every page with artwork is
+  re-colored through its root palette properties and each picture's pixels
+  must move.
+
 ## Gotcha checklist
 
 1. Transparency is the **parameter**, never the prompt - `background:
