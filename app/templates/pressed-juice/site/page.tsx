@@ -53,6 +53,7 @@ const JUICES: Juice[] = [
 
 type Cleanse = {
   days: string;
+  unit: string;
   title: string;
   price: string;
   bottles: string;
@@ -67,6 +68,7 @@ const HALF_GRAPEFRUIT = { red: 'var(--berry)', yellow: 'var(--pale)' };
 const CLEANSES: Cleanse[] = [
   {
     days: '1',
+    unit: 'day',
     title: 'The reset',
     price: '$58',
     bottles: '6 juices',
@@ -75,6 +77,7 @@ const CLEANSES: Cleanse[] = [
   },
   {
     days: '3',
+    unit: 'days',
     title: 'The classic',
     price: '$165',
     bottles: '18 juices',
@@ -87,6 +90,7 @@ const CLEANSES: Cleanse[] = [
   },
   {
     days: '5',
+    unit: 'days',
     title: 'The long one',
     price: '$265',
     bottles: '30 juices',
@@ -320,7 +324,6 @@ export default function PressedJuicePage() {
               </li>
             ))}
           </ul>
-          <div className={s.counterTop} aria-hidden="true" />
           <p className={s.counterNote}>
             Any juice as a 2 oz tasting pour for $2. Glass bottles only; bring
             one back for a dollar.
@@ -348,7 +351,7 @@ export default function PressedJuicePage() {
                   </div>
                   <p className={s.planDays}>
                     <strong>{c.days}</strong>
-                    <span>{c.days === '1' ? 'day' : 'days'}</span>
+                    <span>{c.unit}</span>
                   </p>
                   <h3 className={s.planTitle}>{c.title}</h3>
                   <p className={s.planNote}>{c.note}</p>

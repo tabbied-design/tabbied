@@ -342,6 +342,7 @@
 
 .shelfId {
   display: inline-block;
+  justify-self: start;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.12em;
