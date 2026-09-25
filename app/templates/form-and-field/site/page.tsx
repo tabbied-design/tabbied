@@ -178,7 +178,19 @@ const FAQS = [
 
 export default function FormAndFieldPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#eeedea',
+        '--ink': '#151515',
+        '--blue': '#3d5a80',
+        '--gray': '#8d8c88',
+        '--pale': '#d8d6d0',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,blue,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -190,17 +202,17 @@ export default function FormAndFieldPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markBox} aria-hidden="true" />
-          <span>Form &amp; Field</span>
+          <span data-edit="bar.text" data-edit-max="60">Form &amp; Field</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#contact">Start a project</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#contact">Start a project</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -208,18 +220,18 @@ export default function FormAndFieldPage() {
       <main id="top">
         <section className={s.intro} aria-labelledby="intro-h">
           <div className={s.introText}>
-            <p className={s.kicker}>Architects, Alder Valley, since 2009</p>
-            <h1 id="intro-h" className={s.title}>
+            <p data-edit="intro.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Architects, Alder Valley, since 2009</p>
+            <h1 data-edit="intro.title" data-edit-format="emphasis" data-edit-max="70" id="intro-h" className={s.title}>
               Buildings that sit <em>lightly</em> on their ground.
             </h1>
           </div>
           <div className={s.introSide}>
-            <p className={s.lede}>
+            <p data-edit="intro.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               A practice of seven. We design houses, extensions and small public
               buildings within an hour of the studio, and we stay on every job
               until the builder leaves.
             </p>
-            <a className={s.introLink} href="#projects">See the work</a>
+            <a data-edit="intro.introLink" data-edit-max="28" className={s.introLink} href="#projects">See the work</a>
           </div>
         </section>
 
@@ -227,45 +239,45 @@ export default function FormAndFieldPage() {
             The gallery: a row of plates that scrolls sideways and snaps. */}
         <section id="projects" className={s.projects} aria-labelledby="projects-h">
           <div className={s.galleryHead}>
-            <h2 id="projects-h" className={s.galleryTitle}>Selected work, 2019-2024</h2>
-            <p className={s.galleryHint}>Scroll sideways</p>
+            <h2 data-edit="projects.galleryTitle" data-edit-max="60" id="projects-h" className={s.galleryTitle}>Selected work, 2019-2024</h2>
+            <p data-edit="projects.galleryHint" data-edit-max="240" data-edit-multiline className={s.galleryHint}>Scroll sideways</p>
           </div>
 
           <ol className={s.gallery}>
-            {PROJECTS.map((p) => (
+            {PROJECTS.map((p, i) => (
               <li key={p.id} id={p.id} className={s.card}>
                 <div className={`${s.plate} ${s[p.sky]}`}>
-                  <span className={s.plateNo}>{p.no}</span>
+                  <span data-edit={`projects.plateNo.${i}`} data-edit-max="60" className={s.plateNo}>{p.no}</span>
                   <Artwork slug={p.art} alt={p.alt} inks={p.inks} className={s.building} />
                 </div>
                 <div className={s.caption}>
-                  <h3 className={s.cardName}>{p.name}</h3>
+                  <h3 data-edit={`projects.cardName.${i}`} data-edit-max="40" className={s.cardName}>{p.name}</h3>
                   <dl className={s.cardFacts}>
                     <div>
-                      <dt>Year</dt>
-                      <dd>{p.year}</dd>
+                      <dt data-edit={`projects.term.${i}`} data-edit-max="28">Year</dt>
+                      <dd data-edit={`projects.body.${i}`} data-edit-max="200" data-edit-multiline>{p.year}</dd>
                     </div>
                     <div>
-                      <dt>Place</dt>
-                      <dd>{p.place}</dd>
+                      <dt data-edit={`projects.term2.${i}`} data-edit-max="28">Place</dt>
+                      <dd data-edit={`projects.body2.${i}`} data-edit-max="200" data-edit-multiline>{p.place}</dd>
                     </div>
                     <div>
-                      <dt>Type</dt>
-                      <dd>{p.kind}</dd>
+                      <dt data-edit={`projects.term3.${i}`} data-edit-max="28">Type</dt>
+                      <dd data-edit={`projects.body3.${i}`} data-edit-max="200" data-edit-multiline>{p.kind}</dd>
                     </div>
                     <div>
-                      <dt>Area</dt>
-                      <dd>{p.area}</dd>
+                      <dt data-edit={`projects.term4.${i}`} data-edit-max="28">Area</dt>
+                      <dd data-edit={`projects.body4.${i}`} data-edit-max="200" data-edit-multiline>{p.area}</dd>
                     </div>
                   </dl>
-                  <p className={s.cardNote}>{p.note}</p>
+                  <p data-edit={`projects.cardNote.${i}`} data-edit-max="240" data-edit-multiline className={s.cardNote}>{p.note}</p>
                 </div>
               </li>
             ))}
             <li id="on-the-boards" className={s.card}>
               <div className={`${s.plate} ${s.boards}`}>
-                <span className={s.plateNo}>04</span>
-                <div className={s.boardsField} aria-hidden="true">
+                <span data-edit="projects.plateNo2" data-edit-max="60" className={s.plateNo}>04</span>
+                <div data-edit-pattern="projects.field" data-edit-roles="transparent,2,3,4,2" className={s.boardsField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={isometricweave}
                     palette={BOARDS}
@@ -275,29 +287,29 @@ export default function FormAndFieldPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-                <p className={s.boardsStamp}>On the boards</p>
+                <p data-edit="projects.boardsStamp" data-edit-max="240" data-edit-multiline className={s.boardsStamp}>On the boards</p>
               </div>
               <div className={s.caption}>
-                <h3 className={s.cardName}>Valley School, phase two</h3>
+                <h3 data-edit="projects.cardName2" data-edit-max="40" className={s.cardName}>Valley School, phase two</h3>
                 <dl className={s.cardFacts}>
                   <div>
-                    <dt>Year</dt>
-                    <dd>On site 2027</dd>
+                    <dt data-edit="projects.term5" data-edit-max="28">Year</dt>
+                    <dd data-edit="projects.body5" data-edit-max="200" data-edit-multiline>On site 2027</dd>
                   </div>
                   <div>
-                    <dt>Place</dt>
-                    <dd>School Lane, Alder Valley</dd>
+                    <dt data-edit="projects.term6" data-edit-max="28">Place</dt>
+                    <dd data-edit="projects.body6" data-edit-max="200" data-edit-multiline>School Lane, Alder Valley</dd>
                   </div>
                   <div>
-                    <dt>Type</dt>
-                    <dd>Eight classrooms</dd>
+                    <dt data-edit="projects.term7" data-edit-max="28">Type</dt>
+                    <dd data-edit="projects.body7" data-edit-max="200" data-edit-multiline>Eight classrooms</dd>
                   </div>
                   <div>
-                    <dt>Area</dt>
-                    <dd>14,800 sq ft</dd>
+                    <dt data-edit="projects.term8" data-edit-max="28">Area</dt>
+                    <dd data-edit="projects.body8" data-edit-max="200" data-edit-multiline>14,800 sq ft</dd>
                   </div>
                 </dl>
-                <p className={s.cardNote}>
+                <p data-edit="projects.cardNote2" data-edit-max="240" data-edit-multiline className={s.cardNote}>
                   Eight classrooms around a courtyard, each with its own door to
                   the outside. The drawings are at the town hall for comment
                   until November 14.
@@ -307,13 +319,13 @@ export default function FormAndFieldPage() {
           </ol>
 
           <ol className={s.index} aria-label="Projects in the gallery">
-            {PROJECTS.map((p) => (
+            {PROJECTS.map((p, i) => (
               <li key={p.id}>
-                <a href={`#${p.id}`}>{p.name}</a>
+                <a data-edit={`projects.link.${i}`} data-edit-max="28" href={`#${p.id}`}>{p.name}</a>
               </li>
             ))}
             <li>
-              <a href="#on-the-boards">Valley School</a>
+              <a data-edit="projects.onTheBoards" data-edit-max="28" href="#on-the-boards">Valley School</a>
             </li>
           </ol>
         </section>
@@ -321,7 +333,7 @@ export default function FormAndFieldPage() {
         {/* ------------------------------------------------------ PRACTICE
             The lattice panel is the page's one loud field. */}
         <section id="practice" className={s.practice} aria-labelledby="practice-h">
-          <div className={s.weave} aria-hidden="true">
+          <div data-edit-pattern="practice.field" data-edit-roles="transparent,4,0,3,4" className={s.weave} aria-hidden="true">
             <TabbiedPattern
               pattern={isometricweave}
               palette={WEAVE}
@@ -333,32 +345,32 @@ export default function FormAndFieldPage() {
             />
           </div>
           <div className={s.practiceText}>
-            <p className={s.secNo}>The practice</p>
-            <h2 id="practice-h" className={s.secTitle}>Seven people, one studio, and a site visit every week.</h2>
-            <p className={s.body}>
+            <p data-edit="practice.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>The practice</p>
+            <h2 data-edit="practice.secTitle" data-edit-max="60" id="practice-h" className={s.secTitle}>Seven people, one studio, and a site visit every week.</h2>
+            <p data-edit="practice.body" data-edit-max="240" data-edit-multiline className={s.body}>
               We started in a room above the hardware store on Quarry Row and
               have not moved far. Everything we build is close enough to visit
               in an afternoon, which is the point: an architect who is on site
               every week catches the mistakes that cost money.
             </p>
-            <p className={s.body}>
+            <p data-edit="practice.body2" data-edit-max="240" data-edit-multiline className={s.body}>
               We like concrete that shows how it was poured, brick that is
               repaired rather than replaced, and timber that is allowed to go
               gray. We do not have a house style, but people say they can tell.
             </p>
             <dl className={s.facts}>
-              {FACTS.map(([v, k]) => (
+              {FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`practice.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`practice.body3.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
             <ul className={s.people}>
-              {PEOPLE.map(([n, r]) => (
+              {PEOPLE.map(([n, r], i) => (
                 <li key={n}>
-                  <span className={s.personName}>{n}</span>
-                  <span className={s.personRole}>{r}</span>
+                  <span data-edit={`practice.personName.${i}`} data-edit-max="60" className={s.personName}>{n}</span>
+                  <span data-edit={`practice.personRole.${i}`} data-edit-max="60" className={s.personRole}>{r}</span>
                 </li>
               ))}
             </ul>
@@ -368,19 +380,19 @@ export default function FormAndFieldPage() {
         {/* ------------------------------------------------------ SERVICES */}
         <section id="services" className={s.sec} aria-labelledby="services-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>What we take on</p>
-            <h2 id="services-h" className={s.secTitle}>Services and fees</h2>
-            <p className={s.secNote}>
+            <p data-edit="services.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>What we take on</p>
+            <h2 data-edit="services.secTitle" data-edit-max="60" id="services-h" className={s.secTitle}>Services and fees</h2>
+            <p data-edit="services.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Fees are published because nobody should have to ask. Percentages
               are of the builder&apos;s price, before sales tax.
             </p>
           </div>
           <ul className={s.services}>
-            {SERVICES.map((sv) => (
+            {SERVICES.map((sv, i) => (
               <li key={sv.name} className={s.service}>
-                <h3 className={s.serviceName}>{sv.name}</h3>
-                <p className={s.serviceFee}>{sv.fee}</p>
-                <p className={s.serviceBody}>{sv.body}</p>
+                <h3 data-edit={`services.serviceName.${i}`} data-edit-max="40" className={s.serviceName}>{sv.name}</h3>
+                <p data-edit={`services.serviceFee.${i}`} data-edit-max="240" data-edit-multiline className={s.serviceFee}>{sv.fee}</p>
+                <p data-edit={`services.serviceBody.${i}`} data-edit-max="240" data-edit-multiline className={s.serviceBody}>{sv.body}</p>
               </li>
             ))}
           </ul>
@@ -388,7 +400,7 @@ export default function FormAndFieldPage() {
 
         {/* ------------------------------------------------------- PROCESS */}
         <section id="process" className={s.process} aria-labelledby="process-h">
-          <div className={s.planBand} aria-hidden="true">
+          <div data-edit-pattern="process.field" data-edit-roles="transparent,3,2,1,2,1" className={s.planBand} aria-hidden="true">
             <TabbiedPattern
               pattern={circuit}
               palette={PLAN}
@@ -401,20 +413,20 @@ export default function FormAndFieldPage() {
           </div>
           <div className={s.processInner}>
             <div className={s.secHead}>
-              <p className={s.secNo}>How we work</p>
-              <h2 id="process-h" className={s.secTitle}>Five stages, and a price at each one</h2>
-              <p className={s.secNote}>
+              <p data-edit="process.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>How we work</p>
+              <h2 data-edit="process.secTitle" data-edit-max="60" id="process-h" className={s.secTitle}>Five stages, and a price at each one</h2>
+              <p data-edit="process.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 You can stop after any stage and keep the drawings. About one
                 client in ten does, usually after the feasibility study.
               </p>
             </div>
             <ol className={s.steps}>
-              {STEPS.map((st) => (
+              {STEPS.map((st, i) => (
                 <li key={st.no} className={s.step}>
-                  <span className={s.stepNo}>{st.no}</span>
-                  <h3 className={s.stepTitle}>{st.title}</h3>
-                  <p className={s.stepTime}>{st.time}</p>
-                  <p className={s.stepBody}>{st.body}</p>
+                  <span data-edit={`process.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
+                  <h3 data-edit={`process.stepTitle.${i}`} data-edit-max="40" className={s.stepTitle}>{st.title}</h3>
+                  <p data-edit={`process.stepTime.${i}`} data-edit-max="240" data-edit-multiline className={s.stepTime}>{st.time}</p>
+                  <p data-edit={`process.stepBody.${i}`} data-edit-max="240" data-edit-multiline className={s.stepBody}>{st.body}</p>
                 </li>
               ))}
             </ol>
@@ -425,8 +437,8 @@ export default function FormAndFieldPage() {
         <section id="questions" className={s.sec} aria-labelledby="questions-h">
           <div className={s.faqGrid}>
             <div className={s.faqSide}>
-              <p className={s.secNo}>Questions</p>
-              <h2 id="questions-h" className={s.secTitle}>Before you call</h2>
+              <p data-edit="questions.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>Questions</p>
+              <h2 data-edit="questions.secTitle" data-edit-max="60" id="questions-h" className={s.secTitle}>Before you call</h2>
               <Artwork
                 slug="form-and-field-pavilion"
                 alt=""
@@ -435,10 +447,10 @@ export default function FormAndFieldPage() {
               />
             </div>
             <div className={s.faqs}>
-              {FAQS.map((f) => (
+              {FAQS.map((f, i) => (
                 <details key={f.q} className={s.faq}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`questions.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`questions.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -448,44 +460,44 @@ export default function FormAndFieldPage() {
         {/* ------------------------------------------------------- CONTACT */}
         <section id="contact" className={s.contact} aria-labelledby="contact-h">
           <div className={s.contactText}>
-            <p className={s.secNo}>Start a project</p>
-            <h2 id="contact-h" className={s.secTitle}>Tell us about the site</h2>
-            <p className={s.body}>
+            <p data-edit="contact.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>Start a project</p>
+            <h2 data-edit="contact.secTitle" data-edit-max="60" id="contact-h" className={s.secTitle}>Tell us about the site</h2>
+            <p data-edit="contact.body" data-edit-max="240" data-edit-multiline className={s.body}>
               A paragraph is enough. We reply within three working days to book
               the first visit, which is free.
             </p>
             <dl className={s.studio}>
               <div>
-                <dt>Studio</dt>
-                <dd>14 Quarry Row, Alder Valley</dd>
+                <dt data-edit="contact.term" data-edit-max="28">Studio</dt>
+                <dd data-edit="contact.body2" data-edit-max="200" data-edit-multiline>14 Quarry Row, Alder Valley</dd>
               </div>
               <div>
-                <dt>Open</dt>
-                <dd>Monday to Friday, 9 to 5:30</dd>
+                <dt data-edit="contact.term2" data-edit-max="28">Open</dt>
+                <dd data-edit="contact.body3" data-edit-max="200" data-edit-multiline>Monday to Friday, 9 to 5:30</dd>
               </div>
               <div>
-                <dt>Call</dt>
-                <dd>(555) 014-2290</dd>
+                <dt data-edit="contact.term3" data-edit-max="28">Call</dt>
+                <dd data-edit="contact.body4" data-edit-max="200" data-edit-multiline>(555) 014-2290</dd>
               </div>
               <div>
-                <dt>Write</dt>
+                <dt data-edit="contact.term4" data-edit-max="28">Write</dt>
                 <dd>
-                  <a href="mailto:studio@formandfield.example">studio@formandfield.example</a>
+                  <a data-edit="contact.link" data-edit-max="28" href="mailto:studio@formandfield.example">studio@formandfield.example</a>
                 </dd>
               </div>
             </dl>
           </div>
           <form className={s.form} action="#">
             <p className={s.field}>
-              <label htmlFor="ff-name">Name</label>
+              <label data-edit="contact.label" htmlFor="ff-name">Name</label>
               <input id="ff-name" name="name" type="text" autoComplete="name" />
             </p>
             <p className={s.field}>
-              <label htmlFor="ff-email">Email</label>
+              <label data-edit="contact.label2" htmlFor="ff-email">Email</label>
               <input id="ff-email" name="email" type="email" autoComplete="email" />
             </p>
             <p className={s.field}>
-              <label htmlFor="ff-kind">Project</label>
+              <label data-edit="contact.label3" htmlFor="ff-kind">Project</label>
               <select id="ff-kind" name="kind" defaultValue="">
                 <option value="" disabled>
                   Choose one
@@ -498,7 +510,7 @@ export default function FormAndFieldPage() {
               </select>
             </p>
             <p className={s.field}>
-              <label htmlFor="ff-budget">Building budget</label>
+              <label data-edit="contact.label4" htmlFor="ff-budget">Building budget</label>
               <select id="ff-budget" name="budget" defaultValue="">
                 <option value="" disabled>
                   Choose one
@@ -511,14 +523,14 @@ export default function FormAndFieldPage() {
               </select>
             </p>
             <p className={`${s.field} ${s.fieldWide}`}>
-              <label htmlFor="ff-site">Where is the site?</label>
+              <label data-edit="contact.label5" htmlFor="ff-site">Where is the site?</label>
               <input id="ff-site" name="site" type="text" placeholder="A street, or a description" />
             </p>
             <p className={`${s.field} ${s.fieldWide}`}>
-              <label htmlFor="ff-brief">The brief</label>
+              <label data-edit="contact.label6" htmlFor="ff-brief">The brief</label>
               <textarea id="ff-brief" name="brief" rows={5} placeholder="What you want to build, and why now" />
             </p>
-            <button type="submit" className={s.submit}>Send the brief</button>
+            <button data-edit="contact.submit" data-edit-max="24" type="submit" className={s.submit}>Send the brief</button>
           </form>
         </section>
       </main>
@@ -526,28 +538,28 @@ export default function FormAndFieldPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Form &amp; Field</p>
-            <p className={s.footTag}>Architects and landscape designers. 14 Quarry Row, Alder Valley.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Form &amp; Field</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Architects and landscape designers. 14 Quarry Row, Alder Valley.</p>
           </div>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             (555) 014-2290
             <br />
             studio@formandfield.example
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional architecture practice. Projects, people and fees are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional architecture practice. Projects, people and fees are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on a transparent ground.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
           </p>
         </div>
       </footer>

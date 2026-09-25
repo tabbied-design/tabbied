@@ -239,7 +239,19 @@ const HOURS = [
 
 export default function InkwellTattooPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f4efe6',
+        '--ink': '#141414',
+        '--red': '#c8352b',
+        '--gray': '#8a857c',
+        '--pale': '#e4dccd',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,red,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -249,16 +261,16 @@ export default function InkwellTattooPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Inkwell</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Inkwell</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#book">Book a slot</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#book">Book a slot</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -269,7 +281,7 @@ export default function InkwellTattooPage() {
             papered in the primary pattern, with the house rules pinned in a
             sticky column beside them. */}
         <section id="flash" className={s.wall} aria-labelledby="hero-h">
-          <div className={s.wallField} aria-hidden="true">
+          <div data-edit-pattern="flash.field" data-edit-roles="transparent,3,4,0,4" className={s.wallField} aria-hidden="true">
             <TabbiedPattern
               pattern={diamondconfetti}
               palette={WALLPAPER}
@@ -283,45 +295,45 @@ export default function InkwellTattooPage() {
           <div className={s.wallInner}>
             <div className={s.sheets}>
               <div className={s.titleCard}>
-                <p className={s.kicker}>Street shop, three chairs, since 2014</p>
-                <h1 className={s.title} id="hero-h">
+                <p data-edit="flash.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Street shop, three chairs, since 2014</p>
+                <h1 data-edit="flash.title" data-edit-format="emphasis" data-edit-max="70" className={s.title} id="hero-h">
                   Flash off the wall.
                   <br />
                   <em>Custom on the books.</em>
                 </h1>
-                <p className={s.lede}>
+                <p data-edit="flash.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                   Every sheet on this wall can be tattooed today, as drawn, by
                   whoever is free. Point at one, show us your ID, and sit down.
                   Anything else starts with a conversation and a deposit.
                 </p>
                 <dl className={s.facts}>
                   <div>
-                    <dt>Walk-ins</dt>
-                    <dd>Tue to Sat, noon to 6</dd>
+                    <dt data-edit="flash.term" data-edit-max="28">Walk-ins</dt>
+                    <dd data-edit="flash.body" data-edit-max="200" data-edit-multiline>Tue to Sat, noon to 6</dd>
                   </div>
                   <div>
-                    <dt>Flash from</dt>
-                    <dd>$110</dd>
+                    <dt data-edit="flash.term2" data-edit-max="28">Flash from</dt>
+                    <dd data-edit="flash.body2" data-edit-max="200" data-edit-multiline>$110</dd>
                   </div>
                   <div>
-                    <dt>Shop minimum</dt>
-                    <dd>$80</dd>
+                    <dt data-edit="flash.term3" data-edit-max="28">Shop minimum</dt>
+                    <dd data-edit="flash.body3" data-edit-max="200" data-edit-multiline>$80</dd>
                   </div>
                 </dl>
               </div>
 
               <div className={s.wallLabel}>
-                <h2 className={s.wallHead}>On the wall this month</h2>
-                <span className={s.wallNote}>Prices are for the size shown, in black or red</span>
+                <h2 data-edit="flash.wallHead" data-edit-max="60" className={s.wallHead}>On the wall this month</h2>
+                <span data-edit="flash.wallNote" data-edit-max="60" className={s.wallNote}>Prices are for the size shown, in black or red</span>
               </div>
 
-              {SHEETS.map((sh) => (
+              {SHEETS.map((sh, i) => (
                 <article
                   key={sh.no}
                   className={`${s.sheet} ${sh.shape === 'tall' ? s.sheetTall : ''} ${sh.shape === 'feature' ? s.sheetFeature : ''} ${sh.red ? s.sheetRed : ''}`}>
                   <div className={s.sheetTop}>
                     <span className={s.sheetNo}>{`No. ${sh.no}`}</span>
-                    <span className={s.sheetSize}>{sh.size}</span>
+                    <span data-edit={`sheet.sheetSize.${i}`} data-edit-max="60" className={s.sheetSize}>{sh.size}</span>
                   </div>
                   <div className={s.sheetPaper}>
                     <Artwork
@@ -332,17 +344,17 @@ export default function InkwellTattooPage() {
                     />
                   </div>
                   <div className={s.sheetFoot}>
-                    <h3 className={s.sheetName}>{sh.name}</h3>
-                    <span className={s.sheetPrice}>{sh.price}</span>
-                    <span className={s.sheetNote}>{sh.note}</span>
+                    <h3 data-edit={`sheet.sheetName.${i}`} data-edit-max="40" className={s.sheetName}>{sh.name}</h3>
+                    <span data-edit={`sheet.sheetPrice.${i}`} data-edit-max="60" className={s.sheetPrice}>{sh.price}</span>
+                    <span data-edit={`sheet.sheetNote.${i}`} data-edit-max="60" className={s.sheetNote}>{sh.note}</span>
                   </div>
                 </article>
               ))}
 
               <article className={`${s.sheet} ${s.sheetWide} ${s.sheetRed}`}>
                 <div className={s.sheetTop}>
-                  <span className={s.sheetNo}>No. 05</span>
-                  <span className={s.sheetSize}>2.5 in each</span>
+                  <span data-edit="sheet.sheetNo" data-edit-max="60" className={s.sheetNo}>No. 05</span>
+                  <span data-edit="sheet.sheetSize2" data-edit-max="60" className={s.sheetSize}>2.5 in each</span>
                 </div>
                 <div className={`${s.sheetPaper} ${s.pairPaper}`}>
                   <Artwork
@@ -359,18 +371,18 @@ export default function InkwellTattooPage() {
                   />
                 </div>
                 <div className={s.sheetFoot}>
-                  <h3 className={s.sheetName}>A pair of swallows</h3>
-                  <span className={s.sheetPrice}>$240</span>
-                  <span className={s.sheetNote}>Collarbones, one each side. Tattooed together, one sitting.</span>
+                  <h3 data-edit="sheet.sheetName2" data-edit-max="40" className={s.sheetName}>A pair of swallows</h3>
+                  <span data-edit="sheet.sheetPrice2" data-edit-max="60" className={s.sheetPrice}>$240</span>
+                  <span data-edit="sheet.sheetNote2" data-edit-max="60" className={s.sheetNote}>Collarbones, one each side. Tattooed together, one sitting.</span>
                 </div>
               </article>
 
               <article className={`${s.sheet} ${s.sheetFiller}`}>
                 <div className={s.sheetTop}>
-                  <span className={s.sheetNo}>No. 09</span>
-                  <span className={s.sheetSize}>Per inch</span>
+                  <span data-edit="sheet.sheetNo2" data-edit-max="60" className={s.sheetNo}>No. 09</span>
+                  <span data-edit="sheet.sheetSize3" data-edit-max="60" className={s.sheetSize}>Per inch</span>
                 </div>
-                <div className={s.fillerField} aria-hidden="true">
+                <div data-edit-pattern="sheet.field" data-edit-roles="transparent,1,2,0,1,2,4" className={s.fillerField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={diamondconfetti}
                     palette={FILLER}
@@ -381,16 +393,16 @@ export default function InkwellTattooPage() {
                   />
                 </div>
                 <div className={s.sheetFoot}>
-                  <h3 className={s.sheetName}>Diamond band filler</h3>
-                  <span className={s.sheetPrice}>$30</span>
-                  <span className={s.sheetNote}>Armbands and gaps between old pieces</span>
+                  <h3 data-edit="sheet.sheetName3" data-edit-max="40" className={s.sheetName}>Diamond band filler</h3>
+                  <span data-edit="sheet.sheetPrice3" data-edit-max="60" className={s.sheetPrice}>$30</span>
+                  <span data-edit="sheet.sheetNote3" data-edit-max="60" className={s.sheetNote}>Armbands and gaps between old pieces</span>
                 </div>
               </article>
-              {SHEETS_LOW.map((sh) => (
+              {SHEETS_LOW.map((sh, i) => (
                 <article key={sh.no} className={`${s.sheet} ${sh.red ? s.sheetRed : ''}`}>
                   <div className={s.sheetTop}>
                     <span className={s.sheetNo}>{`No. ${sh.no}`}</span>
-                    <span className={s.sheetSize}>{sh.size}</span>
+                    <span data-edit={`sheet.sheetSize4.${i}`} data-edit-max="60" className={s.sheetSize}>{sh.size}</span>
                   </div>
                   <div className={s.sheetPaper}>
                     <Artwork
@@ -401,9 +413,9 @@ export default function InkwellTattooPage() {
                     />
                   </div>
                   <div className={s.sheetFoot}>
-                    <h3 className={s.sheetName}>{sh.name}</h3>
-                    <span className={s.sheetPrice}>{sh.price}</span>
-                    <span className={s.sheetNote}>{sh.note}</span>
+                    <h3 data-edit={`sheet.sheetName4.${i}`} data-edit-max="40" className={s.sheetName}>{sh.name}</h3>
+                    <span data-edit={`sheet.sheetPrice4.${i}`} data-edit-max="60" className={s.sheetPrice}>{sh.price}</span>
+                    <span data-edit={`sheet.sheetNote4.${i}`} data-edit-max="60" className={s.sheetNote}>{sh.note}</span>
                   </div>
                 </article>
               ))}
@@ -411,18 +423,18 @@ export default function InkwellTattooPage() {
 
             <aside id="rules" className={s.rules} aria-labelledby="rules-h">
               <div className={s.rulesInner}>
-                <span className={s.rulesTag}>Read before you sit</span>
-                <h2 className={s.rulesHead} id="rules-h">House rules</h2>
+                <span data-edit="rules.rulesTag" data-edit-max="60" className={s.rulesTag}>Read before you sit</span>
+                <h2 data-edit="rules.rulesHead" data-edit-max="60" className={s.rulesHead} id="rules-h">House rules</h2>
                 <ol className={s.rulesList}>
-                  {RULES.map((r) => (
-                    <li key={r}>{r}</li>
+                  {RULES.map((r, i) => (
+                    <li data-edit={`rules.item.${i}`} data-edit-max="80" key={r}>{r}</li>
                   ))}
                 </ol>
                 <div className={s.today}>
-                  <span className={s.todayLabel}>Walk-in board</span>
-                  <p className={s.todayText}>Two chairs free most weekdays before 3. Saturdays fill by 2.</p>
+                  <span data-edit="rules.todayLabel" data-edit-max="60" className={s.todayLabel}>Walk-in board</span>
+                  <p data-edit="rules.todayText" data-edit-max="240" data-edit-multiline className={s.todayText}>Two chairs free most weekdays before 3. Saturdays fill by 2.</p>
                 </div>
-                <a className={s.rulesCta} href="#book">Book custom work</a>
+                <a data-edit="rules.rulesCta" data-edit-max="28" className={s.rulesCta} href="#book">Book custom work</a>
               </div>
             </aside>
           </div>
@@ -431,33 +443,33 @@ export default function InkwellTattooPage() {
         {/* --------------------------------------------------------- ARTISTS */}
         <section id="artists" className={s.sec} aria-labelledby="artists-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>02</span>
-            <h2 className={s.secTitle} id="artists-h">Three chairs, three hands</h2>
-            <p className={s.secNote}>
+            <span data-edit="artists.secNo" data-edit-max="60" className={s.secNo}>02</span>
+            <h2 data-edit="artists.secTitle" data-edit-max="60" className={s.secTitle} id="artists-h">Three chairs, three hands</h2>
+            <p data-edit="artists.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Everyone tattoos from the wall. Custom work goes to whoever draws
               that kind of thing best, and we will tell you if it is not us.
             </p>
           </div>
           <div className={s.artists}>
-            {ARTISTS.map((a) => (
+            {ARTISTS.map((a, i) => (
               <article key={a.name} className={s.artist}>
                 <div className={s.artistPlate}>
                   <Artwork slug={a.art} alt={a.alt} inks={['var(--paper)']} className={s.artistArt} />
                 </div>
-                <h3 className={s.artistName}>{a.name}</h3>
-                <p className={s.artistStyle}>{a.style}</p>
-                <p className={s.artistBio}>{a.bio}</p>
+                <h3 data-edit={`artist.artistName.${i}`} data-edit-max="40" className={s.artistName}>{a.name}</h3>
+                <p data-edit={`artist.artistStyle.${i}`} data-edit-max="240" data-edit-multiline className={s.artistStyle}>{a.style}</p>
+                <p data-edit={`artist.artistBio.${i}`} data-edit-max="240" data-edit-multiline className={s.artistBio}>{a.bio}</p>
                 <dl className={s.artistFacts}>
                   <div>
-                    <dt>In the shop</dt>
-                    <dd>{a.days}</dd>
+                    <dt data-edit={`artist.term.${i}`} data-edit-max="28">In the shop</dt>
+                    <dd data-edit={`artist.body.${i}`} data-edit-max="200" data-edit-multiline>{a.days}</dd>
                   </div>
                   <div>
-                    <dt>Custom rate</dt>
-                    <dd>{a.rate}</dd>
+                    <dt data-edit={`artist.term2.${i}`} data-edit-max="28">Custom rate</dt>
+                    <dd data-edit={`artist.body2.${i}`} data-edit-max="200" data-edit-multiline>{a.rate}</dd>
                   </div>
                 </dl>
-                <span className={a.open ? s.booksOpen : s.booksShut}>{a.books}</span>
+                <span data-edit={`artist.booksOpen.${i}`} data-edit-max="60" className={a.open ? s.booksOpen : s.booksShut}>{a.books}</span>
               </article>
             ))}
           </div>
@@ -467,7 +479,7 @@ export default function InkwellTattooPage() {
             The one dark section: stars on the ink, the way a sheet of flash
             fills its gaps. */}
         <section id="aftercare" className={s.care} aria-labelledby="care-h">
-          <div className={s.careField} aria-hidden="true">
+          <div data-edit-pattern="aftercare.field" data-edit-roles="transparent,2,4,3" className={s.careField} aria-hidden="true">
             <TabbiedPattern
               pattern={sparkle}
               palette={STARS}
@@ -481,9 +493,9 @@ export default function InkwellTattooPage() {
           </div>
           <div className={s.careInner}>
             <div className={s.secHead}>
-              <span className={s.secNo}>03</span>
-              <h2 className={s.secTitle} id="care-h">Aftercare, on one card</h2>
-              <p className={s.secNote}>
+              <span data-edit="aftercare.secNo" data-edit-max="60" className={s.secNo}>03</span>
+              <h2 data-edit="aftercare.secTitle" data-edit-max="60" className={s.secTitle} id="care-h">Aftercare, on one card</h2>
+              <p data-edit="aftercare.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 You get this card in your pocket on the way out. Most bad
                 healing is somebody being too kind to a new tattoo.
               </p>
@@ -492,8 +504,8 @@ export default function InkwellTattooPage() {
               {AFTERCARE.map((c, i) => (
                 <li key={c.when}>
                   <span className={s.careNo}>{`0${i + 1}`}</span>
-                  <h3 className={s.careWhen}>{c.when}</h3>
-                  <p className={s.careWhat}>{c.what}</p>
+                  <h3 data-edit={`aftercare.careWhen.${i}`} data-edit-max="40" className={s.careWhen}>{c.when}</h3>
+                  <p data-edit={`aftercare.careWhat.${i}`} data-edit-max="240" data-edit-multiline className={s.careWhat}>{c.what}</p>
                 </li>
               ))}
             </ol>
@@ -503,22 +515,22 @@ export default function InkwellTattooPage() {
         {/* ------------------------------------------------ DEPOSITS AND BOOK */}
         <section id="book" className={s.sec} aria-labelledby="book-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>04</span>
-            <h2 className={s.secTitle} id="book-h">Deposits and booking</h2>
-            <p className={s.secNote}>
+            <span data-edit="book.secNo" data-edit-max="60" className={s.secNo}>04</span>
+            <h2 data-edit="book.secTitle" data-edit-max="60" className={s.secTitle} id="book-h">Deposits and booking</h2>
+            <p data-edit="book.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A deposit holds the time and pays for the drawing. It comes off
               the price on the day, and it is refunded if we cancel.
             </p>
           </div>
           <div className={s.book}>
             <div className={s.deposits}>
-              <h3 className={s.bookHead}>What a deposit holds</h3>
+              <h3 data-edit="book.bookHead" data-edit-max="40" className={s.bookHead}>What a deposit holds</h3>
               <ul className={s.depositList}>
-                {DEPOSITS.map(([what, cost, note]) => (
+                {DEPOSITS.map(([what, cost, note], i) => (
                   <li key={what}>
-                    <span className={s.depWhat}>{what}</span>
-                    <span className={s.depCost}>{cost}</span>
-                    <span className={s.depNote}>{note}</span>
+                    <span data-edit={`book.depWhat.${i}`} data-edit-max="60" className={s.depWhat}>{what}</span>
+                    <span data-edit={`book.depCost.${i}`} data-edit-max="60" className={s.depCost}>{cost}</span>
+                    <span data-edit={`book.depNote.${i}`} data-edit-max="60" className={s.depNote}>{note}</span>
                   </li>
                 ))}
               </ul>
@@ -529,7 +541,7 @@ export default function InkwellTattooPage() {
                   inks={['var(--red)']}
                   className={s.bookDagger}
                 />
-                <p className={s.bookArtNote}>
+                <p data-edit="book.bookArtNote" data-edit-max="240" data-edit-multiline className={s.bookArtNote}>
                   Deposits are paid by card through the link in our reply. We
                   never take one over the phone.
                 </p>
@@ -537,20 +549,20 @@ export default function InkwellTattooPage() {
             </div>
 
             <form className={s.form} action="#">
-              <h3 className={s.bookHead}>Ask for a slot</h3>
+              <h3 data-edit="book.bookHead2" data-edit-max="40" className={s.bookHead}>Ask for a slot</h3>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Your name</span>
+                  <span data-edit="book.text" data-edit-max="60">Your name</span>
                   <input type="text" name="name" autoComplete="name" required />
                 </label>
                 <label className={s.field}>
-                  <span>Email</span>
+                  <span data-edit="book.text2" data-edit-max="60">Email</span>
                   <input type="email" name="email" autoComplete="email" required />
                 </label>
               </div>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Artist</span>
+                  <span data-edit="book.text3" data-edit-max="60">Artist</span>
                   <select name="artist" defaultValue="any">
                     <option value="any">First available</option>
                     <option value="dee">Dee Marlowe</option>
@@ -559,7 +571,7 @@ export default function InkwellTattooPage() {
                   </select>
                 </label>
                 <label className={s.field}>
-                  <span>What kind</span>
+                  <span data-edit="book.text4" data-edit-max="60">What kind</span>
                   <select name="kind" defaultValue="flash">
                     <option value="flash">Flash from the wall</option>
                     <option value="custom">Custom drawing</option>
@@ -569,20 +581,20 @@ export default function InkwellTattooPage() {
               </div>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Placement</span>
+                  <span data-edit="book.text5" data-edit-max="60">Placement</span>
                   <input type="text" name="placement" placeholder="Outer forearm" />
                 </label>
                 <label className={s.field}>
-                  <span>Rough size (inches)</span>
+                  <span data-edit="book.text6" data-edit-max="60">Rough size (inches)</span>
                   <input type="text" name="size" placeholder="4" inputMode="decimal" />
                 </label>
               </div>
               <label className={s.field}>
-                <span>The idea, in a few lines</span>
+                <span data-edit="book.text7" data-edit-max="60">The idea, in a few lines</span>
                 <textarea name="idea" rows={4} placeholder="Sheet No. 03, but with the leaves in black" />
               </label>
-              <button className={s.submit} type="submit">Send the request</button>
-              <small className={s.formNote}>We reply within three working days with a price and a deposit link.</small>
+              <button data-edit="book.submit" data-edit-max="24" className={s.submit} type="submit">Send the request</button>
+              <small data-edit="book.formNote" className={s.formNote}>We reply within three working days with a price and a deposit link.</small>
             </form>
           </div>
         </section>
@@ -591,28 +603,28 @@ export default function InkwellTattooPage() {
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInner}>
             <div className={s.visitText}>
-              <span className={s.secNo}>05</span>
-              <h2 className={s.secTitle} id="visit-h">Up the stairs on Harbor Row</h2>
-              <p className={s.visitAddr}>418 Harbor Row, second floor, above the bike shop</p>
+              <span data-edit="visit.secNo" data-edit-max="60" className={s.secNo}>05</span>
+              <h2 data-edit="visit.secTitle" data-edit-max="60" className={s.secTitle} id="visit-h">Up the stairs on Harbor Row</h2>
+              <p data-edit="visit.visitAddr" data-edit-max="240" data-edit-multiline className={s.visitAddr}>418 Harbor Row, second floor, above the bike shop</p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.visitNote}>
+              <p data-edit="visit.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>
                 Street parking is free after 6. The stairs are steep; if they
                 are a problem, call and we will tattoo you in the ground-floor
                 room.
               </p>
               <ul className={s.contact}>
                 <li>
-                  <a href="tel:+15550142290">(555) 014-2290</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550142290">(555) 014-2290</a>
                 </li>
                 <li>
-                  <a href="mailto:book@inkwell.example">book@inkwell.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:book@inkwell.example">book@inkwell.example</a>
                 </li>
               </ul>
             </div>
@@ -629,7 +641,7 @@ export default function InkwellTattooPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,1,2,0,1,2,4" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={diamondconfetti}
             palette={FILLER}
@@ -640,14 +652,14 @@ export default function InkwellTattooPage() {
           />
         </div>
         <div className={s.footInner}>
-          <p className={s.footName}>Inkwell Tattoo</p>
-          <p className={s.footTag}>Flash off the wall, custom on the books. 418 Harbor Row.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Inkwell Tattoo</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Flash off the wall, custom on the books. 418 Harbor Row.</p>
           <div className={s.footFine}>
-            <p>A fictional tattoo studio. Prices, artists and hours are invented.</p>
+            <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional tattoo studio. Prices, artists and hours are invented.</p>
             <p>
-              <span>Patterns by </span>
-              <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-              <span>, drawn live in the shop's own colors.</span>
+              <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+              <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+              <span data-edit="footer.text2" data-edit-max="60">, drawn live in the shop's own colors.</span>
             </p>
           </div>
         </div>

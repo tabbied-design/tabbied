@@ -174,7 +174,19 @@ const FAQ = [
 
 export default function KeywayLocksmithsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f4f2ec',
+        '--ink': '#15171b',
+        '--brass': '#c9962b',
+        '--steel': '#7f8187',
+        '--pale': '#dedbd3',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,brass,steel,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -186,21 +198,21 @@ export default function KeywayLocksmithsPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <Artwork slug="keyway-locksmiths-key" alt="" inks={['var(--brass)']} className={s.markIcon} />
-          <span className={s.markName}>Keyway</span>
-          <span className={s.markSub}>Locksmiths</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Keyway</span>
+          <span data-edit="bar.markSub" data-edit-max="60" className={s.markSub}>Locksmiths</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <a className={s.barPhone} href={PHONE_HREF}>
-          <span className={s.phoneWord}>Call</span>
-          <span className={s.phoneNum}>{PHONE}</span>
+          <span data-edit="bar.phoneWord" data-edit-max="60" className={s.phoneWord}>Call</span>
+          <span data-edit="bar.phoneNum" data-edit-max="60" className={s.phoneNum}>{PHONE}</span>
         </a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -209,7 +221,7 @@ export default function KeywayLocksmithsPage() {
         {/* ------------------------------------------------------------ HERO
             Ink, with a field of lock cylinders behind the phone number. */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <div className={s.heroField} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,4" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={keyway}
               palette={CYLINDERS}
@@ -222,20 +234,20 @@ export default function KeywayLocksmithsPage() {
           </div>
           <div className={s.heroInner}>
             <div className={s.heroText}>
-              <p className={s.kicker}>Harwick and the Five Bridges, since 1998</p>
-              <h1 id="hero-h" className={s.heroTitle}>
+              <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Harwick and the Five Bridges, since 1998</p>
+              <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
                 Locked out? <em>We are about 22 minutes away.</em>
               </h1>
-              <p className={s.heroLede}>
+              <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
                 Homes, cars, safes and businesses, day and night. The price is
                 fixed on the phone, before anyone gets in the van.
               </p>
             </div>
             <div className={s.callCard}>
-              <span className={s.callLabel}>Call, day or night</span>
-              <a className={s.callNumber} href={PHONE_HREF}>{PHONE}</a>
-              <span className={s.callNote}>A person answers, not a menu.</span>
-              <a className={s.callBack} href="#call">Or ask us to call you</a>
+              <span data-edit="hero.callLabel" data-edit-max="60" className={s.callLabel}>Call, day or night</span>
+              <a data-edit="hero.callNumber" data-edit-max="28" className={s.callNumber} href={PHONE_HREF}>{PHONE}</a>
+              <span data-edit="hero.callNote" data-edit-max="60" className={s.callNote}>A person answers, not a menu.</span>
+              <a data-edit="hero.callBack" data-edit-max="28" className={s.callBack} href="#call">Or ask us to call you</a>
             </div>
           </div>
         </section>
@@ -244,23 +256,23 @@ export default function KeywayLocksmithsPage() {
             Six big tiles, one per job, each with its icon and a price-from. */}
         <section id="services" className={s.picker} aria-labelledby="services-h">
           <div className={s.pickerHead}>
-            <h2 id="services-h">What do you need?</h2>
-            <p className={s.pickerNote}>Pick one and we will ask the right questions. Prices are weekdays 8 am-6 pm in Zone 1.</p>
+            <h2 data-edit="services.title" data-edit-max="60" id="services-h">What do you need?</h2>
+            <p data-edit="services.pickerNote" data-edit-max="240" data-edit-multiline className={s.pickerNote}>Pick one and we will ask the right questions. Prices are weekdays 8 am-6 pm in Zone 1.</p>
           </div>
           <ul className={s.tiles}>
-            {SERVICES.map((sv) => (
+            {SERVICES.map((sv, i) => (
               <li key={sv.id} className={sv.urgent ? `${s.tile} ${s.tileUrgent}` : s.tile}>
-                <span className={s.tileTag}>{sv.tag}</span>
+                <span data-edit={`services.tileTag.${i}`} data-edit-max="60" className={s.tileTag}>{sv.tag}</span>
                 <div className={`${s.tileArt} ${s[sv.turn]}`}>
                   <Artwork slug={sv.icon} alt="" inks={['var(--ink)']} className={s.tileIcon} />
                 </div>
-                <h3>{sv.title}</h3>
-                <p className={s.tileBody}>{sv.body}</p>
+                <h3 data-edit={`services.title2.${i}`} data-edit-max="40">{sv.title}</h3>
+                <p data-edit={`services.tileBody.${i}`} data-edit-max="240" data-edit-multiline className={s.tileBody}>{sv.body}</p>
                 <div className={s.tileFoot}>
-                  <span className={s.tileFrom}>From</span>
-                  <strong className={s.tilePrice}>{sv.from}</strong>
-                  <span className={s.tileUnit}>{sv.unit}</span>
-                  <a className={s.tileLink} href="#call">Book this</a>
+                  <span data-edit={`services.tileFrom.${i}`} data-edit-max="60" className={s.tileFrom}>From</span>
+                  <strong data-edit={`services.tilePrice.${i}`} className={s.tilePrice}>{sv.from}</strong>
+                  <span data-edit={`services.tileUnit.${i}`} data-edit-max="60" className={s.tileUnit}>{sv.unit}</span>
+                  <a data-edit={`services.tileLink.${i}`} data-edit-max="28" className={s.tileLink} href="#call">Book this</a>
                 </div>
               </li>
             ))}
@@ -270,10 +282,10 @@ export default function KeywayLocksmithsPage() {
         {/* --------------------------------------------------- RESPONSE STRIP */}
         <section className={s.strip} aria-label="How fast, how much">
           <dl className={s.stripList}>
-            {STRIP.map(([v, k]) => (
+            {STRIP.map(([v, k], i) => (
               <div key={v}>
-                <dt>{v}</dt>
-                <dd>{k}</dd>
+                <dt data-edit={`strip.term.${i}`} data-edit-max="28">{v}</dt>
+                <dd data-edit={`strip.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
               </div>
             ))}
           </dl>
@@ -282,28 +294,28 @@ export default function KeywayLocksmithsPage() {
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>01</span>
-            <h2 id="prices-h">What it costs</h2>
-            <p className={s.secNote}>
+            <span data-edit="prices.secNo" data-edit-max="60" className={s.secNo}>01</span>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">What it costs</h2>
+            <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Labor and the visit. Parts are extra and priced before fitting;
               a zone call-out fee is added outside Zone 1 or outside the day.
             </p>
           </div>
           <table className={s.prices}>
-            <caption className={s.visuallyHidden}>Prices by time of day</caption>
+            <caption data-edit="prices.visuallyHidden" className={s.visuallyHidden}>Prices by time of day</caption>
             <thead>
               <tr>
-                <th scope="col">Job</th>
-                <th scope="col">Weekdays 8-6</th>
-                <th scope="col">Nights, weekends, holidays</th>
+                <th data-edit="prices.heading" scope="col">Job</th>
+                <th data-edit="prices.heading2" scope="col">Weekdays 8-6</th>
+                <th data-edit="prices.heading3" scope="col">Nights, weekends, holidays</th>
               </tr>
             </thead>
             <tbody>
-              {PRICES.map(([job, day, night]) => (
+              {PRICES.map(([job, day, night], i) => (
                 <tr key={job}>
-                  <th scope="row">{job}</th>
-                  <td data-label="Weekdays 8-6">{day}</td>
-                  <td data-label="Nights and weekends">{night}</td>
+                  <th data-edit={`prices.heading4.${i}`} scope="row">{job}</th>
+                  <td data-edit={`prices.cell.${i}`} data-label="Weekdays 8-6">{day}</td>
+                  <td data-edit={`prices.cell2.${i}`} data-label="Nights and weekends">{night}</td>
                 </tr>
               ))}
             </tbody>
@@ -313,9 +325,9 @@ export default function KeywayLocksmithsPage() {
         {/* ----------------------------------------------------------- AREAS */}
         <section id="areas" className={s.sec} aria-labelledby="areas-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>02</span>
-            <h2 id="areas-h">Where we go, and how fast</h2>
-            <p className={s.secNote}>
+            <span data-edit="areas.secNo" data-edit-max="60" className={s.secNo}>02</span>
+            <h2 data-edit="areas.title" data-edit-max="60" id="areas-h">Where we go, and how fast</h2>
+            <p data-edit="areas.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Three vans, parked at night in Old Town, Eastfield and Ridgeway,
               so one is never far. Times are the usual, not a promise, on a
               snowy Friday night.
@@ -324,27 +336,27 @@ export default function KeywayLocksmithsPage() {
           <div className={s.areas}>
             <div className={s.zoneMap} aria-hidden="true">
               <span className={s.ring3}>
-                <span className={s.ringLabel}>3</span>
+                <span data-edit="areas.ringLabel" data-edit-max="60" className={s.ringLabel}>3</span>
               </span>
               <span className={s.ring2}>
-                <span className={s.ringLabel}>2</span>
+                <span data-edit="areas.ringLabel2" data-edit-max="60" className={s.ringLabel}>2</span>
               </span>
               <span className={s.ring1}>
-                <span className={s.ringLabel}>1</span>
+                <span data-edit="areas.ringLabel3" data-edit-max="60" className={s.ringLabel}>1</span>
               </span>
               <span className={s.zoneCore}>
                 <Artwork slug="keyway-locksmiths-key" alt="" inks={['var(--ink)']} className={s.zoneKey} />
               </span>
             </div>
             <ol className={s.zones}>
-              {ZONES.map((z) => (
+              {ZONES.map((z, i) => (
                 <li key={z.zone}>
                   <div className={s.zoneTop}>
-                    <h3>{z.zone}</h3>
-                    <span className={s.zoneTime}>{z.time}</span>
+                    <h3 data-edit={`areas.title2.${i}`} data-edit-max="40">{z.zone}</h3>
+                    <span data-edit={`areas.zoneTime.${i}`} data-edit-max="60" className={s.zoneTime}>{z.time}</span>
                   </div>
-                  <p className={s.zonePlaces}>{z.places}</p>
-                  <p className={s.zoneFee}>{z.fee}</p>
+                  <p data-edit={`areas.zonePlaces.${i}`} data-edit-max="240" data-edit-multiline className={s.zonePlaces}>{z.places}</p>
+                  <p data-edit={`areas.zoneFee.${i}`} data-edit-max="240" data-edit-multiline className={s.zoneFee}>{z.fee}</p>
                 </li>
               ))}
             </ol>
@@ -354,7 +366,7 @@ export default function KeywayLocksmithsPage() {
         {/* ------------------------------------------------------------ CALL */}
         <section id="call" className={s.call} aria-labelledby="call-h">
           <div className={s.callPanel}>
-            <div className={s.callField} aria-hidden="true">
+            <div data-edit-pattern="call.field" data-edit-roles="transparent,3,2" className={s.callField} aria-hidden="true">
               <TabbiedPattern
                 pattern={keyway}
                 palette={QUIET}
@@ -366,36 +378,36 @@ export default function KeywayLocksmithsPage() {
               />
             </div>
             <Artwork slug="keyway-locksmiths-padlock" alt="A closed padlock" inks={['var(--brass)']} className={s.callLock} />
-            <h2 id="call-h" className={s.callTitle}>Tell us what happened</h2>
-            <p className={s.callText}>We call back within ten minutes, day or night, with a price and a time. If you would rather talk now:</p>
-            <a className={s.callBig} href={PHONE_HREF}>{PHONE}</a>
-            <p className={s.callSafety}>If anyone is in danger, a child or a pet locked in a car, call 911 first.</p>
+            <h2 data-edit="call.callTitle" data-edit-max="60" id="call-h" className={s.callTitle}>Tell us what happened</h2>
+            <p data-edit="call.callText" data-edit-max="240" data-edit-multiline className={s.callText}>We call back within ten minutes, day or night, with a price and a time. If you would rather talk now:</p>
+            <a data-edit="call.callBig" data-edit-max="28" className={s.callBig} href={PHONE_HREF}>{PHONE}</a>
+            <p data-edit="call.callSafety" data-edit-max="240" data-edit-multiline className={s.callSafety}>If anyone is in danger, a child or a pet locked in a car, call 911 first.</p>
           </div>
 
           <form className={s.form} action="#">
             <fieldset className={s.choice}>
-              <legend>What do you need?</legend>
-              {SERVICES.map((sv) => (
+              <legend data-edit="call.legend">What do you need?</legend>
+              {SERVICES.map((sv, i) => (
                 <label key={sv.id}>
                   <input type="radio" name="service" value={sv.id} defaultChecked={sv.urgent} />
-                  <span>{sv.title}</span>
+                  <span data-edit={`call.text.${i}`} data-edit-max="60">{sv.title}</span>
                 </label>
               ))}
             </fieldset>
             <div className={s.field}>
-              <label htmlFor="kw-name">Name</label>
+              <label data-edit="call.label" htmlFor="kw-name">Name</label>
               <input id="kw-name" name="name" type="text" autoComplete="name" />
             </div>
             <div className={s.field}>
-              <label htmlFor="kw-phone">Phone</label>
+              <label data-edit="call.label2" htmlFor="kw-phone">Phone</label>
               <input id="kw-phone" name="phone" type="tel" autoComplete="tel" />
             </div>
             <div className={`${s.field} ${s.fieldWide}`}>
-              <label htmlFor="kw-where">Street address or cross streets</label>
+              <label data-edit="call.label3" htmlFor="kw-where">Street address or cross streets</label>
               <input id="kw-where" name="where" type="text" autoComplete="street-address" />
             </div>
             <div className={s.field}>
-              <label htmlFor="kw-when">When</label>
+              <label data-edit="call.label4" htmlFor="kw-when">When</label>
               <select id="kw-when" name="when" defaultValue="now">
                 <option value="now">Now, please</option>
                 <option value="today">Later today</option>
@@ -404,30 +416,30 @@ export default function KeywayLocksmithsPage() {
               </select>
             </div>
             <div className={s.field}>
-              <label htmlFor="kw-lock">The lock, if you know</label>
+              <label data-edit="call.label5" htmlFor="kw-lock">The lock, if you know</label>
               <input id="kw-lock" name="lock" type="text" placeholder="Front door deadbolt" />
             </div>
             <div className={`${s.field} ${s.fieldWide}`}>
-              <label htmlFor="kw-more">Anything else</label>
+              <label data-edit="call.label6" htmlFor="kw-more">Anything else</label>
               <textarea id="kw-more" name="more" rows={3} />
             </div>
-            <button type="submit" className={s.submit}>Call me back</button>
-            <small className={s.formFine}>We use your number for this job only.</small>
+            <button data-edit="call.submit" data-edit-max="24" type="submit" className={s.submit}>Call me back</button>
+            <small data-edit="call.formFine" className={s.formFine}>We use your number for this job only.</small>
           </form>
         </section>
 
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.sec} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>03</span>
-            <h2 id="faq-h">Questions we get at the door</h2>
-            <p className={s.secNote}>And the answers, so you know before the van does.</p>
+            <span data-edit="faq.secNo" data-edit-max="60" className={s.secNo}>03</span>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Questions we get at the door</h2>
+            <p data-edit="faq.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>And the answers, so you know before the van does.</p>
           </div>
           <div className={s.faq}>
-            {FAQ.map((f) => (
+            {FAQ.map((f, i) => (
               <details key={f.q}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -435,7 +447,7 @@ export default function KeywayLocksmithsPage() {
       </main>
 
       {/* Teeth along the top of the footer, like the cuts on a key blade. */}
-      <div className={s.teeth} aria-hidden="true">
+      <div data-edit-pattern="page.field" data-edit-roles="transparent,2,3,1" className={s.teeth} aria-hidden="true">
         <TabbiedPattern
           pattern={battlement}
           palette={TEETH}
@@ -450,19 +462,19 @@ export default function KeywayLocksmithsPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div className={s.footBrand}>
-            <p className={s.footName}>Keyway Locksmiths</p>
-            <p className={s.footTag}>Locks opened, rekeyed and fitted in Harwick since 1998. License LS-40217, bonded and insured.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Keyway Locksmiths</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Locks opened, rekeyed and fitted in Harwick since 1998. License LS-40217, bonded and insured.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Call</h2>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Call</h2>
             <p className={s.footBig}>
-              <a href={PHONE_HREF}>{PHONE}</a>
+              <a data-edit="footer.link" data-edit-max="28" href={PHONE_HREF}>{PHONE}</a>
             </p>
-            <p className={s.footSmall}>24 hours, every day of the year</p>
+            <p data-edit="footer.footSmall" data-edit-max="240" data-edit-multiline className={s.footSmall}>24 hours, every day of the year</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Workshop</h2>
-            <p className={s.footAddr}>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Workshop</h2>
+            <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
               41 Tanner Street, Harwick
               <br />
               Key cutting Mon-Sat 8-6
@@ -471,20 +483,20 @@ export default function KeywayLocksmithsPage() {
             </p>
           </div>
           <div>
-            <h2 className={s.footHead}>Pages</h2>
+            <h2 data-edit="footer.footHead3" data-edit-max="60" className={s.footHead}>Pages</h2>
             <ul className={s.footLinks}>
-              <li><a href="#services">Services</a></li>
-              <li><a href="#prices">Prices</a></li>
-              <li><a href="#areas">Areas</a></li>
-              <li><a href="#call">Book a callback</a></li>
+              <li><a data-edit="footer.services" data-edit-max="28" href="#services">Services</a></li>
+              <li><a data-edit="footer.prices" data-edit-max="28" href="#prices">Prices</a></li>
+              <li><a data-edit="footer.areas" data-edit-max="28" href="#areas">Areas</a></li>
+              <li><a data-edit="footer.call" data-edit-max="28" href="#call">Book a callback</a></li>
             </ul>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional locksmith. Prices, times, places and the license number are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional locksmith. Prices, times, places and the license number are invented.</p>
           <p>
             Patterns by{' '}
-            <a href="https://tabbied.com" rel="noopener">
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
             </a>
             , drawn live on a transparent ground.

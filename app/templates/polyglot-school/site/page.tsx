@@ -164,7 +164,20 @@ const FAQ = [
 
 export default function PolyglotPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f6f7fb',
+        '--ink': '#16213e',
+        '--blue': '#3d5afe',
+        '--coral': '#ff7a59',
+        '--gray': '#8a90a6',
+        '--pale': '#e6e9f5',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,blue,coral,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -174,16 +187,16 @@ export default function PolyglotPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Polyglot</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Polyglot</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#placement">Free placement test</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#placement">Free placement test</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -192,18 +205,18 @@ export default function PolyglotPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroCopy}>
-            <p className={s.kicker}>Language school, 14 Market Square</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Language school, 14 Market Square</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Climb one level <em>at a time.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Ten languages, taught in groups of ten or fewer, from your first
               hello to reading the newspaper. Every course is one step on the
               same six-level ladder, so you always know where you are.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#placement">Find your level</a>
-              <a className={s.btnGhost} href="#timetable">See the timetable</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#placement">Find your level</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#timetable">See the timetable</a>
             </div>
           </div>
           <div className={s.heroArt}>
@@ -213,8 +226,8 @@ export default function PolyglotPage() {
               inks={{ red: 'var(--coral)', blue: 'var(--blue)' }}
               className={s.bubbles}
             />
-            <span className={s.sayOne} aria-hidden="true">Hola!</span>
-            <span className={s.sayTwo} aria-hidden="true">Bonjour!</span>
+            <span data-edit="hero.text" data-edit-max="60" className={s.sayOne} aria-hidden="true">Hola!</span>
+            <span data-edit="hero.text2" data-edit-max="60" className={s.sayTwo} aria-hidden="true">Bonjour!</span>
           </div>
         </section>
 
@@ -223,7 +236,7 @@ export default function PolyglotPage() {
             stair outline, a card on every tread. */}
         <section id="levels" className={s.levels} aria-labelledby="levels-h">
           <div className={s.ladder}>
-            <div className={s.stairField} aria-hidden="true">
+            <div data-edit-pattern="levels.field" data-edit-roles="transparent,1,2,5,3,0,2,5" className={s.stairField} aria-hidden="true">
               <TabbiedPattern
                 pattern={diamondconfetti}
                 palette={STAIRS}
@@ -234,21 +247,21 @@ export default function PolyglotPage() {
               />
             </div>
             <div className={s.ladderHead}>
-              <p className={s.eyebrow}>The level ladder</p>
-              <h2 id="levels-h">Six steps from hello to fluent</h2>
-              <p className={s.headNote}>
+              <p data-edit="levels.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The level ladder</p>
+              <h2 data-edit="levels.title" data-edit-max="60" id="levels-h">Six steps from hello to fluent</h2>
+              <p data-edit="levels.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 The European framework every school and exam uses. Each step
                 is two or three of our ten-week courses.
               </p>
             </div>
             <ol className={s.steps}>
-              {LEVELS.map((l) => (
+              {LEVELS.map((l, i) => (
                 <li key={l.code} className={`${s.step} ${s[l.step]}`}>
                   <div className={s.card}>
-                    <span className={s.code}>{l.code}</span>
-                    <h3 className={s.levelName}>{l.name}</h3>
-                    <p className={s.can}>{l.can}</p>
-                    <span className={s.hours}>{l.hours}</span>
+                    <span data-edit={`levels.code.${i}`} data-edit-max="60" className={s.code}>{l.code}</span>
+                    <h3 data-edit={`levels.levelName.${i}`} data-edit-max="40" className={s.levelName}>{l.name}</h3>
+                    <p data-edit={`levels.can.${i}`} data-edit-max="240" data-edit-multiline className={s.can}>{l.can}</p>
+                    <span data-edit={`levels.hours.${i}`} data-edit-max="60" className={s.hours}>{l.hours}</span>
                   </div>
                 </li>
               ))}
@@ -259,30 +272,30 @@ export default function PolyglotPage() {
         {/* ------------------------------------------------------- TIMETABLE */}
         <section id="timetable" className={s.timetable} aria-labelledby="timetable-h">
           <div className={s.head}>
-            <p className={s.eyebrow}>This term</p>
-            <h2 id="timetable-h">The week's timetable</h2>
-            <p className={s.headNote}>
+            <p data-edit="timetable.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>This term</p>
+            <h2 data-edit="timetable.title" data-edit-max="60" id="timetable-h">The week's timetable</h2>
+            <p data-edit="timetable.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Groups meet twice a week at the same time. The term runs ten
               weeks from September 14; the next starts January 11.
             </p>
           </div>
           <div className={s.tableWrap}>
             <table className={s.table}>
-              <caption className={s.srOnly}>Group classes by day and time</caption>
+              <caption data-edit="timetable.srOnly" className={s.srOnly}>Group classes by day and time</caption>
               <thead>
                 <tr>
-                  <th scope="col">Time</th>
-                  {DAYS.map((d) => (
-                    <th key={d} scope="col">{d}</th>
+                  <th data-edit="timetable.heading" scope="col">Time</th>
+                  {DAYS.map((d, i) => (
+                    <th data-edit={`timetable.heading2.${i}`} key={d} scope="col">{d}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {SLOTS.map((slot) => (
+                {SLOTS.map((slot, i) => (
                   <tr key={slot.time}>
                     <th scope="row">
-                      <span className={s.slotName}>{slot.time}</span>
-                      <span className={s.slotHours}>{slot.hours}</span>
+                      <span data-edit={`timetable.slotName.${i}`} data-edit-max="60" className={s.slotName}>{slot.time}</span>
+                      <span data-edit={`timetable.slotHours.${i}`} data-edit-max="60" className={s.slotHours}>{slot.hours}</span>
                     </th>
                     {slot.days.map((c, i) => (
                       <td key={DAYS[i]} className={c ? s.hasClass : s.noClass}>{c}</td>
@@ -292,16 +305,16 @@ export default function PolyglotPage() {
               </tbody>
             </table>
           </div>
-          <p className={s.tableNote}>Conversation club is free for anyone enrolled in a course.</p>
+          <p data-edit="timetable.tableNote" data-edit-max="240" data-edit-multiline className={s.tableNote}>Conversation club is free for anyone enrolled in a course.</p>
         </section>
 
         {/* ------------------------------------------------------- LANGUAGES */}
         <section id="languages" className={s.languages} aria-labelledby="languages-h">
           <div className={s.langHead}>
             <div className={s.head}>
-              <p className={s.eyebrow}>Languages</p>
-              <h2 id="languages-h">Ten languages, one front door</h2>
-              <p className={s.headNote}>
+              <p data-edit="languages.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Languages</p>
+              <h2 data-edit="languages.title" data-edit-max="60" id="languages-h">Ten languages, one front door</h2>
+              <p data-edit="languages.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 Every teacher is a native speaker and a trained teacher. English
                 for speakers of other languages runs all year, at every level.
               </p>
@@ -314,12 +327,12 @@ export default function PolyglotPage() {
             />
           </div>
           <ul className={s.langGrid}>
-            {LANGUAGES.map((l) => (
+            {LANGUAGES.map((l, i) => (
               <li key={l.name} className={s.lang}>
-                <span className={s.hello}>{l.hello}</span>
-                <h3 className={s.langName}>{l.name}</h3>
-                <span className={s.langLevels}>{l.levels}</span>
-                <span className={s.langTeachers}>{l.teachers}</span>
+                <span data-edit={`languages.hello.${i}`} data-edit-max="60" className={s.hello}>{l.hello}</span>
+                <h3 data-edit={`languages.langName.${i}`} data-edit-max="40" className={s.langName}>{l.name}</h3>
+                <span data-edit={`languages.langLevels.${i}`} data-edit-max="60" className={s.langLevels}>{l.levels}</span>
+                <span data-edit={`languages.langTeachers.${i}`} data-edit-max="60" className={s.langTeachers}>{l.teachers}</span>
               </li>
             ))}
           </ul>
@@ -338,20 +351,20 @@ export default function PolyglotPage() {
             </div>
             <div className={s.courseCopy}>
               <div className={s.head}>
-                <p className={s.eyebrow}>Courses and fees</p>
-                <h2 id="courses-h">Three ways to study</h2>
+                <p data-edit="courses.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Courses and fees</p>
+                <h2 data-edit="courses.title" data-edit-max="60" id="courses-h">Three ways to study</h2>
               </div>
               <ul className={s.courseList}>
-                {COURSES.map((c) => (
+                {COURSES.map((c, i) => (
                   <li key={c.name} className={s.course}>
-                    <h3 className={s.courseName}>{c.name}</h3>
+                    <h3 data-edit={`courses.courseName.${i}`} data-edit-max="40" className={s.courseName}>{c.name}</h3>
                     <p className={s.coursePrice}>
-                      <strong>{c.price}</strong>
-                      <span>{c.per}</span>
+                      <strong data-edit={`courses.emphasis.${i}`}>{c.price}</strong>
+                      <span data-edit={`courses.text.${i}`} data-edit-max="60">{c.per}</span>
                     </p>
                     <ul className={s.coursePoints}>
-                      {c.points.map((pt) => (
-                        <li key={pt}>{pt}</li>
+                      {c.points.map((pt, i2) => (
+                        <li data-edit={`courses.item.${i}.${i2}`} data-edit-max="80" key={pt}>{pt}</li>
                       ))}
                     </ul>
                   </li>
@@ -363,7 +376,7 @@ export default function PolyglotPage() {
 
         {/* ------------------------------------------------------- PLACEMENT */}
         <section id="placement" className={s.placement} aria-labelledby="placement-h">
-          <div className={s.routes} aria-hidden="true">
+          <div data-edit-pattern="placement.field" data-edit-roles="transparent,5,2,5,4" className={s.routes} aria-hidden="true">
             <TabbiedPattern
               pattern={metro}
               palette={ROUTES}
@@ -376,32 +389,32 @@ export default function PolyglotPage() {
           </div>
           <div className={s.placementInner}>
             <div className={s.placementCopy}>
-              <p className={s.eyebrow}>Placement test</p>
-              <h2 id="placement-h">Twenty minutes to find your step</h2>
-              <p className={s.headNote}>
+              <p data-edit="placement.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Placement test</p>
+              <h2 data-edit="placement.title" data-edit-max="60" id="placement-h">Twenty minutes to find your step</h2>
+              <p data-edit="placement.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 A short test online, then a ten-minute chat with a teacher, who
                 tells you which group to join. It is free and there is nothing
                 to prepare.
               </p>
               <ol className={s.howList}>
-                <li>Send the form. We email a link within a day.</li>
-                <li>Take the test whenever suits you.</li>
-                <li>Talk to a teacher and choose a group.</li>
+                <li data-edit="placement.item" data-edit-max="80">Send the form. We email a link within a day.</li>
+                <li data-edit="placement.item2" data-edit-max="80">Take the test whenever suits you.</li>
+                <li data-edit="placement.item3" data-edit-max="80">Talk to a teacher and choose a group.</li>
               </ol>
             </div>
             <form className={s.form} action="#">
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Your name</span>
+                  <span data-edit="placement.text" data-edit-max="60">Your name</span>
                   <input type="text" name="name" autoComplete="name" />
                 </label>
                 <label className={s.field}>
-                  <span>Email</span>
+                  <span data-edit="placement.text2" data-edit-max="60">Email</span>
                   <input type="email" name="email" autoComplete="email" />
                 </label>
               </div>
               <label className={s.field}>
-                <span>Language</span>
+                <span data-edit="placement.text3" data-edit-max="60">Language</span>
                 <select name="language" defaultValue="">
                   <option value="" disabled>Choose a language</option>
                   {LANGUAGES.map((l) => (
@@ -410,48 +423,48 @@ export default function PolyglotPage() {
                 </select>
               </label>
               <fieldset className={s.choice}>
-                <legend>How much do you know already?</legend>
+                <legend data-edit="placement.legend">How much do you know already?</legend>
                 <div className={s.pills}>
                   <label>
                     <input type="radio" name="level" value="none" />
-                    <span>Nothing yet</span>
+                    <span data-edit="placement.text4" data-edit-max="60">Nothing yet</span>
                   </label>
                   <label>
                     <input type="radio" name="level" value="some" />
-                    <span>A few words</span>
+                    <span data-edit="placement.text5" data-edit-max="60">A few words</span>
                   </label>
                   <label>
                     <input type="radio" name="level" value="by" />
-                    <span>I get by</span>
+                    <span data-edit="placement.text6" data-edit-max="60">I get by</span>
                   </label>
                   <label>
                     <input type="radio" name="level" value="comfortable" />
-                    <span>Comfortable</span>
+                    <span data-edit="placement.text7" data-edit-max="60">Comfortable</span>
                   </label>
                 </div>
               </fieldset>
               <fieldset className={s.choice}>
-                <legend>When could you come?</legend>
+                <legend data-edit="placement.legend2">When could you come?</legend>
                 <div className={s.pills}>
                   <label>
                     <input type="checkbox" name="when" value="morning" />
-                    <span>Mornings</span>
+                    <span data-edit="placement.text8" data-edit-max="60">Mornings</span>
                   </label>
                   <label>
                     <input type="checkbox" name="when" value="lunch" />
-                    <span>Lunch</span>
+                    <span data-edit="placement.text9" data-edit-max="60">Lunch</span>
                   </label>
                   <label>
                     <input type="checkbox" name="when" value="evening" />
-                    <span>Evenings</span>
+                    <span data-edit="placement.text10" data-edit-max="60">Evenings</span>
                   </label>
                   <label>
                     <input type="checkbox" name="when" value="saturday" />
-                    <span>Saturdays</span>
+                    <span data-edit="placement.text11" data-edit-max="60">Saturdays</span>
                   </label>
                 </div>
               </fieldset>
-              <button type="submit" className={s.btn}>Send me the test</button>
+              <button data-edit="placement.btn" data-edit-max="24" type="submit" className={s.btn}>Send me the test</button>
             </form>
           </div>
         </section>
@@ -459,14 +472,14 @@ export default function PolyglotPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
           <div className={s.head}>
-            <p className={s.eyebrow}>Questions</p>
-            <h2 id="faq-h">Before you enroll</h2>
+            <p data-edit="faq.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Questions</p>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Before you enroll</h2>
           </div>
           <div className={s.faqList}>
-            {FAQ.map((f) => (
+            {FAQ.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -476,28 +489,28 @@ export default function PolyglotPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Polyglot</p>
-            <p className={s.footTag}>A language school in ten languages and six levels.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Polyglot</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>A language school in ten languages and six levels.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Visit</h2>
-            <p className={s.footText}>14 Market Square, second floor</p>
-            <p className={s.footText}>Office open Mon-Fri, 9 am - 8 pm</p>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Visit</h2>
+            <p data-edit="footer.footText" data-edit-max="240" data-edit-multiline className={s.footText}>14 Market Square, second floor</p>
+            <p data-edit="footer.footText2" data-edit-max="240" data-edit-multiline className={s.footText}>Office open Mon-Fri, 9 am - 8 pm</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Contact</h2>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Contact</h2>
             <ul className={s.footLinks}>
-              <li><a href="tel:5550146120">(555) 014-6120</a></li>
-              <li><a href="mailto:hello@polyglot.example">hello@polyglot.example</a></li>
+              <li><a data-edit="footer.link" data-edit-max="28" href="tel:5550146120">(555) 014-6120</a></li>
+              <li><a data-edit="footer.link2" data-edit-max="28" href="mailto:hello@polyglot.example">hello@polyglot.example</a></li>
             </ul>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional language school. Courses, prices and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional language school. Courses, prices and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the page's own colors; the pictures follow the same palette.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link3" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the page's own colors; the pictures follow the same palette.</span>
           </p>
         </div>
       </footer>

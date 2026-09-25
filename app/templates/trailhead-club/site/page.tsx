@@ -380,7 +380,19 @@ const FACTS = [
 
 export default function TrailheadClubPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f1efe7',
+        '--ink': '#1c2418',
+        '--moss': '#4f6b3a',
+        '--stone': '#8d8c80',
+        '--mist': '#dfddd1',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,moss,stone,mist"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -392,17 +404,17 @@ export default function TrailheadClubPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <Artwork slug="trailhead-club-peak" alt="" inks={['var(--moss)']} className={s.markIcon} />
-          <span>Trailhead Club</span>
+          <span data-edit="bar.text" data-edit-max="60">Trailhead Club</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#join">Join the club</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#join">Join the club</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -412,24 +424,24 @@ export default function TrailheadClubPage() {
             The club's patch: a summit on its own contour rings. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Volunteer hiking club, Ashby Valley, since 1987</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Volunteer hiking club, Ashby Valley, since 1987</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Every Saturday, <em>someone knows the way.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Led hikes from easy creek walks to long ridge days, graded
               honestly, carpooled from town and free for members. Your first
               two are on us.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#hikes">See the calendar</a>
-              <a className={s.btnGhost} href="#first-hike">Your first hike</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#hikes">See the calendar</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#first-hike">Your first hike</a>
             </div>
             <dl className={s.facts}>
-              {FACTS.map(([v, k]) => (
+              {FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
@@ -437,7 +449,7 @@ export default function TrailheadClubPage() {
 
           <div className={s.badge}>
             <div className={s.badgeDisc}>
-              <div className={s.badgeField} aria-hidden="true">
+              <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,2" className={s.badgeField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={contourlines}
                   palette={CONTOURS}
@@ -451,9 +463,9 @@ export default function TrailheadClubPage() {
               <Artwork slug="trailhead-club-peak" alt="A mountain peak with a flag on the summit" inks={['var(--ink)']} className={s.badgePeak} />
             </div>
             <div className={s.nextHike}>
-              <span className={s.nextLabel}>Next up</span>
-              <strong className={s.nextName}>Cinder Ridge loop</strong>
-              <span className={s.nextMeta}>Sat 3 Oct, 7.8 mi, 1,900 ft</span>
+              <span data-edit="hero.nextLabel" data-edit-max="60" className={s.nextLabel}>Next up</span>
+              <strong data-edit="hero.nextName" className={s.nextName}>Cinder Ridge loop</strong>
+              <span data-edit="hero.nextMeta" data-edit-max="60" className={s.nextMeta}>Sat 3 Oct, 7.8 mi, 1,900 ft</span>
             </div>
           </div>
         </section>
@@ -462,9 +474,9 @@ export default function TrailheadClubPage() {
             The trip calendar: one row per outing, the climb drawn as a bar. */}
         <section id="hikes" className={s.calendar} aria-labelledby="hikes-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>01</span>
-            <h2 id="hikes-h">The trip calendar</h2>
-            <p className={s.secNote}>
+            <span data-edit="hikes.secNo" data-edit-max="60" className={s.secNo}>01</span>
+            <h2 data-edit="hikes.title" data-edit-max="60" id="hikes-h">The trip calendar</h2>
+            <p data-edit="hikes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Autumn 2026. Sign up by email to the address under each hike; the
               leader writes back with the carpool plan two days before.
             </p>
@@ -473,56 +485,56 @@ export default function TrailheadClubPage() {
           <div className={s.legend} aria-hidden="true">
             <span className={s.legendItem}>
               <Artwork slug="trailhead-club-peak" alt="" inks={['var(--moss)']} className={s.legendIcon} />
-              <span>Summit</span>
+              <span data-edit="hikes.text" data-edit-max="60">Summit</span>
             </span>
             <span className={s.legendItem}>
               <Artwork slug="trailhead-club-boot" alt="" inks={['var(--moss)']} className={s.legendIcon} />
-              <span>Walk</span>
+              <span data-edit="hikes.text2" data-edit-max="60">Walk</span>
             </span>
             <span className={s.legendItem}>
               <Artwork slug="trailhead-club-compass" alt="" inks={['var(--moss)']} className={s.legendIcon} />
-              <span>Skills</span>
+              <span data-edit="hikes.text3" data-edit-max="60">Skills</span>
             </span>
             <span className={s.legendItem}>
               <Artwork slug="trailhead-club-tent" alt="" inks={['var(--moss)']} className={s.legendIcon} />
-              <span>Overnight</span>
+              <span data-edit="hikes.text4" data-edit-max="60">Overnight</span>
             </span>
           </div>
 
-          {CALENDAR.map((m) => (
+          {CALENDAR.map((m, i) => (
             <div key={m.name} className={s.month}>
               <div className={s.monthHead}>
-                <h3>{m.name}</h3>
-                <span className={s.monthCount}>{m.count}</span>
+                <h3 data-edit={`hikes.title2.${i}`} data-edit-max="40">{m.name}</h3>
+                <span data-edit={`hikes.monthCount.${i}`} data-edit-max="60" className={s.monthCount}>{m.count}</span>
               </div>
               <div className={s.colHead} aria-hidden="true">
-                <span>Date</span>
-                <span>Hike</span>
-                <span>Distance</span>
-                <span>Climb</span>
-                <span>Grade</span>
-                <span>Places</span>
+                <span data-edit={`hikes.text5.${i}`} data-edit-max="60">Date</span>
+                <span data-edit={`hikes.text6.${i}`} data-edit-max="60">Hike</span>
+                <span data-edit={`hikes.text7.${i}`} data-edit-max="60">Distance</span>
+                <span data-edit={`hikes.text8.${i}`} data-edit-max="60">Climb</span>
+                <span data-edit={`hikes.text9.${i}`} data-edit-max="60">Grade</span>
+                <span data-edit={`hikes.text10.${i}`} data-edit-max="60">Places</span>
               </div>
               <ol className={s.hikes}>
-                {m.hikes.map((h) => (
+                {m.hikes.map((h, i2) => (
                   <li key={h.name} className={`${s.hike} ${s[h.grade]}`}>
                     <div className={s.date}>
-                      <span className={s.day}>{h.day}</span>
-                      <span className={s.weekday}>{h.weekday}</span>
+                      <span data-edit={`hikes.day.${i}.${i2}`} data-edit-max="60" className={s.day}>{h.day}</span>
+                      <span data-edit={`hikes.weekday.${i}.${i2}`} data-edit-max="60" className={s.weekday}>{h.weekday}</span>
                     </div>
                     <Artwork slug={ICON[h.kind]} alt="" inks={['var(--moss)']} className={s.hikeIcon} />
                     <div className={s.hikeInfo}>
-                      <span className={s.hikeKind}>{h.kindLabel}</span>
-                      <h4>{h.name}</h4>
-                      <p className={s.hikeMeet}>{h.meet}</p>
-                      <p className={s.hikeLeader}>{h.leader}</p>
+                      <span data-edit={`hikes.hikeKind.${i}.${i2}`} data-edit-max="60" className={s.hikeKind}>{h.kindLabel}</span>
+                      <h4 data-edit={`hikes.title3.${i}.${i2}`} data-edit-max="36">{h.name}</h4>
+                      <p data-edit={`hikes.hikeMeet.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.hikeMeet}>{h.meet}</p>
+                      <p data-edit={`hikes.hikeLeader.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.hikeLeader}>{h.leader}</p>
                     </div>
-                    <span className={s.miles}>{h.miles}</span>
+                    <span data-edit={`hikes.miles.${i}.${i2}`} data-edit-max="60" className={s.miles}>{h.miles}</span>
                     <div className={s.gain}>
                       <span className={s.gainBar} aria-hidden="true">
                         <span style={{ width: `${Math.round((h.gain / MAX_GAIN) * 100)}%` }} />
                       </span>
-                      <span className={s.gainNum}>{h.gainLabel}</span>
+                      <span data-edit={`hikes.gainNum.${i}.${i2}`} data-edit-max="60" className={s.gainNum}>{h.gainLabel}</span>
                     </div>
                     <div className={s.grade}>
                       <span className={s.dots} aria-hidden="true">
@@ -530,9 +542,9 @@ export default function TrailheadClubPage() {
                         <i />
                         <i />
                       </span>
-                      <span>{h.gradeLabel}</span>
+                      <span data-edit={`hikes.text11.${i}.${i2}`} data-edit-max="60">{h.gradeLabel}</span>
                     </div>
-                    <span className={h.full ? `${s.spots} ${s.spotsFull}` : s.spots}>{h.spots}</span>
+                    <span data-edit={`hikes.spots.${i}.${i2}`} data-edit-max="60" className={h.full ? `${s.spots} ${s.spotsFull}` : s.spots}>{h.spots}</span>
                   </li>
                 ))}
               </ol>
@@ -540,15 +552,15 @@ export default function TrailheadClubPage() {
           ))}
 
           <div className={s.signup}>
-            <p className={s.signupText}>To sign up, write to the hikes desk with the date and the hike.</p>
-            <a className={s.signupLink} href="mailto:hikes@trailheadclub.example">hikes@trailheadclub.example</a>
+            <p data-edit="hikes.signupText" data-edit-max="240" data-edit-multiline className={s.signupText}>To sign up, write to the hikes desk with the date and the hike.</p>
+            <a data-edit="hikes.signupLink" data-edit-max="28" className={s.signupLink} href="mailto:hikes@trailheadclub.example">hikes@trailheadclub.example</a>
           </div>
         </section>
 
         {/* ------------------------------------------------------------ BAND
             Dashed trail marks, edge to edge, between the calendar and the
             grades. Thinned out so it reads as a path, not a texture. */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,1" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={baste}
             palette={TRAIL}
@@ -563,15 +575,15 @@ export default function TrailheadClubPage() {
         {/* ---------------------------------------------------------- GRADES */}
         <section id="grades" className={s.sec} aria-labelledby="grades-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>02</span>
-            <h2 id="grades-h">How we grade a hike</h2>
-            <p className={s.secNote}>
+            <span data-edit="grades.secNo" data-edit-max="60" className={s.secNo}>02</span>
+            <h2 data-edit="grades.title" data-edit-max="60" id="grades-h">How we grade a hike</h2>
+            <p data-edit="grades.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               By distance and climb together, and by the slower of the two. If
               you are between grades, go with the easier one.
             </p>
           </div>
           <div className={s.grades}>
-            {GRADES.map((g) => (
+            {GRADES.map((g, i) => (
               <div key={g.name} className={`${s.gradeCard} ${s[g.grade]}`}>
                 <div className={s.gradeTop}>
                   <span className={s.dots} aria-hidden="true">
@@ -579,23 +591,23 @@ export default function TrailheadClubPage() {
                     <i />
                     <i />
                   </span>
-                  <h3>{g.name}</h3>
+                  <h3 data-edit={`grades.title2.${i}`} data-edit-max="40">{g.name}</h3>
                 </div>
                 <dl className={s.gradeFacts}>
                   <div>
-                    <dt>Distance</dt>
-                    <dd>{g.miles}</dd>
+                    <dt data-edit={`grades.term.${i}`} data-edit-max="28">Distance</dt>
+                    <dd data-edit={`grades.body.${i}`} data-edit-max="200" data-edit-multiline>{g.miles}</dd>
                   </div>
                   <div>
-                    <dt>Climb</dt>
-                    <dd>{g.gain}</dd>
+                    <dt data-edit={`grades.term2.${i}`} data-edit-max="28">Climb</dt>
+                    <dd data-edit={`grades.body2.${i}`} data-edit-max="200" data-edit-multiline>{g.gain}</dd>
                   </div>
                   <div>
-                    <dt>Pace</dt>
-                    <dd>{g.pace}</dd>
+                    <dt data-edit={`grades.term3.${i}`} data-edit-max="28">Pace</dt>
+                    <dd data-edit={`grades.body3.${i}`} data-edit-max="200" data-edit-multiline>{g.pace}</dd>
                   </div>
                 </dl>
-                <p className={s.gradeNote}>{g.note}</p>
+                <p data-edit={`grades.gradeNote.${i}`} data-edit-max="240" data-edit-multiline className={s.gradeNote}>{g.note}</p>
               </div>
             ))}
           </div>
@@ -606,23 +618,23 @@ export default function TrailheadClubPage() {
         <section id="gear" className={s.gearSec} aria-labelledby="gear-h">
           <div className={s.gearInner}>
             <div className={s.secHead}>
-              <span className={s.secNo}>03</span>
-              <h2 id="gear-h">What to bring</h2>
-              <p className={s.secNote}>
+              <span data-edit="gear.secNo" data-edit-max="60" className={s.secNo}>03</span>
+              <h2 data-edit="gear.title" data-edit-max="60" id="gear-h">What to bring</h2>
+              <p data-edit="gear.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 The leader checks packs at the trailhead, kindly. Anything you
                 are missing, the gear closet probably has: packs, poles, tents,
                 headlamps and boots in sizes 5-13.
               </p>
             </div>
             <div className={s.gear}>
-              {GEAR.map((g) => (
+              {GEAR.map((g, i) => (
                 <div key={g.title} className={s.gearCard}>
                   <Artwork slug={g.slug} alt="" inks={['var(--moss)']} className={s.gearIcon} />
-                  <span className={s.gearNote}>{g.note}</span>
-                  <h3>{g.title}</h3>
+                  <span data-edit={`gear.gearNote.${i}`} data-edit-max="60" className={s.gearNote}>{g.note}</span>
+                  <h3 data-edit={`gear.title2.${i}`} data-edit-max="40">{g.title}</h3>
                   <ul className={s.checklist}>
-                    {g.items.map((it) => (
-                      <li key={it}>{it}</li>
+                    {g.items.map((it, i2) => (
+                      <li data-edit={`gear.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                     ))}
                   </ul>
                 </div>
@@ -634,26 +646,26 @@ export default function TrailheadClubPage() {
         {/* ------------------------------------------------------ MEMBERSHIP */}
         <section id="join" className={s.sec} aria-labelledby="join-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>04</span>
-            <h2 id="join-h">Membership</h2>
-            <p className={s.secNote}>
+            <span data-edit="join.secNo" data-edit-max="60" className={s.secNo}>04</span>
+            <h2 data-edit="join.title" data-edit-max="60" id="join-h">Membership</h2>
+            <p data-edit="join.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A year from the day you join. The money pays for the insurance,
               the maps, the gear closet and the trail work tools, and nothing
               else: every leader is a volunteer.
             </p>
           </div>
           <div className={s.tiers}>
-            {TIERS.map((t) => (
+            {TIERS.map((t, i) => (
               <div key={t.name} className={t.featured ? `${s.tier} ${s.tierFeatured}` : s.tier}>
-                <h3>{t.name}</h3>
+                <h3 data-edit={`join.title2.${i}`} data-edit-max="40">{t.name}</h3>
                 <p className={s.tierPrice}>
-                  <strong>{t.price}</strong>
-                  <span>{t.per}</span>
+                  <strong data-edit={`join.emphasis.${i}`}>{t.price}</strong>
+                  <span data-edit={`join.text.${i}`} data-edit-max="60">{t.per}</span>
                 </p>
-                <p className={s.tierNote}>{t.note}</p>
+                <p data-edit={`join.tierNote.${i}`} data-edit-max="240" data-edit-multiline className={s.tierNote}>{t.note}</p>
                 <ul className={s.tierPerks}>
-                  {t.perks.map((p) => (
-                    <li key={p}>{p}</li>
+                  {t.perks.map((p, i2) => (
+                    <li data-edit={`join.item.${i}.${i2}`} data-edit-max="80" key={p}>{p}</li>
                   ))}
                 </ul>
               </div>
@@ -663,19 +675,19 @@ export default function TrailheadClubPage() {
           <form className={s.joinForm} action="#">
             <div className={s.joinIntro}>
               <Artwork slug="trailhead-club-tent" alt="" inks={['var(--moss)']} className={s.joinIcon} />
-              <h3>Join online</h3>
-              <p>We send your card and the map set by post within a week. Pay at your first hike, by card or cash.</p>
+              <h3 data-edit="join.title3" data-edit-max="40">Join online</h3>
+              <p data-edit="join.body" data-edit-max="240" data-edit-multiline>We send your card and the map set by post within a week. Pay at your first hike, by card or cash.</p>
             </div>
             <div className={s.field}>
-              <label htmlFor="th-name">Name</label>
+              <label data-edit="join.label" htmlFor="th-name">Name</label>
               <input id="th-name" name="name" type="text" autoComplete="name" />
             </div>
             <div className={s.field}>
-              <label htmlFor="th-email">Email</label>
+              <label data-edit="join.label2" htmlFor="th-email">Email</label>
               <input id="th-email" name="email" type="email" autoComplete="email" />
             </div>
             <div className={s.field}>
-              <label htmlFor="th-tier">Membership</label>
+              <label data-edit="join.label3" htmlFor="th-tier">Membership</label>
               <select id="th-tier" name="tier" defaultValue="single">
                 <option value="single">Single, $30 a year</option>
                 <option value="household">Household, $45 a year</option>
@@ -683,19 +695,19 @@ export default function TrailheadClubPage() {
               </select>
             </div>
             <div className={s.field}>
-              <label htmlFor="th-hike">Your first hike (optional)</label>
+              <label data-edit="join.label4" htmlFor="th-hike">Your first hike (optional)</label>
               <input id="th-hike" name="hike" type="text" placeholder="Millrace Falls, 11 Oct" />
             </div>
-            <button type="submit" className={s.btn}>Send my details</button>
+            <button data-edit="join.btn" data-edit-max="24" type="submit" className={s.btn}>Send my details</button>
           </form>
         </section>
 
         {/* ------------------------------------------------------ FIRST HIKE */}
         <section id="first-hike" className={s.sec} aria-labelledby="first-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>05</span>
-            <h2 id="first-h">Your first hike</h2>
-            <p className={s.secNote}>
+            <span data-edit="firstHike.secNo" data-edit-max="60" className={s.secNo}>05</span>
+            <h2 data-edit="firstHike.title" data-edit-max="60" id="first-h">Your first hike</h2>
+            <p data-edit="firstHike.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The questions new people ask at the trailhead, answered before
               you get there.
             </p>
@@ -705,10 +717,10 @@ export default function TrailheadClubPage() {
               <Artwork slug="trailhead-club-boot" alt="" inks={['var(--ink)']} className={s.faqBoot} />
             </div>
             <div className={s.faq}>
-              {FAQ.map((f) => (
+              {FAQ.map((f, i) => (
                 <details key={f.q}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`firstHike.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`firstHike.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -718,44 +730,44 @@ export default function TrailheadClubPage() {
         {/* --------------------------------------------------------- CONTACT */}
         <section id="contact" className={s.sec} aria-labelledby="contact-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>06</span>
-            <h2 id="contact-h">Find us</h2>
-            <p className={s.secNote}>
+            <span data-edit="contact.secNo" data-edit-max="60" className={s.secNo}>06</span>
+            <h2 data-edit="contact.title" data-edit-max="60" id="contact-h">Find us</h2>
+            <p data-edit="contact.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The club has no office. It has a room at the library once a
               month, a phone line and an inbox that three volunteers read.
             </p>
           </div>
           <dl className={s.contact}>
             <div>
-              <dt>Trail line</dt>
+              <dt data-edit="contact.term" data-edit-max="28">Trail line</dt>
               <dd>
-                <a href="tel:+15550142290">(555) 014-2290</a>
+                <a data-edit="contact.link" data-edit-max="28" href="tel:+15550142290">(555) 014-2290</a>
               </dd>
-              <dd className={s.contactNote}>A recording, updated by 6 am on hike days.</dd>
+              <dd data-edit="contact.contactNote" data-edit-max="200" data-edit-multiline className={s.contactNote}>A recording, updated by 6 am on hike days.</dd>
             </div>
             <div>
-              <dt>Write</dt>
+              <dt data-edit="contact.term2" data-edit-max="28">Write</dt>
               <dd>
-                <a href="mailto:hello@trailheadclub.example">hello@trailheadclub.example</a>
+                <a data-edit="contact.link2" data-edit-max="28" href="mailto:hello@trailheadclub.example">hello@trailheadclub.example</a>
               </dd>
-              <dd className={s.contactNote}>Answered within two days.</dd>
+              <dd data-edit="contact.contactNote2" data-edit-max="200" data-edit-multiline className={s.contactNote}>Answered within two days.</dd>
             </div>
             <div>
-              <dt>Club night</dt>
-              <dd>Ashby Library, 212 Orchard Street</dd>
-              <dd className={s.contactNote}>First Tuesday of the month, 7 pm. Slides, maps, cookies.</dd>
+              <dt data-edit="contact.term3" data-edit-max="28">Club night</dt>
+              <dd data-edit="contact.body" data-edit-max="200" data-edit-multiline>Ashby Library, 212 Orchard Street</dd>
+              <dd data-edit="contact.contactNote3" data-edit-max="200" data-edit-multiline className={s.contactNote}>First Tuesday of the month, 7 pm. Slides, maps, cookies.</dd>
             </div>
             <div>
-              <dt>Carpools</dt>
-              <dd>Park-and-ride, Orchard and 3rd</dd>
-              <dd className={s.contactNote}>Thirty minutes before every meet time.</dd>
+              <dt data-edit="contact.term4" data-edit-max="28">Carpools</dt>
+              <dd data-edit="contact.body2" data-edit-max="200" data-edit-multiline>Park-and-ride, Orchard and 3rd</dd>
+              <dd data-edit="contact.contactNote4" data-edit-max="200" data-edit-multiline className={s.contactNote}>Thirty minutes before every meet time.</dd>
             </div>
           </dl>
         </section>
       </main>
 
       {/* The rings again, quieter, as the ground the footer stands on. */}
-      <div className={s.coda} aria-hidden="true">
+      <div data-edit-pattern="page.field" data-edit-roles="transparent,3,4,2" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={contourlines}
           palette={CODA}
@@ -771,28 +783,28 @@ export default function TrailheadClubPage() {
         <div className={s.footGrid}>
           <div className={s.footBrand}>
             <Artwork slug="trailhead-club-compass" alt="" inks={['var(--paper)']} className={s.footIcon} />
-            <p className={s.footName}>Trailhead Club</p>
-            <p className={s.footTag}>A volunteer hiking club in the Ashby Valley. Every Saturday since 1987.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Trailhead Club</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>A volunteer hiking club in the Ashby Valley. Every Saturday since 1987.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Hiking</h2>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Hiking</h2>
             <ul className={s.footLinks}>
-              <li><a href="#hikes">The trip calendar</a></li>
-              <li><a href="#grades">How we grade</a></li>
-              <li><a href="#gear">What to bring</a></li>
+              <li><a data-edit="footer.hikes" data-edit-max="28" href="#hikes">The trip calendar</a></li>
+              <li><a data-edit="footer.grades" data-edit-max="28" href="#grades">How we grade</a></li>
+              <li><a data-edit="footer.gear" data-edit-max="28" href="#gear">What to bring</a></li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>The club</h2>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>The club</h2>
             <ul className={s.footLinks}>
-              <li><a href="#join">Membership</a></li>
-              <li><a href="#first-hike">Your first hike</a></li>
-              <li><a href="#contact">Club night</a></li>
+              <li><a data-edit="footer.join" data-edit-max="28" href="#join">Membership</a></li>
+              <li><a data-edit="footer.firstHike" data-edit-max="28" href="#first-hike">Your first hike</a></li>
+              <li><a data-edit="footer.contact" data-edit-max="28" href="#contact">Club night</a></li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>Reach us</h2>
-            <p className={s.footAddr}>
+            <h2 data-edit="footer.footHead3" data-edit-max="60" className={s.footHead}>Reach us</h2>
+            <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
               hello@trailheadclub.example
               <br />
               Trail line (555) 014-2290
@@ -802,10 +814,10 @@ export default function TrailheadClubPage() {
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional hiking club. Hikes, trails, people and prices are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional hiking club. Hikes, trails, people and prices are invented.</p>
           <p>
             Patterns by{' '}
-            <a href="https://tabbied.com" rel="noopener">
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
             </a>
             , drawn live on a transparent ground.

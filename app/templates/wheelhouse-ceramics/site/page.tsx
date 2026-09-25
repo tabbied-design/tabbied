@@ -145,7 +145,20 @@ const FAQ = [
 
 export default function WheelhouseCeramicsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--clay': '#f6f1ea',
+        '--ink': '#2b211c',
+        '--terra': '#c2643e',
+        '--celadon': '#6e8c7b',
+        '--ash': '#a1968c',
+        '--slip': '#eadfd2',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="clay,ink,terra,celadon,ash,slip"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -157,17 +170,17 @@ export default function WheelhouseCeramicsPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markDisc} aria-hidden="true" />
-          <span>Wheelhouse Ceramics</span>
+          <span data-edit="bar.text" data-edit-max="60">Wheelhouse Ceramics</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <span className={s.barMeta}>Shop open Thu-Sun</span>
+        <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Shop open Thu-Sun</span>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -179,21 +192,21 @@ export default function WheelhouseCeramicsPage() {
         <section id="shop" className={s.shop} aria-labelledby="shop-h">
           <ul className={s.grid}>
             <li className={s.intro}>
-              <p className={s.kicker}>Pottery studio and shop, 22 Mill Lane</p>
-              <h1 className={s.title} id="shop-h">
+              <p data-edit="shop.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Pottery studio and shop, 22 Mill Lane</p>
+              <h1 data-edit="shop.title" data-edit-format="emphasis" data-edit-max="70" className={s.title} id="shop-h">
                 Pots from the wheel, <em>glazed three ways.</em>
               </h1>
-              <p className={s.lede}>
+              <p data-edit="shop.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 Everything on this shelf was thrown here, trimmed here and
                 fired in the kiln at the back. Three glazes, a dozen shapes,
                 and a price on every one. Order online or come and pick one up.
               </p>
               <ul className={s.glazes}>
-                {GLAZES.map((g) => (
+                {GLAZES.map((g, i) => (
                   <li key={g.name}>
                     <span className={`${s.swatch} ${s[g.swatch]}`} aria-hidden="true" />
-                    <strong>{g.name}</strong>
-                    <span>{g.note}</span>
+                    <strong data-edit={`shop.emphasis.${i}`}>{g.name}</strong>
+                    <span data-edit={`shop.text.${i}`} data-edit-max="60">{g.note}</span>
                   </li>
                 ))}
               </ul>
@@ -201,7 +214,7 @@ export default function WheelhouseCeramicsPage() {
 
             <li className={`${s.cell} ${s.feature}`}>
               <div className={s.cellArt}>
-                <Artwork slug="wheelhouse-ceramics-vase" alt="A tall vase in the Ember glaze" mode="fill" inks={[]} className={`${s.pot} ${s.featureVase}`}>
+                <Artwork data-edit-pattern="shop.field" data-edit-roles="2,5,1" slug="wheelhouse-ceramics-vase" alt="A tall vase in the Ember glaze" mode="fill" inks={[]} className={`${s.pot} ${s.featureVase}`}>
                   <TabbiedPattern
                     pattern={raku}
                     palette={EMBER}
@@ -213,18 +226,18 @@ export default function WheelhouseCeramicsPage() {
                 </Artwork>
               </div>
               <div className={s.cap}>
-                <span className={s.badge}>Piece of the month</span>
-                <h2 className={s.capName}>Floor vase</h2>
-                <span className={s.capGlaze}>Ember, 18 in tall</span>
-                <span className={s.capPrice}>$240</span>
-                <span className={s.capStock}>One of one</span>
+                <span data-edit="shop.badge" data-edit-max="60" className={s.badge}>Piece of the month</span>
+                <h2 data-edit="shop.capName" data-edit-max="60" className={s.capName}>Floor vase</h2>
+                <span data-edit="shop.capGlaze" data-edit-max="60" className={s.capGlaze}>Ember, 18 in tall</span>
+                <span data-edit="shop.capPrice" data-edit-max="60" className={s.capPrice}>$240</span>
+                <span data-edit="shop.capStock" data-edit-max="60" className={s.capStock}>One of one</span>
               </div>
             </li>
 
-            {EMBER_PIECES.map((p) => (
+            {EMBER_PIECES.map((p, i) => (
               <li key={p.name} className={s.cell}>
                 <div className={s.cellArt}>
-                  <Artwork slug={p.art} alt={`${p.name} in the Ember glaze`} mode="fill" inks={[]} className={`${s.pot} ${s[p.shape]}`}>
+                  <Artwork data-edit-pattern={`shop.field2.${i}`} data-edit-roles="2,5,1" slug={p.art} alt={`${p.name} in the Ember glaze`} mode="fill" inks={[]} className={`${s.pot} ${s[p.shape]}`}>
                     <TabbiedPattern
                       pattern={raku}
                       palette={EMBER}
@@ -236,18 +249,18 @@ export default function WheelhouseCeramicsPage() {
                   </Artwork>
                 </div>
                 <div className={s.cap}>
-                  <h3 className={s.capName}>{p.name}</h3>
+                  <h3 data-edit={`shop.capName2.${i}`} data-edit-max="40" className={s.capName}>{p.name}</h3>
                   <span className={s.capGlaze}>{`Ember, ${p.size}`}</span>
-                  <span className={s.capPrice}>{p.price}</span>
-                  <span className={s.capStock}>{p.stock}</span>
+                  <span data-edit={`shop.capPrice2.${i}`} data-edit-max="60" className={s.capPrice}>{p.price}</span>
+                  <span data-edit={`shop.capStock2.${i}`} data-edit-max="60" className={s.capStock}>{p.stock}</span>
                 </div>
               </li>
             ))}
 
-            {CELADON_PIECES.map((p) => (
+            {CELADON_PIECES.map((p, i) => (
               <li key={p.name} className={s.cell}>
                 <div className={s.cellArt}>
-                  <Artwork slug={p.art} alt={`${p.name} in the Celadon glaze`} mode="fill" inks={[]} className={`${s.pot} ${s[p.shape]}`}>
+                  <Artwork data-edit-pattern={`shop.field3.${i}`} data-edit-roles="3,5,1" slug={p.art} alt={`${p.name} in the Celadon glaze`} mode="fill" inks={[]} className={`${s.pot} ${s[p.shape]}`}>
                     <TabbiedPattern
                       pattern={lobe}
                       palette={GREEN}
@@ -259,18 +272,18 @@ export default function WheelhouseCeramicsPage() {
                   </Artwork>
                 </div>
                 <div className={s.cap}>
-                  <h3 className={s.capName}>{p.name}</h3>
+                  <h3 data-edit={`shop.capName3.${i}`} data-edit-max="40" className={s.capName}>{p.name}</h3>
                   <span className={s.capGlaze}>{`Celadon, ${p.size}`}</span>
-                  <span className={s.capPrice}>{p.price}</span>
-                  <span className={s.capStock}>{p.stock}</span>
+                  <span data-edit={`shop.capPrice3.${i}`} data-edit-max="60" className={s.capPrice}>{p.price}</span>
+                  <span data-edit={`shop.capStock3.${i}`} data-edit-max="60" className={s.capStock}>{p.stock}</span>
                 </div>
               </li>
             ))}
 
-            {ASH_PIECES.map((p) => (
+            {ASH_PIECES.map((p, i) => (
               <li key={p.name} className={s.cell}>
                 <div className={s.cellArt}>
-                  <Artwork slug={p.art} alt={`${p.name} in the Ash glaze`} mode="fill" inks={[]} className={`${s.pot} ${s[p.shape]}`}>
+                  <Artwork data-edit-pattern={`shop.field4.${i}`} data-edit-roles="4,5,1" slug={p.art} alt={`${p.name} in the Ash glaze`} mode="fill" inks={[]} className={`${s.pot} ${s[p.shape]}`}>
                     <TabbiedPattern
                       pattern={gritfield}
                       palette={SPECKLE}
@@ -282,55 +295,55 @@ export default function WheelhouseCeramicsPage() {
                   </Artwork>
                 </div>
                 <div className={s.cap}>
-                  <h3 className={s.capName}>{p.name}</h3>
+                  <h3 data-edit={`shop.capName4.${i}`} data-edit-max="40" className={s.capName}>{p.name}</h3>
                   <span className={s.capGlaze}>{`Ash, ${p.size}`}</span>
-                  <span className={s.capPrice}>{p.price}</span>
-                  <span className={s.capStock}>{p.stock}</span>
+                  <span data-edit={`shop.capPrice4.${i}`} data-edit-max="60" className={s.capPrice}>{p.price}</span>
+                  <span data-edit={`shop.capStock4.${i}`} data-edit-max="60" className={s.capStock}>{p.stock}</span>
                 </div>
               </li>
             ))}
           </ul>
           <div className={s.shopFoot}>
-            <p>Shipping is a flat $14. Pick-up is free, from the shop, Thursday to Sunday.</p>
-            <a className={s.btn} href="#visit">Order or reserve a piece</a>
+            <p data-edit="shop.body" data-edit-max="240" data-edit-multiline>Shipping is a flat $14. Pick-up is free, from the shop, Thursday to Sunday.</p>
+            <a data-edit="shop.btn" data-edit-max="28" className={s.btn} href="#visit">Order or reserve a piece</a>
           </div>
         </section>
 
         {/* --------------------------------------------------------- CLASSES */}
         <section id="classes" className={s.sec} aria-labelledby="classes-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>02</p>
-            <h2 id="classes-h">Wheel classes, fall term</h2>
-            <p className={s.secNote}>
+            <p data-edit="classes.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02</p>
+            <h2 data-edit="classes.title" data-edit-max="60" id="classes-h">Wheel classes, fall term</h2>
+            <p data-edit="classes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Eight people to a class, one wheel each. Clay, glazes, firing,
               aprons and tools are in the price, and you keep everything you make.
             </p>
           </div>
           <div className={s.schedule} role="table" aria-label="Class schedule">
             <div className={s.schedHead} role="row">
-              <span role="columnheader">Class</span>
-              <span role="columnheader">When</span>
-              <span role="columnheader">Length</span>
-              <span role="columnheader">Price</span>
-              <span role="columnheader">Places</span>
+              <span data-edit="classes.text" data-edit-max="60" role="columnheader">Class</span>
+              <span data-edit="classes.text2" data-edit-max="60" role="columnheader">When</span>
+              <span data-edit="classes.text3" data-edit-max="60" role="columnheader">Length</span>
+              <span data-edit="classes.text4" data-edit-max="60" role="columnheader">Price</span>
+              <span data-edit="classes.text5" data-edit-max="60" role="columnheader">Places</span>
             </div>
-            {CLASSES.map((c) => (
+            {CLASSES.map((c, i) => (
               <div key={c.name} className={s.schedRow} role="row">
                 <div className={s.schedName} role="rowheader">
-                  <strong>{c.name}</strong>
-                  <span>{c.what}</span>
+                  <strong data-edit={`classes.emphasis.${i}`}>{c.name}</strong>
+                  <span data-edit={`classes.text6.${i}`} data-edit-max="60">{c.what}</span>
                 </div>
                 <div className={s.schedWhen} role="cell">
-                  <span>{c.when}</span>
-                  <small>{c.starts}</small>
+                  <span data-edit={`classes.text7.${i}`} data-edit-max="60">{c.when}</span>
+                  <small data-edit={`classes.note.${i}`}>{c.starts}</small>
                 </div>
-                <span className={s.schedWeeks} role="cell">{c.weeks}</span>
-                <span className={s.schedPrice} role="cell">{c.price}</span>
-                <span className={s.schedLeft} role="cell">{c.left}</span>
+                <span data-edit={`classes.schedWeeks.${i}`} data-edit-max="60" className={s.schedWeeks} role="cell">{c.weeks}</span>
+                <span data-edit={`classes.schedPrice.${i}`} data-edit-max="60" className={s.schedPrice} role="cell">{c.price}</span>
+                <span data-edit={`classes.schedLeft.${i}`} data-edit-max="60" className={s.schedLeft} role="cell">{c.left}</span>
               </div>
             ))}
           </div>
-          <p className={s.schedNote}>
+          <p data-edit="classes.schedNote" data-edit-max="240" data-edit-multiline className={s.schedNote}>
             Book a place at the shop or by email. Missed a week? Come to any
             open studio session that week instead.
           </p>
@@ -340,37 +353,37 @@ export default function WheelhouseCeramicsPage() {
         <section id="studio" className={s.studio} aria-labelledby="studio-h">
           <div className={s.studioInner}>
             <div className={s.secHead}>
-              <p className={s.secNo}>03</p>
-              <h2 id="studio-h">Open studio membership</h2>
-              <p className={s.secNote}>
+              <p data-edit="studio.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03</p>
+              <h2 data-edit="studio.title" data-edit-max="60" id="studio-h">Open studio membership</h2>
+              <p data-edit="studio.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Twelve wheels, two slab rollers, a glaze room and three kilns.
                 Month to month, and a month's notice to stop.
               </p>
             </div>
             <div className={s.tiers}>
-              {TIERS.map((t) => (
+              {TIERS.map((t, i) => (
                 <article key={t.name} className={s.tier}>
-                  <h3>{t.name}</h3>
+                  <h3 data-edit={`tier.title.${i}`} data-edit-max="40">{t.name}</h3>
                   <p className={s.tierPrice}>
-                    <strong>{t.price}</strong>
-                    <span>{t.per}</span>
+                    <strong data-edit={`tier.emphasis.${i}`}>{t.price}</strong>
+                    <span data-edit={`tier.text.${i}`} data-edit-max="60">{t.per}</span>
                   </p>
-                  <p className={s.tierLead}>{t.lead}</p>
+                  <p data-edit={`tier.tierLead.${i}`} data-edit-max="240" data-edit-multiline className={s.tierLead}>{t.lead}</p>
                   <ul className={s.tierList}>
-                    {t.items.map((item) => (
-                      <li key={item}>{item}</li>
+                    {t.items.map((item, i2) => (
+                      <li data-edit={`tier.item.${i}.${i2}`} data-edit-max="80" key={item}>{item}</li>
                     ))}
                   </ul>
                 </article>
               ))}
             </div>
             <div className={s.openHours}>
-              <h3>Open studio hours</h3>
+              <h3 data-edit="studio.title2" data-edit-max="40">Open studio hours</h3>
               <dl>
-                {OPEN_HOURS.map(([d, h]) => (
+                {OPEN_HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`studio.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`studio.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
@@ -381,7 +394,7 @@ export default function WheelhouseCeramicsPage() {
         {/* ---------------------------------------------------------- FIRING
             The kiln shelf: a band of stacked blocks, then the price list. */}
         <section id="firing" className={s.firing} aria-labelledby="firing-h">
-          <div className={s.kilnBand} aria-hidden="true">
+          <div data-edit-pattern="firing.field" data-edit-roles="transparent,2,3,5" className={s.kilnBand} aria-hidden="true">
             <TabbiedPattern
               pattern={stylobate}
               palette={KILN}
@@ -395,7 +408,7 @@ export default function WheelhouseCeramicsPage() {
           </div>
           <div className={s.firingInner}>
             <div className={s.firingArt}>
-              <Artwork slug="wheelhouse-ceramics-bowl" alt="A bowl, glazed and fired" mode="fill" inks={[]} className={s.firingBowl}>
+              <Artwork data-edit-pattern="firing.field2" data-edit-roles="2,5,1" slug="wheelhouse-ceramics-bowl" alt="A bowl, glazed and fired" mode="fill" inks={[]} className={s.firingBowl}>
                 <TabbiedPattern
                   pattern={lobe}
                   palette={EMBER}
@@ -407,23 +420,23 @@ export default function WheelhouseCeramicsPage() {
               </Artwork>
             </div>
             <div className={s.firingText}>
-              <p className={s.secNo}>04</p>
-              <h2 id="firing-h">Firing for your own work</h2>
-              <p className={s.secNote}>
+              <p data-edit="firing.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>04</p>
+              <h2 data-edit="firing.title" data-edit-max="60" id="firing-h">Firing for your own work</h2>
+              <p data-edit="firing.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 No kiln at home? Bring your pots to the shop, we load them into
                 our next firing, and you collect them from the same shelf.
               </p>
               <dl className={s.prices}>
-                {FIRING.map(([k, v]) => (
+                {FIRING.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`firing.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`firing.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
               <ul className={s.rules}>
-                {FIRING_RULES.map((r) => (
-                  <li key={r}>{r}</li>
+                {FIRING_RULES.map((r, i) => (
+                  <li data-edit={`firing.item.${i}`} data-edit-max="80" key={r}>{r}</li>
                 ))}
               </ul>
             </div>
@@ -433,40 +446,40 @@ export default function WheelhouseCeramicsPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>05</p>
-            <h2 id="visit-h">Visit the shop</h2>
-            <p className={s.secNote}>
+            <p data-edit="visit.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Visit the shop</h2>
+            <p data-edit="visit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The shop is the front room of the studio, so there is usually
               someone at a wheel while you look.
             </p>
           </div>
           <div className={s.visit}>
             <div className={s.visitCol}>
-              <h3>Shop hours</h3>
+              <h3 data-edit="visit.title2" data-edit-max="40">Shop hours</h3>
               <dl className={s.hours}>
-                {SHOP_HOURS.map(([d, h]) => (
+                {SHOP_HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <h3>Find us</h3>
-              <p className={s.addr}>
+              <h3 data-edit="visit.title3" data-edit-max="40">Find us</h3>
+              <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.addr}>
                 22 Mill Lane, in the yard behind the old mill.
                 <br />
                 Parking in the yard; bikes by the door.
               </p>
               <p className={s.addr}>
-                <a href="mailto:hello@wheelhouse.example">hello@wheelhouse.example</a>
+                <a data-edit="visit.link" data-edit-max="28" href="mailto:hello@wheelhouse.example">hello@wheelhouse.example</a>
               </p>
-              <p className={s.addr}>(555) 010-4471</p>
+              <p data-edit="visit.addr" data-edit-max="240" data-edit-multiline className={s.addr}>(555) 010-4471</p>
             </div>
             <div className={s.faq}>
-              {FAQ.map((f) => (
+              {FAQ.map((f, i) => (
                 <details key={f.q}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`visit.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`visit.body2.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -476,20 +489,20 @@ export default function WheelhouseCeramicsPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Wheelhouse Ceramics</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Wheelhouse Ceramics</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional pottery. Pieces, prices and classes are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional pottery. Pieces, prices and classes are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

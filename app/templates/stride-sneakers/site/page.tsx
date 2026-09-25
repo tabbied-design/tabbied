@@ -132,7 +132,20 @@ const HOURS = [
 
 export default function StrideSneakersPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--court': '#f2f2ef',
+        '--ink': '#121212',
+        '--flame': '#ff4f1f',
+        '--cobalt': '#2d6cdf',
+        '--gray': '#8e8e8a',
+        '--pale': '#deded9',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="court,ink,flame,cobalt,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -142,16 +155,16 @@ export default function StrideSneakersPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Stride</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Stride</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <span className={s.barNext}>Next drop Sat 10 am</span>
+        <span data-edit="bar.barNext" data-edit-max="60" className={s.barNext}>Next drop Sat 10 am</span>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -162,40 +175,40 @@ export default function StrideSneakersPage() {
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
             <p className={s.tag}>
-              <span>Drop 14</span>
-              <span>Sat Oct 3</span>
-              <span>10:00 am</span>
+              <span data-edit="hero.text" data-edit-max="60">Drop 14</span>
+              <span data-edit="hero.text2" data-edit-max="60">Sat Oct 3</span>
+              <span data-edit="hero.text3" data-edit-max="60">10:00 am</span>
             </p>
-            <h1 className={s.title} id="hero-h">
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.title} id="hero-h">
               Court High <em>Ember</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               A leather high-top in rust and black, 180 pairs, sizes 4 to 14.
               Raffle entries close Thursday at 8 pm; winners collect in store
               from 10 on Saturday morning.
             </p>
             <dl className={s.stats}>
               <div>
-                <dt>Price</dt>
-                <dd>$140</dd>
+                <dt data-edit="hero.term" data-edit-max="28">Price</dt>
+                <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>$140</dd>
               </div>
               <div>
-                <dt>Pairs</dt>
-                <dd>180</dd>
+                <dt data-edit="hero.term2" data-edit-max="28">Pairs</dt>
+                <dd data-edit="hero.body2" data-edit-max="200" data-edit-multiline>180</dd>
               </div>
               <div>
-                <dt>Method</dt>
-                <dd>Raffle</dd>
+                <dt data-edit="hero.term3" data-edit-max="28">Method</dt>
+                <dd data-edit="hero.body3" data-edit-max="200" data-edit-multiline>Raffle</dd>
               </div>
             </dl>
             <div className={s.actions}>
-              <a className={s.btn} href="#raffle">Enter the raffle</a>
-              <a className={s.btnLine} href="#drops">See the calendar</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#raffle">Enter the raffle</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#drops">See the calendar</a>
             </div>
           </div>
           <div className={s.court}>
             <span className={s.courtLines} aria-hidden="true" />
-            <Artwork slug="stride-sneakers-hightop" alt="The Court High in the Ember colorway, seen from the side" mode="fill" inks={[]} className={s.heroShoe}>
+            <Artwork data-edit-pattern="hero.field" data-edit-roles="2,1,5,3" slug="stride-sneakers-hightop" alt="The Court High in the Ember colorway, seen from the side" mode="fill" inks={[]} className={s.heroShoe}>
               <TabbiedPattern
                 pattern={sheared}
                 palette={HERO_FILL}
@@ -205,7 +218,7 @@ export default function StrideSneakersPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </Artwork>
-            <span className={s.courtNo} aria-hidden="true">14</span>
+            <span data-edit="hero.text4" data-edit-max="60" className={s.courtNo} aria-hidden="true">14</span>
           </div>
         </section>
 
@@ -213,23 +226,23 @@ export default function StrideSneakersPage() {
             Two weeks as a strip: every day a column, drop days wide. */}
         <section id="drops" className={s.drops} aria-labelledby="drops-h">
           <div className={s.dropsHead}>
-            <h2 id="drops-h">Drop calendar</h2>
-            <p className={s.dropsMonth}>October, weeks 1 and 2</p>
-            <p className={s.dropsNote}>
+            <h2 data-edit="drops.title" data-edit-max="60" id="drops-h">Drop calendar</h2>
+            <p data-edit="drops.dropsMonth" data-edit-max="240" data-edit-multiline className={s.dropsMonth}>October, weeks 1 and 2</p>
+            <p data-edit="drops.dropsNote" data-edit-max="240" data-edit-multiline className={s.dropsNote}>
               Raffle drops are collected in store on Saturday. First-come drops
               go live online at 9 am and on the wall when we open.
             </p>
           </div>
           <div className={s.strip}>
             <ol className={s.days}>
-              {DAYS.map((day) => (
+              {DAYS.map((day, i) => (
                 <li key={day.d} className={day.drop ? `${s.day} ${s.dropDay}` : s.day}>
-                  <span className={s.wd}>{day.wd}</span>
-                  <span className={s.dd}>{day.d}</span>
-                  {day.note && <span className={s.dayNote}>{day.note}</span>}
+                  <span data-edit={`drops.wd.${i}`} data-edit-max="60" className={s.wd}>{day.wd}</span>
+                  <span data-edit={`drops.dd.${i}`} data-edit-max="60" className={s.dd}>{day.d}</span>
+                  {day.note && <span data-edit={`drops.dayNote.${i}`} data-edit-max="60" className={s.dayNote}>{day.note}</span>}
                   {day.drop && (
                     <div className={s.dropBody}>
-                      <Artwork slug={day.drop.art} alt={`${day.drop.name} ${day.drop.color}`} mode="fill" inks={[]} className={s.dropShoe}>
+                      <Artwork data-edit-pattern={`drops.field.${i}`} data-edit-roles="5,1,2,3" slug={day.drop.art} alt={`${day.drop.name} ${day.drop.color}`} mode="fill" inks={[]} className={s.dropShoe}>
                         <TabbiedPattern
                           pattern={day.drop.design}
                           palette={DROP_FILL}
@@ -239,34 +252,34 @@ export default function StrideSneakersPage() {
                           style={{ position: 'absolute', inset: 0 }}
                         />
                       </Artwork>
-                      <strong className={s.dropName}>{day.drop.name}</strong>
-                      <span className={s.dropColor}>{day.drop.color}</span>
-                      <span className={s.dropPrice}>{day.drop.price}</span>
-                      <span className={s.dropHow}>{day.drop.how}</span>
+                      <strong data-edit={`drops.dropName.${i}`} className={s.dropName}>{day.drop.name}</strong>
+                      <span data-edit={`drops.dropColor.${i}`} data-edit-max="60" className={s.dropColor}>{day.drop.color}</span>
+                      <span data-edit={`drops.dropPrice.${i}`} data-edit-max="60" className={s.dropPrice}>{day.drop.price}</span>
+                      <span data-edit={`drops.dropHow.${i}`} data-edit-max="60" className={s.dropHow}>{day.drop.how}</span>
                     </div>
                   )}
                 </li>
               ))}
             </ol>
           </div>
-          <p className={s.swipe}>Swipe the strip for all fourteen days</p>
+          <p data-edit="drops.swipe" data-edit-max="240" data-edit-multiline className={s.swipe}>Swipe the strip for all fourteen days</p>
         </section>
 
         {/* ------------------------------------------------------------ SHOP */}
         <section id="shop" className={s.shop} aria-labelledby="shop-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>02</p>
-            <h2 id="shop-h">On the wall now</h2>
-            <p className={s.secNote}>
+            <p data-edit="shop.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02</p>
+            <h2 data-edit="shop.title" data-edit-max="60" id="shop-h">On the wall now</h2>
+            <p data-edit="shop.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               In store and online. Try any pair on; we lace them for you. Free
               returns within 30 days, unworn and in the box.
             </p>
           </div>
           <ul className={s.shoes}>
-            {COURT.map((sh) => (
+            {COURT.map((sh, i) => (
               <li key={sh.color} className={s.shoe}>
                 <div className={s.shoeArt}>
-                  <Artwork slug={sh.art} alt={`${sh.name} in ${sh.color}`} mode="fill" inks={[]} className={`${s.shoePic} ${s[sh.shape]}`}>
+                  <Artwork data-edit-pattern={`shop.field.${i}`} data-edit-roles="3,5,1,2" slug={sh.art} alt={`${sh.name} in ${sh.color}`} mode="fill" inks={[]} className={`${s.shoePic} ${s[sh.shape]}`}>
                     <TabbiedPattern
                       pattern={sh.design}
                       palette={COURT_FILL}
@@ -278,17 +291,17 @@ export default function StrideSneakersPage() {
                   </Artwork>
                 </div>
                 <div className={s.shoeCap}>
-                  <h3>{sh.name}</h3>
-                  <span className={s.shoePrice}>{sh.price}</span>
-                  <span className={s.shoeColor}>{sh.color}</span>
-                  <span className={s.shoeSizes}>{sh.sizes}</span>
+                  <h3 data-edit={`shop.title2.${i}`} data-edit-max="40">{sh.name}</h3>
+                  <span data-edit={`shop.shoePrice.${i}`} data-edit-max="60" className={s.shoePrice}>{sh.price}</span>
+                  <span data-edit={`shop.shoeColor.${i}`} data-edit-max="60" className={s.shoeColor}>{sh.color}</span>
+                  <span data-edit={`shop.shoeSizes.${i}`} data-edit-max="60" className={s.shoeSizes}>{sh.sizes}</span>
                 </div>
               </li>
             ))}
-            {RUN.map((sh) => (
+            {RUN.map((sh, i) => (
               <li key={sh.color} className={s.shoe}>
                 <div className={s.shoeArt}>
-                  <Artwork slug={sh.art} alt={`${sh.name} in ${sh.color}`} mode="fill" inks={[]} className={`${s.shoePic} ${s[sh.shape]}`}>
+                  <Artwork data-edit-pattern={`shop.field2.${i}`} data-edit-roles="2,5,1" slug={sh.art} alt={`${sh.name} in ${sh.color}`} mode="fill" inks={[]} className={`${s.shoePic} ${s[sh.shape]}`}>
                     <TabbiedPattern
                       pattern={sh.design}
                       palette={RUN_FILL}
@@ -300,10 +313,10 @@ export default function StrideSneakersPage() {
                   </Artwork>
                 </div>
                 <div className={s.shoeCap}>
-                  <h3>{sh.name}</h3>
-                  <span className={s.shoePrice}>{sh.price}</span>
-                  <span className={s.shoeColor}>{sh.color}</span>
-                  <span className={s.shoeSizes}>{sh.sizes}</span>
+                  <h3 data-edit={`shop.title3.${i}`} data-edit-max="40">{sh.name}</h3>
+                  <span data-edit={`shop.shoePrice2.${i}`} data-edit-max="60" className={s.shoePrice}>{sh.price}</span>
+                  <span data-edit={`shop.shoeColor2.${i}`} data-edit-max="60" className={s.shoeColor}>{sh.color}</span>
+                  <span data-edit={`shop.shoeSizes2.${i}`} data-edit-max="60" className={s.shoeSizes}>{sh.sizes}</span>
                 </div>
               </li>
             ))}
@@ -313,9 +326,9 @@ export default function StrideSneakersPage() {
         {/* ----------------------------------------------------------- SIZES */}
         <section id="sizes" className={s.sizes} aria-labelledby="sizes-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>03</p>
-            <h2 id="sizes-h">Size guide</h2>
-            <p className={s.secNote}>
+            <p data-edit="sizes.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03</p>
+            <h2 data-edit="sizes.title" data-edit-max="60" id="sizes-h">Size guide</h2>
+            <p data-edit="sizes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Stand on a sheet of paper, heel to the wall, and mark your longest
               toe. That length in centimeters is the bottom row. Between two
               sizes, read the fit notes.
@@ -323,13 +336,13 @@ export default function StrideSneakersPage() {
           </div>
           <div className={s.tableWrap}>
             <table className={s.sizeTable}>
-              <caption>Sneaker sizes across systems, by foot length</caption>
+              <caption data-edit="sizes.caption">Sneaker sizes across systems, by foot length</caption>
               <tbody>
-                {SIZE_ROWS.map((row) => (
+                {SIZE_ROWS.map((row, i) => (
                   <tr key={row.label}>
-                    <th scope="row">{row.label}</th>
-                    {row.values.map((v) => (
-                      <td key={v}>{v}</td>
+                    <th data-edit={`sizes.heading.${i}`} scope="row">{row.label}</th>
+                    {row.values.map((v, i2) => (
+                      <td data-edit={`sizes.cell.${i}.${i2}`} key={v}>{v}</td>
                     ))}
                   </tr>
                 ))}
@@ -337,10 +350,10 @@ export default function StrideSneakersPage() {
             </table>
           </div>
           <ul className={s.fit}>
-            {FIT.map((f) => (
+            {FIT.map((f, i) => (
               <li key={f.name}>
-                <strong>{f.name}</strong>
-                <span>{f.note}</span>
+                <strong data-edit={`sizes.emphasis.${i}`}>{f.name}</strong>
+                <span data-edit={`sizes.text.${i}`} data-edit-max="60">{f.note}</span>
               </li>
             ))}
           </ul>
@@ -348,7 +361,7 @@ export default function StrideSneakersPage() {
 
         {/* ---------------------------------------------------------- RAFFLE */}
         <section id="raffle" className={s.raffle} aria-labelledby="raffle-h">
-          <div className={s.raffleBand} aria-hidden="true">
+          <div data-edit-pattern="raffle.field" data-edit-roles="transparent,1,2,3" className={s.raffleBand} aria-hidden="true">
             <TabbiedPattern
               pattern={sheared}
               palette={STRIPE}
@@ -362,39 +375,39 @@ export default function StrideSneakersPage() {
           </div>
           <div className={s.raffleInner}>
             <div className={s.raffleRules}>
-              <p className={s.secNo}>04</p>
-              <h2 id="raffle-h">Raffle rules</h2>
-              <p className={s.raffleLede}>
+              <p data-edit="raffle.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>04</p>
+              <h2 data-edit="raffle.title" data-edit-max="60" id="raffle-h">Raffle rules</h2>
+              <p data-edit="raffle.raffleLede" data-edit-max="240" data-edit-multiline className={s.raffleLede}>
                 Every limited pair goes by raffle, so nobody has to sleep on
                 the pavement. Six rules, no exceptions, and the draw is filmed.
               </p>
               <ol className={s.rules}>
-                {RULES.map((r) => (
+                {RULES.map((r, i) => (
                   <li key={r.t}>
-                    <strong>{r.t}</strong>
-                    <span>{r.b}</span>
+                    <strong data-edit={`raffle.emphasis.${i}`}>{r.t}</strong>
+                    <span data-edit={`raffle.text.${i}`} data-edit-max="60">{r.b}</span>
                   </li>
                 ))}
               </ol>
             </div>
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Enter: Court High Ember</h3>
-              <p className={s.formSub}>Closes Thursday Oct 1 at 8 pm</p>
+              <h3 data-edit="raffle.formTitle" data-edit-max="40" className={s.formTitle}>Enter: Court High Ember</h3>
+              <p data-edit="raffle.formSub" data-edit-max="240" data-edit-multiline className={s.formSub}>Closes Thursday Oct 1 at 8 pm</p>
               <div className={s.field}>
-                <label htmlFor="stride-name">Full name, as on your ID</label>
+                <label data-edit="raffle.label" htmlFor="stride-name">Full name, as on your ID</label>
                 <input id="stride-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="stride-email">Email</label>
+                <label data-edit="raffle.label2" htmlFor="stride-email">Email</label>
                 <input id="stride-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.fieldRow}>
                 <div className={s.field}>
-                  <label htmlFor="stride-phone">Mobile, for the text</label>
+                  <label data-edit="raffle.label3" htmlFor="stride-phone">Mobile, for the text</label>
                   <input id="stride-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="stride-size">US men's size</label>
+                  <label data-edit="raffle.label4" htmlFor="stride-size">US men's size</label>
                   <select id="stride-size" name="size" defaultValue="10">
                     <option value="7">7</option>
                     <option value="8">8</option>
@@ -408,21 +421,21 @@ export default function StrideSneakersPage() {
                 </div>
               </div>
               <fieldset className={s.choice}>
-                <legend>If you win</legend>
+                <legend data-edit="raffle.legend">If you win</legend>
                 <label>
                   <input type="radio" name="collect" value="store" defaultChecked />
-                  <span>Collect in store</span>
+                  <span data-edit="raffle.text2" data-edit-max="60">Collect in store</span>
                 </label>
                 <label>
                   <input type="radio" name="collect" value="ship" />
-                  <span>Ship to me, $12</span>
+                  <span data-edit="raffle.text3" data-edit-max="60">Ship to me, $12</span>
                 </label>
               </fieldset>
               <label className={s.agree}>
                 <input type="checkbox" name="rules" />
-                <span>I have read the six rules and this is my only entry.</span>
+                <span data-edit="raffle.text4" data-edit-max="60">I have read the six rules and this is my only entry.</span>
               </label>
-              <button className={s.submit} type="submit">Enter the raffle</button>
+              <button data-edit="raffle.submit" data-edit-max="24" className={s.submit} type="submit">Enter the raffle</button>
             </form>
           </div>
         </section>
@@ -430,9 +443,9 @@ export default function StrideSneakersPage() {
         {/* ----------------------------------------------------------- STORE */}
         <section id="store" className={s.store} aria-labelledby="store-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>05</p>
-            <h2 id="store-h">The store</h2>
-            <p className={s.secNote}>
+            <p data-edit="store.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05</p>
+            <h2 data-edit="store.title" data-edit-max="60" id="store-h">The store</h2>
+            <p data-edit="store.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               One room on Dock Row, a wall of shoes, a bench and a lacing
               station. On drop mornings the line forms from 8 and wristbands go
               out at 9:30.
@@ -440,51 +453,51 @@ export default function StrideSneakersPage() {
           </div>
           <div className={s.storeGrid}>
             <div className={s.storeCard}>
-              <h3>Hours</h3>
+              <h3 data-edit="store.title2" data-edit-max="40">Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`store.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`store.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div className={s.storeCard}>
-              <h3>Find us</h3>
-              <p>
+              <h3 data-edit="store.title3" data-edit-max="40">Find us</h3>
+              <p data-edit="store.body" data-edit-max="240" data-edit-multiline>
                 48 Dock Row
                 <br />
                 Between the ferry and the bridge
               </p>
-              <p className={s.storeSmall}>Bike racks outside. The 12 bus stops at the corner.</p>
+              <p data-edit="store.storeSmall" data-edit-max="240" data-edit-multiline className={s.storeSmall}>Bike racks outside. The 12 bus stops at the corner.</p>
             </div>
             <div className={s.storeCard}>
-              <h3>Ask us</h3>
+              <h3 data-edit="store.title4" data-edit-max="40">Ask us</h3>
               <p>
-                <a href="mailto:wall@stride.example">wall@stride.example</a>
+                <a data-edit="store.link" data-edit-max="28" href="mailto:wall@stride.example">wall@stride.example</a>
               </p>
-              <p>(555) 013-7788</p>
-              <p className={s.storeSmall}>Size questions answered the same day, drop questions by Friday noon.</p>
+              <p data-edit="store.body2" data-edit-max="240" data-edit-multiline>(555) 013-7788</p>
+              <p data-edit="store.storeSmall2" data-edit-max="240" data-edit-multiline className={s.storeSmall}>Size questions answered the same day, drop questions by Friday noon.</p>
             </div>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footMark}>Stride</p>
+        <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Stride</p>
         <ul className={s.footLinks}>
-          {NAV.map(([label, href]) => (
+          {NAV.map(([label, href], i) => (
             <li key={href}>
-              <a href={href}>{label}</a>
+              <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
             </li>
           ))}
         </ul>
         <div className={s.footFine}>
-          <p>A fictional sneaker store. Shoes, drops and prices are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional sneaker store. Shoes, drops and prices are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

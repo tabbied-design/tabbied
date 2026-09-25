@@ -137,7 +137,19 @@ const OFFICES = [
 
 export default function HollisHartPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--ivory': '#f7f4ee',
+        '--ink': '#151a1f',
+        '--brass': '#9b7b4a',
+        '--gray': '#8c8e90',
+        '--pale': '#e6e1d7',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="ivory,ink,brass,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -151,23 +163,23 @@ export default function HollisHartPage() {
           across the middle, the sections in small capitals below it. */}
       <header className={s.masthead}>
         <div className={s.issue}>
-          <span>The Property Review</span>
-          <span className={s.issueNo}>No. 38, Autumn 2026</span>
-          <span className={s.issueFree}>Free in both offices</span>
+          <span data-edit="masthead.text" data-edit-max="60">The Property Review</span>
+          <span data-edit="masthead.issueNo" data-edit-max="60" className={s.issueNo}>No. 38, Autumn 2026</span>
+          <span data-edit="masthead.issueFree" data-edit-max="60" className={s.issueFree}>Free in both offices</span>
         </div>
         <a className={s.mark} href="#top">
-          <span>Hollis</span>
+          <span data-edit="masthead.text2" data-edit-max="60">Hollis</span>
           <em>&amp;</em>
-          <span>Hart</span>
+          <span data-edit="masthead.text3" data-edit-max="60">Hart</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`masthead.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`masthead.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -179,11 +191,11 @@ export default function HollisHartPage() {
         <section id="featured" className={s.spread} aria-labelledby="featured-h">
           <div className={s.pageLeft}>
             <div className={s.runHead}>
-              <span>Hollis &amp; Hart</span>
-              <span>Alder Row</span>
+              <span data-edit="featured.text" data-edit-max="60">Hollis &amp; Hart</span>
+              <span data-edit="featured.text2" data-edit-max="60">Alder Row</span>
             </div>
-            <p className={s.kicker}>Featured property</p>
-            <h1 className={s.spreadTitle} id="featured-h">
+            <p data-edit="featured.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Featured property</p>
+            <h1 data-edit="featured.title" data-edit-format="emphasis" data-edit-max="70" className={s.spreadTitle} id="featured-h">
               The house on
               <br />
               <em>Alder Row</em>
@@ -197,24 +209,24 @@ export default function HollisHartPage() {
                 className={s.house}
               />
             </div>
-            <p className={s.photoCaption}>18 Alder Row, from the street, on a September morning.</p>
-            <span className={s.folio}>14</span>
+            <p data-edit="featured.photoCaption" data-edit-max="240" data-edit-multiline className={s.photoCaption}>18 Alder Row, from the street, on a September morning.</p>
+            <span data-edit="featured.folio" data-edit-max="60" className={s.folio}>14</span>
           </div>
 
           <div className={s.pageRight}>
             <div className={s.runHead}>
-              <span>The featured house</span>
-              <span>No. 38</span>
+              <span data-edit="featured.text3" data-edit-max="60">The featured house</span>
+              <span data-edit="featured.text4" data-edit-max="60">No. 38</span>
             </div>
-            <p className={s.deck}>
+            <p data-edit="featured.deck" data-edit-max="240" data-edit-multiline className={s.deck}>
               A Victorian with its porch, its turret and nearly all of its 1891
               detail, three minutes from the park and on the market for the
               first time in forty years.
             </p>
-            <p className={s.byline}>Words by Clara Hart. Photographs by the agency.</p>
+            <p data-edit="featured.byline" data-edit-max="240" data-edit-multiline className={s.byline}>Words by Clara Hart. Photographs by the agency.</p>
 
             <div className={s.columns}>
-              <p className={s.dropcap}>
+              <p data-edit="featured.dropcap" data-edit-max="240" data-edit-multiline className={s.dropcap}>
                 The Ashdowns bought number 18 in 1985 for less than a car costs
                 now, and raised three children and a great many tomatoes in
                 it. What they did not do was modernize it, and that is the
@@ -222,7 +234,7 @@ export default function HollisHartPage() {
                 walnut. The fireplaces work. The stained glass over the front
                 door has been taken out once, to be releaded, and put back.
               </p>
-              <p>
+              <p data-edit="featured.body" data-edit-max="240" data-edit-multiline>
                 Downstairs there are two parlors joined by pocket doors, a
                 dining room with a bay, and a kitchen that was redone in 2011
                 with more restraint than most. Upstairs there are four
@@ -230,9 +242,9 @@ export default function HollisHartPage() {
                 clawfoot tub.
               </p>
               <blockquote className={s.pull}>
-                <p>The porch alone is fifty feet long, and it catches the evening sun.</p>
+                <p data-edit="featured.body2" data-edit-max="240" data-edit-multiline>The porch alone is fifty feet long, and it catches the evening sun.</p>
               </blockquote>
-              <p>
+              <p data-edit="featured.body3" data-edit-max="240" data-edit-multiline>
                 The roof was replaced in 2019 and the wiring in 2016, both with
                 paperwork. The garden runs back to an old stone wall and a
                 garage that could, with a permit, be a studio. It is a house
@@ -242,18 +254,18 @@ export default function HollisHartPage() {
             </div>
 
             <dl className={s.specs}>
-              {SPECS.map(([k, v]) => (
+              {SPECS.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`featured.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`featured.body4.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.spreadActions}>
-              <a className={s.button} href="#contact">Book a viewing</a>
-              <a className={s.textLink} href="#listings">See every listing</a>
+              <a data-edit="featured.button" data-edit-max="28" className={s.button} href="#contact">Book a viewing</a>
+              <a data-edit="featured.textLink" data-edit-max="28" className={s.textLink} href="#listings">See every listing</a>
             </div>
-            <span className={s.folio}>15</span>
+            <span data-edit="featured.folio2" data-edit-max="60" className={s.folio}>15</span>
           </div>
         </section>
 
@@ -261,8 +273,8 @@ export default function HollisHartPage() {
             Also in this issue: the other two houses, as smaller features. */}
         <section className={s.issueMore} aria-labelledby="more-h">
           <div className={s.moreHead}>
-            <h2 id="more-h">Also in this issue</h2>
-            <div className={s.planTile} aria-hidden="true">
+            <h2 data-edit="more.title" data-edit-max="60" id="more-h">Also in this issue</h2>
+            <div data-edit-pattern="more.field" data-edit-roles="transparent,3,4,1" className={s.planTile} aria-hidden="true">
               <TabbiedPattern
                 pattern={ortho}
                 palette={PLAN}
@@ -275,15 +287,15 @@ export default function HollisHartPage() {
             </div>
           </div>
           <div className={s.teasers}>
-            {TEASERS.map((t) => (
+            {TEASERS.map((t, i) => (
               <article key={t.id} className={s.teaser}>
                 <div className={s.teaserPic}>
                   <Artwork slug={t.art} alt={t.alt} mode="tint" inks={['var(--ink)', 'var(--ivory)']} className={s.teaserArt} />
                 </div>
-                <p className={s.kicker}>{t.kicker}</p>
-                <h3>{t.title}</h3>
-                <p className={s.teaserBody}>{t.body}</p>
-                <p className={s.teaserMeta}>{t.meta}</p>
+                <p data-edit={`teaser.kicker.${i}`} data-edit-max="240" data-edit-multiline className={s.kicker}>{t.kicker}</p>
+                <h3 data-edit={`teaser.title.${i}`} data-edit-max="40">{t.title}</h3>
+                <p data-edit={`teaser.teaserBody.${i}`} data-edit-max="240" data-edit-multiline className={s.teaserBody}>{t.body}</p>
+                <p data-edit={`teaser.teaserMeta.${i}`} data-edit-max="240" data-edit-multiline className={s.teaserMeta}>{t.meta}</p>
               </article>
             ))}
           </div>
@@ -292,9 +304,9 @@ export default function HollisHartPage() {
         {/* --------------------------------------------------------- LISTINGS */}
         <section id="listings" className={s.sec} aria-labelledby="listings-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Current listings</p>
-            <h2 id="listings-h">Every house we have for sale this month</h2>
-            <p className={s.secNote}>
+            <p data-edit="listings.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Current listings</p>
+            <h2 data-edit="listings.title" data-edit-max="60" id="listings-h">Every house we have for sale this month</h2>
+            <p data-edit="listings.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Sizes are finished floor area in square feet. Open houses need
               no appointment; for anything else, call the office that lists it.
             </p>
@@ -303,28 +315,28 @@ export default function HollisHartPage() {
             <table className={s.listings}>
               <thead>
                 <tr>
-                  <th scope="col">Address</th>
-                  <th scope="col">Area</th>
-                  <th scope="col">Type</th>
-                  <th scope="col" className={s.num}>Beds</th>
-                  <th scope="col" className={s.num}>Baths</th>
-                  <th scope="col" className={s.num}>Sq ft</th>
-                  <th scope="col" className={s.num}>Price</th>
-                  <th scope="col">Status</th>
+                  <th data-edit="listings.heading" scope="col">Address</th>
+                  <th data-edit="listings.heading2" scope="col">Area</th>
+                  <th data-edit="listings.heading3" scope="col">Type</th>
+                  <th data-edit="listings.num" scope="col" className={s.num}>Beds</th>
+                  <th data-edit="listings.num2" scope="col" className={s.num}>Baths</th>
+                  <th data-edit="listings.num3" scope="col" className={s.num}>Sq ft</th>
+                  <th data-edit="listings.num4" scope="col" className={s.num}>Price</th>
+                  <th data-edit="listings.heading4" scope="col">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {LISTINGS.map((l) => (
+                {LISTINGS.map((l, i) => (
                   <tr key={l.address}>
-                    <th scope="row" className={s.addr}>{l.address}</th>
-                    <td data-label="Area">{l.area}</td>
-                    <td data-label="Type">{l.kind}</td>
-                    <td data-label="Beds" className={s.num}>{l.beds}</td>
-                    <td data-label="Baths" className={s.num}>{l.baths}</td>
-                    <td data-label="Sq ft" className={s.num}>{l.size}</td>
-                    <td data-label="Price" className={`${s.num} ${s.price}`}>{l.price}</td>
+                    <th data-edit={`listings.addr.${i}`} scope="row" className={s.addr}>{l.address}</th>
+                    <td data-edit={`listings.cell.${i}`} data-label="Area">{l.area}</td>
+                    <td data-edit={`listings.cell2.${i}`} data-label="Type">{l.kind}</td>
+                    <td data-edit={`listings.num5.${i}`} data-label="Beds" className={s.num}>{l.beds}</td>
+                    <td data-edit={`listings.num6.${i}`} data-label="Baths" className={s.num}>{l.baths}</td>
+                    <td data-edit={`listings.num7.${i}`} data-label="Sq ft" className={s.num}>{l.size}</td>
+                    <td data-edit={`listings.num8.${i}`} data-label="Price" className={`${s.num} ${s.price}`}>{l.price}</td>
                     <td className={s.statusCell}>
-                      <span className={`${s.status} ${s[`status_${l.tone}`]}`}>{l.status}</span>
+                      <span data-edit={`listings.status.${i}`} data-edit-max="60" className={`${s.status} ${s[`status_${l.tone}`]}`}>{l.status}</span>
                     </td>
                   </tr>
                 ))}
@@ -337,23 +349,23 @@ export default function HollisHartPage() {
             Set like a magazine's contributors page. */}
         <section id="agents" className={s.sec} aria-labelledby="agents-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>The agents</p>
-            <h2 id="agents-h">Four agents, two offices, one list</h2>
-            <p className={s.secNote}>
+            <p data-edit="agents.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The agents</p>
+            <h2 data-edit="agents.title" data-edit-max="60" id="agents-h">Four agents, two offices, one list</h2>
+            <p data-edit="agents.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every listing is shared between the offices, so whoever you call
               can show you any house.
             </p>
           </div>
           <ul className={s.agents}>
-            {AGENTS.map((a) => (
+            {AGENTS.map((a, i) => (
               <li key={a.name} className={s.agent}>
                 <span className={s.initials} aria-hidden="true">{a.initials}</span>
-                <h3>{a.name}</h3>
-                <p className={s.agentRole}>{a.role}</p>
-                <p className={s.agentAreas}>{a.areas}</p>
-                <p className={s.agentNote}>{a.note}</p>
-                <a className={s.agentLink} href={`tel:${a.phone.replace(/[^0-9]/g, '')}`}>{a.phone}</a>
-                <a className={s.agentLink} href={`mailto:${a.email}`}>{a.email}</a>
+                <h3 data-edit={`agents.title2.${i}`} data-edit-max="40">{a.name}</h3>
+                <p data-edit={`agents.agentRole.${i}`} data-edit-max="240" data-edit-multiline className={s.agentRole}>{a.role}</p>
+                <p data-edit={`agents.agentAreas.${i}`} data-edit-max="240" data-edit-multiline className={s.agentAreas}>{a.areas}</p>
+                <p data-edit={`agents.agentNote.${i}`} data-edit-max="240" data-edit-multiline className={s.agentNote}>{a.note}</p>
+                <a data-edit={`agents.agentLink.${i}`} data-edit-max="28" className={s.agentLink} href={`tel:${a.phone.replace(/[^0-9]/g, '')}`}>{a.phone}</a>
+                <a data-edit={`agents.agentLink2.${i}`} data-edit-max="28" className={s.agentLink} href={`mailto:${a.email}`}>{a.email}</a>
               </li>
             ))}
           </ul>
@@ -362,7 +374,7 @@ export default function HollisHartPage() {
         {/* -------------------------------------------------------- VALUATION
             The one loud panel: fanlights in brass and pale, and the form. */}
         <section id="valuation" className={s.valuation} aria-labelledby="valuation-h">
-          <div className={s.valuationField} aria-hidden="true">
+          <div data-edit-pattern="valuation.field" data-edit-roles="transparent,4,2,3" className={s.valuationField} aria-hidden="true">
             <TabbiedPattern
               pattern={lunette}
               palette={ARCHES}
@@ -376,9 +388,9 @@ export default function HollisHartPage() {
           </div>
           <div className={s.valuationInner}>
             <div className={s.valuationText}>
-              <p className={s.kicker}>Free valuation</p>
-              <h2 id="valuation-h">What would your house sell for this autumn?</h2>
-              <p>
+              <p data-edit="valuation.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Free valuation</p>
+              <h2 data-edit="valuation.title" data-edit-max="60" id="valuation-h">What would your house sell for this autumn?</h2>
+              <p data-edit="valuation.body" data-edit-max="240" data-edit-multiline>
                 One of the partners comes to see it, walks every room, and
                 sends you a written figure within three days, with the sales
                 on your street it is based on. There is no charge and no
@@ -386,23 +398,23 @@ export default function HollisHartPage() {
               </p>
               <ul className={s.valuationFacts}>
                 <li>
-                  <strong>3 days</strong>
-                  <span>From the visit to the written figure</span>
+                  <strong data-edit="valuation.emphasis">3 days</strong>
+                  <span data-edit="valuation.text" data-edit-max="60">From the visit to the written figure</span>
                 </li>
                 <li>
-                  <strong>1.2%</strong>
-                  <span>Our fee if we sell it, and nothing if we do not</span>
+                  <strong data-edit="valuation.emphasis2">1.2%</strong>
+                  <span data-edit="valuation.text2" data-edit-max="60">Our fee if we sell it, and nothing if we do not</span>
                 </li>
               </ul>
             </div>
             <form className={s.form} action="#">
               <label className={s.field}>
-                <span>Address of the property</span>
+                <span data-edit="valuation.text3" data-edit-max="60">Address of the property</span>
                 <input type="text" name="address" autoComplete="street-address" required />
               </label>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Type</span>
+                  <span data-edit="valuation.text4" data-edit-max="60">Type</span>
                   <select name="type" defaultValue="house">
                     <option value="house">House</option>
                     <option value="townhouse">Townhouse</option>
@@ -411,7 +423,7 @@ export default function HollisHartPage() {
                   </select>
                 </label>
                 <label className={s.field}>
-                  <span>Bedrooms</span>
+                  <span data-edit="valuation.text5" data-edit-max="60">Bedrooms</span>
                   <select name="beds" defaultValue="3">
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -422,31 +434,31 @@ export default function HollisHartPage() {
                 </label>
               </div>
               <fieldset className={s.when}>
-                <legend>Thinking of selling</legend>
+                <legend data-edit="valuation.legend">Thinking of selling</legend>
                 <label>
                   <input type="radio" name="when" value="now" defaultChecked />
-                  <span>Now</span>
+                  <span data-edit="valuation.text6" data-edit-max="60">Now</span>
                 </label>
                 <label>
                   <input type="radio" name="when" value="year" />
-                  <span>Within a year</span>
+                  <span data-edit="valuation.text7" data-edit-max="60">Within a year</span>
                 </label>
                 <label>
                   <input type="radio" name="when" value="curious" />
-                  <span>Just curious</span>
+                  <span data-edit="valuation.text8" data-edit-max="60">Just curious</span>
                 </label>
               </fieldset>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Your name</span>
+                  <span data-edit="valuation.text9" data-edit-max="60">Your name</span>
                   <input type="text" name="name" autoComplete="name" required />
                 </label>
                 <label className={s.field}>
-                  <span>Email or phone</span>
+                  <span data-edit="valuation.text10" data-edit-max="60">Email or phone</span>
                   <input type="text" name="contact" required />
                 </label>
               </div>
-              <button className={s.button} type="submit">Ask for a valuation</button>
+              <button data-edit="valuation.button" data-edit-max="24" className={s.button} type="submit">Ask for a valuation</button>
             </form>
           </div>
         </section>
@@ -455,24 +467,24 @@ export default function HollisHartPage() {
         <section id="contact" className={s.sec} aria-labelledby="contact-h">
           <div className={s.contact}>
             <div>
-              <p className={s.kicker}>Contact</p>
-              <h2 id="contact-h" className={s.contactTitle}>Two offices, open six days a week</h2>
-              <p className={s.contactNote}>
+              <p data-edit="contact.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Contact</p>
+              <h2 data-edit="contact.contactTitle" data-edit-max="60" id="contact-h" className={s.contactTitle}>Two offices, open six days a week</h2>
+              <p data-edit="contact.contactNote" data-edit-max="240" data-edit-multiline className={s.contactNote}>
                 Viewings run from 8 am to 8 pm, weekends included. The inbox
                 is read every day, and a partner answers within the day.
               </p>
               <p className={s.contactMail}>
-                <a href="mailto:hello@hollishart.example">hello@hollishart.example</a>
+                <a data-edit="contact.link" data-edit-max="28" href="mailto:hello@hollishart.example">hello@hollishart.example</a>
               </p>
             </div>
-            {OFFICES.map((o) => (
+            {OFFICES.map((o, i) => (
               <div key={o.name} className={s.office}>
-                <h3>{o.name}</h3>
-                {o.lines.map((line) => (
-                  <p key={line} className={s.officeAddr}>{line}</p>
+                <h3 data-edit={`contact.title.${i}`} data-edit-max="40">{o.name}</h3>
+                {o.lines.map((line, i2) => (
+                  <p data-edit={`contact.officeAddr.${i}.${i2}`} data-edit-max="240" data-edit-multiline key={line} className={s.officeAddr}>{line}</p>
                 ))}
-                <p className={s.officeHours}>{o.hours}</p>
-                <a className={s.agentLink} href={`tel:${o.phone.replace(/[^0-9]/g, '')}`}>{o.phone}</a>
+                <p data-edit={`contact.officeHours.${i}`} data-edit-max="240" data-edit-multiline className={s.officeHours}>{o.hours}</p>
+                <a data-edit={`contact.agentLink.${i}`} data-edit-max="28" className={s.agentLink} href={`tel:${o.phone.replace(/[^0-9]/g, '')}`}>{o.phone}</a>
               </div>
             ))}
           </div>
@@ -480,20 +492,20 @@ export default function HollisHartPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footMark}>Hollis &amp; Hart</p>
+        <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Hollis &amp; Hart</p>
         <ul className={s.footLinks}>
-          {NAV.map(([label, href]) => (
+          {NAV.map(([label, href], i) => (
             <li key={href}>
-              <a href={href}>{label}</a>
+              <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
             </li>
           ))}
         </ul>
         <div className={s.footFine}>
-          <p>A fictional real estate agency. Houses, prices, streets and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional real estate agency. Houses, prices, streets and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live; the houses are printed in the page's own ink and paper.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live; the houses are printed in the page's own ink and paper.</span>
           </p>
         </div>
       </footer>

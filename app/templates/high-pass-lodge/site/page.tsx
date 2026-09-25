@@ -209,7 +209,21 @@ const FAQS = [
 
 export default function HighPassLodgePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--snow': '#eaf0f2',
+        '--ink': '#16222b',
+        '--lake': '#3e6e8e',
+        '--ember': '#d97b4a',
+        '--stone': '#8d99a1',
+        '--frost': '#cbd8de',
+        '--pine': '#2f5b45',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="snow,ink,lake,ember,stone,frost,pine"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -220,17 +234,17 @@ export default function HighPassLodgePage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span className={s.markName}>High Pass Lodge</span>
-          <span className={s.markAlt}>7,020 ft</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>High Pass Lodge</span>
+          <span data-edit="bar.markAlt" data-edit-max="60" className={s.markAlt}>7,020 ft</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -251,19 +265,19 @@ export default function HighPassLodgePage() {
             />
           </div>
           <div className={s.heroText}>
-            <p className={s.kicker}>A mountain lodge at the top of Kettle Pass</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>A mountain lodge at the top of Kettle Pass</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Sleep above
               <br />
               <em>the tree line.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Twelve rooms under the pass, dinner at seven, a fire lit by four
               and trails from the boot room door. Open all year.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#book">Check dates</a>
-              <a className={s.btnGhost} href="#rooms">See the rooms</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Check dates</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#rooms">See the rooms</a>
             </div>
           </div>
         </section>
@@ -271,7 +285,7 @@ export default function HighPassLodgePage() {
         {/* ------------------------------------------------------ CONDITIONS
             The forest runs straight into this band: same ink, no seam. */}
         <section className={s.conditions} aria-labelledby="conditions-h">
-          <div className={s.conditionsField} aria-hidden="true">
+          <div data-edit-pattern="conditions.field" data-edit-roles="transparent,5,3,4" className={s.conditionsField} aria-hidden="true">
             <TabbiedPattern
               pattern={terrain}
               palette={BAND}
@@ -284,13 +298,13 @@ export default function HighPassLodgePage() {
             />
           </div>
           <div className={s.conditionsInner}>
-            <h2 id="conditions-h" className={s.conditionsHead}>On the pass this morning</h2>
+            <h2 data-edit="conditions.conditionsHead" data-edit-max="60" id="conditions-h" className={s.conditionsHead}>On the pass this morning</h2>
             <dl className={s.conditionsList}>
-              {CONDITIONS.map(([label, value, note]) => (
+              {CONDITIONS.map(([label, value, note], i) => (
                 <div key={label}>
-                  <dt>{label}</dt>
-                  <dd className={s.condValue}>{value}</dd>
-                  <dd className={s.condNote}>{note}</dd>
+                  <dt data-edit={`conditions.term.${i}`} data-edit-max="28">{label}</dt>
+                  <dd data-edit={`conditions.condValue.${i}`} data-edit-max="200" data-edit-multiline className={s.condValue}>{value}</dd>
+                  <dd data-edit={`conditions.condNote.${i}`} data-edit-max="200" data-edit-multiline className={s.condNote}>{note}</dd>
                 </div>
               ))}
             </dl>
@@ -300,29 +314,29 @@ export default function HighPassLodgePage() {
         {/* ----------------------------------------------------------- ROOMS */}
         <section id="rooms" className={s.sec} aria-labelledby="rooms-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>01</span>
-            <h2 id="rooms-h">Rooms</h2>
-            <p className={s.secNote}>
+            <span data-edit="rooms.secNo" data-edit-max="60" className={s.secNo}>01</span>
+            <h2 data-edit="rooms.title" data-edit-max="60" id="rooms-h">Rooms</h2>
+            <p data-edit="rooms.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every rate is half board: breakfast, the four-course dinner and
               a thermos of tea to take out in the morning.
             </p>
           </div>
           <div className={s.rooms}>
-            {ROOMS.map((r) => (
+            {ROOMS.map((r, i) => (
               <article key={r.name} className={s.room}>
                 <div className={s.roomTop}>
-                  <h3>{r.name}</h3>
-                  <span className={s.roomCount}>{r.count}</span>
+                  <h3 data-edit={`room.title.${i}`} data-edit-max="40">{r.name}</h3>
+                  <span data-edit={`room.roomCount.${i}`} data-edit-max="60" className={s.roomCount}>{r.count}</span>
                 </div>
                 <ul className={s.roomFacts}>
-                  <li>{r.sleeps}</li>
-                  <li>{r.beds}</li>
-                  <li>{r.view}</li>
+                  <li data-edit={`room.item.${i}`} data-edit-max="80">{r.sleeps}</li>
+                  <li data-edit={`room.item2.${i}`} data-edit-max="80">{r.beds}</li>
+                  <li data-edit={`room.item3.${i}`} data-edit-max="80">{r.view}</li>
                 </ul>
-                <p className={s.roomNote}>{r.note}</p>
+                <p data-edit={`room.roomNote.${i}`} data-edit-max="240" data-edit-multiline className={s.roomNote}>{r.note}</p>
                 <div className={s.roomPrice}>
-                  <strong>{r.price}</strong>
-                  <span>{r.unit}</span>
+                  <strong data-edit={`room.emphasis.${i}`}>{r.price}</strong>
+                  <span data-edit={`room.text.${i}`} data-edit-max="60">{r.unit}</span>
                 </div>
               </article>
             ))}
@@ -333,33 +347,33 @@ export default function HighPassLodgePage() {
         <section id="dining" className={s.dining} aria-labelledby="dining-h">
           <div className={s.diningInner}>
             <div className={s.diningText}>
-              <span className={s.secNo}>02</span>
-              <h2 id="dining-h">One table, one sitting, seven o'clock</h2>
-              <p>
+              <span data-edit="dining.secNo" data-edit-max="60" className={s.secNo}>02</span>
+              <h2 data-edit="dining.title" data-edit-max="60" id="dining-h">One table, one sitting, seven o'clock</h2>
+              <p data-edit="dining.body" data-edit-max="240" data-edit-multiline>
                 The kitchen cooks one dinner a night for everyone in the house,
                 from what came up the pass that week. Tell us at check-in what
                 you do not eat and it will not be on your plate.
               </p>
               <dl className={s.meals}>
-                {MEALS.map(([meal, when]) => (
+                {MEALS.map(([meal, when], i) => (
                   <div key={meal}>
-                    <dt>{meal}</dt>
-                    <dd>{when}</dd>
+                    <dt data-edit={`dining.term.${i}`} data-edit-max="28">{meal}</dt>
+                    <dd data-edit={`dining.body2.${i}`} data-edit-max="200" data-edit-multiline>{when}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div className={s.menuCard}>
-              <p className={s.menuKicker}>This week's dinner</p>
+              <p data-edit="dining.menuKicker" data-edit-max="240" data-edit-multiline className={s.menuKicker}>This week's dinner</p>
               <ol className={s.menu}>
-                {MENU.map(([dish, course]) => (
+                {MENU.map(([dish, course], i) => (
                   <li key={dish}>
-                    <span className={s.menuCourse}>{course}</span>
-                    <span className={s.menuDish}>{dish}</span>
+                    <span data-edit={`dining.menuCourse.${i}`} data-edit-max="60" className={s.menuCourse}>{course}</span>
+                    <span data-edit={`dining.menuDish.${i}`} data-edit-max="60" className={s.menuDish}>{dish}</span>
                   </li>
                 ))}
               </ol>
-              <p className={s.menuFoot}>Vegetarian and gluten-free every night, asked for once.</p>
+              <p data-edit="dining.menuFoot" data-edit-max="240" data-edit-multiline className={s.menuFoot}>Vegetarian and gluten-free every night, asked for once.</p>
             </div>
           </div>
         </section>
@@ -367,22 +381,22 @@ export default function HighPassLodgePage() {
         {/* --------------------------------------------------------- SEASONS */}
         <section id="seasons" className={s.sec} aria-labelledby="seasons-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>03</span>
-            <h2 id="seasons-h">Four seasons at the pass</h2>
-            <p className={s.secNote}>
+            <span data-edit="seasons.secNo" data-edit-max="60" className={s.secNo}>03</span>
+            <h2 data-edit="seasons.title" data-edit-max="60" id="seasons-h">Four seasons at the pass</h2>
+            <p data-edit="seasons.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The lodge closes for three weeks in May and not otherwise. Each
               season has its own crowd, and its own quiet weeks.
             </p>
           </div>
           <ol className={s.seasons}>
-            {SEASONS.map((se) => (
+            {SEASONS.map((se, i) => (
               <li key={se.name} className={s.season}>
-                <h3>{se.name}</h3>
-                <span className={s.seasonMonths}>{se.months}</span>
-                <p>{se.body}</p>
+                <h3 data-edit={`seasons.title2.${i}`} data-edit-max="40">{se.name}</h3>
+                <span data-edit={`seasons.seasonMonths.${i}`} data-edit-max="60" className={s.seasonMonths}>{se.months}</span>
+                <p data-edit={`seasons.body.${i}`} data-edit-max="240" data-edit-multiline>{se.body}</p>
                 <ul className={s.seasonDoing}>
-                  {se.doing.map((d) => (
-                    <li key={d}>{d}</li>
+                  {se.doing.map((d, i2) => (
+                    <li data-edit={`seasons.item.${i}.${i2}`} data-edit-max="80" key={d}>{d}</li>
                   ))}
                 </ul>
               </li>
@@ -394,15 +408,15 @@ export default function HighPassLodgePage() {
             A survey-map panel beside the list of walks from the door. */}
         <section id="trails" className={s.sec} aria-labelledby="trails-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>04</span>
-            <h2 id="trails-h">Trails from the door</h2>
-            <p className={s.secNote}>
+            <span data-edit="trails.secNo" data-edit-max="60" className={s.secNo}>04</span>
+            <h2 data-edit="trails.title" data-edit-max="60" id="trails-h">Trails from the door</h2>
+            <p data-edit="trails.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Times are for a steady walker in summer. The desk has maps, the
               morning forecast, and a book to write your route in.
             </p>
           </div>
           <div className={s.trailsGrid}>
-            <div className={s.survey} aria-hidden="true">
+            <div data-edit-pattern="trails.field" data-edit-roles="transparent,2,4,1" className={s.survey} aria-hidden="true">
               <TabbiedPattern
                 pattern={contourlines}
                 palette={SURVEY}
@@ -415,29 +429,29 @@ export default function HighPassLodgePage() {
             </div>
             <div className={s.trailsTable}>
               <table className={s.trails}>
-                <caption className={s.srOnly}>Walks that start at the lodge</caption>
+                <caption data-edit="trails.srOnly" className={s.srOnly}>Walks that start at the lodge</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Trail</th>
-                    <th scope="col">Distance</th>
-                    <th scope="col">Climb</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Grade</th>
+                    <th data-edit="trails.heading" scope="col">Trail</th>
+                    <th data-edit="trails.heading2" scope="col">Distance</th>
+                    <th data-edit="trails.heading3" scope="col">Climb</th>
+                    <th data-edit="trails.heading4" scope="col">Time</th>
+                    <th data-edit="trails.heading5" scope="col">Grade</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {TRAILS.map((t) => (
+                  {TRAILS.map((t, i) => (
                     <tr key={t.name}>
-                      <th scope="row">{t.name}</th>
-                      <td data-label="Distance">{t.distance}</td>
-                      <td data-label="Climb">{t.climb}</td>
-                      <td data-label="Time">{t.time}</td>
-                      <td data-label="Grade">{t.grade}</td>
+                      <th data-edit={`trails.heading6.${i}`} scope="row">{t.name}</th>
+                      <td data-edit={`trails.cell.${i}`} data-label="Distance">{t.distance}</td>
+                      <td data-edit={`trails.cell2.${i}`} data-label="Climb">{t.climb}</td>
+                      <td data-edit={`trails.cell3.${i}`} data-label="Time">{t.time}</td>
+                      <td data-edit={`trails.cell4.${i}`} data-label="Grade">{t.grade}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <p className={s.trailsNote}>
+              <p data-edit="trails.trailsNote" data-edit-max="240" data-edit-multiline className={s.trailsNote}>
                 Guided summit days run Saturdays in July and August, $95 a
                 person with lunch. Sign up at the desk by Thursday.
               </p>
@@ -448,18 +462,18 @@ export default function HighPassLodgePage() {
         {/* ---------------------------------------------------- GETTING HERE */}
         <section id="getting-here" className={s.sec} aria-labelledby="getting-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>05</span>
-            <h2 id="getting-h">Getting here</h2>
-            <p className={s.secNote}>
+            <span data-edit="gettingHere.secNo" data-edit-max="60" className={s.secNo}>05</span>
+            <h2 data-edit="gettingHere.title" data-edit-max="60" id="getting-h">Getting here</h2>
+            <p data-edit="gettingHere.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               4 Summit Road, Kettle Pass. The nearest town is Harlow, 27 miles
               and a thousand switchback feet below.
             </p>
           </div>
           <dl className={s.routes}>
-            {ROUTES.map((r) => (
+            {ROUTES.map((r, i) => (
               <div key={r.how}>
-                <dt>{r.how}</dt>
-                <dd>{r.body}</dd>
+                <dt data-edit={`gettingHere.term.${i}`} data-edit-max="28">{r.how}</dt>
+                <dd data-edit={`gettingHere.body.${i}`} data-edit-max="200" data-edit-multiline>{r.body}</dd>
               </div>
             ))}
           </dl>
@@ -479,40 +493,40 @@ export default function HighPassLodgePage() {
           </div>
           <div className={s.bookInner}>
             <div className={s.bookText}>
-              <span className={s.secNoLight}>06</span>
-              <h2 id="book-h">Stay two nights, or stay the week</h2>
-              <p>
+              <span data-edit="book.secNoLight" data-edit-max="60" className={s.secNoLight}>06</span>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Stay two nights, or stay the week</h2>
+              <p data-edit="book.body" data-edit-max="240" data-edit-multiline>
                 Send us your dates and we will answer within a day with what is
                 free and a link to pay the deposit. Or call the desk, which is
                 staffed from 7 am to 10 pm.
               </p>
               <dl className={s.policies}>
-                {POLICIES.map(([k, v]) => (
+                {POLICIES.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`book.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`book.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <form className={s.form} action="#">
-              <h3 className={s.formHead}>Request dates</h3>
+              <h3 data-edit="book.formHead" data-edit-max="40" className={s.formHead}>Request dates</h3>
               <div className={s.formRow}>
-                <label htmlFor="hp-arrive">Arrive</label>
+                <label data-edit="book.label" htmlFor="hp-arrive">Arrive</label>
                 <input id="hp-arrive" name="arrive" type="date" />
               </div>
               <div className={s.formPair}>
                 <div className={s.formRow}>
-                  <label htmlFor="hp-nights">Nights</label>
+                  <label data-edit="book.label2" htmlFor="hp-nights">Nights</label>
                   <input id="hp-nights" name="nights" type="number" min="1" max="21" defaultValue="2" />
                 </div>
                 <div className={s.formRow}>
-                  <label htmlFor="hp-guests">Guests</label>
+                  <label data-edit="book.label3" htmlFor="hp-guests">Guests</label>
                   <input id="hp-guests" name="guests" type="number" min="1" max="10" defaultValue="2" />
                 </div>
               </div>
               <div className={s.formRow}>
-                <label htmlFor="hp-room">Room</label>
+                <label data-edit="book.label4" htmlFor="hp-room">Room</label>
                 <select id="hp-room" name="room" defaultValue="pass">
                   <option value="pass">Pass Room, $240</option>
                   <option value="ridge">Ridge Room, $310</option>
@@ -521,11 +535,11 @@ export default function HighPassLodgePage() {
                 </select>
               </div>
               <div className={s.formRow}>
-                <label htmlFor="hp-email">Email</label>
+                <label data-edit="book.label5" htmlFor="hp-email">Email</label>
                 <input id="hp-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" />
               </div>
-              <button className={s.formBtn} type="submit">Send the request</button>
-              <p className={s.formNote}>Or call (555) 014-2140, 7 am to 10 pm.</p>
+              <button data-edit="book.formBtn" data-edit-max="24" className={s.formBtn} type="submit">Send the request</button>
+              <p data-edit="book.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>Or call (555) 014-2140, 7 am to 10 pm.</p>
             </form>
           </div>
         </section>
@@ -533,14 +547,14 @@ export default function HighPassLodgePage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.sec} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>07</span>
-            <h2 id="faq-h">Good to know</h2>
+            <span data-edit="faq.secNo" data-edit-max="60" className={s.secNo}>07</span>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Good to know</h2>
           </div>
           <div className={s.faq}>
-            {FAQS.map((f) => (
+            {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -550,42 +564,42 @@ export default function HighPassLodgePage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>High Pass Lodge</p>
-            <p className={s.footTag}>Twelve rooms, a bunk loft and a cabin at the top of Kettle Pass. Open all year.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>High Pass Lodge</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Twelve rooms, a bunk loft and a cabin at the top of Kettle Pass. Open all year.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Stay</h2>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Stay</h2>
             <ul className={s.footLinks}>
-              <li><a href="#rooms">Rooms and rates</a></li>
-              <li><a href="#dining">Dining</a></li>
-              <li><a href="#book">Request dates</a></li>
+              <li><a data-edit="footer.rooms" data-edit-max="28" href="#rooms">Rooms and rates</a></li>
+              <li><a data-edit="footer.dining" data-edit-max="28" href="#dining">Dining</a></li>
+              <li><a data-edit="footer.book" data-edit-max="28" href="#book">Request dates</a></li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>Out there</h2>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Out there</h2>
             <ul className={s.footLinks}>
-              <li><a href="#seasons">Seasons</a></li>
-              <li><a href="#trails">Trails from the door</a></li>
-              <li><a href="#getting-here">Getting here</a></li>
+              <li><a data-edit="footer.seasons" data-edit-max="28" href="#seasons">Seasons</a></li>
+              <li><a data-edit="footer.trails" data-edit-max="28" href="#trails">Trails from the door</a></li>
+              <li><a data-edit="footer.gettingHere" data-edit-max="28" href="#getting-here">Getting here</a></li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>The desk</h2>
-            <p className={s.footAddr}>
+            <h2 data-edit="footer.footHead3" data-edit-max="60" className={s.footHead}>The desk</h2>
+            <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
               4 Summit Road
               <br />
               Kettle Pass
             </p>
-            <a className={s.footContact} href="mailto:desk@highpasslodge.example">desk@highpasslodge.example</a>
-            <a className={s.footContact} href="tel:+15550142140">(555) 014-2140</a>
+            <a data-edit="footer.footContact" data-edit-max="28" className={s.footContact} href="mailto:desk@highpasslodge.example">desk@highpasslodge.example</a>
+            <a data-edit="footer.footContact2" data-edit-max="28" className={s.footContact} href="tel:+15550142140">(555) 014-2140</a>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional mountain lodge. Rooms, prices, trails and conditions are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional mountain lodge. Rooms, prices, trails and conditions are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, pictures painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, pictures painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

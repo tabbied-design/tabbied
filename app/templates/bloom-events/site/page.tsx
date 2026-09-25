@@ -159,7 +159,20 @@ const FAQ = [
 
 export default function BloomEventsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--blush': '#fff9f5',
+        '--plum': '#2b1d2e',
+        '--pink': '#ff5d8f',
+        '--mint': '#28c2a0',
+        '--gold': '#ffc93c',
+        '--mauve': '#b7a7b5',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="blush,plum,pink,mint,gold,mauve"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -170,18 +183,18 @@ export default function BloomEventsPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span>Bloom</span>
+          <span data-edit="bar.text" data-edit-max="60">Bloom</span>
           <em>Events</em>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#enquire">Start planning</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#enquire">Start planning</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -191,27 +204,27 @@ export default function BloomEventsPage() {
             The three pictures as one party table, on the confetti plate. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroCopy}>
-            <p className={s.kicker}>Party and event planning, Harbor District</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Party and event planning, Harbor District</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               You bring the guests. <em>We bring the party.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Birthdays, weddings and company events, planned from the first
               idea to the last balloon down. One planner, one plan, and a
               price you know before anything is booked.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#occasions">See the packages</a>
-              <a className={s.btnLine} href="#enquire">Tell us your date</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#occasions">See the packages</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#enquire">Tell us your date</a>
             </div>
             <p className={s.heroNote}>
-              <strong>412</strong>
-              <span>parties since 2015, and not one late cake</span>
+              <strong data-edit="hero.emphasis">412</strong>
+              <span data-edit="hero.text" data-edit-max="60">parties since 2015, and not one late cake</span>
             </p>
           </div>
           <div className={s.heroArt}>
             <div className={s.plate} aria-hidden="true">
-              <div className={s.plateField}>
+              <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,1,2,4" className={s.plateField}>
                 <TabbiedPattern
                   pattern={scatteredgems}
                   palette={CONFETTI}
@@ -247,44 +260,44 @@ export default function BloomEventsPage() {
             Three packages side by side, one picture each. */}
         <section id="occasions" className={s.occasions} aria-labelledby="occasions-h">
           <div className={s.head}>
-            <p className={s.eyebrow}>Packages by occasion</p>
-            <h2 id="occasions-h">Pick the occasion. We plan the rest.</h2>
-            <p className={s.headNote}>
+            <p data-edit="occasions.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Packages by occasion</p>
+            <h2 data-edit="occasions.title" data-edit-max="60" id="occasions-h">Pick the occasion. We plan the rest.</h2>
+            <p data-edit="occasions.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Every package is a starting point with a real price. We send an
               itemized quote after the first call, and it only changes if you
               change the plan.
             </p>
           </div>
           <ul className={s.packs}>
-            {OCCASIONS.map((o) => (
+            {OCCASIONS.map((o, i) => (
               <li key={o.id} className={`${s.pack} ${s[o.tone]}`}>
                 <div className={s.packArt}>
                   <Artwork slug={o.art} alt={o.alt} inks={o.inks} className={s.packPic} />
                 </div>
                 <div className={s.packBody}>
-                  <h3 className={s.packName}>{o.name}</h3>
-                  <p className={s.packLine}>{o.line}</p>
+                  <h3 data-edit={`occasions.packName.${i}`} data-edit-max="40" className={s.packName}>{o.name}</h3>
+                  <p data-edit={`occasions.packLine.${i}`} data-edit-max="240" data-edit-multiline className={s.packLine}>{o.line}</p>
                   <p className={s.packPrice}>
-                    <span>From</span>
-                    <strong>{o.from}</strong>
+                    <span data-edit={`occasions.text.${i}`} data-edit-max="60">From</span>
+                    <strong data-edit={`occasions.emphasis.${i}`}>{o.from}</strong>
                   </p>
-                  <p className={s.packScale}>{o.scale}</p>
+                  <p data-edit={`occasions.packScale.${i}`} data-edit-max="240" data-edit-multiline className={s.packScale}>{o.scale}</p>
                   <ul className={s.packItems}>
-                    {o.items.map((it) => (
-                      <li key={it}>{it}</li>
+                    {o.items.map((it, i2) => (
+                      <li data-edit={`occasions.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                     ))}
                   </ul>
-                  <p className={s.packExtra}>{o.extra}</p>
-                  <a className={s.packCta} href="#enquire">{o.cta}</a>
+                  <p data-edit={`occasions.packExtra.${i}`} data-edit-max="240" data-edit-multiline className={s.packExtra}>{o.extra}</p>
+                  <a data-edit={`occasions.packCta.${i}`} data-edit-max="28" className={s.packCta} href="#enquire">{o.cta}</a>
                 </div>
               </li>
             ))}
           </ul>
           <div className={s.also}>
-            <h3 className={s.alsoHead}>Also planned here</h3>
+            <h3 data-edit="occasions.alsoHead" data-edit-max="40" className={s.alsoHead}>Also planned here</h3>
             <ul className={s.alsoList}>
-              {ALSO.map((a) => (
-                <li key={a}>{a}</li>
+              {ALSO.map((a, i) => (
+                <li data-edit={`occasions.item2.${i}`} data-edit-max="80" key={a}>{a}</li>
               ))}
             </ul>
           </div>
@@ -294,21 +307,21 @@ export default function BloomEventsPage() {
         <section id="plan" className={s.plan} aria-labelledby="plan-h">
           <div className={s.planInner}>
             <div className={s.head}>
-              <p className={s.eyebrow}>How we plan</p>
-              <h2 id="plan-h">A year of planning, one calm day</h2>
-              <p className={s.headNote}>
+              <p data-edit="plan.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>How we plan</p>
+              <h2 data-edit="plan.title" data-edit-max="60" id="plan-h">A year of planning, one calm day</h2>
+              <p data-edit="plan.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 The timeline for a wedding. A birthday runs the same steps in
                 six weeks, a company party in three months.
               </p>
             </div>
             <ol className={s.timeline}>
-              {PLAN.map((p) => (
+              {PLAN.map((p, i) => (
                 <li key={p.when} className={s.stage}>
-                  <span className={s.stageWhen}>{p.when}</span>
+                  <span data-edit={`plan.stageWhen.${i}`} data-edit-max="60" className={s.stageWhen}>{p.when}</span>
                   <span className={s.stageDot} aria-hidden="true" />
                   <div className={s.stageCard}>
-                    <h3 className={s.stageWhat}>{p.what}</h3>
-                    <p className={s.stageBody}>{p.body}</p>
+                    <h3 data-edit={`plan.stageWhat.${i}`} data-edit-max="40" className={s.stageWhat}>{p.what}</h3>
+                    <p data-edit={`plan.stageBody.${i}`} data-edit-max="240" data-edit-multiline className={s.stageBody}>{p.body}</p>
                   </div>
                 </li>
               ))}
@@ -318,7 +331,7 @@ export default function BloomEventsPage() {
 
         {/* ----------------------------------------------------------- WORDS */}
         <section id="words" className={s.words} aria-labelledby="words-h">
-          <div className={s.blossoms} aria-hidden="true">
+          <div data-edit-pattern="words.field" data-edit-roles="transparent,0,2,4,3,5" className={s.blossoms} aria-hidden="true">
             <TabbiedPattern
               pattern={midnightblossoms}
               palette={BLOSSOMS}
@@ -332,17 +345,17 @@ export default function BloomEventsPage() {
           </div>
           <div className={s.wordsInner}>
             <div className={s.head}>
-              <p className={s.eyebrow}>Kind words</p>
-              <h2 id="words-h">From the people who hired us</h2>
+              <p data-edit="words.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Kind words</p>
+              <h2 data-edit="words.title" data-edit-max="60" id="words-h">From the people who hired us</h2>
             </div>
             <ul className={s.quotes}>
-              {WORDS.map((w) => (
+              {WORDS.map((w, i) => (
                 <li key={w.who}>
                   <figure className={s.quote}>
-                    <blockquote>{w.quote}</blockquote>
+                    <blockquote data-edit={`words.quote.${i}`} data-edit-max="240" data-edit-multiline>{w.quote}</blockquote>
                     <figcaption>
-                      <strong>{w.who}</strong>
-                      <span>{w.what}</span>
+                      <strong data-edit={`words.emphasis.${i}`}>{w.who}</strong>
+                      <span data-edit={`words.text.${i}`} data-edit-max="60">{w.what}</span>
                     </figcaption>
                   </figure>
                 </li>
@@ -354,14 +367,14 @@ export default function BloomEventsPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
           <div className={s.head}>
-            <p className={s.eyebrow}>Questions</p>
-            <h2 id="faq-h">Good to know</h2>
+            <p data-edit="faq.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Questions</p>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Good to know</h2>
           </div>
           <div className={s.faqList}>
-            {FAQ.map((f) => (
+            {FAQ.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -370,24 +383,24 @@ export default function BloomEventsPage() {
         {/* --------------------------------------------------------- ENQUIRE */}
         <section id="enquire" className={s.enquire} aria-labelledby="enquire-h">
           <div className={s.enquireAside}>
-            <p className={s.eyebrow}>Enquire</p>
-            <h2 id="enquire-h">Tell us about your day</h2>
-            <p className={s.headNote}>
+            <p data-edit="enquire.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Enquire</p>
+            <h2 data-edit="enquire.title" data-edit-max="60" id="enquire-h">Tell us about your day</h2>
+            <p data-edit="enquire.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               A planner writes back within one working day with dates we can
               do and a first idea of cost. The first call is always free.
             </p>
             <dl className={s.contact}>
               <div>
-                <dt>Call</dt>
-                <dd><a href="tel:5550143366">(555) 014-3366</a></dd>
+                <dt data-edit="enquire.term" data-edit-max="28">Call</dt>
+                <dd><a data-edit="enquire.link" data-edit-max="28" href="tel:5550143366">(555) 014-3366</a></dd>
               </div>
               <div>
-                <dt>Write</dt>
-                <dd><a href="mailto:hello@bloomevents.example">hello@bloomevents.example</a></dd>
+                <dt data-edit="enquire.term2" data-edit-max="28">Write</dt>
+                <dd><a data-edit="enquire.link2" data-edit-max="28" href="mailto:hello@bloomevents.example">hello@bloomevents.example</a></dd>
               </div>
               <div>
-                <dt>Studio</dt>
-                <dd>9 Pier Lane, by appointment</dd>
+                <dt data-edit="enquire.term3" data-edit-max="28">Studio</dt>
+                <dd data-edit="enquire.body" data-edit-max="200" data-edit-multiline>9 Pier Lane, by appointment</dd>
               </div>
             </dl>
             <Artwork
@@ -400,17 +413,17 @@ export default function BloomEventsPage() {
           <form className={s.form} action="#">
             <div className={s.formRow}>
               <label className={s.field}>
-                <span>Your name</span>
+                <span data-edit="enquire.text" data-edit-max="60">Your name</span>
                 <input type="text" name="name" autoComplete="name" />
               </label>
               <label className={s.field}>
-                <span>Email</span>
+                <span data-edit="enquire.text2" data-edit-max="60">Email</span>
                 <input type="email" name="email" autoComplete="email" />
               </label>
             </div>
             <div className={s.formRow}>
               <label className={s.field}>
-                <span>Occasion</span>
+                <span data-edit="enquire.text3" data-edit-max="60">Occasion</span>
                 <select name="occasion" defaultValue="">
                   <option value="" disabled>Choose one</option>
                   <option>Birthday</option>
@@ -420,17 +433,17 @@ export default function BloomEventsPage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>Date, if you have one</span>
+                <span data-edit="enquire.text4" data-edit-max="60">Date, if you have one</span>
                 <input type="date" name="date" />
               </label>
             </div>
             <div className={s.formRow}>
               <label className={s.field}>
-                <span>Guests, roughly</span>
+                <span data-edit="enquire.text5" data-edit-max="60">Guests, roughly</span>
                 <input type="number" name="guests" min="1" inputMode="numeric" />
               </label>
               <label className={s.field}>
-                <span>Budget</span>
+                <span data-edit="enquire.text6" data-edit-max="60">Budget</span>
                 <select name="budget" defaultValue="">
                   <option value="" disabled>Choose a range</option>
                   <option>Under $2,000</option>
@@ -442,30 +455,30 @@ export default function BloomEventsPage() {
               </label>
             </div>
             <label className={s.field}>
-              <span>What are you imagining?</span>
+              <span data-edit="enquire.text7" data-edit-max="60">What are you imagining?</span>
               <textarea name="message" rows={4} />
             </label>
-            <button type="submit" className={s.btn}>Send the enquiry</button>
+            <button data-edit="enquire.btn" data-edit-max="24" type="submit" className={s.btn}>Send the enquiry</button>
           </form>
         </section>
       </main>
 
       <footer className={s.footer}>
         <div className={s.footInner}>
-          <p className={s.footName}>Bloom Events</p>
-          <p className={s.footTag}>Birthdays, weddings and company events, planned start to finish.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Bloom Events</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Birthdays, weddings and company events, planned start to finish.</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
-              <li key={href}><a href={href}>{label}</a></li>
+            {NAV.map(([label, href], i) => (
+              <li key={href}><a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a></li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional event planner. Packages, prices and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional event planner. Packages, prices and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the page's own colors; the pictures follow the same palette.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the page's own colors; the pictures follow the same palette.</span>
           </p>
         </div>
       </footer>

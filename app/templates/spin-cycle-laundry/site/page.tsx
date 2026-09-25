@@ -197,7 +197,20 @@ const FAQ = [
 
 export default function SpinCycleLaundryPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f5f7f7',
+        '--ink': '#16232b',
+        '--teal': '#13a6a3',
+        '--orange': '#f2994a',
+        '--gray': '#8b989c',
+        '--pale': '#e1ebeb',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,teal,orange,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -209,19 +222,19 @@ export default function SpinCycleLaundryPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markDot} aria-hidden="true" />
-          <span>Spin Cycle</span>
+          <span data-edit="bar.text" data-edit-max="60">Spin Cycle</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
         </nav>
-        <span className={s.barOpen}>Open 6 am-11 pm</span>
+        <span data-edit="bar.barOpen" data-edit-max="60" className={s.barOpen}>Open 6 am-11 pm</span>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
@@ -234,27 +247,27 @@ export default function SpinCycleLaundryPage() {
             so the rings turn inside it. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroCopy}>
-            <p className={s.kicker}>Laundromat, wash and fold, delivery</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Laundromat, wash and fold, delivery</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Clean clothes,
               <br />
               <em>no waiting around.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Twenty-four machines on Linden Avenue, a board that tells you which ones are free before you leave the
               house, and a wash-and-fold desk for the weeks you would rather not.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#machines">
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#machines">
                 Check the board
               </a>
-              <a className={s.btnLine} href="#pickup">
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#pickup">
                 Book a pickup
               </a>
             </div>
           </div>
           <div className={s.heroStage}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="5,2,3,0,2" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={loophole}
                 palette={DRUM}
@@ -273,8 +286,8 @@ export default function SpinCycleLaundryPage() {
               className={s.heroWasher}
             />
             <p className={s.heroBadge}>
-              <span className={s.badgeBig}>$1.85</span>
-              <span className={s.badgeSmall}>a pound, washed and folded</span>
+              <span data-edit="hero.badgeBig" data-edit-max="60" className={s.badgeBig}>$1.85</span>
+              <span data-edit="hero.badgeSmall" data-edit-max="60" className={s.badgeSmall}>a pound, washed and folded</span>
             </p>
           </div>
         </section>
@@ -286,34 +299,34 @@ export default function SpinCycleLaundryPage() {
           <div className={s.board}>
             <div className={s.boardTop}>
               <div className={s.boardTitle}>
-                <p className={s.boardKicker}>Machine board</p>
-                <h2 id="machines-h">What is free right now</h2>
+                <p data-edit="machines.boardKicker" data-edit-max="240" data-edit-multiline className={s.boardKicker}>Machine board</p>
+                <h2 data-edit="machines.title" data-edit-max="60" id="machines-h">What is free right now</h2>
               </div>
-              <p className={s.boardClock}>Sample board, 10:42 am</p>
+              <p data-edit="machines.boardClock" data-edit-max="240" data-edit-multiline className={s.boardClock}>Sample board, 10:42 am</p>
             </div>
 
             <dl className={s.tally}>
-              {TALLY.map(([v, k]) => (
+              {TALLY.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`machines.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`machines.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
 
             <div className={s.banks}>
-              {BOARD.map((bank) => (
+              {BOARD.map((bank, i) => (
                 <div key={bank.title} className={s.bank}>
                   <div className={s.bankHead}>
-                    <h3>{bank.title}</h3>
-                    <span>{bank.spec}</span>
+                    <h3 data-edit={`machines.title2.${i}`} data-edit-max="40">{bank.title}</h3>
+                    <span data-edit={`machines.text.${i}`} data-edit-max="60">{bank.spec}</span>
                   </div>
                   <ul className={s.tiles}>
-                    {bank.machines.map((m) => (
+                    {bank.machines.map((m, i2) => (
                       <li key={m.code} className={`${s.tile} ${s[m.state]}`}>
                         <Artwork slug="spin-cycle-laundry-washer" alt="" inks={INKS[m.state]} className={s.tileArt} />
-                        <span className={s.tileCode}>{m.code}</span>
-                        <span className={s.tileStatus}>{m.status}</span>
+                        <span data-edit={`machines.tileCode.${i}.${i2}`} data-edit-max="60" className={s.tileCode}>{m.code}</span>
+                        <span data-edit={`machines.tileStatus.${i}.${i2}`} data-edit-max="60" className={s.tileStatus}>{m.status}</span>
                       </li>
                     ))}
                   </ul>
@@ -322,14 +335,14 @@ export default function SpinCycleLaundryPage() {
             </div>
 
             <ul className={s.legend}>
-              {LEGEND.map(([state, label]) => (
-                <li key={state} className={s[state]}>
+              {LEGEND.map(([state, label], i) => (
+                <li data-edit={`machines.item.${i}`} data-edit-max="80" key={state} className={s[state]}>
                   {label}
                 </li>
               ))}
             </ul>
           </div>
-          <p className={s.boardNote}>
+          <p data-edit="machines.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>
             The same board runs on the screen by the door and in the Spin Cycle app, updated every minute. This one is a
             sample.
           </p>
@@ -338,9 +351,9 @@ export default function SpinCycleLaundryPage() {
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.prices} aria-labelledby="prices-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>01</p>
-            <h2 id="prices-h">Machine prices</h2>
-            <p className={s.secNote}>
+            <p data-edit="prices.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>01</p>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Machine prices</h2>
+            <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Per cycle, soap not included. A vending machine by the tables sells it for $1.25.
             </p>
           </div>
@@ -348,29 +361,29 @@ export default function SpinCycleLaundryPage() {
             <table className={s.table}>
               <thead>
                 <tr>
-                  <th scope="col">Machine</th>
-                  <th scope="col">Load</th>
-                  <th scope="col">Cycle</th>
-                  <th scope="col">Price</th>
+                  <th data-edit="prices.heading" scope="col">Machine</th>
+                  <th data-edit="prices.heading2" scope="col">Load</th>
+                  <th data-edit="prices.heading3" scope="col">Cycle</th>
+                  <th data-edit="prices.heading4" scope="col">Price</th>
                 </tr>
               </thead>
               <tbody>
-                {PRICES.map((p) => (
+                {PRICES.map((p, i) => (
                   <tr key={p.machine}>
-                    <th scope="row">{p.machine}</th>
-                    <td className={s.tdLoad}>{p.load}</td>
-                    <td className={s.tdCycle}>{p.cycle}</td>
-                    <td className={s.tdPrice}>{p.price}</td>
+                    <th data-edit={`prices.heading5.${i}`} scope="row">{p.machine}</th>
+                    <td data-edit={`prices.tdLoad.${i}`} className={s.tdLoad}>{p.load}</td>
+                    <td data-edit={`prices.tdCycle.${i}`} className={s.tdCycle}>{p.cycle}</td>
+                    <td data-edit={`prices.tdPrice.${i}`} className={s.tdPrice}>{p.price}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <dl className={s.pay}>
-            {PAY.map(([k, v]) => (
+            {PAY.map(([k, v], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+                <dt data-edit={`prices.term.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`prices.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
               </div>
             ))}
           </dl>
@@ -388,30 +401,30 @@ export default function SpinCycleLaundryPage() {
           </div>
           <div className={s.foldBody}>
             <div className={s.secHead}>
-              <p className={s.secNo}>02</p>
-              <h2 id="fold-h">
+              <p data-edit="washFold.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02</p>
+              <h2 data-edit="washFold.title" data-edit-format="emphasis" data-edit-max="60" id="fold-h">
                 Wash and fold,
                 <br />
                 <em>by the pound.</em>
               </h2>
-              <p className={s.secNote}>
+              <p data-edit="washFold.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Drop a bag at the desk, pick it up folded. We weigh it in front of you and write the price on the
                 ticket.
               </p>
             </div>
             <dl className={s.foldPrices}>
-              {FOLD_PRICES.map(([k, v]) => (
+              {FOLD_PRICES.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`washFold.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`washFold.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
             <ul className={s.foldNotes}>
-              {FOLD_NOTES.map((n) => (
+              {FOLD_NOTES.map((n, i) => (
                 <li key={n.title}>
-                  <h3>{n.title}</h3>
-                  <p>{n.body}</p>
+                  <h3 data-edit={`washFold.title.${i}`} data-edit-max="40">{n.title}</h3>
+                  <p data-edit={`washFold.body2.${i}`} data-edit-max="240" data-edit-multiline>{n.body}</p>
                 </li>
               ))}
             </ul>
@@ -419,7 +432,7 @@ export default function SpinCycleLaundryPage() {
         </section>
 
         {/* A thin band of stripes, like the edge of a folded towel. */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,5,3,4" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={picket}
             palette={STRIPE}
@@ -435,9 +448,9 @@ export default function SpinCycleLaundryPage() {
         <section id="pickup" className={s.pickup} aria-labelledby="pickup-h">
           <div className={s.pickupHead}>
             <div className={s.secHead}>
-              <p className={s.secNo}>03</p>
-              <h2 id="pickup-h">Pickup and delivery</h2>
-              <p className={s.secNote}>
+              <p data-edit="pickup.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03</p>
+              <h2 data-edit="pickup.title" data-edit-max="60" id="pickup-h">Pickup and delivery</h2>
+              <p data-edit="pickup.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Wash and fold, collected from your door and brought back the next day. Same price per pound as the desk.
               </p>
             </div>
@@ -449,36 +462,36 @@ export default function SpinCycleLaundryPage() {
             />
           </div>
           <ol className={s.pickupSteps}>
-            {PICKUP_STEPS.map(([no, title, body]) => (
+            {PICKUP_STEPS.map(([no, title, body], i) => (
               <li key={no}>
-                <span className={s.stepNo}>{no}</span>
-                <h3>{title}</h3>
-                <p>{body}</p>
+                <span data-edit={`pickup.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{no}</span>
+                <h3 data-edit={`pickup.title2.${i}`} data-edit-max="40">{title}</h3>
+                <p data-edit={`pickup.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
               </li>
             ))}
           </ol>
           <div className={s.pickupGrid}>
             <dl className={s.zones}>
-              {ZONES.map(([k, v]) => (
+              {ZONES.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`pickup.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`pickup.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
             <form className={s.form} action="#">
-              <h3 className={s.formHead}>Book a pickup</h3>
+              <h3 data-edit="pickup.formHead" data-edit-max="40" className={s.formHead}>Book a pickup</h3>
               <label className={s.field}>
-                <span>Name</span>
+                <span data-edit="pickup.text" data-edit-max="60">Name</span>
                 <input type="text" name="name" autoComplete="name" />
               </label>
               <label className={s.field}>
-                <span>Street address</span>
+                <span data-edit="pickup.text2" data-edit-max="60">Street address</span>
                 <input type="text" name="address" autoComplete="street-address" />
               </label>
               <div className={s.fieldRow}>
                 <label className={s.field}>
-                  <span>Day</span>
+                  <span data-edit="pickup.text3" data-edit-max="60">Day</span>
                   <select name="day" defaultValue="tomorrow">
                     <option value="tomorrow">Tomorrow</option>
                     <option value="thursday">Thursday</option>
@@ -487,7 +500,7 @@ export default function SpinCycleLaundryPage() {
                   </select>
                 </label>
                 <label className={s.field}>
-                  <span>Window</span>
+                  <span data-edit="pickup.text4" data-edit-max="60">Window</span>
                   <select name="window" defaultValue="morning">
                     <option value="morning">7-9 am</option>
                     <option value="evening">6-9 pm</option>
@@ -495,10 +508,10 @@ export default function SpinCycleLaundryPage() {
                 </label>
               </div>
               <label className={s.field}>
-                <span>Phone, for the text with the price</span>
+                <span data-edit="pickup.text5" data-edit-max="60">Phone, for the text with the price</span>
                 <input type="tel" name="phone" autoComplete="tel" />
               </label>
-              <button className={s.submit} type="submit">
+              <button data-edit="pickup.submit" data-edit-max="24" className={s.submit} type="submit">
                 Request pickup
               </button>
             </form>
@@ -508,43 +521,43 @@ export default function SpinCycleLaundryPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>04</p>
-            <h2 id="visit-h">Come by</h2>
-            <p className={s.secNote}>
+            <p data-edit="visit.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>04</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Come by</h2>
+            <p data-edit="visit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Big windows, clean floors and a bench out front. Weekday mornings are the quietest; Sunday afternoon is
               the busiest.
             </p>
           </div>
           <div className={s.visitGrid}>
             <div className={s.addr}>
-              <h3 className={s.visitHead}>Where</h3>
-              <p className={s.addrLine}>311 Linden Avenue</p>
-              <p className={s.addrNote}>
+              <h3 data-edit="visit.visitHead" data-edit-max="40" className={s.visitHead}>Where</h3>
+              <p data-edit="visit.addrLine" data-edit-max="240" data-edit-multiline className={s.addrLine}>311 Linden Avenue</p>
+              <p data-edit="visit.addrNote" data-edit-max="240" data-edit-multiline className={s.addrNote}>
                 Between the bakery and the post office. Parking behind, entrance off Birch Lane.
               </p>
-              <a className={s.addrLink} href="tel:5550173110">
+              <a data-edit="visit.addrLink" data-edit-max="28" className={s.addrLink} href="tel:5550173110">
                 (555) 017-3110
               </a>
-              <a className={s.addrLink} href="mailto:hello@spincycle.example">
+              <a data-edit="visit.addrLink2" data-edit-max="28" className={s.addrLink} href="mailto:hello@spincycle.example">
                 hello@spincycle.example
               </a>
             </div>
             <div>
-              <h3 className={s.visitHead}>Hours</h3>
+              <h3 data-edit="visit.visitHead2" data-edit-max="40" className={s.visitHead}>Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div>
-              <h3 className={s.visitHead}>Inside</h3>
+              <h3 data-edit="visit.visitHead3" data-edit-max="40" className={s.visitHead}>Inside</h3>
               <ul className={s.amenities}>
-                {AMENITIES.map((a) => (
-                  <li key={a}>{a}</li>
+                {AMENITIES.map((a, i) => (
+                  <li data-edit={`visit.item.${i}`} data-edit-max="80" key={a}>{a}</li>
                 ))}
               </ul>
             </div>
@@ -554,14 +567,14 @@ export default function SpinCycleLaundryPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>05</p>
-            <h2 id="faq-h">Good to know</h2>
+            <p data-edit="faq.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05</p>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Good to know</h2>
           </div>
           <div className={s.faqList}>
-            {FAQ.map((f) => (
+            {FAQ.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -570,34 +583,34 @@ export default function SpinCycleLaundryPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Spin Cycle</p>
-          <p className={s.footTag}>Laundromat, wash and fold, pickup and delivery. 311 Linden Avenue.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Spin Cycle</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Laundromat, wash and fold, pickup and delivery. 311 Linden Avenue.</p>
           <ul className={s.footLinks}>
             <li>
-              <a href="#machines">Machine board</a>
+              <a data-edit="footer.machines" data-edit-max="28" href="#machines">Machine board</a>
             </li>
             <li>
-              <a href="#prices">Prices</a>
+              <a data-edit="footer.prices" data-edit-max="28" href="#prices">Prices</a>
             </li>
             <li>
-              <a href="#wash-fold">Wash and fold</a>
+              <a data-edit="footer.washFold" data-edit-max="28" href="#wash-fold">Wash and fold</a>
             </li>
             <li>
-              <a href="#pickup">Pickup</a>
+              <a data-edit="footer.pickup" data-edit-max="28" href="#pickup">Pickup</a>
             </li>
             <li>
-              <a href="#visit">Hours</a>
+              <a data-edit="footer.visit" data-edit-max="28" href="#visit">Hours</a>
             </li>
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional laundromat. Prices, machines and hours are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional laundromat. Prices, machines and hours are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
             </a>
-            <span>, drawn live in the page's own colors; the pictures follow the palette too.</span>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the page's own colors; the pictures follow the palette too.</span>
           </p>
         </div>
       </footer>

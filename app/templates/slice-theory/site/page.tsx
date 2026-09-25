@@ -154,7 +154,20 @@ const HOURS = [
 
 export default function SliceTheoryPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--flour': '#fbf4ea',
+        '--crust': '#231a15',
+        '--sauce': '#d7422e',
+        '--basil': '#3e8e41',
+        '--cheese': '#f2b134',
+        '--ash': '#a58e7d',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="flour,crust,sauce,basil,cheese,ash"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -165,18 +178,18 @@ export default function SliceTheoryPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span>Slice</span>
+          <span data-edit="bar.text" data-edit-max="60">Slice</span>
           <em>Theory</em>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCall} href="tel:5550147300">(555) 014-7300</a>
+        <a data-edit="bar.barCall" data-edit-max="28" className={s.barCall} href="tel:5550147300">(555) 014-7300</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -186,29 +199,29 @@ export default function SliceTheoryPage() {
             The whole pie on a board, over the oven's molten sunburst. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroCopy}>
-            <p className={s.kicker}>Pizzeria, 212 Foundry Street</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Pizzeria, 212 Foundry Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               You build it. <em>The oven proves it.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Pick a base, a sauce, a cheese and up to six toppings. We bake it
               at 850 degrees for ninety seconds and hand it over. That is the
               whole theory.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#build">Start building</a>
-              <a className={s.btnLine} href="#house">Or pick a house pizza</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#build">Start building</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#house">Or pick a house pizza</a>
             </div>
             <p className={s.equation} aria-hidden="true">
-              <span>Base</span>
-              <span>Sauce</span>
-              <span>Cheese</span>
-              <span>Toppings</span>
-              <span className={s.eqResult}>Your pizza</span>
+              <span data-edit="hero.text" data-edit-max="60">Base</span>
+              <span data-edit="hero.text2" data-edit-max="60">Sauce</span>
+              <span data-edit="hero.text3" data-edit-max="60">Cheese</span>
+              <span data-edit="hero.text4" data-edit-max="60">Toppings</span>
+              <span data-edit="hero.eqResult" data-edit-max="60" className={s.eqResult}>Your pizza</span>
             </p>
           </div>
           <div className={s.heroArt}>
-            <div className={s.oven} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="1,2,4,2" className={s.oven} aria-hidden="true">
               <TabbiedPattern
                 pattern={turbulentsunburst}
                 palette={OVEN}
@@ -227,8 +240,8 @@ export default function SliceTheoryPage() {
               />
             </div>
             <p className={s.ovenTag}>
-              <strong>850</strong>
-              <span>degrees, 90 seconds</span>
+              <strong data-edit="hero.emphasis">850</strong>
+              <span data-edit="hero.text5" data-edit-max="60">degrees, 90 seconds</span>
             </p>
           </div>
         </section>
@@ -238,9 +251,9 @@ export default function SliceTheoryPage() {
             the pie does. */}
         <section id="build" className={s.build} aria-labelledby="build-h">
           <div className={s.head}>
-            <p className={s.eyebrow}>Build your own</p>
-            <h2 id="build-h">Four steps to your pizza</h2>
-            <p className={s.headNote}>
+            <p data-edit="build.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Build your own</p>
+            <h2 data-edit="build.title" data-edit-max="60" id="build-h">Four steps to your pizza</h2>
+            <p data-edit="build.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Every pizza starts at the cheese price for its size. Toppings are
               priced by size too; the table below has the numbers.
             </p>
@@ -248,8 +261,8 @@ export default function SliceTheoryPage() {
           <ol className={s.steps}>
             <li className={s.step}>
               <div className={s.stepHead}>
-                <span className={s.stepNo}>01</span>
-                <h3 className={s.stepTitle}>Base</h3>
+                <span data-edit="build.stepNo" data-edit-max="60" className={s.stepNo}>01</span>
+                <h3 data-edit="build.stepTitle" data-edit-max="40" className={s.stepTitle}>Base</h3>
               </div>
               <div className={s.stepArt}>
                 <Artwork
@@ -265,19 +278,19 @@ export default function SliceTheoryPage() {
                 />
               </div>
               <ul className={s.choices}>
-                {BASES.map((c) => (
+                {BASES.map((c, i) => (
                   <li key={c.name}>
-                    <span className={s.choiceName}>{c.name}</span>
-                    <span className={s.choiceNote}>{c.note}</span>
-                    <span className={s.choicePrice}>{c.price}</span>
+                    <span data-edit={`build.choiceName.${i}`} data-edit-max="60" className={s.choiceName}>{c.name}</span>
+                    <span data-edit={`build.choiceNote.${i}`} data-edit-max="60" className={s.choiceNote}>{c.note}</span>
+                    <span data-edit={`build.choicePrice.${i}`} data-edit-max="60" className={s.choicePrice}>{c.price}</span>
                   </li>
                 ))}
               </ul>
             </li>
             <li className={s.step}>
               <div className={s.stepHead}>
-                <span className={s.stepNo}>02</span>
-                <h3 className={s.stepTitle}>Sauce</h3>
+                <span data-edit="build.stepNo2" data-edit-max="60" className={s.stepNo}>02</span>
+                <h3 data-edit="build.stepTitle2" data-edit-max="40" className={s.stepTitle}>Sauce</h3>
               </div>
               <div className={s.stepArt}>
                 <Artwork
@@ -292,19 +305,19 @@ export default function SliceTheoryPage() {
                 />
               </div>
               <ul className={s.choices}>
-                {SAUCES.map((c) => (
+                {SAUCES.map((c, i) => (
                   <li key={c.name}>
-                    <span className={s.choiceName}>{c.name}</span>
-                    <span className={s.choiceNote}>{c.note}</span>
-                    <span className={s.choicePrice}>{c.price}</span>
+                    <span data-edit={`build.choiceName2.${i}`} data-edit-max="60" className={s.choiceName}>{c.name}</span>
+                    <span data-edit={`build.choiceNote2.${i}`} data-edit-max="60" className={s.choiceNote}>{c.note}</span>
+                    <span data-edit={`build.choicePrice2.${i}`} data-edit-max="60" className={s.choicePrice}>{c.price}</span>
                   </li>
                 ))}
               </ul>
             </li>
             <li className={s.step}>
               <div className={s.stepHead}>
-                <span className={s.stepNo}>03</span>
-                <h3 className={s.stepTitle}>Cheese</h3>
+                <span data-edit="build.stepNo3" data-edit-max="60" className={s.stepNo}>03</span>
+                <h3 data-edit="build.stepTitle3" data-edit-max="40" className={s.stepTitle}>Cheese</h3>
               </div>
               <div className={s.stepArt}>
                 <Artwork
@@ -318,19 +331,19 @@ export default function SliceTheoryPage() {
                 />
               </div>
               <ul className={s.choices}>
-                {CHEESES.map((c) => (
+                {CHEESES.map((c, i) => (
                   <li key={c.name}>
-                    <span className={s.choiceName}>{c.name}</span>
-                    <span className={s.choiceNote}>{c.note}</span>
-                    <span className={s.choicePrice}>{c.price}</span>
+                    <span data-edit={`build.choiceName3.${i}`} data-edit-max="60" className={s.choiceName}>{c.name}</span>
+                    <span data-edit={`build.choiceNote3.${i}`} data-edit-max="60" className={s.choiceNote}>{c.note}</span>
+                    <span data-edit={`build.choicePrice3.${i}`} data-edit-max="60" className={s.choicePrice}>{c.price}</span>
                   </li>
                 ))}
               </ul>
             </li>
             <li className={`${s.step} ${s.stepLast}`}>
               <div className={s.stepHead}>
-                <span className={s.stepNo}>04</span>
-                <h3 className={s.stepTitle}>Toppings</h3>
+                <span data-edit="build.stepNo4" data-edit-max="60" className={s.stepNo}>04</span>
+                <h3 data-edit="build.stepTitle4" data-edit-max="40" className={s.stepTitle}>Toppings</h3>
               </div>
               <div className={s.stepArt}>
                 <Artwork
@@ -340,14 +353,14 @@ export default function SliceTheoryPage() {
                   className={s.stepPic}
                 />
               </div>
-              <p className={s.toppingRule}>Up to six. Half-and-half is free.</p>
+              <p data-edit="build.toppingRule" data-edit-max="240" data-edit-multiline className={s.toppingRule}>Up to six. Half-and-half is free.</p>
               <div className={s.toppingGroups}>
-                {TOPPINGS.map((g) => (
+                {TOPPINGS.map((g, i) => (
                   <div key={g.group} className={s.toppingGroup}>
-                    <h4 className={s.toppingHead}>{g.group}</h4>
+                    <h4 data-edit={`build.toppingHead.${i}`} data-edit-max="36" className={s.toppingHead}>{g.group}</h4>
                     <ul className={s.tags}>
-                      {g.items.map((t) => (
-                        <li key={t}>{t}</li>
+                      {g.items.map((t, i2) => (
+                        <li data-edit={`build.item.${i}.${i2}`} data-edit-max="80" key={t}>{t}</li>
                       ))}
                     </ul>
                   </div>
@@ -360,42 +373,42 @@ export default function SliceTheoryPage() {
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.prices} aria-labelledby="prices-h">
           <div className={s.head}>
-            <p className={s.eyebrow}>The price matrix</p>
-            <h2 id="prices-h">Every size, every sum</h2>
-            <p className={s.headNote}>
+            <p data-edit="prices.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The price matrix</p>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Every size, every sum</h2>
+            <p data-edit="prices.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               A cheese pizza plus its toppings, or a house pizza at one price.
               Sauce and base upgrades are the same at every size.
             </p>
           </div>
           <div className={s.matrixWrap}>
             <table className={s.matrix}>
-              <caption className={s.srOnly}>Pizza prices by size</caption>
+              <caption data-edit="prices.srOnly" className={s.srOnly}>Pizza prices by size</caption>
               <thead>
                 <tr>
-                  <th scope="col">Size</th>
-                  <th scope="col">Cheese pizza</th>
-                  <th scope="col">Each topping</th>
-                  <th scope="col">House pizza</th>
-                  <th scope="col">Gluten-free base</th>
+                  <th data-edit="prices.heading" scope="col">Size</th>
+                  <th data-edit="prices.heading2" scope="col">Cheese pizza</th>
+                  <th data-edit="prices.heading3" scope="col">Each topping</th>
+                  <th data-edit="prices.heading4" scope="col">House pizza</th>
+                  <th data-edit="prices.heading5" scope="col">Gluten-free base</th>
                 </tr>
               </thead>
               <tbody>
-                {SIZES.map((r) => (
+                {SIZES.map((r, i) => (
                   <tr key={r.size}>
                     <th scope="row">
-                      <span className={s.sizeName}>{r.size}</span>
-                      <span className={s.sizeServes}>{r.serves}</span>
+                      <span data-edit={`prices.sizeName.${i}`} data-edit-max="60" className={s.sizeName}>{r.size}</span>
+                      <span data-edit={`prices.sizeServes.${i}`} data-edit-max="60" className={s.sizeServes}>{r.serves}</span>
                     </th>
-                    <td>{r.cheese}</td>
-                    <td>{r.topping}</td>
-                    <td>{r.house}</td>
-                    <td>{r.gf}</td>
+                    <td data-edit={`prices.cell.${i}`}>{r.cheese}</td>
+                    <td data-edit={`prices.cell2.${i}`}>{r.topping}</td>
+                    <td data-edit={`prices.cell3.${i}`}>{r.house}</td>
+                    <td data-edit={`prices.cell4.${i}`}>{r.gf}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className={s.example}>
+          <p data-edit="prices.example" data-edit-max="240" data-edit-multiline className={s.example}>
             Worked example: a 14 inch sourdough, San Marzano, mozzarella, with
             mushrooms and fennel sausage is $17 + $1 + $2.50 + $2.50 = $23.
           </p>
@@ -404,15 +417,15 @@ export default function SliceTheoryPage() {
         {/* ----------------------------------------------------------- HOUSE */}
         <section id="house" className={s.house} aria-labelledby="house-h">
           <div className={s.head}>
-            <p className={s.eyebrow}>Already proven</p>
-            <h2 id="house-h">Six house pizzas</h2>
-            <p className={s.headNote}>
+            <p data-edit="house.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Already proven</p>
+            <h2 data-edit="house.title" data-edit-max="60" id="house-h">Six house pizzas</h2>
+            <p data-edit="house.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               If you would rather not do the math. Every one can be changed:
               swap anything for anything, at no charge.
             </p>
           </div>
           <ul className={s.houseGrid}>
-            {HOUSE.map((p) => (
+            {HOUSE.map((p, i) => (
               <li key={p.name} className={s.pie}>
                 <div className={s.pieArt}>
                   <Artwork
@@ -423,10 +436,10 @@ export default function SliceTheoryPage() {
                   />
                 </div>
                 <div className={s.pieCopy}>
-                  <span className={s.pieTag}>{p.tag}</span>
-                  <h3 className={s.pieName}>{p.name}</h3>
-                  <p className={s.pieWhat}>{p.what}</p>
-                  <p className={s.pieNote}>{p.note}</p>
+                  <span data-edit={`house.pieTag.${i}`} data-edit-max="60" className={s.pieTag}>{p.tag}</span>
+                  <h3 data-edit={`house.pieName.${i}`} data-edit-max="40" className={s.pieName}>{p.name}</h3>
+                  <p data-edit={`house.pieWhat.${i}`} data-edit-max="240" data-edit-multiline className={s.pieWhat}>{p.what}</p>
+                  <p data-edit={`house.pieNote.${i}`} data-edit-max="240" data-edit-multiline className={s.pieNote}>{p.note}</p>
                 </div>
               </li>
             ))}
@@ -436,7 +449,7 @@ export default function SliceTheoryPage() {
         {/* ----------------------------------------------------------- DEALS
             A strip of tablecloth checks, then three deals on it. */}
         <section id="deals" className={s.deals} aria-labelledby="deals-h">
-          <div className={s.cloth} aria-hidden="true">
+          <div data-edit-pattern="deals.field" data-edit-roles="transparent,2" className={s.cloth} aria-hidden="true">
             <TabbiedPattern
               pattern={damier}
               palette={CLOTH}
@@ -448,16 +461,16 @@ export default function SliceTheoryPage() {
           </div>
           <div className={s.dealsInner}>
             <div className={s.head}>
-              <p className={s.eyebrow}>Deals</p>
-              <h2 id="deals-h">Three standing offers</h2>
+              <p data-edit="deals.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Deals</p>
+              <h2 data-edit="deals.title" data-edit-max="60" id="deals-h">Three standing offers</h2>
             </div>
             <ul className={s.dealGrid}>
-              {DEALS.map((d) => (
+              {DEALS.map((d, i) => (
                 <li key={d.title} className={s.deal}>
-                  <span className={s.dealDay}>{d.day}</span>
-                  <h3 className={s.dealTitle}>{d.title}</h3>
-                  <p className={s.dealBody}>{d.body}</p>
-                  <span className={s.dealCode}>{d.code}</span>
+                  <span data-edit={`deals.dealDay.${i}`} data-edit-max="60" className={s.dealDay}>{d.day}</span>
+                  <h3 data-edit={`deals.dealTitle.${i}`} data-edit-max="40" className={s.dealTitle}>{d.title}</h3>
+                  <p data-edit={`deals.dealBody.${i}`} data-edit-max="240" data-edit-multiline className={s.dealBody}>{d.body}</p>
+                  <span data-edit={`deals.dealCode.${i}`} data-edit-max="60" className={s.dealCode}>{d.code}</span>
                 </li>
               ))}
             </ul>
@@ -467,30 +480,30 @@ export default function SliceTheoryPage() {
         {/* ----------------------------------------------------------- ORDER */}
         <section id="order" className={s.order} aria-labelledby="order-h">
           <div className={s.orderCopy}>
-            <p className={s.eyebrow}>Order</p>
-            <h2 id="order-h">Call it in, walk it out</h2>
-            <p className={s.headNote}>
+            <p data-edit="order.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Order</p>
+            <h2 data-edit="order.title" data-edit-max="60" id="order-h">Call it in, walk it out</h2>
+            <p data-edit="order.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Pickup is ready in fifteen minutes. We deliver within three miles
               by bike: $3, free on orders over $40.
             </p>
             <div className={s.orderActions}>
-              <a className={s.btn} href="tel:5550147300">Call (555) 014-7300</a>
-              <a className={s.btnLine} href="mailto:orders@slicetheory.example">orders@slicetheory.example</a>
+              <a data-edit="order.btn" data-edit-max="28" className={s.btn} href="tel:5550147300">Call (555) 014-7300</a>
+              <a data-edit="order.btnLine" data-edit-max="28" className={s.btnLine} href="mailto:orders@slicetheory.example">orders@slicetheory.example</a>
             </div>
           </div>
           <div className={s.orderCard}>
-            <h3 className={s.orderHead}>Hours</h3>
+            <h3 data-edit="order.orderHead" data-edit-max="40" className={s.orderHead}>Hours</h3>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`order.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`order.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
-            <h3 className={s.orderHead}>Where</h3>
-            <p className={s.orderText}>212 Foundry Street, on the corner of Kiln Lane</p>
-            <p className={s.orderText}>Twenty seats inside, eight on the sidewalk</p>
+            <h3 data-edit="order.orderHead2" data-edit-max="40" className={s.orderHead}>Where</h3>
+            <p data-edit="order.orderText" data-edit-max="240" data-edit-multiline className={s.orderText}>212 Foundry Street, on the corner of Kiln Lane</p>
+            <p data-edit="order.orderText2" data-edit-max="240" data-edit-multiline className={s.orderText}>Twenty seats inside, eight on the sidewalk</p>
           </div>
           <Artwork
             slug="slice-theory-slice"
@@ -503,20 +516,20 @@ export default function SliceTheoryPage() {
 
       <footer className={s.footer}>
         <div className={s.footInner}>
-          <p className={s.footName}>Slice Theory</p>
-          <p className={s.footTag}>Build-your-own pizza, 212 Foundry Street.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Slice Theory</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Build-your-own pizza, 212 Foundry Street.</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
-              <li key={href}><a href={href}>{label}</a></li>
+            {NAV.map(([label, href], i) => (
+              <li key={href}><a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a></li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional pizzeria. Prices, hours and pizzas are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional pizzeria. Prices, hours and pizzas are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the page's own colors; the pictures follow the same palette.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the page's own colors; the pictures follow the same palette.</span>
           </p>
         </div>
       </footer>

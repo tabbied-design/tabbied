@@ -234,7 +234,20 @@ const HOURS = [
 
 export default function TinkerToysPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--cream': '#fff8ee',
+        '--ink': '#1f2240',
+        '--pink': '#ef476f',
+        '--blue': '#118ab2',
+        '--yellow': '#ffd166',
+        '--gray': '#a6a2b3',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="cream,ink,pink,blue,yellow,gray"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -244,19 +257,19 @@ export default function TinkerToysPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">
           Tinker &amp; Co.
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
@@ -267,7 +280,7 @@ export default function TinkerToysPage() {
         {/* ------------------------------------------------------------ HERO
             The rocket takes off through a field of shapes. */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <div className={s.heroField} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,4,2,3,4" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={bauhaus}
               palette={SHAPES}
@@ -280,21 +293,21 @@ export default function TinkerToysPage() {
             />
           </div>
           <div className={s.heroCopy}>
-            <p className={s.kicker}>Independent toy store, Orchard Street</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Independent toy store, Orchard Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Toys worth keeping,
               <br />
               <em>sorted by age.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Two rooms of wooden trains, first puzzles, building sets and board games, each shelf marked for the age it
               suits. Tell us who it is for and we will walk you to the right one.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#ages">
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#ages">
                 Shop by age
               </a>
-              <a className={s.btnLine} href="#events">
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#events">
                 Story time
               </a>
             </div>
@@ -308,8 +321,8 @@ export default function TinkerToysPage() {
             />
           </div>
           <ul className={s.promises}>
-            {PROMISES.map((p) => (
-              <li key={p}>{p}</li>
+            {PROMISES.map((p, i) => (
+              <li data-edit={`hero.item.${i}`} data-edit-max="80" key={p}>{p}</li>
             ))}
           </ul>
         </section>
@@ -319,18 +332,18 @@ export default function TinkerToysPage() {
             age, and the tabs step across so all four can be read at once. */}
         <section id="ages" className={s.ages} aria-labelledby="ages-h">
           <div className={s.secHead}>
-            <h2 id="ages-h">Shop by age</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="ages.title" data-edit-max="60" id="ages-h">Shop by age</h2>
+            <p data-edit="ages.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every shelf in the shop is marked with one of these four bands. The picks below are what the staff give
               their own nieces and nephews.
             </p>
           </div>
           <ol className={s.ageStack}>
-            {AGES.map((a) => (
+            {AGES.map((a, i) => (
               <li key={a.id} className={`${s.ageCard} ${s[a.id]}`}>
                 <p className={s.ageTab}>
-                  <span className={s.ageBand}>{a.band}</span>
-                  <span className={s.ageYears}>years</span>
+                  <span data-edit={`ages.ageBand.${i}`} data-edit-max="60" className={s.ageBand}>{a.band}</span>
+                  <span data-edit={`ages.ageYears.${i}`} data-edit-max="60" className={s.ageYears}>years</span>
                 </p>
                 <div className={s.ageArt}>
                   {a.id === 'tiny' ? (
@@ -372,15 +385,15 @@ export default function TinkerToysPage() {
                   ) : null}
                 </div>
                 <div className={s.ageText}>
-                  <h3>{a.label}</h3>
-                  <p className={s.ageBlurb}>{a.blurb}</p>
-                  <p className={s.ageLook}>{a.look}</p>
+                  <h3 data-edit={`ages.title2.${i}`} data-edit-max="40">{a.label}</h3>
+                  <p data-edit={`ages.ageBlurb.${i}`} data-edit-max="240" data-edit-multiline className={s.ageBlurb}>{a.blurb}</p>
+                  <p data-edit={`ages.ageLook.${i}`} data-edit-max="240" data-edit-multiline className={s.ageLook}>{a.look}</p>
                 </div>
                 <ul className={s.picks}>
-                  {a.picks.map((p) => (
+                  {a.picks.map((p, i2) => (
                     <li key={p.name}>
-                      <span className={s.pickName}>{p.name}</span>
-                      <span className={s.pickPrice}>{p.price}</span>
+                      <span data-edit={`ages.pickName.${i}.${i2}`} data-edit-max="60" className={s.pickName}>{p.name}</span>
+                      <span data-edit={`ages.pickPrice.${i}.${i2}`} data-edit-max="60" className={s.pickPrice}>{p.price}</span>
                     </li>
                   ))}
                 </ul>
@@ -394,8 +407,8 @@ export default function TinkerToysPage() {
             four staff picks as price tags. */}
         <section id="featured" className={s.featured} aria-labelledby="featured-h">
           <div className={s.secHead}>
-            <h2 id="featured-h">On the front table this month</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="featured.title" data-edit-max="60" id="featured-h">On the front table this month</h2>
+            <p data-edit="featured.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Six things we cannot keep in stock. Ask at the counter and we will set one aside.
             </p>
           </div>
@@ -423,12 +436,12 @@ export default function TinkerToysPage() {
                   </div>
                 ) : null}
                 <div className={s.toyBody}>
-                  <span className={s.toyAge}>{t.age}</span>
-                  <h3>{t.name}</h3>
-                  <p className={s.toyNote}>{t.note}</p>
+                  <span data-edit={`featured.toyAge.${i}`} data-edit-max="60" className={s.toyAge}>{t.age}</span>
+                  <h3 data-edit={`featured.title2.${i}`} data-edit-max="40">{t.name}</h3>
+                  <p data-edit={`featured.toyNote.${i}`} data-edit-max="240" data-edit-multiline className={s.toyNote}>{t.note}</p>
                   <div className={s.toyFoot}>
-                    <span className={s.toyMaker}>{t.maker}</span>
-                    <span className={s.toyPrice}>{t.price}</span>
+                    <span data-edit={`featured.toyMaker.${i}`} data-edit-max="60" className={s.toyMaker}>{t.maker}</span>
+                    <span data-edit={`featured.toyPrice.${i}`} data-edit-max="60" className={s.toyPrice}>{t.price}</span>
                   </div>
                 </div>
               </li>
@@ -440,8 +453,8 @@ export default function TinkerToysPage() {
         <section id="events" className={s.events} aria-labelledby="events-h">
           <div className={s.eventsInner}>
             <div className={s.eventsHead}>
-              <h2 id="events-h">Story time and things to do</h2>
-              <p className={s.secNote}>
+              <h2 data-edit="events.title" data-edit-max="60" id="events-h">Story time and things to do</h2>
+              <p data-edit="events.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Everything happens on the rug in the back room. Story time is free and needs no booking; build club has
                 twelve places, so sign up at the counter.
               </p>
@@ -453,19 +466,19 @@ export default function TinkerToysPage() {
               />
             </div>
             <ol className={s.eventList}>
-              {EVENTS.map((e) => (
+              {EVENTS.map((e, i) => (
                 <li key={e.title}>
                   <p className={s.cal}>
-                    <span className={s.calDay}>{e.day}</span>
-                    <span className={s.calDate}>{e.date}</span>
-                    <span className={s.calMonth}>{e.month}</span>
+                    <span data-edit={`events.calDay.${i}`} data-edit-max="60" className={s.calDay}>{e.day}</span>
+                    <span data-edit={`events.calDate.${i}`} data-edit-max="60" className={s.calDate}>{e.date}</span>
+                    <span data-edit={`events.calMonth.${i}`} data-edit-max="60" className={s.calMonth}>{e.month}</span>
                   </p>
                   <div className={s.eventText}>
-                    <h3>{e.title}</h3>
-                    <span className={s.eventMeta}>{e.time}</span>
-                    <span className={s.eventMeta}>{e.who}</span>
+                    <h3 data-edit={`events.title2.${i}`} data-edit-max="40">{e.title}</h3>
+                    <span data-edit={`events.eventMeta.${i}`} data-edit-max="60" className={s.eventMeta}>{e.time}</span>
+                    <span data-edit={`events.eventMeta2.${i}`} data-edit-max="60" className={s.eventMeta}>{e.who}</span>
                   </div>
-                  <span className={s.eventCost}>{e.cost}</span>
+                  <span data-edit={`events.eventCost.${i}`} data-edit-max="60" className={s.eventCost}>{e.cost}</span>
                 </li>
               ))}
             </ol>
@@ -477,7 +490,7 @@ export default function TinkerToysPage() {
             with a ribbon drawn in CSS. */}
         <section id="gifts" className={s.gifts} aria-labelledby="gifts-h">
           <div className={s.gift} aria-hidden="true">
-            <div className={s.giftPaper} aria-hidden="true">
+            <div data-edit-pattern="gifts.field" data-edit-roles="transparent,2,3,4,1" className={s.giftPaper} aria-hidden="true">
               <TabbiedPattern
                 pattern={stitch}
                 palette={PAPER}
@@ -494,20 +507,20 @@ export default function TinkerToysPage() {
             <span className={s.bow} />
           </div>
           <div className={s.giftBody}>
-            <h2 id="gifts-h">
+            <h2 data-edit="gifts.title" data-edit-format="emphasis" data-edit-max="60" id="gifts-h">
               Gift wrap is free,
               <br />
               <em>on everything.</em>
             </h2>
-            <p className={s.secNote}>
+            <p data-edit="gifts.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Bring the toy to the counter and choose a paper. It takes us about five minutes, and we have never once
               run out of tape.
             </p>
             <dl className={s.wrapList}>
-              {WRAP.map(([k, v]) => (
+              {WRAP.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`gifts.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`gifts.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -517,40 +530,40 @@ export default function TinkerToysPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <h2 id="visit-h">Come and play</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Come and play</h2>
+            <p data-edit="visit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Strollers fit through every aisle, there is a changing table in the restroom, and the play table by the
               window is always set up with something new.
             </p>
           </div>
           <div className={s.visitGrid}>
             <div className={s.visitCard}>
-              <h3>Find us</h3>
-              <p className={s.visitBig}>27 Orchard Street</p>
-              <p>
+              <h3 data-edit="visit.title2" data-edit-max="40">Find us</h3>
+              <p data-edit="visit.visitBig" data-edit-max="240" data-edit-multiline className={s.visitBig}>27 Orchard Street</p>
+              <p data-edit="visit.body" data-edit-max="240" data-edit-multiline>
                 Across from the library, next to the ice cream shop. Two-hour parking on the street and behind the bank.
               </p>
             </div>
             <div className={s.visitCard}>
-              <h3>Hours</h3>
+              <h3 data-edit="visit.title3" data-edit-max="40">Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body2.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div className={s.visitCard}>
-              <h3>Ask us</h3>
-              <a className={s.visitLink} href="tel:5550124455">
+              <h3 data-edit="visit.title4" data-edit-max="40">Ask us</h3>
+              <a data-edit="visit.visitLink" data-edit-max="28" className={s.visitLink} href="tel:5550124455">
                 (555) 012-4455
               </a>
-              <a className={s.visitLink} href="mailto:hello@tinkerandco.example">
+              <a data-edit="visit.visitLink2" data-edit-max="28" className={s.visitLink} href="mailto:hello@tinkerandco.example">
                 hello@tinkerandco.example
               </a>
-              <p>We answer the phone between customers, so leave a message if it rings out.</p>
+              <p data-edit="visit.body3" data-edit-max="240" data-edit-multiline>We answer the phone between customers, so leave a message if it rings out.</p>
             </div>
           </div>
         </section>
@@ -558,23 +571,23 @@ export default function TinkerToysPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Tinker &amp; Co.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Tinker &amp; Co.</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional toy store. Toys, prices and events are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional toy store. Toys, prices and events are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
             </a>
-            <span>, drawn live in the page's own colors; the pictures follow the palette too.</span>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the page's own colors; the pictures follow the palette too.</span>
           </p>
         </div>
       </footer>

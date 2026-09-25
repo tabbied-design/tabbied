@@ -177,7 +177,20 @@ const HOURS = [
 
 export default function SpokeAndChainPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--chrome': '#f2f4f3',
+        '--ink': '#111820',
+        '--teal': '#0fa3a3',
+        '--coral': '#f25c54',
+        '--gray': '#8c959a',
+        '--pale': '#dce3e2',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="chrome,ink,teal,coral,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -189,17 +202,17 @@ export default function SpokeAndChainPage() {
       <header className={s.bar}>
         <a className={s.brand} href="#top">
           <span className={s.brandMark} aria-hidden="true" />
-          <span className={s.brandName}>Spoke & Chain</span>
+          <span data-edit="bar.brandName" data-edit-max="60" className={s.brandName}>Spoke & Chain</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#visit">Book a service</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#visit">Book a service</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -210,22 +223,22 @@ export default function SpokeAndChainPage() {
             confetti triangles. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Bike shop and workshop, 48 Harrow Street</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Bike shop and workshop, 48 Harrow Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Sold, fixed and fitted <em>on Harrow Street.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Six kinds of bike on the floor, a four-stand workshop behind it and
               mechanics who ride to work. Service at a fixed price, written down
               before we start.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#visit">Book a service</a>
-              <a className={s.btnLine} href="#service">See the service menu</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#visit">Book a service</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#service">See the service menu</a>
             </div>
           </div>
           <div className={s.heroArt}>
-            <div className={s.confetti} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,5,2,3,4,2" className={s.confetti} aria-hidden="true">
               <TabbiedPattern
                 pattern={confettitriangles}
                 palette={CONFETTI}
@@ -245,20 +258,20 @@ export default function SpokeAndChainPage() {
           </div>
           <ul className={s.heroFacts}>
             <li>
-              <strong>48 h</strong>
-              <span>Most tune-ups, start to finish</span>
+              <strong data-edit="hero.emphasis">48 h</strong>
+              <span data-edit="hero.text" data-edit-max="60">Most tune-ups, start to finish</span>
             </li>
             <li>
-              <strong>Free</strong>
-              <span>Loaner bike while yours is in</span>
+              <strong data-edit="hero.emphasis2">Free</strong>
+              <span data-edit="hero.text2" data-edit-max="60">Loaner bike while yours is in</span>
             </li>
             <li>
-              <strong>30 days</strong>
-              <span>Free adjustments after any service</span>
+              <strong data-edit="hero.emphasis3">30 days</strong>
+              <span data-edit="hero.text3" data-edit-max="60">Free adjustments after any service</span>
             </li>
             <li>
-              <strong>7 days</strong>
-              <span>Open every day of the week</span>
+              <strong data-edit="hero.emphasis4">7 days</strong>
+              <span data-edit="hero.text4" data-edit-max="60">Open every day of the week</span>
             </li>
           </ul>
         </section>
@@ -267,16 +280,16 @@ export default function SpokeAndChainPage() {
             Six cards, one bicycle in six paint jobs. */}
         <section id="bikes" className={s.bikes} aria-labelledby="bikes-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>01 / Bikes</p>
-            <h2 id="bikes-h" className={s.secTitle}>Six kinds of bike, all ridden before they are sold</h2>
-            <p className={s.secLede}>
+            <p data-edit="bikes.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>01 / Bikes</p>
+            <h2 data-edit="bikes.secTitle" data-edit-max="60" id="bikes-h" className={s.secTitle}>Six kinds of bike, all ridden before they are sold</h2>
+            <p data-edit="bikes.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
               Every bike on the floor can go round the block with you. Buy one
               and the first tune-up, a fit to your height and a year of flat
               repairs come with it.
             </p>
           </div>
           <ul className={s.bikeGrid}>
-            {BIKES.map((b) => (
+            {BIKES.map((b, i) => (
               <li key={b.name} className={s.bikeCard}>
                 <div className={s.bikeStage}>
                   <Artwork
@@ -285,19 +298,19 @@ export default function SpokeAndChainPage() {
                     inks={{ red: b.frame, black: b.tires }}
                     className={b.kid ? s.bikeArtKid : s.bikeArt}
                   />
-                  <span className={s.bikeStock}>{b.stock}</span>
+                  <span data-edit={`bikes.bikeStock.${i}`} data-edit-max="60" className={s.bikeStock}>{b.stock}</span>
                 </div>
                 <div className={s.bikeBody}>
-                  <h3 className={s.bikeName}>{b.name}</h3>
-                  <p className={s.bikeUse}>{b.use}</p>
+                  <h3 data-edit={`bikes.bikeName.${i}`} data-edit-max="40" className={s.bikeName}>{b.name}</h3>
+                  <p data-edit={`bikes.bikeUse.${i}`} data-edit-max="240" data-edit-multiline className={s.bikeUse}>{b.use}</p>
                   <dl className={s.bikeFacts}>
                     <div>
-                      <dt>Price</dt>
-                      <dd>{b.price}</dd>
+                      <dt data-edit={`bikes.term.${i}`} data-edit-max="28">Price</dt>
+                      <dd data-edit={`bikes.body.${i}`} data-edit-max="200" data-edit-multiline>{b.price}</dd>
                     </div>
                     <div>
-                      <dt>Sizes</dt>
-                      <dd>{b.sizes}</dd>
+                      <dt data-edit={`bikes.term2.${i}`} data-edit-max="28">Sizes</dt>
+                      <dd data-edit={`bikes.body2.${i}`} data-edit-max="200" data-edit-multiline>{b.sizes}</dd>
                     </div>
                   </dl>
                 </div>
@@ -312,34 +325,34 @@ export default function SpokeAndChainPage() {
         <section id="service" className={s.service} aria-labelledby="service-h">
           <div className={s.serviceInner}>
             <div className={s.secHead}>
-              <p className={s.secNoLight}>02 / Service menu</p>
-              <h2 id="service-h" className={s.secTitle}>Four levels, one fixed price each</h2>
-              <p className={s.secLedeLight}>
+              <p data-edit="service.secNoLight" data-edit-max="240" data-edit-multiline className={s.secNoLight}>02 / Service menu</p>
+              <h2 data-edit="service.secTitle" data-edit-max="60" id="service-h" className={s.secTitle}>Four levels, one fixed price each</h2>
+              <p data-edit="service.secLedeLight" data-edit-max="240" data-edit-multiline className={s.secLedeLight}>
                 Parts are extra and quoted before we fit them. If the bike needs
                 less than the level you booked, you pay for the lower one.
               </p>
             </div>
 
-            <p className={s.swipe}>Swipe the table to compare</p>
+            <p data-edit="service.swipe" data-edit-max="240" data-edit-multiline className={s.swipe}>Swipe the table to compare</p>
             <div className={s.tableWrap}>
               <table className={s.menu}>
-                <caption className={s.srOnly}>What each service level includes</caption>
+                <caption data-edit="service.srOnly" className={s.srOnly}>What each service level includes</caption>
                 <thead>
                   <tr>
-                    <th scope="col" className={s.menuCorner}>What we do</th>
-                    {LEVELS.map((l) => (
+                    <th data-edit="service.menuCorner" scope="col" className={s.menuCorner}>What we do</th>
+                    {LEVELS.map((l, i) => (
                       <th key={l.name} scope="col" className={l.tag ? s.levelHot : s.level}>
-                        <span className={s.levelName}>{l.name}</span>
-                        <span className={s.levelPrice}>{l.price}</span>
-                        {l.tag ? <span className={s.levelTag}>{l.tag}</span> : null}
+                        <span data-edit={`service.levelName.${i}`} data-edit-max="60" className={s.levelName}>{l.name}</span>
+                        <span data-edit={`service.levelPrice.${i}`} data-edit-max="60" className={s.levelPrice}>{l.price}</span>
+                        {l.tag ? <span data-edit={`service.levelTag.${i}`} data-edit-max="60" className={s.levelTag}>{l.tag}</span> : null}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {INCLUDED.map(([task, marks]) => (
+                  {INCLUDED.map(([task, marks], i) => (
                     <tr key={task}>
-                      <th scope="row">{task}</th>
+                      <th data-edit={`service.heading.${i}`} scope="row">{task}</th>
                       {marks.map((m, i) => (
                         <td key={LEVELS[i].name} className={LEVELS[i].tag ? s.cellHot : undefined}>
                           <span className={m ? s.yes : s.no}>{m ? 'Included' : 'Not included'}</span>
@@ -348,9 +361,9 @@ export default function SpokeAndChainPage() {
                     </tr>
                   ))}
                   <tr className={s.menuFoot}>
-                    <th scope="row">Usual turnaround</th>
-                    {LEVELS.map((l) => (
-                      <td key={l.name} className={l.tag ? s.cellHot : undefined}>{l.when}</td>
+                    <th data-edit="service.heading2" scope="row">Usual turnaround</th>
+                    {LEVELS.map((l, i) => (
+                      <td data-edit={`service.cellHot.${i}`} key={l.name} className={l.tag ? s.cellHot : undefined}>{l.when}</td>
                     ))}
                   </tr>
                 </tbody>
@@ -359,16 +372,16 @@ export default function SpokeAndChainPage() {
 
             <div className={s.repairs}>
               <div className={s.repairsText}>
-                <h3 className={s.subTitle}>A la carte</h3>
-                <p className={s.repairsNote}>
+                <h3 data-edit="service.subTitle" data-edit-max="40" className={s.subTitle}>A la carte</h3>
+                <p data-edit="service.repairsNote" data-edit-max="240" data-edit-multiline className={s.repairsNote}>
                   Small jobs while you wait, most in under twenty minutes. Walk
                   in; no booking needed.
                 </p>
                 <dl className={s.repairList}>
-                  {REPAIRS.map(([k, v]) => (
+                  {REPAIRS.map(([k, v], i) => (
                     <div key={k}>
-                      <dt>{k}</dt>
-                      <dd>{v}</dd>
+                      <dt data-edit={`service.term.${i}`} data-edit-max="28">{k}</dt>
+                      <dd data-edit={`service.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                     </div>
                   ))}
                 </dl>
@@ -381,8 +394,8 @@ export default function SpokeAndChainPage() {
                   className={s.pump}
                 />
                 <p className={s.pumpNote}>
-                  <strong>Free air, day and night.</strong>
-                  <span>The pump by our door is chained to the wall and fits every valve.</span>
+                  <strong data-edit="service.emphasis">Free air, day and night.</strong>
+                  <span data-edit="service.text" data-edit-max="60">The pump by our door is chained to the wall and fits every valve.</span>
                 </p>
               </div>
             </div>
@@ -393,8 +406,8 @@ export default function SpokeAndChainPage() {
         <section id="rentals" className={s.rentals} aria-labelledby="rentals-h">
           <div className={s.rentalsHead}>
             <div className={s.secHead}>
-              <p className={s.secNo}>03 / Rentals</p>
-              <h2 id="rentals-h" className={s.secTitle}>By the hour, the day or the week</h2>
+              <p data-edit="rentals.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03 / Rentals</p>
+              <h2 data-edit="rentals.secTitle" data-edit-max="60" id="rentals-h" className={s.secTitle}>By the hour, the day or the week</h2>
             </div>
             <Artwork
               slug="spoke-and-chain-helmet"
@@ -406,32 +419,32 @@ export default function SpokeAndChainPage() {
           <div className={s.rentalsGrid}>
             <div className={s.tableWrap}>
               <table className={s.rates}>
-                <caption className={s.srOnly}>Rental prices by bike and length of hire</caption>
+                <caption data-edit="rentals.srOnly" className={s.srOnly}>Rental prices by bike and length of hire</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Bike</th>
-                    <th scope="col">2 hours</th>
-                    <th scope="col">Half day</th>
-                    <th scope="col">Day</th>
-                    <th scope="col">Week</th>
+                    <th data-edit="rentals.heading" scope="col">Bike</th>
+                    <th data-edit="rentals.heading2" scope="col">2 hours</th>
+                    <th data-edit="rentals.heading3" scope="col">Half day</th>
+                    <th data-edit="rentals.heading4" scope="col">Day</th>
+                    <th data-edit="rentals.heading5" scope="col">Week</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {RENTALS.map((r) => (
+                  {RENTALS.map((r, i) => (
                     <tr key={r.bike}>
-                      <th scope="row">{r.bike}</th>
-                      <td>{r.hours}</td>
-                      <td>{r.half}</td>
-                      <td>{r.day}</td>
-                      <td>{r.week}</td>
+                      <th data-edit={`rentals.heading6.${i}`} scope="row">{r.bike}</th>
+                      <td data-edit={`rentals.cell.${i}`}>{r.hours}</td>
+                      <td data-edit={`rentals.cell2.${i}`}>{r.half}</td>
+                      <td data-edit={`rentals.cell3.${i}`}>{r.day}</td>
+                      <td data-edit={`rentals.cell4.${i}`}>{r.week}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
             <ul className={s.rules}>
-              {RENTAL_RULES.map((r) => (
-                <li key={r}>{r}</li>
+              {RENTAL_RULES.map((r, i) => (
+                <li data-edit={`rentals.item.${i}`} data-edit-max="80" key={r}>{r}</li>
               ))}
             </ul>
           </div>
@@ -442,7 +455,7 @@ export default function SpokeAndChainPage() {
             stack of wheels at one edge. */}
         <section id="fit" className={s.fit} aria-labelledby="fit-h">
           <div className={s.fitPanel}>
-            <div className={s.wheels} aria-hidden="true">
+            <div data-edit-pattern="fit.field" data-edit-roles="transparent,2,5,3" className={s.wheels} aria-hidden="true">
               <TabbiedPattern
                 pattern={ring}
                 palette={WHEELS}
@@ -455,34 +468,34 @@ export default function SpokeAndChainPage() {
               />
             </div>
             <div className={s.fitText}>
-              <p className={s.secNoLight}>04 / Fit session</p>
-              <h2 id="fit-h" className={s.fitTitle}>Ninety minutes that fix the ache in your knee.</h2>
-              <p className={s.fitLede}>
+              <p data-edit="fit.secNoLight" data-edit-max="240" data-edit-multiline className={s.secNoLight}>04 / Fit session</p>
+              <h2 data-edit="fit.fitTitle" data-edit-max="60" id="fit-h" className={s.fitTitle}>Ninety minutes that fix the ache in your knee.</h2>
+              <p data-edit="fit.fitLede" data-edit-max="240" data-edit-multiline className={s.fitLede}>
                 A fit on your own bike, on the trainer, with a fitter who has
                 done more than two thousand of them. Worth it before a long ride
                 and after any pain that comes back.
               </p>
               <dl className={s.fitPrice}>
                 <div>
-                  <dt>Session</dt>
-                  <dd>$180</dd>
+                  <dt data-edit="fit.term" data-edit-max="28">Session</dt>
+                  <dd data-edit="fit.body" data-edit-max="200" data-edit-multiline>$180</dd>
                 </div>
                 <div>
-                  <dt>Length</dt>
-                  <dd>90 min</dd>
+                  <dt data-edit="fit.term2" data-edit-max="28">Length</dt>
+                  <dd data-edit="fit.body2" data-edit-max="200" data-edit-multiline>90 min</dd>
                 </div>
                 <div>
-                  <dt>Back if you buy a bike in 30 days</dt>
-                  <dd>$60</dd>
+                  <dt data-edit="fit.term3" data-edit-max="28">Back if you buy a bike in 30 days</dt>
+                  <dd data-edit="fit.body3" data-edit-max="200" data-edit-multiline>$60</dd>
                 </div>
               </dl>
             </div>
             <ol className={s.fitSteps}>
-              {FIT_STEPS.map((f) => (
+              {FIT_STEPS.map((f, i) => (
                 <li key={f.no}>
-                  <span className={s.fitNo}>{f.no}</span>
-                  <h3 className={s.fitStepTitle}>{f.title}</h3>
-                  <p className={s.fitStepBody}>{f.body}</p>
+                  <span data-edit={`fit.fitNo.${i}`} data-edit-max="60" className={s.fitNo}>{f.no}</span>
+                  <h3 data-edit={`fit.fitStepTitle.${i}`} data-edit-max="40" className={s.fitStepTitle}>{f.title}</h3>
+                  <p data-edit={`fit.fitStepBody.${i}`} data-edit-max="240" data-edit-multiline className={s.fitStepBody}>{f.body}</p>
                 </li>
               ))}
             </ol>
@@ -493,35 +506,35 @@ export default function SpokeAndChainPage() {
             Book a service, and where and when to bring the bike. */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInfo}>
-            <p className={s.secNo}>05 / Visit</p>
-            <h2 id="visit-h" className={s.secTitle}>Book a service, or just come by</h2>
-            <p className={s.secLede}>
+            <p data-edit="visit.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05 / Visit</p>
+            <h2 data-edit="visit.secTitle" data-edit-max="60" id="visit-h" className={s.secTitle}>Book a service, or just come by</h2>
+            <p data-edit="visit.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
               Book online and drop the bike off any time that day. We text
               you the quote before we touch anything, and again when it is
               ready.
             </p>
             <div className={s.visitCols}>
               <div>
-                <h3 className={s.visitHead}>The shop</h3>
-                <p className={s.visitText}>
+                <h3 data-edit="visit.visitHead" data-edit-max="40" className={s.visitHead}>The shop</h3>
+                <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.visitText}>
                   48 Harrow Street
                   <br />
                   Between the bakery and the laundromat
                 </p>
                 <p className={s.visitText}>
-                  <a href="tel:+15550148811">(555) 014-8811</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550148811">(555) 014-8811</a>
                 </p>
                 <p className={s.visitText}>
-                  <a href="mailto:workshop@spokeandchain.example">workshop@spokeandchain.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:workshop@spokeandchain.example">workshop@spokeandchain.example</a>
                 </p>
               </div>
               <div>
-                <h3 className={s.visitHead}>Hours</h3>
+                <h3 data-edit="visit.visitHead2" data-edit-max="40" className={s.visitHead}>Hours</h3>
                 <dl className={s.hours}>
-                  {HOURS.map(([d, h]) => (
+                  {HOURS.map(([d, h], i) => (
                     <div key={d}>
-                      <dt>{d}</dt>
-                      <dd>{h}</dd>
+                      <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                      <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                     </div>
                   ))}
                 </dl>
@@ -530,17 +543,17 @@ export default function SpokeAndChainPage() {
           </div>
 
           <form className={s.form} action="#">
-            <h3 className={s.formTitle}>Book a service</h3>
+            <h3 data-edit="visit.formTitle" data-edit-max="40" className={s.formTitle}>Book a service</h3>
             <label className={s.field}>
-              <span>Name</span>
+              <span data-edit="visit.text" data-edit-max="60">Name</span>
               <input type="text" name="name" autoComplete="name" required />
             </label>
             <label className={s.field}>
-              <span>Mobile, for the quote</span>
+              <span data-edit="visit.text2" data-edit-max="60">Mobile, for the quote</span>
               <input type="tel" name="phone" autoComplete="tel" required />
             </label>
             <label className={s.field}>
-              <span>Service</span>
+              <span data-edit="visit.text3" data-edit-max="60">Service</span>
               <select name="level" defaultValue="Tune-up">
                 {LEVELS.map((l) => (
                   <option key={l.name}>{l.name}</option>
@@ -548,35 +561,35 @@ export default function SpokeAndChainPage() {
               </select>
             </label>
             <label className={s.field}>
-              <span>Drop-off day</span>
+              <span data-edit="visit.text4" data-edit-max="60">Drop-off day</span>
               <input type="date" name="day" />
             </label>
             <label className={s.fieldWide}>
-              <span>The bike, and what it is doing</span>
+              <span data-edit="visit.text5" data-edit-max="60">The bike, and what it is doing</span>
               <textarea name="notes" rows={3} placeholder="Gravel bike, gears skip in the two smallest cogs" />
             </label>
-            <button className={s.submit} type="submit">Book my drop-off</button>
+            <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">Book my drop-off</button>
           </form>
         </section>
       </main>
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Spoke & Chain</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Spoke & Chain</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional bike shop. Prices, hours and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional bike shop. Prices, hours and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the shop's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the shop's own colors.</span>
           </p>
         </div>
       </footer>

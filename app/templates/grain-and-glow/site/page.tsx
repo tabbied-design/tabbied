@@ -167,7 +167,19 @@ const HOURS = [
 
 export default function GrainAndGlowPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--blush': '#f8f2ef',
+        '--ink': '#2a1f1f',
+        '--rose': '#c07a6b',
+        '--gray': '#9c8f8a',
+        '--pale': '#eedfda',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="blush,ink,rose,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -178,19 +190,19 @@ export default function GrainAndGlowPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span>Grain</span>
+          <span data-edit="bar.text" data-edit-max="60">Grain</span>
           <em>&amp;</em>
-          <span>Glow</span>
+          <span data-edit="bar.text2" data-edit-max="60">Glow</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#book">Book a facial</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#book">Book a facial</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -201,25 +213,25 @@ export default function GrainAndGlowPage() {
             products standing on a ledge in front. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Skincare studio, 14 Orchard Street</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Skincare studio, 14 Orchard Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Skin care,
               <br />
               <em>slowly.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               One room, one esthetician and an hour where nothing is rushed.
               Facials for real skin, with the products we use on the shelf by
               the door if you want to take them home.
             </p>
             <div className={s.heroActions}>
-              <a className={s.button} href="#book">Book a facial</a>
-              <a className={s.textLink} href="#menu">Read the menu</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#book">Book a facial</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#menu">Read the menu</a>
             </div>
           </div>
 
           <div className={s.heroArt}>
-            <div className={s.glow} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,0,4" className={s.glow} aria-hidden="true">
               <TabbiedPattern
                 pattern={bokeh}
                 palette={GLOW}
@@ -256,23 +268,23 @@ export default function GrainAndGlowPage() {
         <section id="menu" className={s.menuSec} aria-labelledby="menu-h">
           <div className={s.card}>
             <div className={s.cardHead}>
-              <p className={s.kicker}>The treatment menu</p>
-              <h2 id="menu-h">Facials, add-ons and peels</h2>
-              <p className={s.cardNote}>Prices include tax. Every facial ends with SPF and a cup of tea.</p>
+              <p data-edit="menu.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The treatment menu</p>
+              <h2 data-edit="menu.title" data-edit-max="60" id="menu-h">Facials, add-ons and peels</h2>
+              <p data-edit="menu.cardNote" data-edit-max="240" data-edit-multiline className={s.cardNote}>Prices include tax. Every facial ends with SPF and a cup of tea.</p>
             </div>
 
             <div className={s.cardCols}>
               <div className={s.course}>
-                <h3>Facials</h3>
+                <h3 data-edit="menu.title2" data-edit-max="40">Facials</h3>
                 <ul className={s.items}>
-                  {FACIALS.map((f) => (
+                  {FACIALS.map((f, i) => (
                     <li key={f.name} className={s.item}>
                       <div className={s.itemLine}>
-                        <span className={s.itemName}>{f.name}</span>
-                        <span className={s.itemTime}>{f.time}</span>
-                        <span className={s.itemPrice}>{f.price}</span>
+                        <span data-edit={`menu.itemName.${i}`} data-edit-max="60" className={s.itemName}>{f.name}</span>
+                        <span data-edit={`menu.itemTime.${i}`} data-edit-max="60" className={s.itemTime}>{f.time}</span>
+                        <span data-edit={`menu.itemPrice.${i}`} data-edit-max="60" className={s.itemPrice}>{f.price}</span>
                       </div>
-                      <p className={s.itemNote}>{f.note}</p>
+                      <p data-edit={`menu.itemNote.${i}`} data-edit-max="240" data-edit-multiline className={s.itemNote}>{f.note}</p>
                     </li>
                   ))}
                 </ul>
@@ -280,31 +292,31 @@ export default function GrainAndGlowPage() {
 
               <div className={s.courseStack}>
                 <div className={s.course}>
-                  <h3>Add to any facial</h3>
+                  <h3 data-edit="menu.title3" data-edit-max="40">Add to any facial</h3>
                   <ul className={s.items}>
-                    {ADDONS.map((a) => (
+                    {ADDONS.map((a, i) => (
                       <li key={a.name} className={s.item}>
                         <div className={s.itemLine}>
-                          <span className={s.itemName}>{a.name}</span>
-                          <span className={s.itemTime}>{a.time}</span>
-                          <span className={s.itemPrice}>{a.price}</span>
+                          <span data-edit={`menu.itemName2.${i}`} data-edit-max="60" className={s.itemName}>{a.name}</span>
+                          <span data-edit={`menu.itemTime2.${i}`} data-edit-max="60" className={s.itemTime}>{a.time}</span>
+                          <span data-edit={`menu.itemPrice2.${i}`} data-edit-max="60" className={s.itemPrice}>{a.price}</span>
                         </div>
-                        <p className={s.itemNote}>{a.note}</p>
+                        <p data-edit={`menu.itemNote2.${i}`} data-edit-max="240" data-edit-multiline className={s.itemNote}>{a.note}</p>
                       </li>
                     ))}
                   </ul>
                 </div>
                 <div className={s.course}>
-                  <h3>Peels and series</h3>
+                  <h3 data-edit="menu.title4" data-edit-max="40">Peels and series</h3>
                   <ul className={s.items}>
-                    {SERIES.map((p) => (
+                    {SERIES.map((p, i) => (
                       <li key={p.name} className={s.item}>
                         <div className={s.itemLine}>
-                          <span className={s.itemName}>{p.name}</span>
-                          <span className={s.itemTime}>{p.time}</span>
-                          <span className={s.itemPrice}>{p.price}</span>
+                          <span data-edit={`menu.itemName3.${i}`} data-edit-max="60" className={s.itemName}>{p.name}</span>
+                          <span data-edit={`menu.itemTime3.${i}`} data-edit-max="60" className={s.itemTime}>{p.time}</span>
+                          <span data-edit={`menu.itemPrice3.${i}`} data-edit-max="60" className={s.itemPrice}>{p.price}</span>
                         </div>
-                        <p className={s.itemNote}>{p.note}</p>
+                        <p data-edit={`menu.itemNote3.${i}`} data-edit-max="240" data-edit-multiline className={s.itemNote}>{p.note}</p>
                       </li>
                     ))}
                   </ul>
@@ -318,7 +330,7 @@ export default function GrainAndGlowPage() {
             The house line on a plank against a grained wall. The same two
             photographs, tinted six ways, one per product. */}
         <section id="shelf" className={s.shelfSec} aria-labelledby="shelf-h">
-          <div className={s.wall} aria-hidden="true">
+          <div data-edit-pattern="shelf.field" data-edit-roles="transparent,2,3,4" className={s.wall} aria-hidden="true">
             <TabbiedPattern
               pattern={grainfall}
               palette={GRAIN}
@@ -330,26 +342,26 @@ export default function GrainAndGlowPage() {
             />
           </div>
           <div className={s.shelfHead}>
-            <p className={s.kicker}>The shelf</p>
-            <h2 id="shelf-h">Six things we make, and use on you</h2>
-            <p className={s.shelfNote}>
+            <p data-edit="shelf.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The shelf</p>
+            <h2 data-edit="shelf.title" data-edit-max="60" id="shelf-h">Six things we make, and use on you</h2>
+            <p data-edit="shelf.shelfNote" data-edit-max="240" data-edit-multiline className={s.shelfNote}>
               Mixed in small batches by a lab two towns over, unscented unless
               the name says otherwise. Ask for a sample of anything.
             </p>
           </div>
           <ul className={s.shelf}>
-            {SHELF.map((p) => (
+            {SHELF.map((p, i) => (
               <li key={p.name} className={s.product}>
                 <div className={s.productStage}>
                   <Artwork slug={p.art} alt={p.alt} mode="tint" inks={p.inks} className={s.productArt} />
                 </div>
                 <div className={s.label}>
-                  <h3>{p.name}</h3>
+                  <h3 data-edit={`shelf.title2.${i}`} data-edit-max="40">{p.name}</h3>
                   <p className={s.labelMeta}>
-                    <span>{p.size}</span>
-                    <span className={s.labelPrice}>{p.price}</span>
+                    <span data-edit={`shelf.text.${i}`} data-edit-max="60">{p.size}</span>
+                    <span data-edit={`shelf.labelPrice.${i}`} data-edit-max="60" className={s.labelPrice}>{p.price}</span>
                   </p>
-                  <p className={s.labelNote}>{p.note}</p>
+                  <p data-edit={`shelf.labelNote.${i}`} data-edit-max="240" data-edit-multiline className={s.labelNote}>{p.note}</p>
                 </div>
               </li>
             ))}
@@ -369,23 +381,23 @@ export default function GrainAndGlowPage() {
               />
             </div>
             <div className={s.aboutText}>
-              <p className={s.kicker}>Your esthetician</p>
-              <h2 id="esthetician-h">Noor Haddad</h2>
-              <p className={s.aboutRole}>Licensed esthetician, twelve years in practice</p>
+              <p data-edit="esthetician.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Your esthetician</p>
+              <h2 data-edit="esthetician.title" data-edit-max="60" id="esthetician-h">Noor Haddad</h2>
+              <p data-edit="esthetician.aboutRole" data-edit-max="240" data-edit-multiline className={s.aboutRole}>Licensed esthetician, twelve years in practice</p>
               <blockquote className={s.quote}>
-                <p>Most skin needs less than it is given. My job is to work out which less.</p>
+                <p data-edit="esthetician.body" data-edit-max="240" data-edit-multiline>Most skin needs less than it is given. My job is to work out which less.</p>
               </blockquote>
-              <p>
+              <p data-edit="esthetician.body2" data-edit-max="240" data-edit-multiline>
                 Noor trained in a dermatology clinic before opening Grain &amp;
                 Glow in 2019, and every facial here is hers. She keeps notes
                 on each visit, so the second facial starts where the first one
                 ended.
               </p>
               <ul className={s.creds}>
-                <li>State licensed esthetician</li>
-                <li>Advanced chemical peels</li>
-                <li>Skin of color certificate</li>
-                <li>Oncology esthetics trained</li>
+                <li data-edit="esthetician.item" data-edit-max="80">State licensed esthetician</li>
+                <li data-edit="esthetician.item2" data-edit-max="80">Advanced chemical peels</li>
+                <li data-edit="esthetician.item3" data-edit-max="80">Skin of color certificate</li>
+                <li data-edit="esthetician.item4" data-edit-max="80">Oncology esthetics trained</li>
               </ul>
             </div>
           </div>
@@ -394,14 +406,14 @@ export default function GrainAndGlowPage() {
         {/* -------------------------------------------------------- QUESTIONS */}
         <section id="questions" className={s.sec} aria-labelledby="questions-h">
           <div className={s.qHead}>
-            <p className={s.kicker}>Before you come</p>
-            <h2 id="questions-h">Questions people ask</h2>
+            <p data-edit="questions.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Before you come</p>
+            <h2 data-edit="questions.title" data-edit-max="60" id="questions-h">Questions people ask</h2>
           </div>
           <div className={s.faq}>
-            {QUESTIONS.map((item) => (
+            {QUESTIONS.map((item, i) => (
               <details key={item.q} className={s.faqItem}>
-                <summary>{item.q}</summary>
-                <p>{item.a}</p>
+                <summary data-edit={`questions.question.${i}`} data-edit-max="80">{item.q}</summary>
+                <p data-edit={`questions.body.${i}`} data-edit-max="240" data-edit-multiline>{item.a}</p>
               </details>
             ))}
           </div>
@@ -411,51 +423,51 @@ export default function GrainAndGlowPage() {
         <section id="book" className={s.bookSec} aria-labelledby="book-h">
           <div className={s.book}>
             <div className={s.bookInfo}>
-              <p className={s.kicker}>Book</p>
-              <h2 id="book-h">Book a facial</h2>
-              <p className={s.bookLede}>
+              <p data-edit="book.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Book</p>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Book a facial</h2>
+              <p data-edit="book.bookLede" data-edit-max="240" data-edit-multiline className={s.bookLede}>
                 Send the form and we confirm by text within the day. A $25
                 deposit holds the time and comes off the bill.
               </p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`book.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`book.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.address}>
+              <p data-edit="book.address" data-edit-max="240" data-edit-multiline className={s.address}>
                 14 Orchard Street, upstairs from the florist
               </p>
               <p className={s.contactLine}>
-                <a href="tel:+15550175512">(555) 017-5512</a>
+                <a data-edit="book.link" data-edit-max="28" href="tel:+15550175512">(555) 017-5512</a>
               </p>
               <p className={s.contactLine}>
-                <a href="mailto:hello@grainandglow.example">hello@grainandglow.example</a>
+                <a data-edit="book.link2" data-edit-max="28" href="mailto:hello@grainandglow.example">hello@grainandglow.example</a>
               </p>
-              <p className={s.policy}>
+              <p data-edit="book.policy" data-edit-max="240" data-edit-multiline className={s.policy}>
                 Free to move or cancel with 48 hours notice. Later than that,
                 the deposit is kept.
               </p>
             </div>
             <form className={s.form} action="#">
               <label className={s.field}>
-                <span>Name</span>
+                <span data-edit="book.text" data-edit-max="60">Name</span>
                 <input type="text" name="name" autoComplete="name" required />
               </label>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Mobile</span>
+                  <span data-edit="book.text2" data-edit-max="60">Mobile</span>
                   <input type="tel" name="phone" autoComplete="tel" required />
                 </label>
                 <label className={s.field}>
-                  <span>Preferred day</span>
+                  <span data-edit="book.text3" data-edit-max="60">Preferred day</span>
                   <input type="date" name="date" />
                 </label>
               </div>
               <label className={s.field}>
-                <span>Facial</span>
+                <span data-edit="book.text4" data-edit-max="60">Facial</span>
                 <select name="facial" defaultValue="signature">
                   <option value="signature">The Grain &amp; Glow facial, 60 min</option>
                   <option value="calm">Calm facial, 50 min</option>
@@ -467,24 +479,24 @@ export default function GrainAndGlowPage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>Anything we should know about your skin</span>
+                <span data-edit="book.text5" data-edit-max="60">Anything we should know about your skin</span>
                 <textarea name="notes" rows={3} />
               </label>
-              <button className={s.button} type="submit">Request the time</button>
+              <button data-edit="book.button" data-edit-max="24" className={s.button} type="submit">Request the time</button>
             </form>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footMark}>Grain &amp; Glow</p>
-        <p className={s.footAddr}>14 Orchard Street, upstairs from the florist</p>
+        <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Grain &amp; Glow</p>
+        <p data-edit="footer.footAddr" data-edit-max="240" data-edit-multiline className={s.footAddr}>14 Orchard Street, upstairs from the florist</p>
         <div className={s.footFine}>
-          <p>A fictional skincare studio. Treatments, prices, products and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional skincare studio. Treatments, prices, products and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live; the bottles and the portrait are tinted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live; the bottles and the portrait are tinted in the page's own colors.</span>
           </p>
         </div>
       </footer>

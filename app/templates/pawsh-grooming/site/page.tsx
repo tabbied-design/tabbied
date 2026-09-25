@@ -142,7 +142,20 @@ const HOURS = [
 
 export default function PawshGroomingPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fdf8f4',
+        '--ink': '#2a2433',
+        '--violet': '#7c5ce0',
+        '--pink': '#f5a3b5',
+        '--gray': '#a69eb0',
+        '--pale': '#efe7f6',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,violet,pink,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -154,17 +167,17 @@ export default function PawshGroomingPage() {
       <header className={s.bar}>
         <a className={s.brand} href="#top">
           <span className={s.brandDot} aria-hidden="true" />
-          <span className={s.brandName}>Pawsh</span>
+          <span data-edit="bar.brandName" data-edit-max="60" className={s.brandName}>Pawsh</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#book">Book a groom</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#book">Book a groom</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -174,27 +187,27 @@ export default function PawshGroomingPage() {
             The poodle sits in front of one big soap bubble full of loops. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Dog grooming salon, 17 Larkspur Lane</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Dog grooming salon, 17 Larkspur Lane</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               A bath, a trim and <em>a very good dog.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Three groomers, four tubs and no cages. Every price is set by
               your dog's size before you arrive, so the only surprise at
               pickup is how fluffy they are.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#book">Book a groom</a>
-              <a className={s.btnSoft} href="#prices">See prices by size</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Book a groom</a>
+              <a data-edit="hero.btnSoft" data-edit-max="28" className={s.btnSoft} href="#prices">See prices by size</a>
             </div>
             <ul className={s.heroNotes}>
-              <li>No sedation, ever</li>
-              <li>Quiet hours for nervous dogs</li>
-              <li>Text when they are ready</li>
+              <li data-edit="hero.item" data-edit-max="80">No sedation, ever</li>
+              <li data-edit="hero.item2" data-edit-max="80">Quiet hours for nervous dogs</li>
+              <li data-edit="hero.item3" data-edit-max="80">Text when they are ready</li>
             </ul>
           </div>
           <div className={s.heroArt}>
-            <div className={s.bubble} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="5,3,2,4" className={s.bubble} aria-hidden="true">
               <TabbiedPattern
                 pattern={quoit}
                 palette={BUBBLES}
@@ -213,8 +226,8 @@ export default function PawshGroomingPage() {
               className={s.poodle}
             />
             <p className={s.heroTag}>
-              <span>Fresh from</span>
-              <strong>a full groom</strong>
+              <span data-edit="hero.text" data-edit-max="60">Fresh from</span>
+              <strong data-edit="hero.emphasis">a full groom</strong>
             </p>
           </div>
         </section>
@@ -224,20 +237,20 @@ export default function PawshGroomingPage() {
             to scale, four packages down. */}
         <section id="prices" className={s.prices} aria-labelledby="prices-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>Prices by size</p>
-            <h2 id="prices-h" className={s.secTitle}>Find the row, then find your dog</h2>
-            <p className={s.secLede}>
+            <p data-edit="prices.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Prices by size</p>
+            <h2 data-edit="prices.secTitle" data-edit-max="60" id="prices-h" className={s.secTitle}>Find the row, then find your dog</h2>
+            <p data-edit="prices.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
               Weigh your dog at home or at the vet; if they sit between two
               sizes, we use the smaller one. Tax is included.
             </p>
           </div>
 
           <table className={s.matrix}>
-            <caption className={s.srOnly}>Grooming packages and prices by dog size</caption>
+            <caption data-edit="prices.srOnly" className={s.srOnly}>Grooming packages and prices by dog size</caption>
             <thead>
               <tr>
-                <th scope="col" className={s.corner}>Package</th>
-                {SIZES.map((z) => (
+                <th data-edit="prices.corner" scope="col" className={s.corner}>Package</th>
+                {SIZES.map((z, i) => (
                   <th key={z.id} scope="col" className={s.sizeHead}>
                     <span className={s.dogBox}>
                       <Artwork
@@ -247,21 +260,21 @@ export default function PawshGroomingPage() {
                         className={z.dog}
                       />
                     </span>
-                    <span className={s.sizeShort}>{z.short}</span>
-                    <span className={s.sizeName}>{z.name}</span>
-                    <span className={s.sizeWeight}>{z.weight}</span>
+                    <span data-edit={`prices.sizeShort.${i}`} data-edit-max="60" className={s.sizeShort}>{z.short}</span>
+                    <span data-edit={`prices.sizeName.${i}`} data-edit-max="60" className={s.sizeName}>{z.name}</span>
+                    <span data-edit={`prices.sizeWeight.${i}`} data-edit-max="60" className={s.sizeWeight}>{z.weight}</span>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {PACKAGES.map((p) => (
+              {PACKAGES.map((p, i) => (
                 <tr key={p.name} className={p.tag ? s.rowHot : s.row}>
                   <th scope="row">
-                    <span className={s.pkgName}>{p.name}</span>
-                    {p.tag ? <span className={s.pkgTag}>{p.tag}</span> : null}
-                    <span className={s.pkgIncl}>{p.includes}</span>
-                    <span className={s.pkgTime}>{p.time}</span>
+                    <span data-edit={`prices.pkgName.${i}`} data-edit-max="60" className={s.pkgName}>{p.name}</span>
+                    {p.tag ? <span data-edit={`prices.pkgTag.${i}`} data-edit-max="60" className={s.pkgTag}>{p.tag}</span> : null}
+                    <span data-edit={`prices.pkgIncl.${i}`} data-edit-max="60" className={s.pkgIncl}>{p.includes}</span>
+                    <span data-edit={`prices.pkgTime.${i}`} data-edit-max="60" className={s.pkgTime}>{p.time}</span>
                   </th>
                   {p.prices.map((price, i) => (
                     <td key={SIZES[i].id} className={s[`c${SIZES[i].id}`]}>
@@ -275,8 +288,8 @@ export default function PawshGroomingPage() {
           </table>
 
           <ul className={s.matrixNotes}>
-            {MATRIX_NOTES.map((n) => (
-              <li key={n}>{n}</li>
+            {MATRIX_NOTES.map((n, i) => (
+              <li data-edit={`prices.item.${i}`} data-edit-max="80" key={n}>{n}</li>
             ))}
           </ul>
         </section>
@@ -285,9 +298,9 @@ export default function PawshGroomingPage() {
         <section id="addons" className={s.addons} aria-labelledby="addons-h">
           <div className={s.addonsInner}>
             <div className={s.addonsHead}>
-              <p className={s.secKicker}>Add-ons</p>
-              <h2 id="addons-h" className={s.secTitle}>The extras, at any size</h2>
-              <p className={s.secLede}>
+              <p data-edit="addons.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Add-ons</p>
+              <h2 data-edit="addons.secTitle" data-edit-max="60" id="addons-h" className={s.secTitle}>The extras, at any size</h2>
+              <p data-edit="addons.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 Add them when you book or at drop-off. Same price for a
                 chihuahua and a great dane.
               </p>
@@ -299,11 +312,11 @@ export default function PawshGroomingPage() {
               />
             </div>
             <ul className={s.addonList}>
-              {ADDONS.map(([name, note, price]) => (
+              {ADDONS.map(([name, note, price], i) => (
                 <li key={name}>
-                  <span className={s.addonName}>{name}</span>
-                  <span className={s.addonNote}>{note}</span>
-                  <span className={s.addonPrice}>{price}</span>
+                  <span data-edit={`addons.addonName.${i}`} data-edit-max="60" className={s.addonName}>{name}</span>
+                  <span data-edit={`addons.addonNote.${i}`} data-edit-max="60" className={s.addonNote}>{note}</span>
+                  <span data-edit={`addons.addonPrice.${i}`} data-edit-max="60" className={s.addonPrice}>{price}</span>
                 </li>
               ))}
             </ul>
@@ -313,17 +326,17 @@ export default function PawshGroomingPage() {
         {/* -------------------------------------------------------- GROOMERS */}
         <section id="groomers" className={s.groomers} aria-labelledby="groomers-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>The groomers</p>
-            <h2 id="groomers-h" className={s.secTitle}>Three pairs of hands, one tub each</h2>
+            <p data-edit="groomers.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The groomers</p>
+            <h2 data-edit="groomers.secTitle" data-edit-max="60" id="groomers-h" className={s.secTitle}>Three pairs of hands, one tub each</h2>
           </div>
           <ul className={s.groomerList}>
-            {GROOMERS.map((g) => (
+            {GROOMERS.map((g, i) => (
               <li key={g.name} className={s.groomer}>
                 <span className={s.monogram} aria-hidden="true">{g.initials}</span>
-                <h3 className={s.groomerName}>{g.name}</h3>
-                <p className={s.groomerRole}>{g.role}</p>
-                <p className={s.groomerGood}>{g.good}</p>
-                <p className={s.groomerDays}>{g.days}</p>
+                <h3 data-edit={`groomers.groomerName.${i}`} data-edit-max="40" className={s.groomerName}>{g.name}</h3>
+                <p data-edit={`groomers.groomerRole.${i}`} data-edit-max="240" data-edit-multiline className={s.groomerRole}>{g.role}</p>
+                <p data-edit={`groomers.groomerGood.${i}`} data-edit-max="240" data-edit-multiline className={s.groomerGood}>{g.good}</p>
+                <p data-edit={`groomers.groomerDays.${i}`} data-edit-max="240" data-edit-multiline className={s.groomerDays}>{g.days}</p>
               </li>
             ))}
           </ul>
@@ -333,8 +346,8 @@ export default function PawshGroomingPage() {
         <section id="first-visit" className={s.first} aria-labelledby="first-h">
           <div className={s.firstInner}>
             <div className={s.firstHead}>
-              <p className={s.secKicker}>First visit</p>
-              <h2 id="first-h" className={s.secTitle}>Six things to know before the first bath</h2>
+              <p data-edit="firstVisit.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>First visit</p>
+              <h2 data-edit="firstVisit.secTitle" data-edit-max="60" id="first-h" className={s.secTitle}>Six things to know before the first bath</h2>
               <div className={s.firstDog}>
                 <Artwork
                   slug="pawsh-grooming-dachshund"
@@ -348,8 +361,8 @@ export default function PawshGroomingPage() {
               {FIRST_VISIT.map((f, i) => (
                 <li key={f.title}>
                   <span className={s.firstNo}>{`${i + 1}`}</span>
-                  <h3 className={s.firstTitle}>{f.title}</h3>
-                  <p className={s.firstBody}>{f.body}</p>
+                  <h3 data-edit={`firstVisit.firstTitle.${i}`} data-edit-max="40" className={s.firstTitle}>{f.title}</h3>
+                  <p data-edit={`firstVisit.firstBody.${i}`} data-edit-max="240" data-edit-multiline className={s.firstBody}>{f.body}</p>
                 </li>
               ))}
             </ol>
@@ -360,7 +373,7 @@ export default function PawshGroomingPage() {
             The request form on a violet panel with sparkles at its edge. */}
         <section id="book" className={s.book} aria-labelledby="book-h">
           <div className={s.bookPanel}>
-            <div className={s.sparks} aria-hidden="true">
+            <div data-edit-pattern="book.field" data-edit-roles="transparent,5,3,0" className={s.sparks} aria-hidden="true">
               <TabbiedPattern
                 pattern={sparkle}
                 palette={SPARKS}
@@ -373,44 +386,44 @@ export default function PawshGroomingPage() {
               />
             </div>
             <div className={s.bookIntro}>
-              <p className={s.bookKicker}>Book a groom</p>
-              <h2 id="book-h" className={s.bookTitle}>Ask for a time, we will text back within the hour.</h2>
-              <p className={s.bookLede}>
+              <p data-edit="book.bookKicker" data-edit-max="240" data-edit-multiline className={s.bookKicker}>Book a groom</p>
+              <h2 data-edit="book.bookTitle" data-edit-max="60" id="book-h" className={s.bookTitle}>Ask for a time, we will text back within the hour.</h2>
+              <p data-edit="book.bookLede" data-edit-max="240" data-edit-multiline className={s.bookLede}>
                 Most weeks we have space within three days. For Saturdays,
                 book a fortnight ahead.
               </p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`book.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`book.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.bookAddr}>17 Larkspur Lane, next to the park gates</p>
+              <p data-edit="book.bookAddr" data-edit-max="240" data-edit-multiline className={s.bookAddr}>17 Larkspur Lane, next to the park gates</p>
               <p className={s.bookPhone}>
-                <a href="tel:+15550127297">(555) 012-7297</a>
+                <a data-edit="book.link" data-edit-max="28" href="tel:+15550127297">(555) 012-7297</a>
               </p>
             </div>
             <form className={s.form} action="#">
               <label className={s.field}>
-                <span>Your name</span>
+                <span data-edit="book.text" data-edit-max="60">Your name</span>
                 <input type="text" name="name" autoComplete="name" required />
               </label>
               <label className={s.field}>
-                <span>Mobile</span>
+                <span data-edit="book.text2" data-edit-max="60">Mobile</span>
                 <input type="tel" name="phone" autoComplete="tel" required />
               </label>
               <label className={s.field}>
-                <span>Dog's name</span>
+                <span data-edit="book.text3" data-edit-max="60">Dog's name</span>
                 <input type="text" name="dog" required />
               </label>
               <label className={s.field}>
-                <span>Breed or mix</span>
+                <span data-edit="book.text4" data-edit-max="60">Breed or mix</span>
                 <input type="text" name="breed" />
               </label>
               <label className={s.field}>
-                <span>Size</span>
+                <span data-edit="book.text5" data-edit-max="60">Size</span>
                 <select name="size" defaultValue="">
                   <option value="" disabled>Choose a size</option>
                   {SIZES.map((z) => (
@@ -419,7 +432,7 @@ export default function PawshGroomingPage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>Package</span>
+                <span data-edit="book.text6" data-edit-max="60">Package</span>
                 <select name="package" defaultValue="Full groom">
                   {PACKAGES.map((p) => (
                     <option key={p.name}>{p.name}</option>
@@ -428,10 +441,10 @@ export default function PawshGroomingPage() {
                 </select>
               </label>
               <label className={s.fieldWide}>
-                <span>Anything we should know</span>
+                <span data-edit="book.text7" data-edit-max="60">Anything we should know</span>
                 <textarea name="notes" rows={3} placeholder="Hates the dryer, loves peanut butter" />
               </label>
-              <button className={s.submit} type="submit">Request a time</button>
+              <button data-edit="book.submit" data-edit-max="24" className={s.submit} type="submit">Request a time</button>
             </form>
           </div>
         </section>
@@ -439,18 +452,18 @@ export default function PawshGroomingPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Pawsh</p>
-          <p className={s.footTag}>Dog grooming on Larkspur Lane, by size, by appointment.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pawsh</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Dog grooming on Larkspur Lane, by size, by appointment.</p>
           <p className={s.footMail}>
-            <a href="mailto:woof@pawsh.example">woof@pawsh.example</a>
+            <a data-edit="footer.link" data-edit-max="28" href="mailto:woof@pawsh.example">woof@pawsh.example</a>
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional dog grooming salon. Prices, hours and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional dog grooming salon. Prices, hours and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the salon's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the salon's own colors.</span>
           </p>
         </div>
       </footer>

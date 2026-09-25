@@ -195,7 +195,20 @@ const FAQ = [
 
 export default function GlazeDonutsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--cream': '#fff6f1',
+        '--choc': '#2e1b1b',
+        '--pink': '#f06292',
+        '--purple': '#7e57c2',
+        '--orange': '#ffb74d',
+        '--gray': '#a1887f',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="cream,choc,pink,purple,orange,gray"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -205,22 +218,22 @@ export default function GlazeDonutsPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">
           Glaze
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
         </nav>
-        <a className={s.barCta} href="#dozen">
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#dozen">
           Pre-order
         </a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
@@ -232,27 +245,27 @@ export default function GlazeDonutsPage() {
             One donut, very large, on a field of rings. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroCopy}>
-            <p className={s.kicker}>Donut shop, Market Street, since 2014</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Donut shop, Market Street, since 2014</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Glazed at five,
               <br />
               <em>gone by noon.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               We start frying at 5 am, a dozen kinds every morning, and we close the door when the last tray is empty.
               Come early for the vanilla bean, or order the night before and we will keep yours back.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#board">
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#board">
                 See today's board
               </a>
-              <a className={s.btnLine} href="#dozen">
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#dozen">
                 Build a dozen
               </a>
             </div>
           </div>
           <div className={s.heroArt}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,4,3,2" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={annulus}
                 palette={RINGS}
@@ -271,8 +284,8 @@ export default function GlazeDonutsPage() {
               className={s.heroDonut}
             />
             <p className={s.heroSticker}>
-              <span className={s.stickerBig}>12</span>
-              <span className={s.stickerSmall}>kinds today</span>
+              <span data-edit="hero.stickerBig" data-edit-max="60" className={s.stickerBig}>12</span>
+              <span data-edit="hero.stickerSmall" data-edit-max="60" className={s.stickerSmall}>kinds today</span>
             </p>
           </div>
         </section>
@@ -282,29 +295,29 @@ export default function GlazeDonutsPage() {
         <section id="board" className={s.boardWrap} aria-labelledby="board-h">
           <div className={s.board}>
             <div className={s.boardHead}>
-              <h2 id="board-h">Today's donuts</h2>
-              <p className={s.boardNote}>Fried from 5 am. Sprinkles on everything.</p>
+              <h2 data-edit="board.title" data-edit-max="60" id="board-h">Today's donuts</h2>
+              <p data-edit="board.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>Fried from 5 am. Sprinkles on everything.</p>
             </div>
             <ul className={s.donuts}>
-              {DONUTS.map((d) => (
+              {DONUTS.map((d, i) => (
                 <li key={d.name} className={s.donut}>
-                  {d.tag ? <span className={s.donutTag}>{d.tag}</span> : null}
+                  {d.tag ? <span data-edit={`board.donutTag.${i}`} data-edit-max="60" className={s.donutTag}>{d.tag}</span> : null}
                   <Artwork slug="glaze-donuts-donut" alt="" inks={d.inks} className={s.donutArt} />
-                  <h3 className={s.donutName}>{d.name}</h3>
-                  <p className={s.donutNote}>{d.note}</p>
+                  <h3 data-edit={`board.donutName.${i}`} data-edit-max="40" className={s.donutName}>{d.name}</h3>
+                  <p data-edit={`board.donutNote.${i}`} data-edit-max="240" data-edit-multiline className={s.donutNote}>{d.note}</p>
                   <p className={s.donutPrice}>
-                    <span className={s.cur}>$</span>
-                    <span>{d.price}</span>
+                    <span data-edit={`board.cur.${i}`} data-edit-max="60" className={s.cur}>$</span>
+                    <span data-edit={`board.text.${i}`} data-edit-max="60">{d.price}</span>
                   </p>
                 </li>
               ))}
             </ul>
-            <p className={s.boardFoot}>Vegan Fridays: two flavors, fried separately. Ask what they are.</p>
+            <p data-edit="board.boardFoot" data-edit-max="240" data-edit-multiline className={s.boardFoot}>Vegan Fridays: two flavors, fried separately. Ask what they are.</p>
           </div>
         </section>
 
         {/* A strip of sprinkles between the board and the box. */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,4,5" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={sliver}
             palette={SPRINKLES}
@@ -327,46 +340,46 @@ export default function GlazeDonutsPage() {
             />
           </div>
           <div className={s.dozenBody}>
-            <h2 id="dozen-h">
+            <h2 data-edit="dozen.title" data-edit-format="emphasis" data-edit-max="60" id="dozen-h">
               Build a dozen,
               <br />
               <em>any way you like.</em>
             </h2>
-            <p className={s.lede}>
+            <p data-edit="dozen.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Point at the board and we fill the box. Twelve different or twelve the same, it is the same price.
             </p>
             <dl className={s.ladder}>
-              {DOZEN.map(([k, v]) => (
+              {DOZEN.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`dozen.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`dozen.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
             <ol className={s.dozenSteps}>
-              {DOZEN_STEPS.map(([no, title, body]) => (
+              {DOZEN_STEPS.map(([no, title, body], i) => (
                 <li key={no}>
-                  <span className={s.stepNo}>{no}</span>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
+                  <span data-edit={`dozen.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{no}</span>
+                  <h3 data-edit={`dozen.title.${i}`} data-edit-max="40">{title}</h3>
+                  <p data-edit={`dozen.body2.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                 </li>
               ))}
             </ol>
             <form className={s.form} action="#">
-              <h3 className={s.formHead}>Pre-order for tomorrow</h3>
+              <h3 data-edit="dozen.formHead" data-edit-max="40" className={s.formHead}>Pre-order for tomorrow</h3>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Name</span>
+                  <span data-edit="dozen.text" data-edit-max="60">Name</span>
                   <input type="text" name="name" autoComplete="name" />
                 </label>
                 <label className={s.field}>
-                  <span>Phone</span>
+                  <span data-edit="dozen.text2" data-edit-max="60">Phone</span>
                   <input type="tel" name="phone" autoComplete="tel" />
                 </label>
               </div>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>How many</span>
+                  <span data-edit="dozen.text3" data-edit-max="60">How many</span>
                   <select name="size" defaultValue="dozen">
                     <option value="half">Half dozen</option>
                     <option value="dozen">Dozen</option>
@@ -374,7 +387,7 @@ export default function GlazeDonutsPage() {
                   </select>
                 </label>
                 <label className={s.field}>
-                  <span>Pickup</span>
+                  <span data-edit="dozen.text4" data-edit-max="60">Pickup</span>
                   <select name="time" defaultValue="7">
                     <option value="6">6-7 am</option>
                     <option value="7">7-8 am</option>
@@ -384,10 +397,10 @@ export default function GlazeDonutsPage() {
                 </label>
               </div>
               <label className={s.field}>
-                <span>Which ones (or leave it to us)</span>
+                <span data-edit="dozen.text5" data-edit-max="60">Which ones (or leave it to us)</span>
                 <textarea name="flavors" rows={3} />
               </label>
-              <button className={s.submit} type="submit">
+              <button data-edit="dozen.submit" data-edit-max="24" className={s.submit} type="submit">
                 Send the order
               </button>
             </form>
@@ -398,24 +411,24 @@ export default function GlazeDonutsPage() {
         <section id="coffee" className={s.coffee} aria-labelledby="coffee-h">
           <div className={s.coffeeInner}>
             <div className={s.coffeeBody}>
-              <h2 id="coffee-h">
+              <h2 data-edit="coffee.title" data-edit-format="emphasis" data-edit-max="60" id="coffee-h">
                 And a coffee
                 <br />
                 <em>to dunk it in.</em>
               </h2>
-              <p className={s.lede}>
+              <p data-edit="coffee.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 Roasted across town and brewed every half hour. Drip refills are free for as long as you are at a table.
               </p>
               <ul className={s.drinks}>
-                {DRINKS.map((d) => (
+                {DRINKS.map((d, i) => (
                   <li key={d.name}>
-                    <span className={s.drinkName}>{d.name}</span>
-                    <span className={s.drinkNote}>{d.note}</span>
-                    <span className={s.drinkPrice}>{d.price}</span>
+                    <span data-edit={`coffee.drinkName.${i}`} data-edit-max="60" className={s.drinkName}>{d.name}</span>
+                    <span data-edit={`coffee.drinkNote.${i}`} data-edit-max="60" className={s.drinkNote}>{d.note}</span>
+                    <span data-edit={`coffee.drinkPrice.${i}`} data-edit-max="60" className={s.drinkPrice}>{d.price}</span>
                   </li>
                 ))}
               </ul>
-              <p className={s.combo}>Any donut and a drip coffee: $5</p>
+              <p data-edit="coffee.combo" data-edit-max="240" data-edit-multiline className={s.combo}>Any donut and a drip coffee: $5</p>
             </div>
             <div className={s.coffeeArt}>
               <Artwork
@@ -437,28 +450,28 @@ export default function GlazeDonutsPage() {
         {/* ----------------------------------------------------------- HOURS */}
         <section id="hours" className={s.hours} aria-labelledby="hours-h">
           <div className={s.hoursHead}>
-            <h2 id="hours-h">Open early, until we sell out</h2>
-            <p className={s.lede}>
+            <h2 data-edit="hours.title" data-edit-max="60" id="hours-h">Open early, until we sell out</h2>
+            <p data-edit="hours.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               The hours below are when the door is open. The sign in the window flips to Sold Out when the last tray
               goes, which is usually sooner.
             </p>
           </div>
           <div className={s.hoursGrid}>
             <dl className={s.hoursList}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`hours.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`hours.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.where}>
-              <p className={s.whereBig}>140 Market Street</p>
-              <p>On the corner of Vine, with the pink awning. Four stools inside and two benches out front.</p>
-              <a className={s.whereLink} href="tel:5550191400">
+              <p data-edit="hours.whereBig" data-edit-max="240" data-edit-multiline className={s.whereBig}>140 Market Street</p>
+              <p data-edit="hours.body2" data-edit-max="240" data-edit-multiline>On the corner of Vine, with the pink awning. Four stools inside and two benches out front.</p>
+              <a data-edit="hours.whereLink" data-edit-max="28" className={s.whereLink} href="tel:5550191400">
                 (555) 019-1400
               </a>
-              <a className={s.whereLink} href="mailto:dozen@glaze.example">
+              <a data-edit="hours.whereLink2" data-edit-max="28" className={s.whereLink} href="mailto:dozen@glaze.example">
                 dozen@glaze.example
               </a>
             </div>
@@ -467,12 +480,12 @@ export default function GlazeDonutsPage() {
 
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
-          <h2 id="faq-h">Asked at the counter</h2>
+          <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked at the counter</h2>
           <div className={s.faqList}>
-            {FAQ.map((f) => (
+            {FAQ.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -480,16 +493,16 @@ export default function GlazeDonutsPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Glaze</p>
-        <p className={s.footTag}>Donuts from 5 am, 140 Market Street. Closed Mondays.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Glaze</p>
+        <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Donuts from 5 am, 140 Market Street. Closed Mondays.</p>
         <div className={s.footFine}>
-          <p>A fictional donut shop. Flavors, prices and hours are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional donut shop. Flavors, prices and hours are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
             </a>
-            <span>, drawn live in the page's own colors; the pictures follow the palette too.</span>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the page's own colors; the pictures follow the palette too.</span>
           </p>
         </div>
       </footer>

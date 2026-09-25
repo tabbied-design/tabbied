@@ -105,7 +105,20 @@ const PLATES = [
 
 export default function BlueNoteRoomPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--night': '#0f1220',
+        '--cream': '#f1ece2',
+        '--gold': '#e3b04b',
+        '--blue': '#5d6bd6',
+        '--gray': '#6e7185',
+        '--deep': '#1a1f33',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="night,cream,gold,blue,gray,deep"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -115,16 +128,16 @@ export default function BlueNoteRoomPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Blue Note Room</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Blue Note Room</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.tickets} href="#visit">Reserve</a>
+        <a data-edit="bar.tickets" data-edit-max="28" className={s.tickets} href="#visit">Reserve</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -137,19 +150,19 @@ export default function BlueNoteRoomPage() {
         <section className={s.poster} aria-labelledby="poster-h">
           <div className={s.sheet}>
             <div className={s.posterType}>
-              <p className={s.presents}>Downstairs at 212 Canal Street</p>
-              <h1 id="poster-h" className={s.title}>
+              <p data-edit="poster.presents" data-edit-max="240" data-edit-multiline className={s.presents}>Downstairs at 212 Canal Street</p>
+              <h1 data-edit="poster.title" data-edit-format="emphasis" data-edit-max="70" id="poster-h" className={s.title}>
                 Live jazz, <em>seven nights</em> a week
               </h1>
               <div className={s.tonight}>
-                <p className={s.tonightLabel}>Tonight</p>
-                <p className={s.tonightAct}>Ansel Ward Quartet</p>
-                <p className={s.tonightSets}>Sets at 8:00 and 10:30. Doors 7:00. $25</p>
+                <p data-edit="poster.tonightLabel" data-edit-max="240" data-edit-multiline className={s.tonightLabel}>Tonight</p>
+                <p data-edit="poster.tonightAct" data-edit-max="240" data-edit-multiline className={s.tonightAct}>Ansel Ward Quartet</p>
+                <p data-edit="poster.tonightSets" data-edit-max="240" data-edit-multiline className={s.tonightSets}>Sets at 8:00 and 10:30. Doors 7:00. $25</p>
               </div>
-              <a className={s.posterLink} href="#listings">October listings</a>
+              <a data-edit="poster.posterLink" data-edit-max="28" className={s.posterLink} href="#listings">October listings</a>
             </div>
             <div className={s.posterArt}>
-              <div className={s.halo} aria-hidden="true">
+              <div data-edit-pattern="poster.field" data-edit-roles="transparent,2,3,2,1" className={s.halo} aria-hidden="true">
                 <TabbiedPattern
                   pattern={gyre}
                   palette={HALO}
@@ -169,9 +182,9 @@ export default function BlueNoteRoomPage() {
               />
             </div>
             <p className={s.posterFoot}>
-              <span>The Blue Note Room</span>
-              <span>October 2026</span>
-              <span>No talking during the music</span>
+              <span data-edit="poster.text" data-edit-max="60">The Blue Note Room</span>
+              <span data-edit="poster.text2" data-edit-max="60">October 2026</span>
+              <span data-edit="poster.text3" data-edit-max="60">No talking during the music</span>
             </p>
           </div>
         </section>
@@ -179,38 +192,38 @@ export default function BlueNoteRoomPage() {
         {/* -------------------------------------------------------- LISTINGS */}
         <section id="listings" className={s.listings} aria-labelledby="listings-h">
           <div className={s.listHead}>
-            <p className={s.kicker}>This month</p>
-            <h2 id="listings-h" className={s.secTitle}>October at the Room</h2>
-            <p className={s.secNote}>
+            <p data-edit="listings.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>This month</p>
+            <h2 data-edit="listings.secTitle" data-edit-max="60" id="listings-h" className={s.secTitle}>October at the Room</h2>
+            <p data-edit="listings.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Tickets are for a seat, not a table. Book the early set for dinner
               and the late one for the music; both are the full show.
             </p>
           </div>
           <div className={s.listGrid}>
             <ol className={s.gigs}>
-              {GIGS.map((g) => (
+              {GIGS.map((g, i) => (
                 <li key={`${g.day}-${g.artist}`} className={s.gig}>
                   <p className={s.date}>
-                    <span className={s.dateDay}>{g.day}</span>
-                    <span className={s.dateWd}>{g.wd}</span>
+                    <span data-edit={`listings.dateDay.${i}`} data-edit-max="60" className={s.dateDay}>{g.day}</span>
+                    <span data-edit={`listings.dateWd.${i}`} data-edit-max="60" className={s.dateWd}>{g.wd}</span>
                   </p>
                   <div className={s.gigMain}>
-                    <h3 className={s.artist}>{g.artist}</h3>
-                    <p className={s.gigNote}>{g.note}</p>
+                    <h3 data-edit={`listings.artist.${i}`} data-edit-max="40" className={s.artist}>{g.artist}</h3>
+                    <p data-edit={`listings.gigNote.${i}`} data-edit-max="240" data-edit-multiline className={s.gigNote}>{g.note}</p>
                   </div>
                   <dl className={s.gigFacts}>
                     <div>
-                      <dt>Sets</dt>
-                      <dd>{g.sets}</dd>
+                      <dt data-edit={`listings.term.${i}`} data-edit-max="28">Sets</dt>
+                      <dd data-edit={`listings.body.${i}`} data-edit-max="200" data-edit-multiline>{g.sets}</dd>
                     </div>
                     <div>
-                      <dt>Tickets</dt>
-                      <dd>{g.price}</dd>
+                      <dt data-edit={`listings.term2.${i}`} data-edit-max="28">Tickets</dt>
+                      <dd data-edit={`listings.body2.${i}`} data-edit-max="200" data-edit-multiline>{g.price}</dd>
                     </div>
                   </dl>
                   <div className={s.gigAct}>
-                    <p className={`${s.status} ${s[g.tone]}`}>{g.status}</p>
-                    <a className={s.book} href="#visit">Book</a>
+                    <p data-edit={`listings.status.${i}`} data-edit-max="240" data-edit-multiline className={`${s.status} ${s[g.tone]}`}>{g.status}</p>
+                    <a data-edit={`listings.book.${i}`} data-edit-max="28" className={s.book} href="#visit">Book</a>
                   </div>
                 </li>
               ))}
@@ -224,22 +237,22 @@ export default function BlueNoteRoomPage() {
                   className={s.bass}
                 />
               </div>
-              <h3 id="aside-h" className={s.asideTitle}>Every week</h3>
+              <h3 data-edit="aside.asideTitle" data-edit-max="40" id="aside-h" className={s.asideTitle}>Every week</h3>
               <ul className={s.weekly}>
                 <li>
-                  <span className={s.weeklyDay}>Monday</span>
-                  <span>Big band, 17 pieces</span>
+                  <span data-edit="aside.weeklyDay" data-edit-max="60" className={s.weeklyDay}>Monday</span>
+                  <span data-edit="aside.text" data-edit-max="60">Big band, 17 pieces</span>
                 </li>
                 <li>
-                  <span className={s.weeklyDay}>Wednesday</span>
-                  <span>New voices from the conservatory</span>
+                  <span data-edit="aside.weeklyDay2" data-edit-max="60" className={s.weeklyDay}>Wednesday</span>
+                  <span data-edit="aside.text2" data-edit-max="60">New voices from the conservatory</span>
                 </li>
                 <li>
-                  <span className={s.weeklyDay}>Sunday</span>
-                  <span>The jam, bring your horn</span>
+                  <span data-edit="aside.weeklyDay3" data-edit-max="60" className={s.weeklyDay}>Sunday</span>
+                  <span data-edit="aside.text3" data-edit-max="60">The jam, bring your horn</span>
                 </li>
               </ul>
-              <p className={s.asideNote}>The rest of October goes on sale on the 11th.</p>
+              <p data-edit="aside.asideNote" data-edit-max="240" data-edit-multiline className={s.asideNote}>The rest of October goes on sale on the 11th.</p>
             </aside>
           </div>
         </section>
@@ -247,27 +260,27 @@ export default function BlueNoteRoomPage() {
         {/* ------------------------------------------------------ MEMBERSHIP */}
         <section id="membership" className={s.sec} aria-labelledby="membership-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Membership</p>
-            <h2 id="membership-h" className={s.secTitle}>Come more often, pay less</h2>
-            <p className={s.secNote}>
+            <p data-edit="membership.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Membership</p>
+            <h2 data-edit="membership.secTitle" data-edit-max="60" id="membership-h" className={s.secTitle}>Come more often, pay less</h2>
+            <p data-edit="membership.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Members keep the lights on and the piano tuned. Cancel whenever you
               like, from the bar or by email.
             </p>
           </div>
           <ul className={s.tiers}>
-            {TIERS.map((t) => (
+            {TIERS.map((t, i) => (
               <li key={t.name} className={t.featured ? `${s.tier} ${s.tierFeatured}` : s.tier}>
-                <h3 className={s.tierName}>{t.name}</h3>
+                <h3 data-edit={`membership.tierName.${i}`} data-edit-max="40" className={s.tierName}>{t.name}</h3>
                 <p className={s.tierPrice}>
-                  <span className={s.tierAmount}>{t.price}</span>
-                  <span className={s.tierPer}>{t.per}</span>
+                  <span data-edit={`membership.tierAmount.${i}`} data-edit-max="60" className={s.tierAmount}>{t.price}</span>
+                  <span data-edit={`membership.tierPer.${i}`} data-edit-max="60" className={s.tierPer}>{t.per}</span>
                 </p>
                 <ul className={s.perks}>
-                  {t.perks.map((p) => (
-                    <li key={p}>{p}</li>
+                  {t.perks.map((p, i2) => (
+                    <li data-edit={`membership.item.${i}.${i2}`} data-edit-max="80" key={p}>{p}</li>
                   ))}
                 </ul>
-                <a className={s.join} href="#visit">Join at the bar or by email</a>
+                <a data-edit={`membership.join.${i}`} data-edit-max="28" className={s.join} href="#visit">Join at the bar or by email</a>
               </li>
             ))}
           </ul>
@@ -285,18 +298,18 @@ export default function BlueNoteRoomPage() {
               />
             </div>
             <div className={s.roomText}>
-              <p className={s.kicker}>The room</p>
-              <h2 id="room-h" className={s.secTitle}>Ninety seats, a low ceiling, and one rule</h2>
-              <p className={s.body}>
+              <p data-edit="room.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The room</p>
+              <h2 data-edit="room.secTitle" data-edit-max="60" id="room-h" className={s.secTitle}>Ninety seats, a low ceiling, and one rule</h2>
+              <p data-edit="room.body" data-edit-max="240" data-edit-multiline className={s.body}>
                 The rule is quiet while the band plays. Talk between songs, order
                 between songs, and the musicians will play to you as if the room
                 were full of friends, which by the second set it usually is.
               </p>
               <dl className={s.facts}>
-                {ROOM.map(([k, v]) => (
+                {ROOM.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`room.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`room.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -308,7 +321,7 @@ export default function BlueNoteRoomPage() {
         <section id="bar" className={s.sec} aria-labelledby="bar-h">
           <div className={s.barGrid}>
             <div className={s.record} aria-hidden="true">
-              <div className={s.grooves} aria-hidden="true">
+              <div data-edit-pattern="bar.field" data-edit-roles="transparent,4,3,5" className={s.grooves} aria-hidden="true">
                 <TabbiedPattern
                   pattern={spiralrosette}
                   palette={GROOVES}
@@ -318,26 +331,26 @@ export default function BlueNoteRoomPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <span className={s.label}>BNR</span>
+              <span data-edit="bar.label" data-edit-max="60" className={s.label}>BNR</span>
             </div>
             <div className={s.menu}>
-              <p className={s.kicker}>The bar</p>
-              <h2 id="bar-h" className={s.secTitle}>Drinks named after the records</h2>
+              <p data-edit="bar.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The bar</p>
+              <h2 data-edit="bar.secTitle" data-edit-max="60" id="bar-h" className={s.secTitle}>Drinks named after the records</h2>
               <ul className={s.drinks}>
-                {DRINKS.map((d) => (
+                {DRINKS.map((d, i) => (
                   <li key={d.name}>
-                    <span className={s.drinkName}>{d.name}</span>
-                    <span className={s.drinkPrice}>{d.price}</span>
-                    <span className={s.drinkWhat}>{d.what}</span>
+                    <span data-edit={`bar.drinkName.${i}`} data-edit-max="60" className={s.drinkName}>{d.name}</span>
+                    <span data-edit={`bar.drinkPrice.${i}`} data-edit-max="60" className={s.drinkPrice}>{d.price}</span>
+                    <span data-edit={`bar.drinkWhat.${i}`} data-edit-max="60" className={s.drinkWhat}>{d.what}</span>
                   </li>
                 ))}
               </ul>
-              <h3 className={s.platesHead}>Something to eat, until 11</h3>
+              <h3 data-edit="bar.platesHead" data-edit-max="40" className={s.platesHead}>Something to eat, until 11</h3>
               <ul className={s.plates}>
-                {PLATES.map(([n, p]) => (
+                {PLATES.map(([n, p], i) => (
                   <li key={n}>
-                    <span>{n}</span>
-                    <span className={s.drinkPrice}>{p}</span>
+                    <span data-edit={`bar.text.${i}`} data-edit-max="60">{n}</span>
+                    <span data-edit={`bar.drinkPrice2.${i}`} data-edit-max="60" className={s.drinkPrice}>{p}</span>
                   </li>
                 ))}
               </ul>
@@ -348,40 +361,40 @@ export default function BlueNoteRoomPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitText}>
-            <p className={s.kicker}>Visit and reserve</p>
-            <h2 id="visit-h" className={s.secTitle}>212 Canal Street, downstairs</h2>
-            <p className={s.body}>
+            <p data-edit="visit.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Visit and reserve</p>
+            <h2 data-edit="visit.secTitle" data-edit-max="60" id="visit-h" className={s.secTitle}>212 Canal Street, downstairs</h2>
+            <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.body}>
               Look for the blue door beside the tailor. The box office opens at
               5:00 every night, and unsold seats go at the door from 7:00.
             </p>
             <dl className={s.contact}>
               <div>
-                <dt>Box office</dt>
-                <dd>(555) 019-5282</dd>
+                <dt data-edit="visit.term" data-edit-max="28">Box office</dt>
+                <dd data-edit="visit.body2" data-edit-max="200" data-edit-multiline>(555) 019-5282</dd>
               </div>
               <div>
-                <dt>Email</dt>
+                <dt data-edit="visit.term2" data-edit-max="28">Email</dt>
                 <dd>
-                  <a href="mailto:tickets@bluenoteroom.example">tickets@bluenoteroom.example</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="mailto:tickets@bluenoteroom.example">tickets@bluenoteroom.example</a>
                 </dd>
               </div>
               <div>
-                <dt>Getting here</dt>
-                <dd>Canal Street stop, then two minutes on foot</dd>
+                <dt data-edit="visit.term3" data-edit-max="28">Getting here</dt>
+                <dd data-edit="visit.body3" data-edit-max="200" data-edit-multiline>Canal Street stop, then two minutes on foot</dd>
               </div>
             </dl>
           </div>
           <form className={s.form} action="#">
             <p className={s.field}>
-              <label htmlFor="bn-name">Name</label>
+              <label data-edit="visit.label" htmlFor="bn-name">Name</label>
               <input id="bn-name" name="name" type="text" autoComplete="name" />
             </p>
             <p className={s.field}>
-              <label htmlFor="bn-email">Email</label>
+              <label data-edit="visit.label2" htmlFor="bn-email">Email</label>
               <input id="bn-email" name="email" type="email" autoComplete="email" />
             </p>
             <p className={s.field}>
-              <label htmlFor="bn-night">Night</label>
+              <label data-edit="visit.label3" htmlFor="bn-night">Night</label>
               <select id="bn-night" name="night" defaultValue="">
                 <option value="" disabled>
                   Choose a night
@@ -392,39 +405,39 @@ export default function BlueNoteRoomPage() {
               </select>
             </p>
             <p className={s.field}>
-              <label htmlFor="bn-set">Set</label>
+              <label data-edit="visit.label4" htmlFor="bn-set">Set</label>
               <select id="bn-set" name="set" defaultValue="early">
                 <option value="early">Early set</option>
                 <option value="late">Late set</option>
               </select>
             </p>
             <p className={s.field}>
-              <label htmlFor="bn-seats">Seats</label>
+              <label data-edit="visit.label5" htmlFor="bn-seats">Seats</label>
               <input id="bn-seats" name="seats" type="number" min={1} max={8} defaultValue={2} />
             </p>
-            <button type="submit" className={s.submit}>Hold my seats</button>
+            <button data-edit="visit.submit" data-edit-max="24" type="submit" className={s.submit}>Hold my seats</button>
           </form>
         </section>
       </main>
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footMark}>Blue Note Room</p>
+          <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Blue Note Room</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
-          <p className={s.footAddr}>212 Canal Street, downstairs. Open nightly from 5.</p>
+          <p data-edit="footer.footAddr" data-edit-max="240" data-edit-multiline className={s.footAddr}>212 Canal Street, downstairs. Open nightly from 5.</p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional jazz club. Musicians, prices and dates are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional jazz club. Musicians, prices and dates are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on a transparent ground.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
           </p>
         </div>
       </footer>

@@ -119,7 +119,20 @@ const STOCKISTS = [
 
 export default function WickAndWaxPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--wax': '#f6f2ec',
+        '--ink': '#231f1c',
+        '--amber': '#b8864b',
+        '--heather': '#7c6f8e',
+        '--smoke': '#a39a90',
+        '--pale': '#e8e0d4',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="wax,ink,amber,heather,smoke,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -130,19 +143,19 @@ export default function WickAndWaxPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span>Wick</span>
-          <span className={s.markAmp}>&amp;</span>
-          <span>Wax</span>
+          <span data-edit="bar.text" data-edit-max="60">Wick</span>
+          <span data-edit="bar.markAmp" data-edit-max="60" className={s.markAmp}>&amp;</span>
+          <span data-edit="bar.text2" data-edit-max="60">Wax</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <span className={s.barMeta}>Studio shop Fri-Sun</span>
+        <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Studio shop Fri-Sun</span>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -152,30 +165,30 @@ export default function WickAndWaxPage() {
             A still life in an arched niche: the three ways we pour. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Candle maker, Chandler Lane</p>
-            <h1 className={s.title} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Candle maker, Chandler Lane</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.title} id="hero-h">
               A library of <em>nine scents,</em> poured by hand.
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Soy and beeswax, cotton wicks, and oils blended at the bench one
               batch at a time. Every scent comes three ways, and every card in
               the library tells you what you will smell first, then after an
               hour, then the next morning.
             </p>
             <ul className={s.formats}>
-              {FORMATS.map((f) => (
+              {FORMATS.map((f, i) => (
                 <li key={f.name}>
-                  <strong>{f.name}</strong>
-                  <span>{f.size}</span>
-                  <span className={s.formatPrice}>{f.price}</span>
+                  <strong data-edit={`hero.emphasis.${i}`}>{f.name}</strong>
+                  <span data-edit={`hero.text.${i}`} data-edit-max="60">{f.size}</span>
+                  <span data-edit={`hero.formatPrice.${i}`} data-edit-max="60" className={s.formatPrice}>{f.price}</span>
                 </li>
               ))}
             </ul>
-            <a className={s.btn} href="#library">Browse the library</a>
+            <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#library">Browse the library</a>
           </div>
           <div className={s.niche}>
             <span className={`${s.candleBox} ${s.Pillar} ${s.nichePillar}`}>
-              <Artwork slug="wick-and-wax-pillar" alt="" mode="fill" inks={[]} className={s.candle}>
+              <Artwork data-edit-pattern="hero.field" data-edit-roles="5,2,4" slug="wick-and-wax-pillar" alt="" mode="fill" inks={[]} className={s.candle}>
                 <TabbiedPattern
                   pattern={moleskin}
                   palette={WOODS}
@@ -186,7 +199,7 @@ export default function WickAndWaxPage() {
                 />
               </Artwork>
             </span>
-            <Artwork slug="wick-and-wax-jar" alt="A candle in a glass jar, its wax patterned with leaves" mode="fill" inks={[]} className={s.nicheJar}>
+            <Artwork data-edit-pattern="hero.field2" data-edit-roles="2,2,0" slug="wick-and-wax-jar" alt="A candle in a glass jar, its wax patterned with leaves" mode="fill" inks={[]} className={s.nicheJar}>
               <TabbiedPattern
                 pattern={teardropleaves}
                 palette={HERO_JAR}
@@ -196,7 +209,7 @@ export default function WickAndWaxPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </Artwork>
-            <Artwork slug="wick-and-wax-tin" alt="" mode="fill" inks={[]} className={s.nicheTin}>
+            <Artwork data-edit-pattern="hero.field3" data-edit-roles="3,0,5,2" slug="wick-and-wax-tin" alt="" mode="fill" inks={[]} className={s.nicheTin}>
               <TabbiedPattern
                 pattern={roundpair}
                 palette={FLORALS}
@@ -215,9 +228,9 @@ export default function WickAndWaxPage() {
             Index cards on three shelves, one shelf to a family of scents. */}
         <section id="library" className={s.library} aria-labelledby="library-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>The scent library</p>
-            <h2 id="library-h">Nine scents, three shelves</h2>
-            <p className={s.secNote}>
+            <p data-edit="library.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The scent library</p>
+            <h2 data-edit="library.title" data-edit-max="60" id="library-h">Nine scents, three shelves</h2>
+            <p data-edit="library.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Top notes are what you smell as you lift the lid, the heart once
               the pool has melted, the base what is left in the room tomorrow.
               Every scent is made in all three sizes; the card shows our
@@ -226,15 +239,15 @@ export default function WickAndWaxPage() {
           </div>
 
           <div className={s.shelfHead}>
-            <span className={s.shelfMark}>Shelf A</span>
-            <h3>Woods and smoke</h3>
+            <span data-edit="library.shelfMark" data-edit-max="60" className={s.shelfMark}>Shelf A</span>
+            <h3 data-edit="library.title2" data-edit-max="40">Woods and smoke</h3>
           </div>
           <ul className={s.cards}>
-            {WOOD_SCENTS.map((c) => (
+            {WOOD_SCENTS.map((c, i) => (
               <li key={c.no} className={s.card}>
                 <div className={s.cardArt}>
                   <span className={`${s.candleBox} ${s[c.form]}`}>
-                    <Artwork slug={c.art} alt={`${c.name}, ${c.form}`} mode="fill" inks={[]} className={s.candle}>
+                    <Artwork data-edit-pattern={`library.field.${i}`} data-edit-roles="5,2,4" slug={c.art} alt={`${c.name}, ${c.form}`} mode="fill" inks={[]} className={s.candle}>
                       <TabbiedPattern
                         pattern={moleskin}
                         palette={WOODS}
@@ -248,25 +261,25 @@ export default function WickAndWaxPage() {
                 </div>
                 <div className={s.cardBody}>
                   <span className={s.callNo}>{`No. ${c.no}`}</span>
-                  <h4 className={s.cardName}>{c.name}</h4>
-                  <p className={s.cardMood}>{c.mood}</p>
+                  <h4 data-edit={`library.cardName.${i}`} data-edit-max="36" className={s.cardName}>{c.name}</h4>
+                  <p data-edit={`library.cardMood.${i}`} data-edit-max="240" data-edit-multiline className={s.cardMood}>{c.mood}</p>
                   <dl className={s.notes}>
                     <div>
-                      <dt>Top</dt>
-                      <dd>{c.top}</dd>
+                      <dt data-edit={`library.term.${i}`} data-edit-max="28">Top</dt>
+                      <dd data-edit={`library.body.${i}`} data-edit-max="200" data-edit-multiline>{c.top}</dd>
                     </div>
                     <div>
-                      <dt>Heart</dt>
-                      <dd>{c.heart}</dd>
+                      <dt data-edit={`library.term2.${i}`} data-edit-max="28">Heart</dt>
+                      <dd data-edit={`library.body2.${i}`} data-edit-max="200" data-edit-multiline>{c.heart}</dd>
                     </div>
                     <div>
-                      <dt>Base</dt>
-                      <dd>{c.base}</dd>
+                      <dt data-edit={`library.term3.${i}`} data-edit-max="28">Base</dt>
+                      <dd data-edit={`library.body3.${i}`} data-edit-max="200" data-edit-multiline>{c.base}</dd>
                     </div>
                   </dl>
                   <p className={s.cardPrice}>
-                    <span>{c.form}</span>
-                    <strong>{c.price}</strong>
+                    <span data-edit={`library.text.${i}`} data-edit-max="60">{c.form}</span>
+                    <strong data-edit={`library.emphasis.${i}`}>{c.price}</strong>
                   </p>
                 </div>
               </li>
@@ -274,15 +287,15 @@ export default function WickAndWaxPage() {
           </ul>
 
           <div className={s.shelfHead}>
-            <span className={s.shelfMark}>Shelf B</span>
-            <h3>Flowers</h3>
+            <span data-edit="library.shelfMark2" data-edit-max="60" className={s.shelfMark}>Shelf B</span>
+            <h3 data-edit="library.title3" data-edit-max="40">Flowers</h3>
           </div>
           <ul className={s.cards}>
-            {FLORAL_SCENTS.map((c) => (
+            {FLORAL_SCENTS.map((c, i) => (
               <li key={c.no} className={s.card}>
                 <div className={s.cardArt}>
                   <span className={`${s.candleBox} ${s[c.form]}`}>
-                    <Artwork slug={c.art} alt={`${c.name}, ${c.form}`} mode="fill" inks={[]} className={s.candle}>
+                    <Artwork data-edit-pattern={`library.field2.${i}`} data-edit-roles="3,0,5,2" slug={c.art} alt={`${c.name}, ${c.form}`} mode="fill" inks={[]} className={s.candle}>
                       <TabbiedPattern
                         pattern={roundpair}
                         palette={FLORALS}
@@ -297,25 +310,25 @@ export default function WickAndWaxPage() {
                 </div>
                 <div className={s.cardBody}>
                   <span className={s.callNo}>{`No. ${c.no}`}</span>
-                  <h4 className={s.cardName}>{c.name}</h4>
-                  <p className={s.cardMood}>{c.mood}</p>
+                  <h4 data-edit={`library.cardName2.${i}`} data-edit-max="36" className={s.cardName}>{c.name}</h4>
+                  <p data-edit={`library.cardMood2.${i}`} data-edit-max="240" data-edit-multiline className={s.cardMood}>{c.mood}</p>
                   <dl className={s.notes}>
                     <div>
-                      <dt>Top</dt>
-                      <dd>{c.top}</dd>
+                      <dt data-edit={`library.term4.${i}`} data-edit-max="28">Top</dt>
+                      <dd data-edit={`library.body4.${i}`} data-edit-max="200" data-edit-multiline>{c.top}</dd>
                     </div>
                     <div>
-                      <dt>Heart</dt>
-                      <dd>{c.heart}</dd>
+                      <dt data-edit={`library.term5.${i}`} data-edit-max="28">Heart</dt>
+                      <dd data-edit={`library.body5.${i}`} data-edit-max="200" data-edit-multiline>{c.heart}</dd>
                     </div>
                     <div>
-                      <dt>Base</dt>
-                      <dd>{c.base}</dd>
+                      <dt data-edit={`library.term6.${i}`} data-edit-max="28">Base</dt>
+                      <dd data-edit={`library.body6.${i}`} data-edit-max="200" data-edit-multiline>{c.base}</dd>
                     </div>
                   </dl>
                   <p className={s.cardPrice}>
-                    <span>{c.form}</span>
-                    <strong>{c.price}</strong>
+                    <span data-edit={`library.text2.${i}`} data-edit-max="60">{c.form}</span>
+                    <strong data-edit={`library.emphasis2.${i}`}>{c.price}</strong>
                   </p>
                 </div>
               </li>
@@ -323,15 +336,15 @@ export default function WickAndWaxPage() {
           </ul>
 
           <div className={s.shelfHead}>
-            <span className={s.shelfMark}>Shelf C</span>
-            <h3>Kitchen garden</h3>
+            <span data-edit="library.shelfMark3" data-edit-max="60" className={s.shelfMark}>Shelf C</span>
+            <h3 data-edit="library.title4" data-edit-max="40">Kitchen garden</h3>
           </div>
           <ul className={s.cards}>
-            {GARDEN_SCENTS.map((c) => (
+            {GARDEN_SCENTS.map((c, i) => (
               <li key={c.no} className={s.card}>
                 <div className={s.cardArt}>
                   <span className={`${s.candleBox} ${s[c.form]}`}>
-                    <Artwork slug={c.art} alt={`${c.name}, ${c.form}`} mode="fill" inks={[]} className={s.candle}>
+                    <Artwork data-edit-pattern={`library.field3.${i}`} data-edit-roles="4,4,0" slug={c.art} alt={`${c.name}, ${c.form}`} mode="fill" inks={[]} className={s.candle}>
                       <TabbiedPattern
                         pattern={teardropleaves}
                         palette={GARDEN}
@@ -345,31 +358,31 @@ export default function WickAndWaxPage() {
                 </div>
                 <div className={s.cardBody}>
                   <span className={s.callNo}>{`No. ${c.no}`}</span>
-                  <h4 className={s.cardName}>{c.name}</h4>
-                  <p className={s.cardMood}>{c.mood}</p>
+                  <h4 data-edit={`library.cardName3.${i}`} data-edit-max="36" className={s.cardName}>{c.name}</h4>
+                  <p data-edit={`library.cardMood3.${i}`} data-edit-max="240" data-edit-multiline className={s.cardMood}>{c.mood}</p>
                   <dl className={s.notes}>
                     <div>
-                      <dt>Top</dt>
-                      <dd>{c.top}</dd>
+                      <dt data-edit={`library.term7.${i}`} data-edit-max="28">Top</dt>
+                      <dd data-edit={`library.body7.${i}`} data-edit-max="200" data-edit-multiline>{c.top}</dd>
                     </div>
                     <div>
-                      <dt>Heart</dt>
-                      <dd>{c.heart}</dd>
+                      <dt data-edit={`library.term8.${i}`} data-edit-max="28">Heart</dt>
+                      <dd data-edit={`library.body8.${i}`} data-edit-max="200" data-edit-multiline>{c.heart}</dd>
                     </div>
                     <div>
-                      <dt>Base</dt>
-                      <dd>{c.base}</dd>
+                      <dt data-edit={`library.term9.${i}`} data-edit-max="28">Base</dt>
+                      <dd data-edit={`library.body9.${i}`} data-edit-max="200" data-edit-multiline>{c.base}</dd>
                     </div>
                   </dl>
                   <p className={s.cardPrice}>
-                    <span>{c.form}</span>
-                    <strong>{c.price}</strong>
+                    <span data-edit={`library.text3.${i}`} data-edit-max="60">{c.form}</span>
+                    <strong data-edit={`library.emphasis3.${i}`}>{c.price}</strong>
                   </p>
                 </div>
               </li>
             ))}
           </ul>
-          <p className={s.libraryNote}>
+          <p data-edit="library.libraryNote" data-edit-max="240" data-edit-multiline className={s.libraryNote}>
             Order any scent in any size from the studio shop or by email. Three
             candles or more ship free; bring an empty jar back for $4 off.
           </p>
@@ -378,7 +391,7 @@ export default function WickAndWaxPage() {
         {/* -------------------------------------------------------- WORKSHOP
             Candlelight: soft amber rounds over the ink, and the booking. */}
         <section id="workshop" className={s.workshop} aria-labelledby="workshop-h">
-          <div className={s.glow} aria-hidden="true">
+          <div data-edit-pattern="workshop.field" data-edit-roles="transparent,2,3" className={s.glow} aria-hidden="true">
             <TabbiedPattern
               pattern={bokeh}
               palette={GLOW}
@@ -392,45 +405,45 @@ export default function WickAndWaxPage() {
           </div>
           <div className={s.workshopInner}>
             <div className={s.workshopText}>
-              <p className={s.secKick}>Pour your own</p>
-              <h2 id="workshop-h">Blend a scent, pour a candle, take it home.</h2>
-              <p className={s.workshopLede}>
+              <p data-edit="workshop.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Pour your own</p>
+              <h2 data-edit="workshop.title" data-edit-max="60" id="workshop-h">Blend a scent, pour a candle, take it home.</h2>
+              <p data-edit="workshop.workshopLede" data-edit-max="240" data-edit-multiline className={s.workshopLede}>
                 Smell twenty oils, build a blend from a top, a heart and a base,
                 and pour it into a jar and a tin at our long bench. We cure
                 them for you and they are ready to collect a week later.
               </p>
               <dl className={s.facts}>
-                {WORKSHOP_FACTS.map(([k, v]) => (
+                {WORKSHOP_FACTS.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`workshop.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`workshop.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.private}>
+              <p data-edit="workshop.private" data-edit-max="240" data-edit-multiline className={s.private}>
                 A birthday, a team, a bachelorette party? Book the whole bench for six to
                 ten people on any evening, $60 a person.
               </p>
             </div>
             <form className={s.form} action="#">
               <fieldset className={s.sessions}>
-                <legend>Choose a session</legend>
-                {SESSIONS.map((se) => (
+                <legend data-edit="workshop.legend">Choose a session</legend>
+                {SESSIONS.map((se, i) => (
                   <label key={se.id} className={s.session}>
                     <input type="radio" name="session" value={se.id} disabled={se.full} />
-                    <span className={s.sessionWhen}>{se.when}</span>
-                    <span className={s.sessionTime}>{se.time}</span>
-                    <span className={s.sessionLeft}>{se.left}</span>
+                    <span data-edit={`workshop.sessionWhen.${i}`} data-edit-max="60" className={s.sessionWhen}>{se.when}</span>
+                    <span data-edit={`workshop.sessionTime.${i}`} data-edit-max="60" className={s.sessionTime}>{se.time}</span>
+                    <span data-edit={`workshop.sessionLeft.${i}`} data-edit-max="60" className={s.sessionLeft}>{se.left}</span>
                   </label>
                 ))}
               </fieldset>
               <div className={s.formRow}>
                 <div className={s.field}>
-                  <label htmlFor="wick-name">Name</label>
+                  <label data-edit="workshop.label" htmlFor="wick-name">Name</label>
                   <input id="wick-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="wick-people">People</label>
+                  <label data-edit="workshop.label2" htmlFor="wick-people">People</label>
                   <select id="wick-people" name="people" defaultValue="1">
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -440,11 +453,11 @@ export default function WickAndWaxPage() {
                 </div>
               </div>
               <div className={s.field}>
-                <label htmlFor="wick-email">Email</label>
+                <label data-edit="workshop.label3" htmlFor="wick-email">Email</label>
                 <input id="wick-email" name="email" type="email" autoComplete="email" />
               </div>
-              <button className={s.submit} type="submit">Book my places</button>
-              <small className={s.formNote}>Pay on the day. Cancel up to 48 hours before for a full refund.</small>
+              <button data-edit="workshop.submit" data-edit-max="24" className={s.submit} type="submit">Book my places</button>
+              <small data-edit="workshop.formNote" className={s.formNote}>Pay on the day. Cancel up to 48 hours before for a full refund.</small>
             </form>
           </div>
         </section>
@@ -452,18 +465,18 @@ export default function WickAndWaxPage() {
         {/* ------------------------------------------------------------ CARE */}
         <section id="care" className={s.care} aria-labelledby="care-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Burn well</p>
-            <h2 id="care-h">Four rules for a clean burn</h2>
-            <p className={s.secNote}>
+            <p data-edit="care.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Burn well</p>
+            <h2 data-edit="care.title" data-edit-max="60" id="care-h">Four rules for a clean burn</h2>
+            <p data-edit="care.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A good candle burned badly smokes, tunnels and wastes half its
               wax. These are printed under every lid, too.
             </p>
           </div>
           <ol className={s.careList}>
-            {CARE.map((c) => (
+            {CARE.map((c, i) => (
               <li key={c.t}>
-                <h3>{c.t}</h3>
-                <p>{c.b}</p>
+                <h3 data-edit={`care.title2.${i}`} data-edit-max="40">{c.t}</h3>
+                <p data-edit={`care.body.${i}`} data-edit-max="240" data-edit-multiline>{c.b}</p>
               </li>
             ))}
           </ol>
@@ -472,23 +485,23 @@ export default function WickAndWaxPage() {
         {/* ------------------------------------------------------- STOCKISTS */}
         <section id="stockists" className={s.stockists} aria-labelledby="stockists-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Stockists</p>
-            <h2 id="stockists-h">Where to smell them first</h2>
-            <p className={s.secNote}>
+            <p data-edit="stockists.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Stockists</p>
+            <h2 data-edit="stockists.title" data-edit-max="60" id="stockists-h">Where to smell them first</h2>
+            <p data-edit="stockists.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every shop below keeps testers open on the counter. For wholesale,
               write to trade@wickandwax.example with the name of your shop.
             </p>
           </div>
           <div className={s.areas}>
-            {STOCKISTS.map((a) => (
+            {STOCKISTS.map((a, i) => (
               <div key={a.area} className={s.area}>
-                <h3>{a.area}</h3>
+                <h3 data-edit={`stockists.title2.${i}`} data-edit-max="40">{a.area}</h3>
                 <ul>
-                  {a.shops.map((sh) => (
+                  {a.shops.map((sh, i2) => (
                     <li key={sh.name}>
-                      <strong>{sh.name}</strong>
-                      <span>{sh.addr}</span>
-                      <small>{sh.carry}</small>
+                      <strong data-edit={`stockists.emphasis.${i}.${i2}`}>{sh.name}</strong>
+                      <span data-edit={`stockists.text.${i}.${i2}`} data-edit-max="60">{sh.addr}</span>
+                      <small data-edit={`stockists.note.${i}.${i2}`}>{sh.carry}</small>
                     </li>
                   ))}
                 </ul>
@@ -500,8 +513,8 @@ export default function WickAndWaxPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Wick &amp; Wax</p>
-          <p className={s.footAddr}>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Wick &amp; Wax</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             9 Chandler Lane
             <br />
             hello@wickandwax.example
@@ -510,10 +523,10 @@ export default function WickAndWaxPage() {
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional candle maker. Scents, shops and prices are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional candle maker. Scents, shops and prices are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

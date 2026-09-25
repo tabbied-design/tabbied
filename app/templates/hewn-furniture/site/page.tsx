@@ -231,7 +231,19 @@ const FACTS = [
 
 export default function HewnFurniturePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f3efe8',
+        '--ink': '#201a16',
+        '--walnut': '#9a5b36',
+        '--gray': '#8e857b',
+        '--pale': '#e4dbcf',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,walnut,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -241,17 +253,17 @@ export default function HewnFurniturePage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Hewn</a>
-        <span className={s.edition}>Catalog 14</span>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Hewn</a>
+        <span data-edit="bar.edition" data-edit-max="60" className={s.edition}>Catalog 14</span>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#showroom">Book a visit</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#showroom">Book a visit</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -262,34 +274,34 @@ export default function HewnFurniturePage() {
             the right, the chair on a field of grain lines. */}
         <section className={s.cover} aria-labelledby="cover-h">
           <div className={s.coverText}>
-            <p className={s.kicker}>Catalog 14, autumn and winter 2026</p>
-            <h1 className={s.coverTitle} id="cover-h">
+            <p data-edit="cover.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Catalog 14, autumn and winter 2026</p>
+            <h1 data-edit="cover.title" data-edit-format="emphasis" data-edit-max="70" className={s.coverTitle} id="cover-h">
               Furniture for
               <br />
               <em>a long time.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="cover.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Six pieces from our own workshop in the Mill District: a lounge
               chair, a floor lamp and a low sideboard, each made two ways.
               Delivered and assembled by the people who built them.
             </p>
             <div className={s.coverActions}>
-              <a className={s.button} href="#catalog">Browse the catalog</a>
-              <a className={s.textLink} href="#showroom">Ask for the printed copy</a>
+              <a data-edit="cover.button" data-edit-max="28" className={s.button} href="#catalog">Browse the catalog</a>
+              <a data-edit="cover.textLink" data-edit-max="28" className={s.textLink} href="#showroom">Ask for the printed copy</a>
             </div>
             <ol className={s.contents} aria-label="Contents">
-              {CONTENTS.map(([no, label, href, pageNo]) => (
+              {CONTENTS.map(([no, label, href, pageNo], i) => (
                 <li key={href}>
-                  <span className={s.contentsNo}>{no}</span>
-                  <a href={href}>{label}</a>
-                  <span className={s.contentsPage}>{pageNo}</span>
+                  <span data-edit={`cover.contentsNo.${i}`} data-edit-max="60" className={s.contentsNo}>{no}</span>
+                  <a data-edit={`cover.link.${i}`} data-edit-max="28" href={href}>{label}</a>
+                  <span data-edit={`cover.contentsPage.${i}`} data-edit-max="60" className={s.contentsPage}>{pageNo}</span>
                 </li>
               ))}
             </ol>
           </div>
 
           <figure className={s.plate}>
-            <div className={s.plateField} aria-hidden="true">
+            <div data-edit-pattern="cover.field" data-edit-roles="transparent,2,3,4" className={s.plateField} aria-hidden="true">
               <TabbiedPattern
                 pattern={randomrings}
                 palette={GRAIN}
@@ -299,7 +311,7 @@ export default function HewnFurniturePage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <span className={s.plateNo}>Plate 1</span>
+            <span data-edit="cover.plateNo" data-edit-max="60" className={s.plateNo}>Plate 1</span>
             <Artwork
               slug="hewn-furniture-chair"
               alt="The Loll lounge chair in black leather and walnut"
@@ -307,24 +319,24 @@ export default function HewnFurniturePage() {
               className={s.coverChair}
             />
             <figcaption className={s.plateCaption}>
-              <span className={s.plateItem}>No. 101, Loll lounge chair</span>
-              <span className={s.platePrice}>From $3,480</span>
+              <span data-edit="cover.plateItem" data-edit-max="60" className={s.plateItem}>No. 101, Loll lounge chair</span>
+              <span data-edit="cover.platePrice" data-edit-max="60" className={s.platePrice}>From $3,480</span>
             </figcaption>
           </figure>
         </section>
 
         <ul className={s.promises} aria-label="What comes with every piece">
           <li>
-            <strong>Made here.</strong>
-            <span>Every piece is built in our workshop behind the showroom.</span>
+            <strong data-edit="top.emphasis">Made here.</strong>
+            <span data-edit="top.text" data-edit-max="60">Every piece is built in our workshop behind the showroom.</span>
           </li>
           <li>
-            <strong>Carried in.</strong>
-            <span>Free delivery and assembly in the Mill District and downtown.</span>
+            <strong data-edit="top.emphasis2">Carried in.</strong>
+            <span data-edit="top.text2" data-edit-max="60">Free delivery and assembly in the Mill District and downtown.</span>
           </li>
           <li>
-            <strong>Kept up.</strong>
-            <span>A ten-year guarantee on every frame, joint and base.</span>
+            <strong data-edit="top.emphasis3">Kept up.</strong>
+            <span data-edit="top.text3" data-edit-max="60">A ten-year guarantee on every frame, joint and base.</span>
           </li>
         </ul>
 
@@ -333,55 +345,55 @@ export default function HewnFurniturePage() {
             same photograph appears twice per chapter, once per colorway. */}
         <section id="catalog" className={s.catalog} aria-labelledby="catalog-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>The catalog</span>
-            <h2 id="catalog-h">Six pieces, two ways each</h2>
-            <p className={s.secNote}>
+            <span data-edit="catalog.secNo" data-edit-max="60" className={s.secNo}>The catalog</span>
+            <h2 data-edit="catalog.title" data-edit-max="60" id="catalog-h">Six pieces, two ways each</h2>
+            <p data-edit="catalog.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Prices include assembly within 40 miles. Dimensions are in
               inches: width, depth and height unless the table says otherwise.
             </p>
           </div>
 
-          {CHAPTERS.map((c) => (
+          {CHAPTERS.map((c, i) => (
             <div key={c.id} id={c.id} className={s.chapter}>
               <div className={s.chapterIntro}>
-                <span className={s.chapterNo}>{c.no}</span>
-                <h3>{c.title}</h3>
-                <p className={s.chapterBody}>{c.intro}</p>
-                <p className={s.chapterAside}>{c.aside}</p>
+                <span data-edit={`catalog.chapterNo.${i}`} data-edit-max="60" className={s.chapterNo}>{c.no}</span>
+                <h3 data-edit={`catalog.title2.${i}`} data-edit-max="40">{c.title}</h3>
+                <p data-edit={`catalog.chapterBody.${i}`} data-edit-max="240" data-edit-multiline className={s.chapterBody}>{c.intro}</p>
+                <p data-edit={`catalog.chapterAside.${i}`} data-edit-max="240" data-edit-multiline className={s.chapterAside}>{c.aside}</p>
               </div>
-              {c.products.map((p) => (
+              {c.products.map((p, i2) => (
                 <article key={p.no} className={s.product}>
                   <div className={s.productPlate}>
-                    <span className={s.productNo}>{p.no}</span>
+                    <span data-edit={`product.productNo.${i}.${i2}`} data-edit-max="60" className={s.productNo}>{p.no}</span>
                     <Artwork slug={p.art} alt={p.alt} inks={p.inks} className={s.productPic} />
                   </div>
                   <div className={s.productHead}>
-                    <h4>{p.name}</h4>
-                    <span className={s.productPrice}>{p.price}</span>
+                    <h4 data-edit={`product.title.${i}.${i2}`} data-edit-max="36">{p.name}</h4>
+                    <span data-edit={`product.productPrice.${i}.${i2}`} data-edit-max="60" className={s.productPrice}>{p.price}</span>
                   </div>
-                  <p className={s.productVariant}>{p.variant}</p>
+                  <p data-edit={`product.productVariant.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.productVariant}>{p.variant}</p>
                   <table className={s.dims}>
-                    <caption>Dimensions, in</caption>
+                    <caption data-edit={`product.caption.${i}.${i2}`}>Dimensions, in</caption>
                     <thead>
                       <tr>
-                        {p.dims.map(([k]) => (
-                          <th key={k} scope="col">{k}</th>
+                        {p.dims.map(([k], i3) => (
+                          <th data-edit={`product.heading.${i}.${i2}.${i3}`} key={k} scope="col">{k}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        {p.dims.map(([k, v]) => (
-                          <td key={k}>{v}</td>
+                        {p.dims.map(([k, v], i3) => (
+                          <td data-edit={`product.cell.${i}.${i2}.${i3}`} key={k}>{v}</td>
                         ))}
                       </tr>
                     </tbody>
                   </table>
                   <dl className={s.specs}>
-                    {p.materials.map(([k, v]) => (
+                    {p.materials.map(([k, v], i3) => (
                       <div key={k}>
-                        <dt>{k}</dt>
-                        <dd>{v}</dd>
+                        <dt data-edit={`product.term.${i}.${i2}.${i3}`} data-edit-max="28">{k}</dt>
+                        <dd data-edit={`product.body.${i}.${i2}.${i3}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                       </div>
                     ))}
                   </dl>
@@ -394,7 +406,7 @@ export default function HewnFurniturePage() {
         {/* ------------------------------------------------------------ BAND
             Fluted panels in the pale tone, the one texture between chapters
             and the materials. */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,4,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={reeding}
             palette={FLUTE}
@@ -415,21 +427,21 @@ export default function HewnFurniturePage() {
               inks={['var(--walnut)', 'var(--paper)']}
               className={s.materialsBoard}
             />
-            <p className={s.materialsCaption}>Low Line 64 in black walnut, oiled.</p>
+            <p data-edit="materials.materialsCaption" data-edit-max="240" data-edit-multiline className={s.materialsCaption}>Low Line 64 in black walnut, oiled.</p>
           </div>
           <div className={s.materialsText}>
-            <span className={s.secNo}>04 Materials</span>
-            <h2 id="materials-h">Four materials, and how they age</h2>
-            <p className={s.secNote}>
+            <span data-edit="materials.secNo" data-edit-max="60" className={s.secNo}>04 Materials</span>
+            <h2 data-edit="materials.title" data-edit-max="60" id="materials-h">Four materials, and how they age</h2>
+            <p data-edit="materials.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Samples of every wood and leather are in the showroom, and we
               will post you cut samples for free.
             </p>
             <ul className={s.materialList}>
-              {MATERIALS.map((m) => (
+              {MATERIALS.map((m, i) => (
                 <li key={m.name} className={s.material}>
                   <span className={`${s.chip} ${s[`chip_${m.tone}`]}`} aria-hidden="true" />
-                  <h3>{m.name}</h3>
-                  <p>{m.body}</p>
+                  <h3 data-edit={`materials.title2.${i}`} data-edit-max="40">{m.name}</h3>
+                  <p data-edit={`materials.body.${i}`} data-edit-max="240" data-edit-multiline>{m.body}</p>
                 </li>
               ))}
             </ul>
@@ -439,51 +451,51 @@ export default function HewnFurniturePage() {
         {/* --------------------------------------------------------- DELIVERY */}
         <section id="delivery" className={s.sec} aria-labelledby="delivery-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>05 Delivery</span>
-            <h2 id="delivery-h">Delivery, returns and the guarantee</h2>
-            <p className={s.secNote}>
+            <span data-edit="delivery.secNo" data-edit-max="60" className={s.secNo}>05 Delivery</span>
+            <h2 data-edit="delivery.title" data-edit-max="60" id="delivery-h">Delivery, returns and the guarantee</h2>
+            <p data-edit="delivery.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Our own two vans, our own people. We call the day before with a
               two-hour window and take the packaging away with us.
             </p>
           </div>
           <div className={s.deliveryGrid}>
             <table className={s.zones}>
-              <caption>Delivery by distance from the showroom</caption>
+              <caption data-edit="delivery.caption">Delivery by distance from the showroom</caption>
               <thead>
                 <tr>
-                  <th scope="col">Where</th>
-                  <th scope="col">Cost</th>
-                  <th scope="col">How</th>
+                  <th data-edit="delivery.heading" scope="col">Where</th>
+                  <th data-edit="delivery.heading2" scope="col">Cost</th>
+                  <th data-edit="delivery.heading3" scope="col">How</th>
                 </tr>
               </thead>
               <tbody>
-                {DELIVERY.map(([where, cost, how]) => (
+                {DELIVERY.map(([where, cost, how], i) => (
                   <tr key={where}>
-                    <th scope="row">{where}</th>
-                    <td className={s.zoneCost}>{cost}</td>
-                    <td>{how}</td>
+                    <th data-edit={`delivery.heading4.${i}`} scope="row">{where}</th>
+                    <td data-edit={`delivery.zoneCost.${i}`} className={s.zoneCost}>{cost}</td>
+                    <td data-edit={`delivery.cell.${i}`}>{how}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <dl className={s.terms}>
               <div>
-                <dt>Returns</dt>
-                <dd>
+                <dt data-edit="delivery.term" data-edit-max="28">Returns</dt>
+                <dd data-edit="delivery.body" data-edit-max="200" data-edit-multiline>
                   Pieces marked in stock can come back within 30 days. We
                   collect them for the delivery price and refund the rest.
                 </dd>
               </div>
               <div>
-                <dt>Made to order</dt>
-                <dd>
+                <dt data-edit="delivery.term2" data-edit-max="28">Made to order</dt>
+                <dd data-edit="delivery.body2" data-edit-max="200" data-edit-multiline>
                   A 30% deposit starts the work and the balance is due on
                   delivery. Made-to-order sizes cannot be returned.
                 </dd>
               </div>
               <div>
-                <dt>Guarantee</dt>
-                <dd>
+                <dt data-edit="delivery.term3" data-edit-max="28">Guarantee</dt>
+                <dd data-edit="delivery.body3" data-edit-max="200" data-edit-multiline>
                   Ten years on frames, joints and bases. Leather and fabric
                   wear is not covered, but we recover at cost.
                 </dd>
@@ -505,25 +517,25 @@ export default function HewnFurniturePage() {
               />
             </div>
             <div className={s.workshopText}>
-              <span className={s.secNo}>06 Workshop</span>
-              <h2 id="workshop-h">Behind the showroom, a door, and the workshop</h2>
-              <p>
+              <span data-edit="workshop.secNo" data-edit-max="60" className={s.secNo}>06 Workshop</span>
+              <h2 data-edit="workshop.title" data-edit-max="60" id="workshop-h">Behind the showroom, a door, and the workshop</h2>
+              <p data-edit="workshop.body" data-edit-max="240" data-edit-multiline>
                 Hewn started in 2012 in one bay of the old rail shed on Tanner
                 Street. There are six of us now, and the showroom is the front
                 third of the building, so on a weekday you will hear the
                 planer and smell the oil.
               </p>
-              <p>
+              <p data-edit="workshop.body2" data-edit-max="240" data-edit-multiline>
                 One maker follows a piece from the rough board to the van.
                 Their initials are burned under the seat, inside the lamp base
                 or on the back of the sideboard, and they are the person who
                 answers if anything ever needs fixing.
               </p>
               <dl className={s.facts}>
-                {FACTS.map(([v, k]) => (
+                {FACTS.map(([v, k], i) => (
                   <div key={k}>
-                    <dt>{v}</dt>
-                    <dd>{k}</dd>
+                    <dt data-edit={`workshop.term.${i}`} data-edit-max="28">{v}</dt>
+                    <dd data-edit={`workshop.body3.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                   </div>
                 ))}
               </dl>
@@ -534,58 +546,58 @@ export default function HewnFurniturePage() {
         {/* --------------------------------------------------------- SHOWROOM */}
         <section id="showroom" className={s.sec} aria-labelledby="showroom-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>07 Showroom</span>
-            <h2 id="showroom-h">Sit in everything before you buy it</h2>
-            <p className={s.secNote}>
+            <span data-edit="showroom.secNo" data-edit-max="60" className={s.secNo}>07 Showroom</span>
+            <h2 data-edit="showroom.title" data-edit-max="60" id="showroom-h">Sit in everything before you buy it</h2>
+            <p data-edit="showroom.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Walk in any time we are open. Book an hour if you want a maker
               to go through sizes, woods and leathers with you.
             </p>
           </div>
           <div className={s.visit}>
             <div className={s.visitInfo}>
-              <h3 className={s.visitHead}>Hours</h3>
+              <h3 data-edit="showroom.visitHead" data-edit-max="40" className={s.visitHead}>Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`showroom.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`showroom.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <h3 className={s.visitHead}>Where</h3>
-              <p className={s.address}>
+              <h3 data-edit="showroom.visitHead2" data-edit-max="40" className={s.visitHead}>Where</h3>
+              <p data-edit="showroom.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 218 Tanner Street
                 <br />
                 The Mill District
               </p>
-              <p className={s.visitNote}>
+              <p data-edit="showroom.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>
                 Free parking in the yard off Cooper Lane. The 12 bus stops at
                 the corner.
               </p>
               <p className={s.contactLine}>
-                <a href="tel:+15550148210">(555) 014-8210</a>
+                <a data-edit="showroom.link" data-edit-max="28" href="tel:+15550148210">(555) 014-8210</a>
               </p>
               <p className={s.contactLine}>
-                <a href="mailto:showroom@hewn.example">showroom@hewn.example</a>
+                <a data-edit="showroom.link2" data-edit-max="28" href="mailto:showroom@hewn.example">showroom@hewn.example</a>
               </p>
             </div>
             <form className={s.form} action="#">
-              <h3 className={s.visitHead}>Book an hour with a maker</h3>
+              <h3 data-edit="showroom.visitHead3" data-edit-max="40" className={s.visitHead}>Book an hour with a maker</h3>
               <label className={s.field}>
-                <span>Name</span>
+                <span data-edit="showroom.text" data-edit-max="60">Name</span>
                 <input type="text" name="name" autoComplete="name" required />
               </label>
               <label className={s.field}>
-                <span>Email</span>
+                <span data-edit="showroom.text2" data-edit-max="60">Email</span>
                 <input type="email" name="email" autoComplete="email" required />
               </label>
               <div className={s.fieldRow}>
                 <label className={s.field}>
-                  <span>Day</span>
+                  <span data-edit="showroom.text3" data-edit-max="60">Day</span>
                   <input type="date" name="date" />
                 </label>
                 <label className={s.field}>
-                  <span>Interested in</span>
+                  <span data-edit="showroom.text4" data-edit-max="60">Interested in</span>
                   <select name="piece" defaultValue="any">
                     <option value="any">Everything</option>
                     <option value="seating">Seating</option>
@@ -596,9 +608,9 @@ export default function HewnFurniturePage() {
               </div>
               <label className={s.check}>
                 <input type="checkbox" name="catalog" />
-                <span>Post me the printed catalog as well</span>
+                <span data-edit="showroom.text5" data-edit-max="60">Post me the printed catalog as well</span>
               </label>
-              <button className={s.button} type="submit">Request the appointment</button>
+              <button data-edit="showroom.button" data-edit-max="24" className={s.button} type="submit">Request the appointment</button>
             </form>
           </div>
         </section>
@@ -607,17 +619,17 @@ export default function HewnFurniturePage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div>
-            <p className={s.footName}>Hewn</p>
-            <p className={s.footTag}>Chairs, lamps and sideboards, made in the Mill District.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Hewn</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Chairs, lamps and sideboards, made in the Mill District.</p>
           </div>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             218 Tanner Street
             <br />
             (555) 014-8210
@@ -626,11 +638,11 @@ export default function HewnFurniturePage() {
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional furniture store. Pieces, prices and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional furniture store. Pieces, prices and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live; the furniture is printed in the page's own two colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live; the furniture is printed in the page's own two colors.</span>
           </p>
         </div>
       </footer>

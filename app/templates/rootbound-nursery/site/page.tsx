@@ -154,7 +154,20 @@ const HOURS = [
 
 export default function RootboundNurseryPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f3f5ef',
+        '--ink': '#1a261d',
+        '--leaf': '#3e7d4f',
+        '--clay': '#d98e4a',
+        '--gray': '#919c92',
+        '--pale': '#dfe7dc',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,leaf,clay,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -165,17 +178,17 @@ export default function RootboundNurseryPage() {
 
       <header className={s.bar}>
         <a className={s.brand} href="#top">
-          <span className={s.brandName}>Rootbound</span>
-          <span className={s.brandMeta}>Plant nursery, Orchard Row</span>
+          <span data-edit="bar.brandName" data-edit-max="60" className={s.brandName}>Rootbound</span>
+          <span data-edit="bar.brandMeta" data-edit-max="60" className={s.brandMeta}>Plant nursery, Orchard Row</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -185,36 +198,36 @@ export default function RootboundNurseryPage() {
             The monstera stands in a greenhouse arch filled with arches. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Plant nursery and greenhouse, since 2011</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Plant nursery and greenhouse, since 2011</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Raised under glass, <em>ready for your windowsill.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Houseplants grown on in a 1928 glasshouse, sold with a care card
               written for your room, not the tropics. If it outgrows its pot,
               bring it back and we repot it for free.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#catalog">Browse the catalog</a>
-              <a className={s.btnLine} href="#visit">Plan a visit</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#catalog">Browse the catalog</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#visit">Plan a visit</a>
             </div>
             <dl className={s.heroFacts}>
               <div>
-                <dt>Plants on the benches</dt>
-                <dd>600+</dd>
+                <dt data-edit="hero.term" data-edit-max="28">Plants on the benches</dt>
+                <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>600+</dd>
               </div>
               <div>
-                <dt>Free repot with any pot</dt>
-                <dd>$0</dd>
+                <dt data-edit="hero.term2" data-edit-max="28">Free repot with any pot</dt>
+                <dd data-edit="hero.body2" data-edit-max="200" data-edit-multiline>$0</dd>
               </div>
               <div>
-                <dt>Care clinic, Saturdays</dt>
-                <dd>9-11</dd>
+                <dt data-edit="hero.term3" data-edit-max="28">Care clinic, Saturdays</dt>
+                <dd data-edit="hero.body3" data-edit-max="200" data-edit-multiline>9-11</dd>
               </div>
             </dl>
           </div>
           <div className={s.heroArt}>
-            <div className={s.arch} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,5,3,4,5" className={s.arch} aria-hidden="true">
               <TabbiedPattern
                 pattern={apse}
                 palette={ARCHES}
@@ -241,9 +254,9 @@ export default function RootboundNurseryPage() {
         <section id="catalog" className={s.catalog} aria-labelledby="catalog-h">
           <div className={s.catHead}>
             <div className={s.secHead}>
-              <p className={s.secKicker}>The catalog</p>
-              <h2 id="catalog-h" className={s.secTitle}>What is on the benches this week</h2>
-              <p className={s.secLede}>
+              <p data-edit="catalog.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The catalog</p>
+              <h2 data-edit="catalog.secTitle" data-edit-max="60" id="catalog-h" className={s.secTitle}>What is on the benches this week</h2>
+              <p data-edit="catalog.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 Every plant has been with us at least six weeks, so it has
                 settled to indoor light before it comes home with you. Prices
                 include a nursery pot; decorative pots are in the shop.
@@ -251,61 +264,61 @@ export default function RootboundNurseryPage() {
             </div>
             <ul className={s.legend} aria-label="How to read the chips">
               <li>
-                <span className={`${s.chip} ${s.sunFull}`}>Bright</span>
-                <span className={s.legendText}>A south window or a sunroom</span>
+                <span data-edit="catalog.chip" data-edit-max="60" className={`${s.chip} ${s.sunFull}`}>Bright</span>
+                <span data-edit="catalog.legendText" data-edit-max="60" className={s.legendText}>A south window or a sunroom</span>
               </li>
               <li>
-                <span className={`${s.chip} ${s.sunLow}`}>Low to medium</span>
-                <span className={s.legendText}>A north window, or across the room</span>
+                <span data-edit="catalog.chip2" data-edit-max="60" className={`${s.chip} ${s.sunLow}`}>Low to medium</span>
+                <span data-edit="catalog.legendText2" data-edit-max="60" className={s.legendText}>A north window, or across the room</span>
               </li>
               <li>
-                <span className={`${s.chip} ${s.careEasy}`}>Easy</span>
-                <span className={s.legendText}>Forgives a missed week</span>
+                <span data-edit="catalog.chip3" data-edit-max="60" className={`${s.chip} ${s.careEasy}`}>Easy</span>
+                <span data-edit="catalog.legendText3" data-edit-max="60" className={s.legendText}>Forgives a missed week</span>
               </li>
               <li>
-                <span className={`${s.chip} ${s.careFussy}`}>Fussy</span>
-                <span className={s.legendText}>Wants a routine, and humidity</span>
+                <span data-edit="catalog.chip4" data-edit-max="60" className={`${s.chip} ${s.careFussy}`}>Fussy</span>
+                <span data-edit="catalog.legendText4" data-edit-max="60" className={s.legendText}>Wants a routine, and humidity</span>
               </li>
             </ul>
           </div>
 
           <div className={s.catGrid}>
             <table className={s.plants}>
-              <caption className={s.srOnly}>Houseplants in stock with light, water and care needs</caption>
+              <caption data-edit="catalog.srOnly" className={s.srOnly}>Houseplants in stock with light, water and care needs</caption>
               <thead>
                 <tr>
-                  <th scope="col">Plant</th>
-                  <th scope="col">Light</th>
-                  <th scope="col">Water</th>
-                  <th scope="col">Care</th>
-                  <th scope="col">Sizes and prices</th>
+                  <th data-edit="catalog.heading" scope="col">Plant</th>
+                  <th data-edit="catalog.heading2" scope="col">Light</th>
+                  <th data-edit="catalog.heading3" scope="col">Water</th>
+                  <th data-edit="catalog.heading4" scope="col">Care</th>
+                  <th data-edit="catalog.heading5" scope="col">Sizes and prices</th>
                 </tr>
               </thead>
               <tbody>
-                {PLANTS.map((p) => (
+                {PLANTS.map((p, i) => (
                   <tr key={p.latin}>
                     <th scope="row">
-                      <span className={s.plantName}>{p.name}</span>
-                      <span className={s.plantLatin}>{p.latin}</span>
-                      {p.pets ? <span className={s.petSafe}>Pet safe</span> : null}
+                      <span data-edit={`catalog.plantName.${i}`} data-edit-max="60" className={s.plantName}>{p.name}</span>
+                      <span data-edit={`catalog.plantLatin.${i}`} data-edit-max="60" className={s.plantLatin}>{p.latin}</span>
+                      {p.pets ? <span data-edit={`catalog.petSafe.${i}`} data-edit-max="60" className={s.petSafe}>Pet safe</span> : null}
                     </th>
                     <td>
-                      <span className={`${s.chip} ${LIGHT_CLASS[p.light]}`}>{p.light}</span>
+                      <span data-edit={`catalog.chip5.${i}`} data-edit-max="60" className={`${s.chip} ${LIGHT_CLASS[p.light]}`}>{p.light}</span>
                     </td>
                     <td>
-                      <span className={`${s.chip} ${s.water}`}>{p.water}</span>
+                      <span data-edit={`catalog.chip6.${i}`} data-edit-max="60" className={`${s.chip} ${s.water}`}>{p.water}</span>
                     </td>
                     <td>
-                      <span className={`${s.chip} ${CARE_CLASS[p.care]}`}>{p.care}</span>
+                      <span data-edit={`catalog.chip7.${i}`} data-edit-max="60" className={`${s.chip} ${CARE_CLASS[p.care]}`}>{p.care}</span>
                     </td>
-                    <td className={s.sizes}>{p.sizes}</td>
+                    <td data-edit={`catalog.sizes.${i}`} className={s.sizes}>{p.sizes}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
             <aside className={s.shelf} aria-label="From the benches">
-              {SHELF.map((it) => (
+              {SHELF.map((it, i) => (
                 <div key={it.slug} className={s.shelfItem}>
                   <div className={s.shelfPlate}>
                     <Artwork
@@ -315,8 +328,8 @@ export default function RootboundNurseryPage() {
                       className={it.cls}
                     />
                   </div>
-                  <p className={s.shelfName}>{it.name}</p>
-                  <p className={s.shelfNote}>{it.note}</p>
+                  <p data-edit={`shelf.shelfName.${i}`} data-edit-max="240" data-edit-multiline className={s.shelfName}>{it.name}</p>
+                  <p data-edit={`shelf.shelfNote.${i}`} data-edit-max="240" data-edit-multiline className={s.shelfNote}>{it.note}</p>
                 </div>
               ))}
             </aside>
@@ -326,28 +339,28 @@ export default function RootboundNurseryPage() {
         {/* ------------------------------------------------------- WORKSHOPS */}
         <section id="workshops" className={s.workshops} aria-labelledby="workshops-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>Workshops</p>
-            <h2 id="workshops-h" className={s.secTitle}>Weekends at the potting bench</h2>
-            <p className={s.secLede}>
+            <p data-edit="workshops.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Workshops</p>
+            <h2 data-edit="workshops.secTitle" data-edit-max="60" id="workshops-h" className={s.secTitle}>Weekends at the potting bench</h2>
+            <p data-edit="workshops.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
               Twelve people, two hours, all materials and a cup of tea. Book
               at the till or by phone; we refund up to two days before.
             </p>
           </div>
           <ol className={s.wsList}>
-            {WORKSHOPS.map((w) => (
+            {WORKSHOPS.map((w, i) => (
               <li key={w.title} className={s.ws}>
                 <p className={s.wsDate}>
-                  <span className={s.wsDay}>{w.day}</span>
-                  <span className={s.wsMonth}>{w.month}</span>
+                  <span data-edit={`workshops.wsDay.${i}`} data-edit-max="60" className={s.wsDay}>{w.day}</span>
+                  <span data-edit={`workshops.wsMonth.${i}`} data-edit-max="60" className={s.wsMonth}>{w.month}</span>
                 </p>
                 <div className={s.wsBody}>
-                  <h3 className={s.wsTitle}>{w.title}</h3>
-                  <p className={s.wsText}>{w.body}</p>
-                  <p className={s.wsTime}>{w.time}</p>
+                  <h3 data-edit={`workshops.wsTitle.${i}`} data-edit-max="40" className={s.wsTitle}>{w.title}</h3>
+                  <p data-edit={`workshops.wsText.${i}`} data-edit-max="240" data-edit-multiline className={s.wsText}>{w.body}</p>
+                  <p data-edit={`workshops.wsTime.${i}`} data-edit-max="240" data-edit-multiline className={s.wsTime}>{w.time}</p>
                 </div>
                 <div className={s.wsMeta}>
-                  <p className={s.wsPrice}>{w.price}</p>
-                  <p className={s.wsLeft}>{w.left}</p>
+                  <p data-edit={`workshops.wsPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.wsPrice}>{w.price}</p>
+                  <p data-edit={`workshops.wsLeft.${i}`} data-edit-max="240" data-edit-multiline className={s.wsLeft}>{w.left}</p>
                 </div>
               </li>
             ))}
@@ -366,17 +379,17 @@ export default function RootboundNurseryPage() {
               />
             </div>
             <div className={s.deliveryText}>
-              <p className={s.secKicker}>Delivery</p>
-              <h2 id="delivery-h" className={s.secTitle}>By van, upright, watered the morning it leaves</h2>
-              <p className={s.secLede}>
+              <p data-edit="delivery.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Delivery</p>
+              <h2 data-edit="delivery.secTitle" data-edit-max="60" id="delivery-h" className={s.secTitle}>By van, upright, watered the morning it leaves</h2>
+              <p data-edit="delivery.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 Tuesdays and Fridays, in a van with shelves and a heater. We
                 text a two-hour window the day before.
               </p>
               <dl className={s.rates}>
-                {DELIVERY.map(([k, v]) => (
+                {DELIVERY.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`delivery.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`delivery.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -387,7 +400,7 @@ export default function RootboundNurseryPage() {
         {/* ------------------------------------------------------ GREENHOUSE
             The story of the glasshouse beside a pane of fronds. */}
         <section id="greenhouse" className={s.greenhouse} aria-labelledby="greenhouse-h">
-          <div className={s.pane} aria-hidden="true">
+          <div data-edit-pattern="greenhouse.field" data-edit-roles="5,2,4,3,1" className={s.pane} aria-hidden="true">
             <TabbiedPattern
               pattern={frond}
               palette={FRONDS}
@@ -400,23 +413,23 @@ export default function RootboundNurseryPage() {
             />
           </div>
           <div className={s.ghText}>
-            <p className={s.secKicker}>The greenhouse</p>
-            <h2 id="greenhouse-h" className={s.secTitle}>A cut-flower house, given a second life</h2>
-            <p className={s.ghBody}>
+            <p data-edit="greenhouse.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The greenhouse</p>
+            <h2 data-edit="greenhouse.secTitle" data-edit-max="60" id="greenhouse-h" className={s.secTitle}>A cut-flower house, given a second life</h2>
+            <p data-edit="greenhouse.ghBody" data-edit-max="240" data-edit-multiline className={s.ghBody}>
               The glasshouse was built in 1928 to grow carnations for the
               orchard's farm stand. It stood empty for thirty years
               before we reglazed it, pane by pane, in 2011.
             </p>
-            <p className={s.ghBody}>
+            <p data-edit="greenhouse.ghBody2" data-edit-max="240" data-edit-multiline className={s.ghBody}>
               Bring a sick plant to the care clinic on a Saturday morning and
               one of the growers will look at it with you, free. Bring one you
               have outgrown and we will rehome it for store credit.
             </p>
             <dl className={s.ghFacts}>
-              {GREENHOUSE.map(([k, v]) => (
+              {GREENHOUSE.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`greenhouse.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`greenhouse.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
@@ -426,28 +439,28 @@ export default function RootboundNurseryPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitIntro}>
-            <p className={s.secKicker}>Visit</p>
-            <h2 id="visit-h" className={s.secTitle}>At the end of Orchard Row</h2>
-            <p className={s.visitAddr}>
+            <p data-edit="visit.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Visit</p>
+            <h2 data-edit="visit.secTitle" data-edit-max="60" id="visit-h" className={s.secTitle}>At the end of Orchard Row</h2>
+            <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.visitAddr}>
               88 Orchard Row, behind the farm stand
               <br />
               Parking in the gravel yard, and room for a trolley to the car
             </p>
           </div>
           <dl className={s.hours}>
-            {HOURS.map(([k, v]) => (
+            {HOURS.map(([k, v], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+                <dt data-edit={`visit.term.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
               </div>
             ))}
           </dl>
           <div className={s.contact}>
             <p>
-              <a href="tel:+15550166240">(555) 016-6240</a>
+              <a data-edit="visit.link" data-edit-max="28" href="tel:+15550166240">(555) 016-6240</a>
             </p>
             <p>
-              <a href="mailto:grow@rootbound.example">grow@rootbound.example</a>
+              <a data-edit="visit.link2" data-edit-max="28" href="mailto:grow@rootbound.example">grow@rootbound.example</a>
             </p>
           </div>
         </section>
@@ -455,21 +468,21 @@ export default function RootboundNurseryPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Rootbound</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Rootbound</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional plant nursery. Plants, prices and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional plant nursery. Plants, prices and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the greenhouse's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the greenhouse's own colors.</span>
           </p>
         </div>
       </footer>

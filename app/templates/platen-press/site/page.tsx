@@ -139,7 +139,19 @@ const HOURS = [
 
 export default function PlatenPressPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f7f4ee',
+        '--ink': '#161616',
+        '--red': '#d1343a',
+        '--gray': '#8f8a80',
+        '--pale': '#e5e0d6',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,red,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -149,16 +161,16 @@ export default function PlatenPressPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Platen Press</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Platen Press</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <span className={s.barMeta}>Letterpress, est. 2009</span>
+        <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Letterpress, est. 2009</span>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -169,7 +181,7 @@ export default function PlatenPressPage() {
             once in red and once in black, a hair out of register. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.plate}>
-            <span className={s.plateNo}>Plate I</span>
+            <span data-edit="hero.plateNo" data-edit-max="60" className={s.plateNo}>Plate I</span>
             <div className={s.plateImage}>
               <Artwork
                 slug="platen-press-press"
@@ -184,32 +196,32 @@ export default function PlatenPressPage() {
                 className={s.pressInk}
               />
             </div>
-            <p className={s.plateCaption}>The press. An 8 x 12 in platen, cast in 1911 and still printing four days a week.</p>
+            <p data-edit="hero.plateCaption" data-edit-max="240" data-edit-multiline className={s.plateCaption}>The press. An 8 x 12 in platen, cast in 1911 and still printing four days a week.</p>
           </div>
 
           <div className={s.heroText}>
-            <p className={s.kicker}>Letterpress print studio, Foundry Lane</p>
-            <h1 className={s.title} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Letterpress print studio, Foundry Lane</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.title} id="hero-h">
               Pressed by hand,
               <br />
               <em>one sheet at a time.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Business cards, invitations and stationery set by hand, inked
               by hand and pulled one at a time on an iron press. You can
               feel every letter with your thumb, which is the point.
             </p>
             <dl className={s.specs}>
-              {SPECS.map(([k, v]) => (
+              {SPECS.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.actions}>
-              <a className={s.btnInk} href="#order">Ask for a quote</a>
-              <a className={s.btnLine} href="#papers">See the papers</a>
+              <a data-edit="hero.btnInk" data-edit-max="28" className={s.btnInk} href="#order">Ask for a quote</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#papers">See the papers</a>
             </div>
           </div>
         </section>
@@ -217,7 +229,7 @@ export default function PlatenPressPage() {
         {/* The make-ready sheet: the primary pattern edge to edge, the two
             plates of a job run over each other to check the register. */}
         <div className={s.makeready} aria-hidden="true">
-          <div className={s.makereadyField} aria-hidden="true">
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,2,1" className={s.makereadyField} aria-hidden="true">
             <TabbiedPattern
               pattern={misprint}
               palette={REGISTER}
@@ -229,7 +241,7 @@ export default function PlatenPressPage() {
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
-          <span className={s.makereadyLabel}>Make-ready, sheet 1 of 3</span>
+          <span data-edit="top.makereadyLabel" data-edit-max="60" className={s.makereadyLabel}>Make-ready, sheet 1 of 3</span>
         </div>
 
         {/* ------------------------------------------------------ PAPERS
@@ -237,19 +249,19 @@ export default function PlatenPressPage() {
             weight, and a blind impression of the nib on it. */}
         <section id="papers" className={s.sec} aria-labelledby="papers-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>Sheet II</span>
-            <h2 className={s.secTitle} id="papers-h">Eight papers</h2>
-            <p className={s.secNote}>
+            <span data-edit="papers.secNo" data-edit-max="60" className={s.secNo}>Sheet II</span>
+            <h2 data-edit="papers.secTitle" data-edit-max="60" className={s.secTitle} id="papers-h">Eight papers</h2>
+            <p data-edit="papers.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Weights in grams per square meter. The heavier the sheet, the
               deeper the letters can go. Ask and we will post you the swatch
               book for free.
             </p>
           </div>
           <ul className={s.papers}>
-            {PAPERS.map((p) => (
+            {PAPERS.map((p, i) => (
               <li key={p.no} className={`${s.paper} ${s[`tone_${p.tone}`]}`}>
                 <div className={s.swatch}>
-                  <span className={s.swatchNo}>{p.no}</span>
+                  <span data-edit={`papers.swatchNo.${i}`} data-edit-max="60" className={s.swatchNo}>{p.no}</span>
                   <Artwork
                     slug="platen-press-nib"
                     alt=""
@@ -260,20 +272,20 @@ export default function PlatenPressPage() {
                     ]}
                     className={s.swatchNib}
                   />
-                  <span className={s.swatchWeight}>{p.weight}</span>
-                  <span className={s.swatchUnit}>gsm</span>
+                  <span data-edit={`papers.swatchWeight.${i}`} data-edit-max="60" className={s.swatchWeight}>{p.weight}</span>
+                  <span data-edit={`papers.swatchUnit.${i}`} data-edit-max="60" className={s.swatchUnit}>gsm</span>
                 </div>
                 <div className={s.label}>
-                  <h3 className={s.paperName}>{p.name}</h3>
-                  <span className={s.paperStock}>{p.stock}</span>
+                  <h3 data-edit={`papers.paperName.${i}`} data-edit-max="40" className={s.paperName}>{p.name}</h3>
+                  <span data-edit={`papers.paperStock.${i}`} data-edit-max="60" className={s.paperStock}>{p.stock}</span>
                   <dl className={s.paperFacts}>
                     <div>
-                      <dt>Thickness</dt>
-                      <dd>{p.thick}</dd>
+                      <dt data-edit={`papers.term.${i}`} data-edit-max="28">Thickness</dt>
+                      <dd data-edit={`papers.body.${i}`} data-edit-max="200" data-edit-multiline>{p.thick}</dd>
                     </div>
                     <div>
-                      <dt>Best for</dt>
-                      <dd>{p.best}</dd>
+                      <dt data-edit={`papers.term2.${i}`} data-edit-max="28">Best for</dt>
+                      <dd data-edit={`papers.body2.${i}`} data-edit-max="200" data-edit-multiline>{p.best}</dd>
                     </div>
                   </dl>
                 </div>
@@ -286,14 +298,14 @@ export default function PlatenPressPage() {
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.pricesHead}>
             <div className={s.secHead}>
-              <span className={s.secNo}>Sheet III</span>
-              <h2 className={s.secTitle} id="prices-h">Sizes and prices</h2>
-              <p className={s.secNote}>
+              <span data-edit="prices.secNo" data-edit-max="60" className={s.secNo}>Sheet III</span>
+              <h2 data-edit="prices.secTitle" data-edit-max="60" className={s.secTitle} id="prices-h">Sizes and prices</h2>
+              <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Prices include plates, one ink color unless noted, any paper
                 from the book, trimming and a proof. Tax and postage are extra.
               </p>
             </div>
-            <div className={s.tintField} aria-hidden="true">
+            <div data-edit-pattern="prices.field" data-edit-roles="transparent,1,2" className={s.tintField} aria-hidden="true">
               <TabbiedPattern
                 pattern={halftone}
                 palette={TINT}
@@ -306,36 +318,36 @@ export default function PlatenPressPage() {
           </div>
           <div className={s.tableWrap}>
             <table className={s.table}>
-              <caption className={s.caption}>Prices by quantity, per job</caption>
+              <caption data-edit="prices.caption" className={s.caption}>Prices by quantity, per job</caption>
               <thead>
                 <tr>
-                  <th scope="col">Item</th>
-                  <th scope="col">Size</th>
-                  <th scope="col">Colors</th>
-                  <th scope="col" className={s.num}>100</th>
-                  <th scope="col" className={s.num}>250</th>
-                  <th scope="col" className={s.num}>500</th>
+                  <th data-edit="prices.heading" scope="col">Item</th>
+                  <th data-edit="prices.heading2" scope="col">Size</th>
+                  <th data-edit="prices.heading3" scope="col">Colors</th>
+                  <th data-edit="prices.num" scope="col" className={s.num}>100</th>
+                  <th data-edit="prices.num2" scope="col" className={s.num}>250</th>
+                  <th data-edit="prices.num3" scope="col" className={s.num}>500</th>
                 </tr>
               </thead>
               <tbody>
-                {PRICES.map((r) => (
+                {PRICES.map((r, i) => (
                   <tr key={`${r.item}-${r.colors}`}>
-                    <th scope="row">{r.item}</th>
-                    <td>{r.size}</td>
-                    <td>{r.colors}</td>
-                    <td className={s.num}>{r.p100}</td>
-                    <td className={s.num}>{r.p250}</td>
-                    <td className={s.num}>{r.p500}</td>
+                    <th data-edit={`prices.heading4.${i}`} scope="row">{r.item}</th>
+                    <td data-edit={`prices.cell.${i}`}>{r.size}</td>
+                    <td data-edit={`prices.cell2.${i}`}>{r.colors}</td>
+                    <td data-edit={`prices.num4.${i}`} className={s.num}>{r.p100}</td>
+                    <td data-edit={`prices.num5.${i}`} className={s.num}>{r.p250}</td>
+                    <td data-edit={`prices.num6.${i}`} className={s.num}>{r.p500}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <dl className={s.extras}>
-            {EXTRAS.map(([k, v]) => (
+            {EXTRAS.map(([k, v], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+                <dt data-edit={`prices.term.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`prices.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
               </div>
             ))}
           </dl>
@@ -345,17 +357,17 @@ export default function PlatenPressPage() {
         <section id="process" className={s.process} aria-labelledby="process-h">
           <div className={s.processInner}>
             <div className={s.secHead}>
-              <span className={s.secNo}>Sheet IV</span>
-              <h2 className={s.secTitle} id="process-h">From proof to parcel</h2>
-              <p className={s.secNote}>
+              <span data-edit="process.secNo" data-edit-max="60" className={s.secNo}>Sheet IV</span>
+              <h2 data-edit="process.secTitle" data-edit-max="60" className={s.secTitle} id="process-h">From proof to parcel</h2>
+              <p data-edit="process.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Three weeks from the approved proof for most jobs. Wedding
                 work is best booked two months ahead.
               </p>
             </div>
             <ol className={s.steps}>
-              {STEPS.map((st) => (
+              {STEPS.map((st, i) => (
                 <li key={st.no} className={s.step}>
-                  <span className={s.stepNo}>{st.no}</span>
+                  <span data-edit={`process.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
                   <div className={s.stepArt}>
                     {st.art ? (
                       <Artwork slug={st.art} alt={st.alt ?? ''} inks={['var(--ink)']} className={s.stepPic} />
@@ -363,9 +375,9 @@ export default function PlatenPressPage() {
                       <span className={s.stepRule} aria-hidden="true" />
                     )}
                   </div>
-                  <h3 className={s.stepTitle}>{st.title}</h3>
-                  <span className={s.stepTime}>{st.time}</span>
-                  <p className={s.stepBody}>{st.body}</p>
+                  <h3 data-edit={`process.stepTitle.${i}`} data-edit-max="40" className={s.stepTitle}>{st.title}</h3>
+                  <span data-edit={`process.stepTime.${i}`} data-edit-max="60" className={s.stepTime}>{st.time}</span>
+                  <p data-edit={`process.stepBody.${i}`} data-edit-max="240" data-edit-multiline className={s.stepBody}>{st.body}</p>
                 </li>
               ))}
             </ol>
@@ -376,15 +388,15 @@ export default function PlatenPressPage() {
         <section id="order" className={s.sec} aria-labelledby="order-h">
           <div className={s.order}>
             <div className={s.orderSide}>
-              <span className={s.secNo}>Sheet V</span>
-              <h2 className={s.secTitle} id="order-h">Ask for a quote</h2>
-              <p className={s.secNote}>
+              <span data-edit="order.secNo" data-edit-max="60" className={s.secNo}>Sheet V</span>
+              <h2 data-edit="order.secTitle" data-edit-max="60" className={s.secTitle} id="order-h">Ask for a quote</h2>
+              <p data-edit="order.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Tell us what it is, how many and when you need it. We reply
                 within one working day with a price and the first free slot
                 on the press.
               </p>
               <div className={s.proofBox}>
-                <div className={s.proofField} aria-hidden="true">
+                <div data-edit-pattern="order.field" data-edit-roles="transparent,2,3,2,4" className={s.proofField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={misprint}
                     palette={PROOF}
@@ -402,17 +414,17 @@ export default function PlatenPressPage() {
             <form className={s.form} action="#">
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Name</span>
+                  <span data-edit="order.text" data-edit-max="60">Name</span>
                   <input type="text" name="name" autoComplete="name" required />
                 </label>
                 <label className={s.field}>
-                  <span>Email</span>
+                  <span data-edit="order.text2" data-edit-max="60">Email</span>
                   <input type="email" name="email" autoComplete="email" required />
                 </label>
               </div>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>What to print</span>
+                  <span data-edit="order.text3" data-edit-max="60">What to print</span>
                   <select name="item" defaultValue="cards">
                     <option value="cards">Business cards</option>
                     <option value="notes">Flat notes</option>
@@ -424,7 +436,7 @@ export default function PlatenPressPage() {
                   </select>
                 </label>
                 <label className={s.field}>
-                  <span>How many</span>
+                  <span data-edit="order.text4" data-edit-max="60">How many</span>
                   <select name="quantity" defaultValue="250">
                     <option value="100">100</option>
                     <option value="250">250</option>
@@ -435,7 +447,7 @@ export default function PlatenPressPage() {
               </div>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Paper</span>
+                  <span data-edit="order.text5" data-edit-max="60">Paper</span>
                   <select name="paper" defaultValue="A">
                     {PAPERS.map((p) => (
                       <option key={p.no} value={p.no}>{`${p.no}. ${p.name}, ${p.weight} gsm`}</option>
@@ -443,7 +455,7 @@ export default function PlatenPressPage() {
                   </select>
                 </label>
                 <label className={s.field}>
-                  <span>Ink colors</span>
+                  <span data-edit="order.text6" data-edit-max="60">Ink colors</span>
                   <select name="colors" defaultValue="1">
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -453,20 +465,20 @@ export default function PlatenPressPage() {
               </div>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Needed by</span>
+                  <span data-edit="order.text7" data-edit-max="60">Needed by</span>
                   <input type="date" name="due" />
                 </label>
                 <label className={s.field}>
-                  <span>Link to your file</span>
+                  <span data-edit="order.text8" data-edit-max="60">Link to your file</span>
                   <input type="url" name="file" placeholder="https://" />
                 </label>
               </div>
               <label className={s.field}>
-                <span>The words, or anything else</span>
+                <span data-edit="order.text9" data-edit-max="60">The words, or anything else</span>
                 <textarea name="notes" rows={4} placeholder="Name, title, phone, email. Red name, black the rest." />
               </label>
-              <button className={s.submit} type="submit">Send for a quote</button>
-              <small className={s.formNote}>No deposit until you approve the proof.</small>
+              <button data-edit="order.submit" data-edit-max="24" className={s.submit} type="submit">Send for a quote</button>
+              <small data-edit="order.formNote" className={s.formNote}>No deposit until you approve the proof.</small>
             </form>
           </div>
         </section>
@@ -478,28 +490,28 @@ export default function PlatenPressPage() {
               <Artwork slug="platen-press-nib" alt="" inks={['var(--red)']} className={s.studioNib} />
             </div>
             <div className={s.studioText}>
-              <span className={s.secNo}>Sheet VI</span>
-              <h2 className={s.secTitle} id="studio-h">The studio</h2>
-              <p className={s.studioAddr}>7 Foundry Lane, the yard behind the ironworks</p>
+              <span data-edit="studio.secNo" data-edit-max="60" className={s.secNo}>Sheet VI</span>
+              <h2 data-edit="studio.secTitle" data-edit-max="60" className={s.secTitle} id="studio-h">The studio</h2>
+              <p data-edit="studio.studioAddr" data-edit-max="240" data-edit-multiline className={s.studioAddr}>7 Foundry Lane, the yard behind the ironworks</p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`studio.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`studio.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.studioNote}>
+              <p data-edit="studio.studioNote" data-edit-max="240" data-edit-multiline className={s.studioNote}>
                 On the first Saturday of the month the press runs with the door
                 open. Come and pull a sheet yourself; children are welcome with
                 a grown-up hand on the handle.
               </p>
               <ul className={s.contact}>
                 <li>
-                  <a href="tel:+15550197720">(555) 019-7720</a>
+                  <a data-edit="studio.link" data-edit-max="28" href="tel:+15550197720">(555) 019-7720</a>
                 </li>
                 <li>
-                  <a href="mailto:press@platenpress.example">press@platenpress.example</a>
+                  <a data-edit="studio.link2" data-edit-max="28" href="mailto:press@platenpress.example">press@platenpress.example</a>
                 </li>
               </ul>
             </div>
@@ -509,15 +521,15 @@ export default function PlatenPressPage() {
 
       <footer className={s.footer}>
         <div className={s.footInner}>
-          <p className={s.footName}>Platen Press</p>
-          <p className={s.footTag}>Letterpress printers, 7 Foundry Lane.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Platen Press</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Letterpress printers, 7 Foundry Lane.</p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional letterpress studio. Papers, prices and hours are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional letterpress studio. Papers, prices and hours are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the studio's own inks.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the studio's own inks.</span>
           </p>
         </div>
       </footer>

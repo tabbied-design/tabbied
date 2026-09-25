@@ -117,7 +117,20 @@ const FAQ = [
 
 export default function OffshoreSurfPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--foam': '#f1f5f4',
+        '--deep': '#0e2230',
+        '--teal': '#1ba3b8',
+        '--sun': '#f4a259',
+        '--gray': '#86979e',
+        '--pale': '#dde9ea',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="foam,deep,teal,sun,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -129,17 +142,17 @@ export default function OffshoreSurfPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markSun} aria-hidden="true" />
-          <span>Offshore Surf Co.</span>
+          <span data-edit="bar.text" data-edit-max="60">Offshore Surf Co.</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <span className={s.barReport}>Today 3-4 ft, offshore</span>
+        <span data-edit="bar.barReport" data-edit-max="60" className={s.barReport}>Today 3-4 ft, offshore</span>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -151,11 +164,11 @@ export default function OffshoreSurfPage() {
         <section id="quiver" className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroHead}>
             <div className={s.heroText}>
-              <p className={s.kicker}>Surf shop and surf school, Breakwater Road</p>
-              <h1 className={s.title} id="hero-h">
+              <p data-edit="quiver.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Surf shop and surf school, Breakwater Road</p>
+              <h1 data-edit="quiver.title" data-edit-format="emphasis" data-edit-max="70" className={s.title} id="hero-h">
                 Seven boards, <em>drawn to scale.</em>
               </h1>
-              <p className={s.lede}>
+              <p data-edit="quiver.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 This is the whole quiver, from the nine-and-a-half foot log to
                 the fish. Every board here can be rented by the day, tried for
                 a week and bought when you know.
@@ -163,13 +176,13 @@ export default function OffshoreSurfPage() {
             </div>
             <dl className={s.report}>
               <div className={s.reportHead}>
-                <dt>Surf report</dt>
-                <dd>Friday, 6:40 am</dd>
+                <dt data-edit="quiver.term" data-edit-max="28">Surf report</dt>
+                <dd data-edit="quiver.body" data-edit-max="200" data-edit-multiline>Friday, 6:40 am</dd>
               </div>
-              {REPORT.map(([k, v]) => (
+              {REPORT.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`quiver.term2.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`quiver.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -177,7 +190,7 @@ export default function OffshoreSurfPage() {
 
           <div className={s.rackWrap}>
             <div className={s.rack}>
-              <div className={s.rackSea} aria-hidden="true">
+              <div data-edit-pattern="quiver.field" data-edit-roles="transparent,2,2" className={s.rackSea} aria-hidden="true">
                 <TabbiedPattern
                   pattern={wavelet}
                   palette={SWELL}
@@ -190,18 +203,18 @@ export default function OffshoreSurfPage() {
                 />
               </div>
               <ol className={s.scale} aria-hidden="true">
-                <li>10 ft</li>
-                <li>9 ft</li>
-                <li>8 ft</li>
-                <li>7 ft</li>
-                <li>6 ft</li>
-                <li>5 ft</li>
+                <li data-edit="quiver.item" data-edit-max="80">10 ft</li>
+                <li data-edit="quiver.item2" data-edit-max="80">9 ft</li>
+                <li data-edit="quiver.item3" data-edit-max="80">8 ft</li>
+                <li data-edit="quiver.item4" data-edit-max="80">7 ft</li>
+                <li data-edit="quiver.item5" data-edit-max="80">6 ft</li>
+                <li data-edit="quiver.item6" data-edit-max="80">5 ft</li>
               </ol>
               <ul className={s.boards}>
-                {LOGS.map((b) => (
+                {LOGS.map((b, i) => (
                   <li key={b.name} className={s.board} style={{ '--len': b.inches } as React.CSSProperties}>
                     <div className={s.boardStand}>
-                      <Artwork slug={b.art} alt={`${b.name}, ${b.len}`} mode="fill" inks={[]} className={s.boardPic}>
+                      <Artwork data-edit-pattern={`quiver.field2.${i}`} data-edit-roles="3,2,3,0" slug={b.art} alt={`${b.name}, ${b.len}`} mode="fill" inks={[]} className={s.boardPic}>
                         <TabbiedPattern
                           pattern={b.design}
                           palette={LOG_FILL}
@@ -213,20 +226,20 @@ export default function OffshoreSurfPage() {
                       </Artwork>
                     </div>
                     <div className={s.spec}>
-                      <span className={s.specKind}>Log</span>
-                      <span className={s.specName}>{b.name}</span>
-                      <strong className={s.specLen}>{b.len}</strong>
-                      <span>{b.dims}</span>
+                      <span data-edit={`quiver.specKind.${i}`} data-edit-max="60" className={s.specKind}>Log</span>
+                      <span data-edit={`quiver.specName.${i}`} data-edit-max="60" className={s.specName}>{b.name}</span>
+                      <strong data-edit={`quiver.specLen.${i}`} className={s.specLen}>{b.len}</strong>
+                      <span data-edit={`quiver.text.${i}`} data-edit-max="60">{b.dims}</span>
                       <span>{`${b.vol}, ${b.fins}`}</span>
-                      <span className={s.specPrice}>{b.price}</span>
-                      <span className={s.specRent}>{b.rent}</span>
+                      <span data-edit={`quiver.specPrice.${i}`} data-edit-max="60" className={s.specPrice}>{b.price}</span>
+                      <span data-edit={`quiver.specRent.${i}`} data-edit-max="60" className={s.specRent}>{b.rent}</span>
                     </div>
                   </li>
                 ))}
-                {MIDS.map((b) => (
+                {MIDS.map((b, i) => (
                   <li key={b.name} className={s.board} style={{ '--len': b.inches } as React.CSSProperties}>
                     <div className={s.boardStand}>
-                      <Artwork slug={b.art} alt={`${b.name}, ${b.len}`} mode="fill" inks={[]} className={s.boardPic}>
+                      <Artwork data-edit-pattern={`quiver.field3.${i}`} data-edit-roles="2,0,3,1" slug={b.art} alt={`${b.name}, ${b.len}`} mode="fill" inks={[]} className={s.boardPic}>
                         <TabbiedPattern
                           pattern={b.design}
                           palette={MID_FILL}
@@ -238,20 +251,20 @@ export default function OffshoreSurfPage() {
                       </Artwork>
                     </div>
                     <div className={s.spec}>
-                      <span className={s.specKind}>Mid-length</span>
-                      <span className={s.specName}>{b.name}</span>
-                      <strong className={s.specLen}>{b.len}</strong>
-                      <span>{b.dims}</span>
+                      <span data-edit={`quiver.specKind2.${i}`} data-edit-max="60" className={s.specKind}>Mid-length</span>
+                      <span data-edit={`quiver.specName2.${i}`} data-edit-max="60" className={s.specName}>{b.name}</span>
+                      <strong data-edit={`quiver.specLen2.${i}`} className={s.specLen}>{b.len}</strong>
+                      <span data-edit={`quiver.text2.${i}`} data-edit-max="60">{b.dims}</span>
                       <span>{`${b.vol}, ${b.fins}`}</span>
-                      <span className={s.specPrice}>{b.price}</span>
-                      <span className={s.specRent}>{b.rent}</span>
+                      <span data-edit={`quiver.specPrice2.${i}`} data-edit-max="60" className={s.specPrice}>{b.price}</span>
+                      <span data-edit={`quiver.specRent2.${i}`} data-edit-max="60" className={s.specRent}>{b.rent}</span>
                     </div>
                   </li>
                 ))}
-                {SHORTS.map((b) => (
+                {SHORTS.map((b, i) => (
                   <li key={b.name} className={s.board} style={{ '--len': b.inches } as React.CSSProperties}>
                     <div className={s.boardStand}>
-                      <Artwork slug={b.art} alt={`${b.name}, ${b.len}`} mode="fill" inks={[]} className={s.boardPic}>
+                      <Artwork data-edit-pattern={`quiver.field4.${i}`} data-edit-roles="0,2,3,1" slug={b.art} alt={`${b.name}, ${b.len}`} mode="fill" inks={[]} className={s.boardPic}>
                         <TabbiedPattern
                           pattern={b.design}
                           palette={SHORT_FILL}
@@ -263,21 +276,21 @@ export default function OffshoreSurfPage() {
                       </Artwork>
                     </div>
                     <div className={s.spec}>
-                      <span className={s.specKind}>Short</span>
-                      <span className={s.specName}>{b.name}</span>
-                      <strong className={s.specLen}>{b.len}</strong>
-                      <span>{b.dims}</span>
+                      <span data-edit={`quiver.specKind3.${i}`} data-edit-max="60" className={s.specKind}>Short</span>
+                      <span data-edit={`quiver.specName3.${i}`} data-edit-max="60" className={s.specName}>{b.name}</span>
+                      <strong data-edit={`quiver.specLen3.${i}`} className={s.specLen}>{b.len}</strong>
+                      <span data-edit={`quiver.text3.${i}`} data-edit-max="60">{b.dims}</span>
                       <span>{`${b.vol}, ${b.fins}`}</span>
-                      <span className={s.specPrice}>{b.price}</span>
-                      <span className={s.specRent}>{b.rent}</span>
+                      <span data-edit={`quiver.specPrice3.${i}`} data-edit-max="60" className={s.specPrice}>{b.price}</span>
+                      <span data-edit={`quiver.specRent3.${i}`} data-edit-max="60" className={s.specRent}>{b.rent}</span>
                     </div>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-          <p className={s.swipe}>Swipe the rack for all seven boards</p>
-          <p className={s.rackNote}>
+          <p data-edit="quiver.swipe" data-edit-max="240" data-edit-multiline className={s.swipe}>Swipe the rack for all seven boards</p>
+          <p data-edit="quiver.rackNote" data-edit-max="240" data-edit-multiline className={s.rackNote}>
             Not sure which? Tell us your height, weight and how often you surf,
             and we will hand you two to try.
           </p>
@@ -286,53 +299,53 @@ export default function OffshoreSurfPage() {
         {/* --------------------------------------------------------- LESSONS */}
         <section id="lessons" className={s.lessons} aria-labelledby="lessons-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Surf school</p>
-            <h2 id="lessons-h">Lessons, set by the tide</h2>
-            <p className={s.secNote}>
+            <p data-edit="lessons.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Surf school</p>
+            <h2 data-edit="lessons.title" data-edit-max="60" id="lessons-h">Lessons, set by the tide</h2>
+            <p data-edit="lessons.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Times move with the tide, so the week is posted every Sunday
               evening. Book online, by phone, or at the shack.
             </p>
           </div>
           <div className={s.lessonGrid}>
             <ul className={s.lessonTypes}>
-              {LESSONS.map((l) => (
+              {LESSONS.map((l, i) => (
                 <li key={l.name} className={`${s.lessonType} ${s[l.kind]}`}>
                   <div className={s.lessonTop}>
-                    <h3>{l.name}</h3>
-                    <strong>{l.price}</strong>
+                    <h3 data-edit={`lessons.title2.${i}`} data-edit-max="40">{l.name}</h3>
+                    <strong data-edit={`lessons.emphasis.${i}`}>{l.price}</strong>
                   </div>
-                  <span className={s.lessonTime}>{l.time}</span>
-                  <p>{l.body}</p>
+                  <span data-edit={`lessons.lessonTime.${i}`} data-edit-max="60" className={s.lessonTime}>{l.time}</span>
+                  <p data-edit={`lessons.body.${i}`} data-edit-max="240" data-edit-multiline>{l.body}</p>
                 </li>
               ))}
             </ul>
             <div className={s.week}>
               <div className={s.weekHead}>
-                <h3>This week</h3>
+                <h3 data-edit="lessons.title3" data-edit-max="40">This week</h3>
                 <ul className={s.legend}>
-                  {KINDS.map((k) => (
+                  {KINDS.map((k, i) => (
                     <li key={k.k}>
                       <span className={`${s.dot} ${s[k.k]}`} aria-hidden="true" />
-                      <span>{k.label}</span>
+                      <span data-edit={`lessons.text.${i}`} data-edit-max="60">{k.label}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               <ol className={s.days}>
-                {WEEK.map((d) => (
+                {WEEK.map((d, i) => (
                   <li key={d.day} className={s.dayCol}>
-                    <span className={s.dayName}>{d.day}</span>
+                    <span data-edit={`lessons.dayName.${i}`} data-edit-max="60" className={s.dayName}>{d.day}</span>
                     <ul className={s.slots}>
-                      {d.slots.map((sl) => (
+                      {d.slots.map((sl, i2) => (
                         <li key={sl.t} className={`${s.slot} ${s[sl.k]}`}>
-                          <span>{sl.t}</span>
+                          <span data-edit={`lessons.text2.${i}.${i2}`} data-edit-max="60">{sl.t}</span>
                         </li>
                       ))}
                     </ul>
                   </li>
                 ))}
               </ol>
-              <p className={s.weekNote}>
+              <p data-edit="lessons.weekNote" data-edit-max="240" data-edit-multiline className={s.weekNote}>
                 Morning slots are am, the rest pm. Full lessons show on the
                 booking page; we keep two places back for walk-ins every Saturday.
               </p>
@@ -344,47 +357,47 @@ export default function OffshoreSurfPage() {
         <section id="tides" className={s.tides} aria-labelledby="tides-h">
           <div className={s.tidesInner}>
             <div className={s.secHead}>
-              <p className={s.secKick}>Tides at the breakwater</p>
-              <h2 id="tides-h">The next five days</h2>
-              <p className={s.secNote}>
+              <p data-edit="tides.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Tides at the breakwater</p>
+              <h2 data-edit="tides.title" data-edit-max="60" id="tides-h">The next five days</h2>
+              <p data-edit="tides.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Our beach works best on a rising tide, two to three hours before
                 high. The best window is our guess, and we are usually right.
               </p>
             </div>
             <div className={s.tideTable} role="table" aria-label="Tide times for the next five days">
               <div className={s.tideHead} role="row">
-                <span role="columnheader">Day</span>
-                <span role="columnheader">Low</span>
-                <span role="columnheader">High</span>
-                <span role="columnheader">Low</span>
-                <span role="columnheader">Best window</span>
-                <span role="columnheader">Wind</span>
+                <span data-edit="tides.text" data-edit-max="60" role="columnheader">Day</span>
+                <span data-edit="tides.text2" data-edit-max="60" role="columnheader">Low</span>
+                <span data-edit="tides.text3" data-edit-max="60" role="columnheader">High</span>
+                <span data-edit="tides.text4" data-edit-max="60" role="columnheader">Low</span>
+                <span data-edit="tides.text5" data-edit-max="60" role="columnheader">Best window</span>
+                <span data-edit="tides.text6" data-edit-max="60" role="columnheader">Wind</span>
               </div>
-              {TIDES.map((t) => (
+              {TIDES.map((t, i) => (
                 <div key={t.date} className={s.tideRow} role="row">
                   <div className={s.tideDay} role="rowheader">
-                    <strong>{t.day}</strong>
-                    <span>{t.date}</span>
+                    <strong data-edit={`tides.emphasis.${i}`}>{t.day}</strong>
+                    <span data-edit={`tides.text7.${i}`} data-edit-max="60">{t.date}</span>
                   </div>
                   <div className={s.tideCell} role="cell">
-                    <small>Low</small>
-                    <span>{t.low1}</span>
+                    <small data-edit={`tides.note.${i}`}>Low</small>
+                    <span data-edit={`tides.text8.${i}`} data-edit-max="60">{t.low1}</span>
                   </div>
                   <div className={`${s.tideCell} ${s.tideHigh}`} role="cell">
-                    <small>High</small>
-                    <span>{t.high1}</span>
+                    <small data-edit={`tides.note2.${i}`}>High</small>
+                    <span data-edit={`tides.text9.${i}`} data-edit-max="60">{t.high1}</span>
                   </div>
                   <div className={s.tideCell} role="cell">
-                    <small>Low</small>
-                    <span>{t.low2}</span>
+                    <small data-edit={`tides.note3.${i}`}>Low</small>
+                    <span data-edit={`tides.text10.${i}`} data-edit-max="60">{t.low2}</span>
                   </div>
                   <div className={`${s.tideCell} ${s.tideBest}`} role="cell">
-                    <small>Best window</small>
-                    <span>{t.best}</span>
+                    <small data-edit={`tides.note4.${i}`}>Best window</small>
+                    <span data-edit={`tides.text11.${i}`} data-edit-max="60">{t.best}</span>
                   </div>
                   <div className={s.tideCell} role="cell">
-                    <small>Wind</small>
-                    <span>{t.wind}</span>
+                    <small data-edit={`tides.note5.${i}`}>Wind</small>
+                    <span data-edit={`tides.text12.${i}`} data-edit-max="60">{t.wind}</span>
                   </div>
                 </div>
               ))}
@@ -396,37 +409,37 @@ export default function OffshoreSurfPage() {
         <section id="rentals" className={s.rentals} aria-labelledby="rentals-h">
           <div className={s.rentText}>
             <div className={s.secHead}>
-              <p className={s.secKick}>Rentals</p>
-              <h2 id="rentals-h">By the hour, day or week</h2>
-              <p className={s.secNote}>
+              <p data-edit="rentals.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Rentals</p>
+              <h2 data-edit="rentals.title" data-edit-max="60" id="rentals-h">By the hour, day or week</h2>
+              <p data-edit="rentals.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Two hours is the right length for a first go. Bring ID and a
                 card for the deposit; we hose everything down for you.
               </p>
             </div>
             <div className={s.rentTable} role="table" aria-label="Rental prices">
               <div className={s.rentHead} role="row">
-                <span role="columnheader">Item</span>
-                <span role="columnheader">2 hours</span>
-                <span role="columnheader">Day</span>
-                <span role="columnheader">Week</span>
+                <span data-edit="rentals.text" data-edit-max="60" role="columnheader">Item</span>
+                <span data-edit="rentals.text2" data-edit-max="60" role="columnheader">2 hours</span>
+                <span data-edit="rentals.text3" data-edit-max="60" role="columnheader">Day</span>
+                <span data-edit="rentals.text4" data-edit-max="60" role="columnheader">Week</span>
               </div>
-              {RENTALS.map((r) => (
+              {RENTALS.map((r, i) => (
                 <div key={r.item} className={s.rentRow} role="row">
                   <div className={s.rentItem} role="rowheader">
-                    <strong>{r.item}</strong>
-                    <span>{r.note}</span>
+                    <strong data-edit={`rentals.emphasis.${i}`}>{r.item}</strong>
+                    <span data-edit={`rentals.text5.${i}`} data-edit-max="60">{r.note}</span>
                   </div>
                   <div className={s.rentCell} role="cell">
-                    <small>2 hours</small>
-                    <span>{r.h}</span>
+                    <small data-edit={`rentals.note.${i}`}>2 hours</small>
+                    <span data-edit={`rentals.text6.${i}`} data-edit-max="60">{r.h}</span>
                   </div>
                   <div className={s.rentCell} role="cell">
-                    <small>Day</small>
-                    <span>{r.d}</span>
+                    <small data-edit={`rentals.note2.${i}`}>Day</small>
+                    <span data-edit={`rentals.text7.${i}`} data-edit-max="60">{r.d}</span>
                   </div>
                   <div className={s.rentCell} role="cell">
-                    <small>Week</small>
-                    <span>{r.w}</span>
+                    <small data-edit={`rentals.note3.${i}`}>Week</small>
+                    <span data-edit={`rentals.text8.${i}`} data-edit-max="60">{r.w}</span>
                   </div>
                 </div>
               ))}
@@ -434,7 +447,7 @@ export default function OffshoreSurfPage() {
           </div>
           <aside className={s.fins} aria-labelledby="fins-h">
             <div className={s.finArt}>
-              <Artwork slug="offshore-surf-fin" alt="A single surfboard fin" mode="fill" inks={[]} className={s.finPic}>
+              <Artwork data-edit-pattern="fins.field" data-edit-roles="2,5,1" slug="offshore-surf-fin" alt="A single surfboard fin" mode="fill" inks={[]} className={s.finPic}>
                 <TabbiedPattern
                   pattern={tidering}
                   palette={FIN_FILL}
@@ -445,71 +458,71 @@ export default function OffshoreSurfPage() {
                 />
               </Artwork>
             </div>
-            <h3 id="fins-h">Fins, leashes, repairs</h3>
+            <h3 data-edit="fins.title" data-edit-max="40" id="fins-h">Fins, leashes, repairs</h3>
             <dl className={s.finList}>
               <div>
-                <dt>Single fin, 9 in</dt>
-                <dd>$38</dd>
+                <dt data-edit="fins.term" data-edit-max="28">Single fin, 9 in</dt>
+                <dd data-edit="fins.body" data-edit-max="200" data-edit-multiline>$38</dd>
               </div>
               <div>
-                <dt>Thruster set</dt>
-                <dd>$64</dd>
+                <dt data-edit="fins.term2" data-edit-max="28">Thruster set</dt>
+                <dd data-edit="fins.body2" data-edit-max="200" data-edit-multiline>$64</dd>
               </div>
               <div>
-                <dt>Leash, 6 to 10 ft</dt>
-                <dd>$32</dd>
+                <dt data-edit="fins.term3" data-edit-max="28">Leash, 6 to 10 ft</dt>
+                <dd data-edit="fins.body3" data-edit-max="200" data-edit-multiline>$32</dd>
               </div>
               <div>
-                <dt>Ding repair</dt>
-                <dd>from $40</dd>
+                <dt data-edit="fins.term4" data-edit-max="28">Ding repair</dt>
+                <dd data-edit="fins.body4" data-edit-max="200" data-edit-multiline>from $40</dd>
               </div>
             </dl>
-            <p className={s.finNote}>Dings back in three days, sanded flush and sun-cured.</p>
+            <p data-edit="fins.finNote" data-edit-max="240" data-edit-multiline className={s.finNote}>Dings back in three days, sanded flush and sun-cured.</p>
           </aside>
         </section>
 
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Visit</p>
-            <h2 id="visit-h">The shack at the end of the road</h2>
-            <p className={s.secNote}>
+            <p data-edit="visit.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Visit</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">The shack at the end of the road</h2>
+            <p data-edit="visit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Park in the lot by the breakwater, walk toward the flag, and
               the shack is the blue one with boards out front.
             </p>
           </div>
           <div className={s.visitGrid}>
             <div className={s.visitCard}>
-              <h3>Open every day</h3>
+              <h3 data-edit="visit.title2" data-edit-max="40">Open every day</h3>
               <dl className={s.hours}>
                 <div>
-                  <dt>April to October</dt>
-                  <dd>7 am to 7 pm</dd>
+                  <dt data-edit="visit.term" data-edit-max="28">April to October</dt>
+                  <dd data-edit="visit.body" data-edit-max="200" data-edit-multiline>7 am to 7 pm</dd>
                 </div>
                 <div>
-                  <dt>November to March</dt>
-                  <dd>8 am to 5 pm</dd>
+                  <dt data-edit="visit.term2" data-edit-max="28">November to March</dt>
+                  <dd data-edit="visit.body2" data-edit-max="200" data-edit-multiline>8 am to 5 pm</dd>
                 </div>
                 <div>
-                  <dt>Storm days</dt>
-                  <dd>Shop only, 10 to 4</dd>
+                  <dt data-edit="visit.term3" data-edit-max="28">Storm days</dt>
+                  <dd data-edit="visit.body3" data-edit-max="200" data-edit-multiline>Shop only, 10 to 4</dd>
                 </div>
               </dl>
-              <p className={s.addr}>
+              <p data-edit="visit.body4" data-edit-max="240" data-edit-multiline className={s.addr}>
                 1 Breakwater Road
                 <br />
                 Next to the lifeguard tower
               </p>
               <p className={s.addr}>
-                <a href="mailto:paddleout@offshore.example">paddleout@offshore.example</a>
+                <a data-edit="visit.link" data-edit-max="28" href="mailto:paddleout@offshore.example">paddleout@offshore.example</a>
               </p>
-              <p className={s.addr}>(555) 019-3302</p>
+              <p data-edit="visit.addr" data-edit-max="240" data-edit-multiline className={s.addr}>(555) 019-3302</p>
             </div>
             <div className={s.faq}>
-              {FAQ.map((f) => (
+              {FAQ.map((f, i) => (
                 <details key={f.q}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`visit.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`visit.body4.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -519,14 +532,14 @@ export default function OffshoreSurfPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Offshore Surf Co.</p>
-          <p className={s.footTag}>Boards, lessons and rentals at the end of Breakwater Road.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Offshore Surf Co.</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Boards, lessons and rentals at the end of Breakwater Road.</p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional surf shop. Boards, tides and prices are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional surf shop. Boards, tides and prices are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

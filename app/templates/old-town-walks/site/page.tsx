@@ -220,7 +220,21 @@ const FAQS = [
 
 export default function OldTownWalksPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f3ede2',
+        '--ink': '#232126',
+        '--brick': '#c4563a',
+        '--river': '#3b6e8f',
+        '--stone': '#8f877d',
+        '--pale': '#e5daca',
+        '--ochre': '#e0b04f',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,brick,river,stone,pale,ochre"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -230,15 +244,15 @@ export default function OldTownWalksPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Old Town Walks</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Old Town Walks</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -257,19 +271,19 @@ export default function OldTownWalksPage() {
             />
           </div>
           <div className={s.heroText}>
-            <p className={s.kicker}>Walking tours of the old town, daily since 2009</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Walking tours of the old town, daily since 2009</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Two hours,
               <br />
               <em>four hundred years.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Small groups, local guides and the stories the plaques leave
               out. The first walk leaves the Clock Tower at ten every morning.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#book">Book a walk</a>
-              <a className={s.btnGhost} href="#walks">See all six walks</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Book a walk</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#walks">See all six walks</a>
             </div>
           </div>
         </section>
@@ -277,14 +291,14 @@ export default function OldTownWalksPage() {
         {/* ----------------------------------------------------------- TODAY */}
         <section className={s.today} aria-labelledby="today-h">
           <div className={s.todayInner}>
-            <h2 id="today-h" className={s.todayHead}>Leaving today</h2>
+            <h2 data-edit="today.todayHead" data-edit-max="60" id="today-h" className={s.todayHead}>Leaving today</h2>
             <ol className={s.todayList}>
-              {TODAY.map((t) => (
+              {TODAY.map((t, i) => (
                 <li key={`${t.time}-${t.walk}`}>
-                  <time className={s.todayTime}>{t.time}</time>
-                  <span className={s.todayWalk}>{t.walk}</span>
-                  <span className={s.todayFrom}>{t.from}</span>
-                  <span className={s.todayLeft}>{t.left}</span>
+                  <time data-edit={`today.todayTime.${i}`} className={s.todayTime}>{t.time}</time>
+                  <span data-edit={`today.todayWalk.${i}`} data-edit-max="60" className={s.todayWalk}>{t.walk}</span>
+                  <span data-edit={`today.todayFrom.${i}`} data-edit-max="60" className={s.todayFrom}>{t.from}</span>
+                  <span data-edit={`today.todayLeft.${i}`} data-edit-max="60" className={s.todayLeft}>{t.left}</span>
                 </li>
               ))}
             </ol>
@@ -294,36 +308,36 @@ export default function OldTownWalksPage() {
         {/* ----------------------------------------------------------- WALKS */}
         <section id="walks" className={s.sec} aria-labelledby="walks-h">
           <div className={s.secHead}>
-            <h2 id="walks-h">Six walks</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="walks.title" data-edit-max="60" id="walks-h">Six walks</h2>
+            <p data-edit="walks.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Prices are for an adult; under sixteens pay half and under fives
               walk free. Groups are never more than fourteen.
             </p>
           </div>
           <ul className={s.walks}>
-            {WALKS.map((w) => (
+            {WALKS.map((w, i) => (
               <li key={w.name} className={`${s.walk} ${s[w.tone]}`}>
                 <div className={s.walkTop}>
-                  <h3>{w.name}</h3>
-                  <strong className={s.walkPrice}>{w.price}</strong>
+                  <h3 data-edit={`walks.title2.${i}`} data-edit-max="40">{w.name}</h3>
+                  <strong data-edit={`walks.walkPrice.${i}`} className={s.walkPrice}>{w.price}</strong>
                 </div>
-                <p className={s.walkHook}>{w.hook}</p>
+                <p data-edit={`walks.walkHook.${i}`} data-edit-max="240" data-edit-multiline className={s.walkHook}>{w.hook}</p>
                 <dl className={s.walkFacts}>
                   <div>
-                    <dt>Length</dt>
-                    <dd>{w.length}</dd>
+                    <dt data-edit={`walks.term.${i}`} data-edit-max="28">Length</dt>
+                    <dd data-edit={`walks.body.${i}`} data-edit-max="200" data-edit-multiline>{w.length}</dd>
                   </div>
                   <div>
-                    <dt>Takes</dt>
-                    <dd>{w.time}</dd>
+                    <dt data-edit={`walks.term2.${i}`} data-edit-max="28">Takes</dt>
+                    <dd data-edit={`walks.body2.${i}`} data-edit-max="200" data-edit-multiline>{w.time}</dd>
                   </div>
                   <div>
-                    <dt>Leaves</dt>
-                    <dd>{w.days}</dd>
+                    <dt data-edit={`walks.term3.${i}`} data-edit-max="28">Leaves</dt>
+                    <dd data-edit={`walks.body3.${i}`} data-edit-max="200" data-edit-multiline>{w.days}</dd>
                   </div>
                   <div>
-                    <dt>Meet at</dt>
-                    <dd>{w.meet}</dd>
+                    <dt data-edit={`walks.term4.${i}`} data-edit-max="28">Meet at</dt>
+                    <dd data-edit={`walks.body4.${i}`} data-edit-max="200" data-edit-multiline>{w.meet}</dd>
                   </div>
                 </dl>
               </li>
@@ -334,7 +348,7 @@ export default function OldTownWalksPage() {
         {/* ------------------------------------------------------------ BAND
             A street of gable ends, the loudest pattern on the page. */}
         <div className={s.band} aria-hidden="true">
-          <div className={s.bandField}>
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,2,6,5,4" className={s.bandField}>
             <TabbiedPattern
               pattern={garret}
               palette={HOUSES}
@@ -351,15 +365,15 @@ export default function OldTownWalksPage() {
         {/* ---------------------------------------------------------- MEET */}
         <section id="meet" className={s.sec} aria-labelledby="meet-h">
           <div className={s.secHead}>
-            <h2 id="meet-h">Four meeting points</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="meet.title" data-edit-max="60" id="meet-h">Four meeting points</h2>
+            <p data-edit="meet.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every walk starts at one of these and ends within five minutes
               of it. Look for the guide with the green umbrella.
             </p>
           </div>
           <div className={s.meetGrid}>
             <div className={s.map}>
-              <div className={s.mapField} aria-hidden="true">
+              <div data-edit-pattern="meet.field" data-edit-roles="transparent,3,2,4,1" className={s.mapField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={baste}
                   palette={ROUTES}
@@ -374,16 +388,16 @@ export default function OldTownWalksPage() {
               {POINTS.map((p) => (
                 <span key={p.no} className={s.pin} style={{ left: p.x, top: p.y }} aria-hidden="true">{p.no}</span>
               ))}
-              <span className={s.mapLabel} aria-hidden="true">The river</span>
+              <span data-edit="meet.text" data-edit-max="60" className={s.mapLabel} aria-hidden="true">The river</span>
             </div>
             <ol className={s.points}>
-              {POINTS.map((p) => (
+              {POINTS.map((p, i) => (
                 <li key={p.no}>
-                  <span className={s.pointNo}>{p.no}</span>
+                  <span data-edit={`meet.pointNo.${i}`} data-edit-max="60" className={s.pointNo}>{p.no}</span>
                   <div>
-                    <h3>{p.name}</h3>
-                    <p className={s.pointWhere}>{p.where}</p>
-                    <p className={s.pointWalks}>{p.walks}</p>
+                    <h3 data-edit={`meet.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                    <p data-edit={`meet.pointWhere.${i}`} data-edit-max="240" data-edit-multiline className={s.pointWhere}>{p.where}</p>
+                    <p data-edit={`meet.pointWalks.${i}`} data-edit-max="240" data-edit-multiline className={s.pointWalks}>{p.walks}</p>
                   </div>
                 </li>
               ))}
@@ -394,26 +408,26 @@ export default function OldTownWalksPage() {
         {/* ---------------------------------------------------------- GUIDES */}
         <section id="guides" className={s.sec} aria-labelledby="guides-h">
           <div className={s.secHead}>
-            <h2 id="guides-h">Your guides</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="guides.title" data-edit-max="60" id="guides-h">Your guides</h2>
+            <p data-edit="guides.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Eleven of us in all. These four write the walks and lead most of
               them; the rest are trained by them.
             </p>
           </div>
           <ul className={s.guides}>
-            {GUIDES.map((g) => (
+            {GUIDES.map((g, i) => (
               <li key={g.name} className={s.guide}>
                 <span className={s.guideMark} aria-hidden="true">{g.initials}</span>
-                <h3>{g.name}</h3>
-                <p className={s.guideRole}>{g.role}</p>
+                <h3 data-edit={`guides.title2.${i}`} data-edit-max="40">{g.name}</h3>
+                <p data-edit={`guides.guideRole.${i}`} data-edit-max="240" data-edit-multiline className={s.guideRole}>{g.role}</p>
                 <dl className={s.guideFacts}>
                   <div>
-                    <dt>Speaks</dt>
-                    <dd>{g.speaks}</dd>
+                    <dt data-edit={`guides.term.${i}`} data-edit-max="28">Speaks</dt>
+                    <dd data-edit={`guides.body.${i}`} data-edit-max="200" data-edit-multiline>{g.speaks}</dd>
                   </div>
                   <div>
-                    <dt>Leads</dt>
-                    <dd>{g.leads}</dd>
+                    <dt data-edit={`guides.term2.${i}`} data-edit-max="28">Leads</dt>
+                    <dd data-edit={`guides.body2.${i}`} data-edit-max="200" data-edit-multiline>{g.leads}</dd>
                   </div>
                 </dl>
               </li>
@@ -425,19 +439,19 @@ export default function OldTownWalksPage() {
         <section id="private" className={s.private} aria-labelledby="private-h">
           <div className={s.privateInner}>
             <div>
-              <h2 id="private-h">Private groups and schools</h2>
-              <p>
+              <h2 data-edit="private.title" data-edit-max="60" id="private-h">Private groups and schools</h2>
+              <p data-edit="private.body" data-edit-max="240" data-edit-multiline>
                 Any of the six walks, or one we put together for you, on the
                 day and at the hour you choose. Birthdays, reunions, a class
                 doing the town for a history project.
               </p>
-              <a className={s.btnInk} href="mailto:walks@oldtownwalks.example">Write to plan one</a>
+              <a data-edit="private.btnInk" data-edit-max="28" className={s.btnInk} href="mailto:walks@oldtownwalks.example">Write to plan one</a>
             </div>
             <dl className={s.prices}>
-              {PRIVATE.map(([what, price]) => (
+              {PRIVATE.map(([what, price], i) => (
                 <div key={what}>
-                  <dt>{what}</dt>
-                  <dd>{price}</dd>
+                  <dt data-edit={`private.term.${i}`} data-edit-max="28">{what}</dt>
+                  <dd data-edit={`private.body2.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                 </div>
               ))}
             </dl>
@@ -458,15 +472,15 @@ export default function OldTownWalksPage() {
           </div>
           <div className={s.bookInner}>
             <div className={s.bookText}>
-              <h2 id="book-h">Book a walk</h2>
-              <p>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Book a walk</h2>
+              <p data-edit="book.body" data-edit-max="240" data-edit-multiline>
                 Pay online and show the confirmation on your phone, or pay the
                 guide at the meeting point if there are places left.
               </p>
             </div>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="ow-walk">Walk</label>
+                <label data-edit="book.label" htmlFor="ow-walk">Walk</label>
                 <select id="ow-walk" name="walk" defaultValue={WALKS[0].name}>
                   {WALKS.map((w) => (
                     <option key={w.name} value={w.name}>{w.name}</option>
@@ -474,22 +488,22 @@ export default function OldTownWalksPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="ow-date">Date</label>
+                <label data-edit="book.label2" htmlFor="ow-date">Date</label>
                 <input id="ow-date" name="date" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="ow-adults">Adults</label>
+                <label data-edit="book.label3" htmlFor="ow-adults">Adults</label>
                 <input id="ow-adults" name="adults" type="number" min="1" max="14" defaultValue="2" />
               </div>
               <div className={s.field}>
-                <label htmlFor="ow-kids">Under 16</label>
+                <label data-edit="book.label4" htmlFor="ow-kids">Under 16</label>
                 <input id="ow-kids" name="children" type="number" min="0" max="12" defaultValue="0" />
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="ow-email">Email for the tickets</label>
+                <label data-edit="book.label5" htmlFor="ow-email">Email for the tickets</label>
                 <input id="ow-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" />
               </div>
-              <button className={s.formBtn} type="submit">Check places</button>
+              <button data-edit="book.formBtn" data-edit-max="24" className={s.formBtn} type="submit">Check places</button>
             </form>
           </div>
         </section>
@@ -497,13 +511,13 @@ export default function OldTownWalksPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.sec} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <h2 id="faq-h">Before you come</h2>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Before you come</h2>
           </div>
           <div className={s.faq}>
-            {FAQS.map((f) => (
+            {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -513,29 +527,29 @@ export default function OldTownWalksPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Old Town Walks</p>
-            <p className={s.footTag}>Walking tours of the old town with the people who live in it.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Old Town Walks</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Walking tours of the old town with the people who live in it.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Office</h2>
-            <p className={s.footText}>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Office</h2>
+            <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footText}>
               3 Guild Street, by the Guildhall
               <br />
               Open 9:00 to 17:00, every day
             </p>
           </div>
           <div>
-            <h2 className={s.footHead}>Contact</h2>
-            <a className={s.footLink} href="mailto:walks@oldtownwalks.example">walks@oldtownwalks.example</a>
-            <a className={s.footLink} href="tel:+15550173390">(555) 017-3390</a>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Contact</h2>
+            <a data-edit="footer.footLink" data-edit-max="28" className={s.footLink} href="mailto:walks@oldtownwalks.example">walks@oldtownwalks.example</a>
+            <a data-edit="footer.footLink2" data-edit-max="28" className={s.footLink} href="tel:+15550173390">(555) 017-3390</a>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional walking tour company. Walks, guides, prices and the town are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional walking tour company. Walks, guides, prices and the town are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, pictures painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, pictures painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

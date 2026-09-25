@@ -130,7 +130,20 @@ const HOURS = [
 
 export default function VinylVaultPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f2efe9',
+        '--black': '#121212',
+        '--red': '#e94f37',
+        '--charcoal': '#393e41',
+        '--gray': '#8b8883',
+        '--pale': '#dcd7cf',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,black,red,charcoal,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -142,17 +155,17 @@ export default function VinylVaultPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markDisc} aria-hidden="true" />
-          <span className={s.markName}>Vinyl Vault</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Vinyl Vault</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <span className={s.barHours}>Open today 11-8</span>
+        <span data-edit="bar.barHours" data-edit-max="60" className={s.barHours}>Open today 11-8</span>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -163,24 +176,24 @@ export default function VinylVaultPage() {
             grooves. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Used and new records, 402 Canal Street</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Used and new records, 402 Canal Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Dig
               <br />
               <em>deeper.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Twelve thousand records in the racks, four hundred new ones out
               every Thursday, and a dollar bin by the door that has never once
               been empty. Listen to anything before you buy it.
             </p>
             <div className={s.heroActions}>
-              <a className={s.button} href="#crates">See the crates</a>
-              <a className={s.buttonGhost} href="#buy">Sell us your records</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#crates">See the crates</a>
+              <a data-edit="hero.buttonGhost" data-edit-max="28" className={s.buttonGhost} href="#buy">Sell us your records</a>
             </div>
           </div>
           <div className={s.heroPanel}>
-            <div className={s.grooves} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,3,0" className={s.grooves} aria-hidden="true">
               <TabbiedPattern
                 pattern={ringfield}
                 palette={GROOVES}
@@ -200,28 +213,28 @@ export default function VinylVaultPage() {
               className={s.turntable}
             />
             <p className={s.nowPlaying}>
-              <span className={s.nowLabel}>On the shop deck</span>
-              <span className={s.nowTitle}>Juno Reyes, Night Ferry</span>
+              <span data-edit="hero.nowLabel" data-edit-max="60" className={s.nowLabel}>On the shop deck</span>
+              <span data-edit="hero.nowTitle" data-edit-max="60" className={s.nowTitle}>Juno Reyes, Night Ferry</span>
             </p>
           </div>
         </section>
 
         <ul className={s.ticker} aria-label="The shop in numbers">
           <li>
-            <strong>12,000</strong>
-            <span>records in the racks</span>
+            <strong data-edit="top.emphasis">12,000</strong>
+            <span data-edit="top.text" data-edit-max="60">records in the racks</span>
           </li>
           <li>
-            <strong>400</strong>
-            <span>new in every Thursday</span>
+            <strong data-edit="top.emphasis2">400</strong>
+            <span data-edit="top.text2" data-edit-max="60">new in every Thursday</span>
           </li>
           <li>
-            <strong>4</strong>
-            <span>listening stations</span>
+            <strong data-edit="top.emphasis3">4</strong>
+            <span data-edit="top.text3" data-edit-max="60">listening stations</span>
           </li>
           <li>
-            <strong>$1</strong>
-            <span>bins out front, always</span>
+            <strong data-edit="top.emphasis4">$1</strong>
+            <span data-edit="top.text4" data-edit-max="60">bins out front, always</span>
           </li>
         </ul>
 
@@ -231,9 +244,9 @@ export default function VinylVaultPage() {
             half out of it. */}
         <section id="crates" className={s.crates} aria-labelledby="crates-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>In the crates this week</p>
-            <h2 id="crates-h">Pulled from the new arrivals</h2>
-            <p className={s.secNote}>
+            <p data-edit="crates.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>In the crates this week</p>
+            <h2 data-edit="crates.title" data-edit-max="60" id="crates-h">Pulled from the new arrivals</h2>
+            <p data-edit="crates.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Prices are per record. Grades follow the usual scale, from NM
               (near mint) to VG (very good). Ask at the counter and we will
               put anything on a deck for you.
@@ -242,20 +255,20 @@ export default function VinylVaultPage() {
 
           <div className={s.crate}>
             <div className={`${s.divider} ${s.dividerCharcoal}`}>
-              <h3>Jazz</h3>
-              <span className={s.dividerCount}>1,840 in the racks</span>
+              <h3 data-edit="crates.title2" data-edit-max="40">Jazz</h3>
+              <span data-edit="crates.dividerCount" data-edit-max="60" className={s.dividerCount}>1,840 in the racks</span>
             </div>
             <ul className={s.sleeves}>
-              {JAZZ.map((r) => (
+              {JAZZ.map((r, i) => (
                 <li key={r.title} className={s.record}>
                   <span className={s.disc} aria-hidden="true" />
-                  <div className={s.cover} aria-hidden="true">
+                  <div data-edit-pattern={`crates.field.${i}`} data-edit-roles="3,0,2,4" className={s.cover} aria-hidden="true">
                     <TabbiedPattern pattern={r.design} palette={JAZZ_SLEEVE} fit="grid" cellSize={52} seed={r.seed} style={{ position: 'absolute', inset: 0 }} />
                   </div>
-                  <span className={s.sticker}>{r.price}</span>
-                  <h4 className={s.title}>{r.title}</h4>
-                  <p className={s.artist}>{r.artist}</p>
-                  <p className={s.meta}>{r.meta}</p>
+                  <span data-edit={`crates.sticker.${i}`} data-edit-max="60" className={s.sticker}>{r.price}</span>
+                  <h4 data-edit={`crates.title3.${i}`} data-edit-max="36" className={s.title}>{r.title}</h4>
+                  <p data-edit={`crates.artist.${i}`} data-edit-max="240" data-edit-multiline className={s.artist}>{r.artist}</p>
+                  <p data-edit={`crates.meta.${i}`} data-edit-max="240" data-edit-multiline className={s.meta}>{r.meta}</p>
                 </li>
               ))}
             </ul>
@@ -263,20 +276,20 @@ export default function VinylVaultPage() {
 
           <div className={s.crate}>
             <div className={`${s.divider} ${s.dividerRed}`}>
-              <h3>Soul and funk</h3>
-              <span className={s.dividerCount}>2,210 in the racks</span>
+              <h3 data-edit="crates.title4" data-edit-max="40">Soul and funk</h3>
+              <span data-edit="crates.dividerCount2" data-edit-max="60" className={s.dividerCount}>2,210 in the racks</span>
             </div>
             <ul className={s.sleeves}>
-              {SOUL.map((r) => (
+              {SOUL.map((r, i) => (
                 <li key={r.title} className={s.record}>
                   <span className={s.disc} aria-hidden="true" />
-                  <div className={s.cover} aria-hidden="true">
+                  <div data-edit-pattern={`crates.field2.${i}`} data-edit-roles="2,1,0,5" className={s.cover} aria-hidden="true">
                     <TabbiedPattern pattern={r.design} palette={SOUL_SLEEVE} fit="grid" cellSize={52} seed={r.seed} style={{ position: 'absolute', inset: 0 }} />
                   </div>
-                  <span className={s.sticker}>{r.price}</span>
-                  <h4 className={s.title}>{r.title}</h4>
-                  <p className={s.artist}>{r.artist}</p>
-                  <p className={s.meta}>{r.meta}</p>
+                  <span data-edit={`crates.sticker2.${i}`} data-edit-max="60" className={s.sticker}>{r.price}</span>
+                  <h4 data-edit={`crates.title5.${i}`} data-edit-max="36" className={s.title}>{r.title}</h4>
+                  <p data-edit={`crates.artist2.${i}`} data-edit-max="240" data-edit-multiline className={s.artist}>{r.artist}</p>
+                  <p data-edit={`crates.meta2.${i}`} data-edit-max="240" data-edit-multiline className={s.meta}>{r.meta}</p>
                 </li>
               ))}
             </ul>
@@ -284,20 +297,20 @@ export default function VinylVaultPage() {
 
           <div className={s.crate}>
             <div className={`${s.divider} ${s.dividerPale}`}>
-              <h3>Rock and indie</h3>
-              <span className={s.dividerCount}>4,760 in the racks</span>
+              <h3 data-edit="crates.title6" data-edit-max="40">Rock and indie</h3>
+              <span data-edit="crates.dividerCount3" data-edit-max="60" className={s.dividerCount}>4,760 in the racks</span>
             </div>
             <ul className={s.sleeves}>
-              {ROCK.map((r) => (
+              {ROCK.map((r, i) => (
                 <li key={r.title} className={s.record}>
                   <span className={s.disc} aria-hidden="true" />
-                  <div className={s.cover} aria-hidden="true">
+                  <div data-edit-pattern={`crates.field3.${i}`} data-edit-roles="5,1,2,3" className={s.cover} aria-hidden="true">
                     <TabbiedPattern pattern={r.design} palette={ROCK_SLEEVE} fit="grid" cellSize={52} seed={r.seed} style={{ position: 'absolute', inset: 0 }} />
                   </div>
-                  <span className={s.sticker}>{r.price}</span>
-                  <h4 className={s.title}>{r.title}</h4>
-                  <p className={s.artist}>{r.artist}</p>
-                  <p className={s.meta}>{r.meta}</p>
+                  <span data-edit={`crates.sticker3.${i}`} data-edit-max="60" className={s.sticker}>{r.price}</span>
+                  <h4 data-edit={`crates.title7.${i}`} data-edit-max="36" className={s.title}>{r.title}</h4>
+                  <p data-edit={`crates.artist3.${i}`} data-edit-max="240" data-edit-multiline className={s.artist}>{r.artist}</p>
+                  <p data-edit={`crates.meta3.${i}`} data-edit-max="240" data-edit-multiline className={s.meta}>{r.meta}</p>
                 </li>
               ))}
             </ul>
@@ -305,20 +318,20 @@ export default function VinylVaultPage() {
 
           <div className={s.crate}>
             <div className={`${s.divider} ${s.dividerBlack}`}>
-              <h3>Electronic</h3>
-              <span className={s.dividerCount}>1,390 in the racks</span>
+              <h3 data-edit="crates.title8" data-edit-max="40">Electronic</h3>
+              <span data-edit="crates.dividerCount4" data-edit-max="60" className={s.dividerCount}>1,390 in the racks</span>
             </div>
             <ul className={s.sleeves}>
-              {BEATS.map((r) => (
+              {BEATS.map((r, i) => (
                 <li key={r.title} className={s.record}>
                   <span className={s.disc} aria-hidden="true" />
-                  <div className={s.cover} aria-hidden="true">
+                  <div data-edit-pattern={`crates.field4.${i}`} data-edit-roles="1,2,5,4" className={s.cover} aria-hidden="true">
                     <TabbiedPattern pattern={r.design} palette={BEATS_SLEEVE} fit="grid" cellSize={52} seed={r.seed} style={{ position: 'absolute', inset: 0 }} />
                   </div>
-                  <span className={s.sticker}>{r.price}</span>
-                  <h4 className={s.title}>{r.title}</h4>
-                  <p className={s.artist}>{r.artist}</p>
-                  <p className={s.meta}>{r.meta}</p>
+                  <span data-edit={`crates.sticker4.${i}`} data-edit-max="60" className={s.sticker}>{r.price}</span>
+                  <h4 data-edit={`crates.title9.${i}`} data-edit-max="36" className={s.title}>{r.title}</h4>
+                  <p data-edit={`crates.artist4.${i}`} data-edit-max="240" data-edit-multiline className={s.artist}>{r.artist}</p>
+                  <p data-edit={`crates.meta4.${i}`} data-edit-max="240" data-edit-multiline className={s.meta}>{r.meta}</p>
                 </li>
               ))}
             </ul>
@@ -337,19 +350,19 @@ export default function VinylVaultPage() {
                 inks={['var(--black)', 'var(--pale)']}
                 className={s.headphones}
               />
-              <p className={s.stationNote}>Four listening stations at the back. Take anything off the rack and play it.</p>
+              <p data-edit="picks.stationNote" data-edit-max="240" data-edit-multiline className={s.stationNote}>Four listening stations at the back. Take anything off the rack and play it.</p>
             </div>
             <div className={s.picksText}>
-              <p className={s.kicker}>Staff picks</p>
-              <h2 id="picks-h">Three records we would take home</h2>
+              <p data-edit="picks.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Staff picks</p>
+              <h2 data-edit="picks.title" data-edit-max="60" id="picks-h">Three records we would take home</h2>
               <ol className={s.pickList}>
                 {PICKS.map((p, i) => (
                   <li key={p.who} className={s.pick}>
                     <span className={s.pickNo}>{`0${i + 1}`}</span>
-                    <p className={s.pickWho}>{p.who}</p>
-                    <h3>{p.record}</h3>
-                    <p className={s.pickWhy}>{p.why}</p>
-                    <p className={s.pickWhere}>{p.where}</p>
+                    <p data-edit={`picks.pickWho.${i}`} data-edit-max="240" data-edit-multiline className={s.pickWho}>{p.who}</p>
+                    <h3 data-edit={`picks.title2.${i}`} data-edit-max="40">{p.record}</h3>
+                    <p data-edit={`picks.pickWhy.${i}`} data-edit-max="240" data-edit-multiline className={s.pickWhy}>{p.why}</p>
+                    <p data-edit={`picks.pickWhere.${i}`} data-edit-max="240" data-edit-multiline className={s.pickWhere}>{p.where}</p>
                   </li>
                 ))}
               </ol>
@@ -361,9 +374,9 @@ export default function VinylVaultPage() {
         <section id="buy" className={s.sec} aria-labelledby="buy-h">
           <div className={s.buy}>
             <div className={s.buyText}>
-              <p className={s.kicker}>We buy records</p>
-              <h2 id="buy-h">Bring us the crate from the attic</h2>
-              <p className={s.buyLede}>
+              <p data-edit="buy.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>We buy records</p>
+              <h2 data-edit="buy.title" data-edit-max="60" id="buy-h">Bring us the crate from the attic</h2>
+              <p data-edit="buy.buyLede" data-edit-max="240" data-edit-multiline className={s.buyLede}>
                 One record or five thousand. We pay a share of what we will
                 sell it for, and we tell you the grade and the shelf price of
                 anything you ask about.
@@ -372,8 +385,8 @@ export default function VinylVaultPage() {
                 {STEPS.map(([title, body], i) => (
                   <li key={title}>
                     <span className={s.stepNo}>{i + 1}</span>
-                    <h3>{title}</h3>
-                    <p>{body}</p>
+                    <h3 data-edit={`buy.title2.${i}`} data-edit-max="40">{title}</h3>
+                    <p data-edit={`buy.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                   </li>
                 ))}
               </ol>
@@ -386,25 +399,25 @@ export default function VinylVaultPage() {
                 inks={['var(--black)', 'var(--paper)']}
                 className={s.crateArt}
               />
-              <p className={s.buyNote}>More than 500 records? We come to you, anywhere within 60 miles.</p>
+              <p data-edit="buy.buyNote" data-edit-max="240" data-edit-multiline className={s.buyNote}>More than 500 records? We come to you, anywhere within 60 miles.</p>
             </div>
           </div>
 
           <table className={s.grades}>
-            <caption>What we pay, as a share of our shelf price</caption>
+            <caption data-edit="buy.caption">What we pay, as a share of our shelf price</caption>
             <thead>
               <tr>
-                <th scope="col">Grade</th>
-                <th scope="col">What it means</th>
-                <th scope="col">We pay</th>
+                <th data-edit="buy.heading" scope="col">Grade</th>
+                <th data-edit="buy.heading2" scope="col">What it means</th>
+                <th data-edit="buy.heading3" scope="col">We pay</th>
               </tr>
             </thead>
             <tbody>
-              {GRADES.map(([grade, means, pay]) => (
+              {GRADES.map(([grade, means, pay], i) => (
                 <tr key={grade}>
-                  <th scope="row">{grade}</th>
-                  <td>{means}</td>
-                  <td className={s.pay}>{pay}</td>
+                  <th data-edit={`buy.heading4.${i}`} scope="row">{grade}</th>
+                  <td data-edit={`buy.cell.${i}`}>{means}</td>
+                  <td data-edit={`buy.pay.${i}`} className={s.pay}>{pay}</td>
                 </tr>
               ))}
             </tbody>
@@ -414,27 +427,27 @@ export default function VinylVaultPage() {
         {/* ----------------------------------------------------------- EVENTS */}
         <section id="events" className={s.sec} aria-labelledby="events-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>In the shop</p>
-            <h2 id="events-h">Events this fall</h2>
-            <p className={s.secNote}>
+            <p data-edit="events.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>In the shop</p>
+            <h2 data-edit="events.title" data-edit-max="60" id="events-h">Events this fall</h2>
+            <p data-edit="events.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               All in the shop, all ages. RSVP by email for the in-store set;
               the room holds sixty.
             </p>
           </div>
           <ul className={s.events}>
-            {EVENTS.map((e) => (
+            {EVENTS.map((e, i) => (
               <li key={e.title} className={s.event}>
                 <p className={s.date}>
-                  <span className={s.dateDay}>{e.day}</span>
-                  <span className={s.dateNum}>{e.date}</span>
-                  <span className={s.dateMonth}>{e.month}</span>
+                  <span data-edit={`events.dateDay.${i}`} data-edit-max="60" className={s.dateDay}>{e.day}</span>
+                  <span data-edit={`events.dateNum.${i}`} data-edit-max="60" className={s.dateNum}>{e.date}</span>
+                  <span data-edit={`events.dateMonth.${i}`} data-edit-max="60" className={s.dateMonth}>{e.month}</span>
                 </p>
                 <div className={s.eventText}>
-                  <h3>{e.title}</h3>
-                  <p>{e.body}</p>
+                  <h3 data-edit={`events.title2.${i}`} data-edit-max="40">{e.title}</h3>
+                  <p data-edit={`events.body.${i}`} data-edit-max="240" data-edit-multiline>{e.body}</p>
                 </div>
-                <span className={s.eventTime}>{e.time}</span>
-                <span className={s.eventPrice}>{e.price}</span>
+                <span data-edit={`events.eventTime.${i}`} data-edit-max="60" className={s.eventTime}>{e.time}</span>
+                <span data-edit={`events.eventPrice.${i}`} data-edit-max="60" className={s.eventPrice}>{e.price}</span>
               </li>
             ))}
           </ul>
@@ -444,75 +457,75 @@ export default function VinylVaultPage() {
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInner}>
             <div>
-              <p className={s.kicker}>Visit</p>
-              <h2 id="visit-h">402 Canal Street</h2>
-              <p className={s.visitNote}>
+              <p data-edit="visit.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Visit</p>
+              <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">402 Canal Street</h2>
+              <p data-edit="visit.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>
                 Across from the old tram depot, with the red awning. Bikes
                 lock to the rail out front; the 7 and 21 buses stop at the
                 corner.
               </p>
               <p className={s.contactLine}>
-                <a href="tel:+15550189034">(555) 018-9034</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550189034">(555) 018-9034</a>
               </p>
               <p className={s.contactLine}>
-                <a href="mailto:dig@vinylvault.example">dig@vinylvault.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:dig@vinylvault.example">dig@vinylvault.example</a>
               </p>
             </div>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
             <form className={s.form} action="#">
-              <h3>New arrivals, every Thursday</h3>
-              <p className={s.formNote}>One email a week with the best of what came in. Nothing else.</p>
+              <h3 data-edit="visit.title2" data-edit-max="40">New arrivals, every Thursday</h3>
+              <p data-edit="visit.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>One email a week with the best of what came in. Nothing else.</p>
               <label className={s.field}>
-                <span>Email</span>
+                <span data-edit="visit.text" data-edit-max="60">Email</span>
                 <input type="email" name="email" autoComplete="email" required />
               </label>
               <fieldset className={s.likes}>
-                <legend>Send me</legend>
+                <legend data-edit="visit.legend">Send me</legend>
                 <label>
                   <input type="checkbox" name="genre" value="jazz" defaultChecked />
-                  <span>Jazz</span>
+                  <span data-edit="visit.text2" data-edit-max="60">Jazz</span>
                 </label>
                 <label>
                   <input type="checkbox" name="genre" value="soul" defaultChecked />
-                  <span>Soul</span>
+                  <span data-edit="visit.text3" data-edit-max="60">Soul</span>
                 </label>
                 <label>
                   <input type="checkbox" name="genre" value="rock" />
-                  <span>Rock</span>
+                  <span data-edit="visit.text4" data-edit-max="60">Rock</span>
                 </label>
                 <label>
                   <input type="checkbox" name="genre" value="electronic" />
-                  <span>Electronic</span>
+                  <span data-edit="visit.text5" data-edit-max="60">Electronic</span>
                 </label>
               </fieldset>
-              <button className={s.button} type="submit">Sign up</button>
+              <button data-edit="visit.button" data-edit-max="24" className={s.button} type="submit">Sign up</button>
             </form>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footMark}>Vinyl Vault</p>
+        <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Vinyl Vault</p>
         <ul className={s.footLinks}>
-          {NAV.map(([label, href]) => (
+          {NAV.map(([label, href], i) => (
             <li key={href}>
-              <a href={href}>{label}</a>
+              <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
             </li>
           ))}
         </ul>
         <div className={s.footFine}>
-          <p>A fictional record store. Records, artists, prices and events are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional record store. Records, artists, prices and events are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live as the sleeves; the photographs are tinted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live as the sleeves; the photographs are tinted in the page's own colors.</span>
           </p>
         </div>
       </footer>

@@ -172,7 +172,19 @@ const POLICIES = [
 
 export default function TheWrenHotelPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f4f0ea',
+        '--ink': '#1e1b18',
+        '--wren': '#7d5a44',
+        '--stone': '#a0968b',
+        '--linen': '#e6ded3',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,wren,stone,linen"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -182,16 +194,16 @@ export default function TheWrenHotelPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">The Wren</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">The Wren</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBook} href="#book">Check rates</a>
+        <a data-edit="bar.barBook" data-edit-max="28" className={s.barBook} href="#book">Check rates</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -202,23 +214,23 @@ export default function TheWrenHotelPage() {
             pattern on the landing walls. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>A hotel of eleven rooms, Tanner Street</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>A hotel of eleven rooms, Tanner Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Eleven rooms, and a <em>brass key</em> for each.
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               The Wren is an old bookbinder's building turned into a small
               hotel: eleven rooms over three floors, a bar where the presses
               stood, breakfast until eleven, and a key on a tassel you will
               not lose.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#book">Check rates</a>
-              <a className={s.btnGhost} href="#rooms">See the rooms</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Check rates</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#rooms">See the rooms</a>
             </div>
           </div>
           <div className={s.heroArt}>
-            <div className={s.heroWall} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3" className={s.heroWall} aria-hidden="true">
               <TabbiedPattern
                 pattern={ogee}
                 palette={PAPER_WALL}
@@ -238,10 +250,10 @@ export default function TheWrenHotelPage() {
             />
           </div>
           <dl className={s.facts}>
-            {FACTS.map(([value, label]) => (
+            {FACTS.map(([value, label], i) => (
               <div key={label}>
-                <dt>{value}</dt>
-                <dd>{label}</dd>
+                <dt data-edit={`hero.term.${i}`} data-edit-max="28">{value}</dt>
+                <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{label}</dd>
               </div>
             ))}
           </dl>
@@ -252,16 +264,16 @@ export default function TheWrenHotelPage() {
             sides swapping from one row to the next. */}
         <section id="rooms" className={s.rooms} aria-labelledby="rooms-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>Rooms</p>
-            <h2 id="rooms-h">Three kinds of room, eleven doors.</h2>
-            <p className={s.secNote}>
+            <p data-edit="rooms.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>Rooms</p>
+            <h2 data-edit="rooms.title" data-edit-max="60" id="rooms-h">Three kinds of room, eleven doors.</h2>
+            <p data-edit="rooms.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every room has its own bathroom, blackout curtains, a proper
               mattress and windows that open. Rates are for two, before tax.
             </p>
           </div>
 
           <div className={s.roomList}>
-            {ROOMS.map((r) => (
+            {ROOMS.map((r, i) => (
               <article key={r.id} className={s.room} id={`room-${r.id}`}>
                 <div className={`${s.roomArt} ${s[r.id]}`}>
                   {r.pictures.map((p) => (
@@ -276,28 +288,28 @@ export default function TheWrenHotelPage() {
                   ))}
                 </div>
                 <div className={s.roomText}>
-                  <p className={s.roomWhere}>{r.where}</p>
-                  <h3 className={s.roomName}>{r.name}</h3>
-                  <p className={s.roomBody}>{r.body}</p>
+                  <p data-edit={`room.roomWhere.${i}`} data-edit-max="240" data-edit-multiline className={s.roomWhere}>{r.where}</p>
+                  <h3 data-edit={`room.roomName.${i}`} data-edit-max="40" className={s.roomName}>{r.name}</h3>
+                  <p data-edit={`room.roomBody.${i}`} data-edit-max="240" data-edit-multiline className={s.roomBody}>{r.body}</p>
                   <dl className={s.specs}>
-                    {r.specs.map(([k, v]) => (
+                    {r.specs.map(([k, v], i2) => (
                       <div key={k}>
-                        <dt>{k}</dt>
-                        <dd>{v}</dd>
+                        <dt data-edit={`room.term.${i}.${i2}`} data-edit-max="28">{k}</dt>
+                        <dd data-edit={`room.body.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                       </div>
                     ))}
                   </dl>
                   <ul className={s.amenities} aria-label={`In the ${r.name} rooms`}>
-                    {r.amenities.map((a) => (
+                    {r.amenities.map((a, i2) => (
                       <li key={a.label}>
                         <span className={`${s.icon} ${s[a.icon]}`} aria-hidden="true" />
-                        <span>{a.label}</span>
+                        <span data-edit={`room.text.${i}.${i2}`} data-edit-max="60">{a.label}</span>
                       </li>
                     ))}
                   </ul>
                   <div className={s.roomFoot}>
-                    <strong className={s.rate}>{r.rate}</strong>
-                    <a className={s.roomLink} href="#book">{r.cta}</a>
+                    <strong data-edit={`room.rate.${i}`} className={s.rate}>{r.rate}</strong>
+                    <a data-edit={`room.roomLink.${i}`} data-edit-max="28" className={s.roomLink} href="#book">{r.cta}</a>
                   </div>
                 </div>
               </article>
@@ -309,19 +321,19 @@ export default function TheWrenHotelPage() {
         <section id="house" className={s.house} aria-labelledby="house-h">
           <div className={s.houseInner}>
             <div className={s.secHead}>
-              <p className={s.secNo}>The house</p>
-              <h2 id="house-h">Downstairs, and in between.</h2>
-              <p className={s.secNote}>
+              <p data-edit="house.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>The house</p>
+              <h2 data-edit="house.title" data-edit-max="60" id="house-h">Downstairs, and in between.</h2>
+              <p data-edit="house.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 The ground floor belongs to guests and to the street in equal
                 parts. Nobody needs a room key to have a drink.
               </p>
             </div>
             <div className={s.houseGrid}>
-              {HOUSE.map((h) => (
+              {HOUSE.map((h, i) => (
                 <article key={h.title} className={s.houseCard}>
-                  <h3>{h.title}</h3>
-                  <p className={s.houseTime}>{h.time}</p>
-                  <p>{h.body}</p>
+                  <h3 data-edit={`houseCard.title.${i}`} data-edit-max="40">{h.title}</h3>
+                  <p data-edit={`houseCard.houseTime.${i}`} data-edit-max="240" data-edit-multiline className={s.houseTime}>{h.time}</p>
+                  <p data-edit={`houseCard.body.${i}`} data-edit-max="240" data-edit-multiline>{h.body}</p>
                 </article>
               ))}
             </div>
@@ -331,7 +343,7 @@ export default function TheWrenHotelPage() {
         {/* ---------------------------------------------------- NEIGHBORHOOD
             Minutes on foot, drawn as the length of a rule. */}
         <section id="neighborhood" className={s.hood} aria-labelledby="hood-h">
-          <div className={s.hoodBand} aria-hidden="true">
+          <div data-edit-pattern="neighborhood.field" data-edit-roles="transparent,4,3" className={s.hoodBand} aria-hidden="true">
             <TabbiedPattern
               pattern={lunette}
               palette={ARCHES}
@@ -345,20 +357,20 @@ export default function TheWrenHotelPage() {
           </div>
           <div className={s.hoodInner}>
             <div className={s.secHead}>
-              <p className={s.secNo}>Neighborhood</p>
-              <h2 id="hood-h">Everything worth it is a short walk.</h2>
-              <p className={s.secNote}>
+              <p data-edit="neighborhood.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>Neighborhood</p>
+              <h2 data-edit="neighborhood.title" data-edit-max="60" id="hood-h">Everything worth it is a short walk.</h2>
+              <p data-edit="neighborhood.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Tanner Street runs from the station to the harbor. We are
                 halfway along it, above the bookshop, and the front desk keeps
                 a hand-drawn map for you.
               </p>
             </div>
             <ol className={s.places}>
-              {PLACES.map((p) => (
+              {PLACES.map((p, i) => (
                 <li key={p.name} className={s.place} style={{ '--min': p.min } as React.CSSProperties}>
                   <span className={s.placeMin}>{`${p.min} min`}</span>
-                  <span className={s.placeName}>{p.name}</span>
-                  <span className={s.placeWhat}>{p.what}</span>
+                  <span data-edit={`neighborhood.placeName.${i}`} data-edit-max="60" className={s.placeName}>{p.name}</span>
+                  <span data-edit={`neighborhood.placeWhat.${i}`} data-edit-max="60" className={s.placeWhat}>{p.what}</span>
                   <span className={s.placeRule} aria-hidden="true" />
                 </li>
               ))}
@@ -369,46 +381,46 @@ export default function TheWrenHotelPage() {
         {/* ----------------------------------------------------------- RATES */}
         <section id="rates" className={s.rates} aria-labelledby="rates-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>Rates</p>
-            <h2 id="rates-h">What a night costs, all year.</h2>
-            <p className={s.secNote}>
+            <p data-edit="rates.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>Rates</p>
+            <h2 data-edit="rates.title" data-edit-max="60" id="rates-h">What a night costs, all year.</h2>
+            <p data-edit="rates.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Per room, per night, for two guests. A third guest in the Loft is
               $40. Breakfast is $18 each, or $30 for two added to any rate.
             </p>
           </div>
           <div className={s.rateTable} role="table" aria-label="Nightly rates by season">
             <div className={s.rateHead} role="row">
-              <span role="columnheader">Season</span>
-              <span role="columnheader">Nest</span>
-              <span role="columnheader">Study</span>
-              <span role="columnheader">Loft</span>
+              <span data-edit="rates.text" data-edit-max="60" role="columnheader">Season</span>
+              <span data-edit="rates.text2" data-edit-max="60" role="columnheader">Nest</span>
+              <span data-edit="rates.text3" data-edit-max="60" role="columnheader">Study</span>
+              <span data-edit="rates.text4" data-edit-max="60" role="columnheader">Loft</span>
             </div>
-            {RATES.map((r) => (
+            {RATES.map((r, i) => (
               <div key={r.season} className={s.rateRow} role="row">
                 <div className={s.rateSeason} role="rowheader">
-                  <strong>{r.season}</strong>
-                  <small>{r.months}</small>
+                  <strong data-edit={`rates.emphasis.${i}`}>{r.season}</strong>
+                  <small data-edit={`rates.note.${i}`}>{r.months}</small>
                 </div>
                 <div className={s.rateCell} role="cell">
-                  <small>Nest</small>
-                  <span>{r.nest}</span>
+                  <small data-edit={`rates.note2.${i}`}>Nest</small>
+                  <span data-edit={`rates.text5.${i}`} data-edit-max="60">{r.nest}</span>
                 </div>
                 <div className={s.rateCell} role="cell">
-                  <small>Study</small>
-                  <span>{r.study}</span>
+                  <small data-edit={`rates.note3.${i}`}>Study</small>
+                  <span data-edit={`rates.text6.${i}`} data-edit-max="60">{r.study}</span>
                 </div>
                 <div className={s.rateCell} role="cell">
-                  <small>Loft</small>
-                  <span>{r.loft}</span>
+                  <small data-edit={`rates.note4.${i}`}>Loft</small>
+                  <span data-edit={`rates.text7.${i}`} data-edit-max="60">{r.loft}</span>
                 </div>
               </div>
             ))}
           </div>
           <dl className={s.policies}>
-            {POLICIES.map(([k, v]) => (
+            {POLICIES.map(([k, v], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+                <dt data-edit={`rates.term.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`rates.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
               </div>
             ))}
           </dl>
@@ -417,7 +429,7 @@ export default function TheWrenHotelPage() {
         {/* ------------------------------------------------------------ BOOK
             The ogee again, on the dark wall of the bar, with the key. */}
         <section id="book" className={s.book} aria-labelledby="book-h">
-          <div className={s.bookWall} aria-hidden="true">
+          <div data-edit-pattern="book.field" data-edit-roles="transparent,2,1" className={s.bookWall} aria-hidden="true">
             <TabbiedPattern
               pattern={ogee}
               palette={NIGHT_WALL}
@@ -430,9 +442,9 @@ export default function TheWrenHotelPage() {
           </div>
           <div className={s.bookInner}>
             <div className={s.bookIntro}>
-              <p className={s.kicker}>Book</p>
-              <h2 id="book-h">Ask for a room, and we will hold it.</h2>
-              <p>
+              <p data-edit="book.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Book</p>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Ask for a room, and we will hold it.</h2>
+              <p data-edit="book.body" data-edit-max="240" data-edit-multiline>
                 Tell us your dates and the room you would like. We answer every
                 request by hand within a few hours, with a price for your exact
                 nights and nothing to pay until you confirm.
@@ -446,28 +458,28 @@ export default function TheWrenHotelPage() {
               />
               <dl className={s.contact}>
                 <div>
-                  <dt>Call the desk</dt>
-                  <dd>(555) 014-2290</dd>
+                  <dt data-edit="book.term" data-edit-max="28">Call the desk</dt>
+                  <dd data-edit="book.body2" data-edit-max="200" data-edit-multiline>(555) 014-2290</dd>
                 </div>
                 <div>
-                  <dt>Write</dt>
+                  <dt data-edit="book.term2" data-edit-max="28">Write</dt>
                   <dd>
-                    <a href="mailto:stay@thewren.example">stay@thewren.example</a>
+                    <a data-edit="book.link" data-edit-max="28" href="mailto:stay@thewren.example">stay@thewren.example</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Find us</dt>
-                  <dd>14 Tanner Street, above the bookshop</dd>
+                  <dt data-edit="book.term3" data-edit-max="28">Find us</dt>
+                  <dd data-edit="book.body3" data-edit-max="200" data-edit-multiline>14 Tanner Street, above the bookshop</dd>
                 </div>
               </dl>
             </div>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="wren-arrive">Arriving</label>
+                <label data-edit="book.label" htmlFor="wren-arrive">Arriving</label>
                 <input id="wren-arrive" name="arrive" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="wren-nights">Nights</label>
+                <label data-edit="book.label2" htmlFor="wren-nights">Nights</label>
                 <select id="wren-nights" name="nights" defaultValue="2">
                   <option value="1">1 night</option>
                   <option value="2">2 nights</option>
@@ -477,7 +489,7 @@ export default function TheWrenHotelPage() {
                 </select>
               </div>
               <div className={`${s.field} ${s.span2}`}>
-                <label htmlFor="wren-room">Room</label>
+                <label data-edit="book.label3" htmlFor="wren-room">Room</label>
                 <select id="wren-room" name="room" defaultValue="study">
                   <option value="nest">Nest, from $168</option>
                   <option value="study">Study, from $214</option>
@@ -486,19 +498,19 @@ export default function TheWrenHotelPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="wren-name">Name</label>
+                <label data-edit="book.label4" htmlFor="wren-name">Name</label>
                 <input id="wren-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="wren-email">Email</label>
+                <label data-edit="book.label5" htmlFor="wren-email">Email</label>
                 <input id="wren-email" name="email" type="email" autoComplete="email" />
               </div>
               <label className={s.check} htmlFor="wren-breakfast">
                 <input id="wren-breakfast" name="breakfast" type="checkbox" />
-                <span>Add breakfast for two, $30 a morning</span>
+                <span data-edit="book.text" data-edit-max="60">Add breakfast for two, $30 a morning</span>
               </label>
-              <button className={s.submit} type="submit">Request these dates</button>
-              <small className={s.formNote}>No payment now. We reply by email within four hours, 8 am to 10 pm.</small>
+              <button data-edit="book.submit" data-edit-max="24" className={s.submit} type="submit">Request these dates</button>
+              <small data-edit="book.formNote" className={s.formNote}>No payment now. We reply by email within four hours, 8 am to 10 pm.</small>
             </form>
           </div>
         </section>
@@ -507,27 +519,27 @@ export default function TheWrenHotelPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>The Wren</p>
-            <p className={s.footTag}>Eleven rooms above the bookshop on Tanner Street.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>The Wren</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Eleven rooms above the bookshop on Tanner Street.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Stay</h2>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Stay</h2>
             <ul className={s.footLinks}>
-              <li><a href="#rooms">Rooms</a></li>
-              <li><a href="#rates">Rates and policies</a></li>
-              <li><a href="#book">Book</a></li>
+              <li><a data-edit="footer.rooms" data-edit-max="28" href="#rooms">Rooms</a></li>
+              <li><a data-edit="footer.rates" data-edit-max="28" href="#rates">Rates and policies</a></li>
+              <li><a data-edit="footer.book" data-edit-max="28" href="#book">Book</a></li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>Visit</h2>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Visit</h2>
             <ul className={s.footLinks}>
-              <li><a href="#house">Bar and breakfast</a></li>
-              <li><a href="#neighborhood">Neighborhood</a></li>
+              <li><a data-edit="footer.house" data-edit-max="28" href="#house">Bar and breakfast</a></li>
+              <li><a data-edit="footer.neighborhood" data-edit-max="28" href="#neighborhood">Neighborhood</a></li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>Desk</h2>
-            <p className={s.footAddr}>
+            <h2 data-edit="footer.footHead3" data-edit-max="60" className={s.footHead}>Desk</h2>
+            <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
               14 Tanner Street
               <br />
               Old Harbor
@@ -537,10 +549,10 @@ export default function TheWrenHotelPage() {
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional hotel. Rooms, rates and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional hotel. Rooms, rates and people are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

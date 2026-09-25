@@ -193,7 +193,20 @@ const HOURS = [
 
 export default function RestoreClinicPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--mist': '#f3f6f3',
+        '--ink': '#1b2622',
+        '--eucalyptus': '#5e8c7a',
+        '--clay': '#c98c6b',
+        '--gray': '#8f9b96',
+        '--pale': '#e0e8e3',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="mist,ink,eucalyptus,clay,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -204,18 +217,18 @@ export default function RestoreClinicPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span className={s.markName}>Restore</span>
-          <span className={s.markSub}>Chiropractic and massage</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Restore</span>
+          <span data-edit="bar.markSub" data-edit-max="60" className={s.markSub}>Chiropractic and massage</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#book">Book online</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#book">Book online</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -226,40 +239,40 @@ export default function RestoreClinicPage() {
             sentence beside it. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Chiropractic and massage therapy in Elm Park</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Chiropractic and massage therapy in Elm Park</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Move easier.
               <br />
               <em>Rest deeper.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               A small clinic with one chiropractor, one massage therapist and
               four quiet rooms. Most people come for a sore back and stay for
               the hour where nobody needs anything from them.
             </p>
             <div className={s.heroActions}>
-              <a className={s.button} href="#book">Book a treatment</a>
-              <a className={s.textLink} href="tel:+15550132270">Call (555) 013-2270</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#book">Book a treatment</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="tel:+15550132270">Call (555) 013-2270</a>
             </div>
             <ul className={s.heroFacts}>
               <li>
-                <strong>7 days</strong>
-                <span>Mornings, evenings, weekends</span>
+                <strong data-edit="hero.emphasis">7 days</strong>
+                <span data-edit="hero.text" data-edit-max="60">Mornings, evenings, weekends</span>
               </li>
               <li>
-                <strong>9 insurers</strong>
-                <span>Billed directly, no forms</span>
+                <strong data-edit="hero.emphasis2">9 insurers</strong>
+                <span data-edit="hero.text2" data-edit-max="60">Billed directly, no forms</span>
               </li>
               <li>
-                <strong>This week</strong>
-                <span>New patients seen within days</span>
+                <strong data-edit="hero.emphasis3">This week</strong>
+                <span data-edit="hero.text3" data-edit-max="60">New patients seen within days</span>
               </li>
             </ul>
           </div>
 
           <div className={s.heroArt}>
             <div className={s.arch}>
-              <div className={s.archField} aria-hidden="true">
+              <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,5" className={s.archField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={teardropleaves}
                   palette={LEAVES}
@@ -280,8 +293,8 @@ export default function RestoreClinicPage() {
               />
             </div>
             <p className={s.heroCard}>
-              <span className={s.heroCardName}>Hot stone massage</span>
-              <span className={s.heroCardMeta}>75 min, $130</span>
+              <span data-edit="hero.heroCardName" data-edit-max="60" className={s.heroCardName}>Hot stone massage</span>
+              <span data-edit="hero.heroCardMeta" data-edit-max="60" className={s.heroCardMeta}>75 min, $130</span>
             </p>
           </div>
         </section>
@@ -291,9 +304,9 @@ export default function RestoreClinicPage() {
             length and price, and opening it says what happens. */}
         <section id="treatments" className={s.treatments} aria-labelledby="treatments-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>Treatments and prices</p>
-            <h2 id="treatments-h">Nine treatments, priced by the hour we spend with you</h2>
-            <p className={s.secNote}>
+            <p data-edit="treatments.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Treatments and prices</p>
+            <h2 data-edit="treatments.title" data-edit-max="60" id="treatments-h">Nine treatments, priced by the hour we spend with you</h2>
+            <p data-edit="treatments.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Open a card for what happens and who it is for. Prices include
               tax, and every visit ends with ten minutes to get up slowly.
             </p>
@@ -302,25 +315,25 @@ export default function RestoreClinicPage() {
           <div className={s.menus}>
             <div className={s.menu}>
               <div className={s.menuHead}>
-                <h3>Chiropractic</h3>
-                <span className={s.menuWho}>With Dr. Helena Voss</span>
+                <h3 data-edit="treatments.title2" data-edit-max="40">Chiropractic</h3>
+                <span data-edit="treatments.menuWho" data-edit-max="60" className={s.menuWho}>With Dr. Helena Voss</span>
               </div>
-              {CHIRO.map((t) => (
+              {CHIRO.map((t, i) => (
                 <details key={t.name} className={s.treatment} open={t.open}>
                   <summary>
-                    <span className={s.tName}>{t.name}</span>
-                    <span className={s.tLength}>{t.length}</span>
-                    <span className={s.tPrice}>{t.price}</span>
+                    <span data-edit={`treatments.tName.${i}`} data-edit-max="60" className={s.tName}>{t.name}</span>
+                    <span data-edit={`treatments.tLength.${i}`} data-edit-max="60" className={s.tLength}>{t.length}</span>
+                    <span data-edit={`treatments.tPrice.${i}`} data-edit-max="60" className={s.tPrice}>{t.price}</span>
                   </summary>
                   <div className={s.tBody}>
-                    <p>{t.body}</p>
+                    <p data-edit={`treatments.body.${i}`} data-edit-max="240" data-edit-multiline>{t.body}</p>
                     <ul className={s.tHelps} aria-label="Often booked for">
-                      {t.helps.map((h) => (
-                        <li key={h}>{h}</li>
+                      {t.helps.map((h, i2) => (
+                        <li data-edit={`treatments.item.${i}.${i2}`} data-edit-max="80" key={h}>{h}</li>
                       ))}
                     </ul>
-                    <p className={s.tNote}>{t.note}</p>
-                    <a className={s.tBook} href="#book">Book this treatment</a>
+                    <p data-edit={`treatments.tNote.${i}`} data-edit-max="240" data-edit-multiline className={s.tNote}>{t.note}</p>
+                    <a data-edit={`treatments.tBook.${i}`} data-edit-max="28" className={s.tBook} href="#book">Book this treatment</a>
                   </div>
                 </details>
               ))}
@@ -328,25 +341,25 @@ export default function RestoreClinicPage() {
 
             <div className={s.menu}>
               <div className={s.menuHead}>
-                <h3>Massage therapy</h3>
-                <span className={s.menuWho}>With Marco Lindqvist, RMT</span>
+                <h3 data-edit="treatments.title3" data-edit-max="40">Massage therapy</h3>
+                <span data-edit="treatments.menuWho2" data-edit-max="60" className={s.menuWho}>With Marco Lindqvist, RMT</span>
               </div>
-              {MASSAGE.map((m) => (
+              {MASSAGE.map((m, i) => (
                 <details key={m.name} className={s.treatment} open={m.open}>
                   <summary>
-                    <span className={s.tName}>{m.name}</span>
-                    <span className={s.tLength}>{m.length}</span>
-                    <span className={s.tPrice}>{m.price}</span>
+                    <span data-edit={`treatments.tName2.${i}`} data-edit-max="60" className={s.tName}>{m.name}</span>
+                    <span data-edit={`treatments.tLength2.${i}`} data-edit-max="60" className={s.tLength}>{m.length}</span>
+                    <span data-edit={`treatments.tPrice2.${i}`} data-edit-max="60" className={s.tPrice}>{m.price}</span>
                   </summary>
                   <div className={s.tBody}>
-                    <p>{m.body}</p>
+                    <p data-edit={`treatments.body2.${i}`} data-edit-max="240" data-edit-multiline>{m.body}</p>
                     <ul className={s.tHelps} aria-label="Often booked for">
-                      {m.helps.map((h) => (
-                        <li key={h}>{h}</li>
+                      {m.helps.map((h, i2) => (
+                        <li data-edit={`treatments.item2.${i}.${i2}`} data-edit-max="80" key={h}>{h}</li>
                       ))}
                     </ul>
-                    <p className={s.tNote}>{m.note}</p>
-                    <a className={s.tBook} href="#book">Book this treatment</a>
+                    <p data-edit={`treatments.tNote2.${i}`} data-edit-max="240" data-edit-multiline className={s.tNote}>{m.note}</p>
+                    <a data-edit={`treatments.tBook2.${i}`} data-edit-max="28" className={s.tBook} href="#book">Book this treatment</a>
                   </div>
                 </details>
               ))}
@@ -358,11 +371,11 @@ export default function RestoreClinicPage() {
             Tinted portraits, each standing in an arch of its own color. */}
         <section id="practitioners" className={s.team} aria-labelledby="team-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>The practitioners</p>
-            <h2 id="team-h">Two people, and you will see the same one every time</h2>
+            <p data-edit="practitioners.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The practitioners</p>
+            <h2 data-edit="practitioners.title" data-edit-max="60" id="team-h">Two people, and you will see the same one every time</h2>
           </div>
           <div className={s.people}>
-            {TEAM.map((p) => (
+            {TEAM.map((p, i) => (
               <article key={p.name} className={s.person}>
                 <div className={`${s.portraitFrame} ${s[`frame_${p.frame}`]}`}>
                   <Artwork
@@ -374,17 +387,17 @@ export default function RestoreClinicPage() {
                   />
                 </div>
                 <div className={s.personText}>
-                  <h3>{p.name}</h3>
-                  <p className={s.personRole}>{p.role}</p>
-                  <p className={s.personBio}>{p.bio}</p>
+                  <h3 data-edit={`person.title.${i}`} data-edit-max="40">{p.name}</h3>
+                  <p data-edit={`person.personRole.${i}`} data-edit-max="240" data-edit-multiline className={s.personRole}>{p.role}</p>
+                  <p data-edit={`person.personBio.${i}`} data-edit-max="240" data-edit-multiline className={s.personBio}>{p.bio}</p>
                   <dl className={s.personFacts}>
                     <div>
-                      <dt>In clinic</dt>
-                      <dd>{p.days}</dd>
+                      <dt data-edit={`person.term.${i}`} data-edit-max="28">In clinic</dt>
+                      <dd data-edit={`person.body.${i}`} data-edit-max="200" data-edit-multiline>{p.days}</dd>
                     </div>
                     <div>
-                      <dt>Sees you for</dt>
-                      <dd>{p.treats}</dd>
+                      <dt data-edit={`person.term2.${i}`} data-edit-max="28">Sees you for</dt>
+                      <dd data-edit={`person.body2.${i}`} data-edit-max="200" data-edit-multiline>{p.treats}</dd>
                     </div>
                   </dl>
                 </div>
@@ -394,7 +407,7 @@ export default function RestoreClinicPage() {
         </section>
 
         {/* ------------------------------------------------------------ BAND */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,5,4,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={pebble}
             palette={STONES}
@@ -409,27 +422,27 @@ export default function RestoreClinicPage() {
         {/* ------------------------------------------------------ FIRST VISIT */}
         <section id="first-visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>Your first visit</p>
-            <h2 id="visit-h">What happens the first time</h2>
-            <p className={s.secNote}>
+            <p data-edit="firstVisit.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Your first visit</p>
+            <h2 data-edit="firstVisit.title" data-edit-max="60" id="visit-h">What happens the first time</h2>
+            <p data-edit="firstVisit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Arrive ten minutes early. Bring your insurance card and a list of
               any medication you take.
             </p>
           </div>
           <ol className={s.steps}>
-            {STEPS.map((st) => (
+            {STEPS.map((st, i) => (
               <li key={st.no}>
-                <span className={s.stepNo}>{st.no}</span>
-                <h3>{st.title}</h3>
-                <p>{st.body}</p>
+                <span data-edit={`firstVisit.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
+                <h3 data-edit={`firstVisit.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                <p data-edit={`firstVisit.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
               </li>
             ))}
           </ol>
           <dl className={s.questions}>
-            {QUESTIONS.map(([q, a]) => (
+            {QUESTIONS.map(([q, a], i) => (
               <div key={q}>
-                <dt>{q}</dt>
-                <dd>{a}</dd>
+                <dt data-edit={`firstVisit.term.${i}`} data-edit-max="28">{q}</dt>
+                <dd data-edit={`firstVisit.body2.${i}`} data-edit-max="200" data-edit-multiline>{a}</dd>
               </div>
             ))}
           </dl>
@@ -439,33 +452,33 @@ export default function RestoreClinicPage() {
         <section id="insurance" className={s.insurance} aria-labelledby="insurance-h">
           <div className={s.insuranceInner}>
             <div className={s.insuranceText}>
-              <p className={s.eyebrow}>Insurance and payment</p>
-              <h2 id="insurance-h">We bill your insurer, so you only pay the difference</h2>
-              <p>
+              <p data-edit="insurance.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Insurance and payment</p>
+              <h2 data-edit="insurance.title" data-edit-max="60" id="insurance-h">We bill your insurer, so you only pay the difference</h2>
+              <p data-edit="insurance.body" data-edit-max="240" data-edit-multiline>
                 Show us your card at the first visit and we send every claim
                 from then on. If your plan is not listed, we give you an
                 itemized receipt with our registration numbers the same day.
               </p>
               <dl className={s.pay}>
                 <div>
-                  <dt>Paying yourself</dt>
-                  <dd>Card, cash, HSA and FSA cards</dd>
+                  <dt data-edit="insurance.term" data-edit-max="28">Paying yourself</dt>
+                  <dd data-edit="insurance.body2" data-edit-max="200" data-edit-multiline>Card, cash, HSA and FSA cards</dd>
                 </div>
                 <div>
-                  <dt>Car accidents</dt>
-                  <dd>We work with auto insurers on an open claim</dd>
+                  <dt data-edit="insurance.term2" data-edit-max="28">Car accidents</dt>
+                  <dd data-edit="insurance.body3" data-edit-max="200" data-edit-multiline>We work with auto insurers on an open claim</dd>
                 </div>
                 <div>
-                  <dt>Workplace injury</dt>
-                  <dd>Bring your claim number and we bill the insurer</dd>
+                  <dt data-edit="insurance.term3" data-edit-max="28">Workplace injury</dt>
+                  <dd data-edit="insurance.body4" data-edit-max="200" data-edit-multiline>Bring your claim number and we bill the insurer</dd>
                 </div>
               </dl>
             </div>
             <div className={s.insurers}>
-              <h3>Billed directly</h3>
+              <h3 data-edit="insurance.title2" data-edit-max="40">Billed directly</h3>
               <ul>
-                {INSURERS.map((name) => (
-                  <li key={name}>{name}</li>
+                {INSURERS.map((name, i) => (
+                  <li data-edit={`insurance.item.${i}`} data-edit-max="80" key={name}>{name}</li>
                 ))}
               </ul>
             </div>
@@ -476,51 +489,51 @@ export default function RestoreClinicPage() {
         <section id="book" className={s.sec} aria-labelledby="book-h">
           <div className={s.book}>
             <div className={s.bookInfo}>
-              <p className={s.eyebrow}>Book</p>
-              <h2 id="book-h">Book online, or call and we will find a time</h2>
+              <p data-edit="book.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Book</p>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Book online, or call and we will find a time</h2>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`book.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`book.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.address}>
+              <p data-edit="book.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 41 Linden Avenue, second floor
                 <br />
                 Elm Park
               </p>
-              <p className={s.bookNote}>
+              <p data-edit="book.bookNote" data-edit-max="240" data-edit-multiline className={s.bookNote}>
                 Step-free access by the lift at the back. Two-hour parking on
                 Linden, and the Elm Park stop is a four-minute walk.
               </p>
               <p className={s.contactLine}>
-                <a href="tel:+15550132270">(555) 013-2270</a>
+                <a data-edit="book.link" data-edit-max="28" href="tel:+15550132270">(555) 013-2270</a>
               </p>
               <p className={s.contactLine}>
-                <a href="mailto:hello@restoreclinic.example">hello@restoreclinic.example</a>
+                <a data-edit="book.link2" data-edit-max="28" href="mailto:hello@restoreclinic.example">hello@restoreclinic.example</a>
               </p>
             </div>
 
             <form className={s.form} action="#">
-              <h3>Request an appointment</h3>
+              <h3 data-edit="book.title2" data-edit-max="40">Request an appointment</h3>
               <div className={s.formRow}>
                 <label className={s.field}>
-                  <span>Name</span>
+                  <span data-edit="book.text" data-edit-max="60">Name</span>
                   <input type="text" name="name" autoComplete="name" required />
                 </label>
                 <label className={s.field}>
-                  <span>Phone</span>
+                  <span data-edit="book.text2" data-edit-max="60">Phone</span>
                   <input type="tel" name="phone" autoComplete="tel" />
                 </label>
               </div>
               <label className={s.field}>
-                <span>Email</span>
+                <span data-edit="book.text3" data-edit-max="60">Email</span>
                 <input type="email" name="email" autoComplete="email" required />
               </label>
               <label className={s.field}>
-                <span>Treatment</span>
+                <span data-edit="book.text4" data-edit-max="60">Treatment</span>
                 <select name="treatment" defaultValue="">
                   <option value="" disabled>Choose a treatment</option>
                   <option>Initial chiropractic assessment</option>
@@ -532,22 +545,22 @@ export default function RestoreClinicPage() {
                 </select>
               </label>
               <fieldset className={s.times}>
-                <legend>Best time for you</legend>
+                <legend data-edit="book.legend">Best time for you</legend>
                 <label>
                   <input type="radio" name="time" value="morning" defaultChecked />
-                  <span>Morning</span>
+                  <span data-edit="book.text5" data-edit-max="60">Morning</span>
                 </label>
                 <label>
                   <input type="radio" name="time" value="afternoon" />
-                  <span>Afternoon</span>
+                  <span data-edit="book.text6" data-edit-max="60">Afternoon</span>
                 </label>
                 <label>
                   <input type="radio" name="time" value="evening" />
-                  <span>Evening</span>
+                  <span data-edit="book.text7" data-edit-max="60">Evening</span>
                 </label>
               </fieldset>
-              <button className={s.button} type="submit">Send the request</button>
-              <p className={s.formNote}>We reply within one working day with two or three times to choose from.</p>
+              <button data-edit="book.button" data-edit-max="24" className={s.button} type="submit">Send the request</button>
+              <p data-edit="book.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>We reply within one working day with two or three times to choose from.</p>
             </form>
           </div>
         </section>
@@ -556,23 +569,23 @@ export default function RestoreClinicPage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div>
-            <p className={s.footName}>Restore</p>
-            <p className={s.footTag}>Chiropractic and massage therapy, 41 Linden Avenue, Elm Park.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Restore</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Chiropractic and massage therapy, 41 Linden Avenue, Elm Park.</p>
           </div>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional clinic. Treatments, prices, insurers and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional clinic. Treatments, prices, insurers and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live; the portraits are tinted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live; the portraits are tinted in the page's own colors.</span>
           </p>
         </div>
       </footer>

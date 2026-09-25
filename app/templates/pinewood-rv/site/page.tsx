@@ -120,7 +120,20 @@ const FAQS = [
 
 export default function PinewoodRvPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#eef0ea',
+        '--ink': '#17201a',
+        '--pine': '#3f6b4b',
+        '--orange': '#d9853b',
+        '--gray': '#8a938b',
+        '--pale': '#d7ded4',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,pine,orange,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -132,16 +145,16 @@ export default function PinewoodRvPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markBadge} aria-hidden="true" />
-          <span className={s.markName}>Pinewood RV Park</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Pinewood RV Park</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -156,20 +169,20 @@ export default function PinewoodRvPage() {
             <Artwork slug="pinewood-rv-treeline" alt="" mode="tint" fit="cover" inks={['color-mix(in srgb, var(--ink) 50%, var(--pine))', 'var(--paper)']} />
           </div>
           <div className={s.heroText}>
-            <p className={s.kicker}>Open April 15 to October 31</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Open April 15 to October 31</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Pull in under
               <br />
               <em>the pines.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Sixty-two shaded sites on forty acres of old pine, full hookups
               to 50 amps, a bathhouse with hot showers, and a fire ring at
               every site.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#reserve">Reserve a site</a>
-              <a className={s.btnGhost} href="#sites">Sites and rates</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#reserve">Reserve a site</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#sites">Sites and rates</a>
             </div>
           </div>
         </section>
@@ -177,10 +190,10 @@ export default function PinewoodRvPage() {
         {/* ----------------------------------------------------------- FACTS */}
         <div className={s.facts}>
           <dl className={s.factsList}>
-            {FACTS.map(([big, small]) => (
+            {FACTS.map(([big, small], i) => (
               <div key={small}>
-                <dt>{big}</dt>
-                <dd>{small}</dd>
+                <dt data-edit={`top.term.${i}`} data-edit-max="28">{big}</dt>
+                <dd data-edit={`top.body.${i}`} data-edit-max="200" data-edit-multiline>{small}</dd>
               </div>
             ))}
           </dl>
@@ -189,43 +202,43 @@ export default function PinewoodRvPage() {
         {/* ----------------------------------------------------------- SITES */}
         <section id="sites" className={s.sec} aria-labelledby="sites-h">
           <div className={s.secHead}>
-            <span className={s.secTag}>Sites and rates</span>
-            <h2 id="sites-h">Five kinds of site, all under trees</h2>
-            <p className={s.secNote}>
+            <span data-edit="sites.secTag" data-edit-max="60" className={s.secTag}>Sites and rates</span>
+            <h2 data-edit="sites.title" data-edit-max="60" id="sites-h">Five kinds of site, all under trees</h2>
+            <p data-edit="sites.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every site has a picnic table, a fire ring and a level gravel
               pad. The 2026 season rates, per site:
             </p>
           </div>
           <div className={s.tableWrap}>
             <table className={s.rates}>
-              <caption className={s.srOnly}>Site types and rates for the 2026 season</caption>
+              <caption data-edit="sites.srOnly" className={s.srOnly}>Site types and rates for the 2026 season</caption>
               <thead>
                 <tr>
-                  <th scope="col">Site</th>
-                  <th scope="col">Hookups</th>
-                  <th scope="col">Max length</th>
-                  <th scope="col">Night</th>
-                  <th scope="col">Week</th>
-                  <th scope="col">Month</th>
+                  <th data-edit="sites.heading" scope="col">Site</th>
+                  <th data-edit="sites.heading2" scope="col">Hookups</th>
+                  <th data-edit="sites.heading3" scope="col">Max length</th>
+                  <th data-edit="sites.heading4" scope="col">Night</th>
+                  <th data-edit="sites.heading5" scope="col">Week</th>
+                  <th data-edit="sites.heading6" scope="col">Month</th>
                 </tr>
               </thead>
               <tbody>
-                {SITES.map((site) => (
+                {SITES.map((site, i) => (
                   <tr key={site.kind}>
-                    <th scope="row">{site.kind}</th>
-                    <td data-label="Hookups">{site.hookups}</td>
-                    <td data-label="Max length">{site.length}</td>
-                    <td data-label="Night" className={s.rateNight}>{site.night}</td>
-                    <td data-label="Week">{site.week}</td>
-                    <td data-label="Month">{site.month}</td>
+                    <th data-edit={`sites.heading7.${i}`} scope="row">{site.kind}</th>
+                    <td data-edit={`sites.cell.${i}`} data-label="Hookups">{site.hookups}</td>
+                    <td data-edit={`sites.cell2.${i}`} data-label="Max length">{site.length}</td>
+                    <td data-edit={`sites.rateNight.${i}`} data-label="Night" className={s.rateNight}>{site.night}</td>
+                    <td data-edit={`sites.cell3.${i}`} data-label="Week">{site.week}</td>
+                    <td data-edit={`sites.cell4.${i}`} data-label="Month">{site.month}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <ul className={s.rateNotes}>
-            {RATE_NOTES.map((n) => (
-              <li key={n}>{n}</li>
+            {RATE_NOTES.map((n, i) => (
+              <li data-edit={`sites.item.${i}`} data-edit-max="80" key={n}>{n}</li>
             ))}
           </ul>
         </section>
@@ -233,19 +246,19 @@ export default function PinewoodRvPage() {
         {/* ------------------------------------------------------- AMENITIES */}
         <section id="amenities" className={s.sec} aria-labelledby="amenities-h">
           <div className={s.secHead}>
-            <span className={s.secTag}>Amenities</span>
-            <h2 id="amenities-h">Everything within a short walk</h2>
-            <p className={s.secNote}>
+            <span data-edit="amenities.secTag" data-edit-max="60" className={s.secTag}>Amenities</span>
+            <h2 data-edit="amenities.title" data-edit-max="60" id="amenities-h">Everything within a short walk</h2>
+            <p data-edit="amenities.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The bathhouse, laundry and store are together at the center of
               the park, so no site is more than three minutes away.
             </p>
           </div>
           <ul className={s.amenities}>
-            {AMENITIES.map((a) => (
+            {AMENITIES.map((a, i) => (
               <li key={a.name} className={s.amenity}>
-                <h3>{a.name}</h3>
-                <p>{a.body}</p>
-                <span className={s.amenityHours}>{a.hours}</span>
+                <h3 data-edit={`amenities.title2.${i}`} data-edit-max="40">{a.name}</h3>
+                <p data-edit={`amenities.body.${i}`} data-edit-max="240" data-edit-multiline>{a.body}</p>
+                <span data-edit={`amenities.amenityHours.${i}`} data-edit-max="60" className={s.amenityHours}>{a.hours}</span>
               </li>
             ))}
           </ul>
@@ -255,7 +268,7 @@ export default function PinewoodRvPage() {
             Cross-stitch like the camp blanket on the office bench: the
             loudest pattern on the page. */}
         <div className={s.band} aria-hidden="true">
-          <div className={s.bandField}>
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,4,1" className={s.bandField}>
             <TabbiedPattern
               pattern={stitch}
               palette={BLANKET}
@@ -273,18 +286,18 @@ export default function PinewoodRvPage() {
         <section id="rules" className={s.sec} aria-labelledby="rules-h">
           <div className={s.rulesGrid}>
             <div className={s.secHeadSide}>
-              <span className={s.secTag}>Park rules</span>
-              <h2 id="rules-h">A short list, kept by everyone</h2>
-              <p className={s.secNote}>
+              <span data-edit="rules.secTag" data-edit-max="60" className={s.secTag}>Park rules</span>
+              <h2 data-edit="rules.title" data-edit-max="60" id="rules-h">A short list, kept by everyone</h2>
+              <p data-edit="rules.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Mostly about sleep and fire. The host couple in site 1 can help
                 with anything after the office closes.
               </p>
             </div>
             <dl className={s.rules}>
-              {RULES.map(([k, v]) => (
+              {RULES.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`rules.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`rules.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -294,28 +307,28 @@ export default function PinewoodRvPage() {
         {/* ------------------------------------------------------ DIRECTIONS */}
         <section id="directions" className={s.sec} aria-labelledby="directions-h">
           <div className={s.secHead}>
-            <span className={s.secTag}>Directions</span>
-            <h2 id="directions-h">Finding the gate</h2>
+            <span data-edit="directions.secTag" data-edit-max="60" className={s.secTag}>Directions</span>
+            <h2 data-edit="directions.title" data-edit-max="60" id="directions-h">Finding the gate</h2>
           </div>
           <div className={s.directions}>
             <div className={s.route}>
-              <p className={s.address}>4410 Cedar Fork Road</p>
-              <p>
+              <p data-edit="directions.address" data-edit-max="240" data-edit-multiline className={s.address}>4410 Cedar Fork Road</p>
+              <p data-edit="directions.body" data-edit-max="240" data-edit-multiline>
                 From Highway 12, take exit 44 and go north on Cedar Fork Road
                 for nine miles. The gate is on the left, just past the
                 volunteer fire station.
               </p>
-              <p className={s.warn}>
+              <p data-edit="directions.warn" data-edit-max="240" data-edit-multiline className={s.warn}>
                 After the bridge your GPS may send you up Old Mill Road. Do
                 not follow it: the underpass there is 10 feet high.
               </p>
             </div>
             <dl className={s.nearby}>
-              {NEARBY.map(([place, dist, what]) => (
+              {NEARBY.map(([place, dist, what], i) => (
                 <div key={place}>
-                  <dt>{place}</dt>
-                  <dd className={s.nearbyDist}>{dist}</dd>
-                  <dd className={s.nearbyWhat}>{what}</dd>
+                  <dt data-edit={`directions.term.${i}`} data-edit-max="28">{place}</dt>
+                  <dd data-edit={`directions.nearbyDist.${i}`} data-edit-max="200" data-edit-multiline className={s.nearbyDist}>{dist}</dd>
+                  <dd data-edit={`directions.nearbyWhat.${i}`} data-edit-max="200" data-edit-multiline className={s.nearbyWhat}>{what}</dd>
                 </div>
               ))}
             </dl>
@@ -326,7 +339,7 @@ export default function PinewoodRvPage() {
             The fire ring in its clearing, edge to edge, in two inks. Stars
             sit behind the picture, so they show only between the trees. */}
         <section id="reserve" className={s.reserve} aria-labelledby="reserve-h">
-          <div className={s.reserveStars} aria-hidden="true">
+          <div data-edit-pattern="reserve.field" data-edit-roles="transparent,5,3,4" className={s.reserveStars} aria-hidden="true">
             <TabbiedPattern
               pattern={northstar}
               palette={NIGHT}
@@ -343,29 +356,29 @@ export default function PinewoodRvPage() {
           </div>
           <div className={s.reserveInner}>
             <div className={s.reserveText}>
-              <span className={s.secTagLight}>Reservations</span>
-              <h2 id="reserve-h">Save a site by the fire</h2>
-              <p>
+              <span data-edit="reserve.secTagLight" data-edit-max="60" className={s.secTagLight}>Reservations</span>
+              <h2 data-edit="reserve.title" data-edit-max="60" id="reserve-h">Save a site by the fire</h2>
+              <p data-edit="reserve.body" data-edit-max="240" data-edit-multiline>
                 A one-night deposit holds the site. Cancel up to seven days
                 before and it all comes back; after that, it moves to another
                 stay this season.
               </p>
-              <a className={s.phone} href="tel:+15550166210">(555) 016-6210</a>
-              <span className={s.phoneNote}>Office, 8 am to 8 pm</span>
+              <a data-edit="reserve.phone" data-edit-max="28" className={s.phone} href="tel:+15550166210">(555) 016-6210</a>
+              <span data-edit="reserve.phoneNote" data-edit-max="60" className={s.phoneNote}>Office, 8 am to 8 pm</span>
             </div>
             <form className={s.form} action="#">
               <div className={s.formPair}>
                 <div className={s.field}>
-                  <label htmlFor="pw-arrive">Arrive</label>
+                  <label data-edit="reserve.label" htmlFor="pw-arrive">Arrive</label>
                   <input id="pw-arrive" name="arrive" type="date" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pw-nights">Nights</label>
+                  <label data-edit="reserve.label2" htmlFor="pw-nights">Nights</label>
                   <input id="pw-nights" name="nights" type="number" min="1" max="60" defaultValue="3" />
                 </div>
               </div>
               <div className={s.field}>
-                <label htmlFor="pw-site">Site</label>
+                <label data-edit="reserve.label3" htmlFor="pw-site">Site</label>
                 <select id="pw-site" name="site" defaultValue={SITES[0].kind}>
                   {SITES.map((site) => (
                     <option key={site.kind} value={site.kind}>{site.kind}</option>
@@ -374,11 +387,11 @@ export default function PinewoodRvPage() {
               </div>
               <div className={s.formPair}>
                 <div className={s.field}>
-                  <label htmlFor="pw-length">Rig length, ft</label>
+                  <label data-edit="reserve.label4" htmlFor="pw-length">Rig length, ft</label>
                   <input id="pw-length" name="length" type="number" min="0" max="45" placeholder="32" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pw-amp">Power</label>
+                  <label data-edit="reserve.label5" htmlFor="pw-amp">Power</label>
                   <select id="pw-amp" name="amp" defaultValue="50">
                     <option value="30">30 amp</option>
                     <option value="50">50 amp</option>
@@ -387,10 +400,10 @@ export default function PinewoodRvPage() {
                 </div>
               </div>
               <div className={s.field}>
-                <label htmlFor="pw-email">Email</label>
+                <label data-edit="reserve.label6" htmlFor="pw-email">Email</label>
                 <input id="pw-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" />
               </div>
-              <button className={s.formBtn} type="submit">Check availability</button>
+              <button data-edit="reserve.formBtn" data-edit-max="24" className={s.formBtn} type="submit">Check availability</button>
             </form>
           </div>
         </section>
@@ -398,14 +411,14 @@ export default function PinewoodRvPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.sec} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <span className={s.secTag}>FAQ</span>
-            <h2 id="faq-h">Asked at the office window</h2>
+            <span data-edit="faq.secTag" data-edit-max="60" className={s.secTag}>FAQ</span>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked at the office window</h2>
           </div>
           <div className={s.faq}>
-            {FAQS.map((f) => (
+            {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -415,29 +428,29 @@ export default function PinewoodRvPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Pinewood RV Park</p>
-            <p className={s.footTag}>Sixty-two sites under the pines, April 15 to October 31.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pinewood RV Park</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Sixty-two sites under the pines, April 15 to October 31.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Gate</h2>
-            <p className={s.footText}>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Gate</h2>
+            <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footText}>
               4410 Cedar Fork Road
               <br />
               Exit 44 off Highway 12
             </p>
           </div>
           <div>
-            <h2 className={s.footHead}>Office</h2>
-            <a className={s.footLink} href="tel:+15550166210">(555) 016-6210</a>
-            <a className={s.footLink} href="mailto:office@pinewoodrv.example">office@pinewoodrv.example</a>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Office</h2>
+            <a data-edit="footer.footLink" data-edit-max="28" className={s.footLink} href="tel:+15550166210">(555) 016-6210</a>
+            <a data-edit="footer.footLink2" data-edit-max="28" className={s.footLink} href="mailto:office@pinewoodrv.example">office@pinewoodrv.example</a>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional RV park. Sites, rates, rules and roads are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional RV park. Sites, rates, rules and roads are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, photographs painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, photographs painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

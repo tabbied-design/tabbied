@@ -156,7 +156,20 @@ const FAQ = [
 
 export default function SundayMarketPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fbf7ee',
+        '--ink': '#26231c',
+        '--tomato': '#e4572e',
+        '--leaf': '#4e8f4a',
+        '--squash': '#f3b63f',
+        '--gray': '#a39c8c',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,tomato,leaf,squash,gray"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -167,17 +180,17 @@ export default function SundayMarketPage() {
 
       <header className={s.bar}>
         <a className={s.brand} href="#top">
-          <span className={s.brandName}>Sunday Market</span>
-          <span className={s.brandMeta}>Mill Square, 8 am - 1 pm</span>
+          <span data-edit="bar.brandName" data-edit-max="60" className={s.brandName}>Sunday Market</span>
+          <span data-edit="bar.brandMeta" data-edit-max="60" className={s.brandMeta}>Mill Square, 8 am - 1 pm</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -188,33 +201,33 @@ export default function SundayMarketPage() {
             patched awning. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Farmers market, Harlow Falls</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Farmers market, Harlow Falls</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               26 stalls, one square, <em>every Sunday.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Farmers, bakers and makers from within a hundred miles, on Mill
               Square from the first Sunday in April to the last one in
               November. Bring a bag, bring the kids, come hungry.
             </p>
             <ul className={s.badges}>
               <li>
-                <strong>8 am - 1 pm</strong>
-                <span>Every Sunday, April to November</span>
+                <strong data-edit="hero.emphasis">8 am - 1 pm</strong>
+                <span data-edit="hero.text" data-edit-max="60">Every Sunday, April to November</span>
               </li>
               <li>
-                <strong>Rain or shine</strong>
-                <span>Only lightning closes the square</span>
+                <strong data-edit="hero.emphasis2">Rain or shine</strong>
+                <span data-edit="hero.text2" data-edit-max="60">Only lightning closes the square</span>
               </li>
               <li>
-                <strong>SNAP doubled</strong>
-                <span>Up to $20 on fruit and vegetables</span>
+                <strong data-edit="hero.emphasis3">SNAP doubled</strong>
+                <span data-edit="hero.text3" data-edit-max="60">Up to $20 on fruit and vegetables</span>
               </li>
             </ul>
-            <a className={s.btn} href="#map">Find a stall</a>
+            <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#map">Find a stall</a>
           </div>
           <div className={s.heroArt}>
-            <div className={s.awning} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,0,2,3,4,1" className={s.awning} aria-hidden="true">
               <TabbiedPattern
                 pattern={cornerbloom}
                 palette={BLOOM}
@@ -233,8 +246,8 @@ export default function SundayMarketPage() {
               />
             </div>
             <p className={s.today}>
-              <span className={s.todayTop}>This Sunday</span>
-              <span className={s.todayMain}>First strawberries</span>
+              <span data-edit="hero.todayTop" data-edit-max="60" className={s.todayTop}>This Sunday</span>
+              <span data-edit="hero.todayMain" data-edit-max="60" className={s.todayMain}>First strawberries</span>
             </p>
           </div>
         </section>
@@ -244,9 +257,9 @@ export default function SundayMarketPage() {
             sell, with the directory in the same numbers beside it. */}
         <section id="map" className={s.mapSec} aria-labelledby="map-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>Stall map</p>
-            <h2 id="map-h" className={s.secTitle}>Find your way round the square</h2>
-            <p className={s.secLede}>
+            <p data-edit="map.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Stall map</p>
+            <h2 data-edit="map.secTitle" data-edit-max="60" id="map-h" className={s.secTitle}>Find your way round the square</h2>
+            <p data-edit="map.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
               Stalls keep the same number all season. Walk in from the Canal
               Walk and the numbers run clockwise, ending by the syrup at 26.
             </p>
@@ -255,51 +268,51 @@ export default function SundayMarketPage() {
           <div className={s.mapGrid}>
             <div className={s.mapCol}>
               <div className={s.mapFrame}>
-                <p className={s.gateTop}>Canal Walk entrance</p>
+                <p data-edit="map.gateTop" data-edit-max="240" data-edit-multiline className={s.gateTop}>Canal Walk entrance</p>
                 <ol className={s.map} aria-label="Stalls around Mill Square">
-                  {STALLS.map((st) => (
+                  {STALLS.map((st, i) => (
                     <li
                       key={st.no}
                       className={`${s.stall} ${s[st.kind]}`}
                       style={{ gridColumn: st.col, gridRow: st.row }}>
-                      <span className={s.stallNo}>{st.no}</span>
-                      <span className={s.srOnly}>{st.name}</span>
+                      <span data-edit={`map.stallNo.${i}`} data-edit-max="60" className={s.stallNo}>{st.no}</span>
+                      <span data-edit={`map.srOnly.${i}`} data-edit-max="60" className={s.srOnly}>{st.name}</span>
                     </li>
                   ))}
                 </ol>
                 <ul className={s.places}>
-                  {PLACES.map((p) => (
+                  {PLACES.map((p, i) => (
                     <li key={p.name} className={s[p.cls]}>
-                      <strong>{p.name}</strong>
-                      <span>{p.note}</span>
+                      <strong data-edit={`map.emphasis.${i}`}>{p.name}</strong>
+                      <span data-edit={`map.text.${i}`} data-edit-max="60">{p.note}</span>
                     </li>
                   ))}
                 </ul>
-                <p className={s.gateBottom}>Mill Street entrance</p>
+                <p data-edit="map.gateBottom" data-edit-max="240" data-edit-multiline className={s.gateBottom}>Mill Street entrance</p>
               </div>
               <ul className={s.key}>
-                {KINDS.map((k) => (
+                {KINDS.map((k, i) => (
                   <li key={k.id}>
                     <span className={`${s.keyChip} ${s[k.id]}`} aria-hidden="true" />
-                    <span>{k.name}</span>
+                    <span data-edit={`map.text2.${i}`} data-edit-max="60">{k.name}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             <div className={s.directory}>
-              {KINDS.map((k) => (
+              {KINDS.map((k, i) => (
                 <div key={k.id} className={s.dirGroup}>
                   <div className={s.dirHeadRow}>
                     <span className={`${s.keyChip} ${s[k.id]}`} aria-hidden="true" />
-                    <h3 className={s.dirHead}>{k.name}</h3>
+                    <h3 data-edit={`map.dirHead.${i}`} data-edit-max="40" className={s.dirHead}>{k.name}</h3>
                   </div>
                   <ul className={s.dirList}>
-                    {STALLS.filter((st) => st.kind === k.id).map((st) => (
+                    {STALLS.filter((st) => st.kind === k.id).map((st, i2) => (
                       <li key={st.no}>
-                        <span className={`${s.dirNo} ${s[st.kind]}`}>{st.no}</span>
-                        <span className={s.dirName}>{st.name}</span>
-                        <span className={s.dirSells}>{st.sells}</span>
+                        <span data-edit={`map.dirNo.${i}.${i2}`} data-edit-max="60" className={`${s.dirNo} ${s[st.kind]}`}>{st.no}</span>
+                        <span data-edit={`map.dirName.${i}.${i2}`} data-edit-max="60" className={s.dirName}>{st.name}</span>
+                        <span data-edit={`map.dirSells.${i}.${i2}`} data-edit-max="60" className={s.dirSells}>{st.sells}</span>
                       </li>
                     ))}
                   </ul>
@@ -315,9 +328,9 @@ export default function SundayMarketPage() {
         <section id="season" className={s.season} aria-labelledby="season-h">
           <div className={s.seasonGrid}>
             <div className={s.seasonHead}>
-              <p className={s.secKicker}>In season</p>
-              <h2 id="season-h" className={s.secTitle}>What to look for, month by month</h2>
-              <p className={s.secLede}>
+              <p data-edit="season.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>In season</p>
+              <h2 data-edit="season.secTitle" data-edit-max="60" id="season-h" className={s.secTitle}>What to look for, month by month</h2>
+              <p data-edit="season.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 A pale bar means it is on the tables; a solid one means it is
                 at its best and cheapest. Weather moves everything by a week
                 or two.
@@ -333,19 +346,19 @@ export default function SundayMarketPage() {
             </div>
             <div className={s.calWrap}>
               <table className={s.cal}>
-                <caption className={s.srOnly}>Produce in season at the market, April to November</caption>
+                <caption data-edit="season.srOnly" className={s.srOnly}>Produce in season at the market, April to November</caption>
                 <thead>
                   <tr>
-                    <th scope="col" className={s.calCorner}>Produce</th>
-                    {MONTHS.map((m) => (
-                      <th key={m} scope="col">{m}</th>
+                    <th data-edit="season.calCorner" scope="col" className={s.calCorner}>Produce</th>
+                    {MONTHS.map((m, i) => (
+                      <th data-edit={`season.heading.${i}`} key={m} scope="col">{m}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {PRODUCE.map((p) => (
+                  {PRODUCE.map((p, i) => (
                     <tr key={p.name} className={s[p.tone]}>
-                      <th scope="row">{p.name}</th>
+                      <th data-edit={`season.heading2.${i}`} scope="row">{p.name}</th>
                       {p.months.map((v, i) => (
                         <td key={MONTHS[i]}>
                           {v ? <span className={v === 2 ? s.peak : s.on}>{v === 2 ? 'Best' : 'In season'}</span> : null}
@@ -358,11 +371,11 @@ export default function SundayMarketPage() {
               <ul className={s.calKey}>
                 <li>
                   <span className={s.keyOn} aria-hidden="true" />
-                  <span>At market</span>
+                  <span data-edit="season.text" data-edit-max="60">At market</span>
                 </li>
                 <li>
                   <span className={s.keyPeak} aria-hidden="true" />
-                  <span>At its best</span>
+                  <span data-edit="season.text2" data-edit-max="60">At its best</span>
                 </li>
               </ul>
             </div>
@@ -373,16 +386,16 @@ export default function SundayMarketPage() {
         <section id="payments" className={s.payments} aria-labelledby="pay-h">
           <div className={s.payInner}>
             <div className={s.payLead}>
-              <p className={s.secKickerLight}>SNAP and payments</p>
-              <h2 id="pay-h" className={s.payTitle}>
+              <p data-edit="payments.secKickerLight" data-edit-max="240" data-edit-multiline className={s.secKickerLight}>SNAP and payments</p>
+              <h2 data-edit="payments.title" data-edit-format="emphasis" data-edit-max="60" id="pay-h" className={s.payTitle}>
                 Your food dollars go <em>twice as far here.</em>
               </h2>
               <p className={s.payBig}>
-                <span className={s.payFrom}>$1</span>
-                <span className={s.payEq}>SNAP buys</span>
-                <span className={s.payTo}>$2</span>
+                <span data-edit="payments.payFrom" data-edit-max="60" className={s.payFrom}>$1</span>
+                <span data-edit="payments.payEq" data-edit-max="60" className={s.payEq}>SNAP buys</span>
+                <span data-edit="payments.payTo" data-edit-max="60" className={s.payTo}>$2</span>
               </p>
-              <p className={s.payNote}>of fruit and vegetables, up to $20 every Sunday.</p>
+              <p data-edit="payments.payNote" data-edit-max="240" data-edit-multiline className={s.payNote}>of fruit and vegetables, up to $20 every Sunday.</p>
               <Artwork
                 slug="sunday-market-apples"
                 alt="A wooden crate of apples"
@@ -391,10 +404,10 @@ export default function SundayMarketPage() {
               />
             </div>
             <ul className={s.payCards}>
-              {PAYMENTS.map((p) => (
+              {PAYMENTS.map((p, i) => (
                 <li key={p.title}>
-                  <h3 className={s.payCardTitle}>{p.title}</h3>
-                  <p>{p.body}</p>
+                  <h3 data-edit={`payments.payCardTitle.${i}`} data-edit-max="40" className={s.payCardTitle}>{p.title}</h3>
+                  <p data-edit={`payments.body.${i}`} data-edit-max="240" data-edit-multiline>{p.body}</p>
                 </li>
               ))}
             </ul>
@@ -404,33 +417,33 @@ export default function SundayMarketPage() {
         {/* ------------------------------------------------------ DIRECTIONS */}
         <section id="directions" className={s.directions} aria-labelledby="dir-h">
           <div className={s.dirIntro}>
-            <p className={s.secKicker}>Directions</p>
-            <h2 id="dir-h" className={s.secTitle}>Mill Square, by the old mill race</h2>
-            <p className={s.address}>
+            <p data-edit="directions.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Directions</p>
+            <h2 data-edit="directions.secTitle" data-edit-max="60" id="dir-h" className={s.secTitle}>Mill Square, by the old mill race</h2>
+            <p data-edit="directions.body4" data-edit-max="240" data-edit-multiline className={s.address}>
               Mill Square, between Mill Street and the Canal Walk
               <br />
               Harlow Falls
             </p>
             <dl className={s.when}>
               <div>
-                <dt>Market days</dt>
-                <dd>Sundays, April 5 to November 29</dd>
+                <dt data-edit="directions.term" data-edit-max="28">Market days</dt>
+                <dd data-edit="directions.body" data-edit-max="200" data-edit-multiline>Sundays, April 5 to November 29</dd>
               </div>
               <div>
-                <dt>Hours</dt>
-                <dd>8 am - 1 pm</dd>
+                <dt data-edit="directions.term2" data-edit-max="28">Hours</dt>
+                <dd data-edit="directions.body2" data-edit-max="200" data-edit-multiline>8 am - 1 pm</dd>
               </div>
               <div>
-                <dt>Winter market</dt>
-                <dd>First Sunday of the month, in the Mill Hall</dd>
+                <dt data-edit="directions.term3" data-edit-max="28">Winter market</dt>
+                <dd data-edit="directions.body3" data-edit-max="200" data-edit-multiline>First Sunday of the month, in the Mill Hall</dd>
               </div>
             </dl>
           </div>
           <dl className={s.routes}>
-            {GETTING_HERE.map(([k, v]) => (
+            {GETTING_HERE.map(([k, v], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+                <dt data-edit={`directions.term4.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`directions.body4.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
               </div>
             ))}
           </dl>
@@ -439,25 +452,25 @@ export default function SundayMarketPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
           <div className={s.faqHead}>
-            <p className={s.secKicker}>Questions</p>
-            <h2 id="faq-h" className={s.secTitle}>Asked at the Info tent</h2>
-            <p className={s.secLede}>
+            <p data-edit="faq.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Questions</p>
+            <h2 data-edit="faq.secTitle" data-edit-max="60" id="faq-h" className={s.secTitle}>Asked at the Info tent</h2>
+            <p data-edit="faq.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
               Anything else, ask the market manager on the day, or write to
               hello@sundaymarket.example.
             </p>
           </div>
           <div className={s.faqList}>
-            {FAQ.map((f) => (
+            {FAQ.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
         </section>
       </main>
 
-      <div className={s.leaves} aria-hidden="true">
+      <div data-edit-pattern="page.field" data-edit-roles="transparent,3,4,2" className={s.leaves} aria-hidden="true">
         <TabbiedPattern
           pattern={lobe}
           palette={LEAVES}
@@ -473,24 +486,24 @@ export default function SundayMarketPage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div>
-            <p className={s.footName}>Sunday Market</p>
-            <p className={s.footTag}>Mill Square, Harlow Falls. Sundays, 8 am - 1 pm, April to November.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Sunday Market</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Mill Square, Harlow Falls. Sundays, 8 am - 1 pm, April to November.</p>
           </div>
           <div className={s.footContact}>
             <p>
-              <a href="mailto:hello@sundaymarket.example">hello@sundaymarket.example</a>
+              <a data-edit="footer.link" data-edit-max="28" href="mailto:hello@sundaymarket.example">hello@sundaymarket.example</a>
             </p>
             <p>
-              <a href="tel:+15550133300">(555) 013-3300</a>
+              <a data-edit="footer.link2" data-edit-max="28" href="tel:+15550133300">(555) 013-3300</a>
             </p>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional farmers market. Stalls, prices and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional farmers market. Stalls, prices and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the market's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link3" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the market's own colors.</span>
           </p>
         </div>
       </footer>

@@ -218,7 +218,20 @@ const FAQ = [
 
 export default function SudsCarWashPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f3f8fc',
+        '--ink': '#0f1e33',
+        '--blue': '#1e88e5',
+        '--sun': '#ffca28',
+        '--gray': '#8795a8',
+        '--pale': '#dceaf7',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,blue,sun,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -228,22 +241,22 @@ export default function SudsCarWashPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">
           Suds
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
         </nav>
-        <a className={s.barCta} href="#membership">
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#membership">
           Join Unlimited
         </a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
@@ -256,35 +269,35 @@ export default function SudsCarWashPage() {
             of bubbles that grow toward the ground. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroCopy}>
-            <p className={s.kicker}>Express tunnel wash, two locations</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Express tunnel wash, two locations</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Drive in dirty.
               <br />
               <em>Roll out shining.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Four minutes on the belt, soft cloth and filtered water, then free vacuums for as long as you like. Three
               washes, one price for any car, and an unlimited plan if you wash more than twice a month.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#washes">
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#washes">
                 See the washes
               </a>
-              <a className={s.btnGhost} href="#locations">
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#locations">
                 Find a location
               </a>
             </div>
             <dl className={s.facts}>
-              {FACTS.map(([v, k]) => (
+              {FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
           </div>
           <div className={s.heroPlate}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,0,2,0" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={recession}
                 palette={FOAM}
@@ -307,7 +320,7 @@ export default function SudsCarWashPage() {
               }}
               className={s.heroCar}
             />
-            <span className={s.heroTag}>Any car, one price</span>
+            <span data-edit="hero.heroTag" data-edit-max="60" className={s.heroTag}>Any car, one price</span>
           </div>
         </section>
 
@@ -316,31 +329,31 @@ export default function SudsCarWashPage() {
             in height, each with its picture, price and the steps it runs. */}
         <section id="washes" className={s.washes} aria-labelledby="washes-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>01 / The wash menu</p>
-            <h2 id="washes-h">Three washes. Pick at the gate.</h2>
-            <p className={s.secNote}>
+            <p data-edit="washes.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>01 / The wash menu</p>
+            <h2 data-edit="washes.title" data-edit-max="60" id="washes-h">Three washes. Pick at the gate.</h2>
+            <p data-edit="washes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Same price for a hatchback or a minivan. Every wash ends with the free vacuums, towels and mat cleaners.
             </p>
           </div>
 
           <div className={s.sign}>
             <div className={s.signTop}>
-              <span className={s.signBrand}>Suds Express</span>
-              <span className={s.signSub}>Wash menu</span>
-              <span className={s.signOpen}>Open 7 am-9 pm</span>
+              <span data-edit="washes.signBrand" data-edit-max="60" className={s.signBrand}>Suds Express</span>
+              <span data-edit="washes.signSub" data-edit-max="60" className={s.signSub}>Wash menu</span>
+              <span data-edit="washes.signOpen" data-edit-max="60" className={s.signOpen}>Open 7 am-9 pm</span>
             </div>
             <ol className={s.tiers}>
               {TIERS.map((t, i) => (
                 <li key={t.id} className={`${s.tier} ${s[t.id]}`}>
                   <div className={s.tierCap}>
                     <span className={s.tierNo}>{`0${i + 1}`}</span>
-                    {t.badge ? <span className={s.tierBadge}>{t.badge}</span> : null}
-                    <h3 className={s.tierName}>{t.name}</h3>
+                    {t.badge ? <span data-edit={`washes.tierBadge.${i}`} data-edit-max="60" className={s.tierBadge}>{t.badge}</span> : null}
+                    <h3 data-edit={`washes.tierName.${i}`} data-edit-max="40" className={s.tierName}>{t.name}</h3>
                     <p className={s.tierPrice}>
-                      <span className={s.cur}>$</span>
-                      <span className={s.amt}>{t.price}</span>
+                      <span data-edit={`washes.cur.${i}`} data-edit-max="60" className={s.cur}>$</span>
+                      <span data-edit={`washes.amt.${i}`} data-edit-max="60" className={s.amt}>{t.price}</span>
                     </p>
-                    <span className={s.tierTime}>{t.time}</span>
+                    <span data-edit={`washes.tierTime.${i}`} data-edit-max="60" className={s.tierTime}>{t.time}</span>
                   </div>
                   <div className={s.tierArt}>
                     {t.id === 'basic' ? (
@@ -382,10 +395,10 @@ export default function SudsCarWashPage() {
                       />
                     ) : null}
                   </div>
-                  <p className={s.tierLine}>{t.line}</p>
+                  <p data-edit={`washes.tierLine.${i}`} data-edit-max="240" data-edit-multiline className={s.tierLine}>{t.line}</p>
                   <ul className={s.steps}>
                     {STEPS.map((step, n) => (
-                      <li key={step} className={n < t.upTo ? s.stepOn : s.stepOff}>
+                      <li data-edit={`washes.stepOn.${i}.${n}`} data-edit-max="80" key={step} className={n < t.upTo ? s.stepOn : s.stepOff}>
                         {step}
                       </li>
                     ))}
@@ -398,7 +411,7 @@ export default function SudsCarWashPage() {
             <span />
             <span />
           </div>
-          <p className={s.signNote}>
+          <p data-edit="washes.signNote" data-edit-max="240" data-edit-multiline className={s.signNote}>
             Prices per wash, tax included. Dually trucks, lifted trucks and anything over 7 feet: ask at the booth.
           </p>
         </section>
@@ -419,19 +432,19 @@ export default function SudsCarWashPage() {
           </div>
           <div className={s.howBody}>
             <div className={s.secHead}>
-              <p className={s.secNo}>02 / How it works</p>
-              <h2 id="how-h">First time through the tunnel?</h2>
-              <p className={s.secNote}>
+              <p data-edit="how.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02 / How it works</p>
+              <h2 data-edit="how.title" data-edit-max="60" id="how-h">First time through the tunnel?</h2>
+              <p data-edit="how.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 There is always an attendant at the entrance to wave you onto the track. The belt moves at a walking
                 pace.
               </p>
             </div>
             <ol className={s.howList}>
-              {HOW.map((h) => (
+              {HOW.map((h, i) => (
                 <li key={h.no}>
-                  <span className={s.howNo}>{h.no}</span>
-                  <h3>{h.title}</h3>
-                  <p>{h.body}</p>
+                  <span data-edit={`how.howNo.${i}`} data-edit-max="60" className={s.howNo}>{h.no}</span>
+                  <h3 data-edit={`how.title2.${i}`} data-edit-max="40">{h.title}</h3>
+                  <p data-edit={`how.body.${i}`} data-edit-max="240" data-edit-multiline>{h.body}</p>
                 </li>
               ))}
             </ol>
@@ -441,7 +454,7 @@ export default function SudsCarWashPage() {
         {/* ------------------------------------------------------ MEMBERSHIP
             The one dark panel: bubbles glowing on ink, plans on top. */}
         <section id="membership" className={s.member} aria-labelledby="member-h">
-          <div className={s.memberField} aria-hidden="true">
+          <div data-edit-pattern="membership.field" data-edit-roles="transparent,2,3,5,2" className={s.memberField} aria-hidden="true">
             <TabbiedPattern
               pattern={softbubbles}
               palette={GLOW}
@@ -456,13 +469,13 @@ export default function SudsCarWashPage() {
           <div className={s.memberInner}>
             <div className={s.memberTop}>
               <div className={s.memberHead}>
-                <p className={s.secNo}>03 / Unlimited</p>
-                <h2 id="member-h">
+                <p data-edit="membership.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03 / Unlimited</p>
+                <h2 data-edit="membership.title" data-edit-format="emphasis" data-edit-max="60" id="member-h">
                   Wash every day.
                   <br />
                   <em>Pay once a month.</em>
                 </h2>
-                <p className={s.memberLede}>
+                <p data-edit="membership.memberLede" data-edit-max="240" data-edit-multiline className={s.memberLede}>
                   A sticker on the windshield opens the gate at either location. Wash after the pollen, after the salt,
                   after the drive-in movie. The price stays the same.
                 </p>
@@ -480,31 +493,31 @@ export default function SudsCarWashPage() {
               />
             </div>
             <ul className={s.plans}>
-              {PLANS.map((p) => (
+              {PLANS.map((p, i) => (
                 <li key={p.name} className={s.plan}>
-                  <h3>{p.name}</h3>
+                  <h3 data-edit={`membership.title.${i}`} data-edit-max="40">{p.name}</h3>
                   <p className={s.planPrice}>
-                    <span className={s.cur}>$</span>
-                    <span className={s.amt}>{p.price}</span>
-                    <span className={s.per}>a month</span>
+                    <span data-edit={`membership.cur.${i}`} data-edit-max="60" className={s.cur}>$</span>
+                    <span data-edit={`membership.amt.${i}`} data-edit-max="60" className={s.amt}>{p.price}</span>
+                    <span data-edit={`membership.per.${i}`} data-edit-max="60" className={s.per}>a month</span>
                   </p>
-                  <p className={s.planNote}>{p.note}</p>
+                  <p data-edit={`membership.planNote.${i}`} data-edit-max="240" data-edit-multiline className={s.planNote}>{p.note}</p>
                 </li>
               ))}
             </ul>
             <dl className={s.terms}>
-              {MEMBER_TERMS.map(([k, v]) => (
+              {MEMBER_TERMS.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`membership.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`membership.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.memberActions}>
-              <a className={s.btnSun} href="#locations">
+              <a data-edit="membership.btnSun" data-edit-max="28" className={s.btnSun} href="#locations">
                 Join at the booth
               </a>
-              <span className={s.memberAside}>Or sign up on the gate screen: first month $9.99.</span>
+              <span data-edit="membership.memberAside" data-edit-max="60" className={s.memberAside}>Or sign up on the gate screen: first month $9.99.</span>
             </div>
           </div>
         </section>
@@ -526,27 +539,27 @@ export default function SudsCarWashPage() {
           </div>
           <div className={s.extrasBody}>
             <div className={s.secHead}>
-              <p className={s.secNo}>04 / Extras and self-serve</p>
-              <h2 id="extras-h">A little more, by hand.</h2>
-              <p className={s.secNote}>
+              <p data-edit="extras.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>04 / Extras and self-serve</p>
+              <h2 data-edit="extras.title" data-edit-max="60" id="extras-h">A little more, by hand.</h2>
+              <p data-edit="extras.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Add these at the booth after your wash. The detail bay is behind the vacuums; most take ten to twenty
                 minutes.
               </p>
             </div>
             <ul className={s.extraList}>
-              {EXTRAS.map(([name, what, price]) => (
+              {EXTRAS.map(([name, what, price], i) => (
                 <li key={name}>
-                  <span className={s.extraName}>{name}</span>
-                  <span className={s.extraWhat}>{what}</span>
-                  <span className={s.extraPrice}>{price}</span>
+                  <span data-edit={`extras.extraName.${i}`} data-edit-max="60" className={s.extraName}>{name}</span>
+                  <span data-edit={`extras.extraWhat.${i}`} data-edit-max="60" className={s.extraWhat}>{what}</span>
+                  <span data-edit={`extras.extraPrice.${i}`} data-edit-max="60" className={s.extraPrice}>{price}</span>
                 </li>
               ))}
             </ul>
             <div className={s.free}>
-              <h3 className={s.freeHead}>Always free</h3>
+              <h3 data-edit="extras.freeHead" data-edit-max="40" className={s.freeHead}>Always free</h3>
               <ul className={s.freeList}>
-                {FREE.map((f) => (
-                  <li key={f}>{f}</li>
+                {FREE.map((f, i) => (
+                  <li data-edit={`extras.item.${i}`} data-edit-max="80" key={f}>{f}</li>
                 ))}
               </ul>
             </div>
@@ -556,29 +569,29 @@ export default function SudsCarWashPage() {
         {/* ------------------------------------------------------- LOCATIONS */}
         <section id="locations" className={s.locations} aria-labelledby="locations-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>05 / Locations and hours</p>
-            <h2 id="locations-h">Two tunnels, same menu.</h2>
-            <p className={s.secNote}>
+            <p data-edit="locations.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05 / Locations and hours</p>
+            <h2 data-edit="locations.title" data-edit-max="60" id="locations-h">Two tunnels, same menu.</h2>
+            <p data-edit="locations.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Memberships work at both. Saturday late morning is the busiest hour; weekday evenings after 6 are the
               quietest.
             </p>
           </div>
           <div className={s.places}>
-            {PLACES.map((p) => (
+            {PLACES.map((p, i) => (
               <article key={p.name} className={s.place}>
-                <h3 className={s.placeName}>{p.name}</h3>
-                <p className={s.placeStreet}>{p.street}</p>
-                <p className={s.placeTown}>{p.town}</p>
+                <h3 data-edit={`place.placeName.${i}`} data-edit-max="40" className={s.placeName}>{p.name}</h3>
+                <p data-edit={`place.placeStreet.${i}`} data-edit-max="240" data-edit-multiline className={s.placeStreet}>{p.street}</p>
+                <p data-edit={`place.placeTown.${i}`} data-edit-max="240" data-edit-multiline className={s.placeTown}>{p.town}</p>
                 <dl className={s.hours}>
-                  {p.hours.map(([d, h]) => (
+                  {p.hours.map(([d, h], i2) => (
                     <div key={d}>
-                      <dt>{d}</dt>
-                      <dd>{h}</dd>
+                      <dt data-edit={`place.term.${i}.${i2}`} data-edit-max="28">{d}</dt>
+                      <dd data-edit={`place.body.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                     </div>
                   ))}
                 </dl>
-                <p className={s.placeFacts}>{p.facts}</p>
-                <a className={s.placePhone} href={`tel:${p.phone.replace(/[^0-9]/g, '')}`}>
+                <p data-edit={`place.placeFacts.${i}`} data-edit-max="240" data-edit-multiline className={s.placeFacts}>{p.facts}</p>
+                <a data-edit={`place.placePhone.${i}`} data-edit-max="28" className={s.placePhone} href={`tel:${p.phone.replace(/[^0-9]/g, '')}`}>
                   {p.phone}
                 </a>
               </article>
@@ -589,14 +602,14 @@ export default function SudsCarWashPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>06 / Questions</p>
-            <h2 id="faq-h">Before you roll in</h2>
+            <p data-edit="faq.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>06 / Questions</p>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Before you roll in</h2>
           </div>
           <div className={s.faqList}>
-            {FAQ.map((f) => (
+            {FAQ.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -606,51 +619,51 @@ export default function SudsCarWashPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Suds</p>
-            <p className={s.footTag}>Express tunnel wash with free vacuums, on Harbor Road and in Millbrook.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Suds</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Express tunnel wash with free vacuums, on Harbor Road and in Millbrook.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Wash</h2>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Wash</h2>
             <ul className={s.footLinks}>
               <li>
-                <a href="#washes">The wash menu</a>
+                <a data-edit="footer.washes" data-edit-max="28" href="#washes">The wash menu</a>
               </li>
               <li>
-                <a href="#membership">Unlimited plans</a>
+                <a data-edit="footer.membership" data-edit-max="28" href="#membership">Unlimited plans</a>
               </li>
               <li>
-                <a href="#extras">Extras</a>
+                <a data-edit="footer.extras" data-edit-max="28" href="#extras">Extras</a>
               </li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>Visit</h2>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Visit</h2>
             <ul className={s.footLinks}>
               <li>
-                <a href="#locations">Locations and hours</a>
+                <a data-edit="footer.locations" data-edit-max="28" href="#locations">Locations and hours</a>
               </li>
               <li>
-                <a href="#how">First time here</a>
+                <a data-edit="footer.how" data-edit-max="28" href="#how">First time here</a>
               </li>
               <li>
-                <a href="#faq">Questions</a>
+                <a data-edit="footer.faq" data-edit-max="28" href="#faq">Questions</a>
               </li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>Members</h2>
-            <p className={s.footAddr}>help@suds.example</p>
-            <p className={s.footAddr}>(555) 014-2140</p>
+            <h2 data-edit="footer.footHead3" data-edit-max="60" className={s.footHead}>Members</h2>
+            <p data-edit="footer.footAddr" data-edit-max="240" data-edit-multiline className={s.footAddr}>help@suds.example</p>
+            <p data-edit="footer.footAddr2" data-edit-max="240" data-edit-multiline className={s.footAddr}>(555) 014-2140</p>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional car wash. Prices, hours and places are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional car wash. Prices, hours and places are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
             </a>
-            <span>, drawn live in the page's own colors; the pictures follow the palette too.</span>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the page's own colors; the pictures follow the palette too.</span>
           </p>
         </div>
       </footer>

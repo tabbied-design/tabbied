@@ -141,7 +141,20 @@ const PRICES = [
 
 export default function BrightSmilesPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--cloud': '#f7fbff',
+        '--navy': '#1d2b45',
+        '--blue': '#3b82f6',
+        '--pink': '#f472b6',
+        '--sun': '#facc15',
+        '--slate': '#94a3b8',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="cloud,navy,blue,pink,sun,slate"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -159,19 +172,19 @@ export default function BrightSmilesPage() {
             className={s.markTooth}
           />
           <span className={s.markText}>
-            <span className={s.markName}>Bright Smiles</span>
-            <span className={s.markSub}>Children's dentistry</span>
+            <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Bright Smiles</span>
+            <span data-edit="bar.markSub" data-edit-max="60" className={s.markSub}>Children's dentistry</span>
           </span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#book">Book a visit</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#book">Book a visit</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -181,7 +194,7 @@ export default function BrightSmilesPage() {
             Rings drift across the whole hero; the tooth stands on a blue
             disc with the brush leaning on it. */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <div className={s.heroField} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,4" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={scattershrink}
               palette={RINGS}
@@ -193,18 +206,18 @@ export default function BrightSmilesPage() {
           </div>
           <div className={s.heroInner}>
             <div className={s.heroText}>
-              <p className={s.kicker}>Children's dentist in Maple Hill, ages 1-17</p>
-              <h1 id="hero-h" className={s.heroTitle}>
+              <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Children's dentist in Maple Hill, ages 1-17</p>
+              <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
                 A first visit that ends in <em>a high five.</em>
               </h1>
-              <p className={s.heroLede}>
+              <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
                 Gentle, unhurried checkups for babies, kids and teens, with a
                 parent in the room and a playroom before the chair. Saturday
                 mornings too.
               </p>
               <div className={s.heroActions}>
-                <a className={s.btn} href="#book">Book a first visit</a>
-                <a className={s.btnLine} href="#first-visit">What happens</a>
+                <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Book a first visit</a>
+                <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#first-visit">What happens</a>
               </div>
             </div>
             <div className={s.heroArt}>
@@ -225,16 +238,16 @@ export default function BrightSmilesPage() {
           </div>
           <ul className={s.heroFacts}>
             <li>
-              <strong>Ages 1-17</strong>
-              <span>and their grown-ups</span>
+              <strong data-edit="hero.emphasis">Ages 1-17</strong>
+              <span data-edit="hero.text" data-edit-max="60">and their grown-ups</span>
             </li>
             <li>
-              <strong>Saturdays</strong>
-              <span>8 am to noon</span>
+              <strong data-edit="hero.emphasis2">Saturdays</strong>
+              <span data-edit="hero.text2" data-edit-max="60">8 am to noon</span>
             </li>
             <li>
-              <strong>Parents stay</strong>
-              <span>in the room, always</span>
+              <strong data-edit="hero.emphasis3">Parents stay</strong>
+              <span data-edit="hero.text3" data-edit-max="60">in the room, always</span>
             </li>
           </ul>
         </section>
@@ -243,23 +256,23 @@ export default function BrightSmilesPage() {
             Four big illustrated cards in a row, joined by a dotted path. */}
         <section id="first-visit" className={s.visitSec} aria-labelledby="first-visit-h">
           <div className={s.secHead}>
-            <span className={s.secTag}>About 35 minutes</span>
-            <h2 id="first-visit-h">Your child's first visit</h2>
-            <p className={s.secNote}>The same four steps every time, so the second visit already feels familiar.</p>
+            <span data-edit="firstVisit.secTag" data-edit-max="60" className={s.secTag}>About 35 minutes</span>
+            <h2 data-edit="firstVisit.title" data-edit-max="60" id="first-visit-h">Your child's first visit</h2>
+            <p data-edit="firstVisit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>The same four steps every time, so the second visit already feels familiar.</p>
           </div>
           <ol className={s.steps}>
-            {STEPS.map((st) => (
+            {STEPS.map((st, i) => (
               <li key={st.no} className={`${s.step} ${s[st.card]}`}>
                 <div className={s.stepArt}>
                   <Artwork slug={st.art} alt={st.alt} inks={st.inks} className={s.stepPicture} />
                 </div>
                 <div className={s.stepText}>
                   <div className={s.stepTop}>
-                    <span className={s.stepNo}>{st.no}</span>
-                    <span className={s.stepTime}>{st.time}</span>
+                    <span data-edit={`firstVisit.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
+                    <span data-edit={`firstVisit.stepTime.${i}`} data-edit-max="60" className={s.stepTime}>{st.time}</span>
                   </div>
-                  <h3>{st.title}</h3>
-                  <p>{st.body}</p>
+                  <h3 data-edit={`firstVisit.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                  <p data-edit={`firstVisit.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
                 </div>
               </li>
             ))}
@@ -268,7 +281,7 @@ export default function BrightSmilesPage() {
 
         {/* ------------------------------------------------------------ BAND
             Little arcs, like a row of smiles, between the visit and the ages. */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,3,2,4" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={bangle}
             palette={SMILES}
@@ -283,18 +296,18 @@ export default function BrightSmilesPage() {
         {/* ------------------------------------------------------------ AGES */}
         <section id="ages" className={s.sec} aria-labelledby="ages-h">
           <div className={s.secHead}>
-            <span className={s.secTag}>Every six months</span>
-            <h2 id="ages-h">What we do, by age</h2>
-            <p className={s.secNote}>A checkup changes as your child does. This is what each one covers, on top of a look, a count and a clean.</p>
+            <span data-edit="ages.secTag" data-edit-max="60" className={s.secTag}>Every six months</span>
+            <h2 data-edit="ages.title" data-edit-max="60" id="ages-h">What we do, by age</h2>
+            <p data-edit="ages.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>A checkup changes as your child does. This is what each one covers, on top of a look, a count and a clean.</p>
           </div>
           <ol className={s.ages}>
-            {AGES.map((a) => (
+            {AGES.map((a, i) => (
               <li key={a.age} className={s.age}>
-                <span className={s.ageBubble}>{a.age}</span>
-                <h3>{a.label}</h3>
+                <span data-edit={`ages.ageBubble.${i}`} data-edit-max="60" className={s.ageBubble}>{a.age}</span>
+                <h3 data-edit={`ages.title2.${i}`} data-edit-max="40">{a.label}</h3>
                 <ul className={s.ageList}>
-                  {a.items.map((it) => (
-                    <li key={it}>{it}</li>
+                  {a.items.map((it, i2) => (
+                    <li data-edit={`ages.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                   ))}
                 </ul>
               </li>
@@ -306,9 +319,9 @@ export default function BrightSmilesPage() {
         <section id="parents" className={s.sec} aria-labelledby="parents-h">
           <div className={s.parents}>
             <div className={s.parentsLead}>
-              <span className={s.secTag}>For grown-ups</span>
-              <h2 id="parents-h">Questions parents ask</h2>
-              <p className={s.secNote}>And if yours is not here, call the front desk: Dana has heard all of them.</p>
+              <span data-edit="parents.secTag" data-edit-max="60" className={s.secTag}>For grown-ups</span>
+              <h2 data-edit="parents.title" data-edit-max="60" id="parents-h">Questions parents ask</h2>
+              <p data-edit="parents.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>And if yours is not here, call the front desk: Dana has heard all of them.</p>
               <Artwork
                 slug="bright-smiles-kids-chair"
                 alt=""
@@ -317,10 +330,10 @@ export default function BrightSmilesPage() {
               />
             </div>
             <div className={s.faq}>
-              {FAQ.map((f) => (
+              {FAQ.map((f, i) => (
                 <details key={f.q}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`parents.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`parents.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -330,33 +343,33 @@ export default function BrightSmilesPage() {
         {/* ------------------------------------------------------- INSURANCE */}
         <section id="insurance" className={s.sec} aria-labelledby="insurance-h">
           <div className={s.secHead}>
-            <span className={s.secTag}>No surprises</span>
-            <h2 id="insurance-h">Insurance and prices</h2>
-            <p className={s.secNote}>We check your coverage before the visit and tell you what, if anything, you will owe.</p>
+            <span data-edit="insurance.secTag" data-edit-max="60" className={s.secTag}>No surprises</span>
+            <h2 data-edit="insurance.title" data-edit-max="60" id="insurance-h">Insurance and prices</h2>
+            <p data-edit="insurance.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>We check your coverage before the visit and tell you what, if anything, you will owe.</p>
           </div>
           <div className={s.insurance}>
             <div className={s.plans}>
-              <h3>We take</h3>
+              <h3 data-edit="insurance.title2" data-edit-max="40">We take</h3>
               <ul className={s.planList}>
-                {PLANS.map((p) => (
-                  <li key={p}>{p}</li>
+                {PLANS.map((p, i) => (
+                  <li data-edit={`insurance.item.${i}`} data-edit-max="80" key={p}>{p}</li>
                 ))}
               </ul>
-              <p className={s.plansNote}>Not sure about yours? Send us a photo of the card when you book.</p>
+              <p data-edit="insurance.plansNote" data-edit-max="240" data-edit-multiline className={s.plansNote}>Not sure about yours? Send us a photo of the card when you book.</p>
             </div>
             <div className={s.priceCard}>
-              <h3>Without insurance</h3>
+              <h3 data-edit="insurance.title3" data-edit-max="40">Without insurance</h3>
               <dl className={s.priceList}>
-                {PRICES.map(([k, v]) => (
+                {PRICES.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`insurance.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`insurance.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
               <div className={s.smilePlan}>
-                <strong>Smile plan, $240 a year</strong>
-                <span>Two checkups and cleanings, x-rays and 15% off everything else.</span>
+                <strong data-edit="insurance.emphasis">Smile plan, $240 a year</strong>
+                <span data-edit="insurance.text" data-edit-max="60">Two checkups and cleanings, x-rays and 15% off everything else.</span>
               </div>
             </div>
           </div>
@@ -365,7 +378,7 @@ export default function BrightSmilesPage() {
         {/* ------------------------------------------------------------ BOOK */}
         <section id="book" className={s.book} aria-labelledby="book-h">
           <div className={s.bookPanel}>
-            <div className={s.bookField} aria-hidden="true">
+            <div data-edit-pattern="book.field" data-edit-roles="transparent,5,2" className={s.bookField} aria-hidden="true">
               <TabbiedPattern
                 pattern={scattershrink}
                 palette={QUIET}
@@ -375,22 +388,22 @@ export default function BrightSmilesPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <h2 id="book-h">Book a visit</h2>
-            <p className={s.bookText}>We call back the same day to find a time. First visits are Monday to Thursday mornings, when the office is quiet.</p>
+            <h2 data-edit="book.title" data-edit-max="60" id="book-h">Book a visit</h2>
+            <p data-edit="book.bookText" data-edit-max="240" data-edit-multiline className={s.bookText}>We call back the same day to find a time. First visits are Monday to Thursday mornings, when the office is quiet.</p>
             <dl className={s.bookInfo}>
               <div>
-                <dt>Call</dt>
+                <dt data-edit="book.term" data-edit-max="28">Call</dt>
                 <dd>
-                  <a href={PHONE_HREF}>{PHONE}</a>
+                  <a data-edit="book.link" data-edit-max="28" href={PHONE_HREF}>{PHONE}</a>
                 </dd>
               </div>
               <div>
-                <dt>Find us</dt>
-                <dd>18 Orchard Lane, Maple Hill</dd>
+                <dt data-edit="book.term2" data-edit-max="28">Find us</dt>
+                <dd data-edit="book.body" data-edit-max="200" data-edit-multiline>18 Orchard Lane, Maple Hill</dd>
               </div>
               <div>
-                <dt>Hours</dt>
-                <dd>Mon-Thu 8-5, Fri 8-2, Sat 8-12</dd>
+                <dt data-edit="book.term3" data-edit-max="28">Hours</dt>
+                <dd data-edit="book.body2" data-edit-max="200" data-edit-multiline>Mon-Thu 8-5, Fri 8-2, Sat 8-12</dd>
               </div>
             </dl>
             <Artwork
@@ -403,19 +416,19 @@ export default function BrightSmilesPage() {
 
           <form className={s.form} action="#">
             <div className={s.field}>
-              <label htmlFor="bs-parent">Your name</label>
+              <label data-edit="book.label" htmlFor="bs-parent">Your name</label>
               <input id="bs-parent" name="parent" type="text" autoComplete="name" />
             </div>
             <div className={s.field}>
-              <label htmlFor="bs-phone">Phone</label>
+              <label data-edit="book.label2" htmlFor="bs-phone">Phone</label>
               <input id="bs-phone" name="phone" type="tel" autoComplete="tel" />
             </div>
             <div className={s.field}>
-              <label htmlFor="bs-child">Child's first name</label>
+              <label data-edit="book.label3" htmlFor="bs-child">Child's first name</label>
               <input id="bs-child" name="child" type="text" />
             </div>
             <div className={s.field}>
-              <label htmlFor="bs-age">Age</label>
+              <label data-edit="book.label4" htmlFor="bs-age">Age</label>
               <select id="bs-age" name="age" defaultValue="">
                 <option value="" disabled>Choose</option>
                 <option value="1-2">1-2</option>
@@ -426,26 +439,26 @@ export default function BrightSmilesPage() {
               </select>
             </div>
             <fieldset className={s.choice}>
-              <legend>This is</legend>
+              <legend data-edit="book.legend">This is</legend>
               <label>
                 <input type="radio" name="kind" value="first" defaultChecked />
-                <span>A first visit</span>
+                <span data-edit="book.text" data-edit-max="60">A first visit</span>
               </label>
               <label>
                 <input type="radio" name="kind" value="checkup" />
-                <span>A checkup</span>
+                <span data-edit="book.text2" data-edit-max="60">A checkup</span>
               </label>
               <label>
                 <input type="radio" name="kind" value="tooth" />
-                <span>A sore or broken tooth</span>
+                <span data-edit="book.text3" data-edit-max="60">A sore or broken tooth</span>
               </label>
             </fieldset>
             <div className={`${s.field} ${s.fieldWide}`}>
-              <label htmlFor="bs-notes">Anything we should know</label>
+              <label data-edit="book.label5" htmlFor="bs-notes">Anything we should know</label>
               <textarea id="bs-notes" name="notes" rows={3} placeholder="Nervous, sensory needs, a favorite toy" />
             </div>
-            <button type="submit" className={s.submit}>Ask for a time</button>
-            <small className={s.formFine}>We never share your details. Please keep medical history for the visit.</small>
+            <button data-edit="book.submit" data-edit-max="24" type="submit" className={s.submit}>Ask for a time</button>
+            <small data-edit="book.formFine" className={s.formFine}>We never share your details. Please keep medical history for the visit.</small>
           </form>
         </section>
       </main>
@@ -453,27 +466,27 @@ export default function BrightSmilesPage() {
       <footer className={s.footer}>
         <div className={s.footInner}>
           <div className={s.footBrand}>
-            <p className={s.footName}>Bright Smiles</p>
-            <p className={s.footTag}>Children's dentistry at 18 Orchard Lane, Maple Hill. Ages 1-17.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Bright Smiles</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Children's dentistry at 18 Orchard Lane, Maple Hill. Ages 1-17.</p>
           </div>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
-          <p className={s.footContact}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footContact}>
             (555) 016-8080
             <br />
             hello@brightsmiles.example
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional pediatric dental practice. Prices, hours and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional pediatric dental practice. Prices, hours and people are invented.</p>
           <p>
             Patterns by{' '}
-            <a href="https://tabbied.com" rel="noopener">
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
             </a>
             , drawn live on a transparent ground.

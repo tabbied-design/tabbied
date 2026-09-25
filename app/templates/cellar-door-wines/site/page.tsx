@@ -180,7 +180,19 @@ const HOURS = [
 
 export default function CellarDoorWinesPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f5f0e8',
+        '--ink': '#1f1418',
+        '--claret': '#7b1e3a',
+        '--gray': '#8e8479',
+        '--pale': '#e6dbcf',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,claret,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -190,16 +202,16 @@ export default function CellarDoorWinesPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Cellar Door</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Cellar Door</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <span className={s.barMeta}>41 Linden Street</span>
+        <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>41 Linden Street</span>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -210,13 +222,13 @@ export default function CellarDoorWinesPage() {
             glass are painted over them in the paper color. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Wine shop and tasting bar, down three steps</p>
-            <h1 className={s.title} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Wine shop and tasting bar, down three steps</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.title} id="hero-h">
               The whole shop,
               <br />
               <em>filed by region.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               The list below is the shop, shelved the way you will find it:
               the region first, then the grower. Most bottles are under $30,
               and every one of them has been opened at least once by the
@@ -224,21 +236,21 @@ export default function CellarDoorWinesPage() {
             </p>
             <dl className={s.facts}>
               <div>
-                <dt>Friday tastings</dt>
-                <dd>5 to 8 pm, $15</dd>
+                <dt data-edit="hero.term" data-edit-max="28">Friday tastings</dt>
+                <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>5 to 8 pm, $15</dd>
               </div>
               <div>
-                <dt>Wine club</dt>
-                <dd>From $55 a month</dd>
+                <dt data-edit="hero.term2" data-edit-max="28">Wine club</dt>
+                <dd data-edit="hero.body2" data-edit-max="200" data-edit-multiline>From $55 a month</dd>
               </div>
               <div>
-                <dt>Delivery</dt>
-                <dd>Free in town over $100</dd>
+                <dt data-edit="hero.term3" data-edit-max="28">Delivery</dt>
+                <dd data-edit="hero.body3" data-edit-max="200" data-edit-multiline>Free in town over $100</dd>
               </div>
             </dl>
           </div>
           <div className={s.heroPlate}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,1" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={kilngrid}
                 palette={CELLAR}
@@ -262,9 +274,9 @@ export default function CellarDoorWinesPage() {
             it, one group per region, with engravings between the groups. */}
         <section id="wines" className={s.wines} aria-labelledby="wines-h">
           <div className={s.winesHead}>
-            <span className={s.secLabel}>The list</span>
-            <h2 className={s.secTitle} id="wines-h">Wines by region</h2>
-            <p className={s.secNote}>
+            <span data-edit="wines.secLabel" data-edit-max="60" className={s.secLabel}>The list</span>
+            <h2 data-edit="wines.secTitle" data-edit-max="60" className={s.secTitle} id="wines-h">Wines by region</h2>
+            <p data-edit="wines.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Twenty-two bottles we are drinking this month, from seven regions.
               The rest of the shop follows the same order, shelf by shelf.
             </p>
@@ -272,14 +284,14 @@ export default function CellarDoorWinesPage() {
 
           <div className={s.winesBody}>
             <nav className={s.index} aria-label="Regions">
-              <span className={s.indexHead}>Regions</span>
+              <span data-edit="wines.indexHead" data-edit-max="60" className={s.indexHead}>Regions</span>
               <ol className={s.indexList}>
                 {REGIONS.map((r, i) => (
                   <li key={r.id}>
                     <a href={`#${r.id}`}>
                       <span className={s.indexNo}>{String(i + 1).padStart(2, '0')}</span>
-                      <span className={s.indexName}>{r.name}</span>
-                      <span className={s.indexCount}>{r.wines.length}</span>
+                      <span data-edit={`wines.indexName.${i}`} data-edit-max="60" className={s.indexName}>{r.name}</span>
+                      <span data-edit={`wines.indexCount.${i}`} data-edit-max="60" className={s.indexCount}>{r.wines.length}</span>
                     </a>
                   </li>
                 ))}
@@ -292,18 +304,18 @@ export default function CellarDoorWinesPage() {
                   <section id={r.id} className={s.group} aria-labelledby={`${r.id}-h`}>
                     <div className={s.groupHead}>
                       <span className={s.groupNo}>{String(i + 1).padStart(2, '0')}</span>
-                      <h3 className={s.groupName} id={`${r.id}-h`}>{r.name}</h3>
-                      <span className={s.groupCountry}>{r.country}</span>
-                      <p className={s.groupBlurb}>{r.blurb}</p>
+                      <h3 data-edit={`group.groupName.${i}`} data-edit-max="40" className={s.groupName} id={`${r.id}-h`}>{r.name}</h3>
+                      <span data-edit={`group.groupCountry.${i}`} data-edit-max="60" className={s.groupCountry}>{r.country}</span>
+                      <p data-edit={`group.groupBlurb.${i}`} data-edit-max="240" data-edit-multiline className={s.groupBlurb}>{r.blurb}</p>
                     </div>
                     <ul className={s.wineList}>
-                      {r.wines.map((w) => (
+                      {r.wines.map((w, i2) => (
                         <li key={w.wine} className={s.wine}>
-                          <span className={s.wineProducer}>{w.producer}</span>
-                          <span className={s.wineName}>{w.wine}</span>
-                          <span className={s.wineGrape}>{w.grape}</span>
-                          <span className={s.winePrice}>{w.price}</span>
-                          <p className={s.wineNote}>{w.note}</p>
+                          <span data-edit={`group.wineProducer.${i}.${i2}`} data-edit-max="60" className={s.wineProducer}>{w.producer}</span>
+                          <span data-edit={`group.wineName.${i}.${i2}`} data-edit-max="60" className={s.wineName}>{w.wine}</span>
+                          <span data-edit={`group.wineGrape.${i}.${i2}`} data-edit-max="60" className={s.wineGrape}>{w.grape}</span>
+                          <span data-edit={`group.winePrice.${i}.${i2}`} data-edit-max="60" className={s.winePrice}>{w.price}</span>
+                          <p data-edit={`group.wineNote.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.wineNote}>{w.note}</p>
                         </li>
                       ))}
                     </ul>
@@ -311,7 +323,7 @@ export default function CellarDoorWinesPage() {
                   {r.art ? (
                     <div className={s.engraving}>
                       <Artwork slug={r.art.slug} alt="" inks={['var(--claret)']} className={s.engravingArt} />
-                      <span className={s.engravingCaption}>{r.art.caption}</span>
+                      <span data-edit={`wines.engravingCaption.${i}`} data-edit-max="60" className={s.engravingCaption}>{r.art.caption}</span>
                     </div>
                   ) : null}
                 </div>
@@ -324,7 +336,7 @@ export default function CellarDoorWinesPage() {
         <section id="tastings" className={s.tastings} aria-labelledby="tastings-h">
           <div className={s.tastingsInner}>
             <div className={s.tastingsSide}>
-              <div className={s.vineField} aria-hidden="true">
+              <div data-edit-pattern="tastings.field" data-edit-roles="transparent,4,3,2" className={s.vineField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={lobe}
                   palette={VINE}
@@ -337,9 +349,9 @@ export default function CellarDoorWinesPage() {
                 />
               </div>
               <div className={s.tastingsText}>
-                <span className={s.secLabel}>Every Friday</span>
-                <h2 className={s.secTitle} id="tastings-h">Friday tastings</h2>
-                <p className={s.secNote}>
+                <span data-edit="tastings.secLabel" data-edit-max="60" className={s.secLabel}>Every Friday</span>
+                <h2 data-edit="tastings.secTitle" data-edit-max="60" className={s.secTitle} id="tastings-h">Friday tastings</h2>
+                <p data-edit="tastings.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                   Five wines poured at the counter from 5 to 8, with bread and
                   cheese from next door. $15, taken off any bottle you buy that
                   night. No booking; just come down.
@@ -355,8 +367,8 @@ export default function CellarDoorWinesPage() {
 
             <div className={s.calendar}>
               <div className={s.calHead}>
-                <h3 className={s.calMonth}>October 2026</h3>
-                <span className={s.calNote}>Tastings in claret</span>
+                <h3 data-edit="tastings.calMonth" data-edit-max="40" className={s.calMonth}>October 2026</h3>
+                <span data-edit="tastings.calNote" data-edit-max="60" className={s.calNote}>Tastings in claret</span>
               </div>
               <ol className={s.calGrid}>
                 {WEEKDAYS.map((d) => (
@@ -368,12 +380,12 @@ export default function CellarDoorWinesPage() {
                   ) : TASTINGS[d] ? (
                     <li key={d} className={s.calFriday}>
                       <span className={s.calDay}>{`Fri ${d}`}</span>
-                      <strong className={s.calTitle}>{TASTINGS[d].title}</strong>
-                      <span className={s.calText}>{TASTINGS[d].note}</span>
+                      <strong data-edit={`tastings.calTitle.${i}`} className={s.calTitle}>{TASTINGS[d].title}</strong>
+                      <span data-edit={`tastings.calText.${i}`} data-edit-max="60" className={s.calText}>{TASTINGS[d].note}</span>
                     </li>
                   ) : (
                     <li key={d} className={s.calDate}>
-                      <span className={s.calDay}>{d}</span>
+                      <span data-edit={`tastings.calDay.${i}`} data-edit-max="60" className={s.calDay}>{d}</span>
                     </li>
                   ),
                 )}
@@ -384,7 +396,7 @@ export default function CellarDoorWinesPage() {
 
         {/* ------------------------------------------------------------ CLUB */}
         <section id="club" className={s.club} aria-labelledby="club-h">
-          <div className={s.clubBand} aria-hidden="true">
+          <div data-edit-pattern="club.field" data-edit-roles="transparent,1,2" className={s.clubBand} aria-hidden="true">
             <TabbiedPattern
               pattern={kilngrid}
               palette={RACK}
@@ -396,27 +408,27 @@ export default function CellarDoorWinesPage() {
           </div>
           <div className={s.clubInner}>
             <div className={s.clubHead}>
-              <span className={s.secLabel}>Chosen for you, monthly</span>
-              <h2 className={s.secTitle} id="club-h">The wine club</h2>
-              <p className={s.secNote}>
+              <span data-edit="club.secLabel" data-edit-max="60" className={s.secLabel}>Chosen for you, monthly</span>
+              <h2 data-edit="club.secTitle" data-edit-max="60" className={s.secTitle} id="club-h">The wine club</h2>
+              <p data-edit="club.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 We choose, you drink, and you tell us what you thought. Pick up
                 on the first Saturday of the month or have it delivered for $8.
                 Skip or stop any month.
               </p>
             </div>
             <div className={s.tiers}>
-              {TIERS.map((t) => (
+              {TIERS.map((t, i) => (
                 <article key={t.name} className={s.tier}>
-                  <h3 className={s.tierName}>{t.name}</h3>
-                  <span className={s.tierBottles}>{t.bottles}</span>
-                  <p className={s.tierPrice}>{t.price}</p>
-                  <span className={s.tierPer}>a month</span>
+                  <h3 data-edit={`tier.tierName.${i}`} data-edit-max="40" className={s.tierName}>{t.name}</h3>
+                  <span data-edit={`tier.tierBottles.${i}`} data-edit-max="60" className={s.tierBottles}>{t.bottles}</span>
+                  <p data-edit={`tier.tierPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.tierPrice}>{t.price}</p>
+                  <span data-edit={`tier.tierPer.${i}`} data-edit-max="60" className={s.tierPer}>a month</span>
                   <ul className={s.tierPerks}>
-                    {t.perks.map((p) => (
-                      <li key={p}>{p}</li>
+                    {t.perks.map((p, i2) => (
+                      <li data-edit={`tier.item.${i}.${i2}`} data-edit-max="80" key={p}>{p}</li>
                     ))}
                   </ul>
-                  <a className={s.tierJoin} href="#visit">Join at the counter</a>
+                  <a data-edit={`tier.tierJoin.${i}`} data-edit-max="28" className={s.tierJoin} href="#visit">Join at the counter</a>
                 </article>
               ))}
             </div>
@@ -434,27 +446,27 @@ export default function CellarDoorWinesPage() {
             />
           </div>
           <div className={s.visitText}>
-            <span className={s.secLabel}>Find us</span>
-            <h2 className={s.secTitle} id="visit-h">Down three steps on Linden Street</h2>
-            <p className={s.visitAddr}>41 Linden Street, below the bookbinder</p>
+            <span data-edit="visit.secLabel" data-edit-max="60" className={s.secLabel}>Find us</span>
+            <h2 data-edit="visit.secTitle" data-edit-max="60" className={s.secTitle} id="visit-h">Down three steps on Linden Street</h2>
+            <p data-edit="visit.visitAddr" data-edit-max="240" data-edit-multiline className={s.visitAddr}>41 Linden Street, below the bookbinder</p>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
-            <p className={s.visitNote}>
+            <p data-edit="visit.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>
               You must be 21 to buy, and we will ask. The steps are steep; ring
               the bell by the railing and we will bring the bottles up to you.
             </p>
             <ul className={s.contact}>
               <li>
-                <a href="tel:+15550163390">(555) 016-3390</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550163390">(555) 016-3390</a>
               </li>
               <li>
-                <a href="mailto:cellar@cellardoor.example">cellar@cellardoor.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:cellar@cellardoor.example">cellar@cellardoor.example</a>
               </li>
             </ul>
           </div>
@@ -463,15 +475,15 @@ export default function CellarDoorWinesPage() {
 
       <footer className={s.footer}>
         <div className={s.footInner}>
-          <p className={s.footName}>Cellar Door</p>
-          <p className={s.footTag}>Wine shop and tasting bar, 41 Linden Street.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Cellar Door</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Wine shop and tasting bar, 41 Linden Street.</p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional wine shop. Producers, prices and hours are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional wine shop. Producers, prices and hours are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the shop's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the shop's own colors.</span>
           </p>
         </div>
       </footer>

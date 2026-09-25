@@ -126,7 +126,20 @@ const SEASONS = [
 
 export default function ScoopAndConePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--cream': '#fff6ee',
+        '--ink': '#2a1e24',
+        '--pink': '#f26d7d',
+        '--blue': '#6cc3d5',
+        '--yellow': '#f7c948',
+        '--gray': '#b7a9ad',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="cream,ink,pink,blue,yellow,gray"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -143,17 +156,17 @@ export default function ScoopAndConePage() {
             inks={{ red: 'var(--pink)', blue: 'var(--blue)', yellow: 'var(--yellow)' }}
             className={s.markCone}
           />
-          <span className={s.markName}>Scoop & Cone</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Scoop & Cone</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#flavors">Today's board</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#flavors">Today's board</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -164,36 +177,36 @@ export default function ScoopAndConePage() {
             burst drawn in the same four colors. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Ice cream parlor on the boardwalk, Gull Harbor</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Ice cream parlor on the boardwalk, Gull Harbor</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Churned every morning, <em>gone by nine.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Sixteen flavors on the board today, made in the back from milk
               that left Hollow Farm at dawn, and scooped into waffle cones we
               press at the window.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#flavors">See today's flavors</a>
-              <a className={s.btnLine} href="#build">Build a sundae</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#flavors">See today's flavors</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#build">Build a sundae</a>
             </div>
             <ul className={s.heroFacts}>
               <li>
-                <strong>16</strong>
-                <span>flavors today</span>
+                <strong data-edit="hero.emphasis">16</strong>
+                <span data-edit="hero.text" data-edit-max="60">flavors today</span>
               </li>
               <li>
-                <strong>4</strong>
-                <span>of them vegan</span>
+                <strong data-edit="hero.emphasis2">4</strong>
+                <span data-edit="hero.text2" data-edit-max="60">of them vegan</span>
               </li>
               <li>
-                <strong>$4.95</strong>
-                <span>a single scoop</span>
+                <strong data-edit="hero.emphasis3">$4.95</strong>
+                <span data-edit="hero.text3" data-edit-max="60">a single scoop</span>
               </li>
             </ul>
           </div>
           <div className={s.heroArt}>
-            <div className={s.burst} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,4,1" className={s.burst} aria-hidden="true">
               <TabbiedPattern
                 pattern={confettidotfield}
                 palette={BURST}
@@ -218,37 +231,37 @@ export default function ScoopAndConePage() {
         <section id="flavors" className={s.board} aria-labelledby="flavors-h">
           <div className={s.boardInner}>
             <div className={s.boardHead}>
-              <h2 id="flavors-h">Today's board</h2>
-              <p className={s.boardNote}>It changes every morning; this is Friday's. Ask for a taste of anything, as many as you like.</p>
+              <h2 data-edit="flavors.title" data-edit-max="60" id="flavors-h">Today's board</h2>
+              <p data-edit="flavors.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>It changes every morning; this is Friday's. Ask for a taste of anything, as many as you like.</p>
             </div>
 
             <div className={s.boardPrices}>
               <dl className={s.sizes}>
-                {SIZES.map(([k, v]) => (
+                {SIZES.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`flavors.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`flavors.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
               <ul className={s.cones}>
-                {CONES.map((c) => (
-                  <li key={c}>{c}</li>
+                {CONES.map((c, i) => (
+                  <li data-edit={`flavors.item.${i}`} data-edit-max="80" key={c}>{c}</li>
                 ))}
               </ul>
             </div>
 
             <ul className={s.flavors}>
-              {FLAVORS.map((f) => (
+              {FLAVORS.map((f, i) => (
                 <li key={f.name} className={s.flavor}>
                   <span className={`${s.chip} ${s[f.chip]}`} aria-hidden="true" />
                   <div className={s.flavorText}>
-                    <h3>{f.name}</h3>
-                    <p>{f.note}</p>
+                    <h3 data-edit={`flavors.title2.${i}`} data-edit-max="40">{f.name}</h3>
+                    <p data-edit={`flavors.body2.${i}`} data-edit-max="240" data-edit-multiline>{f.note}</p>
                     {f.tags.length > 0 ? (
                       <ul className={s.tags}>
-                        {f.tags.map((t) => (
-                          <li key={t} className={t === 'Vegan' ? s.tagVegan : t === 'New' ? s.tagNew : s.tag}>{t}</li>
+                        {f.tags.map((t, i2) => (
+                          <li data-edit={`flavors.tagVegan.${i}.${i2}`} data-edit-max="80" key={t} className={t === 'Vegan' ? s.tagVegan : t === 'New' ? s.tagNew : s.tag}>{t}</li>
                         ))}
                       </ul>
                     ) : null}
@@ -260,7 +273,7 @@ export default function ScoopAndConePage() {
         </section>
 
         {/* ------------------------------------------------------------ BAND */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={cove}
             palette={SCALLOP}
@@ -277,19 +290,19 @@ export default function ScoopAndConePage() {
             palette. */}
         <section id="sundaes" className={s.sec} aria-labelledby="sundaes-h">
           <div className={s.secHead}>
-            <h2 id="sundaes-h">Sundaes</h2>
-            <p className={s.secNote}>In a tall glass with a long spoon, at the counter or at the tables out on the boards.</p>
+            <h2 data-edit="sundaes.title" data-edit-max="60" id="sundaes-h">Sundaes</h2>
+            <p data-edit="sundaes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>In a tall glass with a long spoon, at the counter or at the tables out on the boards.</p>
           </div>
           <div className={s.sundaes}>
-            {SUNDAES.map((su) => (
+            {SUNDAES.map((su, i) => (
               <div key={su.name} className={`${s.sundae} ${s[su.card]}`}>
                 <Artwork slug="scoop-and-cone-sundae" alt={`${su.name} sundae`} inks={su.inks} className={s.sundaeArt} />
                 <div className={s.sundaeText}>
                   <div className={s.sundaeTop}>
-                    <h3>{su.name}</h3>
-                    <span className={s.sundaePrice}>{su.price}</span>
+                    <h3 data-edit={`sundaes.title2.${i}`} data-edit-max="40">{su.name}</h3>
+                    <span data-edit={`sundaes.sundaePrice.${i}`} data-edit-max="60" className={s.sundaePrice}>{su.price}</span>
                   </div>
-                  <p>{su.body}</p>
+                  <p data-edit={`sundaes.body.${i}`} data-edit-max="240" data-edit-multiline>{su.body}</p>
                 </div>
               </div>
             ))}
@@ -299,12 +312,12 @@ export default function ScoopAndConePage() {
         {/* ----------------------------------------------------------- BUILD */}
         <section id="build" className={s.sec} aria-labelledby="build-h">
           <div className={s.secHead}>
-            <h2 id="build-h">Build your own sundae</h2>
-            <p className={s.secNote}>$8 for the lot, in four steps at the counter. Kids get a half-size one for $5.</p>
+            <h2 data-edit="build.title" data-edit-max="60" id="build-h">Build your own sundae</h2>
+            <p data-edit="build.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>$8 for the lot, in four steps at the counter. Kids get a half-size one for $5.</p>
           </div>
           <div className={s.build}>
             <div className={s.buildArt} aria-hidden="true">
-              <div className={s.sprinkles}>
+              <div data-edit-pattern="build.field" data-edit-roles="transparent,4,2,3" className={s.sprinkles}>
                 <TabbiedPattern
                   pattern={confettidotfield}
                   palette={SPRINKLES}
@@ -322,15 +335,15 @@ export default function ScoopAndConePage() {
               />
             </div>
             <ol className={s.steps}>
-              {STEPS.map((st) => (
+              {STEPS.map((st, i) => (
                 <li key={st.no} className={s.step}>
-                  <span className={s.stepNo}>{st.no}</span>
+                  <span data-edit={`build.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
                   <div className={s.stepText}>
-                    <h3>{st.title}</h3>
-                    <span className={s.stepNote}>{st.note}</span>
+                    <h3 data-edit={`build.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                    <span data-edit={`build.stepNote.${i}`} data-edit-max="60" className={s.stepNote}>{st.note}</span>
                     <ul className={s.options}>
-                      {st.options.map((o) => (
-                        <li key={o}>{o}</li>
+                      {st.options.map((o, i2) => (
+                        <li data-edit={`build.item.${i}.${i2}`} data-edit-max="80" key={o}>{o}</li>
                       ))}
                     </ul>
                   </div>
@@ -351,20 +364,20 @@ export default function ScoopAndConePage() {
                 className={s.pop}
               />
               <div>
-                <h2 id="hours-h">Hours by season</h2>
-                <p className={s.secNote}>The boardwalk sets our clock. If it is warm and busy we stay open late, and say so on the door.</p>
+                <h2 data-edit="hours.title" data-edit-max="60" id="hours-h">Hours by season</h2>
+                <p data-edit="hours.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>The boardwalk sets our clock. If it is warm and busy we stay open late, and say so on the door.</p>
               </div>
             </div>
             <ul className={s.seasons}>
-              {SEASONS.map((se) => (
+              {SEASONS.map((se, i) => (
                 <li key={se.name} className={`${s.season} ${s[se.tone]}`}>
                   <div className={s.seasonTop}>
-                    <h3>{se.name}</h3>
-                    {se.now ? <span className={s.nowTag}>Now</span> : null}
+                    <h3 data-edit={`hours.title2.${i}`} data-edit-max="40">{se.name}</h3>
+                    {se.now ? <span data-edit={`hours.nowTag.${i}`} data-edit-max="60" className={s.nowTag}>Now</span> : null}
                   </div>
-                  <span className={s.seasonMonths}>{se.months}</span>
-                  <p className={s.seasonHours}>{se.hours}</p>
-                  <p className={s.seasonNote}>{se.note}</p>
+                  <span data-edit={`hours.seasonMonths.${i}`} data-edit-max="60" className={s.seasonMonths}>{se.months}</span>
+                  <p data-edit={`hours.seasonHours.${i}`} data-edit-max="240" data-edit-multiline className={s.seasonHours}>{se.hours}</p>
+                  <p data-edit={`hours.seasonNote.${i}`} data-edit-max="240" data-edit-multiline className={s.seasonNote}>{se.note}</p>
                 </li>
               ))}
             </ul>
@@ -375,28 +388,28 @@ export default function ScoopAndConePage() {
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.visit}>
             <div className={s.visitCard}>
-              <h2 id="visit-h">Come by the window</h2>
-              <p className={s.visitAddr}>Pier 3, the Boardwalk, Gull Harbor</p>
-              <p className={s.visitNote}>Between the carousel and the bait shop. Bikes lock up at the rack out front; dogs get a free pup cup.</p>
+              <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Come by the window</h2>
+              <p data-edit="visit.visitAddr" data-edit-max="240" data-edit-multiline className={s.visitAddr}>Pier 3, the Boardwalk, Gull Harbor</p>
+              <p data-edit="visit.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>Between the carousel and the bait shop. Bikes lock up at the rack out front; dogs get a free pup cup.</p>
               <dl className={s.visitList}>
                 <div>
-                  <dt>Call</dt>
+                  <dt data-edit="visit.term" data-edit-max="28">Call</dt>
                   <dd>
-                    <a href="tel:+15550126644">(555) 012-6644</a>
+                    <a data-edit="visit.link" data-edit-max="28" href="tel:+15550126644">(555) 012-6644</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Write</dt>
+                  <dt data-edit="visit.term2" data-edit-max="28">Write</dt>
                   <dd>
-                    <a href="mailto:hello@scoopandcone.example">hello@scoopandcone.example</a>
+                    <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@scoopandcone.example">hello@scoopandcone.example</a>
                   </dd>
                 </div>
               </dl>
             </div>
             <div className={s.party}>
-              <h3>Parties and pints</h3>
-              <p>The back room seats sixteen for a birthday: a sundae each, a candle in the big dipper, two hours, $180. Pints and quarts to go all year, and we pack them in dry ice for the drive home.</p>
-              <a className={s.btn} href="mailto:parties@scoopandcone.example">Book the back room</a>
+              <h3 data-edit="visit.title2" data-edit-max="40">Parties and pints</h3>
+              <p data-edit="visit.body" data-edit-max="240" data-edit-multiline>The back room seats sixteen for a birthday: a sundae each, a candle in the big dipper, two hours, $180. Pints and quarts to go all year, and we pack them in dry ice for the drive home.</p>
+              <a data-edit="visit.btn" data-edit-max="28" className={s.btn} href="mailto:parties@scoopandcone.example">Book the back room</a>
             </div>
           </div>
         </section>
@@ -412,23 +425,23 @@ export default function ScoopAndConePage() {
               className={s.footCone}
             />
             <div>
-              <p className={s.footName}>Scoop & Cone</p>
-              <p className={s.footTag}>Ice cream churned every morning on the boardwalk at Gull Harbor.</p>
+              <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Scoop & Cone</p>
+              <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Ice cream churned every morning on the boardwalk at Gull Harbor.</p>
             </div>
           </div>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional ice cream parlor. Flavors, prices, hours and places are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional ice cream parlor. Flavors, prices, hours and places are invented.</p>
           <p>
             Patterns by{' '}
-            <a href="https://tabbied.com" rel="noopener">
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
             </a>
             , drawn live on a transparent ground.
