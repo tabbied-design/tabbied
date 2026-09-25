@@ -1,16 +1,13 @@
 // Brand palette -> CSS custom properties.
 //
 // Color enters a template page exactly once, as custom properties on its root
-// element, and the stylesheet only ever says `var(--...)`. That is what makes a
-// re-color a property rewrite instead of a search-and-replace through a
-// stylesheet, and it is the shape the shared TemplateSite component already
-// used before any of this existed.
+// element, and the stylesheet only ever says `var(--...)`, so a re-color is a
+// property rewrite rather than a search-and-replace through a stylesheet.
 //
-// Some of what the page needs is not *in* the palette but derived *from* it -
-// the ink that stays legible on the page ground, the card and panel tints, the
-// text color that sits on a filled accent. Those are functions of the
-// palette, so a re-color has to recompute them; leaving them behind is how a
-// re-colored page ends up with unreadable body copy.
+// Some of what the page needs is derived *from* the palette (the ink that stays
+// legible on the ground, the card and panel tints, the text on a filled
+// accent), so a re-color has to recompute those too, or body copy becomes
+// unreadable.
 
 import { luminance, mix, onColor } from './color.js';
 import type { PaletteDerivation, PaletteSpec } from './spec.js';
@@ -26,10 +23,8 @@ export type PaletteProperties = Record<string, string>;
 /**
  * The variables the shared TemplateSite component works in.
  *
- * Kept verbatim from that component, including the reasoning: `--ink` is a
- * near-white *tinted by the page itself* on a dark ground rather than a fixed
- * off-white, because a cream read as a foreign color on Facet's navy and
- * Nocturne's violet.
+ * On a dark ground `--ink` is a near-white *tinted by the page itself*,
+ * because a fixed cream reads as a foreign color on a navy or violet ground.
  */
 function templateSiteProperties(
   colors: string[],
@@ -111,12 +106,10 @@ export function propertiesForPalette(
 /**
  * Resolve a pattern field's palette against a brand palette.
  *
- * A numeric role indexes the brand palette and wraps, mirroring how the
- * renderer already cycles a short palette across a design that asks for more
- * colors than it was given. A string role is a literal and never moves -
- * `"transparent"` is the common one, and the reason it must be preserved is
- * that a transparent color0 is what lets a pattern be drawn *over* a
- * photograph instead of over its own ground.
+ * A numeric role indexes the brand palette and wraps, as the renderer cycles a
+ * short palette. A string role is a literal and never moves: `"transparent"`
+ * is the common one, and a transparent color0 is what lets a pattern be drawn
+ * *over* a photograph instead of over its own ground.
  */
 export function resolvePaletteRoles(
   roles: readonly (number | string)[],

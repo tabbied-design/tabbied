@@ -1,9 +1,8 @@
 // The edit engine's decisions, with no DOM in sight.
 //
-// planEdits is where every judgment lives - what validates, what a palette
-// change implies for a pattern field, which attributes get written. Pinning it
-// here is what lets apply.ts stay a dull executor and be covered by one e2e
-// case rather than a matrix of them.
+// planEdits is where every judgment lives (what validates, what a palette
+// change implies for a pattern field, which attributes get written). Pinning
+// it here lets apply.ts be covered by one e2e case rather than a matrix.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 

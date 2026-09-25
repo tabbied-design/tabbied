@@ -7,14 +7,12 @@
 //   npx tabbied list --tag dots --density dense
 //   npx tabbied info radius
 //
-// Rendering runs css-doodle in a real headless browser - that is the only
-// faithful renderer there is (see docs/svg-export.md for why nothing here
-// tries to reimplement it). The browser comes from whichever Playwright the
-// caller already has (`playwright`, `playwright-core`, or `@playwright/test`),
-// so this package doesn't drag a browser download into every install; pass
-// --browser <path> or set TABBIED_CHROMIUM to use a specific Chromium.
+// Rendering runs css-doodle in a real headless browser, the only faithful
+// renderer there is. The browser comes from whichever Playwright the caller
+// already has (`playwright`, `playwright-core`, or `@playwright/test`), so
+// this package doesn't drag a browser download into every install.
 //
-// The pattern definitions come from the compiled catalog in dist - the CLI
+// The pattern definitions come from the compiled catalog in dist, so the CLI
 // works from the published tarball, not just the repo checkout.
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
@@ -344,7 +342,6 @@ async function runRender(args: RenderArgs): Promise<void> {
       ...(Object.keys(args.options).length ? { options: args.options } : {}),
     };
     await page.evaluate(
-      // eslint-disable-next-line no-eval -- runs in the page, not in node
       ([def, cfg]: [unknown, unknown]) =>
         (window as any).__mount(def, cfg),
       [definition, config] as [unknown, unknown]

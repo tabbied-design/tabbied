@@ -1,14 +1,12 @@
 // The controlled vocabulary for the catalog's design metadata.
 //
-// Agents filter reliably on enums and unreliably on prose - that is the whole
-// reason these fields exist. So the vocabulary is closed: codegen fails on a
-// value not listed here, and
+// Agents filter reliably on enums and unreliably on prose, so the vocabulary
+// is closed: codegen fails on a value not listed here, and
 // test/catalog.test.mjs pins every published entry against these sets. Add a
-// term only when several designs genuinely need it, and never rename one
-// casually - published catalogs are queried by these exact strings.
+// term only when several designs genuinely need it, and never rename one:
+// published catalogs are queried by these exact strings.
 //
-// Authoring guidance (used by the tagging pass, kept here so re-tagging stays
-// consistent):
+// Authoring guidance, so re-tagging stays consistent:
 // - `tags` (2-6): what is literally visible in the preview - shapes and
 //   arrangements, not interpretations.
 // - `mood` (1-3): the feel of the design at a glance.
@@ -85,8 +83,8 @@ export const GOOD_FOR = [
   'wallpaper',
 ];
 
-/** Field-level shape rules, shared by codegen validation and the tests. */
-export const METADATA_RULES = {
+/** Field-level shape rules for the array fields. */
+const METADATA_RULES = {
   tags: { values: TAGS, min: 2, max: 6 },
   mood: { values: MOODS, min: 1, max: 3 },
   goodFor: { values: GOOD_FOR, min: 1, max: 4 },

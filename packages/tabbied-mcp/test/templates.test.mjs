@@ -1,12 +1,7 @@
-// The template tools.
-//
-// Unlike the design tools, these read *site* artifacts rather than the
-// installed package, so a fixture is the honest choice here - the generated
-// specs are not in this package's dependency tree, and a test that fetched
-// tabbied.com would be testing the deploy.
-//
-// The fixture mirrors what scripts/generate-editable.mjs actually emits; the
-// shapes are pinned by e2e/editable.spec.ts against the real thing.
+// The template tools. They read *site* artifacts that are not in this
+// package's dependency tree, and fetching tabbied.com would test the deploy, so
+// a fixture stands in. It mirrors what scripts/generate-editable.mjs emits;
+// e2e/editable.spec.ts pins those shapes against the real thing.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
@@ -109,8 +104,7 @@ test('the template tools are advertised when their data is resolvable', () => {
 });
 
 test('a host that cannot resolve templates does not advertise them', () => {
-  // A listed tool that always fails is worse than a missing one - the same
-  // rule the preview and docs tools already follow.
+  // A listed tool that always fails is worse than a missing one.
   const bare = createToolset(catalogTools({ catalog }));
 
   assert.deepEqual(

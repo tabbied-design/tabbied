@@ -1,11 +1,9 @@
 // Declarative mounting: read a pattern's config off a plain DOM element's
 // data-* attributes and bring it to life.
 //
-// This is what turns a prerendered page into a standalone, framework-free
-// template. The React component writes the same attributes onto its
-// placeholder (see patternConfigToAttributes), so a static export already
-// carries everything needed to re-mount its patterns without React, an RSC
-// payload, or a build step:
+// The React component writes the same attributes onto its placeholder (see
+// patternConfigToAttributes), so a static export already carries everything
+// needed to re-mount its patterns without React or a build step:
 //
 //   <div data-pattern="ortho"
 //        data-palette="transparent, #C9C8C1, #8E8E88"
@@ -78,12 +76,6 @@ export type HydrateOptions = {
 const hydrated = new WeakMap<Element, PatternController>();
 
 // ---- serialization -------------------------------------------------------
-
-// Values are joined with a separator and parsed back by splitting on it, so
-// the parse has to survive a CSS color that contains its own commas -
-// `rgb(0, 0, 0)`. Every authored palette in the catalog is hex-or-keyword,
-// but the config takes any CSS color, so split at top level only
-// (splitTopLevel.ts, shared with the CLI).
 
 const coverRenderToString = (render: CoverRender): string =>
   `${render.width}x${render.height}`;
@@ -314,8 +306,8 @@ export function hydratePatterns(options: HydrateOptions): HydratedPattern[] {
   for (const element of root.querySelectorAll<HTMLElement>(selector)) {
     const existing = hydrated.get(element);
 
-    // A destroyed controller is inert forever - fall through and re-hydrate
-    // so a teardown/re-hydrate cycle (the README's own recipe) works.
+    // A destroyed controller is inert forever: fall through and re-hydrate so
+    // a teardown/re-hydrate cycle works.
     if (existing && !existing.destroyed) {
       mounted.push({ element, controller: existing });
       continue;

@@ -1,12 +1,8 @@
 #!/usr/bin/env node
 // The `tabbied-mcp` bin: the same server the site exposes at /mcp, over stdio.
-//
-// `serveStdio` owns the whole transport - framing, the era decision on the
-// opening exchange, and pinning one instance for the connection - so this file
-// is just "load the catalog, build the toolset, hand over the factory".
-//
-// The catalog is loaded once here rather than inside the factory: it is
-// immutable per process, and re-reading it per connection would buy nothing.
+// `serveStdio` owns the transport (framing, the era decision, one instance per
+// connection). The catalog is loaded once here rather than in the factory,
+// because it is immutable per process.
 //
 // Configure it in an MCP client as:
 //   { "command": "npx", "args": ["-y", "tabbied-mcp"] }
@@ -40,8 +36,8 @@ async function main(): Promise<void> {
 
   const handle = serveStdio(() => buildServer(tools));
 
-  // The client closing stdin is the shutdown signal. Without this the process
-  // lingers after the client has gone.
+  // The client closing stdin is the shutdown signal; without this the process
+  // outlives the client.
   process.stdin.on('close', () => {
     void handle.close();
   });

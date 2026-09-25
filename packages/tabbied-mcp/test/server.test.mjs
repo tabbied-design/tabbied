@@ -1,11 +1,9 @@
 // The server as a client actually meets it: real JSON-RPC over the SDK's
 // stateless HTTP handler, in both protocol eras.
 //
-// The protocol itself is `@modelcontextprotocol/server`'s job now, so this does
-// not re-test the SDK. What it pins is the seam - that our tools are registered
-// with schemas the SDK accepts, that a `tools/call` reaches the right handler,
-// that argument validation actually engages, and that both eras see the same
-// toolset. Those are the things a change on our side can break.
+// This does not re-test the SDK. It pins the seam: our schemas register, a
+// `tools/call` reaches the right handler, argument validation engages, and
+// both eras see the same toolset.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
@@ -214,8 +212,7 @@ test('GET is refused - v2 has no standalone stream to open', async () => {
 });
 
 test('the render tool is absent from the remote toolset', async () => {
-  // It needs a browser; a Worker has none. If this ever passes, the Worker is
-  // advertising something it cannot do.
+  // It needs a browser, and a Worker has none.
   const { body } = await legacy(1, 'tools/list');
   assert.ok(!body.result.tools.some((tool) => tool.name === 'render_design'));
 });

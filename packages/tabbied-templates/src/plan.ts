@@ -1,14 +1,11 @@
 // Turning an edits document into a list of concrete changes.
 //
-// This is the whole engine, and it deliberately touches no DOM: given a spec
-// and an edits document it computes *what* would change, as data. The DOM step
-// (apply.ts) is then a short, dull executor.
-//
-// The split is not ceremony. Everything interesting - validation, palette
-// resolution, option ranges, attribute serialization - is here, where it can
-// be tested with `node --test` and no browser, and where the site builder can
-// call it to preview a change, the packager to write one, and an LLM pipeline
-// to check its own output before anyone sees it.
+// This is the whole engine, and it touches no DOM: given a spec and an edits
+// document it computes *what* would change, as data, and apply.ts executes it.
+// Validation, palette resolution, option ranges and attribute serialization
+// all live here, so they test under `node --test` with no browser, and the
+// site builder, the packager and an LLM pipeline can plan or check a change
+// without a page.
 
 import { isHexColor } from './color.js';
 import { stripEmphasis } from './text.js';
@@ -50,12 +47,10 @@ export type EditPlan = {
 
 export type PlanOptions = {
   /**
-   * The designs a pattern slot may be swapped to - the catalog's slugs. When
-   * given, a swap to a slug outside it is an error rather than an attribute
-   * that hydrates to nothing: the runtime warns on an unknown design and
-   * draws a blank, which is the silent failure this scheme exists to make
-   * loud. Left out, a swap is only checked for shape (the packager and the
-   * build gate have no catalog to hand).
+   * The designs a pattern slot may be swapped to (the catalog's slugs). When
+   * given, a swap outside it is an error rather than an attribute that
+   * hydrates to a blank with only a console warning. Left out, a swap is only
+   * checked for shape (the packager and the build gate have no catalog).
    */
   designs?: ReadonlySet<string> | readonly string[];
 };
@@ -101,10 +96,9 @@ const serializeOptions = (
 /**
  * Check one option value against the range the catalog published for it.
  *
- * Out-of-range is an error rather than a clamp: a slider value outside its
- * bounds means the caller is working from a stale spec or hallucinated the
- * range, and quietly clamping would hide that from an LLM pipeline that could
- * otherwise correct itself.
+ * Out-of-range is an error rather than a clamp: it means a stale spec or a
+ * hallucinated range, and clamping would hide that from an LLM pipeline that
+ * could otherwise correct itself.
  */
 function checkOption(
   path: string,
@@ -248,11 +242,8 @@ export function planEdits(
       continue;
     }
 
-    // A soft budget, not a rule: the design was set for roughly this much, but
-    // it is the user's page and a long headline is their call to make. The
-    // budget was derived from rendered text, so it is measured against the
-    // rendered text too: the `{em}` markers of an accented run are not
-    // characters on the page.
+    // A soft budget, not a rule: a long headline is the user's call. It is
+    // measured against the rendered text, so `{em}` markers do not count.
     const rendered = stripEmphasis(value).length;
     if (slot.maxChars != null && rendered > slot.maxChars) {
       problems.push(
@@ -372,8 +363,7 @@ export function planEdits(
 
       if (swapped) {
         // The slot's option metadata describes the design being replaced, so
-        // there is nothing here to check the new values against. Say so rather
-        // than pretending they were validated.
+        // there is nothing to check the new values against. Say so.
         problems.push(
           warning(
             path,
@@ -438,9 +428,9 @@ export function validateEdits(
 /**
  * Structural checks on a generated spec.
  *
- * Runs in the build gate (`npm run check:editable`). The failure this exists
- * for is the silent one: a slot that names nothing, or two slots sharing an
- * id, produce a spec that looks fine and an editor whose controls do nothing.
+ * Runs in the build gate (`npm run editable`). Two slots sharing an id, or an
+ * empty one, produce a spec that looks fine and an editor whose controls do
+ * nothing.
  */
 export function validateSpec(spec: TemplateSpec): Problem[] {
   const problems: Problem[] = [];

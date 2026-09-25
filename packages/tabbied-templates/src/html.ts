@@ -1,16 +1,12 @@
 // Finding annotated elements in exported HTML, without a DOM.
 //
-// The generator reads a template's *current* values out of the static export -
-// the same doctrine as the download packager: derive from what shipped, so the
-// spec can never disagree with the page it describes. That means scanning
-// markup in Node, where there is no document.
+// The generator reads a template's *current* values out of the static export,
+// so the spec can never disagree with the page it describes, and that means
+// scanning markup in Node, where there is no document.
 //
-// This is a real (small) tokenizer rather than a regex, and the reason is on
-// the record elsewhere in this repo: the CSS trimmer in package-templates.mjs
-// was written with naive `indexOf('{')` scanning and silently desynchronized
-// on a comment containing a brace. HTML has more of those traps, not fewer -
-// a `>` inside an attribute value, a comment containing markup, and script
-// bodies that are not markup at all.
+// This is a real (small) tokenizer rather than a regex, because naive scanning
+// silently desynchronizes on HTML's traps: a `>` inside an attribute value, a
+// comment containing markup, and script bodies that are not markup at all.
 
 const VOID_ELEMENTS = new Set([
   'area',

@@ -1,6 +1,5 @@
 // Unit tests for the pure computed-value parsers behind the native SVG
-// export. Run with `npm test --workspace tabbied` (node --test). The DOM
-// walker itself is covered by the Playwright parity suite
+// export. The DOM walker itself is covered by the Playwright parity suite
 // (e2e/svg-export.spec.ts), which diffs rendered exports pixel-by-pixel.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
@@ -231,8 +230,7 @@ test('originBox insets the background positioning area by the border', () => {
   });
   assert.deepEqual(originBox(box, border, 'border-box'), box);
 
-  // A borderless box - every pattern that predates batch 11's frames - is
-  // returned untouched, so nothing about those exports moves.
+  // A borderless box is returned untouched.
   const plain = {
     borderLeftWidth: '0px',
     borderTopWidth: '0px',
@@ -290,7 +288,7 @@ test('pseudoBoxFor positions an absolute pseudo against the padding box', () => 
     pseudoBoxFor(CELL, BORDERED_HOST, absolute({ left: '11.96px', top: '11.96px', right: '11.96px', bottom: '11.96px' })),
     { x: 18.96, y: 18.96, w: 22.08, h: 22.08 }
   );
-  // Anchored from the far side, and centerd with neither side set.
+  // Anchored from the far side, and centered with neither side set.
   assert.deepEqual(
     pseudoBoxFor(CELL, BORDERED_HOST, absolute({ right: '4px', bottom: '4px', width: '10px', height: '10px' })),
     { x: 39, y: 39, w: 10, h: 10 }
@@ -321,8 +319,6 @@ test('pseudoBoxFor centers a static pseudo in the content box', () => {
 });
 
 test('pseudoBoxFor leaves a borderless host untouched', () => {
-  // Every pattern that predates batch 11's frames goes through this path, so
-  // the padding-box fix must be a no-op for it.
   assert.deepEqual(
     pseudoBoxFor(CELL, PLAIN_HOST, absolute({ left: '0px', top: '0px', right: '0px', bottom: '0px' })),
     { x: 0, y: 0, w: 60, h: 60 }
@@ -334,16 +330,12 @@ test('pseudoBoxFor leaves a borderless host untouched', () => {
 });
 
 // -- SVG-export tiers -------------------------------------------------------
-// The tier metadata drives real behavior: `svgExport: false` disables the
-// download, `svgExportNote` puts a warning dialog in front of it. It is also
-// easy to lose - the batch generators rewrite every pattern file they own, so
-// a tier that exists only in the generated JSON disappears the next time
-// anyone regenerates that batch. That is not a loud failure: the pattern keeps
-// working, the export just quietly becomes wrong. (It happened to `wedge`.)
-//
-// Pinning the three tiers here makes any such loss fail `npm test` instead.
-// Changing a design's tier is a deliberate act - update this list with it, and
-// update docs/svg-export.md, which these numbers are quoted in.
+// The tier metadata drives real behavior (`svgExport: false` disables the
+// download, `svgExportNote` puts a warning dialog in front of it) and is easy
+// to lose: the batch generators rewrite every pattern file they own, and a
+// lost tier fails silently, with the export quietly wrong. Pinning the tiers
+// here makes that fail `npm test`. Changing a tier is deliberate: update this
+// list with it, and docs/svg-export.md, which quotes these numbers.
 const PATTERNS_DIR = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
   '..',
@@ -357,8 +349,7 @@ const catalog = fs
 const slugsWhere = (predicate) => catalog.filter(predicate).map((a) => a.slug).sort();
 
 test('tier 1 - the designs SVG cannot represent still opt out', () => {
-  // The four conic sweeps, plus the 28 from the September drop: ten the
-  // converter throws on and eighteen it exports wrongly without warning.
+  // Designs the converter throws on or exports wrongly without warning.
   // See docs/svg-export.md for the construct behind each.
   assert.deepEqual(slugsWhere((a) => a.svgExport === false), [
     'coil',
@@ -411,11 +402,8 @@ test('tier 2 - the designs that export with a caveat still carry their note', ()
 });
 
 test('tier 3 - no design makes its export tier conditional on an option', () => {
-  // The Shadow toggle on bloks, cupola, foliage, mixtape, odessa, quarterfall
-  // and radius was the only member of this tier, and it was removed rather
-  // than left as a switch that quietly costs you a clean SVG. The mechanism
-  // still works - this pins that nothing is using it, so a design that grows
-  // an option-level note has to come here and say so deliberately.
+  // The mechanism still works; this pins that nothing uses it, so a design
+  // that grows an option-level note has to come here and say so deliberately.
   assert.deepEqual(
     slugsWhere((a) => a.options.some((option) => option.svgExportNote)),
     []
@@ -423,10 +411,9 @@ test('tier 3 - no design makes its export tier conditional on an option', () => 
 });
 
 test('no pattern paints a box-shadow through an option', () => {
-  // What the removed toggle actually injected. A design wanting a shadow now
-  // has to bake it in and take a definition-level note (as neon, lantern and
-  // terrain do), which is visible in the catalog instead of hidden behind
-  // a switch that defaults differently per design.
+  // A design wanting a shadow bakes it in and takes a definition-level note
+  // (as neon, lantern and terrain do), visible in the catalog rather than
+  // hidden behind an option.
   for (const pattern of catalog) {
     for (const option of pattern.options) {
       assert.ok(

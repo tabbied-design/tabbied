@@ -1,10 +1,6 @@
-// Palette derivation.
-//
-// These values used to live in components/template/TemplateSite.tsx and are
-// now shared with applyEdits, so the thing worth pinning is that the shared
-// implementation still produces what that component produced - a re-color and
-// a first render must agree, or a downloaded page differs from the one it was
-// downloaded from.
+// Palette derivation, shared by components/template/TemplateSite.tsx and
+// applyEdits: a re-color and a first render must agree, or a downloaded page
+// differs from the one it was downloaded from.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -23,7 +19,7 @@ test('toRgb reads every hex form isHexColor admits, alpha dropped', () => {
   assert.deepEqual(toRgb('#ff0000'), [255, 0, 0]);
   assert.deepEqual(toRgb('#f00'), [255, 0, 0]);
   assert.deepEqual(toRgb('#f008'), [255, 0, 0]);
-  // Parsed as one number and shifted, this was (0, 0, 128): the wrong bytes.
+  // The alpha byte must not shift into the channels (that gives 0, 0, 128).
   assert.deepEqual(toRgb('#ff000080'), [255, 0, 0]);
   assert.equal(luminance('#ffffff80'), luminance('#ffffff'));
 });

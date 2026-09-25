@@ -1,9 +1,7 @@
-// Aspect-ratio + grid helpers shared by the pattern editor.
-//
-// A doodle is rendered on a fixed-width canvas whose height follows the
-// selected aspect ratio. The column×row grid adapts to the ratio so that each
-// cell stays (near-)square - this keeps every preset looking the way it was
-// authored regardless of orientation.
+// Aspect-ratio + grid helpers. The grid adapts to the ratio so each cell stays
+// (near-)square, which keeps every preset looking the way it was authored in
+// any orientation. The grid helpers work in the integer density levels 0..4
+// that predate the 0-1 `density` in sizing.ts.
 
 export const ASPECT_RATIOS = {
   // portrait
@@ -23,9 +21,8 @@ export const DEFAULT_ASPECT_RATIO: AspectRatioId = '2:3';
 // Display order for the aspect-ratio selector (portrait -> square -> landscape).
 export const ASPECT_RATIO_IDS = Object.keys(ASPECT_RATIOS) as AspectRatioId[];
 
-// Density of the grid, measured as the number of cells along the canvas's
-// longer edge. Level 0 is the coarsest. The 2:3 ratio reproduces the original
-// 2x3 / 4x6 / 6x9 / 8x12 / 10x15 options exactly.
+// Cells along the canvas's longer edge at each density level, coarsest first.
+// At 2:3 these are the authored 2x3 / 4x6 / 6x9 / 8x12 / 10x15 grids exactly.
 export const LONG_EDGE_COUNTS = [3, 6, 9, 12, 15] as const;
 
 export const GRID_LEVEL_COUNT = LONG_EDGE_COUNTS.length;
@@ -34,11 +31,9 @@ export function isAspectRatioId(value: string): value is AspectRatioId {
   return value in ASPECT_RATIOS;
 }
 
-// Canvas pixel dimensions for a ratio, fitted inside the original preview
-// footprint of `baseWidth` × `baseWidth * 1.5`. Fitting (rather than fixing the
-// width) keeps every ratio within today's bounds, so tall portraits don't clip
-// the viewport and wide landscapes don't overflow horizontally. The 2:3 ratio
-// fills the box exactly, reproducing the original sizing.
+// Canvas pixel dimensions for a ratio, fitted inside a `baseWidth` x
+// `baseWidth * 1.5` box (rather than fixing the width), so tall portraits
+// don't clip the viewport and wide landscapes don't overflow. 2:3 fills it.
 export function getCanvasSize(
   ratio: AspectRatioId,
   baseWidth: number
@@ -69,11 +64,9 @@ export function deriveGrid(ratio: AspectRatioId, level: number): string {
   let rows: number;
 
   if (rw >= rh) {
-    // landscape or square: width is the longer (or equal) edge
     cols = longCount;
     rows = Math.max(1, Math.round((longCount * rh) / rw));
   } else {
-    // portrait: height is the longer edge
     rows = longCount;
     cols = Math.max(1, Math.round((longCount * rw) / rh));
   }

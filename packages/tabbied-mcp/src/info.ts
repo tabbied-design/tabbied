@@ -7,11 +7,11 @@ export const SERVER_NAME = 'tabbied';
 export const VERSION = '0.2.1';
 
 /**
- * Shown to the model as a preamble. It buys three things no tool description
- * can, because they are properties of the *set* rather than of one call: that
- * slugs cannot be guessed, that the previews are the ground truth a choice
- * should rest on, and the sizing rule that is the single most common way a
- * correct-looking integration renders as nothing.
+ * Shown to the model as a preamble. It carries what no tool description can,
+ * because they are properties of the *set* rather than of one call: slugs
+ * cannot be guessed, the previews are what a choice should rest on, and the
+ * sizing rule is the most common way a correct-looking integration renders as
+ * nothing.
  */
 export const INSTRUCTIONS = `Tabbied is a catalog of generative patterns (css-doodle) usable as backgrounds, textures, posters, and exported SVG/PNG assets.
 

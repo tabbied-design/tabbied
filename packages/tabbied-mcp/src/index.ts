@@ -1,13 +1,7 @@
 // The runtime-agnostic half of the server: the tool definitions and the
-// `McpServer` factory built from them. Nothing here imports node, so this entry
-// point is what the Cloudflare Worker bundles.
-//
-// The protocol and both transports come from `@modelcontextprotocol/server` -
-// the Worker wraps `buildServer` in `createMcpHandler`, the bin hands it to
-// `serveStdio`. See docs/mcp-server.md.
-//
-// The node-only pieces - the local catalog reader and the browser-backed
-// `render_design` - live behind the bin and are never reached through here.
+// `McpServer` factory. Nothing reachable from here may import node, because
+// this entry point is what the Cloudflare Worker bundles; the local catalog
+// reader and `render_design` live behind the bin. See docs/mcp-server.md.
 export { buildServer } from './server.js';
 export { catalogTools, createToolset, type Toolset } from './tools.js';
 export { templateTools } from './templates.js';

@@ -1,21 +1,13 @@
-// Color math for palette derivation.
-//
-// These were the private helpers at the top of components/template/TemplateSite.tsx.
-// They moved here because a re-color has to happen in two places that must
-// agree exactly: the React component rendering the live page, and applyEdits()
-// rewriting a page it has no React in. Two copies of a luminance threshold is
-// the kind of drift that shows up as one download package whose body text is
-// the wrong ink.
+// Color math for palette derivation. One copy, shared by the TemplateSite
+// component (first render) and applyEdits() (re-color): the two must agree
+// exactly, or a download's body text comes out in the wrong ink.
 
 export type Rgb = [number, number, number];
 
 /**
- * The three color channels of a hex color. Every form isHexColor admits is
- * read: `#rgb` and `#rgba` are expanded, and the alpha byte of `#rgba` and
- * `#rrggbbaa` is dropped. It used to be parsed as one number and shifted,
- * so `#ff000080` came back as (0, 0, 128): the green, blue and alpha bytes
- * of a red - and every derived property (which ink reads on this ground,
- * the tints, the text color over a swatch) was computed from them.
+ * The three color channels of a hex color. `#rgb` and `#rgba` are expanded,
+ * and the alpha byte of `#rgba` and `#rrggbbaa` is dropped before parsing so
+ * it never shifts into the channels.
  */
 export function toRgb(hex: string): Rgb {
   let value = hex.replace('#', '').trim();

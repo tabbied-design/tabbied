@@ -378,7 +378,7 @@ function shapeNode(shape: Shape, attrs: Attrs, precision: number): SvgNode {
 }
 
 /** Grow a shape outward/inward (for strokes drawn inside the border box). */
-function insetShape(shape: Shape, inset: number, precision: number): Shape {
+function insetShape(shape: Shape, inset: number): Shape {
   if (shape.kind === 'rect') {
     const { x, y, w, h } = shape.box;
     return { kind: 'rect', box: { x: x + inset, y: y + inset, w: w - 2 * inset, h: h - 2 * inset } };
@@ -397,15 +397,15 @@ function insetShape(shape: Shape, inset: number, precision: number): Shape {
 
 type GradientStop = { color: Rgba; pos: number | null };
 
+/** Is this token a gradient stop position (rather than a color)? */
+const isPositionToken = (token: string): boolean =>
+  /^calc\(/.test(token) || /^-?[\d.]+(px|%|deg|grad|rad|turn)$/.test(token);
+
 /**
  * Parse the stop list shared by all gradient functions. Positions are
  * resolved against `lineLength` px (percentages) and left null when the
  * author omitted them.
  */
-/** Is this token a gradient stop position (rather than a color)? */
-const isPositionToken = (token: string): boolean =>
-  /^calc\(/.test(token) || /^-?[\d.]+(px|%|deg|grad|rad|turn)$/.test(token);
-
 function parseStops(
   parts: string[],
   lineLength: number,
@@ -477,10 +477,9 @@ function emulatePremultipliedInterpolation(stops: GradientStop[]): GradientStop[
     const next = stops[i + 1];
     // A fully transparent stop between two different opaque colors: CSS
     // fades the first out and the second in, so it becomes two coincident
-    // stops, each the transparent form of its neighbor. Rewritten as one
-    // stop it took the second neighbor's color, and the first segment
-    // interpolated between the two hues in non-premultiplied space - a haze
-    // of the mixed color where CSS shows none.
+    // stops, each the transparent form of its neighbor. As one stop, a
+    // segment would interpolate between the two hues in non-premultiplied
+    // space: a haze of the mixed color where CSS shows none.
     if (
       stops[i].color.a === 0 &&
       previous &&
@@ -549,9 +548,8 @@ function stopNodes(stops: GradientStop[], ctx: Ctx, offsetMap?: (p: number) => n
  * Angle for `to <side-or-corner>` forms, in degrees (CSS bearing). A corner
  * form's gradient line is perpendicular to the diagonal joining the two
  * neighboring corners (CSS Images 3), so for `to top right` it points along
- * (h, w): a bearing of atan2(h, w). On a 200 by 100 box that is 26.57deg;
- * atan2(w, h), which this had, gave 63.43deg. The two agree only on a
- * square, which is why the cell-by-cell parity sweep did not see it.
+ * (h, w): a bearing of atan2(h, w), not atan2(w, h). The two agree only on
+ * a square, so a parity sweep over square cells cannot tell them apart.
  */
 function sideOrCornerAngle(token: string, w: number, h: number): number {
   const dirs = token.replace(/^to\s+/, '').trim().split(/\s+/).sort().join(' ');
@@ -919,13 +917,12 @@ function measureTree(
   override.textContent = MEASURE_OVERRIDE;
   const mute = document.createElement('style');
   mute.textContent = MUTE_MOTION;
-  // The override style lives in the shadow root, so it can never reach the
-  // host <css-doodle> itself - and the `cover` fit scales the host with an
-  // inline transform. Left in place it would scale every measured box while
-  // getComputedStyle keeps returning unscaled px (border widths, radii,
-  // pseudo sizes, shadow offsets), silently distorting the export. Neutralize
-  // it inline for the measurement pass; the export then comes out at the
-  // render box's native resolution, which is what the source describes.
+  // The override lives in the shadow root, so it cannot reach the host
+  // <css-doodle>, which the `cover` fit scales with an inline transform. Left
+  // in place, the transform would scale every measured box while getComputedStyle
+  // keeps returning unscaled px (border widths, radii, shadow offsets), so it
+  // is neutralized inline too; the export comes out at the render box's
+  // native resolution.
   const host = root.host as HTMLElement;
   const hostTransform = host.style.transform;
   const hostTransition = host.style.transition;
@@ -1025,10 +1022,9 @@ function paintImageLayer(
   const tiles = areaW < box.w - 0.5 || areaH < box.h - 0.5;
   const repeats = repeat.startsWith('repeat');
   // A no-repeat layer smaller than its box is painted once, in its own area,
-  // and nothing around it. An SVG gradient pads its end colors out across
-  // whatever it fills, so filling the whole shape with it (what this did,
-  // with a warning) spread the layer's edge color over the box: a mask made
-  // of quarter-cell squares exported as a solid cell.
+  // and nothing around it: an SVG gradient pads its end colors out across
+  // whatever it fills, so filling the whole shape would spread the layer's
+  // edge color over the box.
   const once = tiles && !repeats;
   // Where a layer may paint: the shape, cut to the layer's area when it is
   // painted once. Null when the two do not meet.
@@ -1287,12 +1283,10 @@ function paintSvgDataUri(
   }
 }
 
-/** Background color + image layers + border for one box. */
 /**
  * The background positioning area for one layer: the border box inset by the
  * border (padding-box, the CSS default) and optionally the padding too
- * (content-box). Identical to `box` on a box without borders, which is every
- * pattern that predates section G of batch 11.
+ * (content-box). Identical to `box` on a box without borders.
  */
 function originBox(box: Box, cs: CSSStyleDeclaration, origin: string): Box {
   const kind = origin.trim();
@@ -1311,6 +1305,7 @@ function originBox(box: Box, cs: CSSStyleDeclaration, origin: string): Box {
   return { x: box.x + l, y: box.y + t, w: box.w - l - r, h: box.h - t - b };
 }
 
+/** Background color + image layers + border for one box. */
 function paintBoxLayers(box: Box, cs: CSSStyleDeclaration, env: WalkEnv): SvgNode[] {
   const { ctx } = env;
   const radii = readRadii(cs, box);
@@ -1350,8 +1345,8 @@ function paintBoxLayers(box: Box, cs: CSSStyleDeclaration, env: WalkEnv): SvgNod
 
   const imageValue = cs.backgroundImage;
   if (bg.a > 0 || (imageValue && imageValue !== 'none')) {
-    // A background painted anywhere but the border box, or blended into the
-    // layer below, is drawn here as neither.
+    // Backgrounds are painted to the border box with normal blending, so any
+    // other clip or blend mode would export wrong.
     const clip = (cs.backgroundClip || 'border-box').split(',').map((part) => part.trim());
     if (clip.some((part) => part && part !== 'border-box')) {
       throw new SvgExportUnsupportedError('background-clip', cs.backgroundClip);
@@ -1535,7 +1530,7 @@ function paintBorders(
   if (uniformRing) {
     return [
       shapeNode(
-        insetShape(shape, first.w / 2, ctx.precision),
+        insetShape(shape, first.w / 2),
         strokeAttrs(maskColor(first.color), first.w),
         ctx.precision
       ),
@@ -1708,9 +1703,9 @@ function maskUrl(cs: CSSStyleDeclaration, box: Box, env: WalkEnv): string | null
     throw new SvgExportUnsupportedError('mask-composite', composite);
   }
 
-  const sizes = splitTopLevel(size || 'auto');
-  const positions = splitTopLevel(position || '0% 0%');
-  const repeats = splitTopLevel(repeat || 'repeat');
+  const sizes = splitTopLevel(size);
+  const positions = splitTopLevel(position);
+  const repeats = splitTopLevel(repeat);
 
   const f = (n: number) => fmtNum(n, ctx.precision);
   const regionAttrs = (): Attrs => ({
@@ -1764,17 +1759,7 @@ function maskUrl(cs: CSSStyleDeclaration, box: Box, env: WalkEnv): string | null
     ctx.maskMode = wasMaskMode;
   }
   if (children.length === 0) return null;
-  const id = addDef(ctx, {
-    tag: 'mask',
-    attrs: {
-      maskUnits: 'userSpaceOnUse',
-      x: f(box.x - box.w),
-      y: f(box.y - box.h),
-      width: f(box.w * 3),
-      height: f(box.h * 3),
-    },
-    children,
-  });
+  const id = addDef(ctx, { tag: 'mask', attrs: regionAttrs(), children });
   return `url(#${id})`;
 }
 
@@ -1921,9 +1906,9 @@ function boxShadowFilterUrl(cs: CSSStyleDeclaration, box: Box, env: WalkEnv): st
  *
  * Neither kind of pseudo is laid out against the border box: an
  * absolutely-positioned one resolves its offsets against the padding box, a
- * static one is centerd in the content box. On a borderless host the three
- * coincide - which is every pattern that predates batch 11's frames - but on a
- * bordered one, using the border box displaces the pseudo by the border width.
+ * static one is centered in the content box. On a borderless host the three
+ * coincide; on a bordered one, using the border box would displace the pseudo
+ * by the border width.
  *
  * Returns null when the pseudo has no area to paint.
  */

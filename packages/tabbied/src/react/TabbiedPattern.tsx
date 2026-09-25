@@ -106,28 +106,6 @@ export type TabbiedPatternProps = PatternBoxSize & {
   onReady?: () => void;
 };
 
-/**
- * Renders a Tabbied pattern into a normal, CSS-sizeable box (like an <img>).
- *
- * By default the box fills its containing block, so dropping one into a sized
- * parent is all it takes:
- *
- * ```tsx
- * <div style={{ width: '100%', height: 400 }}>
- *   <TabbiedPattern pattern={radius} />
- * </div>
- * ```
- *
- * `width`/`height`/`maxWidth`/`maxHeight`/`aspectRatio` bound it instead, and
- * `fill={false}` hands sizing back to a class name. Whatever the box turns out
- * to be, the pattern is fitted into it without distortion - see `fit`.
- *
- * The wrapper <div> is all that React renders - on the server and the first
- * client paint it shows the pattern's background color (correct size, zero
- * CLS, no hydration mismatch, no raw-source flash). After mount, the
- * framework-free createPattern() controller owns the <css-doodle> inside it.
- */
-
 /** The same list, entry for entry. */
 const sameList = (a: readonly unknown[] | undefined, b: readonly unknown[] | undefined) =>
   a === b || (a !== undefined && b !== undefined && a.length === b.length && a.every((v, i) => v === b[i]));
@@ -161,6 +139,27 @@ function sameConfig(a: PatternConfig, b: PatternConfig): boolean {
   );
 }
 
+/**
+ * Renders a Tabbied pattern into a normal, CSS-sizeable box (like an <img>).
+ *
+ * By default the box fills its containing block, so dropping one into a sized
+ * parent is all it takes:
+ *
+ * ```tsx
+ * <div style={{ width: '100%', height: 400 }}>
+ *   <TabbiedPattern pattern={radius} />
+ * </div>
+ * ```
+ *
+ * `width`/`height`/`maxWidth`/`maxHeight`/`aspectRatio` bound it instead, and
+ * `fill={false}` hands sizing back to a class name. Whatever the box turns out
+ * to be, the pattern is fitted into it without distortion - see `fit`.
+ *
+ * The wrapper <div> is all that React renders - on the server and the first
+ * client paint it shows the pattern's background color (correct size, zero
+ * CLS, no hydration mismatch, no raw-source flash). After mount, the
+ * framework-free createPattern() controller owns the <css-doodle> inside it.
+ */
 export const TabbiedPattern = forwardRef<
   TabbiedPatternHandle,
   TabbiedPatternProps
@@ -214,14 +213,11 @@ export const TabbiedPattern = forwardRef<
   };
   const configRef = useRef(config);
 
-  // Forward prop changes into the controller. Runs on every commit, but
-  // hands the controller only a config that differs from the last one it was
-  // given: the controller's own diff is on the built source, which means
-  // resolving the palette and options and rebuilding the whole css-doodle
-  // source to find nothing changed. On a gallery page whose parent
-  // re-renders on hover or a keystroke that was dozens of rebuilds per
-  // commit. Callbacks are left out of the comparison: onReady fires once,
-  // and a fresh closure with the same meaning is not a new pattern.
+  // Forward prop changes into the controller, but only a config that differs
+  // from the last one given: the controller's own diff rebuilds the whole
+  // css-doodle source to find nothing changed, and a parent that re-renders
+  // on hover would pay that for every pattern on every commit. Callbacks are
+  // not compared: onReady fires once, and a fresh closure is not a new pattern.
   useEffect(() => {
     const previous = configRef.current;
     configRef.current = config;
@@ -247,10 +243,8 @@ export const TabbiedPattern = forwardRef<
     };
   }, []);
 
-  // `redrawInterval` / `paused` need no effect of their own: they ride in the
-  // config above, and the controller owns the timer (and its reduced-motion,
-  // tab-visibility and viewport gates). Flipping `paused` is read at tick
-  // time, so the redraw phase survives pause/resume.
+  // `redrawInterval` and `paused` need no effect of their own: they ride in
+  // the config above, and the controller owns the timer and its gates.
 
   useImperativeHandle(
     ref,
@@ -304,14 +298,11 @@ export const TabbiedPattern = forwardRef<
       : { fill, width, height, maxWidth, maxHeight, aspectRatio }
   );
 
-  // The config as data-* attributes. On the client they are inert - the
-  // controller is driven by props - but they make a *server* render
-  // self-describing: the prerendered HTML then carries everything
-  // hydratePatterns() needs to re-mount the pattern with no React and no
-  // build step, which is what lets a static export be repackaged as a plain
-  // HTML template. Deterministic from props, so no hydration mismatch (an
-  // uncontrolled `seed` is generated inside the controller, not here, and so
-  // is simply absent).
+  // The config as data-* attributes: inert on the client (props drive the
+  // controller), but they let hydratePatterns() re-mount a server render with
+  // no React, which is what lets a static export ship as a plain HTML
+  // template. Deterministic from props, so no hydration mismatch (an
+  // uncontrolled `seed` is generated in the controller and is simply absent).
   const configAttributes = patternConfigToAttributes(config);
 
   return (

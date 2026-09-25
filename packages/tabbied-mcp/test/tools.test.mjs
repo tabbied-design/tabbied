@@ -1,7 +1,6 @@
-// The toolset, tested against the real catalog rather than a fixture - these
-// tools exist to make an opaque set of 338 slugs queryable, so a test that
-// invented its own three-design catalog would pass while the thing users
-// actually query stayed broken.
+// The toolset, tested against the real catalog rather than a fixture: these
+// tools exist to make an opaque set of slugs queryable, and an invented
+// catalog would pass while the real one stayed broken.
 //
 // Run with `npm test --workspace tabbied-mcp`, after both packages are built
 // (`npm run build:packages` from the repo root).

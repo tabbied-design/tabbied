@@ -1,17 +1,14 @@
-// The template-site tools: what an agent needs to start somebody's site from
-// one of the 77 finished designs rather than from an empty page.
+// The template-site tools: what an agent needs to start somebody's site from a
+// finished template rather than from an empty page.
 //
-// The design tools answer "which pattern?". These answer "which *site*, and
-// what am I allowed to change about it?" - which is a different question with a
-// different answer shape. A template is a whole page somebody designed; the
-// useful move is not to regenerate it but to swap the brand out of it, and the
-// editable-section spec (docs/editable-templates.md) is exactly the list of
-// what may be swapped.
+// The design tools answer "which pattern?"; these answer "which *site*, and
+// what may I change about it?". The useful move with a template is to swap the
+// brand out of it, and the editable-section spec (docs/editable-templates.md)
+// is the list of what may be swapped.
 //
-// Both tools are thin readers over artifacts the site already generates, so an
-// agent and the web builder are looking at the same bytes. Neither needs a
-// browser, which is why - unlike `render_design` - they work over the remote
-// transport as well as stdio.
+// Both are thin readers over artifacts the site already generates, so an agent
+// and the web builder see the same bytes. Neither needs a browser, so unlike
+// `render_design` they work over both transports.
 import type {
   TemplateCatalog,
   TemplateCatalogEntry,
@@ -33,11 +30,9 @@ const toolError = (message: string): ToolResult => ({
 });
 
 /**
- * How to actually use what `get_template` returns.
- *
- * Spelled out per call rather than left to the reference, because this is the
- * step an agent most reliably gets wrong: the two download formats are edited
- * in opposite ways, and nothing about the spec implies which.
+ * How to use what `get_template` returns. Spelled out per call because the two
+ * download formats are edited in opposite ways and nothing about the spec
+ * implies which.
  */
 const USAGE = {
   html:
