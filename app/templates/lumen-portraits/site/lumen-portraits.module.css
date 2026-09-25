@@ -1113,6 +1113,12 @@
 
 /* On a phone the strips scroll sideways, as film does through a loupe. */
 @media (max-width: 640px) {
+  .enlargeScreen {
+    top: -0.9rem;
+    left: -0.9rem;
+    right: -0.9rem;
+  }
+
   .strip {
     overflow-x: auto;
     scrollbar-width: none;

@@ -358,7 +358,7 @@ export default function OffshoreSurfPage() {
                   fit="grid"
                   cellSize={24}
                   seed="lesson-week"
-                  options={{ frequency: 0.7 }}
+                  options={{ frequency: 1 }}
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
@@ -562,7 +562,7 @@ export default function OffshoreSurfPage() {
             fit="grid"
             cellSize={24}
             seed="footer-swell"
-            options={{ frequency: 0.6 }}
+            options={{ frequency: 1 }}
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>

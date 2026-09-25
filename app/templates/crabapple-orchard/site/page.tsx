@@ -290,15 +290,15 @@ export default function CrabappleOrchardPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <ul className={s.bags}>
-                {BAGS.map((b, i) => (
-                  <li key={b.size} className={s.bag}>
-                    <h3 data-edit={`picking.title3.${i}`} data-edit-max="40">{b.size}</h3>
-                    <p data-edit={`picking.body2.${i}`} data-edit-max="240" data-edit-multiline>{b.holds}</p>
-                    <strong data-edit={`picking.emphasis.${i}`}>{b.price}</strong>
-                  </li>
-                ))}
-              </ul>
+            <ul className={s.bags}>
+              {BAGS.map((b, i) => (
+                <li key={b.size} className={s.bag}>
+                  <h3 data-edit={`picking.title3.${i}`} data-edit-max="40">{b.size}</h3>
+                  <p data-edit={`picking.body2.${i}`} data-edit-max="240" data-edit-multiline>{b.holds}</p>
+                  <strong data-edit={`picking.emphasis.${i}`}>{b.price}</strong>
+                </li>
+              ))}
+            </ul>
             </div>
           </div>
         </section>
