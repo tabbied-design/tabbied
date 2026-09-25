@@ -208,7 +208,7 @@ export default function TheGimletPage() {
             <TabbiedPattern
               pattern={northstar}
               palette={STARS}
-              options={{ frequency: 0.32 }}
+              options={{ frequency: 0.24 }}
               fit="grid"
               cellSize={44}
               seed="gimlet-left"
@@ -220,7 +220,7 @@ export default function TheGimletPage() {
             <TabbiedPattern
               pattern={northstar}
               palette={STARS}
-              options={{ frequency: 0.32 }}
+              options={{ frequency: 0.24 }}
               fit="grid"
               cellSize={44}
               seed="gimlet-right"
@@ -257,6 +257,8 @@ export default function TheGimletPage() {
             A single printed card down the center, glassware between its
             sections. */}
         <section id="menu" className={s.menu} aria-labelledby="menu-h">
+          <p className={`${s.marginNote} ${s.marginLeft}`}>The Gimlet, the autumn list</p>
+          <p className={`${s.marginNote} ${s.marginRight}`}>Cordial batch no. 212, made on Tuesday</p>
           <div className={s.card}>
             <div className={s.cardHead}>
               <p className={s.cardHouse}>The Gimlet</p>
@@ -266,7 +268,6 @@ export default function TheGimletPage() {
                 <TabbiedPattern
                   pattern={diadem}
                   palette={DIAMONDS}
-                  options={{ frequency: 0.7 }}
                   fit="grid"
                   cellSize={28}
                   seed="gimlet-rule"

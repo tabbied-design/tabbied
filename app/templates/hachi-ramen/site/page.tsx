@@ -19,7 +19,7 @@ const GOLD = '#D9A441';
 const PALE = '#E6DCCB';
 
 const NOODLES = ['transparent', PALE, PALE, GOLD];
-const BOWLS = ['transparent', CHILI, GOLD, INK, PALE];
+const BOWLS = ['transparent', CHILI, GOLD, INK];
 
 const NAV = [
   ['The bowl', '#bowl'],
@@ -234,21 +234,8 @@ export default function HachiRamenPage() {
       <main id="top">
         {/* ----------------------------------------------------------- BOWL
             The bowl drawn large, its parts numbered, each label on a leader
-            line. Pale noodle loops fill the whole section behind it. */}
+            line. Pale noodle loops fill the width behind it. */}
         <section id="bowl" className={s.hero} aria-labelledby="hero-h">
-          <div className={s.heroField} aria-hidden="true">
-            <TabbiedPattern
-              pattern={curl}
-              palette={NOODLES}
-              options={{ frequency: 0.8 }}
-              fit="grid"
-              cellSize={64}
-              seed="hachi-noodles"
-              redrawInterval={9000}
-              style={{ position: 'absolute', inset: 0 }}
-            />
-          </div>
-
           <div className={s.heroHead}>
             <div className={s.heroTitleWrap}>
               <p className={s.kicker}>Ramen counter, 8 Canal Street</p>
@@ -271,6 +258,18 @@ export default function HachiRamenPage() {
           </div>
 
           <div className={s.stage}>
+            <div className={s.heroField} aria-hidden="true">
+              <TabbiedPattern
+                pattern={curl}
+                palette={NOODLES}
+                options={{ frequency: 0.8 }}
+                fit="grid"
+                cellSize={64}
+                seed="hachi-noodles"
+                redrawInterval={9000}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <div className={s.plate}>
               <Artwork
                 slug="hachi-ramen-bowl"
@@ -372,7 +371,7 @@ export default function HachiRamenPage() {
           <TabbiedPattern
             pattern={bowl}
             palette={BOWLS}
-            options={{ frequency: 0.7 }}
+            options={{ frequency: 0.9 }}
             fit="grid"
             cellSize={56}
             seed="hachi-stack"

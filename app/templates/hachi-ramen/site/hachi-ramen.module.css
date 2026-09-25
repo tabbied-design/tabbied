@@ -137,8 +137,11 @@
 
 .heroField {
   position: absolute;
-  inset: 0;
   z-index: -1;
+  top: -1.5rem;
+  bottom: calc(clamp(2rem, 4vw, 3.5rem) * -1);
+  left: calc(50% - 50vw);
+  width: 100vw;
 }
 
 .heroHead {
@@ -389,7 +392,7 @@
 .brothHead {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas: 'swatch name body' 'swatch from from';
+  grid-template-areas: 'swatch name name' 'swatch from body';
   gap: 0.1rem 0.8rem;
   align-items: center;
 }
@@ -899,7 +902,6 @@
   .stage {
     aspect-ratio: auto;
     max-width: 46rem;
-    overflow-x: clip;
   }
 
   .plate {

@@ -24,7 +24,7 @@
 
   font-family: var(--sans);
   font-size: 1.0625rem;
-  font-weight: 350;
+  font-weight: 400;
   line-height: 1.6;
   background: var(--night);
   color: var(--cream);
@@ -235,11 +235,49 @@
 /* -------------------------------------------------------------- the card
    Two brass frames: the border, and an outline standing off it. */
 
+/* The hero's two hairlines carry on down the page beside the card, and a
+   line of print stands sideways in each margin as the card scrolls by. */
 .menu {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 40rem) 1fr;
+  column-gap: 3rem;
   padding: var(--air) var(--gut);
+  background:
+    linear-gradient(var(--hair), var(--hair)) calc(50% - 23rem) 0 / 1px 100% no-repeat,
+    linear-gradient(var(--hair), var(--hair)) calc(50% + 23rem) 0 / 1px 100% no-repeat;
+}
+
+.marginNote {
+  position: sticky;
+  top: 30vh;
+  align-self: start;
+  grid-row: 1;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--brass) 80%, transparent);
+  writing-mode: vertical-rl;
+}
+
+.marginLeft {
+  grid-column: 1;
+  justify-self: end;
+  margin-right: 1.75rem;
+  transform: rotate(180deg);
+}
+
+.marginRight {
+  grid-column: 3;
+  justify-self: start;
+  margin-left: 1.75rem;
 }
 
 .card {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
   max-width: 40rem;
   margin: 0 auto;
   padding: clamp(2rem, 5vw, 3.75rem) clamp(1.25rem, 5vw, 3.5rem) clamp(2rem, 4vw, 3rem);
@@ -812,6 +850,10 @@
 /* -------------------------------------------------------------- responsive */
 
 @media (max-width: 1100px) {
+  .marginNote {
+    display: none;
+  }
+
   .teamList {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     row-gap: 3rem;
@@ -879,6 +921,10 @@
 
   .siteMenu {
     margin-left: auto;
+  }
+
+  .menu {
+    display: block;
   }
 
   .card {

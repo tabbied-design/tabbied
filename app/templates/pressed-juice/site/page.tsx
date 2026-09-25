@@ -1,5 +1,5 @@
 import { TabbiedPattern } from 'tabbied/react';
-import { lobe, polkadot } from 'tabbied/patterns';
+import { lobe, pebble } from 'tabbied/patterns';
 import s from './pressed-juice.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
 import { Artwork } from 'components/Artwork';
@@ -380,15 +380,15 @@ export default function PressedJuicePage() {
           </div>
         </section>
 
-        {/* The seeds band: a strip of pulp and pips between sections. */}
+        {/* The pulp band: pips and drops in the fruit colors, between sections. */}
         <div className={s.seedBand} aria-hidden="true">
           <TabbiedPattern
-            pattern={polkadot}
+            pattern={pebble}
             palette={SEEDS}
             fit="grid"
-            cellSize={60}
+            cellSize={52}
             seed="pips"
-            options={{ frequency: 0.85 }}
+            options={{ frequency: 0.7 }}
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>

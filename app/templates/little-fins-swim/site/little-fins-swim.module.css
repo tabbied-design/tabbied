@@ -735,7 +735,7 @@
 .enroll {
   background: var(--deep);
   color: var(--foam);
-  padding: var(--air) var(--gut);
+  padding: var(--air) max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: clamp(2rem, 5vw, 4.5rem);
@@ -745,8 +745,6 @@
 .enrollInfo {
   position: relative;
   max-width: 34rem;
-  justify-self: end;
-  width: 100%;
 }
 
 .enroll .secKick {
@@ -1042,10 +1040,6 @@
     max-width: 24rem;
     width: 100%;
     margin: 0 auto;
-  }
-
-  .enrollInfo {
-    justify-self: start;
   }
 
   .pools,
