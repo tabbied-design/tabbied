@@ -21,6 +21,7 @@ const CONCRETE = '#DAD6CD';
 const MAZE = ['transparent', INK, ORANGE];
 const MAZE_FAINT = ['transparent', STEEL, CONCRETE];
 const PEGBOARD = ['transparent', PAPER];
+const SHELF = ['transparent', STEEL];
 
 const NAV = [
   ['Aisles', '#aisles'],
@@ -452,8 +453,8 @@ export default function BoltAndBenchPage() {
           </ul>
           <div className={s.shelfEdge} aria-hidden="true">
             <TabbiedPattern
-              pattern={squarelabyrinth}
-              palette={MAZE}
+              pattern={perforate}
+              palette={SHELF}
               fit="grid"
               cellSize={36}
               seed="bolt-shelf"

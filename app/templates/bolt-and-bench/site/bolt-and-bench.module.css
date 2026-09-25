@@ -740,13 +740,13 @@
   gap: clamp(1rem, 2vw, 1.5rem);
 }
 
-/* The shelf edge the tags clip onto, in the labyrinth. */
+/* The perforated steel shelf edge the tags clip onto. */
 .shelfEdge {
   position: relative;
   height: 2.25rem;
   margin-top: clamp(1rem, 2vw, 1.5rem);
   overflow: hidden;
-  background: var(--concrete);
+  background: var(--paper);
   border-top: var(--rule);
   border-bottom: var(--rule);
 }

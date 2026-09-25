@@ -15,9 +15,11 @@ const PINK = '#F06292';
 const PURPLE = '#7E57C2';
 const ORANGE = '#FFB74D';
 const GRAY = '#A1887F';
+const CREAM = '#FFF6F1';
 
 const RINGS = ['transparent', PINK, ORANGE, PURPLE, PINK];
 const SPRINKLES = ['transparent', PINK, PURPLE, ORANGE, GRAY];
+const LEDGE = ['transparent', PINK, ORANGE, CREAM, PURPLE];
 
 const NAV = [
   ['The board', '#board'],
@@ -313,6 +315,17 @@ export default function GlazeDonutsPage() {
               ))}
             </ul>
             <p data-edit="board.boardFoot" data-edit-max="240" data-edit-multiline className={s.boardFoot}>Vegan Fridays: two flavors, fried separately. Ask what they are.</p>
+            <div className={s.boardLedge} aria-hidden="true">
+              <TabbiedPattern
+                pattern={sliver}
+                palette={LEDGE}
+                fit="grid"
+                cellSize={24}
+                seed="glaze-ledge"
+                options={{ frequency: 0.7 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </div>
         </section>
 
@@ -332,6 +345,18 @@ export default function GlazeDonutsPage() {
         {/* ----------------------------------------------------------- DOZEN */}
         <section id="dozen" className={s.dozen} aria-labelledby="dozen-h">
           <div className={s.dozenArt}>
+            <div className={s.dozenField} aria-hidden="true">
+              <TabbiedPattern
+                pattern={annulus}
+                palette={RINGS}
+                fit="grid"
+                cellSize={56}
+                seed="glaze-box"
+                redrawInterval={10000}
+                options={{ frequency: 0.4 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="glaze-donuts-box"
               alt="An open box of six donuts"
@@ -431,6 +456,17 @@ export default function GlazeDonutsPage() {
               <p data-edit="coffee.combo" data-edit-max="240" data-edit-multiline className={s.combo}>Any donut and a drip coffee: $5</p>
             </div>
             <div className={s.coffeeArt}>
+              <div className={s.coffeeField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={sliver}
+                  palette={SPRINKLES}
+                  fit="grid"
+                  cellSize={34}
+                  seed="glaze-table"
+                  options={{ frequency: 0.45 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="glaze-donuts-coffee"
                 alt="A paper coffee cup with a lid"
@@ -493,6 +529,17 @@ export default function GlazeDonutsPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footRings} aria-hidden="true">
+          <TabbiedPattern
+            pattern={annulus}
+            palette={RINGS}
+            fit="grid"
+            cellSize={30}
+            seed="glaze-footer"
+            options={{ frequency: 0.6 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Glaze</p>
         <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Donuts from 5 am, 140 Market Street. Closed Mondays.</p>
         <div className={s.footFine}>

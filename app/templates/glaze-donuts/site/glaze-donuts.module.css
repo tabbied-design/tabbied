@@ -278,9 +278,12 @@
 
 /* A dark board in a thick frame, the shape of the sign over the counter. */
 .board {
+  --board-x: clamp(1rem, 4vw, 3rem);
+  --board-b: clamp(1.2rem, 3vw, 2rem);
   max-width: calc(var(--max) + 6rem);
   margin: 0 auto;
-  padding: clamp(1.4rem, 4vw, 3rem) clamp(1rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2rem);
+  padding: clamp(1.4rem, 4vw, 3rem) var(--board-x) var(--board-b);
+  overflow: hidden;
   color: var(--cream);
   background: var(--choc);
   border: clamp(8px, 1.2vw, 14px) solid color-mix(in srgb, var(--gray) 70%, var(--choc));
@@ -388,6 +391,14 @@
   border-top: 2px dashed color-mix(in srgb, var(--cream) 30%, transparent);
 }
 
+/* Sprinkles spilled along the ledge at the foot of the board. */
+.boardLedge {
+  position: relative;
+  height: 40px;
+  margin: 1.2rem calc(-1 * var(--board-x)) calc(-1 * var(--board-b));
+  opacity: 0.85;
+}
+
 /* ------------------------------------------------------------------- band */
 
 .band {
@@ -412,11 +423,23 @@
 .dozenArt {
   position: sticky;
   top: 6rem;
+  isolation: isolate;
   display: grid;
   place-items: center;
   padding: clamp(1.5rem, 4vw, 3rem);
   background: color-mix(in srgb, var(--orange) 26%, var(--cream));
   border-radius: 50% 50% var(--radius) var(--radius);
+  overflow: hidden;
+}
+
+/* Rings rising behind the box, strongest under the arch. */
+.dozenField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(to bottom, var(--choc) 35%, transparent 85%);
+  mask-image: linear-gradient(to bottom, var(--choc) 35%, transparent 85%);
 }
 
 .box {
@@ -611,9 +634,20 @@
 /* The cup with a donut leaning on it. */
 .coffeeArt {
   position: relative;
+  isolation: isolate;
   display: grid;
   place-items: center;
   padding-bottom: 2rem;
+}
+
+/* Sprinkles scattered on the table round the cup. */
+.coffeeField {
+  position: absolute;
+  inset: -8% -12%;
+  z-index: -1;
+  opacity: 0.7;
+  -webkit-mask-image: radial-gradient(closest-side, var(--choc) 55%, transparent);
+  mask-image: radial-gradient(closest-side, var(--choc) 55%, transparent);
 }
 
 .cup {
@@ -760,11 +794,22 @@
 
 /* ------------------------------------------------------------------ footer */
 
+/* Rings along the top edge, fattening toward the words. */
+.footRings {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  opacity: 0.7;
+}
+
 .footer {
+  position: relative;
   display: grid;
   justify-items: center;
   gap: 0.6rem;
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2.5rem) var(--gut) 2rem;
   text-align: center;
   color: var(--cream);
   background: var(--choc);
