@@ -290,13 +290,25 @@ export default function BoltAndBenchPage() {
             One hanging sign per aisle: the number, its tool, what is on
             the shelves and who to ask. */}
         <section id="aisles" className={s.sec} aria-labelledby="aisles-h">
-          <div className={s.secHead}>
-            <span data-edit="aisles.secTag" data-edit-max="60" className={s.secTag}>Store directory</span>
-            <h2 data-edit="aisles.secTitle" data-edit-max="60" className={s.secTitle} id="aisles-h">What is in each aisle</h2>
-            <p data-edit="aisles.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
-              About 14,000 things on eight aisles. If it is not on the shelf we
-              can usually have it by Thursday.
-            </p>
+          <div className={s.aislesTop}>
+            <div className={s.secHead}>
+              <span data-edit="aisles.secTag" data-edit-max="60" className={s.secTag}>Store directory</span>
+              <h2 data-edit="aisles.secTitle" data-edit-max="60" className={s.secTitle} id="aisles-h">What is in each aisle</h2>
+              <p data-edit="aisles.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
+                About 14,000 things on eight aisles. If it is not on the shelf we
+                can usually have it by Thursday.
+              </p>
+            </div>
+            <div className={s.aislesTile} aria-hidden="true">
+              <TabbiedPattern
+                pattern={squarelabyrinth}
+                palette={MAZE}
+                fit="grid"
+                cellSize={80}
+                seed="bolt-tile"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </div>
           <ol className={s.aisles}>
             {AISLES.map((a, i) => (
@@ -438,12 +450,32 @@ export default function BoltAndBenchPage() {
               </li>
             ))}
           </ul>
+          <div className={s.shelfEdge} aria-hidden="true">
+            <TabbiedPattern
+              pattern={squarelabyrinth}
+              palette={MAZE}
+              fit="grid"
+              cellSize={36}
+              seed="bolt-shelf"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
         </section>
 
         {/* ---------------------------------------------------------- HOURS */}
         <section id="hours" className={s.hoursSec} aria-labelledby="hours-h">
           <div className={s.hoursInner}>
             <div className={s.hoursArt}>
+              <div className={s.hoursPlate} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={squarelabyrinth}
+                  palette={MAZE_FAINT}
+                  fit="grid"
+                  cellSize={64}
+                  seed="bolt-plate"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="bolt-and-bench-hammer"
                 alt=""

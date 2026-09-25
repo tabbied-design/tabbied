@@ -24,6 +24,7 @@ const SPRUCE = [GOLD, BURST, PAPER, INK];
 const SUNBURST = [INK, BURST, GOLD];
 const KOA = [GOLD, BURST, PAPER, GREEN];
 const ROOF = ['transparent', GRAY, PAPER];
+const GRILLE = ['transparent', BURST, INK];
 
 const NAV = [
   ['The wall', '#wall'],
@@ -335,15 +336,27 @@ export default function TinRoofGuitarsPage() {
                 ))}
               </dl>
             </div>
-            <ul className={s.teachers}>
-              {TEACHERS.map((t, i) => (
-                <li key={t.name} className={s.teacher}>
-                  <h3 data-edit={`lessons.teacherName.${i}`} data-edit-max="40" className={s.teacherName}>{t.name}</h3>
-                  <p data-edit={`lessons.teacherPlays.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherPlays}>{t.plays}</p>
-                  <p data-edit={`lessons.teacherDays.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherDays}>{t.days}</p>
-                </li>
-              ))}
-            </ul>
+            <div className={s.amp}>
+              <div className={s.grille} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={drypoint}
+                  palette={GRILLE}
+                  fit="grid"
+                  cellSize={28}
+                  seed="grille-cloth"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <ul className={s.teachers}>
+                {TEACHERS.map((t, i) => (
+                  <li key={t.name} className={s.teacher}>
+                    <h3 data-edit={`lessons.teacherName.${i}`} data-edit-max="40" className={s.teacherName}>{t.name}</h3>
+                    <p data-edit={`lessons.teacherPlays.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherPlays}>{t.plays}</p>
+                    <p data-edit={`lessons.teacherDays.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherDays}>{t.days}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -412,6 +425,16 @@ export default function TinRoofGuitarsPage() {
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInner}>
             <div>
+              <span className={s.pick} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={sunray}
+                  palette={SUNBURST}
+                  fit="grid"
+                  cellSize={24}
+                  seed="pick"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </span>
               <p data-edit="visit.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Visit</p>
               <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">212 Mill Road, under the tin roof</h2>
               <p data-edit="visit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
@@ -450,6 +473,16 @@ export default function TinRoofGuitarsPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footRoof} aria-hidden="true">
+          <TabbiedPattern
+            pattern={picket}
+            palette={ROOF}
+            fit="grid"
+            cellSize={24}
+            seed="tin-roof-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footInner}>
           <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Tin Roof Guitars</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Guitars, repairs and lessons on Mill Road since 1994.</p>

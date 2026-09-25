@@ -542,6 +542,14 @@
   overflow: hidden;
 }
 
+/* The hero's lights again, soft, in the top of the arch. */
+.portraitGlow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  mask-image: linear-gradient(180deg, var(--ink) 0%, var(--ink) 30%, transparent 70%);
+}
+
 .portraitFrame .portrait {
   position: absolute;
   left: 50%;
@@ -682,6 +690,8 @@
 }
 
 .book {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   gap: clamp(2rem, 6vw, 6rem);
@@ -689,6 +699,19 @@
   border-radius: 1.5rem;
   background: var(--ink);
   color: var(--blush);
+  overflow: hidden;
+}
+
+/* A low glow of lights along the top edge of the booking card. */
+.bookGlow {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(3.5rem, 7vw, 6rem);
+  opacity: 0.45;
+  mask-image: linear-gradient(180deg, var(--ink), transparent);
 }
 
 .book .kicker {
@@ -802,10 +825,20 @@
 /* ----------------------------------------------------------------- footer */
 
 .footer {
+  --foot-top: clamp(2.5rem, 5vw, 3.5rem);
   margin-top: var(--air);
-  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 2rem;
+  padding: var(--foot-top) var(--gut) 2rem;
   border-top: 1px solid var(--rule);
   text-align: center;
+}
+
+/* The shelf wall's grain, falling from the top edge of the footer. */
+.footGrain {
+  position: relative;
+  height: clamp(2.5rem, 5vw, 3.5rem);
+  margin: calc(-1 * var(--foot-top)) calc(-1 * var(--gut)) calc(var(--foot-top) * 0.6);
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, var(--ink) 30%, transparent);
 }
 
 .footMark {

@@ -16,9 +16,12 @@ const PINK = '#EF476F';
 const BLUE = '#118AB2';
 const YELLOW = '#FFD166';
 const INK = '#1F2240';
+const CREAM = '#FFF8EE';
 
 const SHAPES = ['transparent', YELLOW, PINK, BLUE, YELLOW];
 const PAPER = ['transparent', PINK, BLUE, YELLOW, INK];
+const BLOCKS = ['transparent', PINK, BLUE, YELLOW, INK];
+const RUG = ['transparent', PINK, YELLOW, CREAM, BLUE];
 
 const NAV = [
   ['By age', '#ages'],
@@ -331,6 +334,18 @@ export default function TinkerToysPage() {
             Four cards filed like dividers in a box: each has a tab with its
             age, and the tabs step across so all four can be read at once. */}
         <section id="ages" className={s.ages} aria-labelledby="ages-h">
+          <div className={s.agesBlock} aria-hidden="true">
+            <TabbiedPattern
+              pattern={bauhaus}
+              palette={BLOCKS}
+              fit="grid"
+              cellSize={52}
+              seed="tinker-block"
+              redrawInterval={8000}
+              options={{ frequency: 0.55 }}
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.secHead}>
             <h2 data-edit="ages.title" data-edit-max="60" id="ages-h">Shop by age</h2>
             <p data-edit="ages.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
@@ -458,12 +473,25 @@ export default function TinkerToysPage() {
                 Everything happens on the rug in the back room. Story time is free and needs no booking; build club has
                 twelve places, so sign up at the counter.
               </p>
-              <Artwork
-                slug="tinker-toys-train"
-                alt=""
-                inks={{ red: 'var(--yellow)', blue: 'var(--cream)', yellow: 'var(--pink)', black: 'var(--cream)' }}
-                className={s.eventsTrain}
-              />
+              <div className={s.eventsStage}>
+                <div className={s.eventsRug} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={stitch}
+                    palette={RUG}
+                    fit="grid"
+                    cellSize={30}
+                    seed="tinker-rug"
+                    options={{ frequency: 0.6 }}
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+                <Artwork
+                  slug="tinker-toys-train"
+                  alt=""
+                  inks={{ red: 'var(--yellow)', blue: 'var(--cream)', yellow: 'var(--pink)', black: 'var(--cream)' }}
+                  className={s.eventsTrain}
+                />
+              </div>
             </div>
             <ol className={s.eventList}>
               {EVENTS.map((e, i) => (
@@ -570,6 +598,17 @@ export default function TinkerToysPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footShapes} aria-hidden="true">
+          <TabbiedPattern
+            pattern={bauhaus}
+            palette={BLOCKS}
+            fit="grid"
+            cellSize={40}
+            seed="tinker-footer"
+            options={{ frequency: 0.6 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Tinker &amp; Co.</p>
           <ul className={s.footLinks}>

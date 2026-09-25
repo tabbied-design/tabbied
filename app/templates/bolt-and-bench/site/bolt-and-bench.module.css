@@ -343,6 +343,31 @@
 
 /* -------------------------------------------------------------- directory */
 
+/* The directory's heading, with a square of the labyrinth hung beside it. */
+.aislesTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.aislesTop .secHead {
+  margin-bottom: 0;
+}
+
+.aislesTile {
+  position: relative;
+  flex: none;
+  width: clamp(6rem, 11vw, 9.5rem);
+  aspect-ratio: 1;
+  margin-right: 8px;
+  overflow: hidden;
+  background: var(--concrete);
+  border: var(--rule);
+  box-shadow: 8px 8px 0 var(--orange);
+}
+
 .aisles {
   list-style: none;
   margin: 0;
@@ -715,6 +740,17 @@
   gap: clamp(1rem, 2vw, 1.5rem);
 }
 
+/* The shelf edge the tags clip onto, in the labyrinth. */
+.shelfEdge {
+  position: relative;
+  height: 2.25rem;
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  overflow: hidden;
+  background: var(--concrete);
+  border-top: var(--rule);
+  border-bottom: var(--rule);
+}
+
 .tag {
   position: relative;
   display: grid;
@@ -788,6 +824,16 @@
   display: grid;
   place-items: center;
   min-height: 24rem;
+}
+
+/* A square of the labyrinth, faint on the black, behind the crossed tools. */
+.hoursPlate {
+  position: absolute;
+  width: min(19rem, 86%);
+  aspect-ratio: 1;
+  overflow: hidden;
+  opacity: 0.45;
+  border: 2px solid var(--steel);
 }
 
 .hoursHammer,
@@ -997,6 +1043,10 @@
   .hoursWrench {
     height: 14rem;
   }
+
+  .hoursPlate {
+    width: 13rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1083,6 +1133,10 @@
   .serviceGrid,
   .deals {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aislesTile {
+    display: none;
   }
 }
 

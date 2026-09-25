@@ -599,6 +599,21 @@
   border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
 }
 
+/* The three boxes set on a bed of the band's leaves. */
+.tiersMat {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(0.9rem, 2vw, 1.4rem);
+}
+
+.tiersField {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  background: var(--pale);
+}
+
 .tiers {
   list-style: none;
   margin: 0;
@@ -744,9 +759,21 @@
 /* --------------------------------------------------------------------- faq */
 
 .faq {
+  position: relative;
   max-width: 50rem;
   margin-left: calc(6.5rem + clamp(1.2rem, 3vw, 2.5rem));
   border-top: 1px solid var(--ink);
+}
+
+/* The grapes again, in the heading column beside the questions. */
+.faqGrapes {
+  position: absolute;
+  top: 1.2rem;
+  right: calc(100% + clamp(1.2rem, 3vw, 2.5rem));
+  width: 6.5rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
 }
 
 .faqItem {
@@ -800,6 +827,15 @@
   padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
   background: var(--ink);
   color: var(--paper);
+}
+
+/* A shallow row of the band's leaves along the footer's top edge. */
+.footLeaves {
+  position: relative;
+  height: 3rem;
+  margin: calc(-1 * clamp(3rem, 6vw, 4.5rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  opacity: 0.8;
 }
 
 .footGrid {
@@ -961,6 +997,10 @@
 
   .faq {
     margin-left: 0;
+  }
+
+  .faqGrapes {
+    display: none;
   }
 
   .footGrid {

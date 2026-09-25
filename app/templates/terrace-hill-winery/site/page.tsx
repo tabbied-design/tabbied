@@ -440,15 +440,28 @@ export default function TerraceHillPage() {
                 ))}
               </ul>
             </div>
-            <ul className={s.tiers}>
-              {CLUB.map((c, i) => (
-                <li key={c.size}>
-                  <span data-edit={`club.tierSize.${i}`} data-edit-max="60" className={s.tierSize}>{c.size}</span>
-                  <strong data-edit={`club.tierPrice.${i}`} className={s.tierPrice}>{c.price}</strong>
-                  <span data-edit={`club.tierEvery.${i}`} data-edit-max="60" className={s.tierEvery}>{c.every}</span>
-                </li>
-              ))}
-            </ul>
+            <div className={s.tiersMat}>
+              <div className={s.tiersField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={teardropleaves}
+                  palette={LEAVES}
+                  options={{ frequency: 0.8 }}
+                  fit="grid"
+                  cellSize={44}
+                  seed="terrace-club"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <ul className={s.tiers}>
+                {CLUB.map((c, i) => (
+                  <li key={c.size}>
+                    <span data-edit={`club.tierSize.${i}`} data-edit-max="60" className={s.tierSize}>{c.size}</span>
+                    <strong data-edit={`club.tierPrice.${i}`} className={s.tierPrice}>{c.price}</strong>
+                    <span data-edit={`club.tierEvery.${i}`} data-edit-max="60" className={s.tierEvery}>{c.every}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -506,6 +519,17 @@ export default function TerraceHillPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Questions at the bar</h2>
           </div>
           <div className={s.faq}>
+            <div className={s.faqGrapes} aria-hidden="true">
+              <TabbiedPattern
+                pattern={dotset}
+                palette={GRAPES}
+                options={{ frequency: 0.9 }}
+                fit="grid"
+                cellSize={30}
+                seed="terrace-bunch"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
                 <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
@@ -517,6 +541,17 @@ export default function TerraceHillPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footLeaves} aria-hidden="true">
+          <TabbiedPattern
+            pattern={teardropleaves}
+            palette={LEAVES}
+            options={{ frequency: 0.7 }}
+            fit="grid"
+            cellSize={48}
+            seed="terrace-footer"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Terrace Hill</p>

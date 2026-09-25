@@ -20,6 +20,7 @@ const PALE = '#E6E0CF';
 
 const LEAVES = ['transparent', GREEN, GOLD, RED, INK];
 const HEDGE = ['transparent', GREEN, PALE, GOLD];
+const VINE = ['transparent', GREEN, GOLD];
 
 const NAV = [
   ['Ripe now', '#calendar'],
@@ -277,15 +278,28 @@ export default function CrabappleOrchardPage() {
                 </li>
               ))}
             </ol>
-            <ul className={s.bags}>
-              {BAGS.map((b, i) => (
-                <li key={b.size} className={s.bag}>
-                  <h3 data-edit={`picking.title3.${i}`} data-edit-max="40">{b.size}</h3>
-                  <p data-edit={`picking.body2.${i}`} data-edit-max="240" data-edit-multiline>{b.holds}</p>
-                  <strong data-edit={`picking.emphasis.${i}`}>{b.price}</strong>
-                </li>
-              ))}
-            </ul>
+            <div className={s.crate}>
+              <div className={s.crateLeaves} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={ivy}
+                  palette={HEDGE}
+                  fit="grid"
+                  cellSize={32}
+                  seed="crate"
+                  options={{ frequency: 0.8 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <ul className={s.bags}>
+                {BAGS.map((b, i) => (
+                  <li key={b.size} className={s.bag}>
+                    <h3 data-edit={`picking.title3.${i}`} data-edit-max="40">{b.size}</h3>
+                    <p data-edit={`picking.body2.${i}`} data-edit-max="240" data-edit-multiline>{b.holds}</p>
+                    <strong data-edit={`picking.emphasis.${i}`}>{b.price}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -402,6 +416,17 @@ export default function CrabappleOrchardPage() {
           <div className={s.faqHead}>
             <p data-edit="faq.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Before you come</p>
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Questions we hear at the gate</h2>
+            <div className={s.faqApple} aria-hidden="true">
+              <TabbiedPattern
+                pattern={frond}
+                palette={LEAVES}
+                fit="grid"
+                cellSize={34}
+                seed="gate"
+                options={{ frequency: 0.9 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </div>
           <div className={s.faqList}>
             {FAQS.map((f, i) => (
@@ -415,6 +440,17 @@ export default function CrabappleOrchardPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footHedge} aria-hidden="true">
+          <TabbiedPattern
+            pattern={ivy}
+            palette={VINE}
+            fit="grid"
+            cellSize={30}
+            seed="foot-hedge"
+            options={{ frequency: 0.7 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Crabapple Orchard</p>

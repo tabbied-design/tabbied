@@ -19,6 +19,7 @@ const CREAM = '#FFF6E9';
 
 const BUNS = ['transparent', MUSTARD, KETCHUP, CREAM];
 const ZIGZAG = ['transparent', INK, KETCHUP, MUSTARD];
+const SAUCE = ['transparent', CREAM, MUSTARD];
 
 const NAV = [
   ['Menu', '#menu'],
@@ -386,6 +387,17 @@ export default function DoubleStackBurgersPage() {
                   </div>
                 ))}
               </dl>
+              <div className={s.bagTrim} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={ziggy}
+                  palette={BUNS}
+                  fit="grid"
+                  cellSize={28}
+                  seed="bag-trim"
+                  options={{ frequency: 0.9 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -406,12 +418,25 @@ export default function DoubleStackBurgersPage() {
             <p data-edit="hours.hoursNote" data-edit-max="240" data-edit-multiline className={s.hoursNote}>The grill closes 15 minutes before we do.</p>
           </div>
           <div className={s.findUs}>
-            <Artwork
-              slug="double-stack-burgers-shake"
-              alt=""
-              inks={{ red: 'var(--ketchup)', blue: 'var(--cream)', yellow: 'var(--mustard)', black: 'var(--ink)' }}
-              className={s.findShake}
-            />
+            <div className={s.shakeSpot}>
+              <div className={s.shakeField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={bowl}
+                  palette={SAUCE}
+                  fit="grid"
+                  cellSize={24}
+                  seed="shake-spot"
+                  options={{ frequency: 0.45 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <Artwork
+                slug="double-stack-burgers-shake"
+                alt=""
+                inks={{ red: 'var(--ketchup)', blue: 'var(--cream)', yellow: 'var(--mustard)', black: 'var(--ink)' }}
+                className={s.findShake}
+              />
+            </div>
             <div className={s.findText}>
               <h3 data-edit="hours.title2" data-edit-max="40">1150 Route 9</h3>
               <p data-edit="hours.body2" data-edit-max="240" data-edit-multiline>

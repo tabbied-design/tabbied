@@ -21,6 +21,7 @@ const PALE = '#D7DED4';
 
 const BLANKET = ['transparent', PINE, ORANGE, GRAY, INK];
 const NIGHT = ['transparent', PALE, ORANGE, GRAY];
+const HEARTH = ['transparent', PINE, ORANGE, GRAY, PALE];
 
 const NAV = [
   ['Sites', '#sites'],
@@ -292,6 +293,17 @@ export default function PinewoodRvPage() {
                 Mostly about sleep and fire. The host couple in site 1 can help
                 with anything after the office closes.
               </p>
+              <div className={s.rulesPatch} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={stitch}
+                  palette={BLANKET}
+                  options={{ frequency: 0.6 }}
+                  fit="grid"
+                  cellSize={36}
+                  seed="pinewood-patch"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </div>
             <dl className={s.rules}>
               {RULES.map(([k, v], i) => (
@@ -415,6 +427,17 @@ export default function PinewoodRvPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked at the office window</h2>
           </div>
           <div className={s.faq}>
+            <div className={s.faqWindow} aria-hidden="true">
+              <TabbiedPattern
+                pattern={northstar}
+                palette={NIGHT}
+                options={{ frequency: 0.22 }}
+                fit="grid"
+                cellSize={22}
+                seed="pinewood-window"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
                 <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
@@ -426,6 +449,17 @@ export default function PinewoodRvPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footStitch} aria-hidden="true">
+          <TabbiedPattern
+            pattern={stitch}
+            palette={HEARTH}
+            options={{ frequency: 0.55 }}
+            fit="grid"
+            cellSize={40}
+            seed="pinewood-footer"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pinewood RV Park</p>

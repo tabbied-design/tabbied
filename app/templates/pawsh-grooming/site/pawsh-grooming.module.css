@@ -515,9 +515,26 @@
 }
 
 .brush {
+  position: relative;
   width: min(15rem, 70%);
   margin-top: auto;
   padding-top: 2.5rem;
+}
+
+/* The hero's bubble, small, floating up off the brush. */
+.addonsHead {
+  position: relative;
+}
+
+.brushBubble {
+  position: absolute;
+  left: min(14rem, 66%);
+  bottom: 5.5rem;
+  width: min(8.5rem, 34%);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--violet) 18%, transparent);
 }
 
 .addonList {
@@ -653,11 +670,22 @@
 }
 
 .firstDog {
+  position: relative;
   margin-top: auto;
   padding: 2.5rem 0 0;
 }
 
+/* Fresh out of the bath: a few sparkles round the dog. */
+.dogSparks {
+  position: absolute;
+  inset: 0 -1rem -1rem;
+  max-width: 25rem;
+  -webkit-mask-image: radial-gradient(closest-side, var(--ink) 55%, transparent);
+  mask-image: radial-gradient(closest-side, var(--ink) 55%, transparent);
+}
+
 .dachshund {
+  position: relative;
   width: min(22rem, 100%);
 }
 
@@ -854,6 +882,16 @@
   background: var(--pale);
 }
 
+/* A row of the hero's loops along the top edge. */
+.footLoops {
+  position: relative;
+  height: 2.25rem;
+  margin: -2.6rem calc(-1 * var(--gut)) 2rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, var(--ink) 15%, var(--ink) 85%, transparent);
+  mask-image: linear-gradient(90deg, transparent, var(--ink) 15%, var(--ink) 85%, transparent);
+}
+
 .footTop,
 .footFine {
   display: flex;
@@ -913,6 +951,16 @@
 
   .dachshund {
     width: 14rem;
+  }
+
+  .brushBubble {
+    left: 10rem;
+    bottom: 2.5rem;
+    width: 6rem;
+  }
+
+  .dogSparks {
+    max-width: 17rem;
   }
 
   .matrixNotes {

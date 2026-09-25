@@ -21,6 +21,10 @@ const PALE = '#EFE7F6';
 
 const BUBBLES = [PALE, PINK, VIOLET, GRAY];
 const SPARKS = ['transparent', PALE, PINK, PAPER];
+/* The bubble again on the pale add-ons band, so its ground is the paper;
+   the sparkles round the dog sit straight on the page. */
+const BUBBLES_PAPER = [PAPER, PINK, VIOLET, GRAY];
+const SPARKS_INK = ['transparent', VIOLET, PINK, GRAY];
 
 const NAV = [
   ['Prices', '#prices'],
@@ -304,6 +308,17 @@ export default function PawshGroomingPage() {
                 Add them when you book or at drop-off. Same price for a
                 chihuahua and a great dane.
               </p>
+              <div className={s.brushBubble} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={quoit}
+                  palette={BUBBLES_PAPER}
+                  options={{ frequency: 0.6 }}
+                  fit="grid"
+                  cellSize={30}
+                  seed="pawsh-brush"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="pawsh-grooming-brush"
                 alt="A grooming brush and a pair of scissors"
@@ -349,6 +364,17 @@ export default function PawshGroomingPage() {
               <p data-edit="firstVisit.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>First visit</p>
               <h2 data-edit="firstVisit.secTitle" data-edit-max="60" id="first-h" className={s.secTitle}>Six things to know before the first bath</h2>
               <div className={s.firstDog}>
+                <div className={s.dogSparks} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={sparkle}
+                    palette={SPARKS_INK}
+                    options={{ frequency: 0.35 }}
+                    fit="grid"
+                    cellSize={40}
+                    seed="pawsh-clean"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
                 <Artwork
                   slug="pawsh-grooming-dachshund"
                   alt="A dachshund standing, seen from the side"
@@ -451,6 +477,17 @@ export default function PawshGroomingPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footLoops} aria-hidden="true">
+          <TabbiedPattern
+            pattern={quoit}
+            palette={BUBBLES}
+            options={{ frequency: 0.8 }}
+            fit="grid"
+            cellSize={36}
+            seed="pawsh-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pawsh</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Dog grooming on Larkspur Lane, by size, by appointment.</p>

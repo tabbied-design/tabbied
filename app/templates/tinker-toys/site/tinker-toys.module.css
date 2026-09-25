@@ -252,9 +252,24 @@
 /* -------------------------------------------------------------- age stack */
 
 .ages {
+  position: relative;
   max-width: calc(var(--max) + 2 * var(--gut));
   margin: 0 auto;
   padding: var(--air) var(--gut);
+}
+
+/* A painted block of shapes beside the heading. */
+.agesBlock {
+  position: absolute;
+  top: var(--air);
+  right: var(--gut);
+  width: min(22rem, 30%);
+  height: 6.5rem;
+  overflow: hidden;
+  background: var(--cream);
+  border: var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--lift);
 }
 
 .ageStack {
@@ -565,8 +580,27 @@
 }
 
 .eventsTrain {
+  position: relative;
   width: 100%;
+}
+
+/* The rug in the back room, stitched, with the train parked on it. */
+.eventsStage {
+  position: relative;
   margin-top: 1.5rem;
+  padding: 0 4% 2rem;
+}
+
+.eventsRug {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 50%;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--blue) 26%, var(--ink));
+  border: 2px dashed color-mix(in srgb, var(--cream) 40%, transparent);
+  border-radius: 999px;
 }
 
 .eventList {
@@ -839,9 +873,20 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
-  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 2rem;
+  position: relative;
+  padding: calc(clamp(2.5rem, 5vw, 3.5rem) + 2.5rem) var(--gut) 2rem;
   border-top: var(--line);
   background: color-mix(in srgb, var(--yellow) 30%, var(--cream));
+}
+
+/* A row of shapes along the top edge, like blocks on a shelf. */
+.footShapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  border-bottom: var(--line);
 }
 
 .footTop,
@@ -914,6 +959,10 @@
 
   .toyTall {
     grid-column: auto;
+  }
+
+  .agesBlock {
+    display: none;
   }
 }
 

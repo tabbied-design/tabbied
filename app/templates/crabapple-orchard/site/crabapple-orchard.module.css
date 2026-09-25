@@ -515,7 +515,23 @@
   line-height: 1.15;
 }
 
+/* The bags laid out on a bed of leaves. */
+.crate {
+  position: relative;
+  padding: clamp(0.9rem, 2vw, 1.4rem);
+  overflow: hidden;
+  border-radius: 1.6rem;
+  background: color-mix(in srgb, var(--green) 14%, var(--paper));
+}
+
+.crateLeaves {
+  position: absolute;
+  inset: 0;
+  opacity: 0.8;
+}
+
 .bags {
+  position: relative;
   display: grid;
   gap: 0.9rem;
 }
@@ -808,6 +824,17 @@
   margin-top: 0.8rem;
 }
 
+/* A round of leaves under the question, the shop's arch in small. */
+.faqApple {
+  position: relative;
+  width: clamp(7rem, 12vw, 10rem);
+  aspect-ratio: 1;
+  margin-top: 2.2rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--pale);
+}
+
 .faqList {
   border-top: 2px solid var(--ink);
 }
@@ -859,9 +886,19 @@
 /* ----------------------------------------------------------------- footer */
 
 .footer {
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 30px) var(--gut) 2rem;
   color: var(--paper);
   background: var(--ink);
+}
+
+.footHedge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  overflow: hidden;
 }
 
 .footTop {

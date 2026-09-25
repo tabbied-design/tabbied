@@ -20,6 +20,7 @@ const BLUSH = '#F8F2EF';
 
 const GLOW = ['transparent', BLUSH, PALE];
 const GRAIN = ['transparent', ROSE, GRAY, PALE];
+const EMBER = ['transparent', ROSE, GRAY];
 
 const NAV = [
   ['Facials', '#menu'],
@@ -372,6 +373,17 @@ export default function GrainAndGlowPage() {
         <section id="esthetician" className={s.sec} aria-labelledby="esthetician-h">
           <div className={s.about}>
             <div className={s.portraitFrame}>
+              <div className={s.portraitGlow} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={bokeh}
+                  palette={GLOW}
+                  options={{ frequency: 0.6 }}
+                  fit="grid"
+                  cellSize={56}
+                  seed="grain-portrait"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="grain-and-glow-esthetician"
                 alt="Noor Haddad, the esthetician, smiling, her hair tied back"
@@ -422,6 +434,18 @@ export default function GrainAndGlowPage() {
         {/* ------------------------------------------------------------- BOOK */}
         <section id="book" className={s.bookSec} aria-labelledby="book-h">
           <div className={s.book}>
+            <div className={s.bookGlow} aria-hidden="true">
+              <TabbiedPattern
+                pattern={bokeh}
+                palette={EMBER}
+                options={{ frequency: 0.7 }}
+                fit="grid"
+                cellSize={48}
+                seed="grain-book"
+                redrawInterval={12000}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <div className={s.bookInfo}>
               <p data-edit="book.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Book</p>
               <h2 data-edit="book.title" data-edit-max="60" id="book-h">Book a facial</h2>
@@ -489,6 +513,17 @@ export default function GrainAndGlowPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footGrain} aria-hidden="true">
+          <TabbiedPattern
+            pattern={grainfall}
+            palette={GRAIN}
+            options={{ frequency: 0.8 }}
+            fit="grid"
+            cellSize={40}
+            seed="grain-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Grain &amp; Glow</p>
         <p data-edit="footer.footAddr" data-edit-max="240" data-edit-multiline className={s.footAddr}>14 Orchard Street, upstairs from the florist</p>
         <div className={s.footFine}>

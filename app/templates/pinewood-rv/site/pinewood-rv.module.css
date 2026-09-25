@@ -447,6 +447,18 @@
   border-top: 2px solid var(--ink);
 }
 
+/* A square of the blanket band, stitched onto the notice like a patch. */
+.rulesPatch {
+  position: relative;
+  max-width: 20rem;
+  height: 9rem;
+  margin-top: 2.2rem;
+  overflow: hidden;
+  background: var(--pale);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+}
+
 .rules div {
   display: grid;
   grid-template-columns: 10rem minmax(0, 1fr);
@@ -682,8 +694,22 @@
 /* --------------------------------------------------------------------- faq */
 
 .faq {
+  position: relative;
   max-width: 52rem;
   border-top: 2px solid var(--ink);
+}
+
+/* The office window after dark: the reservation stars over a pine sill. */
+.faqWindow {
+  position: absolute;
+  top: 0;
+  left: calc(100% + clamp(2rem, 4vw, 3rem));
+  width: 11rem;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--ink) 60%, var(--pine));
+  border: 2px solid var(--ink);
+  border-radius: 12px;
 }
 
 .faqItem {
@@ -737,6 +763,15 @@
   padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
   background: var(--ink);
   color: var(--paper);
+}
+
+/* The blanket's stitches again, a strip along the footer's top edge. */
+.footStitch {
+  position: relative;
+  height: 2.5rem;
+  margin: calc(-1 * clamp(3rem, 6vw, 4.5rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  opacity: 0.85;
 }
 
 .footGrid {
@@ -796,6 +831,12 @@
 }
 
 /* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1240px) {
+  .faqWindow {
+    display: none;
+  }
+}
 
 @media (max-width: 1100px) {
   .amenities {
