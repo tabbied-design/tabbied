@@ -142,7 +142,7 @@ const PLANS: Plan[] = [
     per: 'a delivery',
     body: 'A market bunch every Friday morning, for a kitchen table that always has something on it.',
     items: ['Delivered Fridays, 10-1', 'Skip or pause by text', 'Free vase with the first one'],
-    cta: 'Start weekly flowers',
+    cta: 'Start weekly',
     featured: true,
   },
   {
@@ -151,7 +151,7 @@ const PLANS: Plan[] = [
     per: 'a delivery',
     body: 'Every other Friday. The most popular plan for offices and reception desks.',
     items: ['Delivered Fridays, 10-1', 'Skip or pause by text', 'Free vase with the first one'],
-    cta: 'Start fortnightly flowers',
+    cta: 'Start fortnightly',
     featured: false,
   },
   {
@@ -160,7 +160,7 @@ const PLANS: Plan[] = [
     per: 'a delivery',
     body: 'The first Friday of the month, a little larger, and a nice thing to give for a year.',
     items: ['Delivered first Fridays', 'Can be sent as a gift', 'A card every month'],
-    cta: 'Start monthly flowers',
+    cta: 'Start monthly',
     featured: false,
   },
 ];

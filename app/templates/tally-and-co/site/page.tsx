@@ -461,11 +461,11 @@ export default function TallyAndCoPage() {
           <div className={s.contactInner}>
             <div className={s.contactText}>
               <p className={s.eyebrow}>Contact</p>
-              <h2 id="contact-h">Book a free 20-minute call</h2>
+              <h2 id="contact-h">Book a free call</h2>
               <p className={s.contactLede}>
-                Tell us a little about the business and we will send you two
-                or three times this week. Bring last month&apos;s bank statement if
-                you can.
+                Twenty minutes, on video or by phone. Tell us a little about
+                the business and we will send you two or three times this
+                week. Bring last month&apos;s bank statement if you can.
               </p>
               <dl className={s.details}>
                 <div>

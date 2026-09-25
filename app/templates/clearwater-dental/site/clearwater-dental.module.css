@@ -1083,12 +1083,7 @@
     font-size: 0.82rem;
   }
 
-  .hero {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .heroPlate {
-    width: min(100%, 26rem);
     min-height: 0;
   }
 
@@ -1102,6 +1097,10 @@
 }
 
 @media (max-width: 640px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .facts,
   .steps,
   .team,

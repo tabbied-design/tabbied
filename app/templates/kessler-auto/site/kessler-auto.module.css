@@ -555,7 +555,7 @@
   padding-right: 1rem;
 }
 
-.menuTime {
+.menu .menuTime {
   width: 6.5rem;
   font-family: var(--mono);
   font-size: 0.88rem;
@@ -564,7 +564,7 @@
   white-space: nowrap;
 }
 
-.menuPrice {
+.menu .menuPrice {
   width: 5.5rem;
   font-family: var(--mono);
   font-weight: 700;
@@ -1212,7 +1212,7 @@
     grid-column: 1 / -1;
   }
 
-  .menuTime {
+  .menu .menuTime {
     text-align: left;
   }
 

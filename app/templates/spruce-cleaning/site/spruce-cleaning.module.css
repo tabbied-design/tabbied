@@ -276,7 +276,7 @@
 .chip span {
   display: block;
   padding: 0.45rem 0.9rem;
-  border: 1.5px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border: 1.5px solid var(--gray);
   border-radius: 999px;
   font-weight: 700;
   font-size: 0.95rem;
@@ -886,7 +886,7 @@
   width: 100%;
   min-height: 2.9rem;
   padding: 0.6rem 0.8rem;
-  border: 1.5px solid color-mix(in srgb, var(--ink) 24%, transparent);
+  border: 1.5px solid var(--gray);
   border-radius: 10px;
   background: var(--white);
   color: var(--ink);

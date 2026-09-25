@@ -370,7 +370,8 @@
   display: block;
   margin-top: 0.35rem;
   font-family: 'Young Serif', Georgia, serif;
-  font-size: 1.35rem;
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 
@@ -477,6 +478,7 @@
 
 .cardLink {
   align-self: flex-start;
+  white-space: nowrap;
   margin-top: 0.9rem;
   padding: 0.45rem 1rem;
   border: 1px solid var(--peony);
@@ -937,12 +939,8 @@
 /* ---------------------------------------------------------- responsive */
 
 @media (max-width: 1180px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .plans {
-    grid-template-columns: minmax(0, 1fr);
+  .page {
+    --side: 12.5rem;
   }
 
   .split {
@@ -1040,6 +1038,10 @@
   }
 
   .side {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plans {
     grid-template-columns: minmax(0, 1fr);
   }
 

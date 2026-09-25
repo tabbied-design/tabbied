@@ -18,7 +18,7 @@ const SLATE = '#858A92';
 const PALE = '#E3E1DC';
 const INK = '#1B1D22';
 const TILE = ['transparent', PAPER, PALE, SLATE];
-const FACADE = ['transparent', BRICK, SLATE, INK];
+const FACADE = ['transparent', BRICK, SLATE, INK, SLATE, BRICK];
 
 const NAV = [
   ['Listings', '#listings'],
@@ -425,7 +425,7 @@ export default function NorthgateHomesPage() {
                 fit="grid"
                 cellSize={56}
                 seed="northgate-facade"
-                options={{ frequency: 0.45 }}
+                options={{ frequency: 0.35 }}
                 redrawInterval={9000}
                 style={{ position: 'absolute', inset: 0 }}
               />

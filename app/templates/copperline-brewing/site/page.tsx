@@ -20,7 +20,7 @@ const PANEL = '#232924';
 
 const PLATE = ['transparent', AMBER, PANEL, HOP, SLATE];
 const FIZZ = ['transparent', AMBER, HOP];
-const LINE = ['transparent', AMBER, BOARD, SLATE];
+const LINE = ['transparent', PANEL, AMBER, BOARD];
 
 const NAV = [
   ['On tap', '#taps'],

@@ -279,7 +279,7 @@
 }
 
 .waitLabel {
-  margin-top: clamp(2rem, 4vw, 3rem);
+  margin: clamp(2rem, 4vw, 3rem) 0 clamp(0.8rem, 1.6vw, 1.4rem);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.16em;
