@@ -439,9 +439,30 @@
   gap: 0.8rem;
 }
 
-.servicesBottle {
-  width: 5.5rem;
+/* The bottle stood in front of a nail painted with dots. */
+.servicesNail {
+  position: relative;
+  width: 10rem;
+  aspect-ratio: 3 / 4;
   margin-top: 1.5rem;
+  overflow: hidden;
+  border-radius: 999px 999px 1.2rem 1.2rem;
+  background: var(--pale);
+  isolation: isolate;
+}
+
+.nailField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.75;
+}
+
+.servicesBottle {
+  position: absolute;
+  left: 50%;
+  bottom: 0.8rem;
+  width: 3.9rem;
+  transform: translateX(-50%);
 }
 
 .menu {
@@ -601,12 +622,24 @@
    The one dark section: plum ground, the hand lit in pink beside the form. */
 
 .book {
+  position: relative;
   overflow: hidden;
   background: var(--ink);
   color: var(--paper);
 }
 
+/* Petals drift in from the right, behind the hand, and fade out before
+   the words. */
+.bookPetals {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  -webkit-mask-image: linear-gradient(to right, transparent 45%, var(--ink) 85%);
+  mask-image: linear-gradient(to right, transparent 45%, var(--ink) 85%);
+}
+
 .bookInner {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1.1fr 0.8fr;
   gap: clamp(2rem, 4vw, 4rem);
@@ -817,8 +850,18 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 28px) var(--gut) 2rem;
   background: var(--pale);
+}
+
+.footEdge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  overflow: hidden;
 }
 
 .footTop {
@@ -907,8 +950,13 @@
     position: static;
   }
 
-  .servicesBottle {
+  .servicesNail {
     display: none;
+  }
+
+  .bookPetals {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 40%, var(--ink) 75%);
+    mask-image: linear-gradient(to bottom, transparent 40%, var(--ink) 75%);
   }
 
   .swatches {

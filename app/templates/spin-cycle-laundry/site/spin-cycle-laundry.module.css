@@ -308,13 +308,25 @@
 }
 
 .board {
+  --board-pad: clamp(1.2rem, 3vw, 2.4rem);
   display: grid;
   gap: clamp(1.4rem, 3vw, 2rem);
-  padding: clamp(1.2rem, 3vw, 2.4rem);
+  padding: var(--board-pad);
   color: var(--paper);
   background: var(--ink);
   border-radius: calc(var(--radius) * 1.5);
   box-shadow: 0 30px 60px -32px rgb(0 0 0 / 0.5);
+  overflow: hidden;
+}
+
+/* A row of doors across the top of the board, like the console strip on
+   a bank of machines. */
+.boardDoors {
+  position: relative;
+  height: 40px;
+  margin: calc(-1 * var(--board-pad)) calc(-1 * var(--board-pad)) 0;
+  opacity: 0.55;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
 }
 
 .boardTop {
@@ -632,6 +644,17 @@
   background: var(--pale);
 }
 
+/* A striped cloth on the lower part of the table, clipped to the disc. */
+.foldCloth {
+  position: absolute;
+  inset: 4%;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.4;
+  -webkit-mask-image: linear-gradient(to top, var(--ink) 38%, transparent 38%);
+  mask-image: linear-gradient(to top, var(--ink) 38%, transparent 38%);
+}
+
 .towels {
   position: relative;
   width: 80%;
@@ -772,12 +795,22 @@
 }
 
 .form {
+  --form-pad: clamp(1.4rem, 3vw, 2rem);
   display: grid;
   gap: 1rem;
-  padding: clamp(1.4rem, 3vw, 2rem);
+  padding: var(--form-pad);
   background: var(--paper);
   border: 2px solid var(--ink);
   border-radius: calc(var(--radius) * 1.3);
+  overflow: hidden;
+}
+
+/* A striped edge along the top of the ticket. */
+.formEdge {
+  position: relative;
+  height: 28px;
+  margin: calc(-1 * var(--form-pad)) calc(-1 * var(--form-pad)) 0.4rem;
+  border-bottom: 2px solid var(--ink);
 }
 
 .formHead {
@@ -972,9 +1005,25 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
+  position: relative;
+  isolation: isolate;
   padding: clamp(3rem, 6vw, 4rem) var(--gut) 2rem;
   color: var(--paper);
   background: var(--ink);
+  overflow: hidden;
+}
+
+/* Doors fading in toward the right, above the fine print. */
+.footField {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: calc(100% - 4.5rem);
+  z-index: -1;
+  opacity: 0.4;
+  -webkit-mask-image: linear-gradient(90deg, transparent, var(--ink) 70%);
+  mask-image: linear-gradient(90deg, transparent, var(--ink) 70%);
 }
 
 .footTop,
@@ -1133,6 +1182,18 @@
 
   .footTop {
     grid-template-columns: 1fr;
+  }
+
+  /* On a phone the doors run along the top edge, clear of the words. */
+  .footer {
+    padding-top: calc(clamp(3rem, 6vw, 4rem) + 2.5rem);
+  }
+
+  .footField {
+    width: 100%;
+    height: 3.5rem;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 }
 

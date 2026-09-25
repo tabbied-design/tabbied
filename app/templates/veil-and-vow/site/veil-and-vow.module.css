@@ -529,9 +529,30 @@
   top: 7rem;
 }
 
-.fitBouquet {
+/* The bouquet in a small arch, lace falling from its top. */
+.fitArch {
+  position: relative;
   width: min(78%, 20rem);
+  aspect-ratio: 4 / 5;
   margin-top: 2.5rem;
+  overflow: hidden;
+  border-radius: 999px 999px 0.3rem 0.3rem;
+  background: var(--ivory);
+}
+
+.fitLace {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(to bottom, var(--ink) 0 30%, transparent 78%);
+  mask-image: linear-gradient(to bottom, var(--ink) 0 30%, transparent 78%);
+}
+
+.fitBouquet {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 84%;
+  transform: translateX(-50%);
 }
 
 .timeline {
@@ -625,11 +646,21 @@
 /* ------------------------------------------------------------------ book */
 
 .book {
+  position: relative;
+  overflow: hidden;
   padding: var(--air) var(--gut);
   background: color-mix(in srgb, var(--rose) 38%, var(--ivory));
 }
 
+/* Petals falling on the rose ground around the card. */
+.bookPetals {
+  position: absolute;
+  inset: 0;
+  opacity: 0.85;
+}
+
 .bookCard {
+  position: relative;
   max-width: var(--max);
   margin: 0 auto;
   display: grid;
@@ -739,9 +770,21 @@
 /* ---------------------------------------------------------------- footer */
 
 .footer {
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 32px) var(--gut) 2rem;
   background: var(--ink);
   color: var(--ivory);
+}
+
+/* A hem of petals along the top edge. */
+.footHem {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  overflow: hidden;
+  opacity: 0.7;
 }
 
 .footTop {
@@ -860,7 +903,7 @@
     position: static;
   }
 
-  .fitBouquet {
+  .fitArch {
     width: min(50%, 14rem);
   }
 

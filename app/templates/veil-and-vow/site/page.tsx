@@ -19,6 +19,7 @@ const PALE = '#EFE8E1';
 
 const PETALS = ['transparent', IVORY, PALE, TAUPE];
 const LACE = ['transparent', ROSE, PALE, TAUPE];
+const HEM = ['transparent', ROSE, TAUPE];
 
 const NAV = [
   ['The appointment', '#appointment'],
@@ -300,13 +301,26 @@ export default function VeilAndVowPage() {
                   seamstresses who will know your gown by the third fitting.
                 </p>
               </div>
-              <Artwork
-                slug="veil-and-vow-bouquet"
-                alt=""
-                mode="tint"
-                inks={['var(--ink)', 'var(--rose)']}
-                className={s.fitBouquet}
-              />
+              <div className={s.fitArch}>
+                <div className={s.fitLace} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={ogee}
+                    palette={LACE}
+                    fit="grid"
+                    cellSize={44}
+                    seed="veil-veil"
+                    options={{ frequency: 0.6 }}
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+                <Artwork
+                  slug="veil-and-vow-bouquet"
+                  alt=""
+                  mode="tint"
+                  inks={['var(--ink)', 'var(--rose)']}
+                  className={s.fitBouquet}
+                />
+              </div>
             </div>
 
             <div className={s.fitMain}>
@@ -338,6 +352,17 @@ export default function VeilAndVowPage() {
 
         {/* ------------------------------------------------------------ BOOK */}
         <section id="book" className={s.book} aria-labelledby="book-h">
+          <div className={s.bookPetals} aria-hidden="true">
+            <TabbiedPattern
+              pattern={petalcut}
+              palette={PETALS}
+              fit="grid"
+              cellSize={72}
+              seed="book-petals"
+              options={{ frequency: 0.35 }}
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.bookCard}>
             <div className={s.bookInfo}>
               <p data-edit="book.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Book</p>
@@ -414,6 +439,17 @@ export default function VeilAndVowPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footHem} aria-hidden="true">
+          <TabbiedPattern
+            pattern={petalcut}
+            palette={HEM}
+            fit="grid"
+            cellSize={32}
+            seed="hem"
+            options={{ frequency: 0.7 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Veil &amp; Vow</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Bridal gowns, veils and fittings, 9 Orchard Lane.</p>

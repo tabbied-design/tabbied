@@ -21,6 +21,8 @@ const SQUASH = '#F3B63F';
 
 const BLOOM = ['transparent', PAPER, TOMATO, LEAF, SQUASH, INK];
 const LEAVES = ['transparent', LEAF, SQUASH, TOMATO];
+/* On the green payments band the leaves turn squash and paper. */
+const LEAVES_ON_GREEN = ['transparent', SQUASH, PAPER, TOMATO];
 
 const NAV = [
   ['Stall map', '#map'],
@@ -256,6 +258,16 @@ export default function SundayMarketPage() {
             The square as a grid of numbered stalls, colored by what they
             sell, with the directory in the same numbers beside it. */}
         <section id="map" className={s.mapSec} aria-labelledby="map-h">
+          <div className={s.valance} aria-hidden="true">
+            <TabbiedPattern
+              pattern={cornerbloom}
+              palette={BLOOM}
+              fit="grid"
+              cellSize={48}
+              seed="sunday-valance-2"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.secHead}>
             <p data-edit="map.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Stall map</p>
             <h2 data-edit="map.secTitle" data-edit-max="60" id="map-h" className={s.secTitle}>Find your way round the square</h2>
@@ -336,6 +348,17 @@ export default function SundayMarketPage() {
                 or two.
               </p>
               <div className={s.seasonArt}>
+                <div className={s.carrotPlate} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={lobe}
+                    palette={LEAVES}
+                    options={{ frequency: 0.6 }}
+                    fit="grid"
+                    cellSize={40}
+                    seed="sunday-carrots"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
                 <Artwork
                   slug="sunday-market-carrots"
                   alt="A bunch of carrots with leafy tops"
@@ -384,6 +407,17 @@ export default function SundayMarketPage() {
 
         {/* -------------------------------------------------------- PAYMENTS */}
         <section id="payments" className={s.payments} aria-labelledby="pay-h">
+          <div className={s.payLeaves} aria-hidden="true">
+            <TabbiedPattern
+              pattern={lobe}
+              palette={LEAVES_ON_GREEN}
+              options={{ frequency: 0.4 }}
+              fit="grid"
+              cellSize={52}
+              seed="sunday-pay"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.payInner}>
             <div className={s.payLead}>
               <p data-edit="payments.secKickerLight" data-edit-max="240" data-edit-multiline className={s.secKickerLight}>SNAP and payments</p>

@@ -512,11 +512,24 @@
 }
 
 .lakePhoto {
+  position: relative;
+  isolation: isolate;
   margin-top: 2rem;
 }
 
 .lakePhoto > * {
   width: 100%;
+}
+
+/* The photograph's sky is empty, so stars come out behind the pines. */
+.lakeSky {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  height: 48%;
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, var(--night) 45%, transparent);
 }
 
 .things {
@@ -693,8 +706,22 @@
 /* --------------------------------------------------------------------- faq */
 
 .faq {
+  position: relative;
   max-width: 50rem;
   border-top: 1px solid color-mix(in srgb, var(--cream) 30%, transparent);
+}
+
+/* A round pool of the band's rings, beside the questions. */
+.faqRipple {
+  position: absolute;
+  top: -1rem;
+  left: calc(100% + clamp(2rem, 5vw, 4rem));
+  width: 13rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--deep);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lake) 40%, transparent);
 }
 
 .faqItem {
@@ -747,6 +774,15 @@
   margin-top: var(--air);
   padding: clamp(3.5rem, 7vw, 5rem) var(--gut) 2rem;
   background: var(--deep);
+}
+
+/* The band's rings again, a shallow strip along the footer's top edge. */
+.footWake {
+  position: relative;
+  height: 2.5rem;
+  margin: calc(-1 * clamp(3.5rem, 7vw, 5rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  opacity: 0.7;
 }
 
 .footGrid {
@@ -808,6 +844,12 @@
 }
 
 /* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1240px) {
+  .faqRipple {
+    display: none;
+  }
+}
 
 @media (max-width: 1100px) {
   .seasons {

@@ -536,9 +536,29 @@
 }
 
 .rawOyster {
+  grid-area: 1 / 1;
+  position: relative;
   width: min(16rem, 70%);
-  margin-top: 2.25rem;
   transform: rotate(-12deg);
+}
+
+/* The oyster on a round plate of ice, drawn in the tide rings. */
+.rawPlate {
+  display: grid;
+  place-items: center;
+  width: min(19rem, 90%);
+  margin-top: 2.25rem;
+}
+
+.rawIce {
+  grid-area: 1 / 1;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--deep);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0.6rem var(--foam), 0 0 0 calc(0.6rem + 1px) var(--pebble);
 }
 
 .menu {
@@ -582,10 +602,23 @@
 }
 
 .kitchen {
+  --band: 3.25rem;
+  position: relative;
   margin-top: clamp(4rem, 8vw, 6.5rem);
-  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+  padding: calc(clamp(3rem, 6vw, 5rem) + var(--band)) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
   background: var(--mist);
   border-top: 1px solid var(--deep);
+  border-bottom: 1px solid var(--deep);
+}
+
+/* A strip of the rings along the top of the kitchen, like a label's edge. */
+.kitchenBand {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--band);
+  overflow: hidden;
   border-bottom: 1px solid var(--deep);
 }
 
@@ -939,9 +972,21 @@
 /* ---------------------------------------------------------------- footer */
 
 .footer {
+  position: relative;
   color: var(--foam);
   background: var(--deep);
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2.25rem) var(--gut) 2rem;
+}
+
+/* The quay's edge: arcs of the tide along the top of the footer. */
+.footBand {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.25rem;
+  overflow: hidden;
+  opacity: 0.75;
 }
 
 .footInner {
@@ -1043,7 +1088,7 @@
     position: static;
   }
 
-  .rawOyster {
+  .rawPlate {
     display: none;
   }
 

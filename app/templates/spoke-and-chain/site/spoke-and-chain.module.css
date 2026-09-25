@@ -636,6 +636,8 @@
 }
 
 .pumpBox {
+  position: relative;
+  overflow: hidden;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: end;
@@ -646,10 +648,21 @@
 }
 
 .pump {
+  position: relative;
   width: clamp(5.5rem, 9vw, 8rem);
 }
 
+/* A scatter of wheels behind the pump, fading out before the note. */
+.pumpWheels {
+  position: absolute;
+  inset: 0 45% 0 0;
+  opacity: 0.45;
+  -webkit-mask-image: linear-gradient(90deg, var(--ink) 35%, transparent);
+  mask-image: linear-gradient(90deg, var(--ink) 35%, transparent);
+}
+
 .pumpNote {
+  position: relative;
   display: grid;
   gap: 0.5rem;
   padding-bottom: 0.4rem;
@@ -677,6 +690,7 @@
 }
 
 .rentalsHead {
+  position: relative;
   display: flex;
   align-items: end;
   justify-content: space-between;
@@ -684,9 +698,23 @@
 }
 
 .helmet {
+  position: relative;
   flex: none;
   width: clamp(9rem, 16vw, 14rem);
   margin-bottom: -1rem;
+}
+
+/* The hero's pale plate of triangles, small, behind the helmet. */
+.helmetPlate {
+  position: absolute;
+  right: calc(-1 * clamp(1rem, 2.5vw, 2.5rem));
+  bottom: -1.5rem;
+  width: clamp(12rem, 22vw, 19rem);
+  aspect-ratio: 1.25;
+  overflow: hidden;
+  border-radius: 24px 24px 0 0;
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 40%, transparent 96%);
+  mask-image: linear-gradient(180deg, var(--ink) 40%, transparent 96%);
 }
 
 .rentalsGrid {
@@ -1002,6 +1030,16 @@
   background: var(--ink);
 }
 
+/* A ribbon of the hero's triangles along the top edge. */
+.footConfetti {
+  position: relative;
+  height: 3rem;
+  margin: -2.8rem calc(-1 * var(--gut)) 2.4rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, var(--ink), transparent);
+  mask-image: linear-gradient(180deg, var(--ink), transparent);
+}
+
 .footTop,
 .footFine {
   display: flex;
@@ -1193,6 +1231,13 @@
   .helmet {
     width: 6.5rem;
     margin-bottom: 0;
+  }
+
+  .helmetPlate {
+    right: -0.75rem;
+    bottom: auto;
+    top: -0.75rem;
+    width: 8.5rem;
   }
 
   /* Five columns fit a phone once the figures shrink, so no scrolling. */

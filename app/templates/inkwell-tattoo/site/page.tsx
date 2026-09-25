@@ -21,6 +21,7 @@ const PALE = '#E4DCCD';
 const WALLPAPER = ['transparent', GRAY, PALE, PAPER, PALE];
 const FILLER = ['transparent', INK, RED, PAPER, INK, RED, PALE];
 const STARS = ['transparent', RED, PALE, GRAY];
+const DISC = ['transparent', GRAY, PAPER, PALE, PAPER, PALE, PAPER, PALE];
 
 const NAV = [
   ['Flash', '#flash'],
@@ -653,7 +654,7 @@ export default function InkwellTattooPage() {
               <div className={s.visitDisc} aria-hidden="true">
                 <TabbiedPattern
                   pattern={diamondconfetti}
-                  palette={WALLPAPER}
+                  palette={DISC}
                   fit="grid"
                   cellSize={120}
                   seed="inkwell-disc"

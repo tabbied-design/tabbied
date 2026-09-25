@@ -18,9 +18,12 @@ const TEAL = '#13A6A3';
 const ORANGE = '#F2994A';
 const PALE = '#E1EBEB';
 const GRAY = '#8B989C';
+const INK = '#16232B';
 
 const DRUM = [PALE, TEAL, ORANGE, PAPER, TEAL];
 const STRIPE = ['transparent', TEAL, PALE, ORANGE, GRAY];
+const DOORS = [INK, TEAL, ORANGE, GRAY, TEAL];
+const HEM = ['transparent', TEAL, ORANGE, PAPER];
 
 const NAV = [
   ['Machines', '#machines'],
@@ -297,6 +300,18 @@ export default function SpinCycleLaundryPage() {
             the minutes it has left. */}
         <section id="machines" className={s.machines} aria-labelledby="machines-h">
           <div className={s.board}>
+            <div className={s.boardDoors} aria-hidden="true">
+              <TabbiedPattern
+                pattern={loophole}
+                palette={DOORS}
+                fit="grid"
+                cellSize={40}
+                seed="spin-doors"
+                redrawInterval={9000}
+                options={{ frequency: 0.55 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <div className={s.boardTop}>
               <div className={s.boardTitle}>
                 <p data-edit="machines.boardKicker" data-edit-max="240" data-edit-multiline className={s.boardKicker}>Machine board</p>
@@ -392,6 +407,17 @@ export default function SpinCycleLaundryPage() {
         {/* ---------------------------------------------------- WASH AND FOLD */}
         <section id="wash-fold" className={s.fold} aria-labelledby="fold-h">
           <div className={s.foldArt}>
+            <div className={s.foldCloth} aria-hidden="true">
+              <TabbiedPattern
+                pattern={picket}
+                palette={HEM}
+                fit="grid"
+                cellSize={30}
+                seed="spin-cloth"
+                options={{ frequency: 1 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="spin-cycle-laundry-towels"
               alt="A stack of folded towels"
@@ -480,6 +506,17 @@ export default function SpinCycleLaundryPage() {
               ))}
             </dl>
             <form className={s.form} action="#">
+              <div className={s.formEdge} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={picket}
+                  palette={STRIPE}
+                  fit="grid"
+                  cellSize={28}
+                  seed="spin-ticket"
+                  options={{ frequency: 0.8 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <h3 data-edit="pickup.formHead" data-edit-max="40" className={s.formHead}>Book a pickup</h3>
               <label className={s.field}>
                 <span data-edit="pickup.text" data-edit-max="60">Name</span>
@@ -582,6 +619,17 @@ export default function SpinCycleLaundryPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footField} aria-hidden="true">
+          <TabbiedPattern
+            pattern={loophole}
+            palette={DOORS}
+            fit="grid"
+            cellSize={56}
+            seed="spin-foot"
+            options={{ frequency: 0.5 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Spin Cycle</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Laundromat, wash and fold, pickup and delivery. 311 Linden Avenue.</p>

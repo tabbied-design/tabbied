@@ -558,7 +558,7 @@ export default function SudsCarWashPage() {
                 cellSize={90}
                 seed="suds-rinse"
                 redrawInterval={11000}
-                options={{ frequency: 0.3 }}
+                options={{ frequency: 0.4 }}
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
@@ -659,7 +659,7 @@ export default function SudsCarWashPage() {
             pattern={recession}
             palette={PUDDLE}
             fit="grid"
-            cellSize={26}
+            cellSize={24}
             seed="suds-footer"
             options={{ frequency: 0.6 }}
             style={{ position: 'absolute', inset: 0 }}

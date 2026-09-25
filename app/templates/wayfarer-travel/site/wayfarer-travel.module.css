@@ -981,8 +981,8 @@
 /* Depth contours on a chart, under the boat. */
 .consultSea {
   position: absolute;
-  left: -4rem;
-  bottom: -5rem;
+  left: -4.5rem;
+  bottom: -8rem;
   width: 25rem;
   aspect-ratio: 1;
   border-radius: 50%;

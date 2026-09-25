@@ -502,9 +502,23 @@
 }
 
 .examsInner {
+  position: relative;
   max-width: var(--max);
   margin: 0 auto;
   padding: var(--air) var(--gut);
+}
+
+/* The chart's dots receding into the dark, beside the heading. */
+.examsField {
+  position: absolute;
+  top: calc(var(--air) - 1rem);
+  right: var(--gut);
+  width: min(36rem, 40%);
+  height: 15rem;
+  overflow: hidden;
+  opacity: 0.85;
+  -webkit-mask-image: radial-gradient(ellipse at 100% 0%, var(--ink) 30%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 100% 0%, var(--ink) 30%, transparent 72%);
 }
 
 .exams .secNote {
@@ -600,8 +614,21 @@
 /* ------------------------------------------------------------------- sun */
 
 .sun {
+  position: relative;
+  padding-bottom: 3rem;
   background: var(--amber);
   color: var(--ink);
+}
+
+/* Lenses in a row along the foot of the amber band. */
+.sunStrip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3rem;
+  overflow: hidden;
+  opacity: 0.8;
 }
 
 .sunInner {
@@ -737,6 +764,19 @@
   color: var(--muted);
 }
 
+/* A plinth of receding dots the glasses rest on. */
+.insField {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 7.5rem;
+  overflow: hidden;
+  opacity: 0.75;
+  -webkit-mask-image: linear-gradient(to top, var(--ink) 30%, transparent);
+  mask-image: linear-gradient(to top, var(--ink) 30%, transparent);
+}
+
 .insArt {
   position: absolute;
   right: 1.2rem;
@@ -854,9 +894,21 @@
 /* ---------------------------------------------------------------- footer */
 
 .footer {
-  padding: clamp(3rem, 6vw, 4rem) var(--gut) 2rem;
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4rem) + 2.25rem) var(--gut) 2rem;
   background: var(--ink);
   color: var(--paper);
+}
+
+/* A line of lenses along the top edge of the footer. */
+.footStrip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.25rem;
+  overflow: hidden;
+  opacity: 0.85;
 }
 
 .footTop {
@@ -928,6 +980,11 @@
   .pricesGrid {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .examsField {
+    width: 32%;
+    height: 11rem;
+  }
 }
 
 @media (max-width: 960px) {
@@ -956,6 +1013,10 @@
 
   .footTop {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .examsField {
+    display: none;
   }
 }
 

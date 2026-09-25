@@ -447,14 +447,27 @@ export default function OldTownWalksPage() {
               </p>
               <a data-edit="private.btnInk" data-edit-max="28" className={s.btnInk} href="mailto:walks@oldtownwalks.example">Write to plan one</a>
             </div>
-            <dl className={s.prices}>
-              {PRIVATE.map(([what, price], i) => (
-                <div key={what}>
-                  <dt data-edit={`private.term.${i}`} data-edit-max="28">{what}</dt>
-                  <dd data-edit={`private.body2.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
-                </div>
-              ))}
-            </dl>
+            <div className={s.pricesMat}>
+              <div className={s.pricesField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={baste}
+                  palette={ROUTES}
+                  options={{ frequency: 0.6 }}
+                  fit="grid"
+                  cellSize={32}
+                  seed="old-town-private"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <dl className={s.prices}>
+                {PRIVATE.map(([what, price], i) => (
+                  <div key={what}>
+                    <dt data-edit={`private.term.${i}`} data-edit-max="28">{what}</dt>
+                    <dd data-edit={`private.body2.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           </div>
         </section>
 
@@ -514,6 +527,17 @@ export default function OldTownWalksPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Before you come</h2>
           </div>
           <div className={s.faq}>
+            <div className={s.faqStreet} aria-hidden="true">
+              <TabbiedPattern
+                pattern={garret}
+                palette={HOUSES}
+                options={{ frequency: 0.75 }}
+                fit="grid"
+                cellSize={36}
+                seed="old-town-lane"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
                 <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
@@ -525,6 +549,17 @@ export default function OldTownWalksPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footStreet} aria-hidden="true">
+          <TabbiedPattern
+            pattern={garret}
+            palette={HOUSES}
+            options={{ frequency: 0.7 }}
+            fit="grid"
+            cellSize={40}
+            seed="old-town-roofline"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Old Town Walks</p>

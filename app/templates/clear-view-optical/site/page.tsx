@@ -19,6 +19,8 @@ const GRAY = '#8B93A1';
 
 const STAGE = ['transparent', BLUE, GRAY, AMBER];
 const LENSES = ['transparent', BLUE, AMBER, INK];
+const SHADES = ['transparent', INK, BLUE];
+const RIMS = ['transparent', BLUE, AMBER];
 
 const NAV = [
   ['Frames', '#frames'],
@@ -323,6 +325,16 @@ export default function ClearViewOpticalPage() {
         {/* ----------------------------------------------------------- EXAMS */}
         <section id="exams" className={s.exams} aria-labelledby="exams-h">
           <div className={s.examsInner}>
+            <div className={s.examsField} aria-hidden="true">
+              <TabbiedPattern
+                pattern={recession}
+                palette={STAGE}
+                fit="grid"
+                cellSize={34}
+                seed="clear-view-exams"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <div className={s.secHead}>
               <p data-edit="exams.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Eye exams</p>
               <h2 data-edit="exams.title" data-edit-max="60" id="exams-h">Forty minutes, and nothing rushed</h2>
@@ -374,6 +386,17 @@ export default function ClearViewOpticalPage() {
               </p>
             </div>
           </div>
+          <div className={s.sunStrip} aria-hidden="true">
+            <TabbiedPattern
+              pattern={gimbal}
+              palette={SHADES}
+              fit="grid"
+              cellSize={44}
+              seed="clear-view-sun"
+              options={{ frequency: 0.55 }}
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
         </section>
 
         {/* ---------------------------------------------------------- PRICES */}
@@ -422,6 +445,16 @@ export default function ClearViewOpticalPage() {
                 you an itemized receipt to claim yourself. FSA and HSA cards
                 are welcome.
               </p>
+              <div className={s.insField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={recession}
+                  palette={STAGE}
+                  fit="grid"
+                  cellSize={30}
+                  seed="clear-view-plans"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="clear-view-optical-cateye"
                 alt=""
@@ -506,6 +539,17 @@ export default function ClearViewOpticalPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footStrip} aria-hidden="true">
+          <TabbiedPattern
+            pattern={gimbal}
+            palette={RIMS}
+            fit="grid"
+            cellSize={36}
+            seed="clear-view-footer"
+            options={{ frequency: 0.4 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Clear View Optical</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Eye exams and eyewear, 14 Linden Row.</p>

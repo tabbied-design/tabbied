@@ -588,9 +588,9 @@ export default function HighPassLodgePage() {
           <TabbiedPattern
             pattern={terrain}
             palette={BAND}
-            options={{ frequency: 0.5 }}
+            options={{ frequency: 0.9 }}
             fit="grid"
-            cellSize={80}
+            cellSize={72}
             seed="high-pass-foot"
             style={{ position: 'absolute', inset: 0 }}
           />

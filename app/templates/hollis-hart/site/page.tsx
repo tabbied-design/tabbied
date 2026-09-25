@@ -343,6 +343,17 @@ export default function HollisHartPage() {
               </tbody>
             </table>
           </div>
+          <div className={s.planStrip} aria-hidden="true">
+            <TabbiedPattern
+              pattern={ortho}
+              palette={PLAN}
+              options={{ frequency: 0.7 }}
+              fit="grid"
+              cellSize={32}
+              seed="hollis-listings"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
         </section>
 
         {/* ----------------------------------------------------------- AGENTS
@@ -492,6 +503,17 @@ export default function HollisHartPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footFan} aria-hidden="true">
+          <TabbiedPattern
+            pattern={lunette}
+            palette={ARCHES}
+            options={{ frequency: 1 }}
+            fit="grid"
+            cellSize={40}
+            seed="hollis-fanlight"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Hollis &amp; Hart</p>
         <ul className={s.footLinks}>
           {NAV.map(([label, href], i) => (

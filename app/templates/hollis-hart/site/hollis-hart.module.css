@@ -516,6 +516,14 @@
   font-size: 0.93rem;
 }
 
+/* The plan squares again, closing the table like a ruled edge. */
+.planStrip {
+  position: relative;
+  height: 2rem;
+  margin-top: 1.6rem;
+  overflow: hidden;
+}
+
 .listings thead th {
   padding: 0.9rem 0.7rem 0.7rem 0;
   font-size: 0.66rem;
@@ -873,6 +881,17 @@
   padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 2rem;
   background: var(--pale);
   text-align: center;
+}
+
+/* A fanlight over the name, the valuation panel's arches in small. */
+.footFan {
+  position: relative;
+  width: 10rem;
+  height: 5rem;
+  margin: 0 auto 1.4rem;
+  border-radius: 999px 999px 0 0;
+  background: var(--ink);
+  overflow: hidden;
 }
 
 .footMark {

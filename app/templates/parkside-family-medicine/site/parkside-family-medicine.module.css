@@ -641,10 +641,29 @@
   gap: 2rem;
 }
 
-.steth {
+/* The stethoscope on a round of leaves. */
+.stethSpot {
+  position: relative;
   flex: none;
-  width: clamp(6rem, 11vw, 9.5rem);
-  margin-bottom: 2.5rem;
+  display: grid;
+  place-items: center;
+  width: clamp(9rem, 15vw, 13rem);
+  aspect-ratio: 1;
+  margin-bottom: 1.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--pale);
+}
+
+.stethField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.7;
+}
+
+.steth {
+  position: relative;
+  width: 66%;
 }
 
 .team {
@@ -946,7 +965,20 @@
 /* ------------------------------------------------------------------- visit */
 
 .visit {
+  position: relative;
+  padding-top: 3rem;
   background: var(--pale);
+}
+
+/* A low hedge of leaves along the top of the section. */
+.hedge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rem;
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in srgb, var(--sage) 30%, transparent);
 }
 
 .visitInner {
@@ -998,9 +1030,20 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2.5rem) var(--gut) 2rem;
   background: var(--ink);
   color: var(--paper);
+}
+
+/* A row of dots along the top edge of the footer. */
+.footDots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5rem;
+  overflow: hidden;
 }
 
 .footGrid {
@@ -1244,8 +1287,8 @@
     align-items: flex-start;
   }
 
-  .steth {
-    width: 4.5rem;
+  .stethSpot {
+    width: 6.5rem;
   }
 
   /* The hours table becomes one card per day. */

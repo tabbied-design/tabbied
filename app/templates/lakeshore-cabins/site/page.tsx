@@ -408,6 +408,17 @@ export default function LakeshoreCabinsPage() {
                   mode="tint"
                   inks={['var(--deep)', 'var(--amber)']}
                 />
+                <div className={s.lakeSky} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={sparkle}
+                    palette={STARS}
+                    options={{ frequency: 0.3 }}
+                    fit="grid"
+                    cellSize={26}
+                    seed="lakeshore-lookup"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
               </div>
             </div>
             <ul className={s.things}>
@@ -508,6 +519,17 @@ export default function LakeshoreCabinsPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked on the dock, most summers</h2>
           </div>
           <div className={s.faq}>
+            <div className={s.faqRipple} aria-hidden="true">
+              <TabbiedPattern
+                pattern={tidering}
+                palette={RIPPLE}
+                options={{ frequency: 1 }}
+                fit="grid"
+                cellSize={52}
+                seed="lakeshore-stone"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
                 <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
@@ -519,6 +541,17 @@ export default function LakeshoreCabinsPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footWake} aria-hidden="true">
+          <TabbiedPattern
+            pattern={tidering}
+            palette={RIPPLE}
+            options={{ frequency: 0.75 }}
+            fit="grid"
+            cellSize={40}
+            seed="lakeshore-shore"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Lakeshore Cabins</p>

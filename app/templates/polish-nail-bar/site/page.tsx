@@ -19,6 +19,7 @@ const GRAY = '#A38D96';
 
 const PETALS = ['transparent', PINK, VIOLET, PAPER];
 const DOTS = ['transparent', PINK, VIOLET, GRAY];
+const ART = ['transparent', PINK, VIOLET];
 
 const NAV = [
   ['The wall', '#wall'],
@@ -342,13 +343,26 @@ export default function PolishNailBarPage() {
                 Every bar is how long you will be in the chair. Prices
                 include polish from the wall and a hand or foot massage.
               </p>
-              <Artwork
-                slug="polish-nail-bar-bottle"
-                alt=""
-                mode="tint"
-                inks={['var(--violet)', 'var(--paper)']}
-                className={s.servicesBottle}
-              />
+              <div className={s.servicesNail}>
+                <div className={s.nailField} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={polkadot}
+                    palette={DOTS}
+                    fit="grid"
+                    cellSize={26}
+                    seed="nail-art"
+                    options={{ frequency: 0.6 }}
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+                <Artwork
+                  slug="polish-nail-bar-bottle"
+                  alt=""
+                  mode="tint"
+                  inks={['var(--violet)', 'var(--paper)']}
+                  className={s.servicesBottle}
+                />
+              </div>
             </div>
             <div className={s.menu}>
               {MENU.map((g, i) => (
@@ -419,6 +433,17 @@ export default function PolishNailBarPage() {
 
         {/* ------------------------------------------------------------ BOOK */}
         <section id="book" className={s.book} aria-labelledby="book-h">
+          <div className={s.bookPetals} aria-hidden="true">
+            <TabbiedPattern
+              pattern={petalcut}
+              palette={ART}
+              fit="grid"
+              cellSize={64}
+              seed="book-petals"
+              options={{ frequency: 0.4 }}
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.bookInner}>
             <div className={s.bookText}>
               <p data-edit="book.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Book</p>
@@ -541,6 +566,17 @@ export default function PolishNailBarPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footEdge} aria-hidden="true">
+          <TabbiedPattern
+            pattern={petalcut}
+            palette={ART}
+            fit="grid"
+            cellSize={28}
+            seed="foot-petals"
+            options={{ frequency: 0.8 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Polish</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Nail bar, 18 Carmine Street. Pick a color.</p>

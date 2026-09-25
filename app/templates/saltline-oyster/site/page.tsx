@@ -19,6 +19,8 @@ const MIST = '#DCE3E6';
 const RINGS = ['transparent', TIDE, MIST, MIST, PEBBLE];
 const SWELL = ['transparent', TIDE, MIST, PEBBLE];
 const WAKE = ['transparent', TIDE, MIST, PEBBLE];
+const ICE = ['transparent', MIST, MIST, MIST, PEBBLE, MIST];
+const QUAY = ['transparent', TIDE, PEBBLE, TIDE];
 
 const NAV = [
   ['Oysters', '#oysters'],
@@ -391,12 +393,25 @@ export default function SaltlineOysterPage() {
                 Clams opened to order, crudo cut at the counter, lobster boiled
                 that morning and chilled. Towers take about fifteen minutes.
               </p>
-              <Artwork
-                slug="saltline-oyster-oyster"
-                alt=""
-                inks={['var(--tide)']}
-                className={s.rawOyster}
-              />
+              <div className={s.rawPlate}>
+                <div className={s.rawIce} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={tidering}
+                    palette={ICE}
+                    fit="grid"
+                    cellSize={44}
+                    options={{ frequency: 0.8 }}
+                    seed="saltline-ice"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+                <Artwork
+                  slug="saltline-oyster-oyster"
+                  alt=""
+                  inks={['var(--tide)']}
+                  className={s.rawOyster}
+                />
+              </div>
             </div>
             <ul className={s.menu}>
               {RAW.map(([name, note, price], i) => (
@@ -414,6 +429,16 @@ export default function SaltlineOysterPage() {
         {/* --------------------------------------------------------- KITCHEN
             The mackerel stretched across the top of the menu like a label. */}
         <section id="kitchen" className={s.kitchen} aria-labelledby="kitchen-h">
+          <div className={s.kitchenBand} aria-hidden="true">
+            <TabbiedPattern
+              pattern={eclipserings}
+              palette={SWELL}
+              fit="grid"
+              cellSize={52}
+              seed="saltline-kitchen"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.kitchenInner}>
             <div className={s.kitchenArt}>
               <Artwork
@@ -619,6 +644,16 @@ export default function SaltlineOysterPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footBand} aria-hidden="true">
+          <TabbiedPattern
+            pattern={tidering}
+            palette={QUAY}
+            fit="grid"
+            cellSize={40}
+            seed="saltline-quay"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footInner}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Saltline</p>

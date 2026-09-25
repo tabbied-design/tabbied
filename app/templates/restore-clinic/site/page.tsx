@@ -20,6 +20,9 @@ const PALE = '#E0E8E3';
 
 const LEAVES = ['transparent', EUCALYPTUS, PALE];
 const STONES = ['transparent', PALE, GRAY, CLAY];
+const FRAME_LEAVES = ['transparent', 'transparent', PALE];
+const NIGHT_LEAVES = ['transparent', 'transparent', EUCALYPTUS];
+const SHORE = ['transparent', EUCALYPTUS, GRAY, CLAY];
 
 const NAV = [
   ['Treatments', '#treatments'],
@@ -378,6 +381,17 @@ export default function RestoreClinicPage() {
             {TEAM.map((p, i) => (
               <article key={p.name} className={s.person}>
                 <div className={`${s.portraitFrame} ${s[`frame_${p.frame}`]}`}>
+                  <div className={s.frameField} aria-hidden="true">
+                    <TabbiedPattern
+                      pattern={teardropleaves}
+                      palette={FRAME_LEAVES}
+                      options={{ frequency: 0.6 }}
+                      fit="grid"
+                      cellSize={44}
+                      seed={`restore-frame-${i}`}
+                      style={{ position: 'absolute', inset: 0 }}
+                    />
+                  </div>
                   <Artwork
                     slug={p.art}
                     alt={p.alt}
@@ -450,6 +464,17 @@ export default function RestoreClinicPage() {
 
         {/* -------------------------------------------------------- INSURANCE */}
         <section id="insurance" className={s.insurance} aria-labelledby="insurance-h">
+          <div className={s.insuranceField} aria-hidden="true">
+            <TabbiedPattern
+              pattern={teardropleaves}
+              palette={NIGHT_LEAVES}
+              options={{ frequency: 0.45 }}
+              fit="grid"
+              cellSize={72}
+              seed="restore-night"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.insuranceInner}>
             <div className={s.insuranceText}>
               <p data-edit="insurance.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Insurance and payment</p>
@@ -567,6 +592,17 @@ export default function RestoreClinicPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footStrip} aria-hidden="true">
+          <TabbiedPattern
+            pattern={pebble}
+            palette={SHORE}
+            options={{ frequency: 0.5 }}
+            fit="grid"
+            cellSize={36}
+            seed="restore-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Restore</p>

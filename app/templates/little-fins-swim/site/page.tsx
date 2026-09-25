@@ -320,8 +320,8 @@ export default function LittleFinsPage() {
               pattern={lagoon}
               palette={RIPPLES}
               fit="grid"
-              cellSize={48}
-              options={{ frequency: 0.5 }}
+              cellSize={40}
+              options={{ frequency: 0.6 }}
               seed="lane-four"
               style={{ position: 'absolute', inset: 0 }}
             />

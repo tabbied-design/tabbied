@@ -344,6 +344,20 @@
   border-block: 2px solid var(--ink);
 }
 
+/* The hero's awning again, as a scalloped valance hung from the top rule. */
+.valance {
+  position: relative;
+  height: clamp(3.25rem, 5vw, 4.25rem);
+  margin: calc(-1 * clamp(4rem, 8vw, 7rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 4rem);
+  overflow: hidden;
+  -webkit-mask:
+    linear-gradient(var(--ink), var(--ink)) top / 100% calc(100% - 18px) no-repeat,
+    radial-gradient(circle at 50% 0, var(--ink) 17.5px, transparent 18px) bottom / 36px 18px repeat-x;
+  mask:
+    linear-gradient(var(--ink), var(--ink)) top / 100% calc(100% - 18px) no-repeat,
+    radial-gradient(circle at 50% 0, var(--ink) 17.5px, transparent 18px) bottom / 36px 18px repeat-x;
+}
+
 .mapSec > .secHead {
   max-width: calc(var(--max) - 2 * var(--gut));
   margin: 0 auto;
@@ -575,11 +589,27 @@
 }
 
 .seasonArt {
+  position: relative;
   margin-top: auto;
   padding-top: 2.5rem;
 }
 
+/* A round bed of leaves the carrots were pulled from. */
+.carrotPlate {
+  position: absolute;
+  left: -1.5rem;
+  bottom: -1.5rem;
+  width: min(19rem, 90%);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.4;
+  -webkit-mask-image: radial-gradient(closest-side, var(--ink) 50%, transparent 100%);
+  mask-image: radial-gradient(closest-side, var(--ink) 50%, transparent 100%);
+}
+
 .carrots {
+  position: relative;
   width: min(15rem, 70%);
 }
 
@@ -686,12 +716,25 @@
 /* --------------------------------------------------------------- payments */
 
 .payments {
+  position: relative;
+  overflow: hidden;
   padding: clamp(4.5rem, 9vw, 8rem) var(--gut);
   color: var(--paper);
   background: var(--leaf);
 }
 
+/* Fallen leaves along the bottom of the band, under the apple crate. */
+.payLeaves {
+  position: absolute;
+  inset: auto 0 0;
+  height: clamp(9rem, 18vw, 15rem);
+  opacity: 0.35;
+  -webkit-mask-image: linear-gradient(180deg, transparent, var(--ink) 75%);
+  mask-image: linear-gradient(180deg, transparent, var(--ink) 75%);
+}
+
 .payInner {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   gap: clamp(2rem, 6vw, 6rem);

@@ -498,6 +498,14 @@
   overflow: hidden;
 }
 
+/* The hero's leaves, pale and sparse, in the top of each arch. */
+.frameField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  mask-image: linear-gradient(180deg, var(--ink) 0%, var(--ink) 35%, transparent 80%);
+}
+
 .frame_eucalyptus {
   background: var(--eucalyptus);
 }
@@ -629,9 +637,21 @@
 /* -------------------------------------------------------------- insurance */
 
 .insurance {
+  position: relative;
+  isolation: isolate;
   margin-top: var(--air);
   background: var(--ink);
   color: var(--mist);
+  overflow: hidden;
+}
+
+/* Leaves in the dark, kept to the right where the insurer card sits. */
+.insuranceField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+  mask-image: linear-gradient(90deg, transparent 40%, var(--ink) 85%);
 }
 
 .insuranceInner {
@@ -853,9 +873,18 @@
 /* ----------------------------------------------------------------- footer */
 
 .footer {
+  --foot-top: clamp(2.5rem, 5vw, 4rem);
   margin-top: var(--air);
-  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) 2rem;
+  padding: var(--foot-top) var(--gut) 2rem;
   background: var(--pale);
+}
+
+/* A row of stones along the top edge of the footer. */
+.footStrip {
+  position: relative;
+  height: 2.25rem;
+  margin: calc(-1 * var(--foot-top)) calc(-1 * var(--gut)) var(--foot-top);
+  overflow: hidden;
 }
 
 .footTop {
@@ -945,6 +974,10 @@
   .insuranceInner,
   .book {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .insuranceField {
+    mask-image: linear-gradient(180deg, transparent 50%, var(--ink) 90%);
   }
 
   .heroArt {

@@ -20,6 +20,8 @@ const PAPER = '#F5F8F6';
 
 const LEAVES = ['transparent', SAGE, PAPER, GRAY];
 const DOTS = ['transparent', SAGE, GRAY];
+const HEDGE = ['transparent', SAGE, GRAY];
+const SPECKS = ['transparent', PALE, SAGE];
 
 const NAV = [
   ['I need to', '#paths'],
@@ -430,12 +432,25 @@ export default function ParksideFamilyMedicinePage() {
                 here has worked at Parkside for at least six years.
               </p>
             </div>
-            <Artwork
-              slug="parkside-family-medicine-stethoscope"
-              alt=""
-              inks={{ red: 'var(--coral)', blue: 'var(--sage)' }}
-              className={s.steth}
-            />
+            <div className={s.stethSpot}>
+              <div className={s.stethField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={frond}
+                  palette={LEAVES}
+                  options={{ frequency: 0.6 }}
+                  fit="grid"
+                  cellSize={44}
+                  seed="parkside-team"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <Artwork
+                slug="parkside-family-medicine-stethoscope"
+                alt=""
+                inks={{ red: 'var(--coral)', blue: 'var(--sage)' }}
+                className={s.steth}
+              />
+            </div>
           </div>
           <ul className={s.team}>
             {DOCTORS.map((d, i) => (
@@ -556,6 +571,17 @@ export default function ParksideFamilyMedicinePage() {
 
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
+          <div className={s.hedge} aria-hidden="true">
+            <TabbiedPattern
+              pattern={frond}
+              palette={HEDGE}
+              options={{ frequency: 0.7 }}
+              fit="grid"
+              cellSize={40}
+              seed="parkside-hedge"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.visitInner}>
             <div className={s.visitHead}>
               <p data-edit="visit.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Find us</p>
@@ -596,6 +622,16 @@ export default function ParksideFamilyMedicinePage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footDots} aria-hidden="true">
+          <TabbiedPattern
+            pattern={pindot}
+            palette={SPECKS}
+            fit="grid"
+            cellSize={40}
+            seed="parkside-footer"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Parkside Family Medicine</p>

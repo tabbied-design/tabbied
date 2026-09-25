@@ -537,8 +537,25 @@
 }
 
 .sidesArt {
+  position: relative;
   width: min(100%, 23rem);
   margin-bottom: 1.4rem;
+}
+
+/* The plate the gyoza sit on: pale, with paper noodles. */
+.sidesPlate {
+  position: absolute;
+  left: -6%;
+  right: -10%;
+  top: 22%;
+  bottom: -8%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--pale);
+}
+
+.gyoza {
+  position: relative;
 }
 
 .pairNote {
@@ -584,13 +601,24 @@
 }
 
 .drinks {
-  padding: clamp(1.6rem, 3vw, 2.4rem);
+  --pad: clamp(1.6rem, 3vw, 2.4rem);
+
+  padding: var(--pad);
   background: color-mix(in srgb, var(--pale) 70%, var(--paper));
   border: 2px solid var(--ink);
 }
 
 .drinkGroup {
   margin-top: 1.8rem;
+}
+
+/* A short stack of bowls along the top of the card. */
+.drinksTop {
+  position: relative;
+  height: 3.5rem;
+  margin: calc(var(--pad) * -1) calc(var(--pad) * -1) var(--pad);
+  overflow: hidden;
+  border-bottom: 2px solid var(--ink);
 }
 
 .drinkGroup h3 {
@@ -626,9 +654,23 @@
 }
 
 .queueArt {
+  position: relative;
   display: grid;
   justify-items: center;
   margin-top: calc(var(--air) * -1);
+}
+
+/* Noodle steam lit by the lantern, fading out at the edges. */
+.queueGlow {
+  position: absolute;
+  left: 50%;
+  bottom: -4rem;
+  width: 24rem;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(circle, var(--ink) 25%, transparent 68%);
+  mask-image: radial-gradient(circle, var(--ink) 25%, transparent 68%);
 }
 
 .cord {
@@ -639,6 +681,7 @@
 }
 
 .queueLantern {
+  position: relative;
   width: min(100%, 14rem);
   margin-top: -2px;
   filter: drop-shadow(0 0 48px color-mix(in srgb, var(--gold) 45%, transparent));
@@ -815,9 +858,21 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
-  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 1.8rem;
+  position: relative;
+  padding: calc(clamp(2.5rem, 5vw, 3.5rem) + 2rem) var(--gut) 1.8rem;
   background: var(--chili);
   color: var(--paper);
+}
+
+/* Noodles along the top edge of the footer. */
+.footHem {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  overflow: hidden;
+  opacity: 0.8;
 }
 
 .footInner {
@@ -984,6 +1039,11 @@
     width: 9rem;
   }
 
+  .queueGlow {
+    width: 17rem;
+    bottom: -3rem;
+  }
+
   .visit {
     grid-column: auto;
   }
@@ -1005,6 +1065,11 @@
 
   .bars {
     gap: 0.35rem;
+  }
+
+  .sidesPlate {
+    left: 0;
+    right: 0;
   }
 
   .barValue {

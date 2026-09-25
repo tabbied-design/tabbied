@@ -16,9 +16,13 @@ const INK = '#161311';
 const CHILI = '#C8102E';
 const GOLD = '#D9A441';
 const PALE = '#E6DCCB';
+const PAPER = '#F5EFE4';
 
 const NOODLES = ['transparent', PALE, PALE, GOLD];
 const BOWLS = ['transparent', CHILI, GOLD, INK];
+const PLATE = ['transparent', PAPER, PAPER, GOLD];
+const STEAM = ['transparent', GOLD, CHILI];
+const HEM = ['transparent', PALE, GOLD];
 
 const NAV = [
   ['The bowl', '#bowl'],
@@ -396,6 +400,17 @@ export default function HachiRamenPage() {
         <div className={s.pair}>
           <section id="sides" className={s.sides} aria-labelledby="sides-h">
             <div className={s.sidesArt}>
+              <div className={s.sidesPlate} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={curl}
+                  palette={PLATE}
+                  options={{ frequency: 0.7 }}
+                  fit="grid"
+                  cellSize={40}
+                  seed="gyoza-plate"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="hachi-ramen-gyoza"
                 alt="Three pan-fried gyoza dumplings"
@@ -420,6 +435,17 @@ export default function HachiRamenPage() {
           </section>
 
           <section id="drinks" className={s.drinks} aria-labelledby="drinks-h">
+            <div className={s.drinksTop} aria-hidden="true">
+              <TabbiedPattern
+                pattern={bowl}
+                palette={BOWLS}
+                options={{ frequency: 0.8 }}
+                fit="grid"
+                cellSize={28}
+                seed="drinks-stack"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <h2 data-edit="drinks.title" data-edit-max="60" id="drinks-h">Drinks</h2>
             <p data-edit="drinks.pairNote" data-edit-max="240" data-edit-multiline className={s.pairNote}>Two taps, a short sake list and cold tea on the house when the queue is long.</p>
             {DRINKS.map((g, i) => (
@@ -446,6 +472,18 @@ export default function HachiRamenPage() {
         <section id="queue" className={s.queue} aria-labelledby="queue-h">
           <div className={s.queueInner}>
             <div className={s.queueArt}>
+              <div className={s.queueGlow} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={curl}
+                  palette={STEAM}
+                  options={{ frequency: 0.6 }}
+                  fit="grid"
+                  cellSize={40}
+                  seed="lantern-steam"
+                  redrawInterval={12000}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <span className={s.cord} aria-hidden="true" />
               <Artwork
                 slug="hachi-ramen-lantern"
@@ -502,6 +540,17 @@ export default function HachiRamenPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footHem} aria-hidden="true">
+          <TabbiedPattern
+            pattern={curl}
+            palette={HEM}
+            options={{ frequency: 0.9 }}
+            fit="grid"
+            cellSize={32}
+            seed="footer-hem"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footInner}>
           <div className={s.footBrand}>
             <span className={s.footMark} aria-hidden="true">{'\u516B'}</span>
