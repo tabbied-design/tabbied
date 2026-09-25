@@ -65,12 +65,9 @@ export function directionImagePrompt(
 
 /**
  * The full document: every text slot on the chosen template, rewritten for
- * this business in the direction already chosen.
- *
- * The direction is restated rather than chained from the directions turn,
- * because that turn was a different task with a different schema; what this
- * call needs from it is the brief - stance, name, headline, tagline - and that
- * fits in a paragraph.
+ * this business in the direction already chosen. The direction is restated
+ * rather than chained from the directions turn, which had a different task and
+ * schema; the brief it needs fits in a paragraph.
  */
 export function siteSystemPrompt(
   direction: StoredDirection,
@@ -123,12 +120,10 @@ export function siteUserPrompt(description: string, slots: SiteSlot[]): string {
 }
 
 /**
- * A picture for one image slot of a site. The slot's current alt text says
- * what kind of picture the template put there (a storefront, a product, a
- * portrait); the business and the direction say whose. The offline pipeline's
- * craft again: one subject, no text, palette as materials, and - because the
- * result is a cut-out on a real alpha channel - no cast shadow and nothing
- * touching the edge.
+ * A picture for one image slot of a site. The slot's alt text says what kind
+ * of picture the template put there; the business and the direction say
+ * whose. The same craft as above, plus nothing touching the edge, because the
+ * result is a cut-out on a real alpha channel.
  */
 export function siteImagePrompt(options: {
   description: string;

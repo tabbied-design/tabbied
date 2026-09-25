@@ -19,7 +19,7 @@ describe('account usage', () => {
     expect(before.recent).toHaveLength(0);
 
     // A generation with no upstream is answered from the matcher and spends
-    // nothing, so the ledger stays empty - which is the honest number.
+    // nothing, so the ledger stays empty.
     await SELF.fetch(`${ORIGIN}/api/studio/directions`, {
       method: 'POST',
       headers: { ...json, cookie },
@@ -61,9 +61,7 @@ describe('account history', () => {
     expect(mine.generations[0].directions[0].palette.length).toBeGreaterThan(0);
 
     // The count has to be able to be something other than 0: the subquery is
-    // one of the single-table selects drizzle renders with bare column names
-    // (see CLAUDE.md), and written the obvious way it compared two columns of
-    // `site` and answered 0 for every row.
+    // one drizzle renders with bare column names (see CLAUDE.md).
     const made = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
       method: 'POST',
       headers: { ...json, cookie },

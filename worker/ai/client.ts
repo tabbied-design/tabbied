@@ -1,33 +1,24 @@
 import type { Env } from '../env';
 
 // The upstream, reached as a wire format rather than a vendor: text is
-// `${AI_BASE_URL}/responses`, images are `${AI_BASE_URL}/images/generations`,
-// both with a bearer key - OpenAI, an aggregator, a self-hosted server, or
-// Cloudflare AI Gateway in front of any of them are one environment variable
-// apart.
+// `${AI_BASE_URL}/responses`, images `${AI_BASE_URL}/images/generations`, both
+// with a bearer key, so OpenAI, an aggregator, a self-hosted server or
+// Cloudflare AI Gateway are one environment variable apart.
 //
-// The text half speaks the **Responses API**, which OpenAI recommends for new
-// work and which is the only one of the two that can carry a turn forward: a
-// response has an id, and quoting it as `previous_response_id` continues that
-// context server-side. Studio uses it twice - for the repair retry here, and
-// by storing the id on the generation row so a later revision can chain from
-// the answer a user actually kept.
+// Text speaks the Responses API because it can carry a turn forward: quoting a
+// response id as `previous_response_id` continues that context server-side
+// (the repair retry here, and a revision chaining from the stored generation).
+// Two consequences that are easy to lose:
 //
-// Two consequences of that choice are load-bearing and easy to lose:
+//   - Reasoning tokens are output tokens. `max_output_tokens` can be spent
+//     thinking before any message is emitted, which comes back
+//     `status: "incomplete"` with no content, reported as its own failure.
+//   - There is no `choices[0].message.content`. The answer is an item in an
+//     `output` array beside reasoning items, so it is walked.
 //
-//   - **Reasoning tokens are output tokens.** On a reasoning model the budget
-//     in `max_output_tokens` is spent on thinking *before* any message is
-//     emitted, so a cap sized for the old `max_completion_tokens` returns
-//     `status: "incomplete"` and no content at all. That is a distinct failure
-//     from a refusal or a malformed answer and is reported as one.
-//   - **There is no `choices[0].message.content`.** The answer is an item in
-//     an `output` array that also carries reasoning items, so it is walked
-//     rather than indexed.
-//
-// There is deliberately no general `chat()` export beyond this file: every
-// caller is a task endpoint that assembles its own prompt server-side. A
-// pass-through would hand prompt construction to the client and turn the site
-// into a free faucet.
+// There is deliberately no general `chat()` export: every caller is a task
+// endpoint that assembles its own prompt server-side, and a pass-through would
+// turn the site into a free faucet.
 
 export class UpstreamError extends Error {
   constructor(
@@ -99,7 +90,7 @@ async function call(
   }
 }
 
-export type ChatUsage = {
+type ChatUsage = {
   promptTokens: number;
   completionTokens: number;
   /** Billed inside `completionTokens`; carried separately for diagnosis. */
@@ -108,14 +99,14 @@ export type ChatUsage = {
   cachedTokens: number;
 };
 
-export type ChatResult = {
+type ChatResult = {
   content: string;
   usage: ChatUsage;
   model: string;
   /**
    * The id to quote as `previous_response_id` to continue this turn. Absent
-   * when the upstream did not store the response - every caller therefore
-   * treats chaining as an optimization and keeps a full-context path.
+   * when the upstream did not store the response, so every caller keeps a
+   * full-context path.
    */
   responseId?: string;
 };
@@ -140,12 +131,10 @@ type ResponsePayload = {
 };
 
 /**
- * The assistant text out of an `output` array.
- *
- * A reasoning model emits at least two items - a `reasoning` item with no
- * content this code may read, then the `message` - and a model that declines
- * emits a `refusal` part in place of `output_text`. Both are distinguished
- * here so the caller's error is attributable rather than "no content".
+ * The assistant text out of an `output` array. A reasoning model emits a
+ * `reasoning` item before the `message`, and a model that declines emits a
+ * `refusal` part in place of `output_text`; both are told apart here so the
+ * caller's error is attributable rather than "no content".
  */
 function readOutputText(payload: ResponsePayload): string {
   const parts: string[] = [];
@@ -173,17 +162,12 @@ function readOutputText(payload: ResponsePayload): string {
 }
 
 /**
- * One structured-output turn.
- *
- * `schema` is sent as `text.format` (the Responses spelling of what chat
- * completions called `response_format`) and the caller validates the parsed
- * answer against the same zod schema - an upstream that ignores strict
- * formatting therefore fails at the validate step with an attributable error
- * rather than leaking a half-shape into the UI.
+ * One structured-output turn. `schema` is sent as `text.format` and the caller
+ * validates the parsed answer against the same zod schema.
  *
  * Pass `previousResponseId` to continue a stored turn: `input` is then the new
- * message only, and the upstream reassembles the rest. `instructions` are sent
- * every time regardless - the Responses API does not carry them forward.
+ * message only. `instructions` are sent every time, since the Responses API
+ * does not carry them forward.
  */
 export async function respondJson(
   env: Env,
@@ -210,10 +194,9 @@ export async function respondJson(
     },
     // Sized for reasoning + the document, not the document alone.
     max_output_tokens: options.maxOutputTokens ?? 6_000,
-    // Storing is what makes `previous_response_id` resolvable, which is the
-    // whole reason this endpoint was chosen over chat completions. It also
-    // means prompts and answers are retained upstream - see §4 of
-    // agent-outputs/20260827-studio-ai-plan.md.
+    // Storing is what makes `previous_response_id` resolvable. It also means
+    // prompts and answers are retained upstream (section 4 of
+    // agent-outputs/20260827-studio-ai-plan.md).
     store: true,
     ...(options.previousResponseId
       ? { previous_response_id: options.previousResponseId }
@@ -232,8 +215,8 @@ export async function respondJson(
   const content = readOutputText(payload);
 
   if (content.length === 0) {
-    // The reasoning-budget case, named explicitly: it looks like an empty
-    // answer and is really a cap that needs raising.
+    // The reasoning-budget case: it looks like an empty answer and is really
+    // a cap that needs raising.
     if (payload.status === 'incomplete') {
       throw new UpstreamError(
         `response incomplete (${payload.incomplete_details?.reason ?? 'unknown reason'})`
@@ -259,22 +242,17 @@ export async function respondJson(
   };
 }
 
-export type ImageResult = { bytes: ArrayBuffer; contentType: string; model: string };
+type ImageResult = { bytes: ArrayBuffer; contentType: string; model: string };
 
-/**
- * One image, as WebP. Transparency is a *parameter* - never a request in the
- * prose, which paints a fake checkerboard into the pixels - and the GPT Image
- * models honor it natively, which is why this reaches one vendor and not two
- * (see docs/image-pipeline.md).
- *
- * This stays on the images endpoint rather than moving to the Responses API's
- * `image_generation` tool. That tool puts a reasoning model in front of every
- * image whose job would be to rewrite a prompt this repo tunes deliberately,
- * and it bills the rewrite; here the prompt reaches the image model as
- * written, for one metered call with one failure mode.
- */
 export type ReferenceImage = { bytes: ArrayBuffer; contentType: string };
 
+/**
+ * One image, as WebP. Transparency is a parameter, never a request in the
+ * prose (which paints a fake checkerboard into the pixels). This stays on the
+ * images endpoint rather than the Responses API's `image_generation` tool,
+ * which would put a reasoning model in front of a prompt this repo tunes
+ * deliberately and bill the rewrite (see docs/image-pipeline.md).
+ */
 export async function generateImage(
   env: Env,
   options: {
@@ -282,10 +260,9 @@ export async function generateImage(
     size?: string;
     transparent?: boolean;
     /**
-     * Pictures to draw from - a product, a place, a look. With any given the
-     * call goes to `/images/edits`, which is the endpoint that takes reference
-     * images and is multipart rather than JSON; without, `/images/generations`
-     * as before. The rest of the request is the same on both.
+     * Pictures to draw from (a product, a place, a look). With any, the call
+     * goes to the multipart `/images/edits`; without, to
+     * `/images/generations`. The rest of the request is the same on both.
      */
     references?: ReferenceImage[];
   }

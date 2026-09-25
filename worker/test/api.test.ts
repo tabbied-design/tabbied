@@ -2,9 +2,7 @@ import { SELF, env } from 'cloudflare:test';
 import { describe, expect, it } from 'vitest';
 
 // These drive the real Worker over real (local) bindings: the routing, the
-// auth gate, the R2 media path. Anything that would reach the AI upstream is
-// out of scope here and is covered by the browser flow in the e2e script,
-// which runs against a local OpenAI-shaped stub.
+// auth gate, the R2 media path. Nothing here reaches the AI upstream.
 
 describe('the platform tier', () => {
   it('answers its own health probe', async () => {
@@ -15,8 +13,7 @@ describe('the platform tier', () => {
   });
 
   it('lists the social providers it can complete - none, here', async () => {
-    // The test environment configures no client ids, so the honest answer is
-    // an empty list: the sign-in form then draws no provider buttons at all.
+    // The test environment configures no client ids, so the list is empty.
     const response = await SELF.fetch('https://x/api/auth-providers');
 
     expect(response.status).toBe(200);
@@ -25,8 +22,7 @@ describe('the platform tier', () => {
 
   it('answers a miss under /api with JSON, not the site 404 page', async () => {
     // A sub-app's notFound handler is not used once it is mounted with
-    // route(), so this would otherwise fall through and hand an API client
-    // the marketing 404.
+    // route(), so this would otherwise fall through to the marketing 404.
     const response = await SELF.fetch('https://x/api/nope');
 
     expect(response.status).toBe(404);
@@ -56,8 +52,8 @@ describe('generation requires a session', () => {
   });
 
   it('404s a generation that does not exist', async () => {
-    // Reads are unauthenticated by design - the id is the capability - so the
-    // failure mode for a bad link is "not found", never "not allowed".
+    // Reads are unauthenticated by design (the id is the capability), so a bad
+    // link is "not found", never "not allowed".
     const response = await SELF.fetch('https://x/api/studio/generations/nope');
 
     expect(response.status).toBe(404);
@@ -75,8 +71,7 @@ describe('media', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toBe('image/webp');
-    // A key is written once and never rewritten, so this is honest rather
-    // than optimistic.
+    // A key is written once and never rewritten.
     expect(response.headers.get('cache-control')).toContain('immutable');
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(
       new Uint8Array([1, 2, 3])
@@ -102,8 +97,7 @@ describe('media', () => {
 describe('the schema is the boundary', () => {
   it('answers an anonymous, malformed request with the auth gate', async () => {
     // The session is checked before the body, so an anonymous request with a
-    // description too short to match on is refused as anonymous. Either way
-    // it never reaches the upstream.
+    // description too short to match on is refused as anonymous.
     const response = await SELF.fetch('https://x/api/studio/directions', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },

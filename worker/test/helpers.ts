@@ -3,9 +3,7 @@ import { expect } from 'vitest';
 
 // Shared by every suite that signs a person in. The session is a real one:
 // sign up, read the verification link out of the dev mailbox (DEV=1 writes it
-// to D1 rather than sending it), follow it, keep the cookie. That is the same
-// path the e2e flow reads a link back through. This used to be copied into
-// six files, each a little different.
+// to D1 rather than sending it), follow it, keep the cookie.
 
 export const ORIGIN = 'https://tabbied.com';
 export const json = { 'content-type': 'application/json', origin: ORIGIN };

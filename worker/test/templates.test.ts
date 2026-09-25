@@ -262,9 +262,8 @@ describe('"Request more"', () => {
     for (const slug of slugs.slice(FREE, FREE * 2)) await choose(cookie, slug);
     expect((await ask(cookie, SECOND)).status).toBe(200);
 
-    // The directory reads the same allowance rule as the person's own page.
-    // It once read one grant row and counted 'granted' alone, so an account
-    // that had followed the emailed link showed "10 / 5" there.
+    // The directory reads the same allowance rule as the person's own page,
+    // so an account that followed the emailed link counts that grant too.
     const directory = async () =>
       ((await SELF.fetch(`${ORIGIN}/api/admin/users?q=asker2`, { headers: { cookie: boss } }).then((r) => r.json())) as {
         users: { email: string; chosen: number; allowance: number }[];

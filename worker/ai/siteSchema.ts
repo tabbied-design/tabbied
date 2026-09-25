@@ -2,13 +2,10 @@ import { z } from 'zod';
 import { isTextSlot, type TemplateSpec, type TextSlot } from 'tabbied-templates';
 
 // The response schema for a full document, built from the template's spec.
-//
-// Same move as the slug enum in schema.ts, one level up: the *keys* the model
-// may write are exactly the text slots this template has, every one of them
-// required, nothing else admitted. An invented slot cannot survive validation,
-// and a slot the model forgot is a schema failure rather than a headline that
-// silently stays the plant shop's. `maxLength` mirrors each slot's soft budget
-// so the model is told the size of the hole it is filling.
+// Same move as the slug enum in schema.ts, one level up: the keys the model
+// may write are exactly this template's text slots, all required, nothing
+// else admitted, so an invented or forgotten slot is a schema failure.
+// `maxLength` mirrors each slot's soft budget.
 
 /** How much of the current value the model sees, per slot. Enough to know what kind of thing it is. */
 const CURRENT_VALUE_PREVIEW = 160;
@@ -66,8 +63,6 @@ export const buildSiteValidator = (slots: SiteSlot[]) =>
       .strict(),
   });
 
-export type SitePayload = z.infer<ReturnType<typeof buildSiteValidator>>;
-
 /** One line per slot for the prompt: id, what it is, how big, what it says now. */
 export const slotLine = (slot: SiteSlot): string => {
   const current = slot.value.replace(/\s+/g, ' ').trim();
@@ -77,11 +72,10 @@ export const slotLine = (slot: SiteSlot): string => {
   return `- ${slot.id} · ${describe(slot)} · now: "${preview}"`;
 };
 
-// A revision is a *diff*. Asking for the whole document again to change one
-// sentence would spend the whole document's tokens and, worse, invite the
-// model to quietly rewrite what the person had kept. So the answer is a list
-// of (slot, new value) pairs against the same closed set of ids, plus an
-// optional palette and a one-line note saying what was done.
+// A revision is a diff: (slot, new value) pairs against the same closed set
+// of ids, plus an optional palette and a one-line note. Asking for the whole
+// document again would spend its tokens and invite the model to rewrite what
+// the person had kept.
 
 export const reviseJsonSchema = (slots: SiteSlot[]) => ({
   type: 'object',
@@ -131,5 +125,3 @@ export const buildReviseValidator = (slots: SiteSlot[]) => {
     note: z.string().max(200),
   });
 };
-
-export type RevisePayload = z.infer<ReturnType<typeof buildReviseValidator>>;

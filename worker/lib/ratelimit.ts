@@ -3,18 +3,11 @@ import type { Db } from './quota';
 
 // Burst limiting, one atomic statement per request.
 //
-// This lived on KV first, and that was a mistake worth recording rather than
-// quietly fixing: Workers KV permits one write per second to a given key and
-// *throws* on the second one. Since the counter's key is per user, a client
-// sending two requests in a second - exactly the burst this exists to catch -
-// made `put` throw, and the intended 429 surfaced as a 500. KV also has no
-// compare-and-set, so the count could only ever be approximate.
-//
+// Not on KV: it throws on a second write to a key within a second (exactly the
+// burst this catches, turning the 429 into a 500) and has no compare-and-set.
 // In D1 the read, the window rollover and the increment are one statement, so
-// the count is exact and concurrent requests cannot lose an update. The table
-// does not grow without bound either: a rollover updates the row in place, so
-// there is at most one row per user per endpoint and nothing to garbage
-// collect.
+// the count is exact. A rollover updates the row in place, so there is at most
+// one row per user per endpoint.
 
 export type Limit = { key: string; max: number; windowSeconds: number };
 

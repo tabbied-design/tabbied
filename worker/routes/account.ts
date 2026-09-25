@@ -3,7 +3,7 @@ import { and, desc, eq, gte, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../db/schema';
-import { aiUsage, site, templateRequest } from '../db/schema';
+import { aiUsage, site } from '../db/schema';
 import type { Env } from '../env';
 import { loadEditableCatalog } from '../lib/templateAssets';
 import { notifyTemplateRequest, sendApprovalLink } from '../lib/mail';
@@ -33,12 +33,10 @@ import { requireUser } from '../lib/session';
 const account = new Hono<{ Bindings: Env }>();
 
 /**
- * Burst gates, one atomic statement each (lib/ratelimit.ts). Both request
- * routes send a real email, and a resend could otherwise be looped for as
- * many messages as a script cared to send; a request is already held to
- * one open at a time, so its gate is roomy enough for a form answered a few
- * times over. Choosing sends nothing and is idempotent, and gets the same
- * generous gate a manual save has.
+ * Burst gates (lib/ratelimit.ts). Both request routes send a real email, so a
+ * script must not be able to loop them; a request is already held to one open
+ * at a time, so its gate only needs room for a form answered a few times.
+ * Choosing sends nothing and gets the generous gate a manual save has.
  */
 const BURST = {
   choose: { max: 30, windowSeconds: 60 },
@@ -225,10 +223,9 @@ const requestSchema = z.object({
 });
 
 /**
- * The link in a first request's email: the Worker's own route, on the
- * configured origin. Never the host the request arrived on: under `npm run
- * dev` that is the Worker's port and not the site's, and on a preview alias
- * it is the alias, which is what would then be mailed out.
+ * The link in a first request's email, on the configured origin. Never the
+ * host the request arrived on, which is the Worker's port under `npm run dev`
+ * and the alias on a preview.
  */
 const activationUrl = (origin: string, token: string) =>
   `${origin}/api/account/templates/activate?token=${encodeURIComponent(token)}`;
@@ -392,10 +389,8 @@ account.post('/templates/request/resend', async (c) => {
 
   const now = new Date();
 
-  // Not before the first email is due. Resend still holds that message, and
-  // a new token now would make the link in it dead on arrival; the account
-  // page offers the button only once the email should have come, and this
-  // holds a caller that did not wait to the same.
+  // Not before the first email is due: Resend still holds that message, and
+  // a new token now would make the link in it dead on arrival.
   if (request.sendAt && request.sendAt.getTime() > now.getTime()) {
     return c.json({ error: 'Your email has not gone out yet. You can send a new one once it is due.' }, 409);
   }

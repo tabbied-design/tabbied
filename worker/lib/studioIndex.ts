@@ -1,15 +1,13 @@
 import type { Env } from '../env';
 import type { StudioEntry } from '../../lib/studioMatch';
 
-// The 57 template sites, read as an asset rather than bundled.
+// The template sites' match index, read as an asset rather than bundled.
 //
 // `/studio-index.json` is emitted by the export (app/studio-index.json/route.ts)
 // from the same TypeScript the site matches against, so the API and the browser
-// score identical data and a template added in one commit cannot be missing
-// from one of them. It is the property the MCP endpoint already relies on for
-// the design catalog, and the memoization is the same shape too: cached as the
-// promise, so concurrent first requests share one fetch, and a failure is not
-// cached - a transient miss would otherwise poison the isolate for its lifetime.
+// score identical data. Memoized like the MCP catalog: cached as the promise so
+// concurrent first requests share one fetch, and a failure is not cached, so a
+// transient miss cannot poison the isolate.
 
 type Index = { specVersion: number; count: number; entries: StudioEntry[] };
 

@@ -4,9 +4,8 @@ import { ORIGIN, json, signIn } from './helpers';
 
 // The site tier end to end, minus the model: with no AI_API_KEY the directions
 // call answers from the matcher and the make call writes the three-string
-// floor, which exercises every row this tier writes and reads - the site, its
-// first revision, the pin, the listing - through the real routes, the real
-// D1, and the real packaged assets served by the assets binding.
+// floor, which exercises every row this tier writes and reads through the real
+// routes, the real D1, and the real packaged assets.
 //
 // The session is a real one (see helpers.ts).
 
@@ -70,9 +69,8 @@ describe('a direction is its author\'s to make', () => {
     const generationId = await generate(author);
 
     // A generation is readable by anyone holding its id, but a site made from
-    // it spends the maker's budget against the author's description and hangs
-    // off the author's row, whose deletion would cascade to it. The same line
-    // direction-image draws.
+    // it spends budget against the author's description and hangs off the
+    // author's row.
     const theirs = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
       method: 'POST',
       headers: { ...json, cookie: visitor },

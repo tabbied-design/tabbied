@@ -7,7 +7,7 @@ import type { Db } from './quota';
 // chosen (lib/templates.ts); a row here only records a zip that was served.
 
 /** The zip formats a template ships as, in the file name `<slug>-<format>.zip`. */
-export const DOWNLOAD_FORMATS = ['html', 'react'] as const;
+const DOWNLOAD_FORMATS = ['html', 'react'] as const;
 
 export type DownloadFormat = (typeof DOWNLOAD_FORMATS)[number];
 

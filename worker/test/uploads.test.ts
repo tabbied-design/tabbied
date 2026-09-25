@@ -1,8 +1,8 @@
-import { SELF, env } from 'cloudflare:test';
+import { SELF } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { ORIGIN, json, signIn } from './helpers';
+import { ORIGIN, signIn } from './helpers';
 
-// The smallest valid PNG: a 1×1 transparent pixel.
+// The smallest valid PNG: a 1x1 transparent pixel.
 const PNG = Uint8Array.from(
   atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='),
   (c) => c.charCodeAt(0)

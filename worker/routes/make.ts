@@ -9,13 +9,11 @@ import type { StoredResult } from '../../lib/studioDocument';
 import sites from './sites';
 import studio from './studio';
 
-// One prompt in, one site out. The person does not choose a template: the
-// directions call scores and picks three and names the one it would lead
-// with, and this makes that one. It is the two existing handlers run in
-// sequence, in-process, with the caller's own headers - so the session, the
-// burst gates and the daily caps all apply exactly as they would to the two
-// clicks this replaces. Composing the handlers rather than their internals
-// keeps one implementation of each.
+// One prompt in, one site out: the directions call picks three and names the
+// one it would lead with, and this makes that one. It runs the two existing
+// handlers in sequence, in-process, with the caller's own headers, so the
+// session, the burst gates and the daily caps apply exactly as they do to
+// each, and each keeps one implementation.
 
 const requestSchema = z.object({
   description: z.string().trim().min(10).max(600),

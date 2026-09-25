@@ -1,24 +1,21 @@
 import { z } from 'zod';
 
-// One schema, used three ways: it is sent upstream as JSON Schema
-// (`text.format`), it validates what comes back, and its inferred type is
-// what the rest of the Worker holds. An upstream that ignores `json_schema` -
-// some "compatible" servers do - therefore fails at the validate step with an
-// attributable error rather than leaking a half-shape into the UI.
+// The directions answer is described upstream as JSON Schema (`text.format`)
+// and validated with zod on the way back, so an upstream that ignores
+// `json_schema` (some "compatible" servers do) fails at the validate step with
+// an attributable error rather than leaking a half-shape into the UI.
 
 /**
  * Copy budgets mirror the editable spec's maxChars, so a direction can later
  * become an edits document without truncation surgery.
  */
-export const COPY_LIMITS = { brandName: 30, headline: 70, tagline: 90 } as const;
+const COPY_LIMITS = { brandName: 30, headline: 70, tagline: 90 } as const;
 
-export const directionCopySchema = z.object({
+const directionCopySchema = z.object({
   brandName: z.string().min(1).max(COPY_LIMITS.brandName),
   headline: z.string().min(1).max(COPY_LIMITS.headline),
   tagline: z.string().min(1).max(COPY_LIMITS.tagline),
 });
-
-export type DirectionCopy = z.infer<typeof directionCopySchema>;
 
 /** `slug` is narrowed to the assembled candidates at request time. */
 export const buildDirectionsSchema = (slugs: [string, ...string[]]) =>
@@ -36,8 +33,6 @@ export const buildDirectionsSchema = (slugs: [string, ...string[]]) =>
       )
       .length(3),
   });
-
-export type DirectionsPayload = z.infer<ReturnType<typeof buildDirectionsSchema>>;
 
 /**
  * The same shape as JSON Schema for the upstream. Written by hand rather than
@@ -105,8 +100,4 @@ export const directionsJsonSchema = (slugs: string[]) => ({
 
 // The stored document's shape lives in lib/studioDocument.ts, shared with the
 // pages that read it; re-exported here so the Worker's callers keep one import.
-export type {
-  DirectionCopy as StoredCopy,
-  StoredDirection,
-  StoredResult,
-} from '../../lib/studioDocument';
+export type { StoredDirection, StoredResult } from '../../lib/studioDocument';

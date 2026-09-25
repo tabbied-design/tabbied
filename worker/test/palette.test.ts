@@ -73,9 +73,8 @@ describe('ensurePalette', () => {
   });
 
   it('treats shorthand equal to the background as equal to it', () => {
-    // `#fff` and `#ffffff` are one color. Before shorthand was expanded these
-    // compared as different strings, and an invisible ink was "repaired" into
-    // a color nobody chose instead of being rejected.
+    // `#fff` and `#ffffff` are one color; compared as strings, an invisible
+    // ink would be "repaired" into a color nobody chose instead of rejected.
     const result = ensurePalette(['#ffffff', '#fff'], FALLBACK);
 
     expect(result.status).toBe('rejected');

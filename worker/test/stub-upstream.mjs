@@ -2,11 +2,10 @@
 // A local OpenAI-shaped server, for driving the Studio endpoints without a
 // paid API. Point AI_BASE_URL at http://localhost:8788/v1 in .dev.vars.
 //
-// It speaks the Responses API, and honors `text.format` the way a compliant
-// upstream does - the slug enum is read back out of the schema, so the answer
-// is always one the validator can accept. It also stores responses and honors
-// `previous_response_id`, which is what lets the chained repair turn be
-// exercised locally rather than only against OpenAI.
+// It speaks the Responses API and honors `text.format`: the slug enum is read
+// back out of the schema, so the answer is always one the validator accepts.
+// It also stores responses and honors `previous_response_id`, so the chained
+// repair turn can be exercised locally.
 //
 // Pass --bad to return a shape that fails validation on the *first* turn only;
 // the repair turn then succeeds, which is the path the retry exists for. Pass

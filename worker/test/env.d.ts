@@ -1,13 +1,10 @@
 import type { Env } from '../env';
 
-// The pool types `env` from `cloudflare:test` as `Cloudflare.Env` - the global
-// interface `wrangler types` would generate from wrangler.jsonc. This repo
-// keeps worker/env.ts as the source of truth instead, because it records which
-// secrets are *optional* and what each one degrades to when absent, which a
-// generated file cannot say. So the two are bridged here rather than one being
-// replaced by the other: a binding added to worker/env.ts is immediately
-// visible to every test, and a binding renamed there breaks them at compile
-// time.
+// The pool types `env` from `cloudflare:test` as `Cloudflare.Env`, the global
+// interface `wrangler types` would generate. worker/env.ts stays the source of
+// truth (it records which secrets are optional, which a generated file cannot
+// say), so it is bridged here: a binding added there is visible to every test,
+// and one renamed there breaks them at compile time.
 declare global {
   namespace Cloudflare {
     interface Env extends WorkerEnv {

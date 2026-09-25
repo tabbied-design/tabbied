@@ -7,11 +7,10 @@ import { isDev } from '../env';
 // Transactional mail, behind one function so better-auth's hooks never learn
 // which provider is in use.
 //
-// With no RESEND_API_KEY *in development* the message is written to the
-// dev_mail table instead of sent. That is not a stub for its own sake: it is
-// how the e2e flow reads a verification link back without a mail provider, and
-// how a developer confirms an account offline. It is confined to that one path,
-// so production either sends or fails loudly.
+// With no RESEND_API_KEY in development the message is written to the
+// dev_mail table instead of sent: that is how the tests read a verification
+// link back and how a developer confirms an account offline. Production either
+// sends or fails loudly.
 //
 //   npx wrangler d1 execute tabbied --local \
 //     --command "SELECT url FROM dev_mail WHERE email = 'you@example.com'"
@@ -31,7 +30,7 @@ export type Mail = {
 };
 
 /** The sender every message goes out as; `MAIL_FROM` overrides it. */
-export const DEFAULT_FROM = 'Tabbied <hello@tabbied.com>';
+const DEFAULT_FROM = 'Tabbied <hello@tabbied.com>';
 
 const recipients = (to: string | string[]) => (Array.isArray(to) ? to : [to]);
 
@@ -46,8 +45,7 @@ export async function sendMail(env: Env, mail: Mail): Promise<void> {
     const db = drizzle(env.DB, { schema });
     const url = mail.url ?? '';
 
-    // One row per address: the newest message is the only one worth having,
-    // and an unbounded log of dev mail is just litter in the dev database.
+    // One row per address: only the newest message is worth having.
     for (const to of recipients(mail.to)) {
       const email = to.toLowerCase();
       const values = { subject: mail.subject, url, body: mail.text };
@@ -107,7 +105,7 @@ export function teamRecipients(env: Env): string[] {
   return [/<([^>]+)>/.exec(env.MAIL_FROM || DEFAULT_FROM)?.[1] ?? 'hello@tabbied.com'];
 }
 
-/** The site's own origin for links in a message, from the request that caused it. */
+/** The admin requests page, on the configured origin the caller passes. */
 const adminLink = (origin: string | undefined) => `${origin ?? 'https://tabbied.com'}/admin/requests/`;
 
 /** Text for HTML: a person's name reaches the markup as characters, never as tags. */

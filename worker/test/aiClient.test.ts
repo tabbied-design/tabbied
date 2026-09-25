@@ -2,10 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { respondJson, UpstreamError } from '../ai/client';
 import type { Env } from '../env';
 
-// The Responses API's answer is an *item in an array*, not a field, and two of
+// The Responses API's answer is an item in an array, not a field, and two of
 // its failure modes look like an empty answer unless they are named. These
-// tests pin the walker and both of those, at the fetch boundary - nothing here
-// reaches a paid API.
+// tests pin the walker and both of those at the fetch boundary.
 
 const env = (extra: Partial<Env> = {}) =>
   ({
@@ -106,7 +105,7 @@ describe('respondJson', () => {
 
     expect(calls[0].body.previous_response_id).toBe('resp_1');
     // Instructions are re-sent every turn: the Responses API does not carry
-    // them forward, so a chained turn would otherwise lose the contract.
+    // them forward.
     expect(calls[0].body.instructions).toBe('be brief');
   });
 
@@ -123,10 +122,8 @@ describe('respondJson', () => {
   });
 
   it('names an exhausted reasoning budget rather than reporting empty output', async () => {
-    // The regression this exists for: on a reasoning model the cap is spent on
-    // thinking before any message is emitted, so the answer is a `reasoning`
-    // item and nothing else. Indistinguishable from a broken upstream unless
-    // `incomplete_details` is read.
+    // On a reasoning model the cap can be spent on thinking before any message
+    // is emitted, so the answer is a `reasoning` item and nothing else.
     stub({
       id: 'resp_1',
       status: 'incomplete',

@@ -3,12 +3,12 @@ import { contrastRatio, isHexColor, mix, onColor } from 'tabbied-templates';
 // The palette is the one field the model genuinely authors, so it is the one
 // field that gets validated and repaired rather than trusted.
 //
-// The two rules are the palette library's own, not new ones invented here: no
-// ink may equal its background, and at least one ink must clear ~3:1 against
-// color 0. A palette that fails is *repaired* deterministically - one pass,
-// nudging the nearest ink away from the ground - and only a palette repair
-// cannot save is discarded for the template's authored one. Regenerating
-// instead would spend money to re-roll dice we can simply load.
+// The two rules are the palette library's own: no ink may equal its
+// background, and at least one ink must clear ~3:1 against color 0. A palette
+// that fails is repaired deterministically (one pass, nudging the best ink
+// away from the ground), and only one repair cannot save is discarded for the
+// template's authored palette. Regenerating would spend money to re-roll dice
+// we can simply load.
 
 /** The contrast an ink needs against the background to count as legible. */
 const MIN_CONTRAST = 3;
@@ -24,10 +24,9 @@ export type PaletteVerdict = {
 };
 
 /**
- * Lowercase, and expand `#abc` to `#aabbcc`. Shorthand is a perfectly valid
- * color - `isHexColor` accepts it and `toRgb` reads it - but everything
- * downstream stores and renders the six-digit form, so it is expanded here
- * rather than left for each consumer to handle differently.
+ * Lowercase, and expand `#abc` to `#aabbcc`, so rule one's string comparison
+ * sees `#fff` and `#ffffff` as one color and everything downstream gets the
+ * six-digit form.
  */
 function normalize(hex: string): string {
   const value = hex.trim().toLowerCase();
@@ -93,8 +92,8 @@ export function ensurePalette(
   }
 
   // Rule two: something has to be legible on the ground. If nothing is, repair
-  // the closest candidate rather than the first - the smallest edit that fixes
-  // the palette is the one that keeps it the palette the model chose.
+  // the closest candidate rather than the first: the smallest edit keeps it
+  // the palette the model chose.
   if (distinct.some((ink) => contrastRatio(ink, background) >= MIN_CONTRAST)) {
     return { colors: [background, ...distinct], status: 'clean' };
   }

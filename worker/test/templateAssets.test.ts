@@ -4,13 +4,10 @@ import type { Env } from '../env';
 import { hashText, loadPackagedHtml, loadTemplateSpec } from '../lib/templateAssets';
 
 // The packaged template, read through the assets binding the way the sites
-// route reads it. The binding applies `html_handling`, and the default answers
-// a request for `/dir/index.html` with a redirect to `/dir/` rather than the
-// file. Whether the binding then follows that redirect is a property of the
-// runtime, not of this code: workerd did here, so the request came back 200
-// with a different URL, and the route that asked by file name looked fine
-// locally. The reader therefore asks for the directory URL, which is served
-// outright, and copes with a redirect if one is handed back anyway.
+// route reads it. The binding's `html_handling` answers `/dir/index.html` with
+// a redirect to `/dir/`, and whether the binding follows it is up to the
+// runtime, so the reader asks for the directory URL and copes with a redirect
+// if one is handed back anyway.
 
 const ORIGIN = 'https://tabbied.com';
 const SLUG = 'verdant';

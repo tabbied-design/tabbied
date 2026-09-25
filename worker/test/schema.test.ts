@@ -2,13 +2,9 @@ import { SELF, env } from 'cloudflare:test';
 import { describe, expect, it } from 'vitest';
 import journal from '../migrations/meta/_journal.json';
 
-// The one deploy-time fact the Worker can report about itself: whether the
-// database it was handed has this build's migrations. Production once ran a
-// build whose routes read `site` against a database that had never had
-// 0003 applied, and every one of those routes answered "Internal error"
-// while the routes around them worked. Two things now hold: the health
-// route says which migration is applied, and a schema-behind error is a 503
-// that names the cause.
+// Whether the database the Worker was handed has this build's migrations:
+// the health route says which migration is applied, and a schema-behind error
+// is a 503 that names the cause.
 
 const ORIGIN = 'https://tabbied.com';
 const latest = journal.entries.at(-1)!.tag;
@@ -33,11 +29,10 @@ describe('the schema the deployment expects', () => {
     expect(response.status).toBe(404);
   });
 
-  // 0005 rebuilt `site` and `revision` to make a site's generation optional,
-  // child first so the parent's drop could not cascade. The rebuilt child
-  // referenced the parent by its temporary name; this pins that the rename
-  // rewrote the reference, since a foreign key left pointing at `__new_site`
-  // would fail every insert with a message about a table that does not exist.
+  // 0005 rebuilt `site` and `revision`, child first, and the rebuilt child
+  // referenced the parent by its temporary name. This pins that the rename
+  // rewrote the reference: a foreign key left pointing at `__new_site` would
+  // fail every insert.
   it('leaves revision referencing site after the rebuild', async () => {
     const { results } = await env.DB.prepare('PRAGMA foreign_key_list(revision)').all<{
       table: string;
