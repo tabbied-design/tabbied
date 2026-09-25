@@ -233,7 +233,7 @@ OPENAI_API_KEY=... node scripts/generate-images.mjs sync --only <ids> --model gp
 node scripts/promote-artwork.mjs --only <ids>
 ```
 
-What was learned making the first 135:
+What was learned making the first 203:
 
 - **The model keeps to key colors.** Pure red, blue, yellow and black on a
   transparent ground came back with at most 1.14% of pixels far from every
@@ -246,6 +246,17 @@ What was learned making the first 135:
   haze, fog, glow, vignette, reflection, cast shadow or background texture"
   took the same subjects to 0%. For a full-bleed scene, "the sky is
   completely empty and clear: no clouds, no mist, no haze".
+- **Nothing thin against the sky.** The transparent sky of a full-bleed
+  scene is cut well around a treeline or a roofline and badly around a
+  mast, a spire or a flagpole: the model leaves a tent of opaque sky
+  around each thin shape, which draws as blocky haze over the hero.
+  Harbor Light's sailboats did it twice; motorboats under a low shoreline
+  came out clean. Measure it (share of pixels with partial alpha) before
+  a page is built on a background photograph.
+- **A large flat field can come back with holes.** Coral Cove's sea was
+  half see-through in its middle. The page paints a band in the same
+  palette variable behind the picture, which hides the holes and still
+  re-colors.
 - **Blend modes are not a duotone.** Multiply-then-lighten maps shadows to
   one ink only while that ink is the darker; a re-color to a dark palette
   flips them and paints a flat box. The CSS version is two masks instead
