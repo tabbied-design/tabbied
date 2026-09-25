@@ -1,0 +1,1115 @@
+/* ==========================================================================
+   LUMEN - portrait photographer, Larkin Street
+   A contact sheet on a light table: strips of film in the ink color, each
+   frame a portrait printed in two of the page's colors, the chosen one
+   circled in rust like grease pencil. A halftone step wedge beside the
+   heading and a screen of rust dots before the booking form; Gloock for the
+   headings, Albert Sans for everything else.
+   ========================================================================== */
+
+.page {
+  --paper: #f4f1ec;
+  --ink: #1b1a1a;
+  --rust: #b5563c;
+  --gray: #8c8680;
+  --pale: #e3ddd4;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 86rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --display: 'Gloock', Georgia, 'Times New Roman', serif;
+
+  font-family: 'Albert Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------- bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 0.85rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--pale);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.mark::after {
+  content: '';
+  display: inline-block;
+  width: 0.28em;
+  height: 0.28em;
+  margin-left: 0.12em;
+  border-radius: 50%;
+  background: var(--rust);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.9rem, 2vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+  transition: color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--rust);
+}
+
+.nav a:last-child {
+  color: var(--paper);
+  background: var(--ink);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+}
+
+.nav a:last-child:hover {
+  background: var(--rust);
+  color: var(--paper);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.heroHead {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.2rem, 5vw, 3.8rem) var(--gut) clamp(1.8rem, 3.5vw, 2.6rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) clamp(7rem, 13vw, 12rem);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+}
+
+.kicker {
+  margin: 0 0 1.1rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+
+.title {
+  font-size: clamp(2.3rem, 4.8vw, 4.2rem);
+  line-height: 1.04;
+  max-width: 15ch;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--rust);
+}
+
+.lede {
+  margin: 0;
+  max-width: 30rem;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.3rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.7rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.btn {
+  background: var(--rust);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--ink);
+}
+
+.btnGhost {
+  border: 1px solid var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* A printer's step wedge: the halftone design's dots grow row by row. */
+.wedge {
+  position: relative;
+  align-self: stretch;
+  min-height: 12rem;
+  overflow: hidden;
+  border: 1px solid var(--pale);
+}
+
+/* ----------------------------------------------------------- the sheet */
+
+.table {
+  background: var(--pale);
+  padding: clamp(1.2rem, 3vw, 2.6rem) var(--gut) clamp(2rem, 4vw, 3.4rem);
+}
+
+.sheet {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1rem, 2.4vw, 2rem) clamp(1rem, 2.4vw, 2.2rem);
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 18px 40px -22px rgb(0 0 0 / 0.35);
+}
+
+.sheetHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.sheetTitle {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.3rem;
+}
+
+.sheetMeta {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+.rolls {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(0.9rem, 1.6vw, 1.3rem);
+}
+
+.roll {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(11rem, 17vw, 15rem);
+  gap: clamp(1rem, 2vw, 1.8rem);
+  align-items: center;
+}
+
+/* One strip of film, printed: the rebate in ink, sprocket holes a shade
+   lighter, and the edge numbers the only light marks on it. */
+.strip {
+  position: relative;
+  padding: 22px 12px 26px;
+  background: var(--ink);
+}
+
+.strip::before,
+.strip::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  height: 7px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 8px,
+    color-mix(in srgb, var(--gray) 45%, var(--ink)) 8px 17px,
+    transparent 17px 24px
+  );
+}
+
+.strip::before {
+  top: 7px;
+}
+
+.strip::after {
+  bottom: 5px;
+}
+
+.edgePrint {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  color: color-mix(in srgb, var(--pale) 70%, transparent);
+}
+
+.frames {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.frame {
+  position: relative;
+}
+
+.shot {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.backPale {
+  background: var(--pale);
+}
+
+.backGray {
+  background: var(--gray);
+}
+
+.backRust {
+  background: var(--rust);
+}
+
+/* Each frame is the same sitting, cropped differently: the crops move the
+   picture, never the frame. */
+.shot .portrait {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  max-width: none;
+  transform-origin: 50% 22%;
+}
+
+.c1 {
+  transform: translateY(-1%);
+}
+
+.c2 {
+  transform: scale(1.2) translateY(2%);
+}
+
+.c3 {
+  transform: scale(1.5) translateY(4%);
+}
+
+.c4 {
+  transform: scale(1.06) translateX(-8%);
+}
+
+.c5 {
+  transform: scale(1.32) translate(6%, 2%);
+}
+
+.frameNo {
+  position: absolute;
+  left: 2px;
+  bottom: -20px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--pale) 85%, transparent);
+}
+
+.frameNo::before {
+  content: '\25B8';
+  margin-right: 0.3em;
+}
+
+/* The grease pencil: a loose rust box around the frame that was chosen. */
+.pick::after {
+  content: '';
+  position: absolute;
+  inset: -8px -6px -7px -7px;
+  border: 3px solid var(--rust);
+  border-radius: 9px 13px 8px 12px;
+  transform: rotate(-1.4deg);
+  pointer-events: none;
+}
+
+.rollNote {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.rollNo {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+
+.rollWho {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.12rem;
+  line-height: 1.25;
+}
+
+.rollPick {
+  margin: 0.35rem 0 0;
+  padding-left: 0.7rem;
+  border-left: 2px solid var(--rust);
+  font-size: 0.88rem;
+  font-style: italic;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* -------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 0 clamp(2rem, 6vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead .secKicker {
+  grid-column: 1 / -1;
+}
+
+.secKicker {
+  margin: 0 0 0.8rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+
+.secTitle {
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+  line-height: 1.08;
+  max-width: 20ch;
+}
+
+.secNote {
+  margin: 0;
+  max-width: 32rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.body {
+  margin: 1.2rem 0 0;
+  max-width: 36rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ------------------------------------------------------------- sessions */
+
+.sessions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.session {
+  display: grid;
+  align-content: start;
+  gap: 0.2rem;
+  padding: 1.3rem 1.2rem 1.5rem;
+  background: color-mix(in srgb, var(--pale) 55%, var(--paper));
+  border-top: 3px solid var(--ink);
+}
+
+.sessionFrame {
+  justify-self: start;
+  margin-bottom: 0.9rem;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.sessionFrame::before {
+  content: '\25B8';
+  margin-right: 0.4em;
+}
+
+.sessionName {
+  font-size: 1.45rem;
+}
+
+.sessionPrice {
+  margin: 0.4rem 0 0;
+  font-family: var(--display);
+  font-size: 2.3rem;
+  line-height: 1;
+  color: var(--rust);
+}
+
+.sessionTime {
+  margin: 0.3rem 0 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.sessionItems {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0.9rem 0 0;
+  border-top: 1px solid var(--pale);
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.93rem;
+}
+
+.extras {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.extrasHead {
+  font-size: 1.5rem;
+}
+
+.extrasList {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(1.5rem, 4vw, 3rem);
+}
+
+.extrasList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px dotted color-mix(in srgb, var(--ink) 35%, transparent);
+}
+
+.extrasList dt {
+  font-size: 0.95rem;
+}
+
+.extrasList dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ day
+   The darkroom: the one section on the ink ground, with an enlargement
+   pinned to it. */
+
+.day {
+  margin-top: var(--air);
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(3.5rem, 8vw, 6.5rem) var(--gut);
+}
+
+.dayInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: center;
+}
+
+.enlarge {
+  margin: 0;
+}
+
+.enlargePrint {
+  position: relative;
+  aspect-ratio: 11 / 14;
+  overflow: hidden;
+  background: var(--pale);
+  border: clamp(12px, 1.6vw, 20px) solid var(--paper);
+  border-bottom-width: clamp(28px, 4vw, 46px);
+  box-shadow: 0 24px 50px -24px rgb(0 0 0 / 0.6);
+  transform: rotate(-1.2deg);
+}
+
+.enlargePrint .enlargeArt {
+  position: absolute;
+  left: 0;
+  top: 2%;
+  width: 100%;
+  max-width: none;
+}
+
+.enlargeCap {
+  margin: 1.1rem 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+}
+
+.day .secKicker {
+  color: color-mix(in srgb, var(--rust) 70%, var(--paper));
+}
+
+.daySteps {
+  list-style: none;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.8rem clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.daySteps li {
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.dayNo {
+  display: inline-grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  border: 2px solid var(--rust);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.dayTitle {
+  margin-top: 0.8rem;
+  font-size: 1.3rem;
+}
+
+.page .dayTitle {
+  margin-top: 0.8rem;
+}
+
+.dayBody {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+/* ----------------------------------------------------------------- wear */
+
+.wearGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.wearHead {
+  font-size: 1.4rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.wearList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wearList li {
+  position: relative;
+  padding: 0.75rem 0 0.75rem 1.7rem;
+  border-bottom: 1px solid var(--pale);
+}
+
+.wearList li::before {
+  content: '+';
+  position: absolute;
+  left: 0.2rem;
+  top: 0.7rem;
+  font-weight: 700;
+  color: var(--rust);
+}
+
+.wearLeave li::before {
+  content: '\2212';
+}
+
+.wearFrame .shot {
+  aspect-ratio: 4 / 5;
+  outline: 12px solid var(--ink);
+  outline-offset: -1px;
+  margin: 12px;
+}
+
+.wearCap {
+  margin: 1.4rem 0 0;
+  font-size: 0.86rem;
+  font-style: italic;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+/* --------------------------------------------------------------- studio */
+
+.studio {
+  display: grid;
+  grid-template-columns: clamp(10rem, 18vw, 15rem) minmax(0, 1.4fr) minmax(0, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+/* A lens in plan: concentric rings in a round window. */
+.lens {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  background: color-mix(in srgb, var(--pale) 60%, var(--paper));
+}
+
+.hours {
+  margin: 0;
+  border-top: 2px solid var(--ink);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--pale);
+}
+
+.hours dt {
+  font-size: 0.95rem;
+}
+
+.hours dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------ questions */
+
+.faqs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(2rem, 5vw, 4rem);
+}
+
+.faq {
+  border-top: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  font-family: var(--display);
+  font-size: 1.18rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  font-family: 'Albert Sans', Arial, sans-serif;
+  font-weight: 700;
+  color: var(--rust);
+}
+
+.faq[open] summary::after {
+  content: '\2212';
+}
+
+.faq p {
+  margin: 0 0 1.2rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ----------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(110px, 13vw, 180px);
+  margin-top: var(--air);
+  overflow: hidden;
+}
+
+/* ----------------------------------------------------------------- book */
+
+.book {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+}
+
+.contactList {
+  margin: 1.8rem 0 0;
+}
+
+.contactList div {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--pale);
+}
+
+.contactList dt {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rust);
+  padding-top: 0.15rem;
+}
+
+.contactList dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.contactList a {
+  border-bottom: 1px solid var(--rust);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.3rem;
+  align-content: start;
+  padding: clamp(1.3rem, 3vw, 2rem);
+  background: color-mix(in srgb, var(--pale) 55%, var(--paper));
+}
+
+.field {
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius: 4px;
+  padding: 0.65rem 0.75rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
+}
+
+.check {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--rust);
+}
+
+.submit {
+  justify-self: start;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.85rem 1.6rem;
+  color: var(--paper);
+  background: var(--rust);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.submit:hover {
+  background: var(--ink);
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: var(--air);
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 1.6rem;
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.footName {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.footAddr {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+  overflow-wrap: anywhere;
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem 1rem;
+  font-size: 0.9rem;
+}
+
+.footLinks a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+}
+
+.footFine p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--paper) 62%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .sessions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .roll {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .rollNote {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 1rem;
+  }
+
+  .rollPick {
+    grid-column: 1 / -1;
+  }
+
+  .wearGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .wearFrame {
+    grid-column: 1 / -1;
+    max-width: 18rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .heroHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wedge {
+    min-height: 0;
+    height: 84px;
+  }
+
+  .dayInner,
+  .book,
+  .secHead,
+  .faqs,
+  .extras {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .enlarge {
+    max-width: 22rem;
+  }
+
+  .secHead {
+    row-gap: 1rem;
+  }
+
+  .studio {
+    grid-template-columns: 8rem minmax(0, 1fr);
+  }
+
+  .hours {
+    grid-column: 1 / -1;
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .footName {
+    grid-column: 1 / -1;
+  }
+}
+
+/* On a phone the strips scroll sideways, as film does through a loupe. */
+@media (max-width: 640px) {
+  .strip {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .frames {
+    grid-template-columns: repeat(5, 8.5rem);
+    padding-bottom: 2px;
+  }
+
+  .edgePrint {
+    display: none;
+  }
+
+  .sessions,
+  .extrasList,
+  .daySteps,
+  .wearGrid,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .studio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lens {
+    width: 8rem;
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .submit {
+    transition: none;
+  }
+}

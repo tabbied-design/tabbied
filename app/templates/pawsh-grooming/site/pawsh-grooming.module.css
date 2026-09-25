@@ -1,0 +1,1064 @@
+.page {
+  --paper: #fdf8f4;
+  --ink: #2a2433;
+  --violet: #7c5ce0;
+  --pink: #f5a3b5;
+  --gray: #a69eb0;
+  --pale: #efe7f6;
+  --gut: clamp(1.25rem, 4.5vw, 3.5rem);
+  --max: 78rem;
+  --radius: 22px;
+  --line: color-mix(in srgb, var(--ink) 12%, transparent);
+  --muted: color-mix(in srgb, var(--ink) 72%, var(--paper));
+  --display: 'Baloo 2', 'Trebuchet MS', sans-serif;
+
+  font-family: 'Onest', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   PAWSH - dog grooming salon
+   Soap bubbles and a clean towel: warm white, a plum ink, a violet for
+   anything to press and a pink for the fluff. Everything is round. The
+   price list is a matrix of sizes against packages, with the dachshund
+   drawn at four scales across the top, so a visitor finds their dog before
+   they find the number. The dogs and the brush are flat color layers in the
+   palette, so they re-color with the page.
+   ========================================================================== */
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--violet);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.8rem max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brandDot {
+  width: 1.3rem;
+  height: 1.3rem;
+  background: var(--pink);
+  border-radius: 50%;
+  box-shadow: 0.55rem -0.45rem 0 -0.3rem var(--violet);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--violet);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-weight: 500;
+  color: var(--muted);
+  transition: color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--violet);
+}
+
+.barCta {
+  padding: 0.6rem 1.15rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--violet);
+  border-radius: 999px;
+  transition: background 150ms ease;
+}
+
+.barCta:hover {
+  background: var(--ink);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------ shared heads */
+
+.secHead {
+  max-width: 44rem;
+}
+
+.secKicker {
+  margin-bottom: 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+}
+
+.secLede {
+  margin-top: 0.9rem;
+  max-width: 36rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: 1.3rem;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--violet);
+  background: var(--pale);
+  border-radius: 999px;
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 6.4vw, 5.8rem);
+  line-height: 0.95;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--violet);
+}
+
+.heroLede {
+  margin-top: 1.5rem;
+  max-width: 32rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnSoft {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.btn {
+  color: var(--paper);
+  background: var(--violet);
+  box-shadow: 0 10px 22px -12px var(--violet);
+}
+
+.btn:hover {
+  background: var(--ink);
+}
+
+.btnSoft {
+  color: var(--ink);
+  background: var(--pale);
+}
+
+.btnSoft:hover {
+  background: var(--pink);
+}
+
+.heroNotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.heroNotes li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.heroNotes li::before {
+  content: '';
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--pink);
+  border-radius: 50%;
+}
+
+/* One big bubble of loops behind the poodle. */
+.heroArt {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 36rem;
+  justify-self: end;
+}
+
+.bubble {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 86%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--pale);
+  border-radius: 50%;
+}
+
+.poodle {
+  position: absolute;
+  left: 22%;
+  bottom: 0;
+  height: 94%;
+  width: auto;
+  filter: drop-shadow(0 14px 16px rgb(0 0 0 / 0.1));
+}
+
+.heroTag {
+  position: absolute;
+  left: 0;
+  top: 18%;
+  display: grid;
+  padding: 0.7rem 1.1rem;
+  line-height: 1.2;
+  background: var(--paper);
+  border-radius: 18px;
+  box-shadow: 0 14px 30px -18px rgb(0 0 0 / 0.4);
+}
+
+.heroTag span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.heroTag strong {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--violet);
+}
+
+/* ----------------------------------------------------------- size matrix */
+
+.prices {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) clamp(4rem, 8vw, 7rem);
+}
+
+.matrix {
+  width: 100%;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  border-collapse: separate;
+  border-spacing: 0.6rem;
+  table-layout: fixed;
+}
+
+.corner {
+  width: 30%;
+  vertical-align: bottom;
+  padding-bottom: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sizeHead {
+  padding: 0 0 0.6rem;
+  vertical-align: bottom;
+  text-align: center;
+}
+
+/* The dachshund at four scales, all standing on one line. */
+.dogBox {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: clamp(4rem, 8vw, 7rem);
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.dogS {
+  width: 36%;
+}
+
+.dogM {
+  width: 54%;
+}
+
+.dogL {
+  width: 74%;
+}
+
+.dogXl {
+  width: 96%;
+}
+
+.sizeShort {
+  display: block;
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--violet);
+}
+
+.sizeName {
+  display: block;
+  font-weight: 600;
+}
+
+.sizeWeight {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.matrix tbody th {
+  padding: 1.1rem 1rem 1.1rem 0;
+  text-align: left;
+  vertical-align: top;
+  font-weight: 400;
+  border-top: 1px solid var(--line);
+}
+
+.pkgName {
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.pkgTag {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  vertical-align: 0.3rem;
+  color: var(--ink);
+  background: var(--pink);
+  border-radius: 999px;
+}
+
+.pkgIncl {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.pkgTime {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--violet);
+}
+
+/* Each size column deepens the tint a step, so the matrix reads as a scale. */
+.matrix td {
+  padding: 1rem 0.5rem;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 18px;
+}
+
+.cs {
+  background: color-mix(in srgb, var(--violet) 7%, var(--paper));
+}
+
+.cm {
+  background: color-mix(in srgb, var(--violet) 13%, var(--paper));
+}
+
+.cl {
+  background: color-mix(in srgb, var(--violet) 20%, var(--paper));
+}
+
+.cxl {
+  background: color-mix(in srgb, var(--violet) 28%, var(--paper));
+}
+
+.rowHot td {
+  box-shadow: inset 0 0 0 2px var(--violet);
+}
+
+.cellSize {
+  display: none;
+}
+
+.cellPrice {
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.matrixNotes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.matrixNotes li {
+  padding: 1rem 1.2rem;
+  font-size: 0.92rem;
+  background: var(--pale);
+  border-radius: 16px;
+}
+
+/* ---------------------------------------------------------------- add-ons */
+
+.addons {
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+  background: var(--pale);
+}
+
+.addonsInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.addonsHead {
+  display: flex;
+  flex-direction: column;
+}
+
+.brush {
+  width: min(15rem, 70%);
+  margin-top: auto;
+  padding-top: 2.5rem;
+}
+
+.addonList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.addonList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.2rem 1rem;
+  align-items: start;
+  padding: 1.15rem 1.25rem;
+  background: var(--paper);
+  border-radius: 18px;
+}
+
+.addonName {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.addonNote {
+  grid-column: 1;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.addonPrice {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  padding: 0.3rem 0.75rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--pink);
+  border-radius: 999px;
+}
+
+/* --------------------------------------------------------------- groomers */
+
+.groomers {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+}
+
+.groomerList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.groomer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1.7rem;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 4.2rem;
+  height: 4.2rem;
+  margin-bottom: 0.7rem;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--violet);
+  background: var(--pale);
+  border-radius: 50%;
+  box-shadow: 2.4rem -0.6rem 0 -1.35rem var(--pink);
+}
+
+.groomerName {
+  font-size: 1.6rem;
+}
+
+.groomerRole {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--violet);
+}
+
+.groomerGood {
+  color: var(--muted);
+}
+
+.groomerDays {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--pale);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------ first visit */
+
+.first {
+  padding: 0 var(--gut) clamp(4rem, 8vw, 7rem);
+}
+
+.firstInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+  padding-top: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--line);
+}
+
+.firstHead {
+  display: flex;
+  flex-direction: column;
+}
+
+.firstDog {
+  margin-top: auto;
+  padding: 2.5rem 0 0;
+}
+
+.dachshund {
+  width: min(22rem, 100%);
+}
+
+.firstList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.8rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.firstList li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  gap: 0.3rem 0.9rem;
+}
+
+.firstNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--paper);
+  background: var(--violet);
+  border-radius: 50%;
+}
+
+.firstTitle {
+  font-size: 1.3rem;
+  line-height: 1.15;
+  padding-top: 0.35rem;
+}
+
+.firstBody {
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- book */
+
+.book {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) clamp(4rem, 8vw, 7rem);
+}
+
+.bookPanel {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  overflow: hidden;
+  padding: clamp(1.75rem, 5vw, 4rem);
+  padding-top: clamp(5rem, 9vw, 7.5rem);
+  color: var(--paper);
+  background: var(--violet);
+  border-radius: calc(var(--radius) * 1.5);
+}
+
+/* A band of sparkles along the top of the panel, fading before the text. */
+.sparks {
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto;
+  height: clamp(5rem, 9vw, 7.5rem);
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 35%, transparent);
+  mask-image: linear-gradient(180deg, var(--ink) 35%, transparent);
+}
+
+.bookKicker {
+  margin-bottom: 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+.bookTitle {
+  font-size: clamp(2rem, 3.8vw, 3rem);
+}
+
+.bookLede {
+  margin-top: 1rem;
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+.hours {
+  display: grid;
+  gap: 0.35rem;
+  margin: 1.8rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 30%, transparent);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 20rem;
+}
+
+.hours dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.bookAddr {
+  margin-top: 1.4rem;
+  font-weight: 500;
+}
+
+.bookPhone a {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  border-bottom: 3px solid var(--pink);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1rem;
+  align-self: start;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: var(--radius);
+}
+
+.field,
+.fieldWide {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field span,
+.fieldWide span {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--pale);
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+}
+
+.form input:focus-visible,
+.form select:focus-visible,
+.form textarea:focus-visible {
+  outline: none;
+  border-color: var(--violet);
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.6rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--violet);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.submit:hover {
+  background: var(--ink);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: 2.6rem var(--gut) 2rem;
+  background: var(--pale);
+}
+
+.footTop,
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop {
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--violet);
+}
+
+.footTag {
+  flex: 1;
+  color: var(--muted);
+}
+
+.footMail a {
+  font-weight: 600;
+  border-bottom: 2px solid var(--pink);
+}
+
+.footFine {
+  padding-top: 1.3rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.footFine a {
+  border-bottom: 1px solid currentColor;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .addonsInner,
+  .firstInner,
+  .bookPanel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brush {
+    width: 9rem;
+    padding-top: 1.5rem;
+  }
+
+  .dachshund {
+    width: 14rem;
+  }
+
+  .matrixNotes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .bar {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .barCta {
+    justify-self: end;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    justify-self: center;
+    max-width: 28rem;
+  }
+
+  .groomerList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The matrix on a phone: the size row stays four across, and each package
+   becomes a card with its four prices lined up under the dogs. */
+@media (max-width: 720px) {
+  .matrix,
+  .matrix thead,
+  .matrix tbody {
+    display: block;
+  }
+
+  .matrix tr {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+
+  .matrix thead tr {
+    position: sticky;
+    top: 3.6rem;
+    z-index: 2;
+    padding: 0.4rem 0 0.2rem;
+    background: var(--paper);
+  }
+
+  .corner {
+    display: none;
+  }
+
+  .sizeHead {
+    padding-bottom: 0.2rem;
+  }
+
+  .dogBox {
+    height: 3rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .sizeShort {
+    font-size: 1.5rem;
+  }
+
+  .sizeName {
+    display: none;
+  }
+
+  .sizeWeight {
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+
+  .matrix tbody tr {
+    margin-top: 1.1rem;
+  }
+
+  .matrix tbody th {
+    grid-column: 1 / -1;
+    padding: 1rem 0 0.2rem;
+  }
+
+  .matrix td {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.7rem 0.2rem;
+    border-radius: 14px;
+  }
+
+  .cellSize {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .cellPrice {
+    font-size: 1.45rem;
+  }
+
+  .matrixNotes {
+    margin-top: 1.4rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .barCta {
+    display: none;
+  }
+
+  .addonList,
+  .firstList,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroTag {
+    top: 0;
+    right: 0;
+    left: auto;
+  }
+
+  .footTop {
+    display: grid;
+    gap: 0.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    transition: none !important;
+  }
+}

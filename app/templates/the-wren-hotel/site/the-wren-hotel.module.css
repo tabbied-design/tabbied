@@ -1,0 +1,1291 @@
+/* ==========================================================================
+   THE WREN - boutique hotel, Tanner Street
+   A quiet hotel page built as a run of rooms: each kind of room is a large
+   painted plate with its furniture standing in it, and its facts beside it,
+   the sides swapping row by row. The pictures are photographs drawn in two
+   of the page's inks through CSS masks, so a re-color refurnishes the rooms.
+   The ogee is the wallpaper on the landings, in the hero and behind the bar.
+   ========================================================================== */
+
+.page {
+  --paper: #f4f0ea;
+  --ink: #1e1b18;
+  --wren: #7d5a44;
+  --stone: #a0968b;
+  --linen: #e6ded3;
+  --gut: clamp(1.25rem, 4.5vw, 4.5rem);
+  --max: 78rem;
+  --air: clamp(5rem, 11vw, 9.5rem);
+  --display: 'Gilda Display', 'Didot', Georgia, serif;
+
+  font-family: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 1.02rem;
+  line-height: 1.62;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--wren);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.08;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.95rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.1rem, 2.6vw, 2.6rem);
+}
+
+.nav a {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--wren);
+}
+
+.barBook {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.barBook:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.heroText {
+  padding-bottom: clamp(1rem, 4vw, 4rem);
+}
+
+.kicker {
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--wren);
+}
+
+.heroTitle {
+  margin-top: 1.4rem;
+  font-size: clamp(2.6rem, 5.4vw, 4.7rem);
+  line-height: 1.04;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--wren);
+}
+
+.heroLede {
+  margin-top: 1.8rem;
+  max-width: 32rem;
+  font-size: clamp(1.02rem, 1.4vw, 1.14rem);
+  font-weight: 300;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+.heroActions {
+  margin-top: 2.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.95rem 1.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  border: 1px solid var(--ink);
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--wren);
+  border-color: var(--wren);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* An arched alcove papered in ogee, with the key hung in the middle of it
+   on a plain oval so the tassel never fights the wallpaper. */
+.heroArt {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 4 / 5;
+  max-height: 44rem;
+  width: 100%;
+  justify-self: end;
+  border-radius: 999px 999px 0 0;
+  overflow: hidden;
+  background: var(--linen);
+}
+
+.heroWall {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0.55;
+}
+
+.heroArt::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 13%;
+  right: 13%;
+  top: 18%;
+  bottom: 9%;
+  border-radius: 50%;
+  background: var(--linen);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--wren) 40%, transparent);
+}
+
+.heroKey {
+  position: absolute;
+  left: 18%;
+  width: 64%;
+  top: 22%;
+}
+
+.facts {
+  grid-column: 1 / -1;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+}
+
+.facts div {
+  padding: 1.4rem 1.2rem 0 0;
+}
+
+.facts div + div {
+  padding-left: 1.2rem;
+  border-left: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.facts dt {
+  font-family: var(--display);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1;
+}
+
+.facts dd {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+/* ---------------------------------------------------------- section heads */
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 2fr);
+  column-gap: clamp(1.5rem, 5vw, 5rem);
+  row-gap: 1rem;
+  align-items: start;
+  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.secNo {
+  grid-row: span 2;
+  padding-top: 0.9rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--wren);
+  border-top: 1px solid var(--wren);
+}
+
+.secHead h2 {
+  font-size: clamp(2.1rem, 4.4vw, 3.6rem);
+}
+
+.secNote {
+  max-width: 38rem;
+  font-weight: 300;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ------------------------------------------------------------------ rooms
+   The layout of the page: big plates, alternating sides. */
+
+.rooms {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.roomList {
+  display: grid;
+  gap: clamp(4rem, 9vw, 8rem);
+}
+
+.room {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5.5vw, 5.5rem);
+  align-items: center;
+  scroll-margin-top: 5rem;
+}
+
+.room:nth-child(even) .roomArt {
+  order: 2;
+}
+
+.roomArt {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 6 / 5;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+/* A soft floor shadow under whatever stands in the plate. */
+.roomArt::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 16%;
+  right: 16%;
+  bottom: 5%;
+  height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--ink) 30%, transparent), transparent);
+}
+
+.nest {
+  background: var(--linen);
+}
+
+.study {
+  background: var(--wren);
+}
+
+.loft {
+  background: var(--ink);
+}
+
+.loft::after {
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--paper) 14%, transparent), transparent);
+}
+
+/* Room plates: a line of skirting board across the bottom. */
+.roomArt::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 9%;
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+.loft::before {
+  background: color-mix(in srgb, var(--paper) 8%, transparent);
+}
+
+.roomPic {
+  position: absolute;
+}
+
+.solo {
+  height: 80%;
+  left: 50%;
+  bottom: 7%;
+  transform: translateX(-50%);
+}
+
+.chairSolo {
+  height: 78%;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+}
+
+.pairChair {
+  height: 64%;
+  left: 12%;
+  bottom: 6%;
+}
+
+.pairLamp {
+  height: 58%;
+  right: 13%;
+  bottom: 6.5%;
+}
+
+.roomWhere {
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wren);
+}
+
+.roomName {
+  margin-top: 0.6rem;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1;
+}
+
+.roomBody {
+  margin-top: 1.2rem;
+  max-width: 34rem;
+  font-weight: 300;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+
+.specs {
+  margin: 1.8rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, auto));
+  justify-content: start;
+  column-gap: 2rem;
+  row-gap: 0.8rem;
+  padding: 1rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.specs dt {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.specs dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.96rem;
+}
+
+/* Amenities as icons set in the running text. */
+.amenities {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.6rem;
+  font-size: 0.94rem;
+}
+
+.amenities li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.roomFoot {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.8rem 1.6rem;
+}
+
+.rate {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.6rem;
+}
+
+.roomLink {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--wren);
+  color: var(--wren);
+}
+
+.roomLink::after {
+  content: ' \2192';
+}
+
+/* ------------------------------------------------------------------ icons
+   Small line drawings in the accent, made of borders and gradients. */
+
+.icon {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  width: 1.2em;
+  height: 1.2em;
+  color: var(--wren);
+}
+
+.icon::before,
+.icon::after {
+  content: '';
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.bed::before {
+  left: 0;
+  right: 0;
+  bottom: 18%;
+  height: 32%;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+}
+
+.bed::after {
+  left: 0;
+  bottom: 6%;
+  width: 1.5px;
+  height: 78%;
+  background: currentColor;
+  box-shadow: 0.2em 0.1em 0 -0.04em currentColor;
+}
+
+.shower::before {
+  left: 18%;
+  right: 18%;
+  top: 8%;
+  height: 30%;
+  border: 1.5px solid currentColor;
+  border-bottom-width: 1.5px;
+  border-radius: 1em 1em 0 0;
+}
+
+.shower::after {
+  left: 26%;
+  right: 26%;
+  top: 48%;
+  bottom: 6%;
+  background: repeating-linear-gradient(90deg, currentColor 0 1.5px, transparent 1.5px 0.2em);
+  -webkit-mask: repeating-linear-gradient(180deg, currentColor 0 0.12em, transparent 0.12em 0.2em);
+  mask: repeating-linear-gradient(180deg, currentColor 0 0.12em, transparent 0.12em 0.2em);
+}
+
+.tub::before {
+  left: 2%;
+  right: 2%;
+  top: 32%;
+  height: 42%;
+  border: 1.5px solid currentColor;
+  border-radius: 0 0 0.5em 0.5em;
+}
+
+.tub::after {
+  left: 20%;
+  right: 20%;
+  bottom: 6%;
+  height: 20%;
+  border-left: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+}
+
+.desk::before {
+  left: 0;
+  right: 0;
+  top: 32%;
+  height: 1.5px;
+  background: currentColor;
+}
+
+.desk::after {
+  left: 8%;
+  right: 8%;
+  top: 32%;
+  bottom: 6%;
+  border-left: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  background: linear-gradient(currentColor, currentColor) 100% 30% / 45% 1.5px no-repeat;
+}
+
+.window::before {
+  left: 12%;
+  right: 12%;
+  top: 4%;
+  bottom: 4%;
+  border: 1.5px solid currentColor;
+  border-radius: 0.5em 0.5em 0 0;
+  background:
+    linear-gradient(currentColor, currentColor) 50% 0 / 1.5px 100% no-repeat,
+    linear-gradient(currentColor, currentColor) 0 55% / 100% 1.5px no-repeat;
+}
+
+.tea::before {
+  left: 6%;
+  top: 30%;
+  width: 62%;
+  height: 52%;
+  border: 1.5px solid currentColor;
+  border-radius: 0 0 0.45em 0.45em;
+}
+
+.tea::after {
+  right: 6%;
+  top: 38%;
+  width: 30%;
+  height: 26%;
+  border: 1.5px solid currentColor;
+  border-left: 0;
+  border-radius: 0 0.3em 0.3em 0;
+}
+
+.wifi::before {
+  left: 0;
+  right: 0;
+  top: 8%;
+  bottom: 10%;
+  background: radial-gradient(
+    circle at 50% 100%,
+    currentColor 0 10%,
+    transparent 11% 32%,
+    currentColor 33% 42%,
+    transparent 43% 64%,
+    currentColor 65% 74%,
+    transparent 75%
+  );
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.lamp::before {
+  left: 12%;
+  right: 12%;
+  top: 4%;
+  height: 42%;
+  background: currentColor;
+  clip-path: polygon(24% 0, 76% 0, 100% 100%, 0 100%);
+}
+
+.lamp::after {
+  left: 24%;
+  right: 24%;
+  top: 46%;
+  bottom: 6%;
+  border-bottom: 1.5px solid currentColor;
+  background: linear-gradient(currentColor, currentColor) 50% 0 / 1.5px 100% no-repeat;
+}
+
+.chair::before {
+  left: 16%;
+  right: 16%;
+  top: 10%;
+  bottom: 30%;
+  border: 1.5px solid currentColor;
+  border-radius: 0.35em 0.35em 0 0;
+}
+
+.chair::after {
+  left: 4%;
+  right: 4%;
+  top: 44%;
+  bottom: 6%;
+  border: 1.5px solid currentColor;
+  border-top: 0;
+  border-radius: 0 0 0.12em 0.12em;
+}
+
+.key::before {
+  left: 0;
+  top: 28%;
+  width: 42%;
+  height: 42%;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+
+.key::after {
+  left: 42%;
+  right: 0;
+  top: 47%;
+  height: 26%;
+  background:
+    linear-gradient(currentColor, currentColor) 0 0 / 100% 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) 72% 0 / 1.5px 100% no-repeat,
+    linear-gradient(currentColor, currentColor) 100% 0 / 1.5px 100% no-repeat;
+}
+
+/* ------------------------------------------------------------------ house */
+
+.house {
+  margin-top: var(--air);
+  background: var(--linen);
+}
+
+.houseInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.houseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.houseCard {
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--ink);
+}
+
+.houseCard h3 {
+  font-size: clamp(1.7rem, 2.6vw, 2.2rem);
+}
+
+.houseTime {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wren);
+}
+
+.houseCard p:last-child {
+  font-weight: 300;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+
+/* ----------------------------------------------------------- neighborhood */
+
+.hood {
+  position: relative;
+}
+
+.hoodBand {
+  position: relative;
+  height: clamp(5.5rem, 10vw, 8rem);
+  overflow: hidden;
+  opacity: 0.9;
+}
+
+.hoodInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.places {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.place {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) minmax(0, 1.1fr);
+  grid-template-areas: 'min name rule' 'min what rule';
+  column-gap: 1.5rem;
+  align-items: center;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.placeMin {
+  grid-area: min;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--wren);
+}
+
+.placeName {
+  grid-area: name;
+  font-size: 1.08rem;
+  font-weight: 500;
+}
+
+.placeWhat {
+  grid-area: what;
+  font-size: 0.92rem;
+  font-weight: 300;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* The walk, to scale: twelve minutes is the whole column. */
+.placeRule {
+  grid-area: rule;
+  position: relative;
+  height: 1px;
+  width: calc(var(--min) / 12 * 100%);
+  background: var(--wren);
+}
+
+.placeRule::before,
+.placeRule::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.placeRule::before {
+  left: 0;
+  background: var(--ink);
+}
+
+.placeRule::after {
+  left: 100%;
+  border: 1px solid var(--wren);
+  background: var(--paper);
+}
+
+/* ------------------------------------------------------------------ rates */
+
+.rates {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.rateTable {
+  border-top: 1px solid var(--ink);
+}
+
+.rateHead,
+.rateRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.rateHead span {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.rateSeason strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.rateSeason small {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.86rem;
+  font-weight: 300;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.rateCell small {
+  display: none;
+}
+
+.rateCell span {
+  font-family: var(--display);
+  font-size: 1.7rem;
+}
+
+.policies {
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.8rem clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.policies dt {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wren);
+}
+
+.policies dd {
+  margin: 0.4rem 0 0;
+  font-weight: 300;
+  font-size: 0.96rem;
+}
+
+/* ------------------------------------------------------------------- book
+   The bar at night: the ogee in the accent on the ink, and a paper form. */
+
+.book {
+  position: relative;
+  isolation: isolate;
+  background: var(--ink);
+  color: var(--paper);
+  overflow: hidden;
+}
+
+.bookWall {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.45;
+}
+
+.bookInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.bookIntro {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+}
+
+.bookIntro .kicker {
+  color: var(--linen);
+}
+
+.bookIntro h2 {
+  margin-top: 1rem;
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+}
+
+.bookIntro > p:not(.kicker) {
+  margin-top: 1.2rem;
+  font-weight: 300;
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+.bookKey {
+  width: min(15rem, 55%);
+  margin: 2rem 0 0 auto;
+}
+
+.contact {
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.contact dt {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--linen);
+}
+
+.contact dd {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+}
+
+.contact a {
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 40%, transparent);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding: clamp(1.5rem, 3.5vw, 2.8rem);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 3px;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.span2 {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  padding: 0.75rem 0.85rem;
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius: 2px;
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: 2px solid var(--wren);
+  outline-offset: 1px;
+}
+
+.check {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--wren);
+}
+
+.submit {
+  grid-column: 1 / -1;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 1.05rem 1.4rem;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.submit:hover {
+  background: var(--wren);
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  font-size: 0.84rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.6fr repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.footTag {
+  margin-top: 0.8rem;
+  max-width: 18rem;
+  font-weight: 300;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footHead {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--linen);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.footLinks a:hover {
+  color: var(--linen);
+}
+
+.footAddr {
+  margin-top: 0.9rem;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+}
+
+.credit a {
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 40%, transparent);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1060px) {
+  .policies {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.8rem;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    max-width: 30rem;
+    justify-self: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .facts div:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .facts div:nth-child(n + 3) {
+    padding-top: 1.1rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNo {
+    grid-row: auto;
+    justify-self: start;
+    padding-top: 0.6rem;
+  }
+
+  .room {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .room:nth-child(even) .roomArt {
+    order: 0;
+  }
+
+  .houseGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bookInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footGrid > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .barBook {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+
+  .specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .place {
+    grid-template-columns: 4.2rem minmax(0, 1fr);
+    grid-template-areas: 'min name' 'min what' 'rule rule';
+    row-gap: 0.25rem;
+  }
+
+  .placeRule {
+    margin-top: 0.8rem;
+  }
+
+  .rateHead {
+    display: none;
+  }
+
+  .rateRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 0.8rem;
+  }
+
+  .rateSeason {
+    grid-column: 1 / -1;
+  }
+
+  .rateCell small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 66%, transparent);
+  }
+
+  .rateCell span {
+    font-size: 1.45rem;
+  }
+
+  .policies {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footFine {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barBook,
+  .btn,
+  .btnGhost,
+  .submit {
+    transition: none;
+  }
+}

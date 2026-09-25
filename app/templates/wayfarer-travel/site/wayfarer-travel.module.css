@@ -1,0 +1,1291 @@
+.page {
+  --paper: #f5f1e6;
+  --navy: #1b2b3a;
+  --coral: #e0673b;
+  --teal: #2e8b8b;
+  --sand: #e9dfc9;
+  --gut: clamp(1.25rem, 4.5vw, 3.5rem);
+  --max: 78rem;
+  --radius: 18px;
+  --line: color-mix(in srgb, var(--navy) 14%, transparent);
+  --muted: color-mix(in srgb, var(--navy) 72%, var(--paper));
+  --display: 'Gloock', 'Georgia', serif;
+
+  font-family: 'Albert Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--navy);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   WAYFARER TRAVEL - independent travel agency
+   A passport on a kitchen table: cream paper, navy ink, a coral stamp and a
+   teal sea. The destinations run as one sideways row of cards, each a flat
+   illustration on its own colored plate; the illustrations are drawn in the
+   page's palette, so a re-color repaints every lighthouse and sail with it.
+   The one big pattern is the swirl the balloon rises through.
+   ========================================================================== */
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.95rem max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.brandTag {
+  padding: 0.25rem 0.5rem 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral);
+  border: 1.5px solid var(--coral);
+  border-radius: 4px;
+  transform: rotate(-4deg);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--coral);
+}
+
+.barCta {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--navy);
+  border-radius: 999px;
+  transition: background 160ms ease;
+}
+
+.barCta:hover {
+  background: var(--coral);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------ shared heads */
+
+.secHead {
+  max-width: 44rem;
+}
+
+.secKicker,
+.secKickerLight {
+  margin-bottom: 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.secKickerLight {
+  color: var(--coral);
+}
+
+.secTitle {
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  line-height: 1.05;
+}
+
+.secLede {
+  margin-top: 1.2rem;
+  max-width: 34rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.kicker {
+  margin-bottom: 1.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.heroTitle {
+  font-size: clamp(2.7rem, 6vw, 5.4rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--coral);
+}
+
+.heroLede {
+  margin-top: 1.6rem;
+  max-width: 33rem;
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.2rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.9rem 1.45rem;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  color: var(--paper);
+  background: var(--coral);
+}
+
+.btn:hover {
+  background: var(--navy);
+}
+
+.btnGhost {
+  border: 1.5px solid var(--navy);
+}
+
+.btnGhost:hover {
+  color: var(--paper);
+  background: var(--navy);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 2.5rem;
+  margin: 3rem 0 0;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.heroFacts dd {
+  order: -1;
+}
+
+.heroFacts dt {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+/* The swirl is square and the balloon floats at its center. */
+.heroArt {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 38rem;
+  justify-self: end;
+}
+
+.swirl {
+  position: absolute;
+  inset: -22%;
+}
+
+.heroBalloon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 27%;
+  transform: translate(-50%, -52%);
+  filter: drop-shadow(0 18px 18px rgb(0 0 0 / 0.12));
+}
+
+.heroStamp {
+  position: absolute;
+  left: 2%;
+  bottom: 6%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: clamp(7.5rem, 13vw, 9.5rem);
+  aspect-ratio: 1;
+  padding: 0.8rem;
+  text-align: center;
+  color: var(--coral);
+  background: var(--paper);
+  border: 2px solid var(--coral);
+  border-radius: 50%;
+  outline: 1px dashed var(--coral);
+  outline-offset: -8px;
+  transform: rotate(-12deg);
+}
+
+.stampTop,
+.stampDate {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.stampMain {
+  margin: 0.25rem 0;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+/* ------------------------------------------------- destinations: carousel */
+
+.dest {
+  padding: clamp(4rem, 8vw, 7rem) 0 clamp(3.5rem, 6vw, 5rem);
+  background: var(--sand);
+}
+
+.destHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 2rem;
+  max-width: var(--max);
+  margin: 0 auto 2.5rem;
+  padding: 0 var(--gut);
+}
+
+.destMeta {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+.destNote {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.scrollHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--navy);
+  border-radius: 999px;
+}
+
+.scrollHint::after {
+  content: '\2192';
+  font-size: 1rem;
+  letter-spacing: 0;
+  color: var(--coral);
+}
+
+/* The row starts on the content's left edge and runs off the right edge of
+   the screen, so the last visible card is always cut and asks to be
+   scrolled. */
+.rail {
+  --edge: max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(16.5rem, 26vw, 21.5rem);
+  gap: clamp(1rem, 1.6vw, 1.5rem);
+  margin: 0;
+  padding: 0.5rem var(--edge) 1.75rem;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--edge);
+  scrollbar-width: thin;
+  scrollbar-color: var(--coral) color-mix(in srgb, var(--navy) 12%, transparent);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  scroll-snap-align: start;
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 0 var(--line), 0 18px 34px -24px rgb(0 0 0 / 0.35);
+}
+
+.plate {
+  position: relative;
+  aspect-ratio: 5 / 4.2;
+}
+
+.sand {
+  background: color-mix(in srgb, var(--sand) 70%, var(--paper));
+}
+
+.teal {
+  background: var(--teal);
+}
+
+.navy {
+  background: var(--navy);
+}
+
+.coral {
+  background: var(--coral);
+}
+
+.plateArt {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  height: 74%;
+  width: auto;
+  transform: translate(-50%, -50%);
+}
+
+.cardNo {
+  position: absolute;
+  top: 0.9rem;
+  left: 1rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  color: var(--navy);
+}
+
+.navy .cardNo {
+  color: var(--sand);
+}
+
+.cardTag {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--paper);
+  border-radius: 999px;
+}
+
+.cardBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.3rem 1.35rem 1.4rem;
+}
+
+.cardRegion {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.cardName {
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.cardText {
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.cardFacts {
+  display: grid;
+  gap: 0.45rem;
+  margin: auto 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--line);
+}
+
+.cardFacts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.85rem;
+}
+
+.cardFacts dt {
+  color: var(--muted);
+}
+
+.cardFacts dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.cardFacts .cardPrice {
+  align-items: baseline;
+  margin-top: 0.2rem;
+}
+
+.cardPrice dd {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--coral);
+}
+
+.cardLink {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-bottom: 1.5px solid var(--coral);
+  transition: color 160ms ease;
+}
+
+.cardLink:hover {
+  color: var(--coral);
+}
+
+/* ------------------------------------------------------------- trip styles */
+
+.styles {
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut);
+}
+
+.stylesInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.stylesHead {
+  position: sticky;
+  top: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+}
+
+/* A round corner of a map under the heading: contour rings that fade out
+   toward the edge. */
+.contour {
+  position: relative;
+  order: 4;
+  width: min(100%, 22rem);
+  aspect-ratio: 1;
+  margin-top: 2.5rem;
+  overflow: hidden;
+  border-radius: 50%;
+  -webkit-mask-image: radial-gradient(closest-side, var(--navy) 55%, transparent 100%);
+  mask-image: radial-gradient(closest-side, var(--navy) 55%, transparent 100%);
+}
+
+.styleList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.style {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.8rem 0 2.2rem;
+  border-top: 1.5px solid var(--navy);
+}
+
+.styleNo {
+  font-family: var(--display);
+  font-size: 0.95rem;
+  color: var(--coral);
+}
+
+.styleName {
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.styleBody {
+  color: var(--muted);
+}
+
+.styleMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.styleMeta span {
+  padding: 0.2rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--sand);
+  border-radius: 999px;
+}
+
+.stylePlanner {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--teal);
+}
+
+/* ---------------------------------------------------------------- planning */
+
+.planning {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+  border-top: 1px solid var(--line);
+}
+
+/* The route: a band of dashes the four stops sit on. */
+.route {
+  position: relative;
+  height: 3rem;
+  margin: 3rem 0 -3rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, var(--navy) 10%, var(--navy) 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, var(--navy) 10%, var(--navy) 90%, transparent);
+}
+
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  color: var(--paper);
+  background: var(--navy);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--paper);
+}
+
+.stepTitle {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.stepWhen {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+
+.stepBody {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.fees {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding: clamp(1.6rem, 3.5vw, 2.6rem);
+  background: var(--sand);
+  border-radius: var(--radius);
+}
+
+.feesTitle {
+  font-size: 1.8rem;
+}
+
+.feesBody {
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+.feeList {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.feeList div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.feeList div:last-child {
+  border-bottom: 0;
+}
+
+.feeList dt {
+  flex: 1;
+}
+
+.feeList dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  color: var(--navy);
+}
+
+/* --------------------------------------------------------------- postcards */
+
+.postcards {
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+  background: var(--navy);
+  color: var(--paper);
+}
+
+.postcards .secHead {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.postcards .secKicker {
+  color: var(--coral);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 2.8rem auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.postcard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.4rem;
+  color: var(--navy);
+  background: var(--paper);
+  border-radius: 6px;
+  box-shadow: 0 22px 40px -24px rgb(0 0 0 / 0.6);
+}
+
+.postcard:nth-child(1) {
+  transform: rotate(-1.2deg);
+}
+
+.postcard:nth-child(3) {
+  transform: rotate(1deg);
+}
+
+.postMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-right: 1rem;
+  border-right: 1px solid var(--line);
+}
+
+.postQuote {
+  margin: 0;
+}
+
+.postQuote p {
+  font-size: 0.98rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.postWho {
+  margin-top: auto;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.postSide {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+/* A stamp with a perforated edge: holes along every side, solid inside. */
+.stamp {
+  display: grid;
+  place-items: center;
+  width: 5.6rem;
+  aspect-ratio: 4 / 5;
+  padding: 0.7rem;
+  background: var(--navy);
+  -webkit-mask:
+    radial-gradient(circle, transparent 2.6px, var(--navy) 3px) -4.5px -4.5px / 9px 9px round,
+    linear-gradient(var(--navy), var(--navy)) center / calc(100% - 9px) calc(100% - 9px) no-repeat;
+  mask:
+    radial-gradient(circle, transparent 2.6px, var(--navy) 3px) -4.5px -4.5px / 9px 9px round,
+    linear-gradient(var(--navy), var(--navy)) center / calc(100% - 9px) calc(100% - 9px) no-repeat;
+}
+
+.stampArt {
+  height: 100%;
+  width: auto;
+}
+
+.postmark {
+  position: absolute;
+  z-index: 1;
+  top: 4.8rem;
+  right: 4.6rem;
+  display: grid;
+  place-items: center;
+  width: 4.4rem;
+  aspect-ratio: 1;
+  padding: 0.4rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--coral);
+  border: 1.5px solid var(--coral);
+  border-radius: 50%;
+  transform: rotate(-16deg);
+  opacity: 0.9;
+}
+
+.postLines {
+  width: 100%;
+  height: 3.6rem;
+  margin-top: auto;
+  background: repeating-linear-gradient(180deg, transparent 0 17px, var(--line) 17px 18px);
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut);
+}
+
+.faqHead {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+}
+
+.faqArt {
+  width: min(13rem, 60%);
+  margin-top: 2.5rem;
+}
+
+.faqList {
+  border-top: 1.5px solid var(--navy);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--line);
+}
+
+.faqItem summary {
+  position: relative;
+  padding: 1.3rem 2.5rem 1.3rem 0;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  line-height: 1.25;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  position: absolute;
+  top: 1.1rem;
+  right: 0.2rem;
+  font-family: 'Albert Sans', sans-serif;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--coral);
+  transition: transform 160ms ease;
+}
+
+.faqItem[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.faqItem p {
+  max-width: 40rem;
+  padding: 0 2.5rem 1.4rem 0;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- consult */
+
+.consult {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) clamp(4rem, 8vw, 7rem);
+}
+
+.consultPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  padding: clamp(1.75rem, 5vw, 4rem);
+  color: var(--paper);
+  background: var(--navy);
+  border-radius: calc(var(--radius) * 1.4);
+}
+
+.consultIntro {
+  display: flex;
+  flex-direction: column;
+}
+
+.consultTitle {
+  font-size: clamp(2rem, 3.8vw, 3.1rem);
+  line-height: 1.05;
+}
+
+.consultLede {
+  margin-top: 1.2rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.consultArt {
+  width: min(15rem, 70%);
+  margin-top: auto;
+  padding-top: 2.5rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.1rem;
+  align-content: start;
+}
+
+.field,
+.fieldWide {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field span,
+.fieldWide span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--paper);
+  background: color-mix(in srgb, var(--paper) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--paper) 28%, transparent);
+  border-radius: 10px;
+}
+
+.form select option {
+  color: var(--navy);
+  background: var(--paper);
+}
+
+.form input::placeholder,
+.form textarea::placeholder {
+  color: color-mix(in srgb, var(--paper) 50%, transparent);
+}
+
+.form input:focus-visible,
+.form select:focus-visible,
+.form textarea:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 1px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 0.5rem;
+  padding: 0.95rem 1.7rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--navy);
+  background: var(--coral);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.submit:hover {
+  background: var(--sand);
+}
+
+.office {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  padding: 2.5rem clamp(0rem, 3vw, 2rem) 0;
+}
+
+.officeTitle {
+  margin-bottom: 0.7rem;
+  font-size: 1.3rem;
+}
+
+.officeText {
+  margin-bottom: 0.4rem;
+  color: var(--muted);
+}
+
+.officeText a {
+  color: var(--navy);
+  border-bottom: 1px solid var(--coral);
+}
+
+.hours {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 18rem;
+}
+
+.hours dt {
+  color: var(--muted);
+}
+
+.hours dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: 3rem var(--gut) 2.2rem;
+  background: var(--sand);
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.6rem;
+}
+
+.footTag {
+  margin-top: 0.3rem;
+  color: var(--muted);
+}
+
+.footLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-weight: 500;
+}
+
+.footLinks a:hover {
+  color: var(--coral);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 1.5rem auto 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.footFine a {
+  border-bottom: 1px solid currentColor;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .nav {
+    gap: 1.1rem;
+  }
+
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 38rem;
+  }
+
+  .postcards .secHead {
+    max-width: 38rem;
+  }
+
+  .postcard:nth-child(n) {
+    transform: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .barCta {
+    justify-self: end;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    justify-self: center;
+    max-width: 30rem;
+  }
+
+  .destHead,
+  .stylesInner,
+  .faq,
+  .consultPanel,
+  .fees {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2.5rem;
+  }
+
+  .route {
+    display: none;
+  }
+
+  .stepNo {
+    box-shadow: none;
+  }
+
+  .consultArt {
+    display: none;
+  }
+
+  .faqArt {
+    width: 8rem;
+    margin-top: 1.5rem;
+  }
+
+  .stylesHead {
+    position: static;
+  }
+
+  .contour {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCta {
+    display: none;
+  }
+
+  .heroFacts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .heroFacts dd {
+    font-size: 1.6rem;
+  }
+
+  .styleList,
+  .steps,
+  .form,
+  .office {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rail {
+    grid-auto-columns: 82%;
+  }
+
+  .postcard {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 1.1rem;
+  }
+
+  .stamp {
+    width: 4.4rem;
+  }
+
+  .postmark {
+    display: none;
+  }
+
+  .postLines {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,1025 @@
+/* ==========================================================================
+   OLD TOWN WALKS - city walking tours
+   A printed town guide. The first screen is the skyline, full width, its
+   roofs in brick, river blue, ochre and ink across the bottom, and the
+   words stand centered in the sky between the spire and the clock tower.
+   Humanist type, a warm paper, and a street of gable ends as the loud
+   pattern. At the foot, the old bridge fills the booking section with the
+   river and the sky both the section's own blue.
+   ========================================================================== */
+
+.page {
+  --paper: #f3ede2;
+  --ink: #232126;
+  --brick: #c4563a;
+  --river: #3b6e8f;
+  --stone: #8f877d;
+  --pale: #e5daca;
+  --ochre: #e0b04f;
+  --gut: clamp(1rem, 5vw, 4.5rem);
+  --max: 76rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --serif: 'Alegreya', Georgia, serif;
+  --sans: 'Alegreya Sans', 'Gill Sans', 'Helvetica Neue', sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.125rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--brick);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.3rem var(--gut);
+}
+
+.mark {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  font-style: italic;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.9rem, 2vw, 1.9rem);
+}
+
+.nav a {
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding-bottom: 0.15rem;
+  border-bottom: 2px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--brick);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero
+   The skyline is drawn at its own proportions across the full width and
+   hangs below the fold, so the roofs start about two thirds of the way
+   down and the spire and the tower rise into the sky either side of the
+   words. Both sit at a fixed share of the width at any desktop size. */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: max(46rem, 100svh);
+  overflow: hidden;
+  background: var(--pale);
+}
+
+.heroArt {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: -15vw;
+  height: 66.67vw;
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+  width: 40%;
+  margin-left: 35.5%;
+  padding-top: clamp(7rem, 17vh, 9.5rem);
+  text-align: center;
+}
+
+.kicker {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brick);
+}
+
+.heroTitle {
+  margin-top: 1rem;
+  font-size: clamp(2.8rem, 5.4vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--river);
+}
+
+.heroLede {
+  margin: 1.3rem auto 0;
+  max-width: 30rem;
+  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1.8rem;
+}
+
+.btn,
+.btnGhost,
+.btnInk {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  background: var(--brick);
+  border-color: var(--brick);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btnInk {
+  margin-top: 1.6rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btnInk:hover {
+  background: var(--brick);
+  border-color: var(--brick);
+}
+
+/* ------------------------------------------------------------------- today
+   A departures board in ink, straight under the roofs. */
+
+.today {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1.6rem var(--gut) 1.8rem;
+}
+
+.todayInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 1rem 2rem;
+  align-items: start;
+}
+
+.todayHead {
+  padding-top: 0.2rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+
+.todayList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.todayList li {
+  display: grid;
+  gap: 0.1rem;
+  padding-left: 1rem;
+  border-left: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
+}
+
+.todayTime {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.todayWalk {
+  font-weight: 500;
+}
+
+.todayFrom {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.todayLeft {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ochre);
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  padding-bottom: 1.4rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  border-bottom: 2px solid var(--ink);
+}
+
+.secHead h2 {
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+  line-height: 1;
+}
+
+.secNote {
+  max-width: 32rem;
+  justify-self: end;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ------------------------------------------------------------------- walks
+   Cards with a colored rule on top, the color taken from the walk. */
+
+.walks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.walk {
+  --tone: var(--brick);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem 1.4rem;
+  background: color-mix(in srgb, var(--pale) 55%, var(--paper));
+  border-top: 6px solid var(--tone);
+}
+
+.brick {
+  --tone: var(--brick);
+}
+
+.river {
+  --tone: var(--river);
+}
+
+.ochre {
+  --tone: var(--ochre);
+}
+
+.walkTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.walkTop h3 {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.walkPrice {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--brick);
+}
+
+.walkHook {
+  margin-top: 0.8rem;
+  flex: 1;
+  font-size: 1rem;
+}
+
+.walkFacts {
+  margin: 1.2rem 0 0;
+  font-size: 0.95rem;
+}
+
+.walkFacts div {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.walkFacts dt {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 0.15rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.walkFacts dd {
+  margin: 0;
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  margin-top: var(--air);
+}
+
+.bandField {
+  position: relative;
+  height: clamp(6.5rem, 12vw, 10rem);
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------------- meet
+   A map that is only a map in spirit: walking routes as running stitches,
+   a river laid across them, and four numbered pins. */
+
+.meetGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.map {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  background: var(--pale);
+  border: 2px solid var(--ink);
+}
+
+.mapField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+}
+
+.mapRiver {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  top: 76%;
+  height: 11%;
+  background: var(--river);
+  transform: rotate(-9deg);
+}
+
+.mapLabel {
+  position: absolute;
+  right: 6%;
+  bottom: 5%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+/* A round pin with a point under it; the point is a small square turned
+   a quarter, tucked behind the disc. */
+.pin {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  margin: -2.6rem 0 0 -1.15rem;
+  border-radius: 50%;
+  background: var(--brick);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 6px 14px -6px rgb(0 0 0 / 0.5);
+}
+
+.pin::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: -0.3rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-left: -0.45rem;
+  background: var(--brick);
+  transform: rotate(45deg);
+}
+
+.points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.points li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem 0 1.1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.points li:first-child {
+  padding-top: 0;
+}
+
+.pointNo {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--brick);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.points h3 {
+  font-size: 1.35rem;
+}
+
+.pointWhere {
+  margin-top: 0.2rem;
+}
+
+.pointWalks {
+  margin-top: 0.3rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--river);
+}
+
+/* ------------------------------------------------------------------ guides */
+
+.guides {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.guide h3 {
+  margin-top: 1rem;
+  font-size: 1.35rem;
+}
+
+.guideMark {
+  display: grid;
+  place-items: center;
+  width: 4.2rem;
+  height: 4.2rem;
+  border-radius: 50%;
+  background: var(--river);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.guide:nth-child(2) .guideMark {
+  background: var(--brick);
+}
+
+.guide:nth-child(3) .guideMark {
+  background: var(--ink);
+}
+
+.guide:nth-child(4) .guideMark {
+  background: var(--ochre);
+  color: var(--ink);
+}
+
+.guideRole {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.guideFacts {
+  margin: 0.9rem 0 0;
+  font-size: 0.95rem;
+}
+
+.guideFacts div {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.guideFacts dt {
+  min-width: 4.2rem;
+  font-weight: 700;
+}
+
+.guideFacts dd {
+  margin: 0;
+}
+
+/* ----------------------------------------------------------------- private */
+
+.private {
+  margin-top: var(--air);
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+  background: var(--pale);
+}
+
+.privateInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.privateInner h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.05;
+}
+
+.privateInner > div > p {
+  margin-top: 1rem;
+  max-width: 30rem;
+}
+
+.prices {
+  margin: 0;
+  border-top: 2px solid var(--ink);
+}
+
+.prices div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.prices dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* -------------------------------------------------------------------- book
+   The bridge fills the section from just under the heading to the bottom
+   edge. The heading stands in the sky; the form sits on the river. */
+
+.book {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--air);
+  min-height: calc(5rem + 66.67vw);
+  overflow: hidden;
+  background: var(--river);
+  color: var(--paper);
+}
+
+.bookArt {
+  position: absolute;
+  z-index: 0;
+  top: 5rem;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.bookInner {
+  position: relative;
+  z-index: 1;
+  min-height: inherit;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) clamp(2.5rem, 5vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+.bookText {
+  max-width: 34rem;
+  text-align: center;
+}
+
+.bookText h2 {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1;
+}
+
+.bookText p {
+  margin-top: 0.8rem;
+  font-size: 1.1rem;
+}
+
+.form {
+  width: min(100%, 50rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr) minmax(0, 0.75fr) minmax(0, 0.75fr);
+  gap: 1rem;
+  align-items: end;
+  padding: clamp(1.3rem, 3vw, 1.8rem);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 4px;
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.6);
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.fieldWide {
+  grid-column: 1 / 4;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  height: 2.9rem;
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 3px;
+}
+
+.formBtn {
+  height: 2.9rem;
+  padding: 0 1rem;
+  white-space: nowrap;
+  font: inherit;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--brick);
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.formBtn:hover {
+  background: var(--ink);
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: 52rem;
+}
+
+.faqItem {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.faqItem summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  padding: 1.1rem 3rem 1rem 0;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::before,
+.faqItem summary::after {
+  content: '';
+  position: absolute;
+  right: 0.3rem;
+  top: 50%;
+  width: 1rem;
+  height: 2px;
+  background: var(--brick);
+  transform: translateY(-50%);
+  transition: transform 180ms ease;
+}
+
+.faqItem summary::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.faqItem[open] summary::after {
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.faqItem p {
+  padding: 0 3rem 1.3rem 0;
+  max-width: 44rem;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.footTag {
+  margin-top: 0.4rem;
+  max-width: 24rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footHead {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+
+.footText {
+  margin-top: 0.6rem;
+}
+
+.footLink {
+  display: block;
+  margin-top: 0.5rem;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.footLink:hover {
+  color: var(--ochre);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.6rem auto 0;
+  padding-top: 1.3rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .walks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .guides,
+  .todayList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .heroText {
+    width: 46%;
+    margin-left: 33%;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  /* Narrow: the spire and the tower no longer leave room either side, so
+     the words take the full width and the roofs sit lower. */
+  .heroText {
+    width: auto;
+    margin: 0;
+    padding: 7rem var(--gut) 0;
+  }
+
+  .heroArt {
+    bottom: 0;
+    height: 50%;
+  }
+
+  .todayInner,
+  .meetGrid,
+  .privateInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNote {
+    justify-self: start;
+  }
+
+  /* The bridge in the flow, between the heading and the form. */
+  .book {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .bookInner {
+    display: contents;
+  }
+
+  .bookText {
+    order: 1;
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    padding: clamp(3.5rem, 9vw, 5rem) var(--gut) 0;
+  }
+
+  /* Wider than the screen and centered, so the crop keeps the bridge and
+     the nearest houses at a size that reads. */
+  .bookArt {
+    order: 2;
+    position: relative;
+    inset: auto;
+    width: 170%;
+    margin-left: -35%;
+    height: clamp(22rem, 105vw, 34rem);
+    margin-top: -1rem;
+  }
+
+  .form {
+    order: 3;
+    position: relative;
+    z-index: 1;
+    width: auto;
+    margin: -4rem var(--gut) clamp(3rem, 8vw, 4.5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .field:first-child,
+  .field:nth-child(2),
+  .fieldWide,
+  .formBtn {
+    grid-column: 1 / -1;
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .mark {
+    font-size: 1.25rem;
+  }
+
+  .heroText {
+    padding-top: 6rem;
+  }
+
+  .heroArt {
+    height: 44%;
+  }
+
+  .walks,
+  .guides,
+  .todayList,
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .todayList li {
+    grid-template-columns: 4.2rem minmax(0, 1fr);
+    column-gap: 0.8rem;
+    padding: 0.6rem 0 0.6rem 0.8rem;
+  }
+
+  .todayTime {
+    grid-row: span 3;
+    font-size: 1.35rem;
+  }
+
+  .prices div {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .prices dd {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .btnInk,
+  .formBtn,
+  .faqItem summary::before,
+  .faqItem summary::after {
+    transition: none;
+  }
+}

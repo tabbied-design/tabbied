@@ -1,0 +1,1170 @@
+/* ==========================================================================
+   KEYWAY LOCKSMITHS - locksmith, Harwick
+   An emergency trade that wants to look calm. Ink and brass, with the phone
+   number never more than a glance away, and the page's first real content
+   is a picker: six big tiles, one per job, each with its icon painted in
+   the page's ink and a price-from. Archivo does everything, condensed and
+   upper case for the loud parts, at its normal width for the reading.
+   ========================================================================== */
+
+.page {
+  --paper: #f4f2ec;
+  --ink: #15171b;
+  --brass: #c9962b;
+  --steel: #7f8187;
+  --pale: #dedbd3;
+  --gut: clamp(1.25rem, 4.5vw, 4rem);
+  --max: 78rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --rule: color-mix(in srgb, var(--ink) 16%, transparent);
+  --soft: color-mix(in srgb, var(--ink) 74%, transparent);
+  --on-ink: color-mix(in srgb, var(--paper) 78%, transparent);
+
+  font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+:where(.page) :is(h1, h2, h3) {
+  margin: 0;
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+:where(.page) p {
+  margin: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.75rem var(--gut);
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.markIcon {
+  height: 2.1rem;
+  width: auto;
+  transform: rotate(-35deg);
+}
+
+.markName {
+  font-weight: 800;
+  font-stretch: 72%;
+  font-size: 1.45rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.markSub {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass);
+  padding-top: 0.2rem;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.9rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--on-ink);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--brass);
+}
+
+.barPhone {
+  display: inline-flex;
+  gap: 0.4rem;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  padding: 0.6rem 1rem;
+  background: var(--brass);
+  color: var(--ink);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--ink);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(2rem, 4vw, 3rem);
+}
+
+/* The cylinders sit behind the call card and fade out toward the headline. */
+.heroField {
+  position: absolute;
+  inset: 0 0 0 50%;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.9;
+  mask-image: linear-gradient(90deg, transparent 0%, var(--ink) 40%);
+}
+
+.heroInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: end;
+}
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.heroTitle {
+  margin-top: 1rem !important;
+  font-size: clamp(2.8rem, 5.6vw, 5rem);
+  line-height: 0.9 !important;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  color: var(--brass);
+}
+
+.heroLede {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  color: var(--on-ink);
+}
+
+.callCard {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.6rem 1.6rem 1.4rem;
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  border: 2px solid var(--brass);
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+.callLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-ink);
+}
+
+.callNumber {
+  font-weight: 800;
+  font-stretch: 80%;
+  font-size: clamp(2rem, 3.4vw, 2.7rem);
+  line-height: 1.05;
+  color: var(--brass);
+  white-space: nowrap;
+}
+
+.callNote {
+  font-size: 0.92rem;
+  color: var(--on-ink);
+}
+
+.callBack {
+  justify-self: start;
+  margin-top: 0.7rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  border-bottom: 2px solid var(--brass);
+}
+
+/* ---------------------------------------------------------- service picker
+   Still on the ink, so the tiles read as the hero's second half. */
+
+.picker {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0 var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.pickerHead {
+  max-width: var(--max);
+  margin: 0 auto clamp(1.2rem, 2.5vw, 1.8rem);
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+}
+
+.pickerHead h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.pickerNote {
+  max-width: 30rem;
+  font-size: 0.95rem;
+  color: var(--on-ink);
+}
+
+.tiles {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: var(--max);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.8rem, 1.6vw, 1.25rem);
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.5rem 1.3rem;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 6px;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.tile:hover,
+.tile:focus-within {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgb(0 0 0 / 0.35);
+}
+
+.tileUrgent {
+  background: var(--brass);
+}
+
+.tileTag {
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.6rem;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+}
+
+.tileUrgent .tileTag {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.tileArt {
+  --turn: none;
+  height: clamp(9rem, 14vw, 12rem);
+  margin: 1.1rem 0 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--pale) 60%, transparent);
+  border-radius: 4px;
+}
+
+.tileUrgent .tileArt {
+  background: color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.tileIcon {
+  height: 84%;
+  width: auto;
+  transform: var(--turn);
+}
+
+/* Lying down, the key's length is its height, so it is drawn longer. */
+.lying .tileIcon {
+  height: 128%;
+}
+
+.upright {
+  --turn: none;
+}
+
+.lying {
+  --turn: rotate(-90deg);
+}
+
+.mirror {
+  --turn: scaleX(-1);
+}
+
+.tilt {
+  --turn: rotate(-12deg);
+}
+
+.tile h3 {
+  font-size: clamp(1.8rem, 2.6vw, 2.3rem);
+}
+
+.tileBody {
+  margin-top: 0.55rem !important;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--soft);
+}
+
+.tileUrgent .tileBody {
+  color: var(--ink);
+}
+
+.tileFoot {
+  margin-top: auto;
+  padding-top: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.45rem;
+  border-top: 1px solid var(--rule);
+}
+
+.tileFrom {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tilePrice {
+  font-weight: 800;
+  font-stretch: 72%;
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.tileUnit {
+  font-size: 0.85rem;
+  color: var(--soft);
+}
+
+.tileUrgent .tileUnit {
+  color: var(--ink);
+}
+
+.tileLink {
+  margin-left: auto;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-bottom: 2px solid currentColor;
+}
+
+/* The whole tile answers a click on its link. */
+.tileLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+}
+
+/* ------------------------------------------------------------------- strip */
+
+.strip {
+  background: var(--brass);
+  color: var(--ink);
+  padding: clamp(1.8rem, 3.5vw, 2.6rem) var(--gut);
+}
+
+.stripList {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem clamp(1rem, 3vw, 2.5rem);
+}
+
+.stripList div {
+  margin: 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--ink);
+}
+
+.stripList dt {
+  font-weight: 800;
+  font-stretch: 72%;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.stripList dd {
+  margin: 0.45rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  column-gap: clamp(0.75rem, 2vw, 1.5rem);
+  align-items: center;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secNo {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-weight: 800;
+  font-size: 0.9rem;
+  background: var(--ink);
+  color: var(--brass);
+  border-radius: 50%;
+}
+
+.secHead h2 {
+  font-size: clamp(2.3rem, 5vw, 3.8rem);
+}
+
+.secNote {
+  grid-column: 2;
+  margin-top: 0.8rem !important;
+  max-width: 40rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------------ prices */
+
+.prices {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.prices thead th {
+  padding: 0 0 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--soft);
+  border-bottom: 2px solid var(--ink);
+}
+
+.prices thead th:first-child {
+  text-align: left;
+}
+
+.prices tbody th,
+.prices td {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.prices tbody th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding-right: 1rem;
+}
+
+.prices td {
+  text-align: right;
+  font-weight: 800;
+  font-size: 1.2rem;
+  width: 22%;
+  white-space: nowrap;
+}
+
+.prices tbody tr:hover {
+  background: color-mix(in srgb, var(--pale) 55%, transparent);
+}
+
+/* ------------------------------------------------------------------- areas */
+
+.areas {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+/* Three zones drawn as rings around the workshop, the key at the middle. */
+.zoneMap {
+  position: relative;
+  aspect-ratio: 1;
+  width: min(100%, 30rem);
+  justify-self: center;
+}
+
+.ring3,
+.ring2,
+.ring1,
+.zoneCore {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  border-radius: 50%;
+}
+
+.ring3 {
+  width: 100%;
+  height: 100%;
+  background: var(--pale);
+  border: 2px dashed var(--steel);
+}
+
+.ring2 {
+  width: 70%;
+  height: 70%;
+  background: color-mix(in srgb, var(--steel) 30%, var(--pale));
+}
+
+.ring1 {
+  width: 42%;
+  height: 42%;
+  background: color-mix(in srgb, var(--brass) 55%, var(--pale));
+}
+
+.ringLabel {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-weight: 800;
+  font-size: 0.9rem;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 50%;
+}
+
+.zoneCore {
+  width: 20%;
+  height: 20%;
+  display: grid;
+  place-items: center;
+  background: var(--brass);
+  box-shadow: 0 0 0 4px var(--paper);
+}
+
+.zoneKey {
+  height: 70%;
+  width: auto;
+  transform: rotate(-35deg);
+}
+
+.zones {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.6rem;
+}
+
+.zones li {
+  padding-top: 1rem;
+  border-top: 2px solid var(--ink);
+}
+
+.zoneTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.zoneTop h3 {
+  font-size: 1.8rem;
+}
+
+.zoneTime {
+  font-weight: 800;
+  font-stretch: 72%;
+  font-size: 1.8rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.zonePlaces {
+  margin-top: 0.5rem !important;
+  color: var(--soft);
+}
+
+.zoneFee {
+  margin-top: 0.4rem !important;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* -------------------------------------------------------------------- call */
+
+.call {
+  max-width: var(--max);
+  margin: var(--air) auto 0;
+  padding: 0 var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 0;
+}
+
+.callPanel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(2rem, 4vw, 3rem);
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 8px 0 0 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.callField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.6;
+  mask-image: linear-gradient(210deg, var(--ink) 0%, transparent 50%);
+}
+
+.callLock {
+  height: clamp(8rem, 13vw, 11rem);
+  width: auto;
+  margin-bottom: 1.8rem;
+}
+
+.callTitle {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+}
+
+.callText {
+  margin-top: 0.9rem !important;
+  max-width: 26rem;
+  color: var(--on-ink);
+}
+
+.callBig {
+  margin-top: 1rem;
+  font-weight: 800;
+  font-stretch: 80%;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  color: var(--brass);
+  line-height: 1.1;
+}
+
+.callSafety {
+  margin-top: auto !important;
+  padding-top: 1.8rem;
+  font-size: 0.85rem;
+  color: var(--on-ink);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  align-content: start;
+  padding: clamp(1.6rem, 3.5vw, 2.6rem);
+  border: 2px solid var(--ink);
+  border-left: 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.choice {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.choice legend {
+  width: 100%;
+  margin-bottom: 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.choice label {
+  position: relative;
+  cursor: pointer;
+}
+
+.choice input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.choice span {
+  display: inline-block;
+  padding: 0.5rem 0.9rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+}
+
+.choice input:checked + span {
+  background: var(--ink);
+  color: var(--brass);
+}
+
+.choice input:focus-visible + span {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  font: inherit;
+  color: var(--ink);
+  padding: 0.7rem 0.8rem;
+  background: var(--paper);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 40%, transparent);
+  border-radius: 4px;
+  width: 100%;
+  min-width: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input::placeholder {
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
+}
+
+.submit {
+  justify-self: start;
+  font: inherit;
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 0.9rem 1.6rem;
+  background: var(--brass);
+  color: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.submit:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.formFine {
+  align-self: center;
+  font-size: 0.82rem;
+  color: var(--soft);
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: 52rem;
+  margin-left: calc(3rem + clamp(0.75rem, 2vw, 1.5rem));
+}
+
+.faq details {
+  border-top: 1px solid var(--rule);
+}
+
+.faq details:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faq summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  font-weight: 800;
+  background: var(--pale);
+  border-radius: 50%;
+}
+
+.faq details[open] summary::after {
+  content: '\2212';
+  background: var(--brass);
+}
+
+.faq details p {
+  padding: 0 2.5rem 1.3rem 0;
+  color: var(--soft);
+}
+
+/* ---------------------------------------------------------- teeth, footer */
+
+.teeth {
+  position: relative;
+  height: 56px;
+  margin-top: var(--air);
+  overflow: hidden;
+}
+
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.footName {
+  font-weight: 800;
+  font-stretch: 72%;
+  font-size: 2rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footTag {
+  margin-top: 0.7rem !important;
+  max-width: 22rem;
+  color: var(--on-ink);
+}
+
+.footHead {
+  font-size: 0.75rem !important;
+  font-stretch: 100% !important;
+  letter-spacing: 0.14em !important;
+  color: var(--brass);
+}
+
+.footBig {
+  margin-top: 0.8rem !important;
+  font-weight: 800;
+  font-stretch: 80%;
+  font-size: 1.6rem;
+  white-space: nowrap;
+}
+
+.footSmall {
+  font-size: 0.88rem;
+  color: var(--on-ink);
+}
+
+.footAddr {
+  margin-top: 0.8rem !important;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.footLinks a:hover {
+  color: var(--brass);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.82rem;
+  color: var(--on-ink);
+}
+
+.footFine a {
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stripList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .footBrand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .heroInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroField {
+    inset: 40% 0 0 0;
+    mask-image: linear-gradient(180deg, transparent 0%, var(--ink) 40%);
+  }
+
+  .callCard {
+    max-width: 26rem;
+  }
+
+  .areas,
+  .call {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .zoneMap {
+    width: min(100%, 22rem);
+  }
+
+  .callPanel {
+    border-radius: 8px 8px 0 0;
+  }
+
+  .form {
+    border-left: 2px solid var(--ink);
+    border-top: 0;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .faq {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .markSub,
+  .phoneNum {
+    display: none;
+  }
+
+  .barPhone {
+    padding: 0.55rem 1rem;
+  }
+
+  .heroField {
+    inset: auto 0 0 0;
+    height: 11rem;
+  }
+
+  .tiles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tileArt {
+    height: 7.5rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.8rem;
+  }
+
+  .secNote {
+    grid-column: 1;
+  }
+
+  /* The price table restacks: each job its own block, the two prices as
+     labeled lines under it. */
+  .prices thead {
+    display: none;
+  }
+
+  .prices,
+  .prices tbody,
+  .prices tr,
+  .prices th,
+  .prices td {
+    display: block;
+    width: auto;
+  }
+
+  .prices tbody tr {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .prices tbody th,
+  .prices td {
+    padding: 0;
+    border: 0;
+  }
+
+  .prices tbody th {
+    margin-bottom: 0.4rem;
+  }
+
+  .prices td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 1.05rem;
+  }
+
+  .prices td::before {
+    content: attr(data-label);
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--soft);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stripList,
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .tile,
+  .submit {
+    transition: none;
+  }
+
+  .tile:hover,
+  .tile:focus-within {
+    transform: none;
+  }
+}

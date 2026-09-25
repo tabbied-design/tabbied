@@ -1,0 +1,1034 @@
+/* ==========================================================================
+   SCOOP & CONE - ice cream parlor, Gull Harbor
+   A boardwalk parlor: cream paper, a plum-ink menu board, and three flat
+   illustrations whose every color is one of the page's own, so the cone in
+   the hero, the sundaes and the chips on the board all turn with the
+   palette. Lilita One for the signwriting, Nunito for the reading.
+   ========================================================================== */
+
+.page {
+  --cream: #fff6ee;
+  --ink: #2a1e24;
+  --pink: #f26d7d;
+  --blue: #6cc3d5;
+  --yellow: #f7c948;
+  --gray: #b7a9ad;
+  --gut: clamp(1.25rem, 4.5vw, 4rem);
+  --max: 78rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --rule: color-mix(in srgb, var(--ink) 14%, transparent);
+  --soft: color-mix(in srgb, var(--ink) 76%, transparent);
+  --on-ink: color-mix(in srgb, var(--cream) 80%, transparent);
+
+  font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+:where(.page) :is(h1, h2, h3) {
+  margin: 0;
+  font-family: 'Lilita One', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+:where(.page) p {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.7rem var(--gut);
+  background: color-mix(in srgb, var(--cream) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px dashed color-mix(in srgb, var(--pink) 55%, transparent);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.markCone {
+  width: 1.3rem;
+}
+
+.markName {
+  font-family: 'Lilita One', Arial, sans-serif;
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.8rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 0.3rem 0.1rem;
+  border-bottom: 3px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--pink);
+}
+
+.barCta {
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--pink);
+  color: var(--ink);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--cream);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.kicker {
+  display: inline-block;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  background: var(--yellow);
+  border-radius: 999px;
+}
+
+.heroTitle {
+  margin-top: 1.2rem !important;
+  font-size: clamp(2.9rem, 5.9vw, 5.4rem);
+  line-height: 0.94 !important;
+}
+
+.heroTitle em {
+  display: block;
+  font-style: normal;
+  color: var(--pink);
+}
+
+.heroLede {
+  margin-top: 1.9rem;
+  max-width: 32rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  color: var(--soft);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  border: 3px solid var(--ink);
+  transition: transform 160ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.btnLine {
+  background: transparent;
+}
+
+.btn:hover,
+.btnLine:hover {
+  transform: translateY(-2px);
+}
+
+.heroFacts {
+  list-style: none;
+  margin: 2.4rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.2rem;
+}
+
+.heroFacts li {
+  display: grid;
+}
+
+.heroFacts strong {
+  font-family: 'Lilita One', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.heroFacts span {
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+/* The cone stands in the middle of its own confetti burst. */
+.heroArt {
+  position: relative;
+  aspect-ratio: 1;
+  width: min(100%, 38rem);
+  justify-self: center;
+}
+
+.burst {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  mask-image: radial-gradient(circle closest-side, transparent 0 50%, var(--ink) 50.5%);
+}
+
+/* A sticker's edge: four hard cream shadows, then a soft one. */
+.heroCone,
+.buildSundae {
+  filter:
+    drop-shadow(4px 0 0 var(--cream))
+    drop-shadow(-4px 0 0 var(--cream))
+    drop-shadow(0 4px 0 var(--cream))
+    drop-shadow(0 -4px 0 var(--cream))
+    drop-shadow(0 16px 18px rgb(0 0 0 / 0.2));
+}
+
+.heroCone {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44%;
+  translate: -50% -50%;
+}
+
+/* ------------------------------------------------------------ flavor board */
+
+.board {
+  background: var(--ink);
+  color: var(--cream);
+  padding: clamp(3.5rem, 8vw, 6rem) var(--gut);
+}
+
+.boardInner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.boardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 3rem;
+}
+
+.boardHead h2 {
+  font-size: clamp(2.8rem, 6vw, 4.6rem);
+  color: var(--yellow);
+}
+
+.boardNote {
+  max-width: 26rem;
+  color: var(--on-ink);
+}
+
+.boardPrices {
+  margin: clamp(1.8rem, 4vw, 2.6rem) 0 clamp(2rem, 4vw, 3rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem 2.5rem;
+  padding: 1.1rem 0;
+  border-block: 2px dashed color-mix(in srgb, var(--cream) 28%, transparent);
+}
+
+.sizes {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.sizes div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  background: color-mix(in srgb, var(--cream) 10%, transparent);
+  border-radius: 999px;
+}
+
+.sizes dt {
+  font-size: 0.9rem;
+  color: var(--on-ink);
+}
+
+.sizes dd {
+  margin: 0;
+  font-family: 'Lilita One', Arial, sans-serif;
+  font-size: 1.3rem;
+  color: var(--cream);
+}
+
+.cones {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.4rem;
+  font-size: 0.92rem;
+  color: var(--on-ink);
+}
+
+.cones li::before {
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: var(--pink);
+}
+
+.flavors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.6rem, 3vw, 2.4rem) clamp(1.2rem, 2.5vw, 2rem);
+}
+
+.flavor {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+}
+
+/* A scoop: a round top and three drips, all in the flavor's color. */
+.chip {
+  --chip: var(--cream);
+  position: relative;
+  width: 3.4rem;
+  height: 3rem;
+  margin-top: 0.2rem;
+  border-radius: 50% 50% 42% 42%;
+  background: var(--chip);
+}
+
+.chip::after {
+  content: '';
+  position: absolute;
+  left: 4%;
+  bottom: -14%;
+  width: 30%;
+  height: 34%;
+  border-radius: 50%;
+  background: var(--chip);
+  box-shadow:
+    1.15rem 0.12rem 0 var(--chip),
+    2.3rem -0.02rem 0 var(--chip);
+}
+
+.chipCream {
+  --chip: var(--cream);
+}
+
+.chipPink {
+  --chip: var(--pink);
+}
+
+.chipBlue {
+  --chip: var(--blue);
+}
+
+.chipLemon {
+  --chip: color-mix(in srgb, var(--yellow) 70%, var(--cream));
+}
+
+.chipMango {
+  --chip: var(--yellow);
+}
+
+.chipGray {
+  --chip: var(--gray);
+}
+
+.chipMint {
+  --chip: color-mix(in srgb, var(--blue) 55%, var(--cream));
+}
+
+.chipPeach {
+  --chip: color-mix(in srgb, var(--pink) 50%, var(--yellow));
+}
+
+.chipPistachio {
+  --chip: color-mix(in srgb, var(--blue) 45%, var(--yellow));
+}
+
+.chipBerry {
+  --chip: color-mix(in srgb, var(--pink) 72%, var(--ink));
+}
+
+.chipCoconut {
+  --chip: color-mix(in srgb, var(--cream) 82%, var(--blue));
+}
+
+.chipChoc {
+  --chip: color-mix(in srgb, color-mix(in srgb, var(--yellow) 55%, var(--pink)) 55%, var(--ink));
+}
+
+.chipCoffee {
+  --chip: color-mix(in srgb, var(--yellow) 60%, var(--ink));
+}
+
+.chipCookie {
+  --chip: color-mix(in srgb, var(--gray) 60%, var(--cream));
+}
+
+.chipParty {
+  --chip: color-mix(in srgb, var(--pink) 45%, var(--cream));
+}
+
+.flavorText h3 {
+  font-size: 1.35rem;
+  color: var(--cream);
+}
+
+.flavorText p {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--on-ink);
+}
+
+.tags {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tag,
+.tagVegan,
+.tagNew {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--pink);
+}
+
+.tagVegan {
+  background: var(--blue);
+}
+
+.tagNew {
+  background: var(--yellow);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(66px, 7vw, 92px);
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.8rem 3rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2,
+.hoursLead h2 {
+  font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+}
+
+.secNote {
+  max-width: 28rem;
+  color: var(--soft);
+}
+
+/* ----------------------------------------------------------------- sundaes */
+
+.sundaes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.sundae {
+  display: flex;
+  flex-direction: column;
+  border-radius: 28px;
+  padding: clamp(1.6rem, 3vw, 2.2rem) clamp(1.4rem, 2.5vw, 2rem) 1.8rem;
+  overflow: hidden;
+}
+
+.cardBlue {
+  background: color-mix(in srgb, var(--blue) 42%, var(--cream));
+}
+
+.cardYellow {
+  background: color-mix(in srgb, var(--yellow) 48%, var(--cream));
+}
+
+.cardPink {
+  background: color-mix(in srgb, var(--pink) 36%, var(--cream));
+}
+
+.sundaeArt {
+  align-self: center;
+  height: clamp(16rem, 26vw, 22rem);
+  width: auto;
+  margin-bottom: 1.4rem;
+}
+
+.sundaeTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.sundaeTop h3 {
+  font-size: clamp(1.7rem, 2.6vw, 2.1rem);
+}
+
+.sundaePrice {
+  font-family: 'Lilita One', Arial, sans-serif;
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 0.3rem 0.7rem;
+  background: var(--cream);
+  border-radius: 999px;
+}
+
+.sundaeText p {
+  margin-top: 0.6rem;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------- build */
+
+.build {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.buildArt {
+  position: relative;
+  aspect-ratio: 1;
+  width: min(100%, 30rem);
+  justify-self: center;
+}
+
+.sprinkles {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  mask-image: radial-gradient(circle closest-side, transparent 0 52%, var(--ink) 52.5%);
+}
+
+.buildSundae {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 92%;
+  width: auto;
+  translate: -50% -50%;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.3rem 1.3rem 1.4rem;
+  background: color-mix(in srgb, var(--gray) 18%, var(--cream));
+  border: 3px solid var(--ink);
+  border-radius: 22px;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  font-family: 'Lilita One', Arial, sans-serif;
+  font-size: 1.6rem;
+  background: var(--pink);
+}
+
+.step:nth-child(2) .stepNo {
+  background: var(--blue);
+}
+
+.step:nth-child(3) .stepNo {
+  background: var(--yellow);
+}
+
+.step:nth-child(4) .stepNo {
+  background: var(--gray);
+}
+
+.stepText h3 {
+  font-size: 1.55rem;
+}
+
+.stepNote {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--soft);
+}
+
+.options {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.options li {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  background: var(--cream);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------- hours */
+
+.hoursWrap {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+.hoursLead {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.hoursLead .secNote {
+  margin-top: 0.8rem;
+}
+
+.pop {
+  flex: none;
+  height: clamp(9rem, 16vw, 13rem);
+  width: auto;
+  rotate: 14deg;
+}
+
+.seasons {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.8rem, 2vw, 1.4rem);
+}
+
+.season {
+  padding: 1.4rem 1.3rem 1.5rem;
+  border-radius: 22px;
+}
+
+.seasonBlue {
+  background: color-mix(in srgb, var(--blue) 34%, var(--cream));
+}
+
+.seasonYellow {
+  background: color-mix(in srgb, var(--yellow) 44%, var(--cream));
+}
+
+.seasonPink {
+  background: var(--pink);
+  box-shadow: 0 0 0 3px var(--ink);
+}
+
+.seasonGray {
+  background: color-mix(in srgb, var(--gray) 45%, var(--cream));
+}
+
+.seasonTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.seasonTop h3 {
+  font-size: 1.9rem;
+}
+
+.nowTag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 999px;
+}
+
+.seasonMonths {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.seasonHours {
+  margin-top: 1rem !important;
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.seasonNote {
+  margin-top: 0.4rem !important;
+  font-size: 0.9rem;
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.visitCard,
+.party {
+  padding: clamp(1.8rem, 4vw, 2.8rem);
+  border-radius: 28px;
+}
+
+.visitCard {
+  background: var(--yellow);
+}
+
+.visitCard h2 {
+  font-size: clamp(2.4rem, 4.8vw, 3.6rem);
+}
+
+.visitAddr {
+  margin-top: 1rem !important;
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+
+.visitNote {
+  margin-top: 0.4rem !important;
+  max-width: 30rem;
+}
+
+.visitList {
+  margin: 1.6rem 0 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.visitList div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--ink);
+}
+
+.visitList dt {
+  width: 4rem;
+  font-weight: 600;
+}
+
+.visitList dd {
+  margin: 0;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.party {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  background: color-mix(in srgb, var(--blue) 45%, var(--cream));
+}
+
+.party h3 {
+  font-size: clamp(1.9rem, 3.2vw, 2.5rem);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: var(--air);
+  background: var(--ink);
+  color: var(--cream);
+  padding: clamp(2.8rem, 6vw, 4rem) var(--gut) 2rem;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.footBrand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footCone {
+  width: 2.6rem;
+  flex: none;
+}
+
+.footName {
+  font-family: 'Lilita One', Arial, sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.footTag {
+  margin-top: 0.4rem !important;
+  color: var(--on-ink);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  font-weight: 800;
+}
+
+.footLinks a:hover {
+  color: var(--yellow);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 2px dashed color-mix(in srgb, var(--cream) 22%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.85rem;
+  color: var(--on-ink);
+}
+
+.footFine a {
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .flavors {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .seasons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 880px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .hero,
+  .build,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    order: -1;
+    width: min(100%, 26rem);
+  }
+
+  .flavors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sundaes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sundae {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  .sundaeArt {
+    height: 12rem;
+    margin: 0;
+  }
+
+  .buildArt {
+    width: min(100%, 20rem);
+  }
+}
+
+@media (max-width: 560px) {
+  .barCta {
+    display: none;
+  }
+
+  .flavors {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .seasons {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sundae {
+    gap: 1rem;
+    padding: 1.3rem;
+  }
+
+  .sundaeArt {
+    height: 9.5rem;
+  }
+
+  .hoursLead {
+    align-items: flex-start;
+  }
+
+  .pop {
+    height: 7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btnLine:hover {
+    transform: none;
+  }
+}

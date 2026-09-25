@@ -1,0 +1,983 @@
+/* ==========================================================================
+   NORI - omakase sushi counter, Harbor Lane
+   Quiet and exact: rice-paper ground, a mincho serif for names, a gothic
+   sans for everything else, and a great deal of space. The omakase is the
+   spine of the page, a single ruled line with a numbered stop for each of
+   the twelve courses, the words on one side and the source on the other.
+   Three of the stops carry a picture on a round plate. Waves on the green
+   hero panel, a strip of dashes, and nothing else ornamental.
+   ========================================================================== */
+
+.page {
+  --rice: #f4f1ea;
+  --ink: #121614;
+  --red: #d1473a;
+  --green: #2e6b5e;
+  --gray: #8b8c84;
+  --pale: #e0ddd4;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --max: 72rem;
+  --air: clamp(5rem, 11vw, 9rem);
+  --serif: 'Shippori Mincho', 'Hiragino Mincho ProN', Georgia, serif;
+
+  font-family: 'Zen Kaku Gothic New', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--rice);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 4px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd, fieldset) {
+  margin: 0;
+  padding: 0;
+}
+
+.page :where(ul, ol) {
+  list-style: none;
+}
+
+.page h2 {
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 1rem var(--gut);
+  background: color-mix(in srgb, var(--rice) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+/* The name, with a red seal beside it. */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.mark::before {
+  content: '';
+  width: 0.9rem;
+  height: 0.9rem;
+  background: var(--red);
+  border-radius: 2px;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+  flex-wrap: wrap;
+}
+
+.nav a {
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--red);
+}
+
+.barCta {
+  padding: 0.5rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--rice);
+  background: var(--ink);
+}
+
+.barCta:hover {
+  background: var(--red);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--rice);
+}
+
+/* ------------------------------------------------------------ shared bits */
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.lede {
+  max-width: 36rem;
+  font-size: 1.06rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.secHead {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.btn,
+.btnLine,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.6rem;
+  font: inherit;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn,
+.submit {
+  color: var(--rice);
+  background: var(--red);
+  border: 1px solid var(--red);
+}
+
+.btn:hover,
+.submit:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btnLine {
+  border: 1px solid var(--ink);
+}
+
+.btnLine:hover {
+  color: var(--rice);
+  background: var(--ink);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: min(52rem, calc(100vh - 4rem));
+}
+
+.heroCopy {
+  display: grid;
+  align-content: center;
+  gap: 1.6rem;
+  padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 5vw, 4.5rem) clamp(3rem, 7vw, 6rem) var(--gut);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5.6vw, 5rem);
+  font-weight: 600;
+  line-height: 1.08;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--red);
+}
+
+.heroLede {
+  max-width: 32rem;
+  font-size: 1.1rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 2.2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.facts dt {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.facts dd {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+/* The green panel, full height, with the waves and the nigiri. */
+.heroPanel {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  padding: clamp(2rem, 5vw, 4rem);
+  background: var(--green);
+  overflow: hidden;
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+}
+
+.heroNigiri {
+  width: min(92%, 34rem);
+  filter: drop-shadow(0 30px 24px rgb(0 0 0 / 0.35));
+}
+
+/* ----------------------------------------------------------------- omakase */
+
+.omakase {
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: var(--air) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.omakaseHead {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  max-width: 40rem;
+  margin: 0 auto clamp(3rem, 6vw, 4.5rem);
+  text-align: center;
+}
+
+.omakaseHead h2 {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+}
+
+/* One ruled line down the middle of the list. */
+.spine {
+  position: relative;
+  display: grid;
+}
+
+.spine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.course {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6rem minmax(0, 1fr);
+  align-items: center;
+  padding: clamp(1.6rem, 3vw, 2.4rem) 0;
+}
+
+.node {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  background: var(--rice);
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+}
+
+.courseText,
+.courseSide {
+  grid-row: 1;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.courseText {
+  grid-column: 1;
+  justify-items: end;
+  text-align: right;
+}
+
+.courseSide {
+  grid-column: 3;
+  justify-items: start;
+  text-align: left;
+}
+
+/* Every second course swaps sides. */
+.course:nth-child(even) .courseText {
+  grid-column: 3;
+  justify-items: start;
+  text-align: left;
+}
+
+.course:nth-child(even) .courseSide {
+  grid-column: 1;
+  justify-items: end;
+  text-align: right;
+}
+
+.courseKind {
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.courseText h3 {
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+}
+
+.courseText p {
+  max-width: 26rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+.sideNote {
+  max-width: 20rem;
+  font-size: 0.88rem;
+  font-style: italic;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+/* The three pictures, each on a round plate. */
+.plate {
+  display: grid;
+  place-items: center;
+  width: clamp(13rem, 24vw, 19rem);
+  aspect-ratio: 1;
+  margin-bottom: 0.6rem;
+  border-radius: 50%;
+}
+
+.plateLight {
+  background: var(--pale);
+}
+
+.plateDark {
+  background: var(--ink);
+}
+
+.plateGreen {
+  background: var(--green);
+}
+
+.sideArt {
+  width: 78%;
+  filter: drop-shadow(0 14px 12px rgb(0 0 0 / 0.25));
+}
+
+.addons {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  max-width: 40rem;
+  margin: clamp(2rem, 5vw, 3rem) auto 0;
+  padding: 1.6rem clamp(1.2rem, 3vw, 2rem);
+  text-align: center;
+  background: var(--rice);
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  position: relative;
+}
+
+.addonsHead {
+  font-size: 1.3rem;
+}
+
+.addonList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem 2rem;
+}
+
+.addonList div {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.addonList dd {
+  font-weight: 700;
+  color: var(--red);
+}
+
+/* ------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: 88px;
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------- a la carte */
+
+.carte {
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.carteHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 2rem;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.carteArt {
+  width: clamp(10rem, 22vw, 17rem);
+}
+
+.carteGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.groupHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.groupHead h3 {
+  font-size: 1.5rem;
+}
+
+.groupHead span {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.items li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.itemName {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.itemNote {
+  grid-column: 1;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.itemPrice {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------- sake */
+
+.sake {
+  padding: var(--air) var(--gut);
+  color: var(--rice);
+  background: var(--ink);
+}
+
+.sakeInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.sake .lede {
+  color: color-mix(in srgb, var(--rice) 84%, transparent);
+}
+
+.sakeTable {
+  display: grid;
+}
+
+.sakeRowHead,
+.sakeRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 4rem 4rem;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--rice) 18%, transparent);
+}
+
+.sakeRowHead {
+  padding-top: 0;
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--rice) 74%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--rice) 50%, transparent);
+}
+
+.sakeRowHead span:nth-child(n + 3),
+.sakeGlass,
+.sakeBottle {
+  text-align: right;
+}
+
+.sakeName {
+  display: grid;
+}
+
+.sakeName strong {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.sakeName small {
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--rice) 76%, transparent);
+}
+
+.sakeStyle {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--rice) 86%, transparent);
+}
+
+.sakeGlass,
+.sakeBottle {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------------- reserve */
+
+.reserve {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.reserveText {
+  display: grid;
+  gap: 1rem;
+}
+
+.policies {
+  display: grid;
+  margin-top: 1rem;
+  border-top: 1px solid var(--ink);
+}
+
+.policies div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.policies dt {
+  font-family: var(--serif);
+  font-weight: 600;
+}
+
+.policies dd {
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.form {
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--pale);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--rice);
+  border: 1px solid color-mix(in srgb, var(--ink) 34%, transparent);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--red);
+  outline: none;
+}
+
+.seatings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  border: 0;
+}
+
+.seatings legend {
+  margin-bottom: 0.4rem;
+  padding: 0;
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.radio {
+  position: relative;
+}
+
+.radio input {
+  position: absolute;
+  opacity: 0;
+}
+
+.radio span {
+  display: inline-block;
+  padding: 0.55rem 1.1rem;
+  font-weight: 500;
+  background: var(--rice);
+  border: 1px solid color-mix(in srgb, var(--ink) 34%, transparent);
+  cursor: pointer;
+}
+
+.radio input:checked + span {
+  color: var(--rice);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.radio input:focus-visible + span {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.submit {
+  justify-self: start;
+}
+
+.formNote {
+  font-size: 0.84rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 0.5fr) minmax(0, 1.5fr);
+  gap: 2rem;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.visitTitle {
+  padding-top: 0.6rem;
+  border-top: 3px solid var(--red);
+  align-self: start;
+}
+
+.visitList {
+  border-top: 1px solid var(--ink);
+}
+
+.visitList div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.visitList dt {
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+  padding-top: 0.2rem;
+}
+
+.visitList dd {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.visitList a {
+  border-bottom: 1px solid var(--red);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  text-align: center;
+  color: var(--rice);
+  background: var(--green);
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.footTag {
+  color: color-mix(in srgb, var(--rice) 86%, transparent);
+}
+
+.footFine {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 1.8rem;
+  padding-top: 1.2rem;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--rice) 80%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--rice) 24%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .carteGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sakeInner,
+  .reserve {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .heroPanel {
+    min-height: 22rem;
+  }
+
+  /* The spine moves to the left edge; every course reads the same way. */
+  .spine::before {
+    left: 1.7rem;
+  }
+
+  .course,
+  .course:nth-child(even) {
+    grid-template-columns: 3.4rem minmax(0, 1fr);
+    column-gap: 1.2rem;
+    row-gap: 1rem;
+    align-items: start;
+  }
+
+  .node {
+    grid-column: 1;
+  }
+
+  .courseText,
+  .course:nth-child(even) .courseText {
+    grid-column: 2;
+    grid-row: 1;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .courseSide,
+  .course:nth-child(even) .courseSide {
+    grid-column: 2;
+    grid-row: 2;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .plate {
+    width: min(100%, 15rem);
+  }
+
+  .visit {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .bar {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+}
+
+@media (max-width: 620px) {
+  .facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .facts dt {
+    font-size: 1.2rem;
+  }
+
+  .carteHead {
+    grid-template-columns: 1fr;
+  }
+
+  .carteArt {
+    width: 12rem;
+  }
+
+  .carteGrid,
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  /* The sake list restacks: name and note on top, style and prices under. */
+  .sakeRowHead {
+    display: none;
+  }
+
+  .sakeRow {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    row-gap: 0.2rem;
+  }
+
+  .sakeName {
+    grid-column: 1 / -1;
+  }
+
+  .sakeGlass::before {
+    content: 'Glass ';
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+
+  .sakeBottle::before {
+    content: 'Bottle ';
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+
+  .policies div,
+  .visitList div {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .barCta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine,
+  .submit {
+    transition: none;
+  }
+}

@@ -1,0 +1,1131 @@
+/* ==========================================================================
+   EL FAROLITO - taco truck
+   A street poster on masa paper: fat rounded display type, a char outline
+   round every card, and three loud inks (chile, agave, sol) handed out one
+   per day. The week is the page: seven cards with cut-paper tops, like a
+   string of papel picado. The pictures are flat vector layers inked in the
+   same variables, so a re-color repaints the truck along with the page.
+   ========================================================================== */
+
+.page {
+  --masa: #fff7ea;
+  --char: #20161a;
+  --chile: #e23e57;
+  --agave: #2bae9a;
+  --sol: #f6c343;
+  --adobe: #a48f86;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 84rem;
+  --radius: 16px;
+  --line: 2px solid var(--char);
+  --display: 'Lilita One', 'Arial Rounded MT Bold', 'Helvetica Neue', sans-serif;
+
+  font-family: 'Chivo', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--char);
+  background: var(--masa);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--chile);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.85rem var(--gut);
+  background: var(--masa);
+  border-bottom: var(--line);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--masa);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.65rem;
+  line-height: 1;
+  color: var(--chile);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.9rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  color: var(--chile);
+}
+
+.barCall {
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--masa);
+  background: var(--char);
+  border-radius: 999px;
+}
+
+.barCall:hover {
+  background: var(--chile);
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+.btn,
+.btnGhost,
+.btnSol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 1.4rem;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.98rem;
+  text-decoration: none;
+  border: var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.btn {
+  color: var(--masa);
+  background: var(--chile);
+  box-shadow: 4px 4px 0 var(--char);
+}
+
+.btnGhost {
+  color: var(--char);
+  background: transparent;
+}
+
+.btnSol {
+  color: var(--char);
+  background: var(--sol);
+  border-color: var(--sol);
+}
+
+.btn:hover,
+.btnSol:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--char);
+}
+
+.btnGhost:hover {
+  background: color-mix(in srgb, var(--sol) 45%, transparent);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  padding: 0 0 clamp(2.5rem, 5vw, 4rem);
+}
+
+/* One row of the harlequin lattice is a row of pennants: every odd row of
+   circusposter points down. The string is the border above it. */
+.bunting {
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  border-top: 3px solid var(--char);
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: end;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) 0;
+}
+
+.kicker,
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--chile);
+}
+
+.heroTitle {
+  margin-top: 1rem;
+  font-size: clamp(2.9rem, 6.4vw, 6rem);
+  line-height: 0.95;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--chile);
+}
+
+.heroLede {
+  max-width: 34rem;
+  margin-top: 1.4rem;
+  font-size: 1.12rem;
+  color: color-mix(in srgb, var(--char) 82%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.heroArt {
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.truck {
+  width: 100%;
+  margin-left: auto;
+}
+
+/* A strip of road with its center line, for the tires to sit on. */
+.road {
+  display: block;
+  height: 16px;
+  margin: -6px -2rem 0;
+  background:
+    repeating-linear-gradient(90deg, var(--sol) 0 38px, transparent 38px 70px) center / 100% 3px no-repeat,
+    var(--char);
+  border-radius: 999px;
+}
+
+.sticker {
+  position: absolute;
+  top: -1.5rem;
+  left: -0.5rem;
+  display: grid;
+  place-content: center;
+  width: clamp(6.5rem, 10vw, 8.5rem);
+  aspect-ratio: 1;
+  text-align: center;
+  color: var(--char);
+  background: var(--sol);
+  border: var(--line);
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+
+.sticker strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  line-height: 1;
+}
+
+.sticker span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: var(--max);
+  margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
+  padding: 0 var(--gut);
+}
+
+.facts li {
+  padding: 1rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-align: center;
+  border-top: var(--line);
+  border-bottom: var(--line);
+}
+
+.facts li + li {
+  border-left: var(--line);
+}
+
+/* ------------------------------------------------------- section headings */
+
+.head {
+  display: grid;
+  gap: 0.7rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.head h2 {
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+}
+
+.headNote {
+  max-width: 36rem;
+  font-size: 1.02rem;
+  color: color-mix(in srgb, var(--char) 80%, transparent);
+}
+
+/* ---------------------------------------------------------------- the week */
+
+.week {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.day {
+  --tone: var(--chile);
+  --on-tone: var(--masa);
+  display: flex;
+  flex-direction: column;
+  background: var(--masa);
+  border: var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.chile {
+  --tone: var(--chile);
+  --on-tone: var(--masa);
+}
+
+.agave {
+  --tone: var(--agave);
+  --on-tone: var(--char);
+}
+
+.sol {
+  --tone: var(--sol);
+  --on-tone: var(--char);
+}
+
+.off {
+  --tone: color-mix(in srgb, var(--adobe) 40%, var(--masa));
+  --on-tone: var(--char);
+  border-style: dashed;
+}
+
+/* The cut-paper strip: half circles bitten out of its lower edge. */
+.dayTop {
+  --bite: 7px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 0.9rem 0.9rem 1.35rem;
+  color: var(--on-tone);
+  background: var(--tone);
+  -webkit-mask:
+    radial-gradient(circle var(--bite) at 50% 100%, transparent 96%, var(--char) 100%) 50% 100% / calc(var(--bite) * 2 + 6px) 100% repeat-x;
+  mask:
+    radial-gradient(circle var(--bite) at 50% 100%, transparent 96%, var(--char) 100%) 50% 100% / calc(var(--bite) * 2 + 6px) 100% repeat-x;
+}
+
+.dayName {
+  font-family: var(--display);
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.dayTag {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dayBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  padding: 0.6rem 0.9rem 1rem;
+}
+
+.dayTime {
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.dayPlace {
+  font-size: 1.28rem;
+}
+
+.dayWhere {
+  font-size: 0.84rem;
+  color: color-mix(in srgb, var(--char) 78%, transparent);
+}
+
+.dayNote {
+  margin-top: auto;
+  padding-top: 0.7rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  border-top: 1px dashed color-mix(in srgb, var(--char) 35%, transparent);
+}
+
+.off .dayPlace,
+.off .dayTime {
+  color: color-mix(in srgb, var(--char) 70%, transparent);
+}
+
+/* -------------------------------------------------------------------- menu */
+
+.menu {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(4rem, 8vw, 6.5rem);
+  border-top: var(--line);
+}
+
+.menuArt {
+  position: sticky;
+  top: 6rem;
+  align-self: start;
+  display: grid;
+  justify-items: center;
+  gap: 1.5rem;
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2.5rem);
+  background: color-mix(in srgb, var(--sol) 30%, var(--masa));
+  border: var(--line);
+  border-radius: 50% 50% var(--radius) var(--radius) / 34% 34% var(--radius) var(--radius);
+}
+
+.tacos {
+  width: 100%;
+}
+
+.menuDeal {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  text-align: center;
+}
+
+.menuDeal strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  color: var(--chile);
+}
+
+.menuDeal span {
+  font-size: 0.92rem;
+}
+
+.groupHead {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.5rem;
+  font-size: 1.5rem;
+  border-bottom: var(--line);
+}
+
+.items {
+  margin-bottom: 2.2rem;
+}
+
+.items li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--char) 30%, transparent);
+}
+
+.itemName {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.itemDesc {
+  grid-column: 1;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--char) 76%, transparent);
+}
+
+.itemPrice {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  color: var(--chile);
+}
+
+.menuCols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.menuNote {
+  margin-top: -1.2rem;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--char) 70%, transparent);
+}
+
+/* ------------------------------------------------------------------ salsas */
+
+.salsas {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) clamp(4rem, 8vw, 6.5rem);
+}
+
+.salsaArt {
+  order: 2;
+  display: grid;
+  place-items: center;
+}
+
+.chili {
+  width: min(100%, 30rem);
+  transform: rotate(-6deg);
+}
+
+.heatList li {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.95rem 0;
+  border-bottom: var(--line);
+}
+
+.heatList li:first-child {
+  border-top: var(--line);
+}
+
+.heatName {
+  font-family: var(--display);
+  font-size: 1.3rem;
+}
+
+.heatDesc {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--char) 78%, transparent);
+}
+
+/* Four pips, lit up to the salsa's heat. */
+.heatMeter {
+  display: flex;
+  gap: 4px;
+}
+
+.heatMeter i {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--char);
+  border-radius: 50%;
+}
+
+.heat1 .heatMeter i:nth-child(-n + 1),
+.heat2 .heatMeter i:nth-child(-n + 2),
+.heat3 .heatMeter i:nth-child(-n + 3),
+.heat4 .heatMeter i:nth-child(-n + 4) {
+  background: var(--chile);
+}
+
+/* ---------------------------------------------------------------- catering */
+
+.catering {
+  position: relative;
+  isolation: isolate;
+  color: var(--masa);
+  background: var(--char);
+}
+
+/* The lanterns hang in the upper right and fade out toward the copy. */
+.lanterns {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  width: 52%;
+  height: 72%;
+  overflow: hidden;
+  opacity: 0.8;
+  -webkit-mask-image: linear-gradient(200deg, var(--char) 20%, transparent 72%);
+  mask-image: linear-gradient(200deg, var(--char) 20%, transparent 72%);
+}
+
+.cateringInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.catering .eyebrow {
+  color: var(--sol);
+}
+
+.catering .headNote {
+  color: color-mix(in srgb, var(--masa) 84%, transparent);
+}
+
+.packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.pack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.6rem 1.5rem 1.7rem;
+  background: color-mix(in srgb, var(--masa) 6%, var(--char));
+  border: 2px solid color-mix(in srgb, var(--masa) 30%, transparent);
+  border-radius: var(--radius);
+}
+
+.pack:nth-child(2) {
+  border-color: var(--sol);
+}
+
+.packName {
+  font-size: 1.8rem;
+}
+
+.packGuests {
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--masa) 78%, transparent);
+}
+
+.packPrice {
+  margin: 0.6rem 0 0.8rem;
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--sol);
+}
+
+.packItems li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.3rem;
+  font-size: 0.94rem;
+  border-top: 1px solid color-mix(in srgb, var(--masa) 18%, transparent);
+}
+
+.packItems li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 8px;
+  height: 8px;
+  background: var(--chile);
+  transform: rotate(45deg);
+}
+
+.terms {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+}
+
+.terms div {
+  padding-top: 0.9rem;
+  border-top: 2px solid color-mix(in srgb, var(--masa) 30%, transparent);
+}
+
+.terms dt {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  color: var(--sol);
+}
+
+.terms dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--masa) 86%, transparent);
+}
+
+.cateringCta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.2rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.cateringOr {
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--masa) 80%, transparent);
+}
+
+.cateringPhone {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+
+.cateringPhone:hover {
+  color: var(--sol);
+}
+
+/* ------------------------------------------------------------------ follow */
+
+.follow {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  min-height: 40rem;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+  border-bottom: var(--line);
+}
+
+.flags {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.followCard {
+  display: grid;
+  gap: 1rem;
+  width: min(100%, 36rem);
+  padding: clamp(1.8rem, 4vw, 2.8rem);
+  background: var(--masa);
+  border: 3px solid var(--char);
+  border-radius: var(--radius);
+  box-shadow: 10px 10px 0 var(--char);
+}
+
+.followCard h2 {
+  font-size: clamp(2rem, 4vw, 2.9rem);
+}
+
+.followLede {
+  color: color-mix(in srgb, var(--char) 82%, transparent);
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+}
+
+.field {
+  display: grid;
+  flex: 1 1 14rem;
+  gap: 0.35rem;
+}
+
+.field span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field input {
+  min-height: 3rem;
+  padding: 0.6rem 0.9rem;
+  font: inherit;
+  color: var(--char);
+  background: var(--masa);
+  border: var(--line);
+  border-radius: 10px;
+}
+
+.field input::placeholder {
+  color: color-mix(in srgb, var(--char) 50%, transparent);
+}
+
+.handles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-top: 1px dashed color-mix(in srgb, var(--char) 35%, transparent);
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.faqItem {
+  border-bottom: var(--line);
+}
+
+.faqItem:first-child {
+  border-top: var(--line);
+}
+
+.faqItem summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  line-height: 1.2;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  font-family: 'Chivo', sans-serif;
+  font-weight: 700;
+  color: var(--masa);
+  background: var(--chile);
+  border-radius: 50%;
+}
+
+.faqItem[open] summary::after {
+  content: '-';
+  background: var(--char);
+}
+
+.faqItem p {
+  max-width: 44rem;
+  padding: 0 0 1.3rem;
+  color: color-mix(in srgb, var(--char) 84%, transparent);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  color: var(--masa);
+  background: var(--char);
+}
+
+.footGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2.5rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--chile);
+}
+
+.footTag {
+  margin-top: 0.6rem;
+  max-width: 20rem;
+  color: color-mix(in srgb, var(--masa) 82%, transparent);
+}
+
+.footHead {
+  margin-bottom: 0.8rem;
+  font-family: 'Chivo', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sol);
+}
+
+.footLinks li {
+  padding: 0.25rem 0;
+  font-size: 0.94rem;
+}
+
+.footLinks a {
+  text-decoration: none;
+}
+
+.footLinks a:hover {
+  color: var(--sol);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.4rem var(--gut) 2rem;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--masa) 72%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--masa) 18%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .days {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .terms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .heroInner,
+  .menu,
+  .salsas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    max-width: 40rem;
+    margin: 1rem auto 0;
+    width: 100%;
+  }
+
+  .menuArt {
+    position: static;
+    max-width: 30rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .salsaArt {
+    order: 0;
+  }
+
+  .chili {
+    width: min(70%, 22rem);
+  }
+
+  .packages {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .facts li:nth-child(3) {
+    border-left: 0;
+  }
+
+  .facts li:nth-child(n + 3) {
+    border-top: 0;
+  }
+}
+
+@media (max-width: 800px) {
+  .bar {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  /* On a phone each day is a row: the cut strip becomes a column on the
+     left, its bites moved to the right-hand edge. */
+  .days {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.7rem;
+  }
+
+  .day {
+    flex-direction: row;
+  }
+
+  .dayTop {
+    flex: 0 0 5.4rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0.9rem 1.2rem 0.9rem 0.8rem;
+    -webkit-mask:
+      radial-gradient(circle var(--bite) at 100% 50%, transparent 96%, var(--char) 100%) 100% 50% / 100% calc(var(--bite) * 2 + 6px) repeat-y;
+    mask:
+      radial-gradient(circle var(--bite) at 100% 50%, transparent 96%, var(--char) 100%) 100% 50% / 100% calc(var(--bite) * 2 + 6px) repeat-y;
+  }
+
+  .dayName {
+    font-size: 1.8rem;
+  }
+
+  .dayBody {
+    padding: 0.8rem 1rem 0.9rem 0.6rem;
+  }
+
+  .menuCols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .barCall {
+    display: none;
+  }
+
+  .bunting {
+    height: 44px;
+  }
+
+  .heroActions > a {
+    flex: 1 1 100%;
+  }
+
+  .sticker {
+    top: -2.5rem;
+    left: auto;
+    right: 0;
+  }
+
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts li,
+  .facts li + li {
+    padding: 0.7rem 0;
+    border-left: 0;
+    border-top: 0;
+  }
+
+  .facts li:first-child {
+    border-top: var(--line);
+  }
+
+  .heatList li {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.2rem 1rem;
+  }
+
+  .heatDesc {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .heatMeter {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .terms {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .follow {
+    min-height: 0;
+    padding: 5.5rem 1.75rem;
+  }
+
+  .week {
+    padding-top: 3rem;
+  }
+
+  .followCard {
+    box-shadow: 6px 6px 0 var(--char);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btnGhost,
+  .btnSol {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btnSol:hover {
+    transform: none;
+  }
+}

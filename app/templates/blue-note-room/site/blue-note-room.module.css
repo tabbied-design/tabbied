@@ -1,0 +1,1104 @@
+/* ==========================================================================
+   BLUE NOTE ROOM - jazz club, Canal Street
+   A gig poster pasted on the night: gold paper, heavy condensed capitals,
+   and a dark panel where the saxophonist comes out of the shadow in two
+   inks, a halo of turning dashes behind him. Below it the month's listings as a bill, and the room on its own
+   deep ground. Sofia Sans Extra Condensed shouts, Sofia Sans talks.
+   ========================================================================== */
+
+.page {
+  --night: #0f1220;
+  --cream: #f1ece2;
+  --gold: #e3b04b;
+  --blue: #5d6bd6;
+  --gray: #6e7185;
+  --deep: #1a1f33;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 90rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --shout: 'Sofia Sans Extra Condensed', 'Arial Narrow', Impact, sans-serif;
+  --rule: color-mix(in srgb, var(--cream) 14%, transparent);
+
+  font-family: 'Sofia Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--night);
+  color: var(--cream);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--shout);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------- bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(0.8rem, 2.5vw, 2rem);
+  padding: 0.8rem var(--gut);
+  background: color-mix(in srgb, var(--night) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--deep);
+}
+
+.mark {
+  font-family: var(--shout);
+  font-weight: 900;
+  font-size: 1.7rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.mark::after {
+  content: '';
+  display: inline-block;
+  width: 0.3em;
+  height: 0.3em;
+  margin-left: 0.18em;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--cream) 80%, transparent);
+  transition: color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--gold);
+}
+
+.tickets {
+  font-family: var(--shout);
+  font-weight: 800;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  color: var(--night);
+  background: var(--gold);
+  transition: background 150ms ease;
+}
+
+.tickets:hover {
+  background: var(--cream);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--deep);
+}
+
+/* ---------------------------------------------------------------- poster */
+
+.poster {
+  padding: clamp(0.8rem, 1.6vw, 1.4rem) var(--gut) 0;
+}
+
+.sheet {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: clamp(560px, calc(100svh - 7rem), 860px);
+  background: var(--gold);
+  color: var(--night);
+  overflow: hidden;
+  border: clamp(8px, 1vw, 14px) solid var(--gold);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.7);
+}
+
+.posterType {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.6rem;
+  padding: clamp(1.4rem, 3.6vw, 3.2rem);
+}
+
+.presents {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: clamp(4rem, 9.2vw, 9.4rem);
+  line-height: 0.84;
+  max-width: 7.5ch;
+}
+
+.page .title {
+  font-weight: 900;
+  letter-spacing: -0.005em;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--cream);
+  background: var(--blue);
+  padding: 0 0.08em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.tonight {
+  max-width: 26rem;
+  padding-top: 0.8rem;
+  border-top: 3px solid var(--night);
+}
+
+.tonightLabel {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.tonightAct {
+  margin: 0.15rem 0 0;
+  font-family: var(--shout);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.tonightSets {
+  margin: 0.4rem 0 0;
+  font-weight: 600;
+}
+
+.posterLink {
+  align-self: flex-start;
+  font-family: var(--shout);
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.3rem;
+  color: var(--gold);
+  background: var(--night);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.posterLink::after {
+  content: ' \2193';
+}
+
+.posterLink:hover {
+  background: var(--blue);
+  color: var(--cream);
+}
+
+.posterArt {
+  position: relative;
+  min-height: 24rem;
+  background: var(--night);
+  overflow: hidden;
+}
+
+/* The halo: dashes turning around the player's head, cut into a disc. */
+.halo {
+  position: absolute;
+  top: 3%;
+  left: 50%;
+  width: min(92%, 38rem);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.posterArt .sax {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 52%;
+  height: 94%;
+  width: auto;
+  max-width: none;
+  translate: -50% 0;
+}
+
+.posterFoot {
+  grid-column: 1 / -1;
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.3rem 1.5rem;
+  padding: 0.75rem clamp(1.4rem, 3.6vw, 3.2rem);
+  font-family: var(--shout);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--night);
+}
+
+/* -------------------------------------------------------------- listings */
+
+.listings {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.kicker {
+  margin: 0 0 0.7rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.secTitle {
+  font-size: clamp(2.6rem, 5.4vw, 4.8rem);
+  line-height: 0.92;
+}
+
+.secNote {
+  margin: 0;
+  max-width: 30rem;
+  color: color-mix(in srgb, var(--cream) 76%, transparent);
+}
+
+.listHead,
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.listHead .kicker,
+.secHead .kicker {
+  grid-column: 1 / -1;
+  margin-bottom: -0.4rem;
+}
+
+.listGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(14rem, 20vw, 18rem);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.gigs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.gig {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) minmax(0, 12rem) auto;
+  gap: 0.6rem clamp(1rem, 2.4vw, 2rem);
+  align-items: center;
+  padding: 1.3rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.date {
+  margin: 0;
+  display: grid;
+  justify-items: start;
+}
+
+.dateDay {
+  font-family: var(--shout);
+  font-weight: 900;
+  font-size: 3.4rem;
+  line-height: 0.85;
+  color: var(--gold);
+}
+
+.dateWd {
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cream) 70%, transparent);
+}
+
+.artist {
+  font-size: clamp(1.7rem, 2.6vw, 2.2rem);
+  line-height: 0.95;
+}
+
+.gigNote {
+  margin: 0.35rem 0 0;
+  max-width: 34rem;
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--cream) 72%, transparent);
+}
+
+.gigFacts {
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.gigFacts div {
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+.gigFacts dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cream) 56%, transparent);
+  padding-top: 0.15rem;
+}
+
+.gigFacts dd {
+  margin: 0;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.gigAct {
+  display: grid;
+  justify-items: end;
+  gap: 0.5rem;
+}
+
+.status {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.onSale {
+  color: color-mix(in srgb, var(--cream) 60%, transparent);
+}
+
+.fewLeft {
+  color: var(--gold);
+}
+
+.soldOut {
+  padding: 0.1rem 0.45rem;
+  color: var(--cream);
+  background: var(--blue);
+}
+
+.book {
+  font-family: var(--shout);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.3rem 1rem;
+  border: 1.5px solid var(--gold);
+  border-radius: 999px;
+  color: var(--gold);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.book:hover {
+  background: var(--gold);
+  color: var(--night);
+}
+
+.listAside {
+  position: sticky;
+  top: 5.5rem;
+}
+
+.bassPanel {
+  position: relative;
+  height: clamp(20rem, 34vw, 28rem);
+  overflow: hidden;
+  background: var(--blue);
+}
+
+.bassPanel .bass {
+  position: absolute;
+  bottom: -2%;
+  left: 50%;
+  height: 96%;
+  width: auto;
+  max-width: none;
+  translate: -50% 0;
+}
+
+.asideTitle {
+  margin-top: 1.2rem;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.page .asideTitle {
+  margin-top: 1.2rem;
+}
+
+.weekly {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+}
+
+.weekly li {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--cream) 80%, transparent);
+}
+
+.weeklyDay {
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.asideNote {
+  margin: 0.8rem 0 0;
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--cream) 64%, transparent);
+}
+
+/* ----------------------------------------------------------- membership */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.tiers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: clamp(1.4rem, 2.6vw, 2.2rem);
+  background: var(--deep);
+  border-top: 4px solid var(--gold);
+}
+
+.tierFeatured {
+  background: var(--blue);
+  border-top-color: var(--cream);
+}
+
+.tierName {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.tierPrice {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.tierAmount {
+  font-family: var(--shout);
+  font-weight: 900;
+  font-size: 4.2rem;
+  line-height: 0.9;
+  color: var(--gold);
+}
+
+.tierFeatured .tierAmount {
+  color: var(--cream);
+}
+
+.tierPer {
+  font-weight: 600;
+  color: color-mix(in srgb, var(--cream) 76%, transparent);
+}
+
+.perks {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  flex: 1;
+}
+
+.perks li {
+  padding: 0.55rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--cream) 18%, transparent);
+}
+
+.join {
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--gold);
+}
+
+.tierFeatured .join {
+  text-decoration-color: var(--cream);
+}
+
+/* ----------------------------------------------------------------- room */
+
+.room {
+  margin-top: var(--air);
+  background: var(--deep);
+  padding: var(--air) var(--gut);
+}
+
+.roomInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+/* A spotlight: a pool of gold light with the microphone standing in it. */
+.spot {
+  position: relative;
+  min-height: 34rem;
+  background: radial-gradient(
+    ellipse 60% 55% at 50% 40%,
+    color-mix(in srgb, var(--gold) 34%, transparent),
+    transparent 70%
+  );
+}
+
+.spot .mic {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 92%;
+  width: auto;
+  max-width: none;
+  translate: -50% 0;
+}
+
+.body {
+  margin: 1.3rem 0 0;
+  max-width: 38rem;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--cream) 82%, transparent);
+}
+
+.facts {
+  margin: 2rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(1.5rem, 4vw, 3rem);
+}
+
+.facts div {
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.facts dt {
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.facts dd {
+  margin: 0.2rem 0 0;
+}
+
+/* ------------------------------------------------------------------ bar */
+
+.barGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+/* A record: grooves in a disc, and the label in the middle. */
+.record {
+  position: relative;
+  width: min(100%, 30rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--deep);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.8);
+  overflow: hidden;
+}
+
+.grooves {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.label {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 34%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--night);
+  font-family: var(--shout);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  letter-spacing: 0.04em;
+}
+
+.drinks {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+}
+
+.drinks li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 1rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.drinkName {
+  font-family: var(--shout);
+  font-weight: 800;
+  font-size: 1.6rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.drinkPrice {
+  font-family: var(--shout);
+  font-weight: 800;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.drinkWhat {
+  grid-column: 1 / -1;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--cream) 72%, transparent);
+}
+
+.platesHead {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  color: var(--gold);
+}
+
+.page .platesHead {
+  margin-top: 2rem;
+}
+
+.plates {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+}
+
+.plates li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.95rem;
+}
+
+.plates .drinkPrice {
+  font-size: 1.2rem;
+}
+
+/* ---------------------------------------------------------------- visit */
+
+.visit {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.contact {
+  margin: 1.8rem 0 0;
+}
+
+.contact div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.contact dt {
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding-top: 0.2rem;
+}
+
+.contact dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 1px solid var(--gold);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--deep);
+  border-top: 4px solid var(--gold);
+}
+
+.field {
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field:nth-of-type(3) {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cream) 78%, transparent);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  font: inherit;
+  color: var(--cream);
+  background: var(--night);
+  border: 1px solid color-mix(in srgb, var(--cream) 22%, transparent);
+  border-radius: 4px;
+  padding: 0.65rem 0.75rem;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  font-family: var(--shout);
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.6rem;
+  color: var(--night);
+  background: var(--gold);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.submit:hover {
+  background: var(--cream);
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: var(--air);
+  background: var(--gold);
+  color: var(--night);
+  padding: clamp(2.2rem, 5vw, 3.2rem) var(--gut) 1.4rem;
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: center;
+}
+
+.footMark {
+  margin: 0;
+  font-family: var(--shout);
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  font-weight: 700;
+}
+
+.footLinks a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.footAddr {
+  margin: 0;
+  font-weight: 600;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2rem auto 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--night) 30%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+}
+
+.footFine p {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .gig {
+    grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  }
+
+  .gigFacts {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .gigAct {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+
+  .footTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .sheet {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    min-height: 0;
+  }
+
+  .posterArt {
+    height: clamp(24rem, 90vw, 34rem);
+  }
+
+  .listHead,
+  .secHead,
+  .listGrid,
+  .roomInner,
+  .barGrid,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .listAside {
+    position: static;
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 0 1.5rem;
+    align-items: start;
+  }
+
+  .bassPanel {
+    grid-row: 1 / span 4;
+    height: 18rem;
+  }
+
+  .page .asideTitle {
+    margin-top: 0;
+  }
+
+  .tiers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .spot {
+    min-height: 24rem;
+  }
+
+  .record {
+    width: min(70%, 20rem);
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .mark {
+    font-size: 1.35rem;
+  }
+
+  .tickets {
+    font-size: 0.95rem;
+    padding: 0.3rem 0.75rem;
+  }
+
+  .gig {
+    grid-template-columns: 3.4rem minmax(0, 1fr);
+  }
+
+  .dateDay {
+    font-size: 2.6rem;
+  }
+
+  .gigFacts {
+    grid-column: 2;
+    grid-row: auto;
+  }
+
+  .gigAct {
+    grid-column: 2;
+    grid-row: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .listAside {
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: 0 1rem;
+  }
+
+  .bassPanel {
+    height: 14rem;
+  }
+
+  .facts,
+  .plates,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .posterFoot {
+    font-size: 0.95rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .tickets,
+  .posterLink,
+  .book,
+  .submit {
+    transition: none;
+  }
+}

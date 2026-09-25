@@ -1,0 +1,1245 @@
+.page {
+  --chrome: #f2f4f3;
+  --ink: #111820;
+  --teal: #0fa3a3;
+  --coral: #f25c54;
+  --gray: #8c959a;
+  --pale: #dce3e2;
+  --gut: clamp(1.25rem, 4.5vw, 3.5rem);
+  --max: 80rem;
+  --radius: 14px;
+  --line: color-mix(in srgb, var(--ink) 14%, transparent);
+  --muted: color-mix(in srgb, var(--ink) 70%, var(--chrome));
+  --cond: 'Sofia Sans Condensed', 'Arial Narrow', sans-serif;
+
+  font-family: 'Sofia Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  background: var(--chrome);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   SPOKE & CHAIN - bike shop and workshop
+   A workshop ticket: brushed-chrome ground, black ink, a teal for what is
+   included and a coral for what to press. Headings are a heavy condensed
+   face set in capitals, like the stickers on a down tube. The bicycle, the
+   helmet and the pump are flat color layers drawn in the palette, so the six
+   bike cards are one drawing in six paint jobs.
+   ========================================================================== */
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--cond);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.85rem max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: color-mix(in srgb, var(--chrome) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* A chainring in CSS: a toothed ring from a dashed border. */
+.brandMark {
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 4px dotted var(--coral);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 3px var(--chrome), inset 0 0 0 7px var(--ink);
+}
+
+.brandName {
+  font-family: var(--cond);
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.1rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--teal);
+}
+
+.barCta {
+  padding: 0.55rem 1rem;
+  font-family: var(--cond);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--chrome);
+  background: var(--coral);
+  border-radius: 6px;
+  transition: background 150ms ease;
+}
+
+.barCta:hover {
+  background: var(--ink);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--chrome);
+}
+
+/* ------------------------------------------------------------ shared heads */
+
+.secHead {
+  max-width: 46rem;
+}
+
+.secNo,
+.secNoLight {
+  margin-bottom: 1rem;
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+
+.secNoLight {
+  color: var(--teal);
+}
+
+.secTitle {
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
+}
+
+.secLede,
+.secLedeLight {
+  margin-top: 1.2rem;
+  max-width: 38rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.secLedeLight {
+  color: color-mix(in srgb, var(--chrome) 72%, transparent);
+}
+
+.subTitle {
+  font-size: 2rem;
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) 0;
+}
+
+.kicker {
+  margin-bottom: 1.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 6.2vw, 5.8rem);
+  line-height: 0.9;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--coral);
+}
+
+.heroLede {
+  margin-top: 1.6rem;
+  max-width: 30rem;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.35rem;
+  font-family: var(--cond);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.btn {
+  color: var(--chrome);
+  background: var(--ink);
+}
+
+.btn:hover {
+  background: var(--teal);
+}
+
+.btnLine {
+  border: 2px solid var(--ink);
+}
+
+.btnLine:hover {
+  color: var(--chrome);
+  background: var(--ink);
+}
+
+/* The bicycle stands on a floor line; the triangles fade out above it. */
+.heroArt {
+  position: relative;
+  aspect-ratio: 1.3;
+  border-bottom: 3px solid var(--ink);
+}
+
+.confetti {
+  position: absolute;
+  inset: 0 0 10%;
+  overflow: hidden;
+  border-radius: 24px 24px 0 0;
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 45%, transparent 98%);
+  mask-image: linear-gradient(180deg, var(--ink) 45%, transparent 98%);
+}
+
+.heroBike {
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 88%;
+  transform: translateX(-50%);
+}
+
+.heroFacts {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.heroFacts li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1.3rem 1.2rem 1.4rem 0;
+}
+
+.heroFacts li + li {
+  padding-left: 1.2rem;
+  border-left: 1px solid var(--line);
+}
+
+.heroFacts strong {
+  font-family: var(--cond);
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--teal);
+  text-transform: uppercase;
+}
+
+.heroFacts span {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- bike types */
+
+.bikes {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut);
+}
+
+.bikeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bikeCard {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--chrome);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.bikeCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.bikeStage {
+  position: relative;
+  display: grid;
+  place-items: end center;
+  aspect-ratio: 16 / 10;
+  padding: 2.4rem 1.2rem 0;
+  background: var(--pale);
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.bikeArt {
+  width: 86%;
+}
+
+.bikeArtKid {
+  width: 56%;
+}
+
+.bikeStock {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: var(--chrome);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+}
+
+.bikeBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.3rem 1.3rem 1.4rem;
+}
+
+.bikeName {
+  font-size: 2.3rem;
+}
+
+.bikeUse {
+  color: var(--muted);
+}
+
+.bikeFacts {
+  display: grid;
+  gap: 0.35rem;
+  margin: auto 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+
+.bikeFacts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.bikeFacts dt {
+  color: var(--muted);
+}
+
+.bikeFacts dd {
+  margin: 0;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* ------------------------------------------------------------ service menu */
+
+.service {
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut);
+  color: var(--chrome);
+  background: var(--ink);
+}
+
+.serviceInner {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.swipe {
+  display: none;
+  margin-top: 2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.swipe::after {
+  content: ' \2192';
+}
+
+.tableWrap {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.menu {
+  width: 100%;
+  min-width: 44rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  border-collapse: collapse;
+}
+
+.menu th,
+.menu td {
+  padding: 0.95rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--chrome) 14%, transparent);
+}
+
+.menu tbody th {
+  font-weight: 500;
+  text-align: left;
+  color: color-mix(in srgb, var(--chrome) 86%, transparent);
+}
+
+.menuCorner {
+  vertical-align: bottom;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: left !important;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.level,
+.levelHot {
+  position: relative;
+  width: 15%;
+  padding-top: 2.2rem !important;
+  vertical-align: bottom;
+}
+
+.levelHot,
+.cellHot {
+  background: color-mix(in srgb, var(--teal) 18%, transparent);
+}
+
+.levelHot {
+  border-radius: 12px 12px 0 0;
+}
+
+.levelName {
+  display: block;
+  font-family: var(--cond);
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.levelPrice {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--cond);
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--teal);
+}
+
+.levelTag {
+  position: absolute;
+  top: 0.6rem;
+  left: 50%;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--coral);
+  border-radius: 999px;
+  transform: translateX(-50%);
+}
+
+/* Included is a teal disc with a tick; not included is a short gray bar.
+   The words stay for screen readers. */
+.yes,
+.no {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+  color: transparent;
+  white-space: nowrap;
+}
+
+.yes {
+  width: 1.6rem;
+  height: 1.6rem;
+  background: var(--teal);
+  border-radius: 50%;
+}
+
+.yes::before {
+  content: '\2713';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.no {
+  width: 0.9rem;
+  height: 2px;
+  background: color-mix(in srgb, var(--chrome) 30%, transparent);
+}
+
+.menuFoot th,
+.menuFoot td {
+  font-family: var(--cond);
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  border-bottom: 0;
+}
+
+.menuFoot td {
+  color: var(--coral);
+}
+
+.menuFoot .cellHot {
+  border-radius: 0 0 12px 12px;
+}
+
+.repairs {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+  padding-top: clamp(2.5rem, 5vw, 3.5rem);
+  border-top: 2px solid var(--chrome);
+}
+
+.repairsNote {
+  margin-top: 0.8rem;
+  color: color-mix(in srgb, var(--chrome) 72%, transparent);
+}
+
+.repairList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+  margin: 1.8rem 0 0;
+}
+
+.repairList div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--chrome) 14%, transparent);
+}
+
+.repairList dt {
+  flex: 1;
+}
+
+.repairList dd {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1.3rem;
+  font-weight: 800;
+  white-space: nowrap;
+  color: var(--teal);
+}
+
+.pumpBox {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: 1.5rem;
+  padding: 1.8rem;
+  background: color-mix(in srgb, var(--chrome) 7%, transparent);
+  border-radius: var(--radius);
+}
+
+.pump {
+  width: clamp(5.5rem, 9vw, 8rem);
+}
+
+.pumpNote {
+  display: grid;
+  gap: 0.5rem;
+  padding-bottom: 0.4rem;
+}
+
+.pumpNote strong {
+  font-family: var(--cond);
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+
+.pumpNote span {
+  color: color-mix(in srgb, var(--chrome) 76%, transparent);
+}
+
+/* ----------------------------------------------------------------- rentals */
+
+.rentals {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut);
+}
+
+.rentalsHead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.helmet {
+  flex: none;
+  width: clamp(9rem, 16vw, 14rem);
+  margin-bottom: -1rem;
+}
+
+.rentalsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.rates {
+  width: 100%;
+  min-width: 30rem;
+  border-collapse: collapse;
+  border-top: 2px solid var(--ink);
+}
+
+.rates th,
+.rates td {
+  padding: 0.95rem 0.8rem;
+  text-align: right;
+  border-bottom: 1px solid var(--line);
+}
+
+.rates thead th {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rates th:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+
+.rates tbody th {
+  font-weight: 700;
+}
+
+.rates td {
+  font-family: var(--cond);
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.rates td:last-child {
+  color: var(--teal);
+}
+
+.rules {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  margin: 0;
+  padding: 1.6rem 1.7rem;
+  list-style: none;
+  background: var(--pale);
+  border-radius: var(--radius);
+}
+
+.rules li {
+  position: relative;
+  padding-left: 1.6rem;
+}
+
+.rules li::before {
+  content: '';
+  position: absolute;
+  top: 0.55rem;
+  left: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--coral);
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+
+/* --------------------------------------------------------------------- fit */
+
+.fit {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) clamp(4.5rem, 9vw, 8rem);
+}
+
+.fitPanel {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.45fr) minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  overflow: hidden;
+  padding: clamp(1.75rem, 4vw, 3.5rem);
+  padding-left: 0;
+  color: var(--chrome);
+  background: var(--ink);
+  border-radius: calc(var(--radius) * 1.6);
+}
+
+/* A column of rings at the panel's left edge, like wheels hung on a wall. */
+.wheels {
+  position: relative;
+  margin: calc(-1 * clamp(1.75rem, 4vw, 3.5rem)) 0;
+  -webkit-mask-image: linear-gradient(90deg, var(--ink) 55%, transparent);
+  mask-image: linear-gradient(90deg, var(--ink) 55%, transparent);
+}
+
+.fitTitle {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+}
+
+.fitLede {
+  margin-top: 1.1rem;
+  color: color-mix(in srgb, var(--chrome) 74%, transparent);
+}
+
+.fitPrice {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 1.8rem;
+  margin: 2rem 0 0;
+}
+
+.fitPrice div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.fitPrice dt {
+  order: 1;
+  max-width: 9rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--chrome) 66%, transparent);
+}
+
+.fitPrice dd {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--coral);
+}
+
+.fitSteps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.6rem 1.8rem;
+  align-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fitSteps li {
+  display: grid;
+  gap: 0.45rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--teal);
+}
+
+.fitNo {
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--teal);
+}
+
+.fitStepTitle {
+  font-size: 1.6rem;
+}
+
+.fitStepBody {
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--chrome) 74%, transparent);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+  border-top: 2px solid var(--ink);
+}
+
+.visitCols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.visitHead {
+  margin-bottom: 0.7rem;
+  font-size: 1.4rem;
+}
+
+.visitText {
+  margin-bottom: 0.45rem;
+  color: var(--muted);
+}
+
+.visitText a {
+  color: var(--ink);
+  border-bottom: 2px solid var(--coral);
+  overflow-wrap: anywhere;
+}
+
+.hours {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.hours div {
+  display: grid;
+  gap: 0.05rem;
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-self: start;
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: var(--pale);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+  font-size: 2rem;
+}
+
+.field,
+.fieldWide {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field span,
+.fieldWide span {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  padding: 0.75rem 0.8rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--chrome);
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+}
+
+.form input:focus-visible,
+.form select:focus-visible,
+.form textarea:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 1px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--cond);
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--chrome);
+  background: var(--coral);
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.submit:hover {
+  background: var(--ink);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: 2.8rem var(--gut) 2rem;
+  color: var(--chrome);
+  background: var(--ink);
+}
+
+.footTop,
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop {
+  align-items: center;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--chrome) 16%, transparent);
+}
+
+.footName {
+  font-family: var(--cond);
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.footLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.footLinks a:hover {
+  color: var(--teal);
+}
+
+.footFine {
+  padding-top: 1.4rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--chrome) 62%, transparent);
+}
+
+.footFine a {
+  border-bottom: 1px solid currentColor;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .bikeGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fitPanel {
+    grid-template-columns: minmax(6rem, 0.35fr) minmax(0, 1fr);
+  }
+
+  .fitSteps {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 860px) {
+  .bar {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .barCta {
+    justify-self: end;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .repairs,
+  .rentalsGrid,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroFacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .heroFacts li:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .heroFacts li:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+
+  .swipe {
+    display: block;
+  }
+
+  .menu {
+    margin-top: 1rem;
+  }
+
+  /* The task column stays put while the levels scroll under it. */
+  .menu {
+    min-width: 36rem;
+    table-layout: fixed;
+  }
+
+  .menu tbody th,
+  .menuCorner {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    width: 9.5rem;
+    background: var(--ink);
+    box-shadow: 1px 0 0 color-mix(in srgb, var(--chrome) 14%, transparent);
+  }
+
+  .menu tbody th {
+    font-size: 0.88rem;
+    line-height: 1.35;
+  }
+
+  .menu th,
+  .menu td {
+    padding: 0.8rem 0.6rem;
+  }
+
+  .level,
+  .levelHot {
+    width: auto;
+  }
+
+  .fitPanel {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: clamp(1.75rem, 4vw, 3.5rem);
+  }
+
+  .wheels {
+    height: 7rem;
+    margin: calc(-1 * clamp(1.75rem, 4vw, 3.5rem)) calc(-1 * clamp(1.75rem, 4vw, 3.5rem)) 0;
+    -webkit-mask-image: linear-gradient(180deg, var(--ink) 40%, transparent);
+    mask-image: linear-gradient(180deg, var(--ink) 40%, transparent);
+  }
+
+  .fitSteps {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .barCta {
+    display: none;
+  }
+
+  .bikeGrid,
+  .repairList,
+  .fitSteps,
+  .visitCols,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    aspect-ratio: 1.15;
+  }
+
+  .heroFacts strong {
+    font-size: 1.8rem;
+  }
+
+  .pumpBox {
+    padding: 1.3rem;
+  }
+
+  .rentalsHead {
+    align-items: start;
+  }
+
+  .helmet {
+    width: 6.5rem;
+    margin-bottom: 0;
+  }
+
+  /* Five columns fit a phone once the figures shrink, so no scrolling. */
+  .rates {
+    min-width: 0;
+  }
+
+  .rates th,
+  .rates td {
+    padding: 0.8rem 0.3rem;
+  }
+
+  .rates thead th {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+  }
+
+  .rates tbody th {
+    font-size: 0.88rem;
+  }
+
+  .rates td {
+    font-size: 1.1rem;
+  }
+
+  .fitPrice {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .fitPrice dd {
+    font-size: 2rem;
+  }
+
+  .form {
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    transition: none !important;
+  }
+
+  .bikeCard:hover {
+    transform: none;
+  }
+}
