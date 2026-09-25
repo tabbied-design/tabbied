@@ -160,7 +160,7 @@ export default function PointeAndPulsePage() {
       <header className={s.bar}>
         <a className={s.brand} href="#top">
           <span className={s.brandA}>Pointe</span>
-          <span className={s.brandAmp} aria-hidden="true">{'&'}</span>
+          <span className={s.brandAmp}>&amp;</span>
           <span className={s.brandB}>Pulse</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
@@ -468,7 +468,7 @@ export default function PointeAndPulsePage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Pointe and Pulse</p>
+            <p className={s.footName}>Pointe &amp; Pulse</p>
             <p className={s.footTag}>Dance school, 22 Alder Street. Two studios, one sprung floor each.</p>
           </div>
           <div>

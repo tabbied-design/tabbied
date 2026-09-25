@@ -207,7 +207,7 @@ export default function CacaoAndCoPage() {
                       pattern={b.design}
                       palette={TRANSFER}
                       fit="grid"
-                      cellSize={26}
+                      cellSize={24}
                       seed={b.name}
                       style={{ position: 'absolute', inset: 0 }}
                     />

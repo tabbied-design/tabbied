@@ -172,9 +172,9 @@ export default function SatchelAndStrapPage() {
               </div>
               <div className={s.drawing} data-shape="satchel">
                 <span className={s.box} aria-hidden="true" />
-                <span className={s.dimW}>36 cm</span>
-                <span className={s.dimH}>28 cm</span>
-                <span className={s.dimD}>11 cm</span>
+                <span className={s.dimW}>36 cm wide</span>
+                <span className={s.dimH}>28 cm high</span>
+                <span className={s.dimD}>11 cm deep</span>
               </div>
               <div className={s.spec}>
                 <span className={s.rowNo}>No. 1</span>
@@ -213,9 +213,9 @@ export default function SatchelAndStrapPage() {
               </div>
               <div className={s.drawing} data-shape="tote">
                 <span className={s.box} aria-hidden="true" />
-                <span className={s.dimW}>38 cm</span>
-                <span className={s.dimH}>34 cm</span>
-                <span className={s.dimD}>14 cm</span>
+                <span className={s.dimW}>38 cm wide</span>
+                <span className={s.dimH}>34 cm high</span>
+                <span className={s.dimD}>14 cm deep</span>
               </div>
               <div className={s.spec}>
                 <span className={s.rowNo}>No. 2</span>
@@ -254,9 +254,9 @@ export default function SatchelAndStrapPage() {
               </div>
               <div className={s.drawing} data-shape="wallet">
                 <span className={s.box} aria-hidden="true" />
-                <span className={s.dimW}>11 cm</span>
-                <span className={s.dimH}>9 cm</span>
-                <span className={s.dimD}>2 cm</span>
+                <span className={s.dimW}>11 cm wide</span>
+                <span className={s.dimH}>9 cm high</span>
+                <span className={s.dimD}>2 cm deep</span>
               </div>
               <div className={s.spec}>
                 <span className={s.rowNo}>No. 3</span>
