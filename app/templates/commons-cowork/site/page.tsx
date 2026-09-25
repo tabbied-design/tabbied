@@ -544,7 +544,7 @@ export default function CommonsCoworkPage() {
               </div>
               <div className={s.field}>
                 <label htmlFor="co-work">What you do</label>
-                <input id="co-work" name="work" type="text" placeholder="Illustrator, a team of three, a start-up" />
+                <input id="co-work" name="work" type="text" placeholder="Designer, a team of three" />
               </div>
               <div className={s.field}>
                 <label htmlFor="co-plan">Interested in</label>

@@ -334,7 +334,7 @@ export default function QuietHarborPage() {
         </section>
 
         {/* -------------------------------------------------------- SIGN-OFF */}
-        <div className={s.part}>
+        <div className={`${s.part} ${s.signoff}`}>
           <div className={s.side}>
             <div className={s.seal} aria-hidden="true">
               <TabbiedPattern

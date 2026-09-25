@@ -80,7 +80,7 @@
 
 .titleRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(8.5rem, 1fr) auto minmax(8.5rem, 1fr);
   align-items: center;
   gap: clamp(1rem, 3vw, 2.5rem);
   padding: clamp(1rem, 2.4vw, 1.8rem) 0 clamp(0.8rem, 2vw, 1.4rem);
@@ -118,7 +118,7 @@
 }
 
 .title {
-  font-size: clamp(2.5rem, 8.2vw, 7.2rem);
+  font-size: clamp(2.5rem, 7vw, 6.2rem);
   font-weight: 800;
   line-height: 0.95;
   letter-spacing: -0.025em;
@@ -179,6 +179,11 @@
   max-width: var(--max);
   margin: 0 auto;
   padding: clamp(3rem, 6vw, 5rem) var(--gut) 0;
+}
+
+/* The front page starts right under the index, as a paper's does. */
+main > .sec:first-child {
+  padding-top: clamp(1.6rem, 3vw, 2.4rem);
 }
 
 .secRule {
