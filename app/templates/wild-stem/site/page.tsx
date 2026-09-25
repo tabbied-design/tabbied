@@ -314,9 +314,9 @@ export default function WildStemPage() {
         {/* ------------------------------------------------------------ SHOP
             The category rail stays in view beside everything that can be
             ordered; on a phone it becomes a row of chips. */}
-        <div id="shop" className={s.shop}>
+        <section id="shop" className={s.shop} aria-labelledby="shop-h">
           <aside className={s.side} aria-label="Shop categories and delivery">
-            <h2 className={s.sideHead}>Shop</h2>
+            <h2 className={s.sideHead} id="shop-h">Shop</h2>
             <nav aria-label="Categories">
               <ul className={s.cats}>
                 {CATEGORIES.map(([label, href, count]) => (
@@ -491,7 +491,7 @@ export default function WildStemPage() {
               </div>
             </section>
           </div>
-        </div>
+        </section>
 
         {/* ---------------------------------------------------------- DELIVERY */}
         <section id="delivery" className={s.sec} aria-labelledby="delivery-h">

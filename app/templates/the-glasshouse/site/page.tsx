@@ -51,7 +51,7 @@ const GARDEN_FACTS = [
 const DINING_FACTS = [
   ['$78', 'Three courses, per guest, from'],
   ['2', 'Guests at your tasting, included'],
-  ['Every', 'Diet cooked for, not worked around'],
+  ['$18', 'Children under twelve, per head'],
 ];
 
 const STAY_FACTS = [
