@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
+import { templateShot } from 'lib/templateShots';
 import styles from './HomeTemplates.module.css';
 
 // Two rails of template sites drifting in opposite directions. No state and no
@@ -36,14 +37,15 @@ function Card({ site, clone = false }: { site: Site; clone?: boolean }) {
         <span />
       </span>
       <span className={styles.thumb}>
-        {/* A plain img: the export runs with images unoptimized, so
-            next/image would only add its client runtime. Eager, not lazy:
-            the track is moved into view by an animation, which lazy loading
-            does not see as the image approaching, so the second copy of each
-            row would scroll in blank. */}
+        {/* The site below its top bar, or its pattern until it is shot. A
+            plain img: the export runs with images unoptimized, so next/image
+            would only add its client runtime. Eager, not lazy: the track is
+            moved into view by an animation, which lazy loading does not see
+            as the image approaching, so the second copy of each row would
+            scroll in blank. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`/previews/${site.patternSlug}.webp`}
+          src={templateShot(site.slug) ?? `/previews/${site.patternSlug}.webp`}
           alt=""
           loading="eager"
           fetchPriority="low"

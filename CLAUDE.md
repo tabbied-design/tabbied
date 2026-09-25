@@ -448,18 +448,26 @@ agree) behind a "Menu" toggle. Four things it depends on:
   header hides must be in a visible menu that fits on the screen. A new
   template that hides its nav fails it until it carries the menu.
 
-## Template screenshots on the gallery cards - a pilot
+## Template screenshots on the cards
 
-A `/templates` card drew only its pattern, so a person choosing a website
-could not see one. `scripts/generate-template-shots.mjs <slug> ...` renders a
-site's first screen from `out/` (1280x960, the card's own 4:3, so nothing is
-cropped) into `public/template-shots/<slug>.webp`, and a card with a file
-there shows the site with its live pattern as a tile in the corner. The set
-is whatever files exist, read at build time, so a card with no shot is the
-pattern alone as before. Six are shot (solstice, werkraum, hopscotch-museum,
-cobalt-works, zenith-observatory, mistral-cycles). Committed like the
-previews, because the deploy build has no browser; reshoot after a hero
-changes.
+Every template has a screenshot in `public/template-shots/<slug>.webp`: the
+`/templates` card shows it with the site's live pattern as a tile in the
+corner, and the homepage's template rails show it alone. `lib/templateShots.ts`
+reads the folder at build time, so a template with no shot falls back to its
+pattern on both.
+
+`npm run build`, then `node scripts/generate-template-shots.mjs [slug ...]`
+(no slugs shoots all). A shot starts **below the site's top bar**: a
+thumbnail is small, and the brand and nav are the clutter it can least
+afford. `contentTop` walks down from y=0 through stacked full-width bars (a
+strip, the header, a rule under it; a masthead up to 420px if it holds nav
+links; a first bar inset up to 24px, like Orbital's pill) and stops at
+anything holding the `h1`. The page is scrolled past the bars, which are
+hidden so a sticky one does not follow, and the first 1280x960 of content is
+written at 960x720. A page that opens on its hero (Oxbow) is shot from 0.
+Committed like the previews, because the deploy build has no browser; reshoot
+a template after its hero or header changes, and check a new one's crop by
+eye.
 
 ## The mark, and the font that travels with it
 
