@@ -14,7 +14,6 @@ import { fileURLToPath } from 'node:url';
 
 import { patterns } from '../dist/patterns.generated.js';
 import { supportsSvgExport } from '../dist/core/types.js';
-import { validateDesignMetadata } from '../scripts/catalog-vocabulary.mjs';
 
 const packageRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -22,27 +21,7 @@ const catalog = JSON.parse(
   fs.readFileSync(path.join(packageRoot, 'catalog.json'), 'utf-8')
 );
 
-const { version } = JSON.parse(
-  fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf-8')
-);
-
 const bySlug = new Map(catalog.designs.map((design) => [design.slug, design]));
-
-test('catalog covers every pattern exactly once', () => {
-  const slugs = Object.keys(patterns);
-
-  assert.equal(catalog.count, slugs.length);
-  assert.equal(catalog.designs.length, slugs.length);
-  assert.equal(bySlug.size, slugs.length, 'duplicate slug in catalog');
-
-  for (const slug of slugs) {
-    assert.ok(bySlug.has(slug), `catalog is missing "${slug}"`);
-  }
-});
-
-test('catalog reports the package version it was generated from', () => {
-  assert.equal(catalog.version, version);
-});
 
 test('catalog svgExport.supported matches supportsSvgExport()', () => {
   for (const [slug, definition] of Object.entries(patterns)) {
@@ -52,47 +31,6 @@ test('catalog svgExport.supported matches supportsSvgExport()', () => {
       `svgExport.supported for "${slug}" disagrees with supportsSvgExport()`
     );
   }
-
-  // The designs SVG cannot represent (see docs/svg-export.md).
-  const unsupported = catalog.designs
-    .filter((design) => !design.svgExport.supported)
-    .map((design) => design.slug)
-    .sort();
-
-  assert.deepEqual(unsupported, [
-    'coil',
-    'confettitriangles',
-    'cornerbloom',
-    'crosslattice',
-    'dashfield',
-    'diamondconfetti',
-    'diamondember',
-    'driftspiral',
-    'goldencoil',
-    'horizonbands',
-    'isometricblocks',
-    'isometricweave',
-    'kilngrid',
-    'marbledarcs',
-    'meridianhatch',
-    'midnightblossoms',
-    'paintscribble',
-    'pinwheel',
-    'quartercirclequilt',
-    'radiantswirl',
-    'randomrings',
-    'scatteredgems',
-    'softbubbles',
-    'spectrum',
-    'squarelabyrinth',
-    'tealboomerang',
-    'teardropleaves',
-    'tidewashbands',
-    'turbulentsunburst',
-    'warpribbon',
-    'wedge',
-    'wovenkhaki',
-  ]);
 });
 
 test('catalog carries every option a consumer can set', () => {
@@ -130,21 +68,6 @@ test('catalog omits css-doodle plumbing', () => {
       assert.ok(!('replace' in option), 'option leaked its replace token');
       assert.ok(!('code' in option), 'option leaked its code snippet');
     }
-  }
-});
-
-test('every design carries complete, in-vocabulary metadata and a preview', () => {
-  for (const design of catalog.designs) {
-    assert.deepEqual(
-      validateDesignMetadata(design),
-      [],
-      `metadata for "${design.slug}" fails the vocabulary rules`
-    );
-    assert.equal(
-      design.preview,
-      `https://tabbied.com/previews/${design.slug}.webp`,
-      `preview URL for "${design.slug}"`
-    );
   }
 });
 

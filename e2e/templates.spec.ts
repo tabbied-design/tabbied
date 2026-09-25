@@ -309,6 +309,9 @@ test.describe('the /templates gallery', () => {
     await expect(asks.first()).toHaveAttribute('href', /^\/sign-in\/?\?next=%2Ftemplates%2F$/);
     const count = await asks.count();
     expect(count).toBeGreaterThan(50);
+    // The zips and the customizer are behind that sign-in, not on the card.
+    await expect(page.locator('a[href^="/downloads/"]')).toHaveCount(0);
+    await expect(page.locator('a[href="/studio/customize/?slug=verdant"]')).toHaveCount(0);
 
     // Every card's template has both packages: a card for a site the
     // packager skipped would be a dead download once the template is chosen.

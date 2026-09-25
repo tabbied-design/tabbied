@@ -69,6 +69,21 @@ test.describe('studio preview', () => {
   }) => {
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
+    // Nothing from esm.sh: the patterns mount from the same-origin runtime.
+    // And nothing relative to the route: Chromium's preload scanner ignores
+    // the injected <base> in a srcdoc document, so the builder writes absolute
+    // paths under the package and nothing the frame asks for lives under this
+    // route.
+    const external: string[] = [];
+    const underRoute: string[] = [];
+    page.on('request', (request) => {
+      const url = request.url();
+      if (url.includes('esm.sh')) external.push(url);
+      const { pathname } = new URL(url);
+      if (pathname.startsWith('/studio/preview/') && pathname !== '/studio/preview/') {
+        underRoute.push(pathname);
+      }
+    });
 
     await page.goto('/studio/preview/?g=e2epreview&i=0');
 
@@ -112,21 +127,6 @@ test.describe('studio preview', () => {
     expect(patternPalette).toContain('#F7F4EF');
     expect(patternPalette).not.toContain('#2d6a4f');
 
-    expect(errors).toEqual([]);
-  });
-
-  test('mounts its patterns from the same-origin runtime, not esm.sh', async ({
-    page,
-  }) => {
-    const external: string[] = [];
-    page.on('request', (request) => {
-      const url = request.url();
-      if (url.includes('esm.sh')) external.push(url);
-    });
-
-    await page.goto('/studio/preview/?g=e2epreview&i=0');
-
-    const frame = page.frameLocator('iframe');
     const doodle = frame.locator('css-doodle').first();
 
     // The element existing is the custom element having been *defined* in the
@@ -140,15 +140,7 @@ test.describe('studio preview', () => {
       )
       .toBeGreaterThan(0);
 
-    expect(external).toEqual([]);
-  });
-
-  test('keeps the packaged stylesheet, which is relative to the package', async ({
-    page,
-  }) => {
-    await page.goto('/studio/preview/?g=e2epreview&i=0');
-
-    const frame = page.frameLocator('iframe');
+    // The packaged stylesheet survives the trip, relative to the package.
     const nav = frame.locator('nav.nav').first();
 
     await expect(nav).toBeVisible({ timeout: 15_000 });
@@ -158,26 +150,10 @@ test.describe('studio preview', () => {
     await expect
       .poll(() => nav.evaluate((el) => getComputedStyle(el).display))
       .not.toBe('block');
-  });
 
-  test('asks for nothing relative to the route', async ({ page }) => {
-    // Chromium's preload scanner ignores the injected <base> in a srcdoc
-    // document, so the builder writes absolute paths under the package and
-    // nothing the frame asks for lives under this route.
-    const underRoute: string[] = [];
-    page.on('request', (request) => {
-      const { pathname } = new URL(request.url());
-      if (pathname.startsWith('/studio/preview/') && pathname !== '/studio/preview/') {
-        underRoute.push(pathname);
-      }
-    });
-
-    await page.goto('/studio/preview/?g=e2epreview&i=0');
-
-    const frame = page.frameLocator('iframe');
-    await expect(frame.locator('css-doodle').first()).toHaveCount(1, { timeout: 15_000 });
-
+    expect(external).toEqual([]);
     expect(underRoute).toEqual([]);
+    expect(errors).toEqual([]);
   });
 
   test('keeps an in-page link in the page', async ({ page }) => {

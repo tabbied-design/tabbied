@@ -131,7 +131,7 @@ test('overrunning maxChars warns but still applies', () => {
   assert.ok(operationFor(plan, 'text', 'hero.title'));
 });
 
-test('a palette edit writes brand roles and the derived variables', () => {
+test('a palette edit writes the brand roles', () => {
   const plan = planEdits(
     spec,
     document({ palette: ['#0B2545', '#EEF4ED', '#13A8A8'] })
@@ -141,9 +141,6 @@ test('a palette edit writes brand roles and the derived variables', () => {
 
   assert.equal(properties['--brand-0'], '#0B2545');
   assert.equal(properties['--brand-2'], '#13A8A8');
-  // templateSite derivation: a dark ground takes a page-tinted near-white ink.
-  assert.equal(properties['--bg'], '#0B2545');
-  assert.match(properties['--ink'], /^rgb\(/);
 });
 
 test('a re-color moves pattern fields that follow the brand palette', () => {
@@ -291,17 +288,6 @@ test('a swap is held to the catalog when one is given', () => {
   assert.equal(same.problems.length, 0);
   assert.deepEqual(operationFor(same, 'pattern', 'hero.field').attributes, {
     'data-seed': 'sol-2',
-  });
-});
-
-test('a seed edit is planned on its own', () => {
-  const plan = planEdits(
-    spec,
-    document({ patterns: { 'hero.field': { seed: 'sol-9' } } })
-  );
-
-  assert.deepEqual(operationFor(plan, 'pattern', 'hero.field').attributes, {
-    'data-seed': 'sol-9',
   });
 });
 

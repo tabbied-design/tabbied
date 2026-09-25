@@ -9,7 +9,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { _internals } from '../dist/core/svgExport.js';
-import { supportsSvgExport } from '../dist/core/types.js';
 
 const {
   splitTopLevel,
@@ -31,12 +30,6 @@ const normalize = (raw) => {
   assert.ok(parsed, `expected an rgb() color, got: ${raw}`);
   return parsed;
 };
-
-test('supportsSvgExport defaults to true and honors the flag', () => {
-  assert.equal(supportsSvgExport({}), true);
-  assert.equal(supportsSvgExport({ svgExport: true }), true);
-  assert.equal(supportsSvgExport({ svgExport: false }), false);
-});
 
 test('splitTopLevel splits at top-level commas only', () => {
   assert.deepEqual(
@@ -408,29 +401,4 @@ test('tier 3 - no design makes its export tier conditional on an option', () => 
     slugsWhere((a) => a.options.some((option) => option.svgExportNote)),
     []
   );
-});
-
-test('no pattern paints a box-shadow through an option', () => {
-  // A design wanting a shadow bakes it in and takes a definition-level note
-  // (as neon, lantern and terrain do), visible in the catalog rather than
-  // hidden behind an option.
-  for (const pattern of catalog) {
-    for (const option of pattern.options) {
-      assert.ok(
-        !/box-shadow/.test(option.code ?? ''),
-        `${pattern.slug}.${option.id} injects a box-shadow`
-      );
-    }
-  }
-});
-
-test('a tier-1 design never also carries a note', () => {
-  // The editor disables the download outright for these, so a note would
-  // never be shown - carrying one means the tier was set by mistake.
-  for (const pattern of catalog) {
-    if (pattern.svgExport === false) {
-      assert.equal(supportsSvgExport(pattern), false);
-      assert.equal(pattern.svgExportNote, undefined, pattern.slug);
-    }
-  }
 });

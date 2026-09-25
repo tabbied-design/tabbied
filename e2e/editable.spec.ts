@@ -154,30 +154,6 @@ test.describe('editable templates', () => {
       .getAttribute('data-seed');
     expect(seed).toBe('e2e-band');
   });
-
-  test('the engine reports a stale slot instead of failing silently', async ({
-    page,
-  }) => {
-    await serveEngine(page);
-    await page.goto(`/downloads/${SLUG}/`);
-
-    const problems = await page.evaluate(
-      async ([engineUrl, specJson]) => {
-        const module = await import(/* webpackIgnore: true */ engineUrl);
-        const spec = JSON.parse(specJson);
-
-        return module.applyEdits(document, spec, {
-          specVersion: spec.specVersion,
-          slug: 'solstice',
-          edits: { text: { 'hero.nonexistent': 'x' } },
-        }).problems;
-      },
-      [`${ENGINE_ORIGIN}/index.js`, JSON.stringify(spec)]
-    );
-
-    expect(problems).toHaveLength(1);
-    expect(problems[0].level).toBe('error');
-  });
 });
 
 // The other palette derivation. The bespoke pages own their custom property

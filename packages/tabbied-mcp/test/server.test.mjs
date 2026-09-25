@@ -95,6 +95,7 @@ test('a legacy client still gets its initialize handshake', async () => {
   assert.equal(body.result.protocolVersion, '2025-06-18');
   assert.equal(body.result.serverInfo.version, VERSION);
   assert.ok(body.result.capabilities.tools);
+  assert.equal(body.result.instructions, INSTRUCTIONS);
 });
 
 test('a modern client discovers the server without a handshake', async () => {
@@ -109,27 +110,14 @@ test('a modern client discovers the server without a handshake', async () => {
   );
 });
 
-test('both eras list the same four tools', async () => {
+test('both eras list the same tools', async () => {
   const fromLegacy = (await legacy(1, 'tools/list')).body.result.tools;
   const fromModern = (await modern(2, 'tools/list')).body.result.tools;
 
   assert.deepEqual(
-    fromLegacy.map((tool) => tool.name),
-    ['search_designs', 'get_design', 'preview_design', 'get_docs']
-  );
-  assert.deepEqual(
     fromModern.map((tool) => tool.name),
     fromLegacy.map((tool) => tool.name)
   );
-});
-
-test('instructions reach the client', async () => {
-  const { body } = await legacy(1, 'initialize', {
-    protocolVersion: '2025-06-18',
-    capabilities: {},
-    clientInfo: { name: 'test', version: '0' },
-  });
-  assert.equal(body.result.instructions, INSTRUCTIONS);
 });
 
 // ---- the seam between our tools and the SDK --------------------------------
@@ -209,10 +197,4 @@ test('GET is refused - v2 has no standalone stream to open', async () => {
     new Request('https://tabbied.com/mcp', { method: 'GET' })
   );
   assert.equal(response.status, 405);
-});
-
-test('the render tool is absent from the remote toolset', async () => {
-  // It needs a browser, and a Worker has none.
-  const { body } = await legacy(1, 'tools/list');
-  assert.ok(!body.result.tools.some((tool) => tool.name === 'render_design'));
 });

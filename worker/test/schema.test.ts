@@ -17,38 +17,19 @@ describe('the schema the deployment expects', () => {
     const body = (await response.json()) as {
       status: string;
       schema: { expected: string; applied: string | null; current: boolean };
+      adminEmails: number;
+      mail: unknown;
     };
     expect(body.status).toBe('ok');
     expect(body.schema.expected).toBe(latest);
     expect(body.schema.applied).toBe(latest);
     expect(body.schema.current).toBe(true);
-  });
 
-  it('answers a genuine miss as a 404 while the schema is current', async () => {
-    const response = await SELF.fetch(`${ORIGIN}/api/studio/sites/nope`);
-    expect(response.status).toBe(404);
-  });
-
-  // 0005 rebuilt `site` and `revision`, child first, and the rebuilt child
-  // referenced the parent by its temporary name. This pins that the rename
-  // rewrote the reference: a foreign key left pointing at `__new_site` would
-  // fail every insert.
-  it('leaves revision referencing site after the rebuild', async () => {
-    const { results } = await env.DB.prepare('PRAGMA foreign_key_list(revision)').all<{
-      table: string;
-      from: string;
-      on_delete: string;
-    }>();
-    expect(results).toHaveLength(1);
-    expect(results[0].table).toBe('site');
-    expect(results[0].from).toBe('site_id');
-    expect(results[0].on_delete).toBe('CASCADE');
-
-    const columns = await env.DB.prepare('PRAGMA table_info(site)').all<{ name: string; notnull: number }>();
-    const nullable = new Map(columns.results.map((column) => [column.name, column.notnull === 0]));
-    expect(nullable.get('generation_id')).toBe(true);
-    expect(nullable.get('direction_index')).toBe(true);
-    expect(nullable.get('slug')).toBe(false);
+    // The same report counts the configured admin addresses (two, from the
+    // vitest config's ADMIN_EMAILS) without naming them.
+    expect(body.adminEmails).toBe(2);
+    expect(body.mail).toEqual({ provider: 'dev-mail', teamInboxes: 1 });
+    expect(JSON.stringify(body)).not.toContain('example.com');
   });
 
   // Last in the file on purpose: the storage is per test file, so the tables

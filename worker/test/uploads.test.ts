@@ -22,13 +22,6 @@ describe('uploads', () => {
     cookie = await signIn('uploader@example.com');
   });
 
-  it('needs a session', async () => {
-    const form = new FormData();
-    form.append('file', new Blob([PNG], { type: 'image/png' }), 'x.png');
-    expect((await SELF.fetch(`${ORIGIN}/api/uploads`, { method: 'POST', body: form, headers: { origin: ORIGIN } })).status).toBe(401);
-    expect((await SELF.fetch(`${ORIGIN}/api/uploads`)).status).toBe(401);
-  });
-
   it('judges the bytes, not the label', async () => {
     // Text with an image content-type is not an image.
     const fake = await post(cookie, new Blob(['hello'], { type: 'image/png' }));

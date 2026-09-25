@@ -111,6 +111,15 @@ test.describe('tabbied package (component test page)', () => {
       })
       .toBeGreaterThan(1);
 
+    // The cell transitions animate normally by default: the first paint is
+    // muted for two frames (nothing to morph from), then the override lifts
+    // and the authored ease takes over.
+    await expect
+      .poll(() => maxCellTransitionMs(page, '#fit-grid [data-pattern="radius"]'), {
+        timeout: 10000,
+      })
+      .toBeGreaterThan(0);
+
     // Shrinking the container re-derives a coarser grid (debounced ~180ms).
     await page.setViewportSize({ width: 480, height: 800 });
     await expect
@@ -310,23 +319,7 @@ test.describe('tabbied package (component test page)', () => {
   });
 
   // The authored cell transitions fire on any re-render, including a
-  // resize's re-derived grid.
-  test('cell transitions animate normally by default', async ({ page }) => {
-    await page.setViewportSize({ width: 1200, height: 800 });
-    await page.goto('/package-test');
-
-    const selector = '#fit-grid [data-pattern="radius"]';
-    await expect(page.locator(`${selector} css-doodle`)).toBeAttached({
-      timeout: 15000,
-    });
-
-    // The first paint is muted for two frames (nothing to morph from), then
-    // the override lifts and the authored ease takes over.
-    await expect
-      .poll(() => maxCellTransitionMs(page, selector), { timeout: 10000 })
-      .toBeGreaterThan(0);
-  });
-
+  // resize's re-derived grid, so reduced motion has to hold across one.
   test('prefers-reduced-motion mutes the cell transitions, including across a resize', async ({
     page,
   }) => {

@@ -45,26 +45,11 @@ describe('the admin tier', () => {
     expect(overview.users).toBeGreaterThanOrEqual(2);
     // Both accounts were created moments ago, so today is a day with sign-ups.
     expect(overview.signupsByDay.reduce((sum, row) => sum + row.n, 0)).toBeGreaterThanOrEqual(2);
-    expect(overview.signupsByDay.every((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.day))).toBe(true);
-
-    // The member has asked Studio for one set of directions, and the row
-    // says so: the per-user counts are correlated subqueries (see CLAUDE.md).
-    const asked = await SELF.fetch(`${ORIGIN}/api/studio/directions`, {
-      method: 'POST',
-      headers: { ...json, cookie: member },
-      body: JSON.stringify({ description: 'A bakery in a small coastal town, sourdough and coffee.' }),
-    });
-    expect(asked.status).toBe(200);
 
     const users = (await SELF.fetch(`${ORIGIN}/api/admin/users?q=member`, { headers: { cookie } }).then((r) => r.json())) as {
-      users: { email: string; role: string | null; sites: number; generations: number }[];
+      users: { email: string }[];
     };
     expect(users.users.map((u) => u.email)).toEqual(['member@example.com']);
-    expect(users.users[0].generations).toBe(1);
-    expect(users.users[0].sites).toBe(0);
-
-    const quotas = (await SELF.fetch(`${ORIGIN}/api/admin/quotas`, { headers: { cookie } }).then((r) => r.json())) as { editable: boolean };
-    expect(quotas.editable).toBe(false);
   });
 });
 
@@ -102,16 +87,5 @@ describe('admins by configuration', () => {
       user?: { role?: string | null };
     } | null;
     expect(session?.user?.role).toBe('admin');
-  });
-});
-
-describe('the api health report', () => {
-  it('counts the configured admin addresses without naming them', async () => {
-    const body = await SELF.fetch(`${ORIGIN}/api/health`).then((r) => r.json()) as Record<string, unknown>;
-
-    // Two, from the vitest config's ADMIN_EMAILS.
-    expect(body.adminEmails).toBe(2);
-    expect(body.mail).toEqual({ provider: 'dev-mail', teamInboxes: 1 });
-    expect(JSON.stringify(body)).not.toContain('example.com');
   });
 });

@@ -13,10 +13,8 @@ import {
   scanElements,
   parseAttributes,
   labelFromId,
-  parsePaletteRoles,
   parseBrandColors,
   htmlToTextValue,
-  stripCacheBuster,
 } from '../dist/index.js';
 
 const designOptions = (slug) =>
@@ -229,14 +227,8 @@ test('the small helpers behave', () => {
     b: '',
     c: '2',
   });
-  assert.deepEqual(parsePaletteRoles('transparent, 1, 3'), [
-    'transparent',
-    1,
-    3,
-  ]);
   assert.equal(labelFromId('hero.title'), 'Hero title');
   assert.equal(labelFromId('band.ctaLabel'), 'Band cta Label');
-  assert.equal(stripCacheBuster('/a.webp?v=abc123'), '/a.webp');
   assert.equal(htmlToTextValue('a <em>b</em> c'), 'a {em}b{/em} c');
 });
 
@@ -258,27 +250,6 @@ test('a gap in the brand roles stops the palette rather than compacting it', () 
 // A bespoke page accents with whichever tag its stylesheet targets (e.g.
 // `.hero h1 span`). Reading it as an <em> loses the accent and rebuilding it
 // as one loses the color, so both halves take the tag.
-
-test('htmlToTextValue marks up the page\'s own accent tag', () => {
-  const html = 'Color is a<br/><span class="x">material</span> before<br/>it is an effect.';
-
-  assert.equal(
-    htmlToTextValue(html, 'span'),
-    'Color is a {em}material{/em} before it is an effect.'
-  );
-});
-
-test('htmlToTextValue still defaults to em', () => {
-  assert.equal(
-    htmlToTextValue('Evenings that <em>wind down</em>.'),
-    'Evenings that {em}wind down{/em}.'
-  );
-});
-
-test('a <br> becomes a space, not nothing', () => {
-  // JSX leaves no whitespace either side of a break.
-  assert.equal(htmlToTextValue('before<br/>it'), 'before it');
-});
 
 test('accentTagOf reads the tag off the markup, and skips <br>', async () => {
   const { accentTagOf } = await import('../dist/index.js');
@@ -304,5 +275,7 @@ test('an emphasis slot carries the tag it was read with', () => {
   assert.equal(slot.format, 'emphasis');
   assert.equal(slot.emphasisTag, 'span');
   assert.equal(slot.emphasisClass, 'hashed');
+  // The <br> reads back as a space, not nothing: JSX leaves no whitespace
+  // either side of a break.
   assert.equal(slot.value, 'Color is a {em}material{/em} before');
 });

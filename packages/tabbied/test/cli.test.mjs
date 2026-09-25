@@ -27,6 +27,7 @@ test('help prints usage and exits 0', () => {
   const out = run('--help');
   assert.match(out, /tabbied render <slug>/);
   assert.match(out, /tabbied list/);
+  assert.match(out, /--format <svg\|png>/);
 });
 
 test('list with no filters prints every design', () => {
@@ -77,8 +78,4 @@ test('render rejects a --format it cannot write, and an --out it cannot read', (
 
   fails(['render', 'radius', '--out', 'hero.gif', '--format', 'gif'], /--format must be svg \| png/);
   fails(['render', 'radius', '--out', 'hero'], /--out needs a \.svg or \.png extension/);
-});
-
-test('help lists --format', () => {
-  assert.match(run('--help'), /--format <svg\|png>/);
 });

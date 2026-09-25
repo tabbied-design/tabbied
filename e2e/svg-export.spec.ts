@@ -31,32 +31,23 @@ const allPatterns = fs
 const supportedSlugs = allPatterns
   .filter((pattern) => pattern.svgExport !== false)
   .map((pattern) => pattern.slug);
-const unsupportedSlugs = allPatterns
-  .filter((pattern) => pattern.svgExport === false)
-  .map((pattern) => pattern.slug);
 
 // One pattern per feature family: solid cells + pseudo-elements, radii,
-// clip-paths, masks, every gradient kind, hard-stop conic sectors, nested
-// @doodle masks, @svg payloads, borders, filters, blend modes, z-index. Later
-// additions cover shapes nothing earlier did: a tiled dot pattern, a smooth
-// gradient mask, stripe fields under mask-composite: intersect and a
-// many-vertex clip path (batch 11); a posterized fade (`stepramp`), a corner
-// radial ramp mask (`radiance`) and a dot field under a radial ramp
-// (`dotwash`); a linear+radial mask (`bight`), a pure clip-path composition
-// (`bench`) and a stepped-conic mask (`mirrorblack`); a repeating-radial ramp
-// read off a rule-local custom property (`contourlines`), scaled ring borders
-// (`concentricrings`) and a skewed two-tone mosaic (`patternsampler`).
-// Designs with `svgExport: false` are covered by the disabled-menu cases.
+// clip-paths, masks, every gradient kind, hard-stop conic sectors, a nested
+// @doodle mask, @svg payloads, borders, filters, blend modes, z-index, stripe
+// fields under mask-composite: intersect. Later additions cover shapes
+// nothing earlier did: a posterized fade (`stepramp`), a corner radial ramp
+// mask (`radiance`), a stepped-conic mask (`mirrorblack`), a repeating-radial
+// ramp read off a rule-local custom property (`contourlines`), scaled ring
+// borders (`concentricrings`) and a skewed two-tone mosaic
+// (`patternsampler`). Every listed design with its own PER_PATTERN_MAX
+// headroom stays, so each looser threshold is exercised; SVG_FULL_SWEEP runs
+// the rest. Designs with `svgExport: false` are covered by the disabled-menu
+// case.
 const REPRESENTATIVE = [
   'damier',
-  'radius',
   'bauhaus',
-  'chip',
-  'battlement',
-  'annulus',
   'mixtape',
-  'disque',
-  'fluting',
   'gasket',
   'bokeh',
   'neon',
@@ -64,24 +55,14 @@ const REPRESENTATIVE = [
   'terrain',
   'misprint',
   'glyph',
-  'spray',
-  'sunray',
   'fractal',
-  'matryoshka',
   'subdivide',
   'charcoal',
   'circuit',
   'ring',
-  'bloks',
-  'dotfield',
-  'shading',
   'bothways',
-  'dieblock',
   'stepramp',
   'radiance',
-  'dotwash',
-  'bight',
-  'bench',
   'mirrorblack',
   'contourlines',
   'concentricrings',
@@ -171,7 +152,7 @@ test.describe('native SVG export', () => {
           const el = document.querySelector(
             `div[data-pattern="${slug}"] css-doodle`
           ) as HTMLElement;
-          const res = (window as never as {
+          const svgx = (window as never as {
             __svgx: {
               doodleToSvg: (
                 el: HTMLElement,
@@ -183,7 +164,12 @@ test.describe('native SVG export', () => {
                 warnings: string[];
               };
             };
-          }).__svgx.doodleToSvg(el, { clip: { width: gridRect.w, height: gridRect.h } });
+          }).__svgx;
+          const clip = { width: gridRect.w, height: gridRect.h };
+          const res = svgx.doodleToSvg(el, { clip });
+          // Determinism, checked on one design: the same DOM exported again
+          // must be byte-identical (deterministic def ids).
+          const repeatSvg = slug === 'damier' ? svgx.doodleToSvg(el, { clip }).svg : null;
 
           const scale = 2;
           const W = Math.round(res.width * scale);
@@ -273,6 +259,7 @@ test.describe('native SVG export', () => {
           return {
             badFraction: bad / (W * H),
             svg: res.svg,
+            repeatSvg,
             warnings: res.warnings,
           };
         },
@@ -283,6 +270,10 @@ test.describe('native SVG export', () => {
         result.badFraction,
         `pixel diff vs live render (allowed ${PER_PATTERN_MAX[slug] ?? MAX_BAD_FRACTION})`
       ).toBeLessThanOrEqual(PER_PATTERN_MAX[slug] ?? MAX_BAD_FRACTION);
+
+      if (slug === 'damier') {
+        expect(result.repeatSvg, 'same DOM exports byte-identical SVG').toBe(result.svg);
+      }
 
       // Validity: parseable XML, native content only, scalable viewBox.
       expect(result.svg).toContain('xmlns="http://www.w3.org/2000/svg"');
@@ -298,19 +289,6 @@ test.describe('native SVG export', () => {
       expect(parseError).toBeNull();
     });
   }
-
-  test('same DOM exports byte-identical SVG (determinism)', async ({ page }) => {
-    await openPattern(page, 'damier');
-    await page.addScriptTag({ content: injectedConverter });
-    const [first, second] = await page.evaluate(() => {
-      const el = document.querySelector('div[data-pattern] css-doodle') as HTMLElement;
-      const svgx = (window as never as {
-        __svgx: { doodleToSvg: (el: HTMLElement) => { svg: string } };
-      }).__svgx;
-      return [svgx.doodleToSvg(el).svg, svgx.doodleToSvg(el).svg];
-    });
-    expect(first).toBe(second);
-  });
 
   test('editor downloads a native .svg file', async ({ page }) => {
     // radius has no limitations: no warning icon, no confirmation dialog,
@@ -367,18 +345,18 @@ test.describe('native SVG export', () => {
   });
 
   // No option-level svgExportNote case: no pattern uses that mechanism, so it
-  // has no fixture.
-  for (const slug of unsupportedSlugs) {
-    test(`menu item is disabled for ${slug}`, async ({ page }) => {
-      await openPattern(page, slug);
-      await page.getByRole('button', { name: 'Export' }).click();
-      const item = page.getByRole('menuitem', { name: 'Download SVG' });
-      await expect(item).toBeVisible();
-      await expect(item).toHaveAttribute('data-disabled', '');
-      // The PNG item stays enabled.
-      await expect(
-        page.getByRole('menuitem', { name: 'Download PNG' })
-      ).not.toHaveAttribute('data-disabled', '');
-    });
-  }
+  // has no fixture. One `svgExport: false` design is enough to prove the UI
+  // gate; the unit tests in packages/tabbied/test pin which designs are in
+  // that tier.
+  test('menu item is disabled for coil', async ({ page }) => {
+    await openPattern(page, 'coil');
+    await page.getByRole('button', { name: 'Export' }).click();
+    const item = page.getByRole('menuitem', { name: 'Download SVG' });
+    await expect(item).toBeVisible();
+    await expect(item).toHaveAttribute('data-disabled', '');
+    // The PNG item stays enabled.
+    await expect(
+      page.getByRole('menuitem', { name: 'Download PNG' })
+    ).not.toHaveAttribute('data-disabled', '');
+  });
 });

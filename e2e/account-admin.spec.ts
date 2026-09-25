@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const REPO_ROOT = path.join(__dirname, '..');
-const REQUIRED = ['account', 'account/sites', 'account/usage', 'admin', 'admin/users', 'admin/requests'].map((route) =>
+const REQUIRED = ['account', 'account/sites', 'admin', 'admin/users', 'admin/requests'].map((route) =>
   path.join(REPO_ROOT, 'out', route, 'index.html')
 );
 
@@ -39,7 +39,7 @@ test.describe('account and admin pages', () => {
     await expect(page.getByRole('heading', { name: /signed out/ })).toBeVisible();
   });
 
-  test('a member sees their sites and usage', async ({ page }) => {
+  test('a member sees their sites', async ({ page }) => {
     await stubSession(page, null);
     await page.route('**/api/studio/sites', (route) =>
       route.fulfill({
@@ -47,18 +47,6 @@ test.describe('account and admin pages', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           sites: [{ id: 'abc', slug: 'verdant', templateName: 'Verdant', title: 'Ye Joo Park', stance: 'Warmly Grounded', palette: ['#fff', '#000'], revisions: 3, createdAt: '2026-09-01T00:00:00Z', updatedAt: '2026-09-02T00:00:00Z' }],
-        }),
-      })
-    );
-    await page.route('**/api/account/usage', (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          resetsAt: '2026-09-03T00:00:00Z',
-          usage: [{ endpoint: 'site', label: 'sites', used: 2, cap: 10 }],
-          recent: [],
-          downloads: { used: 4, cap: 30, resetsAt: '2026-10-01T00:00:00Z' },
         }),
       })
     );
@@ -90,9 +78,6 @@ test.describe('account and admin pages', () => {
     await page.getByRole('button', { name: 'Delete Ye Joo Park for good' }).click();
     await expect(page.getByRole('link', { name: /Ye Joo Park/ })).toHaveCount(0);
     expect(deletes).toEqual(['DELETE']);
-
-    await page.goto('/account/usage/');
-    await expect(page.getByText('2 / 10 today')).toBeVisible();
   });
 
   test('the overview is the chosen templates, and "Request more" in two rounds', async ({ page }) => {

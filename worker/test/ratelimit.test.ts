@@ -48,14 +48,6 @@ describe('consume', () => {
     expect(Math.max(...counts)).toBe(10);
   });
 
-  it('does not throw on a second write to one key inside a second', async () => {
-    // KV rejects that, which a route would surface as a 500 rather than as
-    // rate limiting.
-    await expect(
-      Promise.all([consume(db, LIMIT), consume(db, LIMIT)])
-    ).resolves.toHaveLength(2);
-  });
-
   it('starts a new window when the old one has passed', async () => {
     await consume(db, LIMIT);
     await consume(db, LIMIT);

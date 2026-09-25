@@ -34,6 +34,7 @@ test.describe('template headers on a phone', () => {
   test('every link a header hides is in a menu that fits the screen', async ({ page }) => {
     test.setTimeout(240_000);
     const failures: string[] = [];
+    let closeChecked = false;
 
     for (const slug of SLUGS) {
       await page.goto(`/templates/${slug}/site/`, { waitUntil: 'domcontentloaded' });
@@ -76,8 +77,13 @@ test.describe('template headers on a phone', () => {
       if (!fits) failures.push(`${slug}: the open menu runs off the screen`);
 
       // A followed link closes it (the component's own handler, on the site).
-      await panel.locator('a').first().click();
-      await expect(page.locator('details.template-menu').first()).not.toHaveAttribute('open', '');
+      // The handler is the same component on every template, so it is
+      // checked once, on the first template that has a menu.
+      if (!closeChecked) {
+        closeChecked = true;
+        await panel.locator('a').first().click();
+        await expect(page.locator('details.template-menu').first()).not.toHaveAttribute('open', '');
+      }
     }
 
     expect(failures).toEqual([]);
