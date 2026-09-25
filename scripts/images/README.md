@@ -61,7 +61,7 @@ a bare URL is kept.
 ## Run it
 
 ```bash
-npm run build                        # refreshes out/template/<slug>/index.html
+npm run build                        # refreshes out/templates/<slug>/site/index.html
 
 npm run images:extract               # 1. prompts -> .batch/prompts.json
 npm run images:build                 # 2. manifest -> .batch/tasks.json

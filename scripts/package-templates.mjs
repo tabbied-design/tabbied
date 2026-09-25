@@ -655,7 +655,7 @@ async function packageReactSite(slug, outDir, version, name, images) {
   );
 
   const locals = collectLocalImports([
-    { source: pageSource, from: path.join('app/template', slug, 'page.tsx') },
+    { source: pageSource, from: path.join('app/templates', slug, 'site', 'page.tsx') },
   ]);
   const siteDir = path.join(outDir, `${slug}-react`);
   const srcDir = path.join(siteDir, 'src');

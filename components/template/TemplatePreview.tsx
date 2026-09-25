@@ -14,7 +14,6 @@
 //
 // The bar's left edge is the Tabbied mark and "Websites", the way back to
 // the gallery, as the artboard draws it.
-import { useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
@@ -49,7 +48,7 @@ export default function TemplatePreview({
   // The width SiteWorkspace.module.css hides the customizer's rail below.
   const narrow = useMediaQuery('(max-width: 768px)');
 
-  const { guard, dialog, templates } = useTemplateGate(useMemo(() => names, [names]));
+  const { guard, dialog, templates } = useTemplateGate(names);
   const chosen = chosenOf(templates, slug);
   const customizeHref = customizerFor(slug, chosen);
   const next = encodeURIComponent(`/studio/customize/?slug=${slug}`);

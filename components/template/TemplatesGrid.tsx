@@ -2,17 +2,15 @@
 
 import { useMemo, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
-import { Menu } from '@base-ui-components/react/menu';
 import type { PatternDefinition } from 'tabbied';
 import {
   TEMPLATE_CATEGORIES,
   type TemplateCategory,
 } from 'lib/templateCategories';
-import Toaster, { toaster } from 'components/Toaster';
-import { ApiError } from 'lib/apiFetch';
+import Toaster from 'components/Toaster';
 import { chosenOf, customizeHref, type MyTemplatesState } from 'lib/myTemplates';
-import { downloadCustomisedSite } from 'lib/studioDownload';
 import { useTemplateGate, type TemplateAction } from './ChooseTemplate';
+import DownloadMenu, { type DownloadMenuClasses } from './DownloadMenu';
 import LazyPattern from './LazyPattern';
 import s from './TemplatesGrid.module.css';
 
@@ -44,14 +42,16 @@ const MAX_SWATCHES = 4;
 
 type Guard = (slug: string, name: string, action: TemplateAction, run: () => void) => void;
 
-async function saveCustomised(siteId: string) {
-  try {
-    toaster.add({ title: 'Preparing your customized download...' });
-    await downloadCustomisedSite(siteId);
-  } catch (cause) {
-    toaster.add({ title: cause instanceof ApiError || cause instanceof Error ? cause.message : 'Could not build the download.' });
-  }
-}
+/** The Download menu in this module's shape; the menu itself is DownloadMenu's. */
+const MENU: DownloadMenuClasses = {
+  trigger: s.pill,
+  caret: s.caret,
+  positioner: s.positioner,
+  menu: s.menu,
+  menuLabel: s.menuLabel,
+  menuItem: s.menuItem,
+  menuRule: s.menuRule,
+};
 
 /**
  * The card's footer, in the four states the account puts it in. The zips
@@ -96,39 +96,7 @@ function Footer({ c, templates, guard }: { c: TemplateCard; templates: MyTemplat
         <Link href={customizeHref(c.slug, chosen)} prefetch={false} className={s.textLink}>
           Customize &#x2192;
         </Link>
-        <Menu.Root>
-          <Menu.Trigger className={s.pill}>
-            Download <span className={s.caret} aria-hidden="true">&#x25BE;</span>
-          </Menu.Trigger>
-          <Menu.Portal>
-            <Menu.Positioner side="top" align="end" sideOffset={8} className={s.positioner}>
-              <Menu.Popup className={s.menu}>
-                {chosen.site ? (
-                  <>
-                    <Menu.Group>
-                      <Menu.GroupLabel className={s.menuLabel}>Your customized version</Menu.GroupLabel>
-                      <Menu.Item className={s.menuItem} onClick={() => saveCustomised(chosen.site!.id)}>
-                        HTML &amp; CSS
-                      </Menu.Item>
-                    </Menu.Group>
-                    <Menu.Separator className={s.menuRule} />
-                  </>
-                ) : null}
-                <Menu.Group>
-                  <Menu.GroupLabel className={s.menuLabel}>
-                    {chosen.site ? `Original ${c.name}` : `${c.name} (original)`}
-                  </Menu.GroupLabel>
-                  <Menu.Item className={s.menuItem} render={<a href={`/downloads/${c.slug}-html.zip`} download />}>
-                    HTML &amp; CSS
-                  </Menu.Item>
-                  <Menu.Item className={s.menuItem} render={<a href={`/downloads/${c.slug}-react.zip`} download />}>
-                    React project
-                  </Menu.Item>
-                </Menu.Group>
-              </Menu.Popup>
-            </Menu.Positioner>
-          </Menu.Portal>
-        </Menu.Root>
+        <DownloadMenu name={c.name} chosen={chosen} side="top" classes={MENU} />
       </div>
     );
   }

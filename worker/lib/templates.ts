@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, sql, type SQL } from 'drizzle-orm';
 import { templateChoice, templateRequest } from '../db/schema';
 import type { Db } from './quota';
 
@@ -27,11 +27,22 @@ export const FIRST_REQUEST_GRANT = 5;
 /** The statuses whose `granted` counts toward the allowance. */
 const COUNTED = sql`('activated', 'granted')`;
 
-/** The SQL for a person's allowance: the free five plus every grant that took. */
-const allowanceSql = (userId: string) => sql`(
+/**
+ * The SQL for a person's allowance: the free five plus every grant that
+ * took. `userId` is a value, or a column expression for a list that wants
+ * the subquery correlated to each of its rows (qualified by hand, as the
+ * drizzle note in CLAUDE.md says). The inner table is aliased so a query
+ * over template_request itself still correlates to its outer row.
+ *
+ * One implementation, deliberately: the admin directory carried a third
+ * copy that read one row where this sums them and counted 'granted' alone,
+ * so an account that had followed the emailed link read "10 / 5" there
+ * while its own page and the claim agreed on 10 of 10.
+ */
+export const allowanceSql = (userId: string | SQL) => sql`(
   ${FREE_TEMPLATES} + coalesce((
-    select sum(granted) from template_request
-    where user_id = ${userId} and status in ${COUNTED}
+    select sum(r.granted) from template_request r
+    where r.user_id = ${userId} and r.status in ${COUNTED}
   ), 0)
 )`;
 
