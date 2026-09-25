@@ -25,6 +25,7 @@
   line-height: 1.55;
   background: var(--paper);
   color: var(--ink);
+  position: relative;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
@@ -534,6 +535,7 @@
 .tablesMain {
   grid-area: main;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2.75rem;
 }
 
@@ -663,6 +665,7 @@
 }
 
 .avail td {
+  position: relative;
   height: 1.8rem;
   border-radius: 0.3rem;
   background: color-mix(in srgb, var(--paper) 10%, transparent);
@@ -940,12 +943,12 @@
 /* ----------------------------------------------------------------- rules */
 
 .rules {
+  max-width: var(--max);
+  margin: 0 auto;
   padding: 0 var(--gut) var(--air);
 }
 
 .rulesCard {
-  max-width: var(--max);
-  margin: 0 auto;
   padding: clamp(1.75rem, 5vw, 4rem);
   border: 2px solid var(--ink);
   border-radius: 1.6rem;
@@ -968,6 +971,7 @@
 
 .ruleList li {
   display: grid;
+  align-content: start;
   grid-template-columns: auto minmax(0, 1fr);
   column-gap: 1rem;
   row-gap: 0.4rem;
@@ -988,9 +992,9 @@
 }
 
 .ruleList h3 {
+  padding-top: 0.2rem;
   font-size: 1.2rem;
   font-weight: 700;
-  align-self: center;
 }
 
 .ruleList p {
