@@ -1256,6 +1256,10 @@
     transform: none;
   }
 
+  .ornament {
+    display: none;
+  }
+
   .spine[data-h='1'] {
     width: 74%;
     height: auto;
