@@ -8,7 +8,8 @@
 // and every picture's pixels must move. A pattern fill re-colors through its
 // pattern instead, so it must carry the role map that lets the engine reach
 // it. The HTML package must carry each mask inline, or a page opened from
-// disk, which is how its README says to open it, draws blank boxes.
+// disk, which is how its README says to open it, draws blank boxes. And the
+// pattern itself has to run through the page, not stop at the hero.
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -131,6 +132,45 @@ test.describe('pictures that follow the palette', () => {
 
         expect(moved, `${slug}: picture ${i + 1} (${kinds[i]}) ignored the re-color`).toBeGreaterThan(6);
       }
+    });
+  }
+
+  // The pattern is the family's signature, so it runs through the page rather
+  // than sitting in the hero alone: a pattern field in at least four parts
+  // (the nearest header, footer, section or aside), three of them past the
+  // hero. Measured at 1440px, where every part of these layouts is drawn.
+  for (const slug of SLUGS) {
+    test(`${slug}: patterns run through the page, not just the hero`, async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(`/templates/${slug}/site/`, { waitUntil: 'domcontentloaded' });
+      await page.waitForSelector('[data-pattern]');
+
+      const { parts, outsideHero } = await page.evaluate(() => {
+        const root = document.querySelector('[data-edit-root]') as HTMLElement;
+        const main = root.querySelector('main');
+        const blocks = [...(main ? main.children : root.children)];
+        const siteHeader = root.querySelector('header');
+        const partOf = (el: Element) =>
+          el.closest('header, footer, section, aside') ?? blocks.find((block) => block.contains(el)) ?? root;
+        const found: Element[] = [];
+
+        for (const field of root.querySelectorAll('[data-pattern]')) {
+          const box = field.getBoundingClientRect();
+          if (getComputedStyle(field).display === 'none' || box.width === 0 || box.height === 0) continue;
+          const part = partOf(field);
+          if (!found.includes(part)) found.push(part);
+        }
+
+        const hero = [...root.querySelectorAll('header, footer, section, aside')].find(
+          (el) => el !== siteHeader && !siteHeader?.contains(el)
+        );
+        const inHero = found.filter((part) => hero && (part === hero || part.contains(hero) || hero.contains(part)));
+
+        return { parts: found.length, outsideHero: found.length - inHero.length };
+      });
+
+      expect(parts, `${slug}: parts of the page carrying a pattern`).toBeGreaterThanOrEqual(4);
+      expect(outsideHero, `${slug}: of those, parts past the hero`).toBeGreaterThanOrEqual(3);
     });
   }
 

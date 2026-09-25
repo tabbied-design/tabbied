@@ -519,6 +519,11 @@ Five things worth not re-litigating:
 `e2e/recolor.spec.ts` is the gate: every page with artwork is re-colored
 through its root palette properties and each picture's pixels must move; a
 fill must carry its role map; the HTML package must carry its masks inline.
+It also holds the family to its pattern: a field in at least four parts of
+the page (the nearest header, footer, section or aside), three of them past
+the hero, measured at 1440px. The first cut had most of its patterns in the
+hero; a field added after a page was annotated gets its slot and role map
+from `annotate-templates.mjs --patterns`, which touches nothing else.
 
 ## Template screenshots on the cards
 
