@@ -16,7 +16,6 @@ export const metadata = {
    `transparent` in the background slot, so the ground of the page - and, in
    the plates, the plate itself - shows through the pattern rather than the
    pattern painting its own backdrop over it. */
-const INK = '#f0ead8';
 const ACCENT = '#c89b3c';
 const GRAY = '#7c736a';
 const PANEL = '#221d18';

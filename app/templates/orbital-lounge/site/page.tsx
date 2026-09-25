@@ -15,7 +15,6 @@ export const metadata = {
 const INK = '#1D1B2B';
 const ORANGE = '#FF6B2C';
 const TEAL = '#0FA3B1';
-const GRAY = '#8B8478';
 /* The tiles pin their doodle to a whole multiple of the cell (9 x 72px) and
    let the round plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */

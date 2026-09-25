@@ -17,16 +17,14 @@ export const metadata = {
 const PALE = '#E9E9E4';
 const GREEN = '#00E58A';
 const STEEL = '#5A6068';
-const PANEL = '#14161A';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = PALE;
 const TILE_B = STEEL;
-
 
 const ROOMS = [
   {

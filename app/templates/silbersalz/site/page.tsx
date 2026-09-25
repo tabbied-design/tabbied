@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  dustfall, grain, grainfield, halftone, misprint, peppering,
+  dustfall, grain, grainfield, halftone, peppering,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './silbersalz.module.css';
@@ -17,15 +17,14 @@ const INK = '#101010';
 const RED = '#C8102E';
 const GRAY = '#8A8880';
 const PALE = '#D9D6CC';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PALE;
-
 
 const DEVELOP = [
   { fmt: '135', proc: 'B&W, hand tank', dev: 'ID-11, 1+1', turn: '3 days', price: '€9' },

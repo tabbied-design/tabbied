@@ -18,15 +18,14 @@ const INK = '#0A0A0A';
 const RED = '#E10600';
 const GRAY = '#9EA2A6';
 const PALE = '#DBDBD9';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PALE;
-
 
 const SERVICES = [
   { q: 'Length', range: '0.5 mm to 1 000 mm', unc: '± (0.05 + L/2000) µm', kit: 'Gauge blocks, CMM, interferometer' },

@@ -13,19 +13,17 @@ export const metadata = {
 
 /* Bone paper, near-black ink, one saturated cobalt. Every pattern field takes
    `transparent` in its background slot so the paper carries through. */
-const INK = '#14161C';
 const BLUE = '#0033CC';
 const STEEL = '#7E8494';
 const PALE = '#DEDBD0';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = STEEL;
 const TILE_B = PALE;
-
 
 const PIGMENTS = [
   { ref: 'PB 28', name: 'Cobalt Blue', family: 'Blue', origin: 'Synthetic oxide', grind: '4 µm', price: '£142 / kg' },

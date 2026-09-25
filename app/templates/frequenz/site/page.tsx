@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  comet, dotwash, flux, ribline, rungs, spraydown, streaking,
+  comet, dotwash, flux, ribline, spraydown, streaking,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './frequenz.module.css';
@@ -18,15 +18,14 @@ const CREAM = '#F2EFE6';
 const AMBER = '#FFA200';
 const GRAY = '#6B6560';
 const PANEL = '#1D1A20';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PANEL;
-
 
 const NOW = { time: '14.00', show: 'Zwischenspiel', host: 'Ruth Padberg', kind: 'New music, no talking over the intro' };
 

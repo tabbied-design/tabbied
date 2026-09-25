@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  bias, corduroy, damier, dogtooth, stitch, taper, thickset,
+  bias, corduroy, damier, dogtooth, stitch, taper,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './passform.module.css';
@@ -18,15 +18,14 @@ const INK = '#191512';
 const RUST = '#C1440E';
 const GRAY = '#9A9086';
 const PALE = '#E5DFD4';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PALE;
-
 
 const STAGES = [
   { n: 'I', t: 'Measure', hrs: '2 h', d: 'Twenty-eight measurements, taken twice, and a long look at how you actually stand rather than how you stand when being measured.' },

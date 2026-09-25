@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  chase, gravure, keyway, mortise, ortho, quire, spandrel, subdivide, windowpane,
+  chase, keyway, mortise, ortho, quire, spandrel, subdivide, windowpane,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './werkraum.module.css';

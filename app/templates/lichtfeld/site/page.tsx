@@ -18,15 +18,14 @@ const WHITE = '#FAFAF5';
 const WARM = '#F5E663';
 const GRAY = '#6A6A64';
 const PANEL = '#151515';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PANEL;
-
 
 const WORK = [
   { code: 'L-118', name: 'Pinakothek, west stair', kind: 'Interior, public', year: '2026', lux: '80 lx' },

@@ -15,7 +15,6 @@ export const metadata = {
 /* Night ground, warm paper, one copper. Every decorative field takes
    `transparent` in the background slot, so the ground of the page - and, in
    the plates, the plate itself - is what shows through the drawing. */
-const INK = '#efe7de';
 const ACCENT = '#b4552d';
 const GRAY = '#7a736d';
 const PANEL = '#231a16';

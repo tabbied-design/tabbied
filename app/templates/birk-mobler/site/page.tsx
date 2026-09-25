@@ -11,7 +11,6 @@ export const metadata = {
 
 /* Site colors. Every field takes `transparent` in the background slot, so
    the dots sit in the paper rather than on a plate laid over it. */
-const INK = '#1F1F1D';
 const OAK = '#B8895A';
 const GRAY = '#9A9994';
 const PALE = '#E6E4DF';

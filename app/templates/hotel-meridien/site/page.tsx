@@ -12,7 +12,6 @@ export const metadata = {
 /* Cream, gold, a gray for the small print and the pale green of the panels.
    Every field takes `transparent` in the background slot so the beads and
    steps sit in the deep green of the page, the way gilding sits on lacquer. */
-const INK = '#F3EBD9';
 const GOLD = '#C9A24B';
 const GRAY = '#7E8A82';
 const PALE = '#1B2F2A';

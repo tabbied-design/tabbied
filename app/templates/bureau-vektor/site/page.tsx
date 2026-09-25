@@ -13,7 +13,6 @@ export const metadata = {
 
 /* White, ink, one ultramarine. Fields take `transparent` in the background
    slot so the paper of the page is the paper of the pattern. */
-const INK = '#0c0d10';
 const BLUE = '#1f3cff';
 const GRAY = '#8a8f99';
 const PALE = '#e8eaf0';

@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  chain, dotfield, matryoshka, quire, stitch, subdivide,
+  dotfield, matryoshka, quire, stitch, subdivide,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './fonds-aubert.module.css';
@@ -17,15 +17,14 @@ const INK = '#1A1C18';
 const OLIVE = '#4C6B2F';
 const GRAY = '#8C8F84';
 const PALE = '#DEDAD4';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PALE;
-
 
 const FONDS = [
   { ref: 'FA 001', name: 'Aubert et Fils, négoce', span: '1861 to 1974', extent: '312 m', state: 'Catalogd' },

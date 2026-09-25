@@ -13,7 +13,6 @@ export const metadata = {
    pattern field takes `transparent` in the background slot so the paper runs
    through it and the field reads as a pressed leaf on the page rather than a
    plate laid on top of it. */
-const INK = '#22302A';
 const SAGE = '#5F8063';
 const HONEY = '#C9A16F';
 const GRAY = '#8E9689';

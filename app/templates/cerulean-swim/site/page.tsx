@@ -12,9 +12,7 @@ export const metadata = {
 const FOAM = '#F2FBFC';
 const TEAL = '#0FA3B1';
 const AQUA = '#B5E2E8';
-const CORAL = '#FF8266';
 const SUN = '#FFD97D';
-const DEEP = '#134D57';
 
 const LOOKS = [
   {
