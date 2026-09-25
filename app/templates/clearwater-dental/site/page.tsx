@@ -549,7 +549,7 @@ export default function ClearwaterDentalPage() {
                   <label htmlFor="cw-reason">Reason for the visit</label>
                   <select id="cw-reason" name="reason" defaultValue="checkup">
                     <option value="checkup">Checkup and cleaning</option>
-                    <option value="child">A child&apos;s first visit</option>
+                    <option value="child">A child's first visit</option>
                     <option value="pain">Toothache or a broken tooth</option>
                     <option value="cosmetic">Whitening or aligners</option>
                     <option value="other">Something else</option>

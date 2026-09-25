@@ -11,7 +11,6 @@ export const metadata = {
 
 /* Venue colors. Every field has `transparent` in the background slot, so
    it draws on whichever ground its panel has. */
-const INK = '#1B2420';
 const EVERGREEN = '#2F5D4E';
 const CHAMPAGNE = '#B89B6A';
 const PALE = '#E8E2D6';

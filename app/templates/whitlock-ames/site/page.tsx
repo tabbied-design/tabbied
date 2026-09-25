@@ -253,7 +253,7 @@ export default function WhitlockAmesPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Whitlock &amp; Ames</a>
+        <a className={s.mark} href="#top">Whitlock & Ames</a>
         <nav className={s.nav} aria-label="Sections">
           {NAV.map(([label, href]) => (
             <a key={href} href={href}>{label}</a>
@@ -605,7 +605,7 @@ export default function WhitlockAmesPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Whitlock &amp; Ames</p>
+          <p className={s.footName}>Whitlock & Ames</p>
           <p className={s.footTag}>Employment and family law, Alderbay.</p>
         </div>
         <div className={s.footFine}>

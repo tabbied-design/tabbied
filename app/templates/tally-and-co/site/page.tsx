@@ -11,7 +11,6 @@ export const metadata = {
 
 /* Site colors. The hero plate draws its notches in the green on the pale
    ground; the highlighted plan's strip draws on the ink card. */
-const INK = '#151A16';
 const GREEN = '#1F7A4D';
 const GRAY = '#8E948F';
 const PALE = '#E4E9E4';
@@ -234,7 +233,7 @@ export default function TallyAndCoPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Tally &amp; Co.</a>
+        <a className={s.mark} href="#top">Tally & Co.</a>
         <nav className={s.nav} aria-label="Sections">
           {NAV.map(([label, href]) => (
             <a key={href} href={href}>{label}</a>
@@ -465,7 +464,7 @@ export default function TallyAndCoPage() {
               <p className={s.contactLede}>
                 Twenty minutes, on video or by phone. Tell us a little about
                 the business and we will send you two or three times this
-                week. Bring last month&apos;s bank statement if you can.
+                week. Bring last month's bank statement if you can.
               </p>
               <dl className={s.details}>
                 <div>
@@ -538,7 +537,7 @@ export default function TallyAndCoPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Tally &amp; Co.</p>
+          <p className={s.footName}>Tally & Co.</p>
           <p className={s.footTag}>Bookkeeping and tax accountants, Fairhaven.</p>
         </div>
         <div className={s.footFine}>
