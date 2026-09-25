@@ -23,6 +23,8 @@ const MID_FILL = [TEAL, FOAM, SUN, DEEP];
 const SHORT_FILL = [FOAM, TEAL, SUN, DEEP];
 const FIN_FILL = [TEAL, PALE, DEEP];
 const SWELL = ['transparent', TEAL, TEAL];
+const TIDE_LINES = ['transparent', TEAL, FOAM];
+const NIGHT_SWELL = ['transparent', TEAL, SUN];
 
 const NAV = [
   ['Quiver', '#quiver'],
@@ -349,12 +351,34 @@ export default function OffshoreSurfPage() {
                 Morning slots are am, the rest pm. Full lessons show on the
                 booking page; we keep two places back for walk-ins every Saturday.
               </p>
+              <div className={s.weekSea} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={wavelet}
+                  palette={SWELL}
+                  fit="grid"
+                  cellSize={24}
+                  seed="lesson-week"
+                  options={{ frequency: 0.7 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </div>
           </div>
         </section>
 
         {/* ----------------------------------------------------------- TIDES */}
         <section id="tides" className={s.tides} aria-labelledby="tides-h">
+          <div className={s.tideRings} aria-hidden="true">
+            <TabbiedPattern
+              pattern={tidering}
+              palette={TIDE_LINES}
+              fit="grid"
+              cellSize={96}
+              seed="tide-corner"
+              options={{ frequency: 0.6 }}
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.tidesInner}>
             <div className={s.secHead}>
               <p data-edit="tides.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Tides at the breakwater</p>
@@ -531,6 +555,17 @@ export default function OffshoreSurfPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footSea} aria-hidden="true">
+          <TabbiedPattern
+            pattern={wavelet}
+            palette={NIGHT_SWELL}
+            fit="grid"
+            cellSize={24}
+            seed="footer-swell"
+            options={{ frequency: 0.6 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Offshore Surf Co.</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Boards, lessons and rentals at the end of Breakwater Road.</p>

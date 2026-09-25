@@ -409,6 +409,17 @@ export default function PressedJuicePage() {
         {/* ----------------------------------------------------------- BOWLS */}
         <section id="bowls" className={s.bowls} aria-labelledby="bowls-h">
           <div className={s.bowlArt}>
+            <div className={s.bowlLeaves} aria-hidden="true">
+              <TabbiedPattern
+                pattern={lobe}
+                palette={LEAVES}
+                fit="grid"
+                cellSize={56}
+                seed="bowl-room"
+                options={{ frequency: 0.4 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="pressed-juice-pineapple"
               alt="A pineapple"
@@ -472,6 +483,17 @@ export default function PressedJuicePage() {
           </ul>
           <div className={s.faq}>
             <h3 data-edit="locations.faqHead" data-edit-max="40" className={s.faqHead}>Good to know</h3>
+            <div className={s.faqSeeds} aria-hidden="true">
+              <TabbiedPattern
+                pattern={pebble}
+                palette={SEEDS}
+                fit="grid"
+                cellSize={32}
+                seed="spoonful"
+                options={{ frequency: 0.7 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
                 <summary data-edit={`locations.question.${i}`} data-edit-max="80">{f.q}</summary>
@@ -483,6 +505,17 @@ export default function PressedJuicePage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footLeaves} aria-hidden="true">
+          <TabbiedPattern
+            pattern={lobe}
+            palette={LEAVES}
+            fit="grid"
+            cellSize={40}
+            seed="press-step"
+            options={{ frequency: 0.5 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <div className={s.footBrand}>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pressed</p>

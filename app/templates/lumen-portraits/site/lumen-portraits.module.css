@@ -533,6 +533,20 @@
   font-size: 1.5rem;
 }
 
+/* A proof strip of the hero's screen under the heading. */
+.extrasSide {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.proof {
+  position: relative;
+  width: min(100%, 13rem);
+  height: 5.5rem;
+  overflow: hidden;
+  border: 1px solid var(--pale);
+}
+
 .extrasList {
   margin: 0;
   display: grid;
@@ -579,7 +593,18 @@
 }
 
 .enlarge {
+  position: relative;
   margin: 0;
+}
+
+/* The print lies on a halftone screen that shows round its edges. */
+.enlargeScreen {
+  position: absolute;
+  top: -1.8rem;
+  left: -1.8rem;
+  right: -1.8rem;
+  bottom: 2.4rem;
+  opacity: 0.75;
 }
 
 .enlargePrint {
@@ -932,6 +957,24 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
   gap: 2rem;
   align-items: start;
+}
+
+/* A lens cap beside the name, the studio's rings in small. */
+.footBrand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.footLens {
+  position: relative;
+  flex: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 2px solid var(--paper);
+  background: color-mix(in srgb, var(--pale) 60%, var(--paper));
 }
 
 .footName {

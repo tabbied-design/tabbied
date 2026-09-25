@@ -561,11 +561,25 @@
 }
 
 .hireArt {
+  position: relative;
   display: grid;
   place-items: center;
 }
 
+/* The hero's stars again, gathered round the bottle. */
+.bottleStars {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(24rem, 100%);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  -webkit-mask-image: radial-gradient(closest-side, var(--night) 55%, transparent 100%);
+  mask-image: radial-gradient(closest-side, var(--night) 55%, transparent 100%);
+}
+
 .hireBottle {
+  position: relative;
   width: clamp(7rem, 12vw, 11rem);
 }
 
@@ -671,6 +685,14 @@
   max-width: 78rem;
   margin: 0 auto;
   padding: var(--air) var(--gut);
+}
+
+/* The list card's rule of diamonds, under the heading. */
+.rulesRule {
+  position: relative;
+  width: min(100%, 20rem);
+  height: 28px;
+  margin: -1rem auto 2.5rem;
 }
 
 .ruleList {
@@ -796,10 +818,25 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
+  position: relative;
+  isolation: isolate;
   padding: clamp(3.5rem, 7vw, 5rem) var(--gut) 2rem;
   text-align: center;
   background: var(--deep);
   border-top: 1px solid var(--hair);
+}
+
+/* A few stars over the name, fading out toward the edges. */
+.footStars {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: min(44rem, 100%);
+  height: calc(clamp(3.5rem, 7vw, 5rem) - 0.6rem);
+  transform: translateX(-50%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, var(--night) 35%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 50% 0%, var(--night) 35%, transparent 72%);
 }
 
 .footMark {

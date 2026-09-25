@@ -697,7 +697,7 @@
   grid-area: form;
   position: relative;
   isolation: isolate;
-  padding: 0.9rem;
+  padding: 1.1rem;
   overflow: hidden;
   border-radius: 1.8rem;
 }

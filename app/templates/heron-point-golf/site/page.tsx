@@ -386,7 +386,7 @@ export default function HeronPointGolfPage() {
               pattern={bobbinet}
               palette={BALL}
               fit="grid"
-              cellSize={24}
+              cellSize={44}
               seed="ball"
               style={{ position: 'absolute', inset: 0 }}
             />

@@ -322,7 +322,19 @@ export default function LumenPortraitsPage() {
             ))}
           </ol>
           <div className={s.extras}>
-            <h3 data-edit="sessions.extrasHead" data-edit-max="40" className={s.extrasHead}>Extras and prints</h3>
+            <div className={s.extrasSide}>
+              <h3 data-edit="sessions.extrasHead" data-edit-max="40" className={s.extrasHead}>Extras and prints</h3>
+              <div className={s.proof} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={halftone}
+                  palette={SCREEN}
+                  fit="grid"
+                  cellSize={24}
+                  seed="lumen-proof"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+            </div>
             <dl className={s.extrasList}>
               {EXTRAS.map(([k, v], i) => (
                 <div key={k}>
@@ -338,6 +350,16 @@ export default function LumenPortraitsPage() {
         <section id="day" className={s.day} aria-labelledby="day-h">
           <div className={s.dayInner}>
             <div className={s.enlarge}>
+              <div className={s.enlargeScreen} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={halftone}
+                  palette={WEDGE}
+                  fit="grid"
+                  cellSize={28}
+                  seed="lumen-screen"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <div className={s.enlargePrint}>
                 <Artwork
                   slug="lumen-portraits-p1"
@@ -542,7 +564,19 @@ export default function LumenPortraitsPage() {
 
       <footer className={s.footer}>
         <div className={s.footGrid}>
-          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Lumen</p>
+          <div className={s.footBrand}>
+            <span className={s.footLens} aria-hidden="true">
+              <TabbiedPattern
+                pattern={concentricrings}
+                palette={LENS}
+                fit="grid"
+                cellSize={24}
+                seed="lumen-cap"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </span>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Lumen</p>
+          </div>
           <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             212 Larkin Street, second floor
             <br />

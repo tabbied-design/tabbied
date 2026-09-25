@@ -714,6 +714,18 @@
   margin-bottom: 16%;
 }
 
+/* The hero's arch of leaves again, after dark, behind the pineapple. */
+.bowlLeaves {
+  position: absolute;
+  top: 6%;
+  bottom: 18%;
+  left: 12%;
+  right: 12%;
+  overflow: hidden;
+  background: var(--ink);
+  border-radius: 999px 999px 0 0;
+}
+
 .bowlLede {
   margin-top: 1.1rem;
   max-width: 36rem;
@@ -835,6 +847,7 @@
 }
 
 .faq {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(12rem, 0.6fr) minmax(0, 1.4fr);
   column-gap: clamp(1.5rem, 5vw, 5rem);
@@ -846,6 +859,18 @@
   grid-row: 1 / span 3;
   font-size: 1.6rem;
   line-height: 1.1;
+}
+
+/* A spoonful of the band's pips under the heading. */
+.faqSeeds {
+  position: absolute;
+  top: 3.6rem;
+  left: 0;
+  width: 11rem;
+  height: 4.5rem;
+  overflow: hidden;
+  background: var(--pale);
+  border-radius: 999px;
 }
 
 .faqItem {
@@ -901,6 +926,14 @@
   color: var(--paper);
   background: var(--ink);
   padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+}
+
+/* The hero's leaves, a strip along the footer's top edge. */
+.footLeaves {
+  position: relative;
+  height: 2.5rem;
+  margin: calc(-1 * clamp(3rem, 6vw, 4.5rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
 }
 
 .footTop {
@@ -1014,6 +1047,10 @@
   .faqHead {
     grid-row: auto;
     margin-bottom: 1rem;
+  }
+
+  .faqSeeds {
+    display: none;
   }
 
   .faqItem {

@@ -632,9 +632,24 @@
    The one filled section: mist from edge to edge, the four icons large. */
 
 .gearSec {
+  position: relative;
+  isolation: isolate;
   margin-top: var(--air);
   background: var(--mist);
   padding: var(--air) 0;
+}
+
+/* Survey rings in the top corner, beside the heading and behind the cards. */
+.gearField {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 70%;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.7;
+  mask-image: radial-gradient(ellipse at 100% 0%, var(--ink) 25%, transparent 70%);
 }
 
 .gearInner {
@@ -781,12 +796,13 @@
 }
 
 .joinForm {
+  --join-pad: clamp(1.5rem, 3vw, 2.2rem);
   margin-top: clamp(2rem, 4vw, 3rem);
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) repeat(2, minmax(0, 1fr));
   gap: 1.1rem clamp(1rem, 2.5vw, 2rem);
   align-items: end;
-  padding: clamp(1.5rem, 3vw, 2.2rem);
+  padding: var(--join-pad);
   border: 2px solid var(--ink);
   border-radius: 4px;
 }
@@ -794,6 +810,18 @@
 .joinIntro {
   grid-row: span 3;
   align-self: start;
+}
+
+/* Trail marks along the top of the form, like a blazed path. */
+.joinTrail {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 2.5rem;
+  margin: calc(-1 * var(--join-pad)) calc(-1 * var(--join-pad)) 0.4rem;
+  overflow: hidden;
+  border-radius: 2px 2px 0 0;
+  background: var(--mist);
+  border-bottom: 2px solid var(--ink);
 }
 
 .joinIcon {
@@ -866,7 +894,16 @@
   place-items: center;
 }
 
+.faqRings {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.75;
+}
+
 .faqBoot {
+  position: relative;
   width: 72%;
 }
 

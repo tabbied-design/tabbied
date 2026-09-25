@@ -616,6 +616,17 @@ export default function TrailheadClubPage() {
         {/* ------------------------------------------------------------ GEAR
             The checklist, one icon per list, large enough to lead. */}
         <section id="gear" className={s.gearSec} aria-labelledby="gear-h">
+          <div className={s.gearField} aria-hidden="true">
+            <TabbiedPattern
+              pattern={contourlines}
+              palette={CODA}
+              options={{ frequency: 0.6 }}
+              fit="grid"
+              cellSize={120}
+              seed="trailhead-gear"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.gearInner}>
             <div className={s.secHead}>
               <span data-edit="gear.secNo" data-edit-max="60" className={s.secNo}>03</span>
@@ -673,6 +684,17 @@ export default function TrailheadClubPage() {
           </div>
 
           <form className={s.joinForm} action="#">
+            <div className={s.joinTrail} aria-hidden="true">
+              <TabbiedPattern
+                pattern={baste}
+                palette={TRAIL}
+                options={{ frequency: 0.8 }}
+                fit="grid"
+                cellSize={36}
+                seed="trailhead-join"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <div className={s.joinIntro}>
               <Artwork slug="trailhead-club-tent" alt="" inks={['var(--moss)']} className={s.joinIcon} />
               <h3 data-edit="join.title3" data-edit-max="40">Join online</h3>
@@ -714,6 +736,17 @@ export default function TrailheadClubPage() {
           </div>
           <div className={s.faqWrap}>
             <div className={s.faqArt} aria-hidden="true">
+              <div className={s.faqRings}>
+                <TabbiedPattern
+                  pattern={contourlines}
+                  palette={CODA}
+                  options={{ frequency: 0.5 }}
+                  fit="grid"
+                  cellSize={100}
+                  seed="trailhead-faq"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork slug="trailhead-club-boot" alt="" inks={['var(--ink)']} className={s.faqBoot} />
             </div>
             <div className={s.faq}>

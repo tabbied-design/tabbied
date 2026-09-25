@@ -974,6 +974,14 @@
     border-top: 1px solid var(--line);
   }
 
+  .secHead {
+    padding-right: 5.5rem;
+  }
+
+  .ball {
+    width: 4.5rem;
+  }
+
   .courseHead {
     grid-template-columns: 1fr;
   }

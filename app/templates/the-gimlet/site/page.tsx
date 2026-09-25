@@ -359,6 +359,18 @@ export default function TheGimletPage() {
         <section id="hire" className={s.hire} aria-labelledby="hire-h">
           <div className={s.hireInner}>
             <div className={s.hireArt}>
+              <div className={s.bottleStars} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={northstar}
+                  palette={STARS}
+                  options={{ frequency: 0.5 }}
+                  fit="grid"
+                  cellSize={32}
+                  seed="gimlet-bottle"
+                  redrawInterval={10000}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="the-gimlet-bottle"
                 alt=""
@@ -421,6 +433,16 @@ export default function TheGimletPage() {
             <p data-edit="rules.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>House rules</p>
             <h2 data-edit="rules.title" data-edit-max="60" id="rules-h">Four, and we keep to them</h2>
           </div>
+          <div className={s.rulesRule} aria-hidden="true">
+            <TabbiedPattern
+              pattern={diadem}
+              palette={DIAMONDS}
+              fit="grid"
+              cellSize={28}
+              seed="gimlet-rules"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <ol className={s.ruleList}>
             {RULES.map(([title, body], i) => (
               <li key={title}>
@@ -479,6 +501,17 @@ export default function TheGimletPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footStars} aria-hidden="true">
+          <TabbiedPattern
+            pattern={northstar}
+            palette={STARS}
+            options={{ frequency: 0.5 }}
+            fit="grid"
+            cellSize={26}
+            seed="gimlet-footer"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>The Gimlet</p>
         <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Gin, lime and not much else, since 2016.</p>
         <nav className={s.footNav} aria-label="Footer">

@@ -459,16 +459,6 @@ export default function PineconeCampPage() {
 
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.fees} aria-labelledby="fees-h">
-          <div className={s.embers} aria-hidden="true">
-            <TabbiedPattern
-              pattern={driftspiral}
-              palette={SPARKS}
-              fit="grid"
-              cellSize={28}
-              seed="pinecone-embers"
-              style={{ position: 'absolute', inset: 0 }}
-            />
-          </div>
           <div className={s.feesInner}>
             <div className={s.head}>
               <p data-edit="fees.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Fees</p>
@@ -508,12 +498,24 @@ export default function PineconeCampPage() {
               Send this and we hold the weeks for three days while we email the
               invoice. A $75 deposit a week confirms them.
             </p>
-            <Artwork
-              slug="pinecone-camp-canoe"
-              alt=""
-              inks={{ red: 'var(--moss)', blue: 'var(--ember)' }}
-              className={s.canoe}
-            />
+            <div className={s.canoeBay}>
+              <div className={s.fireflies} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={driftspiral}
+                  palette={SPARKS}
+                  fit="grid"
+                  cellSize={40}
+                  seed="pinecone-fireflies"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <Artwork
+                slug="pinecone-camp-canoe"
+                alt=""
+                inks={{ red: 'var(--moss)', blue: 'var(--ember)' }}
+                className={s.canoe}
+              />
+            </div>
           </div>
           <form className={s.form} action="#">
             <div className={s.formRow}>
