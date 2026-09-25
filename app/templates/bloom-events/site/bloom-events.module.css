@@ -479,12 +479,13 @@
 /* -------------------------------------------------------------------- plan */
 
 .plan {
+  position: relative;
+  overflow: hidden;
   color: var(--blush);
   background: var(--plum);
 }
 
 .planInner {
-  position: relative;
   max-width: var(--max);
   margin: 0 auto;
   padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
@@ -786,7 +787,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 46%;
+  width: min(46%, 44rem);
   height: 24rem;
   overflow: hidden;
   opacity: 0.55;

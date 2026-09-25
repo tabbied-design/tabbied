@@ -551,15 +551,12 @@
 
 /* Two posts under the board, planted on a ground line. */
 .posts {
+  position: relative;
   display: flex;
   justify-content: space-around;
   height: clamp(2.5rem, 5vw, 4rem);
   padding: 0 18%;
   border-bottom: 3px solid var(--ink);
-}
-
-.posts {
-  position: relative;
 }
 
 .posts span {

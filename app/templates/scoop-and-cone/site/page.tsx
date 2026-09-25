@@ -16,11 +16,13 @@ const PINK = '#F26D7D';
 const BLUE = '#6CC3D5';
 const YELLOW = '#F7C948';
 const INK = '#2A1E24';
+const CREAM = '#FFF6EE';
 
 const BURST = ['transparent', PINK, BLUE, YELLOW, INK];
 const SCALLOP = ['transparent', PINK, YELLOW, BLUE];
 const SPRINKLES = ['transparent', YELLOW, PINK, BLUE];
-const DRIP = ['transparent', BLUE, YELLOW];
+const AWNING = ['transparent', PINK, CREAM];
+const DOILY = ['transparent', BLUE];
 
 const NAV = [
   ['Flavors', '#flavors'],
@@ -230,13 +232,13 @@ export default function ScoopAndConePage() {
         {/* ----------------------------------------------------- FLAVOR BOARD
             The parlor's board: ink ground, every flavor with its chip. */}
         <section id="flavors" className={s.board} aria-labelledby="flavors-h">
-          <div className={s.boardSprinkles} aria-hidden="true">
+          <div className={s.awning} aria-hidden="true">
             <TabbiedPattern
-              pattern={confettidotfield}
-              palette={SPRINKLES}
+              pattern={cove}
+              palette={AWNING}
               fit="grid"
-              cellSize={80}
-              seed="scoop-board"
+              cellSize={40}
+              seed="scoop-awning"
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
@@ -369,13 +371,12 @@ export default function ScoopAndConePage() {
           <div className={s.hoursWrap}>
             <div className={s.hoursLead}>
               <div className={s.popPlate}>
-                <div className={s.popCove} aria-hidden="true">
+                <div className={s.popBurst} aria-hidden="true">
                   <TabbiedPattern
-                    pattern={cove}
-                    palette={DRIP}
-                    options={{ frequency: 0.8 }}
+                    pattern={confettidotfield}
+                    palette={BURST}
                     fit="grid"
-                    cellSize={36}
+                    cellSize={90}
                     seed="scoop-pop"
                     style={{ position: 'absolute', inset: 0 }}
                   />
@@ -431,19 +432,19 @@ export default function ScoopAndConePage() {
               </dl>
             </div>
             <div className={s.party}>
-              <div className={s.partySprinkles} aria-hidden="true">
+              <h3 data-edit="visit.title2" data-edit-max="40">Parties and pints</h3>
+              <p data-edit="visit.body" data-edit-max="240" data-edit-multiline>The back room seats sixteen for a birthday: a sundae each, a candle in the big dipper, two hours, $180. Pints and quarts to go all year, and we pack them in dry ice for the drive home.</p>
+              <a data-edit="visit.btn" data-edit-max="28" className={s.btn} href="mailto:parties@scoopandcone.example">Book the back room</a>
+              <div className={s.partyEdge} aria-hidden="true">
                 <TabbiedPattern
-                  pattern={confettidotfield}
-                  palette={SPRINKLES}
+                  pattern={cove}
+                  palette={DOILY}
                   fit="grid"
-                  cellSize={90}
+                  cellSize={32}
                   seed="scoop-party"
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <h3 data-edit="visit.title2" data-edit-max="40">Parties and pints</h3>
-              <p data-edit="visit.body" data-edit-max="240" data-edit-multiline>The back room seats sixteen for a birthday: a sundae each, a candle in the big dipper, two hours, $180. Pints and quarts to go all year, and we pack them in dry ice for the drive home.</p>
-              <a data-edit="visit.btn" data-edit-max="28" className={s.btn} href="mailto:parties@scoopandcone.example">Book the back room</a>
             </div>
           </div>
         </section>

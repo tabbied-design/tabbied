@@ -256,20 +256,19 @@
 
 .board {
   position: relative;
-  isolation: isolate;
   background: var(--ink);
   color: var(--cream);
-  padding: clamp(3.5rem, 8vw, 6rem) var(--gut);
+  padding: calc(clamp(3.5rem, 8vw, 6rem) + 2.5rem) var(--gut) clamp(3.5rem, 8vw, 6rem);
 }
 
-/* Sprinkles down both edges of the board, clear of the flavors. */
-.boardSprinkles {
+/* A striped awning over the board, scalloped in pink and cream. */
+.awning {
   position: absolute;
-  inset: 0;
-  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5rem;
   overflow: hidden;
-  opacity: 0.7;
-  mask-image: linear-gradient(90deg, var(--ink) 0, transparent 7.5%, transparent 92.5%, var(--ink) 100%);
 }
 
 .boardInner {
@@ -720,15 +719,15 @@
   place-items: center;
 }
 
-/* A scalloped disc behind the ice lolly, like a paper doily. */
-.popCove {
+/* The ice lolly in its own ring of confetti, like the cone and the sundae. */
+.popBurst {
   grid-area: 1 / 1;
   position: relative;
   width: clamp(8rem, 14vw, 11.5rem);
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 50%;
-  opacity: 0.55;
+  mask-image: radial-gradient(circle closest-side, transparent 0 56%, var(--ink) 56.5%);
 }
 
 .pop {
@@ -872,8 +871,6 @@
 }
 
 .party {
-  position: relative;
-  isolation: isolate;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -882,16 +879,13 @@
   background: color-mix(in srgb, var(--blue) 45%, var(--cream));
 }
 
-/* Party sprinkles in the far corner, away from the words. */
-.partySprinkles {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 55%;
-  height: 70%;
-  z-index: -1;
+/* A doily's scalloped edge along the foot of the party card. */
+.partyEdge {
+  position: relative;
+  align-self: stretch;
+  height: 2rem;
+  margin: auto calc(-1 * clamp(1.8rem, 4vw, 2.8rem)) calc(-1 * clamp(1.8rem, 4vw, 2.8rem));
   overflow: hidden;
-  mask-image: radial-gradient(ellipse at 100% 0%, var(--ink) 22%, transparent 62%);
 }
 
 .party h3 {
@@ -1033,10 +1027,6 @@
   .buildArt {
     width: min(100%, 20rem);
   }
-
-  .boardSprinkles {
-    display: none;
-  }
 }
 
 @media (max-width: 560px) {
@@ -1069,7 +1059,7 @@
     height: 7rem;
   }
 
-  .popCove {
+  .popBurst {
     width: 6.5rem;
   }
 }

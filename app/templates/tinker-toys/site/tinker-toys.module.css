@@ -263,7 +263,7 @@
   position: absolute;
   top: var(--air);
   right: var(--gut);
-  width: min(22rem, 30%);
+  width: min(22rem, 24%);
   height: 6.5rem;
   overflow: hidden;
   background: var(--cream);
