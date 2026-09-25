@@ -20,6 +20,7 @@ const PALE = '#DEDBD3';
 const CYLINDERS = ['transparent', BRASS, STEEL, PALE];
 const QUIET = ['transparent', STEEL, BRASS];
 const TEETH = ['transparent', BRASS, STEEL, INK];
+const CUTS = ['transparent', BRASS];
 
 const PHONE = '(555) 019-4400';
 const PHONE_HREF = 'tel:+15550194400';
@@ -277,6 +278,17 @@ export default function KeywayLocksmithsPage() {
               </li>
             ))}
           </ul>
+          <div className={s.pickerEdge} aria-hidden="true">
+            <TabbiedPattern
+              pattern={battlement}
+              palette={CUTS}
+              options={{ frequency: 0.85 }}
+              fit="grid"
+              cellSize={32}
+              seed="keyway-edge"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
         </section>
 
         {/* --------------------------------------------------- RESPONSE STRIP */}
@@ -293,13 +305,26 @@ export default function KeywayLocksmithsPage() {
 
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
-          <div className={s.secHead}>
-            <span data-edit="prices.secNo" data-edit-max="60" className={s.secNo}>01</span>
-            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">What it costs</h2>
-            <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
-              Labor and the visit. Parts are extra and priced before fitting;
-              a zone call-out fee is added outside Zone 1 or outside the day.
-            </p>
+          <div className={s.pricesTop}>
+            <div className={s.secHead}>
+              <span data-edit="prices.secNo" data-edit-max="60" className={s.secNo}>01</span>
+              <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">What it costs</h2>
+              <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
+                Labor and the visit. Parts are extra and priced before fitting;
+                a zone call-out fee is added outside Zone 1 or outside the day.
+              </p>
+            </div>
+            <div className={s.pricesTile} aria-hidden="true">
+              <TabbiedPattern
+                pattern={keyway}
+                palette={CYLINDERS}
+                options={{ frequency: 0.9 }}
+                fit="grid"
+                cellSize={34}
+                seed="keyway-tile"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </div>
           <table className={s.prices}>
             <caption data-edit="prices.visuallyHidden" className={s.visuallyHidden}>Prices by time of day</caption>
@@ -336,6 +361,17 @@ export default function KeywayLocksmithsPage() {
           <div className={s.areas}>
             <div className={s.zoneMap} aria-hidden="true">
               <span className={s.ring3}>
+                <span className={s.ringField} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={keyway}
+                    palette={QUIET}
+                    options={{ frequency: 0.4 }}
+                    fit="grid"
+                    cellSize={40}
+                    seed="keyway-zones"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </span>
                 <span data-edit="areas.ringLabel" data-edit-max="60" className={s.ringLabel}>3</span>
               </span>
               <span className={s.ring2}>

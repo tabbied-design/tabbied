@@ -452,15 +452,15 @@ export default function TerraceHillPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <ul className={s.tiers}>
-                {CLUB.map((c, i) => (
-                  <li key={c.size}>
-                    <span data-edit={`club.tierSize.${i}`} data-edit-max="60" className={s.tierSize}>{c.size}</span>
-                    <strong data-edit={`club.tierPrice.${i}`} className={s.tierPrice}>{c.price}</strong>
-                    <span data-edit={`club.tierEvery.${i}`} data-edit-max="60" className={s.tierEvery}>{c.every}</span>
-                  </li>
-                ))}
-              </ul>
+            <ul className={s.tiers}>
+              {CLUB.map((c, i) => (
+                <li key={c.size}>
+                  <span data-edit={`club.tierSize.${i}`} data-edit-max="60" className={s.tierSize}>{c.size}</span>
+                  <strong data-edit={`club.tierPrice.${i}`} className={s.tierPrice}>{c.price}</strong>
+                  <span data-edit={`club.tierEvery.${i}`} data-edit-max="60" className={s.tierEvery}>{c.every}</span>
+                </li>
+              ))}
+            </ul>
             </div>
           </div>
         </section>

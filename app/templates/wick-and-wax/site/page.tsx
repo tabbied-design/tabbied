@@ -26,6 +26,7 @@ const WOODS = [PALE, AMBER, SMOKE];
 const FLORALS = [HEATHER, WAX, PALE, AMBER];
 const GARDEN = [SMOKE, SMOKE, WAX];
 const GLOW = ['transparent', AMBER, HEATHER];
+const LEAF_ROW = ['transparent', AMBER, HEATHER, SMOKE];
 
 const NAV = [
   ['Library', '#library'],
@@ -480,6 +481,17 @@ export default function WickAndWaxPage() {
               </li>
             ))}
           </ol>
+          <div className={s.careBand} aria-hidden="true">
+            <TabbiedPattern
+              pattern={roundpair}
+              palette={LEAF_ROW}
+              fit="grid"
+              cellSize={28}
+              options={{ frequency: 0.55 }}
+              seed="care-label"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
         </section>
 
         {/* ------------------------------------------------------- STOCKISTS */}
@@ -512,6 +524,17 @@ export default function WickAndWaxPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footGlow} aria-hidden="true">
+          <TabbiedPattern
+            pattern={bokeh}
+            palette={GLOW}
+            fit="grid"
+            cellSize={72}
+            seed="footer-light"
+            options={{ frequency: 0.5 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Wick &amp; Wax</p>
           <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>

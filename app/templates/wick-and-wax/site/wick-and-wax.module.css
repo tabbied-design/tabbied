@@ -742,6 +742,14 @@
   color: color-mix(in srgb, var(--ink) 84%, transparent);
 }
 
+/* A printed row of leaves, like the edge of a candle label. */
+.careBand {
+  position: relative;
+  height: 1.75rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  overflow: hidden;
+}
+
 /* -------------------------------------------------------------- stockists */
 
 .stockists {
@@ -795,9 +803,24 @@
 /* ----------------------------------------------------------------- footer */
 
 .footer {
+  position: relative;
+  isolation: isolate;
   padding: clamp(2.5rem, 5vw, 4rem) var(--gut) 1.8rem;
   color: var(--wax);
   background: var(--ink);
+  overflow: hidden;
+}
+
+/* The workshop's candlelight, low, behind the name. */
+.footGlow {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: min(44rem, 100%);
+  opacity: 0.35;
+  mask-image: radial-gradient(farthest-side at 20% 50%, var(--ink) 20%, transparent);
 }
 
 .footTop {

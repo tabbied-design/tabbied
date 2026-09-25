@@ -321,6 +321,19 @@
 
 /* ------------------------------------------------------- section headings */
 
+/* A small oven dial beside the price heading. */
+.pricesOven {
+  position: absolute;
+  top: 0.5rem;
+  right: var(--gut);
+  width: clamp(7rem, 11vw, 9.5rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 3px solid var(--crust);
+  border-radius: 50%;
+  box-shadow: 6px 6px 0 var(--crust);
+}
+
 .head {
   display: grid;
   gap: 0.75rem;
@@ -482,6 +495,7 @@
 /* ------------------------------------------------------------------ prices */
 
 .prices {
+  position: relative;
   max-width: var(--max);
   margin: 0 auto;
   padding: 0 var(--gut) clamp(4rem, 8vw, 6.5rem);
@@ -786,6 +800,7 @@
 }
 
 .orderSlice {
+  position: relative;
   grid-column: 1;
   justify-self: start;
   width: clamp(7rem, 11vw, 9.5rem);
@@ -793,11 +808,43 @@
   transform: rotate(-14deg);
 }
 
+/* The slice inside a ring of the hero's oven, on the paper it sits on. */
+.sliceStage {
+  position: relative;
+  grid-column: 1;
+  justify-self: start;
+  display: grid;
+  place-items: center;
+  width: clamp(11rem, 16vw, 14rem);
+  aspect-ratio: 1;
+}
+
+.sliceStage .orderSlice {
+  width: 56%;
+  margin-left: 0;
+}
+
+.sliceOven {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  -webkit-mask-image: radial-gradient(closest-side, transparent 66%, var(--crust) 67%);
+  mask-image: radial-gradient(closest-side, transparent 66%, var(--crust) 67%);
+}
+
 /* ------------------------------------------------------------------ footer */
 
 .footer {
   color: var(--flour);
   background: var(--crust);
+}
+
+/* The deals tablecloth, one row of it along the top of the footer. */
+.footCloth {
+  position: relative;
+  height: 24px;
+  overflow: hidden;
 }
 
 .footInner {
@@ -896,7 +943,8 @@
     grid-row: auto;
   }
 
-  .orderSlice {
+  .orderSlice,
+  .sliceStage {
     display: none;
   }
 
@@ -916,6 +964,10 @@
 
   .siteMenu {
     display: block;
+  }
+
+  .pricesOven {
+    display: none;
   }
 }
 

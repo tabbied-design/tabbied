@@ -220,7 +220,7 @@
   margin: 0 auto clamp(2.5rem, 5vw, 4rem);
   padding: 0 var(--gut);
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr) auto;
   gap: 1rem clamp(2rem, 5vw, 4rem);
   align-items: end;
 }
@@ -423,6 +423,19 @@
 
 /* ------------------------------------------------------------------ seam */
 
+/* A cutting of the season's cloth, pinned beside the note. */
+.cutting {
+  position: relative;
+  width: 8rem;
+  height: 6.25rem;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px dashed color-mix(in srgb, var(--umber) 60%, transparent);
+  outline: 4px solid var(--pale);
+  box-shadow: 0 10px 22px -16px rgb(0 0 0 / 0.5);
+  transform: rotate(3deg);
+}
+
 .seam {
   position: relative;
   height: 64px;
@@ -624,10 +637,20 @@
 }
 
 .form {
+  --form-pad: clamp(1.4rem, 3vw, 2.2rem);
   display: grid;
   gap: 1rem;
-  padding: clamp(1.4rem, 3vw, 2.2rem);
+  padding: var(--form-pad);
   background: var(--paper);
+  overflow: hidden;
+}
+
+/* Basting along the top of the fitting card. */
+.formStitch {
+  position: relative;
+  height: 32px;
+  margin: calc(-1 * var(--form-pad)) calc(-1 * var(--form-pad)) 0.4rem;
+  border-bottom: 1px dashed color-mix(in srgb, var(--umber) 50%, transparent);
 }
 
 .formTitle {
@@ -691,10 +714,21 @@
 /* ---------------------------------------------------------------- footer */
 
 .footer {
+  position: relative;
   background: var(--ink);
   color: var(--paper);
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 1.6rem;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2.5rem) var(--gut) 1.6rem;
   text-align: center;
+}
+
+/* A hem basted along the top edge. */
+.footHem {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  opacity: 0.7;
 }
 
 .footMark {
@@ -837,6 +871,12 @@
 
   .swatch {
     min-height: 14rem;
+  }
+
+  .cutting {
+    width: 100%;
+    height: 2.75rem;
+    transform: none;
   }
 }
 

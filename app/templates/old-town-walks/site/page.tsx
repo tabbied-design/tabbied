@@ -459,14 +459,14 @@ export default function OldTownWalksPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <dl className={s.prices}>
-                {PRIVATE.map(([what, price], i) => (
-                  <div key={what}>
-                    <dt data-edit={`private.term.${i}`} data-edit-max="28">{what}</dt>
-                    <dd data-edit={`private.body2.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
-                  </div>
-                ))}
-              </dl>
+            <dl className={s.prices}>
+              {PRIVATE.map(([what, price], i) => (
+                <div key={what}>
+                  <dt data-edit={`private.term.${i}`} data-edit-max="28">{what}</dt>
+                  <dd data-edit={`private.body2.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
+                </div>
+              ))}
+            </dl>
             </div>
           </div>
         </section>

@@ -243,9 +243,21 @@
    Still on the ink, so the tiles read as the hero's second half. */
 
 .picker {
+  position: relative;
   background: var(--ink);
   color: var(--paper);
-  padding: 0 var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+  padding: 0 var(--gut) calc(clamp(3.5rem, 7vw, 5.5rem) + 2rem);
+}
+
+/* Brass cuts along the foot of the picker, so the strip below reads as a
+   key blade. */
+.pickerEdge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2rem;
+  overflow: hidden;
 }
 
 .pickerHead {
@@ -490,6 +502,25 @@
   font-size: clamp(2.3rem, 5vw, 3.8rem);
 }
 
+/* The prices heading, with a small plate of the cylinders beside it. */
+.pricesTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.pricesTile {
+  position: relative;
+  flex: none;
+  width: clamp(6.5rem, 10vw, 8.5rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--ink);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--paper), 0 0 0 6px var(--brass);
+}
+
 .secNote {
   grid-column: 2;
   margin-top: 0.8rem !important;
@@ -590,6 +621,14 @@
   width: 42%;
   height: 42%;
   background: color-mix(in srgb, var(--brass) 55%, var(--pale));
+}
+
+.ringField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.55;
 }
 
 .ringLabel {
@@ -1091,6 +1130,10 @@
 
   .tileArt {
     height: 7.5rem;
+  }
+
+  .pricesTile {
+    display: none;
   }
 
   .secHead {

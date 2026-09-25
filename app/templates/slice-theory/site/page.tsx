@@ -372,6 +372,16 @@ export default function SliceTheoryPage() {
 
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.prices} aria-labelledby="prices-h">
+          <div className={s.pricesOven} aria-hidden="true">
+            <TabbiedPattern
+              pattern={turbulentsunburst}
+              palette={OVEN}
+              fit="grid"
+              cellSize={32}
+              seed="slice-dial"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.head}>
             <p data-edit="prices.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The price matrix</p>
             <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Every size, every sum</h2>
@@ -505,16 +515,38 @@ export default function SliceTheoryPage() {
             <p data-edit="order.orderText" data-edit-max="240" data-edit-multiline className={s.orderText}>212 Foundry Street, on the corner of Kiln Lane</p>
             <p data-edit="order.orderText2" data-edit-max="240" data-edit-multiline className={s.orderText}>Twenty seats inside, eight on the sidewalk</p>
           </div>
-          <Artwork
-            slug="slice-theory-slice"
-            alt=""
-            inks={{ red: 'var(--sauce)', yellow: 'var(--cheese)' }}
-            className={s.orderSlice}
-          />
+          <div className={s.sliceStage}>
+            <div className={s.sliceOven} aria-hidden="true">
+              <TabbiedPattern
+                pattern={turbulentsunburst}
+                palette={OVEN}
+                fit="grid"
+                cellSize={40}
+                seed="slice-order"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
+            <Artwork
+              slug="slice-theory-slice"
+              alt=""
+              inks={{ red: 'var(--sauce)', yellow: 'var(--cheese)' }}
+              className={s.orderSlice}
+            />
+          </div>
         </section>
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footCloth} aria-hidden="true">
+          <TabbiedPattern
+            pattern={damier}
+            palette={CLOTH}
+            fit="grid"
+            cellSize={24}
+            seed="slice-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footInner}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Slice Theory</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Build-your-own pizza, 212 Foundry Street.</p>

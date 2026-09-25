@@ -21,6 +21,8 @@ const INK = '#1C1917';
 const TACKING = ['transparent', PALE, PAPER, GRAY, PALE];
 const SEAM = ['transparent', UMBER, GRAY, UMBER, INK];
 const WEAVE = ['transparent', UMBER, GRAY, PALE, UMBER, GRAY];
+const CLOTH = ['transparent', UMBER, GRAY, UMBER, PALE, UMBER];
+const HEM = ['transparent', UMBER, GRAY, PALE, UMBER];
 
 const NAV = [
   ['Lookbook', '#lookbook'],
@@ -269,6 +271,17 @@ export default function ThreadAndHemPage() {
               Ten pieces this season, each made in small runs and each
               altered here, free, to fit you before it leaves the shop.
             </p>
+            <div className={s.cutting} aria-hidden="true">
+              <TabbiedPattern
+                pattern={batiste}
+                palette={CLOTH}
+                options={{ frequency: 0.9 }}
+                fit="grid"
+                cellSize={32}
+                seed="hem-cutting"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </div>
 
           {LOOKS.map((look, i) => (
@@ -426,6 +439,17 @@ export default function ThreadAndHemPage() {
               </p>
             </div>
             <form className={s.form} action="#">
+              <div className={s.formStitch} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={baste}
+                  palette={SEAM}
+                  options={{ frequency: 0.7 }}
+                  fit="grid"
+                  cellSize={32}
+                  seed="hem-fitting"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <h3 data-edit="visit.formTitle" data-edit-max="40" className={s.formTitle}>Book a fitting</h3>
               <p data-edit="visit.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>
                 An hour with the shop to yourself, before or after hours. There
@@ -461,6 +485,17 @@ export default function ThreadAndHemPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footHem} aria-hidden="true">
+          <TabbiedPattern
+            pattern={baste}
+            palette={HEM}
+            options={{ frequency: 0.85 }}
+            fit="grid"
+            cellSize={36}
+            seed="hem-footer"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Thread &amp; Hem</p>
         <ul className={s.footLinks}>
           {NAV.map(([label, href], i) => (
