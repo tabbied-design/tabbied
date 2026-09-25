@@ -153,10 +153,10 @@ export default function PinewoodRvPage() {
             shows through behind the trees. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroArt} aria-hidden="true">
-            <Artwork slug="pinewood-rv-treeline" alt="" mode="tint" fit="cover" inks={['var(--ink)', 'var(--pale)']} />
+            <Artwork slug="pinewood-rv-treeline" alt="" mode="tint" fit="cover" inks={['color-mix(in srgb, var(--ink) 50%, var(--pine))', 'var(--paper)']} />
           </div>
           <div className={s.heroText}>
-            <p className={s.kicker}>RV park and campground, open April 15 to October 31</p>
+            <p className={s.kicker}>Open April 15 to October 31</p>
             <h1 id="hero-h" className={s.heroTitle}>
               Pull in under
               <br />
@@ -330,9 +330,9 @@ export default function PinewoodRvPage() {
             <TabbiedPattern
               pattern={northstar}
               palette={NIGHT}
-              options={{ frequency: 0.3 }}
+              options={{ frequency: 0.2 }}
               fit="grid"
-              cellSize={40}
+              cellSize={24}
               seed="pinewood-night"
               style={{ position: 'absolute', inset: 0 }}
             />

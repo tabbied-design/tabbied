@@ -1,5 +1,5 @@
 import { TabbiedPattern } from 'tabbied/react';
-import { contourlines, reeding } from 'tabbied/patterns';
+import { randomrings, reeding } from 'tabbied/patterns';
 import s from './hewn-furniture.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
 import { Artwork } from 'components/Artwork';
@@ -291,11 +291,10 @@ export default function HewnFurniturePage() {
           <figure className={s.plate}>
             <div className={s.plateField} aria-hidden="true">
               <TabbiedPattern
-                pattern={contourlines}
+                pattern={randomrings}
                 palette={GRAIN}
-                options={{ frequency: 0.55 }}
                 fit="grid"
-                cellSize={120}
+                cellSize={140}
                 seed="hewn-cover"
                 style={{ position: 'absolute', inset: 0 }}
               />

@@ -143,9 +143,10 @@
   background: linear-gradient(
     180deg,
     var(--pale) 0%,
-    var(--pale) 34%,
-    color-mix(in srgb, var(--orange) 55%, var(--pale)) 60%,
-    var(--orange) 85%
+    var(--pale) 18%,
+    color-mix(in srgb, var(--orange) 45%, var(--pale)) 36%,
+    color-mix(in srgb, var(--orange) 85%, var(--pale)) 52%,
+    var(--orange) 80%
   );
 }
 
@@ -154,7 +155,7 @@
   z-index: 0;
   left: 0;
   right: 0;
-  bottom: -10vw;
+  bottom: -7.5vw;
   height: 66.67vw;
 }
 
@@ -541,7 +542,7 @@
   right: 0;
   height: 55%;
   overflow: hidden;
-  mask-image: linear-gradient(180deg, var(--ink) 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 34% 90% at 56% 0%, var(--ink) 35%, transparent 100%);
 }
 
 .reserveArt {

@@ -14,8 +14,8 @@ import {
   sail,
   shatter,
   sound,
+  ringfield,
   sunsetrings,
-  tidering,
   truchetrings,
 } from 'tabbied/patterns';
 import s from './vinyl-vault.module.css';
@@ -182,9 +182,9 @@ export default function VinylVaultPage() {
           <div className={s.heroPanel}>
             <div className={s.grooves} aria-hidden="true">
               <TabbiedPattern
-                pattern={tidering}
+                pattern={ringfield}
                 palette={GROOVES}
-                options={{ frequency: 0.55 }}
+                options={{ frequency: 0.5 }}
                 fit="grid"
                 cellSize={96}
                 seed="vault-grooves"
