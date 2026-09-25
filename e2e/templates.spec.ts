@@ -178,6 +178,17 @@ for (const fixture of FIXTURES) {
       'template-menu__toggle',
       'template-menu__icon',
       'template-menu__panel',
+      // Artwork's, likewise in base.css.
+      'artwork',
+      'artwork--mask',
+      'artwork--masks',
+      'artwork__layer',
+      'artwork--vector',
+      'artwork--duotone',
+      'artwork--tint',
+      'artwork--fill',
+      'artwork__shade',
+      'artwork--cover',
     ]);
     const orphans = [...onPage].filter(
       (name) =>

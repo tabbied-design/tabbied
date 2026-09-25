@@ -261,6 +261,29 @@ function rewriteImagePaths(html) {
   return { html: rewritten, used: [...used] };
 }
 
+/**
+ * A CSS mask is fetched in CORS mode, and a page opened from disk (which is
+ * how this package's README says to open it) is refused every one: Artwork's
+ * masked kinds would render as blank boxes. So each `--artwork-mask` rides
+ * inline as a data URI. The file still ships in images/ beside it.
+ */
+function inlineArtworkMasks(html, used) {
+  const byBasename = new Map(used.map((relativePath) => [path.basename(relativePath), relativePath]));
+  const cache = new Map();
+
+  return html.replace(/--artwork-mask:url\(\.\/images\/([^)]+)\)/g, (_match, basename) => {
+    const relativePath = byBasename.get(basename);
+
+    if (!relativePath) throw new Error(`artwork mask ${basename} was not among the page's images`);
+    if (!cache.has(basename)) {
+      const bytes = fsSync.readFileSync(path.join(publicDir, 'images', relativePath));
+      cache.set(basename, `data:image/webp;base64,${bytes.toString('base64')}`);
+    }
+
+    return `--artwork-mask:url(${cache.get(basename)})`;
+  });
+}
+
 /** The pattern slugs the page mounts, in first-appearance order. */
 const patternSlugs = (html) => [
   ...new Set([...html.matchAll(/data-pattern="([a-z0-9]+)"/g)].map((m) => m[1])),
@@ -469,6 +492,7 @@ const EXTERNAL_DEPENDENCIES = new Map([
 // Local modules a page may import by workspace path, and where each lands.
 const LOCAL_IMPORTS = new Map([
   ['components/Figure', { from: 'components/Figure.tsx', to: 'Figure.tsx' }],
+  ['components/Artwork', { from: 'components/Artwork.tsx', to: 'Artwork.tsx' }],
   ['components/template/TemplateSite', { from: 'components/template/TemplateSite.tsx', to: 'TemplateSite.tsx' }],
   ['components/template/templateData', { from: 'components/template/templateData.ts', to: 'templateData.ts' }],
   ['components/template/templateContent', { from: 'components/template/templateContent.ts', to: 'templateContent.ts' }],
@@ -490,6 +514,7 @@ function toStandaloneComponent(source, componentName) {
   }
 
   out = out.replaceAll(`'lib/generated/images'`, `'./images'`);
+  out = out.replaceAll(`'lib/generated/artwork'`, `'./artwork'`);
 
   // The page's default export is the app's root component.
   out = out.replace(/export default function \w+\(/, `export default function ${componentName}(`);
@@ -575,7 +600,7 @@ Swap \`pattern\` for any of the ${DESIGN_COUNT} designs (see https://tabbied.com
 The photography is AI-generated and ships with this template.
 `;
 
-async function packageReactSite(slug, outDir, version, name, images) {
+async function packageReactSite(slug, outDir, version, name, images, artwork) {
   const pageSource = await fs.readFile(
     path.join(templateDir, slug, 'site', 'page.tsx'),
     'utf-8'
@@ -637,6 +662,27 @@ async function packageReactSite(slug, outDir, version, name, images) {
       `// Intrinsic dimensions for this page's images, so it reserves layout\n` +
         `// space before they load. Trimmed from the site-wide manifest.\n` +
         `export default ${JSON.stringify(mine, null, 2)} as Record<string, { hash: string; width: number; height: number; base?: string }>;\n`
+    );
+  }
+
+  // Artwork likewise, found by the `data-artwork` each one renders; a
+  // vector entry carries its paths, so this is also where they ship.
+  if (locals.has('components/Artwork')) {
+    const manifest = JSON.parse(
+      (await fs.readFile(path.join(repoRoot, 'lib/generated/artwork.js'), 'utf-8'))
+        .replace(/^[\s\S]*?export default /, '')
+        .replace(/;\s*$/, '')
+    );
+    const mine = Object.fromEntries(
+      Object.entries(manifest).filter(([id]) => artwork.includes(id))
+    );
+    await fs.writeFile(
+      path.join(srcDir, 'artwork.ts'),
+      `// The recolorable artwork this page renders: dimensions, files, and the\n` +
+        `// traced paths of any vector one. Trimmed from the site-wide manifest.\n` +
+        `export default ${JSON.stringify(mine, null, 2)} as Record<string, {\n` +
+        `  kind: 'mono' | 'layers' | 'tone';\n  render?: 'vector' | 'masks';\n  width: number;\n  height: number;\n` +
+        `  hash: string;\n  file?: string;\n  layers?: { name: string; key: string; d?: string; file?: string }[];\n  base: string;\n}>;\n`
     );
   }
 
@@ -753,7 +799,20 @@ async function packageReactSite(slug, outDir, version, name, images) {
 
 // ---- emit ----------------------------------------------------------------
 
-const README = (slug, name, version, slugs) => `# ${name}
+const ARTWORK_README = `
+## Pictures that follow the palette
+
+Some pictures on this page take their color from the page's own palette,
+the custom properties declared on its root element (\`--paper\`, \`--ink\`,
+...). Each one names its inks inline, as \`--art-1\`, \`--art-2\`, usually
+\`var(--ink)\` or \`var(--accent)\`: change the palette and they follow, or
+point an \`--art-N\` at another color to change just that picture. The rules
+that paint them are the \`.artwork\` ones in \`styles/base.css\`. Masked
+pictures carry their file inline as a data URI, so the page works opened
+straight from disk.
+`;
+
+const README = (slug, name, version, slugs, hasArtwork = false) => `# ${name}
 
 A Tabbied template, packaged as a plain HTML template. No build step, no
 framework - open \`index.html\` in a browser and it runs.
@@ -791,7 +850,7 @@ if you'd rather not depend on a CDN.
 ## Images
 
 The photography is AI-generated and ships with this template.
-
+${hasArtwork ? ARTWORK_README : ''}
 ## Credits
 
 Patterns by [Tabbied](https://tabbied.com) (tabbied@${version}), MIT licensed.
@@ -858,7 +917,7 @@ async function packageSite(slug, outDir, version) {
   html = dehashed.html;
 
   const images = rewriteImagePaths(html);
-  html = images.html;
+  html = inlineArtworkMasks(images.html, images.used);
 
   // The two stylesheets replace the /_next/ links that were just stripped.
   html = html.replace(
@@ -901,12 +960,13 @@ async function packageSite(slug, outDir, version) {
   const name = unescapeHtml(/<title>([^<]*)<\/title>/.exec(html)?.[1] ?? slug);
   await fs.writeFile(
     path.join(siteDir, 'README.md'),
-    README(slug, name, version, slugs)
+    README(slug, name, version, slugs, html.includes('data-artwork='))
   );
 
   const size = await zipDirectory(outDir, slug, `${slug}-html.zip`);
 
-  const reactSize = await packageReactSite(slug, outDir, version, name, images.used);
+  const artwork = [...new Set([...html.matchAll(/data-artwork="([^"]+)"/g)].map((m) => m[1]))];
+  const reactSize = await packageReactSite(slug, outDir, version, name, images.used, artwork);
 
   return {
     slug,

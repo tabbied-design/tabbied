@@ -1342,6 +1342,231 @@
           "as": "pale strings and bridge"
         }
       }
+    },
+    "inkwell-tattoo": {
+      "title": "Inkwell Tattoo - tattoo studio",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "saltline-oyster": {
+      "title": "Saltline Oyster Bar - seafood restaurant",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "bolt-and-bench": {
+      "title": "Bolt and Bench - hardware store",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "cellar-door-wines": {
+      "title": "Cellar Door - wine shop",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "platen-press": {
+      "title": "Platen Press - letterpress studio",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "trailhead-club": {
+      "title": "Trailhead Club - hiking club",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "keyway-locksmiths": {
+      "title": "Keyway Locksmiths - locksmith",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "corner-pharmacy": {
+      "title": "Corner Pharmacy - pharmacy",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "scoop-and-cone": {
+      "title": "Scoop and Cone - ice cream parlor",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "bright-smiles-kids": {
+      "title": "Bright Smiles - pediatric dentist",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "wayfarer-travel": {
+      "title": "Wayfarer Travel - travel agency",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "spoke-and-chain": {
+      "title": "Spoke and Chain - bike shop",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "sunday-market": {
+      "title": "Sunday Market - farmers market",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "pawsh-grooming": {
+      "title": "Pawsh - dog grooming",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "rootbound-nursery": {
+      "title": "Rootbound - plant nursery",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "el-farolito-truck": {
+      "title": "El Farolito - taco truck",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "pinecone-camp": {
+      "title": "Pinecone Camp - summer camp",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "slice-theory": {
+      "title": "Slice Theory - pizzeria",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "polyglot-school": {
+      "title": "Polyglot - language school",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "bloom-events": {
+      "title": "Bloom Events - event planner",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "suds-car-wash": {
+      "title": "Suds - car wash",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "spin-cycle-laundry": {
+      "title": "Spin Cycle - laundromat",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "tinker-toys": {
+      "title": "Tinker and Co - toy store",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "glaze-donuts": {
+      "title": "Glaze - donut shop",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "nori-sushi": {
+      "title": "Nori - sushi bar",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "form-and-field": {
+      "title": "Form and Field - architecture firm",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "lumen-portraits": {
+      "title": "Lumen - portrait photographer",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "thread-and-hem": {
+      "title": "Thread and Hem - fashion boutique",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "blue-note-room": {
+      "title": "Blue Note Room - jazz club",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "keel-wealth": {
+      "title": "Keel Wealth - financial advisor",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "hewn-furniture": {
+      "title": "Hewn - furniture store",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "restore-clinic": {
+      "title": "Restore - chiropractic and massage",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "hollis-hart": {
+      "title": "Hollis and Hart - real estate",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "grain-and-glow": {
+      "title": "Grain and Glow - skincare studio",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "vinyl-vault": {
+      "title": "Vinyl Vault - record store",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "the-wren-hotel": {
+      "title": "The Wren - boutique hotel",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "wheelhouse-ceramics": {
+      "title": "Wheelhouse Ceramics - ceramics studio",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "stride-sneakers": {
+      "title": "Stride - sneaker store",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "offshore-surf": {
+      "title": "Offshore Surf Co - surf shop and school",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "wick-and-wax": {
+      "title": "Wick and Wax - candle maker",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "high-pass-lodge": {
+      "title": "High Pass Lodge - mountain lodge",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "lakeshore-cabins": {
+      "title": "Lakeshore Cabins - cabin rentals",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "old-town-walks": {
+      "title": "Old Town Walks - city walking tours",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "terrace-hill-winery": {
+      "title": "Terrace Hill - winery",
+      "style": "flat vector-style illustration",
+      "palette": {}
+    },
+    "pinewood-rv": {
+      "title": "Pinewood RV Park - campground",
+      "style": "flat vector-style illustration",
+      "palette": {}
     }
   },
   "sets": {
@@ -2499,6 +2724,163 @@
       "size": "1024x1024",
       "cutout": true,
       "backdrop": "The object sits alone, softly and evenly lit, with no cast shadow, no hands, no props, no table surface and nothing else whatsoever in frame."
+    },
+    "art-mono": {
+      "style": "bold single-color ink illustration",
+      "size": "1024x1024",
+      "cutout": true,
+      "recolor": "mono",
+      "paletteMode": "hex",
+      "palette": {
+        "Ink": "#000000"
+      },
+      "backdrop": "Solid black ink only, drawn like a linocut or a rubber stamp: black shapes and lines, no gray, no shading, no gradients, no second color. The subject alone and centered, nothing else in frame."
+    },
+    "art-layers-3": {
+      "style": "flat vector-style illustration",
+      "size": "1024x1024",
+      "cutout": true,
+      "recolor": "layers",
+      "keys": {
+        "#FF0000": "red",
+        "#0000FF": "blue",
+        "#000000": "black"
+      },
+      "paletteMode": "hex",
+      "palette": {
+        "Red": "#FF0000",
+        "Blue": "#0000FF",
+        "Black": "#000000"
+      },
+      "backdrop": "Solid flat fills only, each color in large clean shapes, no gradients, no shading, no texture, no outlines in any other color, no white and no gray. The subject alone and centered, nothing else in frame."
+    },
+    "art-layers-4": {
+      "style": "flat vector-style illustration",
+      "size": "1024x1024",
+      "cutout": true,
+      "recolor": "layers",
+      "keys": {
+        "#FF0000": "red",
+        "#0000FF": "blue",
+        "#FFFF00": "yellow",
+        "#000000": "black"
+      },
+      "paletteMode": "hex",
+      "palette": {
+        "Red": "#FF0000",
+        "Blue": "#0000FF",
+        "Yellow": "#FFFF00",
+        "Black": "#000000"
+      },
+      "backdrop": "Solid flat fills only, each color in large clean shapes, no gradients, no shading, no texture, no outlines in any other color, no white and no gray. The subject alone and centered, nothing else in frame."
+    },
+    "art-masks-3": {
+      "style": "flat vector-style illustration",
+      "size": "1024x1024",
+      "cutout": true,
+      "recolor": "layers",
+      "render": "masks",
+      "keys": {
+        "#FF0000": "red",
+        "#0000FF": "blue",
+        "#000000": "black"
+      },
+      "paletteMode": "hex",
+      "palette": {
+        "Red": "#FF0000",
+        "Blue": "#0000FF",
+        "Black": "#000000"
+      },
+      "backdrop": "Solid flat fills only, each color in large clean shapes, no gradients, no shading, no texture, no outlines in any other color, no white and no gray. The subject alone and centered, nothing else in frame."
+    },
+    "art-masks-4": {
+      "style": "flat vector-style illustration",
+      "size": "1024x1024",
+      "cutout": true,
+      "recolor": "layers",
+      "render": "masks",
+      "keys": {
+        "#FF0000": "red",
+        "#0000FF": "blue",
+        "#FFFF00": "yellow",
+        "#000000": "black"
+      },
+      "paletteMode": "hex",
+      "palette": {
+        "Red": "#FF0000",
+        "Blue": "#0000FF",
+        "Yellow": "#FFFF00",
+        "Black": "#000000"
+      },
+      "backdrop": "Solid flat fills only, each color in large clean shapes, no gradients, no shading, no texture, no outlines in any other color, no white and no gray. The subject alone and centered, nothing else in frame."
+    },
+    "art-photo": {
+      "style": "black-and-white studio photograph",
+      "size": "1024x1024",
+      "cutout": true,
+      "recolor": "tone",
+      "palette": {},
+      "backdrop": "The subject alone, lit to show a full range of tones from deep shadow to bright highlight. Photographed as a cleanly isolated cut-out: only the object itself, with no smoke, haze, fog, glow, vignette, reflection, cast shadow or background texture of any kind."
+    },
+    "art-portrait": {
+      "style": "black-and-white studio portrait photograph",
+      "size": "1024x1536",
+      "cutout": true,
+      "recolor": "tone",
+      "palette": {},
+      "backdrop": "Head and shoulders, the person alone, softly lit with clear shadows and highlights, no background, no cast shadow."
+    },
+    "art-bg-layers": {
+      "style": "wide flat vector-style landscape illustration",
+      "size": "1536x1024",
+      "cutout": true,
+      "recolor": "layers",
+      "keys": {
+        "#FF0000": "red",
+        "#0000FF": "blue",
+        "#FFFF00": "yellow",
+        "#000000": "black"
+      },
+      "trim": false,
+      "paletteMode": "hex",
+      "palette": {
+        "Red": "#FF0000",
+        "Blue": "#0000FF",
+        "Yellow": "#FFFF00",
+        "Black": "#000000"
+      },
+      "backdrop": "The scene fills the lower two thirds of the frame from the left edge to the right edge; the sky above it is left completely empty. Solid flat fills only, large clean shapes, no gradients, no shading, no texture, no outlines in any other color, no white and no gray."
+    },
+    "art-bg-masks": {
+      "style": "wide flat vector-style landscape illustration",
+      "size": "1536x1024",
+      "cutout": true,
+      "recolor": "layers",
+      "render": "masks",
+      "keys": {
+        "#FF0000": "red",
+        "#0000FF": "blue",
+        "#FFFF00": "yellow",
+        "#000000": "black"
+      },
+      "trim": false,
+      "paletteMode": "hex",
+      "palette": {
+        "Red": "#FF0000",
+        "Blue": "#0000FF",
+        "Yellow": "#FFFF00",
+        "Black": "#000000"
+      },
+      "backdrop": "The scene fills the lower two thirds of the frame from the left edge to the right edge; the sky above it is left completely empty. Solid flat fills only, large clean shapes, no gradients, no shading, no texture, no outlines in any other color, no white and no gray."
+    },
+    "art-bg-photo": {
+      "style": "wide black-and-white landscape photograph",
+      "size": "1536x1024",
+      "cutout": true,
+      "recolor": "tone",
+      "trim": false,
+      "palette": {},
+      "backdrop": "The scene fills the lower two thirds of the frame from the left edge to the right edge. The sky above it is completely empty and clear: no clouds, no mist, no haze, no fog, no smoke. A full range of tones from deep shadow to bright highlight."
     }
   },
   "prompts": [
@@ -4856,6 +5238,951 @@
       "set": "cadence-music-object",
       "slot": "object",
       "subject": "a full-size violin standing upright, seen straight on from the front, strings and bridge visible"
+    },
+    {
+      "id": "inkwell-tattoo-swallow",
+      "project": "inkwell-tattoo",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a traditional tattoo flash swallow in flight, bold outline"
+    },
+    {
+      "id": "inkwell-tattoo-rose",
+      "project": "inkwell-tattoo",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a traditional tattoo flash rose with two leaves, bold outline"
+    },
+    {
+      "id": "inkwell-tattoo-dagger",
+      "project": "inkwell-tattoo",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a traditional tattoo flash dagger piercing a heart, bold outline"
+    },
+    {
+      "id": "inkwell-tattoo-panther",
+      "project": "inkwell-tattoo",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a traditional tattoo flash panther head, bold outline"
+    },
+    {
+      "id": "saltline-oyster-oyster",
+      "project": "saltline-oyster",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "an oyster shell lying half open, engraving style"
+    },
+    {
+      "id": "saltline-oyster-mackerel",
+      "project": "saltline-oyster",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a mackerel seen from the side, engraving style"
+    },
+    {
+      "id": "saltline-oyster-lobster",
+      "project": "saltline-oyster",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a lobster seen from above, engraving style"
+    },
+    {
+      "id": "bolt-and-bench-hammer",
+      "project": "bolt-and-bench",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a claw hammer, bold icon"
+    },
+    {
+      "id": "bolt-and-bench-wrench",
+      "project": "bolt-and-bench",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "an adjustable wrench, bold icon"
+    },
+    {
+      "id": "bolt-and-bench-roller",
+      "project": "bolt-and-bench",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a paint roller, bold icon"
+    },
+    {
+      "id": "bolt-and-bench-trowel",
+      "project": "bolt-and-bench",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a garden trowel, bold icon"
+    },
+    {
+      "id": "cellar-door-wines-grapes",
+      "project": "cellar-door-wines",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a bunch of grapes with a vine leaf, engraving style"
+    },
+    {
+      "id": "cellar-door-wines-corkscrew",
+      "project": "cellar-door-wines",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a waiter's corkscrew, engraving style"
+    },
+    {
+      "id": "cellar-door-wines-bottle",
+      "project": "cellar-door-wines",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a wine bottle beside a wine glass, engraving style"
+    },
+    {
+      "id": "platen-press-press",
+      "project": "platen-press",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a small tabletop letterpress printing machine, engraving style"
+    },
+    {
+      "id": "platen-press-brayer",
+      "project": "platen-press",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "an ink brayer roller, engraving style"
+    },
+    {
+      "id": "platen-press-nib",
+      "project": "platen-press",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a fountain pen nib, engraving style"
+    },
+    {
+      "id": "trailhead-club-boot",
+      "project": "trailhead-club",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a laced hiking boot, bold icon"
+    },
+    {
+      "id": "trailhead-club-compass",
+      "project": "trailhead-club",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a round hiking compass, bold icon"
+    },
+    {
+      "id": "trailhead-club-tent",
+      "project": "trailhead-club",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a small ridge tent with a pine tree, bold icon"
+    },
+    {
+      "id": "trailhead-club-peak",
+      "project": "trailhead-club",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a mountain peak with a flag on top, bold icon"
+    },
+    {
+      "id": "keyway-locksmiths-key",
+      "project": "keyway-locksmiths",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "an old-fashioned door key, bold icon"
+    },
+    {
+      "id": "keyway-locksmiths-padlock",
+      "project": "keyway-locksmiths",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a closed padlock, bold icon"
+    },
+    {
+      "id": "keyway-locksmiths-handle",
+      "project": "keyway-locksmiths",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a door lever handle with a keyhole plate, bold icon"
+    },
+    {
+      "id": "corner-pharmacy-mortar",
+      "project": "corner-pharmacy",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a mortar and pestle, engraving style"
+    },
+    {
+      "id": "corner-pharmacy-bottle",
+      "project": "corner-pharmacy",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a round pharmacy bottle with a stopper, engraving style"
+    },
+    {
+      "id": "corner-pharmacy-leaf",
+      "project": "corner-pharmacy",
+      "set": "art-mono",
+      "slot": "art",
+      "subject": "a sprig of chamomile flowers, engraving style"
+    },
+    {
+      "id": "scoop-and-cone-cone",
+      "project": "scoop-and-cone",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a waffle cone with two scoops of ice cream"
+    },
+    {
+      "id": "scoop-and-cone-sundae",
+      "project": "scoop-and-cone",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "an ice cream sundae in a tall glass with a cherry on top"
+    },
+    {
+      "id": "scoop-and-cone-popsicle",
+      "project": "scoop-and-cone",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "an ice lolly on a stick with a bite taken out"
+    },
+    {
+      "id": "bright-smiles-kids-toothbrush",
+      "project": "bright-smiles-kids",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a toothbrush and a tube of toothpaste"
+    },
+    {
+      "id": "bright-smiles-kids-tooth",
+      "project": "bright-smiles-kids",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a friendly cartoon tooth with a simple smile"
+    },
+    {
+      "id": "bright-smiles-kids-chair",
+      "project": "bright-smiles-kids",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a dentist's chair with its lamp"
+    },
+    {
+      "id": "wayfarer-travel-lighthouse",
+      "project": "wayfarer-travel",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a lighthouse on a rocky point"
+    },
+    {
+      "id": "wayfarer-travel-balloon",
+      "project": "wayfarer-travel",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a hot-air balloon with a basket"
+    },
+    {
+      "id": "wayfarer-travel-sailboat",
+      "project": "wayfarer-travel",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a small sailing boat on a wave"
+    },
+    {
+      "id": "wayfarer-travel-temple",
+      "project": "wayfarer-travel",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a pagoda on a hill"
+    },
+    {
+      "id": "spoke-and-chain-bicycle",
+      "project": "spoke-and-chain",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a city bicycle seen from the side"
+    },
+    {
+      "id": "spoke-and-chain-helmet",
+      "project": "spoke-and-chain",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a cycling helmet"
+    },
+    {
+      "id": "spoke-and-chain-pump",
+      "project": "spoke-and-chain",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a floor bike pump"
+    },
+    {
+      "id": "sunday-market-basket",
+      "project": "sunday-market",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a woven basket of vegetables"
+    },
+    {
+      "id": "sunday-market-carrots",
+      "project": "sunday-market",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a bunch of carrots with leafy tops"
+    },
+    {
+      "id": "sunday-market-apples",
+      "project": "sunday-market",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a wooden crate of apples"
+    },
+    {
+      "id": "pawsh-grooming-poodle",
+      "project": "pawsh-grooming",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a fluffy poodle sitting"
+    },
+    {
+      "id": "pawsh-grooming-dachshund",
+      "project": "pawsh-grooming",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a dachshund standing, seen from the side"
+    },
+    {
+      "id": "pawsh-grooming-brush",
+      "project": "pawsh-grooming",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a grooming brush and a pair of scissors"
+    },
+    {
+      "id": "rootbound-nursery-monstera",
+      "project": "rootbound-nursery",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a monstera plant in a pot"
+    },
+    {
+      "id": "rootbound-nursery-cactus",
+      "project": "rootbound-nursery",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a tall cactus in a pot"
+    },
+    {
+      "id": "rootbound-nursery-can",
+      "project": "rootbound-nursery",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a watering can"
+    },
+    {
+      "id": "el-farolito-truck-truck",
+      "project": "el-farolito-truck",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a food truck seen from the side with its serving hatch open"
+    },
+    {
+      "id": "el-farolito-truck-tacos",
+      "project": "el-farolito-truck",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "three tacos on a plate"
+    },
+    {
+      "id": "el-farolito-truck-chili",
+      "project": "el-farolito-truck",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a lime cut in half beside a chili pepper"
+    },
+    {
+      "id": "pinecone-camp-canoe",
+      "project": "pinecone-camp",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a canoe with two paddles"
+    },
+    {
+      "id": "pinecone-camp-tent",
+      "project": "pinecone-camp",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a camping tent under a pine tree"
+    },
+    {
+      "id": "pinecone-camp-campfire",
+      "project": "pinecone-camp",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a campfire with logs and flames"
+    },
+    {
+      "id": "slice-theory-pizza",
+      "project": "slice-theory",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a whole pizza seen from above"
+    },
+    {
+      "id": "slice-theory-slice",
+      "project": "slice-theory",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a single slice of pizza"
+    },
+    {
+      "id": "slice-theory-tomato",
+      "project": "slice-theory",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a tomato beside a sprig of basil"
+    },
+    {
+      "id": "polyglot-school-bubbles",
+      "project": "polyglot-school",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "two overlapping speech bubbles"
+    },
+    {
+      "id": "polyglot-school-book",
+      "project": "polyglot-school",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "an open book"
+    },
+    {
+      "id": "polyglot-school-globe",
+      "project": "polyglot-school",
+      "set": "art-layers-3",
+      "slot": "art",
+      "subject": "a desk globe on a stand"
+    },
+    {
+      "id": "bloom-events-balloons",
+      "project": "bloom-events",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a bunch of balloons"
+    },
+    {
+      "id": "bloom-events-cake",
+      "project": "bloom-events",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a two-tier celebration cake with candles"
+    },
+    {
+      "id": "bloom-events-gift",
+      "project": "bloom-events",
+      "set": "art-layers-4",
+      "slot": "art",
+      "subject": "a gift box with a ribbon bow"
+    },
+    {
+      "id": "suds-car-wash-car",
+      "project": "suds-car-wash",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a small hatchback car covered in soap bubbles"
+    },
+    {
+      "id": "suds-car-wash-bucket",
+      "project": "suds-car-wash",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a bucket with a sponge"
+    },
+    {
+      "id": "suds-car-wash-nozzle",
+      "project": "suds-car-wash",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a spray nozzle spraying water"
+    },
+    {
+      "id": "spin-cycle-laundry-washer",
+      "project": "spin-cycle-laundry",
+      "set": "art-masks-3",
+      "slot": "art",
+      "subject": "a front-loading washing machine"
+    },
+    {
+      "id": "spin-cycle-laundry-towels",
+      "project": "spin-cycle-laundry",
+      "set": "art-masks-3",
+      "slot": "art",
+      "subject": "a stack of folded towels"
+    },
+    {
+      "id": "spin-cycle-laundry-basket",
+      "project": "spin-cycle-laundry",
+      "set": "art-masks-3",
+      "slot": "art",
+      "subject": "a laundry basket full of clothes"
+    },
+    {
+      "id": "tinker-toys-train",
+      "project": "tinker-toys",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a wooden toy train with three carriages"
+    },
+    {
+      "id": "tinker-toys-rings",
+      "project": "tinker-toys",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a stacking ring toy"
+    },
+    {
+      "id": "tinker-toys-rocket",
+      "project": "tinker-toys",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a toy rocket"
+    },
+    {
+      "id": "glaze-donuts-donut",
+      "project": "glaze-donuts",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a glazed donut with sprinkles"
+    },
+    {
+      "id": "glaze-donuts-box",
+      "project": "glaze-donuts",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "an open box of donuts"
+    },
+    {
+      "id": "glaze-donuts-coffee",
+      "project": "glaze-donuts",
+      "set": "art-masks-4",
+      "slot": "art",
+      "subject": "a paper coffee cup with a lid"
+    },
+    {
+      "id": "nori-sushi-nigiri",
+      "project": "nori-sushi",
+      "set": "art-masks-3",
+      "slot": "art",
+      "subject": "two pieces of nigiri sushi"
+    },
+    {
+      "id": "nori-sushi-maki",
+      "project": "nori-sushi",
+      "set": "art-masks-3",
+      "slot": "art",
+      "subject": "three maki rolls"
+    },
+    {
+      "id": "nori-sushi-chopsticks",
+      "project": "nori-sushi",
+      "set": "art-masks-3",
+      "slot": "art",
+      "subject": "a pair of chopsticks resting on a small soy dish"
+    },
+    {
+      "id": "form-and-field-house",
+      "project": "form-and-field",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a modern concrete house with large windows, the sky empty"
+    },
+    {
+      "id": "form-and-field-pavilion",
+      "project": "form-and-field",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a timber garden pavilion, the sky empty"
+    },
+    {
+      "id": "form-and-field-library",
+      "project": "form-and-field",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a brick library building with tall arched windows, the sky empty"
+    },
+    {
+      "id": "lumen-portraits-p1",
+      "project": "lumen-portraits",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a woman in her thirties with curly hair, smiling"
+    },
+    {
+      "id": "lumen-portraits-p2",
+      "project": "lumen-portraits",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "an older man with a grey beard and glasses"
+    },
+    {
+      "id": "lumen-portraits-p3",
+      "project": "lumen-portraits",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a young man with short hair, looking to the side"
+    },
+    {
+      "id": "lumen-portraits-p4",
+      "project": "lumen-portraits",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a woman in her sixties with short silver hair"
+    },
+    {
+      "id": "thread-and-hem-coat",
+      "project": "thread-and-hem",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a long wool coat on a wooden hanger"
+    },
+    {
+      "id": "thread-and-hem-boots",
+      "project": "thread-and-hem",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a pair of leather ankle boots"
+    },
+    {
+      "id": "thread-and-hem-model",
+      "project": "thread-and-hem",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a woman in a tailored blazer, three-quarter length"
+    },
+    {
+      "id": "blue-note-room-sax",
+      "project": "blue-note-room",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a saxophonist playing, eyes closed"
+    },
+    {
+      "id": "blue-note-room-bass",
+      "project": "blue-note-room",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "an upright double bass standing"
+    },
+    {
+      "id": "blue-note-room-mic",
+      "project": "blue-note-room",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a vintage chrome ribbon microphone on a straight stand"
+    },
+    {
+      "id": "keel-wealth-a1",
+      "project": "keel-wealth",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a woman in her fifties in a dark suit"
+    },
+    {
+      "id": "keel-wealth-a2",
+      "project": "keel-wealth",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a man in his forties with an open collar shirt"
+    },
+    {
+      "id": "keel-wealth-a3",
+      "project": "keel-wealth",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a woman in her thirties with long straight hair"
+    },
+    {
+      "id": "hewn-furniture-chair",
+      "project": "hewn-furniture",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a mid-century lounge chair"
+    },
+    {
+      "id": "hewn-furniture-lamp",
+      "project": "hewn-furniture",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a floor lamp with a fabric shade"
+    },
+    {
+      "id": "hewn-furniture-sideboard",
+      "project": "hewn-furniture",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a low wooden sideboard with sliding doors"
+    },
+    {
+      "id": "restore-clinic-r1",
+      "project": "restore-clinic",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a woman in her forties in a clinic tunic"
+    },
+    {
+      "id": "restore-clinic-r2",
+      "project": "restore-clinic",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a man in his thirties in a polo shirt"
+    },
+    {
+      "id": "restore-clinic-stones",
+      "project": "restore-clinic",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a stack of smooth massage stones"
+    },
+    {
+      "id": "hollis-hart-victorian",
+      "project": "hollis-hart",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a Victorian house with a porch, the sky empty"
+    },
+    {
+      "id": "hollis-hart-glass",
+      "project": "hollis-hart",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a modern glass house, the sky empty"
+    },
+    {
+      "id": "hollis-hart-townhouse",
+      "project": "hollis-hart",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a row of brick townhouses, the sky empty"
+    },
+    {
+      "id": "grain-and-glow-pump",
+      "project": "grain-and-glow",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a pump bottle of lotion"
+    },
+    {
+      "id": "grain-and-glow-jar",
+      "project": "grain-and-glow",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a small glass jar of face cream"
+    },
+    {
+      "id": "grain-and-glow-esthetician",
+      "project": "grain-and-glow",
+      "set": "art-portrait",
+      "slot": "art",
+      "subject": "a smiling esthetician with her hair tied back"
+    },
+    {
+      "id": "vinyl-vault-turntable",
+      "project": "vinyl-vault",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a turntable with a record on it, seen at an angle"
+    },
+    {
+      "id": "vinyl-vault-headphones",
+      "project": "vinyl-vault",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a pair of over-ear headphones"
+    },
+    {
+      "id": "vinyl-vault-records",
+      "project": "vinyl-vault",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a crate of vinyl records"
+    },
+    {
+      "id": "the-wren-hotel-armchair",
+      "project": "the-wren-hotel",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a velvet armchair"
+    },
+    {
+      "id": "the-wren-hotel-lamp",
+      "project": "the-wren-hotel",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a bedside lamp with a pleated shade"
+    },
+    {
+      "id": "the-wren-hotel-key",
+      "project": "the-wren-hotel",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a brass hotel room key with a large tassel, lying flat"
+    },
+    {
+      "id": "wheelhouse-ceramics-vase",
+      "project": "wheelhouse-ceramics",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a tall ceramic vase"
+    },
+    {
+      "id": "wheelhouse-ceramics-bowl",
+      "project": "wheelhouse-ceramics",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a wide ceramic bowl"
+    },
+    {
+      "id": "wheelhouse-ceramics-jug",
+      "project": "wheelhouse-ceramics",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a ceramic jug with a handle"
+    },
+    {
+      "id": "stride-sneakers-runner",
+      "project": "stride-sneakers",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a running shoe seen from the side"
+    },
+    {
+      "id": "stride-sneakers-hightop",
+      "project": "stride-sneakers",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a high-top basketball sneaker seen from the side"
+    },
+    {
+      "id": "stride-sneakers-slipon",
+      "project": "stride-sneakers",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a canvas slip-on shoe seen from the side"
+    },
+    {
+      "id": "offshore-surf-longboard",
+      "project": "offshore-surf",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a longboard surfboard standing upright"
+    },
+    {
+      "id": "offshore-surf-shortboard",
+      "project": "offshore-surf",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a shortboard surfboard standing upright"
+    },
+    {
+      "id": "offshore-surf-fin",
+      "project": "offshore-surf",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a single surfboard fin"
+    },
+    {
+      "id": "wick-and-wax-jar",
+      "project": "wick-and-wax",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a candle in a glass jar"
+    },
+    {
+      "id": "wick-and-wax-pillar",
+      "project": "wick-and-wax",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a tall pillar candle"
+    },
+    {
+      "id": "wick-and-wax-tin",
+      "project": "wick-and-wax",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a candle in a small round tin with its lid off"
+    },
+    {
+      "id": "high-pass-lodge-range",
+      "project": "high-pass-lodge",
+      "set": "art-bg-layers",
+      "slot": "art",
+      "subject": "a mountain range with snowy peaks and a pine forest in front"
+    },
+    {
+      "id": "high-pass-lodge-lake",
+      "project": "high-pass-lodge",
+      "set": "art-bg-layers",
+      "slot": "art",
+      "subject": "a mountain lake with pines on the shore and a wooden jetty"
+    },
+    {
+      "id": "lakeshore-cabins-shore",
+      "project": "lakeshore-cabins",
+      "set": "art-bg-photo",
+      "slot": "art",
+      "subject": "a calm lake with a forested shoreline and a wooden dock"
+    },
+    {
+      "id": "lakeshore-cabins-cabin",
+      "project": "lakeshore-cabins",
+      "set": "art-bg-photo",
+      "slot": "art",
+      "subject": "a small log cabin among tall trees"
+    },
+    {
+      "id": "old-town-walks-rooftops",
+      "project": "old-town-walks",
+      "set": "art-bg-layers",
+      "slot": "art",
+      "subject": "an old town skyline of rooftops, a church spire and a clock tower"
+    },
+    {
+      "id": "old-town-walks-bridge",
+      "project": "old-town-walks",
+      "set": "art-bg-layers",
+      "slot": "art",
+      "subject": "a stone bridge over a river with old houses on both banks"
+    },
+    {
+      "id": "terrace-hill-winery-hills",
+      "project": "terrace-hill-winery",
+      "set": "art-bg-masks",
+      "slot": "art",
+      "subject": "rolling hills covered in rows of grapevines with a farmhouse"
+    },
+    {
+      "id": "terrace-hill-winery-barrels",
+      "project": "terrace-hill-winery",
+      "set": "art-photo",
+      "slot": "art",
+      "subject": "a stack of oak wine barrels"
+    },
+    {
+      "id": "pinewood-rv-treeline",
+      "project": "pinewood-rv",
+      "set": "art-bg-photo",
+      "slot": "art",
+      "subject": "a pine forest treeline with a vintage camper trailer parked in front"
+    },
+    {
+      "id": "pinewood-rv-fire",
+      "project": "pinewood-rv",
+      "set": "art-bg-photo",
+      "slot": "art",
+      "subject": "a stone fire ring with log benches in a clearing ringed by tall pines, no fire lit"
     }
   ]
 }

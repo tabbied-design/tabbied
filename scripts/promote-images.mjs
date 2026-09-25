@@ -131,6 +131,8 @@ async function main() {
   const jobs = [];
   let errors = 0;
   for (const r of selected) {
+    // Recolorable artwork is reduced to shape and tone, not encoded as is.
+    if (r.recolor) continue;
     const p = plan(r, opts);
     if (p.error) { errors++; console.error(`  failed ${r.id}: ${p.error}`); continue; }
     jobs.push(...p.jobs);
