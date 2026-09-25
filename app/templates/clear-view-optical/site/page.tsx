@@ -277,9 +277,9 @@ export default function ClearViewOpticalPage() {
                       pattern={gimbal}
                       palette={LENSES}
                       fit="grid"
-                      cellSize={40}
+                      cellSize={52}
                       seed={`clear-view-${f.shape}`}
-                      options={{ frequency: 0.35 }}
+                      options={{ frequency: 0.3 }}
                       style={{ position: 'absolute', inset: 0 }}
                     />
                   </div>

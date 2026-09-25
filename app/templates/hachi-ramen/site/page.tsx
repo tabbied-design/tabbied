@@ -122,7 +122,7 @@ const BROTHS: Broth[] = [
   },
   {
     name: 'Shoyu',
-    from: 'Chicken and dashi',
+    from: 'Chicken, dashi',
     text: 'Clear, amber and seasoned with aged soy. The lightest bowl and the chef\'s favorite.',
     tone: 'gold',
     body: 'Light',
@@ -134,7 +134,7 @@ const BROTHS: Broth[] = [
   },
   {
     name: 'Miso',
-    from: 'Chicken, three misos',
+    from: 'Chicken, miso',
     text: 'Red, white and barley miso whisked in at the pass, with ground sesame.',
     tone: 'chili',
     body: 'Hearty',
@@ -146,7 +146,7 @@ const BROTHS: Broth[] = [
   },
   {
     name: 'Kombu',
-    from: 'Kelp and shiitake',
+    from: 'Kelp, shiitake',
     text: 'Our vegan broth, made in its own pot with its own ladle. No fish, no dairy.',
     tone: 'ink',
     body: 'Clean',
@@ -327,8 +327,8 @@ export default function HachiRamenPage() {
                   <span className={s.swatch} aria-hidden="true" />
                   <h3 id={`broth-${b.name}`}>{b.name}</h3>
                   <p className={s.brothFrom}>{b.from}</p>
-                  <strong className={s.brothBody}>{b.body}</strong>
                 </div>
+                <strong className={s.brothBody}>{b.body}</strong>
                 <p className={s.brothText}>{b.text}</p>
                 <ul className={s.bowls}>
                   {b.bowls.map((item) => (

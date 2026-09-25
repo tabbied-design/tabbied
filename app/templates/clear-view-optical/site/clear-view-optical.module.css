@@ -153,7 +153,7 @@
 
 .stage {
   position: relative;
-  padding: clamp(1rem, 3.5vw, 3rem);
+  padding: clamp(0.9rem, 2.2vw, 1.9rem) clamp(0.9rem, 2.2vw, 1.9rem) clamp(4rem, 7vw, 6rem);
   border-radius: 1.5rem;
   background: var(--pale);
 }
@@ -168,8 +168,8 @@
 .chart {
   position: relative;
   display: grid;
-  gap: clamp(0.5rem, 1.2vw, 1rem);
-  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(0.9rem, 2.5vw, 2rem) clamp(1.5rem, 3vw, 2.2rem);
+  gap: clamp(0.35rem, 0.8vw, 0.7rem);
+  padding: clamp(1.3rem, 2.4vw, 2rem) clamp(0.9rem, 2vw, 1.5rem) clamp(1.3rem, 2.4vw, 1.8rem);
   background: var(--paper);
   border-radius: 0.6rem;
   box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.35);
@@ -177,7 +177,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 3.4rem minmax(0, 1fr) 1.6rem;
+  grid-template-columns: 3rem minmax(0, 1fr) 1.4rem;
   align-items: center;
   gap: 0.75rem;
 }
@@ -204,19 +204,19 @@
 }
 
 .row[data-size='1'] .letters {
-  font-size: clamp(4.4rem, 9vw, 7.6rem);
+  font-size: clamp(4.2rem, 7vw, 6.2rem);
 }
 
 .row[data-size='2'] .letters {
-  font-size: clamp(3.2rem, 6.2vw, 5.2rem);
+  font-size: clamp(3rem, 4.8vw, 4.2rem);
 }
 
 .row[data-size='3'] .letters {
-  font-size: clamp(2.4rem, 4.6vw, 3.9rem);
+  font-size: clamp(2.2rem, 3.6vw, 3.1rem);
 }
 
 .row[data-size='4'] .letters {
-  font-size: clamp(1.8rem, 3.4vw, 2.85rem);
+  font-size: clamp(1.7rem, 2.7vw, 2.35rem);
 }
 
 .row[data-size='7'] .letters {
@@ -234,16 +234,16 @@
 /* The headline is the 20/40 line and the one under it, with the chart's
    traditional rule beneath. */
 .row[data-size='5'] {
-  padding: 0.5rem 0 0.9rem;
+  padding: 0.4rem 0 0.8rem;
   border-bottom: 2px solid var(--blue);
 }
 
 .title {
   text-align: center;
-  font-size: clamp(1.45rem, 2.35vw, 2.15rem);
+  font-size: clamp(1.45rem, 2.15vw, 1.95rem);
   font-weight: 600;
   line-height: 1.15;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -288,10 +288,10 @@
 .heroGlasses {
   position: absolute;
   z-index: 2;
-  right: -5%;
-  bottom: 9%;
-  width: 46%;
-  transform: rotate(-11deg);
+  right: -7%;
+  bottom: -1.5%;
+  width: 44%;
+  transform: rotate(-9deg);
   filter: drop-shadow(0 12px 10px rgb(0 0 0 / 0.2));
 }
 
@@ -427,7 +427,7 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  opacity: 0.55;
+  opacity: 0.4;
 }
 
 .faceArt {
@@ -733,10 +733,10 @@
 
 .insArt {
   position: absolute;
-  right: -6%;
-  bottom: -1.2rem;
-  width: 72%;
-  transform: rotate(-6deg);
+  right: 1.2rem;
+  bottom: 1.6rem;
+  width: min(62%, 17rem);
+  transform: rotate(-5deg);
 }
 
 /* ------------------------------------------------------------------ book */

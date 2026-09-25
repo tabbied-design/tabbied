@@ -391,8 +391,8 @@
 
 .brothHead {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas: 'swatch name name' 'swatch from body';
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: 'swatch name' 'swatch from';
   gap: 0.1rem 0.8rem;
   align-items: center;
 }
@@ -423,8 +423,8 @@
 }
 
 .brothBody {
-  grid-area: body;
-  justify-self: end;
+  align-self: flex-start;
+  margin-top: 1rem;
   padding: 0.1rem 0.55rem;
   font-size: 0.78rem;
   font-weight: 700;
@@ -901,7 +901,7 @@
 @media (max-width: 1100px) {
   .stage {
     aspect-ratio: auto;
-    max-width: 46rem;
+    max-width: 42rem;
   }
 
   .plate {
