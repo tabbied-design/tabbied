@@ -134,7 +134,20 @@ const MEMBERS = [
 
 export default function HeronPointGolfPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#eff2ea',
+        '--ink': '#172117',
+        '--green': '#2f6b3a',
+        '--sand': '#c8a45a',
+        '--gray': '#8b9488',
+        '--pale': '#dce3d5',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,green,sand,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -145,18 +158,18 @@ export default function HeronPointGolfPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span className={s.markName}>Heron Point</span>
-          <span className={s.markSub}>Golf club</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Heron Point</span>
+          <span data-edit="bar.markSub" data-edit-max="60" className={s.markSub}>Golf club</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBook} href="#tee">Book a tee time</a>
+        <a data-edit="bar.barBook" data-edit-max="28" className={s.barBook} href="#tee">Book a tee time</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -176,26 +189,26 @@ export default function HeronPointGolfPage() {
             />
           </div>
           <div className={s.heroText}>
-            <p className={s.kicker}>Public golf on the marsh road</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Public golf on the marsh road</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Eighteen holes
               <br />
               <em>along the marsh.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               A par-72 course open to everyone, seven days a week, with a
               range, two teaching pros and breakfast from six.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#tee">Book a tee time</a>
-              <a className={s.btnLine} href="#course">See the scorecard</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#tee">Book a tee time</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#course">See the scorecard</a>
             </div>
           </div>
           <dl className={s.conditions}>
-            {CONDITIONS.map(([k, v]) => (
+            {CONDITIONS.map(([k, v], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+                <dt data-edit={`hero.term.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
               </div>
             ))}
           </dl>
@@ -204,7 +217,7 @@ export default function HeronPointGolfPage() {
         {/* ------------------------------------------------------------ BAND
             Mown turf: laths across and along, the way a fairway is cut. */}
         <div className={s.band} aria-hidden="true">
-          <div className={s.bandField}>
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,2,5" className={s.bandField}>
             <TabbiedPattern
               pattern={hurdle}
               palette={MOWN}
@@ -223,86 +236,86 @@ export default function HeronPointGolfPage() {
         <section id="course" className={s.course} aria-labelledby="course-h">
           <div className={s.courseHead}>
             <div>
-              <p className={s.secKicker}>The course</p>
-              <h2 id="course-h">The card, hole by hole</h2>
-              <p className={s.secNote}>
+              <p data-edit="course.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The course</p>
+              <h2 data-edit="course.title" data-edit-max="60" id="course-h">The card, hole by hole</h2>
+              <p data-edit="course.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Parkland through the pines on the front nine, then out along
                 the water for the back. Yardages are from the back tees; the
                 white tees play 6,104.
               </p>
             </div>
             <dl className={s.stats}>
-              {STATS.map(([k, v]) => (
+              {STATS.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`course.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`course.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
           </div>
           <div className={s.card}>
             <div className={s.nine}>
-              <h3 className={s.nineTitle}>Out, the front nine</h3>
+              <h3 data-edit="course.nineTitle" data-edit-max="40" className={s.nineTitle}>Out, the front nine</h3>
               <table className={s.table}>
                 <thead>
                   <tr>
-                    <th scope="col">Hole</th>
-                    <th scope="col">Par</th>
-                    <th scope="col">Yards</th>
-                    <th scope="col">Note</th>
+                    <th data-edit="course.heading" scope="col">Hole</th>
+                    <th data-edit="course.heading2" scope="col">Par</th>
+                    <th data-edit="course.heading3" scope="col">Yards</th>
+                    <th data-edit="course.heading4" scope="col">Note</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {FRONT.map((h) => (
+                  {FRONT.map((h, i) => (
                     <tr key={h.no}>
                       <th scope="row">
-                        <span className={s.holeNo}>{h.no}</span>
+                        <span data-edit={`course.holeNo.${i}`} data-edit-max="60" className={s.holeNo}>{h.no}</span>
                       </th>
-                      <td className={s.par}>{h.par}</td>
-                      <td className={s.yards}>{h.yards}</td>
-                      <td className={s.note}>{h.note}</td>
+                      <td data-edit={`course.par.${i}`} className={s.par}>{h.par}</td>
+                      <td data-edit={`course.yards.${i}`} className={s.yards}>{h.yards}</td>
+                      <td data-edit={`course.note.${i}`} className={s.note}>{h.note}</td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th scope="row">Out</th>
-                    <td className={s.par}>36</td>
-                    <td className={s.yards}>3,452</td>
-                    <td className={s.note}>Front nine</td>
+                    <th data-edit="course.heading5" scope="row">Out</th>
+                    <td data-edit="course.par2" className={s.par}>36</td>
+                    <td data-edit="course.yards2" className={s.yards}>3,452</td>
+                    <td data-edit="course.note2" className={s.note}>Front nine</td>
                   </tr>
                 </tfoot>
               </table>
             </div>
             <div className={s.nine}>
-              <h3 className={s.nineTitle}>In, the back nine</h3>
+              <h3 data-edit="course.nineTitle2" data-edit-max="40" className={s.nineTitle}>In, the back nine</h3>
               <table className={s.table}>
                 <thead>
                   <tr>
-                    <th scope="col">Hole</th>
-                    <th scope="col">Par</th>
-                    <th scope="col">Yards</th>
-                    <th scope="col">Note</th>
+                    <th data-edit="course.heading6" scope="col">Hole</th>
+                    <th data-edit="course.heading7" scope="col">Par</th>
+                    <th data-edit="course.heading8" scope="col">Yards</th>
+                    <th data-edit="course.heading9" scope="col">Note</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {BACK.map((h) => (
+                  {BACK.map((h, i) => (
                     <tr key={h.no}>
                       <th scope="row">
-                        <span className={s.holeNo}>{h.no}</span>
+                        <span data-edit={`course.holeNo2.${i}`} data-edit-max="60" className={s.holeNo}>{h.no}</span>
                       </th>
-                      <td className={s.par}>{h.par}</td>
-                      <td className={s.yards}>{h.yards}</td>
-                      <td className={s.note}>{h.note}</td>
+                      <td data-edit={`course.par3.${i}`} className={s.par}>{h.par}</td>
+                      <td data-edit={`course.yards3.${i}`} className={s.yards}>{h.yards}</td>
+                      <td data-edit={`course.note3.${i}`} className={s.note}>{h.note}</td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th scope="row">In</th>
-                    <td className={s.par}>36</td>
-                    <td className={s.yards}>3,390</td>
-                    <td className={s.note}>Total 72, 6,842 from the tips</td>
+                    <th data-edit="course.heading10" scope="row">In</th>
+                    <td data-edit="course.par4" className={s.par}>36</td>
+                    <td data-edit="course.yards4" className={s.yards}>3,390</td>
+                    <td data-edit="course.note4" className={s.note}>Total 72, 6,842 from the tips</td>
                   </tr>
                 </tfoot>
               </table>
@@ -314,28 +327,28 @@ export default function HeronPointGolfPage() {
         <section id="lessons" className={s.lessons} aria-labelledby="lessons-h">
           <div className={s.lessonsInner}>
             <div className={s.lessonsText}>
-              <p className={s.secKicker}>Lessons and the range</p>
-              <h2 id="lessons-h">Two pros, a range and a short-game yard</h2>
+              <p data-edit="lessons.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Lessons and the range</p>
+              <h2 data-edit="lessons.title" data-edit-max="60" id="lessons-h">Two pros, a range and a short-game yard</h2>
               <ul className={s.pros}>
-                {PROS.map((p) => (
+                {PROS.map((p, i) => (
                   <li key={p.name} className={s.pro}>
-                    <h3 className={s.proName}>{p.name}</h3>
-                    <p className={s.proRole}>{p.role}</p>
-                    <p className={s.proNote}>{p.note}</p>
+                    <h3 data-edit={`lessons.proName.${i}`} data-edit-max="40" className={s.proName}>{p.name}</h3>
+                    <p data-edit={`lessons.proRole.${i}`} data-edit-max="240" data-edit-multiline className={s.proRole}>{p.role}</p>
+                    <p data-edit={`lessons.proNote.${i}`} data-edit-max="240" data-edit-multiline className={s.proNote}>{p.note}</p>
                   </li>
                 ))}
               </ul>
               <dl className={s.priceList}>
-                {LESSONS.map(([what, price]) => (
+                {LESSONS.map(([what, price], i) => (
                   <div key={what}>
-                    <dt>{what}</dt>
-                    <dd>{price}</dd>
+                    <dt data-edit={`lessons.term.${i}`} data-edit-max="28">{what}</dt>
+                    <dd data-edit={`lessons.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div className={s.range}>
-              <div className={s.rangeField} aria-hidden="true">
+              <div data-edit-pattern="lessons.field" data-edit-roles="transparent,2,3,4" className={s.rangeField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={bobbinet}
                   palette={DIMPLES}
@@ -347,18 +360,18 @@ export default function HeronPointGolfPage() {
                 />
               </div>
               <div className={s.rangeBoard}>
-                <h3 className={s.rangeTitle}>The range</h3>
-                <p className={s.rangeNote}>Twenty-four bays, eight of them covered. Open 6:30 am until dusk.</p>
+                <h3 data-edit="lessons.rangeTitle" data-edit-max="40" className={s.rangeTitle}>The range</h3>
+                <p data-edit="lessons.rangeNote" data-edit-max="240" data-edit-multiline className={s.rangeNote}>Twenty-four bays, eight of them covered. Open 6:30 am until dusk.</p>
                 <ul className={s.buckets}>
-                  {BUCKETS.map((b) => (
+                  {BUCKETS.map((b, i) => (
                     <li key={b.size} className={s.bucket}>
-                      <span className={s.bucketSize}>{b.size}</span>
-                      <span className={s.bucketBalls}>{b.balls}</span>
-                      <span className={s.bucketPrice}>{b.price}</span>
+                      <span data-edit={`lessons.bucketSize.${i}`} data-edit-max="60" className={s.bucketSize}>{b.size}</span>
+                      <span data-edit={`lessons.bucketBalls.${i}`} data-edit-max="60" className={s.bucketBalls}>{b.balls}</span>
+                      <span data-edit={`lessons.bucketPrice.${i}`} data-edit-max="60" className={s.bucketPrice}>{b.price}</span>
                     </li>
                   ))}
                 </ul>
-                <p className={s.rangeFree}>The putting green and the chipping yard are free to use.</p>
+                <p data-edit="lessons.rangeFree" data-edit-max="240" data-edit-multiline className={s.rangeFree}>The putting green and the chipping yard are free to use.</p>
               </div>
             </div>
           </div>
@@ -367,15 +380,15 @@ export default function HeronPointGolfPage() {
         {/* ------------------------------------------------------- CLUBHOUSE */}
         <section id="clubhouse" className={s.clubhouse} aria-labelledby="clubhouse-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>The clubhouse</p>
-            <h2 id="clubhouse-h">Above the eighteenth green</h2>
+            <p data-edit="clubhouse.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The clubhouse</p>
+            <h2 data-edit="clubhouse.title" data-edit-max="60" id="clubhouse-h">Above the eighteenth green</h2>
           </div>
           <ul className={s.houseList}>
             {CLUBHOUSE.map((c, i) => (
               <li key={c.title} className={s.houseItem}>
                 <span className={s.houseNo}>{String(i + 1).padStart(2, '0')}</span>
-                <h3 className={s.houseTitle}>{c.title}</h3>
-                <p className={s.houseBody}>{c.body}</p>
+                <h3 data-edit={`clubhouse.houseTitle.${i}`} data-edit-max="40" className={s.houseTitle}>{c.title}</h3>
+                <p data-edit={`clubhouse.houseBody.${i}`} data-edit-max="240" data-edit-multiline className={s.houseBody}>{c.body}</p>
               </li>
             ))}
           </ul>
@@ -385,36 +398,36 @@ export default function HeronPointGolfPage() {
         <section id="rates" className={s.rates} aria-labelledby="rates-h">
           <div className={s.ratesInner}>
             <div className={s.ratesText}>
-              <p className={s.secKicker}>Green fees</p>
-              <h2 id="rates-h">Rates for this season</h2>
-              <p className={s.secNote}>Twilight starts at 3 pm. Weekends include public holidays. Rental clubs are $30 a set.</p>
+              <p data-edit="rates.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Green fees</p>
+              <h2 data-edit="rates.title" data-edit-max="60" id="rates-h">Rates for this season</h2>
+              <p data-edit="rates.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>Twilight starts at 3 pm. Weekends include public holidays. Rental clubs are $30 a set.</p>
               <dl className={s.members}>
-                {MEMBERS.map(([k, v]) => (
+                {MEMBERS.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`rates.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`rates.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div className={s.rateWrap}>
               <table className={s.rateTable}>
-                <caption className={s.srOnly}>Green fees by round and day</caption>
+                <caption data-edit="rates.srOnly" className={s.srOnly}>Green fees by round and day</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Round</th>
-                    <th scope="col">Weekday</th>
-                    <th scope="col">Weekend</th>
-                    <th scope="col">Twilight</th>
+                    <th data-edit="rates.heading" scope="col">Round</th>
+                    <th data-edit="rates.heading2" scope="col">Weekday</th>
+                    <th data-edit="rates.heading3" scope="col">Weekend</th>
+                    <th data-edit="rates.heading4" scope="col">Twilight</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {RATES.map((r) => (
+                  {RATES.map((r, i) => (
                     <tr key={r.round}>
-                      <th scope="row">{r.round}</th>
-                      <td>{r.week}</td>
-                      <td>{r.weekend}</td>
-                      <td>{r.twilight}</td>
+                      <th data-edit={`rates.heading5.${i}`} scope="row">{r.round}</th>
+                      <td data-edit={`rates.cell.${i}`}>{r.week}</td>
+                      <td data-edit={`rates.cell2.${i}`}>{r.weekend}</td>
+                      <td data-edit={`rates.cell3.${i}`}>{r.twilight}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -437,17 +450,17 @@ export default function HeronPointGolfPage() {
           </div>
           <div className={s.teeInner}>
             <div className={s.teeText}>
-              <p className={s.secKicker}>Tee times</p>
-              <h2 id="tee-h">Book a time on the first tee</h2>
-              <p className={s.teeLede}>Tee times open seven days ahead, fourteen for members. Pay at the pro shop when you check in.</p>
+              <p data-edit="tee.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Tee times</p>
+              <h2 data-edit="tee.title" data-edit-max="60" id="tee-h">Book a time on the first tee</h2>
+              <p data-edit="tee.teeLede" data-edit-max="240" data-edit-multiline className={s.teeLede}>Tee times open seven days ahead, fourteen for members. Pay at the pro shop when you check in.</p>
             </div>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="hp-date">Day</label>
+                <label data-edit="tee.label" htmlFor="hp-date">Day</label>
                 <input id="hp-date" name="date" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="hp-time">Around</label>
+                <label data-edit="tee.label2" htmlFor="hp-time">Around</label>
                 <select id="hp-time" name="time" defaultValue="Morning">
                   <option value="Early">Before 8 am</option>
                   <option value="Morning">Morning</option>
@@ -456,7 +469,7 @@ export default function HeronPointGolfPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="hp-players">Players</label>
+                <label data-edit="tee.label3" htmlFor="hp-players">Players</label>
                 <select id="hp-players" name="players" defaultValue="4">
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -465,7 +478,7 @@ export default function HeronPointGolfPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="hp-holes">Round</label>
+                <label data-edit="tee.label4" htmlFor="hp-holes">Round</label>
                 <select id="hp-holes" name="holes" defaultValue="18 walking">
                   <option value="18 walking">18 holes, walking</option>
                   <option value="18 cart">18 holes, with cart</option>
@@ -473,14 +486,14 @@ export default function HeronPointGolfPage() {
                 </select>
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="hp-name">Name</label>
+                <label data-edit="tee.label5" htmlFor="hp-name">Name</label>
                 <input id="hp-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="hp-email">Email</label>
+                <label data-edit="tee.label6" htmlFor="hp-email">Email</label>
                 <input id="hp-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" />
               </div>
-              <button className={s.formBtn} type="submit">Find a tee time</button>
+              <button data-edit="tee.formBtn" data-edit-max="24" className={s.formBtn} type="submit">Find a tee time</button>
             </form>
           </div>
         </section>
@@ -489,29 +502,29 @@ export default function HeronPointGolfPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Heron Point</p>
-            <p className={s.footTag}>Public golf on the marsh road since 1964.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Heron Point</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Public golf on the marsh road since 1964.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Find us</h2>
-            <p className={s.footText}>1 Heron Point Road, at the end of the marsh road</p>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Find us</h2>
+            <p data-edit="footer.footText" data-edit-max="240" data-edit-multiline className={s.footText}>1 Heron Point Road, at the end of the marsh road</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Pro shop</h2>
-            <a className={s.footLink} href="tel:+15550128840">(555) 012-8840</a>
-            <a className={s.footLink} href="mailto:proshop@heronpoint.example">proshop@heronpoint.example</a>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Pro shop</h2>
+            <a data-edit="footer.footLink" data-edit-max="28" className={s.footLink} href="tel:+15550128840">(555) 012-8840</a>
+            <a data-edit="footer.footLink2" data-edit-max="28" className={s.footLink} href="mailto:proshop@heronpoint.example">proshop@heronpoint.example</a>
           </div>
           <div>
-            <h2 className={s.footHead}>Hours</h2>
-            <p className={s.footText}>First tee 6:30 am, last tee two hours before dusk</p>
+            <h2 data-edit="footer.footHead3" data-edit-max="60" className={s.footHead}>Hours</h2>
+            <p data-edit="footer.footText2" data-edit-max="240" data-edit-multiline className={s.footText}>First tee 6:30 am, last tee two hours before dusk</p>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional golf club. The course, people, prices and the address are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional golf club. The course, people, prices and the address are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, pictures painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, pictures painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

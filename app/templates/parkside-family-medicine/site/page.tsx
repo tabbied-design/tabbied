@@ -203,7 +203,20 @@ const FAQS = [
 
 export default function ParksideFamilyMedicinePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f5f8f6',
+        '--ink': '#15241e',
+        '--sage': '#2e7d6b',
+        '--coral': '#e86f4e',
+        '--gray': '#8c9a94',
+        '--pale': '#dde8e3',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,sage,coral,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -220,17 +233,17 @@ export default function ParksideFamilyMedicinePage() {
             inks={{ red: 'var(--coral)', blue: 'var(--paper)' }}
             className={s.brandMark}
           />
-          <span className={s.brandName}>Parkside Family Medicine</span>
+          <span data-edit="bar.brandName" data-edit-max="60" className={s.brandName}>Parkside Family Medicine</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCall} href="tel:+15550142200">(555) 014-2200</a>
+        <a data-edit="bar.barCall" data-edit-max="28" className={s.barCall} href="tel:+15550142200">(555) 014-2200</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -241,25 +254,25 @@ export default function ParksideFamilyMedicinePage() {
             the heart and its pulse line standing in a paper disc. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Family medicine for every age, since 1998</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Family medicine for every age, since 1998</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Your doctors,
               <br />
               <em>by the park.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Five clinicians who know your family by name. Tell us what you
               need and we will show you the quickest way to it, online, on
               the phone or at the front desk.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#paths">What do you need?</a>
-              <a className={s.btnLine} href="tel:+15550142200">Call (555) 014-2200</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#paths">What do you need?</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="tel:+15550142200">Call (555) 014-2200</a>
             </div>
-            <p className={s.heroNote}>Same-day slots open at 8:00 am, Monday to Saturday.</p>
+            <p data-edit="hero.heroNote" data-edit-max="240" data-edit-multiline className={s.heroNote}>Same-day slots open at 8:00 am, Monday to Saturday.</p>
           </div>
           <div className={s.heroArt}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,0,4" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={frond}
                 palette={LEAVES}
@@ -280,8 +293,8 @@ export default function ParksideFamilyMedicinePage() {
               />
             </div>
             <p className={s.heroBadge}>
-              <strong>Taking new patients</strong>
-              <span>All ages, most insurance plans</span>
+              <strong data-edit="hero.emphasis">Taking new patients</strong>
+              <span data-edit="hero.text" data-edit-max="60">All ages, most insurance plans</span>
             </p>
           </div>
         </section>
@@ -291,17 +304,17 @@ export default function ParksideFamilyMedicinePage() {
             finishes it. The same-day card is the loud one. */}
         <section id="paths" className={s.paths} aria-labelledby="paths-h">
           <div className={s.pathsHead}>
-            <h2 id="paths-h" className={s.pathsTitle}>I need to...</h2>
-            <p className={s.pathsNote}>
+            <h2 data-edit="paths.pathsTitle" data-edit-max="60" id="paths-h" className={s.pathsTitle}>I need to...</h2>
+            <p data-edit="paths.pathsNote" data-edit-max="240" data-edit-multiline className={s.pathsNote}>
               Pick the line that finishes the sentence. Each card says how to
               do it and how long it takes.
             </p>
           </div>
           <div className={s.pathGrid}>
             <div className={s.urgent}>
-              <p className={s.urgentNo}>Today</p>
-              <h3 className={s.urgentTask}>see someone today</h3>
-              <p className={s.urgentHow}>
+              <p data-edit="paths.urgentNo" data-edit-max="240" data-edit-multiline className={s.urgentNo}>Today</p>
+              <h3 data-edit="paths.urgentTask" data-edit-max="40" className={s.urgentTask}>see someone today</h3>
+              <p data-edit="paths.urgentHow" data-edit-max="240" data-edit-multiline className={s.urgentHow}>
                 Call at 8:00 am. A nurse rings you back within the hour and,
                 if you need to be seen, gives you a time before 4:00 pm.
               </p>
@@ -311,24 +324,24 @@ export default function ParksideFamilyMedicinePage() {
                 inks={{ red: 'var(--paper)', blue: 'var(--coral)', black: 'var(--ink)' }}
                 className={s.urgentKit}
               />
-              <a className={s.urgentLink} href="tel:+15550142200">Call (555) 014-2200</a>
+              <a data-edit="paths.urgentLink" data-edit-max="28" className={s.urgentLink} href="tel:+15550142200">Call (555) 014-2200</a>
             </div>
             <ol className={s.pathList}>
               {PATHS.map((p, i) => (
                 <li key={p.task} className={s.path}>
                   <span className={s.pathNo}>{String(i + 1).padStart(2, '0')}</span>
-                  <h3 className={s.pathTask}>{p.task}</h3>
+                  <h3 data-edit={`paths.pathTask.${i}`} data-edit-max="40" className={s.pathTask}>{p.task}</h3>
                   <dl className={s.pathFacts}>
                     <div>
-                      <dt>How</dt>
-                      <dd>{p.how}</dd>
+                      <dt data-edit={`paths.term.${i}`} data-edit-max="28">How</dt>
+                      <dd data-edit={`paths.body.${i}`} data-edit-max="200" data-edit-multiline>{p.how}</dd>
                     </div>
                     <div>
-                      <dt>How long</dt>
-                      <dd>{p.time}</dd>
+                      <dt data-edit={`paths.term2.${i}`} data-edit-max="28">How long</dt>
+                      <dd data-edit={`paths.body2.${i}`} data-edit-max="200" data-edit-multiline>{p.time}</dd>
                     </div>
                   </dl>
-                  <a className={s.pathLink} href={p.href}>{p.cta}</a>
+                  <a data-edit={`paths.pathLink.${i}`} data-edit-max="28" className={s.pathLink} href={p.href}>{p.cta}</a>
                 </li>
               ))}
             </ol>
@@ -338,32 +351,32 @@ export default function ParksideFamilyMedicinePage() {
         {/* ----------------------------------------------------------- HOURS */}
         <section id="hours" className={s.hours} aria-labelledby="hours-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>Opening hours</p>
-            <h2 id="hours-h">Open six days, with slots kept back for today</h2>
-            <p className={s.secNote}>
+            <p data-edit="hours.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Opening hours</p>
+            <h2 data-edit="hours.title" data-edit-max="60" id="hours-h">Open six days, with slots kept back for today</h2>
+            <p data-edit="hours.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every morning a share of the day is held for people who wake up
               ill. The bar shows how many.
             </p>
           </div>
           <div className={s.hoursGrid}>
             <table className={s.table}>
-              <caption className={s.srOnly}>Opening hours and same-day slots</caption>
+              <caption data-edit="hours.srOnly" className={s.srOnly}>Opening hours and same-day slots</caption>
               <thead>
                 <tr>
-                  <th scope="col">Day</th>
-                  <th scope="col">Doors open</th>
-                  <th scope="col">Same-day slots</th>
+                  <th data-edit="hours.heading" scope="col">Day</th>
+                  <th data-edit="hours.heading2" scope="col">Doors open</th>
+                  <th data-edit="hours.heading3" scope="col">Same-day slots</th>
                 </tr>
               </thead>
               <tbody>
-                {HOURS.map((d) => (
+                {HOURS.map((d, i) => (
                   <tr key={d.day}>
                     <th scope="row">
-                      <span className={s.dayName}>{d.day}</span>
-                      <span className={s.dayNote}>{d.note}</span>
+                      <span data-edit={`hours.dayName.${i}`} data-edit-max="60" className={s.dayName}>{d.day}</span>
+                      <span data-edit={`hours.dayNote.${i}`} data-edit-max="60" className={s.dayNote}>{d.note}</span>
                     </th>
                     <td>
-                      <span className={s.doors}>{d.doors}</span>
+                      <span data-edit={`hours.doors.${i}`} data-edit-max="60" className={s.doors}>{d.doors}</span>
                       <span className={s.phones}>{`Phones ${d.phones}`}</span>
                     </td>
                     <td>
@@ -376,31 +389,31 @@ export default function ParksideFamilyMedicinePage() {
                 ))}
                 <tr className={s.closed}>
                   <th scope="row">
-                    <span className={s.dayName}>Sunday</span>
-                    <span className={s.dayNote}>On-call doctor by phone</span>
+                    <span data-edit="hours.dayName2" data-edit-max="60" className={s.dayName}>Sunday</span>
+                    <span data-edit="hours.dayNote2" data-edit-max="60" className={s.dayNote}>On-call doctor by phone</span>
                   </th>
                   <td>
-                    <span className={s.doors}>Closed</span>
+                    <span data-edit="hours.doors2" data-edit-max="60" className={s.doors}>Closed</span>
                   </td>
                   <td>
-                    <span className={s.slotCount}>Press 1 on our number</span>
+                    <span data-edit="hours.slotCount" data-edit-max="60" className={s.slotCount}>Press 1 on our number</span>
                   </td>
                 </tr>
               </tbody>
             </table>
             <div className={s.today}>
-              <h3 className={s.todayTitle}>How a same-day visit works</h3>
+              <h3 data-edit="hours.todayTitle" data-edit-max="40" className={s.todayTitle}>How a same-day visit works</h3>
               <ol className={s.todaySteps}>
-                {TODAY_STEPS.map(([title, body]) => (
+                {TODAY_STEPS.map(([title, body], i) => (
                   <li key={title}>
-                    <strong>{title}</strong>
-                    <span>{body}</span>
+                    <strong data-edit={`hours.emphasis.${i}`}>{title}</strong>
+                    <span data-edit={`hours.text.${i}`} data-edit-max="60">{body}</span>
                   </li>
                 ))}
               </ol>
               <div className={s.emergency}>
-                <p className={s.emergencyHead}>Chest pain, trouble breathing, a bad injury?</p>
-                <p className={s.emergencyBody}>Do not wait for us. Call 911 or go to the emergency room at Linden General.</p>
+                <p data-edit="hours.emergencyHead" data-edit-max="240" data-edit-multiline className={s.emergencyHead}>Chest pain, trouble breathing, a bad injury?</p>
+                <p data-edit="hours.emergencyBody" data-edit-max="240" data-edit-multiline className={s.emergencyBody}>Do not wait for us. Call 911 or go to the emergency room at Linden General.</p>
               </div>
             </div>
           </div>
@@ -410,9 +423,9 @@ export default function ParksideFamilyMedicinePage() {
         <section id="doctors" className={s.doctors} aria-labelledby="doctors-h">
           <div className={s.doctorsHead}>
             <div className={s.secHead}>
-              <p className={s.secKicker}>The team</p>
-              <h2 id="doctors-h">Three doctors, a nurse practitioner and a nurse</h2>
-              <p className={s.secNote}>
+              <p data-edit="doctors.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The team</p>
+              <h2 data-edit="doctors.title" data-edit-max="60" id="doctors-h">Three doctors, a nurse practitioner and a nurse</h2>
+              <p data-edit="doctors.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 You have one named doctor, and you can see any of us. Everyone
                 here has worked at Parkside for at least six years.
               </p>
@@ -425,23 +438,23 @@ export default function ParksideFamilyMedicinePage() {
             />
           </div>
           <ul className={s.team}>
-            {DOCTORS.map((d) => (
+            {DOCTORS.map((d, i) => (
               <li key={d.name} className={s.member}>
                 <span className={s.initials} data-tone={d.tone} aria-hidden="true">{d.initials}</span>
-                <h3 className={s.memberName}>{d.name}</h3>
-                <p className={s.memberRole}>{d.role}</p>
+                <h3 data-edit={`doctors.memberName.${i}`} data-edit-max="40" className={s.memberName}>{d.name}</h3>
+                <p data-edit={`doctors.memberRole.${i}`} data-edit-max="240" data-edit-multiline className={s.memberRole}>{d.role}</p>
                 <dl className={s.memberFacts}>
                   <div>
-                    <dt>Sees</dt>
-                    <dd>{d.sees}</dd>
+                    <dt data-edit={`doctors.term.${i}`} data-edit-max="28">Sees</dt>
+                    <dd data-edit={`doctors.body.${i}`} data-edit-max="200" data-edit-multiline>{d.sees}</dd>
                   </div>
                   <div>
-                    <dt>In on</dt>
-                    <dd>{d.days}</dd>
+                    <dt data-edit={`doctors.term2.${i}`} data-edit-max="28">In on</dt>
+                    <dd data-edit={`doctors.body2.${i}`} data-edit-max="200" data-edit-multiline>{d.days}</dd>
                   </div>
                   <div>
-                    <dt>Speaks</dt>
-                    <dd>{d.speaks}</dd>
+                    <dt data-edit={`doctors.term3.${i}`} data-edit-max="28">Speaks</dt>
+                    <dd data-edit={`doctors.body3.${i}`} data-edit-max="200" data-edit-multiline>{d.speaks}</dd>
                   </div>
                 </dl>
               </li>
@@ -452,7 +465,7 @@ export default function ParksideFamilyMedicinePage() {
         {/* ----------------------------------------------------- NEW PATIENTS
             A quiet field of dots behind the steps, the form on paper. */}
         <section id="new" className={s.join} aria-labelledby="new-h">
-          <div className={s.joinField} aria-hidden="true">
+          <div data-edit-pattern="new.field" data-edit-roles="transparent,2,4" className={s.joinField} aria-hidden="true">
             <TabbiedPattern
               pattern={pindot}
               palette={DOTS}
@@ -464,51 +477,51 @@ export default function ParksideFamilyMedicinePage() {
           </div>
           <div className={s.joinInner}>
             <div className={s.joinText}>
-              <p className={s.secKicker}>New patients</p>
-              <h2 id="new-h">Joining takes four steps and about two weeks</h2>
+              <p data-edit="new.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>New patients</p>
+              <h2 data-edit="new.title" data-edit-max="60" id="new-h">Joining takes four steps and about two weeks</h2>
               <ol className={s.joinSteps}>
                 {JOIN_STEPS.map(([title, body], i) => (
                   <li key={title}>
                     <span className={s.joinNo}>{i + 1}</span>
                     <div>
-                      <h3>{title}</h3>
-                      <p>{body}</p>
+                      <h3 data-edit={`new.title2.${i}`} data-edit-max="40">{title}</h3>
+                      <p data-edit={`new.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                     </div>
                   </li>
                 ))}
               </ol>
               <dl className={s.prices}>
-                {PRICES.map(([what, price]) => (
+                {PRICES.map(([what, price], i) => (
                   <div key={what}>
-                    <dt>{what}</dt>
-                    <dd>{price}</dd>
+                    <dt data-edit={`new.term.${i}`} data-edit-max="28">{what}</dt>
+                    <dd data-edit={`new.body2.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Register with Parkside</h3>
-              <p className={s.formNote}>We cover the 01770 to 01774 zip codes. Outside them, call and ask.</p>
+              <h3 data-edit="new.formTitle" data-edit-max="40" className={s.formTitle}>Register with Parkside</h3>
+              <p data-edit="new.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>We cover the 01770 to 01774 zip codes. Outside them, call and ask.</p>
               <div className={s.field}>
-                <label htmlFor="pk-name">Full name</label>
+                <label data-edit="new.label" htmlFor="pk-name">Full name</label>
                 <input id="pk-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.fieldRow}>
                 <div className={s.field}>
-                  <label htmlFor="pk-dob">Date of birth</label>
+                  <label data-edit="new.label2" htmlFor="pk-dob">Date of birth</label>
                   <input id="pk-dob" name="dob" type="date" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pk-phone">Phone</label>
+                  <label data-edit="new.label3" htmlFor="pk-phone">Phone</label>
                   <input id="pk-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
               </div>
               <div className={s.field}>
-                <label htmlFor="pk-email">Email</label>
+                <label data-edit="new.label4" htmlFor="pk-email">Email</label>
                 <input id="pk-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" />
               </div>
               <div className={s.field}>
-                <label htmlFor="pk-cover">How you will pay</label>
+                <label data-edit="new.label5" htmlFor="pk-cover">How you will pay</label>
                 <select id="pk-cover" name="cover" defaultValue="employer">
                   <option value="employer">Employer or marketplace plan</option>
                   <option value="medicare">Medicare</option>
@@ -517,10 +530,10 @@ export default function ParksideFamilyMedicinePage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="pk-family">Registering others too?</label>
+                <label data-edit="new.label6" htmlFor="pk-family">Registering others too?</label>
                 <input id="pk-family" name="family" type="text" placeholder="Names and ages" />
               </div>
-              <button className={s.formBtn} type="submit">Send my registration</button>
+              <button data-edit="new.formBtn" data-edit-max="24" className={s.formBtn} type="submit">Send my registration</button>
             </form>
           </div>
         </section>
@@ -528,14 +541,14 @@ export default function ParksideFamilyMedicinePage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>Questions</p>
-            <h2 id="faq-h">What people ask the front desk</h2>
+            <p data-edit="faq.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Questions</p>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">What people ask the front desk</h2>
           </div>
           <div className={s.faqList}>
-            {FAQS.map((f) => (
+            {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -545,37 +558,37 @@ export default function ParksideFamilyMedicinePage() {
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInner}>
             <div className={s.visitHead}>
-              <p className={s.secKicker}>Find us</p>
-              <h2 id="visit-h">210 Linden Avenue, on the corner of the park</h2>
+              <p data-edit="visit.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Find us</p>
+              <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">210 Linden Avenue, on the corner of the park</h2>
             </div>
             <dl className={s.visitList}>
               <div>
-                <dt>Parking</dt>
-                <dd>Free lot behind the building, with three accessible bays by the side door.</dd>
+                <dt data-edit="visit.term" data-edit-max="28">Parking</dt>
+                <dd data-edit="visit.body" data-edit-max="200" data-edit-multiline>Free lot behind the building, with three accessible bays by the side door.</dd>
               </div>
               <div>
-                <dt>Bus</dt>
-                <dd>The 12 and the 40 stop outside; get off at Linden Park Gate.</dd>
+                <dt data-edit="visit.term2" data-edit-max="28">Bus</dt>
+                <dd data-edit="visit.body2" data-edit-max="200" data-edit-multiline>The 12 and the 40 stop outside; get off at Linden Park Gate.</dd>
               </div>
               <div>
-                <dt>Access</dt>
-                <dd>Step-free throughout, a hearing loop at reception, interpreters on request.</dd>
+                <dt data-edit="visit.term3" data-edit-max="28">Access</dt>
+                <dd data-edit="visit.body3" data-edit-max="200" data-edit-multiline>Step-free throughout, a hearing loop at reception, interpreters on request.</dd>
               </div>
               <div>
-                <dt>Phone</dt>
+                <dt data-edit="visit.term4" data-edit-max="28">Phone</dt>
                 <dd>
-                  <a href="tel:+15550142200">(555) 014-2200</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550142200">(555) 014-2200</a>
                 </dd>
               </div>
               <div>
-                <dt>Email</dt>
+                <dt data-edit="visit.term5" data-edit-max="28">Email</dt>
                 <dd>
-                  <a href="mailto:frontdesk@parksidemed.example">frontdesk@parksidemed.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:frontdesk@parksidemed.example">frontdesk@parksidemed.example</a>
                 </dd>
               </div>
               <div>
-                <dt>Fax</dt>
-                <dd>(555) 014-2201</dd>
+                <dt data-edit="visit.term6" data-edit-max="28">Fax</dt>
+                <dd data-edit="visit.body4" data-edit-max="200" data-edit-multiline>(555) 014-2201</dd>
               </div>
             </dl>
           </div>
@@ -585,36 +598,36 @@ export default function ParksideFamilyMedicinePage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Parkside Family Medicine</p>
-            <p className={s.footTag}>Family doctors across from Linden Park since 1998.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Parkside Family Medicine</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Family doctors across from Linden Park since 1998.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>I need to</h2>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>I need to</h2>
             <ul className={s.footLinks}>
-              <li><a href="#paths">Book an appointment</a></li>
-              <li><a href="#paths">Renew a prescription</a></li>
-              <li><a href="#new">Become a patient</a></li>
+              <li><a data-edit="footer.paths" data-edit-max="28" href="#paths">Book an appointment</a></li>
+              <li><a data-edit="footer.paths2" data-edit-max="28" href="#paths">Renew a prescription</a></li>
+              <li><a data-edit="footer.new" data-edit-max="28" href="#new">Become a patient</a></li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>Practice</h2>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Practice</h2>
             <ul className={s.footLinks}>
-              <li><a href="#hours">Opening hours</a></li>
-              <li><a href="#doctors">Doctors and nurses</a></li>
-              <li><a href="#visit">Parking and access</a></li>
+              <li><a data-edit="footer.hours" data-edit-max="28" href="#hours">Opening hours</a></li>
+              <li><a data-edit="footer.doctors" data-edit-max="28" href="#doctors">Doctors and nurses</a></li>
+              <li><a data-edit="footer.visit" data-edit-max="28" href="#visit">Parking and access</a></li>
             </ul>
           </div>
           <div>
-            <h2 className={s.footHead}>After hours</h2>
-            <p className={s.footText}>Call (555) 014-2200 and press 1. In an emergency, call 911.</p>
+            <h2 data-edit="footer.footHead3" data-edit-max="60" className={s.footHead}>After hours</h2>
+            <p data-edit="footer.footText" data-edit-max="240" data-edit-multiline className={s.footText}>Call (555) 014-2200 and press 1. In an emergency, call 911.</p>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional family practice. Doctors, hours, prices and the address are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional family practice. Doctors, hours, prices and the address are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, pictures painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, pictures painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

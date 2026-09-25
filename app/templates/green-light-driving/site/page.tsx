@@ -128,7 +128,20 @@ const YEARS = [
 
 export default function GreenLightPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f3f5f2',
+        '--asphalt': '#141a16',
+        '--green': '#1f9d55',
+        '--amber': '#f6c026',
+        '--red': '#e5483a',
+        '--gray': '#858d87',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,asphalt,green,amber,red,gray"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -144,17 +157,17 @@ export default function GreenLightPage() {
             <span />
             <span />
           </span>
-          <span>Green Light</span>
+          <span data-edit="bar.text" data-edit-max="60">Green Light</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href="tel:+15550174400">(555) 017-4400</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href="tel:+15550174400">(555) 017-4400</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -164,22 +177,22 @@ export default function GreenLightPage() {
             The light at green over a field of bends, the car on the road. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Driving school, Eastfield</p>
-            <h1 className={s.title} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Driving school, Eastfield</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.title} id="hero-h">
               Learn calm. <em>Pass first time.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Lessons in dual-control cars with instructors who have heard
               every excuse and panic before. We pick you up from home, school
               or work, and plan every lesson toward the test from the first one.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#book">Book a first drive</a>
-              <a className={s.btnLine} href="#lessons">See the packages</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Book a first drive</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#lessons">See the packages</a>
             </div>
           </div>
           <div className={s.heroArt}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,5" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={switchback}
                 palette={BENDS}
@@ -198,8 +211,8 @@ export default function GreenLightPage() {
               className={s.heroLight}
             />
             <dl className={s.heroStat}>
-              <dt>First-time pass rate, 2025</dt>
-              <dd>91%</dd>
+              <dt data-edit="hero.term" data-edit-max="28">First-time pass rate, 2025</dt>
+              <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>91%</dd>
             </dl>
           </div>
         </section>
@@ -219,9 +232,9 @@ export default function GreenLightPage() {
             The packages as stops down one road, in the order most take them. */}
         <section id="lessons" className={s.lessons} aria-labelledby="lessons-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Lessons and packages</p>
-            <h2 id="lessons-h">Six stops from the first drive to the test</h2>
-            <p className={s.secNote}>
+            <p data-edit="lessons.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Lessons and packages</p>
+            <h2 data-edit="lessons.title" data-edit-max="60" id="lessons-h">Six stops from the first drive to the test</h2>
+            <p data-edit="lessons.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Take them in order, or join the road where you are: every learner
               who has driven before starts with one lesson so we can tell. Prices
               include the car, fuel and pickup within Eastfield.
@@ -229,20 +242,20 @@ export default function GreenLightPage() {
           </div>
           <ol className={s.route}>
             <li className={s.routeStart} aria-hidden="true">
-              <span>Start</span>
+              <span data-edit="lessons.text" data-edit-max="60">Start</span>
             </li>
-            {STOPS.map((st) => (
+            {STOPS.map((st, i) => (
               <li key={st.no} className={s.stop}>
                 <span className={s.stopSign}>
-                  <span className={s.stopLabel}>Stop</span>
-                  <strong>{st.no}</strong>
+                  <span data-edit={`lessons.stopLabel.${i}`} data-edit-max="60" className={s.stopLabel}>Stop</span>
+                  <strong data-edit={`lessons.emphasis.${i}`}>{st.no}</strong>
                 </span>
                 <div className={s.stopCard}>
-                  <span className={s.stopTag}>{st.tag}</span>
-                  <h3 className={s.stopName}>{st.name}</h3>
-                  <p className={s.stopTime}>{st.time}</p>
-                  <p className={s.stopBody}>{st.body}</p>
-                  <p className={s.stopPrice}>{st.price}</p>
+                  <span data-edit={`lessons.stopTag.${i}`} data-edit-max="60" className={s.stopTag}>{st.tag}</span>
+                  <h3 data-edit={`lessons.stopName.${i}`} data-edit-max="40" className={s.stopName}>{st.name}</h3>
+                  <p data-edit={`lessons.stopTime.${i}`} data-edit-max="240" data-edit-multiline className={s.stopTime}>{st.time}</p>
+                  <p data-edit={`lessons.stopBody.${i}`} data-edit-max="240" data-edit-multiline className={s.stopBody}>{st.body}</p>
+                  <p data-edit={`lessons.stopPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.stopPrice}>{st.price}</p>
                 </div>
               </li>
             ))}
@@ -253,10 +266,10 @@ export default function GreenLightPage() {
                 inks={{ red: 'var(--red)', blue: 'var(--green)', yellow: 'var(--paper)', black: 'var(--asphalt)' }}
                 className={s.endSign}
               />
-              <p className={s.endText}>Licensed. And no stopping from here.</p>
+              <p data-edit="lessons.endText" data-edit-max="240" data-edit-multiline className={s.endText}>Licensed. And no stopping from here.</p>
             </li>
           </ol>
-          <p className={s.refresher}>
+          <p data-edit="lessons.refresher" data-edit-max="240" data-edit-multiline className={s.refresher}>
             Licensed already and out of practice? A refresher is three hours for
             $190, at your pace and on the roads you drive.
           </p>
@@ -265,7 +278,7 @@ export default function GreenLightPage() {
         {/* ------------------------------------------------------------ BAND
             A crossing between the road and the test. */}
         <div className={s.band} aria-hidden="true">
-          <div className={s.bandField}>
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,0,3" className={s.bandField}>
             <TabbiedPattern
               pattern={percale}
               palette={CROSSING}
@@ -282,9 +295,9 @@ export default function GreenLightPage() {
         <section id="test" className={s.test} aria-labelledby="test-h">
           <div className={s.testHead}>
             <div className={s.secHead}>
-              <p className={s.secKick}>Test prep</p>
-              <h2 id="test-h">The checklist we go through the week before</h2>
-              <p className={s.secNote}>
+              <p data-edit="test.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Test prep</p>
+              <h2 data-edit="test.title" data-edit-max="60" id="test-h">The checklist we go through the week before</h2>
+              <p data-edit="test.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Tick them off here as you go. Most failed tests we hear about
                 failed on the first list, not the second.
               </p>
@@ -297,13 +310,13 @@ export default function GreenLightPage() {
             />
           </div>
           <div className={s.checks}>
-            {CHECKS.map((group) => (
+            {CHECKS.map((group, i) => (
               <fieldset key={group.head} className={s.checkGroup}>
-                <legend>{group.head}</legend>
-                {group.items.map((it) => (
+                <legend data-edit={`test.legend.${i}`}>{group.head}</legend>
+                {group.items.map((it, i2) => (
                   <label key={it} className={s.check}>
                     <input type="checkbox" name={group.head} value={it} />
-                    <span>{it}</span>
+                    <span data-edit={`test.text.${i}.${i2}`} data-edit-max="60">{it}</span>
                   </label>
                 ))}
               </fieldset>
@@ -314,26 +327,26 @@ export default function GreenLightPage() {
         {/* ----------------------------------------------------- INSTRUCTORS */}
         <section id="instructors" className={s.instructors} aria-labelledby="instructors-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Instructors</p>
-            <h2 id="instructors-h">Four instructors, four cars, one way of teaching</h2>
+            <p data-edit="instructors.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Instructors</p>
+            <h2 data-edit="instructors.title" data-edit-max="60" id="instructors-h">Four instructors, four cars, one way of teaching</h2>
           </div>
           <ul className={s.people}>
-            {INSTRUCTORS.map((p) => (
+            {INSTRUCTORS.map((p, i) => (
               <li key={p.name} className={s.person} data-tone={p.tone}>
                 <span className={s.initials} aria-hidden="true">{p.initials}</span>
-                <h3>{p.name}</h3>
-                <p className={s.personYears}>{p.years}</p>
+                <h3 data-edit={`instructors.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                <p data-edit={`instructors.personYears.${i}`} data-edit-max="240" data-edit-multiline className={s.personYears}>{p.years}</p>
                 <dl className={s.personFacts}>
                   <div>
-                    <dt>Car</dt>
-                    <dd>{p.car}</dd>
+                    <dt data-edit={`instructors.term.${i}`} data-edit-max="28">Car</dt>
+                    <dd data-edit={`instructors.body.${i}`} data-edit-max="200" data-edit-multiline>{p.car}</dd>
                   </div>
                   <div>
-                    <dt>Speaks</dt>
-                    <dd>{p.langs}</dd>
+                    <dt data-edit={`instructors.term2.${i}`} data-edit-max="28">Speaks</dt>
+                    <dd data-edit={`instructors.body2.${i}`} data-edit-max="200" data-edit-multiline>{p.langs}</dd>
                   </div>
                 </dl>
-                <p className={s.personNote}>{p.note}</p>
+                <p data-edit={`instructors.personNote.${i}`} data-edit-max="240" data-edit-multiline className={s.personNote}>{p.note}</p>
               </li>
             ))}
           </ul>
@@ -341,7 +354,7 @@ export default function GreenLightPage() {
 
         {/* --------------------------------------------------------- RESULTS */}
         <section id="results" className={s.results} aria-labelledby="results-h">
-          <div className={s.resultsField} aria-hidden="true">
+          <div data-edit-pattern="results.field" data-edit-roles="transparent,3,2,5" className={s.resultsField} aria-hidden="true">
             <TabbiedPattern
               pattern={slashbar}
               palette={MARKINGS}
@@ -355,42 +368,42 @@ export default function GreenLightPage() {
           </div>
           <div className={s.resultsInner}>
             <div className={s.resultsText}>
-              <p className={s.secKick}>Pass rates</p>
-              <h2 id="results-h">Nine in ten pass on the first try</h2>
-              <p className={s.resultsNote}>
+              <p data-edit="results.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Pass rates</p>
+              <h2 data-edit="results.title" data-edit-max="60" id="results-h">Nine in ten pass on the first try</h2>
+              <p data-edit="results.resultsNote" data-edit-max="240" data-edit-multiline className={s.resultsNote}>
                 Counted from the state's own results for every learner who
                 took a test in our car, including the ones who booked before we
                 thought they were ready.
               </p>
               <dl className={s.figures}>
                 <div>
-                  <dt>First-time passes, 2025</dt>
-                  <dd>91%</dd>
+                  <dt data-edit="results.term" data-edit-max="28">First-time passes, 2025</dt>
+                  <dd data-edit="results.body" data-edit-max="200" data-edit-multiline>91%</dd>
                 </div>
                 <div>
-                  <dt>State average</dt>
-                  <dd>52%</dd>
+                  <dt data-edit="results.term2" data-edit-max="28">State average</dt>
+                  <dd data-edit="results.body2" data-edit-max="200" data-edit-multiline>52%</dd>
                 </div>
                 <div>
-                  <dt>Learners since 2011</dt>
-                  <dd>1,480</dd>
+                  <dt data-edit="results.term3" data-edit-max="28">Learners since 2011</dt>
+                  <dd data-edit="results.body3" data-edit-max="200" data-edit-multiline>1,480</dd>
                 </div>
                 <div>
-                  <dt>Average hours before a test</dt>
-                  <dd>27</dd>
+                  <dt data-edit="results.term4" data-edit-max="28">Average hours before a test</dt>
+                  <dd data-edit="results.body4" data-edit-max="200" data-edit-multiline>27</dd>
                 </div>
               </dl>
             </div>
             <figure className={s.chart}>
-              <figcaption>First-time pass rate by year, against the state average of about 52%</figcaption>
+              <figcaption data-edit="results.caption" data-edit-max="120" data-edit-multiline>First-time pass rate by year, against the state average of about 52%</figcaption>
               <ul className={s.bars}>
-                {YEARS.map((yr) => (
+                {YEARS.map((yr, i) => (
                   <li key={yr.y} className={s.barItem}>
                     <span className={s.barValue}>{`${yr.ours}%`}</span>
                     <span className={s.barTrack} aria-hidden="true">
                       <span className={s.barFill} style={{ height: `${yr.ours}%` }} />
                     </span>
-                    <span className={s.barYear}>{yr.y}</span>
+                    <span data-edit={`results.barYear.${i}`} data-edit-max="60" className={s.barYear}>{yr.y}</span>
                   </li>
                 ))}
               </ul>
@@ -401,28 +414,28 @@ export default function GreenLightPage() {
         {/* ------------------------------------------------------------ BOOK */}
         <section id="book" className={s.book} aria-labelledby="book-h">
           <div className={s.bookInfo}>
-            <p className={s.secKick}>Book a lesson</p>
-            <h2 id="book-h">Tell us where to pick you up</h2>
-            <p className={s.bookLede}>
+            <p data-edit="book.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Book a lesson</p>
+            <h2 data-edit="book.title" data-edit-max="60" id="book-h">Tell us where to pick you up</h2>
+            <p data-edit="book.bookLede" data-edit-max="240" data-edit-multiline className={s.bookLede}>
               We call back the same day to agree a first time. Lessons run from 7
               am to 8 pm on weekdays and 8 am to 4 pm on Saturdays.
             </p>
             <dl className={s.bookFacts}>
               <div>
-                <dt>Office</dt>
-                <dd>40 Mercer Avenue, Eastfield</dd>
+                <dt data-edit="book.term" data-edit-max="28">Office</dt>
+                <dd data-edit="book.body" data-edit-max="200" data-edit-multiline>40 Mercer Avenue, Eastfield</dd>
               </div>
               <div>
-                <dt>Call</dt>
-                <dd>(555) 017-4400</dd>
+                <dt data-edit="book.term2" data-edit-max="28">Call</dt>
+                <dd data-edit="book.body2" data-edit-max="200" data-edit-multiline>(555) 017-4400</dd>
               </div>
               <div>
-                <dt>Write</dt>
-                <dd>lessons@greenlight.example</dd>
+                <dt data-edit="book.term3" data-edit-max="28">Write</dt>
+                <dd data-edit="book.body3" data-edit-max="200" data-edit-multiline>lessons@greenlight.example</dd>
               </div>
               <div>
-                <dt>Cancel</dt>
-                <dd>Free up to 24 hours before</dd>
+                <dt data-edit="book.term4" data-edit-max="28">Cancel</dt>
+                <dd data-edit="book.body4" data-edit-max="200" data-edit-multiline>Free up to 24 hours before</dd>
               </div>
             </dl>
             <Artwork
@@ -435,16 +448,16 @@ export default function GreenLightPage() {
           <form className={s.form} action="#">
             <div className={s.formRow}>
               <div className={s.field}>
-                <label htmlFor="gl-name">Name</label>
+                <label data-edit="book.label" htmlFor="gl-name">Name</label>
                 <input id="gl-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="gl-phone">Phone</label>
+                <label data-edit="book.label2" htmlFor="gl-phone">Phone</label>
                 <input id="gl-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
             </div>
             <div className={s.field}>
-              <label htmlFor="gl-package">Package</label>
+              <label data-edit="book.label3" htmlFor="gl-package">Package</label>
               <select id="gl-package" name="package" defaultValue="1">
                 {STOPS.map((st) => (
                   <option key={st.no} value={st.no}>{`Stop ${st.no}: ${st.name}, ${st.price}`}</option>
@@ -453,41 +466,41 @@ export default function GreenLightPage() {
               </select>
             </div>
             <fieldset className={s.radios}>
-              <legend>Gearbox</legend>
+              <legend data-edit="book.legend">Gearbox</legend>
               <label className={s.radio}>
                 <input type="radio" name="gearbox" value="automatic" defaultChecked />
-                <span>Automatic</span>
+                <span data-edit="book.text" data-edit-max="60">Automatic</span>
               </label>
               <label className={s.radio}>
                 <input type="radio" name="gearbox" value="manual" />
-                <span>Manual</span>
+                <span data-edit="book.text2" data-edit-max="60">Manual</span>
               </label>
             </fieldset>
             <div className={s.field}>
-              <label htmlFor="gl-pickup">Pick me up at</label>
+              <label data-edit="book.label4" htmlFor="gl-pickup">Pick me up at</label>
               <input id="gl-pickup" name="pickup" type="text" placeholder="Street and number, or a school" />
             </div>
             <fieldset className={s.radios}>
-              <legend>Best times</legend>
+              <legend data-edit="book.legend2">Best times</legend>
               <label className={s.radio}>
                 <input type="checkbox" name="times" value="mornings" />
-                <span>Mornings</span>
+                <span data-edit="book.text3" data-edit-max="60">Mornings</span>
               </label>
               <label className={s.radio}>
                 <input type="checkbox" name="times" value="afternoons" />
-                <span>Afternoons</span>
+                <span data-edit="book.text4" data-edit-max="60">Afternoons</span>
               </label>
               <label className={s.radio}>
                 <input type="checkbox" name="times" value="evenings" />
-                <span>Evenings</span>
+                <span data-edit="book.text5" data-edit-max="60">Evenings</span>
               </label>
               <label className={s.radio}>
                 <input type="checkbox" name="times" value="saturdays" />
-                <span>Saturdays</span>
+                <span data-edit="book.text6" data-edit-max="60">Saturdays</span>
               </label>
             </fieldset>
-            <button className={s.submit} type="submit">Request a lesson</button>
-            <small className={s.formNote}>Pay after each lesson, or for a package up front. Packages do not expire.</small>
+            <button data-edit="book.submit" data-edit-max="24" className={s.submit} type="submit">Request a lesson</button>
+            <small data-edit="book.formNote" className={s.formNote}>Pay after each lesson, or for a package up front. Packages do not expire.</small>
           </form>
         </section>
       </main>
@@ -495,22 +508,22 @@ export default function GreenLightPage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div>
-            <p className={s.footName}>Green Light</p>
-            <p className={s.footTag}>Driving school, 40 Mercer Avenue, Eastfield.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Green Light</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Driving school, 40 Mercer Avenue, Eastfield.</p>
           </div>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional driving school. Prices, pass rates and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional driving school. Prices, pass rates and people are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

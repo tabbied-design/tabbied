@@ -125,7 +125,20 @@ const FAQ = [
 
 export default function HiveAndHoneyPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--cream': '#fbf5e6',
+        '--ink': '#2a2012',
+        '--honey': '#e0a21b',
+        '--olive': '#6e7f3a',
+        '--straw': '#9c9076',
+        '--wax': '#f1e4c2',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="cream,ink,honey,olive,straw,wax"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -137,17 +150,17 @@ export default function HiveAndHoneyPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markHex} aria-hidden="true" />
-          <span>Hive &amp; Honey</span>
+          <span data-edit="bar.text" data-edit-max="60">Hive &amp; Honey</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#tours">Book a tour</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#tours">Book a tour</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -157,37 +170,37 @@ export default function HiveAndHoneyPage() {
             The bee in a capped cell, on a field of tumbling hexagons. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Honey farm and shop, Linden Hill</p>
-            <h1 className={s.title} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Honey farm and shop, Linden Hill</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.title} id="hero-h">
               Raw honey, <em>by the flower it came from.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Forty hives on the hill and in the orchards below it. We take the
               honey off the day each flow ends, strain it once through cloth and
               jar it by hand, so a spoon of clover tastes of June and a spoon of
               buckwheat tastes of October.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#honeys">See the nine honeys</a>
-              <a className={s.btnGhost} href="#tours">Open a hive with us</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#honeys">See the nine honeys</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#tours">Open a hive with us</a>
             </div>
             <dl className={s.facts}>
               <div>
-                <dt>Hives</dt>
-                <dd>40</dd>
+                <dt data-edit="hero.term" data-edit-max="28">Hives</dt>
+                <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>40</dd>
               </div>
               <div>
-                <dt>Honeys</dt>
-                <dd>9</dd>
+                <dt data-edit="hero.term2" data-edit-max="28">Honeys</dt>
+                <dd data-edit="hero.body2" data-edit-max="200" data-edit-multiline>9</dd>
               </div>
               <div>
-                <dt>Since</dt>
-                <dd>2009</dd>
+                <dt data-edit="hero.term3" data-edit-max="28">Since</dt>
+                <dd data-edit="hero.body3" data-edit-max="200" data-edit-multiline>2009</dd>
               </div>
             </dl>
           </div>
           <div className={s.heroArt}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,5,4" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={isocube}
                 palette={COMB_FIELD}
@@ -209,16 +222,16 @@ export default function HiveAndHoneyPage() {
             The honeycomb: one cell per honey, colored like the honey. */}
         <section id="honeys" className={s.honeys} aria-labelledby="honeys-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>The honeys</p>
-            <h2 id="honeys-h">Nine honeys, one frame</h2>
-            <p className={s.secNote}>
+            <p data-edit="honeys.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The honeys</p>
+            <h2 data-edit="honeys.title" data-edit-max="60" id="honeys-h">Nine honeys, one frame</h2>
+            <p data-edit="honeys.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Each cell is a flow the bees worked, named for the flowers the
               pollen says they were on. Colors run from water white to dark
               molasses; the price is the same at the market, the shop and by post.
             </p>
           </div>
           <ul className={s.comb}>
-            {COMB.map((c) =>
+            {COMB.map((c, i) =>
               c.tone === 'art' ? (
                 <li key={c.name} className={s.cell} data-tone="art">
                   <div className={s.hex}>
@@ -228,14 +241,14 @@ export default function HiveAndHoneyPage() {
               ) : (
                 <li key={c.name} className={s.cell} data-tone={c.tone}>
                   <div className={s.hex}>
-                    <span className={s.cellSource}>{c.source}</span>
-                    <h3 className={s.cellName}>{c.name}</h3>
-                    <span className={s.cellColor}>{c.color}</span>
+                    <span data-edit={`honeys.cellSource.${i}`} data-edit-max="60" className={s.cellSource}>{c.source}</span>
+                    <h3 data-edit={`honeys.cellName.${i}`} data-edit-max="40" className={s.cellName}>{c.name}</h3>
+                    <span data-edit={`honeys.cellColor.${i}`} data-edit-max="60" className={s.cellColor}>{c.color}</span>
                     <span className={s.cellJars}>
-                      {c.jars.map(([size, price]) => (
+                      {c.jars.map(([size, price], i2) => (
                         <span key={size} className={s.jar}>
-                          <span>{size}</span>
-                          <strong>{price}</strong>
+                          <span data-edit={`honeys.text.${i}.${i2}`} data-edit-max="60">{size}</span>
+                          <strong data-edit={`honeys.emphasis.${i}.${i2}`}>{price}</strong>
                         </span>
                       ))}
                     </span>
@@ -244,7 +257,7 @@ export default function HiveAndHoneyPage() {
               ),
             )}
           </ul>
-          <p className={s.combNote}>
+          <p data-edit="honeys.combNote" data-edit-max="240" data-edit-multiline className={s.combNote}>
             Try before you buy: every honey is open for tasting at the farm shop
             and the Saturday stall. Bring back five clean jars for a free 8 oz.
           </p>
@@ -253,7 +266,7 @@ export default function HiveAndHoneyPage() {
         {/* ------------------------------------------------------------ BAND
             The meadow the honey comes from, in petals. */}
         <div className={s.band} aria-hidden="true">
-          <div className={s.bandField}>
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,3,2,5" className={s.bandField}>
             <TabbiedPattern
               pattern={petalcut}
               palette={MEADOW}
@@ -271,22 +284,22 @@ export default function HiveAndHoneyPage() {
             A month strip, the bars the strength of the nectar flow. */}
         <section id="year" className={s.year} aria-labelledby="year-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>The beekeeping year</p>
-            <h2 id="year-h">What the bees are doing this month</h2>
-            <p className={s.secNote}>
+            <p data-edit="year.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The beekeeping year</p>
+            <h2 data-edit="year.title" data-edit-max="60" id="year-h">What the bees are doing this month</h2>
+            <p data-edit="year.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The bars are the nectar flow on the hill, from nothing to the July
               rush. A harvest month lists the honey that comes off that month.
             </p>
           </div>
           <ol className={s.months}>
-            {MONTHS.map((mo) => (
+            {MONTHS.map((mo, i) => (
               <li key={mo.m} className={s.month} data-harvest={mo.harvest ? 'yes' : 'no'}>
                 <span className={s.flow} aria-hidden="true">
                   <span className={s.flowBar} data-flow={mo.flow} />
                 </span>
-                <strong className={s.monthName}>{mo.m}</strong>
+                <strong data-edit={`year.monthName.${i}`} className={s.monthName}>{mo.m}</strong>
                 <span className={s.monthHarvest}>{mo.harvest || 'No harvest'}</span>
-                <p className={s.monthNote}>{mo.note}</p>
+                <p data-edit={`year.monthNote.${i}`} data-edit-max="240" data-edit-multiline className={s.monthNote}>{mo.note}</p>
               </li>
             ))}
           </ol>
@@ -295,7 +308,7 @@ export default function HiveAndHoneyPage() {
         {/* ----------------------------------------------------------- TOURS */}
         <section id="tours" className={s.tours} aria-labelledby="tours-h">
           <div className={s.toursArt}>
-            <div className={s.toursField} aria-hidden="true">
+            <div data-edit-pattern="tours.field" data-edit-roles="transparent,2,4" className={s.toursField} aria-hidden="true">
               <TabbiedPattern
                 pattern={dotwash}
                 palette={POLLEN}
@@ -307,12 +320,12 @@ export default function HiveAndHoneyPage() {
               />
             </div>
             <Artwork slug="hive-and-honey-skep" alt="An engraving of a traditional straw bee skep" inks={['var(--olive)']} className={s.skep} />
-            <p className={s.toursArtNote}>The old skep by the barn door. Our bees live in wooden boxes you can open.</p>
+            <p data-edit="tours.toursArtNote" data-edit-max="240" data-edit-multiline className={s.toursArtNote}>The old skep by the barn door. Our bees live in wooden boxes you can open.</p>
           </div>
           <div className={s.toursBody}>
-            <p className={s.secKick}>Hive tours, June to September</p>
-            <h2 id="tours-h">Open a hive with us</h2>
-            <p className={s.toursLede}>
+            <p data-edit="tours.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Hive tours, June to September</p>
+            <h2 data-edit="tours.title" data-edit-max="60" id="tours-h">Open a hive with us</h2>
+            <p data-edit="tours.toursLede" data-edit-max="240" data-edit-multiline className={s.toursLede}>
               Ninety minutes with Ruth, who has kept bees on this hill since
               2009. Nobody has been stung on a tour yet, but it is an animal,
               not an exhibit, so wear long trousers and closed shoes.
@@ -321,40 +334,40 @@ export default function HiveAndHoneyPage() {
               {TOUR_STEPS.map((st, i) => (
                 <li key={st.t}>
                   <span className={s.tourNo}>{`0${i + 1}`}</span>
-                  <h3>{st.t}</h3>
-                  <p>{st.b}</p>
+                  <h3 data-edit={`tours.title2.${i}`} data-edit-max="40">{st.t}</h3>
+                  <p data-edit={`tours.body.${i}`} data-edit-max="240" data-edit-multiline>{st.b}</p>
                 </li>
               ))}
             </ol>
             <dl className={s.tourFacts}>
               <div>
-                <dt>Adults</dt>
-                <dd>$45</dd>
+                <dt data-edit="tours.term" data-edit-max="28">Adults</dt>
+                <dd data-edit="tours.body2" data-edit-max="200" data-edit-multiline>$45</dd>
               </div>
               <div>
-                <dt>Ages 8-15</dt>
-                <dd>$25</dd>
+                <dt data-edit="tours.term2" data-edit-max="28">Ages 8-15</dt>
+                <dd data-edit="tours.body3" data-edit-max="200" data-edit-multiline>$25</dd>
               </div>
               <div>
-                <dt>Group</dt>
-                <dd>Up to 10</dd>
+                <dt data-edit="tours.term3" data-edit-max="28">Group</dt>
+                <dd data-edit="tours.body4" data-edit-max="200" data-edit-multiline>Up to 10</dd>
               </div>
             </dl>
             <form className={s.form} action="#">
               <fieldset className={s.dates}>
-                <legend>Choose a tour</legend>
-                {TOUR_DATES.map((d) => (
+                <legend data-edit="tours.legend">Choose a tour</legend>
+                {TOUR_DATES.map((d, i) => (
                   <label key={d.id} className={s.date}>
                     <input type="radio" name="tour" value={d.id} />
-                    <span className={s.dateWhen}>{d.when}</span>
-                    <span className={s.dateTime}>{d.time}</span>
-                    <span className={s.dateLeft}>{d.left}</span>
+                    <span data-edit={`tours.dateWhen.${i}`} data-edit-max="60" className={s.dateWhen}>{d.when}</span>
+                    <span data-edit={`tours.dateTime.${i}`} data-edit-max="60" className={s.dateTime}>{d.time}</span>
+                    <span data-edit={`tours.dateLeft.${i}`} data-edit-max="60" className={s.dateLeft}>{d.left}</span>
                   </label>
                 ))}
               </fieldset>
               <div className={s.formRow}>
                 <div className={s.field}>
-                  <label htmlFor="hh-adults">Adults</label>
+                  <label data-edit="tours.label" htmlFor="hh-adults">Adults</label>
                   <select id="hh-adults" name="adults" defaultValue="2">
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -363,7 +376,7 @@ export default function HiveAndHoneyPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="hh-kids">Children</label>
+                  <label data-edit="tours.label2" htmlFor="hh-kids">Children</label>
                   <select id="hh-kids" name="children" defaultValue="0">
                     <option value="0">0</option>
                     <option value="1">1</option>
@@ -373,11 +386,11 @@ export default function HiveAndHoneyPage() {
                 </div>
               </div>
               <div className={s.field}>
-                <label htmlFor="hh-email">Email</label>
+                <label data-edit="tours.label3" htmlFor="hh-email">Email</label>
                 <input id="hh-email" name="email" type="email" autoComplete="email" />
               </div>
-              <button className={s.submit} type="submit">Hold my places</button>
-              <small className={s.formNote}>Pay on the day. No children under eight, for their sake and the bees.</small>
+              <button data-edit="tours.submit" data-edit-max="24" className={s.submit} type="submit">Hold my places</button>
+              <small data-edit="tours.formNote" className={s.formNote}>Pay on the day. No children under eight, for their sake and the bees.</small>
             </form>
           </div>
         </section>
@@ -385,14 +398,14 @@ export default function HiveAndHoneyPage() {
         {/* ------------------------------------------------------------- RAW */}
         <section id="raw" className={s.raw} aria-labelledby="raw-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>In the honey house</p>
-            <h2 id="raw-h">What raw means here</h2>
+            <p data-edit="raw.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>In the honey house</p>
+            <h2 data-edit="raw.title" data-edit-max="60" id="raw-h">What raw means here</h2>
           </div>
           <ol className={s.rawList}>
-            {RAW.map((r) => (
+            {RAW.map((r, i) => (
               <li key={r.t}>
-                <h3>{r.t}</h3>
-                <p>{r.b}</p>
+                <h3 data-edit={`raw.title2.${i}`} data-edit-max="40">{r.t}</h3>
+                <p data-edit={`raw.body.${i}`} data-edit-max="240" data-edit-multiline>{r.b}</p>
               </li>
             ))}
           </ol>
@@ -401,45 +414,45 @@ export default function HiveAndHoneyPage() {
         {/* ------------------------------------------------------------- BUY */}
         <section id="buy" className={s.buy} aria-labelledby="buy-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Where to buy</p>
-            <h2 id="buy-h">The shop, the markets, the post</h2>
+            <p data-edit="buy.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Where to buy</p>
+            <h2 data-edit="buy.title" data-edit-max="60" id="buy-h">The shop, the markets, the post</h2>
           </div>
           <div className={s.buyGrid}>
             <div className={s.shop}>
               <Artwork slug="hive-and-honey-bee" alt="" inks={['var(--honey)']} className={s.shopBee} />
-              <h3>The farm shop</h3>
-              <p className={s.shopAddr}>418 Linden Hill Road, at the top of the lane</p>
-              <p className={s.shopHours}>Friday and Saturday 9 am-5 pm, Sunday 10 am-4 pm</p>
-              <p className={s.shopNote}>An honesty box by the gate on other days, with the three honeys we have most of.</p>
+              <h3 data-edit="buy.title2" data-edit-max="40">The farm shop</h3>
+              <p data-edit="buy.shopAddr" data-edit-max="240" data-edit-multiline className={s.shopAddr}>418 Linden Hill Road, at the top of the lane</p>
+              <p data-edit="buy.shopHours" data-edit-max="240" data-edit-multiline className={s.shopHours}>Friday and Saturday 9 am-5 pm, Sunday 10 am-4 pm</p>
+              <p data-edit="buy.shopNote" data-edit-max="240" data-edit-multiline className={s.shopNote}>An honesty box by the gate on other days, with the three honeys we have most of.</p>
             </div>
             <div className={s.buyCol}>
-              <h3>Markets</h3>
+              <h3 data-edit="buy.title3" data-edit-max="40">Markets</h3>
               <dl className={s.buyList}>
-                {MARKETS.map(([d, w]) => (
+                {MARKETS.map(([d, w], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{w}</dd>
+                    <dt data-edit={`buy.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`buy.body.${i}`} data-edit-max="200" data-edit-multiline>{w}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div className={s.buyCol}>
-              <h3>Shops that stock us</h3>
+              <h3 data-edit="buy.title4" data-edit-max="40">Shops that stock us</h3>
               <ul className={s.stockists}>
-                {STOCKISTS.map((st) => (
+                {STOCKISTS.map((st, i) => (
                   <li key={st.name}>
-                    <strong>{st.name}</strong>
-                    <span>{st.where}</span>
-                    <small>{st.carry}</small>
+                    <strong data-edit={`buy.emphasis.${i}`}>{st.name}</strong>
+                    <span data-edit={`buy.text.${i}`} data-edit-max="60">{st.where}</span>
+                    <small data-edit={`buy.note.${i}`}>{st.carry}</small>
                   </li>
                 ))}
               </ul>
             </div>
             <div className={s.buyCol}>
-              <h3>By post</h3>
-              <p className={s.postNote}>Order by email with the honeys and sizes you want. We reply with the total and ship on Mondays.</p>
-              <a className={s.postLink} href="mailto:orders@hiveandhoney.example">orders@hiveandhoney.example</a>
-              <p className={s.postNote}>$8 a parcel, free from three jars.</p>
+              <h3 data-edit="buy.title5" data-edit-max="40">By post</h3>
+              <p data-edit="buy.postNote" data-edit-max="240" data-edit-multiline className={s.postNote}>Order by email with the honeys and sizes you want. We reply with the total and ship on Mondays.</p>
+              <a data-edit="buy.postLink" data-edit-max="28" className={s.postLink} href="mailto:orders@hiveandhoney.example">orders@hiveandhoney.example</a>
+              <p data-edit="buy.postNote2" data-edit-max="240" data-edit-multiline className={s.postNote}>$8 a parcel, free from three jars.</p>
             </div>
           </div>
         </section>
@@ -447,16 +460,16 @@ export default function HiveAndHoneyPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Questions</p>
-            <h2 id="faq-h">Asked at the stall every week</h2>
-            <p className={s.faqAside}>Something else? Ask Ruth at the Saturday stall, or call the farm between 9 and 5.</p>
-            <a className={s.faqPhone} href="tel:+15550142290">(555) 014-2290</a>
+            <p data-edit="faq.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Questions</p>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked at the stall every week</h2>
+            <p data-edit="faq.faqAside" data-edit-max="240" data-edit-multiline className={s.faqAside}>Something else? Ask Ruth at the Saturday stall, or call the farm between 9 and 5.</p>
+            <a data-edit="faq.faqPhone" data-edit-max="28" className={s.faqPhone} href="tel:+15550142290">(555) 014-2290</a>
           </div>
           <div className={s.faqList}>
-            {FAQ.map((f) => (
+            {FAQ.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -468,11 +481,11 @@ export default function HiveAndHoneyPage() {
           <div className={s.footBrand}>
             <Artwork slug="hive-and-honey-dipper" alt="" inks={['var(--honey)']} className={s.footDipper} />
             <div>
-              <p className={s.footName}>Hive &amp; Honey</p>
-              <p className={s.footTag}>Raw honey from forty hives on Linden Hill.</p>
+              <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Hive &amp; Honey</p>
+              <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Raw honey from forty hives on Linden Hill.</p>
             </div>
           </div>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             418 Linden Hill Road
             <br />
             hello@hiveandhoney.example
@@ -481,10 +494,10 @@ export default function HiveAndHoneyPage() {
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional honey farm. Honeys, prices and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional honey farm. Honeys, prices and people are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

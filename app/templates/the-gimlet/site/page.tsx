@@ -175,7 +175,20 @@ const HOURS = [
 
 export default function TheGimletPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--night': '#0f1a16',
+        '--cream': '#ede8dc',
+        '--lime': '#a7c957',
+        '--brass': '#c9a35b',
+        '--gray': '#6e7a73',
+        '--deep': '#18261f',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="night,cream,lime,brass,gray,deep"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -185,16 +198,16 @@ export default function TheGimletPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">The Gimlet</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">The Gimlet</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBook} href="tel:+15550194417">Book for four</a>
+        <a data-edit="bar.barBook" data-edit-max="28" className={s.barBook} href="tel:+15550194417">Book for four</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -204,7 +217,7 @@ export default function TheGimletPage() {
             One axis down the middle of the page, the way the list runs.
             The coupe stands on it; stars fill the two margins. */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <div className={`${s.heroStars} ${s.heroStarsLeft}`} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,2,4" className={`${s.heroStars} ${s.heroStarsLeft}`} aria-hidden="true">
             <TabbiedPattern
               pattern={northstar}
               palette={STARS}
@@ -216,7 +229,7 @@ export default function TheGimletPage() {
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
-          <div className={`${s.heroStars} ${s.heroStarsRight}`} aria-hidden="true">
+          <div data-edit-pattern="hero.field2" data-edit-roles="transparent,3,2,4" className={`${s.heroStars} ${s.heroStarsRight}`} aria-hidden="true">
             <TabbiedPattern
               pattern={northstar}
               palette={STARS}
@@ -229,8 +242,8 @@ export default function TheGimletPage() {
             />
           </div>
           <div className={s.heroInner}>
-            <p className={s.kicker}>Cocktail bar, 41 Cordial Lane, down the green stairs</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Cocktail bar, 41 Cordial Lane, down the green stairs</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Gin, lime,
               <br />
               <em>and not much else.</em>
@@ -241,14 +254,14 @@ export default function TheGimletPage() {
               inks={['var(--night)', 'var(--lime)']}
               className={s.heroCoupe}
             />
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Forty seats below the bookbinder, one long list, and a lime
               cordial that takes three days to make. Open from five, Tuesday
               to Sunday.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#menu">Read the list</a>
-              <a className={s.btnLine} href="#hours">Hours and address</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#menu">Read the list</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#hours">Hours and address</a>
             </div>
           </div>
         </section>
@@ -257,14 +270,14 @@ export default function TheGimletPage() {
             A single printed card down the center, glassware between its
             sections. */}
         <section id="menu" className={s.menu} aria-labelledby="menu-h">
-          <p className={`${s.marginNote} ${s.marginLeft}`}>The Gimlet, the autumn list</p>
-          <p className={`${s.marginNote} ${s.marginRight}`}>Cordial batch no. 212, made on Tuesday</p>
+          <p data-edit="menu.marginNote" data-edit-max="240" data-edit-multiline className={`${s.marginNote} ${s.marginLeft}`}>The Gimlet, the autumn list</p>
+          <p data-edit="menu.marginNote2" data-edit-max="240" data-edit-multiline className={`${s.marginNote} ${s.marginRight}`}>Cordial batch no. 212, made on Tuesday</p>
           <div className={s.card}>
             <div className={s.cardHead}>
-              <p className={s.cardHouse}>The Gimlet</p>
-              <h2 id="menu-h" className={s.cardTitle}>The List</h2>
-              <p className={s.cardSeason}>Autumn, served from 5 pm until the last stool empties</p>
-              <div className={s.cardRule} aria-hidden="true">
+              <p data-edit="menu.cardHouse" data-edit-max="240" data-edit-multiline className={s.cardHouse}>The Gimlet</p>
+              <h2 data-edit="menu.cardTitle" data-edit-max="60" id="menu-h" className={s.cardTitle}>The List</h2>
+              <p data-edit="menu.cardSeason" data-edit-max="240" data-edit-multiline className={s.cardSeason}>Autumn, served from 5 pm until the last stool empties</p>
+              <div data-edit-pattern="menu.field" data-edit-roles="transparent,3,1,2" className={s.cardRule} aria-hidden="true">
                 <TabbiedPattern
                   pattern={diadem}
                   palette={DIAMONDS}
@@ -276,20 +289,20 @@ export default function TheGimletPage() {
               </div>
             </div>
 
-            {LIST.map((sec) => (
+            {LIST.map((sec, i) => (
               <div key={sec.id} className={s.course}>
-                <h3 id={`${sec.id}-h`} className={s.courseTitle}>{sec.title}</h3>
-                <p className={s.courseNote}>{sec.note}</p>
+                <h3 data-edit={`menu.courseTitle.${i}`} data-edit-max="40" id={`${sec.id}-h`} className={s.courseTitle}>{sec.title}</h3>
+                <p data-edit={`menu.courseNote.${i}`} data-edit-max="240" data-edit-multiline className={s.courseNote}>{sec.note}</p>
                 <ul className={s.drinks}>
-                  {sec.drinks.map((d) => (
+                  {sec.drinks.map((d, i2) => (
                     <li key={d.name} className={s.drink}>
                       <div className={s.drinkLine}>
-                        <h4 className={s.drinkName}>{d.name}</h4>
+                        <h4 data-edit={`menu.drinkName.${i}.${i2}`} data-edit-max="36" className={s.drinkName}>{d.name}</h4>
                         <span className={s.leader} aria-hidden="true" />
-                        <span className={s.drinkPrice}>{d.price}</span>
+                        <span data-edit={`menu.drinkPrice.${i}.${i2}`} data-edit-max="60" className={s.drinkPrice}>{d.price}</span>
                       </div>
-                      <p className={s.drinkSpirit}>{d.spirit}</p>
-                      <p className={s.drinkNotes}>{d.notes}</p>
+                      <p data-edit={`menu.drinkSpirit.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.drinkSpirit}>{d.spirit}</p>
+                      <p data-edit={`menu.drinkNotes.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.drinkNotes}>{d.notes}</p>
                     </li>
                   ))}
                 </ul>
@@ -301,41 +314,41 @@ export default function TheGimletPage() {
                       inks={['var(--deep)', sec.glass.ink]}
                       className={s[sec.glass.shape]}
                     />
-                    <figcaption>{sec.glass.caption}</figcaption>
+                    <figcaption data-edit={`menu.caption.${i}`} data-edit-max="120" data-edit-multiline>{sec.glass.caption}</figcaption>
                   </figure>
                 ) : null}
               </div>
             ))}
 
             <div className={s.snacks}>
-              <h3 id="snacks-h" className={s.snacksTitle}>Something to eat</h3>
+              <h3 data-edit="menu.snacksTitle" data-edit-max="40" id="snacks-h" className={s.snacksTitle}>Something to eat</h3>
               <dl className={s.snackList}>
-                {SNACKS.map(([what, price]) => (
+                {SNACKS.map(([what, price], i) => (
                   <div key={what}>
-                    <dt>{what}</dt>
-                    <dd>{price}</dd>
+                    <dt data-edit={`menu.term.${i}`} data-edit-max="28">{what}</dt>
+                    <dd data-edit={`menu.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                   </div>
                 ))}
               </dl>
             </div>
 
-            <p className={s.cardFoot}>Prices include tax. A 20 percent service charge is added for tables of six or more.</p>
+            <p data-edit="menu.cardFoot" data-edit-max="240" data-edit-multiline className={s.cardFoot}>Prices include tax. A 20 percent service charge is added for tables of six or more.</p>
           </div>
         </section>
 
         {/* ------------------------------------------------------------ TEAM */}
         <section id="team" className={s.team} aria-labelledby="team-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>Behind the bar</p>
-            <h2 id="team-h">Four people, one of them always on the door</h2>
+            <p data-edit="team.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Behind the bar</p>
+            <h2 data-edit="team.title" data-edit-max="60" id="team-h">Four people, one of them always on the door</h2>
           </div>
           <ul className={s.teamList}>
-            {TEAM.map((t) => (
+            {TEAM.map((t, i) => (
               <li key={t.name} className={s.member}>
                 <span className={s.memberMark} aria-hidden="true">{t.initials}</span>
-                <h3 className={s.memberName}>{t.name}</h3>
-                <p className={s.memberRole}>{t.role}</p>
-                <p className={s.memberOrder}>{t.order}</p>
+                <h3 data-edit={`team.memberName.${i}`} data-edit-max="40" className={s.memberName}>{t.name}</h3>
+                <p data-edit={`team.memberRole.${i}`} data-edit-max="240" data-edit-multiline className={s.memberRole}>{t.role}</p>
+                <p data-edit={`team.memberOrder.${i}`} data-edit-max="240" data-edit-multiline className={s.memberOrder}>{t.order}</p>
               </li>
             ))}
           </ul>
@@ -354,34 +367,34 @@ export default function TheGimletPage() {
               />
             </div>
             <div className={s.hireText}>
-              <p className={s.secKicker}>Private hire</p>
-              <h2 id="hire-h">The back room, the whole bar, or a class</h2>
-              <p className={s.hireLede}>
+              <p data-edit="hire.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Private hire</p>
+              <h2 data-edit="hire.title" data-edit-max="60" id="hire-h">The back room, the whole bar, or a class</h2>
+              <p data-edit="hire.hireLede" data-edit-max="240" data-edit-multiline className={s.hireLede}>
                 Birthdays, leaving drinks, a wedding party that wants the night
                 to go on. Food from the kitchen next door, a list written for
                 the evening, and one of us behind the bar all night.
               </p>
               <ul className={s.spaces}>
-                {SPACES.map((sp) => (
+                {SPACES.map((sp, i) => (
                   <li key={sp.name} className={s.space}>
-                    <h3 className={s.spaceName}>{sp.name}</h3>
-                    <p className={s.spaceSize}>{sp.size}</p>
-                    <p className={s.spaceWhen}>{sp.when}</p>
-                    <p className={s.spacePrice}>{sp.price}</p>
+                    <h3 data-edit={`hire.spaceName.${i}`} data-edit-max="40" className={s.spaceName}>{sp.name}</h3>
+                    <p data-edit={`hire.spaceSize.${i}`} data-edit-max="240" data-edit-multiline className={s.spaceSize}>{sp.size}</p>
+                    <p data-edit={`hire.spaceWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.spaceWhen}>{sp.when}</p>
+                    <p data-edit={`hire.spacePrice.${i}`} data-edit-max="240" data-edit-multiline className={s.spacePrice}>{sp.price}</p>
                   </li>
                 ))}
               </ul>
               <form className={s.form} action="#">
                 <div className={s.field}>
-                  <label htmlFor="gm-name">Your name</label>
+                  <label data-edit="hire.label" htmlFor="gm-name">Your name</label>
                   <input id="gm-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="gm-email">Email</label>
+                  <label data-edit="hire.label2" htmlFor="gm-email">Email</label>
                   <input id="gm-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="gm-space">Space</label>
+                  <label data-edit="hire.label3" htmlFor="gm-space">Space</label>
                   <select id="gm-space" name="space" defaultValue={SPACES[0].name}>
                     {SPACES.map((sp) => (
                       <option key={sp.name} value={sp.name}>{sp.name}</option>
@@ -389,14 +402,14 @@ export default function TheGimletPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="gm-date">Date</label>
+                  <label data-edit="hire.label4" htmlFor="gm-date">Date</label>
                   <input id="gm-date" name="date" type="date" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="gm-guests">Guests</label>
+                  <label data-edit="hire.label5" htmlFor="gm-guests">Guests</label>
                   <input id="gm-guests" name="guests" type="number" min="4" max="90" defaultValue="20" />
                 </div>
-                <button className={s.formBtn} type="submit">Ask about a date</button>
+                <button data-edit="hire.formBtn" data-edit-max="24" className={s.formBtn} type="submit">Ask about a date</button>
               </form>
             </div>
           </div>
@@ -405,15 +418,15 @@ export default function TheGimletPage() {
         {/* ----------------------------------------------------------- RULES */}
         <section id="rules" className={s.rules} aria-labelledby="rules-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>House rules</p>
-            <h2 id="rules-h">Four, and we keep to them</h2>
+            <p data-edit="rules.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>House rules</p>
+            <h2 data-edit="rules.title" data-edit-max="60" id="rules-h">Four, and we keep to them</h2>
           </div>
           <ol className={s.ruleList}>
             {RULES.map(([title, body], i) => (
               <li key={title}>
                 <span className={s.ruleNo}>{`No. ${i + 1}`}</span>
-                <h3>{title}</h3>
-                <p>{body}</p>
+                <h3 data-edit={`rules.title2.${i}`} data-edit-max="40">{title}</h3>
+                <p data-edit={`rules.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
               </li>
             ))}
           </ol>
@@ -423,41 +436,41 @@ export default function TheGimletPage() {
         <section id="hours" className={s.hours} aria-labelledby="hours-h">
           <div className={s.hoursInner}>
             <div className={s.hoursBlock}>
-              <p className={s.secKicker}>Hours</p>
-              <h2 id="hours-h">Open six nights</h2>
+              <p data-edit="hours.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Hours</p>
+              <h2 data-edit="hours.title" data-edit-max="60" id="hours-h">Open six nights</h2>
               <dl className={s.hoursList}>
-                {HOURS.map(([day, time]) => (
+                {HOURS.map(([day, time], i) => (
                   <div key={day}>
-                    <dt>{day}</dt>
-                    <dd>{time}</dd>
+                    <dt data-edit={`hours.term.${i}`} data-edit-max="28">{day}</dt>
+                    <dd data-edit={`hours.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.hoursNote}>Last orders thirty minutes before close. The kitchen next door sends food until 10 pm.</p>
+              <p data-edit="hours.hoursNote" data-edit-max="240" data-edit-multiline className={s.hoursNote}>Last orders thirty minutes before close. The kitchen next door sends food until 10 pm.</p>
             </div>
             <div className={s.hoursBlock}>
-              <p className={s.secKicker}>Finding the door</p>
-              <p className={s.address}>41 Cordial Lane</p>
-              <p className={s.hoursNote}>
+              <p data-edit="hours.secKicker2" data-edit-max="240" data-edit-multiline className={s.secKicker}>Finding the door</p>
+              <p data-edit="hours.address" data-edit-max="240" data-edit-multiline className={s.address}>41 Cordial Lane</p>
+              <p data-edit="hours.hoursNote2" data-edit-max="240" data-edit-multiline className={s.hoursNote}>
                 In the basement below Harlow Bookbinders. Look for the green
                 door with the brass lime on it, and ring the bell on the right.
               </p>
               <dl className={s.contact}>
                 <div>
-                  <dt>Phone</dt>
+                  <dt data-edit="hours.term2" data-edit-max="28">Phone</dt>
                   <dd>
-                    <a href="tel:+15550194417">(555) 019-4417</a>
+                    <a data-edit="hours.link" data-edit-max="28" href="tel:+15550194417">(555) 019-4417</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Email</dt>
+                  <dt data-edit="hours.term3" data-edit-max="28">Email</dt>
                   <dd>
-                    <a href="mailto:hello@thegimlet.example">hello@thegimlet.example</a>
+                    <a data-edit="hours.link2" data-edit-max="28" href="mailto:hello@thegimlet.example">hello@thegimlet.example</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Nearest stop</dt>
-                  <dd>Cordial Lane, trams 3 and 7</dd>
+                  <dt data-edit="hours.term4" data-edit-max="28">Nearest stop</dt>
+                  <dd data-edit="hours.body2" data-edit-max="200" data-edit-multiline>Cordial Lane, trams 3 and 7</dd>
                 </div>
               </dl>
             </div>
@@ -466,20 +479,20 @@ export default function TheGimletPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footMark}>The Gimlet</p>
-        <p className={s.footTag}>Gin, lime and not much else, since 2016.</p>
+        <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>The Gimlet</p>
+        <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Gin, lime and not much else, since 2016.</p>
         <nav className={s.footNav} aria-label="Footer">
-          <a href="#menu">The list</a>
-          <a href="#hire">Private hire</a>
-          <a href="#hours">Hours</a>
-          <a href="mailto:hello@thegimlet.example">hello@thegimlet.example</a>
+          <a data-edit="footer.menu" data-edit-max="28" href="#menu">The list</a>
+          <a data-edit="footer.hire" data-edit-max="28" href="#hire">Private hire</a>
+          <a data-edit="footer.hours" data-edit-max="28" href="#hours">Hours</a>
+          <a data-edit="footer.link" data-edit-max="28" href="mailto:hello@thegimlet.example">hello@thegimlet.example</a>
         </nav>
         <div className={s.footFine}>
-          <p>A fictional cocktail bar. Drinks, people, prices and the address are invented. Please drink responsibly.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional cocktail bar. Drinks, people, prices and the address are invented. Please drink responsibly.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, pictures painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, pictures painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

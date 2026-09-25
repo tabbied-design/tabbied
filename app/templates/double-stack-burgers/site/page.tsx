@@ -106,7 +106,20 @@ const SWAPS = [
 
 export default function DoubleStackBurgersPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--cream': '#fff6e9',
+        '--ink': '#231815',
+        '--ketchup': '#e03a1e',
+        '--mustard': '#f7b32b',
+        '--blue': '#2b6cb0',
+        '--gray': '#a59483',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="cream,ink,ketchup,mustard,blue,gray"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -117,25 +130,25 @@ export default function DoubleStackBurgersPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span className={s.markTop}>Double</span>
-          <span className={s.markBottom}>Stack</span>
+          <span data-edit="bar.markTop" data-edit-max="60" className={s.markTop}>Double</span>
+          <span data-edit="bar.markBottom" data-edit-max="60" className={s.markBottom}>Stack</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBtn} href="#order">Order ahead</a>
+        <a data-edit="bar.barBtn" data-edit-max="28" className={s.barBtn} href="#order">Order ahead</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
 
       <main id="top">
         {/* The counter trim, under the bar. */}
-        <div className={s.trim} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,1,2,3" className={s.trim} aria-hidden="true">
           <TabbiedPattern
             pattern={ziggy}
             palette={ZIGZAG}
@@ -152,22 +165,22 @@ export default function DoubleStackBurgersPage() {
             each layer named on a leader line. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Smash burgers on Route 9</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Smash burgers on Route 9</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Two patties. <em>Six layers.</em> No shortcuts.
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Every burger is smashed to order on a seasoned flat-top, so the
               edges go crisp and lacy and the middle stays juicy. Here is the
               house one, taken apart.
             </p>
             <div className={s.actions}>
-              <a className={s.btn} href="#order">Order ahead</a>
-              <a className={s.btnLine} href="#menu">See the menu</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#order">Order ahead</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#menu">See the menu</a>
             </div>
             <p className={s.today}>
               <span className={s.todayDot} aria-hidden="true" />
-              <span>Open today until 10 pm, till 1 am Friday and Saturday</span>
+              <span data-edit="hero.text" data-edit-max="60">Open today until 10 pm, till 1 am Friday and Saturday</span>
             </p>
           </div>
 
@@ -186,11 +199,11 @@ export default function DoubleStackBurgersPage() {
               </div>
             </div>
             <ol className={s.labels}>
-              {LAYERS.map((l) => (
+              {LAYERS.map((l, i) => (
                 <li key={l.no} className={s.label} data-side={l.side} style={{ top: l.top }}>
-                  <span className={s.labelNo}>{l.no}</span>
-                  <strong className={s.labelName}>{l.name}</strong>
-                  <span className={s.labelDetail}>{l.detail}</span>
+                  <span data-edit={`hero.labelNo.${i}`} data-edit-max="60" className={s.labelNo}>{l.no}</span>
+                  <strong data-edit={`hero.labelName.${i}`} className={s.labelName}>{l.name}</strong>
+                  <span data-edit={`hero.labelDetail.${i}`} data-edit-max="60" className={s.labelDetail}>{l.detail}</span>
                 </li>
               ))}
             </ol>
@@ -202,9 +215,9 @@ export default function DoubleStackBurgersPage() {
             a bun underneath. */}
         <section id="menu" className={s.menu} aria-labelledby="menu-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>The menu</p>
-            <h2 id="menu-h">Burgers, sides, shakes</h2>
-            <p className={s.secNote}>
+            <p data-edit="menu.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The menu</p>
+            <h2 data-edit="menu.title" data-edit-max="60" id="menu-h">Burgers, sides, shakes</h2>
+            <p data-edit="menu.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Everything is made here: the patties ground twice a day, the
               fries cut every morning, the shakes spun with real ice cream.
             </p>
@@ -213,19 +226,19 @@ export default function DoubleStackBurgersPage() {
           <div className={s.menuGrid}>
             <div className={`${s.stack} ${s.stackBurgers}`}>
               <div className={s.bunTop}>
-                <h3>Burgers</h3>
-                <span>All on a potato bun</span>
+                <h3 data-edit="menu.title2" data-edit-max="40">Burgers</h3>
+                <span data-edit="menu.text" data-edit-max="60">All on a potato bun</span>
               </div>
               <ul className={s.items}>
-                {BURGERS.map((b) => (
+                {BURGERS.map((b, i) => (
                   <li key={b.name} className={s.item}>
                     <div className={s.itemHead}>
-                      <h4>{b.name}</h4>
-                      <span className={s.tag}>{b.tag}</span>
+                      <h4 data-edit={`menu.title3.${i}`} data-edit-max="36">{b.name}</h4>
+                      <span data-edit={`menu.tag.${i}`} data-edit-max="60" className={s.tag}>{b.tag}</span>
                       <span className={s.dots} aria-hidden="true" />
-                      <strong>{b.price}</strong>
+                      <strong data-edit={`menu.emphasis.${i}`}>{b.price}</strong>
                     </div>
-                    <p>{b.desc}</p>
+                    <p data-edit={`menu.body.${i}`} data-edit-max="240" data-edit-multiline>{b.desc}</p>
                   </li>
                 ))}
               </ul>
@@ -242,16 +255,16 @@ export default function DoubleStackBurgersPage() {
                     className={s.fries}
                   />
                   <div>
-                    <h3>Sides</h3>
-                    <span>Cut every morning</span>
+                    <h3 data-edit="menu.title4" data-edit-max="40">Sides</h3>
+                    <span data-edit="menu.text2" data-edit-max="60">Cut every morning</span>
                   </div>
                 </div>
                 <ul className={s.items}>
-                  {SIDES.map((sd) => (
+                  {SIDES.map((sd, i) => (
                     <li key={sd.name} className={s.itemShort}>
-                      <h4>{sd.name}</h4>
+                      <h4 data-edit={`menu.title5.${i}`} data-edit-max="36">{sd.name}</h4>
                       <span className={s.dots} aria-hidden="true" />
-                      <strong>{sd.price}</strong>
+                      <strong data-edit={`menu.emphasis2.${i}`}>{sd.price}</strong>
                     </li>
                   ))}
                 </ul>
@@ -267,16 +280,16 @@ export default function DoubleStackBurgersPage() {
                     className={s.shake}
                   />
                   <div>
-                    <h3>Shakes</h3>
-                    <span>16 oz, real ice cream</span>
+                    <h3 data-edit="menu.title6" data-edit-max="40">Shakes</h3>
+                    <span data-edit="menu.text3" data-edit-max="60">16 oz, real ice cream</span>
                   </div>
                 </div>
                 <ul className={s.items}>
-                  {SHAKES.map((sh) => (
+                  {SHAKES.map((sh, i) => (
                     <li key={sh.name} className={s.itemShort}>
-                      <h4>{sh.name}</h4>
+                      <h4 data-edit={`menu.title7.${i}`} data-edit-max="36">{sh.name}</h4>
                       <span className={s.dots} aria-hidden="true" />
-                      <strong>{sh.price}</strong>
+                      <strong data-edit={`menu.emphasis3.${i}`}>{sh.price}</strong>
                     </li>
                   ))}
                 </ul>
@@ -286,17 +299,17 @@ export default function DoubleStackBurgersPage() {
           </div>
 
           <div className={s.swaps}>
-            <h3 className={s.swapsHead}>Swaps and allergies</h3>
+            <h3 data-edit="menu.swapsHead" data-edit-max="40" className={s.swapsHead}>Swaps and allergies</h3>
             <ul>
-              {SWAPS.map((sw) => (
-                <li key={sw}>{sw}</li>
+              {SWAPS.map((sw, i) => (
+                <li data-edit={`menu.item.${i}`} data-edit-max="80" key={sw}>{sw}</li>
               ))}
             </ul>
           </div>
         </section>
 
         {/* The zigzag band, like the trim along the counter. */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field2" data-edit-roles="transparent,1,2,3" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={ziggy}
             palette={ZIGZAG}
@@ -311,9 +324,9 @@ export default function DoubleStackBurgersPage() {
         {/* ---------------------------------------------------------- COMBOS */}
         <section id="combos" className={s.combos} aria-labelledby="combos-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Combo deals</p>
-            <h2 id="combos-h">Make it a meal</h2>
-            <p className={s.secNote}>
+            <p data-edit="combos.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Combo deals</p>
+            <h2 data-edit="combos.title" data-edit-max="60" id="combos-h">Make it a meal</h2>
+            <p data-edit="combos.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Swap the fries for rings or tots at no charge, or upgrade the
               drink to a shake for $4.
             </p>
@@ -322,11 +335,11 @@ export default function DoubleStackBurgersPage() {
             {COMBOS.map((c, i) => (
               <li key={c.name} className={s.combo}>
                 <span className={s.comboNo}>{`#${i + 1}`}</span>
-                <h3>{c.name}</h3>
-                <p>{c.what}</p>
+                <h3 data-edit={`combos.title2.${i}`} data-edit-max="40">{c.name}</h3>
+                <p data-edit={`combos.body.${i}`} data-edit-max="240" data-edit-multiline>{c.what}</p>
                 <div className={s.comboPrice}>
-                  <strong>{c.price}</strong>
-                  <span>{c.save}</span>
+                  <strong data-edit={`combos.emphasis.${i}`}>{c.price}</strong>
+                  <span data-edit={`combos.text.${i}`} data-edit-max="60">{c.save}</span>
                 </div>
               </li>
             ))}
@@ -337,20 +350,20 @@ export default function DoubleStackBurgersPage() {
         <section id="order" className={s.order} aria-labelledby="order-h">
           <div className={s.orderInner}>
             <div className={s.orderText}>
-              <p className={s.secKick}>Order ahead and delivery</p>
-              <h2 id="order-h">Skip the line, or stay on the couch</h2>
+              <p data-edit="order.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Order ahead and delivery</p>
+              <h2 data-edit="order.title" data-edit-max="60" id="order-h">Skip the line, or stay on the couch</h2>
               <ol className={s.steps}>
-                {STEPS.map((st) => (
+                {STEPS.map((st, i) => (
                   <li key={st.no}>
-                    <span className={s.stepNo}>{st.no}</span>
-                    <h3>{st.head}</h3>
-                    <p>{st.body}</p>
+                    <span data-edit={`order.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
+                    <h3 data-edit={`order.title2.${i}`} data-edit-max="40">{st.head}</h3>
+                    <p data-edit={`order.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
                   </li>
                 ))}
               </ol>
               <div className={s.orderActions}>
-                <a className={s.btn} href="#order">Start an order</a>
-                <a className={s.phone} href="tel:+15550127829">(555) 012-7829</a>
+                <a data-edit="order.btn" data-edit-max="28" className={s.btn} href="#order">Start an order</a>
+                <a data-edit="order.phone" data-edit-max="28" className={s.phone} href="tel:+15550127829">(555) 012-7829</a>
               </div>
             </div>
             <div className={s.delivery}>
@@ -360,16 +373,16 @@ export default function DoubleStackBurgersPage() {
                 inks={{ red: 'var(--blue)', yellow: 'var(--mustard)' }}
                 className={s.deliveryFries}
               />
-              <h3 className={s.deliveryHead}>Delivered by our own drivers</h3>
-              <p className={s.deliveryNote}>
+              <h3 data-edit="order.deliveryHead" data-edit-max="40" className={s.deliveryHead}>Delivered by our own drivers</h3>
+              <p data-edit="order.deliveryNote" data-edit-max="240" data-edit-multiline className={s.deliveryNote}>
                 In insulated bags, fries packed separately so they arrive
                 crisp. Delivery runs until 30 minutes before closing.
               </p>
               <dl className={s.zones}>
-                {DELIVERY.map(([k, v]) => (
+                {DELIVERY.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`order.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`order.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -380,17 +393,17 @@ export default function DoubleStackBurgersPage() {
         {/* ----------------------------------------------------------- HOURS */}
         <section id="hours" className={s.hours} aria-labelledby="hours-h">
           <div className={s.hoursCard}>
-            <p className={s.secKick}>Hours and finding us</p>
-            <h2 id="hours-h">Open late, every day</h2>
+            <p data-edit="hours.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Hours and finding us</p>
+            <h2 data-edit="hours.title" data-edit-max="60" id="hours-h">Open late, every day</h2>
             <dl className={s.hoursList}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`hours.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`hours.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
-            <p className={s.hoursNote}>The grill closes 15 minutes before we do.</p>
+            <p data-edit="hours.hoursNote" data-edit-max="240" data-edit-multiline className={s.hoursNote}>The grill closes 15 minutes before we do.</p>
           </div>
           <div className={s.findUs}>
             <Artwork
@@ -400,19 +413,19 @@ export default function DoubleStackBurgersPage() {
               className={s.findShake}
             />
             <div className={s.findText}>
-              <h3>1150 Route 9</h3>
-              <p>
+              <h3 data-edit="hours.title2" data-edit-max="40">1150 Route 9</h3>
+              <p data-edit="hours.body2" data-edit-max="240" data-edit-multiline>
                 Across from the bowling alley, with a lot out back. Forty seats,
                 ten stools at the counter and four picnic tables in summer.
               </p>
-              <a href="mailto:hello@doublestack.example">hello@doublestack.example</a>
+              <a data-edit="hours.link" data-edit-max="28" href="mailto:hello@doublestack.example">hello@doublestack.example</a>
             </div>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <div className={s.buns} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,0" className={s.buns} aria-hidden="true">
           <TabbiedPattern
             pattern={bowl}
             palette={BUNS}
@@ -425,25 +438,25 @@ export default function DoubleStackBurgersPage() {
           />
         </div>
         <div className={s.footTop}>
-          <p className={s.footName}>Double Stack</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Double Stack</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             1150 Route 9
             <br />
             (555) 012-7829
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional burger joint. Menu, prices and hours are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional burger joint. Menu, prices and hours are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

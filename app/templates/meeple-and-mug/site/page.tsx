@@ -229,7 +229,20 @@ const HOURS = [
 
 export default function MeepleAndMugPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f6f0e6',
+        '--ink': '#1f1b2e',
+        '--tomato': '#e4572e',
+        '--teal': '#2a9d8f',
+        '--gray': '#8d8697',
+        '--pale': '#e8dfd0',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,tomato,teal,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -241,17 +254,17 @@ export default function MeepleAndMugPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <Artwork slug="meeple-and-mug-mug" alt="" inks={['var(--tomato)']} className={s.markArt} />
-          <span className={s.markName}>Meeple &amp; Mug</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Meeple &amp; Mug</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#tables">Book a table</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#tables">Book a table</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -261,31 +274,31 @@ export default function MeepleAndMugPage() {
             Three pieces on the edge of a board. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Board game cafe, 22 Tollgate Street</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Board game cafe, 22 Tollgate Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Four hundred games, <em>one long table,</em> and coffee that stays hot.
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Book a table by the hour, pick anything off the shelf, and let
               us teach it while the kettle boils. Open every day, and until
               midnight at the weekend.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#tables">Book a table</a>
-              <a className={s.btnGhost} href="#shelf">Browse the shelf</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#tables">Book a table</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#shelf">Browse the shelf</a>
             </div>
             <dl className={s.facts}>
-              {FACTS.map(([v, k]) => (
+              {FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
           </div>
 
           <div className={s.table}>
-            <div className={s.board} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,2,1,5" className={s.board} aria-hidden="true">
               <TabbiedPattern
                 pattern={damier}
                 palette={BOARD}
@@ -309,9 +322,9 @@ export default function MeepleAndMugPage() {
             box standing on its spine. */}
         <section id="shelf" className={s.shelfSec} aria-labelledby="shelf-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>The shelf</p>
-            <h2 id="shelf-h">Pick by who is coming and how long you have</h2>
-            <p className={s.secNote}>
+            <p data-edit="shelf.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The shelf</p>
+            <h2 data-edit="shelf.title" data-edit-max="60" id="shelf-h">Pick by who is coming and how long you have</h2>
+            <p data-edit="shelf.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A few of the 412, sorted the way people actually choose. Every
               game is free to play with a table, and the ones marked with a
               dot are what the staff reach for first.
@@ -319,20 +332,20 @@ export default function MeepleAndMugPage() {
           </div>
 
           <div className={s.bookcase}>
-            {SHELVES.map((shelf) => (
+            {SHELVES.map((shelf, i) => (
               <div key={shelf.id} className={s.shelf}>
                 <div className={s.shelfLabel}>
-                  <span className={s.shelfId}>{shelf.label}</span>
-                  <h3>{shelf.who}</h3>
-                  <p className={s.shelfLength}>{shelf.length}</p>
-                  <p className={s.shelfNote}>{shelf.note}</p>
+                  <span data-edit={`shelf.shelfId.${i}`} data-edit-max="60" className={s.shelfId}>{shelf.label}</span>
+                  <h3 data-edit={`shelf.title2.${i}`} data-edit-max="40">{shelf.who}</h3>
+                  <p data-edit={`shelf.shelfLength.${i}`} data-edit-max="240" data-edit-multiline className={s.shelfLength}>{shelf.length}</p>
+                  <p data-edit={`shelf.shelfNote.${i}`} data-edit-max="240" data-edit-multiline className={s.shelfNote}>{shelf.note}</p>
                 </div>
                 <ul className={s.spines}>
-                  {shelf.games.map((g) => (
+                  {shelf.games.map((g, i2) => (
                     <li key={g.name} className={s.spine} data-tone={g.tone} data-h={g.h} data-w={g.w}>
-                      <strong className={s.spineName}>{g.name}</strong>
+                      <strong data-edit={`shelf.spineName.${i}.${i2}`} className={s.spineName}>{g.name}</strong>
                       <span className={s.spineMeta}>{`${g.players} players, ${g.time}`}</span>
-                      {g.pick ? <span className={s.pick}>Staff pick</span> : null}
+                      {g.pick ? <span data-edit={`shelf.pick.${i}.${i2}`} data-edit-max="60" className={s.pick}>Staff pick</span> : null}
                     </li>
                   ))}
                   <li className={s.ornament} aria-hidden="true">
@@ -342,7 +355,7 @@ export default function MeepleAndMugPage() {
               </div>
             ))}
           </div>
-          <p className={s.shelfFoot}>
+          <p data-edit="shelf.shelfFoot" data-edit-max="240" data-edit-multiline className={s.shelfFoot}>
             The full list, with ages and weights, is on the tablet by the
             door. Looking for something we do not have? Tell us and it goes on
             the next order.
@@ -355,9 +368,9 @@ export default function MeepleAndMugPage() {
             <div className={s.tablesHead}>
               <Artwork slug="meeple-and-mug-die" alt="" inks={['var(--tomato)']} className={s.tablesDie} />
               <div>
-                <p className={s.secKick}>Tables</p>
-                <h2 id="tables-h">Booked by the hour, the games included</h2>
-                <p className={s.secNote}>
+                <p data-edit="tables.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Tables</p>
+                <h2 data-edit="tables.title" data-edit-max="60" id="tables-h">Booked by the hour, the games included</h2>
+                <p data-edit="tables.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                   Pay for the table, not the games. Walk-ins are welcome when a
                   table is free; at the weekend, book.
                 </p>
@@ -366,38 +379,38 @@ export default function MeepleAndMugPage() {
 
             <div className={s.tablesMain}>
               <ul className={s.rates}>
-                {RATES.map((r) => (
+                {RATES.map((r, i) => (
                   <li key={r.table}>
-                    <h3>{r.table}</h3>
-                    <span className={s.rateSeats}>{r.seats}</span>
-                    <strong className={s.ratePrice}>{r.price}</strong>
-                    <span className={s.rateUnit}>{r.unit}</span>
+                    <h3 data-edit={`tables.title2.${i}`} data-edit-max="40">{r.table}</h3>
+                    <span data-edit={`tables.rateSeats.${i}`} data-edit-max="60" className={s.rateSeats}>{r.seats}</span>
+                    <strong data-edit={`tables.ratePrice.${i}`} className={s.ratePrice}>{r.price}</strong>
+                    <span data-edit={`tables.rateUnit.${i}`} data-edit-max="60" className={s.rateUnit}>{r.unit}</span>
                   </li>
                 ))}
               </ul>
 
               <div className={s.tonight}>
                 <div className={s.tonightHead}>
-                  <h3>Tonight's tables</h3>
-                  <p>Updated at 4 pm. Shaded hours are booked.</p>
+                  <h3 data-edit="tables.title3" data-edit-max="40">Tonight's tables</h3>
+                  <p data-edit="tables.body" data-edit-max="240" data-edit-multiline>Updated at 4 pm. Shaded hours are booked.</p>
                 </div>
                 <div className={s.boardScroll}>
                   <table className={s.avail}>
-                    <caption className={s.srOnly}>Table availability by hour, noon to midnight</caption>
+                    <caption data-edit="tables.srOnly" className={s.srOnly}>Table availability by hour, noon to midnight</caption>
                     <thead>
                       <tr>
-                        <th scope="col">Table</th>
-                        {HOURS_ROW.map((h) => (
-                          <th key={h} scope="col">{h}</th>
+                        <th data-edit="tables.heading" scope="col">Table</th>
+                        {HOURS_ROW.map((h, i) => (
+                          <th data-edit={`tables.heading2.${i}`} key={h} scope="col">{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
-                      {BOARD_ROWS.map((row) => (
+                      {BOARD_ROWS.map((row, i) => (
                         <tr key={row.name}>
                           <th scope="row">
-                            <span className={s.availName}>{row.name}</span>
-                            <span className={s.availSeats}>{row.seats}</span>
+                            <span data-edit={`tables.availName.${i}`} data-edit-max="60" className={s.availName}>{row.name}</span>
+                            <span data-edit={`tables.availSeats.${i}`} data-edit-max="60" className={s.availSeats}>{row.seats}</span>
                           </th>
                           {row.slots.split('').map((c, i) => (
                             <td key={i} data-booked={c === 'x' ? 'yes' : 'no'}>
@@ -413,13 +426,13 @@ export default function MeepleAndMugPage() {
             </div>
 
             <form className={s.book} action="#">
-              <h3>Book a table</h3>
+              <h3 data-edit="tables.title4" data-edit-max="40">Book a table</h3>
               <label className={s.field}>
-                <span>Date</span>
+                <span data-edit="tables.text" data-edit-max="60">Date</span>
                 <input type="date" name="date" required />
               </label>
               <label className={s.field}>
-                <span>From</span>
+                <span data-edit="tables.text2" data-edit-max="60">From</span>
                 <select name="time" defaultValue="18:00">
                   <option value="12:00">12 pm</option>
                   <option value="14:00">2 pm</option>
@@ -431,7 +444,7 @@ export default function MeepleAndMugPage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>Hours</span>
+                <span data-edit="tables.text3" data-edit-max="60">Hours</span>
                 <select name="hours" defaultValue="3">
                   <option value="2">2 hours</option>
                   <option value="3">3 hours</option>
@@ -440,19 +453,19 @@ export default function MeepleAndMugPage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>Players</span>
+                <span data-edit="tables.text4" data-edit-max="60">Players</span>
                 <input type="number" name="players" min="1" max="12" defaultValue="4" />
               </label>
               <label className={`${s.field} ${s.fieldWide}`}>
-                <span>Name</span>
+                <span data-edit="tables.text5" data-edit-max="60">Name</span>
                 <input type="text" name="name" autoComplete="name" required />
               </label>
               <label className={`${s.field} ${s.fieldWide}`}>
-                <span>Email</span>
+                <span data-edit="tables.text6" data-edit-max="60">Email</span>
                 <input type="email" name="email" autoComplete="email" required />
               </label>
-              <button className={s.btn} type="submit">Request the table</button>
-              <p className={s.bookNote}>We confirm by email within the hour. No deposit under six players.</p>
+              <button data-edit="tables.btn" data-edit-max="24" className={s.btn} type="submit">Request the table</button>
+              <p data-edit="tables.bookNote" data-edit-max="240" data-edit-multiline className={s.bookNote}>We confirm by email within the hour. No deposit under six players.</p>
             </form>
           </div>
         </section>
@@ -460,7 +473,7 @@ export default function MeepleAndMugPage() {
         {/* ------------------------------------------------------------ MENU */}
         <section id="menu" className={s.menu} aria-labelledby="menu-h">
           <div className={s.menuArt} aria-hidden="true">
-            <div className={s.menuField}>
+            <div data-edit-pattern="menu.field" data-edit-roles="transparent,3,2,4" className={s.menuField}>
               <TabbiedPattern
                 pattern={polkadot}
                 palette={PIPS}
@@ -475,24 +488,24 @@ export default function MeepleAndMugPage() {
           </div>
           <div className={s.menuBody}>
             <div className={s.secHead}>
-              <p className={s.secKick}>Menu</p>
-              <h2 id="menu-h">Food that keeps the cards clean</h2>
-              <p className={s.secNote}>
+              <p data-edit="menu.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Menu</p>
+              <h2 data-edit="menu.title" data-edit-max="60" id="menu-h">Food that keeps the cards clean</h2>
+              <p data-edit="menu.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Everything on the table menu is eaten with one hand or a fork.
                 Plates come on a side table so the board stays where it is.
               </p>
             </div>
             <div className={s.menuCols}>
-              {MENU.map((col) => (
+              {MENU.map((col, i) => (
                 <div key={col.title} className={s.menuCol}>
-                  <h3>{col.title}</h3>
-                  <p className={s.menuWhen}>{col.when}</p>
+                  <h3 data-edit={`menu.title2.${i}`} data-edit-max="40">{col.title}</h3>
+                  <p data-edit={`menu.menuWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.menuWhen}>{col.when}</p>
                   <ul>
-                    {col.items.map((it) => (
+                    {col.items.map((it, i2) => (
                       <li key={it.name}>
-                        <span className={s.itemName}>{it.name}</span>
-                        <span className={s.itemPrice}>{it.price}</span>
-                        <span className={s.itemNote}>{it.note}</span>
+                        <span data-edit={`menu.itemName.${i}.${i2}`} data-edit-max="60" className={s.itemName}>{it.name}</span>
+                        <span data-edit={`menu.itemPrice.${i}.${i2}`} data-edit-max="60" className={s.itemPrice}>{it.price}</span>
+                        <span data-edit={`menu.itemNote.${i}.${i2}`} data-edit-max="60" className={s.itemNote}>{it.note}</span>
                       </li>
                     ))}
                   </ul>
@@ -503,7 +516,7 @@ export default function MeepleAndMugPage() {
         </section>
 
         {/* ------------------------------------------------------------ BAND */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,5" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={dieblock}
             palette={BAND}
@@ -520,9 +533,9 @@ export default function MeepleAndMugPage() {
         <section id="nights" className={s.nights} aria-labelledby="nights-h">
           <div className={s.nightsHead}>
             <div className={s.secHead}>
-              <p className={s.secKick}>Game nights</p>
-              <h2 id="nights-h">Something on every evening</h2>
-              <p className={s.secNote}>
+              <p data-edit="nights.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Game nights</p>
+              <h2 data-edit="nights.title" data-edit-max="60" id="nights-h">Something on every evening</h2>
+              <p data-edit="nights.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Weekly nights are free with a table. Specials take an entry fee
                 and a booking, and fill up.
               </p>
@@ -531,24 +544,24 @@ export default function MeepleAndMugPage() {
           </div>
 
           <ol className={s.week}>
-            {WEEK.map((w) => (
+            {WEEK.map((w, i) => (
               <li key={w.day} className={s.day}>
-                <span className={s.dayName}>{w.day}</span>
-                <h3>{w.name}</h3>
-                <span className={s.dayTime}>{w.time}</span>
-                <p>{w.note}</p>
+                <span data-edit={`nights.dayName.${i}`} data-edit-max="60" className={s.dayName}>{w.day}</span>
+                <h3 data-edit={`nights.title2.${i}`} data-edit-max="40">{w.name}</h3>
+                <span data-edit={`nights.dayTime.${i}`} data-edit-max="60" className={s.dayTime}>{w.time}</span>
+                <p data-edit={`nights.body.${i}`} data-edit-max="240" data-edit-multiline>{w.note}</p>
               </li>
             ))}
           </ol>
 
           <div className={s.specials}>
-            <h3 className={s.specialsHead}>Specials in October</h3>
+            <h3 data-edit="nights.specialsHead" data-edit-max="40" className={s.specialsHead}>Specials in October</h3>
             <ul>
-              {SPECIALS.map((sp) => (
+              {SPECIALS.map((sp, i) => (
                 <li key={sp.date}>
-                  <time className={s.spDate}>{sp.date}</time>
-                  <strong className={s.spName}>{sp.name}</strong>
-                  <span className={s.spNote}>{sp.note}</span>
+                  <time data-edit={`nights.spDate.${i}`} className={s.spDate}>{sp.date}</time>
+                  <strong data-edit={`nights.spName.${i}`} className={s.spName}>{sp.name}</strong>
+                  <span data-edit={`nights.spNote.${i}`} data-edit-max="60" className={s.spNote}>{sp.note}</span>
                 </li>
               ))}
             </ul>
@@ -560,15 +573,15 @@ export default function MeepleAndMugPage() {
         <section id="rules" className={s.rules} aria-labelledby="rules-h">
           <div className={s.rulesCard}>
             <div className={s.rulesHead}>
-              <p className={s.secKick}>House rules</p>
-              <h2 id="rules-h">Six rules, and one more: be a good winner</h2>
+              <p data-edit="rules.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>House rules</p>
+              <h2 data-edit="rules.title" data-edit-max="60" id="rules-h">Six rules, and one more: be a good winner</h2>
             </div>
             <ol className={s.ruleList}>
               {RULES.map((r, i) => (
                 <li key={r.t}>
                   <span className={s.ruleNo}>{String(i + 1)}</span>
-                  <h3>{r.t}</h3>
-                  <p>{r.b}</p>
+                  <h3 data-edit={`rules.title2.${i}`} data-edit-max="40">{r.t}</h3>
+                  <p data-edit={`rules.body.${i}`} data-edit-max="240" data-edit-multiline>{r.b}</p>
                 </li>
               ))}
             </ol>
@@ -578,37 +591,37 @@ export default function MeepleAndMugPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Visit</p>
-            <h2 id="visit-h">Find the teal door on Tollgate Street</h2>
+            <p data-edit="visit.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Visit</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Find the teal door on Tollgate Street</h2>
           </div>
           <div className={s.visitGrid}>
             <div className={s.visitCol}>
-              <h3>Hours</h3>
+              <h3 data-edit="visit.title2" data-edit-max="40">Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div className={s.visitCol}>
-              <h3>Where</h3>
-              <p>22 Tollgate Street, across from the library. Step-free from the street, with an accessible restroom.</p>
-              <p>The 14 and 31 buses stop outside. Bike racks by the door; parking in the Mill Lane garage.</p>
+              <h3 data-edit="visit.title3" data-edit-max="40">Where</h3>
+              <p data-edit="visit.body2" data-edit-max="240" data-edit-multiline>22 Tollgate Street, across from the library. Step-free from the street, with an accessible restroom.</p>
+              <p data-edit="visit.body3" data-edit-max="240" data-edit-multiline>The 14 and 31 buses stop outside. Bike racks by the door; parking in the Mill Lane garage.</p>
             </div>
             <div className={s.visitCol}>
-              <h3>Ask us</h3>
+              <h3 data-edit="visit.title4" data-edit-max="40">Ask us</h3>
               <ul className={s.contact}>
                 <li>
-                  <a href="tel:+15550142290">(555) 014-2290</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550142290">(555) 014-2290</a>
                 </li>
                 <li>
-                  <a href="mailto:tables@meepleandmug.example">tables@meepleandmug.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:tables@meepleandmug.example">tables@meepleandmug.example</a>
                 </li>
               </ul>
-              <p>Birthdays, office nights and school clubs: write and we will plan the games with you.</p>
+              <p data-edit="visit.body4" data-edit-max="240" data-edit-multiline>Birthdays, office nights and school clubs: write and we will plan the games with you.</p>
             </div>
           </div>
         </section>
@@ -618,20 +631,20 @@ export default function MeepleAndMugPage() {
         <div className={s.footTop}>
           <a className={s.footMark} href="#top">
             <Artwork slug="meeple-and-mug-die" alt="" inks={['var(--paper)']} className={s.footDie} />
-            <span>Meeple &amp; Mug</span>
+            <span data-edit="footer.text" data-edit-max="60">Meeple &amp; Mug</span>
           </a>
-          <p className={s.footTag}>A board game cafe with a very full shelf. 22 Tollgate Street.</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>A board game cafe with a very full shelf. 22 Tollgate Street.</p>
           <nav className={s.footNav} aria-label="Footer">
-            {NAV.map(([label, href]) => (
-              <a key={href} href={href}>{label}</a>
+            {NAV.map(([label, href], i) => (
+              <a data-edit={`footer.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
             ))}
           </nav>
         </div>
         <div className={s.footFine}>
-          <p>A fictional board game cafe. Games, prices and hours are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional board game cafe. Games, prices and hours are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

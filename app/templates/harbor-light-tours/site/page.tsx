@@ -90,7 +90,20 @@ const CHARTERS = [
 
 export default function HarborLightToursPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--fog': '#e9eef1',
+        '--ink': '#14222d',
+        '--signal': '#d8503c',
+        '--sea': '#3b6a87',
+        '--gray': '#8997a1',
+        '--pale': '#d3dde3',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="fog,ink,signal,sea,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -102,17 +115,17 @@ export default function HarborLightToursPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markLight} aria-hidden="true" />
-          <span>Harbor Light Tours</span>
+          <span data-edit="bar.text" data-edit-max="60">Harbor Light Tours</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#book">Book seats</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#book">Book seats</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -126,26 +139,26 @@ export default function HarborLightToursPage() {
             <Artwork slug="harbor-light-tours-harbor" alt="" fit="cover" inks={['var(--ink)', 'var(--pale)']} className={s.heroPicture} />
           </div>
           <div className={s.heroText}>
-            <p className={s.kicker}>Boat tours from Pier 3, Gull Harbor</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Boat tours from Pier 3, Gull Harbor</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               See the harbor <em>from the water.</em>
             </h1>
             <div className={s.heroLead}>
-              <p className={s.lede}>
+              <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 Six trips a day on the Gannet, a forty-seat launch with a warm
                 cabin and an open top deck: the harbor loop, the seals, the
                 lighthouse, and the sun going down behind the breakwater.
               </p>
               <div className={s.heroActions}>
-                <a className={s.btn} href="#departures">Today's departures</a>
-                <a className={s.btnGhost} href="#book">Book seats</a>
+                <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#departures">Today's departures</a>
+                <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#book">Book seats</a>
               </div>
             </div>
           </div>
           <div className={s.nextUp}>
-            <span className={s.nextLabel}>Next out</span>
-            <strong className={s.nextTime}>11:30</strong>
-            <span className={s.nextTour}>Harbor Loop, 14 seats left</span>
+            <span data-edit="hero.nextLabel" data-edit-max="60" className={s.nextLabel}>Next out</span>
+            <strong data-edit="hero.nextTime" className={s.nextTime}>11:30</strong>
+            <span data-edit="hero.nextTour" data-edit-max="60" className={s.nextTour}>Harbor Loop, 14 seats left</span>
           </div>
         </section>
 
@@ -154,32 +167,32 @@ export default function HarborLightToursPage() {
         <section id="departures" className={s.departures} aria-labelledby="departures-h">
           <div className={s.boardHead}>
             <div>
-              <p className={s.secKick}>Departures</p>
-              <h2 id="departures-h">Today from Pier 3</h2>
+              <p data-edit="departures.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Departures</p>
+              <h2 data-edit="departures.title" data-edit-max="60" id="departures-h">Today from Pier 3</h2>
             </div>
-            <p className={s.boardNote}>Adult fares shown. Children under 12 half price, under 3 free. Seats can be booked until ten minutes before sailing.</p>
+            <p data-edit="departures.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>Adult fares shown. Children under 12 half price, under 3 free. Seats can be booked until ten minutes before sailing.</p>
           </div>
           <div className={s.board}>
             <div className={s.boardRow} data-head="yes" aria-hidden="true">
-              <span>Tour</span>
-              <span>Length</span>
-              <span>Departs</span>
-              <span>Adult</span>
-              <span>Status</span>
+              <span data-edit="departures.text" data-edit-max="60">Tour</span>
+              <span data-edit="departures.text2" data-edit-max="60">Length</span>
+              <span data-edit="departures.text3" data-edit-max="60">Departs</span>
+              <span data-edit="departures.text4" data-edit-max="60">Adult</span>
+              <span data-edit="departures.text5" data-edit-max="60">Status</span>
             </div>
             <ul className={s.boardList}>
-              {TOURS.map((t) => (
+              {TOURS.map((t, i) => (
                 <li key={t.name} className={s.boardRow}>
-                  <strong className={s.tourName}>{t.name}</strong>
-                  <span className={s.tourLength}>{t.length}</span>
+                  <strong data-edit={`departures.tourName.${i}`} className={s.tourName}>{t.name}</strong>
+                  <span data-edit={`departures.tourLength.${i}`} data-edit-max="60" className={s.tourLength}>{t.length}</span>
                   <div className={s.tourTimes}>
-                    {t.times.map((tm) => (
-                      <time key={tm} className={s.time}>{tm}</time>
+                    {t.times.map((tm, i2) => (
+                      <time data-edit={`departures.time.${i}.${i2}`} key={tm} className={s.time}>{tm}</time>
                     ))}
-                    <small className={s.tourDays}>{t.days}</small>
+                    <small data-edit={`departures.tourDays.${i}`} className={s.tourDays}>{t.days}</small>
                   </div>
-                  <span className={s.tourPrice}>{t.price}</span>
-                  <span className={s.status} data-status={t.status}>{t.statusLabel}</span>
+                  <span data-edit={`departures.tourPrice.${i}`} data-edit-max="60" className={s.tourPrice}>{t.price}</span>
+                  <span data-edit={`departures.status.${i}`} data-edit-max="60" className={s.status} data-status={t.status}>{t.statusLabel}</span>
                 </li>
               ))}
             </ul>
@@ -187,7 +200,7 @@ export default function HarborLightToursPage() {
         </section>
 
         {/* ------------------------------------------------------------ SAILS */}
-        <div className={s.sails} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,3,2,5,1" className={s.sails} aria-hidden="true">
           <TabbiedPattern
             pattern={sail}
             palette={SAILS}
@@ -203,16 +216,16 @@ export default function HarborLightToursPage() {
         {/* ---------------------------------------------------------- SIGHTS */}
         <section id="sights" className={s.sights} aria-labelledby="sights-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>What you will see</p>
-            <h2 id="sights-h">The Lighthouse Run, minute by minute</h2>
-            <p className={s.secNote}>
+            <p data-edit="sights.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>What you will see</p>
+            <h2 data-edit="sights.title" data-edit-max="60" id="sights-h">The Lighthouse Run, minute by minute</h2>
+            <p data-edit="sights.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The longest of our trips, and the one that takes in everything.
               The Harbor Loop turns back after the customs house; Seal Rocks
               and Caves skips the lighthouse.
             </p>
           </div>
           <div className={s.route}>
-            <div className={s.routeSwell} aria-hidden="true">
+            <div data-edit-pattern="sights.field" data-edit-roles="transparent,3,4" className={s.routeSwell} aria-hidden="true">
               <TabbiedPattern
                 pattern={tidewashbands}
                 palette={SWELL}
@@ -223,11 +236,11 @@ export default function HarborLightToursPage() {
               />
             </div>
             <ol className={s.stops}>
-              {SIGHTS.map((st) => (
+              {SIGHTS.map((st, i) => (
                 <li key={st.at} className={s.stop}>
                   <span className={s.stopAt}>{`${st.at} min`}</span>
-                  <h3>{st.name}</h3>
-                  <p>{st.note}</p>
+                  <h3 data-edit={`sights.title2.${i}`} data-edit-max="40">{st.name}</h3>
+                  <p data-edit={`sights.body.${i}`} data-edit-max="240" data-edit-multiline>{st.note}</p>
                 </li>
               ))}
             </ol>
@@ -238,18 +251,18 @@ export default function HarborLightToursPage() {
         <section id="know" className={s.know} aria-labelledby="know-h">
           <div className={s.knowInner}>
             <div className={s.secHead}>
-              <p className={s.secKick}>Good to know</p>
-              <h2 id="know-h">Before you come aboard</h2>
-              <p className={s.secNote}>
+              <p data-edit="know.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Good to know</p>
+              <h2 data-edit="know.title" data-edit-max="60" id="know-h">Before you come aboard</h2>
+              <p data-edit="know.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 It is always colder on the water than on the pier. The cabin is
                 heated, and there are blankets on the top deck.
               </p>
             </div>
             <div className={s.faqs}>
-              {FAQS.map((f) => (
+              {FAQS.map((f, i) => (
                 <details key={f.q} className={s.faq}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`know.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`know.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -260,19 +273,19 @@ export default function HarborLightToursPage() {
         <section id="charters" className={s.charters} aria-labelledby="charters-h">
           <div className={s.charterCard}>
             <div>
-              <p className={s.secKick}>Charters</p>
-              <h2 id="charters-h">The Gannet, just for you</h2>
-              <p className={s.secNote}>
+              <p data-edit="charters.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Charters</p>
+              <h2 data-edit="charters.title" data-edit-max="60" id="charters-h">The Gannet, just for you</h2>
+              <p data-edit="charters.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Birthdays, weddings, a company afternoon, or ashes scattered
                 past the lighthouse with care. The captain and a deckhand come
                 with the boat.
               </p>
             </div>
             <dl className={s.charterList}>
-              {CHARTERS.map(([what, price]) => (
+              {CHARTERS.map(([what, price], i) => (
                 <div key={what}>
-                  <dt>{what}</dt>
-                  <dd>{price}</dd>
+                  <dt data-edit={`charters.term.${i}`} data-edit-max="28">{what}</dt>
+                  <dd data-edit={`charters.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                 </div>
               ))}
             </dl>
@@ -287,12 +300,12 @@ export default function HarborLightToursPage() {
           </div>
           <div className={s.bookInner}>
             <div className={s.bookPanel}>
-              <p className={s.secKick}>Book</p>
-              <h2 id="book-h">Save your seats</h2>
-              <p className={s.bookLede}>Pay now, or at the kiosk on Pier 3. Free changes up to a day before.</p>
+              <p data-edit="book.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Book</p>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Save your seats</h2>
+              <p data-edit="book.bookLede" data-edit-max="240" data-edit-multiline className={s.bookLede}>Pay now, or at the kiosk on Pier 3. Free changes up to a day before.</p>
               <form className={s.form} action="#">
                 <label className={`${s.field} ${s.wide}`}>
-                  <span>Tour</span>
+                  <span data-edit="book.text" data-edit-max="60">Tour</span>
                   <select name="tour" defaultValue="loop">
                     <option value="loop">Harbor Loop, 60 min, $28</option>
                     <option value="seals">Seal Rocks and Caves, 90 min, $38</option>
@@ -303,37 +316,37 @@ export default function HarborLightToursPage() {
                   </select>
                 </label>
                 <label className={s.field}>
-                  <span>Date</span>
+                  <span data-edit="book.text2" data-edit-max="60">Date</span>
                   <input type="date" name="date" required />
                 </label>
                 <label className={s.field}>
-                  <span>Time</span>
+                  <span data-edit="book.text3" data-edit-max="60">Time</span>
                   <input type="time" name="time" defaultValue="11:30" />
                 </label>
                 <label className={s.field}>
-                  <span>Adults</span>
+                  <span data-edit="book.text4" data-edit-max="60">Adults</span>
                   <input type="number" name="adults" min="1" max="40" defaultValue="2" />
                 </label>
                 <label className={s.field}>
-                  <span>Children</span>
+                  <span data-edit="book.text5" data-edit-max="60">Children</span>
                   <input type="number" name="children" min="0" max="40" defaultValue="0" />
                 </label>
                 <label className={`${s.field} ${s.wide}`}>
-                  <span>Email for the tickets</span>
+                  <span data-edit="book.text6" data-edit-max="60">Email for the tickets</span>
                   <input type="email" name="email" autoComplete="email" required />
                 </label>
-                <button className={s.btn} type="submit">Book the seats</button>
+                <button data-edit="book.btn" data-edit-max="24" className={s.btn} type="submit">Book the seats</button>
               </form>
             </div>
             <div className={s.bookInfo}>
-              <h3>Pier 3, Harbor Street</h3>
-              <p>The blue kiosk at the end of the pier opens 30 minutes before the first sailing.</p>
+              <h3 data-edit="book.title2" data-edit-max="40">Pier 3, Harbor Street</h3>
+              <p data-edit="book.body" data-edit-max="240" data-edit-multiline>The blue kiosk at the end of the pier opens 30 minutes before the first sailing.</p>
               <ul className={s.contact}>
                 <li>
-                  <a href="tel:+15550148852">(555) 014-8852</a>
+                  <a data-edit="book.link" data-edit-max="28" href="tel:+15550148852">(555) 014-8852</a>
                 </li>
                 <li>
-                  <a href="mailto:ahoy@harborlighttours.example">ahoy@harborlighttours.example</a>
+                  <a data-edit="book.link2" data-edit-max="28" href="mailto:ahoy@harborlighttours.example">ahoy@harborlighttours.example</a>
                 </li>
               </ul>
             </div>
@@ -343,19 +356,19 @@ export default function HarborLightToursPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Harbor Light Tours</p>
-          <p className={s.footTag}>Boat trips from Pier 3, Gull Harbor, April to November.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Harbor Light Tours</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Boat trips from Pier 3, Gull Harbor, April to November.</p>
           <nav className={s.footNav} aria-label="Footer">
-            {NAV.map(([label, href]) => (
-              <a key={href} href={href}>{label}</a>
+            {NAV.map(([label, href], i) => (
+              <a data-edit={`footer.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
             ))}
           </nav>
         </div>
         <div className={s.footFine}>
-          <p>A fictional boat tour company. Trips, fares and times are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional boat tour company. Trips, fares and times are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

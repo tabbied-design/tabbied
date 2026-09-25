@@ -119,7 +119,21 @@ const FAQS = [
 
 export default function CrabappleOrchardPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f5f1e6',
+        '--ink': '#1f2419',
+        '--red': '#c0392b',
+        '--green': '#5b8c3a',
+        '--gold': '#e3b23c',
+        '--gray': '#9a9483',
+        '--pale': '#e6e0cf',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,red,green,gold,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -131,17 +145,17 @@ export default function CrabappleOrchardPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markApple} aria-hidden="true" />
-          <span className={s.markName}>Crabapple Orchard</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Crabapple Orchard</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBtn} href="#visit">Book a slot</a>
+        <a data-edit="bar.barBtn" data-edit-max="28" className={s.barBtn} href="#visit">Book a slot</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -160,21 +174,21 @@ export default function CrabappleOrchardPage() {
             />
           </div>
           <div className={s.heroText}>
-            <p className={s.kicker}>Pick-your-own on Hollow Road, since 1962</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Pick-your-own on Hollow Road, since 1962</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Forty rows, <em>twenty-two kinds of apple.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Bring a bag, ride the wagon out to the trees and pick what is
               ripe this week. The cider donuts are waiting when you get back.
             </p>
             <div className={s.actions}>
-              <a className={s.btn} href="#visit">Book a picking slot</a>
-              <a className={s.btnLine} href="#calendar">What is ripe now</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#visit">Book a picking slot</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#calendar">What is ripe now</a>
             </div>
             <p className={s.ripe}>
               <span className={s.ripeDot} aria-hidden="true" />
-              <span>Picking this weekend: Honeycrisp, McIntosh, Macoun and Bosc pears</span>
+              <span data-edit="hero.text" data-edit-max="60">Picking this weekend: Honeycrisp, McIntosh, Macoun and Bosc pears</span>
             </p>
           </div>
         </section>
@@ -184,9 +198,9 @@ export default function CrabappleOrchardPage() {
             months, with a rule where this week falls. */}
         <section id="calendar" className={s.calendar} aria-labelledby="calendar-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>The picking calendar</p>
-            <h2 id="calendar-h">What is ripe, and when</h2>
-            <p className={s.secNote}>
+            <p data-edit="calendar.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The picking calendar</p>
+            <h2 data-edit="calendar.title" data-edit-max="60" id="calendar-h">What is ripe, and when</h2>
+            <p data-edit="calendar.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A good guide, not a promise: a hot August brings everything on a
               week early. The board at the barn has the day's rows.
             </p>
@@ -194,25 +208,25 @@ export default function CrabappleOrchardPage() {
 
           <div className={s.chart}>
             <div className={s.chartHead} aria-hidden="true">
-              <span className={s.chartCorner}>Variety</span>
+              <span data-edit="calendar.chartCorner" data-edit-max="60" className={s.chartCorner}>Variety</span>
               <div className={s.months}>
-                {MONTHS.map((m) => (
-                  <span key={m}>{m}</span>
+                {MONTHS.map((m, i) => (
+                  <span data-edit={`calendar.text.${i}`} data-edit-max="60" key={m}>{m}</span>
                 ))}
                 <span className={s.now}>
-                  <span className={s.nowLabel}>This week</span>
+                  <span data-edit="calendar.nowLabel" data-edit-max="60" className={s.nowLabel}>This week</span>
                 </span>
               </div>
             </div>
             <ul className={s.rowsList}>
-              {VARIETIES.map((v) => (
+              {VARIETIES.map((v, i) => (
                 <li key={v.name} className={s.variety}>
                   <div className={s.varName}>
-                    <h3>{v.name}</h3>
-                    <p>{v.note}</p>
+                    <h3 data-edit={`calendar.title2.${i}`} data-edit-max="40">{v.name}</h3>
+                    <p data-edit={`calendar.body.${i}`} data-edit-max="240" data-edit-multiline>{v.note}</p>
                   </div>
                   <div className={s.track}>
-                    <span
+                    <span data-edit={`calendar.span.${i}`} data-edit-max="60"
                       className={s.span}
                       data-kind={v.kind}
                       style={{ gridColumn: `${v.from} / ${v.to}` }}>
@@ -224,14 +238,14 @@ export default function CrabappleOrchardPage() {
             </ul>
           </div>
           <ul className={s.legend}>
-            <li data-kind="apple">Apples</li>
-            <li data-kind="pear">Pears</li>
-            <li data-kind="squash">Pumpkins and squash</li>
+            <li data-edit="calendar.item" data-edit-max="80" data-kind="apple">Apples</li>
+            <li data-edit="calendar.item2" data-edit-max="80" data-kind="pear">Pears</li>
+            <li data-edit="calendar.item3" data-edit-max="80" data-kind="squash">Pumpkins and squash</li>
           </ul>
         </section>
 
         {/* The hedge: a band of leaves between the calendar and the rules. */}
-        <div className={s.hedge} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,3,6,4" className={s.hedge} aria-hidden="true">
           <TabbiedPattern
             pattern={ivy}
             palette={HEDGE}
@@ -246,9 +260,9 @@ export default function CrabappleOrchardPage() {
         {/* --------------------------------------------------------- PICKING */}
         <section id="picking" className={s.picking} aria-labelledby="picking-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>How picking works</p>
-            <h2 id="picking-h">Pay by the bag, not the pound</h2>
-            <p className={s.secNote}>
+            <p data-edit="picking.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>How picking works</p>
+            <h2 data-edit="picking.title" data-edit-max="60" id="picking-h">Pay by the bag, not the pound</h2>
+            <p data-edit="picking.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Fill it as full as it will close. Pears and crabapples go in the
               same bags; pumpkins are $0.75 a pound at the scale by the barn.
             </p>
@@ -258,17 +272,17 @@ export default function CrabappleOrchardPage() {
               {STEPS.map((st, i) => (
                 <li key={st.head}>
                   <span className={s.stepNo}>{`${i + 1}`}</span>
-                  <h3>{st.head}</h3>
-                  <p>{st.body}</p>
+                  <h3 data-edit={`picking.title2.${i}`} data-edit-max="40">{st.head}</h3>
+                  <p data-edit={`picking.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
                 </li>
               ))}
             </ol>
             <ul className={s.bags}>
-              {BAGS.map((b) => (
+              {BAGS.map((b, i) => (
                 <li key={b.size} className={s.bag}>
-                  <h3>{b.size}</h3>
-                  <p>{b.holds}</p>
-                  <strong>{b.price}</strong>
+                  <h3 data-edit={`picking.title3.${i}`} data-edit-max="40">{b.size}</h3>
+                  <p data-edit={`picking.body2.${i}`} data-edit-max="240" data-edit-multiline>{b.holds}</p>
+                  <strong data-edit={`picking.emphasis.${i}`}>{b.price}</strong>
                 </li>
               ))}
             </ul>
@@ -278,7 +292,7 @@ export default function CrabappleOrchardPage() {
         {/* ------------------------------------------------------- FARM SHOP
             The shop's list beside a big panel of leaves. */}
         <section id="shop" className={s.shop} aria-labelledby="shop-h">
-          <div className={s.leafPanel} aria-hidden="true">
+          <div data-edit-pattern="shop.field" data-edit-roles="transparent,3,4,2,1" className={s.leafPanel} aria-hidden="true">
             <TabbiedPattern
               pattern={frond}
               palette={LEAVES}
@@ -291,26 +305,26 @@ export default function CrabappleOrchardPage() {
             />
           </div>
           <div className={s.shopBody}>
-            <p className={s.secKick}>The farm shop and bakery</p>
-            <h2 id="shop-h">Donuts in the barn window</h2>
-            <p className={s.shopLede}>
+            <p data-edit="shop.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The farm shop and bakery</p>
+            <h2 data-edit="shop.title" data-edit-max="60" id="shop-h">Donuts in the barn window</h2>
+            <p data-edit="shop.shopLede" data-edit-max="240" data-edit-multiline className={s.shopLede}>
               The shop is in the old packing barn, open whenever the orchard
               is, and all winter on Saturdays for cider, jelly and pies to
               order. Everything is made here or two farms down the road.
             </p>
             <ul className={s.bakery}>
-              {BAKERY.map((b) => (
+              {BAKERY.map((b, i) => (
                 <li key={b.name}>
                   <div className={s.bakeHead}>
-                    <h3>{b.name}</h3>
+                    <h3 data-edit={`shop.title2.${i}`} data-edit-max="40">{b.name}</h3>
                     <span className={s.bakeDots} aria-hidden="true" />
-                    <strong>{b.price}</strong>
+                    <strong data-edit={`shop.emphasis.${i}`}>{b.price}</strong>
                   </div>
-                  <p>{b.note}</p>
+                  <p data-edit={`shop.body.${i}`} data-edit-max="240" data-edit-multiline>{b.note}</p>
                 </li>
               ))}
             </ul>
-            <p className={s.shopNote}>Pies to order with two days notice: (555) 019-1962.</p>
+            <p data-edit="shop.shopNote" data-edit-max="240" data-edit-multiline className={s.shopNote}>Pies to order with two days notice: (555) 019-1962.</p>
           </div>
         </section>
 
@@ -328,29 +342,29 @@ export default function CrabappleOrchardPage() {
           </div>
           <div className={s.visitInner}>
             <div className={s.visitText}>
-              <p className={s.visitKick}>Visit and book</p>
-              <h2 id="visit-h">Come out to Hollow Road</h2>
-              <p className={s.visitLede}>
+              <p data-edit="visit.visitKick" data-edit-max="240" data-edit-multiline className={s.visitKick}>Visit and book</p>
+              <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Come out to Hollow Road</h2>
+              <p data-edit="visit.visitLede" data-edit-max="240" data-edit-multiline className={s.visitLede}>
                 Weekend slots sell out by Thursday in October. On weekdays
                 there is no need to book; just come.
               </p>
               <dl className={s.hours}>
-                {HOURS.map(([m, h]) => (
+                {HOURS.map(([m, h], i) => (
                   <div key={m}>
-                    <dt>{m}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{m}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.address}>
+              <p data-edit="visit.address" data-edit-max="240" data-edit-multiline className={s.address}>
                 1420 Hollow Road, three miles past the covered bridge. Free
                 parking in the lower field.
               </p>
             </div>
             <form className={s.form} action="#">
-              <h3 className={s.formHead}>Book a weekend slot</h3>
+              <h3 data-edit="visit.formHead" data-edit-max="40" className={s.formHead}>Book a weekend slot</h3>
               <div className={s.field}>
-                <label htmlFor="ca-date">Day</label>
+                <label data-edit="visit.label" htmlFor="ca-date">Day</label>
                 <select id="ca-date" name="date" defaultValue="sat-oct-4">
                   <option value="sat-sep-27">Saturday, September 27</option>
                   <option value="sun-sep-28">Sunday, September 28</option>
@@ -359,26 +373,26 @@ export default function CrabappleOrchardPage() {
                 </select>
               </div>
               <fieldset className={s.slots}>
-                <legend>Arrival time</legend>
-                {SLOTS.map((sl) => (
+                <legend data-edit="visit.legend">Arrival time</legend>
+                {SLOTS.map((sl, i) => (
                   <label key={sl.id} className={s.slot}>
                     <input type="radio" name="slot" value={sl.id} />
-                    <span>{sl.label}</span>
+                    <span data-edit={`visit.text.${i}`} data-edit-max="60">{sl.label}</span>
                   </label>
                 ))}
               </fieldset>
               <div className={s.formRow}>
                 <div className={s.field}>
-                  <label htmlFor="ca-name">Name</label>
+                  <label data-edit="visit.label2" htmlFor="ca-name">Name</label>
                   <input id="ca-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="ca-email">Email</label>
+                  <label data-edit="visit.label3" htmlFor="ca-email">Email</label>
                   <input id="ca-email" name="email" type="email" autoComplete="email" />
                 </div>
               </div>
-              <button className={s.submit} type="submit">Book for $5 a car</button>
-              <small className={s.formNote}>The $5 comes off your first bag at the barn.</small>
+              <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">Book for $5 a car</button>
+              <small data-edit="visit.formNote" className={s.formNote}>The $5 comes off your first bag at the barn.</small>
             </form>
           </div>
         </section>
@@ -386,14 +400,14 @@ export default function CrabappleOrchardPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
           <div className={s.faqHead}>
-            <p className={s.secKick}>Before you come</p>
-            <h2 id="faq-h">Questions we hear at the gate</h2>
+            <p data-edit="faq.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Before you come</p>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Questions we hear at the gate</h2>
           </div>
           <div className={s.faqList}>
-            {FAQS.map((f) => (
+            {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -403,10 +417,10 @@ export default function CrabappleOrchardPage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div>
-            <p className={s.footName}>Crabapple Orchard</p>
-            <p className={s.footTag}>Pick-your-own apples, pears and pumpkins. A family farm since 1962.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Crabapple Orchard</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Pick-your-own apples, pears and pumpkins. A family farm since 1962.</p>
           </div>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             1420 Hollow Road
             <br />
             hello@crabappleorchard.example
@@ -414,18 +428,18 @@ export default function CrabappleOrchardPage() {
             (555) 019-1962
           </p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional orchard. Varieties, prices and dates are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional orchard. Varieties, prices and dates are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

@@ -204,7 +204,20 @@ const HOURS = [
 
 export default function HachiRamenPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f5efe4',
+        '--ink': '#161311',
+        '--chili': '#c8102e',
+        '--gold': '#d9a441',
+        '--gray': '#8a8176',
+        '--pale': '#e6dccb',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,chili,gold,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -216,16 +229,16 @@ export default function HachiRamenPage() {
       <header className={s.bar}>
         <a className={s.brand} href="#top">
           <span className={s.brandMark} aria-hidden="true">{'\u516B'}</span>
-          <span className={s.brandName}>Hachi Ramen</span>
+          <span data-edit="bar.brandName" data-edit-max="60" className={s.brandName}>Hachi Ramen</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -237,27 +250,27 @@ export default function HachiRamenPage() {
         <section id="bowl" className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroHead}>
             <div className={s.heroTitleWrap}>
-              <p className={s.kicker}>Ramen counter, 8 Canal Street</p>
-              <h1 id="hero-h" className={s.heroTitle}>
+              <p data-edit="bowl.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Ramen counter, 8 Canal Street</p>
+              <h1 data-edit="bowl.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
                 Eight hours of broth,
                 <br />
                 <em>one bowl.</em>
               </h1>
             </div>
             <div className={s.heroAside}>
-              <p className={s.heroLede}>
+              <p data-edit="bowl.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
                 Twelve stools, three broths and a vegan one, noodles made every
                 morning and no reservations. Here is what goes into a bowl.
               </p>
               <div className={s.heroActions}>
-                <a className={s.btn} href="#menu">See the menu</a>
-                <a className={s.btnGhost} href="#queue">How the queue works</a>
+                <a data-edit="bowl.btn" data-edit-max="28" className={s.btn} href="#menu">See the menu</a>
+                <a data-edit="bowl.btnGhost" data-edit-max="28" className={s.btnGhost} href="#queue">How the queue works</a>
               </div>
             </div>
           </div>
 
           <div className={s.stage}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="bowl.field" data-edit-roles="transparent,5,5,3" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={curl}
                 palette={NOODLES}
@@ -293,14 +306,14 @@ export default function HachiRamenPage() {
             </div>
 
             <ol className={s.parts}>
-              {PARTS.map((p) => (
+              {PARTS.map((p, i) => (
                 <li
                   key={p.n}
                   className={p.side === 'left' ? s.partLeft : s.partRight}
                   style={{ top: `${(p.ly / 48) * 100}%` }}>
-                  <span className={s.partNo}>{p.n}</span>
-                  <strong className={s.partName}>{p.name}</strong>
-                  <p className={s.partText}>{p.text}</p>
+                  <span data-edit={`bowl.partNo.${i}`} data-edit-max="60" className={s.partNo}>{p.n}</span>
+                  <strong data-edit={`bowl.partName.${i}`} className={s.partName}>{p.name}</strong>
+                  <p data-edit={`bowl.partText.${i}`} data-edit-max="240" data-edit-multiline className={s.partText}>{p.text}</p>
                 </li>
               ))}
             </ol>
@@ -311,8 +324,8 @@ export default function HachiRamenPage() {
             Four columns, one per broth, each with its own color chip. */}
         <section id="menu" className={s.menu} aria-labelledby="menu-h">
           <div className={s.secHead}>
-            <h2 id="menu-h">The menu, by broth</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="menu.title" data-edit-max="60" id="menu-h">The menu, by broth</h2>
+            <p data-edit="menu.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Pick the broth first, then the bowl. Every bowl can be made
               spicier, from 0 to 5, and every one comes with a second portion
               of noodles for three dollars.
@@ -320,23 +333,23 @@ export default function HachiRamenPage() {
           </div>
 
           <div className={s.broths}>
-            {BROTHS.map((b) => (
+            {BROTHS.map((b, i) => (
               <article key={b.name} className={s.broth} data-tone={b.tone} aria-labelledby={`broth-${b.name}`}>
                 <div className={s.brothHead}>
                   <span className={s.swatch} aria-hidden="true" />
-                  <h3 id={`broth-${b.name}`}>{b.name}</h3>
-                  <p className={s.brothFrom}>{b.from}</p>
+                  <h3 data-edit={`broth.title.${i}`} data-edit-max="40" id={`broth-${b.name}`}>{b.name}</h3>
+                  <p data-edit={`broth.brothFrom.${i}`} data-edit-max="240" data-edit-multiline className={s.brothFrom}>{b.from}</p>
                 </div>
-                <strong className={s.brothBody}>{b.body}</strong>
-                <p className={s.brothText}>{b.text}</p>
+                <strong data-edit={`broth.brothBody.${i}`} className={s.brothBody}>{b.body}</strong>
+                <p data-edit={`broth.brothText.${i}`} data-edit-max="240" data-edit-multiline className={s.brothText}>{b.text}</p>
                 <ul className={s.bowls}>
-                  {b.bowls.map((item) => (
+                  {b.bowls.map((item, i2) => (
                     <li key={item.name}>
                       <div className={s.bowlTop}>
-                        <strong>{item.name}</strong>
-                        <span className={s.bowlPrice}>{item.price}</span>
+                        <strong data-edit={`broth.emphasis.${i}.${i2}`}>{item.name}</strong>
+                        <span data-edit={`broth.bowlPrice.${i}.${i2}`} data-edit-max="60" className={s.bowlPrice}>{item.price}</span>
                       </div>
-                      <span className={s.bowlWhat}>{item.what}</span>
+                      <span data-edit={`broth.bowlWhat.${i}.${i2}`} data-edit-max="60" className={s.bowlWhat}>{item.what}</span>
                     </li>
                   ))}
                 </ul>
@@ -353,12 +366,12 @@ export default function HachiRamenPage() {
                 className={s.extrasLantern}
               />
             </div>
-            <h3 className={s.extrasHead}>On any bowl</h3>
+            <h3 data-edit="menu.extrasHead" data-edit-max="40" className={s.extrasHead}>On any bowl</h3>
             <dl className={s.extrasList}>
-              {EXTRAS.map(([what, price]) => (
+              {EXTRAS.map(([what, price], i) => (
                 <div key={what}>
-                  <dt>{what}</dt>
-                  <dd>{price}</dd>
+                  <dt data-edit={`menu.term.${i}`} data-edit-max="28">{what}</dt>
+                  <dd data-edit={`menu.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                 </div>
               ))}
             </dl>
@@ -366,7 +379,7 @@ export default function HachiRamenPage() {
         </section>
 
         {/* ------------------------------------------------------------ BAND */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,1" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={bowl}
             palette={BOWLS}
@@ -390,35 +403,35 @@ export default function HachiRamenPage() {
                 className={s.gyoza}
               />
             </div>
-            <h2 id="sides-h">Sides</h2>
-            <p className={s.pairNote}>The gyoza are folded by hand at four every afternoon, about six hundred a day.</p>
+            <h2 data-edit="sides.title" data-edit-max="60" id="sides-h">Sides</h2>
+            <p data-edit="sides.pairNote" data-edit-max="240" data-edit-multiline className={s.pairNote}>The gyoza are folded by hand at four every afternoon, about six hundred a day.</p>
             <ul className={s.list}>
-              {SIDES.map((d) => (
+              {SIDES.map((d, i) => (
                 <li key={d.name}>
                   <div className={s.listTop}>
-                    <strong>{d.name}</strong>
+                    <strong data-edit={`sides.emphasis.${i}`}>{d.name}</strong>
                     <span className={s.dots} aria-hidden="true" />
-                    <span className={s.listPrice}>{d.price}</span>
+                    <span data-edit={`sides.listPrice.${i}`} data-edit-max="60" className={s.listPrice}>{d.price}</span>
                   </div>
-                  <span className={s.listNote}>{d.note}</span>
+                  <span data-edit={`sides.listNote.${i}`} data-edit-max="60" className={s.listNote}>{d.note}</span>
                 </li>
               ))}
             </ul>
           </section>
 
           <section id="drinks" className={s.drinks} aria-labelledby="drinks-h">
-            <h2 id="drinks-h">Drinks</h2>
-            <p className={s.pairNote}>Two taps, a short sake list and cold tea on the house when the queue is long.</p>
-            {DRINKS.map((g) => (
+            <h2 data-edit="drinks.title" data-edit-max="60" id="drinks-h">Drinks</h2>
+            <p data-edit="drinks.pairNote" data-edit-max="240" data-edit-multiline className={s.pairNote}>Two taps, a short sake list and cold tea on the house when the queue is long.</p>
+            {DRINKS.map((g, i) => (
               <div key={g.group} className={s.drinkGroup}>
-                <h3>{g.group}</h3>
+                <h3 data-edit={`drinks.title2.${i}`} data-edit-max="40">{g.group}</h3>
                 <ul className={s.list}>
-                  {g.items.map(([name, price]) => (
+                  {g.items.map(([name, price], i2) => (
                     <li key={name}>
                       <div className={s.listTop}>
-                        <strong>{name}</strong>
+                        <strong data-edit={`drinks.emphasis.${i}.${i2}`}>{name}</strong>
                         <span className={s.dots} aria-hidden="true" />
-                        <span className={s.listPrice}>{price}</span>
+                        <span data-edit={`drinks.listPrice.${i}.${i2}`} data-edit-max="60" className={s.listPrice}>{price}</span>
                       </div>
                     </li>
                   ))}
@@ -443,25 +456,25 @@ export default function HachiRamenPage() {
             </div>
 
             <div className={s.queueBody}>
-              <p className={s.queueKicker}>No reservations</p>
-              <h2 id="queue-h">The queue, and when it is shortest</h2>
+              <p data-edit="queue.queueKicker" data-edit-max="240" data-edit-multiline className={s.queueKicker}>No reservations</p>
+              <h2 data-edit="queue.title" data-edit-max="60" id="queue-h">The queue, and when it is shortest</h2>
               <ol className={s.qSteps}>
-                {QUEUE_STEPS.map(([title, text]) => (
+                {QUEUE_STEPS.map(([title, text], i) => (
                   <li key={title}>
-                    <strong>{title}</strong>
-                    <span>{text}</span>
+                    <strong data-edit={`queue.emphasis.${i}`}>{title}</strong>
+                    <span data-edit={`queue.text.${i}`} data-edit-max="60">{text}</span>
                   </li>
                 ))}
               </ol>
 
               <div className={s.wait}>
-                <h3>A Friday night, typical wait</h3>
+                <h3 data-edit="queue.title2" data-edit-max="40">A Friday night, typical wait</h3>
                 <ul className={s.bars}>
-                  {WAIT.map((w) => (
+                  {WAIT.map((w, i) => (
                     <li key={w.time} style={{ '--m': w.minutes } as React.CSSProperties}>
                       <span className={s.barValue}>{`${w.minutes} min`}</span>
                       <span className={s.barFill} aria-hidden="true" />
-                      <span className={s.barTime}>{w.time}</span>
+                      <span data-edit={`queue.barTime.${i}`} data-edit-max="60" className={s.barTime}>{w.time}</span>
                     </li>
                   ))}
                 </ul>
@@ -469,20 +482,20 @@ export default function HachiRamenPage() {
             </div>
 
             <div className={s.visit}>
-              <h3>Hours</h3>
+              <h3 data-edit="queue.title3" data-edit-max="40">Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([day, time]) => (
+                {HOURS.map(([day, time], i) => (
                   <div key={day}>
-                    <dt>{day}</dt>
-                    <dd>{time}</dd>
+                    <dt data-edit={`queue.term.${i}`} data-edit-max="28">{day}</dt>
+                    <dd data-edit={`queue.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                   </div>
                 ))}
               </dl>
-              <h3>Find us</h3>
-              <p className={s.address}>8 Canal Street, under the red lantern, two doors from the bridge.</p>
-              <a className={s.visitLink} href="tel:+15550168808">(555) 016-8808</a>
-              <a className={s.visitLink} href="mailto:counter@hachi.example">counter@hachi.example</a>
-              <p className={s.takeaway}>Broth kits to take home: two portions of broth, noodles and toppings, $24. Order by 14:00 for the evening.</p>
+              <h3 data-edit="queue.title4" data-edit-max="40">Find us</h3>
+              <p data-edit="queue.address" data-edit-max="240" data-edit-multiline className={s.address}>8 Canal Street, under the red lantern, two doors from the bridge.</p>
+              <a data-edit="queue.visitLink" data-edit-max="28" className={s.visitLink} href="tel:+15550168808">(555) 016-8808</a>
+              <a data-edit="queue.visitLink2" data-edit-max="28" className={s.visitLink} href="mailto:counter@hachi.example">counter@hachi.example</a>
+              <p data-edit="queue.takeaway" data-edit-max="240" data-edit-multiline className={s.takeaway}>Broth kits to take home: two portions of broth, noodles and toppings, $24. Order by 14:00 for the evening.</p>
             </div>
           </div>
         </section>
@@ -493,22 +506,22 @@ export default function HachiRamenPage() {
           <div className={s.footBrand}>
             <span className={s.footMark} aria-hidden="true">{'\u516B'}</span>
             <div>
-              <p className={s.footName}>Hachi Ramen</p>
-              <p className={s.footTag}>Eight hours of broth, one bowl. 8 Canal Street.</p>
+              <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Hachi Ramen</p>
+              <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Eight hours of broth, one bowl. 8 Canal Street.</p>
             </div>
           </div>
           <nav className={s.footNav} aria-label="Footer">
-            {NAV.map(([label, href]) => (
-              <a key={href} href={href}>{label}</a>
+            {NAV.map(([label, href], i) => (
+              <a data-edit={`footer.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
             ))}
           </nav>
         </div>
         <div className={s.footFine}>
-          <p>A fictional ramen shop. The menu, prices, hours and address are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional ramen shop. The menu, prices, hours and address are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, pictures painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, pictures painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

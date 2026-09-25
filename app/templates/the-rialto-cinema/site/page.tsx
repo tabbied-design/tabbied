@@ -221,7 +221,20 @@ const HIRE = [
 
 export default function TheRialtoCinemaPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--night': '#120e10',
+        '--cream': '#f2e8da',
+        '--velvet': '#c9302c',
+        '--gold': '#d4a64a',
+        '--gray': '#756b6e',
+        '--plum': '#1f191c',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="night,cream,velvet,gold,gray,plum"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -231,16 +244,16 @@ export default function TheRialtoCinemaPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">The Rialto</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">The Rialto</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBtn} href="#programme">Book seats</a>
+        <a data-edit="bar.barBtn" data-edit-max="28" className={s.barBtn} href="#programme">Book seats</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -250,7 +263,7 @@ export default function TheRialtoCinemaPage() {
             The house before the film: marquee lights drifting in the dark
             and the projector throwing its beam across the words. */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <div className={s.lights} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,2,5" className={s.lights} aria-hidden="true">
             <TabbiedPattern
               pattern={lantern}
               palette={BULBS}
@@ -264,18 +277,18 @@ export default function TheRialtoCinemaPage() {
           </div>
           <div className={s.heroInner}>
             <div className={s.heroText}>
-              <p className={s.kicker}>Two screens on Palace Row, since 1931</p>
-              <h1 id="hero-h" className={s.title}>
+              <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Two screens on Palace Row, since 1931</p>
+              <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
                 Films worth <em>leaving the house</em> for.
               </h1>
-              <p className={s.lede}>
+              <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 New films, restored old ones, and the odd silent with the house
                 pianist, on a 40-foot screen and in a 48-seat snug upstairs.
                 Tickets from $12, and the popcorn is popped in real butter.
               </p>
               <div className={s.actions}>
-                <a className={s.btn} href="#programme">This week's films</a>
-                <a className={s.btnLine} href="#membership">Become a member</a>
+                <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#programme">This week's films</a>
+                <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#membership">Become a member</a>
               </div>
             </div>
             <div className={s.heroArt}>
@@ -289,15 +302,15 @@ export default function TheRialtoCinemaPage() {
                 />
               </div>
               <p className={s.nowShowing}>
-                <span>Tonight on 35mm</span>
-                <strong>The Long Harbor, 7:00</strong>
+                <span data-edit="hero.text" data-edit-max="60">Tonight on 35mm</span>
+                <strong data-edit="hero.emphasis">The Long Harbor, 7:00</strong>
               </p>
             </div>
           </div>
         </section>
 
         {/* The curtain's hem, between the hero and the programme. */}
-        <div className={s.curtain} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,5" className={s.curtain} aria-hidden="true">
           <TabbiedPattern
             pattern={picket}
             palette={CURTAIN}
@@ -314,9 +327,9 @@ export default function TheRialtoCinemaPage() {
             is the film; the times are stubs you tear off. */}
         <section id="programme" className={s.programme} aria-labelledby="programme-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>This week, Friday to Monday</p>
-            <h2 id="programme-h">Now showing</h2>
-            <p className={s.secNote}>
+            <p data-edit="programme.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>This week, Friday to Monday</p>
+            <h2 data-edit="programme.title" data-edit-max="60" id="programme-h">Now showing</h2>
+            <p data-edit="programme.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Tickets $12, members $10, Cheap Monday $8. Book online, at the box
               office from an hour before the first film, or by phone. Seats in
               Screen One are unreserved; Screen Two is booked by the pair.
@@ -324,30 +337,30 @@ export default function TheRialtoCinemaPage() {
           </div>
 
           <ol className={s.days}>
-            {WEEK.map((d) => (
+            {WEEK.map((d, i) => (
               <li key={d.day} className={s.day}>
                 <div className={s.dayHead}>
-                  <h3 className={s.dayName}>{d.day}</h3>
-                  <span className={s.dayDate}>{d.date}</span>
+                  <h3 data-edit={`programme.dayName.${i}`} data-edit-max="40" className={s.dayName}>{d.day}</h3>
+                  <span data-edit={`programme.dayDate.${i}`} data-edit-max="60" className={s.dayDate}>{d.date}</span>
                 </div>
                 <ul className={s.tickets}>
-                  {d.films.map((f) => (
+                  {d.films.map((f, i2) => (
                     <li key={`${d.day}-${f.title}`} className={s.ticket}>
                       <div className={s.ticketMain}>
-                        <span className={s.admit}>{f.screen}</span>
-                        <h4 className={s.filmTitle}>{f.title}</h4>
+                        <span data-edit={`programme.admit.${i}.${i2}`} data-edit-max="60" className={s.admit}>{f.screen}</span>
+                        <h4 data-edit={`programme.filmTitle.${i}.${i2}`} data-edit-max="36" className={s.filmTitle}>{f.title}</h4>
                         <p className={s.filmMeta}>
-                          <span>{f.year}</span>
-                          <span>{f.length}</span>
-                          <span>{f.rating}</span>
+                          <span data-edit={`programme.text.${i}.${i2}`} data-edit-max="60">{f.year}</span>
+                          <span data-edit={`programme.text2.${i}.${i2}`} data-edit-max="60">{f.length}</span>
+                          <span data-edit={`programme.text3.${i}.${i2}`} data-edit-max="60">{f.rating}</span>
                         </p>
-                        <p className={s.filmNote}>{f.note}</p>
+                        <p data-edit={`programme.filmNote.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.filmNote}>{f.note}</p>
                       </div>
                       <ul className={s.stubs} aria-label="Showtimes">
-                        {f.times.map((tm) => (
+                        {f.times.map((tm, i3) => (
                           <li key={tm.t} className={s.stub} data-sold={tm.left === 'Sold out' ? 'yes' : 'no'}>
-                            <time className={s.stubTime}>{tm.t}</time>
-                            <span className={s.stubLeft}>{tm.left}</span>
+                            <time data-edit={`programme.stubTime.${i}.${i2}.${i3}`} className={s.stubTime}>{tm.t}</time>
+                            <span data-edit={`programme.stubLeft.${i}.${i2}.${i3}`} data-edit-max="60" className={s.stubLeft}>{tm.left}</span>
                           </li>
                         ))}
                       </ul>
@@ -357,7 +370,7 @@ export default function TheRialtoCinemaPage() {
               </li>
             ))}
           </ol>
-          <p className={s.weekNote}>
+          <p data-edit="programme.weekNote" data-edit-max="240" data-edit-multiline className={s.weekNote}>
             Tuesday to Thursday goes up on Monday at noon. Members can book from
             the Friday before.
           </p>
@@ -372,26 +385,26 @@ export default function TheRialtoCinemaPage() {
               inks={['var(--night)', 'var(--velvet)']}
               className={s.seats}
             />
-            <p className={s.seatsNote}>Row F, Screen One. Every seat was reupholstered in 2019.</p>
+            <p data-edit="screens.seatsNote" data-edit-max="240" data-edit-multiline className={s.seatsNote}>Row F, Screen One. Every seat was reupholstered in 2019.</p>
           </div>
           <div className={s.screensBody}>
-            <p className={s.secKick}>The two screens</p>
-            <h2 id="screens-h">A palace and a snug</h2>
+            <p data-edit="screens.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The two screens</p>
+            <h2 data-edit="screens.title" data-edit-max="60" id="screens-h">A palace and a snug</h2>
             <div className={s.screenList}>
-              {SCREENS.map((sc) => (
+              {SCREENS.map((sc, i) => (
                 <article key={sc.name} className={s.screen}>
                   <div className={s.screenHead}>
-                    <h3>{sc.name}</h3>
-                    <span className={s.screenNick}>{sc.nick}</span>
+                    <h3 data-edit={`screen.title.${i}`} data-edit-max="40">{sc.name}</h3>
+                    <span data-edit={`screen.screenNick.${i}`} data-edit-max="60" className={s.screenNick}>{sc.nick}</span>
                     <p className={s.screenSeats}>
-                      <strong>{sc.seats}</strong>
-                      <span>seats</span>
+                      <strong data-edit={`screen.emphasis.${i}`}>{sc.seats}</strong>
+                      <span data-edit={`screen.text.${i}`} data-edit-max="60">seats</span>
                     </p>
                   </div>
-                  <p className={s.screenBody}>{sc.body}</p>
+                  <p data-edit={`screen.screenBody.${i}`} data-edit-max="240" data-edit-multiline className={s.screenBody}>{sc.body}</p>
                   <ul className={s.screenFacts}>
-                    {sc.facts.map((fa) => (
-                      <li key={fa}>{fa}</li>
+                    {sc.facts.map((fa, i2) => (
+                      <li data-edit={`screen.item.${i}.${i2}`} data-edit-max="80" key={fa}>{fa}</li>
                     ))}
                   </ul>
                 </article>
@@ -403,26 +416,26 @@ export default function TheRialtoCinemaPage() {
         {/* ------------------------------------------------------ MEMBERSHIP */}
         <section id="membership" className={s.membership} aria-labelledby="membership-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Membership</p>
-            <h2 id="membership-h">Keep the lights on</h2>
-            <p className={s.secNote}>
+            <p data-edit="membership.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Membership</p>
+            <h2 data-edit="membership.title" data-edit-max="60" id="membership-h">Keep the lights on</h2>
+            <p data-edit="membership.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The Rialto is run by a nonprofit trust, and members pay for about
               a third of it. Join at the box office or online; it starts the day
               you join.
             </p>
           </div>
           <ul className={s.tiers}>
-            {TIERS.map((t) => (
+            {TIERS.map((t, i) => (
               <li key={t.name} className={s.tier} data-featured={t.featured ? 'yes' : 'no'}>
-                <span className={s.tierFlag}>{t.featured}</span>
-                <h3 className={s.tierName}>{t.name}</h3>
+                <span data-edit={`membership.tierFlag.${i}`} data-edit-max="60" className={s.tierFlag}>{t.featured}</span>
+                <h3 data-edit={`membership.tierName.${i}`} data-edit-max="40" className={s.tierName}>{t.name}</h3>
                 <p className={s.tierPrice}>
-                  <strong>{t.price}</strong>
-                  <span>{t.per}</span>
+                  <strong data-edit={`membership.emphasis.${i}`}>{t.price}</strong>
+                  <span data-edit={`membership.text.${i}`} data-edit-max="60">{t.per}</span>
                 </p>
                 <ul className={s.tierPerks}>
-                  {t.perks.map((p) => (
-                    <li key={p}>{p}</li>
+                  {t.perks.map((p, i2) => (
+                    <li data-edit={`membership.item.${i}.${i2}`} data-edit-max="80" key={p}>{p}</li>
                   ))}
                 </ul>
                 <a className={s.tierBtn} href="mailto:members@rialto.example">{`Join as a ${t.name}`}</a>
@@ -435,19 +448,19 @@ export default function TheRialtoCinemaPage() {
         <section id="bar" className={s.barSec} aria-labelledby="bar-h">
           <div className={s.barInner}>
             <div className={s.barText}>
-              <p className={s.secKick}>The bar and snacks</p>
-              <h2 id="bar-h">Take your drink in</h2>
-              <p className={s.barLede}>
+              <p data-edit="bar.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The bar and snacks</p>
+              <h2 data-edit="bar.title" data-edit-max="60" id="bar-h">Take your drink in</h2>
+              <p data-edit="bar.barLede" data-edit-max="240" data-edit-multiline className={s.barLede}>
                 The bar in the foyer opens an hour before the first film and
                 closes after the last. Glasses are welcome in both screens; we
                 only ask for quiet ice.
               </p>
               <ul className={s.menu}>
-                {BAR.map((b) => (
+                {BAR.map((b, i) => (
                   <li key={b.name}>
-                    <span className={s.menuName}>{b.name}</span>
+                    <span data-edit={`bar.menuName.${i}`} data-edit-max="60" className={s.menuName}>{b.name}</span>
                     <span className={s.menuDots} aria-hidden="true" />
-                    <strong className={s.menuPrice}>{b.price}</strong>
+                    <strong data-edit={`bar.menuPrice.${i}`} className={s.menuPrice}>{b.price}</strong>
                   </li>
                 ))}
               </ul>
@@ -466,41 +479,41 @@ export default function TheRialtoCinemaPage() {
         {/* ---------------------------------------------------- PRIVATE HIRE */}
         <section id="hire" className={s.hire} aria-labelledby="hire-h">
           <div className={s.hireText}>
-            <p className={s.secKick}>Private hire</p>
-            <h2 id="hire-h">Your own screening</h2>
-            <p className={s.hireLede}>
+            <p data-edit="hire.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Private hire</p>
+            <h2 data-edit="hire.title" data-edit-max="60" id="hire-h">Your own screening</h2>
+            <p data-edit="hire.hireLede" data-edit-max="240" data-edit-multiline className={s.hireLede}>
               Birthdays, premieres, a proposal before the trailers, a company
               showing its film to the people who made it. We have done all of
               them, and a wedding.
             </p>
             <dl className={s.hireList}>
-              {HIRE.map(([k, v]) => (
+              {HIRE.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`hire.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`hire.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
           </div>
           <form className={s.form} action="#">
-            <h3 className={s.formHead}>Ask about a date</h3>
+            <h3 data-edit="hire.formHead" data-edit-max="40" className={s.formHead}>Ask about a date</h3>
             <div className={s.formRow}>
               <div className={s.field}>
-                <label htmlFor="rialto-name">Name</label>
+                <label data-edit="hire.label" htmlFor="rialto-name">Name</label>
                 <input id="rialto-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="rialto-email">Email</label>
+                <label data-edit="hire.label2" htmlFor="rialto-email">Email</label>
                 <input id="rialto-email" name="email" type="email" autoComplete="email" />
               </div>
             </div>
             <div className={s.formRow}>
               <div className={s.field}>
-                <label htmlFor="rialto-date">Date</label>
+                <label data-edit="hire.label3" htmlFor="rialto-date">Date</label>
                 <input id="rialto-date" name="date" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="rialto-guests">Guests</label>
+                <label data-edit="hire.label4" htmlFor="rialto-guests">Guests</label>
                 <select id="rialto-guests" name="guests" defaultValue="up-to-48">
                   <option value="up-to-48">Up to 48</option>
                   <option value="up-to-150">49 to 150</option>
@@ -509,11 +522,11 @@ export default function TheRialtoCinemaPage() {
               </div>
             </div>
             <div className={s.field}>
-              <label htmlFor="rialto-note">What are you planning?</label>
+              <label data-edit="hire.label5" htmlFor="rialto-note">What are you planning?</label>
               <textarea id="rialto-note" name="note" rows={4} />
             </div>
-            <button className={s.submit} type="submit">Send the request</button>
-            <small className={s.formNote}>We reply within two days with dates and a price.</small>
+            <button data-edit="hire.submit" data-edit-max="24" className={s.submit} type="submit">Send the request</button>
+            <small data-edit="hire.formNote" className={s.formNote}>We reply within two days with dates and a price.</small>
           </form>
         </section>
       </main>
@@ -521,20 +534,20 @@ export default function TheRialtoCinemaPage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div>
-            <p className={s.footName}>The Rialto</p>
-            <p className={s.footTag}>An independent cinema, run by the Rialto Trust since 1987.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>The Rialto</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>An independent cinema, run by the Rialto Trust since 1987.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Find us</h2>
-            <p className={s.footText}>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Find us</h2>
+            <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footText}>
               14 Palace Row
               <br />
               Two blocks from the station
             </p>
           </div>
           <div>
-            <h2 className={s.footHead}>Box office</h2>
-            <p className={s.footText}>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Box office</h2>
+            <p data-edit="footer.body3" data-edit-max="240" data-edit-multiline className={s.footText}>
               From an hour before the first film
               <br />
               (555) 016-1931
@@ -544,10 +557,10 @@ export default function TheRialtoCinemaPage() {
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional cinema. Films, times and prices are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional cinema. Films, times and prices are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

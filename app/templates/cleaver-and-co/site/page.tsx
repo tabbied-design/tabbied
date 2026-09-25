@@ -182,7 +182,19 @@ const FAQS = [
 
 export default function CleaverAndCoPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f4eee4',
+        '--ink': '#1c1714',
+        '--red': '#a8322d',
+        '--gray': '#8c8378',
+        '--pale': '#e3d8c8',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,red,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -194,17 +206,17 @@ export default function CleaverAndCoPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <Artwork slug="cleaver-and-co-cleaver" alt="" inks={['var(--red)']} className={s.markIcon} />
-          <span className={s.markName}>Cleaver &amp; Co.</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Cleaver &amp; Co.</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCall} href="tel:+15550147720">(555) 014-7720</a>
+        <a data-edit="bar.barCall" data-edit-max="28" className={s.barCall} href="tel:+15550147720">(555) 014-7720</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -217,27 +229,27 @@ export default function CleaverAndCoPage() {
         <section id="cuts" className={s.hero} aria-labelledby="hero-h">
           <div className={s.intro}>
             <div className={s.introText}>
-              <p className={s.kicker}>Whole-animal butchers on Market Row, since 1987</p>
-              <h1 id="hero-h" className={s.title}>
+              <p data-edit="cuts.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Whole-animal butchers on Market Row, since 1987</p>
+              <h1 data-edit="cuts.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
                 Every cut has a number. <em>Ask for it by name.</em>
               </h1>
             </div>
             <div className={s.introSide}>
-              <p className={s.lede}>
+              <p data-edit="cuts.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 We buy whole animals from four farms close by and break them
                 down behind the counter, so every part of the steer and the pig
                 is here, priced by the pound. Find it on the chart, then tell us
                 how thick.
               </p>
               <div className={s.actions}>
-                <a className={s.btn} href="#visit">Order for Saturday</a>
-                <a className={s.btnLine} href="#week">This week at the counter</a>
+                <a data-edit="cuts.btn" data-edit-max="28" className={s.btn} href="#visit">Order for Saturday</a>
+                <a data-edit="cuts.btnLine" data-edit-max="28" className={s.btnLine} href="#week">This week at the counter</a>
               </div>
             </div>
           </div>
 
           <div className={s.wall}>
-            <div className={s.hatch} aria-hidden="true">
+            <div data-edit-pattern="cuts.field" data-edit-roles="transparent,3,4,2" className={s.hatch} aria-hidden="true">
               <TabbiedPattern
                 pattern={reedpen}
                 palette={HATCH}
@@ -251,9 +263,9 @@ export default function CleaverAndCoPage() {
 
             <div className={s.plate}>
               <div className={s.plateHead}>
-                <span className={s.plateNo}>Chart I</span>
-                <h2 className={s.plateTitle}>The steer</h2>
-                <span className={s.plateNote}>Prices per pound, cut to order</span>
+                <span data-edit="cuts.plateNo" data-edit-max="60" className={s.plateNo}>Chart I</span>
+                <h2 data-edit="cuts.plateTitle" data-edit-max="60" className={s.plateTitle}>The steer</h2>
+                <span data-edit="cuts.plateNote" data-edit-max="60" className={s.plateNote}>Prices per pound, cut to order</span>
               </div>
               <div className={s.chart}>
                 <div className={s.figure}>
@@ -278,13 +290,13 @@ export default function CleaverAndCoPage() {
                   ))}
                 </div>
                 <ol className={s.prices}>
-                  {BEEF.map((c) => (
+                  {BEEF.map((c, i) => (
                     <li key={c.no}>
-                      <span className={s.priceNo}>{c.no}</span>
-                      <h3 className={s.priceName}>{c.name}</h3>
+                      <span data-edit={`cuts.priceNo.${i}`} data-edit-max="60" className={s.priceNo}>{c.no}</span>
+                      <h3 data-edit={`cuts.priceName.${i}`} data-edit-max="40" className={s.priceName}>{c.name}</h3>
                       <span className={s.priceLead} aria-hidden="true" />
-                      <strong className={s.priceAmt}>{c.price}</strong>
-                      <p className={s.priceUse}>{c.use}</p>
+                      <strong data-edit={`cuts.priceAmt.${i}`} className={s.priceAmt}>{c.price}</strong>
+                      <p data-edit={`cuts.priceUse.${i}`} data-edit-max="240" data-edit-multiline className={s.priceUse}>{c.use}</p>
                     </li>
                   ))}
                 </ol>
@@ -293,9 +305,9 @@ export default function CleaverAndCoPage() {
 
             <div className={`${s.plate} ${s.plateFlip}`}>
               <div className={s.plateHead}>
-                <span className={s.plateNo}>Chart II</span>
-                <h2 className={s.plateTitle}>The pig</h2>
-                <span className={s.plateNote}>Prices per pound, cut to order</span>
+                <span data-edit="cuts.plateNo2" data-edit-max="60" className={s.plateNo}>Chart II</span>
+                <h2 data-edit="cuts.plateTitle2" data-edit-max="60" className={s.plateTitle}>The pig</h2>
+                <span data-edit="cuts.plateNote2" data-edit-max="60" className={s.plateNote}>Prices per pound, cut to order</span>
               </div>
               <div className={s.chart}>
                 <div className={s.figure}>
@@ -320,13 +332,13 @@ export default function CleaverAndCoPage() {
                   ))}
                 </div>
                 <ol className={s.prices}>
-                  {PORK.map((c) => (
+                  {PORK.map((c, i) => (
                     <li key={c.no}>
-                      <span className={s.priceNo}>{c.no}</span>
-                      <h3 className={s.priceName}>{c.name}</h3>
+                      <span data-edit={`cuts.priceNo2.${i}`} data-edit-max="60" className={s.priceNo}>{c.no}</span>
+                      <h3 data-edit={`cuts.priceName2.${i}`} data-edit-max="40" className={s.priceName}>{c.name}</h3>
                       <span className={s.priceLead} aria-hidden="true" />
-                      <strong className={s.priceAmt}>{c.price}</strong>
-                      <p className={s.priceUse}>{c.use}</p>
+                      <strong data-edit={`cuts.priceAmt2.${i}`} className={s.priceAmt}>{c.price}</strong>
+                      <p data-edit={`cuts.priceUse2.${i}`} data-edit-max="240" data-edit-multiline className={s.priceUse}>{c.use}</p>
                     </li>
                   ))}
                 </ol>
@@ -342,27 +354,27 @@ export default function CleaverAndCoPage() {
           <div className={s.weekInner}>
             <div className={s.board}>
               <div className={s.boardHead}>
-                <p className={s.boardKick}>Week of September 21</p>
-                <h2 id="week-h">This week at the counter</h2>
+                <p data-edit="week.boardKick" data-edit-max="240" data-edit-multiline className={s.boardKick}>Week of September 21</p>
+                <h2 data-edit="week.title" data-edit-max="60" id="week-h">This week at the counter</h2>
               </div>
               <ul className={s.specials}>
-                {SPECIALS.map((sp) => (
+                {SPECIALS.map((sp, i) => (
                   <li key={sp.name}>
-                    <h3>{sp.name}</h3>
-                    <strong>{sp.price}</strong>
-                    <p>{sp.note}</p>
+                    <h3 data-edit={`week.title2.${i}`} data-edit-max="40">{sp.name}</h3>
+                    <strong data-edit={`week.emphasis.${i}`}>{sp.price}</strong>
+                    <p data-edit={`week.body.${i}`} data-edit-max="240" data-edit-multiline>{sp.note}</p>
                   </li>
                 ))}
               </ul>
               <div className={s.sausages}>
-                <h3 className={s.sausageHead}>Sausages, made Wednesday, $9.50 / lb</h3>
+                <h3 data-edit="week.sausageHead" data-edit-max="40" className={s.sausageHead}>Sausages, made Wednesday, $9.50 / lb</h3>
                 <ul>
-                  {SAUSAGES.map((name) => (
-                    <li key={name}>{name}</li>
+                  {SAUSAGES.map((name, i) => (
+                    <li data-edit={`week.item.${i}`} data-edit-max="80" key={name}>{name}</li>
                   ))}
                 </ul>
               </div>
-              <p className={s.boardNote}>Stock bones are free on Tuesdays, while they last.</p>
+              <p data-edit="week.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>Stock bones are free on Tuesdays, while they last.</p>
             </div>
             <div className={s.hook}>
               <span className={s.hookRail} aria-hidden="true" />
@@ -372,7 +384,7 @@ export default function CleaverAndCoPage() {
                 inks={['var(--pale)']}
                 className={s.cleaver}
               />
-              <p className={s.hookNote}>
+              <p data-edit="week.hookNote" data-edit-max="240" data-edit-multiline className={s.hookNote}>
                 Knives sharpened at the counter on Saturdays, $4 a blade.
               </p>
             </div>
@@ -382,9 +394,9 @@ export default function CleaverAndCoPage() {
         {/* -------------------------------------------------------- SOURCING */}
         <section id="sourcing" className={s.sourcing} aria-labelledby="sourcing-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>How we source</p>
-            <h2 id="sourcing-h">Four farms, all within an hour</h2>
-            <p className={s.secNote}>
+            <p data-edit="sourcing.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>How we source</p>
+            <h2 data-edit="sourcing.title" data-edit-max="60" id="sourcing-h">Four farms, all within an hour</h2>
+            <p data-edit="sourcing.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               We know every farmer by name and have stood in every field. The
               animals go to Maple Creek, a small USDA-inspected plant twelve
               miles out, and come to us whole. Beef hangs in our cold room for
@@ -392,10 +404,10 @@ export default function CleaverAndCoPage() {
             </p>
           </div>
           <dl className={s.facts}>
-            {FACTS.map(([v, k]) => (
+            {FACTS.map(([v, k], i) => (
               <div key={k}>
-                <dt>{v}</dt>
-                <dd>{k}</dd>
+                <dt data-edit={`sourcing.term.${i}`} data-edit-max="28">{v}</dt>
+                <dd data-edit={`sourcing.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
               </div>
             ))}
           </dl>
@@ -403,17 +415,17 @@ export default function CleaverAndCoPage() {
             {FARMS.map((f, i) => (
               <li key={f.name} className={s.farm}>
                 <span className={s.farmNo}>{`0${i + 1}`}</span>
-                <h3 className={s.farmName}>{f.name}</h3>
-                <span className={s.farmMiles}>{f.miles}</span>
-                <p className={s.farmRaise}>{f.raise}</p>
-                <p className={s.farmHow}>{f.how}</p>
+                <h3 data-edit={`sourcing.farmName.${i}`} data-edit-max="40" className={s.farmName}>{f.name}</h3>
+                <span data-edit={`sourcing.farmMiles.${i}`} data-edit-max="60" className={s.farmMiles}>{f.miles}</span>
+                <p data-edit={`sourcing.farmRaise.${i}`} data-edit-max="240" data-edit-multiline className={s.farmRaise}>{f.raise}</p>
+                <p data-edit={`sourcing.farmHow.${i}`} data-edit-max="240" data-edit-multiline className={s.farmHow}>{f.how}</p>
               </li>
             ))}
           </ol>
         </section>
 
         {/* The tiled wall behind the counter, as a band. */}
-        <div className={s.tileBand} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,4,3" className={s.tileBand} aria-hidden="true">
           <TabbiedPattern
             pattern={hurdle}
             palette={TILES}
@@ -428,31 +440,31 @@ export default function CleaverAndCoPage() {
         {/* ----------------------------------------------------------- BOXES */}
         <section id="boxes" className={s.boxes} aria-labelledby="boxes-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Bulk boxes and shares</p>
-            <h2 id="boxes-h">Fill the freezer</h2>
-            <p className={s.secNote}>
+            <p data-edit="boxes.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Bulk boxes and shares</p>
+            <h2 data-edit="boxes.title" data-edit-max="60" id="boxes-h">Fill the freezer</h2>
+            <p data-edit="boxes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Boxes are packed on Thursday for pickup on Friday or Saturday.
               Shares are cut to your own sheet and take about two weeks from
               the deposit.
             </p>
           </div>
           <ul className={s.boxList}>
-            {BOXES.map((b) => (
+            {BOXES.map((b, i) => (
               <li key={b.name} className={s.box}>
                 <div className={s.boxTop}>
-                  <h3 className={s.boxName}>{b.name}</h3>
-                  <span className={s.boxWeight}>{b.weight}</span>
+                  <h3 data-edit={`boxes.boxName.${i}`} data-edit-max="40" className={s.boxName}>{b.name}</h3>
+                  <span data-edit={`boxes.boxWeight.${i}`} data-edit-max="60" className={s.boxWeight}>{b.weight}</span>
                 </div>
                 <p className={s.boxPrice}>
-                  <strong>{b.price}</strong>
-                  <span>{b.unit}</span>
+                  <strong data-edit={`boxes.emphasis.${i}`}>{b.price}</strong>
+                  <span data-edit={`boxes.text.${i}`} data-edit-max="60">{b.unit}</span>
                 </p>
                 <ul className={s.boxItems}>
-                  {b.items.map((it) => (
-                    <li key={it}>{it}</li>
+                  {b.items.map((it, i2) => (
+                    <li data-edit={`boxes.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                   ))}
                 </ul>
-                <p className={s.boxNote}>{b.note}</p>
+                <p data-edit={`boxes.boxNote.${i}`} data-edit-max="240" data-edit-multiline className={s.boxNote}>{b.note}</p>
               </li>
             ))}
           </ul>
@@ -461,18 +473,18 @@ export default function CleaverAndCoPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section className={s.faq} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Across the counter</p>
-            <h2 id="faq-h">What people ask us</h2>
-            <p className={s.secNote}>
+            <p data-edit="faq.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Across the counter</p>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">What people ask us</h2>
+            <p data-edit="faq.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The answers we give most often. Anything else, ask at the counter
               or call; the phone is by the block.
             </p>
           </div>
           <div className={s.faqList}>
-            {FAQS.map((f) => (
+            {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -481,40 +493,40 @@ export default function CleaverAndCoPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInfo}>
-            <p className={s.secKick}>Hours and ordering</p>
-            <h2 id="visit-h">Come to the counter, or call ahead</h2>
-            <p className={s.visitLede}>
+            <p data-edit="visit.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Hours and ordering</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Come to the counter, or call ahead</h2>
+            <p data-edit="visit.visitLede" data-edit-max="240" data-edit-multiline className={s.visitLede}>
               Order by Thursday noon and it is cut, wrapped and waiting for you
               on Saturday morning. Anything on the chart can be cut while you
               wait.
             </p>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.address}>
-              <p>212 Market Row, in the old mill, at the corner of Tanner Street. Parking in the yard behind.</p>
-              <a href="tel:+15550147720">(555) 014-7720</a>
-              <a href="mailto:orders@cleaverandco.example">orders@cleaverandco.example</a>
+              <p data-edit="visit.body2" data-edit-max="240" data-edit-multiline>212 Market Row, in the old mill, at the corner of Tanner Street. Parking in the yard behind.</p>
+              <a data-edit="visit.link" data-edit-max="28" href="tel:+15550147720">(555) 014-7720</a>
+              <a data-edit="visit.link2" data-edit-max="28" href="mailto:orders@cleaverandco.example">orders@cleaverandco.example</a>
             </div>
           </div>
           <form className={s.form} action="#">
-            <h3 className={s.formHead}>Order for pickup</h3>
+            <h3 data-edit="visit.formHead" data-edit-max="40" className={s.formHead}>Order for pickup</h3>
             <div className={s.field}>
-              <label htmlFor="cc-name">Name</label>
+              <label data-edit="visit.label" htmlFor="cc-name">Name</label>
               <input id="cc-name" name="name" type="text" autoComplete="name" />
             </div>
             <div className={s.formRow}>
               <div className={s.field}>
-                <label htmlFor="cc-phone">Phone</label>
+                <label data-edit="visit.label2" htmlFor="cc-phone">Phone</label>
                 <input id="cc-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <div className={s.field}>
-                <label htmlFor="cc-day">Pickup</label>
+                <label data-edit="visit.label3" htmlFor="cc-day">Pickup</label>
                 <select id="cc-day" name="day" defaultValue="sat">
                   <option value="fri">Friday</option>
                   <option value="sat">Saturday</option>
@@ -523,7 +535,7 @@ export default function CleaverAndCoPage() {
               </div>
             </div>
             <div className={s.field}>
-              <label htmlFor="cc-order">Your order</label>
+              <label data-edit="visit.label4" htmlFor="cc-order">Your order</label>
               <textarea
                 id="cc-order"
                 name="order"
@@ -531,8 +543,8 @@ export default function CleaverAndCoPage() {
                 placeholder="Two ribeyes, 1.5 in thick. 2 lb ground chuck. One whole chicken, spatchcocked."
               />
             </div>
-            <button className={s.submit} type="submit">Send my order</button>
-            <small className={s.formNote}>We call to confirm the weight and price. Pay at pickup.</small>
+            <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">Send my order</button>
+            <small data-edit="visit.formNote" className={s.formNote}>We call to confirm the weight and price. Pay at pickup.</small>
           </form>
         </section>
       </main>
@@ -541,17 +553,17 @@ export default function CleaverAndCoPage() {
         <div className={s.footTop}>
           <div className={s.footBrand}>
             <Artwork slug="cleaver-and-co-pig" alt="" inks={['var(--pale)']} className={s.footPig} />
-            <p className={s.footName}>Cleaver &amp; Co.</p>
-            <p className={s.footTag}>Whole-animal butchers, 212 Market Row.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Cleaver &amp; Co.</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Whole-animal butchers, 212 Market Row.</p>
           </div>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             Tue-Fri 10-6:30, Sat 8-4, Sun 10-2
             <br />
             orders@cleaverandco.example
@@ -560,10 +572,10 @@ export default function CleaverAndCoPage() {
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional butcher shop. Farms, prices and hours are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional butcher shop. Farms, prices and hours are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

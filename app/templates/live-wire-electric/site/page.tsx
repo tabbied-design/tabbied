@@ -148,7 +148,20 @@ const HOURS = [
 
 export default function LiveWireElectricPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f2f2ee',
+        '--ink': '#111418',
+        '--volt': '#ffc21a',
+        '--blue': '#2f5bea',
+        '--gray': '#83868c',
+        '--pale': '#dcddd8',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,volt,blue,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -162,17 +175,17 @@ export default function LiveWireElectricPage() {
           <span className={s.brandMark} aria-hidden="true">
             <Artwork slug="live-wire-electric-bulb" alt="" inks={['var(--ink)']} className={s.brandBulb} />
           </span>
-          <span className={s.brandName}>Live Wire Electric</span>
+          <span data-edit="bar.brandName" data-edit-max="60" className={s.brandName}>Live Wire Electric</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCall} href={PHONE_HREF}>{PHONE}</a>
+        <a data-edit="bar.barCall" data-edit-max="28" className={s.barCall} href={PHONE_HREF}>{PHONE}</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -183,36 +196,36 @@ export default function LiveWireElectricPage() {
             the bulb hanging from its cord in a paper socket. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Licensed electricians for Eastbrook and the valley</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Licensed electricians for Eastbrook and the valley</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Wired right,
               <br />
               <em>first time.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Repairs, rewiring, panels and EV chargers for homes and small
               shops. A fixed price in writing before we start, and a 12-month
               guarantee on everything we touch.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#quote">Get a fixed quote</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#quote">Get a fixed quote</a>
               <a className={s.btnLine} href={EMERGENCY_HREF}>
-                <span>Emergency </span>
-                <span>{EMERGENCY}</span>
+                <span data-edit="hero.text" data-edit-max="60">Emergency </span>
+                <span data-edit="hero.text2" data-edit-max="60">{EMERGENCY}</span>
               </a>
             </div>
             <dl className={s.facts}>
-              {FACTS.map(([term, value]) => (
+              {FACTS.map(([term, value], i) => (
                 <div key={term}>
-                  <dt>{term}</dt>
-                  <dd>{value}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{term}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{value}</dd>
                 </div>
               ))}
             </dl>
           </div>
 
           <div className={s.board}>
-            <div className={s.boardField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,3,0,1" className={s.boardField} aria-hidden="true">
               <TabbiedPattern
                 pattern={circuit}
                 palette={BOARD}
@@ -228,7 +241,7 @@ export default function LiveWireElectricPage() {
             <div className={s.socket}>
               <Artwork slug="live-wire-electric-bulb" alt="A light bulb" inks={['var(--ink)']} className={s.heroBulb} />
             </div>
-            <p className={s.boardTag}>Est. 2011, Foundry Lane</p>
+            <p data-edit="hero.boardTag" data-edit-max="240" data-edit-multiline className={s.boardTag}>Est. 2011, Foundry Lane</p>
           </div>
         </section>
 
@@ -238,9 +251,9 @@ export default function LiveWireElectricPage() {
             on one side of the wire and its price on the other. */}
         <section id="services" className={s.services} aria-labelledby="services-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>Services</p>
-            <h2 id="services-h">Everything on the circuit</h2>
-            <p className={s.secNote}>
+            <p data-edit="services.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Services</p>
+            <h2 data-edit="services.title" data-edit-max="60" id="services-h">Everything on the circuit</h2>
+            <p data-edit="services.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Prices are from, for a typical house. Parts are charged at cost
               plus 15%, and every job gets a written quote before we start.
             </p>
@@ -251,23 +264,23 @@ export default function LiveWireElectricPage() {
           </div>
 
           <ol className={s.wire}>
-            {SERVICES.map((sv) => (
+            {SERVICES.map((sv, i) => (
               <li key={sv.no} className={s.stop}>
                 <span className={s.node} aria-hidden="true" />
                 <div className={s.card}>
-                  <span className={s.stopNo}>{sv.no}</span>
-                  <h3>{sv.name}</h3>
-                  <p className={s.stopText}>{sv.text}</p>
+                  <span data-edit={`services.stopNo.${i}`} data-edit-max="60" className={s.stopNo}>{sv.no}</span>
+                  <h3 data-edit={`services.title2.${i}`} data-edit-max="40">{sv.name}</h3>
+                  <p data-edit={`services.stopText.${i}`} data-edit-max="240" data-edit-multiline className={s.stopText}>{sv.text}</p>
                   <ul className={s.covers}>
-                    {sv.covers.map((c) => (
-                      <li key={c}>{c}</li>
+                    {sv.covers.map((c, i2) => (
+                      <li data-edit={`services.item.${i}.${i2}`} data-edit-max="80" key={c}>{c}</li>
                     ))}
                   </ul>
                 </div>
                 <div className={s.price}>
-                  <span className={s.priceFrom}>from</span>
-                  <strong className={s.priceValue}>{sv.price}</strong>
-                  <span className={s.priceUnit}>{sv.unit}</span>
+                  <span data-edit={`services.priceFrom.${i}`} data-edit-max="60" className={s.priceFrom}>from</span>
+                  <strong data-edit={`services.priceValue.${i}`} className={s.priceValue}>{sv.price}</strong>
+                  <span data-edit={`services.priceUnit.${i}`} data-edit-max="60" className={s.priceUnit}>{sv.unit}</span>
                 </div>
               </li>
             ))}
@@ -283,7 +296,7 @@ export default function LiveWireElectricPage() {
         {/* ------------------------------------------------------- EMERGENCY
             Ink, with hazard tape top and bottom and the unplugged plug. */}
         <section id="emergency" className={s.emergency} aria-labelledby="emergency-h">
-          <div className={s.tape} aria-hidden="true">
+          <div data-edit-pattern="emergency.field" data-edit-roles="transparent,2" className={s.tape} aria-hidden="true">
             <TabbiedPattern
               pattern={rafter}
               palette={TAPE}
@@ -296,18 +309,18 @@ export default function LiveWireElectricPage() {
 
           <div className={s.emInner}>
             <div className={s.emMain}>
-              <p className={s.emKicker}>Emergency line, answered 24 hours</p>
-              <h2 id="emergency-h">No power, sparks, or a burning smell?</h2>
-              <a className={s.emPhone} href={EMERGENCY_HREF}>{EMERGENCY}</a>
-              <p className={s.emNote}>
+              <p data-edit="emergency.emKicker" data-edit-max="240" data-edit-multiline className={s.emKicker}>Emergency line, answered 24 hours</p>
+              <h2 data-edit="emergency.title" data-edit-max="60" id="emergency-h">No power, sparks, or a burning smell?</h2>
+              <a data-edit="emergency.emPhone" data-edit-max="28" className={s.emPhone} href={EMERGENCY_HREF}>{EMERGENCY}</a>
+              <p data-edit="emergency.emNote" data-edit-max="240" data-edit-multiline className={s.emNote}>
                 A licensed electrician answers, not a call center. Last year we
                 reached Zone 1 callouts in 52 minutes on average.
               </p>
 
-              <h3 className={s.emSub}>Before we get there</h3>
+              <h3 data-edit="emergency.emSub" data-edit-max="40" className={s.emSub}>Before we get there</h3>
               <ol className={s.before}>
-                {BEFORE.map((b) => (
-                  <li key={b}>{b}</li>
+                {BEFORE.map((b, i) => (
+                  <li data-edit={`emergency.item.${i}`} data-edit-max="80" key={b}>{b}</li>
                 ))}
               </ol>
             </div>
@@ -315,20 +328,20 @@ export default function LiveWireElectricPage() {
             <div className={s.emSide}>
               <Artwork slug="live-wire-electric-plug" alt="An unplugged electrical plug" inks={['var(--volt)']} className={s.emPlug} />
               <table className={s.fees}>
-                <caption>Emergency callout fees</caption>
+                <caption data-edit="emergency.caption">Emergency callout fees</caption>
                 <thead>
                   <tr>
-                    <th scope="col">When</th>
-                    <th scope="col">First hour</th>
-                    <th scope="col">Each extra 30 min</th>
+                    <th data-edit="emergency.heading" scope="col">When</th>
+                    <th data-edit="emergency.heading2" scope="col">First hour</th>
+                    <th data-edit="emergency.heading3" scope="col">Each extra 30 min</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {FEES.map((f) => (
+                  {FEES.map((f, i) => (
                     <tr key={f.when}>
-                      <th scope="row">{f.when}</th>
-                      <td data-label="First hour">{f.first}</td>
-                      <td data-label="Each extra 30 min">{f.extra}</td>
+                      <th data-edit={`emergency.heading4.${i}`} scope="row">{f.when}</th>
+                      <td data-edit={`emergency.cell.${i}`} data-label="First hour">{f.first}</td>
+                      <td data-edit={`emergency.cell2.${i}`} data-label="Each extra 30 min">{f.extra}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -345,25 +358,25 @@ export default function LiveWireElectricPage() {
             </div>
 
             <div className={s.licBody}>
-              <p className={s.eyebrow}>Licenses and guarantees</p>
-              <h2 id="licensed-h">Licensed, insured and signed off</h2>
+              <p data-edit="licensed.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Licenses and guarantees</p>
+              <h2 data-edit="licensed.title" data-edit-max="60" id="licensed-h">Licensed, insured and signed off</h2>
               <ul className={s.creds}>
-                {CREDENTIALS.map((c) => (
+                {CREDENTIALS.map((c, i) => (
                   <li key={c.label} className={s.cred}>
-                    <strong className={s.credBig}>{c.big}</strong>
-                    <h3>{c.label}</h3>
-                    <p>{c.note}</p>
+                    <strong data-edit={`licensed.credBig.${i}`} className={s.credBig}>{c.big}</strong>
+                    <h3 data-edit={`licensed.title2.${i}`} data-edit-max="40">{c.label}</h3>
+                    <p data-edit={`licensed.body.${i}`} data-edit-max="240" data-edit-multiline>{c.note}</p>
                   </li>
                 ))}
               </ul>
 
-              <h3 className={s.stepsHead}>How a job goes</h3>
+              <h3 data-edit="licensed.stepsHead" data-edit-max="40" className={s.stepsHead}>How a job goes</h3>
               <ol className={s.steps}>
                 {STEPS.map(([title, text], n) => (
                   <li key={title}>
                     <span className={s.stepNo}>{`0${n + 1}`}</span>
-                    <strong>{title}</strong>
-                    <span className={s.stepText}>{text}</span>
+                    <strong data-edit={`licensed.emphasis.${n}`}>{title}</strong>
+                    <span data-edit={`licensed.stepText.${n}`} data-edit-max="60" className={s.stepText}>{text}</span>
                   </li>
                 ))}
               </ol>
@@ -376,9 +389,9 @@ export default function LiveWireElectricPage() {
             charge in the outer ring. */}
         <section id="areas" className={s.areas} aria-labelledby="areas-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>Areas served</p>
-            <h2 id="areas-h">Where the vans go</h2>
-            <p className={s.secNote}>
+            <p data-edit="areas.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Areas served</p>
+            <h2 data-edit="areas.title" data-edit-max="60" id="areas-h">Where the vans go</h2>
+            <p data-edit="areas.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Both vans leave the depot on Foundry Lane. Outside the outer ring
               we still come for panels and rewires; ask for a price.
             </p>
@@ -389,26 +402,26 @@ export default function LiveWireElectricPage() {
               <span className={s.ringOuter} />
               <span className={s.ringInner} />
               <span className={s.depot} />
-              <span className={s.ringLabelOne}>5 mi</span>
-              <span className={s.ringLabelTwo}>12 mi</span>
+              <span data-edit="areas.ringLabelOne" data-edit-max="60" className={s.ringLabelOne}>5 mi</span>
+              <span data-edit="areas.ringLabelTwo" data-edit-max="60" className={s.ringLabelTwo}>12 mi</span>
             </div>
 
             <div className={s.zone}>
-              <h3>Zone 1</h3>
-              <p className={s.zoneTerms}>No travel charge. Emergencies within 90 minutes.</p>
+              <h3 data-edit="areas.title2" data-edit-max="40">Zone 1</h3>
+              <p data-edit="areas.zoneTerms" data-edit-max="240" data-edit-multiline className={s.zoneTerms}>No travel charge. Emergencies within 90 minutes.</p>
               <ul className={s.towns}>
-                {ZONE_ONE.map((t) => (
-                  <li key={t}>{t}</li>
+                {ZONE_ONE.map((t, i) => (
+                  <li data-edit={`areas.item.${i}`} data-edit-max="80" key={t}>{t}</li>
                 ))}
               </ul>
             </div>
 
             <div className={s.zone}>
-              <h3>Zone 2</h3>
-              <p className={s.zoneTerms}>$25 travel charge. Emergencies within 2 hours.</p>
+              <h3 data-edit="areas.title3" data-edit-max="40">Zone 2</h3>
+              <p data-edit="areas.zoneTerms2" data-edit-max="240" data-edit-multiline className={s.zoneTerms}>$25 travel charge. Emergencies within 2 hours.</p>
               <ul className={s.towns}>
-                {ZONE_TWO.map((t) => (
-                  <li key={t}>{t}</li>
+                {ZONE_TWO.map((t, i) => (
+                  <li data-edit={`areas.item2.${i}`} data-edit-max="80" key={t}>{t}</li>
                 ))}
               </ul>
             </div>
@@ -419,47 +432,47 @@ export default function LiveWireElectricPage() {
         <section id="quote" className={s.quote} aria-labelledby="quote-h">
           <div className={s.quoteInner}>
             <div className={s.quoteText}>
-              <p className={s.eyebrow}>Fixed quotes</p>
-              <h2 id="quote-h">Tell us what needs doing</h2>
-              <p>
+              <p data-edit="quote.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Fixed quotes</p>
+              <h2 data-edit="quote.title" data-edit-max="60" id="quote-h">Tell us what needs doing</h2>
+              <p data-edit="quote.body" data-edit-max="240" data-edit-multiline>
                 We answer within one working day, usually with a price and
                 sometimes with a visit to look first, which is free in Zone 1.
                 Photos help: reply to our confirmation email with them.
               </p>
               <dl className={s.hours}>
-                {HOURS.map(([day, time]) => (
+                {HOURS.map(([day, time], i) => (
                   <div key={day}>
-                    <dt>{day}</dt>
-                    <dd>{time}</dd>
+                    <dt data-edit={`quote.term.${i}`} data-edit-max="28">{day}</dt>
+                    <dd data-edit={`quote.body2.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                   </div>
                 ))}
               </dl>
               <div className={s.contact}>
-                <a href={PHONE_HREF}>{PHONE}</a>
-                <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
-                <span>118 Foundry Lane, Eastbrook</span>
+                <a data-edit="quote.link" data-edit-max="28" href={PHONE_HREF}>{PHONE}</a>
+                <a data-edit="quote.link2" data-edit-max="28" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+                <span data-edit="quote.text" data-edit-max="60">118 Foundry Lane, Eastbrook</span>
               </div>
             </div>
 
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="lw-name">Name</label>
+                <label data-edit="quote.label" htmlFor="lw-name">Name</label>
                 <input id="lw-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lw-phone">Phone</label>
+                <label data-edit="quote.label2" htmlFor="lw-phone">Phone</label>
                 <input id="lw-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lw-email">Email</label>
+                <label data-edit="quote.label3" htmlFor="lw-email">Email</label>
                 <input id="lw-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lw-zip">Zip code</label>
+                <label data-edit="quote.label4" htmlFor="lw-zip">Zip code</label>
                 <input id="lw-zip" name="zip" type="text" inputMode="numeric" autoComplete="postal-code" />
               </div>
               <div className={`${s.field} ${s.wide}`}>
-                <label htmlFor="lw-job">Kind of job</label>
+                <label data-edit="quote.label5" htmlFor="lw-job">Kind of job</label>
                 <select id="lw-job" name="job" defaultValue={SERVICES[0].name}>
                   {SERVICES.map((sv) => (
                     <option key={sv.no} value={sv.name}>{sv.name}</option>
@@ -468,25 +481,25 @@ export default function LiveWireElectricPage() {
                 </select>
               </div>
               <div className={`${s.field} ${s.wide}`}>
-                <label htmlFor="lw-desc">What is going on</label>
+                <label data-edit="quote.label6" htmlFor="lw-desc">What is going on</label>
                 <textarea id="lw-desc" name="description" rows={4} placeholder="Which rooms, how old the house is, anything you have noticed." />
               </div>
               <fieldset className={`${s.when} ${s.wide}`}>
-                <legend>Best time for a visit</legend>
+                <legend data-edit="quote.legend">Best time for a visit</legend>
                 <label>
                   <input type="radio" name="when" value="morning" defaultChecked />
-                  <span>Mornings</span>
+                  <span data-edit="quote.text2" data-edit-max="60">Mornings</span>
                 </label>
                 <label>
                   <input type="radio" name="when" value="afternoon" />
-                  <span>Afternoons</span>
+                  <span data-edit="quote.text3" data-edit-max="60">Afternoons</span>
                 </label>
                 <label>
                   <input type="radio" name="when" value="any" />
-                  <span>Any time</span>
+                  <span data-edit="quote.text4" data-edit-max="60">Any time</span>
                 </label>
               </fieldset>
-              <button className={s.submit} type="submit">Send for a quote</button>
+              <button data-edit="quote.submit" data-edit-max="24" className={s.submit} type="submit">Send for a quote</button>
             </form>
           </div>
         </section>
@@ -497,27 +510,27 @@ export default function LiveWireElectricPage() {
           <div className={s.footBrand}>
             <Artwork slug="live-wire-electric-bulb" alt="" inks={['var(--volt)']} className={s.footBulb} />
             <div>
-              <p className={s.footName}>Live Wire Electric</p>
-              <p className={s.footTag}>Master electrician license E-40218. Insured, bonded and guaranteed.</p>
+              <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Live Wire Electric</p>
+              <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Master electrician license E-40218. Insured, bonded and guaranteed.</p>
             </div>
           </div>
           <div>
-            <h2 className={s.footHead}>Call</h2>
-            <a className={s.footLink} href={PHONE_HREF}>{PHONE}</a>
-            <a className={s.footLink} href={EMERGENCY_HREF}>{EMERGENCY}</a>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Call</h2>
+            <a data-edit="footer.footLink" data-edit-max="28" className={s.footLink} href={PHONE_HREF}>{PHONE}</a>
+            <a data-edit="footer.footLink2" data-edit-max="28" className={s.footLink} href={EMERGENCY_HREF}>{EMERGENCY}</a>
           </div>
           <div>
-            <h2 className={s.footHead}>Write</h2>
-            <a className={s.footLink} href={`mailto:${EMAIL}`}>{EMAIL}</a>
-            <p className={s.footText}>118 Foundry Lane, Eastbrook</p>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Write</h2>
+            <a data-edit="footer.footLink3" data-edit-max="28" className={s.footLink} href={`mailto:${EMAIL}`}>{EMAIL}</a>
+            <p data-edit="footer.footText" data-edit-max="240" data-edit-multiline className={s.footText}>118 Foundry Lane, Eastbrook</p>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional electrical contractor. Prices, licenses, people and places are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional electrical contractor. Prices, licenses, people and places are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, pictures painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, pictures painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

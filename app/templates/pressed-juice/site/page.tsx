@@ -189,7 +189,21 @@ const FAQS = [
 
 export default function PressedJuicePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fff8ec',
+        '--ink': '#1e2a1c',
+        '--orange': '#ff8a1f',
+        '--lime': '#7cb518',
+        '--berry': '#e63946',
+        '--gray': '#a09a8a',
+        '--pale': '#fce9cf',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,orange,lime,berry,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -201,17 +215,17 @@ export default function PressedJuicePage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markDot} aria-hidden="true" />
-          <span className={s.markName}>Pressed</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Pressed</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBtn} href="#cleanses">Order ahead</a>
+        <a data-edit="bar.barBtn" data-edit-max="28" className={s.barBtn} href="#cleanses">Order ahead</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -222,38 +236,38 @@ export default function PressedJuicePage() {
             lime panel of leaves. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Cold-pressed juice, Orchard Street</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Cold-pressed juice, Orchard Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Pressed at five, <em>gone by six.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Six juices, pressed every morning from whole fruit and vegetables
               and bottled in glass. No water added, nothing heated, nothing
               kept past its third day.
             </p>
             <div className={s.actions}>
-              <a className={s.btn} href="#juices">See the counter</a>
-              <a className={s.btnLine} href="#cleanses">Book a cleanse</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#juices">See the counter</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#cleanses">Book a cleanse</a>
             </div>
             <dl className={s.heroFacts}>
               <div>
-                <dt>5 am</dt>
-                <dd>Pressing starts</dd>
+                <dt data-edit="hero.term" data-edit-max="28">5 am</dt>
+                <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>Pressing starts</dd>
               </div>
               <div>
-                <dt>3 lb</dt>
-                <dd>Of produce a bottle</dd>
+                <dt data-edit="hero.term2" data-edit-max="28">3 lb</dt>
+                <dd data-edit="hero.body2" data-edit-max="200" data-edit-multiline>Of produce a bottle</dd>
               </div>
               <div>
-                <dt>$1</dt>
-                <dd>Back for every bottle</dd>
+                <dt data-edit="hero.term3" data-edit-max="28">$1</dt>
+                <dd data-edit="hero.body3" data-edit-max="200" data-edit-multiline>Back for every bottle</dd>
               </div>
             </dl>
           </div>
 
           <div className={s.stage}>
             <div className={s.panel}>
-              <div className={s.leaves} aria-hidden="true">
+              <div data-edit-pattern="hero.field" data-edit-roles="transparent,0,2,6" className={s.leaves} aria-hidden="true">
                 <TabbiedPattern
                   pattern={lobe}
                   palette={LEAVES}
@@ -293,37 +307,37 @@ export default function PressedJuicePage() {
             of its own color with its label, ingredients and price. */}
         <section id="juices" className={s.juices} aria-labelledby="juices-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>The counter</p>
-            <h2 id="juices-h">Six bottles, pressed this morning</h2>
-            <p className={s.secNote}>
+            <p data-edit="juices.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>The counter</p>
+            <h2 data-edit="juices.title" data-edit-max="60" id="juices-h">Six bottles, pressed this morning</h2>
+            <p data-edit="juices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every juice is in the fridge by 7. When a flavor sells out, it is
               gone until tomorrow; the board by the till says what is left.
             </p>
           </div>
           <ul className={s.shelf}>
-            {JUICES.map((j) => (
+            {JUICES.map((j, i) => (
               <li key={j.no} className={s.bottle} data-tone={j.tone} data-size={j.size}>
                 <span className={s.cap} aria-hidden="true" />
                 <div className={s.glass}>
-                  <span className={s.bottleNo}>{j.no}</span>
+                  <span data-edit={`juices.bottleNo.${i}`} data-edit-max="60" className={s.bottleNo}>{j.no}</span>
                   <div className={s.label}>
-                    <h3 className={s.bottleName}>{j.name}</h3>
-                    <p className={s.bottleTaste}>{j.taste}</p>
+                    <h3 data-edit={`juices.bottleName.${i}`} data-edit-max="40" className={s.bottleName}>{j.name}</h3>
+                    <p data-edit={`juices.bottleTaste.${i}`} data-edit-max="240" data-edit-multiline className={s.bottleTaste}>{j.taste}</p>
                   </div>
                   <ul className={s.ingredients}>
-                    {j.ingredients.map((ing) => (
-                      <li key={ing}>{ing}</li>
+                    {j.ingredients.map((ing, i2) => (
+                      <li data-edit={`juices.item.${i}.${i2}`} data-edit-max="80" key={ing}>{ing}</li>
                     ))}
                   </ul>
                   <p className={s.bottlePrice}>
-                    <strong>{j.price}</strong>
-                    <span>{j.oz}</span>
+                    <strong data-edit={`juices.emphasis.${i}`}>{j.price}</strong>
+                    <span data-edit={`juices.text.${i}`} data-edit-max="60">{j.oz}</span>
                   </p>
                 </div>
               </li>
             ))}
           </ul>
-          <p className={s.counterNote}>
+          <p data-edit="juices.counterNote" data-edit-max="240" data-edit-multiline className={s.counterNote}>
             Any juice as a 2 oz tasting pour for $2. Glass bottles only; bring
             one back for a dollar.
           </p>
@@ -332,16 +346,16 @@ export default function PressedJuicePage() {
         {/* -------------------------------------------------------- CLEANSES */}
         <section id="cleanses" className={s.cleanses} aria-labelledby="cleanses-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Cleanses</p>
-            <h2 id="cleanses-h">One, three or five days</h2>
-            <p className={s.secNote}>
+            <p data-edit="cleanses.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Cleanses</p>
+            <h2 data-edit="cleanses.title" data-edit-max="60" id="cleanses-h">One, three or five days</h2>
+            <p data-edit="cleanses.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Six bottles a day, in the order you drink them, numbered on the
               cap. Order 48 hours ahead; pick up from 7 or have them delivered.
             </p>
           </div>
           <div className={s.cleanseGrid}>
             <ul className={s.plans}>
-              {CLEANSES.map((c) => (
+              {CLEANSES.map((c, i) => (
                 <li key={c.days} className={s.plan}>
                   <div className={s.planFruit} aria-hidden="true">
                     {c.fruit.map((f) => (
@@ -349,29 +363,29 @@ export default function PressedJuicePage() {
                     ))}
                   </div>
                   <p className={s.planDays}>
-                    <strong>{c.days}</strong>
-                    <span>{c.unit}</span>
+                    <strong data-edit={`cleanses.emphasis.${i}`}>{c.days}</strong>
+                    <span data-edit={`cleanses.text.${i}`} data-edit-max="60">{c.unit}</span>
                   </p>
-                  <h3 className={s.planTitle}>{c.title}</h3>
-                  <p className={s.planNote}>{c.note}</p>
+                  <h3 data-edit={`cleanses.planTitle.${i}`} data-edit-max="40" className={s.planTitle}>{c.title}</h3>
+                  <p data-edit={`cleanses.planNote.${i}`} data-edit-max="240" data-edit-multiline className={s.planNote}>{c.note}</p>
                   <p className={s.planPrice}>
-                    <strong>{c.price}</strong>
-                    <span>{c.bottles}</span>
+                    <strong data-edit={`cleanses.emphasis2.${i}`}>{c.price}</strong>
+                    <span data-edit={`cleanses.text2.${i}`} data-edit-max="60">{c.bottles}</span>
                   </p>
                 </li>
               ))}
             </ul>
             <div className={s.day}>
-              <h3 className={s.dayHead}>A day on the cleanse</h3>
+              <h3 data-edit="cleanses.dayHead" data-edit-max="40" className={s.dayHead}>A day on the cleanse</h3>
               <ol className={s.dayList}>
-                {DAY.map(([t, j]) => (
+                {DAY.map(([t, j], i) => (
                   <li key={t}>
-                    <time>{t}</time>
-                    <span>{j}</span>
+                    <time data-edit={`cleanses.date.${i}`}>{t}</time>
+                    <span data-edit={`cleanses.text3.${i}`} data-edit-max="60">{j}</span>
                   </li>
                 ))}
               </ol>
-              <p className={s.dayNote}>
+              <p data-edit="cleanses.dayNote" data-edit-max="240" data-edit-multiline className={s.dayNote}>
                 Drink water in between, as much as you like. Swap any bottle
                 for another when you order.
               </p>
@@ -380,7 +394,7 @@ export default function PressedJuicePage() {
         </section>
 
         {/* The pulp band: pips and drops in the fruit colors, between sections. */}
-        <div className={s.seedBand} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,4,6" className={s.seedBand} aria-hidden="true">
           <TabbiedPattern
             pattern={pebble}
             palette={SEEDS}
@@ -403,26 +417,26 @@ export default function PressedJuicePage() {
             />
           </div>
           <div className={s.bowlBody}>
-            <p className={s.secKick}>Smoothie bowls</p>
-            <h2 id="bowls-h">Thick enough to stand a spoon in</h2>
-            <p className={s.bowlLede}>
+            <p data-edit="bowls.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Smoothie bowls</p>
+            <h2 data-edit="bowls.title" data-edit-max="60" id="bowls-h">Thick enough to stand a spoon in</h2>
+            <p data-edit="bowls.bowlLede" data-edit-max="240" data-edit-multiline className={s.bowlLede}>
               Blended to order with frozen fruit and no ice, so they stay thick
               to the last spoonful. Every bowl is 16 oz and vegan unless you add
               honey.
             </p>
             <ul className={s.bowlList}>
-              {BOWLS.map((b) => (
+              {BOWLS.map((b, i) => (
                 <li key={b.name}>
-                  <h3>{b.name}</h3>
-                  <strong>{b.price}</strong>
-                  <p className={s.bowlBase}>{b.base}</p>
-                  <p className={s.bowlTop}>{b.top}</p>
+                  <h3 data-edit={`bowls.title2.${i}`} data-edit-max="40">{b.name}</h3>
+                  <strong data-edit={`bowls.emphasis.${i}`}>{b.price}</strong>
+                  <p data-edit={`bowls.bowlBase.${i}`} data-edit-max="240" data-edit-multiline className={s.bowlBase}>{b.base}</p>
+                  <p data-edit={`bowls.bowlTop.${i}`} data-edit-max="240" data-edit-multiline className={s.bowlTop}>{b.top}</p>
                 </li>
               ))}
             </ul>
             <ul className={s.addons}>
-              {ADDONS.map((a) => (
-                <li key={a}>{a}</li>
+              {ADDONS.map((a, i) => (
+                <li data-edit={`bowls.item.${i}`} data-edit-max="80" key={a}>{a}</li>
               ))}
             </ul>
           </div>
@@ -431,9 +445,9 @@ export default function PressedJuicePage() {
         {/* ------------------------------------------------------- LOCATIONS */}
         <section id="locations" className={s.locations} aria-labelledby="locations-h">
           <div className={s.secHead}>
-            <p className={s.secKick}>Locations and hours</p>
-            <h2 id="locations-h">Three counters in town</h2>
-            <p className={s.secNote}>
+            <p data-edit="locations.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Locations and hours</p>
+            <h2 data-edit="locations.title" data-edit-max="60" id="locations-h">Three counters in town</h2>
+            <p data-edit="locations.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Order ahead by text at (555) 017-3380 and skip the line at any of
               them. Delivery within three miles of the Press Room, $4.
             </p>
@@ -442,14 +456,14 @@ export default function PressedJuicePage() {
             {LOCATIONS.map((l, i) => (
               <li key={l.name} className={s.place}>
                 <span className={s.placeNo}>{`0${i + 1}`}</span>
-                <h3 className={s.placeName}>{l.name}</h3>
-                <p className={s.placeAddr}>{l.addr}</p>
-                <p className={s.placeNote}>{l.note}</p>
+                <h3 data-edit={`locations.placeName.${i}`} data-edit-max="40" className={s.placeName}>{l.name}</h3>
+                <p data-edit={`locations.placeAddr.${i}`} data-edit-max="240" data-edit-multiline className={s.placeAddr}>{l.addr}</p>
+                <p data-edit={`locations.placeNote.${i}`} data-edit-max="240" data-edit-multiline className={s.placeNote}>{l.note}</p>
                 <dl className={s.placeHours}>
-                  {l.hours.map(([d, h]) => (
+                  {l.hours.map(([d, h], i2) => (
                     <div key={d}>
-                      <dt>{d}</dt>
-                      <dd>{h}</dd>
+                      <dt data-edit={`locations.term.${i}.${i2}`} data-edit-max="28">{d}</dt>
+                      <dd data-edit={`locations.body.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                     </div>
                   ))}
                 </dl>
@@ -457,11 +471,11 @@ export default function PressedJuicePage() {
             ))}
           </ul>
           <div className={s.faq}>
-            <h3 className={s.faqHead}>Good to know</h3>
-            {FAQS.map((f) => (
+            <h3 data-edit="locations.faqHead" data-edit-max="40" className={s.faqHead}>Good to know</h3>
+            {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
+                <summary data-edit={`locations.question.${i}`} data-edit-max="80">{f.q}</summary>
+                <p data-edit={`locations.body2.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
               </details>
             ))}
           </div>
@@ -471,10 +485,10 @@ export default function PressedJuicePage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div className={s.footBrand}>
-            <p className={s.footName}>Pressed</p>
-            <p className={s.footTag}>Cold-pressed juice, bowls and cleanses. 48 Orchard Street.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pressed</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Cold-pressed juice, bowls and cleanses. 48 Orchard Street.</p>
           </div>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             hello@pressed.example
             <br />
             (555) 017-3380
@@ -487,10 +501,10 @@ export default function PressedJuicePage() {
           />
         </div>
         <div className={s.footFine}>
-          <p>A fictional juice bar. Juices, prices and addresses are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional juice bar. Juices, prices and addresses are invented.</p>
           <p className={s.credit}>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

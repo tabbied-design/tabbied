@@ -148,7 +148,20 @@ const FEE_NOTES = [
 
 export default function PointeAndPulsePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f7f1ee',
+        '--ink': '#1e1a22',
+        '--rose': '#d6456b',
+        '--violet': '#6b5bd1',
+        '--gray': '#978e97',
+        '--blush': '#ede3e6',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,rose,violet,gray,blush"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -159,18 +172,18 @@ export default function PointeAndPulsePage() {
 
       <header className={s.bar}>
         <a className={s.brand} href="#top">
-          <span className={s.brandA}>Pointe</span>
-          <span className={s.brandAmp}>&amp;</span>
-          <span className={s.brandB}>Pulse</span>
+          <span data-edit="bar.brandA" data-edit-max="60" className={s.brandA}>Pointe</span>
+          <span data-edit="bar.brandAmp" data-edit-max="60" className={s.brandAmp}>&amp;</span>
+          <span data-edit="bar.brandB" data-edit-max="60" className={s.brandB}>Pulse</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -181,7 +194,7 @@ export default function PointeAndPulsePage() {
             hop dancer in a block of violet, with the words between. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.panelBallet}>
-            <div className={s.panelField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,5,0,3" className={s.panelField} aria-hidden="true">
               <TabbiedPattern
                 pattern={cendal}
                 palette={SASH_ROSE}
@@ -202,25 +215,25 @@ export default function PointeAndPulsePage() {
           </div>
 
           <div className={s.heroText}>
-            <p className={s.kicker}>Dance school, 22 Alder Street</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Dance school, 22 Alder Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               From first position
               <br />
               <em>to freestyle.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Ballet, jazz, hip hop and contemporary for dancers from two to
               adult, in two sprung-floor studios. Your first class is free.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#trial">Book a free trial</a>
-              <a className={s.btnGhost} href="#timetable">See the timetable</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#trial">Book a free trial</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#timetable">See the timetable</a>
             </div>
-            <p className={s.term}>Autumn term runs 8 September to 13 December.</p>
+            <p data-edit="hero.term" data-edit-max="240" data-edit-multiline className={s.term}>Autumn term runs 8 September to 13 December.</p>
           </div>
 
           <div className={s.panelPulse}>
-            <div className={s.panelField} aria-hidden="true">
+            <div data-edit-pattern="hero.field2" data-edit-roles="transparent,2,5,0" className={s.panelField} aria-hidden="true">
               <TabbiedPattern
                 pattern={cendal}
                 palette={SASH_VIOLET}
@@ -245,48 +258,48 @@ export default function PointeAndPulsePage() {
             Days across, times down, each class colored by its style. */}
         <section id="timetable" className={s.timetable} aria-labelledby="timetable-h">
           <div className={s.secHead}>
-            <h2 id="timetable-h">The week, class by class</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="timetable.title" data-edit-max="60" id="timetable-h">The week, class by class</h2>
+            <p data-edit="timetable.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Studio 1 unless marked. Ages are a guide: we move dancers up when
               they are ready, not on their birthday.
             </p>
           </div>
 
           <ul className={s.legend} aria-label="Styles">
-            {STYLES.map((st) => (
+            {STYLES.map((st, i) => (
               <li key={st.id} data-style={st.id}>
                 <span className={s.legendChip} aria-hidden="true" />
-                <span>{st.name}</span>
+                <span data-edit={`timetable.text.${i}`} data-edit-max="60">{st.name}</span>
               </li>
             ))}
           </ul>
 
           <div className={s.tableWrap}>
             <table className={s.table}>
-              <caption className={s.srOnly}>Weekly class timetable, autumn term</caption>
+              <caption data-edit="timetable.srOnly" className={s.srOnly}>Weekly class timetable, autumn term</caption>
               <thead>
                 <tr>
                   <th scope="col" className={s.corner}>
-                    <span className={s.srOnly}>Time</span>
+                    <span data-edit="timetable.srOnly2" data-edit-max="60" className={s.srOnly}>Time</span>
                   </th>
-                  {DAYS.map((day) => (
-                    <th key={day} scope="col">{day}</th>
+                  {DAYS.map((day, i) => (
+                    <th data-edit={`timetable.heading.${i}`} key={day} scope="col">{day}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {TIMES.map((time) => (
+                {TIMES.map((time, i) => (
                   <tr key={time} className={time === '16:00' ? s.afterSchool : undefined}>
-                    <th scope="row">{time}</th>
-                    {DAYS.map((day) => {
+                    <th data-edit={`timetable.heading2.${i}`} scope="row">{time}</th>
+                    {DAYS.map((day, i2) => {
                       const c = CLASSES.find((k) => k.day === day && k.time === time);
                       return (
                         <td key={day}>
                           {c ? (
                             <div className={s.cls} data-style={c.style}>
-                              <strong className={s.clsName}>{c.name}</strong>
-                              <span className={s.clsAges}>{c.ages}</span>
-                              <span className={s.clsLen}>{c.len}</span>
+                              <strong data-edit={`timetable.clsName.${i}.${i2}`} className={s.clsName}>{c.name}</strong>
+                              <span data-edit={`timetable.clsAges.${i}.${i2}`} data-edit-max="60" className={s.clsAges}>{c.ages}</span>
+                              <span data-edit={`timetable.clsLen.${i}.${i2}`} data-edit-max="60" className={s.clsLen}>{c.len}</span>
                             </div>
                           ) : null}
                         </td>
@@ -297,16 +310,16 @@ export default function PointeAndPulsePage() {
               </tbody>
             </table>
           </div>
-          <p className={s.swipe}>Swipe the timetable sideways to see the whole week.</p>
+          <p data-edit="timetable.swipe" data-edit-max="240" data-edit-multiline className={s.swipe}>Swipe the timetable sideways to see the whole week.</p>
 
           <ul className={s.styles}>
-            {STYLES.map((st) => (
+            {STYLES.map((st, i) => (
               <li key={st.id} className={s.style} data-style={st.id}>
-                <h3>{st.name}</h3>
-                <p>{st.text}</p>
+                <h3 data-edit={`timetable.title2.${i}`} data-edit-max="40">{st.name}</h3>
+                <p data-edit={`timetable.body.${i}`} data-edit-max="240" data-edit-multiline>{st.text}</p>
                 <p className={s.wear}>
-                  <span className={s.wearLabel}>Wear</span>
-                  <span>{st.wear}</span>
+                  <span data-edit={`timetable.wearLabel.${i}`} data-edit-max="60" className={s.wearLabel}>Wear</span>
+                  <span data-edit={`timetable.text2.${i}`} data-edit-max="60">{st.wear}</span>
                 </p>
               </li>
             ))}
@@ -316,19 +329,19 @@ export default function PointeAndPulsePage() {
         {/* -------------------------------------------------------- TEACHERS */}
         <section id="teachers" className={s.teachers} aria-labelledby="teachers-h">
           <div className={s.secHead}>
-            <h2 id="teachers-h">The teachers</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="teachers.title" data-edit-max="60" id="teachers-h">The teachers</h2>
+            <p data-edit="teachers.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Four full-time teachers and two assistants, all first aid trained
               and background checked.
             </p>
           </div>
           <ul className={s.teacherGrid}>
-            {TEACHERS.map((t) => (
+            {TEACHERS.map((t, i) => (
               <li key={t.name} className={s.teacher} data-style={t.style}>
                 <span className={s.monogram} aria-hidden="true">{t.initials}</span>
-                <h3>{t.name}</h3>
-                <p className={s.teacherRole}>{t.role}</p>
-                <p className={s.teacherBio}>{t.bio}</p>
+                <h3 data-edit={`teachers.title2.${i}`} data-edit-max="40">{t.name}</h3>
+                <p data-edit={`teachers.teacherRole.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherRole}>{t.role}</p>
+                <p data-edit={`teachers.teacherBio.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherBio}>{t.bio}</p>
               </li>
             ))}
           </ul>
@@ -337,7 +350,7 @@ export default function PointeAndPulsePage() {
         {/* --------------------------------------------------------- RECITAL
             Ink, a field of stars, and the ballet dancer again in violet. */}
         <section id="recital" className={s.recital} aria-labelledby="recital-h">
-          <div className={s.recitalField} aria-hidden="true">
+          <div data-edit-pattern="recital.field" data-edit-roles="transparent,5,2,3,5" className={s.recitalField} aria-hidden="true">
             <TabbiedPattern
               pattern={northstar}
               palette={STARS}
@@ -359,23 +372,23 @@ export default function PointeAndPulsePage() {
               />
             </div>
             <div className={s.recitalBody}>
-              <p className={s.recitalKicker}>The winter recital</p>
-              <h2 id="recital-h">Every class on one stage</h2>
+              <p data-edit="recital.recitalKicker" data-edit-max="240" data-edit-multiline className={s.recitalKicker}>The winter recital</p>
+              <h2 data-edit="recital.title" data-edit-max="60" id="recital-h">Every class on one stage</h2>
               <div className={s.date}>
-                <span className={s.dateDay}>13</span>
-                <span className={s.dateMonth}>December</span>
-                <span className={s.datePlace}>Saturday, Alder Hall</span>
+                <span data-edit="recital.dateDay" data-edit-max="60" className={s.dateDay}>13</span>
+                <span data-edit="recital.dateMonth" data-edit-max="60" className={s.dateMonth}>December</span>
+                <span data-edit="recital.datePlace" data-edit-max="60" className={s.datePlace}>Saturday, Alder Hall</span>
               </div>
-              <p className={s.recitalText}>
+              <p data-edit="recital.recitalText" data-edit-max="240" data-edit-multiline className={s.recitalText}>
                 From Tiny toes to the Crew, every class performs one dance,
                 with the seniors closing each half. Tickets go on sale to
                 families on 1 November and to everyone a week later.
               </p>
               <dl className={s.recitalFacts}>
-                {RECITAL_FACTS.map(([term, value]) => (
+                {RECITAL_FACTS.map(([term, value], i) => (
                   <div key={term}>
-                    <dt>{term}</dt>
-                    <dd>{value}</dd>
+                    <dt data-edit={`recital.term.${i}`} data-edit-max="28">{term}</dt>
+                    <dd data-edit={`recital.body.${i}`} data-edit-max="200" data-edit-multiline>{value}</dd>
                   </div>
                 ))}
               </dl>
@@ -387,18 +400,18 @@ export default function PointeAndPulsePage() {
         <section id="fees" className={s.fees} aria-labelledby="fees-h">
           <div className={s.feesInner}>
             <div>
-              <h2 id="fees-h">Fees</h2>
+              <h2 data-edit="fees.title" data-edit-max="60" id="fees-h">Fees</h2>
               <ul className={s.feeNotes}>
-                {FEE_NOTES.map((n) => (
-                  <li key={n}>{n}</li>
+                {FEE_NOTES.map((n, i) => (
+                  <li data-edit={`fees.item.${i}`} data-edit-max="80" key={n}>{n}</li>
                 ))}
               </ul>
             </div>
             <dl className={s.feeList}>
-              {FEES.map(([what, price]) => (
+              {FEES.map(([what, price], i) => (
                 <div key={what}>
-                  <dt>{what}</dt>
-                  <dd>{price}</dd>
+                  <dt data-edit={`fees.term.${i}`} data-edit-max="28">{what}</dt>
+                  <dd data-edit={`fees.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                 </div>
               ))}
             </dl>
@@ -418,23 +431,23 @@ export default function PointeAndPulsePage() {
             </div>
 
             <div className={s.trialBody}>
-              <h2 id="trial-h">Try a class, free</h2>
-              <p className={s.trialLede}>
+              <h2 data-edit="trial.title" data-edit-max="60" id="trial-h">Try a class, free</h2>
+              <p data-edit="trial.trialLede" data-edit-max="240" data-edit-multiline className={s.trialLede}>
                 Pick a style and a day, and we will reply within a day with the
                 class that fits. Come ten minutes early; wear something you can
                 move in.
               </p>
               <form className={s.form} action="#">
                 <div className={s.field}>
-                  <label htmlFor="pp-dancer">Dancer's name</label>
+                  <label data-edit="trial.label" htmlFor="pp-dancer">Dancer's name</label>
                   <input id="pp-dancer" name="dancer" type="text" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pp-age">Age</label>
+                  <label data-edit="trial.label2" htmlFor="pp-age">Age</label>
                   <input id="pp-age" name="age" type="number" min="2" max="99" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pp-style">Style</label>
+                  <label data-edit="trial.label3" htmlFor="pp-style">Style</label>
                   <select id="pp-style" name="style" defaultValue="Ballet">
                     {STYLES.map((st) => (
                       <option key={st.id} value={st.name}>{st.name}</option>
@@ -443,7 +456,7 @@ export default function PointeAndPulsePage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pp-day">Best day</label>
+                  <label data-edit="trial.label4" htmlFor="pp-day">Best day</label>
                   <select id="pp-day" name="day" defaultValue="Saturday">
                     {DAYS.map((day) => (
                       <option key={day} value={day}>{day}</option>
@@ -451,14 +464,14 @@ export default function PointeAndPulsePage() {
                   </select>
                 </div>
                 <div className={`${s.field} ${s.wide}`}>
-                  <label htmlFor="pp-email">Email (a parent's, for under 18s)</label>
+                  <label data-edit="trial.label5" htmlFor="pp-email">Email (a parent's, for under 18s)</label>
                   <input id="pp-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" />
                 </div>
                 <div className={`${s.field} ${s.wide}`}>
-                  <label htmlFor="pp-note">Anything we should know</label>
+                  <label data-edit="trial.label6" htmlFor="pp-note">Anything we should know</label>
                   <textarea id="pp-note" name="note" rows={3} placeholder="Past classes, an injury, a shy first-timer." />
                 </div>
-                <button className={s.submit} type="submit">Book the free class</button>
+                <button data-edit="trial.submit" data-edit-max="24" className={s.submit} type="submit">Book the free class</button>
               </form>
             </div>
           </div>
@@ -468,26 +481,26 @@ export default function PointeAndPulsePage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Pointe &amp; Pulse</p>
-            <p className={s.footTag}>Dance school, 22 Alder Street. Two studios, one sprung floor each.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pointe &amp; Pulse</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Dance school, 22 Alder Street. Two studios, one sprung floor each.</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Office hours</h2>
-            <p className={s.footText}>Monday to Friday, 15:30 - 20:30</p>
-            <p className={s.footText}>Saturday, 8:30 - 12:30</p>
+            <h2 data-edit="footer.footHead" data-edit-max="60" className={s.footHead}>Office hours</h2>
+            <p data-edit="footer.footText" data-edit-max="240" data-edit-multiline className={s.footText}>Monday to Friday, 15:30 - 20:30</p>
+            <p data-edit="footer.footText2" data-edit-max="240" data-edit-multiline className={s.footText}>Saturday, 8:30 - 12:30</p>
           </div>
           <div>
-            <h2 className={s.footHead}>Contact</h2>
-            <a className={s.footLink} href="tel:+15550184412">(555) 018-4412</a>
-            <a className={s.footLink} href="mailto:hello@pointeandpulse.example">hello@pointeandpulse.example</a>
+            <h2 data-edit="footer.footHead2" data-edit-max="60" className={s.footHead}>Contact</h2>
+            <a data-edit="footer.footLink" data-edit-max="28" className={s.footLink} href="tel:+15550184412">(555) 018-4412</a>
+            <a data-edit="footer.footLink2" data-edit-max="28" className={s.footLink} href="mailto:hello@pointeandpulse.example">hello@pointeandpulse.example</a>
           </div>
         </div>
         <div className={s.footFine}>
-          <p>A fictional dance school. Classes, teachers, prices and dates are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional dance school. Classes, teachers, prices and dates are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, pictures painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, pictures painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

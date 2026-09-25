@@ -177,7 +177,20 @@ const HOURS = [
 
 export default function PolishNailBarPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fff5f5',
+        '--ink': '#2a1520',
+        '--pink': '#e0306d',
+        '--violet': '#7a5cfa',
+        '--gray': '#a38d96',
+        '--pale': '#f9e1e8',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,pink,violet,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -187,16 +200,16 @@ export default function PolishNailBarPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Polish</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Polish</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBook} href="#book">Book a chair</a>
+        <a data-edit="bar.barBook" data-edit-max="28" className={s.barBook} href="#book">Book a chair</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -207,39 +220,39 @@ export default function PolishNailBarPage() {
             foot and three bottles, each tinted a different shade. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Nail bar, 18 Carmine Street</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Nail bar, 18 Carmine Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Pick a color.
               <br />
               <em>We'll do the rest.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Thirty shades on the wall, four artists at the bar and a
               manicure that lasts. Come in with a photo or come in with
               nothing: we will find it together.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#book">Book a chair</a>
-              <a className={s.btnLine} href="#wall">See the wall</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Book a chair</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#wall">See the wall</a>
             </div>
             <dl className={s.heroFacts}>
               <div>
-                <dt>Manicure</dt>
-                <dd>from $28</dd>
+                <dt data-edit="hero.term" data-edit-max="28">Manicure</dt>
+                <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>from $28</dd>
               </div>
               <div>
-                <dt>Gel</dt>
-                <dd>from $45</dd>
+                <dt data-edit="hero.term2" data-edit-max="28">Gel</dt>
+                <dd data-edit="hero.body2" data-edit-max="200" data-edit-multiline>from $45</dd>
               </div>
               <div>
-                <dt>Walk-ins</dt>
-                <dd>until 4 pm</dd>
+                <dt data-edit="hero.term3" data-edit-max="28">Walk-ins</dt>
+                <dd data-edit="hero.body3" data-edit-max="200" data-edit-multiline>until 4 pm</dd>
               </div>
             </dl>
           </div>
           <div className={s.heroArt}>
             <div className={s.arch}>
-              <div className={s.archField} aria-hidden="true">
+              <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,0" className={s.archField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={petalcut}
                   palette={PETALS}
@@ -290,26 +303,26 @@ export default function PolishNailBarPage() {
             palette, with its name and finish under it. */}
         <section id="wall" className={s.wall} aria-labelledby="wall-h">
           <div className={s.wallHead}>
-            <p className={s.secKicker}>The color wall</p>
-            <h2 id="wall-h">Thirty shades, all in stock, all in gel and regular</h2>
-            <p className={s.secNote}>
+            <p data-edit="wall.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The color wall</p>
+            <h2 data-edit="wall.title" data-edit-max="60" id="wall-h">Thirty shades, all in stock, all in gel and regular</h2>
+            <p data-edit="wall.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Point at one, or bring a photo and we will mix it. A new six
               arrives at the start of every season.
             </p>
           </div>
           <div className={s.wallBoard}>
-            {WALL.map((f) => (
+            {WALL.map((f, i) => (
               <div key={f.name} className={s.family}>
                 <div className={s.familyHead}>
-                  <h3>{f.name}</h3>
-                  <p>{f.note}</p>
+                  <h3 data-edit={`wall.title2.${i}`} data-edit-max="40">{f.name}</h3>
+                  <p data-edit={`wall.body.${i}`} data-edit-max="240" data-edit-multiline>{f.note}</p>
                 </div>
                 <ul className={s.swatches}>
-                  {f.shades.map((sh) => (
+                  {f.shades.map((sh, i2) => (
                     <li key={sh.name} className={s.swatch} style={{ '--sw': sh.mix } as React.CSSProperties}>
                       <span className={s.chip} data-finish={sh.finish} aria-hidden="true" />
-                      <span className={s.shadeName}>{sh.name}</span>
-                      <span className={s.shadeFinish}>{sh.finish}</span>
+                      <span data-edit={`wall.shadeName.${i}.${i2}`} data-edit-max="60" className={s.shadeName}>{sh.name}</span>
+                      <span data-edit={`wall.shadeFinish.${i}.${i2}`} data-edit-max="60" className={s.shadeFinish}>{sh.finish}</span>
                     </li>
                   ))}
                 </ul>
@@ -323,9 +336,9 @@ export default function PolishNailBarPage() {
         <section id="services" className={s.services} aria-labelledby="services-h">
           <div className={s.servicesInner}>
             <div className={s.servicesHead}>
-              <p className={s.secKicker}>Services</p>
-              <h2 id="services-h">The menu, by the minute</h2>
-              <p className={s.secNote}>
+              <p data-edit="services.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Services</p>
+              <h2 data-edit="services.title" data-edit-max="60" id="services-h">The menu, by the minute</h2>
+              <p data-edit="services.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Every bar is how long you will be in the chair. Prices
                 include polish from the wall and a hand or foot massage.
               </p>
@@ -338,21 +351,21 @@ export default function PolishNailBarPage() {
               />
             </div>
             <div className={s.menu}>
-              {MENU.map((g) => (
+              {MENU.map((g, i) => (
                 <div key={g.name} className={s.group}>
-                  <h3 className={s.groupName}>{g.name}</h3>
+                  <h3 data-edit={`services.groupName.${i}`} data-edit-max="40" className={s.groupName}>{g.name}</h3>
                   <ul className={s.rows}>
-                    {g.services.map((sv) => (
+                    {g.services.map((sv, i2) => (
                       <li key={sv.name} className={s.row}>
                         <div className={s.rowText}>
-                          <h4 className={s.rowName}>{sv.name}</h4>
-                          <p className={s.rowNote}>{sv.note}</p>
+                          <h4 data-edit={`services.rowName.${i}.${i2}`} data-edit-max="36" className={s.rowName}>{sv.name}</h4>
+                          <p data-edit={`services.rowNote.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.rowNote}>{sv.note}</p>
                         </div>
                         <span className={s.rowBar} aria-hidden="true">
                           <span className={s.rowFill} style={{ width: `${(sv.minutes / 90) * 100}%` }} />
                         </span>
                         <span className={s.rowTime}>{`${sv.minutes} min`}</span>
-                        <span className={s.rowPrice}>{sv.price}</span>
+                        <span data-edit={`services.rowPrice.${i}.${i2}`} data-edit-max="60" className={s.rowPrice}>{sv.price}</span>
                       </li>
                     ))}
                   </ul>
@@ -364,7 +377,7 @@ export default function PolishNailBarPage() {
 
         {/* ------------------------------------------------------------ BAND */}
         <div className={s.band} aria-hidden="true">
-          <div className={s.bandField}>
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,4" className={s.bandField}>
             <TabbiedPattern
               pattern={polkadot}
               palette={DOTS}
@@ -379,24 +392,24 @@ export default function PolishNailBarPage() {
         {/* --------------------------------------------------------- ARTISTS */}
         <section id="artists" className={s.artists} aria-labelledby="artists-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>The artists</p>
-            <h2 id="artists-h">Four at the bar, each with a favorite shade</h2>
+            <p data-edit="artists.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The artists</p>
+            <h2 data-edit="artists.title" data-edit-max="60" id="artists-h">Four at the bar, each with a favorite shade</h2>
           </div>
           <ul className={s.artistList}>
-            {ARTISTS.map((a) => (
+            {ARTISTS.map((a, i) => (
               <li key={a.name} className={s.artist} style={{ '--sw': a.mix } as React.CSSProperties}>
                 <span className={s.artistChip} aria-hidden="true" />
-                <h3 className={s.artistName}>{a.name}</h3>
-                <p className={s.artistRole}>{a.role}</p>
-                <p className={s.artistNote}>{a.note}</p>
+                <h3 data-edit={`artists.artistName.${i}`} data-edit-max="40" className={s.artistName}>{a.name}</h3>
+                <p data-edit={`artists.artistRole.${i}`} data-edit-max="240" data-edit-multiline className={s.artistRole}>{a.role}</p>
+                <p data-edit={`artists.artistNote.${i}`} data-edit-max="240" data-edit-multiline className={s.artistNote}>{a.note}</p>
                 <dl className={s.artistFacts}>
                   <div>
-                    <dt>In</dt>
-                    <dd>{a.days}</dd>
+                    <dt data-edit={`artists.term.${i}`} data-edit-max="28">In</dt>
+                    <dd data-edit={`artists.body.${i}`} data-edit-max="200" data-edit-multiline>{a.days}</dd>
                   </div>
                   <div>
-                    <dt>Wears</dt>
-                    <dd>{a.shade}</dd>
+                    <dt data-edit={`artists.term2.${i}`} data-edit-max="28">Wears</dt>
+                    <dd data-edit={`artists.body2.${i}`} data-edit-max="200" data-edit-multiline>{a.shade}</dd>
                   </div>
                 </dl>
               </li>
@@ -408,24 +421,24 @@ export default function PolishNailBarPage() {
         <section id="book" className={s.book} aria-labelledby="book-h">
           <div className={s.bookInner}>
             <div className={s.bookText}>
-              <p className={s.secKicker}>Book</p>
-              <h2 id="book-h">Save a chair</h2>
-              <p className={s.secNote}>
+              <p data-edit="book.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Book</p>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Save a chair</h2>
+              <p data-edit="book.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 We confirm by text within the hour, and remind you the day
                 before.
               </p>
               <dl className={s.policies}>
-                {POLICIES.map(([title, body]) => (
+                {POLICIES.map(([title, body], i) => (
                   <div key={title}>
-                    <dt>{title}</dt>
-                    <dd>{body}</dd>
+                    <dt data-edit={`book.term.${i}`} data-edit-max="28">{title}</dt>
+                    <dd data-edit={`book.body.${i}`} data-edit-max="200" data-edit-multiline>{body}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="pl-service">Service</label>
+                <label data-edit="book.label" htmlFor="pl-service">Service</label>
                 <select id="pl-service" name="service" defaultValue="Gel manicure">
                   {MENU.map((g) => (
                     <optgroup key={g.name} label={g.name}>
@@ -437,7 +450,7 @@ export default function PolishNailBarPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="pl-artist">Artist</label>
+                <label data-edit="book.label2" htmlFor="pl-artist">Artist</label>
                 <select id="pl-artist" name="artist" defaultValue="Anyone">
                   <option value="Anyone">Whoever is free first</option>
                   {ARTISTS.map((a) => (
@@ -446,11 +459,11 @@ export default function PolishNailBarPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="pl-date">Day</label>
+                <label data-edit="book.label3" htmlFor="pl-date">Day</label>
                 <input id="pl-date" name="date" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="pl-time">Time</label>
+                <label data-edit="book.label4" htmlFor="pl-time">Time</label>
                 <select id="pl-time" name="time" defaultValue="Afternoon">
                   <option value="Morning">Morning</option>
                   <option value="Afternoon">Afternoon</option>
@@ -458,14 +471,14 @@ export default function PolishNailBarPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="pl-name">Name</label>
+                <label data-edit="book.label5" htmlFor="pl-name">Name</label>
                 <input id="pl-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="pl-phone">Mobile</label>
+                <label data-edit="book.label6" htmlFor="pl-phone">Mobile</label>
                 <input id="pl-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
-              <button className={s.formBtn} type="submit">Request the chair</button>
+              <button data-edit="book.formBtn" data-edit-max="24" className={s.formBtn} type="submit">Request the chair</button>
             </form>
             <div className={s.bookArt} aria-hidden="true">
               <Artwork
@@ -482,45 +495,45 @@ export default function PolishNailBarPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitCol}>
-            <p className={s.secKicker}>Visit</p>
-            <h2 id="visit-h">18 Carmine Street</h2>
-            <p className={s.visitNote}>Between the florist and the bakery, two doors up from the Carmine Street stop.</p>
+            <p data-edit="visit.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Visit</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">18 Carmine Street</h2>
+            <p data-edit="visit.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>Between the florist and the bakery, two doors up from the Carmine Street stop.</p>
             <dl className={s.hoursList}>
-              {HOURS.map(([day, time]) => (
+              {HOURS.map(([day, time], i) => (
                 <div key={day}>
-                  <dt>{day}</dt>
-                  <dd>{time}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{day}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                 </div>
               ))}
             </dl>
           </div>
           <div className={s.visitCol}>
-            <h3 className={s.visitHead}>Clean, every time</h3>
+            <h3 data-edit="visit.visitHead" data-edit-max="40" className={s.visitHead}>Clean, every time</h3>
             <ul className={s.cleanList}>
-              <li>Metal tools are sterilized in an autoclave between every client.</li>
-              <li>Files and buffers are single use; you can take yours home.</li>
-              <li>Each pedicure bowl gets a fresh liner and no jets to hide in.</li>
-              <li>Ventilated tables pull the fumes down and away from you.</li>
+              <li data-edit="visit.item" data-edit-max="80">Metal tools are sterilized in an autoclave between every client.</li>
+              <li data-edit="visit.item2" data-edit-max="80">Files and buffers are single use; you can take yours home.</li>
+              <li data-edit="visit.item3" data-edit-max="80">Each pedicure bowl gets a fresh liner and no jets to hide in.</li>
+              <li data-edit="visit.item4" data-edit-max="80">Ventilated tables pull the fumes down and away from you.</li>
             </ul>
           </div>
           <div className={s.visitCol}>
-            <h3 className={s.visitHead}>Get in touch</h3>
+            <h3 data-edit="visit.visitHead2" data-edit-max="40" className={s.visitHead}>Get in touch</h3>
             <dl className={s.contact}>
               <div>
-                <dt>Call or text</dt>
+                <dt data-edit="visit.term2" data-edit-max="28">Call or text</dt>
                 <dd>
-                  <a href="tel:+15550167720">(555) 016-7720</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550167720">(555) 016-7720</a>
                 </dd>
               </div>
               <div>
-                <dt>Email</dt>
+                <dt data-edit="visit.term3" data-edit-max="28">Email</dt>
                 <dd>
-                  <a href="mailto:hello@polishnailbar.example">hello@polishnailbar.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@polishnailbar.example">hello@polishnailbar.example</a>
                 </dd>
               </div>
               <div>
-                <dt>Gift cards</dt>
-                <dd>Any amount, at the desk or by email</dd>
+                <dt data-edit="visit.term4" data-edit-max="28">Gift cards</dt>
+                <dd data-edit="visit.body2" data-edit-max="200" data-edit-multiline>Any amount, at the desk or by email</dd>
               </div>
             </dl>
           </div>
@@ -529,15 +542,15 @@ export default function PolishNailBarPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footMark}>Polish</p>
-          <p className={s.footTag}>Nail bar, 18 Carmine Street. Pick a color.</p>
+          <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Polish</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Nail bar, 18 Carmine Street. Pick a color.</p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional nail salon. Shades, prices, people and the address are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional nail salon. Shades, prices, people and the address are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, pictures painted in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, pictures painted in the page's own colors.</span>
           </p>
         </div>
       </footer>

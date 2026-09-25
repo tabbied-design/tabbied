@@ -23,6 +23,9 @@ import {
   turbulentsunburst, scatteredgems, recession, loophole, isometricweave,
   baste, gyre, lunette, bokeh, ringfield, ogee, sheared, terrain,
   sparkle, garret,
+  reedpen, isocube, circuit, lobe, lagoon, curl, frond, ziggy,
+  switchback, pebble, lantern, cendal, northstar, gravure, petalcut,
+  dogtooth, sunray, hurdle,
 } from 'tabbied/patterns';
 import type { PatternDefinition } from 'tabbied';
 
@@ -219,4 +222,32 @@ export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'old-town-walks', name: 'Old Town Walks', topic: 'City walking tours', patternSlug: 'garret', pattern: garret, paletteName: 'Old town', palette: ['#F3EDE2', '#232126', '#C4563A', '#3B6E8F', '#8F877D', '#E5DACA', '#E0B04F'], seed: 'art-43' },
   { slug: 'terrace-hill-winery', name: 'Terrace Hill', topic: 'Vineyard and winery', patternSlug: 'teardropleaves', pattern: teardropleaves, paletteName: 'Vineyard rows', palette: ['#F4EFE4', '#241A1F', '#7A2E44', '#6A7F3E', '#B99A5B', '#E3D8C4', '#9A8F84'], seed: 'art-44' },
   { slug: 'pinewood-rv', name: 'Pinewood RV Park', topic: 'Campground and RV park', patternSlug: 'stitch', pattern: stitch, paletteName: 'Pine evening', palette: ['#EEF0EA', '#17201A', '#3F6B4B', '#D9853B', '#8A938B', '#D7DED4'], seed: 'art-45' },
+
+  // Twenty-five more on the same Artwork, the last four with a full-bleed
+  // background.
+  { slug: 'cleaver-and-co', name: 'Cleaver & Co.', topic: 'Butcher shop', patternSlug: 'reedpen', pattern: reedpen, paletteName: 'Butcher paper', palette: ['#F4EEE4', '#1C1714', '#A8322D', '#8C8378', '#E3D8C8'], seed: 'art-46' },
+  { slug: 'hive-and-honey', name: 'Hive & Honey', topic: 'Honey farm and shop', patternSlug: 'isocube', pattern: isocube, paletteName: 'Comb gold', palette: ['#FBF5E6', '#2A2012', '#E0A21B', '#6E7F3A', '#9C9076', '#F1E4C2'], seed: 'art-47' },
+  { slug: 'live-wire-electric', name: 'Live Wire Electric', topic: 'Electrician', patternSlug: 'circuit', pattern: circuit, paletteName: 'Hi-vis', palette: ['#F2F2EE', '#111418', '#FFC21A', '#2F5BEA', '#83868C', '#DCDDD8'], seed: 'art-48' },
+  { slug: 'meeple-and-mug', name: 'Meeple & Mug', topic: 'Board game cafe', patternSlug: 'damier', pattern: damier, paletteName: 'Game night', palette: ['#F6F0E6', '#1F1B2E', '#E4572E', '#2A9D8F', '#8D8697', '#E8DFD0'], seed: 'art-49' },
+  { slug: 'pressed-juice', name: 'Pressed', topic: 'Juice bar', patternSlug: 'lobe', pattern: lobe, paletteName: 'Citrus press', palette: ['#FFF8EC', '#1E2A1C', '#FF8A1F', '#7CB518', '#E63946', '#A09A8A', '#FCE9CF'], seed: 'art-50' },
+  { slug: 'little-fins-swim', name: 'Little Fins', topic: 'Swim school for kids', patternSlug: 'lagoon', pattern: lagoon, paletteName: 'Pool deck', palette: ['#F2FAFC', '#0E2A3B', '#00A6D6', '#FF7B54', '#FFD23F', '#8FA3AD'], seed: 'art-51' },
+  { slug: 'hachi-ramen', name: 'Hachi Ramen', topic: 'Ramen shop', patternSlug: 'curl', pattern: curl, paletteName: 'Broth and chili', palette: ['#F5EFE4', '#161311', '#C8102E', '#D9A441', '#8A8176', '#E6DCCB'], seed: 'art-52' },
+  { slug: 'clear-view-optical', name: 'Clear View Optical', topic: 'Optician and eyewear', patternSlug: 'recession', pattern: recession, paletteName: 'Lens blue', palette: ['#F7F8FA', '#121821', '#2D5BFF', '#F2A541', '#8B93A1', '#E3E7EE'], seed: 'art-53' },
+  { slug: 'parkside-family-medicine', name: 'Parkside Family Medicine', topic: 'Family doctor\'s practice', patternSlug: 'frond', pattern: frond, paletteName: 'Clinic sage', palette: ['#F5F8F6', '#15241E', '#2E7D6B', '#E86F4E', '#8C9A94', '#DDE8E3'], seed: 'art-54' },
+  { slug: 'double-stack-burgers', name: 'Double Stack', topic: 'Burger joint', patternSlug: 'ziggy', pattern: ziggy, paletteName: 'Diner', palette: ['#FFF6E9', '#231815', '#E03A1E', '#F7B32B', '#2B6CB0', '#A59483'], seed: 'art-55' },
+  { slug: 'green-light-driving', name: 'Green Light', topic: 'Driving school', patternSlug: 'switchback', pattern: switchback, paletteName: 'Signal', palette: ['#F3F5F2', '#141A16', '#1F9D55', '#F6C026', '#E5483A', '#858D87'], seed: 'art-56' },
+  { slug: 'crux-climbing', name: 'Crux', topic: 'Climbing gym', patternSlug: 'pebble', pattern: pebble, paletteName: 'Chalk and holds', palette: ['#EDEBE7', '#16161A', '#FF5A36', '#3A7BD5', '#8A8A8F', '#D8D5CF'], seed: 'art-57' },
+  { slug: 'the-rialto-cinema', name: 'The Rialto', topic: 'Independent cinema', patternSlug: 'lantern', pattern: lantern, paletteName: 'Velvet', palette: ['#120E10', '#F2E8DA', '#C9302C', '#D4A64A', '#756B6E', '#1F191C'], seed: 'art-58' },
+  { slug: 'pointe-and-pulse', name: 'Pointe & Pulse', topic: 'Dance school', patternSlug: 'cendal', pattern: cendal, paletteName: 'Rehearsal rose', palette: ['#F7F1EE', '#1E1A22', '#D6456B', '#6B5BD1', '#978E97', '#EDE3E6'], seed: 'art-59' },
+  { slug: 'the-gimlet', name: 'The Gimlet', topic: 'Cocktail bar', patternSlug: 'northstar', pattern: northstar, paletteName: 'Lime and brass', palette: ['#0F1A16', '#EDE8DC', '#A7C957', '#C9A35B', '#6E7A73', '#18261F'], seed: 'art-60' },
+  { slug: 'cacao-and-co', name: 'Cacao & Co.', topic: 'Chocolate shop', patternSlug: 'gravure', pattern: gravure, paletteName: 'Cocoa', palette: ['#F6EFE8', '#2A1A14', '#8A3B24', '#D19A5A', '#968A82', '#EBDDD2'], seed: 'art-61' },
+  { slug: 'veil-and-vow', name: 'Veil & Vow', topic: 'Bridal boutique', patternSlug: 'petalcut', pattern: petalcut, paletteName: 'Ivory lace', palette: ['#FBF8F4', '#26201F', '#B08A6E', '#C9A7B8', '#9D9491', '#EFE8E1'], seed: 'art-62' },
+  { slug: 'polish-nail-bar', name: 'Polish', topic: 'Nail salon', patternSlug: 'petalcut', pattern: petalcut, paletteName: 'Lacquer', palette: ['#FFF5F5', '#2A1520', '#E0306D', '#7A5CFA', '#A38D96', '#F9E1E8'], seed: 'art-63' },
+  { slug: 'brim-hat-shop', name: 'Brim', topic: 'Hat shop', patternSlug: 'dogtooth', pattern: dogtooth, paletteName: 'Felt', palette: ['#F2EEE7', '#1D1B1A', '#7C5A3A', '#3D6B7D', '#928B82', '#E2DBD0'], seed: 'art-64' },
+  { slug: 'satchel-and-strap', name: 'Satchel & Strap', topic: 'Leather goods maker', patternSlug: 'plait', pattern: plait, paletteName: 'Saddle', palette: ['#F4EEE6', '#1E1612', '#A0522D', '#4A5D3F', '#8F857B', '#E6DACB'], seed: 'art-65' },
+  { slug: 'tin-roof-guitars', name: 'Tin Roof Guitars', topic: 'Guitar shop', patternSlug: 'sunray', pattern: sunray, paletteName: 'Sunburst', palette: ['#F3EFE8', '#16120F', '#D2691E', '#2E5E4E', '#F2B84B', '#8E867D'], seed: 'art-66' },
+  { slug: 'crabapple-orchard', name: 'Crabapple Orchard', topic: 'Pick-your-own orchard', patternSlug: 'frond', pattern: frond, paletteName: 'Orchard', palette: ['#F5F1E6', '#1F2419', '#C0392B', '#5B8C3A', '#E3B23C', '#9A9483', '#E6E0CF'], seed: 'art-67' },
+  { slug: 'coral-cove-beach-club', name: 'Coral Cove', topic: 'Beach club', patternSlug: 'lagoon', pattern: lagoon, paletteName: 'Coral and lagoon', palette: ['#FFF4EA', '#16323D', '#FF6F59', '#20A4B8', '#F7C873', '#8FA1A6', '#F8E1D1'], seed: 'art-68' },
+  { slug: 'harbor-light-tours', name: 'Harbor Light Tours', topic: 'Boat tours', patternSlug: 'sail', pattern: sail, paletteName: 'Harbor fog', palette: ['#E9EEF1', '#14222D', '#D8503C', '#3B6A87', '#8997A1', '#D3DDE3'], seed: 'art-69' },
+  { slug: 'heron-point-golf', name: 'Heron Point', topic: 'Golf club', patternSlug: 'hurdle', pattern: hurdle, paletteName: 'Fairway', palette: ['#EFF2EA', '#172117', '#2F6B3A', '#C8A45A', '#8B9488', '#DCE3D5'], seed: 'art-70' },
 ];
