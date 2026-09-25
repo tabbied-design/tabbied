@@ -618,6 +618,8 @@
   background: var(--cream);
   color: var(--cocoa);
   min-width: 0;
+  height: 2.9rem;
+  box-sizing: border-box;
 }
 
 .submit {

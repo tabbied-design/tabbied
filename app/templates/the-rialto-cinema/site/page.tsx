@@ -263,7 +263,6 @@ export default function TheRialtoCinemaPage() {
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
-          <span className={s.beam} aria-hidden="true" />
           <div className={s.heroInner}>
             <div className={s.heroText}>
               <p className={s.kicker}>Two screens on Palace Row, since 1931</p>
@@ -276,17 +275,20 @@ export default function TheRialtoCinemaPage() {
                 Tickets from $12, and the popcorn is popped in real butter.
               </p>
               <div className={s.actions}>
-                <a className={s.btn} href="#programme">This week&apos;s films</a>
+                <a className={s.btn} href="#programme">This week's films</a>
                 <a className={s.btnLine} href="#membership">Become a member</a>
               </div>
             </div>
             <div className={s.heroArt}>
-              <Artwork
-                slug="the-rialto-cinema-projector"
-                alt="A vintage film projector with two reels"
-                inks={['var(--velvet)', 'var(--gold)']}
-                className={s.projector}
-              />
+              <div className={s.projWrap}>
+                <span className={s.beam} aria-hidden="true" />
+                <Artwork
+                  slug="the-rialto-cinema-projector"
+                  alt="A vintage film projector with two reels"
+                  inks={['var(--velvet)', 'var(--gold)']}
+                  className={s.projector}
+                />
+              </div>
               <p className={s.nowShowing}>
                 <span>Tonight on 35mm</span>
                 <strong>The Long Harbor, 7:00</strong>
@@ -382,7 +384,10 @@ export default function TheRialtoCinemaPage() {
                   <div className={s.screenHead}>
                     <h3>{sc.name}</h3>
                     <span className={s.screenNick}>{sc.nick}</span>
-                    <strong className={s.screenSeats}>{sc.seats}</strong>
+                    <p className={s.screenSeats}>
+                      <strong>{sc.seats}</strong>
+                      <span>seats</span>
+                    </p>
                   </div>
                   <p className={s.screenBody}>{sc.body}</p>
                   <ul className={s.screenFacts}>
@@ -421,7 +426,7 @@ export default function TheRialtoCinemaPage() {
                     <li key={p}>{p}</li>
                   ))}
                 </ul>
-                <a className={s.tierBtn} href="#hire">{`Join as a ${t.name}`}</a>
+                <a className={s.tierBtn} href="mailto:members@rialto.example">{`Join as a ${t.name}`}</a>
               </li>
             ))}
           </ul>

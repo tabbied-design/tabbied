@@ -1,0 +1,905 @@
+/* ==========================================================================
+   TIN ROOF GUITARS - a guitar shop
+   The wall is the page. Under a corrugated eave of pattern ribs, a green
+   slatwall in three bays (acoustic, electric, ukulele), each guitar on its
+   hook as a silhouette cut out of a Tabbied pattern with the photograph's
+   own shading laid back over it, and a paper price tag hanging under it.
+   Then a bench ticket of repairs, lessons on a gold ground, trade-ins and
+   the shop. Big Shoulders for signs, Work Sans for reading.
+   ========================================================================== */
+
+.page {
+  --paper: #f3efe8;
+  --ink: #16120f;
+  --burst: #d2691e;
+  --green: #2e5e4e;
+  --gold: #f2b84b;
+  --gray: #8e867d;
+  --muted: color-mix(in srgb, var(--ink) 72%, transparent);
+  --line: color-mix(in srgb, var(--ink) 16%, transparent);
+  --gut: clamp(1rem, 4vw, 4rem);
+  --max: 82rem;
+  --air: clamp(4rem, 8vw, 7rem);
+  --sign: 'Big Shoulders Display', Impact, 'Arial Narrow', sans-serif;
+  --text: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--text);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--burst);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-family: var(--sign);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem var(--gut);
+  border-bottom: 3px solid var(--ink);
+}
+
+.mark {
+  font-family: var(--sign);
+  font-size: 1.75rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2.2vw, 2.2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-family: var(--sign);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--burst);
+}
+
+.barCall {
+  flex: none;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--paper);
+  background: var(--ink);
+  transition: background-color 160ms ease;
+}
+
+.barCall:hover {
+  background: var(--burst);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 3.5vw, 3rem) var(--gut) clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.kicker,
+.secKicker {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--burst);
+}
+
+.heroTitle {
+  margin-top: 0.9rem;
+  font-size: clamp(2.8rem, 5.2vw, 4.9rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.005em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--burst);
+}
+
+.heroLede {
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.heroFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.75rem;
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--ink);
+}
+
+.heroFacts dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  font-family: var(--sign);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------------- wall
+   The eave: pattern ribs on ink. The wall: green, ruled into slats. */
+
+.roof {
+  position: relative;
+  height: 3.5rem;
+  background: var(--ink);
+}
+
+.roofField {
+  position: absolute;
+  inset: 0;
+}
+
+.slats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.5rem 0;
+  padding: 2.25rem var(--gut) 1.5rem;
+  background-color: var(--green);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3.4rem,
+    color-mix(in srgb, var(--ink) 28%, transparent) 3.4rem 3.55rem
+  );
+}
+
+.bay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 clamp(0.75rem, 1.5vw, 1.5rem);
+}
+
+.bay + .bay {
+  border-left: 2px solid color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.baySign {
+  margin-bottom: 1.4rem;
+  padding: 0.3rem 0.9rem 0.25rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+  background: var(--gold);
+  transform: rotate(-1.5deg);
+}
+
+.hooks {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hang {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 7.75rem;
+}
+
+.hook {
+  width: 2rem;
+  height: 0.45rem;
+  margin-bottom: 0.15rem;
+  background: var(--gray);
+  border-radius: 999px;
+  box-shadow: 0 2px 0 rgb(0 0 0 / 0.3);
+}
+
+.acoustic {
+  width: 7.2rem;
+}
+
+.electric {
+  width: 6.4rem;
+}
+
+.ukulele {
+  width: 4.6rem;
+}
+
+.acoustic,
+.electric,
+.ukulele {
+  filter: drop-shadow(6px 10px 8px rgb(0 0 0 / 0.35));
+}
+
+/* A paper tag on a string, tilted a little either way. */
+.tag {
+  position: relative;
+  width: 100%;
+  margin-top: 1.4rem;
+  padding: 0.75rem 0.75rem 0.7rem;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 8px 14px -8px rgb(0 0 0 / 0.5);
+  transform: rotate(-1.2deg);
+}
+
+.hang:nth-child(even) .tag {
+  transform: rotate(1.4deg);
+}
+
+.tag::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0.45rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: -0.25rem;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.tag::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 0.7rem);
+  width: 1px;
+  height: 1.6rem;
+  background: var(--paper);
+}
+
+.tagName {
+  margin-top: 0.7rem;
+  font-size: 1.05rem;
+  line-height: 1.05;
+}
+
+.tagSpec {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.tagYear {
+  margin-top: 0.2rem;
+  font-size: 0.76rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.tagPrice {
+  margin-top: 0.4rem;
+  font-family: var(--sign);
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--burst);
+}
+
+.wallNote {
+  padding: 0 var(--gut) 2.5rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: var(--paper);
+  background: var(--green);
+}
+
+/* ----------------------------------------------------------------- repairs */
+
+.repairs {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  gap: 0.8rem;
+  max-width: 46rem;
+  margin-bottom: 2.5rem;
+}
+
+.secHead h2,
+.lessonsText h2,
+.tradeText h2,
+.visitInner h2 {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 0.92;
+}
+
+.secNote {
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.ticket {
+  border: 3px solid var(--ink);
+}
+
+.ticketHead,
+.job {
+  display: grid;
+  grid-template-columns: minmax(10rem, 14rem) 1fr 9rem 8rem;
+  gap: 1.5rem;
+  align-items: baseline;
+  padding: 0.95rem 1.4rem;
+}
+
+.ticketHead {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.ticketHead span:last-child,
+.jobPrice {
+  text-align: right;
+}
+
+.job + .job {
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+}
+
+.jobName {
+  font-size: 1.35rem;
+  line-height: 1.05;
+}
+
+.jobWhat {
+  color: var(--muted);
+}
+
+.jobTime {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.jobPrice {
+  font-family: var(--sign);
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: var(--burst);
+}
+
+/* ----------------------------------------------------------------- lessons */
+
+.lessons {
+  background: var(--gold);
+}
+
+.lessonsInner {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.lessons .secKicker {
+  color: var(--ink);
+}
+
+.lessonsText .secNote {
+  margin-top: 1rem;
+  color: var(--ink);
+}
+
+.lessonsText h2 {
+  margin-top: 0.8rem;
+}
+
+.lessonPrices {
+  display: grid;
+  margin-top: 2rem;
+  border-top: 3px solid var(--ink);
+}
+
+.lessonPrices div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+}
+
+.lessonPrices dt {
+  font-weight: 600;
+}
+
+.lessonPrices dd {
+  font-family: var(--sign);
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.teachers {
+  display: grid;
+  gap: 1rem;
+}
+
+.teacher {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.2rem 1.5rem;
+  align-items: baseline;
+  padding: 1.25rem 1.5rem;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.teacherName {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.teacherPlays {
+  grid-column: 1 / -1;
+  color: var(--muted);
+}
+
+.teacherDays {
+  grid-row: 1;
+  grid-column: 2;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--burst);
+}
+
+/* ------------------------------------------------------------------- trade */
+
+.trade {
+  overflow: hidden;
+}
+
+.tradeInner {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.7fr) 1.6fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.tradeArt {
+  display: grid;
+  place-items: center;
+}
+
+.tradeGuitar {
+  width: clamp(8rem, 12.5vw, 11rem);
+  transform: rotate(-9deg);
+  filter: drop-shadow(10px 16px 12px rgb(0 0 0 / 0.3));
+}
+
+.tradeText h2 {
+  margin-top: 0.8rem;
+}
+
+.tradeSteps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.tradeSteps li {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--sign);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--paper);
+  background: var(--burst);
+  border-radius: 50%;
+}
+
+.tradeSteps h3 {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.tradeSteps p {
+  margin-top: 0.3rem;
+  color: var(--muted);
+}
+
+.tradeRate {
+  margin-top: 2rem;
+  padding: 0.9rem 1.1rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--gold) 45%, var(--paper));
+  border-left: 5px solid var(--burst);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1.2fr auto;
+  gap: 1rem;
+  align-items: end;
+  margin-top: 2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+}
+
+.formBtn {
+  padding: 0.8rem 1.4rem;
+  font-family: var(--sign);
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.formBtn:hover {
+  background: var(--burst);
+  border-color: var(--burst);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  background: var(--green);
+  color: var(--paper);
+}
+
+.visitInner {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.visit .secKicker {
+  color: var(--gold);
+}
+
+.visitInner h2 {
+  margin-top: 0.8rem;
+}
+
+.visit .secNote {
+  margin-top: 1rem;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.hoursList,
+.contact {
+  display: grid;
+  align-content: start;
+  gap: 0.2rem;
+  border-top: 3px solid var(--paper);
+}
+
+.hoursList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
+}
+
+.hoursList dt {
+  font-weight: 600;
+}
+
+.hoursList dd {
+  text-align: right;
+}
+
+.contact div {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
+}
+
+.contact dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.contact dd {
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: clamp(3rem, 6vw, 4rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.footInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.footMark {
+  font-family: var(--sign);
+  font-size: clamp(2.6rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.footTag {
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 2rem;
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--paper) 68%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .lessonsInner,
+  .visitInner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .visitInner > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .barCall {
+    margin-left: auto;
+  }
+
+  .hero,
+  .lessonsInner,
+  .tradeInner {
+    grid-template-columns: 1fr;
+  }
+
+  .ticketHead {
+    display: none;
+  }
+
+  .job {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'name price'
+      'what what'
+      'time time';
+    gap: 0.3rem 1rem;
+  }
+
+  .jobName {
+    grid-area: name;
+  }
+
+  .jobPrice {
+    grid-area: price;
+  }
+
+  .jobWhat {
+    grid-area: what;
+  }
+
+  .jobTime {
+    grid-area: time;
+  }
+
+  .tradeArt {
+    order: 2;
+  }
+
+  .tradeGuitar {
+    width: 8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .siteMenu {
+    margin-left: auto;
+  }
+
+  .mark {
+    font-size: 1.5rem;
+  }
+
+  .bay {
+    width: 100%;
+    padding: 0;
+  }
+
+  .bay + .bay {
+    padding-top: 2.5rem;
+    border-left: 0;
+    border-top: 2px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  }
+
+  .hooks {
+    flex-wrap: wrap;
+    gap: 2rem 1rem;
+  }
+
+  .hang {
+    width: calc(50% - 0.5rem);
+  }
+
+  .tradeSteps,
+  .visitInner,
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher {
+    grid-template-columns: 1fr;
+  }
+
+  .teacherDays {
+    grid-row: auto;
+    grid-column: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCall,
+  .formBtn {
+    transition: none;
+  }
+}

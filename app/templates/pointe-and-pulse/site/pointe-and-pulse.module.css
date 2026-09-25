@@ -1,0 +1,953 @@
+/* ==========================================================================
+   POINTE & PULSE - dance school
+   Rehearsal rose: a pink-white paper, a plum ink, rose and violet for the
+   two halves of the name, and a blush tint. A classical serif for names
+   and a clean sans for the timetable. The hero pairs the two dancers in
+   duotone, ballet in a rose arch and hip hop in a violet block; the page
+   itself is the week's timetable, days across and times down, every
+   class colored by its style.
+   ========================================================================== */
+
+.page {
+  --paper: #f7f1ee;
+  --ink: #1e1a22;
+  --rose: #d6456b;
+  --violet: #6b5bd1;
+  --gray: #978e97;
+  --blush: #ede3e6;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --max: 80rem;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+  --serif: 'Prata', 'Didot', Georgia, serif;
+  --sans: 'Be Vietnam Pro', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.03rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* Style colors, read by the legend, the timetable, the style cards and
+   the teachers alike. */
+.page [data-style='ballet'] {
+  --c: var(--rose);
+  --on: var(--paper);
+}
+
+.page [data-style='jazz'] {
+  --c: var(--violet);
+  --on: var(--paper);
+}
+
+.page [data-style='hiphop'] {
+  --c: var(--ink);
+  --on: var(--paper);
+}
+
+.page [data-style='contemporary'] {
+  --c: var(--gray);
+  --on: var(--ink);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.1rem var(--gut);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.brandA {
+  color: var(--rose);
+}
+
+.brandAmp {
+  font-size: 0.8em;
+  color: var(--gray);
+}
+
+.brandB {
+  color: var(--violet);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.25rem 0;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--rose);
+}
+
+.nav a:last-child {
+  padding: 0.45rem 1rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+}
+
+.nav a:last-child:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: 88rem;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 2rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr) minmax(0, 0.95fr);
+  grid-template-areas: 'ballet text pulse';
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: end;
+}
+
+.panelBallet,
+.panelPulse {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(30rem, 44vw, 40rem);
+}
+
+.panelBallet {
+  grid-area: ballet;
+  background: var(--rose);
+  border-radius: 999px 999px 0 0;
+}
+
+.panelPulse {
+  grid-area: pulse;
+  background: var(--violet);
+  border-radius: 1.4rem 1.4rem 0 0;
+}
+
+.panelField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.ballet {
+  position: absolute;
+  left: -4%;
+  bottom: 2%;
+  width: 108%;
+}
+
+.hiphop {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 84%;
+  transform: translateX(-50%);
+}
+
+.heroText {
+  grid-area: text;
+  align-self: center;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.heroTitle {
+  margin-top: 1.1rem;
+  font-size: clamp(2.5rem, 4.3vw, 4.3rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--rose);
+}
+
+.heroLede {
+  margin: 1.3rem auto 0;
+  max-width: 26rem;
+  font-size: 1.08rem;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.7rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.75rem 1.3rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.btn {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.term {
+  margin-top: 1.4rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* --------------------------------------------------------------- timetable */
+
+.timetable {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  padding-bottom: 1.3rem;
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.secHead h2 {
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+}
+
+.secNote {
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.legend {
+  list-style: none;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  font-weight: 500;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendChip {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 0.35rem;
+  background: var(--c);
+}
+
+.tableWrap {
+  margin-top: 1.2rem;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 6px;
+  margin: 0 -6px;
+}
+
+.table thead th {
+  padding: 0.3rem 0.5rem 0.6rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 400;
+  text-align: left;
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.table thead th.corner {
+  width: 4.2rem;
+  border-bottom: 0;
+}
+
+.table tbody th {
+  padding: 0.55rem 0.5rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: right;
+  vertical-align: top;
+  font-variant-numeric: tabular-nums;
+}
+
+.table td {
+  padding: 0;
+  vertical-align: top;
+  height: 5.6rem;
+  background: color-mix(in srgb, var(--blush) 60%, var(--paper));
+  border-radius: 0.6rem;
+}
+
+.afterSchool th,
+.afterSchool td {
+  box-shadow: 0 -3px 0 var(--paper), 0 -6px 0 var(--ink);
+}
+
+.afterSchool th {
+  box-shadow: none;
+}
+
+.cls {
+  display: grid;
+  align-content: start;
+  gap: 0.1rem;
+  min-height: 5.6rem;
+  height: 100%;
+  padding: 0.6rem 0.7rem;
+  border-radius: 0.6rem;
+  background: var(--c);
+  color: var(--on);
+}
+
+.clsName {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.clsAges {
+  font-size: 0.82rem;
+}
+
+.clsLen {
+  font-size: 0.78rem;
+  opacity: 0.85;
+}
+
+.swipe {
+  display: none;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.styles {
+  list-style: none;
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.style {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+  border-top: 6px solid var(--c);
+}
+
+.style h3 {
+  font-size: 1.6rem;
+}
+
+.style > p:not(.wear) {
+  margin-top: 0.6rem;
+  flex: 1;
+  font-size: 0.97rem;
+}
+
+.wear {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 1rem;
+  padding-top: 0.7rem;
+  font-size: 0.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.wearLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+/* ---------------------------------------------------------------- teachers */
+
+.teachers {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) var(--air);
+}
+
+.teacherGrid {
+  list-style: none;
+  margin: 2.4rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.teacher {
+  padding: 1.6rem 1.4rem;
+  background: var(--blush);
+  border-radius: 1.2rem 1.2rem 1.2rem 0;
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 4.2rem;
+  height: 4.2rem;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  background: var(--c);
+  color: var(--on);
+}
+
+.teacher h3 {
+  margin-top: 1.1rem;
+  font-size: 1.45rem;
+}
+
+.teacherRole {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.teacherBio {
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+}
+
+/* ----------------------------------------------------------------- recital */
+
+.recital {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--air) var(--gut);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.recitalField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.recitalInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.recitalArt {
+  display: grid;
+  place-items: center;
+}
+
+.recitalDancer {
+  width: min(100%, 36rem);
+}
+
+.recitalBody {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  background: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+  border-radius: 1.4rem;
+}
+
+.recitalKicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--blush);
+}
+
+.recitalBody h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+}
+
+.date {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: 'day month' 'day place';
+  column-gap: 1rem;
+  align-items: end;
+  margin-top: 1.6rem;
+}
+
+.dateDay {
+  grid-area: day;
+  font-family: var(--serif);
+  font-size: clamp(4.5rem, 8vw, 6.5rem);
+  line-height: 0.85;
+  color: var(--rose);
+}
+
+.dateMonth {
+  grid-area: month;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.datePlace {
+  grid-area: place;
+  align-self: start;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+
+.recitalText {
+  margin-top: 1.4rem;
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+
+.recitalFacts {
+  margin: 1.5rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.5rem;
+}
+
+.recitalFacts div {
+  padding-top: 0.6rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
+}
+
+.recitalFacts dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blush);
+}
+
+.recitalFacts dd {
+  margin: 0.15rem 0 0;
+}
+
+/* -------------------------------------------------------------------- fees */
+
+.fees {
+  padding: var(--air) var(--gut);
+  background: var(--blush);
+}
+
+.feesInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.feesInner h2 {
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+}
+
+.feeNotes {
+  margin: 1.2rem 0 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.feeNotes li::marker {
+  color: var(--rose);
+}
+
+.feeList {
+  margin: 0;
+  border-top: 1.5px solid var(--ink);
+}
+
+.feeList div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.feeList dt {
+  flex: 1;
+}
+
+.feeList dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------- trial */
+
+.trial {
+  padding: var(--air) var(--gut);
+}
+
+.trialInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: stretch;
+}
+
+.trialArt {
+  position: relative;
+  min-height: 30rem;
+  overflow: hidden;
+  background: var(--blush);
+  border-radius: 999px 999px 1.4rem 1.4rem;
+}
+
+.trialDancer {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 78%;
+  transform: translateX(-50%);
+}
+
+.trialBody h2 {
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+}
+
+.trialLede {
+  margin-top: 0.9rem;
+  max-width: 34rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.8rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 0.6rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.6rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--rose);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.submit:hover {
+  background: var(--violet);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.footTag {
+  margin-top: 0.5rem;
+  max-width: 22rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footHead {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--blush);
+}
+
+.footText {
+  margin-top: 0.4rem;
+}
+
+.footLink {
+  display: block;
+  margin-top: 0.4rem;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.footLink:hover {
+  color: var(--rose);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.6rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 20%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.footFine a {
+  color: var(--paper);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: 'text text' 'ballet pulse';
+  }
+
+  .heroText {
+    padding: 1.5rem 0 1rem;
+  }
+
+  .panelBallet,
+  .panelPulse {
+    min-height: clamp(22rem, 52vw, 34rem);
+  }
+
+  .styles,
+  .teacherGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+    margin-left: auto;
+  }
+
+  .secHead,
+  .recitalInner,
+  .feesInner,
+  .trialInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The week scrolls sideways inside its own box; the times stay put. */
+  .table {
+    min-width: 50rem;
+  }
+
+  .table tbody th,
+  .table thead th.corner {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--paper);
+  }
+
+  .swipe {
+    display: block;
+  }
+
+  .recitalDancer {
+    width: min(100%, 26rem);
+  }
+
+  .trialArt {
+    min-height: 24rem;
+    max-width: 28rem;
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .footGrid > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    gap: 0.6rem;
+  }
+
+  .panelBallet,
+  .panelPulse {
+    min-height: 15rem;
+  }
+
+  .styles,
+  .teacherGrid,
+  .recitalFacts,
+  .form,
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .trialArt {
+    min-height: 20rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .submit {
+    transition: none;
+  }
+}

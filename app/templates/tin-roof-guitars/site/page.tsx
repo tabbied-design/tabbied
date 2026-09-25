@@ -21,8 +21,8 @@ const GRAY = '#8E867D';
 const PAPER = '#F3EFE8';
 
 const SPRUCE = [GOLD, BURST, PAPER, INK];
-const SUNBURST = [BURST, GOLD, INK, GREEN];
-const KOA = [PAPER, BURST, GOLD, GREEN];
+const SUNBURST = [INK, BURST, GOLD];
+const KOA = [GOLD, BURST, PAPER, GREEN];
 const ROOF = ['transparent', GRAY, PAPER];
 
 const NAV = [

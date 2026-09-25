@@ -1,0 +1,1105 @@
+/* ==========================================================================
+   THE RIALTO - independent cinema, Palace Row
+   A ticket programme: the week is a column of cream tickets on the dark of
+   the house, one day at a time, each ticket a film and each showtime a
+   stub on the far side of a perforated line. The photographs are duotones
+   in the house colors, velvet red in the shadows and gold or cream in the
+   light. A deco display face for titles and times, a geometric sans for
+   the rest, and marquee lights drifting behind the opening screen.
+   ========================================================================== */
+
+.page {
+  --night: #120e10;
+  --cream: #f2e8da;
+  --velvet: #c9302c;
+  --gold: #d4a64a;
+  --gray: #756b6e;
+  --plum: #1f191c;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 80rem;
+  --air: clamp(4rem, 9vw, 7.5rem);
+  --display: 'Limelight', 'Didot', Georgia, serif;
+
+  font-family: 'Josefin Sans', 'Futura', 'Century Gothic', Arial, sans-serif;
+  font-size: 1.06rem;
+  line-height: 1.55;
+  color: var(--cream);
+  background: var(--night);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* -------------------------------------------------------------------- bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.85rem var(--gut);
+  background: var(--night);
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--gold);
+}
+
+.barBtn {
+  padding: 0.6rem 1.1rem 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--night);
+  background: var(--gold);
+  border-radius: 2px;
+  transition: background-color 160ms ease;
+}
+
+.barBtn:hover {
+  background: var(--cream);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--night);
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(3rem, 7vw, 6rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.lights {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.heroInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.heroText {
+  position: relative;
+  z-index: 2;
+}
+
+.kicker,
+.secKick {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--display);
+  font-size: clamp(2.8rem, 6vw, 5.6rem);
+  line-height: 1.02;
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.6);
+}
+
+.title em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.lede {
+  margin-top: 1.4rem;
+  max-width: 34rem;
+  font-size: clamp(1.08rem, 1.35vw, 1.22rem);
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.7);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.9rem 1.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid var(--gold);
+  border-radius: 2px;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn {
+  color: var(--night);
+  background: var(--gold);
+}
+
+.btn:hover {
+  background: var(--cream);
+  border-color: var(--cream);
+}
+
+.btnLine {
+  color: var(--gold);
+  background: var(--night);
+}
+
+.btnLine:hover {
+  color: var(--night);
+  background: var(--gold);
+}
+
+.heroArt {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1.2rem;
+}
+
+.projWrap {
+  position: relative;
+  width: min(100%, 26rem);
+}
+
+/* The projector faces left, so its beam crosses the headline. */
+.projector {
+  width: 100%;
+  transform: scaleX(-1);
+}
+
+.beam {
+  position: absolute;
+  z-index: -1;
+  right: 72%;
+  top: 52%;
+  width: 72vw;
+  height: 40rem;
+  transform: translateY(-50%);
+  clip-path: polygon(100% 48%, 100% 52%, 0 0, 0 100%);
+  background: linear-gradient(to left, color-mix(in srgb, var(--gold) 34%, transparent), color-mix(in srgb, var(--gold) 6%, transparent) 70%, transparent);
+  pointer-events: none;
+}
+
+.nowShowing {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  padding: 0.8rem 1.4rem 0.6rem;
+  text-align: center;
+  border-top: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+}
+
+.nowShowing span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.nowShowing strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.3rem;
+}
+
+/* The curtain's hem. */
+.curtain {
+  position: relative;
+  height: clamp(3rem, 6vw, 4.5rem);
+  overflow: hidden;
+  border-bottom: 2px solid var(--gold);
+}
+
+/* --------------------------------------------------------------- sections */
+
+.programme,
+.membership {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(1.5rem, 5vw, 5rem);
+  row-gap: 0.8rem;
+  align-items: end;
+  margin-bottom: clamp(2.2rem, 4vw, 3.4rem);
+}
+
+.secKick {
+  grid-column: 1;
+}
+
+.secHead h2,
+.screensBody h2,
+.barText h2,
+.hireText h2 {
+  font-family: var(--display);
+  font-size: clamp(2.3rem, 4.6vw, 3.9rem);
+  line-height: 1.02;
+}
+
+.secHead h2 {
+  grid-column: 1;
+}
+
+.secNote {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--cream) 88%, transparent);
+}
+
+/* -------------------------------------------------------------- programme
+   Each day: its name in a sticky column, its tickets beside it. A ticket
+   is a cream card; the stubs are divided from it by a perforation with a
+   half-moon bitten out of each edge. */
+
+.days {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+.day {
+  display: grid;
+  grid-template-columns: minmax(9rem, 13rem) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: start;
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+}
+
+.dayHead {
+  position: sticky;
+  top: 5.5rem;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.dayName {
+  font-family: var(--display);
+  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+  line-height: 1;
+  color: var(--gold);
+}
+
+.dayDate {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.tickets {
+  display: grid;
+  gap: 1rem;
+}
+
+.ticket {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  color: var(--night);
+  background: var(--cream);
+  border-radius: 0.35rem;
+  box-shadow: 0 18px 30px -22px rgb(0 0 0 / 0.9);
+}
+
+.ticketMain {
+  padding: 1.2rem 1.6rem 1.25rem;
+  border-left: 0.5rem solid var(--velvet);
+  border-radius: 0.35rem 0 0 0.35rem;
+}
+
+.admit {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--velvet);
+}
+
+.filmTitle {
+  margin-top: 0.3rem;
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  line-height: 1.05;
+}
+
+.filmMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0;
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.filmMeta span + span::before {
+  content: '\00B7';
+  margin: 0 0.55rem;
+}
+
+.filmNote {
+  margin-top: 0.5rem;
+  max-width: 38rem;
+  font-size: 0.97rem;
+}
+
+.stubs {
+  position: relative;
+  display: flex;
+  border-left: 2px dashed color-mix(in srgb, var(--night) 40%, transparent);
+}
+
+.stubs::before,
+.stubs::after {
+  content: '';
+  position: absolute;
+  left: -0.8rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--night);
+}
+
+.stubs::before {
+  top: -0.75rem;
+}
+
+.stubs::after {
+  bottom: -0.75rem;
+}
+
+.stub {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.3rem;
+  min-width: 6.4rem;
+  padding: 1rem 0.9rem;
+  text-align: center;
+}
+
+.stub + .stub {
+  border-left: 1px dashed color-mix(in srgb, var(--night) 30%, transparent);
+}
+
+.stubTime {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.stubLeft {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stub[data-sold='yes'] {
+  color: color-mix(in srgb, var(--night) 55%, transparent);
+  background: color-mix(in srgb, var(--night) 7%, transparent);
+}
+
+.stub[data-sold='yes'] .stubTime {
+  text-decoration: line-through;
+  text-decoration-color: var(--velvet);
+  text-decoration-thickness: 2px;
+}
+
+.stub[data-sold='yes'] .stubLeft {
+  color: var(--velvet);
+}
+
+.stub:last-child {
+  border-radius: 0 0.35rem 0.35rem 0;
+}
+
+.weekNote {
+  margin-top: 2rem;
+  padding-top: 1.4rem;
+  font-style: italic;
+  text-align: center;
+  color: color-mix(in srgb, var(--cream) 85%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+}
+
+/* ---------------------------------------------------------------- screens */
+
+.screens {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.screensArt {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2.5rem) clamp(1.2rem, 3vw, 2rem);
+  background-color: var(--velvet);
+  background-image: radial-gradient(ellipse 60% 55% at 50% 30%, color-mix(in srgb, var(--gold) 40%, transparent), transparent 70%);
+  border-radius: 0.35rem;
+}
+
+.seats {
+  width: 100%;
+}
+
+.seatsNote {
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--cream);
+}
+
+.screensBody h2 {
+  margin-top: 0.8rem;
+}
+
+.screenList {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.screen {
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--gold);
+}
+
+.screenHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  align-items: end;
+}
+
+.screenHead h3 {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.screenNick {
+  grid-column: 1;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.screenSeats {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: grid;
+  justify-items: end;
+  line-height: 1;
+}
+
+.screenSeats strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 2.6rem;
+  color: var(--gold);
+}
+
+.screenSeats span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.screenBody {
+  margin-top: 0.9rem;
+}
+
+.screenFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.screenFacts li {
+  padding: 0.35rem 0.75rem 0.25rem;
+  font-size: 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--cream) 40%, transparent);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------- membership */
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: stretch;
+}
+
+.tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem 1.6rem 1.6rem;
+  background: var(--plum);
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  border-radius: 0.35rem;
+}
+
+.tier[data-featured='yes'] {
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 0 6px var(--night), 0 0 0 7px color-mix(in srgb, var(--gold) 50%, transparent);
+}
+
+.tierFlag {
+  position: absolute;
+  top: -0.8rem;
+  left: 1.6rem;
+  padding: 0.3rem 0.7rem 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--night);
+  background: var(--gold);
+}
+
+.tierFlag:empty {
+  display: none;
+}
+
+.tierName {
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.tierPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed color-mix(in srgb, var(--gold) 50%, transparent);
+}
+
+.tierPrice strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.tierPerks {
+  display: grid;
+  gap: 0.55rem;
+  flex: 1;
+}
+
+.tierPerks li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.tierPerks li::before {
+  content: '\2605';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.8rem;
+  color: var(--gold);
+}
+
+.tierBtn {
+  display: block;
+  padding: 0.8rem 1rem 0.65rem;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.tierBtn:hover,
+.tier[data-featured='yes'] .tierBtn {
+  color: var(--night);
+  background: var(--gold);
+}
+
+/* -------------------------------------------------------------------- bar */
+
+.barSec {
+  margin-top: var(--air);
+  padding: var(--air) var(--gut);
+  background: var(--plum);
+  border-top: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+}
+
+.barInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.barText h2 {
+  margin-top: 0.8rem;
+}
+
+.barLede {
+  margin-top: 1.1rem;
+  max-width: 34rem;
+}
+
+.menu {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 1.8rem;
+  max-width: 36rem;
+}
+
+.menu li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+}
+
+.menuName {
+  font-size: 1.02rem;
+}
+
+.menuDots {
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 2px dotted color-mix(in srgb, var(--gold) 55%, transparent);
+}
+
+.menuPrice {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.barArt {
+  display: grid;
+  justify-items: center;
+}
+
+.popcorn {
+  width: min(100%, 19rem);
+}
+
+/* ----------------------------------------------------------- private hire */
+
+.hire {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.hireText h2 {
+  margin-top: 0.8rem;
+}
+
+.hireLede {
+  margin-top: 1.1rem;
+  max-width: 34rem;
+}
+
+.hireList {
+  margin-top: 1.8rem;
+  border-top: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+}
+
+.hireList div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+}
+
+.hireList dt {
+  font-weight: 700;
+}
+
+.hireList dd {
+  color: color-mix(in srgb, var(--cream) 88%, transparent);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--night);
+  background: var(--cream);
+  border-radius: 0.35rem;
+}
+
+.formHead {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1.05;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem 0.6rem;
+  font: inherit;
+  color: var(--night);
+  background: var(--cream);
+  border: 1px solid color-mix(in srgb, var(--night) 45%, transparent);
+  border-radius: 2px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.9rem 1.4rem 0.75rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--velvet);
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.submit:hover {
+  background: var(--night);
+}
+
+.formNote {
+  font-size: 0.85rem;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  background: var(--plum);
+  border-top: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.footTag {
+  margin-top: 0.7rem;
+  max-width: 22rem;
+  color: color-mix(in srgb, var(--cream) 85%, transparent);
+}
+
+.footHead {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.footText {
+  margin-top: 0.7rem;
+  line-height: 1.8;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--cream) 75%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--cream) 18%, transparent);
+}
+
+.credit a {
+  color: var(--gold);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1080px) {
+  .day {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dayHead {
+    position: static;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 0.9rem;
+  }
+
+  .tiers {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .heroInner,
+  .screens,
+  .barInner,
+  .hire {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .projWrap {
+    width: min(70%, 20rem);
+  }
+
+  .beam {
+    right: 70%;
+    width: 80vw;
+    height: 26rem;
+  }
+
+  .popcorn {
+    width: min(60%, 14rem);
+  }
+
+  .barArt {
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 800px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.7rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNote {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .footTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Narrow: the stubs drop below the film, across a perforation that runs
+   side to side. */
+@media (max-width: 640px) {
+  .barBtn {
+    display: none;
+  }
+
+  .ticket {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ticketMain {
+    border-radius: 0.35rem 0.35rem 0 0;
+    padding: 1.1rem 1.2rem;
+  }
+
+  .stubs {
+    border-left: 0;
+    border-top: 2px dashed color-mix(in srgb, var(--night) 40%, transparent);
+  }
+
+  .stubs::before,
+  .stubs::after {
+    top: -0.75rem;
+    bottom: auto;
+  }
+
+  .stubs::before {
+    left: -0.75rem;
+  }
+
+  .stubs::after {
+    left: auto;
+    right: -0.75rem;
+  }
+
+  .stub {
+    flex: 1;
+    min-width: 0;
+    padding: 0.85rem 0.5rem;
+  }
+
+  .stub:last-child {
+    border-radius: 0 0 0.35rem 0;
+  }
+
+  .stubTime {
+    font-size: 1.35rem;
+  }
+
+  .formRow,
+  .hireList div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hireList div {
+    gap: 0.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barBtn,
+  .btn,
+  .btnLine,
+  .tierBtn,
+  .submit {
+    transition: none;
+  }
+}

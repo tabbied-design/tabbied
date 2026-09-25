@@ -341,9 +341,9 @@ export default function PointeAndPulsePage() {
             <TabbiedPattern
               pattern={northstar}
               palette={STARS}
-              options={{ frequency: 0.22 }}
+              options={{ frequency: 0.14 }}
               fit="grid"
-              cellSize={46}
+              cellSize={40}
               seed="pointe-stars"
               redrawInterval={6500}
               style={{ position: 'absolute', inset: 0 }}

@@ -1,0 +1,1061 @@
+/* ==========================================================================
+   SATCHEL & STRAP - leather goods maker, Tanner Street
+   A workbench. Every piece lies on a green cutting mat, cut out of a
+   Tabbied pattern in the page's leather colors with the photograph's own
+   creases and buckles shaded back over it, and beside it a drawing of its
+   three dimensions in the style of a pattern maker's notebook. A sturdy
+   book serif for names, a plain sans for the specs, tan and olive on
+   undyed hide, and a seam of cross stitches between the rooms.
+   ========================================================================== */
+
+.page {
+  --hide: #f4eee6;
+  --ink: #1e1612;
+  --saddle: #a0522d;
+  --olive: #4a5d3f;
+  --gray: #8f857b;
+  --pale: #e6dacb;
+  --gut: clamp(1rem, 4.5vw, 4rem);
+  --max: 82rem;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+  --serif: 'Vollkorn', Georgia, serif;
+  --muted: color-mix(in srgb, var(--ink) 72%, var(--hide));
+  --line: color-mix(in srgb, var(--ink) 18%, transparent);
+
+  position: relative;
+  font-family: 'Commissioner', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--hide);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 5rem;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--saddle);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(h1, h2) em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--saddle);
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The cutting mat: olive, ruled in a fine and a coarse grid. */
+.mat,
+.rowMat {
+  position: relative;
+  border-radius: 0.8rem;
+  background-color: var(--olive);
+  background-image:
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--pale) 34%, transparent) 0 1px, transparent 1px 5rem),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--pale) 34%, transparent) 0 1px, transparent 1px 5rem),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--pale) 13%, transparent) 0 1px, transparent 1px 1rem),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--pale) 13%, transparent) 0 1px, transparent 1px 1rem);
+  background-position: 0.9rem 0.9rem;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem var(--gut);
+  background: var(--hide);
+  border-bottom: 1px solid var(--line);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.markAmp {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--saddle);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2.2vw, 2.2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 2px dashed transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--saddle);
+}
+
+.barMeta {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--hide);
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) var(--air);
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.kicker,
+.secKick {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--saddle);
+}
+
+.title {
+  margin-top: 1.2rem;
+  font-size: clamp(2.7rem, 5.2vw, 4.6rem);
+  line-height: 1.02;
+}
+
+.title em {
+  display: block;
+}
+
+.lede {
+  margin-top: 1.5rem;
+  max-width: 32rem;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2.2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.5rem;
+  border: 0;
+  border-radius: 0.4rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--saddle);
+  color: var(--hide);
+  outline: 1.5px dashed color-mix(in srgb, var(--hide) 70%, transparent);
+  outline-offset: -5px;
+  transition: background-color 150ms ease;
+}
+
+.btn:hover {
+  background: var(--ink);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.textLink {
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px dashed var(--saddle);
+  padding-bottom: 0.1rem;
+}
+
+.mat {
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  box-shadow: 0 30px 50px -30px rgb(0 0 0 / 0.45);
+}
+
+/* A steel rule along the top edge, marked every centimeter. */
+.matRule {
+  position: absolute;
+  z-index: 1;
+  top: 1.2rem;
+  left: 6%;
+  width: 62%;
+  height: 1.4rem;
+  border-radius: 0.15rem;
+  background-color: var(--pale);
+  background-image:
+    repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 2.5rem),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 60%, transparent) 0 1px, transparent 1px 0.5rem);
+  background-size: 100% 60%, 100% 32%;
+  background-repeat: no-repeat;
+  transform: rotate(-2deg);
+  box-shadow: 0 6px 10px -6px rgb(0 0 0 / 0.5);
+}
+
+.heroSatchel,
+.heroWallet,
+.rowSatchel,
+.rowTote,
+.rowWallet,
+.repairTote {
+  --artwork-shade: 0.5;
+}
+
+.heroSatchel {
+  position: absolute;
+  left: 7%;
+  top: 14%;
+  width: 70%;
+  transform: rotate(-5deg);
+}
+
+.heroWallet {
+  position: absolute;
+  z-index: 2;
+  right: 5%;
+  bottom: 7%;
+  width: 34%;
+  transform: rotate(9deg);
+}
+
+/* ----------------------------------------------------------------- bench */
+
+.bench {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.secHead {
+  max-width: 42rem;
+}
+
+.secHead h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.rows {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  border-top: 2px dashed color-mix(in srgb, var(--saddle) 70%, transparent);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  align-items: center;
+  padding: clamp(2rem, 4vw, 3rem) 0;
+  border-bottom: 2px dashed color-mix(in srgb, var(--saddle) 70%, transparent);
+}
+
+.rowMat {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+}
+
+.rowSatchel {
+  width: 70%;
+  transform: rotate(-3deg);
+}
+
+.rowTote {
+  height: 84%;
+  transform: rotate(3deg);
+}
+
+.rowWallet {
+  width: 56%;
+  transform: rotate(-6deg);
+}
+
+/* The drawing: a box in three faces, sized per piece, with its three
+   measurements ruled off in the saddle color. Drawn to its own scale. */
+.drawing {
+  position: relative;
+  height: 17rem;
+  --left: 6.2rem;
+  --foot: 3.4rem;
+}
+
+.drawing[data-shape='satchel'] {
+  --w: 11rem;
+  --h: 8.6rem;
+  --d: 2.4rem;
+}
+
+.drawing[data-shape='tote'] {
+  --w: 10.4rem;
+  --h: 9.4rem;
+  --d: 2.8rem;
+}
+
+.drawing[data-shape='wallet'] {
+  --w: 10.6rem;
+  --h: 8.7rem;
+  --d: 1.3rem;
+}
+
+.box {
+  position: absolute;
+  left: var(--left);
+  bottom: var(--foot);
+  width: var(--w);
+  height: var(--h);
+  border: 1.5px solid var(--ink);
+  background: color-mix(in srgb, var(--pale) 55%, transparent);
+}
+
+.box::before,
+.box::after {
+  content: '';
+  position: absolute;
+  border: 1.5px solid var(--ink);
+  transform-origin: bottom left;
+}
+
+.box::before {
+  left: -1.5px;
+  bottom: 100%;
+  width: 100%;
+  height: var(--d);
+  border-bottom: 0;
+  transform: skewX(-45deg);
+}
+
+.box::after {
+  left: 100%;
+  bottom: -1.5px;
+  width: var(--d);
+  height: 100%;
+  border-left: 0;
+  transform: skewY(-45deg);
+}
+
+.dimW,
+.dimH,
+.dimD {
+  position: absolute;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--saddle);
+  white-space: nowrap;
+}
+
+.dimW {
+  left: var(--left);
+  bottom: calc(var(--foot) - 2.4rem);
+  width: var(--w);
+  padding-top: 0.6rem;
+  text-align: center;
+  border-top: 1px solid var(--saddle);
+}
+
+.dimW::before,
+.dimW::after {
+  content: '';
+  position: absolute;
+  top: -0.35rem;
+  height: 0.7rem;
+  border-left: 1px solid var(--saddle);
+}
+
+.dimW::before {
+  left: 0;
+}
+
+.dimW::after {
+  right: 0;
+}
+
+.dimH {
+  right: calc(100% - var(--left) + 0.9rem);
+  bottom: var(--foot);
+  height: var(--h);
+  display: flex;
+  align-items: center;
+  padding-right: 0.6rem;
+  border-right: 1px solid var(--saddle);
+}
+
+.dimH::before,
+.dimH::after {
+  content: '';
+  position: absolute;
+  right: -0.35rem;
+  width: 0.7rem;
+  border-top: 1px solid var(--saddle);
+}
+
+.dimH::before {
+  top: 0;
+}
+
+.dimH::after {
+  bottom: 0;
+}
+
+.dimD {
+  left: calc(var(--left) + var(--w) + var(--d) + 0.7rem);
+  bottom: calc(var(--foot) + var(--h) + var(--d) * 0.5 - 0.5rem);
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.rowNo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--saddle);
+}
+
+.spec h3 {
+  font-size: clamp(1.8rem, 2.6vw, 2.3rem);
+}
+
+.specNote {
+  color: var(--muted);
+}
+
+.specList {
+  margin-top: 0.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.specList div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+
+.specList dt {
+  font-weight: 600;
+}
+
+.price {
+  margin-top: 0.4rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.small {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 2fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.smallHead {
+  font-size: 1.8rem;
+}
+
+.smallList li {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.smallList li:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.smallList strong {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.smallNote {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.smallPrice {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ seam */
+
+.seam {
+  position: relative;
+  height: clamp(3.5rem, 6vw, 4.5rem);
+  overflow: hidden;
+  background: var(--olive);
+  border-block: 2px dashed var(--pale);
+  outline: 0.5rem solid var(--olive);
+}
+
+/* ------------------------------------------------------------- monograms */
+
+.monograms {
+  background: var(--pale);
+  margin-top: 0.5rem;
+}
+
+.monoInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.stamps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.stamp h3 {
+  margin-top: 1rem;
+  font-size: 1.4rem;
+}
+
+.stamp p {
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* A swatch of tan leather, the letters pressed into it. */
+.stampMark {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.6rem;
+  background: var(--saddle);
+  outline: 1.5px dashed color-mix(in srgb, var(--pale) 55%, transparent);
+  outline-offset: -0.7rem;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  color: color-mix(in srgb, var(--saddle) 62%, var(--ink));
+  text-shadow:
+    0 1px 0 color-mix(in srgb, var(--pale) 38%, transparent),
+    0 -1px 0 color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.stamp[data-style='roman'] .stampMark {
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.stamp[data-style='block'] .stampMark {
+  font-weight: 700;
+  letter-spacing: 0.22em;
+}
+
+.stamp[data-style='italic'] .stampMark {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.monoPrices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(1.5rem, 4vw, 4rem);
+  margin-top: 2.5rem;
+}
+
+.monoPrices div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.monoPrices dd {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- repairs */
+
+.repairs {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.repairGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.repairTote {
+  width: min(55%, 13rem);
+  margin-top: 2.5rem;
+  transform: rotate(-4deg);
+}
+
+.repairTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.repairTable thead th {
+  padding: 0 0 0.7rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--ink);
+}
+
+.repairTable tbody th,
+.repairTable td {
+  padding: 1rem 1rem 1rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.repairTable tbody th {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.repairTable td:nth-child(2) {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.repairTable td:last-child {
+  padding-right: 0;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- workshop */
+
+.workshop {
+  background: var(--ink);
+  color: var(--hide);
+}
+
+.workInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: end;
+}
+
+.workText h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+}
+
+.workText h2 em {
+  display: block;
+  color: color-mix(in srgb, var(--saddle) 55%, var(--pale));
+}
+
+.workText p:not(.secKick) {
+  margin-top: 1.1rem;
+  max-width: 36rem;
+  color: color-mix(in srgb, var(--hide) 78%, var(--ink));
+}
+
+.workshop .secKick {
+  color: color-mix(in srgb, var(--saddle) 55%, var(--pale));
+}
+
+.workFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.workFacts div {
+  padding: 1.3rem 0;
+  border-top: 2px dashed color-mix(in srgb, var(--hide) 30%, transparent);
+}
+
+.workFacts dt {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.workFacts dd {
+  margin-top: 0.4rem;
+  padding-right: 1rem;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--hide) 75%, var(--ink));
+}
+
+/* ----------------------------------------------------------------- order */
+
+.order {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.orderInfo h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+}
+
+.hours {
+  margin-top: 1.8rem;
+  border-top: 1px solid var(--line);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  text-align: right;
+}
+
+.addr {
+  margin-top: 1.5rem;
+}
+
+.contact {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.8rem;
+  font-weight: 600;
+}
+
+.contact a {
+  text-decoration-style: dashed;
+  text-decoration-color: var(--saddle);
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border-radius: 0.8rem;
+  background: var(--pale);
+  outline: 2px dashed color-mix(in srgb, var(--saddle) 60%, transparent);
+  outline-offset: -0.6rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.75rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--hide);
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 0.4rem;
+}
+
+.form .btn {
+  grid-column: 1 / -1;
+  margin-top: 0.4rem;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  background: var(--olive);
+  color: var(--hide);
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.footTag {
+  color: color-mix(in srgb, var(--hide) 80%, var(--olive));
+}
+
+.footNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  font-weight: 500;
+}
+
+.footNav a {
+  text-decoration: none;
+}
+
+.footNav a:hover {
+  text-decoration: underline dashed;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.85rem;
+  border-top: 2px dashed color-mix(in srgb, var(--hide) 30%, transparent);
+  color: color-mix(in srgb, var(--hide) 80%, var(--olive));
+}
+
+.footFine a {
+  color: var(--hide);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1180px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .spec {
+    grid-column: 1 / -1;
+  }
+
+  .small {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .nav,
+  .barMeta {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+    margin-left: auto;
+  }
+
+  .hero,
+  .repairGrid,
+  .workInner,
+  .order {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: clamp(2.4rem, 10.5vw, 3rem);
+  }
+
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .drawing {
+    height: 15rem;
+    --left: 5.6rem;
+  }
+
+  .drawing[data-shape='satchel'],
+  .drawing[data-shape='tote'],
+  .drawing[data-shape='wallet'] {
+    --w: 8.4rem;
+    --h: 7rem;
+  }
+
+  .smallList li {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 0.1rem;
+  }
+
+  .smallNote {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .stamps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .monoPrices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .repairTable thead {
+    display: none;
+  }
+
+  .repairTable,
+  .repairTable tbody {
+    display: block;
+  }
+
+  .repairTable tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .repairTable tbody th,
+  .repairTable td {
+    padding: 0;
+    border: 0;
+  }
+
+  .repairTable td:last-child {
+    grid-column: 1 / -1;
+    font-size: 0.92rem;
+  }
+
+  .workFacts dt {
+    font-size: 2rem;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn {
+    transition: none;
+  }
+}
