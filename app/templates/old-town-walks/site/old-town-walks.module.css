@@ -446,6 +446,7 @@
    a quarter, tucked behind the disc. */
 .pin {
   position: absolute;
+  z-index: 1;
   display: grid;
   place-items: center;
   width: 2.3rem;

@@ -135,8 +135,8 @@ const POINTS: Point[] = [
     name: 'Bridge Gate',
     where: 'At the stone lion on the town side of the Old Bridge.',
     walks: 'Bridges and Mills',
-    x: '72%',
-    y: '68%',
+    x: '74%',
+    y: '66%',
   },
   {
     no: '3',
