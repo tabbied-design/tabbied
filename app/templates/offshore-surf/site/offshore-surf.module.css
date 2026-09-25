@@ -34,6 +34,10 @@
   text-decoration: none;
 }
 
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
 .page :focus-visible {
   outline: 2px solid var(--teal);
   outline-offset: 3px;
@@ -305,7 +309,6 @@
 
 .boardPic {
   height: calc(var(--rack) * var(--len) / 120);
-  filter: drop-shadow(0 10px 12px rgb(0 0 0 / 0.35));
 }
 
 .spec {
@@ -733,7 +736,6 @@
 
 .finPic {
   width: min(78%, 17rem);
-  filter: drop-shadow(0 12px 14px rgb(0 0 0 / 0.35));
 }
 
 .fins h3 {

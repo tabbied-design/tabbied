@@ -33,6 +33,10 @@
   text-decoration: none;
 }
 
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
 .page :focus-visible {
   outline: 2px solid var(--terra);
   outline-offset: 3px;

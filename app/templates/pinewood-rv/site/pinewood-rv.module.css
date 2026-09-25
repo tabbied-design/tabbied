@@ -1,0 +1,1017 @@
+/* ==========================================================================
+   PINEWOOD RV PARK - campground and RV park
+   A park-service notice board: a slab serif, plain facts, and pine green
+   doing the work of every sign. The first screen is the treeline with the
+   camper, tinted in the page's own inks, full width against an evening
+   glow; the words take the right half of the sky. The campfire clearing
+   fills the reservations section at night, stars showing only between the
+   trees. Orange is the glow and the buttons, never small text.
+   ========================================================================== */
+
+.page {
+  --paper: #eef0ea;
+  --ink: #17201a;
+  --pine: #3f6b4b;
+  --orange: #d9853b;
+  --gray: #8a938b;
+  --pale: #d7ded4;
+  --gut: clamp(1rem, 5vw, 4.5rem);
+  --max: 76rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --slab: 'Zilla Slab', 'Rockwell', Georgia, serif;
+  --sans: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--slab);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.2rem var(--gut);
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+}
+
+/* A pine in a roundel, drawn with two borders. */
+.markBadge {
+  position: relative;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  background: var(--pine);
+}
+
+.markBadge::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0.45rem;
+  margin-left: -0.55rem;
+  border-left: 0.55rem solid transparent;
+  border-right: 0.55rem solid transparent;
+  border-bottom: 1.3rem solid var(--paper);
+}
+
+.markName {
+  font-family: var(--slab);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.9rem, 2vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding-bottom: 0.15rem;
+  border-bottom: 2px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--pine);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero
+   The glow is the section's own gradient; the photograph's sky is empty,
+   so the trees stand against it. */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: max(46rem, 100svh);
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    var(--pale) 0%,
+    var(--pale) 34%,
+    color-mix(in srgb, var(--orange) 55%, var(--pale)) 60%,
+    var(--orange) 85%
+  );
+}
+
+.heroArt {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: -10vw;
+  height: 66.67vw;
+}
+
+/* The words on a notice board nailed up at the edge of the trees: the
+   picture has too little empty sky for a headline and the camper both,
+   so the sign carries its own ground. */
+.heroText {
+  position: absolute;
+  z-index: 1;
+  top: clamp(6rem, 13vh, 7.5rem);
+  right: var(--gut);
+  width: min(40%, 34rem);
+  padding: clamp(1.6rem, 2.6vw, 2.3rem);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.55);
+}
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pine);
+}
+
+.heroTitle {
+  margin-top: 0.8rem;
+  font-size: clamp(2.6rem, 4.6vw, 4.3rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--pine);
+}
+
+.heroLede {
+  margin-top: 1rem;
+  max-width: 32rem;
+  font-size: 1.05rem;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.3rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--pine);
+  border-color: var(--pine);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------------- facts */
+
+.facts {
+  background: var(--pine);
+  color: var(--paper);
+  padding: 1.4rem var(--gut);
+}
+
+.factsList {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.factsList div {
+  padding-left: 1rem;
+  border-left: 2px solid var(--orange);
+}
+
+.factsList dt {
+  font-family: var(--slab);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.factsList dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--paper) 85%, transparent);
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 46rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secTag,
+.secTagLight {
+  display: inline-block;
+  padding: 0.3rem 0.7rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--pine);
+  border-radius: 4px;
+}
+
+.secTagLight {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.secHead h2,
+.secHeadSide h2 {
+  margin-top: 0.9rem;
+  font-size: clamp(2rem, 4.2vw, 3.3rem);
+  line-height: 1.05;
+}
+
+.secNote {
+  margin-top: 0.8rem;
+  max-width: 38rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ------------------------------------------------------------------- sites */
+
+.tableWrap {
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.rates {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rates th,
+.rates td {
+  padding: 1rem 1.1rem;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.rates thead th {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  border-bottom: 0;
+}
+
+.rates tbody tr:nth-child(odd) {
+  background: color-mix(in srgb, var(--pale) 60%, var(--paper));
+}
+
+.rates tbody tr:last-child th,
+.rates tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.rates tbody th {
+  font-family: var(--slab);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.rates td:nth-last-child(-n + 3),
+.rates thead th:nth-last-child(-n + 3) {
+  text-align: right;
+}
+
+.rateNight {
+  font-family: var(--slab);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--pine);
+}
+
+.rateNotes {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 2rem;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* --------------------------------------------------------------- amenities */
+
+.amenities {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.amenity {
+  display: flex;
+  flex-direction: column;
+  padding: 1.3rem 1.2rem 1.2rem;
+  background: color-mix(in srgb, var(--pale) 55%, var(--paper));
+  border-radius: 8px;
+  border-top: 5px solid var(--pine);
+}
+
+.amenity h3 {
+  font-size: 1.3rem;
+}
+
+.amenity p {
+  margin-top: 0.4rem;
+  flex: 1;
+  font-size: 0.95rem;
+}
+
+.amenityHours {
+  margin-top: 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--pine);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  margin-top: var(--air);
+  border-block: 2px solid var(--ink);
+}
+
+.bandField {
+  position: relative;
+  height: clamp(6rem, 11vw, 9rem);
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------- rules */
+
+.rulesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.rules {
+  margin: 0;
+  border-top: 2px solid var(--ink);
+}
+
+.rules div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.rules dt {
+  font-family: var(--slab);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.rules dd {
+  margin: 0;
+}
+
+/* -------------------------------------------------------------- directions */
+
+.directions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.route p + p {
+  margin-top: 1rem;
+}
+
+.address {
+  font-family: var(--slab);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.warn {
+  padding: 0.9rem 1rem;
+  border-left: 5px solid var(--orange);
+  background: color-mix(in srgb, var(--orange) 16%, var(--paper));
+}
+
+.nearby {
+  margin: 0;
+}
+
+.nearby div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 1rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.nearby dt {
+  font-weight: 600;
+}
+
+.nearbyDist {
+  margin: 0;
+  font-family: var(--slab);
+  font-weight: 700;
+  color: var(--pine);
+}
+
+.nearbyWhat {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ----------------------------------------------------------------- reserve
+   Night. The clearing and its pines, full width; the stars are behind the
+   picture, the fire's glow in front of it. */
+
+.reserve {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--air);
+  min-height: 56rem;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--ink) 0%, var(--pine) 70%);
+  color: var(--paper);
+}
+
+.reserveStars {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, var(--ink) 40%, transparent 100%);
+}
+
+.reserveArt {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+}
+
+/* A shadow down the left, where the words run over the trees. */
+.reserveArt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ink) 78%, transparent) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.glow {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 80%;
+  width: 34rem;
+  height: 20rem;
+  margin: -10rem 0 0 -17rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--orange) 62%, transparent), transparent);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.reserveInner {
+  position: relative;
+  z-index: 3;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) clamp(4rem, 8vw, 6rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 25rem);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.reserveText {
+  max-width: 30rem;
+}
+
+.reserveText h2 {
+  margin-top: 0.9rem;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1;
+}
+
+.reserveText p {
+  margin-top: 1rem;
+}
+
+.phone {
+  display: inline-block;
+  margin-top: 1.6rem;
+  font-family: var(--slab);
+  font-size: 1.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.phone:hover {
+  color: var(--orange);
+}
+
+.phoneNote {
+  display: block;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+
+.form {
+  display: grid;
+  gap: 0.9rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 10px;
+  box-shadow: 0 30px 70px -30px rgb(0 0 0 / 0.7);
+}
+
+.formPair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.8rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  height: 2.9rem;
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 6px;
+}
+
+.formBtn {
+  margin-top: 0.3rem;
+  height: 3.1rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--orange);
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.formBtn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: 52rem;
+  border-top: 2px solid var(--ink);
+}
+
+.faqItem {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.faqItem summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  padding: 1.1rem 3rem 1rem 0;
+  font-family: var(--slab);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::before,
+.faqItem summary::after {
+  content: '';
+  position: absolute;
+  right: 0.3rem;
+  top: 50%;
+  width: 1rem;
+  height: 3px;
+  background: var(--pine);
+  transform: translateY(-50%);
+  transition: transform 180ms ease;
+}
+
+.faqItem summary::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.faqItem[open] summary::after {
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.faqItem p {
+  padding: 0 3rem 1.3rem 0;
+  max-width: 44rem;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+
+.footName {
+  font-family: var(--slab);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.footTag {
+  margin-top: 0.4rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footHead {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pale);
+}
+
+.footText {
+  margin-top: 0.6rem;
+}
+
+.footLink {
+  display: block;
+  margin-top: 0.5rem;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.footLink:hover {
+  color: var(--orange);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.6rem auto 0;
+  padding-top: 1.3rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .amenities {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .factsList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .heroText {
+    width: 46%;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .heroText {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: auto;
+    padding: 6.5rem var(--gut) 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* Wider than the screen and pinned left, so the crop keeps the camper. */
+  .heroArt {
+    bottom: 0;
+    right: auto;
+    width: 150%;
+    height: 52%;
+  }
+
+  .rulesGrid,
+  .directions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The clearing in the flow, between the words and the form. */
+  .reserve {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .reserveInner {
+    display: contents;
+  }
+
+  .reserveText {
+    order: 1;
+    position: relative;
+    z-index: 3;
+    padding: clamp(3.5rem, 9vw, 5rem) var(--gut) 0;
+  }
+
+  .reserveArt {
+    order: 2;
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: clamp(20rem, 80vw, 30rem);
+    margin-top: 1rem;
+  }
+
+  .reserveArt::after {
+    display: none;
+  }
+
+  .glow {
+    top: auto;
+    bottom: 18rem;
+    width: 22rem;
+    height: 12rem;
+    margin: 0 0 0 -11rem;
+  }
+
+  .form {
+    order: 3;
+    position: relative;
+    z-index: 3;
+    margin: -4rem var(--gut) clamp(3rem, 8vw, 4.5rem);
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .markName {
+    font-size: 1.15rem;
+  }
+
+  .markBadge {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .markBadge::after {
+    top: 0.4rem;
+    margin-left: -0.48rem;
+    border-left-width: 0.48rem;
+    border-right-width: 0.48rem;
+    border-bottom-width: 1.1rem;
+  }
+
+  .heroArt {
+    height: 46%;
+  }
+
+  .heroText {
+    padding-top: 5.8rem;
+  }
+
+  .factsList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .amenities,
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rules div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+
+  /* The rate table restacks: one card per site, labels from data. */
+  .tableWrap {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .rates thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .rates,
+  .rates tbody,
+  .rates tr,
+  .rates th,
+  .rates td {
+    display: block;
+  }
+
+  .rates tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem 0.8rem;
+    margin-bottom: 0.8rem;
+    padding: 1rem;
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+  }
+
+  .rates tbody tr:nth-child(odd) {
+    background: transparent;
+  }
+
+  .rates tbody th {
+    grid-column: 1 / -1;
+  }
+
+  .rates td:nth-child(2),
+  .rates td:nth-child(3) {
+    grid-column: span 3;
+  }
+
+  .rates th,
+  .rates td,
+  .rates td:nth-last-child(-n + 3) {
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+
+  .rates td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+
+  .rates td:nth-child(2)::before,
+  .rates td:nth-child(3)::before {
+    display: inline;
+    margin-right: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .formBtn,
+  .faqItem summary::before,
+  .faqItem summary::after {
+    transition: none;
+  }
+}

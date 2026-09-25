@@ -198,7 +198,7 @@ export default function PawshGroomingPage() {
               <TabbiedPattern
                 pattern={quoit}
                 palette={BUBBLES}
-                options={{ frequency: 0.45 }}
+                options={{ frequency: 0.7 }}
                 fit="grid"
                 cellSize={46}
                 seed="pawsh-bubbles"

@@ -53,7 +53,7 @@ const PAPERS: Paper[] = [
   { no: 'D', weight: '350', name: 'Oatmeal', stock: 'Recycled, flecked', thick: '0.5 mm', best: 'Tags, menus, coasters', tone: 'oat' },
   { no: 'E', weight: '400', name: 'Stone Kraft', stock: 'Unbleached kraft', thick: '0.55 mm', best: 'Labels and packaging', tone: 'stone' },
   { no: 'F', weight: '700', name: 'Coal', stock: 'Dyed through', thick: '0.9 mm', best: 'White ink or foil', tone: 'coal' },
-  { no: 'G', weight: '350', name: 'Vermilion', stock: 'Dyed through', thick: '0.5 mm', best: 'Envelopes liners, a second color', tone: 'red' },
+  { no: 'G', weight: '350', name: 'Vermilion', stock: 'Dyed through', thick: '0.5 mm', best: 'Envelope liners, a second color', tone: 'red' },
   { no: 'H', weight: '1200', name: 'White and Vermilion', stock: 'Two sheets, pasted', thick: '1.6 mm', best: 'Cards that stand on their edge', tone: 'duplex' },
 ];
 

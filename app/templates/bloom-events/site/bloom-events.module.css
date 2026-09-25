@@ -621,6 +621,7 @@
 
 .quote {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 1.2rem;
   padding: 1.8rem 1.7rem;

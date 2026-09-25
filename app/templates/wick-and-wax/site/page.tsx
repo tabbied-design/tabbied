@@ -1,5 +1,5 @@
 import { TabbiedPattern } from 'tabbied/react';
-import { bokeh, midnightblossoms, moleskin, teardropleaves } from 'tabbied/patterns';
+import { bokeh, moleskin, roundpair, teardropleaves } from 'tabbied/patterns';
 import s from './wick-and-wax.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
 import { Artwork } from 'components/Artwork';
@@ -19,11 +19,11 @@ const HEATHER = '#7C6F8E';
 const SMOKE = '#A39A90';
 const PALE = '#E8E0D4';
 
-/* teardropleaves and midnightblossoms paint their ground in the second
-   color, so the first two match. */
+/* teardropleaves paints its ground in the second color, so its first two
+   match. */
 const HERO_JAR = [AMBER, AMBER, WAX];
 const WOODS = [PALE, AMBER, SMOKE];
-const FLORALS = [HEATHER, HEATHER, PALE, AMBER, WAX];
+const FLORALS = [HEATHER, WAX, PALE, AMBER];
 const GARDEN = [SMOKE, SMOKE, WAX];
 const GLOW = ['transparent', AMBER, HEATHER];
 
@@ -180,7 +180,7 @@ export default function WickAndWaxPage() {
                   pattern={moleskin}
                   palette={WOODS}
                   fit="grid"
-                  cellSize={22}
+                  cellSize={24}
                   seed="hero-pillar"
                   style={{ position: 'absolute', inset: 0 }}
                 />
@@ -198,10 +198,11 @@ export default function WickAndWaxPage() {
             </Artwork>
             <Artwork slug="wick-and-wax-tin" alt="" mode="fill" inks={[]} className={s.nicheTin}>
               <TabbiedPattern
-                pattern={midnightblossoms}
+                pattern={roundpair}
                 palette={FLORALS}
                 fit="grid"
-                cellSize={26}
+                cellSize={24}
+                options={{ frequency: 0.6 }}
                 seed="hero-tin"
                 style={{ position: 'absolute', inset: 0 }}
               />
@@ -238,7 +239,7 @@ export default function WickAndWaxPage() {
                         pattern={moleskin}
                         palette={WOODS}
                         fit="grid"
-                        cellSize={20}
+                        cellSize={24}
                         seed={c.name}
                         style={{ position: 'absolute', inset: 0 }}
                       />
@@ -283,10 +284,11 @@ export default function WickAndWaxPage() {
                   <span className={`${s.candleBox} ${s[c.form]}`}>
                     <Artwork slug={c.art} alt={`${c.name}, ${c.form}`} mode="fill" inks={[]} className={s.candle}>
                       <TabbiedPattern
-                        pattern={midnightblossoms}
+                        pattern={roundpair}
                         palette={FLORALS}
                         fit="grid"
                         cellSize={24}
+                        options={{ frequency: 0.6 }}
                         seed={c.name}
                         style={{ position: 'absolute', inset: 0 }}
                       />

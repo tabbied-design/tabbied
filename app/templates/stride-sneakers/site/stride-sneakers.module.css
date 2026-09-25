@@ -34,6 +34,10 @@
   text-decoration: none;
 }
 
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
 .page :focus-visible {
   outline: 3px solid var(--cobalt);
   outline-offset: 2px;
@@ -308,7 +312,6 @@
   width: 90%;
   top: 50%;
   transform: translateY(-46%) rotate(-7deg);
-  filter: drop-shadow(0 26px 18px rgb(0 0 0 / 0.22));
 }
 
 /* ------------------------------------------------------------------ drops */
