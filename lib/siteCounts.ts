@@ -1,14 +1,9 @@
-// The figures the homepage quotes, derived from the data they describe rather
-// than written into the copy - the same reason /templates computes its own
-// total. Adding a preset, a template site, or a palette can't leave a stale
-// number behind in the hero sentence or the stats rows. The docs page reads
-// the package version here for the same reason: a release bumps it and the
-// header keeps up.
+// The figures the homepage quotes (and the package version the docs page
+// shows), derived from the data they describe so none goes stale.
 //
-// Server-only by intent: `patterns` carries every design's css-doodle source,
-// so importing it from a client component would drag the whole catalog into
-// the browser bundle to count its keys. The homepage reads these in its server
-// component and passes plain numbers down.
+// Server-only: `patterns` carries every design's css-doodle source, so a
+// client import would ship the whole catalog to count its keys. Pages read
+// these in a server component and pass plain numbers down.
 import pkg from 'tabbied/package.json';
 import { patterns } from 'tabbied/patterns';
 import { PALETTE_LIBRARY } from 'lib/paletteLibrary';

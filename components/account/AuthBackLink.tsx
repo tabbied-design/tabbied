@@ -6,15 +6,11 @@ import { safeNext } from 'lib/safeNext';
 import styles from './AuthShell.module.css';
 
 // The way out of the account forms, on its own so that reading `?next=` costs
-// only this button.
-//
-// It follows the same `?next=` the form returns to on success - the page that
-// sent the person here, a template they were customizing, the gallery, their
-// account - so leaving and finishing land in the same place. With no `next`
-// it is the homepage.
+// only this button. It follows the same `?next=` the form returns to on
+// success, so leaving and finishing land in the same place: a same-origin
+// path only (lib/safeNext), else the homepage.
 
 export default function AuthBackLink() {
-  // Same-origin paths only (lib/safeNext); the homepage otherwise.
   const back = safeNext(useSearchParams().get('next'), '/');
 
   return (

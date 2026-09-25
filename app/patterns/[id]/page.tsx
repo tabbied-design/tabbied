@@ -5,8 +5,7 @@ import { getAllPatternIds, getPattern } from 'lib/pattern';
 import { pageMetadata, previewImage } from 'lib/seo';
 import EditPattern from 'components/edit-pattern-page/EditPattern';
 
-// Replicates the old `getStaticPaths` with `fallback: false` - only the
-// pattern ids known at build time are rendered, anything else 404s.
+// Only the pattern ids known at build time are rendered; anything else 404s.
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
@@ -41,11 +40,9 @@ export default async function PatternPage({
   const { id } = await params;
   const pattern = await getPattern(id);
 
-  // EditPattern is a client component, so every font variable it reads has to
-  // reach it from here: the serif for the stage caption, the mono for the
-  // header crumb and the rail's readouts, and Plex Sans for the rail's copy.
-  // The mono was missing, and the failure was quiet - `var(--font-plex-mono)`
-  // simply resolved to nothing and the crumb rendered in the system monospace.
+  // EditPattern is a client component, so every font variable it reads (the
+  // serif caption, the mono readouts, the Plex Sans copy) has to be applied
+  // here. A missing one fails quietly: the var resolves to nothing.
   return (
     <Suspense>
       <div

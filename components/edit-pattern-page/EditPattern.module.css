@@ -7,10 +7,8 @@
   background: #ffffff;
 }
 
-/* Expanding hides the rail and lets the stage take the whole width, which is
-   what the design does - it is the same stage on the same ground, not a copy of
-   the pattern floating over a scrim. The pattern re-fits on its own: the
-   ResizeObserver on .previewWrapper is what sizes it. */
+/* Expanding hides the rail and the stage takes the whole width; the
+   ResizeObserver on .previewWrapper re-fits the pattern. */
 .editPatternSection {
   flex-grow: 1;
   min-height: 0;
@@ -24,9 +22,8 @@
 /* ---- Preview pane ---- */
 
 /* A neutral ground the pattern sits on as a plate, rather than a full bleed of
-   the pattern's own background: the light gradient is what lets a dark design
-   and a pale one read the same way, and gives the caption something to sit on.
-   The expanded dialog still bleeds, which is the point of expanding. */
+   the pattern's own background: the light gradient lets a dark design and a
+   pale one read the same way, and gives the caption something to sit on. */
 .previewWrapper {
   position: relative;
   flex: 1;
@@ -53,9 +50,8 @@
 }
 
 /* The frame is the plate. The canvas inside it is snapped to whole, square
-   cells and overflows the plate by up to a cell or so at the right and
-   bottom (see `canvas` in EditPattern.tsx); the frame clips it, the way a
-   fit="grid" host clips its own oversized canvas. */
+   cells and overflows it at the right and bottom (see `canvas` in
+   EditPattern.tsx); the frame clips it, as a fit="grid" host does. */
 .doodleFrame {
   display: inline-block;
   min-height: 0;
@@ -91,13 +87,13 @@
   letter-spacing: 0.02em;
 }
 
-/* Checkerboard behind zero-alpha (transparent-background) previews. */
-/* Expanded to the screen: the plate is centerd in it rather than hung from
+/* Expanded to the screen: the plate is centered in it rather than hung from
    the top of a stage under a header. */
 .previewWrapper:fullscreen {
   align-items: center;
 }
 
+/* Checkerboard behind zero-alpha (transparent-background) previews. */
 .previewTransparent {
   background-image: repeating-conic-gradient(#e3e6ea 0% 25%, #f8f9fa 0% 50%);
   background-size: 18px 18px;
@@ -139,8 +135,7 @@
   overflow: hidden;
 }
 
-/* The grouped inspector content scrolls within the panel; when the palette
-   browser is open it fills the panel and scrolls its own list instead. */
+/* The inspector content scrolls within the panel. */
 .panelScroll {
   flex: 1;
   min-height: 0;
@@ -187,8 +182,7 @@
 
 /* ---- Colors group ---- */
 
-/* Both groups sit on one baseline so the two captions line up, and the inks
-   never wrap: the stepper that used to share this row is in the header now. */
+/* Both groups sit on one baseline so the two captions line up. */
 .colorsRow {
   display: flex;
   align-items: flex-end;
@@ -466,7 +460,7 @@
 
 /* The phone's strip: the same rows laid side by side in one swipeable line,
    each ringed so it reads as a chip against the white, run out to the tile's
-   edges. Scroll within scroll on touch is what the vertical list would be. */
+   edges. A vertical list would be a scroll within a scroll on touch. */
 .paletteStrip {
   display: flex;
   flex-direction: row;
@@ -585,9 +579,7 @@
 
 /* ---- Layout group ---- */
 
-/* Every control in the design stacks: its label, then the control across the
-   full rail. Side by side, the chips were squeezed into whatever the label left
-   over, which is what turned grid density into a scrolling segmented strip. */
+/* Every control stacks: its label, then the control across the full rail. */
 .layoutField {
   margin-bottom: 26px;
 }
@@ -659,8 +651,8 @@
   border-radius: 2px;
 }
 
-/* Separate pills that wrap, not one segmented track: the design draws each
-   density as its own chip and fills the chosen one solid. */
+/* Separate pills that wrap, not one segmented track; the chosen one is
+   filled solid. */
 .chipRow {
   display: flex;
   flex-wrap: wrap;
@@ -712,7 +704,7 @@
   cursor: pointer;
 }
 
-/* ---- Mobile (7d): compact editor - fixed preview band, scrolling controls ---- */
+/* ---- Mobile: fixed preview band, scrolling controls ---- */
 
 @media (max-width: 991.98px) {
   /* Keep the fixed-height card model (the page doesn't scroll); the editing
@@ -753,9 +745,8 @@
   }
 }
 
-/* On a phone the plate is a share of the screen rather than a fixed band.
-   300px is most of a 667px viewport and barely a third of a 932px one, which
-   left the controls cramped on the small phones and the pattern small on the
+/* On a phone the plate is a share of the screen rather than a fixed band,
+   which would cramp the controls on small phones and shrink the pattern on
    large ones; a floor keeps it legible where the fraction is smallest. */
 @media (max-width: 767.98px) {
   .previewWrapper {
@@ -764,8 +755,8 @@
   }
 }
 
-/* A short phone (a 375x667 SE) left the controls 287px under that, with
-   Colors already scrolled out of it; there the plate gives up some share. */
+/* On a short phone (a 375x667 SE) the plate gives up some share so the
+   Colors group stays in view. */
 @media (max-width: 767.98px) and (max-height: 700px) {
   .previewWrapper {
     height: 40vh;

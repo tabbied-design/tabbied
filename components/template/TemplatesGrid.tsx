@@ -16,10 +16,7 @@ import s from './TemplatesGrid.module.css';
 
 // The template gallery's body: a row of category chips and the cards they
 // filter. Client-side for the chips and for the one thing the server cannot
-// know, which templates are the visitor's: a card's footer is "Sign in to
-// use" for a visitor, "Choose template" for a template a person may still
-// choose, "Customize" and "Download" once it is theirs, and "Request more"
-// when every one they may choose is chosen (lib/myTemplates.ts).
+// know, which templates are the visitor's (lib/myTemplates.ts).
 
 export type TemplateCard = {
   slug: string;
@@ -127,11 +124,8 @@ function Footer({ c, templates, guard }: { c: TemplateCard; templates: MyTemplat
 }
 
 /**
- * A card: the pattern takes the whole top, numbered; the name, the kind of
- * business and its inks sit under it with the palette and pattern named at
- * the right; the footer closes it. Each card carries its accent as a custom
- * property, which tints the hover, so mousing across the grid previews each
- * site's color before you open it.
+ * A card. Each carries its accent as a custom property, which tints the
+ * hover, so mousing across the grid previews each site's color.
  */
 function Card({ c, templates, guard }: { c: TemplateCard; templates: MyTemplatesState; guard: Guard }) {
   const vars = { '--accent': c.colors[1] ?? c.colors[0] } as CSSProperties;
@@ -144,8 +138,8 @@ function Card({ c, templates, guard }: { c: TemplateCard; templates: MyTemplates
       <a className={s.cardLink} href={c.href}>
         <div className={s.thumb}>
           {c.shot ? (
-            // A pilot: the site itself, with its pattern as the accent in the
-            // corner. A template with no shot is the pattern alone, as before
+            // The site itself, with its pattern as the accent in the corner;
+            // a template with no shot is the pattern alone
             // (scripts/generate-template-shots.mjs).
             <>
               {/* eslint-disable-next-line @next/next/no-img-element -- a committed file under public/ */}

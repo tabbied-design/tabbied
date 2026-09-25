@@ -2,15 +2,11 @@ import type { Metadata } from 'next';
 
 // A page's title, description, canonical URL and share card, in one call.
 //
-// Per page rather than in the root layout, deliberately: the 77 template
-// pages are under the same layout, and their exported HTML is what the
-// packager turns into the downloads. A share card or a canonical link set at
-// the root would ride into every site someone downloads and publishes,
-// pointing at tabbied.com (the packager strips them as well, as a second
-// line). So only the site's own pages call this. The root layout supplies
+// Per page rather than in the root layout, deliberately: the template pages
+// share that layout and become the downloads, so a share card or canonical
+// link set at the root would ride into every site someone publishes (the
+// packager strips them too, as a second line). The root layout supplies
 // `metadataBase`, which turns the paths here into absolute URLs.
-
-export const SITE_URL = 'https://tabbied.com';
 
 type ShareImage = { url: string; width: number; height: number; alt: string };
 

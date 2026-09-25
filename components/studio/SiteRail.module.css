@@ -22,9 +22,6 @@
   flex: none;
 }
 
-/* The gutters come in where the rail is the width of the phone. Set here and
-   not on the wrapper in SiteWorkspace: the wrapper has no padding of its own,
-   so a rule there would add to this one rather than replace it. */
 /* Below the two-column breakpoint the wrapper is static and grows with its
    content, so the rail is an ordinary block again and the list goes back to a
    capped window rather than trying to fill a height nothing sets. */
@@ -50,6 +47,9 @@
   }
 }
 
+/* The gutters come in where the rail is the width of the phone. Set here and
+   not on the wrapper in SiteWorkspace: the wrapper has no padding of its own,
+   so a rule there would add to this one rather than replace it. */
 @media (max-width: 768px) {
   .rail {
     padding: 22px 18px 40px;
@@ -158,15 +158,11 @@
 }
 
 /* Except Colors, where the palette list is the long part and scrolls inside
-   the panel; a scroll here as well would put one inside the other. So the
-   panel is told not to scroll - and `visible` rather than `hidden`, because
-   the rows below reach 12px past this box on each side and `hidden` clips
-   them there. That clip is what drew the selected row as a square slab with
-   its name flush against the cut: the pill's two rounded ends were outside
-   the panel and the 14px that insets the name was spent on the part that got
-   cut off. Nothing can actually overflow here to need the clip - the list is
-   `flex: 1; min-height: 0` over a scroller - and .rail's own `hidden` is the
-   backstop. */
+   the panel; a scroll here as well would put one inside the other. `visible`
+   rather than `hidden`, because the rows below reach 12px past this box on
+   each side and `hidden` would cut off the selected pill's rounded ends.
+   Nothing can actually overflow here (the list is `flex: 1; min-height: 0`
+   over a scroller), and .rail's own `hidden` is the backstop. */
 .panelColors {
   overflow: visible;
 }
@@ -186,10 +182,9 @@
 /* ---- Palettes ------------------------------------------------------------ */
 
 /* The list takes whatever the tabs and the reset action leave, and scrolls
-   inside that. It was capped at 320px, which left a short window scrolling
-   inside a rail that also scrolled - two scrollbars for one list. The negative
-   margin is the rail's full side padding, so a row's hover and its inked state
-   run to the rail's edges. The fade says the list continues. */
+   inside that, so one list has one scrollbar. The negative margin is the
+   rail's full side padding, so a row's hover and its inked state run to the
+   rail's edges. The fade says the list continues. */
 .paletteScroll {
   position: relative;
   flex: 1;

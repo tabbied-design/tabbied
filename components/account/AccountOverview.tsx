@@ -1,22 +1,14 @@
 'use client';
 
-// The account's front page: the templates a person has chosen.
+// The account's front page: the templates a person has chosen, against the
+// allowance (worker/lib/templates.ts). A ring counting them, the AI card
+// beside it, and a table of the chosen templates, ending in either the empty
+// slot or, at the limit, "Request more".
 //
-// During the beta every account chooses five website templates, and once a
-// template is chosen its colors and patterns can be changed and it can be
-// downloaded as often as the person likes (worker/lib/templates.ts). So the
-// page is that: a ring counting the chosen against the allowance, the AI
-// card beside it ("Not yet available", every AI cap belongs to an endpoint
-// nothing links to), and a table of the chosen templates, each with its
-// Download menu (the customized version when there is a saved site, and the
-// original in both formats) and the way into the customizer. Below the rows
-// is either the empty slot, leading to the gallery, or, at the limit, the
-// one "Request more" message the beta allows.
-//
-// Two query parameters arrive from elsewhere and are read after mount (a
-// search param read during render bails the static route out):
-// `?templates=full`, where the Worker sends a download click it refused,
-// and `?request=1`, the choose dialog's "Request more".
+// Query parameters are read after mount, since a search param read during
+// render bails the static route out: `?templates=full`, where the Worker
+// sends a download click it refused, `?request=1` ("Request more" from the
+// gallery), and `?activated=`, where the emailed link lands.
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Dialog } from '@base-ui-components/react/dialog';
@@ -85,8 +77,8 @@ function Gauge({ used, total }: { used: number; total: number }) {
 
 /**
  * A small tile in the template's own colors: its ground under a motif in
- * its first ink. Which motif is a function of the slug, so a template keeps
- * its tile; the artboard drew the same four.
+ * its first ink. The motif is a function of the slug, so a template keeps
+ * its tile.
  */
 function Thumb({ entry }: { entry: TemplateIndexEntry | undefined }) {
   const ground = entry?.colors[0] ?? '#f4f4f3';
@@ -189,13 +181,11 @@ function Chips({
 }
 
 /**
- * "Request more", in the two shapes the 24 September designs give it. A
- * first request is three quick questions, answered by an emailed link that
- * adds 5 (so it says "Get 5 more templates" and "Send request"); a later one
- * carries those answers forward (with an Edit) and asks how many, whether
- * the person would pay, a link and what they are for, and goes to the team
- * ("Send for review"). After sending, the dialog says which of the two
- * happens next.
+ * "Request more", in two shapes. A first request is three quick questions,
+ * answered by an emailed link that adds FIRST_REQUEST_GRANT; a later one
+ * carries those answers forward (with an Edit), asks how many, whether the
+ * person would pay, a link and what they are for, and goes to the team.
+ * After sending, the dialog says which of the two happens next.
  */
 function RequestDialog({
   open,

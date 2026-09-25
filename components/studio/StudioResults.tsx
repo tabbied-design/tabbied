@@ -11,21 +11,18 @@ import type { StoredDirection, StoredGeneration } from 'lib/studioDocument';
 import PreviewDialog, { type PreviewTarget } from './PreviewDialog';
 import styles from './StudioResults.module.css';
 
-// One page, two sources.
+// One page, two sources:
 //
-//   ?q=<description>  the matcher - scored in the browser, instant, offline,
-//                     and a pure function of the text, which is what made it
-//                     shareable.
-//   ?g=<id>           a stored generation - an LLM answer is not reproducible,
-//                     so shareability moved into storage. The id is the
-//                     capability; the read needs no session.
+//   ?q=<description>  the matcher, scored in the browser; a pure function of
+//                     the text, so the link is shareable.
+//   ?g=<id>           a stored generation. An LLM answer is not reproducible,
+//                     so shareability lives in storage; the id is the
+//                     capability, and the read needs no session.
 //
-// Both arrive as the same card shape, so everything below this point is
-// indifferent to which one produced it.
+// Both arrive as the same card shape.
 
 const SWATCHES = 4;
 
-/** The card fields, however they were produced. */
 /**
  * A card's direction, from either source. Matched directions carry `reasons`
  * and no copy; stored ones carry copy and no reasons. Everything else is the
@@ -42,11 +39,9 @@ type Direction = Pick<
 type Catalog = typeof import('tabbied/patterns');
 
 /**
- * The runtime catalog, loaded after the cards have drawn. Three previews
- * need three designs, and a static import put the whole 338-design module
- * on this page's critical path - the free, signed-out landing for a
- * library match. Split out, it streams in behind the copy and is the same
- * chunk the gallery and the editor already cache.
+ * The runtime catalog, loaded after the cards have drawn, so the whole
+ * catalog module stays off the critical path of the free, signed-out landing.
+ * It is the same chunk the gallery and the editor already cache.
  */
 function useCatalog(): Catalog | null {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
@@ -363,8 +358,8 @@ export default function StudioResults({ entries }: { entries: StudioEntry[] }) {
                   </div>
 
                   <div className={styles.actions}>
-                    {/* A real link - middle-click, copy, no-script all land on
-                        the full page - that a plain click turns into the
+                    {/* A real link (middle-click, copy and no-script all land
+                        on the full page) that a plain click turns into the
                         dialog instead. */}
                     <Link
                       href={previewHref(generationId, direction, index)}
@@ -390,8 +385,7 @@ export default function StudioResults({ entries }: { entries: StudioEntry[] }) {
                     </a>
 
                     {/* Spending actions need a session: the capability link
-                        is a read grant, not a spend one. Making a site is the
-                        full document on this template; imagery is one picture. */}
+                        is a read grant, not a spend one. */}
                     {generationId && stored && user ? (
                       <button
                         type="button"

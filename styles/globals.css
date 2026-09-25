@@ -1,13 +1,10 @@
-/* The proxima-nova (Adobe Fonts / typekit) stylesheet is linked from the root
-   layout <head> with a preconnect, rather than @imported here - an @import is
-   only discovered after this bundle downloads, which serializes the requests
-   and delays first paint. */
+/* proxima-nova is linked from the root layout, not @imported here: an
+   @import is only discovered after this sheet downloads. */
 
 /*
  * minireset.css (MIT, https://github.com/jgthms/minireset.css), vendored inline
- * instead of pulled from a render-blocking CDN @import. It provides the global
- * box-sizing and fluid-image (`max-width: 100%`) reset the layout relies on, so
- * keeping it local makes the base styles reliable and removes a network round-trip.
+ * rather than @imported from a CDN. The layout relies on its box-sizing and
+ * fluid-image (`max-width: 100%`) reset.
  */
 html,
 body,
@@ -93,12 +90,9 @@ th:not([align]) {
 }
 
 :root {
-  /* Two sans, split by role - see lib/fonts.ts. The editor, the gallery and
-     the palette browser read these; the older legal pages reference neither,
-     so switching the text face here cannot reach them. The inner
-     fallback matters: a bare `var(--font-plex-sans)` on a route that does not
-     load the font resolves to nothing and leaves `font-family: , 'Helvetica
-     Neue', ...`, which is invalid and drops the whole declaration. */
+  /* Two sans, split by role (see lib/fonts.ts). The inner fallback matters:
+     a bare `var(--font-plex-sans)` on a route that does not load the font
+     resolves to nothing, which invalidates the whole declaration. */
   --font-sans-serif: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
     'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
@@ -119,13 +113,9 @@ th:not([align]) {
 }
 
 /*
- * Guard against accidental horizontal scroll (and the right-side whitespace
- * it produces) on every page. A stray fixed-width or full-bleed element that
- * pokes past the viewport should be clipped rather than widen the document.
- * `clip` (not `hidden`) is deliberate: `overflow-x: hidden` forces `overflow-y`
- * to compute to `auto`, making html/body a scroll container that defeats
- * `position: sticky` descendants (e.g. the gallery's mobile palette shelf).
- * `clip` still prevents horizontal scroll without creating that scroll port.
+ * A stray element past the viewport is clipped rather than widening the page.
+ * `clip`, not `hidden`: `overflow-x: hidden` makes `overflow-y` compute to
+ * `auto`, a scroll container that defeats `position: sticky` descendants.
  */
 html,
 body {
@@ -183,12 +173,10 @@ button {
 
 /*
  * The template kit's small-screen menu (components/template/TemplateMenu).
- * Here rather than in a module because every template package ships this
- * sheet as base.css and may ship only one module of its own. Hidden until a
- * page's own class shows it at the width its nav disappears, and themed from
- * the header it sits in: the header's type and color, and the page's
- * `--template-menu-bg` for the panel's ground, so a re-colored page re-colors
- * its menu too.
+ * Here because every template package ships this sheet as base.css and may
+ * ship only one module of its own. A page's own class shows it where its nav
+ * disappears; it takes the header's type and color, and the page's
+ * `--template-menu-bg` for the panel's ground.
  */
 .template-menu {
   position: relative;

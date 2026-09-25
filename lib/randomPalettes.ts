@@ -1,17 +1,12 @@
-// The gallery's "Random per pattern": one library palette per card.
-//
-// The spread is drawn once per session and kept, so coming back from the
-// editor shows the cards as they were; choosing the option again draws a new
-// one. The server renders with a fixed seed and the session's seed is applied
-// after mount - a Math.random() during render would make the prerendered grid
-// disagree with the first client render, the same trap the homepage's grids
-// avoid with seededRandom().
+// The gallery's "Random per pattern": one library palette per card. The seed
+// is drawn once per session, so coming back from the editor shows the same
+// cards. The server renders with a fixed seed and the session's is applied
+// after mount: a Math.random() during render breaks hydration.
 import { seededRandom } from 'components/main-page/homeMotion';
 
 /**
  * `count` picks from `pool` in a seeded shuffle, so no palette repeats until
- * the pool is used up (the library is larger than the catalog, so it never
- * is). Deterministic in the seed: the same seed gives the same spread.
+ * the pool is used up. The same seed gives the same spread.
  */
 export function assignRandomPalettes<T>(
   count: number,

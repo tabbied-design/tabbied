@@ -15,17 +15,14 @@ const ROWS = [SHOWCASE.slice(0, 5), SHOWCASE.slice(5, 10)];
 type Site = (typeof SHOWCASE)[number];
 
 /**
- * One card; the second copy of each row is the marquee's seam, not a second
- * list, so it is hidden from assistive tech and out of the tab order - a
- * keyboard user was tabbing through twenty links of which ten were the same
- * ten again.
+ * One card. The second copy of each row is the marquee's seam, not a second
+ * list, so it is hidden from assistive tech and out of the tab order.
  */
 function Card({ site, clone = false }: { site: Site; clone?: boolean }) {
   return (
     <Link
       // The framed preview, not /templates/<slug>/site/ itself: the frame carries
-      // the way back to the gallery and the actions for taking the template,
-      // which the bare page has none of. Same destination as a gallery card.
+      // the way back to the gallery and the actions for taking the template.
       href={`/templates/${site.slug}/`}
       prefetch={false}
       className={styles.card}
@@ -40,11 +37,10 @@ function Card({ site, clone = false }: { site: Site; clone?: boolean }) {
       </span>
       <span className={styles.thumb}>
         {/* A plain img: the export runs with images unoptimized, so
-            next/image added its client runtime to the homepage to do what
-            object-fit does. Eager, not lazy: the track is translated into
-            view by an animation, which lazy loading does not see as the image
-            approaching, so the second copy of each row scrolled in blank.
-            There are ten files, and the first copy asks for all of them. */}
+            next/image would only add its client runtime. Eager, not lazy:
+            the track is moved into view by an animation, which lazy loading
+            does not see as the image approaching, so the second copy of each
+            row would scroll in blank. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`/previews/${site.patternSlug}.webp`}
@@ -55,9 +51,7 @@ function Card({ site, clone = false }: { site: Site; clone?: boolean }) {
           className={styles.thumbImage}
         />
       </span>
-      {/* The name under the picture, where two grey bars used to stand in for
-          it and read as a card still loading. The link carries it too, for
-          anyone not reading the card. */}
+      {/* Hidden: the link's label carries the same words. */}
       <span className={styles.caption} aria-hidden="true">
         <span className={styles.captionName}>{site.name}</span>
         <span className={styles.captionTopic}>{site.topic}</span>

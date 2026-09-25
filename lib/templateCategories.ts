@@ -1,11 +1,7 @@
-// Every template site, by category, for the gallery's filter row.
-//
-// Hand-assigned. The sites carry a free-form `topic` ("Dry pigment mill",
-// "Fair-faced concrete") and no keyword rule sorts seventy-seven of those into
-// a handful of bins without filing a bell foundry under Food. A site missing
-// from this table fails the build (`categoryOf` throws while the gallery
-// prerenders), which is the same gate the thumbnails and the editable specs
-// use: the failure otherwise is a card that no filter reaches.
+// Every template site, by category, for the gallery's filter row. Hand-assigned,
+// since no keyword rule sorts free-form topics into bins. A site missing from
+// this table fails the build (`categoryOf` throws while the gallery
+// prerenders); otherwise it would be a card no filter reaches.
 
 export const TEMPLATE_CATEGORIES = [
   'Shop',

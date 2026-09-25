@@ -1,10 +1,6 @@
-// Shared keys + helper for restoring the gallery's scroll position when the
-// user returns from a pattern editor via "Back to gallery".
-//
-// The App Router does not restore window scroll on these back/forward SPA
-// navigations (and the browser's native restoration only applies to full
-// document loads), so the gallery persists its own scroll position and the
-// editor header arms a one-shot restore before navigating back.
+// Restoring the gallery's scroll position on "Back to gallery". The App Router
+// does not restore window scroll on these SPA navigations, so the gallery
+// persists its own position and the editor arms a one-shot restore.
 export const GALLERY_SCROLL_Y = 'tabbied:gallery-scroll-y';
 export const GALLERY_SCROLL_RESTORE = 'tabbied:gallery-scroll-restore';
 
@@ -16,8 +12,7 @@ export function armGalleryScrollRestore(): void {
   try {
     sessionStorage.setItem(GALLERY_SCROLL_RESTORE, '1');
   } catch {
-    // sessionStorage can throw in private mode / sandboxed frames; restoring
-    // the scroll position is best-effort, so a failure here is non-fatal.
+    // sessionStorage can throw in private mode; restoring is best-effort.
   }
 }
 

@@ -1,19 +1,13 @@
-// The download with the person's changes in it, built where the changes are.
+// The download with the person's changes in it, built in the browser: a
+// Worker has no DOM to apply the document with and would re-upload a large
+// archive per click. Fetch the packaged zip, apply the document to its
+// index.html with the same engine the canvas was drawn with, and zip it again.
 //
-// The packaged zip on the server is the template as authored; the customizer
-// holds the document that changes it. A Worker route could not apply that
-// document (it has no DOM) and would re-upload a multi-megabyte archive per
-// click, so the browser does it: fetch the packaged zip, apply the document
-// to its index.html with the same engine the canvas was drawn with, and zip
-// it again. What is saved is exactly what was previewed, which is the whole
-// point of previewing the download rather than the live page.
-//
-// Two things beyond the engine's own work are done to the page, and no
-// others. The bootstrap's import list is rewritten to the designs the page
-// mounts *now*: the packager named each design the export used, and a
-// swapped field names one that list never had. And a picture Studio made,
-// which the page reaches through /api/media, is fetched and shipped inside
-// the archive, since an unzipped folder has no API behind it.
+// Beyond the engine's work, two things only: the bootstrap's import list is
+// rewritten to the designs the page mounts now (a swapped field names one the
+// packager never listed), and a picture Studio made, reached through
+// /api/media, is shipped inside the archive, since an unzipped folder has no
+// API behind it.
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import {
   applyEdits,
@@ -44,7 +38,7 @@ const mountedDesigns = (doc: Document): string[] =>
  * false when there is no such script, which a caller reports rather than
  * shipping a page whose patterns would not draw.
  */
-export function rewriteBootstrap(doc: Document): boolean {
+function rewriteBootstrap(doc: Document): boolean {
   const script = [...doc.querySelectorAll('script[type="module"]')].find((candidate) =>
     candidate.textContent?.includes('esm.sh/tabbied')
   );
@@ -113,12 +107,9 @@ export type CustomisedArchive = {
 };
 
 /**
- * The packaged HTML download for `slug`, with the document applied.
- *
- * The zip is fetched from the same static path the plain Download button
- * uses, so what is customized is byte-for-byte the package the packager
- * wrote; the archive comes back with the same entries in the same order,
- * index.html replaced, and the same folder name at the root.
+ * The packaged HTML download for `slug`, with the document applied. The
+ * archive keeps the package's entries, order and root folder, with index.html
+ * replaced.
  */
 export async function buildCustomisedArchive(options: {
   slug: string;
@@ -129,10 +120,8 @@ export async function buildCustomisedArchive(options: {
   const response = await fetch(`/downloads/${slug}-html.zip`);
 
   if (!response.ok) {
-    // The zip goes through the Worker, which makes the template one of the
-    // person's and answers a fetch in JSON when it will not serve one:
-    // signed out, or every template they may choose already chosen. That
-    // sentence is the toast.
+    // The Worker's claim answers a refused fetch (signed out, or every
+    // template already chosen) with a JSON sentence, which is the toast.
     const said = await response
       .json()
       .then((body: { error?: string }) => body.error)
@@ -190,8 +179,7 @@ export function saveArchive(bytes: Uint8Array, fileName: string): void {
 
 /**
  * A saved site's customized HTML download, from anywhere a site id is known:
- * the account's table and the gallery's cards. The same build the
- * customizer's Download menu runs, on the site's latest saved revision.
+ * the customizer's build, on the site's latest saved revision.
  */
 export async function downloadCustomisedSite(siteId: string): Promise<void> {
   const site = await apiFetch<SiteDocument>(`/api/studio/sites/${encodeURIComponent(siteId)}`);

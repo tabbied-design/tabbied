@@ -1,10 +1,7 @@
-// Per-site composition for the React template sites: a visual "kit" (how the
-// page is dressed) and an ordered list of sections, plus the content for the
-// new section types. This is what makes the ten sites feel distinct rather than
-// one template, they pick different kits, different section orders, and mix in
-// manifestos, alternating illustrated rows, icon grids, FAQs, big quotes, logo
-// clouds, and galleries. Existing about/features/testimonials/newsletter/images
-// live in templateContent.ts; stats live in templateData.ts.
+// Per-site composition for the TemplateSite pages: a visual "kit" (how the
+// page is dressed), an ordered list of sections, and the content for the
+// section types kept here. about/features/testimonials/newsletter/images live
+// in templateContent.ts; stats live in templateData.ts.
 
 export type Kit = 'soft' | 'editorial' | 'brutal' | 'bordered' | 'minimal';
 
@@ -53,10 +50,10 @@ export type SectionContent = {
   /**
    * People, each with a generated portrait (see Team in TemplateSite.tsx).
    *
-   * `portraitScene` is the half of the prompt the whole team shares - where
-   * they are and how it is lit - and each person's `role` completes it. One
-   * line per team instead of one prompt per person, and it keeps a site's
-   * people looking like colleagues rather than a stock-photo grab bag.
+   * `portraitScene` is the half of the prompt the whole team shares (where
+   * they are and how it is lit), and each person's `role` completes it, which
+   * keeps a site's people looking like colleagues rather than a stock-photo
+   * grab bag.
    */
   team?: {
     kicker: string;
@@ -70,16 +67,14 @@ export type SectionContent = {
   gallery?: string[];
   /**
    * A generated photograph behind the hero's art panel, with a pattern drawn
-   * over it (see HeroArt). Without it the panel is the pattern alone, which is
-   * what the other nineteen sites do.
+   * over it (see HeroArt). Without it the panel is the pattern alone.
    */
   heroImage?: string;
   /**
    * Pattern slug drawn over `heroImage`, defaulting to the site's last. It is
-   * named rather than inferred because the choice is load-bearing: the overlay
-   * is opaque, so the design has to be a sparse one whose gaps are real
-   * negative space (lines, frames, scattered marks) rather than a dense field
-   * that would simply cover the photograph.
+   * named rather than inferred because the overlay is opaque, so the design
+   * has to be a sparse one whose gaps are real negative space (lines, frames,
+   * scattered marks) rather than a dense field that covers the photograph.
    */
   heroOverlayPattern?: string;
 };
@@ -247,7 +242,6 @@ export const TEMPLATE_SECTIONS: Record<string, SectionContent> = {
     ],
   },
 
-  // ---- Ported from the static-HTML samples (sites 1-10) ----
   verdant: {
     kit: 'soft',
     sections: ['stats', 'about', 'altRows', 'items', 'specs', 'iconFeatures', 'gallery', 'process', 'testimonials', 'band', 'newsletter'],

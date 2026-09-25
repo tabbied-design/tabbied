@@ -72,8 +72,8 @@ const PREVIEW_FIT_MARGIN = 0.9;
 // single horizontal row, so it has to stay swipeable.
 const STRIP_LIMIT = 30;
 
-// The paletteSource marker for "the pattern's own colors" / a freely-edited
-// palette - neither highlights any chip.
+// A palette id, or 'pattern' (the design's own colors) or 'custom' (freely
+// edited), neither of which highlights a row.
 type PaletteSource = 'pattern' | 'custom' | string;
 
 // Largest width/height for `ratio` that fits inside a maxW x maxH box.
@@ -98,9 +98,8 @@ const loadImage = (url: string) =>
 /**
  * The pattern's PNG cut to `width x height` from its top-left corner, over
  * the picture (cover-fitted) when there is one. css-doodle exports the whole
- * canvas, and the plate's canvas is larger than the plate: the plate snapped
- * to whole cells, with the frame clipping the rest (see `canvas` in the
- * editor). The file is the plate as the stage showed it.
+ * canvas, which is snapped to whole cells and larger than the plate (see
+ * `canvas` in the editor), so the file is the plate as the stage showed it.
  */
 const cropExport = async (
   patternPng: Blob,
@@ -154,9 +153,9 @@ const toDataUrl = async (url: string): Promise<string> => {
 };
 
 /**
- * The picture as the root's first child, cover-fitted to the viewBox, so the
- * exported SVG shows what the stage showed. Everything the converter drew
- * follows it and paints over it exactly as the pattern paints over the stage.
+ * The picture as the root's first child, cover-fitted to the viewBox, so
+ * everything the converter drew paints over it as the pattern paints over
+ * the stage.
  */
 const embedImageInSvg = (svg: string, dataUrl: string): string => {
   const match = /<svg\b[^>]*viewBox="0 0 ([\d.]+) ([\d.]+)"[^>]*>/.exec(svg);
@@ -191,10 +190,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   const brandState = useBrandPalettes();
   const brandPalettes = brandState.palettes;
-  // The active palette shared with the gallery - a saved palette or a curated
-  // library palette (opening a pattern picks up whatever the gallery previews).
-  // Memoized on the store snapshot: the resolver builds a fresh object, and an
-  // effect keyed on it re-ran every render.
+  // The palette the gallery has active (saved or library). Memoized on the
+  // store snapshot: the resolver builds a fresh object, and an effect is
+  // keyed on it.
   const activeCustomPalette = useMemo(
     () => resolveActivePalette(brandState),
     [brandState]
@@ -202,10 +200,10 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   const draftPreview = useDraftPreview();
 
-  // The palette a link carries, when it carries a usable one: a color count
-  // the pattern can take, every entry a color. `?palette=red`, or a stray
-  // `}`, used to reach css-doodle's source (which painted nothing, silently)
-  // and the copied React snippet verbatim.
+  // The palette a link carries, when usable: a color count the pattern can
+  // take, every entry a color. Anything else (`?palette=red`, a stray `}`)
+  // would reach css-doodle's source, which then paints nothing, and the
+  // copied React snippet verbatim.
   const linkedPaletteFromQuery = (): string[] | null => {
     const queryPalette = searchParams.getAll('palette');
 
@@ -229,16 +227,13 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   const urlHadPaletteAtMount = useRef(linkedAtMount.current !== null);
 
-  // Which palette (if any) the editor's swatches currently reflect, driving the
-  // chip outline. 'pattern'/'custom' highlight no chip; a palette id highlights
-  // that chip. Any manual swatch edit switches this to 'custom'. A link's
-  // colors start as 'custom' and the lookup below names them if it can.
+  // Which palette row the swatches reflect. A swatch edit makes it 'custom';
+  // a link's colors start as 'custom' until the lookup below names them.
   const [paletteSource, setPaletteSource] = useState<PaletteSource>(() =>
     urlHadPaletteAtMount.current ? 'custom' : 'pattern'
   );
   const [paletteQuery, setPaletteQuery] = useState('');
-  // The phone's "View all": every palette in a fullscreen sheet, since the
-  // strip under the swatches shows only the first STRIP_LIMIT.
+  // The phone's "View all": every palette in a fullscreen sheet.
   const [browserOpen, setBrowserOpen] = useState(false);
 
   const customPaletteColors = (custom: BrandPalette): string[] =>
@@ -335,10 +330,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   const hasGrid = gridIndex >= 0;
 
   // The density a link carries, 0 (coarse) to 1 (fine): `density` when it
-  // parses in range, else a legacy `grid=CxR` read as the density whose
-  // cell that grid had on the original plate (links written before density
-  // existed, and llms.txt told agents to write them), else the design's
-  // authored default. Two decimals, the precision the link is written at.
+  // parses in range, else a legacy `grid=CxR` (llms.txt told agents to write
+  // them) read as the density of that grid's cell on the original plate,
+  // else the design's authored default. Two decimals, as links write it.
   const densityFromQuery = (): number => {
     const raw = searchParams.get('density');
     const parsed = raw === null || raw.trim() === '' ? NaN : Number(raw);
@@ -382,26 +376,22 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   // arrangement rather than re-rolling it at the larger plate's cell count.
   const pinnedGrid = useRef<{ cols: number; rows: number } | null>(null);
 
-  // A picture behind the pattern instead of a color. It is a local object
-  // URL and nothing else: it goes in no query string, no saved palette and no
-  // shared link, which the share action says out loud. Choosing one makes the
-  // ground transparent so the picture shows through wherever the design
-  // paints nothing, and clearing it puts the color back if there was one.
+  // A picture behind the pattern instead of a color: a local object URL,
+  // never in the query string, a saved palette or a shared link (the share
+  // toast says so). Choosing one makes the ground transparent; clearing it
+  // puts the color back if there was one.
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
   const bgWasOpaque = useRef(false);
 
   const selfWrites = useRef<Set<string>>(new Set());
-  // Below the two-column breakpoint the editor uses the compact 7d layout: a
-  // fixed preview with an icon-button header and inline shuffle/export panels.
+  // Below the two-column breakpoint: a fixed preview band, an icon-button
+  // header and a palette strip.
   const isMobile = useMediaQuery('(max-width: 991.98px)');
 
-  // The preview is a bounded box in every layout now (a flex-filled pane on
-  // desktop, a fixed band on mobile), so the pattern simply fits the measured
-  // box. The caption under the plate is hidden on the band, so nothing is
-  // taken off before the fit there; the desktop pane is tall enough that the
-  // fit margin covers it. The pattern is drawn only once the box has been
-  // measured (see the stage): drawn first at a guessed size and again at the
-  // real one a frame later, every visit paid for a whole extra generation.
+  // The plate fits the measured preview box (a flex-filled pane on desktop,
+  // a fixed band on a phone); the fit margin leaves room for the desktop
+  // caption. The pattern is drawn only once the box is measured, since a
+  // draw at a guessed size costs a whole extra generation a frame later.
   // Until then these numbers stand in for the handlers that read them.
   const { width, height } = previewSize
     ? fitToBox(
@@ -411,12 +401,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
       )
     : fitToBox(aspectRatio, 360, 540);
 
-  // The grid is derived from the plate at the density's target cell, the way
-  // fit="grid" derives it from a container: the slider sets how big a cell
-  // is, and how many fit follows from the plate. So a wider stage shows more
-  // cells at the same density, which is what an embed under the default fit
-  // then draws from the copied snippet. The design's own cell bounds apply as
-  // they do everywhere else.
+  // The grid is derived from the plate at the density's cell size, the way
+  // fit="grid" derives it from a container: a wider stage shows more cells
+  // at the same density, as an embed of the copied snippet does.
   const grid = hasGrid
     ? pinnedGrid.current ??
       deriveGridForBox(width, height, densityToCellPx(density), pattern.sizing)
@@ -424,13 +411,10 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   // The plate is the ratio's box; the canvas drawn in it is that box snapped
   // to whole, square cells (`snapCellToBox`, the arithmetic `fit="grid"` runs
-  // on a container) and the frame clips the sub-cell overflow, up to a cell
-  // or so at the right and bottom edges. Drawn at the box's own size the
-  // cells are `width / cols` wide, which a plate of any ratio but the grid's
-  // makes fractional and oblong: a 3:2 plate at 15x10 had 58.2px tracks and
-  // a hairline seam down every column, while 1:1 happened to land on 60. A
-  // design with no grid option has no cell count to snap to and is drawn at
-  // the box.
+  // on a container) and the frame clips the sub-cell overflow at the right
+  // and bottom. Drawn at the box's own size, a plate of any ratio but the
+  // grid's gets fractional, oblong cells and a hairline seam at each track.
+  // A design with no grid option is drawn at the box.
   const cell = grid
     ? snapCellToBox(width, height, grid.cols, grid.rows, pattern.sizing?.cellMultiple)
     : null;
@@ -492,9 +476,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  // Apply the gallery's selected palette on first load, once, and mark it as the
-  // active chip. A shared link that carries its own palette wins: it is
-  // applied by the state initializers, and named (or not) by the lookup below.
+  // Apply the gallery's active palette once, on first load. A link that
+  // carries its own palette wins: the state initializers apply it, and the
+  // lookup below names it if it can.
   useEffect(() => {
     if (initialCustomApplied.current) return;
 
@@ -515,17 +499,11 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   }, [activeCustomPalette]);
 
   // A link's colors are looked up in the list, so a link from the gallery's
-  // random spread (or one shared from a named palette) lights that palette's
-  // row; anything else stays "custom". Two things about the lookup. The
-  // gallery fits a palette to the pattern before putting it in the link
-  // (fitToColorBounds: cut to the most inks the design takes, padded to the
-  // fewest), so the list is compared fitted the same way - compared whole, a
-  // five-ink palette on a four-ink design never matched. And it runs again
-  // when the saved palettes arrive: useSyncExternalStore renders the
-  // hydration pass with the server snapshot, which has none, and only then
-  // with the stored ones, so a lookup made once on mount could name a library
-  // palette and never a saved one. It stops the moment the swatches stop
-  // matching what the link carried.
+  // random spread or a named palette lights that row; anything else stays
+  // "custom". The list is compared fitted (fitToColorBounds), as the gallery
+  // fits a palette before linking it. It re-runs when the saved palettes
+  // arrive, since useSyncExternalStore hydrates with the server snapshot,
+  // which has none, and stops once the swatches no longer match the link.
   useEffect(() => {
     const linked = linkedAtMount.current;
 
@@ -550,13 +528,10 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     if (named) setPaletteSource(named.palette.id);
   }, [brandPalettes, palette, colorCount, paletteSource, pattern.colors]);
 
-  // Expanding pins the grid the plate shows now, and collapsing releases it;
-  // the grid is otherwise the plate's, at whatever size the stage is.
-  //
-  // It also takes the screen where the browser allows it. Hiding the panel
-  // frees width only, and a 1:1 or 2:3 plate is bound by the stage's height,
-  // so on its own Expand hid the controls and drew the same plate. Where
-  // there is no fullscreen (an iPhone), it is the wider stage, as before.
+  // Expanding pins the grid the plate shows now, and collapsing releases it.
+  // It also goes fullscreen where the browser allows it: hiding the panel
+  // frees only width, and a 1:1 or 2:3 plate is bound by the stage's height.
+  // Without fullscreen (an iPhone) it is the wider stage alone.
   const expand = () => {
     pinnedGrid.current = grid;
     setIsExpanded(true);
@@ -593,7 +568,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     return () => document.removeEventListener('fullscreenchange', onChange);
   }, [isExpanded]);
 
-  // Escape came free with the dialog; expanding in place has to bind it.
+  // Expanded without fullscreen, Escape has to be bound here.
   useEffect(() => {
     if (!isExpanded) return;
 
@@ -642,11 +617,10 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   // state the URL already implies" apart from a real edit.
   const initialSerializedState = useRef<string | null>(null);
 
-  // Sync the URL search params FROM component state if necessary. A clean
-  // `/patterns/<slug>/` visit keeps its bare URL while the state still matches
-  // what that URL implies - but only that long: once anything changes the URL
-  // must follow, even when it started without params, or "Copy shareable
-  // link" copies a link that doesn't reproduce the edits.
+  // Sync the URL search params FROM component state. A bare
+  // `/patterns/<slug>/` visit keeps its bare URL until the state changes;
+  // after that the URL must follow, or "Copy shareable link" copies a link
+  // that does not reproduce the edits.
   useEffect(() => {
     const newParams = new URLSearchParams();
 
@@ -695,10 +669,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     });
   };
 
-  // Shuffle draws the layout again and nothing else. It used to be a menu of
-  // three scopes (layout, colors, both); the colors are chosen from the
-  // list under the swatches, and a control that could also reroll them read
-  // as noise beside it.
+  // Shuffle rerolls the layout only; colors are chosen from the palette list.
   const randomizeSeed = () => {
     setSeed(randomSeed(4));
   };
@@ -747,8 +718,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     if (paletteSource === id) setPaletteSource('custom');
   };
 
-  // Apply a saved (custom) palette to the editor's swatches + share it with the
-  // gallery. Clicking the already-active custom chip opens it for editing.
+  // Apply a saved palette and make it the gallery's active one too. Clicking
+  // the already-active one opens it for editing.
   const applyCustomPalette = (saved: BrandPalette) => {
     applyBrandPalette(saved);
     setActivePalette(saved.id);
@@ -844,9 +815,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     setDensity(Math.round(next * 100) / 100);
   };
 
-  // One export at a time: a second click while the first is rendering, or a
-  // picture removed mid-export (which revokes the object URL being read),
-  // otherwise ended in the generic failure toast.
+  // One export at a time: a second click while the first is rendering would
+  // otherwise end in the failure toast.
   const exporting = useRef(false);
 
   const runExport = async (run: () => Promise<void>) => {
@@ -865,10 +835,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     const scale = Math.ceil(3000 / Math.max(width, height));
 
     try {
-      // css-doodle's export draws the whole canvas, the pattern alone with
-      // the ground it was given. The file is cut to the plate (the canvas
-      // overflows it; see `canvas`), over the picture when there is one,
-      // cover-fitted the way the stage shows it.
+      // `detail` returns the whole canvas with its own ground; cropExport
+      // cuts it to the plate, over the picture when there is one.
       const result = (await doodleRef.current?.exportImage({ scale, detail: true })) as
         | { blob: Blob }
         | undefined;
@@ -887,9 +855,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   const svgExportEnabled = supportsSvgExport(pattern);
 
-  // Limitations worth confirming before an SVG download: the design's own
-  // note (filter-based effects, documented sub-pixel deviations) plus notes
-  // from any enabled toggle options (e.g. shadows that export as filters).
+  // Limitations to confirm before an SVG download: the design's own note
+  // plus the note of any enabled toggle option.
   const svgExportNotes = [
     ...(pattern.svgExportNote ? [pattern.svgExportNote] : []),
     ...pattern.options.flatMap((option, index) =>
@@ -902,8 +869,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   const [svgConfirmOpen, setSvgConfirmOpen] = useState(false);
 
   const downloadSvg = () => runExport(async () => {
-    // The canvas overflows the plate (see `canvas`); the export is clipped to
-    // the plate, so the file shows what the stage showed.
+    // Clipped to the plate, which the canvas overflows (see `canvas`).
     const clip = { width, height };
 
     try {
@@ -1042,26 +1008,21 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
   const bgIsTransparent = isTransparentHex(palette[0] ?? '');
 
-  // ---- Grouped inspector controls ----
-
-  // One merged chip list: custom palettes first, then the read-only library.
-  // Memoized on the saved palettes: every slider tick and color-picker drag
-  // re-renders the editor, and merging, filtering and searching 437 palettes
-  // on each of them was the bulk of that render.
+  // Custom palettes first, then the library. Memoized: every slider tick and
+  // picker drag re-renders the editor, and merging the whole library on each
+  // was the bulk of that render.
   const mergedChips = useMemo(
     () => mergePalettes(brandPalettes, PALETTE_LIBRARY),
     [brandPalettes]
   );
-  // The rail lists every palette, custom first, filtered by the search above
-  // it and revealed in batches as it scrolls (the same list the gallery's
-  // rail shows, so the two read as one control).
+  // The rail lists every palette, filtered by its search and revealed in
+  // batches as it scrolls, like the gallery's rail.
   const listedPalettes = useMemo(
     () => mergePalettes(brandPalettes, PALETTE_LIBRARY, paletteQuery),
     [brandPalettes, paletteQuery]
   );
   const paletteList = usePaletteReveal(listedPalettes, 24);
-  // The phone's strip is a single horizontal row, so it shows the first few
-  // and the one in use, and "View all" reaches the rest.
+  // The phone's strip: the first STRIP_LIMIT plus the one in use.
   const stripPalettes = useMemo(() => {
     const head = mergedChips.slice(0, STRIP_LIMIT);
     const inUse = mergedChips.find(({ palette: p }) => p.id === paletteSource);
@@ -1080,8 +1041,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     if (isMobile && stripRef.current) revealPressed(stripRef.current);
   }, [isMobile, paletteSource]);
 
-  // The plate's caption names what it is: the palette it wears (when it wears
-  // a named one), its grid and its ratio - the three things the rail changes.
+  // The plate's caption: the palette it wears (when named), its grid and its
+  // ratio, the three things the rail changes.
   const captionParts = [
     mergedChips.find(({ palette: p }) => p.id === paletteSource)?.palette.name,
     grid ? `${grid.cols}\u00D7${grid.rows} grid` : null,
@@ -1122,10 +1083,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     const onChange = (next: OptionValue) => setOptionByIndex(index, next);
 
     if (option.type === 'ButtonSelectGroup') {
-      // The grid is a density slider, 0 coarse to 1 fine, read out as that
-      // number the way the frequency slider beside it is; the grid the plate
-      // resolves to at that cell size is named in the plate's caption. The
-      // other select groups stay chips.
+      // The grid option is a density slider, 0 coarse to 1 fine; the grid it
+      // resolves to is named in the plate's caption. Other groups are chips.
       if (option.id === GRID_OPTION_ID) {
         if (!grid) return null;
 
@@ -1218,9 +1177,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         mobile={isMobile}
       />
 
-      {/* The phone's "View all": every palette, in a sheet over the editor
-          rather than a panel in the rail, so the list has the whole screen
-          and the way back is one tap. The desktop rail lists them all. */}
       <Dialog.Root open={browserOpen} onOpenChange={setBrowserOpen}>
         <Dialog.Portal>
           <Dialog.Popup className={styles.allPalettesSheet} aria-label="All palettes">
@@ -1248,9 +1204,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
         </Dialog.Portal>
       </Dialog.Root>
 
-      {/* Confirmation before downloading an SVG with known limitations
-          (filter-based effects or documented sub-pixel deviations). A plain
-          Dialog rather than AlertDialog so clicking outside dismisses it. */}
+      {/* A plain Dialog rather than AlertDialog so clicking outside
+          dismisses it. */}
       <Dialog.Root open={svgConfirmOpen} onOpenChange={setSvgConfirmOpen}>
         <Dialog.Portal>
           <Dialog.Backdrop className={styles.svgConfirmBackdrop} />
@@ -1313,10 +1268,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
               ? `${styles.previewWrapper} ${styles.previewTransparent}`
               : styles.previewWrapper
           }
-          // Expanded, the stage is the whole editor, so anywhere that is not
-          // the plate is "outside" and dismisses it - the affordance a backdrop
-          // used to provide. Guarded on the target being this element so a
-          // click on the plate, the caption or the toggle does not close it.
+          // Expanded, a click on the stage outside the plate collapses it;
+          // the target check ignores the plate, the caption and the toggle.
           onClick={
             isExpanded
               ? (event) => {
@@ -1337,10 +1290,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           </button>
 
           <figure className={styles.stage}>
-            {/* The frame is the plate, at the ratio's size. The canvas in it
-                is snapped to whole cells and overflows it (see `canvas`); the
-                frame's overflow: hidden clips the rest. Sized only once the
-                stage is measured, like the pattern it holds. */}
+            {/* The frame is the plate; its overflow: hidden clips the
+                cell-snapped canvas (see `canvas`). Sized only once the stage
+                is measured, like the pattern it holds. */}
             <div
               className={styles.doodleFrame}
               style={previewSize ? { ...imageStyle, width, height } : imageStyle}
@@ -1357,9 +1309,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
               )}
             </div>
 
-            {/* The pattern is named under it rather than in a header bar, so
-                the stage reads as a plate with its caption. On a phone the
-                caption is hidden and the band is all plate. */}
+            {/* Hidden on a phone, where the band is all plate. */}
             <figcaption className={styles.stageCaption}>
               <span className={styles.stageName}>{pattern.name}</span>
               <span className={styles.stageMeta}>
@@ -1373,9 +1323,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
           <div className={styles.panelScroll}>
           {palette.length > 0 && (
             <section className={styles.group}>
-              {/* The design hangs the swatch count off the title rather than
-                  off the end of the ink row, which is what keeps the inks on
-                  one line however many there are. */}
+              {/* The count sits by the title, not at the end of the ink row,
+                  which keeps the inks on one line however many there are. */}
               <div className={styles.groupHeader}>
                 <h2 className={styles.groupTitle}>Colors</h2>
                 {minColors < maxColors && (
@@ -1464,10 +1413,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                       {bgIsTransparent && <Check size={15} />}
                     </button>
                     )}
-                    {/* A picture instead of a color. While one is set it
-                        stands in for both the swatch and the transparent
-                        toggle, showing the picture; choosing again replaces
-                        it, and the link under the caption clears it. */}
+                    {/* While a picture is set this stands in for the swatch
+                        and the toggle; choosing again replaces the picture,
+                        and the X beside the caption clears it. */}
                     <label
                       className={
                         backgroundImage
@@ -1565,12 +1513,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                   </label>
                 )}
 
-                {/* The reveal hook measures its list to keep filling until it
-                    overflows. The strip is one row that never overflows
-                    vertically, so given the strip it filled all the way to
-                    the end of the library - some twenty full re-renders of
-                    the editor on every phone visit - for a slice it never
-                    showed. It gets the desktop list only. */}
+                {/* The reveal hook keeps filling until its list overflows
+                    vertically, which the one-row strip never does, so only
+                    the desktop list gets it. */}
                 <div
                   ref={isMobile ? stripRef : paletteList.listRef}
                   className={isMobile ? `${styles.paletteList} ${styles.paletteStrip}` : styles.paletteList}
@@ -1613,8 +1558,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                   )}
                 </div>
 
-                {/* The rail lists every palette from the start, so there is
-                    no "browse all" to reach; only the way to a new one. */}
                 {!isMobile && (
                   <div className={styles.chipsActions}>
                     <button

@@ -58,17 +58,15 @@ export default function PreviewFrame({
           className={styles.iframe}
           title={title}
           srcDoc={html}
-          // `allow-same-origin` is required, not lazy: without it the document
-          // gets an opaque origin and the same-origin runtime import is blocked
-          // as cross-origin, so the page renders with every pattern missing.
+          // `allow-same-origin` is required: with an opaque origin the
+          // same-origin runtime import is blocked and every pattern is missing.
           // What stays denied is what this page actually has: the packaged
-          // template's `<form action="#">` and its `<a href="#">` links cannot
+          // template's `<form action="#">` and `<a href="#">` links cannot
           // navigate the top frame, submit, or open a popup. The content is
-          // first-party throughout - our template, our runtime - and the only
-          // model-authored strings reach it as text nodes (`writeText` builds
-          // them with createTextNode precisely so there is no markup path).
-          // That reasoning holds *until* user-supplied markup or images enter
-          // this document; revisit it then, not after.
+          // first-party (our template, our runtime), and model-authored strings
+          // reach it only as text nodes (`writeText` uses createTextNode, so
+          // there is no markup path). Revisit this *before* user-supplied
+          // markup or images enter this document.
           sandbox="allow-scripts allow-same-origin"
         />
       </div>

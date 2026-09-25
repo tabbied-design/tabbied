@@ -124,7 +124,7 @@
   color: oklch(0.45 0.01 260);
 }
 
-/* Today's AI usage, in ink: the one card on the page that is about spending. */
+/* The AI card, in ink. */
 .dark {
   padding: 32px;
   color: #eef0f6;
@@ -546,8 +546,8 @@
   color: oklch(0.4 0.01 260);
 }
 
-/* Shown while the three requests are in flight. Two rows' worth, so the page
-   does not reflow when the real ones land. */
+/* Shown while the templates load. Two rows' worth, so the page does not
+   reflow when the real ones land. */
 .skeleton {
   height: 18px;
   background-color: oklch(0 0 0 / 0.06);

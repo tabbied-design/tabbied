@@ -1,15 +1,11 @@
 'use client';
 
-// Choosing the design one pattern field draws, for this site. Shuffle draws a
-// new set for the whole page; this is the way to change one field to a design
-// a person has in mind, which is what the gallery is for everywhere else on
-// the site and was missing here.
+// Choosing the design one pattern field draws, for this site.
 //
 // It applies on click and closes, like the rail's palette rows rather than
 // the color editor: a design is one choice, not a set of values that reads
 // better committed together, and the canvas answering at once is the point of
-// previewing. The list is the catalog the shuffle draws from, searched by
-// name, each design shown by its committed preview.
+// previewing. The list is the catalog the shuffle draws from.
 import { useEffect, useMemo, useState } from 'react';
 import { Dialog } from '@base-ui-components/react/dialog';
 import { Search, X } from 'lucide-react';

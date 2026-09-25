@@ -1,14 +1,7 @@
 /*
- * Homepage design tokens.
- *
- * The homepage is the one route with its own chrome and its own palette: a dark
- * editorial shell with two inset light sections. Rather than leak those colors
- * into globals.css (where every other route would inherit them), they are
- * declared once on the page wrapper and inherit down to the section modules,
- * which reference them as `var(--h-...)`.
- *
- * Everything else on the site still renders in the shared light theme via
- * MainHeader/Footer; nothing here is global.
+ * Homepage design tokens: a dark editorial shell with two inset light
+ * sections. Declared on the page wrapper, not in globals.css, so they reach
+ * only the pages that opt in; the section modules read them as `var(--h-...)`.
  */
 
 .home {
@@ -31,20 +24,18 @@
   --h-paper-well: oklch(0.98 0.002 260);
   --h-teal: oklch(0.4 0.13 175);
 
-  /* Measure. `--h-edge` is the full-bleed margin beside the 1280px column -
-     the strip the hero fills with pattern cells. It is only ever used on
-     full-width children, so its 50% always resolves against the viewport. */
+  /* Measure. `--h-edge` is the full-bleed margin beside the 1280px column.
+     It is only ever used on full-width children, so its 50% always resolves
+     against the viewport. */
   --h-max: 1280px;
   --h-pad: 128px;
   --h-edge: max(48px, calc(50% - 640px));
 
-  /* Two sans, split by role, as the artboards have them: Proxima Nova sets
-     display type (headings, the stat figures, primary buttons) and IBM Plex
-     Sans sets body and UI copy. Reading a design file's stack left to right is
-     what separates them - `'Proxima Nova','IBM Plex Sans'` is a heading,
-     `'IBM Plex Sans','Proxima Nova'` is body text. Proxima comes from the
-     typekit link in the root layout; Plex Sans is self-hosted by next/font and
-     arrives as a class, so it is a variable rather than a family name. */
+  /* Two sans, split by role as the artboards have them: Proxima Nova sets
+     display type (headings, stat figures, primary buttons) and IBM Plex Sans
+     sets body and UI copy. Proxima comes from the root layout's typekit link;
+     Plex Sans is self-hosted by next/font and arrives as a class, so it is a
+     variable rather than a family name. */
   --h-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
     'Helvetica Neue', Helvetica, Arial, sans-serif;
   --h-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),

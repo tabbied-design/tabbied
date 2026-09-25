@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 import useMediaQuery from 'lib/useMediaQuery';
 import styles from './HomeHowItWorks.module.css';
 
-// Three steps, each illustrated by a small live panel rather than a screenshot:
-// the palette picker moves, the frequency slider travels, the export button
-// fills. Everything here is decoration for the copy beside it, so the panels are
-// hidden from assistive technology and stop entirely under reduced motion.
+// Three steps, each illustrated by a small live panel. The panels are
+// decoration for the copy beside them, so they are hidden from assistive
+// technology and stop entirely under reduced motion.
 
 /** The four palettes the picker steps through, with the swatches each shows. */
 const PALETTE_PILLS = [
@@ -97,9 +96,8 @@ function Panel({ children }: { children: React.ReactNode }) {
 
 export default function HomeHowItWorks() {
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  // The section is display: none below 768px (see the stylesheet); two clocks
-  // re-rendering invisible panels for the life of the page is what a phone
-  // visitor otherwise paid for it.
+  // The section is display: none below 768px, so the clocks stop there rather
+  // than re-render invisible panels.
   const shown = useMediaQuery('(min-width: 768px)');
   const [paletteIdx, setPaletteIdx] = useState(0);
   const [frequencyIdx, setFrequencyIdx] = useState(FREQUENCY_STEPS.length - 1);
@@ -153,8 +151,7 @@ export default function HomeHowItWorks() {
       <div className={styles.inner}>
         <ol className={styles.steps}>
           {steps.map((step, i) => (
-            // Even-numbered steps put the panel on the right; the copy and the
-            // panel swap sides down the column.
+            // Even-numbered steps put the panel on the right.
             <li key={step.title} className={styles.row} data-flipped={i % 2 === 1 || undefined}>
               <Panel>{step.panel}</Panel>
               <div className={styles.text}>

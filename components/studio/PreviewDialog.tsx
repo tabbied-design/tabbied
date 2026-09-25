@@ -1,14 +1,10 @@
 'use client';
 
-// A results card's Preview, without leaving the page.
-//
-// It shows the same artifact the full preview route shows - the packaged
-// download with the card's direction applied by the edits engine - for the
-// same reason: the live /templates/<slug>/site/ page mounts its patterns through
-// React and ignores an attribute written from outside, while the package has
-// no framework left in it. The card's link still points at the full page, so
-// a middle-click, a copied URL and a browser with scripting off all land
-// somewhere real; this is what a plain click gets.
+// A results card's Preview, without leaving the page. It shows what the full
+// preview route shows, the packaged download with the card's direction
+// applied, since the live /templates/<slug>/site/ page mounts its patterns
+// through React and ignores an attribute written from outside. The card's
+// link still points at the full page; this is what a plain click gets.
 import { useEffect, useState } from 'react';
 import { Dialog } from '@base-ui-components/react/dialog';
 import { directionToEdits, type Problem, type TemplateSpec } from 'tabbied-templates';
@@ -82,9 +78,9 @@ export default function PreviewDialog({
 
     return () => {
       live = false;
-      // Forget the built page with the card: the next card otherwise rendered
-      // the previous one's document for a commit, runtime import and all,
-      // before its own build began.
+      // Forget the built page with the card, or the next card renders the
+      // previous one's document (runtime import and all) for a commit before
+      // its own build begins.
       setState({ status: 'loading' });
     };
   }, [target]);
@@ -149,11 +145,7 @@ export default function PreviewDialog({
                     className={styles.iframe}
                     title={`${target.stance ?? target.name} - a preview built on the ${target.name} template`}
                     srcDoc={state.html}
-                    // Same reasoning as PreviewFrame: `allow-same-origin` is
-                    // what lets the document import the same-origin pattern
-                    // runtime; the package's own `href="#"` links and its
-                    // form still cannot navigate this page, submit, or open
-                    // a popup.
+                    // Same sandbox, for the same reasons, as PreviewFrame.
                     sandbox="allow-scripts allow-same-origin"
                   />
                 ) : state.status === 'error' ? (

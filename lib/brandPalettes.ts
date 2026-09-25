@@ -1,11 +1,6 @@
-// Custom palettes: user-defined color palettes, persisted in localStorage, that
-// can be applied globally to the /patterns gallery previews. (Named
-// `brandPalettes` internally for storage-key stability; the UI calls them
-// "custom palettes".)
-//
-// The whole feature state lives under one localStorage key so cross-tab sync
-// is a single `storage` event. Same-tab consumers subscribe through
-// useSyncExternalStore via subscribe/getSnapshot below.
+// Custom palettes (named `brandPalettes` for storage-key stability), persisted
+// in localStorage and applied to the /patterns gallery previews. The whole
+// state lives under one key so cross-tab sync is a single `storage` event.
 'use client';
 
 import { useSyncExternalStore } from 'react';
@@ -40,7 +35,7 @@ export type BrandPaletteState = {
   activePaletteId: string | null;
 };
 
-export const STORAGE_KEY = 'tabbied.brandPalettes.v1';
+const STORAGE_KEY = 'tabbied.brandPalettes.v1';
 
 /**
  * The gallery's "Random per pattern" option, kept in the same slot as a
@@ -51,17 +46,16 @@ export const STORAGE_KEY = 'tabbied.brandPalettes.v1';
  */
 export const RANDOM_PALETTE_ID = 'random';
 
-export const isRandomPaletteId = (id: string | null | undefined): boolean =>
+const isRandomPaletteId = (id: string | null | undefined): boolean =>
   id === RANDOM_PALETTE_ID;
 
 /** Palette size bounds: a background plus at least one ink. */
-export const MIN_PALETTE_COLORS = 2;
-export const MAX_PALETTE_COLORS = 12;
+const MIN_PALETTE_COLORS = 2;
+const MAX_PALETTE_COLORS = 12;
 
 const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 
-// A first visit is the random spread, as the design draws the library: each
-// card in a different palette until a person picks one for all of them.
+// A first visit is the random spread: each card in a different palette.
 const DEFAULT_STATE: BrandPaletteState = {
   palettes: [],
   activePaletteId: RANDOM_PALETTE_ID,
@@ -78,8 +72,7 @@ const isValidPalette = (value: unknown): value is BrandPalette => {
   return (
     typeof palette.id === 'string' &&
     palette.id.length > 0 &&
-    // The name is optional - an empty string is valid (the palette then shows
-    // as just its colors) - but it must still be a string when present.
+    // An empty name is valid (the palette shows as just its colors).
     typeof palette.name === 'string' &&
     Array.isArray(palette.colors) &&
     palette.colors.length >= MIN_PALETTE_COLORS &&
@@ -120,12 +113,9 @@ const readState = (): BrandPaletteState => {
     const palettes = Array.isArray(parsed.palettes)
       ? parsed.palettes.filter(isValidPalette).map(normalizePalette)
       : [];
-    // The active id may name a saved palette, a curated library palette (both
-    // can be applied to the gallery previews) or the random spread. One that
-    // names nothing any more (deleted in another tab, a library id that was
-    // retired) is the first-visit state again: the random spread, which is
-    // what the gallery lights for it, rather than `null`, which the editor
-    // would resolve to the shared default palette.
+    // An active id that names nothing any more (deleted in another tab, a
+    // retired library id) is the first-visit random spread, not `null`, which
+    // the editor would resolve to the shared default palette.
     const activePaletteId =
       typeof parsed.activePaletteId === 'string' &&
       (palettes.some((palette) => palette.id === parsed.activePaletteId) ||
@@ -136,8 +126,7 @@ const readState = (): BrandPaletteState => {
 
     return { palettes, activePaletteId };
   } catch {
-    // Corrupt storage (hand-edited, quota weirdness) falls back to defaults
-    // rather than breaking the gallery.
+    // Corrupt storage falls back to defaults rather than breaking the gallery.
     return DEFAULT_STATE;
   }
 };
@@ -167,12 +156,11 @@ export const getBrandPaletteState = (): BrandPaletteState =>
 
 const getServerSnapshot = (): BrandPaletteState => DEFAULT_STATE;
 
-export const subscribeBrandPalettes = (listener: () => void): (() => void) => {
+const subscribeBrandPalettes = (listener: () => void): (() => void) => {
   listeners.add(listener);
 
-  // Cross-tab updates arrive as `storage` events; attach once per subscriber
-  // set. (Same-tab writes go through emit() directly - storage events don't
-  // fire in the tab that wrote.)
+  // Cross-tab updates arrive as `storage` events (which never fire in the tab
+  // that wrote; same-tab writes go through emit()).
   if (listeners.size === 1 && typeof window !== 'undefined') {
     window.addEventListener('storage', handleStorage);
   }
@@ -200,13 +188,11 @@ export function useBrandPalettes(): BrandPaletteState {
 }
 
 // ---------------------------------------------------------------------------
-// Live draft preview (transient - never persisted)
+// Live draft preview (transient, never persisted)
 // ---------------------------------------------------------------------------
-// While the palette editor dialog is open, the page's own patterns recolor to
-// the palette being edited. That live value is broadcast on its own channel
-// (separate from the persisted store, so it never touches localStorage) and
-// consumed by the gallery cards and the pattern preview. `null` = no draft
-// open, so consumers fall back to their normal palette.
+// While the palette editor is open the page's patterns recolor to the palette
+// being edited, broadcast on its own channel apart from the persisted store.
+// `null` means no draft is open.
 let draftPreview: string[] | null = null;
 const draftPreviewListeners = new Set<() => void>();
 
@@ -259,10 +245,7 @@ export const deletePalette = (id: string) => {
   writeState({
     ...state,
     palettes: state.palettes.filter((palette) => palette.id !== id),
-    // Deleting the active palette reverts the previews to the random spread,
-    // the gallery's default - the same place a delete from a row lands. The
-    // palette editor's Delete used to skip that and land on the shared
-    // default library palette instead.
+    // Deleting the active palette reverts to the random spread, the default.
     activePaletteId:
       state.activePaletteId === id ? RANDOM_PALETTE_ID : state.activePaletteId,
   });
@@ -292,13 +275,10 @@ const libraryAsBrand = (library: LibraryPalette): BrandPalette => ({
 });
 
 /**
- * The active palette resolved from the saved palettes first, then the curated
- * library. A null/unknown active id falls back to the shared default library
- * palette, so the gallery is themed by one palette rather than each pattern's
- * own colors. Null when the random spread is active - there is no one palette
- * to hand out, and a consumer with nothing else to go on shows the pattern's
- * own colors - and in the impossible case that the default id has been
- * dropped from the library.
+ * The active palette from the saved palettes first, then the library. A null
+ * or unknown id falls back to the default library palette. Null when the
+ * random spread is active (no one palette to hand out, so a consumer shows the
+ * pattern's own colors).
  */
 export const resolveActivePalette = (
   state: BrandPaletteState
@@ -322,7 +302,7 @@ export const resolveActivePalette = (
 // ---------------------------------------------------------------------------
 
 /** The palette's colors with color0 resolved for rendering. */
-export const resolvePaletteColors = (palette: BrandPalette): string[] =>
+const resolvePaletteColors = (palette: BrandPalette): string[] =>
   palette.transparentBackground
     ? ['transparent', ...palette.colors.slice(1)]
     : [...palette.colors];

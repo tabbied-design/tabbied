@@ -1,6 +1,4 @@
-// Small color helpers shared by the palette editors (the /patterns gallery bar
-// and the individual pattern page). Kept framework-free so both the native
-// <input type="color"> swatches and the hex text fields can round-trip values.
+// Color helpers shared by the palette editors.
 
 // Normalize a hex string for the native color input (which only accepts
 // #rrggbb): expand #rgb, drop any alpha, and fall back to white while a value
@@ -24,9 +22,8 @@ export const isTransparentHex = (hex: string): boolean =>
   /^#[0-9a-f]{8}$/i.test((hex ?? '').trim()) &&
   (hex ?? '').trim().toLowerCase().endsWith('00');
 
-// The opaque `#rrggbb` form of a color (expands #rgb, drops any alpha). Used to
-// toggle a transparent background on/off while keeping the underlying color, so
-// switching transparency off brings the same background back.
+// The opaque `#rrggbb` form of a color (expands #rgb, drops any alpha), so
+// switching a transparent background off brings the same color back.
 export const toOpaqueHex = (hex: string): string => {
   const value = (hex ?? '').trim().replace(/^#/, '');
 
@@ -40,7 +37,6 @@ export const toOpaqueHex = (hex: string): string => {
   return `#${value.slice(0, 6).padEnd(6, '0')}`;
 };
 
-// A random 6-digit hex color (e.g. "#3eecff"), used to shuffle palettes.
 export const randomHexColor = (): string =>
   `#${Math.floor(Math.random() * 0xffffff)
     .toString(16)

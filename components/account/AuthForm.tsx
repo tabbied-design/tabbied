@@ -8,10 +8,9 @@ import { signIn, signUp } from 'lib/authClient';
 import { safeNext } from 'lib/safeNext';
 import styles from './AuthForm.module.css';
 
-// Sign-in and sign-up are the same form with two labels and one extra field,
-// so they are one component: the states that matter (pending, error, "check
-// your mail") are identical, and keeping them together is what stops the two
-// pages drifting apart.
+// Sign-in and sign-up are one component: the same form with two sets of
+// labels, and the states that matter (pending, error, "check your mail") are
+// identical, so the two pages cannot drift apart.
 
 type Mode = 'sign-in' | 'sign-up';
 
@@ -34,13 +33,10 @@ const COPY = {
   },
 } as const;
 
-// ---- providers --------------------------------------------------------------
-//
-// The Worker configures a provider or it does not (worker/auth.ts), and only
-// it knows which. The form asks once and draws a button per answer, so a
-// provider that is not set up is never a button that 500s on click - and with
-// no Worker at all (the export served alone) the request fails quietly and
-// the form is email and password, which always works.
+// Only the Worker knows which providers are configured (worker/auth.ts). The
+// form asks once and draws a button per answer, so an unconfigured provider
+// is never a button that 500s on click; with no Worker at all the request
+// fails quietly and the form is email and password.
 
 type Provider = 'google' | 'apple' | 'github';
 
@@ -123,18 +119,14 @@ export default function AuthForm({ mode }: { mode: Mode }) {
     const result =
       mode === 'sign-up'
         ? await signUp.email({
-            // The design's account form is two fields, so there is nothing to
-            // ask a name with. better-auth's user.name is not nullable, so it
-            // is seeded from the address and changed under Settings, which is
-            // where the name lives anyway. `initials` already falls back to the
-            // address, so the avatar reads the same either way.
+            // The form asks no name and better-auth's user.name is not
+            // nullable, so it is seeded from the address; Settings changes it.
             name: email.split('@')[0],
             email,
             password,
             // Absolute, like the social callback below: better-auth resolves
             // a relative one against its own baseURL, which in development
-            // is the Worker on :8787, so the mailed link landed there rather
-            // than on the site.
+            // is the Worker on :8787, not the site.
             callbackURL: `${window.location.origin}/verify-email/`,
           })
         : await signIn.email({ email, password });
@@ -146,9 +138,8 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       return;
     }
 
-    // A new account has no session until the address is confirmed, so there is
-    // nowhere to send them yet - say so rather than bouncing to a page that
-    // will tell them they are signed out.
+    // A new account has no session until the address is confirmed, so say so
+    // rather than bouncing to a page that reports them signed out.
     if (mode === 'sign-up') {
       setSent(true);
       return;

@@ -1,12 +1,11 @@
 'use client';
 
-// One direction, on the actual template - the three-string rebrand.
+// One direction on the actual template: the three-string rebrand.
 //
-// Everything here happens in the browser and it has to: the edits engine works
+// Everything here happens in the browser, and has to: the edits engine works
 // against a DOM, the packaged template is a static asset, and the generation is
-// behind a capability id in the query string. Nothing about this page is
-// prerenderable, which is why it is a client component behind a Suspense
-// boundary rather than a route the export could try to build.
+// behind a capability id in the query string. Nothing here is prerenderable,
+// so it is a client component behind a Suspense boundary.
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -45,9 +44,8 @@ export default function StudioPreview() {
       return { status: 'error', message: 'That direction is no longer in this set.' };
     }
 
-    // The spec and the package are plain static assets, so they are fetched
-    // directly rather than through apiFetch - there is no API involved and no
-    // session to carry.
+    // Plain static assets, fetched directly rather than through apiFetch: no
+    // API, no session.
     const [specResponse, htmlResponse] = await Promise.all([
       fetch(templateSpecUrl(direction.slug)),
       fetch(`${packagedTemplateUrl(direction.slug)}index.html`),

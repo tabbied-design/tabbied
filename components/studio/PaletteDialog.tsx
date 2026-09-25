@@ -1,14 +1,11 @@
 'use client';
 
 // Editing the colors of one palette, for this site. The rail's rows choose a
-// palette wholesale; this is the way to change one of its colors - which is
-// what the rail used to be before the list took its place, so nothing a person
-// could do before has gone away.
+// palette wholesale; this changes one of its colors.
 //
 // It edits a copy and commits on Save, unlike the rail's rows, which apply as
 // they are clicked: a color picker fires an event per drag frame, and planning
-// and re-running the whole page on each of them is what made the first version
-// of this unusable.
+// and re-running the whole page on each of them is unusable.
 import { useEffect, useState } from 'react';
 import { Dialog } from '@base-ui-components/react/dialog';
 import { Check, X } from 'lucide-react';

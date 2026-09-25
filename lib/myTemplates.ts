@@ -1,14 +1,9 @@
 'use client';
 
 // The templates the signed-in person has chosen, shared by every component on
-// a page that asks: the gallery's cards, the preview's menu, the account's
-// table. One read per page (and one more after a choice), not one per card:
-// the gallery has 77 cards and each needs to know whether it is "Yours".
-//
-// The rule it mirrors is the Worker's (worker/lib/templates.ts): five
-// templates during the beta, chosen explicitly or on the first download or
-// customizer save, and after that unlimited. The Worker enforces it; this is
-// only what the page draws.
+// a page: one read per page (and one more after a choice), not one per card.
+// The rule is the Worker's (worker/lib/templates.ts); this is only what the
+// page draws.
 import { useEffect, useSyncExternalStore } from 'react';
 import { apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
@@ -76,12 +71,9 @@ function set(next: MyTemplatesState) {
 }
 
 /**
- * Read the person's templates again, e.g. after a choice. Every call is a
- * new request and only the newest one settles the store. Sharing a read
- * already in flight looked like a saving and was a bug: the read had left
- * before the choice was posted, so it answered from before it, and a card
- * kept saying "Choose template" for a template the toast had just called
- * theirs.
+ * Read the person's templates again, e.g. after a choice. Every call is a new
+ * request and only the newest settles the store: a read already in flight left
+ * before the choice was posted, so sharing it would answer from before it.
  */
 export function refreshMyTemplates(): Promise<void> {
   const read: Promise<void> = apiFetch<MyTemplates>('/api/account/templates')

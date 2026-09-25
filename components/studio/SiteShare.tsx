@@ -1,10 +1,8 @@
 'use client';
 
-// A site, read-only, at one revision - the thing a person sends to someone.
-//
-// No editor, no chrome beyond a title and the download: the id is the
-// capability, as with any generation link, and the revision number pins what
-// the recipient sees so a later edit does not change what was shared.
+// A site, read-only, at one revision: the thing a person sends to someone.
+// The id is the capability, as with any generation link, and the revision
+// number pins what the recipient sees, so a later edit does not change it.
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -33,8 +31,8 @@ export default function SiteShare() {
     (async () => {
       if (!id) throw new Error('no id');
 
-      // Encoded: an id shaped like a path (`../generations/x`) otherwise
-      // normalized to a different endpoint and a confusing failure.
+      // Encoded: an id shaped like a path (`../generations/x`) would otherwise
+      // normalize to a different endpoint.
       const site = await apiFetch<SiteDocument>(`/api/studio/sites/${encodeURIComponent(id)}`);
       const revision =
         Number.isInteger(n) && n >= 1 && n !== site.latest.n

@@ -1,8 +1,5 @@
-// "Shuffle patterns": a new design for every pattern field on the page.
-//
-// Pure, so the choice can be tested and so the same function draws for the
-// customizer and for anything that later wants a page re-patterned without a
-// person. The randomness is injected for the same reason.
+// "Shuffle patterns": a new design for every pattern field on the page. Pure,
+// with the randomness injected, so a draw can be tested.
 import type { PatternEdit, PatternSlot } from 'tabbied-templates';
 import type { DesignChoice } from './designCatalog';
 
@@ -11,18 +8,14 @@ export const designOn = (slot: PatternSlot, edit?: PatternEdit): string =>
   edit?.slug ?? slot.config.slug;
 
 /** Four base-36 characters, the shape the pattern editor's seeds have. */
-export const randomSeed = (random: () => number = Math.random): string =>
+const randomSeed = (random: () => number = Math.random): string =>
   Array.from({ length: 4 }, () => Math.floor(random() * 36).toString(36)).join('');
 
 /**
- * Draw a new design for each field, keeping the page's character.
- *
- * A field is drawn from the designs of the same density as the one it has
- * now - a hero backdrop that was busy stays busy, a quiet band stays quiet -
- * and no design is used twice on one page while the library still has
- * another to offer. Every field also gets a fresh seed, so a design the page
- * already had somewhere is still a new arrangement. The result names every
- * field, which is what lets a save carry the whole set at once.
+ * Draw a new design for each field, keeping the page's character: each field
+ * draws from the designs of its current density, and no design is used twice
+ * on a page while the library has another to offer. Every field gets a fresh
+ * seed, and the result names every field, so a save carries the whole set.
  */
 export function shuffleDesigns(
   slots: readonly PatternSlot[],
@@ -72,12 +65,11 @@ export const patternsChanged = (
 ): boolean => slots.some((slot) => patternChanged(slot, current?.[slot.id]));
 
 /**
- * Give one field a design a person chose, with a fresh seed as a shuffle
- * gives; the other fields keep whatever they draw. Choosing the template's
- * own design is the field's reset: its entry leaves the document, so the
- * authored seed and options come back with it rather than a fresh seed on
- * the authored design. The caller rebuilds the canvas in that case, since a
- * plan without the entry cannot put those attributes back.
+ * Give one field a design a person chose, with a fresh seed; the other fields
+ * keep what they draw. Choosing the template's own design is the field's
+ * reset: its entry leaves the document so the authored seed and options come
+ * back, and the caller rebuilds the canvas, since a plan without the entry
+ * cannot put those attributes back.
  */
 export function pickDesign(
   slots: readonly PatternSlot[],

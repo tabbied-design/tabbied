@@ -1,9 +1,7 @@
-// Extra content for the React template sites, so each reads as a full,
-// well-structured single-page website rather than a single hero. Kept in its
-// own module (keyed by slug) so templateData.ts stays focused on identity and
-// theming. `images` maps each item's seed to a text-to-image prompt: the cards
-// render an image placeholder that shows the prompt, ready to generate a raster
-// image to drop in (see https://developers.openai.com/api/docs/models/gpt-image-2).
+// Extra content for the TemplateSite pages, keyed by slug so templateData.ts
+// stays focused on identity and theming. `images` maps each item's seed to a
+// text-to-image prompt, which the card shows (see ImageCard) until a generated
+// image exists for it.
 
 export type TemplateContent = {
   about: {
@@ -20,7 +18,7 @@ export type TemplateContent = {
   /**
    * The about section's art panel. Without it the panel falls back to the
    * site's pattern, which reads as decoration next to copy that is making a
-   * specific claim - an image that answers the copy does more work.
+   * specific claim.
    */
   aboutImage?: string;
 };
@@ -141,7 +139,6 @@ export const TEMPLATE_CONTENT: Record<string, TemplateContent> = {
     },
   },
 
-  // ---- Ported from the static-HTML samples (sites 1-10) ----
   verdant: {
     aboutImage:
       'A bright plant shop corner, tiered shelves of leafy houseplants in terracotta and pale pots, sunlight through a tall window. Soft natural light, shallow depth of field, high detail, no text or logos. Any person in the frame is shown whole and uncropped - no disembodied hands, no limbs cut off by the edge, and no bodies without heads.',

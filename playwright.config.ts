@@ -1,14 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Playwright configuration used to verify the production build of the site.
- * The site is a static export, so the web server serves the `out/` directory
- * (`npm start` -> `serve out`) - make sure `next build` has run first.
+ * Verifies the production build: `npm start` serves the static export in
+ * `out/`, so run `npm run build` first.
  */
 export default defineConfig({
   testDir: './e2e',
-  // The pages do heavy client-side css-doodle rendering against a single
-  // server, so run serially to avoid flakiness from resource contention.
+  // Heavy client-side css-doodle rendering against one server: run serially.
   fullyParallel: false,
   workers: 1,
   forbidOnly: !!process.env.CI,

@@ -24,21 +24,13 @@ import styles from './EditPatternHeader.module.css';
 
 type EditPatternHeaderProps = {
   patternName: string;
-  /**
-   * Draw the layout again. One action, not a menu of scopes: the colors are
-   * chosen from the rail, so a shuffle only ever rearranges the cells.
-   */
+  /** Draw the layout again; the colors are chosen from the rail. */
   onShuffle: () => void;
-  /** Download the current pattern as a PNG. */
   onExportPng: () => void;
-  /** Download the current pattern as a native vector SVG. */
   onExportSvg: () => void;
   /** SVG export is disabled for designs using effects SVG can't represent. */
   svgExportDisabled: boolean;
-  /**
-   * The current export has known limitations (filter-based effects or
-   * documented sub-pixel deviations) - mark the menu item with a warning.
-   */
+  /** The SVG export has known limitations: mark the menu item with a warning. */
   svgExportWarning: boolean;
   /** Copy the current (fully-encoded) URL to the clipboard. */
   onCopyLink: () => void | Promise<void>;
@@ -46,8 +38,8 @@ type EditPatternHeaderProps = {
   onCopyReactComponent: () => void | Promise<void>;
   /**
    * A picture is set behind the pattern. The menu then says which exports
-   * carry it, because two of the four cannot: the picture is an object URL
-   * local to this tab, so the link and the snippet open without it.
+   * carry it: it is an object URL local to this tab, so the link and the
+   * snippet open without it.
    */
   hasBackgroundImage: boolean;
   /** Below the two-column breakpoint: the actions are two circles. */
@@ -68,11 +60,9 @@ export default function EditPatternHeader({
 }: EditPatternHeaderProps) {
   const router = useRouter();
 
-  // Whether this editor was opened from the gallery (a marker the gallery card
-  // sets on click, consumed here on mount). Consumed once per mount, through
-  // a ref: the marker is one-shot, and React runs a mount effect twice under
-  // StrictMode in development, so the second run found it gone and the back
-  // link fell through to a plain push with no scroll to restore.
+  // Whether this editor was opened from the gallery (a one-shot marker the
+  // gallery card sets on click). Consumed through a ref because StrictMode
+  // runs a mount effect twice and the second run would find it gone.
   const [cameFromGallery, setCameFromGallery] = useState(false);
   const consumed = useRef<boolean | null>(null);
 
@@ -105,9 +95,7 @@ export default function EditPatternHeader({
     }
   };
 
-  // Export is a dropdown at every width: a PNG download plus clipboard
-  // exports. On a phone it used to be a sheet that replaced the rail, which
-  // put four short rows a screen away from the button that opened them.
+  // Export is the same dropdown at every width.
   const exportMenu = (trigger: ReactNode) => (
     <Menu.Root>
       {trigger}

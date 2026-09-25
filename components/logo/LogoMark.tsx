@@ -1,14 +1,12 @@
 import type { CSSProperties } from 'react';
 
 // The Tabbied mark: two mirrored strokes, each a stem that turns through a
-// half-round bowl and doubles back on itself. One continuous path per half,
-// drawn in `currentColor` so the parent decides whether it is ink on paper or
-// paper on ink - the mastheads are light, the homepage's is dark, and the mark
-// is the same file in both.
+// half-round bowl and doubles back on itself, drawn in `currentColor` so the
+// parent decides whether it is ink on paper or paper on ink.
 //
-// The stroke is authored at 17 units in a 391-unit box, which is what keeps it
-// hairline-thin at the ~20px the navs draw it at. Scaling the box rather than
-// the stroke is deliberate: the weight is part of the drawing.
+// The stroke is authored at 17 units in a 391-unit box, which keeps it
+// hairline-thin at the ~20px the navs draw it at. Scale the box, never the
+// stroke: the weight is part of the drawing.
 const VIEW_BOX = '107 92 391 391';
 
 const LEFT = 'M191 261 H277 C277 172.6 205.4 101 116 101 V311 C116 401.1 188.7 474 277 474 V312 H221';

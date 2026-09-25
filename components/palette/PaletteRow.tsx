@@ -5,14 +5,11 @@ import PaletteStrip from './PaletteStrip';
 import styles from './PaletteRow.module.css';
 
 /**
- * One row in the merged palette list (custom palettes first, then the read-only
- * library), shared by the gallery rail and the embedded palette browser. Rows
- * share a single left edge - no horizontal padding, no hover background; hover
- * is a 2px translateX nudge. Clicking the row applies the palette (or, when it's
- * already active, opens the editor - handled by the caller's onClick). The
- * pencil and delete mark are buttons beside the row's own button, not spans
- * inside it: a button may not contain another control, and a nested one both
- * pollutes the row's accessible name and fires the row on a keypress.
+ * One row in the palette browser's merged list. What a click does (apply, or
+ * edit when already active) is the caller's onClick. The pencil and delete
+ * mark are buttons beside the row's own button, not inside it: a button may
+ * not contain another control, and a nested one pollutes the row's accessible
+ * name and fires the row on a keypress.
  */
 export default function PaletteRow({
   colors,

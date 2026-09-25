@@ -27,10 +27,9 @@ export type NewTemplateSite = {
 };
 
 /**
- * The second template collection: fifty-six single-page brand
- * sites under /templates/<slug>/site/, each designed around one Tabbied pattern and
- * AI-generated imagery (see docs/image-pipeline.md). Listed on /template and
- * /templates; palettes here mirror each page's own constants.
+ * The second template collection: single-page brand sites under
+ * /templates/<slug>/site/, each designed around one Tabbied pattern (imagery:
+ * docs/image-pipeline.md). Palettes here mirror each page's own constants.
  */
 export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'mistral-cycles', name: 'Mistral Cycles', topic: 'Handbuilt bicycle frames', patternSlug: 'gasket', pattern: gasket, paletteName: 'Blueprint navy', palette: ['#0D1B2A', '#1B98E0', '#E0FBFC', '#FF7B00', '#FFD23F', '#EAEAEA'], seed: 'dir-mc' },
@@ -75,10 +74,9 @@ export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'silbersalz', name: 'Silbersalz', topic: 'Photographic laboratory', patternSlug: 'grainfield', pattern: grainfield, paletteName: 'Safelight red', palette: ['#EDEBE4', '#101010', '#C8102E', '#8A8880', '#D9D6CC'], seed: 'dir-ss' },
   { slug: 'kryss', name: 'Kryss', topic: 'Wayfinding studio', patternSlug: 'metro', pattern: metro, paletteName: 'Directional green', palette: ['#F4F4F1', '#131416', '#00843D', '#8E9094', '#E2E2DE'], seed: 'dir-ky' },
 
-  // Swiss-bold set: the same grid discipline turned up. Display type at
-  // poster size, the full width of the viewport used as the measure, no
-  // photography, and no rules - sections are divided by a change of ground
-  // or by a full-bleed pattern field. Longer pages than anything above.
+  // Swiss-bold set: poster-size display type, the full viewport as the
+  // measure, no photography and no rules (sections divide by a change of
+  // ground or a full-bleed pattern field).
   { slug: 'salzhaus', name: 'Salzhaus', topic: 'Contemporary dance company', patternSlug: 'pivot', pattern: pivot, paletteName: 'Basel scarlet', palette: ['#F3F1EC', '#101014', '#FF2D00', '#8B8B85', '#DEDCD4'], seed: 'bold-sz' },
   { slug: 'zwoelfton', name: 'Zwölfton', topic: 'New-music ensemble', patternSlug: 'raking', pattern: raking, paletteName: 'Acid yellow, night', palette: ['#0B0B0F', '#EFEEE7', '#E8FF00', '#6D6D66', '#22222A'], seed: 'bold-zt' },
   { slug: 'bureau-vektor', name: 'Bureau Vektor', topic: 'Public statistics office', patternSlug: 'gutter', pattern: gutter, paletteName: 'Ultramarine', palette: ['#FFFFFF', '#0C0D10', '#1F3CFF', '#8A8F99', '#E8EAF0'], seed: 'bold-bv' },
@@ -90,11 +88,9 @@ export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'kubus', name: 'Kubus', topic: 'Kunsthalle', patternSlug: 'lintel', pattern: lintel, paletteName: 'Achromatic', palette: ['#080808', '#FAFAF8', '#8A8A86', '#1C1C1C'], seed: 'bold-kb' },
   { slug: 'tiefsee', name: 'Tiefsee', topic: 'Deep-sea research program', patternSlug: 'dipole', pattern: dipole, paletteName: 'Bioluminescent cyan', palette: ['#04121A', '#E6EEF0', '#00D2E0', '#5D7480', '#0A1F2B'], seed: 'bold-ts' },
 
-  // Swiss-bold, with photography: the same full-bleed grid and poster type as
-  // the set above, but each page also carries generated imagery. Scenes run
-  // full-bleed with the pattern bands beside them; only the cut-out objects
-  // are composited, onto a pattern plate drawn on a transparent ground.
-  // Page palette and data/image-prompts.json project palette are the same hexes.
+  // Swiss-bold with generated imagery: scenes run full-bleed beside the
+  // pattern bands; cut-out objects are composited onto a pattern plate drawn
+  // on a transparent ground. Palettes match data/image-prompts.json.
   { slug: 'glockenhof', name: 'Glockenhof', topic: 'Bell foundry', patternSlug: 'cupola', pattern: cupola, paletteName: 'Bronze, night', palette: ['#141210', '#F0EAD8', '#C89B3C', '#7C736A', '#221D18'], seed: 'img-gh' },
   { slug: 'orgelwerk', name: 'Orgelwerk', topic: 'Pipe organ builders', patternSlug: 'battlement', pattern: battlement, paletteName: 'Organ pine', palette: ['#F1EFE7', '#141614', '#1D6F5C', '#87887F', '#DFDCD0'], seed: 'img-ow' },
   { slug: 'marais-blanc', name: 'Marais Blanc', topic: 'Sea salt works', patternSlug: 'clipcorner', pattern: clipcorner, paletteName: 'Salt-pan rose', palette: ['#FBFAF7', '#171519', '#C2456B', '#8C8A90', '#E4E1DC'], seed: 'img-mb' },
@@ -102,12 +98,9 @@ export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'kupferwalz', name: 'Kupferwalz', topic: 'Copper rolling mill', patternSlug: 'rolloff', pattern: rolloff, paletteName: 'Copper, mill night', palette: ['#15100E', '#EFE7DE', '#B4552D', '#7A736D', '#231A16'], seed: 'img-kw' },
   { slug: 'purpurhaus', name: 'Purpurhaus', topic: 'Natural dye works', patternSlug: 'prismfold', pattern: prismfold, paletteName: 'Cochineal plum', palette: ['#F4F0E6', '#191317', '#5E2750', '#8B8279', '#E2DBCB'], seed: 'img-ph' },
 
-  // The idioms set: twenty sites in twenty visual languages, none of them
-  // Swiss. Brutalist, editorial, space age, Y2K, Scandinavian, Bauhaus, Art
-  // Deco, wabi-sabi, terminal, Memphis, mid-century, broadsheet, botanical,
-  // industrial, nautical, photocopy punk, SaaS, lookbook, southwestern and a
-  // sports poster. Each is a whole page without a single photograph: the
-  // patterns are the imagery, and each draws designs no earlier site used.
+  // The idioms set: one visual language per site, none of them Swiss, and no
+  // photographs: the patterns are the imagery, each a design no earlier site
+  // used.
   { slug: 'betonpark', name: 'Betonpark', topic: 'Indoor skatepark', patternSlug: 'bracket', pattern: bracket, paletteName: 'Concrete and safety green', palette: ['#EDEDEA', '#0B0B0B', '#2BD32B', '#7A7A76', '#D2D2CC'], seed: 'set-bp' },
   { slug: 'revue-marges', name: 'Revue Marges', topic: 'Literary quarterly', patternSlug: 'moleskin', pattern: moleskin, paletteName: 'Cream and oxblood', palette: ['#F6F1E7', '#1E1A17', '#7A1F2B', '#8A8177', '#DED4C3'], seed: 'set-rm' },
   { slug: 'orbital-lounge', name: 'Orbital', topic: 'Listening bar', patternSlug: 'disque', pattern: disque, paletteName: 'Space-age orange', palette: ['#FFF4E3', '#1D1B2B', '#FF6B2C', '#0FA3B1', '#8B8478'], seed: 'set-ol' },

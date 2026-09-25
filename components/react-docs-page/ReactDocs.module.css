@@ -1,11 +1,7 @@
-/* The docs page (/docs/react): a light section of the homepage's shell.
-
-   The page wraps itself in the homepage tokens (home.module.css, `--h-...`)
-   the way the template gallery does, so the masthead, the prose, the code
-   panels and the footer read from one set: ink on paper for the article, and
-   the dark shell turned back on for the code. The fonts are the design's
-   three, by role: Proxima Nova for headings, IBM Plex Sans for copy, and
-   IBM Plex Mono for every label, index and token. Nothing here is global. */
+/* The docs page (/docs/react): a light section of the homepage's shell. It
+   reads the homepage tokens (home.module.css, `--h-...`): ink on paper for
+   the article, and the dark shell turned back on for the code. Nothing here
+   is global. */
 
 .page {
   min-height: 100vh;
@@ -36,8 +32,7 @@
 /* ---- Page header ---- */
 
 /* The title on the left half, the lede and the package's particulars on the
-   right, bottom-aligned - the library page's header, on a page that is read
-   rather than browsed. */
+   right, bottom-aligned. */
 .head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -79,9 +74,8 @@
   color: var(--h-teal);
 }
 
-/* The version, the license, and the two places the package lives: a row of
-   the design's mono pills. The facts are plain chips; the destinations take
-   the ink and a hairline that darkens on hover. */
+/* The version, the license, and the two places the package lives. The facts
+   are plain chips; the destinations take the ink and a hairline. */
 .meta {
   display: flex;
   flex-wrap: wrap;
@@ -689,8 +683,8 @@
 }
 
 /* Below the desktop breakpoint the header stacks and the rail becomes a row
-   of pills pinned to the top of the viewport, scrolling sideways: thirteen
-   sections on a phone are otherwise reachable only from the top. */
+   of pills pinned to the top of the viewport, scrolling sideways, so every
+   section stays reachable on a phone without scrolling back to the top. */
 @media (max-width: 1023.98px) {
   .head {
     grid-template-columns: 1fr;

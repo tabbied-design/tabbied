@@ -34,7 +34,7 @@ type Overview = {
   averageChosen: number;
   freeTemplates: number;
   pendingRequests: number;
-  /** Absent on rows from before the chart existed - read as no sign-ups. */
+  /** Absent from a Worker older than the chart: read as no sign-ups. */
   signupsByDay?: { day: string; n: number }[];
 };
 
@@ -84,10 +84,9 @@ function GrowthChart({ signups }: { signups?: { day: string; n: number }[] }) {
         ))}
       </div>
       <div className={styles.barLabels} aria-hidden="true">
-        {/* Separated by a space so the row reads as fourteen numbers, not one
-            long one - to a screen reader that ignores the hiding, and to a
-            text query that would otherwise find "42" across "24 25". Flex
-            drops the whitespace-only nodes, so nothing is drawn for them. */}
+        {/* A space between labels keeps the row fourteen numbers rather than
+            one long one, to a screen reader or a text query; flex draws
+            nothing for it. */}
         {days.map((entry, index) => (
           <span key={entry.key} className={styles.barLabel}>
             {index > 0 ? ' ' : ''}
@@ -195,7 +194,7 @@ function Status({ row }: { row: UserRow }) {
  * filter, the sort and the pages are the browser's over what came back.
  * The overview shows the first handful of it; the users page all of it.
  */
-export function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number; compact?: boolean }) {
+function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number; compact?: boolean }) {
   const [draft, setDraft] = useState('');
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('All users');
@@ -724,8 +723,7 @@ export function UploadsPanel() {
               onClick={async () => {
                 setBusy(u.id);
                 setMessage(null);
-                // A refused delete used to reload silently and leave the row
-                // standing with nothing said.
+                // A refused delete says why rather than reloading silently.
                 try {
                   await apiFetch(`/api/admin/uploads/${u.id}`, { method: 'DELETE' });
                 } catch (cause) {
@@ -751,8 +749,8 @@ export function QuotasPanel() {
   if (!data) return <Load error={error} />;
   return (
     <>
-      {/* Scrollable like the other tables: the cells do not wrap, and on a
-          phone the third column was cut off with no way to reach it. */}
+      {/* Scrollable like the other tables: the cells do not wrap, so a
+          phone would otherwise cut off the third column. */}
       <div className={`${styles.panel} ${styles.scroll}`}>
         <table className={styles.table}>
           <thead>

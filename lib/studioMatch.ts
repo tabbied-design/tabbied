@@ -1,18 +1,8 @@
-// Studio's matcher: prose in, three template sites out.
-//
-// This is deliberately not a model call. Everything Studio needs to answer with
-// already exists in the repo - 77 finished template sites, each built on one of
-// the 338 patterns and one of the 437 palettes, each with a real preview page
-// and a real downloadable zip. So a description is matched against that library
-// rather than used to generate anything, and every result is a site a person can
-// open and download today.
-//
-// It runs in the browser, which is why it takes a prebuilt index (see
-// lib/studioDirections.ts) instead of importing the catalog: the vocabulary for
-// 77 sites is a few kilobytes, the catalog is 384 KB.
-//
-// When the AI gateway in agent-outputs/20260827-studio-ai-plan.md lands, it
-// replaces `matchDirections` and nothing above it has to change.
+// Studio's matcher: prose in, three finished template sites out, with no model
+// call. Pure and isomorphic: the signed-out results page runs it in the
+// browser, and the Worker runs it to assemble the AI tier's candidates. It
+// takes a prebuilt index (lib/studioDirections.ts) rather than importing the
+// 384 KB catalog.
 
 /** One template site, reduced to what matching and the result card need. */
 export type StudioEntry = {
@@ -52,9 +42,9 @@ const STOPWORDS = new Set([
 ]);
 
 /**
- * Everyday words a person actually writes, mapped onto the closed catalog
- * vocabulary in packages/tabbied/scripts/catalog-vocabulary.mjs. One word may
- * legitimately imply two moods - "friendly" is both playful and organic.
+ * Everyday words mapped onto the closed catalog vocabulary
+ * (packages/tabbied/scripts/catalog-vocabulary.mjs). One word may imply two
+ * moods: "friendly" is both playful and organic.
  */
 const MOOD_WORDS: Record<string, string[]> = {
   bold: ['bold'], strong: ['bold'], striking: ['bold'], confident: ['bold'],
@@ -114,9 +104,8 @@ const DENSITY_WORDS: Record<string, string> = {
 };
 
 /**
- * Crude suffix stripping - enough that "families" reaches "family" and
- * "bakeries" reaches "bakery". Only used for topic matching, where the words
- * are ordinary nouns; the mood and color maps are looked up on raw words.
+ * Crude suffix stripping, enough that "bakeries" reaches "bakery". Only for
+ * topic matching; the mood and color maps are looked up on raw words.
  */
 export function stem(word: string): string {
   if (word.endsWith('ies') && word.length > 4) {
@@ -144,9 +133,8 @@ export function tokenize(text: string): string[] {
 
 /** Hue angle of a #rrggbb color, or null when it is close to grayscale. */
 export function hexHue(hex: string): number | null {
-  // Palettes may carry a literal `transparent` in slot 0 - that is what lets a
-  // pattern field read over a photograph - so anything that is not a six-digit
-  // hex simply has no hue.
+  // Palettes may carry a literal `transparent` in slot 0, so anything that is
+  // not a six-digit hex has no hue.
   if (!/^#[0-9a-f]{6}$/i.test(hex)) {
     return null;
   }
@@ -316,9 +304,9 @@ export function matchDirections(
     return { ...entry, score, reasons };
   });
 
-  // Ties - including the all-zero case of an empty description - break on a
-  // hash of the text, so a given description always yields the same three and
-  // two different descriptions rarely yield the same three.
+  // Ties (including an empty description's all-zero scores) break on a hash
+  // of the text, so a description always yields the same three and two
+  // descriptions rarely yield the same three.
   const tiebreak = (entry: StudioDirection) => hash(`${seed}:${entry.slug}`);
   const remaining = scored
     .slice()

@@ -2,10 +2,8 @@ import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 
 // Every template's name, kind and colors, for pages that list a person's
-// templates by slug (the account, the preview's choose dialog). Server-only:
-// the two collections carry their pattern definitions, and a client
-// component importing them would ship the catalog to learn 77 names. Pages
-// pass what they need of this down as plain data.
+// templates by slug. Server-only: the two collections carry their pattern
+// definitions, so pages pass what they need of this down as plain data.
 
 export type TemplateIndexEntry = {
   slug: string;

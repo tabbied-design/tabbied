@@ -11,21 +11,17 @@ import type { LibraryPalette } from 'lib/paletteLibrary';
 import { mergePalettes } from 'lib/paletteList';
 import styles from './GalleryRail.module.css';
 
-// How many rows to reveal per batch. The full merged list is hundreds of
-// palettes, so it renders incrementally (like the old browser) and grows as the
-// rail scrolls - cheap first paint, no wall of DOM.
+// How many rows to reveal per batch. The merged list is hundreds of palettes,
+// so it renders incrementally and grows as the rail scrolls.
 const PAGE = 24;
 
 /**
- * The gallery's desktop palette rail: one search that filters both the
- * palette list and the design grid, then "Mixed" (a random palette per
- * pattern) above the full
- * merged palette list (custom first, then the read-only library) scrolling in
- * a single column. It fills the height under the masthead - the artboard drew
- * it as a fixed box with a fade, and the list is the whole point of the rail,
- * so it gets the room. There is no "New palette" here: the pencil on any row
- * opens the editor, and saving a library palette's edit is how a new one is
- * made.
+ * The gallery's desktop palette rail: one search that filters both the palette
+ * list and the design grid (owned by the parent), then "Mixed" (a random
+ * palette per pattern) above the merged palette list (custom first, then the
+ * read-only library), filling the height under the masthead. There is no "New
+ * palette" here: the pencil on any row opens the editor, and saving a library
+ * palette's edit is how a new one is made.
  */
 export default function GalleryRail({
   search,
@@ -54,8 +50,6 @@ export default function GalleryRail({
   onEditLibrary: (palette: LibraryPalette) => void;
   onDelete: (id: string) => void;
 }) {
-  // The same query filters both the palette list (here) and the design grid
-  // (owned by the parent), so there's a single search for the whole page.
   const merged = useMemo(
     () => mergePalettes(palettes, library, search),
     [palettes, library, search]
@@ -83,10 +77,9 @@ export default function GalleryRail({
           <Search size={15} aria-hidden="true" />
         </label>
 
-        {/* The random spread is chosen from the same list as a palette, so it
-            sits where a palette would, drawn as one ("Mixed", its swatches
-            split between the spread's palettes), above the rest and pinned:
-            choosing it again draws a new spread. */}
+        {/* The random spread is chosen from the same list as a palette, so
+            it is drawn as one, pinned above the rest; choosing it again draws
+            a new spread. */}
         <button
           type="button"
           className={styles.random}

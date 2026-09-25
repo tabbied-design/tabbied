@@ -8,13 +8,10 @@ import { markGalleryNavigation } from 'lib/galleryScroll';
 import GalleryDoodle from './GalleryDoodle';
 import styles from './SelectPattern.module.css';
 
-// One gallery card: a live thumbnail with its name below it (no overlay).
-// Client-side because the preview follows the selected palette (localStorage),
-// applied to every design in the grid. Memoized: the gallery re-renders on
-// every keystroke in the search and every palette click, and a card whose
-// props have not changed has nothing to do - re-rendering it handed
-// TabbiedPattern a fresh palette array and rebuilt the doodle's source only to
-// find it unchanged, twenty-four times per render.
+// One gallery card: a live thumbnail with its name below it. Client-side
+// because the preview follows the selected palette (localStorage). Memoized:
+// the gallery re-renders on every search keystroke and palette click, and an
+// unchanged card would otherwise rebuild its doodle's source for nothing.
 function GalleryCard({
   item,
   palette: cardPalette,

@@ -86,10 +86,9 @@
   box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.55);
 }
 
-/* The ground, first and set apart. It is most of what a pattern shows, and
-   for every palette but the one in use nothing else on screen says what it
-   is: Ocean's navy was nowhere in its row. A checker shows through a
-   transparent one. */
+/* The ground, first and set apart: it is most of what a pattern shows, and
+   for any palette but the one in use nothing else on screen shows it. A
+   checker shows through a transparent one. */
 .chips > .ground {
   position: relative;
   width: 16px;

@@ -1,15 +1,11 @@
-// Deterministic first paint, random afterwards.
+// Deterministic first paint, random afterwards. `Math.random()` during render
+// makes the prerendered HTML disagree with the first client render and breaks
+// hydration, so every initial grid comes from a fixed seed (server and client
+// build the same one) and real randomness only enters through timers, which
+// start after mount.
 //
-// Three fields on the homepage are grids of randomly shaped cells that reshuffle
-// on a timer: the hero skyline, the margin columns beside it, and the drifting
-// squares behind the story section. `Math.random()` at render time would make
-// the prerendered HTML disagree with the first client render and blow up
-// hydration, so the *initial* grid comes from a fixed seed - server and client
-// build the same one - and the timers that introduce real randomness only start
-// after mount, where drift no longer matters.
-//
-// The palettes and shape vocabulary below are the homepage's own; the pattern
-// catalog has its own palettes and neither should follow the other.
+// The palettes and shapes below are the homepage's own, independent of the
+// pattern catalog's.
 
 export type Rand = () => number;
 
@@ -29,9 +25,8 @@ const pick = <T,>(rand: Rand, list: readonly T[]): T =>
   list[Math.floor(rand() * list.length)];
 
 // -- Palettes -----------------------------------------------------------------
-// The dark sections cycle through these four, which is what makes the hero read
-// as a live pattern engine rather than a static header: the skyline recolors and
-// the stat numbers follow it.
+// The page cycles through these four: the skyline recolors and the stat numbers
+// follow it.
 
 export const PALETTE_CYCLE = ['Mint', 'Ocean', 'Sunset', 'Lilac'] as const;
 
@@ -91,8 +86,7 @@ export const PALETTE_POOLS: Record<PaletteName, readonly string[]> = {
 
 /**
  * A skyline cell's fill is a function of where it sits and which palette is up,
- * so only its silhouette is random. That is what keeps the grid reading as one
- * composition while individual cells flip shape underneath it.
+ * so only its silhouette is random and the grid reads as one composition.
  */
 export function stopForCell(palette: PaletteName, col: number, row: number) {
   const stops = PALETTE_STOPS[palette];
@@ -102,9 +96,8 @@ export function stopForCell(palette: PaletteName, col: number, row: number) {
 }
 
 // -- Silhouettes --------------------------------------------------------------
-// The design's "geometric" vocabulary: full squares, right triangles, and
-// quarter-rounds. Every shape tiles its cell edge to edge, which is what lets
-// the grid stay seamless however the cells land.
+// Full squares, right triangles, and quarter-rounds: every shape tiles its cell
+// edge to edge, so the grid stays seamless however the cells land.
 
 const TRIANGLE_CLIPS = [
   'polygon(0 0,100% 0,0 100%)',
@@ -123,7 +116,7 @@ const QUARTER_RADII = [
 /** Weighted so quarter-rounds appear as often as the two straight-edged shapes. */
 const SHAPES = ['square', 'triangle', 'quarter', 'quarter', 'square', 'triangle'] as const;
 
-export type Silhouette = { radius: string; clip: string };
+type Silhouette = { radius: string; clip: string };
 
 export function randomSilhouette(rand: Rand): Silhouette {
   switch (pick(rand, SHAPES)) {
@@ -137,7 +130,7 @@ export function randomSilhouette(rand: Rand): Silhouette {
 }
 
 /** A two-stop gradient in the current palette, for cells that carry their own fill. */
-export function randomFill(rand: Rand, palette: PaletteName): string {
+function randomFill(rand: Rand, palette: PaletteName): string {
   const pool = PALETTE_POOLS[palette];
   const from = pick(rand, pool);
   const to = pick(rand, pool);
@@ -171,7 +164,10 @@ export const TIMING = {
   demo: 4200,
 } as const;
 
-/** Replaces `count` random entries of `list` using `make`, returning a new array. */
+/**
+ * Replaces `count` random entries of `list` using `make`, returning a new array.
+ * Real randomness: call it only from a timer, after mount.
+ */
 export function reshuffle<T>(list: T[], count: number, make: () => T): T[] {
   const next = list.slice();
 

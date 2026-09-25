@@ -5,8 +5,7 @@ import { TEMPLATE_COUNT } from 'lib/siteCounts';
 
 export const metadata: Metadata = { title: 'Templates - Admin', robots: { index: false, follow: false } };
 
-// A server component, so the count is derived like every other figure on the
-// site (lib/siteCounts); the lede said 57 while 77 were packaged.
+// A server component, so the count is derived (lib/siteCounts).
 export default function Page() {
   return (
     <AdminPage

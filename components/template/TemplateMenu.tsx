@@ -3,23 +3,17 @@
 // The template kit's small-screen menu: a copy of a header's section links
 // behind a "Menu" toggle, for the widths where the page hides its own nav.
 //
-// A <details>, not a button with state, because it has to work in all three
-// places a template lives. On the site and in the React package this
-// component runs; in the HTML package the Next runtime is stripped and
-// nothing of it runs at all, so the open and shut must be the browser's own.
-// The summary is a button to assistive technology and says whether it is
-// expanded, which is the disclosure pattern with nothing to wire up.
+// A <details>, not a button with state: the HTML package strips the runtime
+// and nothing of this runs there, so open and shut must be the browser's own.
+// The summary is already a disclosure button to assistive technology.
 //
-// What script adds is closing: on a followed link, a click outside, and
-// Escape. Here that is the effect below; the HTML package carries the same
-// few lines as a plain script (scripts/package-templates.mjs), since a page
-// with no framework would otherwise leave the menu open over the section it
-// just scrolled to.
+// Script adds only closing, on a followed link, an outside click and Escape:
+// the effect below, and the same few lines as a plain script in the HTML
+// package (MENU_SCRIPT in scripts/package-templates.mjs).
 //
-// No CSS module of its own: the packager ships one stylesheet per page and
-// refuses a second. The shape lives in styles/globals.css (the global sheet
-// every package carries as base.css) under `.template-menu`, and the page
-// supplies the rest through the class it passes: when to show the menu, and
+// No CSS module of its own, since the packager ships one stylesheet per page:
+// the shape is `.template-menu` in styles/globals.css (every package's
+// base.css), and the page's class supplies when to show the menu and
 // `--template-menu-bg`, the ground its panel sits on.
 import { useEffect, useRef, type ReactNode } from 'react';
 

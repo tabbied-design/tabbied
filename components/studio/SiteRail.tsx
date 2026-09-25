@@ -1,28 +1,15 @@
 'use client';
 
-// The rail beside the canvas: the site's name, and three tabs.
+// The rail beside the canvas: the site's name, and three tabs. Colors and
+// Patterns are the whole of what the customizer changes (one palette for the
+// page, one design per pattern field); Content says words and pictures are not
+// edited here yet. Every change is planned and applied by the parent; this
+// only says what was asked for.
 //
-// Colors and Patterns are the first release of the customizer, and they are
-// the whole of what it changes: one palette for the page, and one design per
-// pattern field. Content is a tab so the person can see where words and
-// pictures will be edited, and reads that they are not edited here yet - the
-// download is where copy changes today. Every change is planned and applied
-// by the parent; this only says what was asked for.
-//
-// Patterns lists one row per field on the page. Shuffle draws a new set for
-// all of them; the pencil on a row opens the library for that one field, and
-// a row that no longer draws the template's own design gets an undo of its
-// own, beside the page-wide Reset. The pencil is the same control the palette
-// rows carry, so the two tabs read as one rail.
-//
-// Colors is a list of palettes rather than a row of color pickers because
-// picking four colors that work together is the hard part and the library
-// has already done it 437 times. The pickers did not go away - the pencil on
-// a row opens them, seeded with that palette. There is no "Reset palette":
-// the template's own palette is the first row, and choosing it is the reset.
-//
-// Save sits at the foot of the rail rather than in the bar: it belongs beside
-// the controls that make the changes it saves.
+// Colors is a list of palettes rather than color pickers, because picking
+// colors that work together is the hard part and the library has done it. The
+// pencil on a row opens the pickers, seeded with that palette. The template's
+// own palette is the first row, and choosing it is the reset.
 import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
 import { Pencil, Save, Undo2 } from 'lucide-react';
 import type { PatternSlot, TemplateSpec } from 'tabbied-templates';
@@ -84,7 +71,7 @@ export default function SiteRail({
   onSave,
 }: {
   title: string;
-  /** The template the site was made from - the name its own palette goes by. */
+  /** The template the site was made from, the name its own palette goes by. */
   templateName: string;
   /** Commit a new name. Called on blur and Enter, never per keystroke. */
   onRename: (title: string) => void;
@@ -155,7 +142,7 @@ export default function SiteRail({
   };
 
   // Memoized: the rail re-renders on every palette click, shuffle tick and
-  // save-state change, and rebuilt a 338-entry map on each of them.
+  // save-state change.
   const names = useMemo(() => new Map(designs.map((design) => [design.slug, design.name])), [designs]);
   const fieldLabel = (slot: PatternSlot) => slot.label ?? sectionOf(slot.id);
 
@@ -266,8 +253,7 @@ export default function SiteRail({
             title={`Edit ${(editingChoice?.name ?? '').replace(' (default)', '')}`}
             colors={
               // The row being edited, except when it is the one already on the
-              // page - then it is the page's colors, so an edit builds on the
-              // last one rather than starting over.
+              // page: then the page's colors, so an edit builds on the last one.
               editingChoice && editingChoice.id === active ? palette : editingChoice?.colors ?? palette
             }
             labels={roleNames}
@@ -350,8 +336,6 @@ export default function SiteRail({
               if (picking) onFieldDesign(picking, slug);
             }}
           />
-          {/* Shuffle has the row to itself until the page has been changed;
-              then Reset appears beside it, the way back to the template's own. */}
           <div className={styles.patternActions}>
             {patternsChanged ? (
               <button

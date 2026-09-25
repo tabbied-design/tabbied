@@ -1,23 +1,13 @@
-// A curated, read-only palette library shown in the gallery rail and the
-// pattern editor. Unlike "Your Palettes" (user-defined, persisted in
-// localStorage via lib/brandPalettes), these ship with the app: they can be
-// applied to preview every design in their colors, or copied into Your Palettes
-// with the "+" affordance (which mints a fresh, editable saved palette).
+// The curated, read-only palette library, shipped with the app (unlike the
+// saved palettes in lib/brandPalettes). Each palette holds 3-7 colors with the
+// background first (color0), matching BrandPalette's shape.
 //
-// Each palette holds 3-7 colors with the background first (color0), matching
-// BrandPalette's shape so the same rendering helpers apply. The first twelve
-// are the palettes shipped in the Claude Design handoff mockups; the rest are a
-// curated set spanning neutrals, jewel tones, pastels, retro and earthy stories,
-// then critters and botanicals, then weather, historic dyes, glaze, minerals,
-// places and design movements.
-//
-// Two rules are worth keeping when adding more. No ink repeats its own
-// background, and every palette carries at least one ink with real contrast
-// against color0 (~3:1), so a design rendered in it always reads. Individual
-// inks may sit much closer than that - the pastel and tonal stories depend on
-// it - but a palette where *nothing* separates from the background renders as a
-// blank sheet. Four of the soft pastels (Sorbet, Cotton, Macaron, Poolside)
-// predate the second rule and sit under it deliberately.
+// Two rules when adding more. No ink repeats its own background, and every
+// palette carries at least one ink with real contrast against color0 (~3:1),
+// so a design rendered in it always reads. Individual inks may sit much closer
+// (the pastel and tonal stories depend on it), but a palette where nothing
+// separates from the background renders as a blank sheet. Four soft pastels
+// (Sorbet, Cotton, Macaron, Poolside) sit under the second rule deliberately.
 
 export type LibraryPalette = {
   id: string;
@@ -550,11 +540,9 @@ export const PALETTE_LIBRARY: LibraryPalette[] = [
 
 ];
 
-// The palette every gallery preview (and a freshly-opened editor) starts in.
-// The site no longer falls back to each pattern's own authored palette as the
-// default look; instead one curated library palette themes the whole gallery
-// until the visitor picks another. "Pop" is a white-background, six-color
-// spread of Tabbied's brand accents, so it reads cleanly across every design.
+// The palette a null or unknown active id resolves to (resolveActivePalette).
+// "Pop" is a white-background spread of Tabbied's brand accents, so it reads
+// across every design.
 export const DEFAULT_PALETTE_ID = 'lib-pop';
 
 const LIBRARY_BY_ID = new Map(PALETTE_LIBRARY.map((palette) => [palette.id, palette]));

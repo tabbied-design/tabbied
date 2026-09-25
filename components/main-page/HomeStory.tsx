@@ -7,8 +7,7 @@ import { seededRandom, type Rand } from './homeMotion';
 import styles from './HomeStory.module.css';
 
 // Near-white squares drifting behind the copy, plus one slow ring of them
-// orbiting the center. The section is about the work being generative, so the
-// background is generated rather than placed.
+// orbiting the center.
 
 const SQUARE_COUNT = 20;
 const ORBIT_COUNT = 14;
@@ -42,12 +41,7 @@ function randomSquare(rand: Rand): Square {
   };
 }
 
-/**
- * Seeded like the hero's grids, and for the same reason - but note this one is
- * built inside the component rather than at module scope. A module-level
- * `Math.random()` would run once on the server and again in the browser and
- * produce two different backgrounds for the same markup.
- */
+/** Seeded, so the prerendered backdrop survives hydration (see homeMotion.ts). */
 function initialSquares(): Square[] {
   const rand = seededRandom(SEED);
 
@@ -97,8 +91,8 @@ export default function HomeStory({
       return;
     }
 
-    // A square fades out where it is, then reappears somewhere else - so the
-    // swap needs a second beat, and every pending one has to be cancellable.
+    // A square fades out where it is, then reappears somewhere else, so the
+    // swap needs a second beat and every pending one has to be cancellable.
     const pending = new Set<ReturnType<typeof setTimeout>>();
 
     const timer = setInterval(() => {
@@ -181,10 +175,9 @@ export default function HomeStory({
           combinations that work, and turn inspiration into something useful.
         </p>
 
-        {/* Plain elements rather than a <dl>: three of the four are links, and
-            an anchor is not a permitted child of a description list. The
-            palettes are browsed and applied from the pattern library's rail,
-            so that is where their count leads. */}
+        {/* Plain elements rather than a <dl>: an anchor is not a permitted
+            child of a description list. The palettes are browsed from the
+            pattern library's rail, so that is where their count leads. */}
         <div className={styles.stats}>
           <Link href="/patterns" prefetch={false} className={styles.stat}>
             <span className={styles.statNumber}>{paletteCount}</span>

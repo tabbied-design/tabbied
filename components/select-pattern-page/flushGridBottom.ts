@@ -1,16 +1,11 @@
 /**
- * Stretch the lowest card in each column of a masonry grid to the grid's last
- * row line, so the page ends on one edge rather than a ragged one and the
- * pagination under it sits on a line.
+ * Stretch the lowest card in each column of a masonry grid by whole rows to the
+ * grid's last row line, so the page ends on one edge rather than a ragged one.
  *
- * The grid lays its cards out with `grid-auto-flow: dense` and every card one
- * column wide, which is masonry: each card lands under the shortest column.
- * That leaves the columns ending at different heights, and this evens them by
- * extending the last card in each by whole rows. The span is written inline on
- * the card as the `grid-row` shorthand, which beats the class the card was
- * given (an inline `grid-row-end` alone would not: the class sets the start
- * as a span too, and when both ends are spans the end one is ignored), and it
- * is cleared first so a resize recomputes from the authored spans.
+ * The span is written inline as the `grid-row` shorthand: an inline
+ * `grid-row-end` alone is ignored, because the card's class sets the start as
+ * a span too and when both ends are spans the end one loses. It is cleared
+ * first so a resize recomputes from the authored spans.
  */
 export function flushGridBottom(grid: HTMLElement): void {
   const cards = Array.from(grid.children) as HTMLElement[];

@@ -1,37 +1,22 @@
 // Turning a packaged template into a preview of a generated direction.
 //
-// The artifact previewed is the *download* - out/downloads/<slug>/index.html,
-// the same bytes the Download button hands over. That is deliberate on both
-// counts. It is the only version of a template with no framework left in it,
-// so its patterns are `[data-pattern]` placeholders the edits engine can
-// rewrite and a plain `hydratePatterns()` can mount, where the live
-// /templates/<slug>/site/ page mounts its patterns through React and would ignore an
-// attribute written from outside. And previewing what is actually downloaded
-// is the difference between a preview and a mockup.
+// The artifact previewed is the download (out/downloads/<slug>/index.html):
+// it has no framework left, so its `[data-pattern]` placeholders can be
+// rewritten by the edits engine and mounted by a plain `hydratePatterns()`,
+// where the live page mounts through React and ignores an outside write.
 //
 // Four changes are made to it, and no others:
 //
-//   1. A <base> so the package's relative styles/ and images/ still resolve
-//      once the document is running inside an iframe on another path.
-//   2. The bootstrap's esm.sh import is pointed at a same-origin bundle. The
-//      pinned CDN import is right for a stranger who unzipped the download
-//      years from now and wrong for this site drawing its own preview. The
-//      same script keeps the page's `#section` links in the page - see
-//      `bootstrap` for why a srcdoc document cannot do that on its own.
-//   3. The edits document - a direction's three strings, or a site's full
-//      revision - applied by the engine, exactly as an editor would apply it.
-//   4. Every relative stylesheet, image and script reference is spelled out
-//      as an absolute path under the package. The <base> already resolves
-//      them correctly, but Chromium's speculative preload scanner does not
-//      honor a <base> in an about:srcdoc document: it fetched each
-//      stylesheet and preloaded image against the *page's* URL first
-//      (`/studio/results/styles/base.css` - a 404, then `ERR_ABORTED` once
-//      the parser caught up and fetched the right one). Nothing broke, and
-//      the console filled with errors that looked exactly like a broken
-//      preview. Absolute paths give the scanner nothing to guess.
-//
-// The rest of the page is untouched, which is what makes this honest: every
-// section, image and word the download contains is what shows up here.
+//   1. A <base>, so the package's relative styles/ and images/ resolve inside
+//      an iframe on another path.
+//   2. The bootstrap's pinned esm.sh import is pointed at a same-origin bundle,
+//      beside a script that keeps `#section` links in the page (see
+//      `linkScript`).
+//   3. The edits document, applied by the engine.
+//   4. Every relative stylesheet, image and script reference is made absolute
+//      under the package: Chromium's preload scanner ignores a <base> in an
+//      about:srcdoc document and fetches against the page's URL first, which
+//      fills the console with 404s.
 import {
   applyEdits,
   type EditsDocument,
@@ -40,7 +25,7 @@ import {
 } from 'tabbied-templates';
 
 /** The bundled, same-origin pattern runtime (scripts/build-preview-runtime.mjs). */
-export const PREVIEW_RUNTIME = '/studio/preview-runtime.js';
+const PREVIEW_RUNTIME = '/studio/preview-runtime.js';
 
 export const packagedTemplateUrl = (slug: string) => `/downloads/${slug}/`;
 
@@ -54,30 +39,25 @@ export type PreviewDocument = {
 };
 
 /**
- * The script the shell injects in place of the packaged bootstrap.
- *
- * It carries no pattern names: the runtime bundles every design any packaged
- * template mounts and `hydrate()` closes over the map, so this is the same one
- * line for all 77 sites and cannot drift from the page it revives.
+ * The script injected in place of the packaged bootstrap. It names no
+ * patterns: the runtime bundles the whole catalog and `hydrate()` closes over
+ * it, so this is the same for every site.
  */
 const bootstrap =
   `import { hydrate, rehydrate } from '${PREVIEW_RUNTIME}';\n` +
   'hydrate();\n' +
-  // Handed to the parent so the editor can re-draw the patterns after it has
-  // rewritten their attributes. Same origin, so the parent can reach it.
+  // For the parent (same origin), to re-draw the patterns after it has
+  // rewritten their attributes.
   'window.__tabbied = { rehydrate };\n';
 
 /**
- * A `#work` link in a srcdoc document is a navigation, not a scroll. The
- * document's own URL is `about:srcdoc`, and the link resolves against the
- * <base> to `/downloads/<slug>/#work` - never the same URL, so the browser
- * navigates the frame there: the raw package, with the rebrand gone and the
- * esm.sh bootstrap back. A sandbox does not stop a frame navigating itself.
- * So fragment links are handled here, as the scroll the template meant.
+ * A `#work` link in a srcdoc document resolves against the <base> to
+ * `/downloads/<slug>/#work`, never the document's own `about:srcdoc`, so the
+ * browser navigates the frame to the raw package (a sandbox does not stop
+ * that). Fragment links are handled here as the scroll the template meant.
  *
- * A classic script of its own, not a line of the module above: a module
- * waits on its import, and a link clicked before the runtime arrived was a
- * navigation. This runs as the parser reaches it.
+ * A classic script, not a line of the module above: a module waits on its
+ * import, and a link clicked before then would navigate.
  */
 const linkScript =
   'document.addEventListener("click", function (event) {\n' +
@@ -92,12 +72,9 @@ const linkScript =
   '});\n';
 
 /**
- * Rewrite the packaged bootstrap to load the same-origin runtime.
- *
- * Matched on the esm.sh specifier rather than on position: the packager writes
- * exactly one such module script today (scripts/package-templates.mjs), and if
- * that ever stops being true a preview that silently drew nothing would be far
- * harder to notice than the problem this reports.
+ * Rewrite the packaged bootstrap to load the same-origin runtime. Matched on
+ * the esm.sh specifier the packager writes (scripts/package-templates.mjs), and
+ * reported when missing rather than drawing a preview with no patterns.
  */
 function rewriteBootstrap(documentEl: Document): Problem[] {
   const scripts = [
@@ -164,9 +141,9 @@ function absolutiseSrcset(value: string, root: string): string {
 }
 
 /**
- * Spell every relative resource reference out as an absolute path under the
- * package (change 4 above). The <base> stays: it is what resolves the
- * references this cannot see, such as a `url()` in an inline style.
+ * Make every relative resource reference absolute under the package (change 4
+ * above). The <base> still resolves what this cannot see, such as a `url()`
+ * in an inline style.
  */
 function absolutiseResources(documentEl: Document, root: string): void {
   for (const [selector, attribute] of RESOURCE_ATTRIBUTES) {
@@ -184,11 +161,8 @@ function absolutiseResources(documentEl: Document, root: string): void {
 }
 
 /**
- * Build the preview document.
- *
- * Takes the packaged HTML as text rather than fetching it, so the caller owns
- * the request (and its errors) and this stays a pure transform over a DOM the
- * browser already knows how to build.
+ * Build the preview document from the packaged HTML. The caller fetches it and
+ * owns the request's errors; this is a pure transform.
  */
 export function buildPreviewDocument(options: {
   html: string;
@@ -201,8 +175,7 @@ export function buildPreviewDocument(options: {
   const parsed = new DOMParser().parseFromString(html, 'text/html');
   const head = parsed.head;
 
-  // First child, so it precedes every relative href and src in the document -
-  // a <base> only governs what follows it.
+  // First child: a <base> only governs the references that follow it.
   const base = parsed.createElement('base');
   base.setAttribute('href', packagedTemplateUrl(slug));
   head.insertBefore(base, head.firstChild);

@@ -101,11 +101,8 @@
 /* -- 01 · palette picker --------------------------------------------------- */
 
 /* Only the picker is inset as a proportion of the card; the other two panels
-   fill the card and inset themselves with padding, as the design has them. The
-   auto margins used to sit on .panelBody, where they outlived the width they
-   centerd: a panel that reset `width` to auto still absorbed its free space
-   into those margins, so its slider and chips shrink-wrapped and floated in
-   the middle of the card instead of spanning it. */
+   fill it and inset with padding. The auto margins belong here, not on
+   .panelBody, where they would shrink-wrap the other panels' contents. */
 .paletteBody {
   width: 80%;
   margin: 0 auto;

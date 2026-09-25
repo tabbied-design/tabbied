@@ -44,9 +44,8 @@ export default function DocsNav({ sections }: { sections: DocsSection[] }) {
   }, [sections]);
 
   // In the pill row the current section can be off the side of the screen, so
-  // it is scrolled into view as the page moves past it. The row only scrolls
-  // when it overflows, which is how this knows it is the row and not the
-  // column - and the column is never touched.
+  // it is scrolled into view. Only the row overflows, which is how this tells
+  // it from the desktop column.
   useEffect(() => {
     const scroller = scrollRef.current;
 

@@ -197,9 +197,7 @@
 
 /* On a phone the editor is not offered: the rail is hidden, the notice says
    so, and the page is the site alone, full bleed under the bar and scrolling
-   inside its own frame. The rail on a 390px screen put the palette list
-   between the person and the page it recolored, and the canvas pinned at
-   half the viewport was a keyhole to judge a page through. */
+   inside its own frame. */
 @media (max-width: 768px) {
   .shell,
   .shellWide {

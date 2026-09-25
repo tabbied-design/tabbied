@@ -57,9 +57,9 @@ function HexField({
 }
 
 /**
- * The shared new/edit-palette dialog (4a): the single place palettes are
- * created, edited, and deleted. Renders over a low-opacity backdrop so the page
- * it sits on stays visible (its patterns recolor live as the draft is edited).
+ * The shared new/edit-palette dialog: the single place palettes are created,
+ * edited, and deleted. Its backdrop is low-opacity so the page behind stays
+ * visible, its patterns recoloring live as the draft is edited.
  */
 export default function PaletteEditorDialog({
   draft,
@@ -93,8 +93,7 @@ export default function PaletteEditorDialog({
   }, [draft?.id]);
 
   // On touch devices, auto-focusing the Name field pops the on-screen keyboard
-  // and it covers the dialog. Detect a coarse primary pointer and skip the
-  // initial focus there; pointer/keyboard users still land in the Name field.
+  // over the dialog, so a coarse pointer gets no initial focus.
   const isCoarsePointer = useMediaQuery('(pointer: coarse)');
 
   return (
@@ -105,8 +104,6 @@ export default function PaletteEditorDialog({
       }}
     >
       <Dialog.Portal>
-        {/* Low-opacity scrim: the page (and its live-recolored patterns) stays
-            visible behind the dialog. */}
         <Dialog.Backdrop className={styles.dialogBackdrop} />
         <Dialog.Popup
           className={styles.dialogPopup}

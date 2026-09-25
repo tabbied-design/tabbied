@@ -1,12 +1,10 @@
 /*
- * A tiny responsive 12-column grid that replaces the slice of react-bootstrap
- * the site actually used (Container / Row / Col with responsive spans, offsets,
- * ordering and gutter control). Spans/offsets/order are driven by CSS custom
- * properties set per breakpoint on each <Col>, with a fallback chain so an
- * unset breakpoint inherits the next smaller one - mirroring Bootstrap's
- * mobile-first cascade.
+ * A tiny responsive 12-column grid (Container / Row / Col). Spans, offsets and
+ * order are custom properties set per breakpoint on each <Col>, with a
+ * fallback chain so an unset breakpoint inherits the next smaller one
+ * (mobile-first, as Bootstrap does).
  *
- * Custom breakpoints (min-width): sm 748px, md 992px, lg 1300px.
+ * Breakpoints (min-width): sm 748px, md 992px, lg 1300px.
  */
 
 .container {

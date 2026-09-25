@@ -10,8 +10,7 @@ export const metadata: Metadata = {
 export default async function SelectPatternPage() {
   const gallery = await getGalleryItems();
 
-  // The mono is used for the card names; the variable has to reach them from an
-  // ancestor, and SelectPattern is a client component.
+  // SelectPattern is a client component, so its font variables are applied here.
   return (
     <div className={`${plexMono.variable} ${plexSans.variable}`}>
       <SelectPattern gallery={gallery} />

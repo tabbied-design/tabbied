@@ -8,19 +8,14 @@ import styles from './PaletteListRow.module.css';
 const MAX_CHIPS = 6;
 
 /**
- * One palette in a list: the name, then its ground and its inks as a run of
- * chips, then the pencil (and, for a palette the person made, a delete mark).
- * The ground comes first and set apart from the inks: it was left out on the
- * grounds that the thumbnails already show it, which is true only of the
- * palette in use. The active row is an ink pill. Shared by the gallery's rail
+ * One palette in a list: the name, then its ground (set apart) and its inks
+ * as a run of chips, then the pencil and, for a palette the person made, a
+ * delete mark. The active row is an ink pill. Shared by the gallery's rail
  * and the editor's palette list, so the two read as one control.
  *
- * The row is a group of real buttons: the pill (name and inks) applies the
- * palette, and the pencil and delete mark beside it are buttons of their own.
- * They used to be `role="button"` spans nested inside the pill's button, which
- * HTML forbids: the pill's accessible name swallowed their labels ("Ink Edit
- * Ink (saves as a copy)"), and a keypress on a mark also activated the pill in
- * browsers that do not let a descendant stop the ancestor button's default.
+ * The pencil and delete mark are buttons beside the pill's button, not
+ * inside it: HTML forbids nested controls, and a nested one joins the pill's
+ * accessible name and can fire the pill on a keypress.
  */
 export default function PaletteListRow({
   name,

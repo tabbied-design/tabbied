@@ -35,10 +35,8 @@ const PER_PAGE = 24;
 /**
  * Row spans for the masonry, in 52px rows: every card is one column wide and
  * three, four or five rows tall, and the grid's dense placement puts each one
- * under the shortest column, which is what makes it masonry rather than a
- * mosaic. The sequence is the design's. It repeats per page, so the rhythm is
- * the same wherever you are in the catalog, and it stays between 196 and
- * 340px, so a card never reads as a strip however narrow the column.
+ * under the shortest column. The sequence is the design's and repeats per
+ * page; at 196-340px tall, a card never reads as a strip.
  */
 const ROW_SPANS: readonly number[] = [
   3, 5, 4, 5,
@@ -79,21 +77,20 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
   const savedPalettes = brandState.palettes;
 
   // Below the two-column breakpoint the fixed rail is replaced by the mobile
-  // header (7a). Rendering it only on mobile keeps its palette shelf out of
-  // the desktop DOM; the `&&` placeholder holds the slot so the grid (a later
+  // header. Rendering it only on mobile keeps its palette shelf out of the
+  // desktop DOM; the `&&` placeholder holds the slot so the grid (a later
   // sibling) never remounts when this toggles.
   const isMobile = useMediaQuery('(max-width: 991.98px)');
 
   const [search, setSearch] = useState('');
-  // The gallery page lives in the URL (?page=N) so it's shareable, survives a
-  // refresh, and works with back/forward. It's read from the URL client-side
-  // (not useSearchParams) so the page keeps its server-rendered first paint
-  // instead of deopting to client-only rendering. Starts at 1 for SSR.
+  // The gallery page lives in the URL (?page=N) so it's shareable and works
+  // with back/forward. It's read client-side (not useSearchParams) so the page
+  // keeps its server-rendered first paint instead of deopting to client-only
+  // rendering. Starts at 1 for SSR.
   const [page, setPage] = useState(1);
   // Mobile only: the "All >" chip-shelf pill swaps in the embedded browser.
   const [browserOpen, setBrowserOpen] = useState(false);
 
-  // Read the page from the URL on mount and on back/forward.
   useEffect(() => {
     const readPage = () => {
       const raw = new URLSearchParams(window.location.search).get('page');
@@ -180,9 +177,8 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
 
   // The spread is keyed by the card's place in the whole catalog, not on the
   // page, so a search or a page change keeps each design in its own palette.
-  // Fitted once per spread: a fresh array per card per render reached
-  // TabbiedPattern as a changed palette on every keystroke and palette click,
-  // and rebuilt every visible doodle's source to find nothing had changed.
+  // Fitted once per spread: a fresh array per render reaches TabbiedPattern as
+  // a changed palette and rebuilds every visible doodle's source.
   const spreadPalettes = useMemo(
     () =>
       new Map(
@@ -217,8 +213,8 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
   };
 
   const editor = usePaletteEditor({
-    // Saving/creating applies the palette; the rail shows the full list, so a
-    // freshly saved custom palette is already at the top - no page to jump to.
+    // Saving applies the palette; a freshly saved one is already at the top of
+    // the rail's full list, so there is no page to jump to.
     onSaved: (palette) => applyPalette(palette.id, true),
   });
 
@@ -267,10 +263,9 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
     return () => observer.disconnect();
   }, [visible]);
 
-  // The column's heading, which a page change and a search bring back into
-  // view: a page number is clicked at the foot of the grid, and without this
-  // the next page opened on its last row. The heading's scroll-margin keeps
-  // it clear of the pinned bar (and, on a phone, the palette shelf).
+  // A page change or a search brings the column's heading back into view, since
+  // a page number is clicked at the foot of the grid. The heading's
+  // scroll-margin keeps it clear of the pinned bar (and, on a phone, the shelf).
   const headerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const pendingScroll = useRef<'page' | 'search' | null>(null);
@@ -307,7 +302,7 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
   const onSearchChange = (value: string) => {
     pendingScroll.current = 'search';
     setSearch(value);
-    // A new search resets to page 1 - clear the page param (not a page nav).
+    // A new search resets to page 1, replacing the URL rather than pushing.
     setPage(1);
     writePageToUrl(1, true);
   };
@@ -356,10 +351,9 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
       />
       )}
 
-      {/* Mobile only: the palette chip shelf lives here - a direct child of the
-          document-scrolled gallery - so `position: sticky` keeps it pinned to
-          the top of the viewport across the whole grid scroll (nested inside the
-          header wrapper it could only stick within that short box). */}
+      {/* A direct child of the document-scrolled gallery, so `position:
+          sticky` pins it across the whole grid scroll; inside the header
+          wrapper it could only stick within that short box. */}
       {isMobile && !browserOpen && (
         <GalleryChipShelf
           className={styles.mobileShelf}
@@ -404,10 +398,9 @@ export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
             </div>
 
             {/* Numbers only, as the design draws it: the window always shows
-                the neighbors of the current page, so there is nothing an
-                arrow would reach that a number does not. Real links, so each
-                page is a URL a crawler can follow and a person can open in a
-                tab; a plain click stays in the page. */}
+                the current page's neighbors. Real links, so each page is a URL
+                a crawler can follow and a person can open in a tab; a plain
+                click stays in the page. */}
             {pageCount > 1 && (
               <nav className={styles.pagination} aria-label="Pages">
                 {pages.map((p, index) =>
