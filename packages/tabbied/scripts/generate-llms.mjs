@@ -271,8 +271,7 @@ one of 1:2 | 2:3 | 1:1 | 3:2 | 2:1 (the ids in src/core/aspectRatio.ts),
 (\`frequency=0.6\`). The \`grid\` option is not a link parameter: the editor
 derives it from the plate at that density, as \`fit: "grid"\` derives it from
 a container. Unknown or out-of-range values fall back to defaults, so a
-partial link is safe, and an older \`grid=8x12\` link is read as the density
-that grid had.
+partial link is safe.
 
 ## Reduced motion
 

@@ -623,7 +623,7 @@ drew at its five stops: `cellPx = 360 / (2 + 8 * density)`, so the former
 integer levels 0..4 sit at 0, 0.25, 0.5, 0.75 and 1, and 0.5 is the 60px cell
 most designs open at (`densityToCellPx` in `sizing.ts`;
 `agent-outputs/20260922-remove-aspect-ratio-plan.md` has the discussion). The
-aspect ratio picker stayed; only the grid control changed. Four things worth
+aspect ratio picker stayed; only the grid control changed. Five things worth
 not re-litigating:
 
 - **Density is a cell size in px, not a count.** The editor derives the
@@ -633,20 +633,20 @@ not re-litigating:
   embed the cells the plate showed at the size it showed them. A count along
   the long edge would keep one picture on every screen, and the snippet
   could not then say it honestly, because the package's unit is px.
-- **The grid is not a link parameter.** A share link carries `density=`;
-  `grid=CxR` is read as a legacy density (`densityFromGrid`, the long edge
-  against the original 540px plate) and the URL is rewritten, since
-  llms.txt told agents to write it for a year. The grid option's slot in
-  `optionValues` is inert and never reaches the URL or the snippet.
+- **The grid is not a link parameter.** A share link carries `density=`,
+  and a `grid=` parameter is ignored like any unknown one. A design's
+  authored grid default only sets the density it opens at
+  (`densityFromGrid`, the long edge against the original 540px plate). The
+  grid option's slot in `optionValues` is inert and never reaches the URL
+  or the snippet.
 - **Expand pins the grid.** Same seed plus a different `cols x rows` is a
   different arrangement, so expanding the plate holds the grid it showed
   and scales the cells; a ratio change, a density change or a collapse
   releases it. A plain window resize re-derives, as every embed does.
-- **The rescale is a breaking change to a shipped prop.** A legacy
-  `density={2}` clamps to 1 (36px cells, not 60px), and `createPattern`
-  warns once per page on a value above 1; a legacy `1` (90px then, 36px
-  now) is the silent case nothing can tell apart. Every call site in this
-  repo migrated level n to n / 4 in the same change.
+- **The rescale is a breaking change to a shipped prop**, made without a
+  compatibility path: a `density` above 1 clamps to 1 (36px cells), and
+  nothing warns about it. Every call site in this repo migrated level n to
+  n / 4 in the same change.
 - **The plate is clipped, the way a `fit: "grid"` field is.** The plate is
   the ratio's box; the canvas drawn in it is that box snapped to whole,
   square cells (`snapCellToBox`, the arithmetic `applyGridSnap` runs on a
@@ -735,7 +735,7 @@ npm run dev            # site on :3000, with NEXT_PUBLIC_API_BASE set
 npm run dev:api        # the Worker on :8787 - run both
 npm run db:migrate     # apply worker/migrations to the local D1
 npm run stub:ai        # a local OpenAI-shaped upstream on :8788
-npm run test:worker    # 36 tests in workerd, over local D1 and R2
+npm run test:worker    # workerd, over local D1 and R2
 ```
 
 **No binding declares an id, deliberately.** Wrangler provisions a binding
@@ -1229,14 +1229,11 @@ whatever text Studio wrote, so putting them back is a UI change.
   implementation. `worker/test/admin.test.ts` pins the *session*, not just
   the row - the row passing is what let this ship.
 
-Two things about the tests. `worker/test/*.test.ts` sign up real users and
-follow the verification link out of `dev_mail`; run them **after** a build,
-not during one - `next build` empties `out/` and the assets binding reads
-from there, which reads as a random failure in `beforeAll`. And one smoke
-test (`the same description always gives the same three`) can time out on
-`page.goto` in a sandbox with no outbound network: the results page's
-typekit and Google Fonts stylesheets hang until the proxy resets them, and
-`load` waits for stylesheets. Not a regression; it passes with network.
+`worker/test/*.test.ts` sign up real users and follow the verification link
+out of `dev_mail`; run them **after** a build, not during one: `next build`
+empties `out/` and the assets binding reads from there, which reads as a
+random failure in `beforeAll`. Each test file pays its own setup (about 10s),
+so a new test joins an existing file unless it needs a fresh database.
 
 ## Agent-facing docs - all generated, never hand-edited
 

@@ -148,11 +148,10 @@ export function resolveBoxStyle(size: PatternBoxSize = {}): PatternBoxStyle {
   return style;
 }
 
-// "cols × rows" for an arbitrary box at a target cell size, keeping cells
-// near-square. Generalizes deriveGrid() from the five preset aspect ratios to
-// any measured container: respect the pattern's cell-size bounds (px-effect
-// designs need a floor), though never a cell larger than the box's short
-// edge, then css-doodle's hard 64x64 cap.
+// "cols x rows" for an arbitrary box at a target cell size, keeping cells
+// near-square: respect the pattern's cell-size bounds (px-effect designs need
+// a floor), though never a cell larger than the box's short edge, then
+// css-doodle's hard 64x64 cap.
 //
 // cols and rows are chosen jointly, squareness first and closeness to the
 // target breaking ties. Rounding each axis on its own can pair a rounded-up
@@ -309,9 +308,8 @@ const DENSITY_REFERENCE_LONG_EDGE = 540;
 /**
  * The density whose cell, on the original 360x540 plate, has the long edge
  * of a "colsxrows" grid; null when the value is not one. Reads a preset's
- * authored default and the old editor's `grid=8x12` links: 6x9 is 0.5,
- * 10x15 is 1, and anything finer clamps to 1. Two decimals, the precision a
- * share link carries.
+ * authored grid default: 6x9 is 0.5, 10x15 is 1, and anything finer clamps
+ * to 1. Two decimals, the precision a share link carries.
  */
 export function densityFromGrid(grid: string): number | null {
   const parsed = parseGridValue(grid);

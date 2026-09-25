@@ -229,23 +229,6 @@ type ResolvedConfig = {
   coverRender: CoverRender;
 };
 
-// A density above 1 can only be the old integer scale 0..4 (level n is now
-// n / 4), so it is warned about once per page; a legacy 1 cannot be told apart.
-let warnedLegacyDensity = false;
-
-const clampDensity = (density: number): number => {
-  if (density > 1 && !warnedLegacyDensity) {
-    warnedLegacyDensity = true;
-    console.warn(
-      `[tabbied] density ${density} is above 1. density is now a number from ` +
-        '0 (coarse) to 1 (fine); the old levels 0..4 map to 0, 0.25, 0.5, ' +
-        '0.75 and 1.'
-    );
-  }
-
-  return Math.min(Math.max(density, 0), 1);
-};
-
 export function createPattern(
   host: HTMLElement,
   initialConfig: PatternConfig
@@ -313,7 +296,7 @@ export function createPattern(
       targetCellPx:
         config.cellSize ??
         (config.density != null
-          ? densityToCellPx(clampDensity(config.density))
+          ? densityToCellPx(config.density)
           : DEFAULT_CELL_PX),
       fixedWidth: config.width ?? DEFAULT_FIXED_SIZE.width,
       fixedHeight: config.height ?? DEFAULT_FIXED_SIZE.height,

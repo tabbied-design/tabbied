@@ -288,8 +288,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
     if (option.type === 'ButtonSelectGroup') {
       // The grid option's slot is inert: the grid is derived from the plate
-      // at the density (below), never read from here or from a link. A
-      // legacy `grid=` link is read by densityFromQuery instead.
+      // at the density (below), never read from here or from a link.
       if (option.id === GRID_OPTION_ID) return option.default;
 
       return option.options?.includes(queryVal) ? queryVal : option.default;
@@ -330,9 +329,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
   const hasGrid = gridIndex >= 0;
 
   // The density a link carries, 0 (coarse) to 1 (fine): `density` when it
-  // parses in range, else a legacy `grid=CxR` (llms.txt told agents to write
-  // them) read as the density of that grid's cell on the original plate,
-  // else the design's authored default. Two decimals, as links write it.
+  // parses in range, else the density of the design's authored grid default
+  // on the original plate. Two decimals, as links write it.
   const densityFromQuery = (): number => {
     const raw = searchParams.get('density');
     const parsed = raw === null || raw.trim() === '' ? NaN : Number(raw);
@@ -340,11 +338,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
     if (Number.isFinite(parsed) && parsed >= 0 && parsed <= 1) {
       return Math.round(parsed * 100) / 100;
     }
-
-    const legacyGrid = searchParams.get('grid');
-    const legacy = legacyGrid === null ? null : densityFromGrid(legacyGrid);
-
-    if (legacy !== null) return legacy;
 
     return (
       (hasGrid ? densityFromGrid(String(pattern.options[gridIndex].default)) : null) ??

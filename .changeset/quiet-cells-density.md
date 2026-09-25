@@ -14,13 +14,14 @@
 
 **Breaking changes**
 
-- A `density` above 1 clamps to 1 and draws 36px cells; the controller warns once per page naming the mapping. A legacy `density={1}` is the silent case: 90px cells before, 36px after. Migrate level n to n / 4.
-- `DENSITY_CELL_PX` is removed. `DEFAULT_CELL_PX` keeps its value (36px, now `densityToCellPx(1)`), so a consumer that passes neither `cellSize` nor `density` sees no change.
+- A `density` above 1 clamps to 1 and draws 36px cells, and `density={1}` draws 36px cells where it drew 90px. Nothing warns: migrate level n to n / 4.
+- `DENSITY_CELL_PX` is removed.
+- The level-based grid helpers are removed: `LONG_EDGE_COUNTS`, `GRID_LEVEL_COUNT`, `getCanvasSize`, `deriveGrid`, `getGridOptions` and `gridToLevel`. A grid is derived from a box at a density with `deriveGridForBox`. `DEFAULT_CELL_PX` keeps its value (36px, now `densityToCellPx(1)`), so a consumer that passes neither `cellSize` nor `density` sees no change.
 
 **Additions**
 
 - `densityToCellPx(density)`: the target cell size for a density, clamped to the range.
-- `densityFromGrid("colsxrows")`: the density whose cell that grid had on the original 360x540 plate (6x9 is 0.5, 10x15 is 1), or null for anything that is not a grid. This is what reads an older editor link's `grid=` parameter.
+- `densityFromGrid("colsxrows")`: the density whose cell that grid had on the original 360x540 plate (6x9 is 0.5, 10x15 is 1), or null for anything that is not a grid. The editor uses it to open a design at the density of its authored grid default.
 - `DENSITY_REFERENCE_PX`, the 360px the mapping is defined against.
 
-The Tabbied editor's grid control is now this density: a slider from 0 to 1, read out as that number, with the grid the plate resolves to at that cell size named in the plate's caption and the aspect ratio picker unchanged. Share links carry `density=` in place of the grid; an older `grid=8x12` link still opens at the density it had.
+The Tabbied editor's grid control is now this density: a slider from 0 to 1, read out as that number, with the grid the plate resolves to at that cell size named in the plate's caption and the aspect ratio picker unchanged. Share links carry `density=` in place of the grid; a `grid=` parameter is ignored.
