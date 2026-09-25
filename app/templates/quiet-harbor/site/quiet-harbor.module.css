@@ -1,0 +1,761 @@
+/* ==========================================================================
+   QUIET HARBOR COUNSELING - a private therapy practice
+   The page is a letter. One column of serif text at a reading measure, the
+   section names set small in the left margin the way a careful writer
+   annotates, and nothing else competing for attention. The one image is a
+   survey chart of the harbor at the top: rings of equal spacing, fading out
+   at both ends, and a small turning seal beside the signature.
+   ========================================================================== */
+
+.page {
+  --paper: #f4f3f0;
+  --ink: #2c2e33;
+  --harbor: #5c7a8c;
+  --gray: #9ea1a6;
+  --pale: #e6e5e0;
+  --gut: clamp(1.25rem, 5vw, 3rem);
+  --measure: 38rem;
+  --air: clamp(4.5rem, 10vw, 7.5rem);
+  --line: color-mix(in srgb, var(--ink) 14%, transparent);
+  --muted: color-mix(in srgb, var(--ink) 72%, transparent);
+  --ui: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  font-optical-sizing: auto;
+  font-size: 1.18rem;
+  font-weight: 400;
+  line-height: 1.72;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--harbor);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2 {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------- the crisis line
+   A single line above everything, so help is the first thing on the page
+   for anyone who needs it now. */
+
+.crisisLine {
+  margin: 0;
+  padding: 0.5rem var(--gut);
+  font-family: var(--ui);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: center;
+  background: var(--pale);
+}
+
+.crisisLine a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------- top bar
+   Slim and still: the name, five links, no rule, no fill. */
+
+.bar {
+  max-width: 68rem;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem var(--gut);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+.mark {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  white-space: nowrap;
+}
+
+.markName {
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.markKind {
+  font-family: var(--ui);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem clamp(1rem, 2.4vw, 2rem);
+}
+
+.nav a {
+  font-family: var(--ui);
+  font-size: 0.9rem;
+  color: var(--muted);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--harbor);
+}
+
+/* ------------------------------------------------------------ letterhead
+   One cell of rings, centered in the band; the mask fades it at both ends
+   and at the foot, so the letter starts on clean paper. */
+
+.chart {
+  position: relative;
+  height: clamp(180px, 26vw, 320px);
+  overflow: hidden;
+  mask-image: radial-gradient(ellipse 50% 90% at 50% 40%, var(--ink) 20%, transparent 100%);
+}
+
+.chartField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.8;
+}
+
+/* ------------------------------------------------------------------ parts
+   Every part of the letter is the same three-column grid: the margin note
+   on the left, the text at a reading measure, and an empty margin that
+   keeps the column centered. */
+
+.part {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--measure)) minmax(0, 1fr);
+  column-gap: clamp(2rem, 5vw, 4rem);
+  padding: 0 var(--gut);
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.part:first-of-type {
+  margin-top: clamp(1rem, 3vw, 2rem);
+}
+
+.side {
+  grid-column: 1;
+  justify-self: end;
+  max-width: 12rem;
+  padding-top: 0.5rem;
+  text-align: right;
+}
+
+.body {
+  grid-column: 2;
+}
+
+.body > :where(p) {
+  margin: 0 0 1.1em;
+}
+
+.body > :where(p:last-child) {
+  margin-bottom: 0;
+}
+
+.side .sideHead {
+  font-family: var(--ui);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.sideHead::before {
+  content: '';
+  display: block;
+  width: 1.8rem;
+  height: 1px;
+  margin: 0 0 0.7rem auto;
+  background: var(--harbor);
+}
+
+.dateline {
+  margin: 0;
+  font-family: var(--ui);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.kicker {
+  margin: 0 0 1rem;
+  font-family: var(--ui);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.body .title {
+  font-size: clamp(2.3rem, 5vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--harbor);
+}
+
+.salute {
+  margin-top: clamp(2rem, 4vw, 2.8rem);
+  font-style: italic;
+}
+
+.dashList {
+  list-style: none;
+  margin: 0 0 1.3em;
+  padding: 0;
+}
+
+.dashList li {
+  position: relative;
+  padding: 0.2rem 0 0.2rem 1.6rem;
+}
+
+.dashList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.05em;
+  width: 0.8rem;
+  height: 1px;
+  background: var(--harbor);
+}
+
+.pull {
+  margin: 2rem 0 0;
+  padding: 0.2rem 0 0.2rem 1.4rem;
+  border-left: 2px solid var(--harbor);
+}
+
+.pull p {
+  margin: 0;
+  font-size: 1.45rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.45;
+}
+
+/* A short sequence of three, laid out as the letter's own small table. */
+.firstList,
+.practical {
+  margin: 1.6rem 0 0;
+}
+
+.firstList div,
+.practical div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 1.2rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.firstList div:last-child,
+.practical div:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.practical {
+  margin-top: 0;
+}
+
+.firstList dt,
+.practical dt {
+  padding-top: 0.35rem;
+  font-family: var(--ui);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.firstList dd,
+.practical dd {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------- fees */
+
+.fees {
+  width: 100%;
+  margin: 0 0 1.8rem;
+  border-collapse: collapse;
+}
+
+.fees tr {
+  border-top: 1px solid var(--line);
+}
+
+.fees tr:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.fees th,
+.fees td {
+  padding: 0.85rem 0;
+  vertical-align: baseline;
+}
+
+.fees th {
+  font-weight: 400;
+  text-align: left;
+}
+
+.fees .feeLen {
+  padding-left: 1rem;
+  font-family: var(--ui);
+  font-size: 0.85rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.fees .feePrice {
+  padding-left: 1rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------- faq */
+
+.faq {
+  border-bottom: 1px solid var(--line);
+}
+
+.faqItem {
+  border-top: 1px solid var(--line);
+}
+
+.faqItem summary {
+  position: relative;
+  padding: 1rem 2.5rem 1rem 0;
+  list-style: none;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary:hover {
+  color: var(--harbor);
+}
+
+/* A plus that loses its upright when the answer opens. */
+.faqItem summary::before,
+.faqItem summary::after {
+  content: '';
+  position: absolute;
+  right: 0.3rem;
+  top: 50%;
+  width: 0.8rem;
+  height: 1px;
+  background: var(--ink);
+  transition: transform 160ms ease;
+}
+
+.faqItem summary::after {
+  transform: rotate(90deg);
+}
+
+.faqItem[open] summary::after {
+  transform: rotate(0deg);
+}
+
+.faqItem p {
+  margin: 0;
+  padding: 0 2.5rem 1.3rem 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- crisis */
+
+.crisis {
+  padding: 1.4rem 1.6rem 1.5rem;
+  background: var(--pale);
+  border-left: 3px solid var(--harbor);
+}
+
+.crisis p {
+  margin: 0 0 0.8rem;
+}
+
+.crisisLead {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.crisisList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--ui);
+  font-size: 1rem;
+}
+
+.crisisList li {
+  padding: 0.35rem 0;
+}
+
+.crisisList a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ----------------------------------------------------------------- sign-off */
+
+.seal {
+  position: relative;
+  width: 144px;
+  height: 144px;
+  margin-top: 0.4rem;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.85;
+}
+
+.closing {
+  margin-top: 2rem;
+  font-style: italic;
+}
+
+.signature {
+  margin: 0.2rem 0 0;
+  font-size: clamp(2.2rem, 4.4vw, 2.9rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.credential {
+  margin-top: 0.6rem;
+  font-family: var(--ui);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- form
+   Lines to write on rather than boxes to fill. */
+
+.form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.field span,
+.choices legend {
+  font-family: var(--ui);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.45rem 0;
+  font: inherit;
+  font-size: 1.1rem;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 34%, transparent);
+  border-radius: 0;
+  transition: border-color 160ms ease;
+}
+
+.field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-bottom-color: var(--harbor);
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.choices legend {
+  padding: 0;
+  margin-bottom: 0.5rem;
+}
+
+.choices label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.choices input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--harbor);
+}
+
+.formFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 0.4rem;
+}
+
+.send {
+  padding: 0.85rem 1.6rem;
+  font-family: var(--ui);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.send:hover {
+  background: var(--harbor);
+}
+
+.formNote {
+  flex: 1 1 16rem;
+  margin: 0;
+  font-family: var(--ui);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: 0 var(--gut) 2rem;
+}
+
+.footInner {
+  max-width: calc(68rem - 2 * var(--gut));
+  margin: 0 auto;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.footCols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  font-family: var(--ui);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.footName {
+  margin: 0;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.footAddr {
+  margin: 0;
+  color: var(--muted);
+}
+
+.footContact {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footContact a {
+  border-bottom: 1px solid var(--gray);
+  transition: border-color 160ms ease;
+}
+
+.footContact a:hover {
+  border-color: var(--harbor);
+}
+
+.footFine {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.6rem 1.5rem;
+  margin-top: 2rem;
+  font-family: var(--ui);
+}
+
+.footFine p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive
+   Below the width where a margin fits, the notes move above their text and
+   the letter becomes one plain column. */
+
+@media (max-width: 1000px) {
+  .part {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: calc(var(--measure) + 2 * var(--gut));
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .side,
+  .body {
+    grid-column: 1;
+  }
+
+  .side {
+    justify-self: start;
+    max-width: none;
+    padding-top: 0;
+    margin-bottom: 1.1rem;
+    text-align: left;
+  }
+
+  .sideHead::before {
+    margin-left: 0;
+  }
+
+  .signoff .side {
+    order: 2;
+    margin: 1.8rem 0 0;
+  }
+
+  .seal {
+    width: 96px;
+    height: 96px;
+  }
+}
+
+@media (max-width: 800px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    padding-top: 1.1rem;
+    padding-bottom: 1.1rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    font-size: 1.1rem;
+  }
+
+  .markKind {
+    display: none;
+  }
+
+  .firstList div,
+  .practical div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+
+  .firstList dt,
+  .practical dt {
+    padding-top: 0;
+  }
+
+  .row,
+  .footCols,
+  .footFine {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fees .feeLen {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .faqItem summary,
+  .faqItem summary::before,
+  .faqItem summary::after,
+  .field input,
+  .field textarea,
+  .send,
+  .footContact a {
+    transition: none;
+  }
+}

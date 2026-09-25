@@ -15,6 +15,15 @@ cannot be used here: **flare does not support the Batch API**, and everything
 below is built on batch at half the synchronous rate. Bumping this pipeline's
 model means giving that up, so the two are pinned separately on purpose.
 
+The one exception so far is small on purpose: the seven cut-outs of the
+minimal set (2026-09-25; the loaf and croissant, the flat white, the
+bouquet, the pint, the teapot and the violin) were made with the same
+prompts and promotion, but through `sync --model gpt-image-2.5-flare`, since
+seven requests do not need a batch and flare returns them in seconds. The
+`meta.model` default stays `gpt-image-2`, so a later `submit` of those ids
+would regenerate them on the batch model; pass the same `--model` to keep
+them on flare.
+
 ```
   data/image-prompts.json        <- 1. author the PROJECT (palette + style), then its prompts
             -

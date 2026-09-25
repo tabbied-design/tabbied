@@ -1208,6 +1208,140 @@
           "as": "raw wool and the drying racks"
         }
       }
+    },
+    "crumb-bakehouse": {
+      "title": "Crumb Bakehouse - neighborhood bakery",
+      "style": "studio product photograph",
+      "paletteMode": "scene",
+      "palette": {
+        "Flour": {
+          "hex": "#FBF7EF",
+          "as": "dusted flour on the crust"
+        },
+        "Crust": {
+          "hex": "#C98B3A",
+          "as": "a deep golden baked crust"
+        },
+        "Ink": {
+          "hex": "#2A2118",
+          "as": "the darkest caramelized edges"
+        },
+        "Pale": {
+          "hex": "#EDE3D1",
+          "as": "the pale open crumb"
+        }
+      }
+    },
+    "morrow-coffee": {
+      "title": "Morrow Coffee - coffee shop and roastery",
+      "style": "studio product photograph",
+      "paletteMode": "scene",
+      "palette": {
+        "Oat": {
+          "hex": "#F3EEE6",
+          "as": "matte off-white glazed stoneware"
+        },
+        "Caramel": {
+          "hex": "#B06A3B",
+          "as": "the crema on the coffee"
+        },
+        "Espresso": {
+          "hex": "#231A14",
+          "as": "the dark coffee itself"
+        },
+        "Stone": {
+          "hex": "#8D8177",
+          "as": "an unglazed clay foot ring"
+        }
+      }
+    },
+    "wild-stem": {
+      "title": "Wild Stem - florist",
+      "style": "studio product photograph",
+      "paletteMode": "scene",
+      "palette": {
+        "Peony": {
+          "hex": "#C94F6D",
+          "as": "peony and ranunculus petals"
+        },
+        "Stem": {
+          "hex": "#5E7B4C",
+          "as": "stems, leaves and eucalyptus"
+        },
+        "Petal": {
+          "hex": "#FBF7F4",
+          "as": "white sweet peas and pale blooms"
+        },
+        "Twine": {
+          "hex": "#9C958F",
+          "as": "natural twine tying the stems"
+        }
+      }
+    },
+    "copperline-brewing": {
+      "title": "Copperline Brewing - brewery and taproom",
+      "style": "studio product photograph",
+      "paletteMode": "scene",
+      "palette": {
+        "Amber": {
+          "hex": "#E0A33B",
+          "as": "a clear amber pale ale"
+        },
+        "Cream": {
+          "hex": "#EFE8D8",
+          "as": "a dense cream-colored head of foam"
+        },
+        "Glass": {
+          "hex": "#6D706A",
+          "as": "the thick glass base"
+        }
+      }
+    },
+    "linden-guesthouse": {
+      "title": "The Linden Guesthouse - bed and breakfast",
+      "style": "studio product photograph",
+      "paletteMode": "scene",
+      "palette": {
+        "Terracotta": {
+          "hex": "#A45A3C",
+          "as": "a terracotta-glazed teapot body"
+        },
+        "Linden": {
+          "hex": "#6F7D5C",
+          "as": "a small green glazed lid knob"
+        },
+        "Cream": {
+          "hex": "#F5F2EA",
+          "as": "a cream glazed interior and rim"
+        },
+        "Ink": {
+          "hex": "#25271F",
+          "as": "a dark wooden handle"
+        }
+      }
+    },
+    "cadence-music": {
+      "title": "Cadence Music School - music lessons",
+      "style": "studio product photograph",
+      "paletteMode": "scene",
+      "palette": {
+        "Spruce": {
+          "hex": "#C98B4A",
+          "as": "a honey-colored varnished spruce top"
+        },
+        "Ebony": {
+          "hex": "#1B1A24",
+          "as": "an ebony fingerboard, pegs and chinrest"
+        },
+        "Maple": {
+          "hex": "#8A4B2A",
+          "as": "a flamed maple back and ribs"
+        },
+        "Gut": {
+          "hex": "#E9E6DF",
+          "as": "pale strings and bridge"
+        }
+      }
     }
   },
   "sets": {
@@ -2329,6 +2463,42 @@
           "as": "raw wool and the drying racks"
         }
       }
+    },
+    "crumb-bakehouse-object": {
+      "style": "studio product photograph",
+      "size": "1024x1024",
+      "cutout": true,
+      "backdrop": "The object sits alone, softly and evenly lit, with no cast shadow, no hands, no props, no table surface and nothing else whatsoever in frame."
+    },
+    "morrow-coffee-object": {
+      "style": "studio product photograph",
+      "size": "1024x1024",
+      "cutout": true,
+      "backdrop": "The object sits alone, softly and evenly lit, with no cast shadow, no hands, no props, no table surface and nothing else whatsoever in frame."
+    },
+    "wild-stem-object": {
+      "style": "studio product photograph",
+      "size": "1024x1024",
+      "cutout": true,
+      "backdrop": "The object sits alone, softly and evenly lit, with no cast shadow, no hands, no props, no table surface and nothing else whatsoever in frame."
+    },
+    "copperline-brewing-object": {
+      "style": "studio product photograph",
+      "size": "1024x1024",
+      "cutout": true,
+      "backdrop": "The object sits alone, softly and evenly lit, with no cast shadow, no hands, no props, no table surface and nothing else whatsoever in frame."
+    },
+    "linden-guesthouse-object": {
+      "style": "studio product photograph",
+      "size": "1024x1024",
+      "cutout": true,
+      "backdrop": "The object sits alone, softly and evenly lit, with no cast shadow, no hands, no props, no table surface and nothing else whatsoever in frame."
+    },
+    "cadence-music-object": {
+      "style": "studio product photograph",
+      "size": "1024x1024",
+      "cutout": true,
+      "backdrop": "The object sits alone, softly and evenly lit, with no cast shadow, no hands, no props, no table surface and nothing else whatsoever in frame."
     }
   },
   "prompts": [
@@ -4637,6 +4807,55 @@
       "set": "purpurhaus-tile",
       "slot": "tile",
       "subject": "a fan of dyed wool swatch cards riveted together at one corner and spread open"
+    },
+    {
+      "id": "crumb-bakehouse-loaf",
+      "project": "crumb-bakehouse",
+      "set": "crumb-bakehouse-object",
+      "slot": "object",
+      "subject": "a round country sourdough loaf with a deep scored ear and a floured crust, seen from a slight three-quarter angle"
+    },
+    {
+      "id": "crumb-bakehouse-croissant",
+      "project": "crumb-bakehouse",
+      "set": "crumb-bakehouse-object",
+      "slot": "object",
+      "subject": "a single all-butter croissant with crisp laminated layers, seen from the side"
+    },
+    {
+      "id": "morrow-coffee-cup",
+      "project": "morrow-coffee",
+      "set": "morrow-coffee-object",
+      "slot": "object",
+      "subject": "a small handleless stoneware cup of flat white coffee with a simple latte art heart, seen from a slight angle above"
+    },
+    {
+      "id": "wild-stem-bouquet",
+      "project": "wild-stem",
+      "set": "wild-stem-object",
+      "slot": "object",
+      "subject": "a loose hand-tied bouquet of pink peonies, ranunculus, white sweet peas and eucalyptus, stems tied with twine, standing upright"
+    },
+    {
+      "id": "copperline-brewing-pint",
+      "project": "copperline-brewing",
+      "set": "copperline-brewing-object",
+      "slot": "object",
+      "subject": "a plain straight-sided pint glass of clear amber pale ale with a dense foam head"
+    },
+    {
+      "id": "linden-guesthouse-teapot",
+      "project": "linden-guesthouse",
+      "set": "linden-guesthouse-object",
+      "slot": "object",
+      "subject": "a round terracotta-glazed ceramic teapot with a dark wooden handle, seen from the side"
+    },
+    {
+      "id": "cadence-music-violin",
+      "project": "cadence-music",
+      "set": "cadence-music-object",
+      "slot": "object",
+      "subject": "a full-size violin standing upright, seen straight on from the front, strings and bridge visible"
     }
   ]
 }

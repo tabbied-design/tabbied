@@ -1,0 +1,1355 @@
+/* ==========================================================================
+   COMMON TABLE - community food bank, Millbrook
+   The numbers are the design. One huge figure for the year, a row of five
+   more, amounts you can choose like cards, and a bar that fills toward a
+   goal. Cream ground, near-black ink, the carrot for giving and the leaf
+   green for getting help. The horizon field under the hero is the one
+   loud ornament; everything else is type and hairlines.
+   ========================================================================== */
+
+.page {
+  --cream: #fff8ec;
+  --ink: #22201c;
+  --carrot: #e0642e;
+  --leaf: #3e7c59;
+  --stone: #9a9285;
+  --husk: #f1e6d2;
+  --gut: clamp(1rem, 4.5vw, 3.5rem);
+  --max: 80rem;
+  --air: clamp(4.5rem, 10vw, 8.5rem);
+  --display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --text: 'Public Sans', 'Helvetica Neue', Arial, sans-serif;
+  --inner: calc(var(--max) - 2 * var(--gut));
+
+  font-family: var(--text);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--carrot);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.85rem var(--gut);
+  background: color-mix(in srgb, var(--cream) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-stretch: 85%;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.9rem, 2vw, 1.8rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--carrot);
+}
+
+.barDonate {
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  background: var(--carrot);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: background-color 160ms ease;
+}
+
+.barDonate:hover {
+  background: color-mix(in srgb, var(--carrot) 85%, var(--ink));
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--cream);
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+.btnPrimary,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btnPrimary {
+  border: 2px solid var(--carrot);
+  background: var(--carrot);
+  color: var(--ink);
+}
+
+.btnPrimary:hover {
+  background: color-mix(in srgb, var(--carrot) 85%, var(--ink));
+  border-color: color-mix(in srgb, var(--carrot) 85%, var(--ink));
+}
+
+.btnGhost {
+  border: 2px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  padding-top: clamp(3rem, 7vw, 6rem);
+}
+
+.heroInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.heroFigure {
+  container-type: inline-size;
+}
+
+.kicker,
+.secKicker {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+/* The year's figure, sized to the column (container units) so nine
+   characters fill three quarters of it at any width, and still fit on one
+   line in a fallback face while the webfont loads. */
+.bigNumber {
+  margin-top: 0.5rem;
+  font-family: var(--display);
+  font-size: 22cqi;
+  font-weight: 800;
+  font-stretch: 78%;
+  line-height: 0.84;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--carrot);
+}
+
+.bigLabel {
+  margin-top: calc(0.5rem + 3.5cqi);
+  max-width: 36rem;
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.heroRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1.5rem clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: 1.6rem;
+  border-top: 3px solid var(--ink);
+}
+
+.heroTitle {
+  font-size: clamp(1.8rem, 3.4vw, 2.9rem);
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--leaf);
+}
+
+.heroLede {
+  max-width: 32rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* The horizon: two whole rows of 72px cells, clipped to the band. */
+.horizon {
+  position: relative;
+  height: 144px;
+  margin-top: clamp(3rem, 6vw, 5rem);
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.secHead {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 46rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+}
+
+.secNote {
+  margin-top: 0.4rem;
+  max-width: 40rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.impact,
+.give,
+.volunteer,
+.partners {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+/* ----------------------------------------------------------------- impact */
+
+.stats {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 3px solid var(--ink);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem clamp(0.9rem, 1.6vw, 1.5rem) 0 0;
+}
+
+.stat + .stat {
+  padding-left: clamp(0.9rem, 1.6vw, 1.5rem);
+  border-left: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.statValue {
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 4.6vw, 4.4rem);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.statLabel {
+  margin: 0.55rem 0 0;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.statNote {
+  margin: 0.5rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+/* ------------------------------------------------------------------- give */
+
+.giveForm {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.giveForm fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.often {
+  display: inline-flex;
+  justify-self: start;
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: var(--husk);
+}
+
+.oftenOption {
+  position: relative;
+  cursor: pointer;
+}
+
+.oftenOption input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.oftenOption span {
+  display: block;
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 75%, transparent);
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.oftenOption:has(input:checked) span {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.oftenOption:has(input:focus-visible) span {
+  outline: 2px solid var(--carrot);
+  outline-offset: 2px;
+}
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.tier {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr;
+  gap: 0.6rem 1rem;
+  min-height: 9.5rem;
+  padding: 1.3rem 1.4rem 1.4rem;
+  border: 2px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: 14px;
+  background: var(--cream);
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.tier:hover {
+  border-color: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+/* The radio itself, drawn as a ring in the card's corner. */
+.tierInput {
+  grid-column: 2;
+  grid-row: 1;
+  appearance: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin: 0.3rem 0 0;
+  border: 2px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.tierInput:checked {
+  border-color: var(--carrot);
+  background: radial-gradient(circle, var(--carrot) 0 42%, transparent 46%);
+}
+
+.tierInput:focus-visible {
+  outline: 2px solid var(--carrot);
+  outline-offset: 3px;
+}
+
+.tier:has(.tierInput:checked) {
+  border-color: var(--carrot);
+  background: color-mix(in srgb, var(--carrot) 9%, var(--cream));
+}
+
+.tierAmount {
+  grid-column: 1;
+  grid-row: 1;
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 3.6vw, 3rem);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.tierBuys {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  align-self: end;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.giveFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.other {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.other input {
+  width: 12rem;
+}
+
+.giveNote {
+  max-width: 44rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+/* Shared input look for both forms. */
+.page input[type='text'],
+.page input[type='email'],
+.page input[type='number'],
+.page select,
+.page textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1.5px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  border-radius: 10px;
+  background: var(--cream);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.page input:focus-visible,
+.page select:focus-visible,
+.page textarea:focus-visible {
+  outline: 2px solid var(--carrot);
+  outline-offset: 1px;
+  border-color: var(--carrot);
+}
+
+/* ------------------------------------------------------------------- goal */
+
+.goal {
+  margin-top: var(--air);
+  padding: clamp(3rem, 7vw, 5.5rem) var(--gut);
+  background: var(--husk);
+}
+
+.goalInner {
+  max-width: var(--inner);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+}
+
+.goalHead {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.goalHead h2 {
+  max-width: 20ch;
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+}
+
+.goalFigures {
+  margin: 0;
+  display: flex;
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.goalFigures dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.goalFigures dd {
+  margin: 0.2rem 0 0;
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 700;
+  font-stretch: 85%;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.goalFigures .goalRaised {
+  color: var(--carrot);
+}
+
+/* The bar: an ink hairline box, filled 70% with a striped field. The fill
+   width is the one number to change when the total moves. */
+.track {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 56px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+.trackFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 70.2%;
+  background: var(--carrot);
+  border-right: 2px solid var(--ink);
+}
+
+.trackPattern {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.5;
+}
+
+.milestones {
+  grid-column: 1 / -1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.milestones li {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: end;
+  text-align: right;
+  padding: 0.9rem 1rem 0 1rem;
+  border-right: 2px solid var(--ink);
+}
+
+.mileAmount {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.mileWhat {
+  max-width: 17rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.mileState {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.milestones li:last-child .mileState {
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* -------------------------------------------------------------- volunteer */
+
+.shifts {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.98rem;
+}
+
+.shifts thead th {
+  padding: 0 1rem 0.8rem 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+  border-bottom: 3px solid var(--ink);
+}
+
+.shifts thead th:last-child {
+  text-align: right;
+  padding-right: 0;
+}
+
+.shifts tbody th,
+.shifts tbody td {
+  padding: 1.05rem 1rem 1.05rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.shiftName {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.shiftWhen {
+  white-space: nowrap;
+}
+
+.shiftDay {
+  font-weight: 700;
+}
+
+.shiftTime {
+  margin-left: 0.6rem;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.shiftWhere,
+.shiftWho {
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.shifts tbody .shiftSpots {
+  padding-right: 0;
+  text-align: right;
+  font-weight: 700;
+  color: var(--leaf);
+  white-space: nowrap;
+}
+
+.shifts tbody .shiftFull {
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+  text-decoration: line-through;
+}
+
+.volFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-top: 1.8rem;
+}
+
+.volNote {
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* ------------------------------------------------------------------- help */
+
+.help {
+  margin-top: var(--air);
+  padding: clamp(3.5rem, 8vw, 6.5rem) var(--gut);
+  background: var(--leaf);
+  color: var(--cream);
+}
+
+.helpInner {
+  max-width: var(--inner);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2.5rem clamp(2rem, 4vw, 3.5rem);
+}
+
+.helpKicker {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.helpLead h2 {
+  margin-top: 0.6rem;
+  font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+}
+
+.helpLede {
+  margin-top: 1rem;
+  max-width: 34rem;
+}
+
+.helpCol {
+  padding-top: 1rem;
+  border-top: 2px solid var(--cream);
+}
+
+.helpHead {
+  font-size: 1.15rem;
+  margin-bottom: 0.9rem;
+}
+
+.helpHours {
+  margin: 0;
+}
+
+.helpHours div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--cream) 30%, transparent);
+}
+
+.helpHours dt {
+  font-weight: 700;
+}
+
+.helpHours dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.helpSmall {
+  margin-top: 1rem;
+  font-size: 0.92rem;
+}
+
+.bring {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.bring li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.bring li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.55rem;
+  height: 2px;
+  background: var(--cream);
+}
+
+.help :focus-visible {
+  outline-color: var(--cream);
+}
+
+/* --------------------------------------------------------------- partners */
+
+.partnerGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.partnerGrid li {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1.2rem 1rem 1.3rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.partnerName {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.partnerRole {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+/* ----------------------------------------------------------------- report */
+
+.report {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+/* A report cover without a word on it: leaves on the husk plate, the
+   proportions of a letter-size page. */
+.reportCover {
+  position: relative;
+  aspect-ratio: 8.5 / 11;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 30px 50px -30px rgb(0 0 0 / 0.35);
+}
+
+.reportBody {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.reportBody h2 {
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+}
+
+.reportLede {
+  margin-top: 0.4rem;
+  max-width: 38rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.spendBar {
+  display: flex;
+  height: 22px;
+  margin-top: 1.6rem;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.spendPart {
+  display: block;
+  height: 100%;
+}
+
+.spendPart.spendFood {
+  flex: 91;
+}
+
+.spendPart.spendFund {
+  flex: 6;
+}
+
+.spendPart.spendAdmin {
+  flex: 3;
+}
+
+.spendFood {
+  background: var(--carrot);
+}
+
+.spendFund {
+  background: var(--leaf);
+}
+
+.spendAdmin {
+  background: var(--stone);
+}
+
+.spendKey {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  font-size: 0.95rem;
+}
+
+.spendKey li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.spendSwatch {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+}
+
+.spendPct {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.reportFigures {
+  margin: 1.4rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+}
+
+.reportFigures div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.reportFigures dt {
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.reportFigures dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.reportLinks {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.8rem;
+}
+
+.reportLinks a {
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--carrot);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.reportLinks a:hover {
+  color: var(--carrot);
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contact {
+  margin-top: var(--air);
+  padding: clamp(3.5rem, 8vw, 6rem) var(--gut);
+  background: var(--husk);
+}
+
+.contactInner {
+  max-width: var(--inner);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem clamp(2rem, 6vw, 6rem);
+}
+
+.contactInner h2 {
+  margin-top: 0.6rem;
+  font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+}
+
+.contactList {
+  margin: 2rem 0 0;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.contactList dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.contactList dd {
+  margin: 0.15rem 0 0;
+  max-width: 28rem;
+}
+
+.contactList a {
+  text-decoration: underline;
+  text-decoration-color: var(--carrot);
+  text-underline-offset: 3px;
+}
+
+.contactForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-content: start;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  font-weight: 400;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.contactForm button {
+  justify-self: start;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.footGrid {
+  max-width: var(--inner);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-stretch: 85%;
+}
+
+.footTag {
+  margin-top: 0.4rem;
+  max-width: 24rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--cream) 80%, transparent);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.footLinks a {
+  text-decoration: none;
+}
+
+.footLinks a:hover {
+  color: var(--carrot);
+}
+
+.footAddr {
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--cream) 80%, transparent);
+}
+
+.footFine {
+  max-width: var(--inner);
+  margin: 2.5rem auto 0;
+  padding-top: 1.1rem;
+  border-top: 1px solid color-mix(in srgb, var(--cream) 22%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--cream) 72%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer :focus-visible {
+  outline-color: var(--cream);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+
+  .stat:nth-child(4) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .helpInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .helpLead {
+    grid-column: 1 / -1;
+  }
+
+  .partnerGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .barDonate {
+    margin-left: auto;
+  }
+
+  .heroRow {
+    grid-template-columns: 1fr;
+  }
+
+  .tiers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .goalInner {
+    grid-template-columns: 1fr;
+  }
+
+  .report {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  }
+
+  .reportFigures {
+    grid-template-columns: 1fr;
+  }
+
+  .contactInner {
+    grid-template-columns: 1fr;
+  }
+
+  /* The shifts table restacks: one card per shift, the header row gone. */
+  .shifts thead {
+    display: none;
+  }
+
+  .shifts,
+  .shifts tbody,
+  .shifts tr {
+    display: block;
+  }
+
+  .shifts tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem 1rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  }
+
+  .shifts tr:first-child {
+    border-top: 3px solid var(--ink);
+  }
+
+  .shifts tbody th,
+  .shifts tbody td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .shiftName {
+    grid-column: 1;
+  }
+
+  .shifts tbody .shiftSpots {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .shiftWhen,
+  .shiftWhere,
+  .shiftWho {
+    grid-column: 1 / -1;
+  }
+
+  .shiftWhen {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 720px) {
+  .barDonate {
+    padding: 0.45rem 0.95rem;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat,
+  .stat + .stat {
+    padding: 1.1rem 0 0;
+    border-left: 0;
+  }
+
+  .stat:nth-child(even) {
+    padding-left: 1rem;
+    border-left: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  }
+
+  .stat:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .tiers {
+    grid-template-columns: 1fr;
+  }
+
+  .tier {
+    min-height: 0;
+  }
+
+  .giveFoot {
+    display: grid;
+    justify-content: stretch;
+  }
+
+  .other input {
+    width: 100%;
+  }
+
+  .goalFigures {
+    flex-wrap: wrap;
+    gap: 1rem 1.8rem;
+  }
+
+  .track {
+    height: 40px;
+  }
+
+  .milestones {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    margin-top: 0.4rem;
+  }
+
+  .milestones li {
+    justify-items: start;
+    text-align: left;
+    padding: 0 0 0 1rem;
+    border-right: 0;
+    border-left: 2px solid var(--ink);
+  }
+
+  .helpInner {
+    grid-template-columns: 1fr;
+  }
+
+  .partnerGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .report {
+    grid-template-columns: 1fr;
+  }
+
+  .reportCover {
+    width: min(100%, 17rem);
+  }
+
+  .contactForm {
+    grid-template-columns: 1fr;
+  }
+
+  .footGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barDonate,
+  .btnPrimary,
+  .btnGhost,
+  .oftenOption span,
+  .tier {
+    transition: none;
+  }
+}

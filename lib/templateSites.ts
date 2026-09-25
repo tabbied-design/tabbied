@@ -10,6 +10,13 @@ import {
   bracket, moleskin, disque, spectrum, ninon, bauhaus, capstan, raku,
   combed, shatter, grosgrain, wale, spit, gesso, bowsprit, mirrorblack,
   sound, cornerbite, fractal, pinwheel,
+  midnightblossoms, goldencoil, wovenkhaki, softbubbles, diagonalweave,
+  cornernotch, isometricblocks, marbledarcs, tidewashbands, spiralrosette,
+  quarterburst, truchetrings, teardropleaves, tealboomerang,
+  quartercirclequilt, randomrings, foliage, patternsampler,
+  sunsetrings, warpribbon, contourlines, dashfield, paintscribble,
+  spinningrings, horizonbands, crosslattice, meridianhatch, diamondember,
+  concentricrings, rabbet,
 } from 'tabbied/patterns';
 import type { PatternDefinition } from 'tabbied';
 
@@ -121,4 +128,39 @@ export const NEW_TEMPLATE_SITES: NewTemplateSite[] = [
   { slug: 'atelier-vane', name: 'Atelier Vane', topic: 'Fashion label', patternSlug: 'cornerbite', pattern: cornerbite, paletteName: 'Black on white', palette: ['#FFFFFF', '#000000', '#8C8C8C', '#E4E4E4'], seed: 'set-av' },
   { slug: 'mesa-outfitters', name: 'Mesa Outfitters', topic: 'Desert trail guides', patternSlug: 'fractal', pattern: fractal, paletteName: 'Terracotta and sky', palette: ['#F7EEDF', '#2B1F16', '#C75B2A', '#3B8EA5', '#8C7E6E', '#E4D5BE'], seed: 'set-mo' },
   { slug: 'velo-criterium', name: 'Velo Criterium', topic: 'City-center cycling race', patternSlug: 'pinwheel', pattern: pinwheel, paletteName: 'Lime and electric blue', palette: ['#0B1220', '#F2F5FF', '#C6FF3D', '#2F6BFF', '#6C7590'], seed: 'set-vc' },
+
+  // The minimal set: sites for the businesses that most often need one (a
+  // restaurant, a dentist, a plumber), each on its own layout, with the
+  // pattern as the only ornament. Seven carry one or two cut-outs generated
+  // on gpt-image-2.5-flare; the rest have no pictures at all.
+  { slug: 'osteria-lume', name: 'Osteria Lume', topic: 'Neighborhood Italian restaurant', patternSlug: 'midnightblossoms', pattern: midnightblossoms, paletteName: 'Linen and tomato', palette: ['#F7F2E9', '#1E1B18', '#C8402B', '#8A8275', '#E7DFD1', '#6B7A3A'], seed: 'min-ol' },
+  { slug: 'morrow-coffee', name: 'Morrow Coffee', topic: 'Coffee shop and roastery', patternSlug: 'goldencoil', pattern: goldencoil, paletteName: 'Oat milk and espresso', palette: ['#F3EEE6', '#231A14', '#B06A3B', '#8D8177', '#E3DACD'], seed: 'min-mc' },
+  { slug: 'crumb-bakehouse', name: 'Crumb Bakehouse', topic: 'Neighborhood bakery', patternSlug: 'wovenkhaki', pattern: wovenkhaki, paletteName: 'Flour and crust', palette: ['#FBF7EF', '#2A2118', '#C98B3A', '#9A8F80', '#EDE3D1'], seed: 'min-cb' },
+  { slug: 'clearwater-dental', name: 'Clearwater Dental', topic: 'Family dental practice', patternSlug: 'softbubbles', pattern: softbubbles, paletteName: 'Mint and slate', palette: ['#F6FAF9', '#14232B', '#2BA59A', '#7F9096', '#DDEBE8'], seed: 'min-cd' },
+  { slug: 'whitlock-ames', name: 'Whitlock & Ames', topic: 'Employment and family law firm', patternSlug: 'diagonalweave', pattern: diagonalweave, paletteName: 'Parchment and oxford', palette: ['#F4F2EC', '#141B26', '#2F4B7C', '#8B8A85', '#DEDBD2'], seed: 'min-wa' },
+  { slug: 'tally-and-co', name: 'Tally & Co.', topic: 'Bookkeeping and tax accountants', patternSlug: 'cornernotch', pattern: cornernotch, paletteName: 'Ledger green', palette: ['#FAFAF7', '#151A16', '#1F7A4D', '#8E948F', '#E4E9E4'], seed: 'min-tc' },
+  { slug: 'northgate-homes', name: 'Northgate Homes', topic: 'Independent real estate agent', patternSlug: 'isometricblocks', pattern: isometricblocks, paletteName: 'Brick and slate', palette: ['#F6F4F1', '#1B1D22', '#B5523B', '#858A92', '#E3E1DC'], seed: 'min-nh' },
+  { slug: 'fringe-salon', name: 'Fringe', topic: 'Hair salon', patternSlug: 'marbledarcs', pattern: marbledarcs, paletteName: 'Blush and charcoal', palette: ['#FAF5F2', '#1F1A1C', '#D96C7B', '#968A8E', '#EFE3E0'], seed: 'min-fs' },
+  { slug: 'stropline-barbers', name: 'Stropline Barbers', topic: 'Barbershop', patternSlug: 'tidewashbands', pattern: tidewashbands, paletteName: 'Barber night', palette: ['#121417', '#F1EDE4', '#D63A2F', '#6F737A', '#1D2126'], seed: 'min-sb' },
+  { slug: 'stillpoint-yoga', name: 'Stillpoint Yoga', topic: 'Yoga studio', patternSlug: 'spiralrosette', pattern: spiralrosette, paletteName: 'Clay and sage', palette: ['#F5F1EA', '#2A2A26', '#7C8C6E', '#A39C92', '#E6E0D5', '#C0795A'], seed: 'min-sy' },
+  { slug: 'forge-strength', name: 'Forge Strength', topic: 'Strength and conditioning gym', patternSlug: 'quarterburst', pattern: quarterburst, paletteName: 'Chalk and ember', palette: ['#F0F0ED', '#121212', '#FF5A1F', '#8C8C88', '#DADAD5'], seed: 'min-fg' },
+  { slug: 'northside-plumbing', name: 'Northside Plumbing', topic: 'Plumbing and heating contractor', patternSlug: 'truchetrings', pattern: truchetrings, paletteName: 'Pipe blue and copper', palette: ['#F5F7F9', '#0D1B2A', '#1565C0', '#C46B2E', '#8A96A3', '#E1E7ED'], seed: 'min-np' },
+  { slug: 'fernhill-gardens', name: 'Fernhill Gardens', topic: 'Landscaping and garden design', patternSlug: 'teardropleaves', pattern: teardropleaves, paletteName: 'Moss and loam', palette: ['#F3F2EB', '#1E2419', '#4E7A3A', '#9A9A8A', '#E1E3D6'], seed: 'min-fh' },
+  { slug: 'maple-street-vets', name: 'Maple Street Vets', topic: 'Veterinary clinic', patternSlug: 'tealboomerang', pattern: tealboomerang, paletteName: 'Teal and apricot', palette: ['#FBF8F3', '#1D2A30', '#1B8A8F', '#F29E6D', '#8C979B', '#E8EFEE'], seed: 'min-ms' },
+  { slug: 'little-acorns', name: 'Little Acorns', topic: 'Nursery and daycare', patternSlug: 'quartercirclequilt', pattern: quartercirclequilt, paletteName: 'Crayon soft', palette: ['#FFF9F0', '#2B2A33', '#F28C6B', '#6CB8A8', '#F5C85B', '#A9A2B0'], seed: 'min-la' },
+  { slug: 'the-glasshouse', name: 'The Glasshouse', topic: 'Wedding and event venue', patternSlug: 'randomrings', pattern: randomrings, paletteName: 'Champagne and evergreen', palette: ['#F8F5EF', '#1B2420', '#2F5D4E', '#B89B6A', '#E8E2D6'], seed: 'min-gh' },
+  { slug: 'wild-stem', name: 'Wild Stem', topic: 'Florist', patternSlug: 'foliage', pattern: foliage, paletteName: 'Peony and stem', palette: ['#FBF7F4', '#22261E', '#C94F6D', '#5E7B4C', '#9C958F', '#EFE6E2'], seed: 'min-ws' },
+  { slug: 'dog-eared-books', name: 'Dog-Eared Books', topic: 'Independent bookshop', patternSlug: 'patternsampler', pattern: patternsampler, paletteName: 'Paperback', palette: ['#F6F1E7', '#1C1A17', '#2B59A3', '#8C857A', '#E4DCCB', '#D9A43B'], seed: 'min-db' },
+  { slug: 'copperline-brewing', name: 'Copperline Brewing', topic: 'Brewery and taproom', patternSlug: 'sunsetrings', pattern: sunsetrings, paletteName: 'Hops and amber', palette: ['#161A17', '#EFE8D8', '#E0A33B', '#8DB255', '#6D706A', '#232924'], seed: 'min-cl' },
+  { slug: 'align-physio', name: 'Align Physio', topic: 'Physiotherapy clinic', patternSlug: 'warpribbon', pattern: warpribbon, paletteName: 'Clinic blue and coral', palette: ['#F7F9FB', '#13202E', '#2F6FDE', '#F2765C', '#8795A5', '#E3EAF2'], seed: 'min-ap' },
+  { slug: 'quiet-harbor', name: 'Quiet Harbor Counseling', topic: 'Private therapy practice', patternSlug: 'contourlines', pattern: contourlines, paletteName: 'Fog', palette: ['#F4F3F0', '#2C2E33', '#5C7A8C', '#9EA1A6', '#E6E5E0'], seed: 'min-qh' },
+  { slug: 'maren-holt', name: 'Maren Holt', topic: 'Independent brand strategist', patternSlug: 'dashfield', pattern: dashfield, paletteName: 'Ink and signal', palette: ['#FFFFFF', '#111111', '#3B5BDB', '#8C8C8C', '#EDEDED'], seed: 'min-mh' },
+  { slug: 'parallel-studio', name: 'Parallel Studio', topic: 'Design and marketing agency', patternSlug: 'paintscribble', pattern: paintscribble, paletteName: 'Studio violet', palette: ['#EDEBE6', '#151515', '#6246EA', '#8A8780', '#D8D5CD'], seed: 'min-ps' },
+  { slug: 'relay', name: 'Relay', topic: 'Booking software for small businesses', patternSlug: 'spinningrings', pattern: spinningrings, paletteName: 'Indigo and peach', palette: ['#FCFCFE', '#161A33', '#4F46E5', '#FF9B71', '#7C8094', '#EEF0FA'], seed: 'min-re' },
+  { slug: 'common-table', name: 'Common Table', topic: 'Community food bank', patternSlug: 'horizonbands', pattern: horizonbands, paletteName: 'Harvest', palette: ['#FFF8EC', '#22201C', '#E0642E', '#3E7C59', '#9A9285', '#F1E6D2'], seed: 'min-ct' },
+  { slug: 'spruce-cleaning', name: 'Spruce', topic: 'Home cleaning service', patternSlug: 'crosslattice', pattern: crosslattice, paletteName: 'Fresh', palette: ['#F9FAF7', '#1A2322', '#5BAF7A', '#F2C94C', '#8E9894', '#E6ECE7'], seed: 'min-sc' },
+  { slug: 'kessler-auto', name: 'Kessler Auto', topic: 'Independent auto repair garage', patternSlug: 'meridianhatch', pattern: meridianhatch, paletteName: 'Shop floor', palette: ['#EDECE8', '#16181B', '#D7372B', '#75797F', '#D5D3CE'], seed: 'min-ka' },
+  { slug: 'linden-guesthouse', name: 'The Linden Guesthouse', topic: 'Bed and breakfast', patternSlug: 'diamondember', pattern: diamondember, paletteName: 'Linden and terracotta', palette: ['#F5F2EA', '#25271F', '#A45A3C', '#6F7D5C', '#9C978C', '#E7E1D3'], seed: 'min-lg' },
+  { slug: 'cadence-music', name: 'Cadence Music School', topic: 'Music lessons for all ages', patternSlug: 'concentricrings', pattern: concentricrings, paletteName: 'Keys and vermilion', palette: ['#FAF8F3', '#1B1A24', '#E0533C', '#8D8A93', '#E9E6DF'], seed: 'min-cm' },
+  { slug: 'commons-cowork', name: 'Commons', topic: 'Coworking space', patternSlug: 'rabbet', pattern: rabbet, paletteName: 'Ochre desk', palette: ['#F1F0EC', '#1B1B1D', '#D9A21B', '#8A8A85', '#DCDAD2'], seed: 'min-cw' },
 ];

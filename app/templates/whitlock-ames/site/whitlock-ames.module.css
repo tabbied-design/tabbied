@@ -1,0 +1,1087 @@
+/* ==========================================================================
+   WHITLOCK & AMES - employment and family law
+   A long document, set like one: Caslon for the words that carry weight,
+   Public Sans for the small print, hanging section numerals in the left
+   margin, and the contents in a rail on the right that stays in view while
+   the six sections scroll past. The only ornament is the weave on the
+   frontispiece plate and a band of loose thread before the footer.
+   ========================================================================== */
+
+.page {
+  --parchment: #f4f2ec;
+  --ink: #141b26;
+  --oxford: #2f4b7c;
+  --gray: #8b8a85;
+  --pale: #dedbd2;
+  --gut: clamp(1.25rem, 5vw, 4rem);
+  --max: 78rem;
+  --rail: 15rem;
+  --hang: 5rem;
+  --measure: 42rem;
+  --air: clamp(4.5rem, 9vw, 7rem);
+  --bar-h: 4.25rem;
+  --soft: color-mix(in srgb, var(--ink) 76%, var(--parchment));
+  --quiet: color-mix(in srgb, var(--ink) 64%, var(--parchment));
+  --rule: color-mix(in srgb, var(--ink) 16%, var(--parchment));
+
+  font-family: 'Public Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--parchment);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--oxford);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page h1,
+.page h2 {
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+/* ----------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  min-height: var(--bar-h);
+  padding: 0 max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: color-mix(in srgb, var(--parchment) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--parchment);
+}
+
+.mark {
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-size: 1.3rem;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.84rem;
+  letter-spacing: 0.02em;
+  color: var(--soft);
+  padding: 0.3rem 0;
+  border-bottom: 1px solid transparent;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--oxford);
+  border-color: var(--oxford);
+}
+
+.barPhone {
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.barPhone:hover {
+  color: var(--oxford);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 7rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+  border-bottom: 1px solid var(--rule);
+}
+
+.kicker {
+  margin: 0 0 1.8rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--quiet);
+}
+
+.heroTitle {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1.08;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--oxford);
+}
+
+.lede {
+  margin: 2rem 0 0;
+  max-width: 36rem;
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+  margin-top: 2.5rem;
+}
+
+.primary {
+  display: inline-block;
+  padding: 0.95rem 1.5rem;
+  background: var(--ink);
+  color: var(--parchment);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background-color 160ms ease;
+}
+
+.page .primary:hover {
+  background: var(--oxford);
+}
+
+.textLink {
+  font-size: 0.92rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.15rem;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.textLink:hover {
+  color: var(--oxford);
+  border-color: var(--oxford);
+}
+
+/* The frontispiece: a hairline frame, a gap of parchment, then the weave. */
+.plate {
+  padding: 0.75rem;
+  border: 1px solid var(--rule);
+}
+
+.plateField {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------- document */
+
+.doc {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--rail);
+  gap: clamp(3rem, 6vw, 6rem);
+}
+
+.body {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+/* The contents rail: sticky under the bar, for the length of the document. */
+.rail {
+  grid-column: 2;
+  grid-row: 1;
+  padding-top: var(--air);
+}
+
+.railInner {
+  position: sticky;
+  top: calc(var(--bar-h) + 2rem);
+}
+
+.railLabel {
+  margin: 0 0 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--quiet);
+}
+
+.toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.toc li {
+  border-bottom: 1px solid var(--rule);
+}
+
+.toc a {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  gap: 0.4rem;
+  align-items: baseline;
+  padding: 0.6rem 0;
+  transition: color 160ms ease;
+}
+
+.toc a:hover {
+  color: var(--oxford);
+}
+
+.tocNo {
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-style: italic;
+  color: var(--oxford);
+}
+
+.tocLabel {
+  font-size: 0.92rem;
+}
+
+.railCall {
+  margin-top: 2.2rem;
+}
+
+.railPhone {
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.railPhone:hover {
+  color: var(--oxford);
+}
+
+.railNote {
+  margin: 0.4rem 0 0;
+  font-size: 0.82rem;
+  color: var(--quiet);
+}
+
+/* ---------------------------------------------------------------- sections
+   Each section hangs its numeral in the margin to the left of the heading,
+   the way a statute or a contract does. */
+
+.sec {
+  position: relative;
+  padding: var(--air) 0 0 var(--hang);
+  scroll-margin-top: var(--bar-h);
+}
+
+.secNo {
+  position: absolute;
+  left: 0;
+  top: calc(var(--air) - 0.35rem);
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.2rem, 3.4vw, 2.9rem);
+  line-height: 1;
+  color: var(--oxford);
+}
+
+.sec h2 {
+  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+  line-height: 1.12;
+}
+
+.secLede {
+  margin: 1rem 0 0;
+  max-width: var(--measure);
+  font-size: 1.05rem;
+  color: var(--soft);
+}
+
+.sec h3 {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--quiet);
+}
+
+/* ---------------------------------------------------------- practice areas */
+
+.areas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3.5rem);
+  margin-top: 2.6rem;
+}
+
+.area h3 {
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.area dl {
+  margin: 0;
+}
+
+.area dl div {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.area dt {
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-size: 1.08rem;
+  margin-bottom: 0.25rem;
+}
+
+.area dd {
+  margin: 0;
+  font-size: 0.93rem;
+  color: var(--soft);
+}
+
+.notUs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1.2rem;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+.notUs ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0;
+}
+
+.notUs li:not(:last-child)::after {
+  content: '/';
+  margin: 0 0.6rem;
+  color: var(--gray);
+}
+
+.notUsHead {
+  margin: 0;
+  font-weight: 600;
+}
+
+.notUsNote {
+  margin: 0;
+  color: var(--quiet);
+}
+
+/* -------------------------------------------------------------------- fees */
+
+.fees {
+  width: 100%;
+  margin-top: 2.6rem;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.fees caption {
+  text-align: left;
+  padding-bottom: 0.8rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--quiet);
+}
+
+.fees thead th {
+  padding: 0.6rem 1rem 0.6rem 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--quiet);
+}
+
+.fees tbody th,
+.fees tbody td {
+  padding: 0.9rem 1rem 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.fees tbody th {
+  width: 36%;
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.feeCell {
+  width: 6rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.coverCell {
+  color: var(--soft);
+}
+
+.feeMore {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3.5rem);
+  margin-top: 2.8rem;
+}
+
+.small {
+  margin: 0.7rem 0 0;
+  font-size: 0.93rem;
+  color: var(--soft);
+}
+
+.rates {
+  margin: 1.1rem 0 0;
+}
+
+.rates div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.93rem;
+}
+
+.rates div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.rates dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------- attorneys */
+
+.people {
+  list-style: none;
+  margin: 2.6rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.person {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  gap: 0.6rem 2.5rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.personHead {
+  grid-row: span 2;
+}
+
+.personHead h3 {
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.personRole {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.88rem;
+  color: var(--quiet);
+}
+
+.personFacts {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 2.2rem;
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.personFacts div {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.personFacts dt {
+  color: var(--quiet);
+}
+
+.personFacts dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+.personFocus {
+  grid-column: 2;
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--soft);
+  max-width: 36rem;
+}
+
+/* ------------------------------------------------------------ consultation */
+
+.steps {
+  list-style: none;
+  margin: 2.6rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  counter-reset: step;
+}
+
+.steps li {
+  counter-increment: step;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ink);
+}
+
+.steps li::before {
+  content: counter(step, upper-roman);
+  display: block;
+  margin-bottom: 0.9rem;
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--oxford);
+}
+
+.steps h3 {
+  margin-bottom: 0.5rem;
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.steps p {
+  margin: 0;
+  font-size: 0.93rem;
+  color: var(--soft);
+}
+
+.bring {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3.5rem);
+  margin-top: 3rem;
+  padding: 1.8rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.bring ul {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.bring li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.95rem;
+}
+
+/* A short rule in place of a bullet. */
+.bring li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.8em;
+  width: 0.7rem;
+  height: 1px;
+  background: var(--oxford);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.3rem 1.6rem;
+  margin-top: 3rem;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  border: 1px solid var(--ink);
+}
+
+.formTitle {
+  grid-column: 1 / -1;
+}
+
+.page .formTitle {
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: -0.6rem 0 0.4rem;
+  max-width: 34rem;
+  font-size: 0.92rem;
+  color: var(--soft);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--soft);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 40%, var(--parchment));
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: none;
+  border-bottom: 2px solid var(--oxford);
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 0.6rem;
+  padding: 0.95rem 1.6rem;
+  border: 0;
+  background: var(--ink);
+  color: var(--parchment);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.submit:hover {
+  background: var(--oxford);
+}
+
+/* --------------------------------------------------------------- questions */
+
+.faq {
+  margin-top: 2.4rem;
+  border-top: 1px solid var(--ink);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faqItem summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  padding: 1.15rem 3rem 1.15rem 0;
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-size: 1.1rem;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::before,
+.faqItem summary::after {
+  content: '';
+  position: absolute;
+  right: 0.3rem;
+  top: 50%;
+  width: 0.8rem;
+  height: 1px;
+  background: var(--oxford);
+  transition: transform 160ms ease;
+}
+
+.faqItem summary::after {
+  transform: rotate(90deg);
+}
+
+.faqItem[open] summary::after {
+  transform: rotate(0deg);
+}
+
+.faqItem summary:hover {
+  color: var(--oxford);
+}
+
+.faqItem p {
+  margin: 0;
+  padding: 0 3rem 1.4rem 0;
+  max-width: var(--measure);
+  font-size: 0.97rem;
+  color: var(--soft);
+}
+
+/* ----------------------------------------------------------------- offices */
+
+.offices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3.5rem);
+  margin-top: 2.6rem;
+}
+
+.office {
+  padding-top: 1rem;
+  border-top: 1px solid var(--ink);
+}
+
+.officeAddr {
+  margin: 0.9rem 0 0;
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.officeAddr span {
+  display: block;
+}
+
+.officeHours {
+  margin: 0.8rem 0 0;
+  font-size: 0.93rem;
+  font-weight: 500;
+}
+
+.officeAccess {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+.contact {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 2.6rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.contact dt {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--quiet);
+}
+
+.contact dd {
+  margin: 0.35rem 0 0;
+  font-size: 0.97rem;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 1px solid var(--rule);
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.contact a:hover {
+  color: var(--oxford);
+  border-color: var(--oxford);
+}
+
+/* -------------------------------------------------------------------- coda */
+
+.coda {
+  position: relative;
+  height: 144px;
+  margin-top: var(--air);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent 0%, var(--ink) 18%, var(--ink) 82%, transparent 100%);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: clamp(2.5rem, 5vw, 3.5rem) max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut))) 2rem;
+  background: var(--ink);
+  color: var(--parchment);
+}
+
+.footTop,
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem 2rem;
+}
+
+.footName {
+  margin: 0;
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  font-size: 1.5rem;
+}
+
+.footTag {
+  margin: 0;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--parchment) 74%, var(--ink));
+}
+
+.footFine {
+  margin-top: 2.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--parchment) 20%, var(--ink));
+}
+
+.footFine p {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--parchment) 70%, var(--ink));
+}
+
+.footFine a {
+  color: var(--parchment);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .doc {
+    grid-template-columns: minmax(0, 1fr) 13rem;
+    gap: 3rem;
+  }
+
+  .page {
+    --hang: 3.8rem;
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Below 900px the nav folds into the menu and the rail becomes an
+   ordinary contents list at the head of the document. */
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1rem;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plateField {
+    aspect-ratio: 5 / 2;
+  }
+
+  .doc {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .rail,
+  .body {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .rail {
+    padding-top: clamp(2.5rem, 7vw, 3.5rem);
+  }
+
+  .railInner {
+    position: static;
+  }
+
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
+
+  .railCall {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .barPhone {
+    display: none;
+  }
+
+  .page {
+    --hang: 0rem;
+  }
+
+  .secNo {
+    position: static;
+    display: block;
+    margin-bottom: 0.8rem;
+    font-size: 2rem;
+  }
+
+  .toc,
+  .areas,
+  .feeMore,
+  .bring,
+  .offices,
+  .contact,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .person {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .personHead {
+    grid-row: auto;
+  }
+
+  .personFacts,
+  .personFocus {
+    grid-column: 1;
+  }
+
+  /* The fee table restacks: the matter and its fee on one line, what it
+     covers underneath. */
+  .fees thead {
+    display: none;
+  }
+
+  .fees,
+  .fees tbody {
+    display: block;
+  }
+
+  .fees tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.3rem 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .fees tbody tr:first-child {
+    border-top: 1px solid var(--ink);
+  }
+
+  .fees caption {
+    display: block;
+  }
+
+  .fees tbody th,
+  .fees tbody td {
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .feeCell {
+    text-align: right;
+  }
+
+  .coverCell {
+    grid-column: 1 / -1;
+    font-size: 0.9rem;
+  }
+
+  .faqItem p {
+    padding-right: 0;
+  }
+
+  .coda {
+    height: 96px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .primary,
+  .textLink,
+  .toc a,
+  .submit,
+  .contact a,
+  .faqItem summary::before,
+  .faqItem summary::after {
+    transition: none;
+  }
+}

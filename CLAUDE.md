@@ -226,7 +226,7 @@ and *not* `zip` - so CI stayed green while the first Workers deploy died with
 fflate (zero dependencies), so the only thing the packaging step needs is the
 Node that is already running it. Don't reintroduce a PATH lookup here. Two
 details it depends on: every directory gets its own zero-length `<name>/`
-entry, because 30 of the 77 sites reference no images and their empty `images/`
+entry, because 54 of the 107 sites reference no images and their empty `images/`
 (and the React package's `public/`) would otherwise vanish from the download;
 and entries carry the source file's real mtime, which `zip -r` did and fflate
 does not do on its own.
@@ -251,7 +251,7 @@ The two formats are built in opposite directions, and that is the point:
   source to copy - hand-porting is the trap the derive-don't-port strategy
   above exists to avoid.
 - **React is a copy of the page**, because a template page already *is* a plain
-  React component. The only Next.js API any of the 77 uses is `export const
+  React component. The only Next.js API any of the 107 uses is `export const
   metadata`; there is no next/image, next/link, `'use client'` or
   `generateStaticParams` anywhere. So `page.tsx` ships as authored and only the
   frame changes: metadata lifted into `index.html`, workspace imports pointed
@@ -283,7 +283,7 @@ code: the placeholders already carry their config as `data-*` attributes
 `hydratePatterns()` call revives the whole page.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
-page, or two hashed names collapsing onto one plain name. All 77 sites
+page, or two hashed names collapsing onto one plain name. All 107 sites
 package, so `KNOWN_UNSUPPORTED` is empty - anything that throws is a new
 problem and exits non-zero.
 
@@ -355,7 +355,7 @@ Four things worth not re-litigating:
   footer) and an edit reaches all of them; the generator fails the build if
   they don't currently agree.
 
-All 77 sites are annotated. The 72 bespoke pages were done by
+All 107 sites are annotated. The 102 bespoke pages were done by
 `scripts/annotate-templates.mjs`, a one-time codemod (`npm run
 annotate:templates`) - run it after adding a new bespoke template, and note it
 skips any page already carrying `data-edit-root`, so a hand-annotated page is
@@ -391,7 +391,7 @@ most of them are units and connectives rather than copy, so they want a person.
 
 **The accent tag is read off the page, never assumed.** `writeText` used to
 rebuild an accented run as an `<em>`, which is right for the five shared pages
-and wrong for the 72 bespoke ones: each accents with whatever its stylesheet
+and wrong for the 102 bespoke ones: each accents with whatever its stylesheet
 targets, and Cobalt Works styles `.hero h1 span`. `accentTagOf` reads it at
 generate time and the slot carries it as `emphasisTag`, so the round trip keeps
 the tag it found. It defaults to `em`, so a page that declares none is
@@ -406,7 +406,7 @@ take a per-item palette from a data array or a conditional, so no static map
 can describe them - they re-color only through an explicit `palette` in the
 edits document.
 
-**Two palette derivations, and the bespoke one is not `--brand-N`.** Those 72
+**Two palette derivations, and the bespoke one is not `--brand-N`.** Those 102
 pages each declare their own property names on their root rule (`--paper`,
 `--ink`, ...) with the stylesheet reading `var(--...)`, so they use
 `data-edit-root="vars"` plus `data-edit-vars` naming the role order. The
@@ -427,7 +427,8 @@ nothing in its place, so a phone visitor, on the site or on a site shipped
 from the download, had the footer and nothing else. Each of them now renders
 `components/template/TemplateMenu` in its header: a copy of the nav's links
 (same `data-edit` ids, which is allowed, and the editable gate checks they
-agree) behind a "Menu" toggle. Four things it depends on:
+agree) behind a "Menu" toggle. The 30 minimal templates were built with it,
+so 87 of the 107 carry one. Four things it depends on:
 
 - **It is a `<details>`, because the HTML package has no React left.** Open
   and shut are the browser's own there. Closing on a followed link, an
@@ -447,6 +448,34 @@ agree) behind a "Menu" toggle. Four things it depends on:
 - **`e2e/template-menus.spec.ts` is the gate.** At 390px, every link a
   header hides must be in a visible menu that fits on the screen. A new
   template that hides its nav fails it until it carries the menu.
+
+## The minimal set - the businesses that most need a site
+
+The last 30 entries in `lib/templateSites.ts` (2026-09-25) are sites for
+ordinary local businesses: a restaurant, a cafe, a dentist, a law firm, a
+plumber, a salon, a vet, a daycare, and so on. Each is built on a different
+layout (a printed menu card, a split screen, a fixed sidebar, a sticky
+contents rail, a timetable grid, a bento, a tap board, a letter, a floor
+plan), and the pattern is the only ornament. Seven carry one or two product
+cut-outs generated on gpt-image-2.5-flare (`docs/image-pipeline.md`); the
+rest have no pictures. They brought three gallery categories, Services,
+Health and Community, because none of the nine before fit a dentist or a
+plumber. Four things worth knowing before editing one:
+
+- **In the sidebar layouts the sidebar is the `<header>`** (Clearwater
+  Dental, Morrow Coffee, Maren Holt): it is a column on a desktop and folds
+  into a top bar with the TemplateMenu on a phone, because the menu gate
+  reads the page's first `<header>`.
+- **Some classes come from data** (`s[t.kind]`: a listing's status tag, a
+  tap's glass color, a floor-plan zone). Both packages are fine with it,
+  since the HTML one reads classes off the export, but an edit to the tag's
+  text does not change its color.
+- **A few designs ignore the seed** (`isometricblocks`, `diamondember`), so
+  where a page repeats one as tiles the variety is a CSS crop, not a seed.
+- **`midnightconfetti` cannot re-color**: it has one color slot and paints
+  its petals in fixed hues. It was Wild Stem's first hero and was swapped
+  for `foliage` for that reason; a primary pattern that ignores the palette
+  breaks the customizer's promise.
 
 ## Template screenshots on the cards
 
@@ -533,7 +562,7 @@ it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
 
 **The wordmark's font is declared by `Logo` itself**, not by a route and not
 by the root layout. `plexMono` and `ebGaramond` are applied by the routes that
-use them; the lockup is in a dozen mastheads and in none of the 77 template
+use them; the lockup is in a dozen mastheads and in none of the 107 template
 pages, so the component that draws the word is the only place that knows
 where the font is actually read.
 
@@ -856,7 +885,7 @@ another). Five things worth not re-litigating:
   (`components/template/ChooseTemplate.tsx`): how many are chosen, what this
   one costs, and at the limit the chosen ones and "Request more". The page
   learns what is chosen from `GET /api/account/templates`, read once per
-  page into a small store (`lib/myTemplates.ts`) the 77 gallery cards
+  page into a small store (`lib/myTemplates.ts`) the 107 gallery cards
   share. Someone who opens a zip's URL directly is held to the same five.
 - **A click and a fetch are answered differently.** A navigation (a download
   link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
@@ -926,14 +955,14 @@ they stay reachable from the framed template preview and from the account.
 The rest of this section describes the flow as built, for when it comes back.
 
 `/studio` takes a description of a business and `/studio/results` answers with
-three template sites. Studio answers with what the repo actually has: 77
+three template sites. Studio answers with what the repo actually has: 107
 finished template sites, each on one of the 338 patterns and one of the 437
 palettes, each with a real page and a real zip. (The AI tier this was designed
 against - `agent-outputs/20260827-studio-ai-plan.md` - has since landed; see
 below. The matcher was not replaced by it.)
 
 - **`lib/studioMatch.ts` is pure and isomorphic; `lib/studioDirections.ts` is
-  server-only.** The index - 77 entries of names, palettes and vocabulary - is
+  server-only.** The index - 107 entries of names, palettes and vocabulary - is
   built at build time and passed to the client as plain data. Importing the
   catalog (384 KB) or the template data into the browser to match against it is
   the thing this split exists to prevent.
@@ -1078,7 +1107,7 @@ the template and shows the result.
   `planEdits`, which is pure and so runs in the Worker with no DOM; one repair
   retry; a second failure writes the three-string `directionToEdits` floor as
   revision 1 with `source: 'fallback'`, and the workspace says so. Because the
-  document is keyed by slot id, **this reaches all 77 templates today** -
+  document is keyed by slot id, **this reaches all 107 templates today** -
   `data-edit-copy` roles matter only for the cheap card-stage preview.
 - **Sites are pinned and versioned.** `site` records `specVersion` and a
   SHA-256 of the packaged `index.html` it was authored against; `GET

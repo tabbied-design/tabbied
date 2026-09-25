@@ -1,0 +1,1130 @@
+/* ==========================================================================
+   WILD STEM - florist
+   A small shop laid out like one: a quiet top bar, a hero with the bouquet
+   standing on an arched plate of leaves and petals, then the shop itself,
+   with a category rail on the left that stays in view while the products,
+   subscriptions, weddings and sympathy flowers scroll past on the right.
+   Each product's picture is a pattern tile on a blush card. Young Serif for
+   names and prices, Figtree for the rest. Peony is the accent and is kept
+   to large type and small marks; buttons are ink.
+   ========================================================================== */
+
+.page {
+  --paper: #fbf7f4;
+  --ink: #22261e;
+  --peony: #c94f6d;
+  --stem: #5e7b4c;
+  --gray: #9c958f;
+  --blush: #efe6e2;
+  --leaf: color-mix(in srgb, var(--stem) 70%, var(--ink));
+  --line: color-mix(in srgb, var(--ink) 12%, transparent);
+  --bar-h: 4.25rem;
+  --gut: clamp(1.25rem, 4vw, 3rem);
+  --max: 86rem;
+  --inner: calc(var(--max) - 2 * var(--gut));
+  --side: 15.5rem;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--peony);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: 'Young Serif', Georgia, serif;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------- strip and bar */
+
+.strip {
+  padding: 0.5rem var(--gut);
+  background: var(--blush);
+  text-align: center;
+}
+
+.strip p {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--bar-h);
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0 max(var(--gut), calc((100% - var(--inner)) / 2));
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.mark {
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: 1.55rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--peony);
+}
+
+.barCall {
+  padding: 0.5rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.barCall:hover {
+  border-color: var(--peony);
+  color: var(--peony);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.kicker {
+  margin: 0 0 1.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.heroTitle {
+  font-size: clamp(2.4rem, 4.8vw, 4.4rem);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  max-width: 15ch;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--peony);
+}
+
+.heroLede {
+  margin: 1.6rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1.02rem, 1.3vw, 1.14rem);
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+.btn:hover {
+  background: var(--peony);
+  border-color: var(--peony);
+}
+
+.btnGhost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.btnGhost:hover {
+  border-color: var(--peony);
+  color: var(--peony);
+}
+
+.heroFacts {
+  margin: clamp(2.4rem, 5vw, 3.4rem) 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 32rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+
+.heroFacts dt {
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.heroFacts dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.84rem;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* The plate: an arch of blush with the petals on it, and the bouquet
+   standing at its foot. The arch clips both. */
+.plate {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 34rem;
+  justify-self: end;
+  aspect-ratio: 5 / 6;
+  border-radius: 999px 999px 1.25rem 1.25rem;
+  background: var(--blush);
+  overflow: hidden;
+}
+
+.plateField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.9;
+}
+
+.bouquet {
+  position: absolute;
+  left: 50%;
+  bottom: 3%;
+  width: 82%;
+  height: auto;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 22px 28px rgb(0 0 0 / 0.22));
+}
+
+/* -------------------------------------------------------------------- shop */
+
+.shop {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: var(--side) minmax(0, 1fr);
+  gap: clamp(2rem, 4.5vw, 4.5rem);
+  border-top: 1px solid var(--line);
+  scroll-margin-top: var(--bar-h);
+}
+
+.side {
+  position: sticky;
+  top: calc(var(--bar-h) + 1.5rem);
+  align-self: start;
+}
+
+.page .sideHead {
+  font-size: 1.7rem;
+  line-height: 1.1;
+  margin-bottom: 1.2rem;
+}
+
+.cats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.cats a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--line);
+  transition: color 160ms ease;
+}
+
+.cats a:hover {
+  color: var(--peony);
+}
+
+.catName {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.catCount {
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+  text-align: right;
+}
+
+.sideBox {
+  margin-top: 1.4rem;
+  padding: 1.1rem 1.2rem 1.2rem;
+  border-radius: 0.75rem;
+  background: var(--blush);
+}
+
+.sideBox p {
+  margin: 0.45rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* The two small heads are set in the sans; the page's h3 rule would
+   otherwise give them the serif. */
+.page .sideBoxHead {
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.sideLink {
+  display: inline-block;
+  margin-top: 0.7rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--peony);
+  text-underline-offset: 4px;
+}
+
+.sidePhone {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.sidePhone:hover,
+.sideLink:hover {
+  color: var(--peony);
+}
+
+/* ----------------------------------------------------------------- catalog */
+
+.cat {
+  padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  scroll-margin-top: calc(var(--bar-h) + 1rem);
+}
+
+.catHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem 2rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.8rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.catHead h2 {
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  line-height: 1.1;
+}
+
+.catHead p {
+  margin: 0;
+  max-width: 30rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.4rem clamp(1rem, 2vw, 1.6rem);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.tile {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 0.75rem;
+  background: var(--blush);
+  overflow: hidden;
+}
+
+.tileLeaf {
+  background: color-mix(in srgb, var(--stem) 16%, var(--paper));
+}
+
+.cardBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+}
+
+.cardBody h3 {
+  font-size: 1.28rem;
+  line-height: 1.2;
+}
+
+.cardNote {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.cardFoot {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.2rem 1rem;
+}
+
+.cardPrice {
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: 1.15rem;
+}
+
+.cardSizes {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--ink) 64%, transparent);
+}
+
+.cardLink {
+  align-self: flex-start;
+  white-space: nowrap;
+  margin-top: 0.9rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--peony);
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.cardLink:hover {
+  background: var(--peony);
+  color: var(--paper);
+}
+
+/* ----------------------------------------------------------- subscriptions */
+
+.plans {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+}
+
+.planFeatured {
+  background: var(--blush);
+  border-color: var(--blush);
+}
+
+.plan h3 {
+  font-size: 1.35rem;
+}
+
+.planPrice {
+  margin: 1rem 0 0;
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--peony);
+}
+
+.planPer {
+  margin: 0.3rem 0 0;
+  font-size: 0.84rem;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.planBody {
+  margin: 1rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.planList {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  flex: 1;
+}
+
+.planList li {
+  position: relative;
+  padding: 0.3rem 0 0.3rem 1.1rem;
+  font-size: 0.88rem;
+}
+
+.planList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.8rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--stem);
+}
+
+/* ---------------------------------------------- weddings and sympathy */
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.splitText p {
+  margin: 0 0 1rem;
+  font-size: 0.98rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.splitText .btn {
+  margin-top: 0.6rem;
+}
+
+.priceList {
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+.priceList div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.priceList dt {
+  font-size: 0.96rem;
+}
+
+.priceList dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------ full width */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+  scroll-margin-top: var(--bar-h);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.08;
+}
+
+.secHead p {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 0.98rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.secFine {
+  margin: 1.2rem 0 0;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* ------------------------------------------------------------ delivery */
+
+.zones {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.zones th,
+.zones td {
+  padding: 1.1rem 1rem 1.1rem 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.zones thead th {
+  padding-top: 0;
+  padding-bottom: 0.8rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.zones tbody th {
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.zones td {
+  font-size: 0.98rem;
+}
+
+.zoneFee {
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.zones .zoneCut {
+  font-weight: 600;
+  color: var(--leaf);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- order */
+
+.order {
+  margin-top: var(--air);
+  padding: var(--air) var(--gut);
+  background: var(--blush);
+  scroll-margin-top: var(--bar-h);
+}
+
+.orderInner {
+  max-width: var(--inner);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.orderIntro h2 {
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.08;
+}
+
+.orderIntro p {
+  margin: 1.1rem 0 0;
+  max-width: 26rem;
+  font-size: 0.98rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem 1.2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field span {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.65rem 0.9rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 0.55rem;
+  box-sizing: border-box;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.form .btn {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+/* ---------------------------------------------------------------- care */
+
+.care {
+  list-style: none;
+  counter-reset: care;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1.2rem, 2.4vw, 2rem);
+}
+
+.care li {
+  counter-increment: care;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.care li::before {
+  content: counter(care, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.8rem;
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--peony);
+}
+
+.care h3 {
+  font-size: 1.3rem;
+}
+
+.care p {
+  margin: 0.5rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* --------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.6rem, 4vw, 3.5rem);
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.page .visitHead {
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--leaf);
+  margin-bottom: 0.9rem;
+}
+
+.visitAddr {
+  margin: 0;
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+.visitNote {
+  margin: 0.6rem 0 0;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.hours {
+  margin: 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.visitList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.visitList a {
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid color-mix(in srgb, var(--peony) 60%, transparent);
+}
+
+.visitList a:hover {
+  color: var(--peony);
+}
+
+/* -------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) clamp(1.6rem, 3vw, 2.2rem);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.footTop,
+.footFine {
+  max-width: var(--inner);
+  margin: 0 auto;
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem 2rem;
+}
+
+.footName {
+  margin: 0;
+  font-family: 'Young Serif', Georgia, serif;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1;
+}
+
+.footTag {
+  margin: 0;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footFine {
+  margin-top: clamp(2.2rem, 5vw, 3.5rem);
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+}
+
+.footFine p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer :focus-visible {
+  outline-color: var(--paper);
+}
+
+/* ---------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .page {
+    --side: 12.5rem;
+  }
+
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .care {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .barCall {
+    justify-self: end;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plate {
+    justify-self: center;
+    max-width: 30rem;
+  }
+
+  /* The rail becomes a row of chips above the products, and the two boxes
+     sit side by side under it. */
+  .shop {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .side {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .side > nav,
+  .sideHead {
+    grid-column: 1 / -1;
+  }
+
+  .cats {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.4rem;
+    border-top: 0;
+    scrollbar-width: thin;
+  }
+
+  .cats a {
+    padding: 0.5rem 0.95rem;
+    border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .catCount {
+    display: none;
+  }
+
+  .secHead,
+  .orderInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .visit {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .side {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* One product per row: the tile on the left, the words beside it. */
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.6rem;
+  }
+
+  .card {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .tile {
+    aspect-ratio: 3 / 4;
+  }
+
+  .cardBody {
+    padding-top: 0;
+  }
+
+  .cardFoot {
+    margin-top: 0;
+  }
+
+  .care,
+  .visit,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The zone table restacks: the zone and its fee on one line, the rest
+     under them. */
+  .zones thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .zones tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.2rem 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .zones th,
+  .zones td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .zones td:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .zones .zoneFee {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: right;
+  }
+
+  .zones .zoneCut {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCall,
+  .btn,
+  .btnGhost,
+  .cats a,
+  .cardLink {
+    transition: none;
+  }
+}

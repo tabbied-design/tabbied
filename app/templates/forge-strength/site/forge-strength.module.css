@@ -1,0 +1,1119 @@
+/* ==========================================================================
+   FORGE STRENGTH - strength and conditioning gym
+   A bento page. The hero is a grid of six tiles of different sizes, and
+   every section after it is built from the same tiles: chalk-gray cards,
+   the odd iron one, one ember one. Archivo, squeezed narrow and heavy for
+   headings and wide open for text, with DM Mono for numbers and labels.
+   The quarter bursts get the tallest tile on the page.
+   ========================================================================== */
+
+.page {
+  --chalk: #f0f0ed;
+  --iron: #121212;
+  --ember: #ff5a1f;
+  --steel: #8c8c88;
+  --dust: #dadad5;
+  --tile: color-mix(in srgb, var(--dust) 58%, var(--chalk));
+  --muted: color-mix(in srgb, var(--iron) 70%, var(--chalk));
+  --line: color-mix(in srgb, var(--iron) 14%, var(--chalk));
+  --gut: clamp(1rem, 3.5vw, 2.5rem);
+  --max: 84rem;
+  --gap: 12px;
+  --radius: 16px;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+
+  font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--chalk);
+  color: var(--iron);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 3px;
+}
+
+:where(.page) :where(h1, h2, h3, p, ul, ol, dl, dd, figure, blockquote) {
+  margin: 0;
+  padding: 0;
+}
+
+:where(.page) :where(ul, ol) {
+  list-style: none;
+}
+
+:where(.page) :where(h1, h2, h3) {
+  font-stretch: 72%;
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.8rem max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: color-mix(in srgb, var(--chalk) 92%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.mark {
+  font-stretch: 72%;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.9rem, 2.2vw, 2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--ember);
+}
+
+.barCta {
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  background: var(--iron);
+  color: var(--chalk);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.barCta:hover {
+  background: var(--ember);
+  color: var(--iron);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--chalk);
+}
+
+/* ------------------------------------------------------------------ tiles */
+
+.tile {
+  position: relative;
+  border-radius: var(--radius);
+  background: var(--tile);
+  overflow: hidden;
+}
+
+.tileLabel {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tileFoot {
+  margin-top: auto;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- hero bento */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0.75rem var(--gut) 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(11.5rem, auto));
+  grid-template-areas:
+    'promise promise hours burst'
+    'promise promise price burst'
+    'quote   quote   free  burst';
+  gap: var(--gap);
+}
+
+.promise {
+  grid-area: promise;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 3.5vw, 2.75rem);
+  background: var(--iron);
+  color: var(--chalk);
+}
+
+.kicker {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--chalk) 72%, var(--iron));
+}
+
+.heroTitle {
+  margin-top: auto;
+  padding-top: 2rem;
+  font-size: clamp(2.6rem, 4.9vw, 4.4rem);
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--ember);
+}
+
+.heroLede {
+  margin-top: 1.25rem;
+  max-width: 34rem;
+  font-size: 1rem;
+  color: color-mix(in srgb, var(--chalk) 80%, var(--iron));
+}
+
+.heroActions {
+  margin-top: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btnEmber,
+.btnLine {
+  display: inline-block;
+  padding: 0.8rem 1.3rem;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.btnEmber {
+  background: var(--ember);
+  color: var(--iron);
+}
+
+.btnEmber:hover {
+  background: var(--chalk);
+}
+
+.btnLine {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--chalk) 45%, var(--iron));
+}
+
+.btnLine:hover {
+  background: var(--chalk);
+  color: var(--iron);
+}
+
+.hours {
+  grid-area: hours;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem;
+}
+
+.hoursList {
+  margin: 1rem 0;
+}
+
+.hoursList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.hoursList dt {
+  font-weight: 600;
+}
+
+.hoursList dd {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.85rem;
+}
+
+.price {
+  grid-area: price;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem;
+}
+
+.priceBig {
+  margin: 0.5rem 0 1rem;
+  font-stretch: 72%;
+  font-size: clamp(3.5rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 0.9;
+}
+
+/* The primary field: a tall tile, edge to edge, no text on it. */
+.burst {
+  grid-area: burst;
+  min-height: 20rem;
+  background: var(--iron);
+}
+
+.quote {
+  grid-area: quote;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.6rem clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.quoteText {
+  font-stretch: 85%;
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.quoteWho {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.free {
+  grid-area: free;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem;
+  background: var(--ember);
+  color: var(--iron);
+}
+
+.freeBody {
+  margin: 0.75rem 0 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.freeLink {
+  margin-top: auto;
+  align-self: flex-start;
+  font-weight: 700;
+  border-bottom: 2px solid var(--iron);
+}
+
+.freeLink::after {
+  content: ' \2192';
+}
+
+/* ----------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 27rem);
+  gap: 0.9rem clamp(2rem, 6vw, 5rem);
+  align-items: end;
+  margin-bottom: 1.75rem;
+}
+
+.secNo {
+  grid-column: 1 / -1;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ember) 70%, var(--iron));
+}
+
+.secHead h2 {
+  font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+}
+
+.secNote {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------- programs, bento */
+
+.programs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(15rem, auto);
+  grid-auto-flow: dense;
+  gap: var(--gap);
+}
+
+.program {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.big {
+  grid-column: span 2;
+  grid-row: span 2;
+  background: var(--iron);
+  color: var(--chalk);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.wide {
+  grid-column: span 2;
+}
+
+/* Tally strokes across the top half of the big card, fading out before
+   the words. */
+.tallyField {
+  position: absolute;
+  inset: 0 0 55% 0;
+  mask-image: linear-gradient(180deg, var(--iron) 30%, transparent 100%);
+}
+
+.programTag {
+  position: relative;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.big .programTag {
+  margin-top: auto;
+  color: var(--ember);
+}
+
+.programName {
+  position: relative;
+  margin-top: 0.6rem;
+  font-size: clamp(1.8rem, 2.6vw, 2.3rem);
+}
+
+.big .programName {
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+}
+
+.programBody {
+  position: relative;
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.big .programBody {
+  max-width: 36rem;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--chalk) 80%, var(--iron));
+}
+
+.programFacts {
+  position: relative;
+  margin-top: auto;
+  padding-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.big .programFacts {
+  margin-top: 0;
+}
+
+.programFacts li {
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.74rem;
+}
+
+.big .programFacts li {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--chalk) 30%, var(--iron));
+}
+
+/* ---------------------------------------------------------------- coaches */
+
+.coaches {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.coach {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.coachMono {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  background: var(--iron);
+  color: var(--chalk);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.coach:first-child .coachMono {
+  background: var(--ember);
+  color: var(--iron);
+}
+
+.coachName {
+  margin-top: 1.4rem;
+  font-size: 1.9rem;
+}
+
+.coachRole {
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.coachBody {
+  margin-top: 0.75rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.coachCerts {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ memberships */
+
+.tableWrap {
+  border-radius: var(--radius);
+  background: var(--tile);
+  padding: 0.5rem clamp(1rem, 2.5vw, 2rem);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.table thead th {
+  padding: 1rem 1rem 0.75rem 0;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.table thead th:last-child {
+  text-align: right;
+  padding-right: 0;
+}
+
+.table tbody th,
+.table td {
+  padding: 1.1rem 1rem 1.1rem 0;
+  border-top: 1px solid var(--line);
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.table tbody th {
+  font-stretch: 80%;
+  font-size: 1.35rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table td {
+  color: var(--muted);
+}
+
+.table .tdPrice {
+  padding-right: 0;
+  text-align: right;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--iron);
+  white-space: nowrap;
+}
+
+.pick {
+  display: inline-block;
+  margin-left: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  vertical-align: 0.3em;
+  background: var(--ember);
+  color: var(--iron);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.66rem;
+  font-weight: 500;
+  font-stretch: 100%;
+  letter-spacing: 0.04em;
+}
+
+/* -------------------------------------------------------------- the floor */
+
+.floor {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.kit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 12rem;
+  padding: 1.5rem;
+}
+
+/* A little rhythm: the first and last span two columns. */
+.kit:first-child,
+.kit:last-child {
+  grid-column: span 2;
+}
+
+.kit:first-child {
+  background: var(--iron);
+  color: var(--chalk);
+}
+
+.kit:first-child dd {
+  color: color-mix(in srgb, var(--chalk) 75%, var(--iron));
+}
+
+.kit dt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.kitNum {
+  font-stretch: 72%;
+  font-size: clamp(2.8rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 0.9;
+}
+
+.kitName {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.kit dd {
+  margin-top: auto;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- timetable */
+
+.slots {
+  border-top: 2px solid var(--iron);
+}
+
+.slot {
+  display: grid;
+  grid-template-columns: 9rem 12rem minmax(0, 1fr) auto;
+  gap: 0.25rem 1.5rem;
+  align-items: baseline;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.slotTime {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 1.15rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.slotDays {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.slotName {
+  font-stretch: 80%;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.slotCoach {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--gap);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field span {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--iron) 22%, var(--chalk));
+  border-radius: 10px;
+  background: var(--chalk);
+  color: var(--iron);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 1px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--iron);
+  color: var(--chalk);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.submit:hover {
+  background: var(--ember);
+  color: var(--iron);
+}
+
+.where {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  padding-top: 10rem;
+}
+
+.whereField {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 8rem;
+  background: var(--iron);
+}
+
+.whereAddr {
+  margin-top: 0.75rem;
+  font-stretch: 85%;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.whereList {
+  margin-top: 1.5rem;
+}
+
+.whereList div {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.whereList dt {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.whereList dd {
+  overflow-wrap: anywhere;
+}
+
+.whereList a {
+  border-bottom: 1px solid var(--ember);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  max-width: var(--max);
+  margin: var(--air) auto 0;
+  padding: 0 var(--gut) 2rem;
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 2rem 0 1.5rem;
+  border-top: 2px solid var(--iron);
+}
+
+.footMark {
+  font-stretch: 62%;
+  font-size: clamp(5rem, 16vw, 12rem);
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.footLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.footLinks a:hover {
+  color: var(--ember);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .hero {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-template-areas:
+      'promise promise burst'
+      'promise promise burst'
+      'hours   price   free'
+      'quote   quote   quote';
+  }
+
+  .promise {
+    min-height: 28rem;
+  }
+
+  .coaches {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .nav,
+  .barCta {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+    margin-left: auto;
+  }
+
+  .hero {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'promise promise'
+      'hours   price'
+      'burst   free'
+      'quote   quote';
+  }
+
+  .promise {
+    min-height: 0;
+  }
+
+  .burst {
+    min-height: 13rem;
+  }
+
+  .secHead {
+    grid-template-columns: 1fr;
+  }
+
+  .programs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .big {
+    grid-row: span 1;
+    min-height: 26rem;
+  }
+
+  .floor {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kit,
+  .kit:first-child,
+  .kit:last-child {
+    grid-column: span 1;
+  }
+
+  .slot {
+    grid-template-columns: 7rem minmax(0, 1fr) auto;
+  }
+
+  .slotTime {
+    grid-row: 1 / span 2;
+  }
+
+  .slotDays {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .slotName {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .slotCoach {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .contact {
+    grid-template-columns: 1fr;
+  }
+
+  /* The table restacks: each membership a small card, its cells labeled
+     from the data-label the header cells can no longer give. */
+  .tableWrap {
+    padding: 0;
+    background: none;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table th,
+  .table td {
+    display: block;
+  }
+
+  .table tr {
+    margin-bottom: var(--gap);
+    padding: 1.1rem 1.25rem;
+    border-radius: var(--radius);
+    background: var(--tile);
+  }
+
+  .table tbody th,
+  .table td {
+    padding: 0.3rem 0;
+    border-top: 0;
+  }
+
+  .table tbody th {
+    padding-bottom: 0.6rem;
+    white-space: normal;
+  }
+
+  .table td {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    font-family: 'DM Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .table .tdPrice {
+    text-align: left;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'promise'
+      'free'
+      'hours'
+      'price'
+      'burst'
+      'quote';
+  }
+
+  .burst {
+    min-height: 9rem;
+  }
+
+  .programs,
+  .coaches,
+  .floor,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wide,
+  .big {
+    grid-column: span 1;
+  }
+
+  .program {
+    min-height: 0;
+  }
+
+  .big {
+    min-height: 0;
+    padding-top: 10rem;
+  }
+
+  .tallyField {
+    inset: 0 0 auto 0;
+    height: 8.5rem;
+  }
+
+  .programs {
+    grid-auto-rows: auto;
+  }
+
+  .slot {
+    grid-template-columns: 6.25rem minmax(0, 1fr);
+    gap: 0.25rem 1rem;
+  }
+
+  .slotTime {
+    font-size: 1rem;
+  }
+
+  .slotCoach {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .table td {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCta,
+  .btnEmber,
+  .btnLine,
+  .submit {
+    transition: none;
+  }
+}
