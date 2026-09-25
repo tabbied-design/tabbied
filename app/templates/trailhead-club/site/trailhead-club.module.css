@@ -1182,7 +1182,8 @@
   }
 
   .faqArt {
-    position: static;
+    position: relative;
+    top: auto;
     width: 11rem;
   }
 
