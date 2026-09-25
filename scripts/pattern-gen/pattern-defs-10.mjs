@@ -1,51 +1,33 @@
-// Batch 10 - 200 motifs (gallery orders 1100+).
+// Batch 10 - gallery orders 1100-1199. Motifs bigger than a cell and smaller
+// than the sheet: a super-tile spans several cells, a chain runs from one cell
+// into the next, a wedge opens out past its own edges. The grid stops being a
+// frame around each drawing and becomes what the drawing is assembled from.
 //
-// Batch 9 asked what happens when the *canvas* is the unit rather than the
-// cell. This one sits between the two: most of these motifs are bigger than a
-// cell and smaller than the sheet. A super-tile spans four cells; a chain runs
-// from one cell into the next; a wedge opens out past its own edges. The grid
-// stops being a frame around each drawing and becomes the thing the drawing is
-// assembled from.
-//
-// It opens with the family this batch was asked for. Wedge - a conic-gradient
-// mask cutting one sector out of a solid cell - turned out to be the most
-// liked design in batch 9, because of the way the sector *spreads*: a shape
-// that starts at a point and opens. Section A is thirty-six variations on
-// that: sectors from the center, from a corner, from an edge, annular ones
-// with the apex bored out, nested ones, paired ones, whole fans, and sectors
-// whose angle is driven by where the cell sits on the sheet. Every one of them
-// is a real hole, because a conic mask cuts rather than paints.
-//
-//   A. Spread            one sector, opening from a point (36 designs).
-//   B. Super-tiles       a motif that spans two or three cells each way, so
+//   A. Spread            one sector, opening from a point.
+//   B. Super-tiles       a motif that spans a two-by-two block of cells, so
 //                        the drawing is larger than the cell it starts in.
 //   C. Interlock         figure and ground both inked, each shape keying into
 //                        the ones beside it.
 //   D. Counterform       the drawing is the hole; the ink is what is left.
-//   E. Stacks            layered plates, offset, reading as depth without any
-//                        perspective in them.
 //   F. Chains            links that run from cell to cell.
 //   G. Corners           everything built off the corner of the cell rather
 //                        than its middle.
 //   H. Bands             moldings and banding, run across the sheet.
 //
-// House rules (inherited from every earlier batch, enforced by
-// generate-batch10.mjs and validate-batch10.mjs):
+// House rules (enforced by generate-batch10.mjs and validate-batch10.mjs):
 //
 //   * exactly one @random(${shapeFrequency}) gate per design, so the frequency
 //     slider always thins the field;
 //   * every design samples a transition-able ink per cell -
 //     background-color, color, border-color or box-shadow - so a reseed
-//     morphs. background-image is deliberately excluded from the validator's
-//     reseed check: a design whose only variation lived in a gradient would
-//     snap instead of morphing;
+//     morphs. A design whose only variation lived in a background-image
+//     gradient would snap instead;
 //   * a randomized custom prop read more than once goes through @var(--x);
 //   * nothing paints var(--color0). A hole knocked out in the background
-//     color is a fake hole - set the background slot to transparent and it
-//     stops erasing anything. Every gap here is a mask, a clip-path hole or a
-//     gap between elements, and validate-batch10.mjs re-renders the whole
-//     batch over a checkerboard with the background slot set to #00000000 and
-//     requires byte-identical cells.
+//     color is a fake hole once the background slot is transparent; every gap
+//     here is a mask, a clip-path hole or a gap between elements, and
+//     validate-batch10.mjs re-renders the batch with the background slot set
+//     to #00000000 and requires byte-identical cells.
 
 const isDark = (hex) => {
   const m = /^#([0-9a-f]{6})/i.exec(hex);
@@ -71,24 +53,9 @@ const xf = (v) => `-webkit-transform: ${v}; transform: ${v};`;
 const msk = (v) => `-webkit-mask: ${v}; mask: ${v};`;
 const B = (css) => `:before { content: ''; position: absolute; ${css}${pt} }`;
 const A = (css) => `:after { content: ''; position: absolute; ${css}${pt} }`;
-const sh = (spec) => cp(`@shape(${spec})`);
-const svgMask = (body) => msk(`@svg(${body})`);
 
 const R2 = '@pick(0deg, 90deg)';
 const R4 = '@pick(0deg, 90deg, 180deg, 270deg)';
-const R8 = '@pick(0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg)';
-
-// A px length authored for a six-column grid, scaled down as the grid
-// densifies. Border and shadow widths take lengths only, never percentages.
-const u = (v) => `calc(${v}px * 6 / @size-col)`;
-
-// A sweep across the sheet, for the few designs that grade their spread.
-const RX = '@x / @X';
-const RY = '@y / @Y';
-const ramp = (a, b, t) =>
-  `@calc(${a} ${b >= a ? '+' : '-'} ${Math.abs(b - a)} * ${t})%`;
-const rampDeg = (a, b, t) =>
-  `@calc(${a} ${b >= a ? '+' : '-'} ${Math.abs(b - a)} * ${t})deg`;
 
 // -- A: the spread ----------------------------------------------------------
 // One sector of a circle, opening from a point. conic-gradient is the only
@@ -102,58 +69,9 @@ const rampDeg = (a, b, t) =>
 const pie = (deg, { from = '0deg', at = '50% 50%' } = {}) =>
   msk(`conic-gradient(from ${from} at ${at}, #000 0 ${deg}, transparent ${deg} 360deg)`);
 
-// A fan: `on` degrees of ink every `period` degrees, all the way round.
-const fan = (on, period, { from = '0deg', at = '50% 50%' } = {}) =>
-  msk(`repeating-conic-gradient(from ${from} at ${at}, #000 0 ${on}, transparent ${on} ${period})`);
-
-// A sector with its apex bored out - an annular sector. Two masks intersected:
-// the conic decides the angle, the radial decides the inner and outer radius.
-const arcSector = (deg, bore, { from = '0deg', at = '50% 50%' } = {}) =>
-  `-webkit-mask: conic-gradient(from ${from} at ${at}, #000 0 ${deg}, transparent 0), radial-gradient(circle closest-side at ${at}, transparent ${bore}, #000 0); mask: conic-gradient(from ${from} at ${at}, #000 0 ${deg}, transparent 0), radial-gradient(circle closest-side at ${at}, transparent ${bore}, #000 0); -webkit-mask-composite: source-in; mask-composite: intersect;`;
-
-// A fan with its hub bored out.
-const arcFan = (on, period, bore, { from = '0deg', at = '50% 50%' } = {}) =>
-  `-webkit-mask: repeating-conic-gradient(from ${from} at ${at}, #000 0 ${on}, transparent ${on} ${period}), radial-gradient(circle closest-side at ${at}, transparent ${bore}, #000 0); mask: repeating-conic-gradient(from ${from} at ${at}, #000 0 ${on}, transparent ${on} ${period}), radial-gradient(circle closest-side at ${at}, transparent ${bore}, #000 0); -webkit-mask-composite: source-in; mask-composite: intersect;`;
-
 // -- other masks ------------------------------------------------------------
 const ringMask = (bore) =>
   msk(`radial-gradient(circle closest-side at 50% 50%, transparent ${bore}, #000 ${bore})`);
-const slotMask = (angle, on, off) =>
-  msk(`repeating-linear-gradient(${angle}, #000 0 ${on}, transparent ${on} ${off})`);
-
-// -- real holes, cut by hand ------------------------------------------------
-const P = (pts) => pts.map(([x, y]) => `${(+x).toFixed(1)}% ${(+y).toFixed(1)}%`).join(', ');
-const poly = (pts) => `polygon(${P(pts)})`;
-const withHole = (inner) =>
-  `polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, ${P(inner)}, ${P([inner[0]])})`;
-const rectHole = (x, y) => [
-  [x, y],
-  [x, 100 - y],
-  [100 - x, 100 - y],
-  [100 - x, y],
-];
-const roundHole = (r, steps = 28) =>
-  Array.from({ length: steps }, (_, i) => {
-    const a = (-2 * Math.PI * i) / steps;
-    return [50 + r * Math.cos(a), 50 + r * Math.sin(a)];
-  });
-const diamondHole = (x, y) => [
-  [50, 50 - y],
-  [50 - x, 50],
-  [50, 50 + y],
-  [50 + x, 50],
-];
-const ringPoly = (outer, inner) =>
-  `polygon(${P(outer)}, ${P([outer[0]])}, ${P(inner)}, ${P([inner[0]])})`;
-const SQUARE = [[0, 0], [100, 0], [100, 100], [0, 100]];
-const DIAMOND = [[50, 0], [100, 50], [50, 100], [0, 50]];
-
-// -- super-tiles ------------------------------------------------------------
-// A motif spread over an n x n block of cells: each cell draws its own quarter
-// (or ninth) of the drawing, chosen by where it sits in the block. `q(n)` is
-// the cell's position within the block, counting from zero.
-const qx = (n) => `@x % ${n}`;
-const qy = (n) => `@y % ${n}`;
 
 // -- palette bank -----------------------------------------------------------
 // color0 = background. Palettes may repeat across designs (they are different
@@ -409,10 +327,8 @@ const add = (name, palIdx, description, build, cfg = {}) => {
     gridDefault: cfg.grid ?? '6x9',
     freqDefault: cfg.freq ?? 1,
     ...(cfg.min ? { minCellPx: cfg.min } : {}),
-    // SVG-export tier (docs/svg-export.md). It belongs in the definition, not
-    // hand-added to the generated JSON: the generator rewrites every file it
-    // owns, so metadata that only exists downstream is silently dropped the
-    // next time anyone regenerates the batch.
+    // SVG-export tier (docs/svg-export.md). It belongs here: the generator
+    // rewrites every file it owns, dropping anything hand-added to the JSON.
     ...(cfg.svgExport === false ? { svgExport: false } : {}),
     ...(cfg.svgExportNote ? { svgExportNote: cfg.svgExportNote } : {}),
     thumb: { grid: cfg.tg ?? '5x5', frequency: cfg.tf ?? 1 },
@@ -423,9 +339,7 @@ const add = (name, palIdx, description, build, cfg = {}) => {
 
 
 // ----------------------------------------------------------------------------
-// A. Spread - one sector of a circle, opening from a point. Thirty-six ways to
-//    move the apex, change the angle, bore out the middle, pair the sectors up
-//    or open them into a whole fan.
+// A. Spread - one sector of a circle, opening from a point.
 // ----------------------------------------------------------------------------
 
 add('Sunray', 33, 'A broad sector opening from one corner, so the light comes in across the whole cell.', (c) => ({
@@ -484,15 +398,6 @@ add('Perforate', 31, 'A field of small perforations on a square pitch.', (c) => 
 }), { tg: '5x5' });
 
 // ----------------------------------------------------------------------------
-// E. Stacks - layered plates, offset from one another. No projection and no
-//    shading: the depth comes from nothing but the offset and the order the
-//    plates are painted in.
-// ----------------------------------------------------------------------------
-
-const plates = (c, dx, dy, w = 66) =>
-  `${B(`left: 6%; top: 6%; width: ${w}%; height: ${w}%; background: ${ink(c)};`)} ${A(`left: ${6 + dx}%; top: ${6 + dy}%; width: ${w}%; height: ${w}%; background: ${ink(c)};`)}`;
-
-// ----------------------------------------------------------------------------
 // F. Chains - links that run out of one cell and into the next, so the row is
 //    continuous rather than a set of separate marks.
 // ----------------------------------------------------------------------------
@@ -531,11 +436,6 @@ add('Abutment', 27, 'An abutment: the mass at the end of the arch that takes the
 // H. Bands - moldings and banding run across the sheet. The whole vocabulary
 //    of a molded edge, one profile per design.
 // ----------------------------------------------------------------------------
-
-const bandOf = (c, tops) =>
-  tops.map(([t, h], i) => (i === 0
-    ? B(`left: 0; top: ${t}%; width: 100%; height: ${h}%; background: ${ink(c)};`)
-    : A(`left: 0; top: ${t}%; width: 100%; height: ${h}%; background: ${ink(c)};`))).join(' ');
 
 add('Reeding', 57, 'Reeding: convex half-rounds run side by side, the opposite of fluting.', (c) => ({
   vars: '',

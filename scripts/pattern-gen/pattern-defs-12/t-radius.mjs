@@ -1,15 +1,11 @@
 // T. Radius - what `border-radius` alone can draw.
 //
-// One property, four corners, and a percentage each: round one hard and the
-// square becomes a quadrant, round two opposite ones and it becomes a leaf,
-// round three by different amounts and it leans. The converter reads the
-// resolved radii off the box and emits a <rect> with them, or a <path> where
-// the corners differ, so these sit at a flat zero against their live render.
-//
-// No design here puts a border on a rounded box - the converter throws on a
-// partially-rounded one, and mixed widths round a corner deviate by up to a
-// pixel. The shapes are filled, and where an outline is wanted it is a second
-// filled shape inside the first.
+// Round one corner hard and the square becomes a quadrant, two opposite ones
+// and it becomes a leaf, three by different amounts and it leans. The
+// converter emits a <rect> with the resolved radii, or a <path> where the
+// corners differ. No design here puts a border on a rounded box (the
+// converter throws on a partially-rounded one); where an outline is wanted it
+// is a second filled shape inside the first.
 import { section, A, F, TR, ink, rot, R2, R4 } from './shared.mjs';
 
 const { add, all } = section('T. Radius');

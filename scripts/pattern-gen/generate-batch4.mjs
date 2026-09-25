@@ -1,7 +1,7 @@
 // Emits packages/tabbied/patterns/<slug>.json for every batch-4 definition and prints the
 // galleryThumbnails entries to insert. Scoped to batch 4 only so it never
 // resurrects patterns that were trimmed from the gallery in earlier commits.
-import { writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { batch4 } from './pattern-defs-4.mjs';
@@ -35,24 +35,10 @@ const collapse = (s) => s.replace(/\s+/g, ' ').trim();
 
 const defs = batch4;
 
-// Guard: batch-4 slugs must be unique and must not clobber any pre-existing
-// pattern that isn't part of this batch.
 const batchSlugs = new Set();
 for (const def of defs) {
   if (batchSlugs.has(def.slug)) throw new Error(`duplicate slug: ${def.slug}`);
   batchSlugs.add(def.slug);
-}
-const existing = new Set(
-  readdirSync(path.join(ROOT, 'packages/tabbied/patterns'))
-    .filter((f) => f.endsWith('.json'))
-    .map((f) => f.replace(/\.json$/, ''))
-);
-for (const def of defs) {
-  // Allow regenerating the batch's own files; only guard against clobbering a
-  // different, pre-existing pattern.
-  if (existing.has(def.slug) && !batchSlugs.has(def.slug)) {
-    throw new Error(`batch-4 slug ${def.slug} collides with an existing pattern`);
-  }
 }
 
 const thumbEntries = [];

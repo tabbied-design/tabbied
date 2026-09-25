@@ -1,8 +1,8 @@
 // Syncs packages/tabbied/patterns/ with the batch-6 definitions: writes one
 // JSON per definition, deletes any batch-6 pattern (and its gallery thumbnail
 // entry) that the definitions no longer describe, and prints the thumbnail
-// entries to insert. Scoped to gallery orders 620+ so it never touches
-// patterns shipped in earlier batches.
+// entries to insert. Scoped to gallery orders 620-699 so it never touches
+// patterns shipped in another batch.
 import { writeFileSync, readdirSync, readFileSync, unlinkSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -49,10 +49,9 @@ for (const def of defs) {
   if (batchSlugs.has(def.slug)) throw new Error(`duplicate slug: ${def.slug}`);
   batchSlugs.add(def.slug);
 }
-// Batch 6 owns gallery orders 620-699, so a file already on disk is either
-// this batch's own output (safe to rewrite) or another batch's pattern (never
-// clobber it). The range is bounded at both ends: batches 7 and 8 live above
-// it, and an open-ended check here would delete them on a batch-6 rerun.
+// A file on disk whose order falls in the range below is this batch's own
+// output (safe to rewrite); anything else is another batch's (never clobber
+// it). The upper bound keeps a rerun from deleting the patterns above it.
 const FIRST_ORDER = 620;
 const LAST_ORDER = 699;
 const ownedByBatch6 = (order) => order >= FIRST_ORDER && order <= LAST_ORDER;
@@ -140,11 +139,9 @@ for (const def of defs) {
   if (/@rand\s*\(|@r\s*\(/.test(style)) {
     throw new Error(`${def.slug}: @rand() is not allowed in the ordered batch`);
   }
-  // Batch 6 also has to survive a transparent background. Painting
-  // var(--color0) only *looks* like a knockout while the background is
-  // opaque - with the background slot set to #rrggbb00 the "hole" paints
-  // nothing and the shape underneath stays solid. Cut the shape instead
-  // (clip-path hole, mask, or a gap between elements).
+  // Painting var(--color0) only *looks* like a knockout while the background
+  // is opaque: set to #rrggbb00, the "hole" paints nothing. Cut the shape
+  // instead (clip-path hole, mask, or a gap between elements).
   if (/var\(\s*--color0\s*\)/.test(style)) {
     throw new Error(
       `${def.slug}: style paints var(--color0) - that knockout disappears on a transparent background`

@@ -2,13 +2,9 @@
 //
 // `stepFade()` writes a linear fall as flat translucent levels; `stepGlow()`
 // does the same on a circle. Every stop pair sits at the same position, so
-// both are hard-stop gradients that *read* as ramps - the levels come from the
-// alpha, not from interpolation - and the section works them the way a fresco
-// is worked: a day's plaster at a time.
-//
-// The alpha is carried by the mask, not by the ink, so the levels stay real
-// holes: on a transparent background the sheet shows through each step in
-// proportion rather than through none of them.
+// both are hard-stop gradients that *read* as ramps. The alpha is carried by
+// the mask, so on a transparent background the sheet shows through each step
+// in proportion.
 import {
   section,
   F,

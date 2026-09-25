@@ -4,12 +4,10 @@
 // entries to insert. Scoped to gallery orders 2000-2999 so it never touches
 // patterns shipped in another batch.
 //
-// The lints are in pattern-lints.mjs, shared with batches 11 and 12: the house
-// rules every batch is checked against, plus the CSS that would cost a design
-// its clean SVG-export tier - box-shadow, filter, blend modes, smooth conic
-// sweeps, nested doodles and @svg payloads. Those checks are the cheap first
-// pass; validate-svg-batch13.mjs is the real gate, running the shipped
-// converter over every rendered design.
+// The lints (pattern-lints.mjs) are the house rules plus the CSS that would
+// cost a design its clean SVG-export tier. They are the cheap first pass;
+// validate-svg-batch13.mjs is the real gate, running the shipped converter
+// over every rendered design.
 import { writeFileSync, readdirSync, readFileSync, unlinkSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -56,9 +54,9 @@ for (const def of defs) {
   batchSlugs.add(def.slug);
 }
 
-// Batch 13 owns gallery orders 2000-2999, so a file already on disk is either
-// this batch's own output (safe to rewrite) or another batch's pattern (never
-// clobber it). A batch 14 starts at 3000 and bounds itself the same way.
+// A file on disk whose order falls in the range below is this batch's own
+// output (safe to rewrite); anything else is another batch's (never clobber
+// it). The upper bound keeps a rerun from deleting the patterns above it.
 const FIRST_ORDER = 2000;
 const PAST_LAST_ORDER = 3000;
 const ownedByBatch13 = (order) => order >= FIRST_ORDER && order < PAST_LAST_ORDER;

@@ -1,12 +1,6 @@
-// I. Wedge - triangles, points and tapers.
-//
-// A triangle is three numbers in a clip path and the only primitive here that
-// has a direction: both of these point somewhere. One halves the cell along
-// its diagonal; the other runs a wedge from a whole edge down to a corner.
-//
-// clip-path: polygon() maps to an SVG <clipPath> vertex for vertex, so a
-// twenty-sided profile is as cheap and as exact as a three-sided one.
-import { section, A, F, TR, cp, ink, poly, rot, R4 } from './shared.mjs';
+// I. Wedge - triangles, points and tapers. A triangle is three points in a
+// clip path, which maps to an SVG <clipPath> vertex for vertex.
+import { section, F, TR, cp, ink, poly, rot, R4 } from './shared.mjs';
 
 const { add, all } = section('I. Wedge');
 

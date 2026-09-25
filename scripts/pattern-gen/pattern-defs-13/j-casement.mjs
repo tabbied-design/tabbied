@@ -1,14 +1,10 @@
 // J. Casement - frames, and the openings cut through them.
 //
-// Two directions, and the section runs both. A frame is a *union* of edge
-// slabs: four of them for a closed surround, three for one left open. An
-// opening is the complement - a union of two "everything but this band"
-// layers, which leaves a rectangular hole exactly where the two bands cross,
-// because mask layers composite by adding coverage and only the intersection
-// of the two gaps is uncovered by both.
-//
-// Either way the void is cut rather than painted, so on a transparent
-// background the sheet shows through every window.
+// A frame is a *union* of edge slabs: four for a closed surround, three for
+// one left open. An opening is the complement: a union of two "everything but
+// this band" layers, which leaves a rectangular hole where the two bands
+// cross, because mask layers add coverage and only the intersection of the
+// two gaps is uncovered by both. Either way the void is cut, not painted.
 import {
   section,
   F,

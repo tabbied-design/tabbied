@@ -1,4 +1,4 @@
-// Renders every new pattern in headless Chromium and verifies:
+// Renders every batch-1-3 pattern in headless Chromium and verifies:
 //  1. it paints (cells with visible features),
 //  2. reseeding changes the pattern,
 //  3. cells persist across reseed (so CSS transitions can animate),
@@ -101,12 +101,10 @@ for (const chunk of chunks) {
   shot++;
   const blocks = chunk.map((slug) => {
     const pattern = JSON.parse(readFileSync(path.join(ROOT, `packages/tabbied/patterns/${slug}.json`), 'utf-8'));
-    // Render close to gallery conditions: square card, thumbnail option overrides.
-    const overrides = {};
+    // Render close to gallery conditions: a square card.
     const { style, doodle } = buildSource(pattern, {
       width: '300px',
       height: '300px',
-      optionOverrides: overrides,
     });
     return { slug, style, doodle, name: pattern.name };
   });
@@ -152,9 +150,9 @@ for (const chunk of chunks) {
       el.update(el.textContent);
     }
   });
-  // Generous settle time: with 20 doodles transitioning at once the browser
-  // can start a heavy doodle's transition close to a second late, which made
-  // the reseed check flag patterns as identical while they were still queued.
+  // Generous settle time: with 20 doodles transitioning at once a heavy
+  // doodle's transition can start close to a second late, and the reseed check
+  // would read it as identical while it is still queued.
   await page.waitForTimeout(2800);
   const after = await inspect(page);
   await page.screenshot({ path: `/tmp/sheet-${shot}-seed2.png`, fullPage: true });

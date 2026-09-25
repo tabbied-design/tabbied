@@ -1,15 +1,12 @@
 // H. Sheer - the dotted grounds of net and lace.
 //
 // Tiled radial fields: a hard dot, a feathered dot, and a ring. The converter
-// turns each tiled layer into an SVG <pattern> holding one tile, so a field of
-// four hundred dots costs one gradient however dense the net gets.
+// turns each tiled layer into an SVG <pattern> holding one tile.
 //
-// The pitch is where this section had to be careful. A dot far below a pixel
-// at thumbnail scale is drawn by CSS and by a vector rasterizer with different
-// rounding, and the parity sweep catches it as a whole-field diff rather than
-// an edge one - the two finest designs here (Bobbinet, Tulle) ship coarser
-// than first drawn, and on a 3x3 thumbnail grid, so their features stay whole
-// pixels where the gallery shows them.
+// Mind the pitch: a dot far below a pixel at thumbnail scale is rounded
+// differently by CSS and by a vector rasterizer, and the parity sweep sees a
+// whole-field diff. The two finest designs (Bobbinet, Tulle) are drawn coarse
+// enough, on a 3x3 thumbnail grid, that their features stay whole pixels.
 import {
   section,
   F,

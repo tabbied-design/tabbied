@@ -1,12 +1,10 @@
 // E. Chamfer - what is taken off the cell rather than what is put on it.
 //
-// Every design here starts from the full square and removes: a corner, an
-// edge, a notch, a step. clip-path: polygon() is the whole toolkit, and the
-// converter turns it into an SVG <clipPath> with the same points, so a
-// twenty-vertex profile costs nothing and lands exactly where CSS put it, and
-// the notches and channels stay real holes on a transparent background because
-// nothing is filled back in - the shape simply stops.
-import { section, A, F, TR, cp, ink, poly, rot, R2, R4 } from './shared.mjs';
+// Every design starts from the full square and removes a corner, an edge, a
+// notch or a step with clip-path: polygon(), which the converter turns into
+// an SVG <clipPath> with the same points. Nothing is filled back in, so the
+// notches stay real holes on a transparent background.
+import { section, F, TR, cp, ink, poly, rot, R2, R4 } from './shared.mjs';
 
 const { add, all } = section('E. Chamfer');
 

@@ -1,15 +1,13 @@
 // Syncs packages/tabbied/patterns/ with the batch-11 definitions: writes one
 // JSON per definition, deletes any batch-11 pattern (and its gallery thumbnail
 // entry) that the definitions no longer describe, and prints the thumbnail
-// entries to insert. Scoped to gallery orders 1200+ so it never touches
+// entries to insert. Scoped to gallery orders 1200-1399 so it never touches
 // patterns shipped in another batch.
 //
-// On top of the house rules every batch is checked against, this one lints for
-// the CSS that would cost a design its clean SVG-export tier - box-shadow,
-// filter, blend modes, smooth conic sweeps, nested doodles and @svg payloads.
-// Both sets live in pattern-lints.mjs, shared with batch 12, which makes the
-// same promise. Those checks are the cheap first pass; validate-svg-batch11.mjs
-// is the real gate, running the shipped converter over every rendered design.
+// The lints (pattern-lints.mjs) are the house rules plus the CSS that would
+// cost a design its clean SVG-export tier. They are the cheap first pass;
+// validate-svg-batch11.mjs is the real gate, running the shipped converter
+// over every rendered design.
 import { writeFileSync, readdirSync, readFileSync, unlinkSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -56,10 +54,9 @@ for (const def of defs) {
   batchSlugs.add(def.slug);
 }
 
-// Batch 11 owns gallery orders 1200-1399, so a file already on disk is either
-// this batch's own output (safe to rewrite) or another batch's pattern (never
-// clobber it). The upper bound is what keeps this generator from deleting
-// batch 12, which starts at 1400.
+// A file on disk whose order falls in the range below is this batch's own
+// output (safe to rewrite); anything else is another batch's (never clobber
+// it). The upper bound keeps a rerun from deleting the patterns above it.
 const FIRST_ORDER = 1200;
 const PAST_LAST_ORDER = 1400;
 const ownedByBatch11 = (order) => order >= FIRST_ORDER && order < PAST_LAST_ORDER;

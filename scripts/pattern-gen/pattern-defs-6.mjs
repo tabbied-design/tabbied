@@ -1,4 +1,4 @@
-// Batch 6 - 19 *ordered*, background-independent motifs (gallery orders 620+).
+// Batch 6 - *ordered*, background-independent motifs (gallery orders 620-699).
 //
 // Two rules separate this batch from everything before it.
 //
@@ -11,17 +11,14 @@
 //    sampled per cell) but never rearrange it, so a reseed reads as a new
 //    colorway of the same design.
 //
-// 2. Nothing is painted in the background color. A design that knocks a hole
-//    out of its shapes with `var(--color0)` looks right only while the
-//    background is opaque: set the background slot to transparent (the editor
-//    writes `#rrggbb00`) and those "holes" stop erasing anything, because
-//    painting transparent over ink leaves the ink. So every gap here is real
-//    geometry - a clip-path hole, a mask, a border, or a gap between two
-//    shapes - and the style half never references `var(--color0)` at all
-//    (generate-batch6.mjs enforces this). Each design renders identically over
-//    any background, including none.
+// 2. Nothing is painted in the background color. A hole knocked out with
+//    `var(--color0)` looks right only while the background is opaque: with
+//    the background slot transparent (the editor writes `#rrggbb00`) it stops
+//    erasing anything. So every gap here is real geometry (a clip-path hole, a
+//    mask, a border, or a gap between two shapes), and generate-batch6.mjs
+//    rejects any style that references `var(--color0)`.
 //
-// House rules (matching every earlier batch):
+// House rules:
 //   * reseed variation rides on a transition-able, *sampled* property -
 //     background-color or border-color - so recolors morph;
 //   * a randomized custom prop used more than once is read via @var(--x);
@@ -266,10 +263,8 @@ const add = (name, palIdx, description, build, cfg = {}) => {
     colors: { min: 2, max: c, default: c },
     gridDefault: cfg.grid ?? '8x12',
     freqDefault: cfg.freq ?? 1,
-    // SVG-export tier (docs/svg-export.md). It belongs in the definition, not
-    // hand-added to the generated JSON: the generator rewrites every file it
-    // owns, so metadata that only exists downstream is silently dropped the
-    // next time anyone regenerates the batch.
+    // SVG-export tier (docs/svg-export.md). It belongs here: the generator
+    // rewrites every file it owns, dropping anything hand-added to the JSON.
     ...(cfg.svgExport === false ? { svgExport: false } : {}),
     ...(cfg.svgExportNote ? { svgExportNote: cfg.svgExportNote } : {}),
     thumb: { grid: cfg.tg ?? '5x5', frequency: cfg.tf ?? 1 },

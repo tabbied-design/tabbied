@@ -1,14 +1,9 @@
 // I. Rigging - spars run out on the diagonal.
 //
-// A spar is a hard linear band: the strip between two stops, at any angle.
-// Written as a mask layer rather than a pseudo-element it costs nothing to
-// have several, and they compose - one spar over a hull, or two run out
-// parallel on the same lean.
-//
-// A band at 45deg is the one case worth watching in export: CSS and a vector
-// renderer disagree by a fraction of a pixel along a diagonal edge, which the
-// sweep tolerates but which is why nothing here butts two bands edge to edge.
-// They cross, or they stand clear.
+// A spar is a hard linear band written as a mask layer, so several compose
+// freely. CSS and a vector renderer disagree by a fraction of a pixel along a
+// 45deg edge, which the sweep tolerates but which is why nothing here butts
+// two bands edge to edge: they cross, or they stand clear.
 import {
   section,
   F,

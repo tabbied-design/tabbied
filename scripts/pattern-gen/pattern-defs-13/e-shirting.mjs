@@ -1,14 +1,10 @@
 // E. Shirting - one stripe, four weights.
 //
-// A single repeating-linear-gradient per design, used as a mask over one ink,
-// and the only thing that changes across the section is the ratio of rule to
-// ground: a hairline on an open set, an even stripe, a dense rib, and cloth
-// so nearly solid that only a pinstripe of ground survives. That is a weaver's
-// distinction rather than a draughtsman's, and it is the whole section.
-//
-// A repeating gradient exports as a tiled <linearGradient>, so the count of
-// stripes on screen is the count in the file, and the ground between them
-// stays a real hole on a transparent background.
+// One repeating-linear-gradient mask per design, and only the ratio of rule to
+// ground changes: a hairline on an open set, an even stripe, a dense rib, and
+// cloth so nearly solid only a pinstripe of ground survives. A repeating
+// gradient exports as a tiled <linearGradient>, so the ground stays a real
+// hole on a transparent background.
 import { section, F, TR, rot, faded, slotL, R2 } from './shared.mjs';
 
 const { add, all } = section('E. Shirting');

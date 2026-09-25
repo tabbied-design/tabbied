@@ -1,4 +1,4 @@
-// Batch 8 - 10 motifs (gallery orders 900+).
+// Batch 8 - gallery orders 900-999.
 //
 // Where batch 7 works in the idiom of the hand-drawn originals - a clip-path
 // polygon typed out by hand, a border-radius, a pseudo-element - this batch is
@@ -17,8 +17,7 @@
 //   * mask: @doodle(...) renders a whole second doodle and uses it as the
 //     mask (Matryoshka, Fractal, Subdivide).
 //
-// Three things about masks, all learned the hard way and all worth keeping
-// written down:
+// Three things about masks:
 //
 //   * a mask reads *alpha*, not luminance, so a white shape is exactly as
 //     opaque as a black one and cannot be used to punch a hole. Every hole is
@@ -29,19 +28,17 @@
 //     arithmetic does not survive the trip, which is why the grids above are
 //     CSS gradient masks rather than SVG.
 //
-// House rules (inherited from every earlier batch):
+// House rules (enforced by generate-batch8.mjs and validate-batch8.mjs):
 //   * exactly one @random(${shapeFrequency}) gate per design, so the frequency
 //     slider always thins the field;
 //   * every design samples a transition-able ink per cell, so a reseed morphs.
-//     validate-batch8.mjs deliberately ignores background-image when it checks
-//     that a reseed changed something: a design whose only variation lived in
-//     a gradient or an @svg would snap instead;
+//     A design whose only variation lived in a gradient or an @svg would snap
+//     instead;
 //   * a randomized custom prop read more than once goes through @var(--x);
 //   * nothing paints var(--color0). A hole knocked out in the background
-//     color is a fake hole - set the background slot to transparent and it
-//     stops erasing anything. validate-batch8.mjs re-renders the batch over a
-//     checkerboard with the background slot set to #00000000 and requires
-//     byte-identical cells.
+//     color is a fake hole once the background slot is transparent;
+//     validate-batch8.mjs re-renders the batch with the background slot set
+//     to #00000000 and requires byte-identical cells.
 
 const isDark = (hex) => {
   const m = /^#([0-9a-f]{6})/i.exec(hex);
@@ -172,9 +169,8 @@ const PAL = [
   ['#F5F3F4', '#0B090A', '#BA181B', '#E5383B', '#660708', '#A4161A'],
 ];
 
-// Every motif name used anywhere in the project so far, including the designs
-// that were authored for batch 7 and cut before it shipped - a name should
-// never come to mean two different things.
+// Every motif name used anywhere in the project so far, including designs
+// cut before they shipped: a name should never mean two different things.
 const TAKEN = new Set(
   (
     'abacus accordion acorn agate ampersand amphora analemma annulet ' +
@@ -273,11 +269,6 @@ const RESERVED = new Set(
 let order = 900;
 const all = [];
 
-// cfg:
-//   grid   default "columns x rows" for the editor       (default '6x9')
-//   freq   default frequency                             (default 1)
-//   tg/tf  gallery-thumbnail grid / frequency            (default '5x5' / 1)
-//   min    sizing.minCellPx floor, for px-scaled details
 // Documented sub-pixel deviations from the live render (docs/svg-export.md,
 // tier 2). The export is the *correct* drawing in both cases; it is the
 // browser's rasterization of the mask that differs, so the user is told
@@ -287,6 +278,11 @@ const NESTED_SEAM_NOTE =
 const SVG_MASK_NOTE =
   "The stripe mask can sit up to a pixel away from the on-screen rendering, and its internal coordinates use calc(), which some design tools don't evaluate.";
 
+// cfg:
+//   grid   default "columns x rows" for the editor       (default '6x9')
+//   freq   default frequency                             (default 1)
+//   tg/tf  gallery-thumbnail grid / frequency            (default '5x5' / 1)
+//   min    sizing.minCellPx floor, for px-scaled details
 const add = (name, palIdx, description, build, cfg = {}) => {
   const slug = name.toLowerCase();
   if (!/^[a-z][a-z0-9]*$/.test(slug)) throw new Error(`bad slug: ${slug}`);
@@ -312,10 +308,8 @@ const add = (name, palIdx, description, build, cfg = {}) => {
     gridDefault: cfg.grid ?? '6x9',
     freqDefault: cfg.freq ?? 1,
     ...(cfg.min ? { minCellPx: cfg.min } : {}),
-    // SVG-export tier (docs/svg-export.md). It belongs in the definition, not
-    // hand-added to the generated JSON: the generator rewrites every file it
-    // owns, so metadata that only exists downstream is silently dropped the
-    // next time anyone regenerates the batch.
+    // SVG-export tier (docs/svg-export.md). It belongs here: the generator
+    // rewrites every file it owns, dropping anything hand-added to the JSON.
     ...(cfg.svgExport === false ? { svgExport: false } : {}),
     ...(cfg.svgExportNote ? { svgExportNote: cfg.svgExportNote } : {}),
     thumb: { grid: cfg.tg ?? '5x5', frequency: cfg.tf ?? 1 },

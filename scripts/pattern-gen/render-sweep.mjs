@@ -1,15 +1,13 @@
-// The rendering gate, shared by batches 11 and 12. Renders every pattern in a
+// The rendering gate shared by batches 11-13. Renders every pattern in a
 // batch in headless Chromium at its gallery-thumbnail settings and verifies it
 // paints, keeps its cells across a reseed (so transitions animate), re-inks on
-// that reseed, and logs no console errors.
+// that reseed, and logs no console errors; svg-sweep.mjs is the export half.
 //
-// This is the *rendering* half; svg-sweep.mjs is the export half. Geometry is
-// allowed to move on reseed - @rand() and @pick() place the shapes - but
-// background independence is not optional: re-rendering with the background
-// slot set to a zero-alpha color must produce byte-identical cells. A design
-// that knocked its holes out with var(--color0) would quietly fill them in
-// here. (Same seed -> same rolls, so the two passes are directly comparable
-// even though the design is random.)
+// Geometry may move on reseed (@rand() and @pick() place the shapes), but
+// re-rendering with the background slot at zero alpha must produce
+// byte-identical cells, so a design that knocked its holes out with
+// var(--color0) fails. Same seed -> same rolls, so the two passes compare
+// directly even though the design is random.
 //
 // Contact sheets land in /tmp/sheet-<label>-*.png - the transparent pass is
 // shot over a checkerboard so real holes are visible as see-through.
@@ -29,8 +27,8 @@ const ALL_CELLS = 9999;
 const TRANSPARENT = '#00000000';
 
 // Mirrors buildDoodleSource() in packages/tabbied/src/core/doodleSource.ts,
-// including the ToggleSwitch semantics (on -> substitute the snippet, off ->
-// drop the token) that batch 10's Shadow / Rounded Corners switches rely on.
+// including its ToggleSwitch semantics (on -> substitute the snippet, off ->
+// drop the token).
 function buildSource(pattern, { width, height, optionOverrides = {}, transparentBg = false }) {
   let style = pattern.code.style;
   let doodle = pattern.code.doodle;
@@ -109,12 +107,11 @@ async function inspect(page) {
 /**
  * Reads the page repeatedly until two consecutive reads agree.
  *
- * Every design transitions, so a snapshot taken while one is still animating
- * reports an interpolated background-color. A fixed sleep is not enough: the
- * two passes below are compared property-for-property, and on a loaded machine
- * one of them can settle after the timeout the other settled before, which
- * shows up as whole pages of spurious "the design paints with color0"
- * failures. Waiting for the reading itself to stop moving removes the race.
+ * Every design transitions, so a snapshot taken mid-animation reports an
+ * interpolated background-color. A fixed sleep is not enough: on a loaded
+ * machine one pass can settle after the timeout and the other before it, and
+ * the property-for-property comparison then reports spurious "paints with
+ * color0" failures.
  */
 async function inspectSettled(page, { tries = 12, gap = 250 } = {}) {
   let previous = await inspect(page);

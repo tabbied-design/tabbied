@@ -1,18 +1,10 @@
 // C. Sector - hard-stop conic pies.
 //
-// conic-gradient is the only thing in CSS that sweeps a value round an angle,
-// and it is also the one gradient SVG has no primitive for. The distinction
-// that matters is *hard stop* versus sweep: a span whose two ends are the same
-// color is a sector, and the converter emits it as a path; a span whose ends
-// differ is a smooth angular blend, and the converter refuses it. Four designs
-// in the catalog are marked "no SVG export" for exactly that reason.
-//
-// Every conic here is a hard stop, used as a mask, so the part that is not the
-// sector is a genuine hole rather than a fill in the background color. What
-// separates one design from the next is where the apex sits, how wide the
-// sector opens, how many of them there are, and whether the middle is bored
-// out.
-import { section, A, F, TR, ink, rot, pie1, arcSector, R4 } from './shared.mjs';
+// SVG has no primitive for a conic sweep. A span whose two ends are the same
+// color is a sector, which the converter emits as a path; a span whose ends
+// differ is a smooth angular blend, which it refuses. Every conic here is a
+// hard stop used as a mask, so the rest of the cell is a genuine hole.
+import { section, F, TR, ink, rot, pie1, arcSector, R4 } from './shared.mjs';
 
 const { add, all } = section('C. Sector');
 

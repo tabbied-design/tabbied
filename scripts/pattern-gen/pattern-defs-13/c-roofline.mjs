@@ -1,13 +1,9 @@
 // C. Roofline - profiles taken off the top of a solid mass.
 //
-// Where a chamfer takes a corner off a square, these take a skyline off it: a
-// gable with its peak clipped back to a short flat, and a projecting course
-// with its underside bevelled away to the wall. clip-path: polygon() is the
-// whole toolkit and it exports as an SVG <clipPath> with the same points, so
-// the profile lands exactly where CSS put it.
-//
-// Nothing is filled back in, so what is cut away stays a real hole on a
-// transparent background - the shape simply stops.
+// A gable with its peak clipped back to a short flat, and a projecting course
+// with its underside bevelled away to the wall. clip-path: polygon() exports
+// as an SVG <clipPath> with the same points, and nothing is filled back in,
+// so what is cut away stays a real hole on a transparent background.
 import { section, F, TR, cp, ink, poly, rot, R2, R4 } from './shared.mjs';
 
 const { add, all } = section('C. Roofline');

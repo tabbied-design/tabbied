@@ -1,27 +1,16 @@
-// One-shot generator: emits packages/tabbied/patterns/<slug>.json for every definition and
-// prints the galleryThumbnails.ts entries to insert.
+// One-shot generator for batches 1-3: emits packages/tabbied/patterns/<slug>.json
+// for every definition and prints the galleryThumbnails.ts entries to insert.
 //
-// HISTORICAL - DO NOT RUN. The definitions in pattern-defs-1/2/3.mjs are a
-// snapshot of how batches 1-3 were first produced, and the catalog has moved
-// on without them. Running this today would:
-//
-//   * recreate 105 designs retired since (see "retire 15 designs", #41, and
-//     the cleanups around it) - this generator has no ownership range and so
-//     no way to prune, unlike generate-batch6.mjs and later;
-//   * overwrite `tetro` with an older, different design of the same name;
-//     the one that ships is defined in pattern-defs-4.mjs;
-//   * strip the SVG-export tier from the thirteen batch-1-3 patterns that
-//     carry one (docs/svg-export.md), because the tiers were added straight
-//     to the generated JSON and never back-ported here.
+// HISTORICAL - DO NOT RUN. pattern-defs-1/2/3.mjs are a snapshot of how
+// batches 1-3 were first produced, and the catalog has moved on. Running this
+// would recreate the designs retired since (it has no ownership range to
+// prune with), overwrite `tetro` with an older design of the same name (the
+// shipping one is in pattern-defs-4.mjs), and strip the SVG-export tier from
+// the batch-1-3 patterns that carry one, since those tiers were added to the
+// generated JSON and never back-ported here (docs/svg-export.md).
 //
 // For those patterns the JSON in packages/tabbied/patterns/ is authoritative;
-// edit it directly. The tier metadata is guarded by a unit test
-// (packages/tabbied/test/svgExport.test.mjs), so stripping it fails the build
-// rather than shipping a broken export.
-//
-// Later batches do not have this problem: from batch 4 on, the SVG-export tier
-// lives in the definitions and is emitted by the generator, and from batch 6 on
-// the generator prunes what its definitions no longer describe.
+// edit it directly. packages/tabbied/test/svgExport.test.mjs guards the tiers.
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -27,7 +27,6 @@ if (!blocks.length) {
   process.exit(0);
 }
 
-// Find the final "};" that closes the exported map and insert before it.
 const marker = '\n};\n';
 const at = src.lastIndexOf(marker);
 if (at === -1) throw new Error('could not find closing of galleryThumbnails');

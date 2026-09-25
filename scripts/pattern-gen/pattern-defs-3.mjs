@@ -1,4 +1,4 @@
-// Batch 3 (gallery orders 137-236): 100 new designs.
+// Batch 3 (gallery orders 137-236).
 // Same conventions as batch 1/2 (verified against css-doodle 0.51):
 //  - solid colors / transforms / offsets / border-radius / same-arity
 //    clip-paths / box-shadows / opacity all transition on reseed; gradients
