@@ -1,6 +1,7 @@
-// Guards the CLI's catalog commands (list/info/help) - the parts that run
-// without a browser. Rendering is exercised by hand and by consumers; these
-// tests pin the query surface agents script against.
+// Guards the parts of the CLI that run without a browser: the catalog
+// commands (list/info/help) and render's argument checks. Rendering itself is
+// exercised by hand and by consumers; these tests pin the query surface
+// agents script against.
 //
 // Run with `npm test --workspace tabbied`, after `npm run build` has
 // produced dist/cli.js and catalog.json.
@@ -64,4 +65,20 @@ test('unknown design and unknown command fail loudly', () => {
       args.join(' ')
     );
   }
+});
+
+test('render rejects a --format it cannot write, and an --out it cannot read', () => {
+  const fails = (args, message) =>
+    assert.throws(
+      () => execFileSync(process.execPath, [cli, ...args], { encoding: 'utf-8', stdio: 'pipe' }),
+      (error) => error.status === 1 && message.test(error.stderr),
+      args.join(' ')
+    );
+
+  fails(['render', 'radius', '--out', 'hero.gif', '--format', 'gif'], /--format must be svg \| png/);
+  fails(['render', 'radius', '--out', 'hero'], /--out needs a \.svg or \.png extension/);
+});
+
+test('help lists --format', () => {
+  assert.match(run('--help'), /--format <svg\|png>/);
 });

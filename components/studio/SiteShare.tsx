@@ -67,7 +67,7 @@ export default function SiteShare() {
     return (
       <p className={styles.notice} role="alert">
         That link does not lead anywhere.{' '}
-        <Link href="/studio" className={styles.back}>
+        <Link href="/templates" className={styles.back}>
           Make your own
         </Link>
         .

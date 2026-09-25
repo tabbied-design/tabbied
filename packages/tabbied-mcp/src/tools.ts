@@ -145,8 +145,8 @@ function searchTool(catalog: Catalog): Tool {
           type: 'boolean',
           description:
             'Restrict to designs that can (true) or cannot (false) be exported ' +
-            'as true vector SVG. A handful paint smooth conic sweeps that SVG ' +
-            'cannot represent.',
+            'as true vector SVG. Some use CSS (smooth conic sweeps, double or ' +
+            'dashed borders, 3D transforms) that SVG cannot represent faithfully.',
         },
         limit: {
           type: 'integer',

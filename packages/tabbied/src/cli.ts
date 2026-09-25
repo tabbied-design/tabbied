@@ -54,6 +54,7 @@ Usage:
 Render options:
   --out <path>          Destination. Extension picks the format (.svg | .png);
                         with --frames, a directory for the sequence.
+  --format <svg|png>    Output format, for an --out without that extension.
   --seed <string>       Fixed seed (default: random). Same seed = same image.
   --palette <colors>    Comma-separated CSS colors, background first.
   --options "<pairs>"   Option values, "id: value; id2: value2".
@@ -198,6 +199,7 @@ function parseRenderArgs(argv: string[]): RenderArgs {
   const frames = Number(flags.get('frames') ?? 0);
   const extension = path.extname(out).toLowerCase();
   let format = flags.get('format') as 'svg' | 'png' | undefined;
+  if (format && format !== 'svg' && format !== 'png') fail(`--format must be svg | png`);
   if (!format) {
     if (frames > 0) format = 'png';
     else if (extension === '.svg') format = 'svg';

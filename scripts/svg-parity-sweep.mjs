@@ -57,8 +57,8 @@ const slugs = process.argv.slice(2).length
 const TOLERANCE = 12; // per-channel
 const MAX_BAD_FRACTION = 0.01; // 1% of pixels
 // Documented sub-CSS-pixel deviations:
-// - fractal/matryoshka/subdivide: css-doodle's live rendering shows hairline
-//   seams from rasterizing the nested foreignObject mask; the vector export
+// - fractal: css-doodle's live rendering shows hairline seams from
+//   rasterizing the nested foreignObject mask; the vector export
 //   intentionally renders clean solid tiles instead.
 // - drypoint: the browser rasterizes the @svg mask image with slightly
 //   different sub-pixel rounding than the inlined symbol (<=1 CSS px).
@@ -68,8 +68,6 @@ const MAX_BAD_FRACTION = 0.01; // 1% of pixels
 // Keep in sync with e2e/svg-export.spec.ts (which documents each entry).
 const PER_PATTERN_MAX = {
   fractal: 0.03,
-  matryoshka: 0.03,
-  subdivide: 0.035,
   drypoint: 0.02,
   windowpane: 0.02,
   glyph: 0.015,

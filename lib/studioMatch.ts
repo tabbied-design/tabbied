@@ -91,9 +91,10 @@ const HUE_WORDS: Record<string, number> = {
   brown: 30, tan: 35, beige: 40, sand: 45, clay: 25, chocolate: 25,
 };
 
+// Both spellings: these match what a person types, not this repo's prose.
 const NEUTRAL_WORDS = new Set([
-  'black', 'white', 'gray', 'gray', 'monochrome', 'mono', 'grayscale',
-  'grayscale', 'neutral', 'charcoal', 'slate', 'ink', 'stone',
+  'black', 'white', 'gray', 'grey', 'monochrome', 'mono', 'grayscale',
+  'greyscale', 'neutral', 'charcoal', 'slate', 'ink', 'stone',
 ]);
 
 const DENSITY_WORDS: Record<string, string> = {

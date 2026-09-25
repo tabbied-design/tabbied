@@ -707,10 +707,11 @@ Three things worth not re-litigating:
   animation and transition has a `@media (prefers-reduced-motion: reduce)`
   override; a marquee that merely slows down is the failure this guards against.
 
-The mono is loaded by `next/font` **in the page**, not the root layout, so only
-this route preloads it. IBM Plex Sans is deliberately not loaded - proxima-nova
-from the layout's typekit link is the sans, and the design only ever named Plex
-Sans as its fallback.
+IBM Plex Mono and IBM Plex Sans are loaded by `next/font` (`lib/fonts.ts`)
+**in the page**, not the root layout, so only the routes that use them preload
+them. The two sans split by role, as the artboards do: proxima-nova, from the
+layout's typekit link, sets display type (headings, stat figures, primary
+buttons), and Plex Sans sets body and UI copy.
 
 ## The platform tier - auth, generation, media
 

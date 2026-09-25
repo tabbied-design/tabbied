@@ -349,7 +349,7 @@ Rendering runs css-doodle in a headless browser via whatever Playwright the
 project already has (`playwright`, `playwright-core`, or `@playwright/test`) -
 install one of those if none is present, and pass `--browser <path>` (or set
 `TABBIED_CHROMIUM`) to use a specific Chromium binary. `--out`'s extension
-picks the format; frame sequences are PNG, cut deterministically between
+(or `--format svg|png`) picks the format; frame sequences are PNG, cut deterministically between
 seeds (frames within a reseed window are identical, so encoders can
 deduplicate). Run `npx tabbied --help` for every flag.
 

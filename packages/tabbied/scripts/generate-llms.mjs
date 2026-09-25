@@ -381,8 +381,8 @@ npx tabbied info radius
 Rendering runs css-doodle in a headless browser via whatever Playwright the
 project already has (\`playwright\`, \`playwright-core\`, or
 \`@playwright/test\`); pass \`--browser <path>\` (or set \`TABBIED_CHROMIUM\`) to
-use a specific Chromium binary. \`--out\`'s extension picks SVG or PNG; the
-${designs.filter((design) => !design.svgExport.supported).length} \`[no SVG]\` designs below render as PNG only.
+use a specific Chromium binary. \`--out\`'s extension (or \`--format svg|png\`)
+picks SVG or PNG; the ${designs.filter((design) => !design.svgExport.supported).length} \`[no SVG]\` designs below render as PNG only.
 
 ## SVG export
 
@@ -396,8 +396,10 @@ pay nothing.
 
 Call \`supportsSvgExport(pattern)\` before offering the option: ${
     designs.filter((design) => !design.svgExport.supported).length
-  } designs paint
-smooth conic sweeps that SVG cannot represent and are marked unsupported below.
+  } designs use CSS
+the converter cannot reproduce faithfully (smooth conic sweeps, double or
+dashed borders, 3D transforms and \`color-mix()\` among them) and are marked
+unsupported below.
 Designs with partial limitations carry a note (filter-based effects that
 browsers render correctly but design tools may import imperfectly); surface
 those to the user before downloading. Unsupported CSS throws
