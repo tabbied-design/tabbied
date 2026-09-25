@@ -1,0 +1,1257 @@
+/* ==========================================================================
+   KESSLER AUTO - independent repair garage, Harlow
+   Plain and industrial: a concrete ground, black ink in condensed capitals,
+   heavy rules where a shop would paint a line on the floor, and a monospace
+   for everything a mechanic would write on a board. Red is the stop light
+   and the phone number. The disc in the hero is the wheel; the tape under
+   it is the only other ornament, and the bay board is the page's center.
+   ========================================================================== */
+
+.page {
+  --concrete: #edece8;
+  --ink: #16181b;
+  --red: #d7372b;
+  --steel: #75797f;
+  --pale: #d5d3ce;
+  --gut: clamp(1rem, 4.5vw, 3.5rem);
+  --max: 78rem;
+  --inner: calc(var(--max) - 2 * var(--gut));
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--concrete);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 800;
+  font-stretch: 78%;
+  letter-spacing: -0.01em;
+  line-height: 0.98;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* -------------------------------------------------------------------- bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.6vw, 2.2rem);
+  padding: 0 var(--gut);
+  min-height: 4rem;
+  background: var(--concrete);
+  border-bottom: 3px solid var(--ink);
+}
+
+.mark {
+  font-size: 1.35rem;
+  font-weight: 900;
+  font-stretch: 112%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.8rem, 1.8vw, 1.6rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--red);
+}
+
+.barPhone {
+  padding: 0.5rem 0.9rem;
+  background: var(--ink);
+  color: var(--concrete);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.barPhone:hover {
+  background: var(--red);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--concrete);
+}
+
+/* ---------------------------------------------------------------- shared */
+
+.kicker,
+.secNo {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.secNo {
+  color: var(--red);
+}
+
+.btn,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.1rem;
+  padding: 0.7rem 1.5rem;
+  border: 2px solid var(--ink);
+  font: inherit;
+  font-weight: 800;
+  font-stretch: 90%;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--concrete);
+}
+
+.btn:hover {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.btnLine {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btnLine:hover {
+  background: var(--ink);
+  color: var(--concrete);
+}
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  gap: 0.7rem;
+  align-content: start;
+  max-width: 42rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+}
+
+.secNote {
+  max-width: 36rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.smallHead {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-stretch: 100%;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) 0;
+}
+
+.heroTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2.5rem clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.heroTitle {
+  margin-top: 1.1rem;
+  font-size: clamp(2.6rem, 6.2vw, 5.6rem);
+  line-height: 0.92;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--red);
+}
+
+.heroLede {
+  margin-top: 1.4rem;
+  max-width: 34rem;
+  font-size: 1.12rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+/* The wheel: one disc, so the plate is square and a whole number of 60px
+   cells, which keeps the circle round and uncropped. */
+.wheel {
+  position: relative;
+  width: 420px;
+  height: 420px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+/* The counter sign: the phone and the hours, as large as the title. */
+.sign {
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+  border-top: 3px solid var(--ink);
+}
+
+.sign div {
+  padding: 1.1rem 1.5rem 1.3rem 0;
+}
+
+.sign div + div {
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--ink);
+}
+
+.sign dt {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.sign dd {
+  margin: 0.4rem 0 0;
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.signPhone dd a {
+  color: var(--red);
+  text-decoration: none;
+}
+
+.signPhone dd a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
+/* Floor tape: exactly one row of 32px cells. */
+.tape {
+  position: relative;
+  height: 32px;
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------- bay board */
+
+.board {
+  padding: clamp(3rem, 7vw, 5rem) var(--gut);
+  background: var(--ink);
+  color: var(--concrete);
+}
+
+.boardInner {
+  max-width: var(--inner);
+  margin: 0 auto;
+}
+
+.boardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--concrete) 30%, transparent);
+}
+
+.boardHead h2 {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+}
+
+.boardStamp {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--concrete) 78%, transparent);
+}
+
+.bays {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.bayCard {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 1.5rem 1.4rem 1.6rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--concrete) 30%, transparent);
+}
+
+.bayCard + .bayCard {
+  border-left: 1px solid color-mix(in srgb, var(--concrete) 30%, transparent);
+}
+
+.bayCard:first-child {
+  padding-left: 0;
+}
+
+.bayNo {
+  font-size: clamp(2.2rem, 3.6vw, 3.2rem);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* The status light: a drawn dot before the label, one look per status. */
+.bayStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0.4rem 0 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bayStatus::before {
+  content: '';
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.stLift .bayStatus::before {
+  background: var(--red);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--red) 30%, transparent);
+}
+
+.stTest .bayStatus::before {
+  background: var(--steel);
+}
+
+.stParts .bayStatus::before {
+  border: 2px solid var(--pale);
+}
+
+.stReady .bayStatus::before {
+  background: var(--concrete);
+}
+
+.bayCar {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-stretch: 90%;
+  line-height: 1.2;
+}
+
+.bayJob {
+  margin-bottom: 0.6rem;
+  color: color-mix(in srgb, var(--concrete) 86%, transparent);
+}
+
+.bayMeta {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--concrete) 76%, transparent);
+}
+
+.queue {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 1rem 2rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--concrete) 30%, transparent);
+}
+
+.queueHead {
+  font-size: 1.5rem;
+}
+
+.queueList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.queueList li {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 16rem) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.queueTime {
+  color: var(--red);
+  font-weight: 700;
+}
+
+.queueJob {
+  color: color-mix(in srgb, var(--concrete) 78%, transparent);
+}
+
+.boardNote {
+  margin-top: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--concrete) 78%, transparent);
+}
+
+.board :focus-visible {
+  outline-color: var(--concrete);
+}
+
+/* -------------------------------------------------------------- services
+   The menu is the longest thing on the page, so its heading stays put
+   beside it while the rows go by. */
+
+.services {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+  gap: 2rem clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.services .secHead {
+  position: sticky;
+  top: 6rem;
+}
+
+.menu {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.menu thead th {
+  padding: 0 0 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 3px solid var(--ink);
+}
+
+.menu thead th:nth-child(2),
+.menu thead th:nth-child(3) {
+  text-align: right;
+}
+
+.menuGroup th {
+  padding: 1.8rem 0 0.6rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  text-align: left;
+  border-bottom: 2px solid var(--ink);
+}
+
+.menu tbody:first-of-type .menuGroup th {
+  padding-top: 1.2rem;
+}
+
+.menuJob,
+.menuTime,
+.menuPrice {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  vertical-align: baseline;
+}
+
+.menuJob {
+  font-weight: 500;
+  text-align: left;
+  padding-right: 1rem;
+}
+
+.menuTime {
+  width: 6.5rem;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  text-align: right;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+  white-space: nowrap;
+}
+
+.menuPrice {
+  width: 5.5rem;
+  font-family: var(--mono);
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------- inspection */
+
+.inspection {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'head prices'
+    'checks checks';
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+  padding-top: 2rem;
+  border-top: 3px solid var(--ink);
+}
+
+.inspection .secHead {
+  grid-area: head;
+  margin-bottom: 0;
+}
+
+.inspPrices {
+  grid-area: prices;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-self: start;
+  border: 2px solid var(--ink);
+}
+
+.inspPrices div {
+  padding: 1.2rem 1.2rem 1.4rem;
+}
+
+.inspPrices div + div {
+  border-left: 1px solid var(--ink);
+}
+
+.inspPrices div:last-child {
+  background: var(--ink);
+  color: var(--concrete);
+}
+
+.inspPrices dt {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.inspPrices dd {
+  margin: 0.5rem 0 0;
+  font-size: clamp(2.6rem, 4.6vw, 3.8rem);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 1;
+}
+
+.inspChecks {
+  grid-area: checks;
+}
+
+.inspChecks ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 1.5rem;
+}
+
+.inspChecks li {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.inspNote {
+  margin-top: 1.2rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ------------------------------------------------------------------ wait */
+
+.waitGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.waitGrid li {
+  padding-top: 1rem;
+  border-top: 3px solid var(--ink);
+}
+
+.waitGrid h3 {
+  font-size: 1.45rem;
+}
+
+.waitGrid p {
+  margin-top: 0.7rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* -------------------------------------------------------------- warranty */
+
+.warranty {
+  margin-top: var(--air);
+  padding: clamp(3rem, 7vw, 5rem) var(--gut);
+  background: var(--pale);
+}
+
+.warrantyInner {
+  max-width: var(--inner);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2rem clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+/* A seal, the wheel again at a quarter of the size, in red. */
+.seal {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.warrantyCopy h2 {
+  margin-top: 0.7rem;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+}
+
+.warrantyList {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+}
+
+.warrantyList li {
+  padding: 0.8rem 0 0.8rem 1.6rem;
+  position: relative;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.warrantyList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.35rem;
+  width: 0.7rem;
+  height: 3px;
+  background: var(--red);
+}
+
+/* ------------------------------------------------------------- mechanics */
+
+.crew {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 3px solid var(--ink);
+}
+
+.crew li {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  padding: 1.3rem 1.3rem 1.5rem 0;
+}
+
+.crew li + li {
+  padding-left: 1.3rem;
+  border-left: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+.crewName {
+  font-size: 1.7rem;
+}
+
+.crewRole {
+  font-weight: 700;
+}
+
+.crewCerts {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--red);
+}
+
+.crewKnows {
+  margin-top: 0.4rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ------------------------------------------------------------------ book */
+
+.book {
+  margin-top: var(--air);
+  padding: var(--air) var(--gut);
+  background: var(--pale);
+}
+
+.bookInner {
+  max-width: var(--inner);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  gap: 2.5rem clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.bookIntro {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.bookIntro h2 {
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+}
+
+.bookFacts {
+  margin: 1.2rem 0 0;
+  display: grid;
+  border-top: 2px solid var(--ink);
+}
+
+.bookFacts div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+.bookFacts dt {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding-top: 0.15rem;
+}
+
+.bookFacts dd {
+  margin: 0;
+}
+
+.bookFacts a {
+  text-decoration: underline;
+  text-decoration-color: var(--red);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.bookForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--concrete);
+  border: 2px solid var(--ink);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.field input,
+.field select,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: var(--concrete);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 1px;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.dropOff {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dropOff legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dropOff label {
+  position: relative;
+  cursor: pointer;
+}
+
+.dropOff input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.dropOff span {
+  display: block;
+  padding: 0.55rem 1rem;
+  border: 1.5px solid var(--ink);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.dropOff label:has(input:checked) span {
+  background: var(--ink);
+  color: var(--concrete);
+}
+
+.dropOff label:has(input:focus-visible) span {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.bookForm .btn {
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------ directions */
+
+.find {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 2.5rem clamp(2rem, 6vw, 6rem);
+  padding-top: 2rem;
+  border-top: 3px solid var(--ink);
+}
+
+.findTitle {
+  margin-top: 0.7rem;
+  font-size: clamp(2.4rem, 5.4vw, 4.6rem);
+}
+
+.findText {
+  margin-top: 1.1rem;
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.hours {
+  margin: 0;
+  align-self: start;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+.hours div:first-child {
+  border-top: 2px solid var(--ink);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-weight: 700;
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--concrete);
+}
+
+.footGrid {
+  max-width: var(--inner);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 2.5rem;
+}
+
+.footName {
+  margin-right: auto;
+  font-size: 1.6rem;
+  font-weight: 900;
+  font-stretch: 112%;
+  text-transform: uppercase;
+}
+
+.footLine {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.footFine {
+  max-width: var(--inner);
+  margin: 2rem auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--concrete) 25%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--concrete) 76%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer :focus-visible {
+  outline-color: var(--concrete);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1180px) {
+  .nav {
+    display: none;
+  }
+
+  .barPhone {
+    margin-left: auto;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+}
+
+@media (max-width: 1100px) {
+  .bays {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bayCard:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .waitGrid,
+  .crew {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .crew li:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .crew li:nth-child(n + 3) {
+    border-top: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  }
+
+  .wheel {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 860px) {
+  .heroTop {
+    grid-template-columns: 1fr;
+  }
+
+  .wheel {
+    order: -1;
+    width: 240px;
+    height: 240px;
+  }
+
+  .sign {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .signPhone {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .sign div + div {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .sign div:last-child {
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--ink);
+  }
+
+  .services,
+  .inspection,
+  .bookInner,
+  .find {
+    grid-template-columns: 1fr;
+  }
+
+  .services .secHead {
+    position: static;
+  }
+
+  .inspection {
+    grid-template-areas:
+      'head'
+      'prices'
+      'checks';
+  }
+
+  .inspChecks ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .queue {
+    grid-template-columns: 1fr;
+  }
+
+  .warrantyInner {
+    grid-template-columns: 1fr;
+  }
+
+  .seal {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 640px) {
+  .bays,
+  .waitGrid,
+  .crew,
+  .warrantyList {
+    grid-template-columns: 1fr;
+  }
+
+  .bayCard,
+  .bayCard + .bayCard,
+  .bayCard:nth-child(3) {
+    padding: 1.3rem 0;
+    border-left: 0;
+  }
+
+  .crew li,
+  .crew li + li,
+  .crew li:nth-child(3) {
+    padding: 1.2rem 0;
+    border-left: 0;
+  }
+
+  .crew li + li {
+    border-top: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  }
+
+  .queueList li {
+    grid-template-columns: 3.4rem minmax(0, 1fr);
+    gap: 0 0.8rem;
+  }
+
+  .queueJob {
+    grid-column: 2;
+  }
+
+  /* The menu restacks: the job on its own line, time and price under it. */
+  .menu thead {
+    display: none;
+  }
+
+  .menu tbody tr:not(.menuGroup) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.1rem 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+
+  .menu tbody tr:not(.menuGroup) > * {
+    padding: 0;
+    border: 0;
+    width: auto;
+  }
+
+  .menuJob {
+    grid-column: 1 / -1;
+  }
+
+  .menuTime {
+    text-align: left;
+  }
+
+  .inspPrices dd {
+    font-size: 2.4rem;
+  }
+
+  .inspPrices div {
+    padding: 1rem 0.8rem 1.1rem;
+  }
+
+  .inspChecks ul {
+    grid-template-columns: 1fr;
+  }
+
+  .bookForm {
+    grid-template-columns: 1fr;
+  }
+
+  .footName {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .mark {
+    font-size: 1.1rem;
+    font-stretch: 100%;
+  }
+
+  .barPhone {
+    padding: 0.45rem 0.6rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine {
+    transition: none;
+  }
+}

@@ -195,8 +195,8 @@ const AREA_FREE = ['Fernhill', 'Ashby Cross', 'Millbrook', 'Low Common', 'Dene V
 const AREA_FAR = ['Harlow Green', 'Stoneleigh', 'Upper Weald', 'Cressing', 'Marsh Lane', 'Kettle Bridge'];
 
 const HOURS = [
-  ['Monday-Friday', '8:00-5:00'],
-  ['Saturday', '9:00-12:00, March-October'],
+  ['Monday-Friday', '8am-5pm'],
+  ['Saturday, March-October', '9am-noon'],
   ['Sunday', 'Closed'],
 ];
 
@@ -390,6 +390,12 @@ export default function FernhillGardensPage() {
             </p>
           </div>
           <ul className={s.plans}>
+            <li className={s.planHead} aria-hidden="true">
+              <span>Plan</span>
+              <span>Visits</span>
+              <span>Time each visit</span>
+              <span>Per month</span>
+            </li>
             {PLANS.map((p) => (
               <li key={p.name} className={p.featured ? s.planFeatured : s.plan}>
                 <div className={s.planName}>

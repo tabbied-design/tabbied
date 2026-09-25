@@ -1,0 +1,1334 @@
+.page {
+  --paper: #fcfcfe;
+  --ink: #161a33;
+  --indigo: #4f46e5;
+  --peach: #ff9b71;
+  --gray: #7c8094;
+  --pale: #eef0fa;
+  --gut: clamp(1.25rem, 4vw, 3rem);
+  --max: 76rem;
+  --air: clamp(5rem, 10vw, 8.5rem);
+  --radius: 14px;
+  --soft: color-mix(in srgb, var(--ink) 68%, transparent);
+  --line: color-mix(in srgb, var(--ink) 11%, transparent);
+  --lift: 0 24px 48px -28px rgb(0 0 0 / 0.35);
+
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   RELAY - online booking for small businesses
+   A product page that shows the product. The hero's right half is the
+   calendar itself, built from the same grid a real day would use, sitting
+   on a pale plate of rings. Below it the page is plain: a white ground, one
+   pale band for the steps, indigo for anything you can press and peach for
+   anything that just happened.
+   ========================================================================== */
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: 'Sora', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ----------------------------------------------------------------- buttons */
+
+.btn,
+.btnGhost,
+.btnLight,
+.btnSmall {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.35rem;
+  font: inherit;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  color: var(--paper);
+  background: var(--indigo);
+}
+
+.btn:hover {
+  background: var(--ink);
+}
+
+.btnGhost {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.btnGhost:hover {
+  border-color: var(--indigo);
+  color: var(--indigo);
+}
+
+.btnLight {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.btnLight:hover {
+  background: var(--peach);
+}
+
+.btnSmall {
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+  color: var(--paper);
+  background: var(--indigo);
+}
+
+.btnSmall:hover {
+  background: var(--ink);
+}
+
+/* --------------------------------------------------------------------- bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.85rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+/* A relay baton: a pill with a dot of peach at its end. */
+.brandMark {
+  position: relative;
+  width: 1.7rem;
+  height: 0.95rem;
+  border-radius: 999px;
+  background: var(--indigo);
+}
+
+.brandMark::after {
+  content: '';
+  position: absolute;
+  top: 0.2rem;
+  right: 0.2rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--peach);
+}
+
+.brandWord {
+  font-family: 'Sora', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--soft);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--indigo);
+}
+
+.barActions {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.login {
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.login:hover {
+  color: var(--indigo);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.6rem;
+  padding: 0.3rem 0.85rem 0.3rem 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.badgeTag {
+  padding: 0.15rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--peach);
+  border-radius: 999px;
+}
+
+.heroTitle {
+  font-size: clamp(2.4rem, 4.2vw, 3.9rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--indigo);
+}
+
+.heroLede {
+  max-width: 32rem;
+  margin: 1.6rem 0 0;
+  font-size: clamp(1.05rem, 1.4vw, 1.18rem);
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2.2rem;
+}
+
+.heroNote {
+  margin: 1rem 0 0;
+  font-size: 0.86rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------------- stage
+   The product, drawn. The plate of rings is the primary field; the app
+   window, the toast and the chip sit on it and never under each other's
+   words. */
+
+.stage {
+  position: relative;
+  padding: clamp(2.4rem, 5vw, 4.4rem) clamp(1.4rem, 3.4vw, 3rem);
+}
+
+.stageField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--pale);
+  opacity: 0.9;
+}
+
+.stageField > * {
+  opacity: 0.55;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 1rem 1rem 4rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--lift);
+}
+
+.appTop {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 0.2rem 0.85rem;
+}
+
+.appDate {
+  margin-right: auto;
+  font-family: 'Sora', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.appToggle,
+.appToggleOn {
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.appToggle {
+  color: var(--soft);
+  background: var(--pale);
+}
+
+.appToggleOn {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.cal {
+  display: grid;
+  grid-template-columns: 2.9rem repeat(3, minmax(0, 1fr));
+  grid-template-rows: 1.9rem repeat(12, 1.7rem);
+  column-gap: 0.3rem;
+}
+
+.calCorner {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.calHead {
+  grid-row: 1;
+  align-self: center;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--soft);
+}
+
+/* Each hour label is also the hour's rule, drawn across all the columns. */
+.calHour {
+  grid-column: 1 / -1;
+  padding-top: 0.15rem;
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--soft);
+  border-top: 1px solid var(--line);
+}
+
+.booked,
+.fresh,
+.open,
+.break {
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0 0.35rem;
+  margin: 2px 0;
+  padding: 0.2rem 0.45rem;
+  overflow: hidden;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  border-radius: 6px;
+}
+
+.booked {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--indigo) 13%, var(--paper));
+  box-shadow: inset 3px 0 0 var(--indigo);
+}
+
+.fresh {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--peach) 30%, var(--paper));
+  box-shadow: inset 3px 0 0 var(--peach), 0 0 0 2px color-mix(in srgb, var(--peach) 45%, transparent);
+}
+
+.open {
+  color: var(--indigo);
+  background: var(--paper);
+  border: 1px dashed color-mix(in srgb, var(--indigo) 45%, transparent);
+}
+
+.break {
+  color: var(--soft);
+  background: var(--pale);
+}
+
+.slotWhat {
+  font-weight: 700;
+}
+
+.slotWho {
+  color: color-mix(in srgb, currentColor 75%, transparent);
+}
+
+.slotWho:empty {
+  display: none;
+}
+
+.toast {
+  position: absolute;
+  z-index: 2;
+  left: -1.6rem;
+  bottom: 1.1rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.1rem 0.6rem;
+  width: min(17.5rem, 70%);
+  padding: 0.8rem 0.95rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--lift);
+}
+
+.toastDot {
+  grid-row: 1 / span 2;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-top: 0.4rem;
+  border-radius: 50%;
+  background: var(--peach);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--peach) 28%, transparent);
+}
+
+.toastHead {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.toastBody {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--soft);
+}
+
+.chip {
+  position: absolute;
+  z-index: 2;
+  top: 0.6rem;
+  right: -1rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 7.5rem);
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.6rem 0.9rem 0.65rem;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 12px;
+  box-shadow: var(--lift);
+}
+
+.chipNum {
+  font-family: 'Sora', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--peach);
+}
+
+.chipText {
+  font-size: 0.74rem;
+  line-height: 1.3;
+}
+
+/* ------------------------------------------------------------------- types */
+
+.types {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+  text-align: center;
+}
+
+.typesHead {
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.typeList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 1.3rem 0 0;
+  padding: 0;
+}
+
+.typeList li {
+  padding: 0.45rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+/* ----------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2.2rem, 5vw, 3.4rem);
+}
+
+.kicker {
+  margin: 0 0 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--indigo);
+}
+
+.secHead h2 {
+  font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.secLede {
+  max-width: 36rem;
+  margin: 1rem 0 0;
+  font-size: 1.05rem;
+  color: var(--soft);
+}
+
+/* ---------------------------------------------------------------- features */
+
+.featureGrid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.feature {
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+  padding: 1.6rem 1.5rem 1.7rem;
+  background: var(--pale);
+  border-radius: var(--radius);
+}
+
+.featureNo {
+  font-family: 'Sora', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--indigo);
+}
+
+.feature h3 {
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+
+.feature p {
+  margin: 0;
+  font-size: 0.96rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+}
+
+.stats div {
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.stats dt {
+  font-family: 'Sora', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--indigo);
+}
+
+.stats dd {
+  margin: 0.5rem 0 0;
+  font-size: 0.92rem;
+  color: var(--soft);
+}
+
+/* --------------------------------------------------------------------- how */
+
+.how {
+  margin-top: var(--air);
+  padding: var(--air) var(--gut);
+  background: var(--pale);
+}
+
+.howInner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.steps {
+  position: relative;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin: 0;
+  padding: 0;
+}
+
+/* The line the three numbers hang from. */
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 1.4rem;
+  left: 1.4rem;
+  right: 1.4rem;
+  border-top: 2px dashed color-mix(in srgb, var(--indigo) 35%, transparent);
+}
+
+.steps li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  margin-bottom: 0.6rem;
+  font-family: 'Sora', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--indigo);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--pale);
+}
+
+.steps h3 {
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+
+.steps p {
+  max-width: 22rem;
+  margin: 0;
+  font-size: 0.98rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+/* ----------------------------------------------------------------- pricing */
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  align-items: stretch;
+}
+
+.plan,
+.planFeatured {
+  display: flex;
+  flex-direction: column;
+  padding: 1.8rem 1.6rem;
+  border-radius: 18px;
+}
+
+.plan {
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.planFeatured {
+  color: var(--paper);
+  background: var(--ink);
+  box-shadow: var(--lift);
+}
+
+.planTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.planTop h3 {
+  font-size: 1.2rem;
+}
+
+.planTag {
+  padding: 0.2rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--peach);
+  border-radius: 999px;
+}
+
+.planTag:empty {
+  display: none;
+}
+
+.planPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 1.3rem 0 0;
+}
+
+.planAmount {
+  font-family: 'Sora', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.planPer {
+  font-size: 0.95rem;
+  color: color-mix(in srgb, currentColor 70%, transparent);
+}
+
+.planBlurb {
+  margin: 0.8rem 0 0;
+  font-size: 0.96rem;
+  color: color-mix(in srgb, currentColor 78%, transparent);
+}
+
+.planList {
+  list-style: none;
+  flex: 1;
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  margin: 1.5rem 0 1.8rem;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+
+/* A check drawn with two borders, not a glyph. */
+.planList li {
+  position: relative;
+  padding-left: 1.7rem;
+  font-size: 0.95rem;
+}
+
+.planList li::before {
+  content: '';
+  position: absolute;
+  top: 0.32rem;
+  left: 0.25rem;
+  width: 0.4rem;
+  height: 0.75rem;
+  border-right: 2px solid var(--indigo);
+  border-bottom: 2px solid var(--indigo);
+  transform: rotate(45deg);
+}
+
+.planFeatured .planList li::before {
+  border-color: var(--peach);
+}
+
+.plan .btn,
+.plan .btnGhost,
+.planFeatured .btn,
+.planFeatured .btnGhost {
+  width: 100%;
+}
+
+.planFeatured .btn:hover {
+  color: var(--ink);
+  background: var(--peach);
+}
+
+.planNote {
+  max-width: 44rem;
+  margin: 1.4rem 0 0;
+  font-size: 0.88rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------ integrations */
+
+.intGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.intCol {
+  padding: 1.4rem 1.3rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.intCol h3 {
+  margin-bottom: 0.8rem;
+  font-size: 1.02rem;
+}
+
+.intCol ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.intCol li {
+  padding: 0.55rem 0;
+  font-size: 0.94rem;
+  border-top: 1px solid var(--line);
+}
+
+/* --------------------------------------------------------------- customers */
+
+.stories {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.story {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin: 0;
+  padding: 1.6rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.storyResult {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--peach) 28%, var(--paper));
+  border-radius: 999px;
+}
+
+.story blockquote {
+  flex: 1;
+  margin: 0;
+}
+
+.story blockquote p {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.story figcaption {
+  display: grid;
+  gap: 0.05rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.story cite {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.story figcaption span {
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faqWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.faqList {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.faqItem {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.faqItem[open] {
+  background: var(--pale);
+  border-color: transparent;
+}
+
+.faqItem summary {
+  position: relative;
+  padding: 1rem 3rem 1rem 1.2rem;
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::before,
+.faqItem summary::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1.2rem;
+  width: 0.8rem;
+  height: 2px;
+  background: var(--indigo);
+  transition: transform 160ms ease;
+}
+
+.faqItem summary::after {
+  transform: rotate(90deg);
+}
+
+.faqItem[open] summary::after {
+  transform: rotate(0deg);
+}
+
+.faqItem p {
+  max-width: 40rem;
+  margin: 0;
+  padding: 0 1.2rem 1.2rem;
+  font-size: 0.96rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* ------------------------------------------------------------------- start
+   The indigo panel: the words on plain indigo, the pills to their right,
+   faded in from the edge so they never reach the form. */
+
+.start {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.startPanel {
+  position: relative;
+  overflow: hidden;
+  color: var(--paper);
+  background: var(--indigo);
+  border-radius: 24px;
+}
+
+.startField {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent 0%, var(--ink) 40%);
+}
+
+.startCopy {
+  position: relative;
+  max-width: 34rem;
+  padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 5vw, 4rem);
+}
+
+.startCopy h2 {
+  font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.startCopy p {
+  margin: 1rem 0 0;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--paper) 85%, transparent);
+}
+
+.startForm {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1.8rem;
+}
+
+.startForm input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.8rem 1rem;
+  font: inherit;
+  font-size: 0.98rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid transparent;
+  border-radius: 10px;
+}
+
+.startForm input::placeholder {
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
+}
+
+.startForm input:focus {
+  outline: 2px solid var(--peach);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 1.8rem;
+  border-top: 1px solid var(--line);
+}
+
+.footGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.footName {
+  margin: 0;
+  font-family: 'Sora', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.footTag {
+  max-width: 18rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.94rem;
+  color: var(--soft);
+}
+
+.footAddr {
+  margin: 1.2rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--soft);
+}
+
+.footHead {
+  margin-bottom: 0.9rem;
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.footLinks {
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.footLinks a {
+  font-size: 0.94rem;
+  transition: color 160ms ease;
+}
+
+.footLinks a:hover {
+  color: var(--indigo);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  max-width: var(--max);
+  margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+
+.footFine p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--soft);
+}
+
+.footFine a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .intGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .featureGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.8rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .login {
+    display: none;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .heroCopy {
+    max-width: 40rem;
+  }
+
+  .stage {
+    max-width: 44rem;
+  }
+
+  .chip {
+    top: -1.2rem;
+    right: 1.2rem;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .steps,
+  .plans,
+  .stories {
+    grid-template-columns: 1fr;
+  }
+
+  .steps::before {
+    top: 1.4rem;
+    bottom: 1.4rem;
+    left: 1.4rem;
+    right: auto;
+    border-top: 0;
+    border-left: 2px dashed color-mix(in srgb, var(--indigo) 35%, transparent);
+  }
+
+  .steps li {
+    padding-left: 4.2rem;
+  }
+
+  .stepNo {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .plans {
+    max-width: 30rem;
+  }
+
+  .faqWrap {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .startField {
+    width: 100%;
+    top: auto;
+    height: 128px;
+    mask-image: linear-gradient(180deg, transparent 0%, var(--ink) 45%);
+  }
+
+  .startCopy {
+    padding-bottom: 9rem;
+  }
+
+  .footGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .footBrand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .stage {
+    padding: 1.4rem 0.9rem 5.8rem;
+  }
+
+  .app {
+    padding: 0.8rem 0.7rem 0.9rem;
+  }
+
+  .cal {
+    grid-template-columns: 2.4rem repeat(3, minmax(0, 1fr));
+    column-gap: 0.2rem;
+  }
+
+  .booked,
+  .fresh,
+  .open,
+  .break {
+    padding: 0.15rem 0.3rem;
+    font-size: 0.62rem;
+  }
+
+  .slotWho {
+    display: none;
+  }
+
+  .chip {
+    display: none;
+  }
+
+  .toast {
+    left: 0.9rem;
+    right: 0.9rem;
+    bottom: 1rem;
+    width: auto;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .intGrid {
+    gap: 0.7rem;
+  }
+
+  .intCol {
+    padding: 1.1rem 0.9rem 0.9rem;
+  }
+
+  .intCol li {
+    font-size: 0.86rem;
+    line-height: 1.4;
+  }
+
+  .startForm {
+    flex-direction: column;
+  }
+
+  .footGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .barActions {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btnGhost,
+  .btnLight,
+  .btnSmall,
+  .nav a,
+  .footLinks a,
+  .faqItem summary::before,
+  .faqItem summary::after {
+    transition: none;
+  }
+}

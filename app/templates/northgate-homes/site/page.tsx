@@ -12,11 +12,12 @@ export const metadata = {
 /* Site colors. The listing "photos" are the cube tile in the site's own
    inks; every card shares one palette and the stylesheet crops each one
    differently, so a re-color reaches all of them. */
+const PAPER = '#F6F4F1';
 const BRICK = '#B5523B';
 const SLATE = '#858A92';
 const PALE = '#E3E1DC';
 const INK = '#1B1D22';
-const TILE = ['transparent', PALE, SLATE, BRICK];
+const TILE = ['transparent', PAPER, PALE, SLATE];
 const FACADE = ['transparent', BRICK, SLATE, INK];
 
 const NAV = [
@@ -424,7 +425,7 @@ export default function NorthgateHomesPage() {
                 fit="grid"
                 cellSize={56}
                 seed="northgate-facade"
-                options={{ frequency: 0.55 }}
+                options={{ frequency: 0.45 }}
                 redrawInterval={9000}
                 style={{ position: 'absolute', inset: 0 }}
               />

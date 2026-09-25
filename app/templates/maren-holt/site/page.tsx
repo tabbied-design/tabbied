@@ -307,7 +307,8 @@ export default function MarenHoltPage() {
             <p className={s.kicker}>Brand strategy for companies of 10 to 200 people</p>
             <h1 id="intro-h" className={s.title}>
               I help growing companies decide what they stand for,
-              <em> and then say it plainly.</em>
+              <br />
+              <em>and then say it plainly.</em>
             </h1>
             <p className={s.lede}>
               Most of my clients have outgrown the story they started with.

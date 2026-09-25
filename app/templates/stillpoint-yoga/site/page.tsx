@@ -277,7 +277,7 @@ export default function StillpointYogaPage() {
             <h1 className={s.heroTitle} id="hero-h">
               A quiet room, a full week,
               <br />
-              <em>and a mat with your name on it.</em>
+              <em>and a mat kept for you.</em>
             </h1>
             <p className={s.heroLede}>
               Twenty-four classes from early morning to late evening, from

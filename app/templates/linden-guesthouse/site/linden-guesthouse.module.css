@@ -1,3 +1,12 @@
+/* ==========================================================================
+   THE LINDEN GUESTHOUSE: a bed and breakfast in Ashby Green
+   The rooms are the page: five full-width rows, each opening on a swatch of
+   the house wallpaper, then the room, then its numbers. Everything else is
+   a quiet serif on warm paper, hairlines in the pale tone, and terracotta
+   used only to point. The house and the yard wear two colorings of the one
+   wallpaper so a guest can tell the wings apart at a glance.
+   ========================================================================== */
+
 .page {
   --paper: #f5f2ea;
   --ink: #25271f;
@@ -20,14 +29,6 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* ==========================================================================
-   THE LINDEN GUESTHOUSE - bed and breakfast, Ashby Green
-   The rooms are the page: five full-width rows, each opening on a swatch of
-   the house wallpaper, then the room, then its numbers. Everything else is
-   a quiet serif on warm paper, hairlines in the pale tone, and terracotta
-   used only to point. The house and the yard wear two colorings of the one
-   wallpaper so a guest can tell the wings apart at a glance.
-   ========================================================================== */
 
 .page :where(a) {
   color: inherit;
@@ -39,10 +40,7 @@
   outline-offset: 3px;
 }
 
-.page h1,
-.page h2,
-.page h3,
-.page h4 {
+.page :where(h1, h2, h3, h4) {
   font-family: var(--serif);
   font-weight: 400;
   letter-spacing: -0.01em;
@@ -127,7 +125,7 @@
 .hero {
   max-width: var(--max);
   margin: 0 auto;
-  padding: clamp(3rem, 7vw, 6rem) var(--gut) clamp(3rem, 6vw, 4.5rem);
+  padding: clamp(2.5rem, 4.5vw, 4rem) var(--gut) clamp(2.5rem, 3.5vw, 3rem);
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
   gap: clamp(2rem, 6vw, 6rem);
@@ -144,11 +142,11 @@
 }
 
 .heroTitle {
-  font-size: clamp(2.3rem, 5vw, 4.3rem);
+  font-size: clamp(2.3rem, 4.4vw, 3.8rem);
   line-height: 1.06;
   font-weight: 350;
   letter-spacing: -0.02em;
-  max-width: 17ch;
+  max-width: 20ch;
 }
 
 .heroTitle em {
@@ -268,13 +266,12 @@
    corridor of doors rather than a set of cards. */
 
 .rooms {
-  padding-top: clamp(1rem, 2vw, 2rem);
+  padding-top: clamp(0.5rem, 1.5vw, 1.5rem);
 }
 
 .rooms > .secHead {
   max-width: var(--max);
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto clamp(1.5rem, 3vw, 2.2rem);
   padding: 0 var(--gut);
 }
 
@@ -491,11 +488,11 @@
 }
 
 .menuHead {
-  margin: 0 0 0.9rem !important;
-  font-family: var(--sans) !important;
+  margin: 0 0 0.9rem;
+  font-family: var(--sans);
   font-size: 0.8rem;
-  font-weight: 600 !important;
-  letter-spacing: 0.16em !important;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--linden);
 }
@@ -908,7 +905,7 @@
 }
 
 .footGrid {
-  max-width: var(--max);
+  max-width: calc(var(--max) - 2 * var(--gut));
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
@@ -931,11 +928,11 @@
 }
 
 .footHead {
-  margin: 0 0 0.9rem !important;
-  font-family: var(--sans) !important;
+  margin: 0 0 0.9rem;
+  font-family: var(--sans);
   font-size: 0.75rem;
-  font-weight: 600 !important;
-  letter-spacing: 0.16em !important;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--ink) 62%, transparent);
 }
@@ -958,7 +955,7 @@
 }
 
 .footFine {
-  max-width: var(--max);
+  max-width: calc(var(--max) - 2 * var(--gut));
   margin: clamp(2.5rem, 6vw, 4rem) auto 0;
   padding-top: 1.1rem;
   border-top: 1px solid var(--pale);
@@ -992,6 +989,10 @@
 
   .room {
     grid-template-columns: minmax(0, 28fr) minmax(0, 72fr);
+  }
+
+  .roomPlate {
+    grid-row: 1 / span 2;
   }
 
   .roomFacts {
@@ -1058,6 +1059,7 @@
   }
 
   .roomPlate {
+    grid-row: auto;
     min-height: 8.5rem;
   }
 
@@ -1073,10 +1075,13 @@
   .rules,
   .guide,
   .routes,
-  .form,
   .sideboard,
   .footGrid {
     grid-template-columns: 1fr;
+  }
+
+  .form {
+    gap: 1.1rem 0.9rem;
   }
 
   .menu li {

@@ -17,7 +17,7 @@ const CHAMPAGNE = '#B89B6A';
 const PALE = '#E8E2D6';
 
 const RINGS = ['transparent', CHAMPAGNE, EVERGREEN, PALE];
-const STARS = ['transparent', CHAMPAGNE, PALE];
+const STARS = ['transparent', CHAMPAGNE];
 const LEAVES = ['transparent', EVERGREEN, PALE, CHAMPAGNE];
 
 const NAV = [
@@ -34,7 +34,7 @@ const NAV = [
 const CEREMONY_FACTS = [
   ['120', 'Guests seated under the dome'],
   ['200', 'On the lawn, in summer'],
-  ['11:00-17:00', 'Ceremony times, any day'],
+  ['7', 'Days a week, from 11:00 to 17:00'],
 ];
 
 const RECEPTION_FACTS = [
@@ -153,7 +153,7 @@ const PACKAGES: Package[] = [
     featured: true,
   },
   {
-    name: 'The Whole Weekend',
+    name: 'The Weekend',
     when: 'Friday to Sunday, exclusive use',
     price: '$26,500',
     guests: 'Up to 140 guests, 18 staying',
@@ -294,8 +294,8 @@ export default function TheGlasshousePage() {
               pattern={sparkle}
               palette={STARS}
               fit="grid"
-              cellSize={72}
-              options={{ frequency: 0.45 }}
+              cellSize={56}
+              options={{ frequency: 0.35 }}
               redrawInterval={8000}
               style={{ position: 'absolute', inset: 0 }}
             />
@@ -323,7 +323,7 @@ export default function TheGlasshousePage() {
         {/* ------------------------------------------------------------ 04
             Leaves at both edges, like the box hedges either side of the
             path, and clear paper in the middle for the words. */}
-        <section id="garden" className={s.panel} aria-labelledby="garden-h">
+        <section id="garden" className={`${s.panel} ${s.panelGarden}`} aria-labelledby="garden-h">
           <div className={s.leafField} aria-hidden="true">
             <TabbiedPattern
               pattern={lobe}
@@ -409,7 +409,7 @@ export default function TheGlasshousePage() {
                 </div>
               ))}
             </dl>
-            <a className={s.btnLight} href="#packages">Rooms come with The Whole Weekend</a>
+            <a className={s.btnLight} href="#packages">Rooms come with The Weekend</a>
           </div>
         </section>
 

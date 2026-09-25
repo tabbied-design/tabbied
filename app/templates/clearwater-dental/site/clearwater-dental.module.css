@@ -196,6 +196,14 @@
   font-variant-numeric: tabular-nums;
 }
 
+.sideNote {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--quiet);
+}
+
 /* ----------------------------------------------------------------- content */
 
 .body {
@@ -209,7 +217,7 @@
   margin: 0 auto;
   padding: clamp(3rem, 7vw, 6rem) var(--gut) 0;
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   gap: clamp(2rem, 4vw, 3.5rem);
   align-items: center;
 }
@@ -224,12 +232,11 @@
 }
 
 .heroTitle {
-  font-size: clamp(2.3rem, 4.6vw, 3.9rem);
-  line-height: 1.06;
+  font-size: clamp(2.3rem, 4vw, 3.5rem);
+  line-height: 1.08;
 }
 
 .heroTitle em {
-  display: block;
   font-style: italic;
   color: color-mix(in srgb, var(--teal) 70%, var(--slate));
 }
@@ -278,7 +285,8 @@
 
 /* The one dark surface. The bubbles are drawn with a screen blend, so the
    plate isolates them: they lighten the slate and each other, and nothing
-   behind the plate. */
+   behind the plate. Always square, since the design sizes its bubbles in
+   percent of each axis and an oblong plate draws them as ovals. */
 .heroPlate {
   position: relative;
   isolation: isolate;
@@ -322,9 +330,7 @@
 
 .secHead {
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr);
-  gap: 0.4rem 1rem;
-  align-items: baseline;
+  gap: 0.5rem;
   margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
@@ -342,8 +348,7 @@
 }
 
 .secNote {
-  grid-column: 2;
-  margin: 0.3rem 0 0;
+  margin: 0.2rem 0 0;
   max-width: 36rem;
   color: var(--soft);
 }
@@ -760,6 +765,40 @@
   line-height: 1.55;
 }
 
+.hoursList {
+  margin: 0;
+  max-width: 22rem;
+}
+
+.hoursList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--pale);
+  font-size: 0.95rem;
+}
+
+.hoursList div:last-child {
+  border-bottom: 1px solid var(--pale);
+}
+
+.hoursList dt {
+  color: var(--soft);
+}
+
+.hoursList dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.page .hoursNote {
+  margin: 0.7rem 0 0;
+  max-width: 22rem;
+  font-size: 0.85rem;
+  color: var(--quiet);
+}
+
 .directions {
   list-style: none;
   margin: 0;
@@ -1049,7 +1088,7 @@
   }
 
   .heroPlate {
-    aspect-ratio: 16 / 10;
+    width: min(100%, 26rem);
     min-height: 0;
   }
 
@@ -1063,14 +1102,6 @@
 }
 
 @media (max-width: 640px) {
-  .secHead {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .secNote {
-    grid-column: 1;
-  }
-
   .facts,
   .steps,
   .team,
@@ -1091,7 +1122,38 @@
   }
 
   .team {
-    row-gap: 2.2rem;
+    row-gap: 2rem;
+  }
+
+  /* On a phone the tile sits beside the name, and the number beside the
+     step, so neither list becomes a long ladder. */
+  .member {
+    display: grid;
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    column-gap: 1.1rem;
+    align-items: start;
+  }
+
+  .avatar {
+    grid-row: 1 / span 4;
+    width: 4.25rem;
+    height: 4.25rem;
+    margin: 0;
+  }
+
+  .memberDays {
+    margin-top: 0;
+  }
+
+  .steps li {
+    display: grid;
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+    column-gap: 1rem;
+  }
+
+  .stepNo {
+    grid-row: 1 / span 2;
+    margin: 0;
   }
 
   .faqItem p {

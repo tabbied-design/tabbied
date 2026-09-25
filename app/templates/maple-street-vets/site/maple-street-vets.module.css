@@ -1,0 +1,964 @@
+/* ==========================================================================
+   MAPLE STREET VETS - veterinary clinic
+   A card dashboard. The things people come to a vet's site for (are you
+   open, the emergency number, how to book, a repeat prescription) are the
+   first screen, each on its own card on a pale board. Everything below
+   keeps to the same card: a small label with a status dot, one large line,
+   a short note. Teal marks what is live, apricot marks what is urgent, and
+   the boomerang tile is the only picture.
+   ========================================================================== */
+
+.page {
+  --paper: #fbf8f3;
+  --ink: #1d2a30;
+  --teal: #1b8a8f;
+  --apricot: #f29e6d;
+  --gray: #8c979b;
+  --pale: #e8efee;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 84rem;
+  --radius: 18px;
+  --air: clamp(4rem, 9vw, 7rem);
+  --head: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+  --muted: color-mix(in srgb, var(--ink) 70%, transparent);
+  --rule: color-mix(in srgb, var(--ink) 12%, transparent);
+
+  font-family: 'Atkinson Hyperlegible', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--head);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------- emergency strip */
+
+.alert {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.2rem 0.7rem;
+  padding: 0.6rem var(--gut);
+  background: var(--apricot);
+  color: var(--ink);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.alertLabel {
+  font-weight: 700;
+}
+
+.alertPhone {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.95rem max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.markDot {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50% 50% 50% 4px;
+  background: var(--teal);
+}
+
+.markName {
+  font-family: var(--head);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.9rem, 1.8vw, 1.6rem);
+}
+
+.nav a {
+  font-size: 0.93rem;
+  color: var(--muted);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--teal);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------- dashboard
+   The board runs full width on the pale tint, and its grid is held to the
+   page's measure by the padding, so the cards line up with every section
+   below. */
+
+.dash {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(14rem, auto);
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem) max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: var(--pale);
+}
+
+.card,
+.cardDark,
+.cardWelcome {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: clamp(1.2rem, 2vw, 1.6rem);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+.cardWelcome {
+  grid-column: span 2;
+  grid-row: span 2;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.6rem, 3.5vw, 3rem);
+}
+
+.cardDark {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.cardTile {
+  position: relative;
+  grid-column: span 2;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.eyebrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.heroTitle {
+  font-size: clamp(2.4rem, 4.6vw, 4rem);
+  line-height: 1.04;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--teal);
+}
+
+.heroLede {
+  margin-top: 1.3rem;
+  max-width: 34rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.85rem 1.35rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.98rem;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--teal);
+}
+
+.btnGhost {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* A card's label row: a status dot and a small heading. */
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.cardLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cardDark .cardLabel {
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.dotLive,
+.dotTeal,
+.dotAlert {
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.dotLive {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--teal) 22%, transparent);
+}
+
+.dotAlert {
+  background: var(--apricot);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--apricot) 28%, transparent);
+}
+
+.cardBig {
+  margin-top: 0.4rem;
+  font-family: var(--head);
+  font-size: clamp(1.4rem, 2vw, 1.7rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.cardNote {
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+.cardDark .cardNote {
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+
+.cardPhone {
+  margin-top: 0.4rem;
+  font-family: var(--head);
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--apricot);
+  white-space: nowrap;
+}
+
+.cardLinks {
+  display: grid;
+  justify-items: start;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.cardLinks a {
+  font-weight: 700;
+  font-size: 0.93rem;
+  border-bottom: 2px solid var(--teal);
+  overflow-wrap: anywhere;
+}
+
+.cardLinks a:hover {
+  color: var(--teal);
+}
+
+.miniHours {
+  margin: auto 0 0;
+}
+
+.miniHours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.93rem;
+}
+
+.miniHours dt {
+  color: var(--muted);
+}
+
+.miniHours dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 1rem clamp(2rem, 6vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.secHead h2 {
+  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.secNote {
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- services */
+
+.services {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.svc {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 1.5rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.svcWho {
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: var(--pale);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.svc h3 {
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+.svcBody {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.svcPrice {
+  align-self: stretch;
+  margin-top: auto;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------- plans */
+
+.plans {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.planCards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.plan,
+.planFeatured {
+  display: grid;
+  align-content: start;
+  padding: 1.5rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.planFeatured {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.plan h3,
+.planFeatured h3 {
+  font-size: 1.35rem;
+}
+
+.planSize {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.planFeatured .planSize {
+  color: color-mix(in srgb, var(--paper) 75%, transparent);
+}
+
+.planPrice {
+  margin-top: 1.6rem;
+  font-family: var(--head);
+  font-size: 3rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.planFeatured .planPrice {
+  color: var(--apricot);
+}
+
+.planPer {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.planFeatured .planPer {
+  color: color-mix(in srgb, var(--paper) 75%, transparent);
+}
+
+.planIncludes {
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  border-radius: var(--radius);
+  background: var(--pale);
+}
+
+.planIncludes h3 {
+  font-size: 1.35rem;
+}
+
+.planIncludes ul {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 0;
+}
+
+.planIncludes li {
+  position: relative;
+  padding: 0.6rem 0 0.6rem 1.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* A check mark drawn with two borders. */
+.planIncludes li::before {
+  content: '';
+  position: absolute;
+  left: 0.2rem;
+  top: 0.85rem;
+  width: 0.4rem;
+  height: 0.75rem;
+  border-right: 2px solid var(--teal);
+  border-bottom: 2px solid var(--teal);
+  transform: rotate(45deg);
+}
+
+.planNote {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- team */
+
+.team {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.person {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.5rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.personRole {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.person h3 {
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.personQuals {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.personNote {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* The week: seven small tiles, the days in clinic filled in teal. */
+.days {
+  list-style: none;
+  margin: auto 0 0;
+  padding: 1rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.3rem;
+}
+
+.day,
+.dayOn {
+  display: grid;
+  place-items: center;
+  height: 1.9rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--pale);
+  color: var(--gray);
+}
+
+.dayOn {
+  background: var(--teal);
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------- new clients */
+
+.newGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1rem;
+}
+
+.newCard {
+  padding: clamp(1.6rem, 3.5vw, 3rem);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.newCard h2 {
+  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.newLede {
+  margin-top: 1rem;
+  max-width: 32rem;
+  color: var(--muted);
+}
+
+.steps {
+  list-style: none;
+  margin: 1.8rem 0 2rem;
+  padding: 0;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  column-gap: 1rem;
+}
+
+.stepNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: var(--apricot);
+  font-family: var(--head);
+  font-weight: 600;
+}
+
+.steps h3 {
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.steps p {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.newPanel {
+  position: relative;
+  min-height: 18rem;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--pale);
+}
+
+/* -------------------------------------------------------------------- fees */
+
+.fees {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.feeTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.feeTable th {
+  padding: 0 0 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+}
+
+.feeTable th:last-child,
+.feeTable td:last-child {
+  text-align: right;
+}
+
+.feeTable td {
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+.feeTable td:last-child {
+  padding-left: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.payCard {
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border-radius: var(--radius);
+  background: var(--pale);
+}
+
+.payCard h3 {
+  font-size: 1.2rem;
+}
+
+.payCard p {
+  margin: 0.4rem 0 1.4rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.payCard p:last-child {
+  margin-bottom: 0;
+}
+
+/* -------------------------------------------------------------------- find */
+
+.findGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.findGrid .card {
+  border: 1px solid var(--rule);
+  box-shadow: none;
+}
+
+.findAddr {
+  font-family: var(--head);
+  font-size: 1.3rem;
+  line-height: 1.35;
+}
+
+.findList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.findList li {
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.findList li:first-child {
+  border-top: 0;
+}
+
+.findList a {
+  font-weight: 700;
+  border-bottom: 2px solid var(--teal);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.footGrid {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.3fr);
+  gap: 2rem;
+}
+
+.footName {
+  font-family: var(--head);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.footTag {
+  margin-top: 0.4rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.footLinks a:hover {
+  color: var(--teal);
+}
+
+.footAddr {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.footFine {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 2.5rem auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+}
+
+.footFine p {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .dash {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: auto;
+  }
+
+  .cardWelcome {
+    grid-row: auto;
+  }
+
+  .cardTile {
+    min-height: 15rem;
+  }
+
+  .services,
+  .team {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plans,
+  .fees {
+    grid-template-columns: 1fr;
+  }
+
+  .findGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .findGrid .card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .footGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .dash {
+    grid-template-columns: 1fr;
+  }
+
+  .cardWelcome,
+  .cardTile {
+    grid-column: auto;
+  }
+
+  .cardTile {
+    min-height: 12rem;
+  }
+
+  .secHead {
+    grid-template-columns: 1fr;
+  }
+
+  .services,
+  .team,
+  .newGrid,
+  .findGrid,
+  .footGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .findGrid .card:last-child {
+    grid-column: auto;
+  }
+
+  .planCards {
+    gap: 0.6rem;
+  }
+
+  .plan,
+  .planFeatured {
+    padding: 1.1rem;
+  }
+
+  .planPrice {
+    font-size: 2.4rem;
+  }
+
+  .newPanel {
+    min-height: 12rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost {
+    transition: none;
+  }
+}

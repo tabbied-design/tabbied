@@ -108,7 +108,7 @@
 
 .main {
   position: relative;
-  padding: 0 var(--gut);
+  padding: clamp(3.5rem, 8vw, 7rem) var(--gut) 0;
 }
 
 .cloth {
@@ -116,8 +116,20 @@
   top: 0;
   left: 0;
   right: 0;
-  height: clamp(240px, 34vw, 460px);
+  height: clamp(260px, 36vw, 480px);
   overflow: hidden;
+}
+
+/* Drawn half as large again and scaled back down, so the blossoms read as
+   a small print on the cloth rather than as flowers. */
+.clothField {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150%;
+  height: 150%;
+  transform: scale(0.6667);
+  transform-origin: 0 0;
 }
 
 /* A soft fold where the cloth meets the paper below it. */
@@ -125,7 +137,7 @@
   content: '';
   position: absolute;
   inset: auto 0 0;
-  height: 40%;
+  height: 34%;
   background: linear-gradient(180deg, transparent, var(--linen));
 }
 
@@ -133,8 +145,9 @@
 
 .card {
   position: relative;
+  z-index: 1;
   max-width: var(--card);
-  margin: clamp(3.5rem, 8vw, 7.5rem) auto 0;
+  margin: 0 auto;
   padding: clamp(2.75rem, 7vw, 5.5rem) var(--pad) clamp(2.5rem, 6vw, 4.5rem);
   background: var(--linen);
   border: 1px solid color-mix(in srgb, var(--ink) 24%, transparent);
@@ -409,12 +422,12 @@
 }
 
 /* --------------------------------------------------------------------- seam
-   The fold between the menu and the practical half, drawn as a running
-   stitch across the whole sheet. */
+   The fold between the menu and the practical half, drawn as one row of
+   cross-stitch across the whole sheet. */
 
 .seam {
   position: relative;
-  height: 36px;
+  height: 26px;
   margin: clamp(3.5rem, 8vw, 5rem) calc(-1 * var(--pad)) 0;
   overflow: hidden;
 }
@@ -762,7 +775,7 @@
   }
 
   .seam {
-    height: 28px;
+    height: 26px;
   }
 }
 

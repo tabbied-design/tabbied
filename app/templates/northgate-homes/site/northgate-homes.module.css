@@ -326,6 +326,7 @@
 .muted {
   background: var(--paper);
   color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
 }
 
 .cardBody {
@@ -379,7 +380,6 @@
   order: -1;
   margin: 0;
   font-weight: 600;
-  font-variant-numeric: tabular-nums;
 }
 
 .cardLink {
@@ -979,16 +979,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .agents,
-  .fees,
-  .terms {
-    grid-template-columns: 1fr;
-    max-width: 36rem;
-  }
-
-  .feeTerms {
-    min-height: 0;
-  }
 }
 
 @media (max-width: 900px) {
@@ -1024,7 +1014,24 @@
   }
 }
 
+@media (max-width: 760px) {
+  .agents,
+  .fees,
+  .terms {
+    grid-template-columns: 1fr;
+    max-width: 36rem;
+  }
+
+  .feeTerms {
+    min-height: 0;
+  }
+}
+
 @media (max-width: 640px) {
+  .photo {
+    aspect-ratio: 16 / 10;
+  }
+
   .barPhone {
     display: none;
   }

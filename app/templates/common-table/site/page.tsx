@@ -17,7 +17,7 @@ const LEAF = '#3E7C59';
 const HUSK = '#F1E6D2';
 
 const HORIZON = ['transparent', LEAF, HUSK, 'transparent', CARROT, CARROT];
-const FILL = ['transparent', CARROT, INK];
+const FILL = ['transparent', HUSK];
 const COVER = [HUSK, LEAF, CARROT];
 
 const NAV = [
@@ -195,7 +195,7 @@ export default function CommonTablePage() {
       <link
         rel="stylesheet"
         precedence="default"
-        href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap"
       />
 
       <header className={s.bar}>
@@ -224,18 +224,20 @@ export default function CommonTablePage() {
               <p className={s.bigNumber}>1,284,600</p>
               <p className={s.bigLabel}>pounds of food with 3,410 households in the Millbrook valley.</p>
             </div>
-            <div className={s.heroCopy}>
+            <div className={s.heroRow}>
               <h1 id="hero-h" className={s.heroTitle}>
                 Good food for anyone who needs it, <em>no referral needed.</em>
               </h1>
-              <p className={s.heroLede}>
-                Common Table is the community food bank for Millbrook and the
-                valley towns. We rescue, buy and grow groceries, and share
-                them at four pantries and at your door.
-              </p>
-              <div className={s.heroActions}>
-                <a className={s.btnPrimary} href="#give">Give today</a>
-                <a className={s.btnGhost} href="#help">Get food this week</a>
+              <div className={s.heroCopy}>
+                <p className={s.heroLede}>
+                  Common Table is the community food bank for Millbrook and the
+                  valley towns. We rescue, buy and grow groceries, and share
+                  them at four pantries and at your door.
+                </p>
+                <div className={s.heroActions}>
+                  <a className={s.btnPrimary} href="#give">Give today</a>
+                  <a className={s.btnGhost} href="#help">Get food this week</a>
+                </div>
               </div>
             </div>
           </div>
@@ -347,6 +349,7 @@ export default function CommonTablePage() {
                   <TabbiedPattern
                     pattern={ribline}
                     palette={FILL}
+                    options={{ frequency: 0.6 }}
                     fit="grid"
                     cellSize={28}
                     seed="common-table-fill"
@@ -596,7 +599,10 @@ export default function CommonTablePage() {
             <li><a href="#help">Get help</a></li>
             <li><a href="#report">Annual report</a></li>
           </ul>
-          <p className={s.footAddr}>240 Foundry Street, Millbrook. (555) 014-2290.</p>
+          <div>
+            <p className={s.footAddr}>240 Foundry Street, Millbrook</p>
+            <p className={s.footAddr}>(555) 014-2290</p>
+          </div>
         </div>
         <div className={s.footFine}>
           <p>A fictional food bank. Figures, partners and people are invented.</p>

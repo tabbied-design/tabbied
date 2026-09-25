@@ -40,9 +40,7 @@
   outline-offset: 3px;
 }
 
-.page h1,
-.page h2,
-.page h3 {
+:where(.page) :where(h1, h2, h3) {
   margin: 0;
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 350;
@@ -50,14 +48,7 @@
   text-wrap: balance;
 }
 
-.page p {
-  margin: 0;
-}
-
-.page ul,
-.page ol,
-.page dl,
-.page dd {
+:where(.page) :where(p, ul, ol, dl, dd) {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -128,7 +119,7 @@
   margin: 0 auto;
   padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(2.5rem, 5vw, 4rem);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(14rem, 28vw, 22rem);
+  grid-template-columns: minmax(0, 1fr) clamp(12rem, 24vw, 19rem);
   gap: clamp(2rem, 6vw, 6rem);
   align-items: center;
 }
@@ -144,7 +135,7 @@
 
 .heroTitle {
   margin-top: 1.2rem;
-  font-size: clamp(2.1rem, 4.6vw, 3.6rem);
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
   line-height: 1.08;
   font-weight: 300;
 }
@@ -268,7 +259,7 @@
 
 /* Intensity: a tint and a bar color, read by the swatch and the blocks. */
 .gentle {
-  --tint: color-mix(in srgb, var(--sage) 20%, var(--paper));
+  --tint: color-mix(in srgb, var(--sage) 28%, var(--paper));
   --bar: var(--sage);
 }
 
@@ -812,13 +803,17 @@
   }
 
   .week {
+    grid-column: auto;
+    grid-row: auto;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
     gap: 2rem clamp(1.5rem, 4vw, 3rem);
   }
 
   .day,
   .sessions {
+    grid-row: auto;
     display: block;
   }
 
@@ -954,7 +949,7 @@
   }
 
   .visitList div {
-    grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 9.5rem) minmax(0, 1fr);
   }
 }
 

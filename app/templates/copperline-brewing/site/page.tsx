@@ -292,7 +292,7 @@ export default function CopperlineBrewingPage() {
                 <TabbiedPattern
                   pattern={sunsetrings}
                   palette={PLATE}
-                  options={{ frequency: 0.55 }}
+                  options={{ frequency: 1 }}
                   fit="grid"
                   cellSize={96}
                   seed="copperline-plate"
@@ -492,8 +492,8 @@ export default function CopperlineBrewingPage() {
               <article key={h.room} className={s.room}>
                 <h3>{h.room}</h3>
                 <p className={s.roomSize}>{h.size}</p>
-                <p className={s.roomNote}>{h.note}</p>
                 <p className={s.roomPrice}>{h.price}</p>
+                <p className={s.roomNote}>{h.note}</p>
               </article>
             ))}
             <div className={s.includes}>
@@ -514,7 +514,7 @@ export default function CopperlineBrewingPage() {
           <TabbiedPattern
             pattern={sunsetrings}
             palette={LINE}
-            options={{ frequency: 0.7 }}
+            options={{ frequency: 1 }}
             fit="grid"
             cellSize={48}
             seed="copperline-line"

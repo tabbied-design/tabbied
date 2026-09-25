@@ -1,0 +1,932 @@
+/* ==========================================================================
+   DOG-EARED BOOKS - independent bookshop
+   The shop's site is set like its own weekly broadsheet: a masthead with a
+   folio line, two ears and a double rule, then numbered pages. The staff
+   picks run in real newspaper columns with column rules, the events are a
+   listings table, the new arrivals a numbered column, and special orders a
+   boxed advertisement. Newsreader for the text and the heads, Libre Franklin
+   for folios, labels and captions. Blue is the one ink color; mustard only
+   ever appears inside the pictures.
+   ========================================================================== */
+
+.page {
+  --paper: #f6f1e7;
+  --ink: #1c1a17;
+  --blue: #2b59a3;
+  --gray: #8c857a;
+  --pale: #e4dccb;
+  --mustard: #d9a43b;
+  --rule: color-mix(in srgb, var(--ink) 22%, transparent);
+  --gut: clamp(1.1rem, 4vw, 3rem);
+  --max: 80rem;
+  --sans: 'Libre Franklin', 'Franklin Gothic Medium', Arial, sans-serif;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- masthead */
+
+.masthead {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0.9rem var(--gut) 0;
+}
+
+.folio {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.titleRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(1rem, 2.4vw, 1.8rem) 0 clamp(0.8rem, 2vw, 1.4rem);
+}
+
+.ear {
+  display: grid;
+  gap: 0.2rem;
+  max-width: 11.5rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--ink);
+  text-align: center;
+}
+
+.ear:first-child {
+  justify-self: start;
+}
+
+.ear:last-child {
+  justify-self: end;
+}
+
+.earHead {
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.earBody {
+  font-style: italic;
+  font-size: 0.98rem;
+  line-height: 1.3;
+}
+
+.title {
+  font-size: clamp(2.5rem, 8.2vw, 7.2rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* A double rule over the dateline: the one flourish a broadsheet allows. */
+.dateline {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem 1.5rem;
+  padding: 0.45rem 0;
+  border-top: 4px double var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--ink);
+}
+
+.nav a {
+  padding: 0 clamp(0.8rem, 1.8vw, 1.5rem);
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 160ms ease;
+}
+
+.nav a + a {
+  border-left: 1px solid var(--rule);
+}
+
+.nav a:hover {
+  color: var(--blue);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------- the pages
+   Every section opens like a new page of the paper: a heavy rule, the
+   section name and a page number, then a headline and a standfirst. */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) 0;
+}
+
+.secRule {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-top: 4px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.secRule span:last-child {
+  font-weight: 500;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.headline {
+  margin-top: clamp(1.2rem, 2.6vw, 1.8rem);
+  max-width: 24ch;
+  font-size: clamp(2rem, 4.3vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.standfirst {
+  margin: 0.9rem 0 0;
+  max-width: 42rem;
+  font-size: clamp(1.08rem, 1.5vw, 1.24rem);
+  font-style: italic;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ------------------------------------------------------------- front page */
+
+.front {
+  margin-top: clamp(1.8rem, 3.6vw, 2.6rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(1.6rem, 3.4vw, 2.8rem);
+  align-items: start;
+}
+
+.leadFig,
+.shelfFig {
+  margin: 0;
+}
+
+.leadField,
+.shelfField {
+  position: relative;
+  overflow: hidden;
+  background: var(--pale);
+}
+
+.leadField {
+  aspect-ratio: 16 / 10;
+}
+
+.leadFig figcaption,
+.shelfFig figcaption {
+  margin-top: 0.55rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.lead {
+  padding-left: clamp(1.6rem, 3.4vw, 2.8rem);
+  border-left: 1px solid var(--rule);
+}
+
+.pickSection {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.leadTitle {
+  margin-top: 0.6rem;
+  font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.08;
+}
+
+.pickAuthor {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  font-style: italic;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.leadReview {
+  margin: 1rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* The drop cap: three lines deep, in the paper's one color. */
+.leadReview::first-letter {
+  float: left;
+  margin: 0.06em 0.1em 0 0;
+  font-size: 3.6em;
+  font-weight: 700;
+  line-height: 0.82;
+  color: var(--blue);
+}
+
+.pickBy {
+  margin: 0.7rem 0 0;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.pickPrice {
+  margin: 0.2rem 0 0;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* The rest of the picks, poured into real newspaper columns. */
+.columns {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--ink);
+  columns: 3 16rem;
+  column-gap: clamp(1.6rem, 3vw, 2.6rem);
+  column-rule: 1px solid var(--rule);
+}
+
+.pick {
+  break-inside: avoid;
+  padding-bottom: 1.6rem;
+}
+
+.pickTitle {
+  margin-top: 0.35rem;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.pickReview {
+  margin: 0.55rem 0 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ------------------------------------------------------------------ events */
+
+.events {
+  width: 100%;
+  margin-top: clamp(1.8rem, 3.6vw, 2.6rem);
+  border-collapse: collapse;
+}
+
+.events thead th {
+  padding: 0 1rem 0.6rem 0;
+  border-bottom: 2px solid var(--ink);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.events td {
+  padding: 1.1rem 1rem 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+.evDate {
+  width: 6.5rem;
+}
+
+.evDay {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.evNum {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.evTime {
+  width: 6.5rem;
+  padding-top: 1.35rem;
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.evKind {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.evTitle {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.evNote {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.98rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.evTickets {
+  width: 11rem;
+  padding-top: 1.35rem;
+  font-family: var(--sans);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------- new books */
+
+.newGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+  gap: clamp(1.6rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.newList {
+  list-style: none;
+  counter-reset: arrivals;
+  margin: clamp(1.2rem, 2.6vw, 1.8rem) 0 0;
+  padding: 0;
+  columns: 2 15rem;
+  column-gap: clamp(1.6rem, 3vw, 2.6rem);
+  column-rule: 1px solid var(--rule);
+}
+
+.newList li {
+  counter-increment: arrivals;
+  break-inside: avoid;
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  column-gap: 0.4rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.newList li::before {
+  content: counter(arrivals);
+  grid-row: 1 / span 3;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--blue);
+  font-variant-numeric: lining-nums;
+}
+
+.newTitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.25;
+}
+
+.newAuthor {
+  font-size: 0.98rem;
+}
+
+.newFormat {
+  margin-top: 0.15rem;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+/* ------------------------------------------------------------------ orders */
+
+.ordersGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(1.8rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.ordersCols {
+  margin-top: 1.4rem;
+  columns: 2 14rem;
+  column-gap: clamp(1.4rem, 2.6vw, 2.2rem);
+  column-rule: 1px solid var(--rule);
+}
+
+.ordersCols p {
+  margin: 0 0 1rem;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* The boxed advertisement: a double rule all round, a band of halftone
+   where the ad's picture would be, then the offer and the coupon. */
+.ad {
+  margin-top: clamp(1.2rem, 2.6vw, 1.8rem);
+  border: 4px double var(--ink);
+  background: var(--paper);
+}
+
+.adField {
+  position: relative;
+  height: 7.5rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ink);
+}
+
+.adBody {
+  padding: clamp(1.2rem, 2.6vw, 1.8rem);
+}
+
+.adHead {
+  margin: 0;
+  font-size: clamp(1.7rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.adSub {
+  margin: 0.5rem 0 0;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.form {
+  margin-top: 1.4rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field span {
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 2.6rem;
+  padding: 0.3rem 0;
+  font: inherit;
+  font-size: 1.05rem;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.btn {
+  grid-column: 1 / -1;
+  margin-top: 0.4rem;
+  min-height: 3rem;
+  padding: 0.8rem 1.4rem;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.btn:hover {
+  background: var(--blue);
+}
+
+/* ----------------------------------------------------------------- shelves */
+
+.shelvesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  gap: clamp(1.8rem, 4vw, 3.5rem);
+  align-items: start;
+  margin-top: clamp(1.4rem, 3vw, 2rem);
+}
+
+.shelfField {
+  aspect-ratio: 4 / 5;
+}
+
+.shelvesGrid .headline {
+  margin-top: 0;
+}
+
+.shelves {
+  margin: clamp(1.4rem, 3vw, 2rem) 0 0;
+  columns: 2 15rem;
+  column-gap: clamp(1.6rem, 3vw, 2.4rem);
+  column-rule: 1px solid var(--rule);
+}
+
+.shelves div {
+  break-inside: avoid;
+  padding: 0.75rem 0 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+.shelves dt {
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.shelfWhere {
+  margin: 0.15rem 0 0;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.shelfNote {
+  margin: 0.3rem 0 0;
+  font-size: 0.97rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  margin-top: clamp(1.6rem, 3.4vw, 2.4rem);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 1.8rem);
+}
+
+.visitBox {
+  padding: 1.1rem 1.3rem 1.3rem;
+  border: 1px solid var(--ink);
+}
+
+.page .boxHead {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hours {
+  margin: 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-size: 1rem;
+}
+
+.hours dd {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.visitAddr {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.boxNote {
+  margin: 0.7rem 0 0;
+  font-size: 0.97rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+.contact {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.contact a {
+  font-size: 1.08rem;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: var(--blue);
+  text-underline-offset: 4px;
+}
+
+.contact a:hover {
+  color: var(--blue);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  max-width: var(--max);
+  margin: clamp(4rem, 8vw, 6rem) auto 0;
+  padding: 0 var(--gut) 1.6rem;
+}
+
+.footTitle {
+  margin: 0;
+  padding: 1rem 0 0.8rem;
+  border-top: 4px double var(--ink);
+  border-bottom: 1px solid var(--ink);
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 2rem;
+  padding-top: 0.8rem;
+}
+
+.footFine p {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footFine a:hover {
+  color: var(--blue);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1040px) {
+  .front,
+  .newGrid,
+  .ordersGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lead {
+    padding: 1.4rem 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .shelvesGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shelfField {
+    aspect-ratio: 16 / 7;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav {
+    display: none;
+  }
+
+  /* The index becomes one "Sections" button in the same band. */
+  .siteMenu {
+    display: flex;
+    justify-content: center;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .folioMid {
+    display: none;
+  }
+
+  .titleRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  .title {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .ear {
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .dateline {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The listings restack: the date on the left, the rest beside it. */
+  .events thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .events tr {
+    display: grid;
+    grid-template-columns: 4.8rem minmax(0, 1fr);
+    column-gap: 0.8rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .events td {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .events .evDate {
+    grid-row: 1 / span 3;
+  }
+
+  .events .evTime,
+  .events .evTickets {
+    padding-top: 0.3rem;
+  }
+
+  .events .evWhat {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .events .evTime {
+    grid-row: 2;
+    grid-column: 2;
+  }
+
+  .events .evTickets {
+    grid-row: 3;
+    grid-column: 2;
+  }
+
+  .shelfField {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn {
+    transition: none;
+  }
+}

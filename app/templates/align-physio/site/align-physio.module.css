@@ -1,0 +1,1242 @@
+/* ==========================================================================
+   ALIGN PHYSIO - physiotherapy clinic
+   Clean and calm, the way a good clinic room is: cool paper, one blue for
+   anything you can act on, coral kept for small marks. The hero splits in
+   two, the promise and the booking card; after it the conditions read as
+   a book's index, A to Z, with the letters held in view as you scroll.
+   ========================================================================== */
+
+.page {
+  --paper: #f7f9fb;
+  --ink: #13202e;
+  --blue: #2f6fde;
+  --coral: #f2765c;
+  --gray: #8795a5;
+  --pale: #e3eaf2;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --bar-h: 4.25rem;
+  --line: color-mix(in srgb, var(--ink) 12%, transparent);
+  --muted: color-mix(in srgb, var(--ink) 72%, transparent);
+  --display: 'Lexend', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: 'Atkinson Hyperlegible', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  height: var(--bar-h);
+  padding: 0 var(--gut);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* Two halves of one dot: the clinic's two colors, lined up. */
+.markDot {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: linear-gradient(90deg, var(--blue) 0 50%, var(--coral) 50% 100%);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.94rem;
+  color: var(--muted);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--blue);
+}
+
+.barBook {
+  padding: 0.5rem 1.1rem;
+  font-family: var(--display);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 999px;
+  transition: background-color 160ms ease;
+}
+
+.barBook:hover {
+  background: var(--blue);
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3vw, 2.5rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.kicker,
+.secKicker {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kicker::before,
+.secKicker::before {
+  content: '';
+  width: 1.6rem;
+  height: 2px;
+  background: var(--coral);
+}
+
+.heroTitle {
+  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--blue);
+}
+
+.heroLede {
+  margin: 1.6rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 999px;
+  transition: background-color 160ms ease;
+}
+
+.button:hover {
+  background: var(--blue);
+}
+
+.textLink {
+  font-weight: 700;
+  border-bottom: 2px solid var(--coral);
+  padding-bottom: 0.1rem;
+}
+
+.heroFacts {
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 34rem;
+}
+
+.heroFacts div {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+
+.heroFacts dt {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.heroFacts dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* The panel: threads on the pale ground, the card standing on them. */
+.heroPanel {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4.5vw, 4rem);
+  background: var(--pale);
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+/* Drawn at half the panel's size and scaled up twice, so each thread is
+   two pixels thick: at one pixel they all but vanish on the pale. */
+.ribbon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: calc(50% + 1px);
+  height: calc(50% + 1px);
+  overflow: hidden;
+  transform: scale(2);
+  transform-origin: 0 0;
+}
+
+.card {
+  width: 100%;
+  max-width: 28.5rem;
+  padding: clamp(1.25rem, 2.5vw, 1.8rem);
+  background: var(--paper);
+  border-radius: 18px;
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.35), 0 2px 6px rgb(0 0 0 / 0.05);
+}
+
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.cardHead h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.cardPrice {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 500;
+  color: var(--blue);
+  white-space: nowrap;
+}
+
+.field {
+  margin: 0.9rem 0 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.field legend {
+  padding: 0;
+  margin-bottom: 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.types {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.type {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1fr) auto 3.2rem;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.type:hover {
+  border-color: color-mix(in srgb, var(--blue) 50%, transparent);
+}
+
+.type:has(input:checked) {
+  border-color: var(--blue);
+  background: color-mix(in srgb, var(--blue) 7%, var(--paper));
+  box-shadow: inset 0 0 0 1px var(--blue);
+}
+
+.type input {
+  margin: 0;
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--blue);
+}
+
+.typeName {
+  font-weight: 700;
+  font-size: 0.96rem;
+}
+
+.typeLen {
+  font-size: 0.86rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.typePrice {
+  font-family: var(--display);
+  font-weight: 500;
+  text-align: right;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.slot {
+  position: relative;
+  display: grid;
+  gap: 0.05rem;
+  padding: 0.45rem 0.5rem;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.slot:hover {
+  border-color: color-mix(in srgb, var(--blue) 50%, transparent);
+}
+
+/* The radio stays in the page for keyboards and screen readers; the chip
+   is what shows. */
+.slot input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.slot:has(input:checked) {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.slot:has(input:focus-visible) {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.slotDay {
+  font-size: 0.78rem;
+  opacity: 0.8;
+}
+
+.slotTime {
+  font-family: var(--display);
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+
+.submit {
+  width: 100%;
+  margin-top: 1.1rem;
+  padding: 0.95rem 1rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--paper);
+  background: var(--blue);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.submit:hover {
+  background: var(--ink);
+}
+
+.cardNote {
+  margin: 0.8rem 0 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 46rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+
+.secNote {
+  margin: 1rem 0 0;
+  max-width: 38rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- conditions
+   The letter bar sticks under the site bar while the index scrolls. */
+
+.letters {
+  position: sticky;
+  top: var(--bar-h);
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(26, minmax(0, 1fr));
+  margin: 0 0 clamp(1.8rem, 4vw, 2.8rem);
+  padding: 0.55rem 0;
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.letters a,
+.letterOff {
+  display: grid;
+  place-items: center;
+  height: 2.3rem;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+.letters a {
+  color: var(--blue);
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.letters a:hover {
+  color: var(--paper);
+  background: var(--blue);
+}
+
+.letterOff {
+  font-weight: 300;
+  color: color-mix(in srgb, var(--ink) 28%, transparent);
+}
+
+.index {
+  columns: 4 14rem;
+  column-gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.group {
+  break-inside: avoid;
+  padding-bottom: 1.6rem;
+  scroll-margin-top: calc(var(--bar-h) + 5rem);
+}
+
+.groupLetter {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.35rem;
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--blue);
+  border-bottom: 1px solid var(--line);
+}
+
+.group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.group li {
+  padding: 0.28rem 0;
+  font-size: 0.98rem;
+}
+
+/* ------------------------------------------------------------- treatments */
+
+.treatments {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);
+  counter-reset: treat;
+}
+
+.treatments li {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1.1rem;
+  border-top: 2px solid var(--ink);
+  counter-increment: treat;
+}
+
+.treatments li::before {
+  content: counter(treat, decimal-leading-zero);
+  margin-bottom: 0.9rem;
+  font-family: var(--display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--blue);
+}
+
+.treatments h3 {
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.treatBody {
+  margin: 0.6rem 0 1rem;
+  color: var(--muted);
+}
+
+.treatUse {
+  align-self: flex-start;
+  margin: auto 0 0;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.84rem;
+  background: var(--pale);
+  border-radius: 999px;
+}
+
+/* ---------------------------------------------------------------- physios */
+
+.team {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.team li {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1.2fr) minmax(0, 1.3fr) minmax(0, 1.2fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--blue);
+  background: var(--pale);
+  border-radius: 50%;
+}
+
+.team li:nth-child(even) .avatar {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--coral) 22%, var(--paper));
+}
+
+.who h3 {
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.role {
+  margin: 0.1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.focus {
+  margin: 0;
+}
+
+.teamFacts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.teamFacts dt {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.teamFacts dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.94rem;
+}
+
+/* ----------------------------------------------------------------- prices */
+
+.prices {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.priceTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.priceTable thead th {
+  padding: 0 0 0.7rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.priceTable thead th + th {
+  padding-left: 1rem;
+}
+
+.priceTable thead th:last-child,
+.priceTable td:last-child {
+  text-align: right;
+}
+
+.priceTable tbody tr {
+  border-top: 1px solid var(--line);
+}
+
+.priceTable tbody tr:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.priceTable tbody th,
+.priceTable td {
+  padding: 1rem 0;
+  vertical-align: baseline;
+}
+
+.priceTable tbody th {
+  font-weight: 700;
+  text-align: left;
+}
+
+.priceTable td {
+  padding-left: 1rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.priceTable td:last-child {
+  font-family: var(--display);
+  font-weight: 500;
+  color: var(--ink);
+  white-space: normal;
+}
+
+.insure {
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--pale);
+  border-radius: 20px;
+}
+
+.insure h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.insurers {
+  list-style: none;
+  margin: 1rem 0 1.6rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.insurers li {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.88rem;
+  background: var(--paper);
+  border-radius: 999px;
+}
+
+.payNotes {
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.payNotes div {
+  padding-top: 0.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.payNotes dt {
+  font-weight: 700;
+}
+
+.payNotes dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ first visit */
+
+.firstGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: start;
+}
+
+.firstSide {
+  position: sticky;
+  top: calc(var(--bar-h) + 2rem);
+}
+
+.rings {
+  position: relative;
+  height: clamp(200px, 20vw, 280px);
+  overflow: hidden;
+  background: var(--pale);
+  border-radius: 24px;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* One line through the hour, with a dot at each part. */
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0.4rem;
+  width: 2px;
+  background: var(--pale);
+}
+
+.steps li {
+  position: relative;
+  padding: 0 0 2rem 2.4rem;
+}
+
+.steps li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.3rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  background: var(--paper);
+  border: 2px solid var(--blue);
+  border-radius: 50%;
+}
+
+.steps li:last-child::before {
+  background: var(--coral);
+  border-color: var(--coral);
+}
+
+.stepTime {
+  font-family: var(--display);
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--blue);
+}
+
+.steps h3 {
+  margin-top: 0.2rem;
+  font-size: 1.45rem;
+  font-weight: 400;
+}
+
+.steps p {
+  margin: 0.4rem 0 0;
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+.bring {
+  margin-left: 2.4rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.bring h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.bring ul {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.bring li {
+  position: relative;
+  padding-left: 1.7rem;
+  font-size: 0.96rem;
+}
+
+/* A tick drawn from two borders. */
+.bring li::before {
+  content: '';
+  position: absolute;
+  left: 0.25rem;
+  top: 0.35rem;
+  width: 0.4rem;
+  height: 0.75rem;
+  border-right: 2px solid var(--blue);
+  border-bottom: 2px solid var(--blue);
+  transform: rotate(45deg);
+}
+
+/* ----------------------------------------------------------------- clinic */
+
+.clinic {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.clinic .clinicHead {
+  margin-bottom: 0.9rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.address {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.contact {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.contact a {
+  border-bottom: 2px solid var(--coral);
+  transition: color 160ms ease;
+}
+
+.contact a:hover {
+  color: var(--blue);
+}
+
+.hours {
+  margin: 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.hours div:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.hours dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.getting {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.getting li {
+  padding-left: 1rem;
+  border-left: 2px solid var(--pale);
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(2.5rem, 6vw, 4rem) var(--gut) 2rem;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.footTop,
+.footGrid,
+.footFine {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: clamp(2rem, 5vw, 3rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+}
+
+.footLine {
+  margin: 0;
+  max-width: 34rem;
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.footer .button {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.footer .button:hover {
+  color: var(--paper);
+  background: var(--blue);
+}
+
+.footGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem 2rem;
+  padding: 1.8rem 0;
+}
+
+.footName {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+}
+
+.footLinks a {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footLinks a:hover {
+  color: var(--paper);
+}
+
+.footFine {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.8rem 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+}
+
+.footFine p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .treatments {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .team li {
+    grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .teamFacts {
+    grid-column: 2 / -1;
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.8rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .prices,
+  .firstGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .firstSide {
+    position: static;
+  }
+
+  .rings {
+    height: 160px;
+  }
+
+  .clinic {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .page {
+    --bar-h: 3.75rem;
+  }
+
+  .heroFacts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .heroFacts div {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.6rem 0;
+  }
+
+  .heroFacts dd {
+    margin: 0;
+  }
+
+  .heroPanel {
+    padding: 1.25rem 0.75rem;
+    border-radius: 20px;
+  }
+
+  .type {
+    grid-template-columns: 1.1rem minmax(0, 1fr) auto;
+    row-gap: 0.1rem;
+  }
+
+  .typeLen {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .typePrice {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+
+  .slots {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .letters {
+    grid-template-columns: repeat(13, minmax(0, 1fr));
+    padding: 0.35rem 0;
+  }
+
+  .letters a,
+  .letterOff {
+    height: 2.1rem;
+    font-size: 0.98rem;
+  }
+
+  .index {
+    columns: 2;
+    column-gap: 1.25rem;
+  }
+
+  .group {
+    scroll-margin-top: calc(var(--bar-h) + 7rem);
+  }
+
+  .groupLetter {
+    font-size: 1.6rem;
+  }
+
+  .group li {
+    font-size: 0.92rem;
+  }
+
+  .treatments,
+  .clinic,
+  .footFine {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .team li {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: 0.4rem 1rem;
+    align-items: start;
+  }
+
+  .avatar {
+    width: 3rem;
+    height: 3rem;
+    font-size: 0.95rem;
+  }
+
+  .focus,
+  .teamFacts {
+    grid-column: 2;
+  }
+
+  .bring {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barBook,
+  .button,
+  .type,
+  .slot,
+  .submit,
+  .letters a,
+  .contact a {
+    transition: none;
+  }
+}

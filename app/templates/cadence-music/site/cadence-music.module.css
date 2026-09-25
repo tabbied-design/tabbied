@@ -1,0 +1,1365 @@
+/* ==========================================================================
+   CADENCE MUSIC SCHOOL: lessons for all ages, Millbrook
+   Two things carry the page: six instruments as large tiles on a hairline
+   grid, and the autumn term drawn as a line of weeks with its concerts
+   above and its exams below. The rest is quiet: warm paper, a condensed
+   serif for names and numbers, a plain sans for everything you read, and
+   vermilion kept for the few things that should be heard first.
+   ========================================================================== */
+
+.page {
+  --paper: #faf8f3;
+  --ink: #1b1a24;
+  --vermilion: #e0533c;
+  --gray: #8d8a93;
+  --pale: #e9e6df;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 80rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  --hair: color-mix(in srgb, var(--ink) 14%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--vermilion);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.75rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--hair);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+.mark {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  white-space: nowrap;
+}
+
+.markName {
+  font-family: var(--serif);
+  font-size: 1.85rem;
+  line-height: 1;
+}
+
+.markSub {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--vermilion);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.8rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--vermilion);
+}
+
+.barCta {
+  padding: 0.55rem 1.1rem;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background-color 160ms ease;
+}
+
+.barCta:hover {
+  background: var(--vermilion);
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4.5rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.kicker {
+  margin: 0 0 1.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5.4vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  max-width: 15ch;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--vermilion);
+}
+
+.heroLede {
+  margin: 1.6rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.heroActions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.4rem;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.4rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: 0;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn:hover {
+  background: var(--vermilion);
+  color: var(--ink);
+}
+
+.btnLine {
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid var(--ink);
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.btnLine:hover {
+  color: var(--vermilion);
+  border-color: var(--vermilion);
+}
+
+.facts {
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--hair);
+  max-width: 40rem;
+}
+
+.facts dt {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1;
+}
+
+.facts dd {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* The plate: rings spreading from the middle, the violin standing on them. */
+.heroPlate {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--pale);
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+}
+
+.violin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: auto;
+  height: 92%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 24px 22px rgb(0 0 0 / 0.3));
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 5fr) minmax(0, 5fr);
+  gap: 0.6rem clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secNo {
+  align-self: start;
+  padding-top: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--vermilion);
+  font-variant-numeric: tabular-nums;
+}
+
+.secHead h2 {
+  font-size: clamp(2.3rem, 4.4vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.secNote {
+  margin: 0;
+  max-width: 32rem;
+  font-size: 0.98rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+/* ------------------------------------------------------------ instruments
+   Six tiles, three by two, drawn with one-pixel gaps over the rule color
+   so the grid lines are the tiles' own edges. */
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--hair);
+  border: 1px solid var(--hair);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  min-height: 21rem;
+  padding: clamp(1.4rem, 2.4vw, 2rem);
+  background: var(--paper);
+  transition: background-color 200ms ease;
+}
+
+.tile:hover {
+  background: color-mix(in srgb, var(--pale) 60%, var(--paper));
+}
+
+.tileTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.tileNo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--vermilion);
+}
+
+.tileAges {
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
+}
+
+.tileName {
+  margin-top: clamp(1.4rem, 3vw, 2.4rem);
+  font-size: clamp(3rem, 5.4vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+}
+
+.tile:hover .tileName {
+  font-style: italic;
+}
+
+.tileBody {
+  margin: 1rem 0 1.6rem;
+  font-size: 0.94rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.tileFoot {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.3rem 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--hair);
+  font-size: 0.86rem;
+}
+
+.tileFoot strong {
+  font-weight: 600;
+}
+
+.tileFoot span {
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* --------------------------------------------------------------- teachers */
+
+.teachers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(1.5rem, 3vw, 3rem);
+}
+
+.teacher {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.4rem 0 1.6rem;
+  border-top: 1px solid var(--hair);
+}
+
+.initials {
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.teacherText h3 {
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.teaches {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.teacherNote {
+  margin: 0.55rem 0 0;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.days {
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+/* ------------------------------------------------------------------- term
+   A change of ground for the timeline. The list is a grid of sixteen week
+   columns and three rows: events above, the line, events below. Each event
+   hangs from the line on a one-pixel stem with a dot where it meets it. */
+
+.termSec {
+  margin-top: var(--air);
+  padding: var(--air) 0;
+  background: var(--pale);
+}
+
+.termInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.timeline {
+  padding: 0.5rem 0 0;
+}
+
+.events {
+  --line: 1.5rem;
+  --track: 4.5rem;
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  grid-template-rows: auto var(--track) auto;
+}
+
+.track {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+}
+
+.track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--line);
+  height: 2px;
+  margin-top: -1px;
+  background: var(--ink);
+}
+
+.tick {
+  position: relative;
+  padding: calc(var(--line) + 0.55rem) 0 0 0.45rem;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.tick::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(var(--line) - 0.35rem);
+  width: 1px;
+  height: 0.7rem;
+  background: var(--ink);
+}
+
+/* The two weeks without lessons, hatched across the line. */
+.breakHalf,
+.breakWinter {
+  position: absolute;
+  top: 0;
+  height: calc(var(--line) + 0.35rem);
+  width: calc(100% / 16);
+  background: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--ink) 26%, transparent) 0 1px,
+    transparent 1px 6px
+  );
+}
+
+.breakHalf {
+  left: calc(100% / 16 * 6);
+}
+
+.breakWinter {
+  left: calc(100% / 16 * 15);
+}
+
+.eventUp,
+.eventDown {
+  position: relative;
+  padding: 0 1rem 0 0.9rem;
+  border-left: 1px solid var(--ink);
+}
+
+.eventUp {
+  grid-row: 1;
+  align-self: end;
+  padding-bottom: 1rem;
+}
+
+.eventDown {
+  grid-row: 3;
+  align-self: start;
+  padding-top: 1.1rem;
+}
+
+/* The stem continues to the line; the dot sits on it. */
+.eventUp::before,
+.eventDown::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  width: 1px;
+  background: var(--ink);
+}
+
+.eventUp::before {
+  top: 100%;
+  height: var(--line);
+}
+
+.eventDown::before {
+  bottom: 100%;
+  height: calc(var(--track) - var(--line));
+}
+
+.eventUp::after,
+.eventDown::after {
+  content: '';
+  position: absolute;
+  left: -7px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  box-sizing: border-box;
+}
+
+.eventUp::after {
+  top: calc(100% + var(--line) - 6.5px);
+  background: var(--vermilion);
+  border-color: var(--vermilion);
+}
+
+.eventDown::after {
+  bottom: calc(100% + var(--track) - var(--line) - 6.5px);
+  background: var(--paper);
+}
+
+.eventKind {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.eventDate {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.eventUp .eventDate {
+  color: var(--ink);
+}
+
+.eventTitle {
+  margin-top: 0.2rem;
+  font-size: 1.5rem;
+  line-height: 1.05;
+}
+
+.eventBody {
+  margin: 0.4rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.year {
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--hair);
+  border: 1px solid var(--hair);
+}
+
+.year div {
+  padding: 1.1rem 1.3rem;
+  background: var(--paper);
+}
+
+.year dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vermilion);
+}
+
+.yearDates {
+  margin: 0.3rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.yearWeeks {
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* ------------------------------------------------------------------ rates */
+
+.rates {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.rate {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.6rem 1.8rem;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+}
+
+.rate:nth-child(2) {
+  border-color: var(--ink);
+}
+
+.rateMin {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.rateMin strong {
+  font-family: var(--serif);
+  font-size: clamp(4.5rem, 8vw, 6.5rem);
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+}
+
+.rateMin span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vermilion);
+}
+
+.ratePrice {
+  margin: 1.6rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--hair);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.ratePrice strong {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.ratePrice span {
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.rateTerm {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.rateSuits {
+  margin: 0.8rem 0 0;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.rateNotes {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.8rem clamp(1rem, 2vw, 1.5rem);
+}
+
+.rateNotes li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.rateNotes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--vermilion);
+}
+
+/* ---------------------------------------------------------------- classes */
+
+.classes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.classes thead th {
+  padding: 0 1rem 0.7rem 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+  color: color-mix(in srgb, var(--ink) 64%, transparent);
+  border-bottom: 1px solid var(--ink);
+}
+
+.classes thead th:last-child {
+  text-align: right;
+  padding-right: 0;
+}
+
+.classes tbody th,
+.classes tbody td {
+  padding: 1rem 1rem 1rem 0;
+  border-bottom: 1px solid var(--hair);
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.className {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.classAges {
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.classWhen {
+  font-variant-numeric: tabular-nums;
+}
+
+.classes tbody .classPrice {
+  text-align: right;
+  padding-right: 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: 96px;
+  margin-top: var(--air);
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ trial */
+
+.trialSec {
+  padding: var(--air) var(--gut) 0;
+}
+
+.trial {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.trialIntro .secNo {
+  display: block;
+  padding: 0 0 0.9rem;
+}
+
+.trialIntro h2 {
+  font-size: clamp(2.3rem, 4.4vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.trialIntro > p {
+  margin: 1.2rem 0 0;
+  max-width: 30rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.trialSteps {
+  list-style: none;
+  counter-reset: step;
+  margin: 2rem 0 0;
+  padding: 0;
+}
+
+.trialSteps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: 0.1rem 0.6rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--hair);
+}
+
+.trialSteps li::before {
+  content: counter(step);
+  grid-row: 1 / span 2;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--vermilion);
+}
+
+.trialSteps strong {
+  font-weight: 600;
+}
+
+.trialSteps span {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem 1.4rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--pale);
+  border-radius: 6px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--vermilion);
+  outline-offset: 0;
+  border-color: var(--ink);
+}
+
+.formFoot {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.4rem;
+  margin-top: 0.3rem;
+}
+
+.formFoot small {
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+/* ---------------------------------------------------------------- find us */
+
+.find {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.address {
+  display: flex;
+  flex-direction: column;
+  font-style: normal;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  line-height: 1.25;
+}
+
+.addrName {
+  color: var(--vermilion);
+}
+
+.address a {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--hair);
+  overflow-wrap: anywhere;
+}
+
+.address span + a {
+  margin-top: 1.2rem;
+}
+
+.address a:hover {
+  color: var(--vermilion);
+  border-color: var(--vermilion);
+}
+
+.findHead {
+  margin-bottom: 0.8rem;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 64%, transparent);
+}
+
+.hours {
+  margin: 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--hair);
+  font-size: 0.95rem;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 500;
+}
+
+.getting {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.getting li {
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--hair);
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ----------------------------------------------------------------- footer
+   The wordmark as large as the page will take, then three short lists. */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(2rem, 4vw, 3rem) var(--gut) clamp(1.6rem, 3vw, 2.4rem);
+  border-top: 1px solid var(--ink);
+}
+
+.footTop,
+.footGrid,
+.footFine {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+}
+
+.footName {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(4rem, 13vw, 11rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+}
+
+.footLine {
+  margin: 0;
+  max-width: 20rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.footGrid {
+  margin-top: clamp(1.8rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem clamp(1.5rem, 4vw, 3rem);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.footLinks a {
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.footLinks a:hover {
+  color: var(--vermilion);
+}
+
+.footFine {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--hair);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+}
+
+.footFine p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footFine a:hover {
+  color: var(--vermilion);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1120px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .teachers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rateNotes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .eventTitle {
+    font-size: 1.3rem;
+  }
+
+  .eventBody {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .trial {
+    grid-template-columns: 1fr;
+  }
+
+  .heroPlate {
+    aspect-ratio: 5 / 4;
+  }
+
+  .secHead {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .secNo {
+    padding-top: 0;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .find {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .address {
+    grid-column: 1 / -1;
+  }
+
+  /* The timeline turns: one line down the left, every event on it in
+     order, with its body back. */
+  .events {
+    display: block;
+    position: relative;
+    padding-left: 1.6rem;
+  }
+
+  .events::before {
+    content: '';
+    position: absolute;
+    left: 0.4rem;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 2px;
+    background: var(--ink);
+  }
+
+  .track {
+    display: none;
+  }
+
+  .eventUp,
+  .eventDown {
+    padding: 0 0 1.6rem;
+    border-left: 0;
+  }
+
+  .eventUp::before,
+  .eventDown::before {
+    display: none;
+  }
+
+  .eventUp::after,
+  .eventDown::after {
+    top: 0.1rem;
+    bottom: auto;
+    left: calc(-1.6rem + 0.4rem - 5.5px);
+  }
+
+  .eventTitle {
+    font-size: 1.5rem;
+  }
+
+  .eventBody {
+    display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCta {
+    display: none;
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 1.2rem;
+  }
+
+  .grid,
+  .teachers,
+  .rates,
+  .rateNotes,
+  .year,
+  .find,
+  .footGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tile {
+    min-height: 0;
+  }
+
+  .rate {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 1.2rem;
+    padding: 1.2rem;
+  }
+
+  .rateMin {
+    grid-row: 1 / span 4;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .rateMin strong {
+    font-size: 4rem;
+  }
+
+  .ratePrice {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .ratePrice strong {
+    font-size: 1.8rem;
+  }
+
+  .rateSuits {
+    margin-top: 0.4rem;
+    font-size: 0.88rem;
+  }
+
+  .tileName {
+    margin-top: 1rem;
+  }
+
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  /* The classes table restacks: one block per class. */
+  .classes thead {
+    display: none;
+  }
+
+  .classes,
+  .classes tbody,
+  .classes tr,
+  .classes tbody th,
+  .classes tbody td {
+    display: block;
+  }
+
+  .classes tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.15rem 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .classes tbody th,
+  .classes tbody td {
+    padding: 0;
+    border: 0;
+  }
+
+  .className {
+    grid-column: 1 / -1;
+  }
+
+  .classAges {
+    grid-column: 1 / -1;
+    font-size: 0.9rem;
+  }
+
+  .classes tbody .classPrice {
+    text-align: right;
+  }
+
+  .band {
+    height: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCta,
+  .btn,
+  .btnLine,
+  .tile {
+    transition: none;
+  }
+}

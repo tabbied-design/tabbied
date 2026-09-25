@@ -1,5 +1,5 @@
 import { TabbiedPattern } from 'tabbied/react';
-import { baste, midnightblossoms } from 'tabbied/patterns';
+import { midnightblossoms, stitch } from 'tabbied/patterns';
 import s from './osteria-lume.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
 
@@ -9,7 +9,7 @@ export const metadata = {
     'Osteria Lume is a small Italian restaurant on the corner of Vine and Fifth: pasta made each morning, a wood grill and a short list of Italian wine. Dinner Tuesday to Sunday, lunch at the weekend.',
 };
 
-/* Site colors. The tablecloth takes the pale linen as its own ground; the
+/* Site colors. The tablecloth paints the pale linen as its own cloth; the
    stitched fold takes `transparent`, so it sits in the card's paper. */
 const LINEN = '#F7F2E9';
 const INK = '#1E1B18';
@@ -184,15 +184,17 @@ export default function OsteriaLumePage() {
         {/* The tablecloth: the card is laid on it, so it shows above the card
             and to either side of it on a wide screen. */}
         <div className={s.cloth} aria-hidden="true">
-          <TabbiedPattern
-            pattern={midnightblossoms}
-            palette={CLOTH}
-            options={{ frequency: 0.45 }}
-            fit="grid"
-            cellSize={120}
-            seed="lume-cloth"
-            style={{ position: 'absolute', inset: 0 }}
-          />
+          <div className={s.clothField}>
+            <TabbiedPattern
+              pattern={midnightblossoms}
+              palette={CLOTH}
+              options={{ frequency: 0.5 }}
+              fit="grid"
+              cellSize={120}
+              seed="lume-cloth"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
         </div>
 
         <div className={s.card}>
@@ -290,14 +292,14 @@ export default function OsteriaLumePage() {
             </p>
           </section>
 
-          {/* The fold in the card: a running stitch, like the hem of a cloth. */}
+          {/* The fold in the card: a cross-stitched hem, like the edge of a cloth. */}
           <div className={s.seam} aria-hidden="true">
             <TabbiedPattern
-              pattern={baste}
+              pattern={stitch}
               palette={SEAM}
-              options={{ frequency: 0.7 }}
+              options={{ frequency: 0.55 }}
               fit="grid"
-              cellSize={36}
+              cellSize={26}
               seed="lume-seam"
               style={{ position: 'absolute', inset: 0 }}
             />

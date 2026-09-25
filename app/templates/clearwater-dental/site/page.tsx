@@ -35,7 +35,7 @@ const HOURS = [
   ['Wednesday', '8:00-5:00'],
   ['Thursday', '8:00-7:00'],
   ['Friday', '8:00-2:00'],
-  ['Saturday', '9:00-1:00, twice a month'],
+  ['Saturday', '9:00-1:00'],
   ['Sunday', 'Closed'],
 ];
 
@@ -239,6 +239,7 @@ export default function ClearwaterDentalPage() {
               </div>
             ))}
           </dl>
+          <small className={s.sideNote}>Saturdays: the first and third of each month.</small>
         </div>
 
         <TemplateMenu className={s.siteMenu}>
@@ -273,7 +274,7 @@ export default function ClearwaterDentalPage() {
               <TabbiedPattern
                 pattern={softbubbles}
                 palette={BUBBLES}
-                options={{ frequency: 0.35 }}
+                options={{ frequency: 0.5 }}
                 fit="grid"
                 cellSize={72}
                 redrawInterval={8400}
@@ -494,6 +495,16 @@ export default function ClearwaterDentalPage() {
                   <br />
                   Brookmere
                 </p>
+                <h3>Hours</h3>
+                <dl className={s.hoursList}>
+                  {HOURS.map(([d, h]) => (
+                    <div key={d}>
+                      <dt>{d}</dt>
+                      <dd>{h}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className={s.hoursNote}>Saturdays are the first and third of each month. Evening slots go first, so book them early.</p>
                 <h3>Getting here</h3>
                 <ul className={s.directions}>
                   <li>Free parking behind the building, 14 spaces, two of them wide</li>

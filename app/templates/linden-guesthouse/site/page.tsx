@@ -12,15 +12,15 @@ export const metadata = {
 
 /* Site colors. Every field takes `transparent` in the background slot, so
    the room swatches and the leaves sit on the page's own paper. */
-const INK = '#25271F';
 const TERRA = '#A45A3C';
 const LINDEN = '#6F7D5C';
 const PAPER = '#F5F2EA';
+const GRAY = '#9C978C';
 const PALE = '#E7E1D3';
 
 /* The two wings of the house wear two colorings of the same wallpaper. */
-const HOUSE = ['transparent', INK, PALE, PAPER, TERRA, PALE];
-const YARD = ['transparent', INK, PALE, PAPER, LINDEN, PALE];
+const HOUSE = ['transparent', GRAY, PALE, PAPER, TERRA, PAPER];
+const YARD = ['transparent', GRAY, PALE, PAPER, LINDEN, PAPER];
 const LEAVES = ['transparent', LINDEN, PALE, TERRA];
 
 const NAV = [

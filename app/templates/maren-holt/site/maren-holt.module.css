@@ -99,7 +99,7 @@
 /* The portrait slot, filled by the primary field instead of a photograph. */
 .plate {
   position: relative;
-  height: clamp(96px, 17vh, 176px);
+  height: clamp(96px, 19vh, 190px);
   margin: clamp(1.1rem, 2.6vh, 1.8rem) 0;
   overflow: hidden;
   background: var(--paper);
@@ -309,7 +309,7 @@
 
 .workRow {
   display: grid;
-  grid-template-columns: 4rem minmax(0, 1.05fr) minmax(0, 1fr);
+  grid-template-columns: 5.6rem minmax(0, 1.05fr) minmax(0, 1fr);
   grid-template-areas:
     'year main outcome'
     'kind main outcome';
@@ -813,7 +813,7 @@
 
 @media (max-width: 1180px) {
   .workRow {
-    grid-template-columns: 4rem minmax(0, 1fr);
+    grid-template-columns: 5.6rem minmax(0, 1fr);
     grid-template-areas:
       'year main'
       'kind main'
@@ -838,20 +838,44 @@
   }
 }
 
-/* Below this the profile stops being a column: it becomes the top of the
-   page, its section list moves into the menu, and the rest stays. */
+/* Below this the profile stops being a column. The header's box is
+   dissolved so its first row (name and menu) can stick to the top of the
+   whole page as a bar, and the rest of the card becomes the opening of the
+   page; the section list moves into the menu. */
 @media (max-width: 900px) {
   .shell {
-    grid-template-columns: 1fr;
+    display: block;
   }
 
   .profile {
-    position: static;
-    height: auto;
-    overflow: visible;
-    padding: 1.1rem var(--gut) 2rem;
-    border-right: 0;
+    display: contents;
+  }
+
+  .profileTop {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding: 0.75rem var(--gut);
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(10px);
     border-bottom: var(--rule);
+  }
+
+  .name {
+    font-size: 1.75rem;
+  }
+
+  .role,
+  .plate,
+  .bio,
+  .status,
+  .links {
+    margin-left: var(--gut);
+    margin-right: var(--gut);
+  }
+
+  .role {
+    margin-top: 1.6rem;
   }
 
   .nav {
@@ -863,7 +887,9 @@
   }
 
   .plate {
-    height: 132px;
+    height: 140px;
+    margin-top: 1.2rem;
+    margin-bottom: 1.4rem;
   }
 
   .bio {
@@ -872,7 +898,9 @@
 
   .links {
     margin-top: 0;
-    padding-top: 1.2rem;
+    margin-bottom: 0;
+    padding: 1.2rem 0 2rem;
+    border-bottom: var(--rule);
   }
 
   .main {
