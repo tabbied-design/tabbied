@@ -364,6 +364,17 @@ export default function HighPassLodgePage() {
               </dl>
             </div>
             <div className={s.menuCard}>
+              <div className={s.menuMat} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={contourlines}
+                  palette={SURVEY}
+                  options={{ frequency: 0.55 }}
+                  fit="grid"
+                  cellSize={40}
+                  seed="high-pass-mat"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <p data-edit="dining.menuKicker" data-edit-max="240" data-edit-multiline className={s.menuKicker}>This week's dinner</p>
               <ol className={s.menu}>
                 {MENU.map(([dish, course], i) => (
@@ -551,6 +562,17 @@ export default function HighPassLodgePage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Good to know</h2>
           </div>
           <div className={s.faq}>
+            <div className={s.faqRail} aria-hidden="true">
+              <TabbiedPattern
+                pattern={contourlines}
+                palette={SURVEY}
+                options={{ frequency: 0.55 }}
+                fit="grid"
+                cellSize={28}
+                seed="high-pass-rail"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             {FAQS.map((f, i) => (
               <details key={f.q} className={s.faqItem}>
                 <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
@@ -562,6 +584,17 @@ export default function HighPassLodgePage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footStrip} aria-hidden="true">
+          <TabbiedPattern
+            pattern={terrain}
+            palette={BAND}
+            options={{ frequency: 0.5 }}
+            fit="grid"
+            cellSize={80}
+            seed="high-pass-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>High Pass Lodge</p>

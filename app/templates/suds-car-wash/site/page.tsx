@@ -19,6 +19,9 @@ const PALE = '#DCEAF7';
 
 const FOAM = ['transparent', PAPER, BLUE, PAPER];
 const GLOW = ['transparent', BLUE, SUN, PALE, BLUE];
+const PUDDLE = ['transparent', BLUE, PALE, BLUE];
+const SPRAY = ['transparent', PAPER, BLUE, PAPER, SUN];
+const RINSE = ['transparent', BLUE, PALE, SUN];
 
 const NAV = [
   ['Washes', '#washes'],
@@ -408,6 +411,17 @@ export default function SudsCarWashPage() {
             </ol>
           </div>
           <div className={s.posts} aria-hidden="true">
+            <div className={s.postsFoam} aria-hidden="true">
+              <TabbiedPattern
+                pattern={recession}
+                palette={PUDDLE}
+                fit="grid"
+                cellSize={24}
+                seed="suds-puddle"
+                options={{ frequency: 0.7 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <span />
             <span />
           </div>
@@ -419,6 +433,17 @@ export default function SudsCarWashPage() {
         {/* ------------------------------------------------------------- HOW */}
         <section id="how" className={s.how} aria-labelledby="how-h">
           <div className={s.howArt}>
+            <div className={s.howDisc} aria-hidden="true">
+              <TabbiedPattern
+                pattern={recession}
+                palette={SPRAY}
+                fit="grid"
+                cellSize={40}
+                seed="suds-spray"
+                options={{ frequency: 0.6 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="suds-car-wash-nozzle"
               alt="A spray nozzle, spraying water"
@@ -525,6 +550,18 @@ export default function SudsCarWashPage() {
         {/* ---------------------------------------------------------- EXTRAS */}
         <section id="extras" className={s.extras} aria-labelledby="extras-h">
           <div className={s.extrasArt}>
+            <div className={s.extrasField} aria-hidden="true">
+              <TabbiedPattern
+                pattern={softbubbles}
+                palette={RINSE}
+                fit="grid"
+                cellSize={90}
+                seed="suds-rinse"
+                redrawInterval={11000}
+                options={{ frequency: 0.3 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="suds-car-wash-bucket"
               alt="A bucket with a sponge resting in it"
@@ -617,6 +654,17 @@ export default function SudsCarWashPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footFoam} aria-hidden="true">
+          <TabbiedPattern
+            pattern={recession}
+            palette={PUDDLE}
+            fit="grid"
+            cellSize={26}
+            seed="suds-footer"
+            options={{ frequency: 0.6 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Suds</p>

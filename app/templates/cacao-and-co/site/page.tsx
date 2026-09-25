@@ -20,6 +20,8 @@ const PALE = '#EBDDD2';
 const MOLD = ['transparent', PALE, CARAMEL];
 const TRANSFER = ['transparent', CARAMEL, PALE, CHERRY];
 const CUP = [CREAM, PALE, CARAMEL];
+const MAT = ['transparent', CREAM, CARAMEL];
+const STRIP = ['transparent', CHERRY, CARAMEL];
 
 const NAV = [
   ['The box', '#box'],
@@ -242,6 +244,17 @@ export default function CacaoAndCoPage() {
         {/* ------------------------------------------------------------ BARS */}
         <section id="bars" className={s.bars} aria-labelledby="bars-h">
           <div className={s.barsArt}>
+            <div className={s.barsMat} aria-hidden="true">
+              <TabbiedPattern
+                pattern={gravure}
+                palette={MAT}
+                fit="grid"
+                cellSize={36}
+                options={{ frequency: 0.85 }}
+                seed="mat"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="cacao-and-co-bar"
               alt="A bar of dark chocolate with a few squares broken off"
@@ -301,6 +314,16 @@ export default function CacaoAndCoPage() {
                 ))}
               </ol>
             </div>
+          </div>
+          <div className={s.makingStrip} aria-hidden="true">
+            <TabbiedPattern
+              pattern={bothcut}
+              palette={STRIP}
+              fit="grid"
+              cellSize={44}
+              seed="transfer sheet"
+              style={{ position: 'absolute', inset: 0 }}
+            />
           </div>
         </section>
 
@@ -426,6 +449,16 @@ export default function CacaoAndCoPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
+          <span className={s.footBonbon} aria-hidden="true">
+            <TabbiedPattern
+              pattern={diadem}
+              palette={TRANSFER}
+              fit="grid"
+              cellSize={24}
+              seed="Sea Salt Caramel"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </span>
           <p className={s.footName}>
             <span data-edit="footer.text" data-edit-max="60">Cacao</span>
             <em>&amp;</em>

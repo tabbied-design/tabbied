@@ -15,9 +15,12 @@ export const metadata = {
 const WALNUT = '#9A5B36';
 const GRAY = '#8E857B';
 const PALE = '#E4DBCF';
+const PAPER = '#F3EFE8';
 
 const GRAIN = ['transparent', WALNUT, GRAY, PALE];
 const FLUTE = ['transparent', PALE, GRAY];
+const HALO = ['transparent', WALNUT, GRAY];
+const FORM_FLUTE = ['transparent', PAPER, GRAY];
 
 const NAV = [
   ['Catalog', '#catalog'],
@@ -509,6 +512,16 @@ export default function HewnFurniturePage() {
         <section id="workshop" className={s.workshop} aria-labelledby="workshop-h">
           <div className={s.workshopInner}>
             <div className={s.workshopLamp}>
+              <div className={s.lampHalo} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={randomrings}
+                  palette={HALO}
+                  fit="grid"
+                  cellSize={120}
+                  seed="hewn-halo"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="hewn-furniture-lamp"
                 alt="The Stem floor lamp, standing in the workshop"
@@ -582,6 +595,17 @@ export default function HewnFurniturePage() {
               </p>
             </div>
             <form className={s.form} action="#">
+              <div className={s.formStrip} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={reeding}
+                  palette={FORM_FLUTE}
+                  options={{ frequency: 0.7 }}
+                  fit="grid"
+                  cellSize={28}
+                  seed="hewn-form"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <h3 data-edit="showroom.visitHead3" data-edit-max="40" className={s.visitHead}>Book an hour with a maker</h3>
               <label className={s.field}>
                 <span data-edit="showroom.text" data-edit-max="60">Name</span>
@@ -619,6 +643,16 @@ export default function HewnFurniturePage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div>
+            <div className={s.footPlate} aria-hidden="true">
+              <TabbiedPattern
+                pattern={randomrings}
+                palette={GRAIN}
+                fit="grid"
+                cellSize={26}
+                seed="hewn-foot"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Hewn</p>
             <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Chairs, lamps and sideboards, made in the Mill District.</p>
           </div>

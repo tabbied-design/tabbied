@@ -745,12 +745,25 @@
 /* --------------------------------------------------------------- postcards */
 
 .postcards {
+  position: relative;
+  overflow: hidden;
   padding: clamp(4rem, 8vw, 7rem) var(--gut);
   background: var(--navy);
   color: var(--paper);
 }
 
+/* The hero's swirl again, as a postmark ring cut by the top edge. */
+.postSwirl {
+  position: absolute;
+  top: -7rem;
+  right: max(-5rem, calc((100% - var(--max)) / 2 - 5rem));
+  width: 27rem;
+  aspect-ratio: 1;
+  opacity: 0.8;
+}
+
 .postcards .secHead {
+  position: relative;
   max-width: calc(var(--max) - 2 * var(--gut));
   margin: 0 auto;
 }
@@ -760,6 +773,7 @@
 }
 
 .cards {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(1.25rem, 2.5vw, 2rem);
@@ -948,6 +962,7 @@
 }
 
 .consultPanel {
+  overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
   gap: clamp(2rem, 5vw, 4.5rem);
@@ -958,8 +973,22 @@
 }
 
 .consultIntro {
+  position: relative;
   display: flex;
   flex-direction: column;
+}
+
+/* Depth contours on a chart, under the boat. */
+.consultSea {
+  position: absolute;
+  left: -4rem;
+  bottom: -5rem;
+  width: 25rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(closest-side, var(--navy) 45%, transparent 100%);
+  mask-image: radial-gradient(closest-side, var(--navy) 45%, transparent 100%);
 }
 
 .consultTitle {
@@ -973,6 +1002,7 @@
 }
 
 .consultArt {
+  position: relative;
   width: min(15rem, 70%);
   margin-top: auto;
   padding-top: 2.5rem;
@@ -1103,6 +1133,16 @@
   background: var(--sand);
 }
 
+/* The planning route runs along the top of the footer. */
+.footRoute {
+  position: relative;
+  height: 2.25rem;
+  margin: -3rem calc(-1 * var(--gut)) 2.4rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, var(--navy) 12%, var(--navy) 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, var(--navy) 12%, var(--navy) 88%, transparent);
+}
+
 .footTop {
   display: flex;
   flex-wrap: wrap;
@@ -1221,7 +1261,8 @@
     box-shadow: none;
   }
 
-  .consultArt {
+  .consultArt,
+  .consultSea {
     display: none;
   }
 
@@ -1279,6 +1320,13 @@
 
   .postLines {
     display: none;
+  }
+
+  .postSwirl {
+    top: -4.5rem;
+    right: -4.5rem;
+    width: 13rem;
+    opacity: 0.55;
   }
 }
 

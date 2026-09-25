@@ -414,8 +414,22 @@
   background: color-mix(in srgb, var(--caramel) 38%, var(--cream));
 }
 
+/* A mat of molds around the bar, the bar on a plain plate inside it. */
+.barsMat {
+  position: absolute;
+  inset: 0;
+}
+
+.barsArt::after {
+  content: '';
+  position: absolute;
+  inset: 9%;
+  background: color-mix(in srgb, var(--caramel) 38%, var(--cream));
+}
+
 .barPhoto {
   width: 78%;
+  z-index: 1;
 }
 
 .barList {
@@ -494,6 +508,18 @@
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(2rem, 5vw, 5rem);
   align-items: center;
+}
+
+/* A sheet of transfer tops along the foot of the dark room. */
+.making {
+  position: relative;
+}
+
+.makingStrip {
+  position: relative;
+  height: 44px;
+  overflow: hidden;
+  opacity: 0.85;
 }
 
 .making .secKick {
@@ -800,7 +826,21 @@
   border-bottom: 1px solid color-mix(in srgb, var(--cream) 20%, transparent);
 }
 
+/* One bonbon beside the name, a top from the box. */
+.footBonbon {
+  position: relative;
+  flex: none;
+  width: 4.2rem;
+  aspect-ratio: 1;
+  border-radius: 22%;
+  overflow: hidden;
+  margin-right: -0.9rem;
+  background: var(--cherry);
+  align-self: center;
+}
+
 .footName {
+  margin-right: auto;
   display: flex;
   align-items: baseline;
   gap: 0.35rem;

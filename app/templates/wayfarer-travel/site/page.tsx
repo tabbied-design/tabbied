@@ -20,6 +20,11 @@ const SAND = '#E9DFC9';
 const SWIRL = ['transparent', NAVY, SAND, TEAL, CORAL];
 const CONTOUR = ['transparent', TEAL, SAND, CORAL];
 const ROUTE = ['transparent', CORAL, SAND, TEAL];
+/* The same three fields again further down: the swirl and the contours on
+   navy (so no navy ink), the route on the sand footer. */
+const SWIRL_NIGHT = ['transparent', SAND, TEAL, CORAL];
+const CONTOUR_NIGHT = ['transparent', TEAL, SAND];
+const ROUTE_FOOT = ['transparent', CORAL, NAVY, TEAL];
 
 const NAV = [
   ['Destinations', '#destinations'],
@@ -519,6 +524,16 @@ export default function WayfarerTravelPage() {
         {/* ------------------------------------------------------ POSTCARDS
             Three notes from travelers, each on a postcard with its stamp. */}
         <section id="postcards" className={s.postcards} aria-labelledby="postcards-h">
+          <div className={s.postSwirl} aria-hidden="true">
+            <TabbiedPattern
+              pattern={radiantswirl}
+              palette={SWIRL_NIGHT}
+              fit="grid"
+              cellSize={48}
+              seed="wayfarer-post"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.secHead}>
             <p data-edit="postcards.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Postcards</p>
             <h2 data-edit="postcards.secTitle" data-edit-max="60" id="postcards-h" className={s.secTitle}>What came back in the mail</h2>
@@ -577,6 +592,17 @@ export default function WayfarerTravelPage() {
                 A planner replies within one working day to set a time. Bring
                 photos, a rough budget and anyone who is coming with you.
               </p>
+              <div className={s.consultSea} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={contourlines}
+                  palette={CONTOUR_NIGHT}
+                  options={{ frequency: 0.45 }}
+                  fit="grid"
+                  cellSize={80}
+                  seed="wayfarer-sea"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="wayfarer-travel-sailboat"
                 alt="A small sailing boat on a wave"
@@ -675,6 +701,16 @@ export default function WayfarerTravelPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footRoute} aria-hidden="true">
+          <TabbiedPattern
+            pattern={dashfield}
+            palette={ROUTE_FOOT}
+            fit="grid"
+            cellSize={40}
+            seed="wayfarer-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Wayfarer Travel</p>

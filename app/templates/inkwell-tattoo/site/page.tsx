@@ -454,6 +454,17 @@ export default function InkwellTattooPage() {
             {ARTISTS.map((a, i) => (
               <article key={a.name} className={s.artist}>
                 <div className={s.artistPlate}>
+                  <span className={s.plateStars} aria-hidden="true">
+                    <TabbiedPattern
+                      pattern={sparkle}
+                      palette={STARS}
+                      fit="grid"
+                      cellSize={40}
+                      options={{ frequency: 0.4 }}
+                      seed={`inkwell-plate-${i}`}
+                      style={{ position: 'absolute', inset: 0 }}
+                    />
+                  </span>
                   <Artwork slug={a.art} alt={a.alt} inks={['var(--paper)']} className={s.artistArt} />
                 </div>
                 <h3 data-edit={`artist.artistName.${i}`} data-edit-max="40" className={s.artistName}>{a.name}</h3>
@@ -549,6 +560,16 @@ export default function InkwellTattooPage() {
             </div>
 
             <form className={s.form} action="#">
+              <div className={s.formBand} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={diamondconfetti}
+                  palette={FILLER}
+                  fit="grid"
+                  cellSize={60}
+                  seed="inkwell-armband"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <h3 data-edit="book.bookHead2" data-edit-max="40" className={s.bookHead}>Ask for a slot</h3>
               <div className={s.formRow}>
                 <label className={s.field}>
@@ -629,6 +650,16 @@ export default function InkwellTattooPage() {
               </ul>
             </div>
             <div className={s.visitArt}>
+              <div className={s.visitDisc} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={diamondconfetti}
+                  palette={WALLPAPER}
+                  fit="grid"
+                  cellSize={120}
+                  seed="inkwell-disc"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="inkwell-tattoo-swallow"
                 alt=""

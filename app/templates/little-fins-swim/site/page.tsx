@@ -16,8 +16,10 @@ const FOAM = '#F2FAFC';
 const DEEP = '#0E2A3B';
 const CORAL = '#FF7B54';
 const SUN = '#FFD23F';
+const POOL = '#00A6D6';
 
 const RIPPLES = ['transparent', FOAM, SUN, DEEP];
+const POND = ['transparent', POOL, SUN, FOAM];
 const RINGS = ['transparent', SUN, CORAL, FOAM];
 const BUBBLES = ['transparent', CORAL, SUN];
 
@@ -313,6 +315,17 @@ export default function LittleFinsPage() {
 
         {/* ------------------------------------------------------- TIMETABLE */}
         <section id="timetable" className={s.timetable} aria-labelledby="timetable-h">
+          <div className={s.ttTile} aria-hidden="true">
+            <TabbiedPattern
+              pattern={lagoon}
+              palette={RIPPLES}
+              fit="grid"
+              cellSize={48}
+              options={{ frequency: 0.5 }}
+              seed="lane-four"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.secHead}>
             <p data-edit="timetable.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Timetable, autumn term</p>
             <h2 data-edit="timetable.title" data-edit-max="60" id="timetable-h">Classes by pool and day</h2>
@@ -438,6 +451,18 @@ export default function LittleFinsPage() {
               ))}
             </ul>
             <p data-edit="enroll.priceNote" data-edit-max="240" data-edit-multiline className={s.priceNote}>Brothers and sisters: 10% off the second child and every one after.</p>
+            <div className={s.pond} aria-hidden="true">
+              <TabbiedPattern
+                pattern={lagoon}
+                palette={POND}
+                fit="grid"
+                cellSize={30}
+                options={{ frequency: 0.4 }}
+                seed="duck-pond"
+                redrawInterval={10000}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="little-fins-swim-duck"
               alt=""
@@ -503,6 +528,17 @@ export default function LittleFinsPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footBubbles} aria-hidden="true">
+          <TabbiedPattern
+            pattern={polkadot}
+            palette={BUBBLES}
+            fit="grid"
+            cellSize={44}
+            options={{ frequency: 0.3 }}
+            seed="foot-bubbles"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Little Fins</p>

@@ -438,6 +438,8 @@
 /* ------------------------------------------------------------------ dining */
 
 .dining {
+  position: relative;
+  isolation: isolate;
   margin-top: var(--air);
   padding: var(--air) var(--gut);
   background: var(--frost);
@@ -490,12 +492,22 @@
   text-align: right;
 }
 
-/* A menu card like the chalkboard by the dining room door. */
+/* A menu card like the chalkboard by the dining room door, set on a
+   survey-map mat that shows past its lower right corner. */
 .menuCard {
+  position: relative;
   padding: clamp(1.8rem, 4vw, 3rem);
   background: var(--ink);
   color: var(--snow);
   box-shadow: 0 30px 60px -40px rgb(0 0 0 / 0.6);
+}
+
+.menuMat {
+  position: absolute;
+  z-index: -1;
+  inset: 2.2rem -2.2rem -2.2rem 2.2rem;
+  overflow: hidden;
+  background: var(--snow);
 }
 
 .menuKicker {
@@ -844,8 +856,20 @@
 /* --------------------------------------------------------------------- faq */
 
 .faq {
+  position: relative;
   max-width: 50rem;
   margin-left: calc(3.5rem + clamp(1rem, 3vw, 2rem));
+  border-top: 2px solid var(--ink);
+}
+
+/* A narrow survey strip down the number column, beside the questions. */
+.faqRail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: calc(100% + clamp(1rem, 3vw, 2rem));
+  width: 3.5rem;
+  overflow: hidden;
   border-top: 2px solid var(--ink);
 }
 
@@ -900,6 +924,16 @@
   padding: clamp(3.5rem, 7vw, 5rem) var(--gut) 2rem;
   background: var(--ink);
   color: var(--snow);
+}
+
+/* The conditions band again, as a strip along the footer's top edge. */
+.footStrip {
+  position: relative;
+  height: 5rem;
+  margin: calc(-1 * clamp(3.5rem, 7vw, 5rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  opacity: 0.7;
+  mask-image: linear-gradient(180deg, var(--ink) 40%, transparent);
 }
 
 .footGrid {
@@ -1020,6 +1054,10 @@
     min-height: 12rem;
   }
 
+  .menuMat {
+    inset: 1rem -0.9rem -0.9rem 1rem;
+  }
+
   /* The book section becomes a column: sky and heading, a window onto
      the lake, and the form card overlapping the water below it. */
   .book {
@@ -1099,6 +1137,10 @@
 
   .faq {
     margin-left: 0;
+  }
+
+  .faqRail {
+    display: none;
   }
 
   /* The trail table restacks: one block per trail, labels from data. */
