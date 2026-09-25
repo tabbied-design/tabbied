@@ -203,6 +203,12 @@
   white-space: nowrap;
 }
 
+.row[data-size='1'] .letters,
+.row[data-size='2'] .letters,
+.row[data-size='3'] .letters {
+  line-height: 0.8;
+}
+
 .row[data-size='1'] .letters {
   font-size: clamp(4.2rem, 7vw, 6.2rem);
 }

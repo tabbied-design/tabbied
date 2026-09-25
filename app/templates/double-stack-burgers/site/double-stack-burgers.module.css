@@ -1,0 +1,1162 @@
+/* ==========================================================================
+   DOUBLE STACK - smash burgers, Route 9
+   An exploded burger: the house double drawn once per layer, each copy
+   clipped to its own layer and dropped a little lower than the last, so
+   the stack opens up on a blue diner panel with every layer named on a
+   leader line. The menu repeats the idea as three stacks, a bun on top and
+   a bun below. A fat poster face for names and prices, a round sans for
+   the rest, ketchup, mustard and diner blue on cream.
+   ========================================================================== */
+
+.page {
+  --cream: #fff6e9;
+  --ink: #231815;
+  --ketchup: #e03a1e;
+  --mustard: #f7b32b;
+  --blue: #2b6cb0;
+  --gray: #a59483;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 84rem;
+  --air: clamp(4rem, 9vw, 7rem);
+  --display: 'Bowlby One', 'Arial Black', Impact, sans-serif;
+
+  font-family: 'Rubik', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--cream);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* -------------------------------------------------------------------- bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.65rem var(--gut);
+  background: var(--cream);
+  border-bottom: 3px solid var(--ink);
+}
+
+.mark {
+  display: inline-grid;
+  line-height: 0.82;
+  text-decoration: none;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.markBottom {
+  color: var(--ketchup);
+  font-size: 1.55rem;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.2rem, 3vw, 2.8rem);
+}
+
+.nav a {
+  font-weight: 700;
+  font-size: 1.02rem;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--ketchup);
+}
+
+.barBtn {
+  padding: 0.6rem 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--cream);
+  background: var(--ketchup);
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 3px 0 var(--ink);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.barBtn:hover {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--ink);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--cream);
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3.5rem) var(--gut) clamp(2.5rem, 5vw, 4rem);
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: center;
+}
+
+.kicker,
+.secKick {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ketchup);
+}
+
+.title {
+  margin-top: 0.9rem;
+  font-family: var(--display);
+  font-size: clamp(2.3rem, 3.9vw, 3.7rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--ketchup);
+}
+
+.lede {
+  margin-top: 1.3rem;
+  max-width: 30rem;
+  font-size: clamp(1.05rem, 1.3vw, 1.15rem);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  font-weight: 700;
+  font-size: 1.02rem;
+  text-decoration: none;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 4px 0 var(--ink);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.btn {
+  color: var(--cream);
+  background: var(--ketchup);
+}
+
+.btnLine {
+  background: var(--mustard);
+}
+
+.btn:hover,
+.btnLine:hover {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--ink);
+}
+
+.today {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.8rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.todayDot {
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--ketchup);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ketchup) 25%, transparent);
+}
+
+/* The exploded burger. The stage is the burger's width plus a label
+   column either side; the blue panel sits behind the burger only. */
+.stage {
+  --bw: min(20rem, 22vw);
+  position: relative;
+  padding: 3rem 0;
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: calc(var(--bw) + 4.5rem);
+  transform: translateX(-50%);
+  background: var(--blue);
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 0.6rem var(--blue), inset 0 0 0 0.75rem color-mix(in srgb, var(--cream) 55%, transparent);
+}
+
+.burger {
+  position: relative;
+  z-index: 1;
+  width: var(--bw);
+  margin: 0 auto;
+  aspect-ratio: 832 / 1210;
+}
+
+.burgerArt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 832 / 864;
+}
+
+.slice {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 6px 0 rgb(0 0 0 / 0.18));
+}
+
+.sliceArt {
+  width: 100%;
+}
+
+/* Cut lines fall where one layer ends and the next begins; each copy then
+   drops by 8% of the burger's height more than the one above. */
+.slice:nth-child(1) {
+  clip-path: inset(0 0 71.5% 0);
+}
+
+.slice:nth-child(2) {
+  clip-path: inset(28.5% 0 54.6% 0);
+  transform: translateY(8%);
+}
+
+.slice:nth-child(3) {
+  clip-path: inset(45.4% 0 41.4% 0);
+  transform: translateY(16%);
+}
+
+.slice:nth-child(4) {
+  clip-path: inset(58.6% 0 34.3% 0);
+  transform: translateY(24%);
+}
+
+.slice:nth-child(5) {
+  clip-path: inset(65.7% 0 19.2% 0);
+  transform: translateY(32%);
+}
+
+.slice:nth-child(6) {
+  clip-path: inset(80.8% 0 0 0);
+  transform: translateY(40%);
+}
+
+.labels {
+  position: absolute;
+  z-index: 2;
+  top: 3rem;
+  bottom: 3rem;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.label {
+  position: absolute;
+  width: 50%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.5rem;
+  row-gap: 0.15rem;
+  align-items: center;
+  transform: translateY(-50%);
+}
+
+.label[data-side='left'] {
+  left: 0;
+  padding-right: calc(var(--bw) / 2 + 2.6rem);
+  grid-template-columns: minmax(0, 1fr) auto;
+  text-align: right;
+}
+
+.label[data-side='right'] {
+  left: 50%;
+  padding-left: calc(var(--bw) / 2 + 2.6rem);
+}
+
+.label[data-side='left'] .labelNo {
+  order: 2;
+}
+
+.label[data-side='left'] .labelName {
+  order: 1;
+}
+
+.label[data-side='left'] .labelDetail {
+  order: 3;
+}
+
+/* The leader line and the dot where it touches the layer. */
+.label::after,
+.label::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+}
+
+.label::after {
+  width: calc(var(--bw) * 0.1 + 2.1rem);
+  border-top: 2px solid var(--ink);
+}
+
+.label::before {
+  z-index: 1;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-top: -0.3rem;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+}
+
+.label[data-side='left']::after {
+  right: calc(var(--bw) * 0.4);
+}
+
+.label[data-side='left']::before {
+  right: calc(var(--bw) * 0.4 - 0.35rem);
+}
+
+.label[data-side='right']::after {
+  left: calc(var(--bw) * 0.4);
+}
+
+.label[data-side='right']::before {
+  left: calc(var(--bw) * 0.4 - 0.35rem);
+}
+
+.labelNo {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  font-family: var(--display);
+  font-size: 0.8rem;
+  line-height: 1;
+  background: var(--mustard);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.labelName {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.02rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.labelDetail {
+  grid-column: 1 / -1;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------- sections */
+
+.menu {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(1.5rem, 5vw, 5rem);
+  row-gap: 0.8rem;
+  align-items: end;
+  margin-bottom: clamp(2.2rem, 4vw, 3.2rem);
+}
+
+.secKick {
+  grid-column: 1;
+}
+
+.secHead h2,
+.orderText h2,
+.hoursCard h2 {
+  font-family: var(--display);
+  font-size: clamp(2.1rem, 4.2vw, 3.6rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.secHead h2 {
+  grid-column: 1;
+}
+
+.secNote {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  max-width: 34rem;
+  font-size: 1.05rem;
+}
+
+/* ------------------------------------------------------------------- menu
+   Each list is a stack: a bun on top with its seeds, the items as the
+   layers between two ink sides, and a bun underneath. */
+
+.menuGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.stackPair {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.bunTop {
+  position: relative;
+  padding: 2.2rem 1.5rem 1.1rem;
+  text-align: center;
+  background-color: var(--mustard);
+  background-image:
+    radial-gradient(ellipse 0.3rem 0.18rem at 22% 30%, var(--cream) 90%, transparent 100%),
+    radial-gradient(ellipse 0.3rem 0.18rem at 34% 16%, var(--cream) 90%, transparent 100%),
+    radial-gradient(ellipse 0.3rem 0.18rem at 47% 26%, var(--cream) 90%, transparent 100%),
+    radial-gradient(ellipse 0.3rem 0.18rem at 60% 14%, var(--cream) 90%, transparent 100%),
+    radial-gradient(ellipse 0.3rem 0.18rem at 72% 28%, var(--cream) 90%, transparent 100%),
+    radial-gradient(ellipse 0.3rem 0.18rem at 84% 40%, var(--cream) 90%, transparent 100%);
+  border: 3px solid var(--ink);
+  border-radius: 50% 50% 0.7rem 0.7rem / 3.6rem 3.6rem 0.7rem 0.7rem;
+}
+
+.bunTop h3 {
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.bunTop span {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.bunArt {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: 1rem;
+  padding-left: 12%;
+  text-align: left;
+}
+
+.fries {
+  width: clamp(3.4rem, 5vw, 4.4rem);
+  margin-top: -2.6rem;
+}
+
+.shake {
+  width: clamp(2.2rem, 3.2vw, 2.8rem);
+  margin-top: -3.4rem;
+}
+
+.items {
+  display: grid;
+  padding: 0.4rem 1.5rem;
+  background: var(--cream);
+  border-left: 3px solid var(--ink);
+  border-right: 3px solid var(--ink);
+}
+
+.item,
+.itemShort {
+  padding: 0.85rem 0;
+  border-bottom: 2px dashed color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.item:last-child,
+.itemShort:last-child {
+  border-bottom: 0;
+}
+
+.itemHead,
+.itemShort {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+
+.item h4,
+.itemShort h4 {
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+.item p {
+  margin-top: 0.25rem;
+  max-width: 34rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 85%, transparent);
+}
+
+.tag {
+  flex: none;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--ketchup);
+  border-radius: 999px;
+  align-self: center;
+}
+
+.tag:empty {
+  display: none;
+}
+
+.dots {
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 2px dotted var(--gray);
+}
+
+.itemHead strong,
+.itemShort strong {
+  flex: none;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.05rem;
+}
+
+.bunBottom {
+  height: 1.6rem;
+  background: var(--mustard);
+  border: 3px solid var(--ink);
+  border-radius: 0.5rem 0.5rem 1.4rem 1.4rem;
+}
+
+.swaps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem 1.6rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding: 1.1rem 1.4rem;
+  border: 2px dashed var(--ink);
+  border-radius: 1rem;
+}
+
+.swapsHead {
+  font-family: var(--display);
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.swaps ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+}
+
+.swaps li {
+  font-size: 0.95rem;
+}
+
+/* The zigzag trim: a thin run under the bar, a deeper one before the
+   combos. */
+.trim {
+  position: relative;
+  height: 1.75rem;
+  overflow: hidden;
+  border-bottom: 3px solid var(--ink);
+}
+
+.band {
+  position: relative;
+  height: clamp(3.5rem, 6vw, 5rem);
+  overflow: hidden;
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+}
+
+/* ----------------------------------------------------------------- combos */
+
+.combos {
+  padding: var(--air) var(--gut);
+  color: var(--cream);
+  background: var(--ketchup);
+}
+
+.combos .secHead,
+.comboList {
+  max-width: var(--max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.combos .secKick {
+  color: var(--cream);
+}
+
+.comboList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.combo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.4rem;
+  color: var(--ink);
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  border-radius: 1.2rem;
+  box-shadow: 0 6px 0 var(--ink);
+}
+
+.comboNo {
+  align-self: start;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  background: var(--mustard);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.combo h3 {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.combo p {
+  flex: 1;
+  font-size: 0.98rem;
+}
+
+.comboPrice {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--ink);
+}
+
+.comboPrice strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--ketchup);
+}
+
+.comboPrice span {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ order */
+
+.order {
+  padding: var(--air) var(--gut);
+}
+
+.orderInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.orderText h2 {
+  margin-top: 0.8rem;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.2rem;
+}
+
+.steps li {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  color: var(--cream);
+  background: var(--blue);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+}
+
+.steps h3 {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.steps p {
+  font-size: 0.98rem;
+}
+
+.orderActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2.2rem;
+}
+
+.phone {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  text-decoration: none;
+}
+
+.delivery {
+  position: relative;
+  padding: 1.8rem;
+  padding-top: 2.4rem;
+  color: var(--cream);
+  background: var(--ink);
+  border-radius: 1.4rem;
+}
+
+.deliveryFries {
+  position: absolute;
+  top: -2.5rem;
+  right: 1.6rem;
+  width: 4.6rem;
+}
+
+.deliveryHead {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+  padding-right: 5rem;
+}
+
+.deliveryNote {
+  margin-top: 0.8rem;
+  color: color-mix(in srgb, var(--cream) 85%, transparent);
+}
+
+.zones {
+  margin-top: 1.2rem;
+}
+
+.zones div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px dashed color-mix(in srgb, var(--cream) 35%, transparent);
+}
+
+.zones dd {
+  font-weight: 700;
+  color: var(--mustard);
+}
+
+/* ------------------------------------------------------------------ hours */
+
+.hours {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+.hoursCard {
+  padding: clamp(1.5rem, 3.5vw, 2.6rem);
+  background: var(--mustard);
+  border: 3px solid var(--ink);
+  border-radius: 1.4rem;
+  box-shadow: 0 6px 0 var(--ink);
+}
+
+.hoursCard .secKick {
+  color: var(--ink);
+}
+
+.hoursCard h2 {
+  margin-top: 0.6rem;
+}
+
+.hoursList {
+  margin-top: 1.4rem;
+}
+
+.hoursList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-top: 2px solid var(--ink);
+}
+
+.hoursList dt {
+  font-weight: 700;
+}
+
+.hoursList dd {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.hoursNote {
+  margin-top: 0.4rem;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--ink);
+  font-size: 0.95rem;
+}
+
+.findUs {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  align-items: center;
+}
+
+.findShake {
+  width: clamp(4.5rem, 8vw, 7rem);
+}
+
+.findText h3 {
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.findText p {
+  margin-top: 0.8rem;
+  max-width: 28rem;
+}
+
+.findText a {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-weight: 700;
+  text-decoration-color: var(--ketchup);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  padding: 0 var(--gut) 2rem;
+  color: var(--cream);
+  background: var(--ink);
+}
+
+.buns {
+  position: relative;
+  height: 3rem;
+  margin: 0 calc(var(--gut) * -1) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: start;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--mustard);
+}
+
+.footLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+}
+
+.footLinks a {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.footLinks a:hover {
+  text-decoration: underline;
+}
+
+.footAddr {
+  line-height: 1.7;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--cream) 74%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--cream) 22%, transparent);
+}
+
+.credit a {
+  color: var(--cream);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1180px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroText {
+    max-width: 44rem;
+  }
+
+  .stage {
+    --bw: min(21rem, 34vw);
+  }
+
+  .comboList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .menuGrid,
+  .orderInner,
+  .hours {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .delivery {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.7rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNote {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .footTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Narrow: the burger on its own, the labels as a numbered list under it. */
+@media (max-width: 700px) {
+  .stage {
+    --bw: min(15rem, 58vw);
+    padding: 2rem 0 0;
+  }
+
+  .panel {
+    bottom: auto;
+    height: calc(var(--bw) * 1210 / 832 + 4rem);
+  }
+
+  .burger {
+    margin-bottom: 2rem;
+  }
+
+  .labels {
+    position: static;
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1.6rem;
+    counter-reset: none;
+  }
+
+  .label,
+  .label[data-side='left'],
+  .label[data-side='right'] {
+    position: static;
+    width: auto;
+    padding: 0;
+    transform: none;
+    text-align: left;
+    grid-template-columns: auto minmax(0, 1fr);
+    top: auto !important;
+  }
+
+  .label[data-side='left'] .labelNo,
+  .label[data-side='left'] .labelName,
+  .label[data-side='left'] .labelDetail {
+    order: 0;
+  }
+
+  .label[data-side='left'] .labelDetail {
+    grid-column: 2;
+  }
+
+  .labelDetail {
+    grid-column: 2;
+  }
+
+  .label::after,
+  .label::before {
+    display: none;
+  }
+
+  .steps,
+  .comboList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .barBtn {
+    display: none;
+  }
+
+  .items {
+    padding: 0.3rem 1rem;
+  }
+
+  .bunArt {
+    padding-left: 8%;
+  }
+
+  .findUs {
+    align-items: start;
+  }
+
+  .findShake {
+    width: 3.6rem;
+  }
+
+  .hoursList dd {
+    font-size: 0.95rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barBtn,
+  .btn,
+  .btnLine {
+    transition: none;
+  }
+
+  .barBtn:hover,
+  .btn:hover,
+  .btnLine:hover {
+    transform: none;
+  }
+}

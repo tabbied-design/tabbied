@@ -1,5 +1,5 @@
 import { TabbiedPattern } from 'tabbied/react';
-import { hairpin, percale, slashbar } from 'tabbied/patterns';
+import { percale, slashbar, switchback } from 'tabbied/patterns';
 import s from './green-light-driving.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
 import { Artwork } from 'components/Artwork';
@@ -12,13 +12,14 @@ export const metadata = {
 
 /* Site colors. The car, the light and the sign are stacked masks, one per
    color layer, each painted with one of the page's custom properties. */
+const PAPER = '#F3F5F2';
 const ASPHALT = '#141A16';
 const GREEN = '#1F9D55';
 const AMBER = '#F6C026';
 const GRAY = '#858D87';
 
 const BENDS = ['transparent', GREEN, GRAY];
-const CROSSING = ['transparent', AMBER, ASPHALT];
+const CROSSING = ['transparent', PAPER, AMBER];
 const MARKINGS = ['transparent', AMBER, GREEN, GRAY];
 
 const NAV = [
@@ -180,11 +181,11 @@ export default function GreenLightPage() {
           <div className={s.heroArt}>
             <div className={s.heroField} aria-hidden="true">
               <TabbiedPattern
-                pattern={hairpin}
+                pattern={switchback}
                 palette={BENDS}
                 fit="grid"
                 cellSize={64}
-                options={{ frequency: 0.4 }}
+                options={{ frequency: 0.55 }}
                 seed="eastfield-bends"
                 redrawInterval={8400}
                 style={{ position: 'absolute', inset: 0 }}
@@ -357,7 +358,7 @@ export default function GreenLightPage() {
               <p className={s.secKick}>Pass rates</p>
               <h2 id="results-h">Nine in ten pass on the first try</h2>
               <p className={s.resultsNote}>
-                Counted from the state&apos;s own results for every learner who
+                Counted from the state's own results for every learner who
                 took a test in our car, including the ones who booked before we
                 thought they were ready.
               </p>

@@ -223,7 +223,7 @@ export default function ClearViewOpticalPage() {
             <Artwork
               slug="clear-view-optical-round"
               alt="A pair of round glasses set down on the chart"
-              inks={{ red: 'var(--ink)', blue: 'var(--blue)' }}
+              inks={{ red: 'var(--blue)', blue: 'var(--ink)' }}
               className={s.heroGlasses}
             />
           </div>

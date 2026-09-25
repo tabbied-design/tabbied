@@ -1,0 +1,910 @@
+/* ==========================================================================
+   VEIL & VOW - bridal boutique, Orchard Lane
+   An appointment journey. Four numbered steps read across the page, the
+   gowns stand in a row of tall arches, and the fittings run down a
+   timeline to the week of the wedding. The two photographs, a gown and a
+   bouquet, are tinted through masks in the page's own inks, a different
+   pair on each arch's ground. A high-contrast Bodoni with its italic for
+   the headings, a soft sans for the rest, ivory, rose and taupe.
+   ========================================================================== */
+
+.page {
+  --ivory: #fbf8f4;
+  --ink: #26201f;
+  --taupe: #b08a6e;
+  --rose: #c9a7b8;
+  --gray: #9d9491;
+  --pale: #efe8e1;
+  --gut: clamp(1rem, 4.5vw, 4rem);
+  --max: 82rem;
+  --air: clamp(4.5rem, 9vw, 8rem);
+  --serif: 'Libre Bodoni', 'Bodoni 72', Didot, Georgia, serif;
+  --muted: color-mix(in srgb, var(--ink) 70%, var(--ivory));
+  --deep: color-mix(in srgb, var(--taupe) 60%, var(--ink));
+  --line: color-mix(in srgb, var(--ink) 16%, transparent);
+
+  position: relative;
+  font-family: 'Mulish', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  background: var(--ivory);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 5rem;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--taupe);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(h1, h2) em {
+  font-style: italic;
+  color: var(--deep);
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem var(--gut);
+  background: var(--ivory);
+  border-bottom: 1px solid var(--line);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.markAmp {
+  font-style: italic;
+  color: var(--taupe);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2.2vw, 2.2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--taupe);
+}
+
+.barCta {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: var(--ink);
+  color: var(--ivory);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--ivory);
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) var(--air);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6.5rem);
+  align-items: center;
+}
+
+.kicker,
+.secKick {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--deep);
+}
+
+.title {
+  margin-top: 1.3rem;
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  line-height: 1.04;
+}
+
+.title em {
+  display: block;
+}
+
+.lede {
+  margin-top: 1.6rem;
+  max-width: 33rem;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2.2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 1.6rem;
+  border: 0;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--ink);
+  color: var(--ivory);
+  transition: background-color 150ms ease;
+}
+
+.btn:hover {
+  background: var(--deep);
+}
+
+.textLink {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--taupe);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 34rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.facts dt {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.facts dd {
+  margin-top: 0.4rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.heroArt {
+  position: relative;
+  padding: 0 0 2.5rem 3rem;
+}
+
+.heroArch {
+  position: relative;
+  aspect-ratio: 4 / 5.2;
+  overflow: hidden;
+  border-radius: 999px 999px 0.3rem 0.3rem;
+  background: var(--rose);
+}
+
+.archField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.8;
+}
+
+.heroGown {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 88%;
+  transform: translateX(-50%);
+}
+
+.heroBouquet {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 42%;
+  filter: drop-shadow(0 14px 18px rgb(0 0 0 / 0.18));
+}
+
+/* --------------------------------------------------------------- journey */
+
+.journey {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.secHead {
+  max-width: 42rem;
+}
+
+.secHead h2 {
+  margin-top: 0.9rem;
+  font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+/* The steps share one rule, drawn through the numerals. */
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2.1rem;
+  border-top: 1px solid var(--taupe);
+}
+
+.step {
+  position: relative;
+}
+
+.stepNo {
+  display: inline-block;
+  padding-right: 1rem;
+  font-family: var(--serif);
+  font-size: 3.6rem;
+  font-style: italic;
+  line-height: 1.15;
+  color: var(--taupe);
+  background: var(--ivory);
+}
+
+.step h3 {
+  margin-top: 1.2rem;
+  font-size: 1.7rem;
+}
+
+.stepWhen {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--deep);
+}
+
+.step p {
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- gowns */
+
+.gowns {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.gownsHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem 3rem;
+}
+
+.gownsHead .secNote {
+  max-width: 26rem;
+}
+
+.arches {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.archItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.arch {
+  position: relative;
+  aspect-ratio: 5 / 8;
+  overflow: hidden;
+  border-radius: 999px 999px 0.3rem 0.3rem;
+  margin-bottom: 1.2rem;
+}
+
+.arch[data-tone='rose'] {
+  background: var(--rose);
+}
+
+.arch[data-tone='ink'] {
+  background: var(--ink);
+}
+
+.arch[data-tone='pale'] {
+  background: var(--pale);
+}
+
+.arch[data-tone='taupe'] {
+  background: var(--taupe);
+}
+
+.arch[data-tone='gray'] {
+  background: var(--gray);
+}
+
+.archArt {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 98%;
+  transform: translateX(-50%);
+}
+
+.arch[data-tone='gray'] .archArt {
+  bottom: 6%;
+  width: 90%;
+}
+
+.archItem h3 {
+  font-size: 1.6rem;
+}
+
+.archLine {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+}
+
+.archMeta {
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.archPrice {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-top: 1px solid var(--line);
+}
+
+/* ------------------------------------------------------------------ band */
+
+.band {
+  position: relative;
+  height: clamp(4.5rem, 8vw, 6.5rem);
+  overflow: hidden;
+  background: var(--pale);
+}
+
+/* ------------------------------------------------------------- designers */
+
+.designers {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.houses {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(1.5rem, 4vw, 4rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.houses li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: start;
+  column-gap: 1rem;
+  row-gap: 0.4rem;
+  padding: 1.6rem 0 1.8rem;
+  border-top: 1px solid var(--ink);
+}
+
+.houses h3 {
+  font-size: 1.75rem;
+}
+
+.houseFrom {
+  align-self: baseline;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--deep);
+}
+
+.houseKnown {
+  grid-column: 1 / -1;
+  color: var(--muted);
+}
+
+.houseSizes,
+.housePrice {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.housePrice {
+  text-align: right;
+}
+
+/* -------------------------------------------------------------- fittings */
+
+.fittings {
+  background: var(--pale);
+}
+
+.fitInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.fitSide {
+  position: sticky;
+  top: 7rem;
+}
+
+.fitBouquet {
+  width: min(78%, 20rem);
+  margin-top: 2.5rem;
+}
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 2.2rem;
+  padding-left: 2.2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.35rem;
+  top: 0.6rem;
+  bottom: 0.6rem;
+  border-left: 1px solid var(--taupe);
+}
+
+.timeline li {
+  position: relative;
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -2.2rem;
+  top: 0.35rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--pale);
+  border: 1px solid var(--taupe);
+}
+
+.timeline li:last-child::before {
+  background: var(--taupe);
+}
+
+.tlWhen {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--deep);
+}
+
+.timeline h3 {
+  margin-top: 0.35rem;
+  font-size: 1.7rem;
+}
+
+.timeline p {
+  margin-top: 0.4rem;
+  max-width: 36rem;
+  color: var(--muted);
+}
+
+.alter {
+  margin-top: 3.5rem;
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: var(--ivory);
+}
+
+.alterHead {
+  font-size: 1.6rem;
+}
+
+.alterList {
+  margin-top: 1rem;
+}
+
+.alterList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.alterList dd {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.alterNote {
+  margin-top: 1rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ book */
+
+.book {
+  padding: var(--air) var(--gut);
+  background: color-mix(in srgb, var(--rose) 38%, var(--ivory));
+}
+
+.bookCard {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(1.5rem, 5vw, 4rem);
+  background: var(--ivory);
+}
+
+.bookInfo h2 {
+  margin-top: 0.9rem;
+  font-size: clamp(2.1rem, 3.8vw, 3.2rem);
+}
+
+.bookInfo h2 em {
+  display: block;
+}
+
+.bookLede {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.hours {
+  margin-top: 1.8rem;
+  border-top: 1px solid var(--line);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.addr {
+  margin-top: 1.5rem;
+}
+
+.contact {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.8rem;
+  font-weight: 700;
+}
+
+.contact a {
+  text-decoration-color: var(--taupe);
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  align-content: start;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.75rem 0.1rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.form .btn {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 0.8rem;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--ivory);
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+}
+
+.footTag {
+  color: color-mix(in srgb, var(--ivory) 72%, var(--ink));
+}
+
+.footNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.footNav a {
+  text-decoration: none;
+}
+
+.footNav a:hover {
+  color: var(--rose);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--ivory) 20%, transparent);
+  color: color-mix(in srgb, var(--ivory) 70%, var(--ink));
+}
+
+.footFine a {
+  color: var(--ivory);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1180px) {
+  .arches {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .houses {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .nav,
+  .barCta {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+    margin-left: auto;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    width: min(100%, 30rem);
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2.5rem;
+  }
+
+  .steps::before {
+    display: none;
+  }
+
+  .stepNo {
+    border-bottom: 1px solid var(--taupe);
+    padding-right: 0;
+    min-width: 5rem;
+  }
+
+  .fitInner,
+  .bookCard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fitSide {
+    position: static;
+  }
+
+  .fitBouquet {
+    width: min(50%, 14rem);
+  }
+
+  .footTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* On a phone the arches become a row to swipe, inside the page's width. */
+@media (max-width: 640px) {
+  .title {
+    font-size: clamp(2.5rem, 11vw, 3.1rem);
+  }
+
+  .heroArt {
+    padding-left: 1.5rem;
+  }
+
+  .facts dt {
+    font-size: 1.5rem;
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .arches {
+    display: flex;
+    gap: 1rem;
+    max-width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.75rem;
+  }
+
+  .archItem {
+    flex: 0 0 68%;
+    scroll-snap-align: start;
+  }
+
+  .houses {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn {
+    transition: none;
+  }
+}
