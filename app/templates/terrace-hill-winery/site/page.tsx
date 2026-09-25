@@ -383,6 +383,7 @@ export default function TerraceHillPage() {
               mode="tint"
               fit="cover"
               inks={['var(--wine)', 'var(--pale)']}
+              className={s.barrels}
             />
           </div>
           <div className={s.visitText}>

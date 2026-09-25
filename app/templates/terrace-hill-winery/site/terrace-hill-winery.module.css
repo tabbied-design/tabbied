@@ -131,16 +131,15 @@
   z-index: 0;
   left: 0;
   right: 0;
-  bottom: -11vw;
+  bottom: -15vw;
   height: 66.67vw;
 }
 
 .heroText {
   position: relative;
   z-index: 1;
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: clamp(7rem, 16vh, 9rem) var(--gut) 0;
+  max-width: 64rem;
+  padding: clamp(6.8rem, 15vh, 8.5rem) var(--gut) 0;
 }
 
 .kicker {
@@ -503,7 +502,7 @@
   overflow: hidden;
 }
 
-.visitArt > * {
+.barrels {
   position: absolute;
   inset: 0;
 }

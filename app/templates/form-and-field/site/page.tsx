@@ -344,7 +344,7 @@ export default function FormAndFieldPage() {
             <p className={s.body}>
               We like concrete that shows how it was poured, brick that is
               repaired rather than replaced, and timber that is allowed to go
-              grey. We do not have a house style, but people say they can tell.
+              gray. We do not have a house style, but people say they can tell.
             </p>
             <dl className={s.facts}>
               {FACTS.map(([v, k]) => (
