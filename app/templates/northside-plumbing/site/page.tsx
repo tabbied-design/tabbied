@@ -179,7 +179,20 @@ const REVIEWS = [
 
 export default function NorthsidePlumbingPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f5f7f9',
+        '--navy': '#0d1b2a',
+        '--blue': '#1565c0',
+        '--copper': '#c46b2e',
+        '--gray': '#8a96a3',
+        '--pale': '#e1e7ed',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,navy,blue,copper,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -190,18 +203,18 @@ export default function NorthsidePlumbingPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span className={s.markName}>Northside</span>
-          <span className={s.markSub}>Plumbing and Heating</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Northside</span>
+          <span data-edit="bar.markSub" data-edit-max="60" className={s.markSub}>Plumbing and Heating</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href={PHONE_HREF}>{PHONE}</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href={PHONE_HREF}>{PHONE}</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -214,27 +227,27 @@ export default function NorthsidePlumbingPage() {
           <div className={s.heroInner}>
             <p className={s.status}>
               <span className={s.statusDot} aria-hidden="true" />
-              <span>Phones answered now. Average response this month: 47 minutes.</span>
+              <span data-edit="hero.text" data-edit-max="60">Phones answered now. Average response this month: 47 minutes.</span>
             </p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Emergency plumbing and heating,
               <br />
               <em>24 hours a day, 7 days a week.</em>
             </h1>
-            <a className={s.bigPhone} href={PHONE_HREF}>{PHONE}</a>
+            <a data-edit="hero.bigPhone" data-edit-max="28" className={s.bigPhone} href={PHONE_HREF}>{PHONE}</a>
             <div className={s.heroFoot}>
               <ul className={s.urgent} aria-label="Call us straight away for">
-                {URGENT.map((u) => (
-                  <li key={u}>{u}</li>
+                {URGENT.map((u, i) => (
+                  <li data-edit={`hero.item.${i}`} data-edit-max="80" key={u}>{u}</li>
                 ))}
               </ul>
               <div className={s.heroActions}>
-                <a className={s.btnCopper} href={PHONE_HREF}>Call now</a>
-                <a className={s.btnLine} href="#quote">Not urgent? Get a quote</a>
+                <a data-edit="hero.btnCopper" data-edit-max="28" className={s.btnCopper} href={PHONE_HREF}>Call now</a>
+                <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#quote">Not urgent? Get a quote</a>
               </div>
             </div>
           </div>
-          <div className={s.pipes} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,4" className={s.pipes} aria-hidden="true">
             <TabbiedPattern
               pattern={truchetrings}
               palette={PIPES}
@@ -251,20 +264,20 @@ export default function NorthsidePlumbingPage() {
         <div className={s.strip}>
           <dl className={s.stripList}>
             <div>
-              <dt>47 min</dt>
-              <dd>Average emergency response</dd>
+              <dt data-edit="top.term" data-edit-max="28">47 min</dt>
+              <dd data-edit="top.body" data-edit-max="200" data-edit-multiline>Average emergency response</dd>
             </div>
             <div>
-              <dt>9 vans</dt>
-              <dd>On the road, day and night</dd>
+              <dt data-edit="top.term2" data-edit-max="28">9 vans</dt>
+              <dd data-edit="top.body2" data-edit-max="200" data-edit-multiline>On the road, day and night</dd>
             </div>
             <div>
-              <dt>4.9 / 5</dt>
-              <dd>From 812 reviews</dd>
+              <dt data-edit="top.term3" data-edit-max="28">4.9 / 5</dt>
+              <dd data-edit="top.body3" data-edit-max="200" data-edit-multiline>From 812 reviews</dd>
             </div>
             <div>
-              <dt>Since 1994</dt>
-              <dd>Family run, licensed and insured</dd>
+              <dt data-edit="top.term4" data-edit-max="28">Since 1994</dt>
+              <dd data-edit="top.body4" data-edit-max="200" data-edit-multiline>Family run, licensed and insured</dd>
             </div>
           </dl>
         </div>
@@ -272,17 +285,17 @@ export default function NorthsidePlumbingPage() {
         {/* -------------------------------------------------------- SERVICES */}
         <section id="services" className={s.sec} aria-labelledby="services-h">
           <div className={s.secHead}>
-            <h2 id="services-h">What we fix</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="services.title" data-edit-max="60" id="services-h">What we fix</h2>
+            <p data-edit="services.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Homes and small businesses, plumbing and heating, from a
               dripping faucet to a whole-house repipe.
             </p>
           </div>
           <ul className={s.services}>
-            {SERVICES.map((sv) => (
+            {SERVICES.map((sv, i) => (
               <li key={sv.name} className={s.service}>
-                <h3>{sv.name}</h3>
-                <p>{sv.body}</p>
+                <h3 data-edit={`services.title2.${i}`} data-edit-max="40">{sv.name}</h3>
+                <p data-edit={`services.body.${i}`} data-edit-max="240" data-edit-multiline>{sv.body}</p>
               </li>
             ))}
           </ul>
@@ -291,38 +304,38 @@ export default function NorthsidePlumbingPage() {
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.secHead}>
-            <h2 id="prices-h">Price guide</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Price guide</h2>
+            <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               All prices include tax and are for a single visit to a home in
               our area. The technician confirms the price in writing before
               starting.
             </p>
           </div>
           <dl className={s.rates}>
-            {RATES.map((r) => (
+            {RATES.map((r, i) => (
               <div key={r.label} className={s.rate}>
-                <dt className={s.rateLabel}>{r.label}</dt>
-                <dd className={s.rateValue}>{r.value}</dd>
-                <dd className={s.rateNote}>{r.note}</dd>
+                <dt data-edit={`prices.rateLabel.${i}`} data-edit-max="28" className={s.rateLabel}>{r.label}</dt>
+                <dd data-edit={`prices.rateValue.${i}`} data-edit-max="200" data-edit-multiline className={s.rateValue}>{r.value}</dd>
+                <dd data-edit={`prices.rateNote.${i}`} data-edit-max="200" data-edit-multiline className={s.rateNote}>{r.note}</dd>
               </div>
             ))}
           </dl>
           <div className={s.jobsWrap}>
             <table className={s.jobs}>
-              <caption className={s.jobsCaption}>Fixed-price jobs</caption>
+              <caption data-edit="prices.jobsCaption" className={s.jobsCaption}>Fixed-price jobs</caption>
               <thead>
                 <tr>
-                  <th scope="col">Job</th>
-                  <th scope="col">Typical time</th>
-                  <th scope="col">Price</th>
+                  <th data-edit="prices.heading" scope="col">Job</th>
+                  <th data-edit="prices.heading2" scope="col">Typical time</th>
+                  <th data-edit="prices.heading3" scope="col">Price</th>
                 </tr>
               </thead>
               <tbody>
-                {JOBS.map(([job, price, time]) => (
+                {JOBS.map(([job, price, time], i) => (
                   <tr key={job}>
-                    <th scope="row">{job}</th>
-                    <td className={s.jobTime}>{time}</td>
-                    <td className={s.jobPrice}>{price}</td>
+                    <th data-edit={`prices.heading4.${i}`} scope="row">{job}</th>
+                    <td data-edit={`prices.jobTime.${i}`} className={s.jobTime}>{time}</td>
+                    <td data-edit={`prices.jobPrice.${i}`} className={s.jobPrice}>{price}</td>
                   </tr>
                 ))}
               </tbody>
@@ -333,8 +346,8 @@ export default function NorthsidePlumbingPage() {
         {/* ----------------------------------------------------------- AREAS */}
         <section id="areas" className={s.sec} aria-labelledby="areas-h">
           <div className={s.secHead}>
-            <h2 id="areas-h">Where we go</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="areas.title" data-edit-max="60" id="areas-h">Where we go</h2>
+            <p data-edit="areas.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Twelve neighborhoods, one yard in the middle of them. Outside
               the list? Call anyway: within twelve miles we come for a $25
               travel charge.
@@ -343,21 +356,21 @@ export default function NorthsidePlumbingPage() {
           <div className={s.areas}>
             <div>
               <ul className={s.areaList}>
-                {AREAS.map(([name, zip]) => (
+                {AREAS.map(([name, zip], i) => (
                   <li key={zip}>
-                    <span className={s.areaName}>{name}</span>
-                    <span className={s.areaZip}>{zip}</span>
+                    <span data-edit={`areas.areaName.${i}`} data-edit-max="60" className={s.areaName}>{name}</span>
+                    <span data-edit={`areas.areaZip.${i}`} data-edit-max="60" className={s.areaZip}>{zip}</span>
                   </li>
                 ))}
               </ul>
-              <p className={s.areaNote}>
+              <p data-edit="areas.areaNote" data-edit-max="240" data-edit-multiline className={s.areaNote}>
                 Emergency calls in these ZIP codes are reached in under an hour
                 on most nights. Put your ZIP code in the quote form and we will
                 confirm before we book.
               </p>
             </div>
             <div className={s.mapPanel}>
-              <div className={s.mapField} aria-hidden="true">
+              <div data-edit-pattern="areas.field" data-edit-roles="transparent,4,2,3,1" className={s.mapField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={circuit}
                   palette={MAP}
@@ -368,13 +381,13 @@ export default function NorthsidePlumbingPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.mapLabel}>The yard</p>
-              <p className={s.mapAddr}>
+              <p data-edit="areas.mapLabel" data-edit-max="240" data-edit-multiline className={s.mapLabel}>The yard</p>
+              <p data-edit="areas.body" data-edit-max="240" data-edit-multiline className={s.mapAddr}>
                 1180 Canal Street
                 <br />
                 Northside 55507
               </p>
-              <p className={s.mapNote}>Parts counter open weekdays 7 am-4 pm</p>
+              <p data-edit="areas.mapNote" data-edit-max="240" data-edit-multiline className={s.mapNote}>Parts counter open weekdays 7 am-4 pm</p>
             </div>
           </div>
         </section>
@@ -382,28 +395,28 @@ export default function NorthsidePlumbingPage() {
         {/* ------------------------------------------------------ GUARANTEES */}
         <section id="guarantees" className={s.sec} aria-labelledby="guarantees-h">
           <div className={s.secHead}>
-            <h2 id="guarantees-h">Guarantees and licenses</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="guarantees.title" data-edit-max="60" id="guarantees-h">Guarantees and licenses</h2>
+            <p data-edit="guarantees.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Four promises we put in writing on every job, and the numbers
               you can check with the state board.
             </p>
           </div>
           <div className={s.promises}>
             <ol className={s.guarantees}>
-              {GUARANTEES.map((g) => (
+              {GUARANTEES.map((g, i) => (
                 <li key={g.title}>
-                  <h3>{g.title}</h3>
-                  <p>{g.body}</p>
+                  <h3 data-edit={`guarantees.title2.${i}`} data-edit-max="40">{g.title}</h3>
+                  <p data-edit={`guarantees.body.${i}`} data-edit-max="240" data-edit-multiline>{g.body}</p>
                 </li>
               ))}
             </ol>
             <div className={s.licenseCard}>
-              <h3 className={s.licenseHead}>Licensed and insured</h3>
+              <h3 data-edit="guarantees.licenseHead" data-edit-max="40" className={s.licenseHead}>Licensed and insured</h3>
               <dl className={s.licenses}>
-                {LICENSES.map(([what, num]) => (
+                {LICENSES.map(([what, num], i) => (
                   <div key={what}>
-                    <dt>{what}</dt>
-                    <dd>{num}</dd>
+                    <dt data-edit={`guarantees.term.${i}`} data-edit-max="28">{what}</dt>
+                    <dd data-edit={`guarantees.body2.${i}`} data-edit-max="200" data-edit-multiline>{num}</dd>
                   </div>
                 ))}
               </dl>
@@ -414,18 +427,18 @@ export default function NorthsidePlumbingPage() {
         {/* --------------------------------------------------------- REVIEWS */}
         <section id="reviews" className={s.sec} aria-labelledby="reviews-h">
           <div className={s.secHead}>
-            <h2 id="reviews-h">What neighbors say</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="reviews.title" data-edit-max="60" id="reviews-h">What neighbors say</h2>
+            <p data-edit="reviews.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               4.9 out of 5 from 812 reviews over the last three years. A few
               of the short ones.
             </p>
           </div>
           <ul className={s.reviews}>
-            {REVIEWS.map((r) => (
+            {REVIEWS.map((r, i) => (
               <li key={r.who} className={s.review}>
-                <blockquote>{r.quote}</blockquote>
-                <p className={s.reviewWho}>{r.who}</p>
-                <p className={s.reviewJob}>{r.job}</p>
+                <blockquote data-edit={`reviews.quote.${i}`} data-edit-max="240" data-edit-multiline>{r.quote}</blockquote>
+                <p data-edit={`reviews.reviewWho.${i}`} data-edit-max="240" data-edit-multiline className={s.reviewWho}>{r.who}</p>
+                <p data-edit={`reviews.reviewJob.${i}`} data-edit-max="240" data-edit-multiline className={s.reviewJob}>{r.job}</p>
               </li>
             ))}
           </ul>
@@ -435,46 +448,46 @@ export default function NorthsidePlumbingPage() {
         <section id="quote" className={s.sec} aria-labelledby="quote-h">
           <div className={s.quote}>
             <div className={s.quoteSide}>
-              <h2 id="quote-h">Request a quote</h2>
-              <p className={s.quoteLede}>
+              <h2 data-edit="quote.title" data-edit-max="60" id="quote-h">Request a quote</h2>
+              <p data-edit="quote.quoteLede" data-edit-max="240" data-edit-multiline className={s.quoteLede}>
                 For work that can wait a day or two. Tell us what you need and
                 we will call back within two working hours with a price or a
                 time to come and look.
               </p>
               <div className={s.quoteCall}>
-                <p className={s.quoteCallLabel}>Water coming through the ceiling? Skip the form.</p>
-                <a className={s.quoteCallNum} href={PHONE_HREF}>{PHONE}</a>
+                <p data-edit="quote.quoteCallLabel" data-edit-max="240" data-edit-multiline className={s.quoteCallLabel}>Water coming through the ceiling? Skip the form.</p>
+                <a data-edit="quote.quoteCallNum" data-edit-max="28" className={s.quoteCallNum} href={PHONE_HREF}>{PHONE}</a>
               </div>
               <dl className={s.office}>
                 <div>
-                  <dt>Emergencies</dt>
-                  <dd>24/7, every day of the year</dd>
+                  <dt data-edit="quote.term" data-edit-max="28">Emergencies</dt>
+                  <dd data-edit="quote.body" data-edit-max="200" data-edit-multiline>24/7, every day of the year</dd>
                 </div>
                 <div>
-                  <dt>Office</dt>
-                  <dd>Mon-Fri 7 am-6 pm, Sat 8 am-12 pm</dd>
+                  <dt data-edit="quote.term2" data-edit-max="28">Office</dt>
+                  <dd data-edit="quote.body2" data-edit-max="200" data-edit-multiline>Mon-Fri 7 am-6 pm, Sat 8 am-12 pm</dd>
                 </div>
                 <div>
-                  <dt>Email</dt>
-                  <dd><a href="mailto:office@northside.example">office@northside.example</a></dd>
+                  <dt data-edit="quote.term3" data-edit-max="28">Email</dt>
+                  <dd><a data-edit="quote.link" data-edit-max="28" href="mailto:office@northside.example">office@northside.example</a></dd>
                 </div>
               </dl>
             </div>
             <form className={s.form} action="#">
               <label className={s.field}>
-                <span>Name</span>
+                <span data-edit="quote.text" data-edit-max="60">Name</span>
                 <input type="text" name="name" autoComplete="name" required />
               </label>
               <label className={s.field}>
-                <span>Phone</span>
+                <span data-edit="quote.text2" data-edit-max="60">Phone</span>
                 <input type="tel" name="phone" autoComplete="tel" required />
               </label>
               <label className={s.field}>
-                <span>ZIP code</span>
+                <span data-edit="quote.text3" data-edit-max="60">ZIP code</span>
                 <input type="text" name="zip" inputMode="numeric" autoComplete="postal-code" />
               </label>
               <label className={s.field}>
-                <span>Type of job</span>
+                <span data-edit="quote.text4" data-edit-max="60">Type of job</span>
                 <select name="job" defaultValue="repair">
                   <option value="repair">Repair</option>
                   <option value="heater">Water heater</option>
@@ -485,25 +498,25 @@ export default function NorthsidePlumbingPage() {
                 </select>
               </label>
               <fieldset className={s.when}>
-                <legend>How soon?</legend>
+                <legend data-edit="quote.legend">How soon?</legend>
                 <label>
                   <input type="radio" name="when" value="week" defaultChecked />
-                  <span>This week</span>
+                  <span data-edit="quote.text5" data-edit-max="60">This week</span>
                 </label>
                 <label>
                   <input type="radio" name="when" value="month" />
-                  <span>This month</span>
+                  <span data-edit="quote.text6" data-edit-max="60">This month</span>
                 </label>
                 <label>
                   <input type="radio" name="when" value="planning" />
-                  <span>Just planning</span>
+                  <span data-edit="quote.text7" data-edit-max="60">Just planning</span>
                 </label>
               </fieldset>
               <label className={`${s.field} ${s.fieldWide}`}>
-                <span>What is going on?</span>
+                <span data-edit="quote.text8" data-edit-max="60">What is going on?</span>
                 <textarea name="details" rows={4} />
               </label>
-              <button className={s.submit} type="submit">Send request</button>
+              <button data-edit="quote.submit" data-edit-max="24" className={s.submit} type="submit">Send request</button>
             </form>
           </div>
         </section>
@@ -512,16 +525,16 @@ export default function NorthsidePlumbingPage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div>
-            <p className={s.footName}>Northside Plumbing and Heating</p>
-            <p className={s.footAddr}>1180 Canal Street, Northside 55507</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Northside Plumbing and Heating</p>
+            <p data-edit="footer.footAddr" data-edit-max="240" data-edit-multiline className={s.footAddr}>1180 Canal Street, Northside 55507</p>
           </div>
-          <a className={s.footPhone} href={PHONE_HREF}>{PHONE}</a>
+          <a data-edit="footer.footPhone" data-edit-max="28" className={s.footPhone} href={PHONE_HREF}>{PHONE}</a>
         </div>
         <div className={s.footFine}>
-          <p>A fictional plumbing contractor. Prices, licenses, reviews and ZIP codes are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional plumbing contractor. Prices, licenses, reviews and ZIP codes are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>
@@ -529,10 +542,10 @@ export default function NorthsidePlumbingPage() {
       {/* On a phone the number stays on screen: a bar pinned to the bottom. */}
       <div className={s.callBar}>
         <a className={s.callBarPhone} href={PHONE_HREF}>
-          <span className={s.callWord}>Call </span>
-          <span>{PHONE}</span>
+          <span data-edit="page.callWord" data-edit-max="60" className={s.callWord}>Call </span>
+          <span data-edit="page.text" data-edit-max="60">{PHONE}</span>
         </a>
-        <a className={s.callBarQuote} href="#quote">Quote</a>
+        <a data-edit="page.callBarQuote" data-edit-max="28" className={s.callBarQuote} href="#quote">Quote</a>
       </div>
     </div>
   );

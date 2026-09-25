@@ -202,7 +202,19 @@ const HOURS = [
 
 export default function KesslerAutoPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--concrete': '#edece8',
+        '--ink': '#16181b',
+        '--red': '#d7372b',
+        '--steel': '#75797f',
+        '--pale': '#d5d3ce',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="concrete,ink,red,steel,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -212,16 +224,16 @@ export default function KesslerAutoPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Kessler Auto</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Kessler Auto</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href="tel:+15550104471">(555) 010-4471</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href="tel:+15550104471">(555) 010-4471</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -233,21 +245,21 @@ export default function KesslerAutoPage() {
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroTop}>
             <div className={s.heroCopy}>
-              <p className={s.kicker}>Independent repair shop, Harlow, since 1994</p>
-              <h1 id="hero-h" className={s.heroTitle}>
+              <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Independent repair shop, Harlow, since 1994</p>
+              <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
                 Service, repairs and inspections, <em>priced before we lift it.</em>
               </h1>
-              <p className={s.heroLede}>
+              <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
                 Four bays, four mechanics, and a written quote before any
                 wrench turns. Cars and light trucks, most makes, gas, diesel
                 and hybrid.
               </p>
               <div className={s.heroActions}>
-                <a className={s.btn} href="#book">Book a repair</a>
-                <a className={s.btnLine} href="#services">See the service menu</a>
+                <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Book a repair</a>
+                <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#services">See the service menu</a>
               </div>
             </div>
-            <div className={s.wheel} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,2" className={s.wheel} aria-hidden="true">
               <TabbiedPattern
                 pattern={meridianhatch}
                 palette={WHEEL}
@@ -261,24 +273,24 @@ export default function KesslerAutoPage() {
           </div>
           <dl className={s.sign}>
             <div className={s.signPhone}>
-              <dt>Call the counter</dt>
+              <dt data-edit="hero.term" data-edit-max="28">Call the counter</dt>
               <dd>
-                <a href="tel:+15550104471">(555) 010-4471</a>
+                <a data-edit="hero.link" data-edit-max="28" href="tel:+15550104471">(555) 010-4471</a>
               </dd>
             </div>
             <div>
-              <dt>Monday to Friday</dt>
-              <dd>7:30-6:00</dd>
+              <dt data-edit="hero.term2" data-edit-max="28">Monday to Friday</dt>
+              <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>7:30-6:00</dd>
             </div>
             <div>
-              <dt>Saturday</dt>
-              <dd>8:00-1:00</dd>
+              <dt data-edit="hero.term3" data-edit-max="28">Saturday</dt>
+              <dd data-edit="hero.body2" data-edit-max="200" data-edit-multiline>8:00-1:00</dd>
             </div>
           </dl>
         </section>
 
         {/* Floor tape: the rafter design one row high, red and ink. */}
-        <div className={s.tape} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,1" className={s.tape} aria-hidden="true">
           <TabbiedPattern
             pattern={rafter}
             palette={TAPE}
@@ -295,67 +307,67 @@ export default function KesslerAutoPage() {
         <section id="bays" className={s.board} aria-labelledby="bays-h">
           <div className={s.boardInner}>
             <div className={s.boardHead}>
-              <h2 id="bays-h">Bay board</h2>
-              <p className={s.boardStamp}>Thursday, updated 10:40 am</p>
+              <h2 data-edit="bays.title" data-edit-max="60" id="bays-h">Bay board</h2>
+              <p data-edit="bays.boardStamp" data-edit-max="240" data-edit-multiline className={s.boardStamp}>Thursday, updated 10:40 am</p>
             </div>
             <ol className={s.bays}>
-              {BAYS.map((b) => (
+              {BAYS.map((b, i) => (
                 <li key={b.bay} className={`${s.bayCard} ${s[b.cls]}`}>
-                  <span className={s.bayNo}>{b.bay}</span>
-                  <span className={s.bayStatus}>{b.status}</span>
-                  <span className={s.bayCar}>{b.car}</span>
-                  <span className={s.bayJob}>{b.job}</span>
-                  <span className={s.bayMeta}>{b.tech}</span>
-                  <span className={s.bayMeta}>{b.eta}</span>
+                  <span data-edit={`bays.bayNo.${i}`} data-edit-max="60" className={s.bayNo}>{b.bay}</span>
+                  <span data-edit={`bays.bayStatus.${i}`} data-edit-max="60" className={s.bayStatus}>{b.status}</span>
+                  <span data-edit={`bays.bayCar.${i}`} data-edit-max="60" className={s.bayCar}>{b.car}</span>
+                  <span data-edit={`bays.bayJob.${i}`} data-edit-max="60" className={s.bayJob}>{b.job}</span>
+                  <span data-edit={`bays.bayMeta.${i}`} data-edit-max="60" className={s.bayMeta}>{b.tech}</span>
+                  <span data-edit={`bays.bayMeta2.${i}`} data-edit-max="60" className={s.bayMeta}>{b.eta}</span>
                 </li>
               ))}
             </ol>
             <div className={s.queue}>
-              <h3 className={s.queueHead}>Next in</h3>
+              <h3 data-edit="bays.queueHead" data-edit-max="40" className={s.queueHead}>Next in</h3>
               <ul className={s.queueList}>
-                {QUEUE.map(([time, car, job]) => (
+                {QUEUE.map(([time, car, job], i) => (
                   <li key={time}>
-                    <span className={s.queueTime}>{time}</span>
-                    <span className={s.queueCar}>{car}</span>
-                    <span className={s.queueJob}>{job}</span>
+                    <span data-edit={`bays.queueTime.${i}`} data-edit-max="60" className={s.queueTime}>{time}</span>
+                    <span data-edit={`bays.queueCar.${i}`} data-edit-max="60" className={s.queueCar}>{car}</span>
+                    <span data-edit={`bays.queueJob.${i}`} data-edit-max="60" className={s.queueJob}>{job}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <p className={s.boardNote}>Your car on the board? We text you each time its status changes.</p>
+            <p data-edit="bays.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>Your car on the board? We text you each time its status changes.</p>
           </div>
         </section>
 
         {/* -------------------------------------------------------- SERVICES */}
         <section id="services" className={`${s.sec} ${s.services}`} aria-labelledby="services-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>01</p>
-            <h2 id="services-h">Service menu</h2>
-            <p className={s.secNote}>
+            <p data-edit="services.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>01</p>
+            <h2 data-edit="services.title" data-edit-max="60" id="services-h">Service menu</h2>
+            <p data-edit="services.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Prices from, parts and labor, before tax, for most cars. Labor is
               $138 an hour. We call with a firm price before we start, and the
               diagnosis fee comes off the repair if you go ahead.
             </p>
           </div>
           <table className={s.menu}>
-            <caption className={s.visuallyHidden}>Service menu with typical time and price from</caption>
+            <caption data-edit="services.visuallyHidden" className={s.visuallyHidden}>Service menu with typical time and price from</caption>
             <thead>
               <tr>
-                <th scope="col">Job</th>
-                <th scope="col">Time</th>
-                <th scope="col">From</th>
+                <th data-edit="services.heading" scope="col">Job</th>
+                <th data-edit="services.heading2" scope="col">Time</th>
+                <th data-edit="services.heading3" scope="col">From</th>
               </tr>
             </thead>
-            {MENU.map((g) => (
+            {MENU.map((g, i) => (
               <tbody key={g.group}>
                 <tr className={s.menuGroup}>
-                  <th scope="colgroup" colSpan={3}>{g.group}</th>
+                  <th data-edit={`services.heading4.${i}`} scope="colgroup" colSpan={3}>{g.group}</th>
                 </tr>
-                {g.jobs.map(([job, time, price]) => (
+                {g.jobs.map(([job, time, price], i2) => (
                   <tr key={job}>
-                    <th scope="row" className={s.menuJob}>{job}</th>
-                    <td className={s.menuTime}>{time}</td>
-                    <td className={s.menuPrice}>{price}</td>
+                    <th data-edit={`services.menuJob.${i}.${i2}`} scope="row" className={s.menuJob}>{job}</th>
+                    <td data-edit={`services.menuTime.${i}.${i2}`} className={s.menuTime}>{time}</td>
+                    <td data-edit={`services.menuPrice.${i}.${i2}`} className={s.menuPrice}>{price}</td>
                   </tr>
                 ))}
               </tbody>
@@ -367,9 +379,9 @@ export default function KesslerAutoPage() {
         <section id="inspection" className={s.sec} aria-labelledby="inspection-h">
           <div className={s.inspection}>
             <div className={s.secHead}>
-              <p className={s.secNo}>02</p>
-              <h2 id="inspection-h">State inspection</h2>
-              <p className={s.secNote}>
+              <p data-edit="inspection.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02</p>
+              <h2 data-edit="inspection.title" data-edit-max="60" id="inspection-h">State inspection</h2>
+              <p data-edit="inspection.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Official inspection station No. 4417. Walk in on a weekday
                 between 8:00 and 3:00; it takes about thirty minutes and you
                 can wait for it.
@@ -377,26 +389,26 @@ export default function KesslerAutoPage() {
             </div>
             <dl className={s.inspPrices}>
               <div>
-                <dt>Safety</dt>
-                <dd>$35</dd>
+                <dt data-edit="inspection.term" data-edit-max="28">Safety</dt>
+                <dd data-edit="inspection.body" data-edit-max="200" data-edit-multiline>$35</dd>
               </div>
               <div>
-                <dt>Emissions</dt>
-                <dd>$25</dd>
+                <dt data-edit="inspection.term2" data-edit-max="28">Emissions</dt>
+                <dd data-edit="inspection.body2" data-edit-max="200" data-edit-multiline>$25</dd>
               </div>
               <div>
-                <dt>Both together</dt>
-                <dd>$55</dd>
+                <dt data-edit="inspection.term3" data-edit-max="28">Both together</dt>
+                <dd data-edit="inspection.body3" data-edit-max="200" data-edit-multiline>$55</dd>
               </div>
             </dl>
             <div className={s.inspChecks}>
-              <h3 className={s.smallHead}>What we check</h3>
+              <h3 data-edit="inspection.smallHead" data-edit-max="40" className={s.smallHead}>What we check</h3>
               <ul>
-                {INSPECTION_CHECKS.map((c) => (
-                  <li key={c}>{c}</li>
+                {INSPECTION_CHECKS.map((c, i) => (
+                  <li data-edit={`inspection.item.${i}`} data-edit-max="80" key={c}>{c}</li>
                 ))}
               </ul>
-              <p className={s.inspNote}>
+              <p data-edit="inspection.inspNote" data-edit-max="240" data-edit-multiline className={s.inspNote}>
                 If it fails, you get the list of what failed and a price to fix
                 each item. Fix it here or anywhere; the re-test within thirty
                 days is free.
@@ -408,14 +420,14 @@ export default function KesslerAutoPage() {
         {/* ------------------------------------------------ WAIT AND WARRANTY */}
         <section id="wait" className={s.sec} aria-labelledby="wait-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>03</p>
-            <h2 id="wait-h">While you wait</h2>
+            <p data-edit="wait.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03</p>
+            <h2 data-edit="wait.title" data-edit-max="60" id="wait-h">While you wait</h2>
           </div>
           <ul className={s.waitGrid}>
-            {WAITING.map((w) => (
+            {WAITING.map((w, i) => (
               <li key={w.title}>
-                <h3>{w.title}</h3>
-                <p>{w.body}</p>
+                <h3 data-edit={`wait.title2.${i}`} data-edit-max="40">{w.title}</h3>
+                <p data-edit={`wait.body.${i}`} data-edit-max="240" data-edit-multiline>{w.body}</p>
               </li>
             ))}
           </ul>
@@ -423,7 +435,7 @@ export default function KesslerAutoPage() {
 
         <section id="warranty" className={s.warranty} aria-labelledby="warranty-h">
           <div className={s.warrantyInner}>
-            <div className={s.seal} aria-hidden="true">
+            <div data-edit-pattern="warranty.field" data-edit-roles="transparent,2,3" className={s.seal} aria-hidden="true">
               <TabbiedPattern
                 pattern={meridianhatch}
                 palette={SEAL}
@@ -434,11 +446,11 @@ export default function KesslerAutoPage() {
               />
             </div>
             <div className={s.warrantyCopy}>
-              <p className={s.secNo}>04</p>
-              <h2 id="warranty-h">Two years or 24,000 miles on every repair</h2>
+              <p data-edit="warranty.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>04</p>
+              <h2 data-edit="warranty.title" data-edit-max="60" id="warranty-h">Two years or 24,000 miles on every repair</h2>
               <ul className={s.warrantyList}>
-                {WARRANTY.map((w) => (
-                  <li key={w}>{w}</li>
+                {WARRANTY.map((w, i) => (
+                  <li data-edit={`warranty.item.${i}`} data-edit-max="80" key={w}>{w}</li>
                 ))}
               </ul>
             </div>
@@ -448,20 +460,20 @@ export default function KesslerAutoPage() {
         {/* ------------------------------------------------------- MECHANICS */}
         <section id="mechanics" className={s.sec} aria-labelledby="mechanics-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>05</p>
-            <h2 id="mechanics-h">The mechanics</h2>
-            <p className={s.secNote}>
+            <p data-edit="mechanics.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05</p>
+            <h2 data-edit="mechanics.title" data-edit-max="60" id="mechanics-h">The mechanics</h2>
+            <p data-edit="mechanics.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Hanna Kessler runs the counter, answers the phone and writes every
               quote. These four do the work.
             </p>
           </div>
           <ul className={s.crew}>
-            {MECHANICS.map((m) => (
+            {MECHANICS.map((m, i) => (
               <li key={m.name}>
-                <h3 className={s.crewName}>{m.name}</h3>
-                <p className={s.crewRole}>{m.role}</p>
-                <p className={s.crewCerts}>{m.certs}</p>
-                <p className={s.crewKnows}>{m.knows}</p>
+                <h3 data-edit={`mechanics.crewName.${i}`} data-edit-max="40" className={s.crewName}>{m.name}</h3>
+                <p data-edit={`mechanics.crewRole.${i}`} data-edit-max="240" data-edit-multiline className={s.crewRole}>{m.role}</p>
+                <p data-edit={`mechanics.crewCerts.${i}`} data-edit-max="240" data-edit-multiline className={s.crewCerts}>{m.certs}</p>
+                <p data-edit={`mechanics.crewKnows.${i}`} data-edit-max="240" data-edit-multiline className={s.crewKnows}>{m.knows}</p>
               </li>
             ))}
           </ul>
@@ -471,49 +483,49 @@ export default function KesslerAutoPage() {
         <section id="book" className={s.book} aria-labelledby="book-h">
           <div className={s.bookInner}>
             <div className={s.bookIntro}>
-              <p className={s.secNo}>06</p>
-              <h2 id="book-h">Book an appointment</h2>
-              <p className={s.secNote}>
+              <p data-edit="book.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>06</p>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Book an appointment</h2>
+              <p data-edit="book.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Send the form and Hanna calls back within the working day with
                 a time and, where she can, a price. For a car that will not
                 start, call instead.
               </p>
               <dl className={s.bookFacts}>
                 <div>
-                  <dt>Counter</dt>
-                  <dd>(555) 010-4471</dd>
+                  <dt data-edit="book.term" data-edit-max="28">Counter</dt>
+                  <dd data-edit="book.body" data-edit-max="200" data-edit-multiline>(555) 010-4471</dd>
                 </div>
                 <div>
-                  <dt>Towing</dt>
-                  <dd>Route 9 Towing, (555) 010-8800</dd>
+                  <dt data-edit="book.term2" data-edit-max="28">Towing</dt>
+                  <dd data-edit="book.body2" data-edit-max="200" data-edit-multiline>Route 9 Towing, (555) 010-8800</dd>
                 </div>
                 <div>
-                  <dt>Email</dt>
+                  <dt data-edit="book.term3" data-edit-max="28">Email</dt>
                   <dd>
-                    <a href="mailto:shop@kesslerauto.example">shop@kesslerauto.example</a>
+                    <a data-edit="book.link" data-edit-max="28" href="mailto:shop@kesslerauto.example">shop@kesslerauto.example</a>
                   </dd>
                 </div>
               </dl>
             </div>
             <form className={s.bookForm} action="#">
               <label className={s.field}>
-                <span>Name</span>
+                <span data-edit="book.text" data-edit-max="60">Name</span>
                 <input type="text" name="name" autoComplete="name" />
               </label>
               <label className={s.field}>
-                <span>Phone</span>
+                <span data-edit="book.text2" data-edit-max="60">Phone</span>
                 <input type="tel" name="phone" autoComplete="tel" />
               </label>
               <label className={s.field}>
-                <span>Year, make and model</span>
+                <span data-edit="book.text3" data-edit-max="60">Year, make and model</span>
                 <input type="text" name="vehicle" placeholder="2016 Subaru Outback" />
               </label>
               <label className={s.field}>
-                <span>Mileage</span>
+                <span data-edit="book.text4" data-edit-max="60">Mileage</span>
                 <input type="text" name="miles" inputMode="numeric" />
               </label>
               <label className={s.field}>
-                <span>What it needs</span>
+                <span data-edit="book.text5" data-edit-max="60">What it needs</span>
                 <select name="job" defaultValue="service">
                   <option value="service">Scheduled service</option>
                   <option value="oil">Oil change</option>
@@ -525,29 +537,29 @@ export default function KesslerAutoPage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>Preferred day</span>
+                <span data-edit="book.text6" data-edit-max="60">Preferred day</span>
                 <input type="date" name="day" />
               </label>
               <fieldset className={s.dropOff}>
-                <legend>Drop it off or wait?</legend>
+                <legend data-edit="book.legend">Drop it off or wait?</legend>
                 <label>
                   <input type="radio" name="stay" value="drop" defaultChecked />
-                  <span>Drop off</span>
+                  <span data-edit="book.text7" data-edit-max="60">Drop off</span>
                 </label>
                 <label>
                   <input type="radio" name="stay" value="wait" />
-                  <span>Wait for it</span>
+                  <span data-edit="book.text8" data-edit-max="60">Wait for it</span>
                 </label>
                 <label>
                   <input type="radio" name="stay" value="loaner" />
-                  <span>Need a loaner</span>
+                  <span data-edit="book.text9" data-edit-max="60">Need a loaner</span>
                 </label>
               </fieldset>
               <label className={`${s.field} ${s.fieldWide}`}>
-                <span>What is it doing? Noises, lights, when it started</span>
+                <span data-edit="book.text10" data-edit-max="60">What is it doing? Noises, lights, when it started</span>
                 <textarea name="notes" rows={4} />
               </label>
-              <button className={s.btn} type="submit">Request appointment</button>
+              <button data-edit="book.btn" data-edit-max="24" className={s.btn} type="submit">Request appointment</button>
             </form>
           </div>
         </section>
@@ -556,23 +568,23 @@ export default function KesslerAutoPage() {
         <section id="find" className={s.sec} aria-labelledby="find-h">
           <div className={s.find}>
             <div>
-              <p className={s.secNo}>07</p>
-              <h2 id="find-h" className={s.findTitle}>1180 Mill Road, Harlow</h2>
-              <p className={s.findText}>
+              <p data-edit="find.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>07</p>
+              <h2 data-edit="find.findTitle" data-edit-max="60" id="find-h" className={s.findTitle}>1180 Mill Road, Harlow</h2>
+              <p data-edit="find.findText" data-edit-max="240" data-edit-multiline className={s.findText}>
                 From Route 9 northbound, turn right at the second light after
                 the lumber yard. We are the long block on the left with four
                 bay doors and the counter at door 1.
               </p>
-              <p className={s.findText}>
+              <p data-edit="find.findText2" data-edit-max="240" data-edit-multiline className={s.findText}>
                 Six customer spaces out front, more along the fence. After
                 hours, keys go through the slot in door 1.
               </p>
             </div>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`find.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`find.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
@@ -582,16 +594,16 @@ export default function KesslerAutoPage() {
 
       <footer className={s.footer}>
         <div className={s.footGrid}>
-          <p className={s.footName}>Kessler Auto</p>
-          <p className={s.footLine}>1180 Mill Road, Harlow</p>
-          <p className={s.footLine}>(555) 010-4471</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Kessler Auto</p>
+          <p data-edit="footer.footLine" data-edit-max="240" data-edit-multiline className={s.footLine}>1180 Mill Road, Harlow</p>
+          <p data-edit="footer.footLine2" data-edit-max="240" data-edit-multiline className={s.footLine}>(555) 010-4471</p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional repair garage. Prices, people and the bay board are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional repair garage. Prices, people and the bay board are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the page's own colors.</span>
           </p>
         </div>
       </footer>

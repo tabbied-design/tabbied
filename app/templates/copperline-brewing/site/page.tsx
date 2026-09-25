@@ -238,7 +238,20 @@ const RULES = [
 
 export default function CopperlineBrewingPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--board': '#161a17',
+        '--chalk': '#efe8d8',
+        '--amber': '#e0a33b',
+        '--hop': '#8db255',
+        '--slate': '#6d706a',
+        '--panel': '#232924',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="board,chalk,amber,hop,slate,panel"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -248,16 +261,16 @@ export default function CopperlineBrewingPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Copperline Brewing</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Copperline Brewing</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <span className={s.barMeta}>Open today, noon to 11 pm</span>
+        <span data-edit="bar.barMeta" data-edit-max="60" className={s.barMeta}>Open today, noon to 11 pm</span>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -269,26 +282,26 @@ export default function CopperlineBrewingPage() {
         <section id="taps" className={s.board} aria-labelledby="taps-h">
           <div className={s.boardHead}>
             <div className={s.boardTitle}>
-              <p className={s.kicker}>Brewery and taproom, Foundry Yard</p>
-              <h1 id="taps-h" className={s.title}>
+              <p data-edit="taps.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Brewery and taproom, Foundry Yard</p>
+              <h1 data-edit="taps.title" data-edit-format="emphasis" data-edit-max="70" id="taps-h" className={s.title}>
                 On tap <em>today</em>
               </h1>
-              <p className={s.lede}>
+              <p data-edit="taps.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 Twelve lines, all brewed forty feet from the bar on a
                 ten-barrel kit. The board changes when a keg does, which is
                 most weeks on a Tuesday and a Friday.
               </p>
               <dl className={s.today}>
-                {TODAY.map(([k, v]) => (
+                {TODAY.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`taps.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`taps.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div className={s.plate}>
-              <div className={s.plateField} aria-hidden="true">
+              <div data-edit-pattern="taps.field" data-edit-roles="transparent,2,5,3,4" className={s.plateField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={sunsetrings}
                   palette={PLATE}
@@ -299,7 +312,7 @@ export default function CopperlineBrewingPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <Figure
+              <Figure editId="photo.copperline-brewing-pint-cutout"
                 slug="copperline-brewing-pint-cutout"
                 cutout
                 priority
@@ -310,24 +323,24 @@ export default function CopperlineBrewingPage() {
           </div>
 
           <ol className={s.taps}>
-            {TAPS.map((t) => (
+            {TAPS.map((t, i) => (
               <li key={t.no} className={s.tap}>
                 <div className={s.tapTop}>
-                  <span className={s.tapNo}>{t.no}</span>
-                  {t.tag ? <span className={t.tag === 'New' ? s.tagNew : s.tagLast}>{t.tag}</span> : null}
+                  <span data-edit={`taps.tapNo.${i}`} data-edit-max="60" className={s.tapNo}>{t.no}</span>
+                  {t.tag ? <span data-edit={`taps.tagNew.${i}`} data-edit-max="60" className={t.tag === 'New' ? s.tagNew : s.tagLast}>{t.tag}</span> : null}
                   <span className={`${s.glass} ${s[t.tone]}`} aria-hidden="true" />
                 </div>
-                <p className={s.tapName}>{t.name}</p>
-                <p className={s.tapStyle}>{t.style}</p>
+                <p data-edit={`taps.tapName.${i}`} data-edit-max="240" data-edit-multiline className={s.tapName}>{t.name}</p>
+                <p data-edit={`taps.tapStyle.${i}`} data-edit-max="240" data-edit-multiline className={s.tapStyle}>{t.style}</p>
                 <dl className={s.tapFacts}>
                   <div>
-                    <dt>ABV</dt>
-                    <dd>{t.abv}</dd>
+                    <dt data-edit={`taps.term2.${i}`} data-edit-max="28">ABV</dt>
+                    <dd data-edit={`taps.body2.${i}`} data-edit-max="200" data-edit-multiline>{t.abv}</dd>
                   </div>
-                  {t.pours.map(([size, price]) => (
+                  {t.pours.map(([size, price], i2) => (
                     <div key={size}>
-                      <dt>{size}</dt>
-                      <dd>{price}</dd>
+                      <dt data-edit={`taps.term3.${i}.${i2}`} data-edit-max="28">{size}</dt>
+                      <dd data-edit={`taps.body3.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                     </div>
                   ))}
                 </dl>
@@ -337,14 +350,14 @@ export default function CopperlineBrewingPage() {
 
           <div className={s.boardFoot}>
             <dl className={s.pours}>
-              {POURS.map(([k, v]) => (
+              {POURS.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`taps.term4.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`taps.body4.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
-            <p className={s.boardNote}>
+            <p data-edit="taps.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>
               Tap water is free and on the bar. Line 12 is always something
               without the alcohol, and there is a dry cider in the fridge for
               anyone avoiding gluten.
@@ -355,7 +368,7 @@ export default function CopperlineBrewingPage() {
         {/* ----------------------------------------------------------- CANS */}
         <section id="cans" className={s.sec} aria-labelledby="cans-h">
           <div className={s.cansGrid}>
-            <div className={s.fizz} aria-hidden="true">
+            <div data-edit-pattern="cans.field" data-edit-roles="transparent,2,3" className={s.fizz} aria-hidden="true">
               <TabbiedPattern
                 pattern={bokeh}
                 palette={FIZZ}
@@ -368,32 +381,32 @@ export default function CopperlineBrewingPage() {
             </div>
             <div className={s.cansBody}>
               <div className={s.secHead}>
-                <span className={s.secNo}>02</span>
-                <h2 id="cans-h">Cans to take away</h2>
-                <p className={s.secNote}>
+                <span data-edit="cans.secNo" data-edit-max="60" className={s.secNo}>02</span>
+                <h2 data-edit="cans.title" data-edit-max="60" id="cans-h">Cans to take away</h2>
+                <p data-edit="cans.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                   Canned on Tuesdays and in the fridge by the door by
                   Wednesday. Pay at the bar; the fridge is open whenever we are.
                 </p>
               </div>
               <ul className={s.cans}>
-                {CANS.map((c) => (
+                {CANS.map((c, i) => (
                   <li key={c.name}>
                     <span className={`${s.glass} ${s[c.tone]}`} aria-hidden="true" />
                     <div className={s.canName}>
-                      <strong>{c.name}</strong>
-                      <span>{c.style}</span>
+                      <strong data-edit={`cans.emphasis.${i}`}>{c.name}</strong>
+                      <span data-edit={`cans.text.${i}`} data-edit-max="60">{c.style}</span>
                     </div>
-                    <span className={s.canPack}>{c.pack}</span>
-                    <span className={s.canPrice}>{c.price}</span>
+                    <span data-edit={`cans.canPack.${i}`} data-edit-max="60" className={s.canPack}>{c.pack}</span>
+                    <span data-edit={`cans.canPrice.${i}`} data-edit-max="60" className={s.canPrice}>{c.price}</span>
                   </li>
                 ))}
               </ul>
               <dl className={s.fills}>
-                {FILLS.map(([k, v, p]) => (
+                {FILLS.map(([k, v, p], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd className={s.fillWhat}>{v}</dd>
-                    <dd className={s.fillPrice}>{p}</dd>
+                    <dt data-edit={`cans.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`cans.fillWhat.${i}`} data-edit-max="200" data-edit-multiline className={s.fillWhat}>{v}</dd>
+                    <dd data-edit={`cans.fillPrice.${i}`} data-edit-max="200" data-edit-multiline className={s.fillPrice}>{p}</dd>
                   </div>
                 ))}
               </dl>
@@ -404,36 +417,36 @@ export default function CopperlineBrewingPage() {
         {/* ----------------------------------------------------------- FOOD */}
         <section id="food" className={s.sec} aria-labelledby="food-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>03</span>
-            <h2 id="food-h">Food trucks by day</h2>
-            <p className={s.secNote}>
+            <span data-edit="food.secNo" data-edit-max="60" className={s.secNo}>03</span>
+            <h2 data-edit="food.title" data-edit-max="60" id="food-h">Food trucks by day</h2>
+            <p data-edit="food.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               We do not have a kitchen, so a different truck parks in the yard
               each night. Order at the window and they will bring it in. You
               are welcome to bring your own food any day.
             </p>
           </div>
           <table className={s.trucks}>
-            <caption className={s.srOnly}>Food trucks in the yard, by day of the week</caption>
+            <caption data-edit="food.srOnly" className={s.srOnly}>Food trucks in the yard, by day of the week</caption>
             <thead>
               <tr>
-                <th scope="col">Day</th>
-                <th scope="col">Truck</th>
-                <th scope="col">Serving</th>
-                <th scope="col">Window</th>
+                <th data-edit="food.heading" scope="col">Day</th>
+                <th data-edit="food.heading2" scope="col">Truck</th>
+                <th data-edit="food.heading3" scope="col">Serving</th>
+                <th data-edit="food.heading4" scope="col">Window</th>
               </tr>
             </thead>
             <tbody>
-              {TRUCKS.map(([day, truck, food, time]) => (
+              {TRUCKS.map(([day, truck, food, time], i) => (
                 <tr key={day} className={food ? undefined : s.dark}>
-                  <th scope="row">{day}</th>
-                  <td className={s.truckName}>{truck}</td>
-                  <td className={s.truckFood}>{food}</td>
-                  <td className={s.truckTime}>{time}</td>
+                  <th data-edit={`food.heading5.${i}`} scope="row">{day}</th>
+                  <td data-edit={`food.truckName.${i}`} className={s.truckName}>{truck}</td>
+                  <td data-edit={`food.truckFood.${i}`} className={s.truckFood}>{food}</td>
+                  <td data-edit={`food.truckTime.${i}`} className={s.truckTime}>{time}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <p className={s.footnote}>
+          <p data-edit="food.footnote" data-edit-max="240" data-edit-multiline className={s.footnote}>
             Soft pretzels with beer mustard are at the bar every day we are
             open, $6.
           </p>
@@ -442,9 +455,9 @@ export default function CopperlineBrewingPage() {
         {/* ---------------------------------------------------------- TOURS */}
         <section id="tours" className={s.sec} aria-labelledby="tours-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>04</span>
-            <h2 id="tours-h">Brewery tours</h2>
-            <p className={s.secNote}>
+            <span data-edit="tours.secNo" data-edit-max="60" className={s.secNo}>04</span>
+            <h2 data-edit="tours.title" data-edit-max="60" id="tours-h">Brewery tours</h2>
+            <p data-edit="tours.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Saturdays at 1 pm and 3 pm, forty-five minutes, fourteen people
               at most. Led by whoever brewed that week.
             </p>
@@ -454,22 +467,22 @@ export default function CopperlineBrewingPage() {
               {TOUR_STOPS.map(([stop, body], i) => (
                 <li key={stop}>
                   <span className={s.routeNo}>{String(i + 1).padStart(2, '0')}</span>
-                  <h3>{stop}</h3>
-                  <p>{body}</p>
+                  <h3 data-edit={`tours.title2.${i}`} data-edit-max="40">{stop}</h3>
+                  <p data-edit={`tours.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                 </li>
               ))}
             </ol>
             <div className={s.ticket}>
-              <p className={s.ticketHead}>One ticket</p>
-              <p className={s.ticketPrice}>$18</p>
+              <p data-edit="tours.ticketHead" data-edit-max="240" data-edit-multiline className={s.ticketHead}>One ticket</p>
+              <p data-edit="tours.ticketPrice" data-edit-max="240" data-edit-multiline className={s.ticketPrice}>$18</p>
               <ul className={s.ticketList}>
-                <li>Four tasters of your choice</li>
-                <li>A Copperline glass to keep</li>
-                <li>21 and over, with ID</li>
-                <li>Closed-toe shoes, please: the floor is wet</li>
+                <li data-edit="tours.item" data-edit-max="80">Four tasters of your choice</li>
+                <li data-edit="tours.item2" data-edit-max="80">A Copperline glass to keep</li>
+                <li data-edit="tours.item3" data-edit-max="80">21 and over, with ID</li>
+                <li data-edit="tours.item4" data-edit-max="80">Closed-toe shoes, please: the floor is wet</li>
               </ul>
-              <a className={s.button} href="mailto:tours@copperline.example">Book a tour</a>
-              <p className={s.ticketNote}>
+              <a data-edit="tours.button" data-edit-max="28" className={s.button} href="mailto:tours@copperline.example">Book a tour</a>
+              <p data-edit="tours.ticketNote" data-edit-max="240" data-edit-multiline className={s.ticketNote}>
                 Or ask at the bar. Groups of eight or more, write and we will
                 add a tour on a weekday.
               </p>
@@ -480,37 +493,37 @@ export default function CopperlineBrewingPage() {
         {/* ---------------------------------------------------------- HIRE */}
         <section id="hire" className={s.sec} aria-labelledby="hire-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>05</span>
-            <h2 id="hire-h">Private hire</h2>
-            <p className={s.secNote}>
+            <span data-edit="hire.secNo" data-edit-max="60" className={s.secNo}>05</span>
+            <h2 data-edit="hire.title" data-edit-max="60" id="hire-h">Private hire</h2>
+            <p data-edit="hire.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Two ways to have the place to yourselves. No room fee: you
               spend the minimum at the bar and the trucks, and that is it.
             </p>
           </div>
           <div className={s.rooms}>
-            {HIRE.map((h) => (
+            {HIRE.map((h, i) => (
               <article key={h.room} className={s.room}>
-                <h3>{h.room}</h3>
-                <p className={s.roomSize}>{h.size}</p>
-                <p className={s.roomPrice}>{h.price}</p>
-                <p className={s.roomNote}>{h.note}</p>
+                <h3 data-edit={`room.title.${i}`} data-edit-max="40">{h.room}</h3>
+                <p data-edit={`room.roomSize.${i}`} data-edit-max="240" data-edit-multiline className={s.roomSize}>{h.size}</p>
+                <p data-edit={`room.roomPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.roomPrice}>{h.price}</p>
+                <p data-edit={`room.roomNote.${i}`} data-edit-max="240" data-edit-multiline className={s.roomNote}>{h.note}</p>
               </article>
             ))}
             <div className={s.includes}>
-              <h3>Every booking includes</h3>
+              <h3 data-edit="hire.title2" data-edit-max="40">Every booking includes</h3>
               <ul>
-                {HIRE_INCLUDES.map((x) => (
-                  <li key={x}>{x}</li>
+                {HIRE_INCLUDES.map((x, i) => (
+                  <li data-edit={`hire.item.${i}`} data-edit-max="80" key={x}>{x}</li>
                 ))}
               </ul>
-              <a className={s.buttonGhost} href="mailto:events@copperline.example">Ask about a date</a>
+              <a data-edit="hire.buttonGhost" data-edit-max="28" className={s.buttonGhost} href="mailto:events@copperline.example">Ask about a date</a>
             </div>
           </div>
         </section>
 
         {/* ----------------------------------------------------------- LINE
             The copper line: one row of rings across the page. */}
-        <div className={s.line} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,5,2,0" className={s.line} aria-hidden="true">
           <TabbiedPattern
             pattern={sunsetrings}
             palette={LINE}
@@ -525,9 +538,9 @@ export default function CopperlineBrewingPage() {
         {/* ---------------------------------------------------------- VISIT */}
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>06</span>
-            <h2 id="visit-h">Hours and the taproom</h2>
-            <p className={s.secNote}>
+            <span data-edit="visit.secNo" data-edit-max="60" className={s.secNo}>06</span>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Hours and the taproom</h2>
+            <p data-edit="visit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A converted brass foundry at the end of the yard. Long tables,
               a small stage for Sunday folk sessions, and the brewhouse behind
               a glass wall.
@@ -535,36 +548,36 @@ export default function CopperlineBrewingPage() {
           </div>
           <div className={s.visit}>
             <div>
-              <h3 className={s.visitHead}>Hours</h3>
+              <h3 data-edit="visit.visitHead" data-edit-max="40" className={s.visitHead}>Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d} className={d === 'Thursday' ? s.isToday : undefined}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div>
-              <h3 className={s.visitHead}>Find us</h3>
-              <p className={s.address}>
+              <h3 data-edit="visit.visitHead2" data-edit-max="40" className={s.visitHead}>Find us</h3>
+              <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 Unit 4, Foundry Yard
                 <br />
                 212 Canal Street
               </p>
               <ul className={s.contact}>
                 <li>
-                  <a href="tel:+15550142290">(555) 014-2290</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550142290">(555) 014-2290</a>
                 </li>
                 <li>
-                  <a href="mailto:hello@copperline.example">hello@copperline.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@copperline.example">hello@copperline.example</a>
                 </li>
               </ul>
               <dl className={s.rules}>
-                {RULES.map(([k, v]) => (
+                {RULES.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`visit.term2.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`visit.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -576,17 +589,17 @@ export default function CopperlineBrewingPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Copperline Brewing</p>
-            <p className={s.footTag}>Twelve lines, a yard full of food trucks, and the brewhouse behind the glass.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Copperline Brewing</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Twelve lines, a yard full of food trucks, and the brewhouse behind the glass.</p>
           </div>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             Unit 4, Foundry Yard
             <br />
             212 Canal Street
@@ -595,11 +608,11 @@ export default function CopperlineBrewingPage() {
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional brewery and taproom. Beers, prices, trucks and hours are invented. Please drink responsibly.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional brewery and taproom. Beers, prices, trucks and hours are invented. Please drink responsibly.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on a transparent ground.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
           </p>
         </div>
       </footer>

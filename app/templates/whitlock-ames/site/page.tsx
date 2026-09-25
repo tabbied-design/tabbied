@@ -243,7 +243,19 @@ const OFFICES: Office[] = [
 
 export default function WhitlockAmesPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--parchment': '#f4f2ec',
+        '--ink': '#141b26',
+        '--oxford': '#2f4b7c',
+        '--gray': '#8b8a85',
+        '--pale': '#dedbd2',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="parchment,ink,oxford,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -253,16 +265,16 @@ export default function WhitlockAmesPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Whitlock & Ames</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Whitlock & Ames</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href="tel:+15550184400">(555) 018-4400</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href="tel:+15550184400">(555) 018-4400</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -271,24 +283,24 @@ export default function WhitlockAmesPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Attorneys at law, Alderbay</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Attorneys at law, Alderbay</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Employment and family law, <em>explained plainly.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               We are five attorneys acting for employees, small employers and
               families, when work or a household comes apart. We quote a fixed
               fee wherever the work allows it, and we print those fees below.
             </p>
             <div className={s.actions}>
-              <a className={s.primary} href="#consultation">Request a consultation</a>
-              <a className={s.textLink} href="#fees">Read our fees</a>
+              <a data-edit="hero.primary" data-edit-max="28" className={s.primary} href="#consultation">Request a consultation</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#fees">Read our fees</a>
             </div>
           </div>
           {/* The primary field: a plate of hairline weave, framed like a
               frontispiece. */}
           <div className={s.plate} aria-hidden="true">
-            <div className={s.plateField}>
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,2" className={s.plateField}>
               <TabbiedPattern
                 pattern={diagonalweave}
                 palette={WEAVE}
@@ -306,23 +318,23 @@ export default function WhitlockAmesPage() {
         <div className={s.doc}>
           <aside className={s.rail} aria-label="On this page">
             <div className={s.railInner}>
-              <p className={s.railLabel}>Contents</p>
+              <p data-edit="rail.railLabel" data-edit-max="240" data-edit-multiline className={s.railLabel}>Contents</p>
               <nav aria-label="Contents">
                 <ol className={s.toc}>
-                  {CONTENTS.map(([no, label, href]) => (
+                  {CONTENTS.map(([no, label, href], i) => (
                     <li key={href}>
                       <a href={href}>
-                        <span className={s.tocNo}>{no}</span>
-                        <span className={s.tocLabel}>{label}</span>
+                        <span data-edit={`rail.tocNo.${i}`} data-edit-max="60" className={s.tocNo}>{no}</span>
+                        <span data-edit={`rail.tocLabel.${i}`} data-edit-max="60" className={s.tocLabel}>{label}</span>
                       </a>
                     </li>
                   ))}
                 </ol>
               </nav>
               <div className={s.railCall}>
-                <p className={s.railLabel}>Call</p>
-                <a className={s.railPhone} href="tel:+15550184400">(555) 018-4400</a>
-                <p className={s.railNote}>Monday to Friday, 8:30-6:00. Evenings by appointment.</p>
+                <p data-edit="rail.railLabel2" data-edit-max="240" data-edit-multiline className={s.railLabel}>Call</p>
+                <a data-edit="rail.railPhone" data-edit-max="28" className={s.railPhone} href="tel:+15550184400">(555) 018-4400</a>
+                <p data-edit="rail.railNote" data-edit-max="240" data-edit-multiline className={s.railNote}>Monday to Friday, 8:30-6:00. Evenings by appointment.</p>
               </div>
             </div>
           </aside>
@@ -330,95 +342,95 @@ export default function WhitlockAmesPage() {
           <div className={s.body}>
             {/* ------------------------------------------------ 1 PRACTICE */}
             <section id="practice" className={s.sec} aria-labelledby="practice-h">
-              <span className={s.secNo}>1</span>
-              <h2 id="practice-h">Practice areas</h2>
-              <p className={s.secLede}>
+              <span data-edit="practice.secNo" data-edit-max="60" className={s.secNo}>1</span>
+              <h2 data-edit="practice.title" data-edit-max="60" id="practice-h">Practice areas</h2>
+              <p data-edit="practice.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 Two areas of law and nothing else, because a firm of five
                 cannot be good at twelve. Each has two attorneys who know the
                 local judges, agencies and opposing counsel by name.
               </p>
               <div className={s.areas}>
                 <div className={s.area}>
-                  <h3>Employment</h3>
+                  <h3 data-edit="practice.title2" data-edit-max="40">Employment</h3>
                   <dl>
-                    {EMPLOYMENT.map((a) => (
+                    {EMPLOYMENT.map((a, i) => (
                       <div key={a.term}>
-                        <dt>{a.term}</dt>
-                        <dd>{a.body}</dd>
+                        <dt data-edit={`practice.term.${i}`} data-edit-max="28">{a.term}</dt>
+                        <dd data-edit={`practice.body.${i}`} data-edit-max="200" data-edit-multiline>{a.body}</dd>
                       </div>
                     ))}
                   </dl>
                 </div>
                 <div className={s.area}>
-                  <h3>Family</h3>
+                  <h3 data-edit="practice.title3" data-edit-max="40">Family</h3>
                   <dl>
-                    {FAMILY.map((a) => (
+                    {FAMILY.map((a, i) => (
                       <div key={a.term}>
-                        <dt>{a.term}</dt>
-                        <dd>{a.body}</dd>
+                        <dt data-edit={`practice.term2.${i}`} data-edit-max="28">{a.term}</dt>
+                        <dd data-edit={`practice.body2.${i}`} data-edit-max="200" data-edit-multiline>{a.body}</dd>
                       </div>
                     ))}
                   </dl>
                 </div>
               </div>
               <div className={s.notUs}>
-                <p className={s.notUsHead}>We do not handle</p>
+                <p data-edit="practice.notUsHead" data-edit-max="240" data-edit-multiline className={s.notUsHead}>We do not handle</p>
                 <ul>
-                  {NOT_US.map((n) => (
-                    <li key={n}>{n}</li>
+                  {NOT_US.map((n, i) => (
+                    <li data-edit={`practice.item.${i}`} data-edit-max="80" key={n}>{n}</li>
                   ))}
                 </ul>
-                <p className={s.notUsNote}>We will give you the names of people who do.</p>
+                <p data-edit="practice.notUsNote" data-edit-max="240" data-edit-multiline className={s.notUsNote}>We will give you the names of people who do.</p>
               </div>
             </section>
 
             {/* ---------------------------------------------------- 2 FEES */}
             <section id="fees" className={s.sec} aria-labelledby="fees-h">
-              <span className={s.secNo}>2</span>
-              <h2 id="fees-h">How we charge</h2>
-              <p className={s.secLede}>
+              <span data-edit="fees.secNo" data-edit-max="60" className={s.secNo}>2</span>
+              <h2 data-edit="fees.title" data-edit-max="60" id="fees-h">How we charge</h2>
+              <p data-edit="fees.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 Most of what we do has a fixed fee, agreed in writing before we
                 start. Court filing fees and expert reports are extra and are
                 passed on at cost.
               </p>
               <table className={s.fees}>
-                <caption>Fixed fees</caption>
+                <caption data-edit="fees.caption">Fixed fees</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Matter</th>
-                    <th scope="col">Fee</th>
-                    <th scope="col">What it covers</th>
+                    <th data-edit="fees.heading" scope="col">Matter</th>
+                    <th data-edit="fees.heading2" scope="col">Fee</th>
+                    <th data-edit="fees.heading3" scope="col">What it covers</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {FEES.map((f) => (
+                  {FEES.map((f, i) => (
                     <tr key={f.matter}>
-                      <th scope="row">{f.matter}</th>
-                      <td className={s.feeCell}>{f.fee}</td>
-                      <td className={s.coverCell}>{f.covers}</td>
+                      <th data-edit={`fees.heading4.${i}`} scope="row">{f.matter}</th>
+                      <td data-edit={`fees.feeCell.${i}`} className={s.feeCell}>{f.fee}</td>
+                      <td data-edit={`fees.coverCell.${i}`} className={s.coverCell}>{f.covers}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <div className={s.feeMore}>
                 <div>
-                  <h3>Hourly work</h3>
-                  <p className={s.small}>
+                  <h3 data-edit="fees.title2" data-edit-max="40">Hourly work</h3>
+                  <p data-edit="fees.small" data-edit-max="240" data-edit-multiline className={s.small}>
                     Contested custody, litigation and anything that cannot
                     be scoped in advance. Billed in six-minute units, monthly.
                   </p>
                   <dl className={s.rates}>
-                    {HOURLY.map(([who, rate]) => (
+                    {HOURLY.map(([who, rate], i) => (
                       <div key={who}>
-                        <dt>{who}</dt>
-                        <dd>{rate}</dd>
+                        <dt data-edit={`fees.term.${i}`} data-edit-max="28">{who}</dt>
+                        <dd data-edit={`fees.body.${i}`} data-edit-max="200" data-edit-multiline>{rate}</dd>
                       </div>
                     ))}
                   </dl>
                 </div>
                 <div>
-                  <h3>Contingency</h3>
-                  <p className={s.small}>
+                  <h3 data-edit="fees.title3" data-edit-max="40">Contingency</h3>
+                  <p data-edit="fees.small2" data-edit-max="240" data-edit-multiline className={s.small}>
                     For discrimination and unpaid wage claims we will often
                     work for one third of what is recovered, and nothing if
                     nothing is. You pay the court costs as they arise, and we
@@ -430,30 +442,30 @@ export default function WhitlockAmesPage() {
 
             {/* ----------------------------------------------- 3 ATTORNEYS */}
             <section id="attorneys" className={s.sec} aria-labelledby="attorneys-h">
-              <span className={s.secNo}>3</span>
-              <h2 id="attorneys-h">The attorneys</h2>
-              <p className={s.secLede}>
+              <span data-edit="attorneys.secNo" data-edit-max="60" className={s.secNo}>3</span>
+              <h2 data-edit="attorneys.title" data-edit-max="60" id="attorneys-h">The attorneys</h2>
+              <p data-edit="attorneys.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 Every client has one named attorney and one paralegal, and a
                 reply from one of them within a working day.
               </p>
               <ul className={s.people}>
-                {ATTORNEYS.map((a) => (
+                {ATTORNEYS.map((a, i) => (
                   <li key={a.name} className={s.person}>
                     <div className={s.personHead}>
-                      <h3>{a.name}</h3>
-                      <span className={s.personRole}>{a.role}</span>
+                      <h3 data-edit={`attorneys.title2.${i}`} data-edit-max="40">{a.name}</h3>
+                      <span data-edit={`attorneys.personRole.${i}`} data-edit-max="60" className={s.personRole}>{a.role}</span>
                     </div>
                     <dl className={s.personFacts}>
                       <div>
-                        <dt>Admitted</dt>
-                        <dd>{a.admitted}</dd>
+                        <dt data-edit={`attorneys.term.${i}`} data-edit-max="28">Admitted</dt>
+                        <dd data-edit={`attorneys.body.${i}`} data-edit-max="200" data-edit-multiline>{a.admitted}</dd>
                       </div>
                       <div>
-                        <dt>Languages</dt>
-                        <dd>{a.languages}</dd>
+                        <dt data-edit={`attorneys.term2.${i}`} data-edit-max="28">Languages</dt>
+                        <dd data-edit={`attorneys.body2.${i}`} data-edit-max="200" data-edit-multiline>{a.languages}</dd>
                       </div>
                     </dl>
-                    <p className={s.personFocus}>{a.focus}</p>
+                    <p data-edit={`attorneys.personFocus.${i}`} data-edit-max="240" data-edit-multiline className={s.personFocus}>{a.focus}</p>
                   </li>
                 ))}
               </ul>
@@ -461,27 +473,27 @@ export default function WhitlockAmesPage() {
 
             {/* -------------------------------------------- 4 CONSULTATION */}
             <section id="consultation" className={s.sec} aria-labelledby="consultation-h">
-              <span className={s.secNo}>4</span>
-              <h2 id="consultation-h">A first consultation</h2>
-              <p className={s.secLede}>
+              <span data-edit="consultation.secNo" data-edit-max="60" className={s.secNo}>4</span>
+              <h2 data-edit="consultation.title" data-edit-max="60" id="consultation-h">A first consultation</h2>
+              <p data-edit="consultation.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 Three steps, usually inside a week. You decide at the end of
                 them whether to go on, and nothing is owed beyond the $250.
               </p>
               <ol className={s.steps}>
-                {STEPS.map((st) => (
+                {STEPS.map((st, i) => (
                   <li key={st.title}>
-                    <h3>{st.title}</h3>
-                    <p>{st.body}</p>
+                    <h3 data-edit={`consultation.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                    <p data-edit={`consultation.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
                   </li>
                 ))}
               </ol>
               <div className={s.bring}>
-                {BRING.map((b) => (
+                {BRING.map((b, i) => (
                   <div key={b.head}>
-                    <h3>{b.head}</h3>
+                    <h3 data-edit={`consultation.title3.${i}`} data-edit-max="40">{b.head}</h3>
                     <ul>
-                      {b.items.map((it) => (
-                        <li key={it}>{it}</li>
+                      {b.items.map((it, i2) => (
+                        <li data-edit={`consultation.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                       ))}
                     </ul>
                   </div>
@@ -489,29 +501,29 @@ export default function WhitlockAmesPage() {
               </div>
 
               <form className={s.form} action="#">
-                <h3 className={s.formTitle}>Request a consultation</h3>
-                <p className={s.formNote}>
+                <h3 data-edit="consultation.formTitle" data-edit-max="40" className={s.formTitle}>Request a consultation</h3>
+                <p data-edit="consultation.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>
                   Please do not describe your case here. Until the conflict
                   check clears, nothing you send us is confidential.
                 </p>
                 <div className={s.field}>
-                  <label htmlFor="wa-name">Your name</label>
+                  <label data-edit="consultation.label" htmlFor="wa-name">Your name</label>
                   <input id="wa-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="wa-other">Name of the other side</label>
+                  <label data-edit="consultation.label2" htmlFor="wa-other">Name of the other side</label>
                   <input id="wa-other" name="other" type="text" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="wa-phone">Phone</label>
+                  <label data-edit="consultation.label3" htmlFor="wa-phone">Phone</label>
                   <input id="wa-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="wa-email">Email</label>
+                  <label data-edit="consultation.label4" htmlFor="wa-email">Email</label>
                   <input id="wa-email" name="email" type="email" autoComplete="email" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="wa-area">The matter concerns</label>
+                  <label data-edit="consultation.label5" htmlFor="wa-area">The matter concerns</label>
                   <select id="wa-area" name="area" defaultValue="employment">
                     <option value="employment">Work or employment</option>
                     <option value="family">Family</option>
@@ -519,7 +531,7 @@ export default function WhitlockAmesPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="wa-how">Meet</label>
+                  <label data-edit="consultation.label6" htmlFor="wa-how">Meet</label>
                   <select id="wa-how" name="how" defaultValue="downtown">
                     <option value="downtown">At the Downtown office</option>
                     <option value="eastside">At the Eastside office</option>
@@ -527,19 +539,19 @@ export default function WhitlockAmesPage() {
                     <option value="phone">By phone</option>
                   </select>
                 </div>
-                <button type="submit" className={s.submit}>Send the request</button>
+                <button data-edit="consultation.submit" data-edit-max="24" type="submit" className={s.submit}>Send the request</button>
               </form>
             </section>
 
             {/* ----------------------------------------------- 5 QUESTIONS */}
             <section id="questions" className={s.sec} aria-labelledby="questions-h">
-              <span className={s.secNo}>5</span>
-              <h2 id="questions-h">Client questions</h2>
+              <span data-edit="questions.secNo" data-edit-max="60" className={s.secNo}>5</span>
+              <h2 data-edit="questions.title" data-edit-max="60" id="questions-h">Client questions</h2>
               <div className={s.faq}>
-                {QUESTIONS.map((f) => (
+                {QUESTIONS.map((f, i) => (
                   <details key={f.q} className={s.faqItem}>
-                    <summary>{f.q}</summary>
-                    <p>{f.a}</p>
+                    <summary data-edit={`questions.question.${i}`} data-edit-max="80">{f.q}</summary>
+                    <p data-edit={`questions.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                   </details>
                 ))}
               </div>
@@ -547,42 +559,42 @@ export default function WhitlockAmesPage() {
 
             {/* ------------------------------------------------- 6 OFFICES */}
             <section id="offices" className={s.sec} aria-labelledby="offices-h">
-              <span className={s.secNo}>6</span>
-              <h2 id="offices-h">Offices</h2>
-              <p className={s.secLede}>
+              <span data-edit="offices.secNo" data-edit-max="60" className={s.secNo}>6</span>
+              <h2 data-edit="offices.title" data-edit-max="60" id="offices-h">Offices</h2>
+              <p data-edit="offices.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
                 Two offices across town, one telephone number, and video
                 appointments for anyone who would rather not come in.
               </p>
               <div className={s.offices}>
-                {OFFICES.map((o) => (
+                {OFFICES.map((o, i) => (
                   <div key={o.name} className={s.office}>
-                    <h3>{o.name}</h3>
+                    <h3 data-edit={`offices.title2.${i}`} data-edit-max="40">{o.name}</h3>
                     <p className={s.officeAddr}>
-                      {o.lines.map((line) => (
-                        <span key={line}>{line}</span>
+                      {o.lines.map((line, i2) => (
+                        <span data-edit={`offices.text.${i}.${i2}`} data-edit-max="60" key={line}>{line}</span>
                       ))}
                     </p>
-                    <p className={s.officeHours}>{o.hours}</p>
-                    <p className={s.officeAccess}>{o.access}</p>
+                    <p data-edit={`offices.officeHours.${i}`} data-edit-max="240" data-edit-multiline className={s.officeHours}>{o.hours}</p>
+                    <p data-edit={`offices.officeAccess.${i}`} data-edit-max="240" data-edit-multiline className={s.officeAccess}>{o.access}</p>
                   </div>
                 ))}
               </div>
               <dl className={s.contact}>
                 <div>
-                  <dt>Telephone</dt>
+                  <dt data-edit="offices.term" data-edit-max="28">Telephone</dt>
                   <dd>
-                    <a href="tel:+15550184400">(555) 018-4400</a>
+                    <a data-edit="offices.link" data-edit-max="28" href="tel:+15550184400">(555) 018-4400</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Email</dt>
+                  <dt data-edit="offices.term2" data-edit-max="28">Email</dt>
                   <dd>
-                    <a href="mailto:office@whitlockames.example">office@whitlockames.example</a>
+                    <a data-edit="offices.link2" data-edit-max="28" href="mailto:office@whitlockames.example">office@whitlockames.example</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Post</dt>
-                  <dd>PO Box 118, Alderbay</dd>
+                  <dt data-edit="offices.term3" data-edit-max="28">Post</dt>
+                  <dd data-edit="offices.body" data-edit-max="200" data-edit-multiline>PO Box 118, Alderbay</dd>
                 </div>
               </dl>
             </section>
@@ -591,7 +603,7 @@ export default function WhitlockAmesPage() {
       </main>
 
       {/* A quiet band of loose thread before the footer. */}
-      <div className={s.coda} aria-hidden="true">
+      <div data-edit-pattern="page.field" data-edit-roles="transparent,4,3,2" className={s.coda} aria-hidden="true">
         <TabbiedPattern
           pattern={batiste}
           palette={THREAD}
@@ -605,18 +617,18 @@ export default function WhitlockAmesPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Whitlock & Ames</p>
-          <p className={s.footTag}>Employment and family law, Alderbay.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Whitlock & Ames</p>
+          <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Employment and family law, Alderbay.</p>
         </div>
         <div className={s.footFine}>
-          <p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>
             A fictional law firm. Attorneys, fees and offices are invented, and
             nothing on this page is legal advice.
           </p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on the page.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on the page.</span>
           </p>
         </div>
       </footer>

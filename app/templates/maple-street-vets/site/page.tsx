@@ -200,7 +200,20 @@ const FEES = [
 
 export default function MapleStreetVetsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fbf8f3',
+        '--ink': '#1d2a30',
+        '--teal': '#1b8a8f',
+        '--apricot': '#f29e6d',
+        '--gray': '#8c979b',
+        '--pale': '#e8efee',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,teal,apricot,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -211,24 +224,24 @@ export default function MapleStreetVetsPage() {
 
       {/* The emergency line sits above everything, on every screen. */}
       <div className={s.alert} role="note">
-        <strong className={s.alertLabel}>Emergency?</strong>
-        <span className={s.alertText}>We answer 24 hours a day, every day.</span>
-        <a className={s.alertPhone} href="tel:+15550173399">{EMERGENCY}</a>
+        <strong data-edit="page.alertLabel" className={s.alertLabel}>Emergency?</strong>
+        <span data-edit="page.alertText" data-edit-max="60" className={s.alertText}>We answer 24 hours a day, every day.</span>
+        <a data-edit="page.alertPhone" data-edit-max="28" className={s.alertPhone} href="tel:+15550173399">{EMERGENCY}</a>
       </div>
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markDot} aria-hidden="true" />
-          <span className={s.markName}>Maple Street Vets</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Maple Street Vets</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -240,19 +253,19 @@ export default function MapleStreetVetsPage() {
             with the boomerang tile as the one picture. */}
         <section id="today" className={s.dash} aria-labelledby="hero-h">
           <div className={s.cardWelcome}>
-            <p className={s.eyebrow}>Independent vets for cats, dogs and small pets</p>
+            <p data-edit="today.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Independent vets for cats, dogs and small pets</p>
             <div>
-              <h1 id="hero-h" className={s.heroTitle}>
+              <h1 data-edit="today.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
                 Your pet's vets, <em>just off Maple Street.</em>
               </h1>
-              <p className={s.heroLede}>
+              <p data-edit="today.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
                 Three vets, three nurses and one waiting room with a separate
                 corner for cats. Same-day appointments for anything that
                 cannot wait, and a vet on the phone at 3am if it comes to that.
               </p>
               <div className={s.actions}>
-                <a className={s.btn} href="#book">Book an appointment</a>
-                <a className={s.btnGhost} href="#new">Register a new pet</a>
+                <a data-edit="today.btn" data-edit-max="28" className={s.btn} href="#book">Book an appointment</a>
+                <a data-edit="today.btnGhost" data-edit-max="28" className={s.btnGhost} href="#new">Register a new pet</a>
               </div>
             </div>
           </div>
@@ -260,14 +273,14 @@ export default function MapleStreetVetsPage() {
           <div className={s.card}>
             <div className={s.cardHead}>
               <span className={s.dotLive} aria-hidden="true" />
-              <h2 className={s.cardLabel}>Hours</h2>
+              <h2 data-edit="today.cardLabel" data-edit-max="60" className={s.cardLabel}>Hours</h2>
             </div>
-            <p className={s.cardBig}>Open 7 days</p>
+            <p data-edit="today.cardBig" data-edit-max="240" data-edit-multiline className={s.cardBig}>Open 7 days</p>
             <dl className={s.miniHours}>
-              {WEEK.map(([d, h]) => (
+              {WEEK.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`today.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`today.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
@@ -276,10 +289,10 @@ export default function MapleStreetVetsPage() {
           <div className={s.cardDark}>
             <div className={s.cardHead}>
               <span className={s.dotAlert} aria-hidden="true" />
-              <h2 className={s.cardLabel}>Emergency line</h2>
+              <h2 data-edit="today.cardLabel2" data-edit-max="60" className={s.cardLabel}>Emergency line</h2>
             </div>
-            <a className={s.cardPhone} href="tel:+15550173399">{EMERGENCY}</a>
-            <p className={s.cardNote}>
+            <a data-edit="today.cardPhone" data-edit-max="28" className={s.cardPhone} href="tel:+15550173399">{EMERGENCY}</a>
+            <p data-edit="today.cardNote" data-edit-max="240" data-edit-multiline className={s.cardNote}>
               A vet answers day and night. After 7pm, come to the side door on
               Elm Row and ring the bell.
             </p>
@@ -288,35 +301,35 @@ export default function MapleStreetVetsPage() {
           <div id="book" className={s.card}>
             <div className={s.cardHead}>
               <span className={s.dotTeal} aria-hidden="true" />
-              <h2 className={s.cardLabel}>Book</h2>
+              <h2 data-edit="today.cardLabel3" data-edit-max="60" className={s.cardLabel}>Book</h2>
             </div>
-            <p className={s.cardBig}>Same-day slots</p>
-            <p className={s.cardNote}>
+            <p data-edit="today.cardBig2" data-edit-max="240" data-edit-multiline className={s.cardBig}>Same-day slots</p>
+            <p data-edit="today.cardNote2" data-edit-max="240" data-edit-multiline className={s.cardNote}>
               Held back every morning for pets who are unwell. Routine visits
               are usually free within three days.
             </p>
             <div className={s.cardLinks}>
-              <a href="tel:+15550173300">{PHONE}</a>
-              <a href="mailto:hello@maplestreetvets.example">Book by email</a>
+              <a data-edit="today.link" data-edit-max="28" href="tel:+15550173300">{PHONE}</a>
+              <a data-edit="today.link2" data-edit-max="28" href="mailto:hello@maplestreetvets.example">Book by email</a>
             </div>
           </div>
 
           <div className={s.card}>
             <div className={s.cardHead}>
               <span className={s.dotTeal} aria-hidden="true" />
-              <h2 className={s.cardLabel}>Repeat prescriptions</h2>
+              <h2 data-edit="today.cardLabel4" data-edit-max="60" className={s.cardLabel}>Repeat prescriptions</h2>
             </div>
-            <p className={s.cardBig}>Ready in 48 hours</p>
-            <p className={s.cardNote}>
+            <p data-edit="today.cardBig3" data-edit-max="240" data-edit-multiline className={s.cardBig}>Ready in 48 hours</p>
+            <p data-edit="today.cardNote3" data-edit-max="240" data-edit-multiline className={s.cardNote}>
               Order by email with your pet's name and the medicine. Collect
               from the desk, or we post it for $6.
             </p>
             <div className={s.cardLinks}>
-              <a href="mailto:scripts@maplestreetvets.example">scripts@maplestreetvets.example</a>
+              <a data-edit="today.link3" data-edit-max="28" href="mailto:scripts@maplestreetvets.example">scripts@maplestreetvets.example</a>
             </div>
           </div>
 
-          <div className={s.cardTile} aria-hidden="true">
+          <div data-edit-pattern="today.field" data-edit-roles="transparent,2,3,0,5" className={s.cardTile} aria-hidden="true">
             <TabbiedPattern
               pattern={tealboomerang}
               palette={TILE}
@@ -331,30 +344,30 @@ export default function MapleStreetVetsPage() {
           <div className={s.card}>
             <div className={s.cardHead}>
               <span className={s.dotTeal} aria-hidden="true" />
-              <h2 className={s.cardLabel}>Health plans</h2>
+              <h2 data-edit="today.cardLabel5" data-edit-max="60" className={s.cardLabel}>Health plans</h2>
             </div>
-            <p className={s.cardBig}>From $19 a month</p>
-            <p className={s.cardNote}>
+            <p data-edit="today.cardBig4" data-edit-max="240" data-edit-multiline className={s.cardBig}>From $19 a month</p>
+            <p data-edit="today.cardNote4" data-edit-max="240" data-edit-multiline className={s.cardNote}>
               Vaccinations, checks and parasite treatment spread across the
               year, with 10% off everything else.
             </p>
             <div className={s.cardLinks}>
-              <a href="#plans">Compare the plans</a>
+              <a data-edit="today.plans" data-edit-max="28" href="#plans">Compare the plans</a>
             </div>
           </div>
 
           <div className={s.card}>
             <div className={s.cardHead}>
               <span className={s.dotTeal} aria-hidden="true" />
-              <h2 className={s.cardLabel}>Find us</h2>
+              <h2 data-edit="today.cardLabel6" data-edit-max="60" className={s.cardLabel}>Find us</h2>
             </div>
-            <p className={s.cardBig}>112 Maple Street</p>
-            <p className={s.cardNote}>
+            <p data-edit="today.cardBig5" data-edit-max="240" data-edit-multiline className={s.cardBig}>112 Maple Street</p>
+            <p data-edit="today.cardNote5" data-edit-max="240" data-edit-multiline className={s.cardNote}>
               Twelve parking spaces behind the clinic, off Elm Row. The number
               9 bus stops outside.
             </p>
             <div className={s.cardLinks}>
-              <a href="#find">Directions and parking</a>
+              <a data-edit="today.find" data-edit-max="28" href="#find">Directions and parking</a>
             </div>
           </div>
         </section>
@@ -362,19 +375,19 @@ export default function MapleStreetVetsPage() {
         {/* -------------------------------------------------------- SERVICES */}
         <section id="services" className={s.sec} aria-labelledby="services-h">
           <div className={s.secHead}>
-            <h2 id="services-h">Services</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="services.title" data-edit-max="60" id="services-h">Services</h2>
+            <p data-edit="services.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Everything a pet needs in a normal life, under one roof. Prices
               include the examination; medicines are itemized on the bill.
             </p>
           </div>
           <ul className={s.services}>
-            {SERVICES.map((sv) => (
+            {SERVICES.map((sv, i) => (
               <li key={sv.title} className={s.svc}>
-                <span className={s.svcWho}>{sv.who}</span>
-                <h3>{sv.title}</h3>
-                <p className={s.svcBody}>{sv.body}</p>
-                <span className={s.svcPrice}>{sv.price}</span>
+                <span data-edit={`services.svcWho.${i}`} data-edit-max="60" className={s.svcWho}>{sv.who}</span>
+                <h3 data-edit={`services.title2.${i}`} data-edit-max="40">{sv.title}</h3>
+                <p data-edit={`services.svcBody.${i}`} data-edit-max="240" data-edit-multiline className={s.svcBody}>{sv.body}</p>
+                <span data-edit={`services.svcPrice.${i}`} data-edit-max="60" className={s.svcPrice}>{sv.price}</span>
               </li>
             ))}
           </ul>
@@ -383,31 +396,31 @@ export default function MapleStreetVetsPage() {
         {/* ----------------------------------------------------------- PLANS */}
         <section id="plans" className={s.sec} aria-labelledby="plans-h">
           <div className={s.secHead}>
-            <h2 id="plans-h">Pet health plans</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="plans.title" data-edit-max="60" id="plans-h">Pet health plans</h2>
+            <p data-edit="plans.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               One monthly payment for the routine care every pet needs. No
               waiting period, and you can leave after twelve months.
             </p>
           </div>
           <div className={s.plans}>
             <ul className={s.planCards}>
-              {PLANS.map((p) => (
+              {PLANS.map((p, i) => (
                 <li key={p.name} className={p.featured ? s.planFeatured : s.plan}>
-                  <h3>{p.name}</h3>
-                  <span className={s.planSize}>{p.size}</span>
-                  <strong className={s.planPrice}>{p.price}</strong>
-                  <span className={s.planPer}>a month</span>
+                  <h3 data-edit={`plans.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                  <span data-edit={`plans.planSize.${i}`} data-edit-max="60" className={s.planSize}>{p.size}</span>
+                  <strong data-edit={`plans.planPrice.${i}`} className={s.planPrice}>{p.price}</strong>
+                  <span data-edit={`plans.planPer.${i}`} data-edit-max="60" className={s.planPer}>a month</span>
                 </li>
               ))}
             </ul>
             <div className={s.planIncludes}>
-              <h3>Every plan includes</h3>
+              <h3 data-edit="plans.title3" data-edit-max="40">Every plan includes</h3>
               <ul>
-                {PLAN_INCLUDES.map((it) => (
-                  <li key={it}>{it}</li>
+                {PLAN_INCLUDES.map((it, i) => (
+                  <li data-edit={`plans.item.${i}`} data-edit-max="80" key={it}>{it}</li>
                 ))}
               </ul>
-              <p className={s.planNote}>
+              <p data-edit="plans.planNote" data-edit-max="240" data-edit-multiline className={s.planNote}>
                 Rabbits and guinea pigs have their own plan at $12 a month. Ask
                 at the desk.
               </p>
@@ -420,8 +433,8 @@ export default function MapleStreetVetsPage() {
             in the clinic filled in. */}
         <section id="team" className={s.sec} aria-labelledby="team-h">
           <div className={s.secHead}>
-            <h2 id="team-h">Vets and nurses</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="team.title" data-edit-max="60" id="team-h">Vets and nurses</h2>
+            <p data-edit="team.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Ask for the same vet each time and we will do our best. The
               week under each name shows the days they are in.
             </p>
@@ -429,14 +442,14 @@ export default function MapleStreetVetsPage() {
           <ul className={s.team}>
             {TEAM.map((p, i) => (
               <li key={p.name} className={s.person}>
-                <span className={s.personRole}>{p.role}</span>
-                <h3>{p.name}</h3>
-                <span className={s.personQuals}>{p.quals}</span>
-                <p className={s.personNote}>{p.note}</p>
-                <span className={s.srOnly}>{p.daysLabel}</span>
+                <span data-edit={`team.personRole.${i}`} data-edit-max="60" className={s.personRole}>{p.role}</span>
+                <h3 data-edit={`team.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                <span data-edit={`team.personQuals.${i}`} data-edit-max="60" className={s.personQuals}>{p.quals}</span>
+                <p data-edit={`team.personNote.${i}`} data-edit-max="240" data-edit-multiline className={s.personNote}>{p.note}</p>
+                <span data-edit={`team.srOnly.${i}`} data-edit-max="60" className={s.srOnly}>{p.daysLabel}</span>
                 <ol className={s.days} aria-hidden="true">
                   {DAYS.map((d, j) => (
-                    <li key={`${i}-${j}`} className={p.days[j] ? s.dayOn : s.day}>{d}</li>
+                    <li data-edit={`team.dayOn.${i}.${j}`} data-edit-max="80" key={`${i}-${j}`} className={p.days[j] ? s.dayOn : s.day}>{d}</li>
                   ))}
                 </ol>
               </li>
@@ -448,24 +461,24 @@ export default function MapleStreetVetsPage() {
         <section id="new" className={s.sec} aria-labelledby="new-h">
           <div className={s.newGrid}>
             <div className={s.newCard}>
-              <h2 id="new-h">New clients</h2>
-              <p className={s.newLede}>
+              <h2 data-edit="new.title" data-edit-max="60" id="new-h">New clients</h2>
+              <p data-edit="new.newLede" data-edit-max="240" data-edit-multiline className={s.newLede}>
                 We are taking on new cats, dogs, rabbits and guinea pigs.
                 Registering takes three steps, and the first one is the only
                 one you have to do.
               </p>
               <ol className={s.steps}>
-                {STEPS.map((st) => (
+                {STEPS.map((st, i) => (
                   <li key={st.no}>
-                    <span className={s.stepNo}>{st.no}</span>
-                    <h3>{st.title}</h3>
-                    <p>{st.body}</p>
+                    <span data-edit={`new.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
+                    <h3 data-edit={`new.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                    <p data-edit={`new.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
                   </li>
                 ))}
               </ol>
-              <a className={s.btn} href="mailto:hello@maplestreetvets.example">Register by email</a>
+              <a data-edit="new.btn" data-edit-max="28" className={s.btn} href="mailto:hello@maplestreetvets.example">Register by email</a>
             </div>
-            <div className={s.newPanel} aria-hidden="true">
+            <div data-edit-pattern="new.field" data-edit-roles="transparent,2,3,0" className={s.newPanel} aria-hidden="true">
               <TabbiedPattern
                 pattern={pebble}
                 palette={PEBBLES}
@@ -482,38 +495,38 @@ export default function MapleStreetVetsPage() {
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.sec} aria-labelledby="fees-h">
           <div className={s.secHead}>
-            <h2 id="fees-h">Fees</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="fees.title" data-edit-max="60" id="fees-h">Fees</h2>
+            <p data-edit="fees.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               What a visit costs before any medicine or tests. We always give
               you an estimate before treatment, and ask before going over it.
             </p>
           </div>
           <div className={s.fees}>
             <table className={s.feeTable}>
-              <caption className={s.srOnly}>Consultation and clinic fees</caption>
+              <caption data-edit="fees.srOnly" className={s.srOnly}>Consultation and clinic fees</caption>
               <thead>
                 <tr>
-                  <th scope="col">Appointment</th>
-                  <th scope="col">Fee</th>
+                  <th data-edit="fees.heading" scope="col">Appointment</th>
+                  <th data-edit="fees.heading2" scope="col">Fee</th>
                 </tr>
               </thead>
               <tbody>
-                {FEES.map(([what, fee]) => (
+                {FEES.map(([what, fee], i) => (
                   <tr key={what}>
-                    <td>{what}</td>
-                    <td>{fee}</td>
+                    <td data-edit={`fees.cell.${i}`}>{what}</td>
+                    <td data-edit={`fees.cell2.${i}`}>{fee}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <div className={s.payCard}>
-              <h3>Paying</h3>
-              <p>
+              <h3 data-edit="fees.title2" data-edit-max="40">Paying</h3>
+              <p data-edit="fees.body" data-edit-max="240" data-edit-multiline>
                 Payment is due on the day, by card or cash. For bills over $500
                 we offer a three-month payment plan with no interest.
               </p>
-              <h3>Insurance</h3>
-              <p>
+              <h3 data-edit="fees.title3" data-edit-max="40">Insurance</h3>
+              <p data-edit="fees.body2" data-edit-max="240" data-edit-multiline>
                 We claim directly from most insurers, so you pay only the
                 excess. Bring your policy number to the first visit.
               </p>
@@ -524,15 +537,15 @@ export default function MapleStreetVetsPage() {
         {/* ------------------------------------------------------------ FIND */}
         <section id="find" className={s.sec} aria-labelledby="find-h">
           <div className={s.secHead}>
-            <h2 id="find-h">Find us</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="find.title" data-edit-max="60" id="find-h">Find us</h2>
+            <p data-edit="find.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               On the corner of Maple Street and Elm Row, opposite the library.
             </p>
           </div>
           <div className={s.findGrid}>
             <div className={s.card}>
-              <h3 className={s.cardLabel}>Address</h3>
-              <p className={s.findAddr}>
+              <h3 data-edit="find.cardLabel" data-edit-max="40" className={s.cardLabel}>Address</h3>
+              <p data-edit="find.body" data-edit-max="240" data-edit-multiline className={s.findAddr}>
                 Maple Street Vets
                 <br />
                 112 Maple Street
@@ -541,25 +554,25 @@ export default function MapleStreetVetsPage() {
               </p>
             </div>
             <div className={s.card}>
-              <h3 className={s.cardLabel}>Getting here</h3>
+              <h3 data-edit="find.cardLabel2" data-edit-max="40" className={s.cardLabel}>Getting here</h3>
               <ul className={s.findList}>
-                <li>Parking behind the clinic, entrance on Elm Row</li>
-                <li>Bus 9 and 14 to Maple Street Library</li>
-                <li>Step-free entrance and a pet ramp</li>
+                <li data-edit="find.item" data-edit-max="80">Parking behind the clinic, entrance on Elm Row</li>
+                <li data-edit="find.item2" data-edit-max="80">Bus 9 and 14 to Maple Street Library</li>
+                <li data-edit="find.item3" data-edit-max="80">Step-free entrance and a pet ramp</li>
               </ul>
             </div>
             <div className={s.card}>
-              <h3 className={s.cardLabel}>Call or write</h3>
+              <h3 data-edit="find.cardLabel3" data-edit-max="40" className={s.cardLabel}>Call or write</h3>
               <ul className={s.findList}>
                 <li>
-                  <a href="tel:+15550173300">{PHONE}</a>
+                  <a data-edit="find.link" data-edit-max="28" href="tel:+15550173300">{PHONE}</a>
                 </li>
                 <li>
-                  <a href="mailto:hello@maplestreetvets.example">hello@maplestreetvets.example</a>
+                  <a data-edit="find.link2" data-edit-max="28" href="mailto:hello@maplestreetvets.example">hello@maplestreetvets.example</a>
                 </li>
                 <li>
-                  <span>Emergencies, day or night: </span>
-                  <a href="tel:+15550173399">{EMERGENCY}</a>
+                  <span data-edit="find.text" data-edit-max="60">Emergencies, day or night: </span>
+                  <a data-edit="find.link3" data-edit-max="28" href="tel:+15550173399">{EMERGENCY}</a>
                 </li>
               </ul>
             </div>
@@ -570,20 +583,20 @@ export default function MapleStreetVetsPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Maple Street Vets</p>
-            <p className={s.footTag}>An independent veterinary clinic, open seven days.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Maple Street Vets</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>An independent veterinary clinic, open seven days.</p>
           </div>
           <ul className={s.footLinks}>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#plans">Health plans</a></li>
-            <li><a href="#team">Vets and nurses</a></li>
+            <li><a data-edit="footer.services" data-edit-max="28" href="#services">Services</a></li>
+            <li><a data-edit="footer.plans" data-edit-max="28" href="#plans">Health plans</a></li>
+            <li><a data-edit="footer.team" data-edit-max="28" href="#team">Vets and nurses</a></li>
           </ul>
           <ul className={s.footLinks}>
-            <li><a href="#new">New clients</a></li>
-            <li><a href="#fees">Fees</a></li>
-            <li><a href="#find">Find us</a></li>
+            <li><a data-edit="footer.new" data-edit-max="28" href="#new">New clients</a></li>
+            <li><a data-edit="footer.fees" data-edit-max="28" href="#fees">Fees</a></li>
+            <li><a data-edit="footer.find" data-edit-max="28" href="#find">Find us</a></li>
           </ul>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             112 Maple Street
             <br />
             (555) 017-3300
@@ -592,11 +605,11 @@ export default function MapleStreetVetsPage() {
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional veterinary clinic. Prices, hours and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional veterinary clinic. Prices, hours and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on a transparent ground.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
           </p>
         </div>
       </footer>

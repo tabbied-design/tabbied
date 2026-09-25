@@ -226,7 +226,7 @@ and *not* `zip` - so CI stayed green while the first Workers deploy died with
 fflate (zero dependencies), so the only thing the packaging step needs is the
 Node that is already running it. Don't reintroduce a PATH lookup here. Two
 details it depends on: every directory gets its own zero-length `<name>/`
-entry, because 30 of the 77 sites reference no images and their empty `images/`
+entry, because 54 of the 107 sites reference no images and their empty `images/`
 (and the React package's `public/`) would otherwise vanish from the download;
 and entries carry the source file's real mtime, which `zip -r` did and fflate
 does not do on its own.
@@ -427,7 +427,8 @@ nothing in its place, so a phone visitor, on the site or on a site shipped
 from the download, had the footer and nothing else. Each of them now renders
 `components/template/TemplateMenu` in its header: a copy of the nav's links
 (same `data-edit` ids, which is allowed, and the editable gate checks they
-agree) behind a "Menu" toggle. Four things it depends on:
+agree) behind a "Menu" toggle. The 30 minimal templates were built with it,
+so 87 of the 107 carry one. Four things it depends on:
 
 - **It is a `<details>`, because the HTML package has no React left.** Open
   and shut are the browser's own there. Closing on a followed link, an
@@ -447,6 +448,34 @@ agree) behind a "Menu" toggle. Four things it depends on:
 - **`e2e/template-menus.spec.ts` is the gate.** At 390px, every link a
   header hides must be in a visible menu that fits on the screen. A new
   template that hides its nav fails it until it carries the menu.
+
+## The minimal set - the businesses that most need a site
+
+The last 30 entries in `lib/templateSites.ts` (2026-09-25) are sites for
+ordinary local businesses: a restaurant, a cafe, a dentist, a law firm, a
+plumber, a salon, a vet, a daycare, and so on. Each is built on a different
+layout (a printed menu card, a split screen, a fixed sidebar, a sticky
+contents rail, a timetable grid, a bento, a tap board, a letter, a floor
+plan), and the pattern is the only ornament. Seven carry one or two product
+cut-outs generated on gpt-image-2.5-flare (`docs/image-pipeline.md`); the
+rest have no pictures. They brought three gallery categories, Services,
+Health and Community, because none of the nine before fit a dentist or a
+plumber. Four things worth knowing before editing one:
+
+- **In the sidebar layouts the sidebar is the `<header>`** (Clearwater
+  Dental, Morrow Coffee, Maren Holt): it is a column on a desktop and folds
+  into a top bar with the TemplateMenu on a phone, because the menu gate
+  reads the page's first `<header>`.
+- **Some classes come from data** (`s[t.kind]`: a listing's status tag, a
+  tap's glass color, a floor-plan zone). Both packages are fine with it,
+  since the HTML one reads classes off the export, but an edit to the tag's
+  text does not change its color.
+- **A few designs ignore the seed** (`isometricblocks`, `diamondember`), so
+  where a page repeats one as tiles the variety is a CSS crop, not a seed.
+- **`midnightconfetti` cannot re-color**: it has one color slot and paints
+  its petals in fixed hues. It was Wild Stem's first hero and was swapped
+  for `foliage` for that reason; a primary pattern that ignores the palette
+  breaks the customizer's promise.
 
 ## Template screenshots on the cards
 

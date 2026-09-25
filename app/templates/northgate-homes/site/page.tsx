@@ -266,7 +266,19 @@ const HOURS = [
 
 export default function NorthgateHomesPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f6f4f1',
+        '--ink': '#1b1d22',
+        '--brick': '#b5523b',
+        '--slate': '#858a92',
+        '--pale': '#e3e1dc',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,brick,slate,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -276,16 +288,16 @@ export default function NorthgateHomesPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#listings">Northgate Homes</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#listings">Northgate Homes</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href="tel:+15550142210">(555) 014-2210</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href="tel:+15550142210">(555) 014-2210</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -296,11 +308,11 @@ export default function NorthgateHomesPage() {
             and the homes on the books this week. */}
         <section id="listings" className={s.listings} aria-labelledby="listings-h">
           <div className={s.intro}>
-            <p className={s.kicker}>Independent real estate, Northgate and the river villages</p>
-            <h1 id="listings-h" className={s.title}>
+            <p data-edit="listings.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Independent real estate, Northgate and the river villages</p>
+            <h1 data-edit="listings.title" data-edit-format="emphasis" data-edit-max="70" id="listings-h" className={s.title}>
               Homes for sale and rent in Northgate, <em>listed by people who live here.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="listings.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Thirty-two homes on our books this week. Every one has been
               measured, visited and priced by one of the three of us, and
               every viewing is with the agent who listed it.
@@ -309,48 +321,48 @@ export default function NorthgateHomesPage() {
 
           <form className={s.filter} action="#" aria-label="Filter listings">
             <fieldset className={s.group}>
-              <legend>Looking to</legend>
+              <legend data-edit="listings.legend">Looking to</legend>
               <div className={s.chips}>
                 {MODES.map((m, i) => (
                   <label key={m} className={s.chip}>
                     <input type="radio" name="mode" value={m} defaultChecked={i === 0} />
-                    <span>{m}</span>
+                    <span data-edit={`listings.text.${i}`} data-edit-max="60">{m}</span>
                   </label>
                 ))}
               </div>
             </fieldset>
             <fieldset className={s.group}>
-              <legend>Bedrooms</legend>
+              <legend data-edit="listings.legend2">Bedrooms</legend>
               <div className={s.chips}>
                 {BEDS.map((b, i) => (
                   <label key={b} className={s.chip}>
                     <input type="radio" name="beds" value={b} defaultChecked={i === 0} />
-                    <span>{b}</span>
+                    <span data-edit={`listings.text2.${i}`} data-edit-max="60">{b}</span>
                   </label>
                 ))}
               </div>
             </fieldset>
             <div className={s.group}>
-              <label className={s.selectLabel} htmlFor="price">Price</label>
+              <label data-edit="listings.selectLabel" className={s.selectLabel} htmlFor="price">Price</label>
               <select id="price" name="price" className={s.select} defaultValue={PRICES[0]}>
                 {PRICES.map((p) => (
                   <option key={p} value={p}>{p}</option>
                 ))}
               </select>
             </div>
-            <button type="submit" className={s.filterGo}>Show homes</button>
+            <button data-edit="listings.filterGo" data-edit-max="24" type="submit" className={s.filterGo}>Show homes</button>
           </form>
 
           <div className={s.gridHead}>
-            <p className={s.count}>Showing 9 of 32 homes</p>
-            <p className={s.sort}>Newest first</p>
+            <p data-edit="listings.count" data-edit-max="240" data-edit-multiline className={s.count}>Showing 9 of 32 homes</p>
+            <p data-edit="listings.sort" data-edit-max="240" data-edit-multiline className={s.sort}>Newest first</p>
           </div>
 
           <ul className={s.grid}>
-            {LISTINGS.map((l) => (
+            {LISTINGS.map((l, i) => (
               <li key={l.street} className={s.card}>
                 <div className={s.photo}>
-                  <div className={s.photoField} aria-hidden="true">
+                  <div data-edit-pattern={`listings.field.${i}`} data-edit-roles="transparent,0,4,3" className={s.photoField} aria-hidden="true">
                     <TabbiedPattern
                       pattern={isometricblocks}
                       palette={TILE}
@@ -360,35 +372,35 @@ export default function NorthgateHomesPage() {
                       style={{ position: 'absolute', inset: 0 }}
                     />
                   </div>
-                  <span className={`${s.tag} ${s[l.tone]}`}>{l.status}</span>
+                  <span data-edit={`listings.tag.${i}`} data-edit-max="60" className={`${s.tag} ${s[l.tone]}`}>{l.status}</span>
                 </div>
                 <div className={s.cardBody}>
-                  <p className={s.price}>{l.price}</p>
-                  <h3 className={s.street}>{l.street}</h3>
-                  <p className={s.place}>{l.place}</p>
+                  <p data-edit={`listings.price.${i}`} data-edit-max="240" data-edit-multiline className={s.price}>{l.price}</p>
+                  <h3 data-edit={`listings.street.${i}`} data-edit-max="40" className={s.street}>{l.street}</h3>
+                  <p data-edit={`listings.place.${i}`} data-edit-max="240" data-edit-multiline className={s.place}>{l.place}</p>
                   <dl className={s.specs}>
                     <div>
-                      <dt>Beds</dt>
-                      <dd>{l.beds}</dd>
+                      <dt data-edit={`listings.term.${i}`} data-edit-max="28">Beds</dt>
+                      <dd data-edit={`listings.body.${i}`} data-edit-max="200" data-edit-multiline>{l.beds}</dd>
                     </div>
                     <div>
-                      <dt>Baths</dt>
-                      <dd>{l.baths}</dd>
+                      <dt data-edit={`listings.term2.${i}`} data-edit-max="28">Baths</dt>
+                      <dd data-edit={`listings.body2.${i}`} data-edit-max="200" data-edit-multiline>{l.baths}</dd>
                     </div>
                     <div>
-                      <dt>Sq ft</dt>
-                      <dd>{l.sqft}</dd>
+                      <dt data-edit={`listings.term3.${i}`} data-edit-max="28">Sq ft</dt>
+                      <dd data-edit={`listings.body3.${i}`} data-edit-max="200" data-edit-multiline>{l.sqft}</dd>
                     </div>
                   </dl>
-                  <a className={s.cardLink} href="#contact">Book a viewing</a>
+                  <a data-edit={`listings.cardLink.${i}`} data-edit-max="28" className={s.cardLink} href="#contact">Book a viewing</a>
                 </div>
               </li>
             ))}
           </ul>
 
           <div className={s.more}>
-            <p>Twenty-three more homes, and the ones not yet listed, are on the full list.</p>
-            <a className={s.moreLink} href="#contact">Ask for the full list</a>
+            <p data-edit="listings.body4" data-edit-max="240" data-edit-multiline>Twenty-three more homes, and the ones not yet listed, are on the full list.</p>
+            <a data-edit="listings.moreLink" data-edit-max="28" className={s.moreLink} href="#contact">Ask for the full list</a>
           </div>
         </section>
 
@@ -398,9 +410,9 @@ export default function NorthgateHomesPage() {
         <section id="valuation" className={s.valuation} aria-labelledby="valuation-h">
           <div className={s.valInner}>
             <div className={s.valCopy}>
-              <p className={s.kicker}>Thinking of selling</p>
-              <h2 id="valuation-h" className={s.valTitle}>What is your home worth this month?</h2>
-              <p className={s.valLede}>
+              <p data-edit="valuation.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Thinking of selling</p>
+              <h2 data-edit="valuation.valTitle" data-edit-max="60" id="valuation-h" className={s.valTitle}>What is your home worth this month?</h2>
+              <p data-edit="valuation.valLede" data-edit-max="240" data-edit-multiline className={s.valLede}>
                 A free valuation, in person, within 48 hours. We walk through,
                 look at the last six sales on your street, and give you a
                 number and a range in writing. No obligation, and no follow-up
@@ -408,17 +420,17 @@ export default function NorthgateHomesPage() {
               </p>
               <form className={s.valForm} action="#">
                 <label className={s.field}>
-                  <span>Address</span>
+                  <span data-edit="valuation.text" data-edit-max="60">Address</span>
                   <input type="text" name="address" autoComplete="street-address" placeholder="14 Linden Row" />
                 </label>
                 <label className={s.field}>
-                  <span>Phone or email</span>
+                  <span data-edit="valuation.text2" data-edit-max="60">Phone or email</span>
                   <input type="text" name="reach" placeholder="(555) 000-0000" />
                 </label>
-                <button type="submit" className={s.button}>Book a valuation</button>
+                <button data-edit="valuation.button" data-edit-max="24" type="submit" className={s.button}>Book a valuation</button>
               </form>
             </div>
-            <div className={s.valField} aria-hidden="true">
+            <div data-edit-pattern="valuation.field" data-edit-roles="transparent,2,3,1,3,2" className={s.valField} aria-hidden="true">
               <TabbiedPattern
                 pattern={lintel}
                 palette={FACADE}
@@ -436,32 +448,32 @@ export default function NorthgateHomesPage() {
         {/* ---------------------------------------------------------- AGENTS */}
         <section id="agents" className={s.sec} aria-labelledby="agents-h">
           <div className={s.secHead}>
-            <h2 id="agents-h">Three agents, one office</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="agents.title" data-edit-max="60" id="agents-h">Three agents, one office</h2>
+            <p data-edit="agents.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               You deal with the same person from the valuation to the keys.
               Figures are for the last twelve months.
             </p>
           </div>
           <ul className={s.agents}>
-            {AGENTS.map((a) => (
+            {AGENTS.map((a, i) => (
               <li key={a.name} className={s.agent}>
                 <span className={s.monogram} aria-hidden="true">{a.initials}</span>
-                <h3 className={s.agentName}>{a.name}</h3>
-                <p className={s.agentRole}>{a.role}</p>
-                <p className={s.agentMeta}>{a.since}</p>
-                <p className={s.agentMeta}>{a.areas}</p>
+                <h3 data-edit={`agents.agentName.${i}`} data-edit-max="40" className={s.agentName}>{a.name}</h3>
+                <p data-edit={`agents.agentRole.${i}`} data-edit-max="240" data-edit-multiline className={s.agentRole}>{a.role}</p>
+                <p data-edit={`agents.agentMeta.${i}`} data-edit-max="240" data-edit-multiline className={s.agentMeta}>{a.since}</p>
+                <p data-edit={`agents.agentMeta2.${i}`} data-edit-max="240" data-edit-multiline className={s.agentMeta}>{a.areas}</p>
                 <dl className={s.agentStats}>
                   <div>
-                    <dt>Homes sold or let</dt>
-                    <dd>{a.sold}</dd>
+                    <dt data-edit={`agents.term.${i}`} data-edit-max="28">Homes sold or let</dt>
+                    <dd data-edit={`agents.body.${i}`} data-edit-max="200" data-edit-multiline>{a.sold}</dd>
                   </div>
                   <div>
-                    <dt>Median days to contract</dt>
-                    <dd>{a.days}</dd>
+                    <dt data-edit={`agents.term2.${i}`} data-edit-max="28">Median days to contract</dt>
+                    <dd data-edit={`agents.body2.${i}`} data-edit-max="200" data-edit-multiline>{a.days}</dd>
                   </div>
                 </dl>
-                <a className={s.agentLink} href={a.tel}>{a.phone}</a>
-                <a className={s.agentLink} href={`mailto:${a.email}`}>{a.email}</a>
+                <a data-edit={`agents.agentLink.${i}`} data-edit-max="28" className={s.agentLink} href={a.tel}>{a.phone}</a>
+                <a data-edit={`agents.agentLink2.${i}`} data-edit-max="28" className={s.agentLink} href={`mailto:${a.email}`}>{a.email}</a>
               </li>
             ))}
           </ul>
@@ -470,51 +482,51 @@ export default function NorthgateHomesPage() {
         {/* ---------------------------------------------------------- MARKET */}
         <section id="market" className={s.sec} aria-labelledby="market-h">
           <div className={s.secHead}>
-            <h2 id="market-h">The Northgate market, August 2026</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="market.title" data-edit-max="60" id="market-h">The Northgate market, August 2026</h2>
+            <p data-edit="market.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Closed sales and signed leases from the county records over the
               last twelve months, updated on the first Monday of the month.
             </p>
           </div>
           <dl className={s.headlines}>
-            {HEADLINES.map(([v, k, d]) => (
+            {HEADLINES.map(([v, k, d], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd className={s.headValue}>{v}</dd>
-                <dd className={s.headNote}>{d}</dd>
+                <dt data-edit={`market.term.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`market.headValue.${i}`} data-edit-max="200" data-edit-multiline className={s.headValue}>{v}</dd>
+                <dd data-edit={`market.headNote.${i}`} data-edit-max="200" data-edit-multiline className={s.headNote}>{d}</dd>
               </div>
             ))}
           </dl>
           <table className={s.areas}>
-            <caption>By neighborhood</caption>
+            <caption data-edit="market.caption">By neighborhood</caption>
             <thead>
               <tr>
-                <th scope="col">Neighborhood</th>
-                <th scope="col">Median price</th>
-                <th scope="col">12-month change</th>
-                <th scope="col">Days on market</th>
-                <th scope="col">Homes sold</th>
+                <th data-edit="market.heading" scope="col">Neighborhood</th>
+                <th data-edit="market.heading2" scope="col">Median price</th>
+                <th data-edit="market.heading3" scope="col">12-month change</th>
+                <th data-edit="market.heading4" scope="col">Days on market</th>
+                <th data-edit="market.heading5" scope="col">Homes sold</th>
               </tr>
             </thead>
             <tbody>
-              {AREAS.map(([name, price, change, days, sold]) => (
+              {AREAS.map(([name, price, change, days, sold], i) => (
                 <tr key={name}>
-                  <th scope="row">{name}</th>
+                  <th data-edit={`market.heading6.${i}`} scope="row">{name}</th>
                   <td>
-                    <span className={s.cellLabel}>Median price</span>
-                    <span>{price}</span>
+                    <span data-edit={`market.cellLabel.${i}`} data-edit-max="60" className={s.cellLabel}>Median price</span>
+                    <span data-edit={`market.text.${i}`} data-edit-max="60">{price}</span>
                   </td>
                   <td>
-                    <span className={s.cellLabel}>12-month change</span>
-                    <span>{change}</span>
+                    <span data-edit={`market.cellLabel2.${i}`} data-edit-max="60" className={s.cellLabel}>12-month change</span>
+                    <span data-edit={`market.text2.${i}`} data-edit-max="60">{change}</span>
                   </td>
                   <td>
-                    <span className={s.cellLabel}>Days on market</span>
-                    <span>{days}</span>
+                    <span data-edit={`market.cellLabel3.${i}`} data-edit-max="60" className={s.cellLabel}>Days on market</span>
+                    <span data-edit={`market.text3.${i}`} data-edit-max="60">{days}</span>
                   </td>
                   <td>
-                    <span className={s.cellLabel}>Homes sold</span>
-                    <span>{sold}</span>
+                    <span data-edit={`market.cellLabel4.${i}`} data-edit-max="60" className={s.cellLabel}>Homes sold</span>
+                    <span data-edit={`market.text4.${i}`} data-edit-max="60">{sold}</span>
                   </td>
                 </tr>
               ))}
@@ -525,31 +537,31 @@ export default function NorthgateHomesPage() {
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.sec} aria-labelledby="fees-h">
           <div className={s.secHead}>
-            <h2 id="fees-h">What selling or renting with us costs</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="fees.title" data-edit-max="60" id="fees-h">What selling or renting with us costs</h2>
+            <p data-edit="fees.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Three ways to work with us, written down before you sign
               anything. Fees are plus state sales tax where it applies.
             </p>
           </div>
           <div className={s.fees}>
-            {FEES.map((f) => (
+            {FEES.map((f, i) => (
               <div key={f.name} className={s.fee}>
-                <h3 className={s.feeName}>{f.name}</h3>
-                <p className={s.feePrice}>{f.price}</p>
-                <p className={s.feeTerms}>{f.terms}</p>
+                <h3 data-edit={`fees.feeName.${i}`} data-edit-max="40" className={s.feeName}>{f.name}</h3>
+                <p data-edit={`fees.feePrice.${i}`} data-edit-max="240" data-edit-multiline className={s.feePrice}>{f.price}</p>
+                <p data-edit={`fees.feeTerms.${i}`} data-edit-max="240" data-edit-multiline className={s.feeTerms}>{f.terms}</p>
                 <ul className={s.feeList}>
-                  {f.items.map((item) => (
-                    <li key={item}>{item}</li>
+                  {f.items.map((item, i2) => (
+                    <li data-edit={`fees.item.${i}.${i2}`} data-edit-max="80" key={item}>{item}</li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
           <dl className={s.terms}>
-            {TERMS.map(([t, d]) => (
+            {TERMS.map(([t, d], i) => (
               <div key={t}>
-                <dt>{t}</dt>
-                <dd>{d}</dd>
+                <dt data-edit={`fees.term.${i}`} data-edit-max="28">{t}</dt>
+                <dd data-edit={`fees.body.${i}`} data-edit-max="200" data-edit-multiline>{d}</dd>
               </div>
             ))}
           </dl>
@@ -558,44 +570,44 @@ export default function NorthgateHomesPage() {
         {/* --------------------------------------------------------- CONTACT */}
         <section id="contact" className={s.sec} aria-labelledby="contact-h">
           <div className={s.secHead}>
-            <h2 id="contact-h">Call, write, or come in</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="contact.title" data-edit-max="60" id="contact-h">Call, write, or come in</h2>
+            <p data-edit="contact.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The office is on Market Street, opposite the library. We answer
               the phone ourselves and reply to email the same working day.
             </p>
           </div>
           <div className={s.contact}>
             <div className={s.contactInfo}>
-              <h3 className={s.smallHead}>Office</h3>
-              <p className={s.address}>
+              <h3 data-edit="contact.smallHead" data-edit-max="40" className={s.smallHead}>Office</h3>
+              <p data-edit="contact.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 212 Market Street
                 <br />
                 Northgate
               </p>
-              <a className={s.bigLink} href="tel:+15550142210">(555) 014-2210</a>
-              <a className={s.bigLink} href="mailto:hello@northgatehomes.example">hello@northgatehomes.example</a>
-              <h3 className={s.smallHead}>Hours</h3>
+              <a data-edit="contact.bigLink" data-edit-max="28" className={s.bigLink} href="tel:+15550142210">(555) 014-2210</a>
+              <a data-edit="contact.bigLink2" data-edit-max="28" className={s.bigLink} href="mailto:hello@northgatehomes.example">hello@northgatehomes.example</a>
+              <h3 data-edit="contact.smallHead2" data-edit-max="40" className={s.smallHead}>Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`contact.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`contact.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.parking}>Free parking behind the building, entrance on Cooper Lane.</p>
+              <p data-edit="contact.parking" data-edit-max="240" data-edit-multiline className={s.parking}>Free parking behind the building, entrance on Cooper Lane.</p>
             </div>
             <form className={s.contactForm} action="#">
               <label className={s.field}>
-                <span>Name</span>
+                <span data-edit="contact.text" data-edit-max="60">Name</span>
                 <input type="text" name="name" autoComplete="name" />
               </label>
               <label className={s.field}>
-                <span>Email or phone</span>
+                <span data-edit="contact.text2" data-edit-max="60">Email or phone</span>
                 <input type="text" name="reach" autoComplete="email" />
               </label>
               <label className={s.field}>
-                <span>I would like to</span>
+                <span data-edit="contact.text3" data-edit-max="60">I would like to</span>
                 <select name="topic" defaultValue="Buy">
                   <option value="Buy">Buy a home</option>
                   <option value="Sell">Sell a home</option>
@@ -605,10 +617,10 @@ export default function NorthgateHomesPage() {
                 </select>
               </label>
               <label className={`${s.field} ${s.fieldWide}`}>
-                <span>Message</span>
+                <span data-edit="contact.text4" data-edit-max="60">Message</span>
                 <textarea name="message" rows={4} placeholder="The address, or what you are looking for" />
               </label>
-              <button type="submit" className={s.button}>Send</button>
+              <button data-edit="contact.button" data-edit-max="24" type="submit" className={s.button}>Send</button>
             </form>
           </div>
         </section>
@@ -617,17 +629,17 @@ export default function NorthgateHomesPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Northgate Homes</p>
-            <p className={s.footTag}>Independent real estate in Northgate and the river villages, since 2009.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Northgate Homes</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Independent real estate in Northgate and the river villages, since 2009.</p>
           </div>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             212 Market Street, Northgate
             <br />
             (555) 014-2210
@@ -636,11 +648,11 @@ export default function NorthgateHomesPage() {
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional real estate agency. Listings, prices, people and market figures are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional real estate agency. Listings, prices, people and market figures are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the site's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the site's own colors.</span>
           </p>
         </div>
       </footer>

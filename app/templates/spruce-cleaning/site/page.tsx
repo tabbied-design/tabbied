@@ -199,7 +199,20 @@ const FAQ = [
 
 export default function SprucePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--white': '#f9faf7',
+        '--ink': '#1a2322',
+        '--green': '#5baf7a',
+        '--lemon': '#f2c94c',
+        '--gray': '#8e9894',
+        '--mist': '#e6ece7',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="white,ink,green,lemon,gray,mist"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -209,16 +222,16 @@ export default function SprucePage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Spruce</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Spruce</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBook} href="#book">Book a clean</a>
+        <a data-edit="bar.barBook" data-edit-max="28" className={s.barBook} href="#book">Book a clean</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -229,47 +242,47 @@ export default function SprucePage() {
             shows the row for the size that is checked, with no script. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroCopy}>
-            <p className={s.kicker}>Home cleaning in Lakemont</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Home cleaning in Lakemont</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               A clean home, priced by its size, <em>never by the hour.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Two cleaners, every supply, and a checklist you can read before
               you book. Pick your home below for the price.
             </p>
             <form className={s.quote} action="#book">
               <fieldset className={s.quoteSizes}>
-                <legend className={s.quoteLegend}>Your home</legend>
-                {SIZES.map((z) => (
+                <legend data-edit="hero.quoteLegend" className={s.quoteLegend}>Your home</legend>
+                {SIZES.map((z, i) => (
                   <label key={z.id} className={s.chip}>
                     <input type="radio" name="size" value={z.id} defaultChecked={z.id === 'two'} />
-                    <span>{z.short}</span>
+                    <span data-edit={`hero.text.${i}`} data-edit-max="60">{z.short}</span>
                   </label>
                 ))}
               </fieldset>
-              {SIZES.map((z) => (
+              {SIZES.map((z, i) => (
                 <dl key={z.id} className={`${s.quoteRow} ${s[z.cls]}`}>
                   <div className={s.quoteMain}>
-                    <dt>Regular clean from</dt>
-                    <dd>{z.regular}</dd>
+                    <dt data-edit={`hero.term.${i}`} data-edit-max="28">Regular clean from</dt>
+                    <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{z.regular}</dd>
                   </div>
                   <div>
-                    <dt>Deep clean</dt>
-                    <dd>{z.deep}</dd>
+                    <dt data-edit={`hero.term2.${i}`} data-edit-max="28">Deep clean</dt>
+                    <dd data-edit={`hero.body2.${i}`} data-edit-max="200" data-edit-multiline>{z.deep}</dd>
                   </div>
                   <div>
-                    <dt>Move-out</dt>
-                    <dd>{z.moveOut}</dd>
+                    <dt data-edit={`hero.term3.${i}`} data-edit-max="28">Move-out</dt>
+                    <dd data-edit={`hero.body3.${i}`} data-edit-max="200" data-edit-multiline>{z.moveOut}</dd>
                   </div>
                 </dl>
               ))}
               <div className={s.quoteFoot}>
-                <a className={s.btn} href="#book">Book this clean</a>
-                <a className={s.textLink} href="#prices">See every price</a>
+                <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Book this clean</a>
+                <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#prices">See every price</a>
               </div>
             </form>
           </div>
-          <div className={s.heroTiles} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,5,2" className={s.heroTiles} aria-hidden="true">
             <TabbiedPattern
               pattern={crosslattice}
               palette={TILES}
@@ -284,64 +297,64 @@ export default function SprucePage() {
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Prices</p>
-            <h2 id="prices-h">One price for your home, set before we arrive</h2>
-            <p className={s.secNote}>
+            <p data-edit="prices.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Prices</p>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">One price for your home, set before we arrive</h2>
+            <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Prices include two cleaners, supplies, and one bathroom per
               bedroom. A regular clean keeps a home that is already in shape;
               book a deep clean first if it has been a while.
             </p>
           </div>
           <table className={s.priceTable}>
-            <caption className={s.visuallyHidden}>Prices by home size and type of clean</caption>
+            <caption data-edit="prices.visuallyHidden" className={s.visuallyHidden}>Prices by home size and type of clean</caption>
             <thead>
               <tr>
-                <th scope="col">Home size</th>
+                <th data-edit="prices.heading" scope="col">Home size</th>
                 <th scope="col" className={s.colRegular}>
-                  <span className={s.colName}>Regular</span>
-                  <span className={s.colTag}>Most booked</span>
+                  <span data-edit="prices.colName" data-edit-max="60" className={s.colName}>Regular</span>
+                  <span data-edit="prices.colTag" data-edit-max="60" className={s.colTag}>Most booked</span>
                 </th>
                 <th scope="col">
-                  <span className={s.colName}>Deep</span>
+                  <span data-edit="prices.colName2" data-edit-max="60" className={s.colName}>Deep</span>
                 </th>
                 <th scope="col">
-                  <span className={s.colName}>Move-out</span>
+                  <span data-edit="prices.colName3" data-edit-max="60" className={s.colName}>Move-out</span>
                 </th>
               </tr>
             </thead>
             <tbody>
-              {SIZES.map((z) => (
+              {SIZES.map((z, i) => (
                 <tr key={z.id}>
                   <th scope="row" className={s.sizeCell}>
-                    <span className={s.sizeName}>{z.name}</span>
-                    <span className={s.sizeTime}>{z.time}</span>
+                    <span data-edit={`prices.sizeName.${i}`} data-edit-max="60" className={s.sizeName}>{z.name}</span>
+                    <span data-edit={`prices.sizeTime.${i}`} data-edit-max="60" className={s.sizeTime}>{z.time}</span>
                   </th>
-                  <td className={s.colRegular} data-label="Regular">{z.regular}</td>
-                  <td data-label="Deep">{z.deep}</td>
-                  <td data-label="Move-out">{z.moveOut}</td>
+                  <td data-edit={`prices.colRegular.${i}`} className={s.colRegular} data-label="Regular">{z.regular}</td>
+                  <td data-edit={`prices.cell.${i}`} data-label="Deep">{z.deep}</td>
+                  <td data-edit={`prices.cell2.${i}`} data-label="Move-out">{z.moveOut}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           <div className={s.priceNotes}>
             <div>
-              <h3 className={s.miniHead}>Regular cleans on a schedule</h3>
+              <h3 data-edit="prices.miniHead" data-edit-max="40" className={s.miniHead}>Regular cleans on a schedule</h3>
               <dl className={s.miniList}>
-                {FREQUENCY.map(([k, v]) => (
+                {FREQUENCY.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`prices.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`prices.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div>
-              <h3 className={s.miniHead}>Add to any clean</h3>
+              <h3 data-edit="prices.miniHead2" data-edit-max="40" className={s.miniHead}>Add to any clean</h3>
               <dl className={s.miniList}>
-                {EXTRAS.map(([k, v]) => (
+                {EXTRAS.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`prices.term2.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`prices.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -355,24 +368,24 @@ export default function SprucePage() {
         <section id="included" className={s.included} aria-labelledby="included-h">
           <div className={s.includedInner}>
             <div className={s.secHead}>
-              <p className={s.kicker}>The checklist</p>
-              <h2 id="included-h">What we clean, room by room</h2>
-              <p className={s.secNote}>
+              <p data-edit="included.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The checklist</p>
+              <h2 data-edit="included.title" data-edit-max="60" id="included-h">What we clean, room by room</h2>
+              <p data-edit="included.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Your cleaners work from this list and tick it off on the day.
                 You get the ticked copy by text when they leave.
               </p>
             </div>
             <ul className={s.legend}>
-              <li className={s.legendAll}>Every clean</li>
-              <li className={s.legendDeep}>Deep and move-out cleans</li>
+              <li data-edit="included.legendAll" data-edit-max="80" className={s.legendAll}>Every clean</li>
+              <li data-edit="included.legendDeep" data-edit-max="80" className={s.legendDeep}>Deep and move-out cleans</li>
             </ul>
             <div className={s.rooms}>
-              {ROOMS.map((r) => (
+              {ROOMS.map((r, i) => (
                 <div key={r.room} className={s.room}>
-                  <h3 className={s.roomName}>{r.room}</h3>
+                  <h3 data-edit={`included.roomName.${i}`} data-edit-max="40" className={s.roomName}>{r.room}</h3>
                   <ul className={s.checklist}>
-                    {r.items.map((it) => (
-                      <li key={it.text} className={it.deep ? s.checkDeep : s.checkAll}>{it.text}</li>
+                    {r.items.map((it, i2) => (
+                      <li data-edit={`included.checkDeep.${i}.${i2}`} data-edit-max="80" key={it.text} className={it.deep ? s.checkDeep : s.checkAll}>{it.text}</li>
                     ))}
                   </ul>
                 </div>
@@ -384,15 +397,15 @@ export default function SprucePage() {
         {/* ------------------------------------------------------------- HOW */}
         <section id="how" className={s.sec} aria-labelledby="how-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>How it works</p>
-            <h2 id="how-h">Booked in two minutes, cleaned in an afternoon</h2>
+            <p data-edit="how.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>How it works</p>
+            <h2 data-edit="how.title" data-edit-max="60" id="how-h">Booked in two minutes, cleaned in an afternoon</h2>
           </div>
           <ol className={s.steps}>
-            {STEPS.map((st) => (
+            {STEPS.map((st, i) => (
               <li key={st.no}>
-                <span className={s.stepNo}>{st.no}</span>
-                <h3>{st.title}</h3>
-                <p>{st.body}</p>
+                <span data-edit={`how.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
+                <h3 data-edit={`how.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                <p data-edit={`how.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
               </li>
             ))}
           </ol>
@@ -401,27 +414,27 @@ export default function SprucePage() {
         {/* -------------------------------------------------------- CLEANERS */}
         <section id="cleaners" className={s.sec} aria-labelledby="cleaners-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Our cleaners</p>
-            <h2 id="cleaners-h">Twenty-two people, all of them on staff</h2>
+            <p data-edit="cleaners.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Our cleaners</p>
+            <h2 data-edit="cleaners.title" data-edit-max="60" id="cleaners-h">Twenty-two people, all of them on staff</h2>
           </div>
           <div className={s.cleaners}>
             <ul className={s.promises}>
-              {PROMISES.map((p) => (
+              {PROMISES.map((p, i) => (
                 <li key={p.title}>
-                  <h3>{p.title}</h3>
-                  <p>{p.body}</p>
+                  <h3 data-edit={`cleaners.title2.${i}`} data-edit-max="40">{p.title}</h3>
+                  <p data-edit={`cleaners.body.${i}`} data-edit-max="240" data-edit-multiline>{p.body}</p>
                 </li>
               ))}
             </ul>
             <div className={s.team}>
-              <h3 className={s.miniHead}>Some of the team</h3>
+              <h3 data-edit="cleaners.miniHead" data-edit-max="40" className={s.miniHead}>Some of the team</h3>
               <ul className={s.teamList}>
-                {TEAM.map(([name, role, since, langs]) => (
+                {TEAM.map(([name, role, since, langs], i) => (
                   <li key={name}>
-                    <span className={s.teamName}>{name}</span>
-                    <span className={s.teamRole}>{role}</span>
-                    <span className={s.teamMeta}>{since}</span>
-                    <span className={s.teamMeta}>{langs}</span>
+                    <span data-edit={`cleaners.teamName.${i}`} data-edit-max="60" className={s.teamName}>{name}</span>
+                    <span data-edit={`cleaners.teamRole.${i}`} data-edit-max="60" className={s.teamRole}>{role}</span>
+                    <span data-edit={`cleaners.teamMeta.${i}`} data-edit-max="60" className={s.teamMeta}>{since}</span>
+                    <span data-edit={`cleaners.teamMeta2.${i}`} data-edit-max="60" className={s.teamMeta}>{langs}</span>
                   </li>
                 ))}
               </ul>
@@ -434,19 +447,19 @@ export default function SprucePage() {
             the right, never behind the words. */}
         <section className={s.guarantee} aria-labelledby="guarantee-h">
           <div className={s.guaranteeCopy}>
-            <p className={s.guaranteeKicker}>The Spruce guarantee</p>
-            <h2 id="guarantee-h">Missed a spot? We come back within 48 hours.</h2>
-            <p>
+            <p data-edit="guarantee.guaranteeKicker" data-edit-max="240" data-edit-multiline className={s.guaranteeKicker}>The Spruce guarantee</p>
+            <h2 data-edit="guarantee.title" data-edit-max="60" id="guarantee-h">Missed a spot? We come back within 48 hours.</h2>
+            <p data-edit="guarantee.body" data-edit-max="240" data-edit-multiline>
               If anything on the checklist was not done, tell us within two
               days and your cleaners return to do it again, free. If it is
               still not right after that, the clean is on us.
             </p>
-            <p className={s.guaranteeSmall}>
+            <p data-edit="guarantee.guaranteeSmall" data-edit-max="240" data-edit-multiline className={s.guaranteeSmall}>
               Cancel or move a clean free up to 24 hours before. Inside 24
               hours the fee is $40.
             </p>
           </div>
-          <div className={s.sparkField} aria-hidden="true">
+          <div data-edit-pattern="guarantee.field" data-edit-roles="transparent,5,3,2" className={s.sparkField} aria-hidden="true">
             <TabbiedPattern
               pattern={sparkle}
               palette={SPARKS}
@@ -464,17 +477,17 @@ export default function SprucePage() {
         <section id="areas" className={s.sec} aria-labelledby="areas-h">
           <div className={s.areas}>
             <div className={s.secHead}>
-              <p className={s.kicker}>Areas</p>
-              <h2 id="areas-h">Where we clean</h2>
-              <p className={s.secNote}>
+              <p data-edit="areas.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Areas</p>
+              <h2 data-edit="areas.title" data-edit-max="60" id="areas-h">Where we clean</h2>
+              <p data-edit="areas.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Everywhere within twelve miles of our base on Tamarack Street.
                 Beyond that, up to twenty miles, a $20 travel fee is added to
                 each visit.
               </p>
             </div>
             <ul className={s.areaList}>
-              {AREAS.map((a) => (
-                <li key={a}>{a}</li>
+              {AREAS.map((a, i) => (
+                <li data-edit={`areas.item.${i}`} data-edit-max="80" key={a}>{a}</li>
               ))}
             </ul>
           </div>
@@ -484,14 +497,14 @@ export default function SprucePage() {
         <section id="faq" className={s.sec} aria-labelledby="faq-h">
           <div className={s.faqWrap}>
             <div className={s.secHead}>
-              <p className={s.kicker}>Questions</p>
-              <h2 id="faq-h">Before you book</h2>
+              <p data-edit="faq.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Questions</p>
+              <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Before you book</h2>
             </div>
             <div className={s.faq}>
-              {FAQ.map((f) => (
+              {FAQ.map((f, i) => (
                 <details key={f.q} className={s.faqItem}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -502,48 +515,48 @@ export default function SprucePage() {
         <section id="book" className={s.book} aria-labelledby="book-h">
           <div className={s.bookInner}>
             <div className={s.bookIntro}>
-              <p className={s.kicker}>Book</p>
-              <h2 id="book-h">Request a clean</h2>
-              <p className={s.secNote}>
+              <p data-edit="book.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Book</p>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Request a clean</h2>
+              <p data-edit="book.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 We reply within two working hours to confirm the window and
                 the price. Nothing is charged until after the clean.
               </p>
               <dl className={s.bookContact}>
                 <div>
-                  <dt>Call or text</dt>
-                  <dd>(555) 018-4420</dd>
+                  <dt data-edit="book.term" data-edit-max="28">Call or text</dt>
+                  <dd data-edit="book.body" data-edit-max="200" data-edit-multiline>(555) 018-4420</dd>
                 </div>
                 <div>
-                  <dt>Email</dt>
+                  <dt data-edit="book.term2" data-edit-max="28">Email</dt>
                   <dd>
-                    <a href="mailto:hello@sprucecleaning.example">hello@sprucecleaning.example</a>
+                    <a data-edit="book.link" data-edit-max="28" href="mailto:hello@sprucecleaning.example">hello@sprucecleaning.example</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Office</dt>
-                  <dd>Monday to Saturday, 7:30-6:00</dd>
+                  <dt data-edit="book.term3" data-edit-max="28">Office</dt>
+                  <dd data-edit="book.body2" data-edit-max="200" data-edit-multiline>Monday to Saturday, 7:30-6:00</dd>
                 </div>
               </dl>
             </div>
             <form className={s.bookForm} action="#">
               <label className={s.field}>
-                <span>Name</span>
+                <span data-edit="book.text" data-edit-max="60">Name</span>
                 <input type="text" name="name" autoComplete="name" />
               </label>
               <label className={s.field}>
-                <span>Phone</span>
+                <span data-edit="book.text2" data-edit-max="60">Phone</span>
                 <input type="tel" name="phone" autoComplete="tel" />
               </label>
               <label className={s.field}>
-                <span>Email</span>
+                <span data-edit="book.text3" data-edit-max="60">Email</span>
                 <input type="email" name="email" autoComplete="email" />
               </label>
               <label className={s.field}>
-                <span>ZIP code</span>
+                <span data-edit="book.text4" data-edit-max="60">ZIP code</span>
                 <input type="text" name="zip" inputMode="numeric" autoComplete="postal-code" />
               </label>
               <label className={s.field}>
-                <span>Home size</span>
+                <span data-edit="book.text5" data-edit-max="60">Home size</span>
                 <select name="home" defaultValue="two">
                   {SIZES.map((z) => (
                     <option key={z.id} value={z.id}>{z.name}</option>
@@ -551,7 +564,7 @@ export default function SprucePage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>Type of clean</span>
+                <span data-edit="book.text6" data-edit-max="60">Type of clean</span>
                 <select name="type" defaultValue="regular">
                   <option value="regular">Regular</option>
                   <option value="deep">Deep</option>
@@ -559,7 +572,7 @@ export default function SprucePage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>How often</span>
+                <span data-edit="book.text7" data-edit-max="60">How often</span>
                 <select name="often" defaultValue="once">
                   <option value="once">Just once</option>
                   <option value="weekly">Every week</option>
@@ -568,14 +581,14 @@ export default function SprucePage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>First date</span>
+                <span data-edit="book.text8" data-edit-max="60">First date</span>
                 <input type="date" name="date" />
               </label>
               <label className={`${s.field} ${s.fieldWide}`}>
-                <span>Anything we should know: access, pets, rooms to skip</span>
+                <span data-edit="book.text9" data-edit-max="60">Anything we should know: access, pets, rooms to skip</span>
                 <textarea name="notes" rows={3} />
               </label>
-              <button className={s.btn} type="submit">Request this clean</button>
+              <button data-edit="book.btn" data-edit-max="24" className={s.btn} type="submit">Request this clean</button>
             </form>
           </div>
         </section>
@@ -583,21 +596,21 @@ export default function SprucePage() {
 
       <footer className={s.footer}>
         <div className={s.footGrid}>
-          <p className={s.footName}>Spruce</p>
-          <p className={s.footAddr}>18 Tamarack Street, Lakemont</p>
-          <p className={s.footAddr}>(555) 018-4420</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Spruce</p>
+          <p data-edit="footer.footAddr" data-edit-max="240" data-edit-multiline className={s.footAddr}>18 Tamarack Street, Lakemont</p>
+          <p data-edit="footer.footAddr2" data-edit-max="240" data-edit-multiline className={s.footAddr}>(555) 018-4420</p>
           <ul className={s.footLinks}>
-            <li><a href="#prices">Prices</a></li>
-            <li><a href="#included">Checklist</a></li>
-            <li><a href="#book">Book</a></li>
+            <li><a data-edit="footer.prices" data-edit-max="28" href="#prices">Prices</a></li>
+            <li><a data-edit="footer.included" data-edit-max="28" href="#included">Checklist</a></li>
+            <li><a data-edit="footer.book" data-edit-max="28" href="#book">Book</a></li>
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional cleaning service. Prices, people and places are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional cleaning service. Prices, people and places are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live in the page's own colors.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live in the page's own colors.</span>
           </p>
         </div>
       </footer>

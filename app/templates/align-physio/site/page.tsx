@@ -217,7 +217,20 @@ const HOURS = [
 
 export default function AlignPhysioPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f7f9fb',
+        '--ink': '#13202e',
+        '--blue': '#2f6fde',
+        '--coral': '#f2765c',
+        '--gray': '#8795a5',
+        '--pale': '#e3eaf2',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,blue,coral,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -229,17 +242,17 @@ export default function AlignPhysioPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markDot} aria-hidden="true" />
-          <span>Align Physio</span>
+          <span data-edit="bar.text" data-edit-max="60">Align Physio</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBook} href="#book">Book</a>
+        <a data-edit="bar.barBook" data-edit-max="28" className={s.barBook} href="#book">Book</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -250,32 +263,32 @@ export default function AlignPhysioPage() {
             of threads that shade from blue to coral. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Physiotherapy clinic, Linden Avenue</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Physiotherapy clinic, Linden Avenue</p>
+            <h1 data-edit="hero.title2" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Back to the things <em>you move for.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Assessment and treatment for back and neck pain, sports
               injuries and recovery after surgery. You see a licensed physical
               therapist within the week, usually within two days, for a full
               hour the first time.
             </p>
             <div className={s.heroActions}>
-              <a className={s.button} href="#book">Book a first visit</a>
-              <a className={s.textLink} href="tel:+15550184470">Or call (555) 018-4470</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#book">Book a first visit</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="tel:+15550184470">Or call (555) 018-4470</a>
             </div>
             <dl className={s.heroFacts}>
-              {HERO_FACTS.map(([k, v]) => (
+              {HERO_FACTS.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
           </div>
 
           <div className={s.heroPanel}>
-            <div className={s.ribbon} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3" className={s.ribbon} aria-hidden="true">
               <TabbiedPattern
                 pattern={warpribbon}
                 palette={RIBBON}
@@ -288,36 +301,36 @@ export default function AlignPhysioPage() {
             </div>
             <form id="book" className={s.card} action="#" aria-labelledby="book-h">
               <div className={s.cardHead}>
-                <h2 id="book-h">Book a first visit</h2>
-                <p className={s.cardPrice}>From $120</p>
+                <h2 data-edit="hero.title" data-edit-max="60" id="book-h">Book a first visit</h2>
+                <p data-edit="hero.cardPrice" data-edit-max="240" data-edit-multiline className={s.cardPrice}>From $120</p>
               </div>
               <fieldset className={s.field}>
-                <legend>Appointment type</legend>
+                <legend data-edit="hero.legend">Appointment type</legend>
                 <div className={s.types}>
                   {TYPES.map(([name, length, price], i) => (
                     <label key={name} className={s.type}>
                       <input type="radio" name="type" value={name} defaultChecked={i === 0} />
-                      <span className={s.typeName}>{name}</span>
-                      <span className={s.typeLen}>{length}</span>
-                      <span className={s.typePrice}>{price}</span>
+                      <span data-edit={`hero.typeName.${i}`} data-edit-max="60" className={s.typeName}>{name}</span>
+                      <span data-edit={`hero.typeLen.${i}`} data-edit-max="60" className={s.typeLen}>{length}</span>
+                      <span data-edit={`hero.typePrice.${i}`} data-edit-max="60" className={s.typePrice}>{price}</span>
                     </label>
                   ))}
                 </div>
               </fieldset>
               <fieldset className={s.field}>
-                <legend>Next available</legend>
+                <legend data-edit="hero.legend2">Next available</legend>
                 <div className={s.slots}>
                   {SLOTS.map(([day, time], i) => (
                     <label key={day + time} className={s.slot}>
                       <input type="radio" name="slot" value={`${day} ${time}`} defaultChecked={i === 0} />
-                      <span className={s.slotDay}>{day}</span>
-                      <span className={s.slotTime}>{time}</span>
+                      <span data-edit={`hero.slotDay.${i}`} data-edit-max="60" className={s.slotDay}>{day}</span>
+                      <span data-edit={`hero.slotTime.${i}`} data-edit-max="60" className={s.slotTime}>{time}</span>
                     </label>
                   ))}
                 </div>
               </fieldset>
-              <button type="submit" className={s.submit}>Continue to your details</button>
-              <p className={s.cardNote}>
+              <button data-edit="hero.submit" data-edit-max="24" type="submit" className={s.submit}>Continue to your details</button>
+              <p data-edit="hero.cardNote" data-edit-max="240" data-edit-multiline className={s.cardNote}>
                 Nothing to pay now. We bill your insurer directly, or you pay
                 at the end of the visit.
               </p>
@@ -330,29 +343,29 @@ export default function AlignPhysioPage() {
             view, and the conditions flowing in columns under their letters. */}
         <section id="conditions" className={s.sec} aria-labelledby="conditions-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>Conditions we treat</p>
-            <h2 id="conditions-h">From Achilles to wrist, A to Z</h2>
-            <p className={s.secNote}>
+            <p data-edit="conditions.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Conditions we treat</p>
+            <h2 data-edit="conditions.title" data-edit-max="60" id="conditions-h">From Achilles to wrist, A to Z</h2>
+            <p data-edit="conditions.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Not on the list? Call and ask. If it is not something a physio
               should treat, we will say so and tell you who should.
             </p>
           </div>
           <nav className={s.letters} aria-label="Conditions by letter">
-            {ALPHABET.map((letter) =>
+            {ALPHABET.map((letter, i) =>
               LETTERS_IN_USE.has(letter) ? (
-                <a key={letter} href={`#az-${letter.toLowerCase()}`}>{letter}</a>
+                <a data-edit={`conditions.link.${i}`} data-edit-max="28" key={letter} href={`#az-${letter.toLowerCase()}`}>{letter}</a>
               ) : (
                 <span key={letter} className={s.letterOff} aria-hidden="true">{letter}</span>
               )
             )}
           </nav>
           <div className={s.index}>
-            {INDEX.map(([letter, items]) => (
+            {INDEX.map(([letter, items], i) => (
               <div key={letter} id={`az-${letter.toLowerCase()}`} className={s.group}>
-                <h3 className={s.groupLetter}>{letter}</h3>
+                <h3 data-edit={`conditions.groupLetter.${i}`} data-edit-max="40" className={s.groupLetter}>{letter}</h3>
                 <ul>
-                  {items.map((item) => (
-                    <li key={item}>{item}</li>
+                  {items.map((item, i2) => (
+                    <li data-edit={`conditions.item.${i}.${i2}`} data-edit-max="80" key={item}>{item}</li>
                   ))}
                 </ul>
               </div>
@@ -363,20 +376,20 @@ export default function AlignPhysioPage() {
         {/* ----------------------------------------------------- TREATMENTS */}
         <section id="treatments" className={s.sec} aria-labelledby="treatments-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>Treatments</p>
-            <h2 id="treatments-h">What an hour with us is made of</h2>
-            <p className={s.secNote}>
+            <p data-edit="treatments.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Treatments</p>
+            <h2 data-edit="treatments.title" data-edit-max="60" id="treatments-h">What an hour with us is made of</h2>
+            <p data-edit="treatments.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Hands-on care to get you moving, then exercise to keep you
               moving. We will not sell you a machine or a block of twenty
               sessions.
             </p>
           </div>
           <ol className={s.treatments}>
-            {TREATMENTS.map((t) => (
+            {TREATMENTS.map((t, i) => (
               <li key={t.name}>
-                <h3>{t.name}</h3>
-                <p className={s.treatBody}>{t.body}</p>
-                <p className={s.treatUse}>{t.use}</p>
+                <h3 data-edit={`treatments.title2.${i}`} data-edit-max="40">{t.name}</h3>
+                <p data-edit={`treatments.treatBody.${i}`} data-edit-max="240" data-edit-multiline className={s.treatBody}>{t.body}</p>
+                <p data-edit={`treatments.treatUse.${i}`} data-edit-max="240" data-edit-multiline className={s.treatUse}>{t.use}</p>
               </li>
             ))}
           </ol>
@@ -385,31 +398,31 @@ export default function AlignPhysioPage() {
         {/* -------------------------------------------------------- PHYSIOS */}
         <section id="physios" className={s.sec} aria-labelledby="physios-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>The physios</p>
-            <h2 id="physios-h">Five people, one of whom you will see every time</h2>
-            <p className={s.secNote}>
+            <p data-edit="physios.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The physios</p>
+            <h2 data-edit="physios.title" data-edit-max="60" id="physios-h">Five people, one of whom you will see every time</h2>
+            <p data-edit="physios.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               You keep the same physio from the first visit to the last. Ask
               for someone by name when you book, or tell us what is wrong and
               we will match you.
             </p>
           </div>
           <ul className={s.team}>
-            {PHYSIOS.map((p) => (
+            {PHYSIOS.map((p, i) => (
               <li key={p.name}>
                 <span className={s.avatar} aria-hidden="true">{p.initials}</span>
                 <div className={s.who}>
-                  <h3>{p.name}</h3>
-                  <p className={s.role}>{p.role}</p>
+                  <h3 data-edit={`physios.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                  <p data-edit={`physios.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{p.role}</p>
                 </div>
-                <p className={s.focus}>{p.focus}</p>
+                <p data-edit={`physios.focus.${i}`} data-edit-max="240" data-edit-multiline className={s.focus}>{p.focus}</p>
                 <dl className={s.teamFacts}>
                   <div>
-                    <dt>In clinic</dt>
-                    <dd>{p.days}</dd>
+                    <dt data-edit={`physios.term.${i}`} data-edit-max="28">In clinic</dt>
+                    <dd data-edit={`physios.body.${i}`} data-edit-max="200" data-edit-multiline>{p.days}</dd>
                   </div>
                   <div>
-                    <dt>Speaks</dt>
-                    <dd>{p.lang}</dd>
+                    <dt data-edit={`physios.term2.${i}`} data-edit-max="28">Speaks</dt>
+                    <dd data-edit={`physios.body2.${i}`} data-edit-max="200" data-edit-multiline>{p.lang}</dd>
                   </div>
                 </dl>
               </li>
@@ -420,41 +433,41 @@ export default function AlignPhysioPage() {
         {/* --------------------------------------------------------- PRICES */}
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>Prices and insurers</p>
-            <h2 id="prices-h">What it costs, before you come</h2>
+            <p data-edit="prices.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Prices and insurers</p>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">What it costs, before you come</h2>
           </div>
           <div className={s.prices}>
             <table className={s.priceTable}>
-              <caption className={s.srOnly}>Appointment prices</caption>
+              <caption data-edit="prices.srOnly" className={s.srOnly}>Appointment prices</caption>
               <thead>
                 <tr>
-                  <th scope="col">Appointment</th>
-                  <th scope="col">Length</th>
-                  <th scope="col">Price</th>
+                  <th data-edit="prices.heading" scope="col">Appointment</th>
+                  <th data-edit="prices.heading2" scope="col">Length</th>
+                  <th data-edit="prices.heading3" scope="col">Price</th>
                 </tr>
               </thead>
               <tbody>
-                {PRICES.map(([name, length, price]) => (
+                {PRICES.map(([name, length, price], i) => (
                   <tr key={name}>
-                    <th scope="row">{name}</th>
-                    <td>{length}</td>
-                    <td>{price}</td>
+                    <th data-edit={`prices.heading4.${i}`} scope="row">{name}</th>
+                    <td data-edit={`prices.cell.${i}`}>{length}</td>
+                    <td data-edit={`prices.cell2.${i}`}>{price}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <div className={s.insure}>
-              <h3>We bill these directly</h3>
+              <h3 data-edit="prices.title2" data-edit-max="40">We bill these directly</h3>
               <ul className={s.insurers}>
-                {INSURERS.map((name) => (
-                  <li key={name}>{name}</li>
+                {INSURERS.map((name, i) => (
+                  <li data-edit={`prices.item.${i}`} data-edit-max="80" key={name}>{name}</li>
                 ))}
               </ul>
               <dl className={s.payNotes}>
-                {PAY_NOTES.map(([k, v]) => (
+                {PAY_NOTES.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`prices.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`prices.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -468,14 +481,14 @@ export default function AlignPhysioPage() {
           <div className={s.firstGrid}>
             <div className={s.firstSide}>
               <div className={s.secHead}>
-                <p className={s.secKicker}>Your first visit</p>
-                <h2 id="first-h">One hour, in four parts</h2>
-                <p className={s.secNote}>
+                <p data-edit="firstVisit.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Your first visit</p>
+                <h2 data-edit="firstVisit.title" data-edit-max="60" id="first-h">One hour, in four parts</h2>
+                <p data-edit="firstVisit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                   Nothing happens that you have not agreed to, and you can
                   bring someone with you.
                 </p>
               </div>
-              <div className={s.rings} aria-hidden="true">
+              <div data-edit-pattern="firstVisit.field" data-edit-roles="transparent,4,2,4" className={s.rings} aria-hidden="true">
                 <TabbiedPattern
                   pattern={gimbal}
                   palette={RINGS}
@@ -490,19 +503,19 @@ export default function AlignPhysioPage() {
             </div>
             <div>
               <ol className={s.steps}>
-                {VISIT_STEPS.map((st) => (
+                {VISIT_STEPS.map((st, i) => (
                   <li key={st.title}>
-                    <span className={s.stepTime}>{st.time}</span>
-                    <h3>{st.title}</h3>
-                    <p>{st.body}</p>
+                    <span data-edit={`firstVisit.stepTime.${i}`} data-edit-max="60" className={s.stepTime}>{st.time}</span>
+                    <h3 data-edit={`firstVisit.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                    <p data-edit={`firstVisit.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
                   </li>
                 ))}
               </ol>
               <div className={s.bring}>
-                <h3>What to bring and wear</h3>
+                <h3 data-edit="firstVisit.title3" data-edit-max="40">What to bring and wear</h3>
                 <ul>
-                  {BRING.map((b) => (
-                    <li key={b}>{b}</li>
+                  {BRING.map((b, i) => (
+                    <li data-edit={`firstVisit.item.${i}`} data-edit-max="80" key={b}>{b}</li>
                   ))}
                 </ul>
               </div>
@@ -513,44 +526,44 @@ export default function AlignPhysioPage() {
         {/* --------------------------------------------------------- CLINIC */}
         <section id="clinic" className={s.sec} aria-labelledby="clinic-h">
           <div className={s.secHead}>
-            <p className={s.secKicker}>The clinic</p>
-            <h2 id="clinic-h">Second floor, above the pharmacy</h2>
+            <p data-edit="clinic.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The clinic</p>
+            <h2 data-edit="clinic.title" data-edit-max="60" id="clinic-h">Second floor, above the pharmacy</h2>
           </div>
           <div className={s.clinic}>
             <div>
-              <h3 className={s.clinicHead}>Address</h3>
-              <p className={s.address}>
+              <h3 data-edit="clinic.clinicHead" data-edit-max="40" className={s.clinicHead}>Address</h3>
+              <p data-edit="clinic.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 48 Linden Avenue, Suite 210
                 <br />
                 Entrance on Mill Street
               </p>
               <ul className={s.contact}>
                 <li>
-                  <a href="tel:+15550184470">(555) 018-4470</a>
+                  <a data-edit="clinic.link" data-edit-max="28" href="tel:+15550184470">(555) 018-4470</a>
                 </li>
                 <li>
-                  <a href="mailto:hello@alignphysio.example">hello@alignphysio.example</a>
+                  <a data-edit="clinic.link2" data-edit-max="28" href="mailto:hello@alignphysio.example">hello@alignphysio.example</a>
                 </li>
               </ul>
             </div>
             <div>
-              <h3 className={s.clinicHead}>Hours</h3>
+              <h3 data-edit="clinic.clinicHead2" data-edit-max="40" className={s.clinicHead}>Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`clinic.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`clinic.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div>
-              <h3 className={s.clinicHead}>Getting here</h3>
+              <h3 data-edit="clinic.clinicHead3" data-edit-max="40" className={s.clinicHead}>Getting here</h3>
               <ul className={s.getting}>
-                <li>Step-free from the street, with an elevator to the second floor.</li>
-                <li>Free parking behind the building for two hours; ask for a ticket at the desk.</li>
-                <li>The 7 and 22 buses stop at Linden and Mill, one minute away.</li>
-                <li>A changing room and a shower, if you are coming from a run.</li>
+                <li data-edit="clinic.item" data-edit-max="80">Step-free from the street, with an elevator to the second floor.</li>
+                <li data-edit="clinic.item2" data-edit-max="80">Free parking behind the building for two hours; ask for a ticket at the desk.</li>
+                <li data-edit="clinic.item3" data-edit-max="80">The 7 and 22 buses stop at Linden and Mill, one minute away.</li>
+                <li data-edit="clinic.item4" data-edit-max="80">A changing room and a shower, if you are coming from a run.</li>
               </ul>
             </div>
           </div>
@@ -559,25 +572,25 @@ export default function AlignPhysioPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footLine}>Hurting now? We keep two same-day slots open every morning.</p>
-          <a className={s.button} href="tel:+15550184470">Call (555) 018-4470</a>
+          <p data-edit="footer.footLine" data-edit-max="240" data-edit-multiline className={s.footLine}>Hurting now? We keep two same-day slots open every morning.</p>
+          <a data-edit="footer.button" data-edit-max="28" className={s.button} href="tel:+15550184470">Call (555) 018-4470</a>
         </div>
         <div className={s.footGrid}>
-          <p className={s.footName}>Align Physio</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Align Physio</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional physiotherapy clinic. Prices, hours, insurers and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional physiotherapy clinic. Prices, hours, insurers and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on a transparent ground.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
           </p>
         </div>
       </footer>

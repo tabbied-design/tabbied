@@ -98,7 +98,19 @@ const HOURS = [
 
 export default function CrumbBakehousePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--flour': '#fbf7ef',
+        '--crust': '#2a2118',
+        '--honey': '#c98b3a',
+        '--gray': '#9a8f80',
+        '--pale': '#ede3d1',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="flour,crust,honey,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -108,15 +120,15 @@ export default function CrumbBakehousePage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Crumb</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Crumb</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -124,23 +136,23 @@ export default function CrumbBakehousePage() {
       <main id="top">
         {/* -------------------------------------------------------- MASTHEAD */}
         <section className={s.mast} aria-labelledby="name-h">
-          <p className={s.kicker}>Bakehouse on Orchard Row, since 2019</p>
-          <h1 id="name-h" className={s.name}>Crumb Bakehouse</h1>
-          <p className={s.lede}>
+          <p data-edit="name.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Bakehouse on Orchard Row, since 2019</p>
+          <h1 data-edit="name.name" data-edit-max="70" id="name-h" className={s.name}>Crumb Bakehouse</h1>
+          <p data-edit="name.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
             Sourdough, pastry and cake, baked all day in the room behind the
             counter. This page is the list we chalk up by the door each
             morning.
           </p>
           <p className={s.dateLine}>
-            <span>Today's list</span>
+            <span data-edit="name.text" data-edit-max="60">Today's list</span>
             <span className={s.dateSep} aria-hidden="true" />
-            <span>Thursday, September 25</span>
+            <span data-edit="name.text2" data-edit-max="60">Thursday, September 25</span>
           </p>
         </section>
 
         {/* The woven band: a basket liner laid across the top of the list. */}
         <div className={s.band} aria-hidden="true">
-          <div className={s.bandField}>
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,4,2" className={s.bandField}>
             <TabbiedPattern
               pattern={wovenkhaki}
               palette={WOVEN}
@@ -155,8 +167,8 @@ export default function CrumbBakehousePage() {
         {/* ----------------------------------------------------------- TODAY */}
         <section id="today" className={s.sec} aria-labelledby="today-h">
           <div className={s.secHead}>
-            <h2 id="today-h">Out of the oven today</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="today.title" data-edit-max="60" id="today-h">Out of the oven today</h2>
+            <p data-edit="today.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Times are when a bake comes out of the oven, give or take ten
               minutes. The last column is when it usually sells out.
             </p>
@@ -164,7 +176,7 @@ export default function CrumbBakehousePage() {
 
           <div className={s.hang}>
             <div className={s.plate}>
-              <div className={s.plateField} aria-hidden="true">
+              <div data-edit-pattern="today.field" data-edit-roles="transparent,4,2" className={s.plateField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={wovenkhaki}
                   palette={WOVEN}
@@ -174,30 +186,30 @@ export default function CrumbBakehousePage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <Figure
+              <Figure editId="photo.crumb-bakehouse-loaf-cutout"
                 slug="crumb-bakehouse-loaf-cutout"
                 cutout
                 alt="A round country sourdough loaf, floured, with one deep open score"
                 className={s.loaf}
               />
             </div>
-            <p className={s.plateCaption}>The country loaf, out at seven.</p>
+            <p data-edit="today.plateCaption" data-edit-max="240" data-edit-multiline className={s.plateCaption}>The country loaf, out at seven.</p>
           </div>
 
           <ol className={s.list}>
-            {TODAY.map((b) => (
+            {TODAY.map((b, i) => (
               <li key={`${b.time}-${b.name}`}>
-                <span className={s.time}>{b.time}</span>
+                <span data-edit={`today.time.${i}`} data-edit-max="60" className={s.time}>{b.time}</span>
                 <div className={s.bake}>
-                  <h3>{b.name}</h3>
-                  <p className={s.bakeNote}>{b.note}</p>
+                  <h3 data-edit={`today.title2.${i}`} data-edit-max="40">{b.name}</h3>
+                  <p data-edit={`today.bakeNote.${i}`} data-edit-max="240" data-edit-multiline className={s.bakeNote}>{b.note}</p>
                 </div>
-                <span className={s.bakePrice}>{b.price}</span>
-                <span className={s.lasts}>{b.lasts}</span>
+                <span data-edit={`today.bakePrice.${i}`} data-edit-max="60" className={s.bakePrice}>{b.price}</span>
+                <span data-edit={`today.lasts.${i}`} data-edit-max="60" className={s.lasts}>{b.lasts}</span>
               </li>
             ))}
           </ol>
-          <p className={s.halfPrice}>
+          <p data-edit="today.halfPrice" data-edit-max="240" data-edit-multiline className={s.halfPrice}>
             From 4 pm, everything left on the shelves is half price.
           </p>
         </section>
@@ -205,8 +217,8 @@ export default function CrumbBakehousePage() {
         {/* ------------------------------------------------------------ WEEK */}
         <section id="week" className={s.sec} aria-labelledby="week-h">
           <div className={s.secHead}>
-            <h2 id="week-h">Breads of the week</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="week.title" data-edit-max="60" id="week-h">Breads of the week</h2>
+            <p data-edit="week.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The country loaf and the focaccia are baked every day. The rest
               come round on their own days. Closed Mondays: the oven gets the
               day off too.
@@ -215,7 +227,7 @@ export default function CrumbBakehousePage() {
 
           <div className={`${s.hang} ${s.hangLeft}`}>
             <div className={`${s.plate} ${s.plateBasket}`}>
-              <div className={s.plateField} aria-hidden="true">
+              <div data-edit-pattern="week.field" data-edit-roles="transparent,2,0" className={s.plateField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={hurdle}
                   palette={BASKET}
@@ -226,30 +238,30 @@ export default function CrumbBakehousePage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <Figure
+              <Figure editId="photo.crumb-bakehouse-croissant-cutout"
                 slug="crumb-bakehouse-croissant-cutout"
                 cutout
                 alt="A golden croissant with deep, dark curls"
                 className={s.croissant}
               />
             </div>
-            <p className={s.plateCaption}>Croissants, every day we are open.</p>
+            <p data-edit="week.plateCaption" data-edit-max="240" data-edit-multiline className={s.plateCaption}>Croissants, every day we are open.</p>
           </div>
 
           <table className={s.rota}>
-            <caption className={s.srOnly}>Which bread is baked on which day, Tuesday to Sunday</caption>
+            <caption data-edit="week.srOnly" className={s.srOnly}>Which bread is baked on which day, Tuesday to Sunday</caption>
             <thead>
               <tr>
-                <th scope="col" className={s.rotaBread}>Bread</th>
-                {DAYS.map((d) => (
-                  <th key={d} scope="col">{d}</th>
+                <th data-edit="week.rotaBread" scope="col" className={s.rotaBread}>Bread</th>
+                {DAYS.map((d, i) => (
+                  <th data-edit={`week.heading.${i}`} key={d} scope="col">{d}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {ROTA.map((r) => (
+              {ROTA.map((r, i) => (
                 <tr key={r.name}>
-                  <th scope="row" className={s.rotaBread}>{r.name}</th>
+                  <th data-edit={`week.rotaBread2.${i}`} scope="row" className={s.rotaBread}>{r.name}</th>
                   {r.days.map((on, i) => (
                     <td key={DAYS[i]} className={on ? s.on : s.off}>
                       <span className={s.srOnly}>{on ? 'Baked' : 'Not baked'}</span>
@@ -264,8 +276,8 @@ export default function CrumbBakehousePage() {
         {/* ---------------------------------------------------------- ORDERS */}
         <section id="orders" className={s.sec} aria-labelledby="orders-h">
           <div className={s.secHead}>
-            <h2 id="orders-h">Pre-orders and celebration cakes</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="orders.title" data-edit-max="60" id="orders-h">Pre-orders and celebration cakes</h2>
+            <p data-edit="orders.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Any bread on the week list, ordered by 2 pm the day before, is
               kept for you under your name until we close.
             </p>
@@ -273,94 +285,94 @@ export default function CrumbBakehousePage() {
 
           <div className={s.cakes}>
             <div>
-              <h3 className={s.label}>Cakes, with three days' notice</h3>
+              <h3 data-edit="orders.label" data-edit-max="40" className={s.label}>Cakes, with three days' notice</h3>
               <dl className={s.sizes}>
-                {CAKES.map(([size, serves, price]) => (
+                {CAKES.map(([size, serves, price], i) => (
                   <div key={size}>
-                    <dt>{size}</dt>
-                    <dd className={s.serves}>{serves}</dd>
-                    <dd className={s.sizePrice}>{price}</dd>
+                    <dt data-edit={`orders.term.${i}`} data-edit-max="28">{size}</dt>
+                    <dd data-edit={`orders.serves.${i}`} data-edit-max="200" data-edit-multiline className={s.serves}>{serves}</dd>
+                    <dd data-edit={`orders.sizePrice.${i}`} data-edit-max="200" data-edit-multiline className={s.sizePrice}>{price}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.small}>
+              <p data-edit="orders.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 A message piped on top and candles are free. A deposit of half
                 is taken when you order.
               </p>
             </div>
             <div>
-              <h3 className={s.label}>Flavors</h3>
+              <h3 data-edit="orders.label2" data-edit-max="40" className={s.label}>Flavors</h3>
               <ul className={s.flavors}>
-                {FLAVORS.map((f) => (
-                  <li key={f}>{f}</li>
+                {FLAVORS.map((f, i) => (
+                  <li data-edit={`orders.item.${i}`} data-edit-max="80" key={f}>{f}</li>
                 ))}
               </ul>
             </div>
           </div>
 
           <form className={s.form} action="#">
-            <h3 className={s.formTitle}>Place an order</h3>
+            <h3 data-edit="orders.formTitle" data-edit-max="40" className={s.formTitle}>Place an order</h3>
             <div className={s.formGrid}>
               <div className={s.field}>
-                <label htmlFor="crumb-name">Name</label>
+                <label data-edit="orders.label3" htmlFor="crumb-name">Name</label>
                 <input id="crumb-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="crumb-phone">Phone</label>
+                <label data-edit="orders.label4" htmlFor="crumb-phone">Phone</label>
                 <input id="crumb-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <div className={s.field}>
-                <label htmlFor="crumb-date">Pick-up day</label>
+                <label data-edit="orders.label5" htmlFor="crumb-date">Pick-up day</label>
                 <input id="crumb-date" name="date" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="crumb-kind">Order</label>
+                <label data-edit="orders.label6" htmlFor="crumb-kind">Order</label>
                 <select id="crumb-kind" name="kind" defaultValue="bread">
                   <option value="bread">Bread or pastry</option>
                   <option value="cake">Celebration cake</option>
                 </select>
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="crumb-what">What you would like</label>
+                <label data-edit="orders.label7" htmlFor="crumb-what">What you would like</label>
                 <textarea id="crumb-what" name="what" rows={3} />
               </div>
             </div>
-            <button className={s.submit} type="submit">Send the order</button>
-            <p className={s.small}>We call back within the day to confirm. Nothing is baked until we have spoken.</p>
+            <button data-edit="orders.submit" data-edit-max="24" className={s.submit} type="submit">Send the order</button>
+            <p data-edit="orders.small2" data-edit-max="240" data-edit-multiline className={s.small}>We call back within the day to confirm. Nothing is baked until we have spoken.</p>
           </form>
         </section>
 
         {/* ------------------------------------------------------- WHOLESALE */}
         <section id="wholesale" className={s.sec} aria-labelledby="wholesale-h">
           <div className={s.secHead}>
-            <h2 id="wholesale-h">Wholesale</h2>
+            <h2 data-edit="wholesale.title" data-edit-max="60" id="wholesale-h">Wholesale</h2>
           </div>
-          <p className={s.prose}>
+          <p data-edit="wholesale.prose" data-edit-max="240" data-edit-multiline className={s.prose}>
             We bake for four cafes and two restaurants within a mile of the
             shop, delivered by cargo bike before seven. Standing orders only,
             from $60 a day, with a week's notice to change them. We are full
             until the new year; write to join the list.
           </p>
           <p className={s.prose}>
-            <a href="mailto:trade@crumbbakehouse.example">trade@crumbbakehouse.example</a>
+            <a data-edit="wholesale.link" data-edit-max="28" href="mailto:trade@crumbbakehouse.example">trade@crumbbakehouse.example</a>
           </p>
         </section>
 
         {/* ------------------------------------------------------- ALLERGENS */}
         <section id="allergens" className={s.sec} aria-labelledby="allergens-h">
           <div className={s.secHead}>
-            <h2 id="allergens-h">Allergens</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="allergens.title" data-edit-max="60" id="allergens-h">Allergens</h2>
+            <p data-edit="allergens.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               One kitchen, flour in the air, nuts and sesame on the same
               benches. We cannot promise anything is free of anything, and we
               do not make gluten-free bread.
             </p>
           </div>
           <dl className={s.allergens}>
-            {ALLERGENS.map(([what, contains]) => (
+            {ALLERGENS.map(([what, contains], i) => (
               <div key={what}>
-                <dt>{what}</dt>
-                <dd>{contains}</dd>
+                <dt data-edit={`allergens.term.${i}`} data-edit-max="28">{what}</dt>
+                <dd data-edit={`allergens.body.${i}`} data-edit-max="200" data-edit-multiline>{contains}</dd>
               </div>
             ))}
           </dl>
@@ -369,29 +381,29 @@ export default function CrumbBakehousePage() {
         {/* ------------------------------------------------------------ SHOP */}
         <section id="shop" className={s.sec} aria-labelledby="shop-h">
           <div className={s.secHead}>
-            <h2 id="shop-h">The shop</h2>
+            <h2 data-edit="shop.title" data-edit-max="60" id="shop-h">The shop</h2>
           </div>
           <div className={s.shop}>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`shop.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`shop.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
             <div>
-              <p className={s.address}>
+              <p data-edit="shop.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 12 Orchard Row
                 <br />
                 next to the laundromat
               </p>
               <p className={s.address}>
-                <a href="tel:+15550167720">(555) 016-7720</a>
+                <a data-edit="shop.link" data-edit-max="28" href="tel:+15550167720">(555) 016-7720</a>
                 <br />
-                <a href="mailto:hello@crumbbakehouse.example">hello@crumbbakehouse.example</a>
+                <a data-edit="shop.link2" data-edit-max="28" href="mailto:hello@crumbbakehouse.example">hello@crumbbakehouse.example</a>
               </p>
-              <p className={s.small}>
+              <p data-edit="shop.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 Card and cash. Bring a bag, or take one of our paper ones for
                 ten cents. There is one step at the door and a ramp inside it.
               </p>
@@ -401,11 +413,11 @@ export default function CrumbBakehousePage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Crumb Bakehouse</p>
-        <p>A fictional neighborhood bakery. Breads, prices and hours are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Crumb Bakehouse</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional neighborhood bakery. Breads, prices and hours are invented.</p>
         <p>
           Patterns by{' '}
-          <a href="https://tabbied.com" rel="noopener">
+          <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">
             Tabbied
           </a>
           , drawn live on a transparent ground; the loaf and the croissant are generated images.

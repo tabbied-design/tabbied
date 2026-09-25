@@ -185,7 +185,19 @@ const CLIENTS = [
 
 export default function ParallelStudioPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#edebe6',
+        '--ink': '#151515',
+        '--violet': '#6246ea',
+        '--gray': '#8a8780',
+        '--pale': '#d8d5cd',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,violet,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -197,17 +209,17 @@ export default function ParallelStudioPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markRule} aria-hidden="true" />
-          <span className={s.markWord}>Parallel</span>
+          <span data-edit="bar.markWord" data-edit-max="60" className={s.markWord}>Parallel</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#contact">Start a project</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#contact">Start a project</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -216,29 +228,29 @@ export default function ParallelStudioPage() {
         {/* ------------------------------------------------------------ HERO
             One sentence, set big, and the studio's particulars in mono. */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <p className={s.eyebrow}>Parallel Studio, Millbrook, since 2014</p>
-          <h1 id="hero-h" className={s.heroTitle}>
+          <p data-edit="hero.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Parallel Studio, Millbrook, since 2014</p>
+          <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="100" id="hero-h" className={s.heroTitle}>
             Eleven people making brands, websites and campaigns
             <br />
             <em>for companies with something real to say.</em>
           </h1>
           <dl className={s.heroMeta}>
             <div>
-              <dt>Projects</dt>
-              <dd>142 since 2014</dd>
+              <dt data-edit="hero.term" data-edit-max="28">Projects</dt>
+              <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>142 since 2014</dd>
             </div>
             <div>
-              <dt>Studio</dt>
-              <dd>Riverside Works, Unit 9</dd>
+              <dt data-edit="hero.term2" data-edit-max="28">Studio</dt>
+              <dd data-edit="hero.body2" data-edit-max="200" data-edit-multiline>Riverside Works, Unit 9</dd>
             </div>
             <div>
-              <dt>Booking</dt>
-              <dd>From February 2027</dd>
+              <dt data-edit="hero.term3" data-edit-max="28">Booking</dt>
+              <dd data-edit="hero.body3" data-edit-max="200" data-edit-multiline>From February 2027</dd>
             </div>
             <div>
-              <dt>New business</dt>
+              <dt data-edit="hero.term4" data-edit-max="28">New business</dt>
               <dd>
-                <a href="mailto:hello@parallel.example">hello@parallel.example</a>
+                <a data-edit="hero.link" data-edit-max="28" href="mailto:hello@parallel.example">hello@parallel.example</a>
               </dd>
             </div>
           </dl>
@@ -248,44 +260,44 @@ export default function ParallelStudioPage() {
             The work as a table. The rows are the picture. */}
         <section id="work" className={s.index} aria-labelledby="work-h">
           <div className={s.indexHead}>
-            <span className={s.secNo}>01</span>
-            <h2 id="work-h">Index</h2>
-            <p className={s.indexNote}>The last fourteen projects, newest first. Marked rows are written up below.</p>
+            <span data-edit="work.secNo" data-edit-max="60" className={s.secNo}>01</span>
+            <h2 data-edit="work.title" data-edit-max="60" id="work-h">Index</h2>
+            <p data-edit="work.indexNote" data-edit-max="240" data-edit-multiline className={s.indexNote}>The last fourteen projects, newest first. Marked rows are written up below.</p>
             <ul className={s.counts}>
-              {COUNTS.map(([k, v]) => (
+              {COUNTS.map(([k, v], i) => (
                 <li key={k}>
-                  <span>{k}</span>
-                  <span className={s.countNo}>{v}</span>
+                  <span data-edit={`work.text.${i}`} data-edit-max="60">{k}</span>
+                  <span data-edit={`work.countNo.${i}`} data-edit-max="60" className={s.countNo}>{v}</span>
                 </li>
               ))}
             </ul>
           </div>
           <div className={s.tableWrap}>
             <table className={s.table}>
-              <caption className={s.srOnly}>Projects by number, client, project, discipline and year</caption>
+              <caption data-edit="work.srOnly" className={s.srOnly}>Projects by number, client, project, discipline and year</caption>
               <thead>
                 <tr>
-                  <th scope="col">No.</th>
-                  <th scope="col">Client</th>
-                  <th scope="col">Project</th>
-                  <th scope="col">Discipline</th>
-                  <th scope="col">Year</th>
+                  <th data-edit="work.heading" scope="col">No.</th>
+                  <th data-edit="work.heading2" scope="col">Client</th>
+                  <th data-edit="work.heading3" scope="col">Project</th>
+                  <th data-edit="work.heading4" scope="col">Discipline</th>
+                  <th data-edit="work.heading5" scope="col">Year</th>
                 </tr>
               </thead>
               <tbody>
-                {INDEX.map((r) => (
+                {INDEX.map((r, i) => (
                   <tr key={r.no} className={r.featured ? s.rowFeatured : s.row}>
-                    <td className={s.cNo}>{r.no}</td>
-                    <th scope="row" className={s.cClient}>{r.client}</th>
-                    <td className={s.cProject}>{r.project}</td>
-                    <td className={s.cDisc}>{r.discipline}</td>
-                    <td className={s.cYear}>{r.year}</td>
+                    <td data-edit={`work.cNo.${i}`} className={s.cNo}>{r.no}</td>
+                    <th data-edit={`work.cClient.${i}`} scope="row" className={s.cClient}>{r.client}</th>
+                    <td data-edit={`work.cProject.${i}`} className={s.cProject}>{r.project}</td>
+                    <td data-edit={`work.cDisc.${i}`} className={s.cDisc}>{r.discipline}</td>
+                    <td data-edit={`work.cYear.${i}`} className={s.cYear}>{r.year}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className={s.indexMore}>Projects 001-010, 2014-2022, and the work under NDA are shown in person at the studio.</p>
+          <p data-edit="work.indexMore" data-edit-max="240" data-edit-multiline className={s.indexMore}>Projects 001-010, 2014-2022, and the work under NDA are shown in person at the studio.</p>
         </section>
 
         {/* -------------------------------------------------------- FEATURED
@@ -293,13 +305,13 @@ export default function ParallelStudioPage() {
             of a picture. */}
         <section id="featured" className={s.featured} aria-labelledby="featured-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>02</span>
-            <h2 id="featured-h">Featured</h2>
+            <span data-edit="featured.secNo" data-edit-max="60" className={s.secNo}>02</span>
+            <h2 data-edit="featured.title" data-edit-max="60" id="featured-h">Featured</h2>
           </div>
           <div className={s.features}>
             {FEATURED.map((f, i) => (
               <article key={f.no} className={i === 0 ? s.featureLead : s.feature}>
-                <div className={s.panel} aria-hidden="true">
+                <div data-edit-pattern={`featureLead.field.${i}`} data-edit-roles="transparent,0,2,4" className={s.panel} aria-hidden="true">
                   <TabbiedPattern
                     pattern={paintscribble}
                     palette={SCRIBBLE}
@@ -312,20 +324,20 @@ export default function ParallelStudioPage() {
                 </div>
                 <div className={s.featureText}>
                   <p className={s.featureMeta}>
-                    <span className={s.featureNo}>{f.no}</span>
-                    <span>{f.client}</span>
+                    <span data-edit={`featureLead.featureNo.${i}`} data-edit-max="60" className={s.featureNo}>{f.no}</span>
+                    <span data-edit={`featureLead.text.${i}`} data-edit-max="60">{f.client}</span>
                   </p>
-                  <h3>{f.title}</h3>
-                  <p className={s.featureBody}>{f.body}</p>
+                  <h3 data-edit={`featureLead.title.${i}`} data-edit-max="40">{f.title}</h3>
+                  <p data-edit={`featureLead.featureBody.${i}`} data-edit-max="240" data-edit-multiline className={s.featureBody}>{f.body}</p>
                   <dl className={s.featureFacts}>
-                    {f.facts.map(([v, k]) => (
+                    {f.facts.map(([v, k], i2) => (
                       <div key={k}>
-                        <dt>{v}</dt>
-                        <dd>{k}</dd>
+                        <dt data-edit={`featureLead.term.${i}.${i2}`} data-edit-max="28">{v}</dt>
+                        <dd data-edit={`featureLead.body.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                       </div>
                     ))}
                   </dl>
-                  <p className={s.featureCredits}>{f.credits}</p>
+                  <p data-edit={`featureLead.featureCredits.${i}`} data-edit-max="240" data-edit-multiline className={s.featureCredits}>{f.credits}</p>
                 </div>
               </article>
             ))}
@@ -335,41 +347,41 @@ export default function ParallelStudioPage() {
         {/* ---------------------------------------------------- CAPABILITIES */}
         <section id="capabilities" className={s.sec} aria-labelledby="cap-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>03</span>
-            <h2 id="cap-h">Capabilities</h2>
-            <p className={s.secNote}>
+            <span data-edit="capabilities.secNo" data-edit-max="60" className={s.secNo}>03</span>
+            <h2 data-edit="capabilities.title" data-edit-max="60" id="cap-h">Capabilities</h2>
+            <p data-edit="capabilities.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Everything is made in the studio by the people on this page.
               Budgets are fixed once the brief is signed, and published here
               so nobody has to ask.
             </p>
           </div>
           <div className={s.caps}>
-            {CAPABILITIES.map((c) => (
+            {CAPABILITIES.map((c, i) => (
               <div key={c.name} className={s.cap}>
-                <h3>{c.name}</h3>
+                <h3 data-edit={`capabilities.title2.${i}`} data-edit-max="40">{c.name}</h3>
                 <ul>
-                  {c.items.map((it) => (
-                    <li key={it}>{it}</li>
+                  {c.items.map((it, i2) => (
+                    <li data-edit={`capabilities.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                   ))}
                 </ul>
-                <p className={s.capTypical}>{c.typical}</p>
+                <p data-edit={`capabilities.capTypical.${i}`} data-edit-max="240" data-edit-multiline className={s.capTypical}>{c.typical}</p>
               </div>
             ))}
           </div>
           <ol className={s.phases}>
-            {PHASES.map(([no, name, time, body]) => (
+            {PHASES.map(([no, name, time, body], i) => (
               <li key={no}>
-                <span className={s.phaseNo}>{no}</span>
-                <h3>{name}</h3>
-                <span className={s.phaseTime}>{time}</span>
-                <p>{body}</p>
+                <span data-edit={`capabilities.phaseNo.${i}`} data-edit-max="60" className={s.phaseNo}>{no}</span>
+                <h3 data-edit={`capabilities.title3.${i}`} data-edit-max="40">{name}</h3>
+                <span data-edit={`capabilities.phaseTime.${i}`} data-edit-max="60" className={s.phaseTime}>{time}</span>
+                <p data-edit={`capabilities.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
               </li>
             ))}
           </ol>
         </section>
 
         {/* A strip of square marks between the work and the people. */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,3,4,2" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={hilbert}
             palette={MARKS}
@@ -385,48 +397,48 @@ export default function ParallelStudioPage() {
         {/* ------------------------------------------------------------ TEAM */}
         <section id="team" className={s.sec} aria-labelledby="team-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>04</span>
-            <h2 id="team-h">Team</h2>
-            <p className={s.secNote}>
+            <span data-edit="team.secNo" data-edit-max="60" className={s.secNo}>04</span>
+            <h2 data-edit="team.title" data-edit-max="60" id="team-h">Team</h2>
+            <p data-edit="team.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Eleven people, one room, no account managers. The person who
               presents the work is a person who made it.
             </p>
           </div>
           <ol className={s.team}>
-            {TEAM.map((p) => (
+            {TEAM.map((p, i) => (
               <li key={p.name}>
-                <h3>{p.name}</h3>
-                <p className={s.teamRole}>{p.role}</p>
+                <h3 data-edit={`team.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                <p data-edit={`team.teamRole.${i}`} data-edit-max="240" data-edit-multiline className={s.teamRole}>{p.role}</p>
                 <span className={s.teamSince}>{`Since ${p.since}`}</span>
               </li>
             ))}
           </ol>
-          <p className={s.hiring}>We hire once or twice a year and say so here first. Nothing open right now.</p>
+          <p data-edit="team.hiring" data-edit-max="240" data-edit-multiline className={s.hiring}>We hire once or twice a year and say so here first. Nothing open right now.</p>
         </section>
 
         {/* --------------------------------------------------------- CLIENTS */}
         <section id="clients" className={s.sec} aria-labelledby="clients-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>05</span>
-            <h2 id="clients-h">Clients</h2>
-            <p className={s.secNote}>A selection from twelve years. Two out of three come back for a second project.</p>
+            <span data-edit="clients.secNo" data-edit-max="60" className={s.secNo}>05</span>
+            <h2 data-edit="clients.title" data-edit-max="60" id="clients-h">Clients</h2>
+            <p data-edit="clients.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>A selection from twelve years. Two out of three come back for a second project.</p>
           </div>
           <ul className={s.clients}>
-            {CLIENTS.map((c) => (
-              <li key={c}>{c}</li>
+            {CLIENTS.map((c, i) => (
+              <li data-edit={`clients.item.${i}`} data-edit-max="80" key={c}>{c}</li>
             ))}
           </ul>
           <figure className={s.quote}>
             <blockquote>
-              <p>
+              <p data-edit="clients.body" data-edit-max="240" data-edit-multiline>
                 They asked better questions in the first meeting than our
                 last agency did in three years, and then they made the
                 answers look good.
               </p>
             </blockquote>
             <figcaption>
-              <cite>Hollie Tern</cite>
-              <span>Founder, Tern Energy</span>
+              <cite data-edit="clients.attribution" data-edit-max="48">Hollie Tern</cite>
+              <span data-edit="clients.text" data-edit-max="60">Founder, Tern Energy</span>
             </figcaption>
           </figure>
         </section>
@@ -436,25 +448,25 @@ export default function ParallelStudioPage() {
           The last thing on the page is the invitation, as big as it goes. */}
       <footer className={s.footer}>
         <section id="contact" className={s.contact} aria-labelledby="contact-h">
-          <h2 id="contact-h" className={s.huge}>Start a project</h2>
+          <h2 data-edit="contact.huge" data-edit-max="60" id="contact-h" className={s.huge}>Start a project</h2>
           <div className={s.contactGrid}>
             <div>
-              <h3 className={s.contactHead}>New business</h3>
-              <p className={s.contactLine}>Theo Marchetti</p>
-              <a className={s.contactLink} href="mailto:hello@parallel.example">hello@parallel.example</a>
-              <p className={s.contactLine}>+1 555 555 0187</p>
+              <h3 data-edit="contact.contactHead" data-edit-max="40" className={s.contactHead}>New business</h3>
+              <p data-edit="contact.contactLine" data-edit-max="240" data-edit-multiline className={s.contactLine}>Theo Marchetti</p>
+              <a data-edit="contact.contactLink" data-edit-max="28" className={s.contactLink} href="mailto:hello@parallel.example">hello@parallel.example</a>
+              <p data-edit="contact.contactLine2" data-edit-max="240" data-edit-multiline className={s.contactLine}>+1 555 555 0187</p>
             </div>
             <div>
-              <h3 className={s.contactHead}>What to send</h3>
-              <p className={s.contactText}>
+              <h3 data-edit="contact.contactHead2" data-edit-max="40" className={s.contactHead}>What to send</h3>
+              <p data-edit="contact.contactText" data-edit-max="240" data-edit-multiline className={s.contactText}>
                 A paragraph about the problem, a budget range and a date. We
                 answer every brief within three working days, including the
                 ones we turn down.
               </p>
             </div>
             <div>
-              <h3 className={s.contactHead}>Studio</h3>
-              <p className={s.contactText}>
+              <h3 data-edit="contact.contactHead3" data-edit-max="40" className={s.contactHead}>Studio</h3>
+              <p data-edit="contact.body" data-edit-max="240" data-edit-multiline className={s.contactText}>
                 Riverside Works, Unit 9
                 <br />
                 40 Canal Street, Millbrook
@@ -465,11 +477,11 @@ export default function ParallelStudioPage() {
           </div>
         </section>
         <div className={s.fine}>
-          <p>Parallel Studio Ltd.</p>
-          <p>A fictional studio. Clients, projects, people and figures are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>Parallel Studio Ltd.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>A fictional studio. Clients, projects, people and figures are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

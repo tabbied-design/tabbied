@@ -233,7 +233,19 @@ const QUOTES: Quote[] = [
 
 export default function MarenHoltPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#ffffff',
+        '--ink': '#111111',
+        '--signal': '#3b5bdb',
+        '--gray': '#8c8c8c',
+        '--pale': '#ededed',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,signal,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -249,16 +261,16 @@ export default function MarenHoltPage() {
             view while the record scrolls beside it. */}
         <header className={s.profile}>
           <div className={s.profileTop}>
-            <a className={s.name} href="#top">Maren Holt</a>
+            <a data-edit="profile.name" data-edit-max="28" className={s.name} href="#top">Maren Holt</a>
             <TemplateMenu className={s.siteMenu}>
-              {NAV.map(([label, href]) => (
-                <a key={href} href={href}>{label}</a>
+              {NAV.map(([label, href], i) => (
+                <a data-edit={`profile.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
               ))}
             </TemplateMenu>
           </div>
-          <p className={s.role}>Independent brand strategist</p>
+          <p data-edit="profile.role" data-edit-max="240" data-edit-multiline className={s.role}>Independent brand strategist</p>
 
-          <div className={s.plate} aria-hidden="true">
+          <div data-edit-pattern="profile.field" data-edit-roles="transparent,1,2,3" className={s.plate} aria-hidden="true">
             <TabbiedPattern
               pattern={dashfield}
               palette={PLATE}
@@ -270,7 +282,7 @@ export default function MarenHoltPage() {
             />
           </div>
 
-          <p className={s.bio}>
+          <p data-edit="profile.bio" data-edit-max="240" data-edit-multiline className={s.bio}>
             Seventeen years in agencies and on my own. I work with one client
             at a time on positioning, brand platforms and names, and I do the
             interviews, the thinking and the writing myself.
@@ -278,25 +290,25 @@ export default function MarenHoltPage() {
 
           <div className={s.status}>
             <span className={s.statusDot} aria-hidden="true" />
-            <p className={s.statusText}>Booking from 3 November</p>
-            <p className={s.statusNote}>Two sprint slots left before the new year</p>
+            <p data-edit="profile.statusText" data-edit-max="240" data-edit-multiline className={s.statusText}>Booking from 3 November</p>
+            <p data-edit="profile.statusNote" data-edit-max="240" data-edit-multiline className={s.statusNote}>Two sprint slots left before the new year</p>
           </div>
 
           <nav className={s.nav} aria-label="Sections">
-            {NAV.map(([label, href]) => (
-              <a key={href} href={href}>{label}</a>
+            {NAV.map(([label, href], i) => (
+              <a data-edit={`profile.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
             ))}
           </nav>
 
           <ul className={s.links}>
             <li>
-              <a href="mailto:hello@marenholt.example">hello@marenholt.example</a>
+              <a data-edit="profile.link3" data-edit-max="28" href="mailto:hello@marenholt.example">hello@marenholt.example</a>
             </li>
             <li>
-              <a href="tel:+15555550142">+1 555 555 0142</a>
+              <a data-edit="profile.link4" data-edit-max="28" href="tel:+15555550142">+1 555 555 0142</a>
             </li>
             <li>
-              <a href="#writing">Plain Positioning, the newsletter</a>
+              <a data-edit="profile.writing" data-edit-max="28" href="#writing">Plain Positioning, the newsletter</a>
             </li>
           </ul>
         </header>
@@ -304,13 +316,13 @@ export default function MarenHoltPage() {
         <main id="top" className={s.main}>
           {/* ---------------------------------------------------------- INTRO */}
           <section className={s.intro} aria-labelledby="intro-h">
-            <p className={s.kicker}>Brand strategy for companies of 10 to 200 people</p>
-            <h1 id="intro-h" className={s.title}>
+            <p data-edit="intro.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Brand strategy for companies of 10 to 200 people</p>
+            <h1 data-edit="intro.title" data-edit-format="emphasis" data-edit-max="80" id="intro-h" className={s.title}>
               I help growing companies decide what they stand for,
               <br />
               <em>and then say it plainly.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="intro.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Most of my clients have outgrown the story they started with.
               The product changed, the team tripled, and nobody can explain
               the company in a sentence any more. I find that sentence with
@@ -318,10 +330,10 @@ export default function MarenHoltPage() {
               that follows from it.
             </p>
             <dl className={s.facts}>
-              {FACTS.map(([v, k]) => (
+              {FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`intro.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`intro.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
@@ -330,24 +342,24 @@ export default function MarenHoltPage() {
           {/* ----------------------------------------------------------- WORK */}
           <section id="work" className={s.sec} aria-labelledby="work-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>01</span>
-              <h2 id="work-h">Selected work</h2>
-              <p className={s.secNote}>
+              <span data-edit="work.secNo" data-edit-max="60" className={s.secNo}>01</span>
+              <h2 data-edit="work.title" data-edit-max="60" id="work-h">Selected work</h2>
+              <p data-edit="work.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Eight of the last sixty. Case studies with the numbers behind
                 them are sent on request; three clients are under NDA and are
                 not listed.
               </p>
             </div>
             <ol className={s.work}>
-              {WORK.map((w) => (
+              {WORK.map((w, i) => (
                 <li key={w.client} className={s.workRow}>
-                  <span className={s.workYear}>{w.year}</span>
+                  <span data-edit={`work.workYear.${i}`} data-edit-max="60" className={s.workYear}>{w.year}</span>
                   <div className={s.workMain}>
-                    <h3>{w.client}</h3>
-                    <p className={s.workProject}>{w.project}</p>
+                    <h3 data-edit={`work.title2.${i}`} data-edit-max="40">{w.client}</h3>
+                    <p data-edit={`work.workProject.${i}`} data-edit-max="240" data-edit-multiline className={s.workProject}>{w.project}</p>
                   </div>
-                  <p className={s.workOutcome}>{w.outcome}</p>
-                  <span className={s.workKind}>{w.kind}</span>
+                  <p data-edit={`work.workOutcome.${i}`} data-edit-max="240" data-edit-multiline className={s.workOutcome}>{w.outcome}</p>
+                  <span data-edit={`work.workKind.${i}`} data-edit-max="60" className={s.workKind}>{w.kind}</span>
                 </li>
               ))}
             </ol>
@@ -356,33 +368,33 @@ export default function MarenHoltPage() {
           {/* ------------------------------------------------------- SERVICES */}
           <section id="services" className={s.sec} aria-labelledby="services-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>02</span>
-              <h2 id="services-h">Services and rates</h2>
-              <p className={s.secNote}>
+              <span data-edit="services.secNo" data-edit-max="60" className={s.secNo}>02</span>
+              <h2 data-edit="services.title" data-edit-max="60" id="services-h">Services and rates</h2>
+              <p data-edit="services.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Fixed prices where the work has a known shape, a day rate
                 where it does not. Half is invoiced at the start and half on
                 delivery.
               </p>
             </div>
             <div className={s.services}>
-              {SERVICES.map((sv) => (
+              {SERVICES.map((sv, i) => (
                 <article key={sv.name} className={s.service}>
-                  <h3>{sv.name}</h3>
-                  <span className={s.serviceTime}>{sv.time}</span>
-                  <strong className={s.servicePrice}>{sv.price}</strong>
-                  <p>{sv.body}</p>
+                  <h3 data-edit={`service.title.${i}`} data-edit-max="40">{sv.name}</h3>
+                  <span data-edit={`service.serviceTime.${i}`} data-edit-max="60" className={s.serviceTime}>{sv.time}</span>
+                  <strong data-edit={`service.servicePrice.${i}`} className={s.servicePrice}>{sv.price}</strong>
+                  <p data-edit={`service.body.${i}`} data-edit-max="240" data-edit-multiline>{sv.body}</p>
                 </article>
               ))}
             </div>
             <dl className={s.rates}>
-              {RATES.map(([k, v]) => (
+              {RATES.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`services.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`services.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
-            <p className={s.fine}>
+            <p data-edit="services.fine" data-edit-max="240" data-edit-multiline className={s.fine}>
               Prices exclude sales tax. Travel is billed at cost and only when
               you ask me to be in the room; most of the work is done on calls
               and in writing.
@@ -392,22 +404,22 @@ export default function MarenHoltPage() {
           {/* --------------------------------------------------------- CAREER */}
           <section id="career" className={s.sec} aria-labelledby="career-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>03</span>
-              <h2 id="career-h">Career</h2>
-              <p className={s.secNote}>
+              <span data-edit="career.secNo" data-edit-max="60" className={s.secNo}>03</span>
+              <h2 data-edit="career.title" data-edit-max="60" id="career-h">Career</h2>
+              <p data-edit="career.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Copywriter first, strategist since 2011, independent since
                 2019. The short version of a longer CV, which I am happy to
                 send.
               </p>
             </div>
             <ol className={s.timeline}>
-              {CAREER.map((r) => (
+              {CAREER.map((r, i) => (
                 <li key={r.when}>
-                  <span className={s.tlWhen}>{r.when}</span>
+                  <span data-edit={`career.tlWhen.${i}`} data-edit-max="60" className={s.tlWhen}>{r.when}</span>
                   <div className={s.tlBody}>
-                    <h3>{r.title}</h3>
-                    <p className={s.tlWhere}>{r.where}</p>
-                    <p className={s.tlNote}>{r.note}</p>
+                    <h3 data-edit={`career.title2.${i}`} data-edit-max="40">{r.title}</h3>
+                    <p data-edit={`career.tlWhere.${i}`} data-edit-max="240" data-edit-multiline className={s.tlWhere}>{r.where}</p>
+                    <p data-edit={`career.tlNote.${i}`} data-edit-max="240" data-edit-multiline className={s.tlNote}>{r.note}</p>
                   </div>
                 </li>
               ))}
@@ -417,9 +429,9 @@ export default function MarenHoltPage() {
           {/* -------------------------------------------------------- WRITING */}
           <section id="writing" className={s.sec} aria-labelledby="writing-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>04</span>
-              <h2 id="writing-h">Writing and talks</h2>
-              <p className={s.secNote}>
+              <span data-edit="writing.secNo" data-edit-max="60" className={s.secNo}>04</span>
+              <h2 data-edit="writing.title" data-edit-max="60" id="writing-h">Writing and talks</h2>
+              <p data-edit="writing.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Plain Positioning is a monthly letter about brand decisions
                 for people who have to make them. 3,400 readers, no tracking,
                 one email a month.
@@ -427,52 +439,52 @@ export default function MarenHoltPage() {
             </div>
             <div className={s.writing}>
               <div>
-                <h3 className={s.listHead}>Writing</h3>
+                <h3 data-edit="writing.listHead" data-edit-max="40" className={s.listHead}>Writing</h3>
                 <ul className={s.pieces}>
-                  {WRITING.map((p) => (
+                  {WRITING.map((p, i) => (
                     <li key={p.title}>
-                      <p className={s.pieceTitle}>{p.title}</p>
-                      <span className={s.pieceMeta}>{p.kind}</span>
-                      <time className={s.pieceWhen}>{p.when}</time>
+                      <p data-edit={`writing.pieceTitle.${i}`} data-edit-max="240" data-edit-multiline className={s.pieceTitle}>{p.title}</p>
+                      <span data-edit={`writing.pieceMeta.${i}`} data-edit-max="60" className={s.pieceMeta}>{p.kind}</span>
+                      <time data-edit={`writing.pieceWhen.${i}`} className={s.pieceWhen}>{p.when}</time>
                     </li>
                   ))}
                 </ul>
               </div>
               <div>
-                <h3 className={s.listHead}>Talks</h3>
+                <h3 data-edit="writing.listHead2" data-edit-max="40" className={s.listHead}>Talks</h3>
                 <ul className={s.pieces}>
-                  {TALKS.map((p) => (
+                  {TALKS.map((p, i) => (
                     <li key={p.title}>
-                      <p className={s.pieceTitle}>{p.title}</p>
-                      <span className={s.pieceMeta}>{p.kind}</span>
-                      <time className={s.pieceWhen}>{p.when}</time>
+                      <p data-edit={`writing.pieceTitle2.${i}`} data-edit-max="240" data-edit-multiline className={s.pieceTitle}>{p.title}</p>
+                      <span data-edit={`writing.pieceMeta2.${i}`} data-edit-max="60" className={s.pieceMeta}>{p.kind}</span>
+                      <time data-edit={`writing.pieceWhen2.${i}`} className={s.pieceWhen}>{p.when}</time>
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
             <form className={s.signup} action="#">
-              <label className={s.signupLabel} htmlFor="mh-letter">Get the letter</label>
+              <label data-edit="writing.signupLabel" className={s.signupLabel} htmlFor="mh-letter">Get the letter</label>
               <input id="mh-letter" name="email" type="email" placeholder="you@company.example" />
-              <button type="submit" className={s.buttonGhost}>Subscribe</button>
+              <button data-edit="writing.buttonGhost" data-edit-max="24" type="submit" className={s.buttonGhost}>Subscribe</button>
             </form>
           </section>
 
           {/* ---------------------------------------------------------- WORDS */}
           <section id="words" className={s.sec} aria-labelledby="words-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>05</span>
-              <h2 id="words-h">Kind words</h2>
+              <span data-edit="words.secNo" data-edit-max="60" className={s.secNo}>05</span>
+              <h2 data-edit="words.title" data-edit-max="60" id="words-h">Kind words</h2>
             </div>
             <div className={s.quotes}>
-              {QUOTES.map((q) => (
+              {QUOTES.map((q, i) => (
                 <figure key={q.name} className={s.quote}>
                   <blockquote>
-                    <p>{q.text}</p>
+                    <p data-edit={`words.body.${i}`} data-edit-max="240" data-edit-multiline>{q.text}</p>
                   </blockquote>
                   <figcaption>
-                    <cite>{q.name}</cite>
-                    <span>{q.role}</span>
+                    <cite data-edit={`words.attribution.${i}`} data-edit-max="48">{q.name}</cite>
+                    <span data-edit={`words.text.${i}`} data-edit-max="60">{q.role}</span>
                   </figcaption>
                 </figure>
               ))}
@@ -481,7 +493,7 @@ export default function MarenHoltPage() {
 
           {/* The one other field: dots that grow down the band, ink with the
               odd signal blue, a quiet full stop before the contact form. */}
-          <div className={s.band} aria-hidden="true">
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,1,2" className={s.band} aria-hidden="true">
             <TabbiedPattern
               pattern={halftone}
               palette={DOTS}
@@ -496,9 +508,9 @@ export default function MarenHoltPage() {
           {/* -------------------------------------------------------- CONTACT */}
           <section id="contact" className={s.sec} aria-labelledby="contact-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>06</span>
-              <h2 id="contact-h">Tell me what you are working on</h2>
-              <p className={s.secNote}>
+              <span data-edit="contact.secNo" data-edit-max="60" className={s.secNo}>06</span>
+              <h2 data-edit="contact.title" data-edit-max="60" id="contact-h">Tell me what you are working on</h2>
+              <p data-edit="contact.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 I reply within two working days. If it is not a fit I will
                 say so, and usually suggest someone who is.
               </p>
@@ -506,19 +518,19 @@ export default function MarenHoltPage() {
             <div className={s.contact}>
               <form className={s.form} action="#">
                 <div className={s.field}>
-                  <label htmlFor="mh-name">Your name</label>
+                  <label data-edit="contact.label" htmlFor="mh-name">Your name</label>
                   <input id="mh-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="mh-email">Email</label>
+                  <label data-edit="contact.label2" htmlFor="mh-email">Email</label>
                   <input id="mh-email" name="email" type="email" autoComplete="email" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="mh-company">Company and size</label>
+                  <label data-edit="contact.label3" htmlFor="mh-company">Company and size</label>
                   <input id="mh-company" name="company" type="text" placeholder="Tallowmere, 40 people" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="mh-need">What you need</label>
+                  <label data-edit="contact.label4" htmlFor="mh-need">What you need</label>
                   <select id="mh-need" name="need" defaultValue="">
                     <option value="" disabled>
                       Choose one
@@ -532,29 +544,29 @@ export default function MarenHoltPage() {
                   </select>
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="mh-note">What is going on</label>
+                  <label data-edit="contact.label5" htmlFor="mh-note">What is going on</label>
                   <textarea id="mh-note" name="note" rows={5} placeholder="A few sentences is plenty. What changed, and what you would like to be true in a year." />
                 </div>
-                <button type="submit" className={s.button}>Send</button>
+                <button data-edit="contact.button" data-edit-max="24" type="submit" className={s.button}>Send</button>
               </form>
               <dl className={s.direct}>
                 <div>
-                  <dt>Email</dt>
+                  <dt data-edit="contact.term" data-edit-max="28">Email</dt>
                   <dd>
-                    <a href="mailto:hello@marenholt.example">hello@marenholt.example</a>
+                    <a data-edit="contact.link" data-edit-max="28" href="mailto:hello@marenholt.example">hello@marenholt.example</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Phone</dt>
-                  <dd>+1 555 555 0142</dd>
+                  <dt data-edit="contact.term2" data-edit-max="28">Phone</dt>
+                  <dd data-edit="contact.body" data-edit-max="200" data-edit-multiline>+1 555 555 0142</dd>
                 </div>
                 <div>
-                  <dt>Hours</dt>
-                  <dd>Monday to Thursday, 9-5 Eastern</dd>
+                  <dt data-edit="contact.term3" data-edit-max="28">Hours</dt>
+                  <dd data-edit="contact.body2" data-edit-max="200" data-edit-multiline>Monday to Thursday, 9-5 Eastern</dd>
                 </div>
                 <div>
-                  <dt>Studio</dt>
-                  <dd>
+                  <dt data-edit="contact.term4" data-edit-max="28">Studio</dt>
+                  <dd data-edit="contact.body3" data-edit-max="200" data-edit-multiline>
                     18 Ferry Lane, Studio 4
                     <br />
                     Port Aldine
@@ -567,11 +579,11 @@ export default function MarenHoltPage() {
       </div>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Maren Holt Strategy</p>
-        <p className={s.footFine}>A fictional consultancy. Clients, figures and people are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Maren Holt Strategy</p>
+        <p data-edit="footer.footFine" data-edit-max="240" data-edit-multiline className={s.footFine}>A fictional consultancy. Clients, figures and people are invented.</p>
         <p className={s.footFine}>
-          <span>Patterns by </span>
-          <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+          <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+          <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
         </p>
       </footer>
     </div>

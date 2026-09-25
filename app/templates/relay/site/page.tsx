@@ -262,7 +262,20 @@ const FOOT: FootColumn[] = [
 
 export default function RelayPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fcfcfe',
+        '--ink': '#161a33',
+        '--indigo': '#4f46e5',
+        '--peach': '#ff9b71',
+        '--gray': '#7c8094',
+        '--pale': '#eef0fa',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,indigo,peach,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -274,22 +287,22 @@ export default function RelayPage() {
       <header className={s.bar}>
         <a className={s.brand} href="#top">
           <span className={s.brandMark} aria-hidden="true" />
-          <span className={s.brandWord}>Relay</span>
+          <span data-edit="bar.brandWord" data-edit-max="60" className={s.brandWord}>Relay</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <div className={s.barActions}>
-          <a className={s.login} href="#top">Log in</a>
-          <a className={s.btnSmall} href="#start">Start free</a>
+          <a data-edit="bar.login" data-edit-max="28" className={s.login} href="#top">Log in</a>
+          <a data-edit="bar.btnSmall" data-edit-max="28" className={s.btnSmall} href="#start">Start free</a>
         </div>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
-          <a href="#top">Log in</a>
+          <a data-edit="bar.top" data-edit-max="28" href="#top">Log in</a>
         </TemplateMenu>
       </header>
 
@@ -300,28 +313,28 @@ export default function RelayPage() {
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroCopy}>
             <p className={s.badge}>
-              <span className={s.badgeTag}>New</span>
-              <span>Deposits for no-shows, on every plan</span>
+              <span data-edit="hero.badgeTag" data-edit-max="60" className={s.badgeTag}>New</span>
+              <span data-edit="hero.text" data-edit-max="60">Deposits for no-shows, on every plan</span>
             </p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Let clients book themselves.
               <br />
               <em>Keep your evenings.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Relay gives your business a booking page, reminders that cut
               no-shows and one calendar for the whole team. Set it up in an
               afternoon; your clients book in thirty seconds.
             </p>
             <div className={s.actions}>
-              <a className={s.btn} href="#start">Start free for 14 days</a>
-              <a className={s.btnGhost} href="#how">See how it works</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#start">Start free for 14 days</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#how">See how it works</a>
             </div>
-            <p className={s.heroNote}>No card needed. From $12 a month after that.</p>
+            <p data-edit="hero.heroNote" data-edit-max="240" data-edit-multiline className={s.heroNote}>No card needed. From $12 a month after that.</p>
           </div>
 
           <div className={s.stage}>
-            <div className={s.stageField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2" className={s.stageField} aria-hidden="true">
               <TabbiedPattern
                 pattern={spinningrings}
                 palette={RINGS}
@@ -333,25 +346,25 @@ export default function RelayPage() {
 
             <div className={s.app} role="img" aria-label="The Relay calendar for Tuesday, with three people's bookings, open slots and a new booking">
               <div className={s.appTop}>
-                <span className={s.appDate}>Tuesday 14 October</span>
-                <span className={s.appToggle}>Day</span>
-                <span className={s.appToggleOn}>Team</span>
+                <span data-edit="hero.appDate" data-edit-max="60" className={s.appDate}>Tuesday 14 October</span>
+                <span data-edit="hero.appToggle" data-edit-max="60" className={s.appToggle}>Day</span>
+                <span data-edit="hero.appToggleOn" data-edit-max="60" className={s.appToggleOn}>Team</span>
               </div>
               <div className={s.cal}>
                 <span className={s.calCorner} />
                 {STAFF.map((name, i) => (
-                  <span key={name} className={s.calHead} style={{ gridColumn: i + 2 }}>{name}</span>
+                  <span data-edit={`hero.calHead.${i}`} data-edit-max="60" key={name} className={s.calHead} style={{ gridColumn: i + 2 }}>{name}</span>
                 ))}
                 {HOURS.map((h, i) => (
-                  <span key={h} className={s.calHour} style={{ gridRow: `${i * 2 + 2} / span 2` }}>{h}</span>
+                  <span data-edit={`hero.calHour.${i}`} data-edit-max="60" key={h} className={s.calHour} style={{ gridRow: `${i * 2 + 2} / span 2` }}>{h}</span>
                 ))}
-                {SLOTS.map((sl) => (
+                {SLOTS.map((sl, i) => (
                   <span
                     key={`${sl.col}-${sl.at}`}
                     className={s[sl.kind]}
                     style={{ gridColumn: sl.col + 1, gridRow: `${sl.at + 1} / span ${sl.len}` }}>
-                    <span className={s.slotWhat}>{sl.what}</span>
-                    <span className={s.slotWho}>{sl.who}</span>
+                    <span data-edit={`hero.slotWhat.${i}`} data-edit-max="60" className={s.slotWhat}>{sl.what}</span>
+                    <span data-edit={`hero.slotWho.${i}`} data-edit-max="60" className={s.slotWho}>{sl.who}</span>
                   </span>
                 ))}
               </div>
@@ -359,23 +372,23 @@ export default function RelayPage() {
 
             <div className={s.toast} aria-hidden="true">
               <span className={s.toastDot} />
-              <span className={s.toastHead}>New booking, just now</span>
-              <span className={s.toastBody}>Maya Reyes, Cut with Ben, 11:00. $10 deposit paid.</span>
+              <span data-edit="hero.toastHead" data-edit-max="60" className={s.toastHead}>New booking, just now</span>
+              <span data-edit="hero.toastBody" data-edit-max="60" className={s.toastBody}>Maya Reyes, Cut with Ben, 11:00. $10 deposit paid.</span>
             </div>
 
             <div className={s.chip} aria-hidden="true">
-              <span className={s.chipNum}>2</span>
-              <span className={s.chipText}>no-shows this month, down from 9</span>
+              <span data-edit="hero.chipNum" data-edit-max="60" className={s.chipNum}>2</span>
+              <span data-edit="hero.chipText" data-edit-max="60" className={s.chipText}>no-shows this month, down from 9</span>
             </div>
           </div>
         </section>
 
         {/* ----------------------------------------------------------- TYPES */}
         <section className={s.types} aria-labelledby="types-h">
-          <h2 id="types-h" className={s.typesHead}>Built for businesses that run on appointments</h2>
+          <h2 data-edit="types.typesHead" data-edit-max="60" id="types-h" className={s.typesHead}>Built for businesses that run on appointments</h2>
           <ul className={s.typeList}>
-            {TYPES.map((t) => (
-              <li key={t}>{t}</li>
+            {TYPES.map((t, i) => (
+              <li data-edit={`types.item.${i}`} data-edit-max="80" key={t}>{t}</li>
             ))}
           </ul>
         </section>
@@ -383,23 +396,23 @@ export default function RelayPage() {
         {/* -------------------------------------------------------- FEATURES */}
         <section id="features" className={s.sec} aria-labelledby="features-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Product</p>
-            <h2 id="features-h">Everything between &quot;can I book?&quot; and &quot;see you Tuesday&quot;</h2>
+            <p data-edit="features.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Product</p>
+            <h2 data-edit="features.title" data-edit-max="60" id="features-h">Everything between &quot;can I book?&quot; and &quot;see you Tuesday&quot;</h2>
           </div>
           <ul className={s.featureGrid}>
             {FEATURES.map((f, i) => (
               <li key={f.title} className={s.feature}>
                 <span className={s.featureNo}>{String(i + 1).padStart(2, '0')}</span>
-                <h3>{f.title}</h3>
-                <p>{f.body}</p>
+                <h3 data-edit={`features.title2.${i}`} data-edit-max="40">{f.title}</h3>
+                <p data-edit={`features.body.${i}`} data-edit-max="240" data-edit-multiline>{f.body}</p>
               </li>
             ))}
           </ul>
           <dl className={s.stats}>
-            {STATS.map(([v, k]) => (
+            {STATS.map(([v, k], i) => (
               <div key={k}>
-                <dt>{v}</dt>
-                <dd>{k}</dd>
+                <dt data-edit={`features.term.${i}`} data-edit-max="28">{v}</dt>
+                <dd data-edit={`features.body2.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
               </div>
             ))}
           </dl>
@@ -409,15 +422,15 @@ export default function RelayPage() {
         <section id="how" className={s.how} aria-labelledby="how-h">
           <div className={s.howInner}>
             <div className={s.secHead}>
-              <p className={s.kicker}>How it works</p>
-              <h2 id="how-h">Three steps, and the third one repeats itself</h2>
+              <p data-edit="how.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>How it works</p>
+              <h2 data-edit="how.title" data-edit-max="60" id="how-h">Three steps, and the third one repeats itself</h2>
             </div>
             <ol className={s.steps}>
-              {STEPS.map(([n, title, body]) => (
+              {STEPS.map(([n, title, body], i) => (
                 <li key={n}>
-                  <span className={s.stepNo}>{n}</span>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
+                  <span data-edit={`how.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{n}</span>
+                  <h3 data-edit={`how.title2.${i}`} data-edit-max="40">{title}</h3>
+                  <p data-edit={`how.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                 </li>
               ))}
             </ol>
@@ -427,35 +440,35 @@ export default function RelayPage() {
         {/* --------------------------------------------------------- PRICING */}
         <section id="pricing" className={s.sec} aria-labelledby="pricing-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Pricing</p>
-            <h2 id="pricing-h">Three plans, every one with 14 days free</h2>
-            <p className={s.secLede}>
+            <p data-edit="pricing.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Pricing</p>
+            <h2 data-edit="pricing.title" data-edit-max="60" id="pricing-h">Three plans, every one with 14 days free</h2>
+            <p data-edit="pricing.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
               Prices are per business, not per person. Pay yearly and get two
               months free.
             </p>
           </div>
           <div className={s.plans}>
-            {PLANS.map((p) => (
+            {PLANS.map((p, i) => (
               <article key={p.name} className={p.featured ? s.planFeatured : s.plan}>
                 <div className={s.planTop}>
-                  <h3>{p.name}</h3>
-                  <span className={s.planTag}>{p.tag}</span>
+                  <h3 data-edit={`planFeatured.title.${i}`} data-edit-max="40">{p.name}</h3>
+                  <span data-edit={`planFeatured.planTag.${i}`} data-edit-max="60" className={s.planTag}>{p.tag}</span>
                 </div>
                 <p className={s.planPrice}>
-                  <span className={s.planAmount}>{p.price}</span>
-                  <span className={s.planPer}>{p.per}</span>
+                  <span data-edit={`planFeatured.planAmount.${i}`} data-edit-max="60" className={s.planAmount}>{p.price}</span>
+                  <span data-edit={`planFeatured.planPer.${i}`} data-edit-max="60" className={s.planPer}>{p.per}</span>
                 </p>
-                <p className={s.planBlurb}>{p.blurb}</p>
+                <p data-edit={`planFeatured.planBlurb.${i}`} data-edit-max="240" data-edit-multiline className={s.planBlurb}>{p.blurb}</p>
                 <ul className={s.planList}>
-                  {p.items.map((it) => (
-                    <li key={it}>{it}</li>
+                  {p.items.map((it, i2) => (
+                    <li data-edit={`planFeatured.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                   ))}
                 </ul>
-                <a className={p.featured ? s.btn : s.btnGhost} href="#start">Start free</a>
+                <a data-edit={`planFeatured.btn.${i}`} data-edit-max="28" className={p.featured ? s.btn : s.btnGhost} href="#start">Start free</a>
               </article>
             ))}
           </div>
-          <p className={s.planNote}>
+          <p data-edit="pricing.planNote" data-edit-max="240" data-edit-multiline className={s.planNote}>
             Deposits are paid out by your payment provider at its usual rate;
             Relay adds nothing on top. Prices exclude sales tax.
           </p>
@@ -464,20 +477,20 @@ export default function RelayPage() {
         {/* ---------------------------------------------------- INTEGRATIONS */}
         <section id="integrations" className={s.sec} aria-labelledby="integrations-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Integrations</p>
-            <h2 id="integrations-h">Works with the tools you already use</h2>
-            <p className={s.secLede}>
+            <p data-edit="integrations.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Integrations</p>
+            <h2 data-edit="integrations.title" data-edit-max="60" id="integrations-h">Works with the tools you already use</h2>
+            <p data-edit="integrations.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>
               Connections are set up from the settings page in a minute each,
               and every plan includes all of them.
             </p>
           </div>
           <div className={s.intGrid}>
-            {INTEGRATIONS.map((g) => (
+            {INTEGRATIONS.map((g, i) => (
               <div key={g.name} className={s.intCol}>
-                <h3>{g.name}</h3>
+                <h3 data-edit={`integrations.title2.${i}`} data-edit-max="40">{g.name}</h3>
                 <ul>
-                  {g.items.map((it) => (
-                    <li key={it}>{it}</li>
+                  {g.items.map((it, i2) => (
+                    <li data-edit={`integrations.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                   ))}
                 </ul>
               </div>
@@ -488,19 +501,19 @@ export default function RelayPage() {
         {/* ------------------------------------------------------- CUSTOMERS */}
         <section id="customers" className={s.sec} aria-labelledby="customers-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Customers</p>
-            <h2 id="customers-h">Small places, fewer empty chairs</h2>
+            <p data-edit="customers.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Customers</p>
+            <h2 data-edit="customers.title" data-edit-max="60" id="customers-h">Small places, fewer empty chairs</h2>
           </div>
           <div className={s.stories}>
-            {STORIES.map((st) => (
+            {STORIES.map((st, i) => (
               <figure key={st.name} className={s.story}>
-                <p className={s.storyResult}>{st.result}</p>
+                <p data-edit={`customers.storyResult.${i}`} data-edit-max="240" data-edit-multiline className={s.storyResult}>{st.result}</p>
                 <blockquote>
-                  <p>{st.quote}</p>
+                  <p data-edit={`customers.body.${i}`} data-edit-max="240" data-edit-multiline>{st.quote}</p>
                 </blockquote>
                 <figcaption>
-                  <cite>{st.name}</cite>
-                  <span>{st.biz}</span>
+                  <cite data-edit={`customers.attribution.${i}`} data-edit-max="48">{st.name}</cite>
+                  <span data-edit={`customers.text.${i}`} data-edit-max="60">{st.biz}</span>
                 </figcaption>
               </figure>
             ))}
@@ -511,15 +524,15 @@ export default function RelayPage() {
         <section id="faq" className={s.sec} aria-labelledby="faq-h">
           <div className={s.faqWrap}>
             <div className={s.secHead}>
-              <p className={s.kicker}>Questions</p>
-              <h2 id="faq-h">Asked before signing up</h2>
-              <p className={s.secLede}>Anything else goes to help@relay.example, answered by a person within a working day.</p>
+              <p data-edit="faq.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Questions</p>
+              <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked before signing up</h2>
+              <p data-edit="faq.secLede" data-edit-max="240" data-edit-multiline className={s.secLede}>Anything else goes to help@relay.example, answered by a person within a working day.</p>
             </div>
             <div className={s.faqList}>
-              {FAQ.map((f) => (
+              {FAQ.map((f, i) => (
                 <details key={f.q} className={s.faqItem}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -529,7 +542,7 @@ export default function RelayPage() {
         {/* ----------------------------------------------------------- START */}
         <section id="start" className={s.start} aria-labelledby="start-h">
           <div className={s.startPanel}>
-            <div className={s.startField} aria-hidden="true">
+            <div data-edit-pattern="start.field" data-edit-roles="transparent,3,5,0" className={s.startField} aria-hidden="true">
               <TabbiedPattern
                 pattern={quoit}
                 palette={PILLS}
@@ -542,12 +555,12 @@ export default function RelayPage() {
               />
             </div>
             <div className={s.startCopy}>
-              <h2 id="start-h">Your booking page could be live by lunch</h2>
-              <p>Fourteen days free on any plan. No card, no call with sales.</p>
+              <h2 data-edit="start.title" data-edit-max="60" id="start-h">Your booking page could be live by lunch</h2>
+              <p data-edit="start.body" data-edit-max="240" data-edit-multiline>Fourteen days free on any plan. No card, no call with sales.</p>
               <form className={s.startForm} action="#">
-                <label className={s.srOnly} htmlFor="relay-email">Work email</label>
+                <label data-edit="start.srOnly" className={s.srOnly} htmlFor="relay-email">Work email</label>
                 <input id="relay-email" name="email" type="email" placeholder="you@yourbusiness.example" autoComplete="email" />
-                <button type="submit" className={s.btnLight}>Start free</button>
+                <button data-edit="start.btnLight" data-edit-max="24" type="submit" className={s.btnLight}>Start free</button>
               </form>
             </div>
           </div>
@@ -557,9 +570,9 @@ export default function RelayPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div className={s.footBrand}>
-            <p className={s.footName}>Relay</p>
-            <p className={s.footTag}>Online booking for businesses that run on appointments.</p>
-            <p className={s.footAddr}>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Relay</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Online booking for businesses that run on appointments.</p>
+            <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
               Relay Software Inc.
               <br />
               210 Foundry Row, Suite 5
@@ -567,13 +580,13 @@ export default function RelayPage() {
               help@relay.example
             </p>
           </div>
-          {FOOT.map((col) => (
+          {FOOT.map((col, i) => (
             <div key={col.head}>
-              <h2 className={s.footHead}>{col.head}</h2>
+              <h2 data-edit={`footer.footHead.${i}`} data-edit-max="60" className={s.footHead}>{col.head}</h2>
               <ul className={s.footLinks}>
-                {col.links.map(([label, href]) => (
+                {col.links.map(([label, href], i2) => (
                   <li key={label}>
-                    <a href={href}>{label}</a>
+                    <a data-edit={`footer.link.${i}.${i2}`} data-edit-max="28" href={href}>{label}</a>
                   </li>
                 ))}
               </ul>
@@ -581,10 +594,10 @@ export default function RelayPage() {
           ))}
         </div>
         <div className={s.footFine}>
-          <p>A fictional software company. Prices, customers and integrations are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional software company. Prices, customers and integrations are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

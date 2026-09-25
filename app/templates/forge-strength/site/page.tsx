@@ -163,7 +163,19 @@ const SLOTS = [
 
 export default function ForgeStrengthPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--chalk': '#f0f0ed',
+        '--iron': '#121212',
+        '--ember': '#ff5a1f',
+        '--steel': '#8c8c88',
+        '--dust': '#dadad5',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="chalk,iron,ember,steel,dust"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -173,16 +185,16 @@ export default function ForgeStrengthPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Forge</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Forge</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#contact">Free session</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#contact">Free session</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -194,43 +206,43 @@ export default function ForgeStrengthPage() {
             quarter bursts, the loudest thing on the page. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={`${s.tile} ${s.promise}`}>
-            <p className={s.kicker}>Strength and conditioning, 210 Foundry Lane</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Strength and conditioning, 210 Foundry Lane</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               Lift heavy things.
               <br />
               <em>Stay strong for life.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Coached barbell classes, conditioning and open gym in a
               12,000 sq ft warehouse. Programs that are written down, coaches
               who know your numbers, and no mirrors on the platforms.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btnEmber} href="#contact">Book a free session</a>
-              <a className={s.btnLine} href="#programs">See the programs</a>
+              <a data-edit="hero.btnEmber" data-edit-max="28" className={s.btnEmber} href="#contact">Book a free session</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#programs">See the programs</a>
             </div>
           </div>
 
           <div className={`${s.tile} ${s.hours}`}>
-            <p className={s.tileLabel}>Open</p>
+            <p data-edit="hero.tileLabel" data-edit-max="240" data-edit-multiline className={s.tileLabel}>Open</p>
             <dl className={s.hoursList}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
-            <p className={s.tileFoot}>Coach on the floor 6 am-9 pm</p>
+            <p data-edit="hero.tileFoot" data-edit-max="240" data-edit-multiline className={s.tileFoot}>Coach on the floor 6 am-9 pm</p>
           </div>
 
           <div className={`${s.tile} ${s.price}`}>
-            <p className={s.tileLabel}>Memberships from</p>
-            <p className={s.priceBig}>$59</p>
-            <p className={s.tileFoot}>A month. No joining fee, no contract on Open Gym.</p>
+            <p data-edit="hero.tileLabel2" data-edit-max="240" data-edit-multiline className={s.tileLabel}>Memberships from</p>
+            <p data-edit="hero.priceBig" data-edit-max="240" data-edit-multiline className={s.priceBig}>$59</p>
+            <p data-edit="hero.tileFoot2" data-edit-max="240" data-edit-multiline className={s.tileFoot}>A month. No joining fee, no contract on Open Gym.</p>
           </div>
 
-          <div className={`${s.tile} ${s.burst}`} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,1,0,4" className={`${s.tile} ${s.burst}`} aria-hidden="true">
             <TabbiedPattern
               pattern={quarterburst}
               palette={BURST}
@@ -243,29 +255,29 @@ export default function ForgeStrengthPage() {
           </div>
 
           <figure className={`${s.tile} ${s.quote}`}>
-            <blockquote className={s.quoteText}>
+            <blockquote data-edit="hero.quoteText" data-edit-max="240" data-edit-multiline className={s.quoteText}>
               I came in for my back and stayed for the deadlift. Two years on I
               pull 315 lb and nothing hurts.
             </blockquote>
-            <figcaption className={s.quoteWho}>Dana K., member since 2024</figcaption>
+            <figcaption data-edit="hero.quoteWho" data-edit-max="120" data-edit-multiline className={s.quoteWho}>Dana K., member since 2024</figcaption>
           </figure>
 
           <div className={`${s.tile} ${s.free}`}>
-            <p className={s.tileLabel}>Free first session</p>
-            <p className={s.freeBody}>
+            <p data-edit="hero.tileLabel3" data-edit-max="240" data-edit-multiline className={s.tileLabel}>Free first session</p>
+            <p data-edit="hero.freeBody" data-edit-max="240" data-edit-multiline className={s.freeBody}>
               One hour with a coach: a movement screen, your first lifts and a
               plan. No card needed.
             </p>
-            <a className={s.freeLink} href="#contact">Book it</a>
+            <a data-edit="hero.freeLink" data-edit-max="28" className={s.freeLink} href="#contact">Book it</a>
           </div>
         </section>
 
         {/* -------------------------------------------------------- PROGRAMS */}
         <section id="programs" className={s.sec} aria-labelledby="programs-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>01 / Programs</p>
-            <h2 id="programs-h">Eight ways to train here</h2>
-            <p className={s.secNote}>
+            <p data-edit="programs.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>01 / Programs</p>
+            <h2 data-edit="programs.title" data-edit-max="60" id="programs-h">Eight ways to train here</h2>
+            <p data-edit="programs.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Everything is coached from a written program. New members start
               with a free session or Strength Foundations, never straight into
               a class.
@@ -273,7 +285,7 @@ export default function ForgeStrengthPage() {
           </div>
           <ul className={s.programs}>
             <li className={`${s.tile} ${s.program} ${s.big}`}>
-              <div className={s.tallyField} aria-hidden="true">
+              <div data-edit-pattern="programs.field" data-edit-roles="transparent,2,3" className={s.tallyField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={reedpen}
                   palette={TALLY}
@@ -284,28 +296,28 @@ export default function ForgeStrengthPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <span className={s.programTag}>The core of Forge</span>
-              <h3 className={s.programName}>Barbell Club</h3>
-              <p className={s.programBody}>
+              <span data-edit="programs.programTag" data-edit-max="60" className={s.programTag}>The core of Forge</span>
+              <h3 data-edit="programs.programName" data-edit-max="40" className={s.programName}>Barbell Club</h3>
+              <p data-edit="programs.programBody" data-edit-max="240" data-edit-multiline className={s.programBody}>
                 Squat, bench, deadlift and press, coached in groups of eight on
                 a twelve-week cycle. Every session is written down, every lift
                 is logged, and every twelve weeks we test and start again, a
                 little heavier.
               </p>
               <ul className={s.programFacts}>
-                {BARBELL_FACTS.map((f) => (
-                  <li key={f}>{f}</li>
+                {BARBELL_FACTS.map((f, i) => (
+                  <li data-edit={`programs.item.${i}`} data-edit-max="80" key={f}>{f}</li>
                 ))}
               </ul>
             </li>
-            {PROGRAMS.map((p) => (
+            {PROGRAMS.map((p, i) => (
               <li key={p.name} className={`${s.tile} ${s.program} ${s[p.size]}`}>
-                <span className={s.programTag}>{p.tag}</span>
-                <h3 className={s.programName}>{p.name}</h3>
-                <p className={s.programBody}>{p.body}</p>
+                <span data-edit={`programs.programTag2.${i}`} data-edit-max="60" className={s.programTag}>{p.tag}</span>
+                <h3 data-edit={`programs.programName2.${i}`} data-edit-max="40" className={s.programName}>{p.name}</h3>
+                <p data-edit={`programs.programBody2.${i}`} data-edit-max="240" data-edit-multiline className={s.programBody}>{p.body}</p>
                 <ul className={s.programFacts}>
-                  {p.facts.map((f) => (
-                    <li key={f}>{f}</li>
+                  {p.facts.map((f, i2) => (
+                    <li data-edit={`programs.item2.${i}.${i2}`} data-edit-max="80" key={f}>{f}</li>
                   ))}
                 </ul>
               </li>
@@ -316,22 +328,22 @@ export default function ForgeStrengthPage() {
         {/* --------------------------------------------------------- COACHES */}
         <section id="coaches" className={s.sec} aria-labelledby="coaches-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>02 / Coaches</p>
-            <h2 id="coaches-h">The coaches</h2>
-            <p className={s.secNote}>
+            <p data-edit="coaches.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02 / Coaches</p>
+            <h2 data-edit="coaches.title" data-edit-max="60" id="coaches-h">The coaches</h2>
+            <p data-edit="coaches.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Four full-time coaches, all certified, all paid a salary rather
               than by the head, which is why none of them will sell you
               anything.
             </p>
           </div>
           <ul className={s.coaches}>
-            {COACHES.map((c) => (
+            {COACHES.map((c, i) => (
               <li key={c.name} className={`${s.tile} ${s.coach}`}>
                 <span className={s.coachMono} aria-hidden="true">{c.initials}</span>
-                <h3 className={s.coachName}>{c.name}</h3>
-                <p className={s.coachRole}>{c.role}</p>
-                <p className={s.coachBody}>{c.body}</p>
-                <span className={s.coachCerts}>{c.certs}</span>
+                <h3 data-edit={`coaches.coachName.${i}`} data-edit-max="40" className={s.coachName}>{c.name}</h3>
+                <p data-edit={`coaches.coachRole.${i}`} data-edit-max="240" data-edit-multiline className={s.coachRole}>{c.role}</p>
+                <p data-edit={`coaches.coachBody.${i}`} data-edit-max="240" data-edit-multiline className={s.coachBody}>{c.body}</p>
+                <span data-edit={`coaches.coachCerts.${i}`} data-edit-max="60" className={s.coachCerts}>{c.certs}</span>
               </li>
             ))}
           </ul>
@@ -342,9 +354,9 @@ export default function ForgeStrengthPage() {
             small card, labeled from the header cells. */}
         <section id="memberships" className={s.sec} aria-labelledby="memberships-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>03 / Memberships</p>
-            <h2 id="memberships-h">Memberships</h2>
-            <p className={s.secNote}>
+            <p data-edit="memberships.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03 / Memberships</p>
+            <h2 data-edit="memberships.title" data-edit-max="60" id="memberships-h">Memberships</h2>
+            <p data-edit="memberships.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               No joining fee. Freeze for up to eight weeks a year for travel or
               injury. After the first three months, cancel with thirty days
               notice.
@@ -352,25 +364,25 @@ export default function ForgeStrengthPage() {
           </div>
           <div className={s.tableWrap}>
             <table className={s.table}>
-              <caption className={s.caption}>Membership prices, per month unless marked</caption>
+              <caption data-edit="memberships.caption" className={s.caption}>Membership prices, per month unless marked</caption>
               <thead>
                 <tr>
-                  <th scope="col">Membership</th>
-                  <th scope="col">What you get</th>
-                  <th scope="col">Commitment</th>
-                  <th scope="col">Price</th>
+                  <th data-edit="memberships.heading" scope="col">Membership</th>
+                  <th data-edit="memberships.heading2" scope="col">What you get</th>
+                  <th data-edit="memberships.heading3" scope="col">Commitment</th>
+                  <th data-edit="memberships.heading4" scope="col">Price</th>
                 </tr>
               </thead>
               <tbody>
-                {MEMBERSHIPS.map(([name, what, term, price]) => (
+                {MEMBERSHIPS.map(([name, what, term, price], i) => (
                   <tr key={name}>
                     <th scope="row">
-                      <span>{name}</span>
-                      {name === 'Coached' ? <span className={s.pick}>Most chosen</span> : null}
+                      <span data-edit={`memberships.text.${i}`} data-edit-max="60">{name}</span>
+                      {name === 'Coached' ? <span data-edit={`memberships.pick.${i}`} data-edit-max="60" className={s.pick}>Most chosen</span> : null}
                     </th>
-                    <td data-label="Includes">{what}</td>
-                    <td data-label="Commitment">{term}</td>
-                    <td data-label="Price" className={s.tdPrice}>{price}</td>
+                    <td data-edit={`memberships.cell.${i}`} data-label="Includes">{what}</td>
+                    <td data-edit={`memberships.cell2.${i}`} data-label="Commitment">{term}</td>
+                    <td data-edit={`memberships.tdPrice.${i}`} data-label="Price" className={s.tdPrice}>{price}</td>
                   </tr>
                 ))}
               </tbody>
@@ -381,21 +393,21 @@ export default function ForgeStrengthPage() {
         {/* ------------------------------------------------------- THE FLOOR */}
         <section id="floor" className={s.sec} aria-labelledby="floor-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>04 / The floor</p>
-            <h2 id="floor-h">What is on the floor</h2>
-            <p className={s.secNote}>
+            <p data-edit="floor.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>04 / The floor</p>
+            <h2 data-edit="floor.title" data-edit-max="60" id="floor-h">What is on the floor</h2>
+            <p data-edit="floor.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               12,000 sq ft under an 18 ft ceiling, rubber throughout, and two
               garage doors that stay open from May to September.
             </p>
           </div>
           <dl className={s.floor}>
-            {FLOOR.map(([num, name, note]) => (
+            {FLOOR.map(([num, name, note], i) => (
               <div key={name} className={`${s.tile} ${s.kit}`}>
                 <dt>
-                  <span className={s.kitNum}>{num}</span>
-                  <span className={s.kitName}>{name}</span>
+                  <span data-edit={`floor.kitNum.${i}`} data-edit-max="60" className={s.kitNum}>{num}</span>
+                  <span data-edit={`floor.kitName.${i}`} data-edit-max="60" className={s.kitName}>{name}</span>
                 </dt>
-                <dd>{note}</dd>
+                <dd data-edit={`floor.body.${i}`} data-edit-max="200" data-edit-multiline>{note}</dd>
               </div>
             ))}
           </dl>
@@ -404,20 +416,20 @@ export default function ForgeStrengthPage() {
         {/* ------------------------------------------------------- TIMETABLE */}
         <section id="timetable" className={s.sec} aria-labelledby="timetable-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>05 / Timetable</p>
-            <h2 id="timetable-h">Timetable highlights</h2>
-            <p className={s.secNote}>
+            <p data-edit="timetable.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05 / Timetable</p>
+            <h2 data-edit="timetable.title" data-edit-max="60" id="timetable-h">Timetable highlights</h2>
+            <p data-edit="timetable.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Forty-two classes a week; these are the ones people plan their
               week around. The full timetable is in the members app.
             </p>
           </div>
           <ol className={s.slots}>
-            {SLOTS.map(([days, time, name, coach]) => (
+            {SLOTS.map(([days, time, name, coach], i) => (
               <li key={days + time} className={s.slot}>
-                <span className={s.slotTime}>{time}</span>
-                <span className={s.slotDays}>{days}</span>
-                <span className={s.slotName}>{name}</span>
-                <span className={s.slotCoach}>{coach}</span>
+                <span data-edit={`timetable.slotTime.${i}`} data-edit-max="60" className={s.slotTime}>{time}</span>
+                <span data-edit={`timetable.slotDays.${i}`} data-edit-max="60" className={s.slotDays}>{days}</span>
+                <span data-edit={`timetable.slotName.${i}`} data-edit-max="60" className={s.slotName}>{name}</span>
+                <span data-edit={`timetable.slotCoach.${i}`} data-edit-max="60" className={s.slotCoach}>{coach}</span>
               </li>
             ))}
           </ol>
@@ -426,9 +438,9 @@ export default function ForgeStrengthPage() {
         {/* --------------------------------------------------------- CONTACT */}
         <section id="contact" className={s.sec} aria-labelledby="contact-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>06 / Contact</p>
-            <h2 id="contact-h">Book your free first session</h2>
-            <p className={s.secNote}>
+            <p data-edit="contact.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>06 / Contact</p>
+            <h2 data-edit="contact.title" data-edit-max="60" id="contact-h">Book your free first session</h2>
+            <p data-edit="contact.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Tell us when suits you and a coach will reply within a day with
               two or three times to choose from.
             </p>
@@ -436,19 +448,19 @@ export default function ForgeStrengthPage() {
           <div className={s.contact}>
             <form className={`${s.tile} ${s.form}`} action="#">
               <label className={s.field}>
-                <span>Name</span>
+                <span data-edit="contact.text" data-edit-max="60">Name</span>
                 <input type="text" name="name" autoComplete="name" required />
               </label>
               <label className={s.field}>
-                <span>Email</span>
+                <span data-edit="contact.text2" data-edit-max="60">Email</span>
                 <input type="email" name="email" autoComplete="email" required />
               </label>
               <label className={s.field}>
-                <span>Phone</span>
+                <span data-edit="contact.text3" data-edit-max="60">Phone</span>
                 <input type="tel" name="phone" autoComplete="tel" />
               </label>
               <label className={s.field}>
-                <span>Best time</span>
+                <span data-edit="contact.text4" data-edit-max="60">Best time</span>
                 <select name="time" defaultValue="evening">
                   <option value="morning">Early morning</option>
                   <option value="midday">Midday</option>
@@ -457,14 +469,14 @@ export default function ForgeStrengthPage() {
                 </select>
               </label>
               <label className={`${s.field} ${s.fieldWide}`}>
-                <span>What would you like to get out of it?</span>
+                <span data-edit="contact.text5" data-edit-max="60">What would you like to get out of it?</span>
                 <textarea name="goal" rows={4} />
               </label>
-              <button className={s.submit} type="submit">Book my session</button>
+              <button data-edit="contact.submit" data-edit-max="24" className={s.submit} type="submit">Book my session</button>
             </form>
 
             <div className={`${s.tile} ${s.where}`}>
-              <div className={s.whereField} aria-hidden="true">
+              <div data-edit-pattern="contact.field" data-edit-roles="transparent,2,3,0" className={s.whereField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={notch}
                   palette={NOTCH}
@@ -475,28 +487,28 @@ export default function ForgeStrengthPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.tileLabel}>Find us</p>
-              <p className={s.whereAddr}>
+              <p data-edit="contact.tileLabel" data-edit-max="240" data-edit-multiline className={s.tileLabel}>Find us</p>
+              <p data-edit="contact.body3" data-edit-max="240" data-edit-multiline className={s.whereAddr}>
                 Unit 4, 210 Foundry Lane
                 <br />
                 The orange door, past the timber yard
               </p>
               <dl className={s.whereList}>
                 <div>
-                  <dt>Call</dt>
-                  <dd><a href="tel:+15550197733">(555) 019-7733</a></dd>
+                  <dt data-edit="contact.term" data-edit-max="28">Call</dt>
+                  <dd><a data-edit="contact.link" data-edit-max="28" href="tel:+15550197733">(555) 019-7733</a></dd>
                 </div>
                 <div>
-                  <dt>Write</dt>
-                  <dd><a href="mailto:coach@forgestrength.example">coach@forgestrength.example</a></dd>
+                  <dt data-edit="contact.term2" data-edit-max="28">Write</dt>
+                  <dd><a data-edit="contact.link2" data-edit-max="28" href="mailto:coach@forgestrength.example">coach@forgestrength.example</a></dd>
                 </div>
                 <div>
-                  <dt>Park</dt>
-                  <dd>Free in the yard, 30 spaces</dd>
+                  <dt data-edit="contact.term3" data-edit-max="28">Park</dt>
+                  <dd data-edit="contact.body" data-edit-max="200" data-edit-multiline>Free in the yard, 30 spaces</dd>
                 </div>
                 <div>
-                  <dt>Bus</dt>
-                  <dd>Route 7 to Foundry and Mill</dd>
+                  <dt data-edit="contact.term4" data-edit-max="28">Bus</dt>
+                  <dd data-edit="contact.body2" data-edit-max="200" data-edit-multiline>Route 7 to Foundry and Mill</dd>
                 </div>
               </dl>
             </div>
@@ -506,19 +518,19 @@ export default function ForgeStrengthPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footMark}>Forge</p>
+          <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Forge</p>
           <ul className={s.footLinks}>
-            <li><a href="#programs">Programs</a></li>
-            <li><a href="#memberships">Memberships</a></li>
-            <li><a href="#timetable">Timetable</a></li>
-            <li><a href="#contact">Free session</a></li>
+            <li><a data-edit="footer.programs" data-edit-max="28" href="#programs">Programs</a></li>
+            <li><a data-edit="footer.memberships" data-edit-max="28" href="#memberships">Memberships</a></li>
+            <li><a data-edit="footer.timetable" data-edit-max="28" href="#timetable">Timetable</a></li>
+            <li><a data-edit="footer.contact" data-edit-max="28" href="#contact">Free session</a></li>
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional gym. Prices, coaches, members and lifts are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional gym. Prices, coaches, members and lifts are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

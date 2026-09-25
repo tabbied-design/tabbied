@@ -87,7 +87,19 @@ const TIMES = ['Weekday mornings', 'Weekday afternoons', 'Early evenings'];
 
 export default function QuietHarborPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f4f3f0',
+        '--ink': '#2c2e33',
+        '--harbor': '#5c7a8c',
+        '--gray': '#9ea1a6',
+        '--pale': '#e6e5e0',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,harbor,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -97,23 +109,23 @@ export default function QuietHarborPage() {
       />
 
       <p className={s.crisisLine}>
-        <span>In crisis right now? Call or text 988, or call 911. </span>
-        <a href="#crisis">More help</a>
+        <span data-edit="page.text" data-edit-max="60">In crisis right now? Call or text 988, or call 911. </span>
+        <a data-edit="page.crisis" data-edit-max="28" href="#crisis">More help</a>
       </p>
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span className={s.markName}>Quiet Harbor</span>
-          <span className={s.markKind}>Counseling</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Quiet Harbor</span>
+          <span data-edit="bar.markKind" data-edit-max="60" className={s.markKind}>Counseling</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -123,7 +135,7 @@ export default function QuietHarborPage() {
             A survey chart of the harbor, rings of equal spacing, fading out
             at both ends. It is the only thing on the page that is not text. */}
         <div className={s.chart} aria-hidden="true">
-          <div className={s.chartField}>
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,4" className={s.chartField}>
             <TabbiedPattern
               pattern={contourlines}
               palette={CHART}
@@ -138,28 +150,28 @@ export default function QuietHarborPage() {
         {/* --------------------------------------------------------- OPENING */}
         <section className={s.part} aria-labelledby="opening-h">
           <div className={s.side}>
-            <p className={s.dateline}>Wharf Lane, September</p>
+            <p data-edit="opening.dateline" data-edit-max="240" data-edit-multiline className={s.dateline}>Wharf Lane, September</p>
           </div>
           <div className={s.body}>
-            <p className={s.kicker}>Individual and couples therapy</p>
-            <h1 id="opening-h" className={s.title}>
+            <p data-edit="opening.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Individual and couples therapy</p>
+            <h1 data-edit="opening.title" data-edit-format="emphasis" data-edit-max="70" id="opening-h" className={s.title}>
               Before we meet, <em>a letter.</em>
             </h1>
-            <p className={s.salute}>Hello,</p>
-            <p>
+            <p data-edit="opening.salute" data-edit-max="240" data-edit-multiline className={s.salute}>Hello,</p>
+            <p data-edit="opening.body" data-edit-max="240" data-edit-multiline>
               If you are reading this, something has probably been heavy for
               a while, and you have started to wonder whether talking to
               someone might help. I think it often does, and I am glad you
               are looking.
             </p>
-            <p>
+            <p data-edit="opening.body2" data-edit-max="240" data-edit-multiline>
               My name is Nora Ellison. I am a licensed clinical social worker,
               and I have been a therapist for fourteen years, the last eight
               of them here, in two quiet rooms above the chandlery on Wharf
               Lane. I work alone, so the person who answers the phone is the
               person you will see.
             </p>
-            <p>
+            <p data-edit="opening.body3" data-edit-max="240" data-edit-multiline>
               I have written this page as a letter because the first contact
               is the hardest part, and I wanted you to know a little about me
               before you have to say anything about yourself.
@@ -170,21 +182,21 @@ export default function QuietHarborPage() {
         {/* ------------------------------------------------------------- WHO */}
         <section id="who" className={s.part} aria-labelledby="who-h">
           <div className={s.side}>
-            <h2 id="who-h" className={s.sideHead}>Who I work with</h2>
+            <h2 data-edit="who.sideHead" data-edit-max="60" id="who-h" className={s.sideHead}>Who I work with</h2>
           </div>
           <div className={s.body}>
-            <p>
+            <p data-edit="who.body" data-edit-max="240" data-edit-multiline>
               I see adults on their own and couples of every kind. The people
               who come to me are rarely in the middle of a catastrophe. More
               often they are managing, from the outside, and tired of how much
               effort that takes. Most often it is one of these:
             </p>
             <ul className={s.dashList}>
-              {WHO.map((w) => (
-                <li key={w}>{w}</li>
+              {WHO.map((w, i) => (
+                <li data-edit={`who.item.${i}`} data-edit-max="80" key={w}>{w}</li>
               ))}
             </ul>
-            <p>
+            <p data-edit="who.body2" data-edit-max="240" data-edit-multiline>
               There are things I do not treat, among them eating disorders
               that need medical care and active addiction. If that is what is
               happening, I will not leave you with nothing: I know good people
@@ -196,22 +208,22 @@ export default function QuietHarborPage() {
         {/* ------------------------------------------------------------- HOW */}
         <section id="how" className={s.part} aria-labelledby="how-h">
           <div className={s.side}>
-            <h2 id="how-h" className={s.sideHead}>How I work</h2>
+            <h2 data-edit="how.sideHead" data-edit-max="60" id="how-h" className={s.sideHead}>How I work</h2>
           </div>
           <div className={s.body}>
-            <p>
+            <p data-edit="how.body" data-edit-max="240" data-edit-multiline>
               Mostly, I listen, and then I say what I notice. I will not sit in
               silence while you wonder what I am thinking, and I will not hand
               you worksheets unless they would genuinely help.
             </p>
-            <p>
+            <p data-edit="how.body2" data-edit-max="240" data-edit-multiline>
               The methods I draw on have long names: acceptance and commitment
               therapy, cognitive behavioral therapy, and for couples,
               emotionally focused therapy. In the room they look like an
               ordinary, careful conversation that slowly gets somewhere.
             </p>
             <blockquote className={s.pull}>
-              <p>You do not have to arrive with the right words. Finding them is part of the work.</p>
+              <p data-edit="how.body3" data-edit-max="240" data-edit-multiline>You do not have to arrive with the right words. Finding them is part of the work.</p>
             </blockquote>
           </div>
         </section>
@@ -219,19 +231,19 @@ export default function QuietHarborPage() {
         {/* ----------------------------------------------------------- FIRST */}
         <section id="first" className={s.part} aria-labelledby="first-h">
           <div className={s.side}>
-            <h2 id="first-h" className={s.sideHead}>A first session</h2>
+            <h2 data-edit="first.sideHead" data-edit-max="60" id="first-h" className={s.sideHead}>A first session</h2>
           </div>
           <div className={s.body}>
-            <p>
+            <p data-edit="first.body" data-edit-max="240" data-edit-multiline>
               People tell me the worst part is the waiting room, so there is
               not one: I open the door at the time we agreed, and we go
               straight up.
             </p>
             <dl className={s.firstList}>
-              {FIRST.map(([k, v]) => (
+              {FIRST.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`first.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`first.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -241,27 +253,27 @@ export default function QuietHarborPage() {
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.part} aria-labelledby="fees-h">
           <div className={s.side}>
-            <h2 id="fees-h" className={s.sideHead}>Fees and the sliding scale</h2>
+            <h2 data-edit="fees.sideHead" data-edit-max="60" id="fees-h" className={s.sideHead}>Fees and the sliding scale</h2>
           </div>
           <div className={s.body}>
             <table className={s.fees}>
-              <caption className={s.srOnly}>Session fees</caption>
+              <caption data-edit="fees.srOnly" className={s.srOnly}>Session fees</caption>
               <tbody>
-                {FEES.map(([name, length, price]) => (
+                {FEES.map(([name, length, price], i) => (
                   <tr key={name}>
-                    <th scope="row">{name}</th>
-                    <td className={s.feeLen}>{length}</td>
-                    <td className={s.feePrice}>{price}</td>
+                    <th data-edit={`fees.heading.${i}`} scope="row">{name}</th>
+                    <td data-edit={`fees.feeLen.${i}`} className={s.feeLen}>{length}</td>
+                    <td data-edit={`fees.feePrice.${i}`} className={s.feePrice}>{price}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <p>
+            <p data-edit="fees.body" data-edit-max="240" data-edit-multiline>
               Eight of my weekly hours are kept for a sliding scale, from $60
               to $140 a session. You choose where you sit on it, and I will not
               ask you to prove anything.
             </p>
-            <p>
+            <p data-edit="fees.body2" data-edit-max="240" data-edit-multiline>
               I am not in network with any insurer. Each month I give you a
               superbill to claim back from your plan, and HSA and FSA cards are
               fine. I ask for 48 hours notice to cancel; illness and
@@ -273,14 +285,14 @@ export default function QuietHarborPage() {
         {/* ------------------------------------------------------- PRACTICAL */}
         <section id="practical" className={s.part} aria-labelledby="practical-h">
           <div className={s.side}>
-            <h2 id="practical-h" className={s.sideHead}>Online and in person</h2>
+            <h2 data-edit="practical.sideHead" data-edit-max="60" id="practical-h" className={s.sideHead}>Online and in person</h2>
           </div>
           <div className={s.body}>
             <dl className={s.practical}>
-              {PRACTICAL.map(([k, v]) => (
+              {PRACTICAL.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`practical.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`practical.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -290,14 +302,14 @@ export default function QuietHarborPage() {
         {/* ------------------------------------------------------- QUESTIONS */}
         <section id="questions" className={s.part} aria-labelledby="questions-h">
           <div className={s.side}>
-            <h2 id="questions-h" className={s.sideHead}>Questions people ask</h2>
+            <h2 data-edit="questions.sideHead" data-edit-max="60" id="questions-h" className={s.sideHead}>Questions people ask</h2>
           </div>
           <div className={s.body}>
             <div className={s.faq}>
-              {FAQ.map((f) => (
+              {FAQ.map((f, i) => (
                 <details key={f.q} className={s.faqItem}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`questions.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`questions.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -307,26 +319,26 @@ export default function QuietHarborPage() {
         {/* ---------------------------------------------------------- CRISIS */}
         <section id="crisis" className={s.part} aria-labelledby="crisis-h">
           <div className={s.side}>
-            <h2 id="crisis-h" className={s.sideHead}>If you are in crisis</h2>
+            <h2 data-edit="crisis.sideHead" data-edit-max="60" id="crisis-h" className={s.sideHead}>If you are in crisis</h2>
           </div>
           <div className={s.body}>
             <aside className={s.crisis}>
-              <p className={s.crisisLead}>Please do not wait for a reply from me.</p>
-              <p>
+              <p data-edit="crisis.crisisLead" data-edit-max="240" data-edit-multiline className={s.crisisLead}>Please do not wait for a reply from me.</p>
+              <p data-edit="crisis.body" data-edit-max="240" data-edit-multiline>
                 I am not an emergency service, and I do not check messages in
                 the evenings or at weekends. If you are thinking about ending
                 your life, or you are in danger now:
               </p>
               <ul className={s.crisisList}>
                 <li>
-                  <span>Call or text </span>
-                  <a href="tel:988">988</a>
-                  <span>, the Suicide and Crisis Lifeline, at any hour</span>
+                  <span data-edit="crisis.text" data-edit-max="60">Call or text </span>
+                  <a data-edit="crisis.link" data-edit-max="28" href="tel:988">988</a>
+                  <span data-edit="crisis.text2" data-edit-max="60">, the Suicide and Crisis Lifeline, at any hour</span>
                 </li>
                 <li>
-                  <span>Call </span>
-                  <a href="tel:911">911</a>
-                  <span>, or go to your nearest emergency room</span>
+                  <span data-edit="crisis.text3" data-edit-max="60">Call </span>
+                  <a data-edit="crisis.link2" data-edit-max="28" href="tel:911">911</a>
+                  <span data-edit="crisis.text4" data-edit-max="60">, or go to your nearest emergency room</span>
                 </li>
               </ul>
             </aside>
@@ -336,7 +348,7 @@ export default function QuietHarborPage() {
         {/* -------------------------------------------------------- SIGN-OFF */}
         <div className={`${s.part} ${s.signoff}`}>
           <div className={s.side}>
-            <div className={s.seal} aria-hidden="true">
+            <div data-edit-pattern="top.field2" data-edit-roles="transparent,2,3,1" className={s.seal} aria-hidden="true">
               <TabbiedPattern
                 pattern={gyre}
                 palette={SEAL}
@@ -349,68 +361,68 @@ export default function QuietHarborPage() {
             </div>
           </div>
           <div className={s.body}>
-            <p>
+            <p data-edit="top.body" data-edit-max="240" data-edit-multiline>
               Whatever you decide, thank you for reading this far. If you would
               like to talk, the note below comes straight to me.
             </p>
-            <p className={s.closing}>Warmly,</p>
-            <p className={s.signature}>Nora Ellison</p>
-            <p className={s.credential}>Licensed clinical social worker, license no. 00-000000</p>
+            <p data-edit="top.closing" data-edit-max="240" data-edit-multiline className={s.closing}>Warmly,</p>
+            <p data-edit="top.signature" data-edit-max="240" data-edit-multiline className={s.signature}>Nora Ellison</p>
+            <p data-edit="top.credential" data-edit-max="240" data-edit-multiline className={s.credential}>Licensed clinical social worker, license no. 00-000000</p>
           </div>
         </div>
 
         {/* --------------------------------------------------------- CONTACT */}
         <section id="contact" className={s.part} aria-labelledby="contact-h">
           <div className={s.side}>
-            <h2 id="contact-h" className={s.sideHead}>P.S. Write to me</h2>
+            <h2 data-edit="contact.sideHead" data-edit-max="60" id="contact-h" className={s.sideHead}>P.S. Write to me</h2>
           </div>
           <div className={s.body}>
             <form className={s.form} action="#">
               <div className={s.row}>
                 <label className={s.field}>
-                  <span>Your name, or what I should call you</span>
+                  <span data-edit="contact.text" data-edit-max="60">Your name, or what I should call you</span>
                   <input type="text" name="name" autoComplete="name" required />
                 </label>
                 <label className={s.field}>
-                  <span>Email</span>
+                  <span data-edit="contact.text2" data-edit-max="60">Email</span>
                   <input type="email" name="email" autoComplete="email" required />
                 </label>
               </div>
               <label className={s.field}>
-                <span>Phone, if you would rather I called</span>
+                <span data-edit="contact.text3" data-edit-max="60">Phone, if you would rather I called</span>
                 <input type="tel" name="phone" autoComplete="tel" />
               </label>
               <label className={s.field}>
-                <span>Anything you would like me to know (optional)</span>
+                <span data-edit="contact.text4" data-edit-max="60">Anything you would like me to know (optional)</span>
                 <textarea name="note" rows={4} />
               </label>
               <fieldset className={s.choices}>
-                <legend>I would like to meet</legend>
+                <legend data-edit="contact.legend">I would like to meet</legend>
                 <label>
                   <input type="radio" name="where" value="in-person" defaultChecked />
-                  <span>In person</span>
+                  <span data-edit="contact.text5" data-edit-max="60">In person</span>
                 </label>
                 <label>
                   <input type="radio" name="where" value="online" />
-                  <span>Online</span>
+                  <span data-edit="contact.text6" data-edit-max="60">Online</span>
                 </label>
                 <label>
                   <input type="radio" name="where" value="either" />
-                  <span>Either</span>
+                  <span data-edit="contact.text7" data-edit-max="60">Either</span>
                 </label>
               </fieldset>
               <fieldset className={s.choices}>
-                <legend>Times that usually suit me</legend>
-                {TIMES.map((t) => (
+                <legend data-edit="contact.legend2">Times that usually suit me</legend>
+                {TIMES.map((t, i) => (
                   <label key={t}>
                     <input type="checkbox" name="times" value={t} />
-                    <span>{t}</span>
+                    <span data-edit={`contact.text8.${i}`} data-edit-max="60">{t}</span>
                   </label>
                 ))}
               </fieldset>
               <div className={s.formFoot}>
-                <button type="submit" className={s.send}>Send the note</button>
-                <p className={s.formNote}>
+                <button data-edit="contact.send" data-edit-max="24" type="submit" className={s.send}>Send the note</button>
+                <p data-edit="contact.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>
                   Please keep it brief, and leave out anything you would not
                   want in an email. I will reply within two working days.
                 </p>
@@ -423,27 +435,27 @@ export default function QuietHarborPage() {
       <footer className={s.footer}>
         <div className={s.footInner}>
           <div className={s.footCols}>
-            <p className={s.footName}>Quiet Harbor Counseling</p>
-            <p className={s.footAddr}>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Quiet Harbor Counseling</p>
+            <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
               14 Wharf Lane, Suite 3
               <br />
               Above the chandlery
             </p>
             <ul className={s.footContact}>
               <li>
-                <a href="tel:+15550137720">(555) 013-7720</a>
+                <a data-edit="footer.link" data-edit-max="28" href="tel:+15550137720">(555) 013-7720</a>
               </li>
               <li>
-                <a href="mailto:nora@quietharbor.example">nora@quietharbor.example</a>
+                <a data-edit="footer.link2" data-edit-max="28" href="mailto:nora@quietharbor.example">nora@quietharbor.example</a>
               </li>
             </ul>
           </div>
           <div className={s.footFine}>
-            <p>A fictional therapy practice. The therapist, fees, hours and license are invented.</p>
+            <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional therapy practice. The therapist, fees, hours and license are invented.</p>
             <p>
-              <span>Patterns by </span>
-              <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-              <span>, drawn live on a transparent ground.</span>
+              <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+              <a data-edit="footer.link3" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+              <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
             </p>
           </div>
         </div>

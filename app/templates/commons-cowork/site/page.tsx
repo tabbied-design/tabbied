@@ -239,7 +239,19 @@ const HOURS = [
 
 export default function CommonsCoworkPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f1f0ec',
+        '--ink': '#1b1b1d',
+        '--ochre': '#d9a21b',
+        '--gray': '#8a8a85',
+        '--pale': '#dcdad2',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,ochre,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -251,17 +263,17 @@ export default function CommonsCoworkPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markBox} aria-hidden="true" />
-          <span className={s.markName}>Commons</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Commons</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#tour">Book a tour</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#tour">Book a tour</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -272,30 +284,30 @@ export default function CommonsCoworkPage() {
             right: pieces cut to fit their neighbors. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Coworking, 40 Canal Street</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Coworking, 40 Canal Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               A desk, a door or a day. <em>Room to work, among neighbors.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Commons fills the ground floor of the old Harbor print works: a
               flex floor, fixed desks, four studios that lock, two meeting
               rooms and a courtyard in the middle of it all. Come for a day,
               or stay for years; a third of our members have.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#tour">Book a tour</a>
-              <a className={s.btnLine} href="#plans">Compare plans</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#tour">Book a tour</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#plans">Compare plans</a>
             </div>
             <dl className={s.facts}>
-              {FACTS.map(([value, label]) => (
+              {FACTS.map(([value, label], i) => (
                 <div key={label}>
-                  <dt>{value}</dt>
-                  <dd>{label}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{value}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{label}</dd>
                 </div>
               ))}
             </dl>
           </div>
-          <div className={s.heroField} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,1,3,2,4" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={rabbet}
               palette={BLOCKS}
@@ -316,9 +328,9 @@ export default function CommonsCoworkPage() {
             talking. */}
         <section id="floor" className={s.sec} aria-labelledby="floor-h">
           <div className={s.secHead}>
-            <p className={s.secLabel}>01 / Floor plan</p>
-            <h2 id="floor-h">The ground floor, all 6,400 square feet of it</h2>
-            <p className={s.secNote}>
+            <p data-edit="floor.secLabel" data-edit-max="240" data-edit-multiline className={s.secLabel}>01 / Floor plan</p>
+            <h2 data-edit="floor.title" data-edit-max="60" id="floor-h">The ground floor, all 6,400 square feet of it</h2>
+            <p data-edit="floor.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               One level, step-free from the street. The studios face the
               canal, the flex floor faces the courtyard, and the booths are
               where the noise is not.
@@ -326,18 +338,18 @@ export default function CommonsCoworkPage() {
           </div>
           <div className={s.planWrap}>
             <p className={s.compass} aria-hidden="true">
-              <span>N</span>
+              <span data-edit="floor.text" data-edit-max="60">N</span>
             </p>
             <ol className={s.plan} aria-label="Floor plan of the ground floor, numbered as in the key">
-              {ZONES.map((z) => (
+              {ZONES.map((z, i) => (
                 <li key={z.no} className={`${s.zone} ${s[z.kind]}`} style={{ gridArea: z.area }}>
-                  <span className={s.zoneNo}>{z.no}</span>
-                  <span className={s.zoneName}>{z.name}</span>
-                  <span className={s.zoneMeta}>{z.meta}</span>
+                  <span data-edit={`floor.zoneNo.${i}`} data-edit-max="60" className={s.zoneNo}>{z.no}</span>
+                  <span data-edit={`floor.zoneName.${i}`} data-edit-max="60" className={s.zoneName}>{z.name}</span>
+                  <span data-edit={`floor.zoneMeta.${i}`} data-edit-max="60" className={s.zoneMeta}>{z.meta}</span>
                 </li>
               ))}
               <li className={`${s.zone} ${s.yard}`}>
-                <div className={s.yardField} aria-hidden="true">
+                <div data-edit-pattern="floor.field" data-edit-roles="transparent,3,4,2" className={s.yardField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={pebble}
                     palette={GRAVEL}
@@ -348,21 +360,21 @@ export default function CommonsCoworkPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-                <span className={s.zoneNo}>8</span>
-                <span className={s.zoneName}>Courtyard</span>
-                <span className={s.zoneMeta}>Open air</span>
+                <span data-edit="floor.zoneNo2" data-edit-max="60" className={s.zoneNo}>8</span>
+                <span data-edit="floor.zoneName2" data-edit-max="60" className={s.zoneName}>Courtyard</span>
+                <span data-edit="floor.zoneMeta2" data-edit-max="60" className={s.zoneMeta}>Open air</span>
               </li>
             </ol>
             <p className={s.door}>
-              <span>Canal Street entrance</span>
+              <span data-edit="floor.text2" data-edit-max="60">Canal Street entrance</span>
             </p>
           </div>
           <ul className={s.key}>
-            {KEY.map(([no, name, body]) => (
+            {KEY.map(([no, name, body], i) => (
               <li key={no}>
-                <span className={s.keyNo}>{no}</span>
-                <strong>{name}</strong>
-                <span className={s.keyBody}>{body}</span>
+                <span data-edit={`floor.keyNo.${i}`} data-edit-max="60" className={s.keyNo}>{no}</span>
+                <strong data-edit={`floor.emphasis.${i}`}>{name}</strong>
+                <span data-edit={`floor.keyBody.${i}`} data-edit-max="60" className={s.keyBody}>{body}</span>
               </li>
             ))}
           </ul>
@@ -374,46 +386,46 @@ export default function CommonsCoworkPage() {
             with the feature column pinned. */}
         <section id="plans" className={s.sec} aria-labelledby="plans-h">
           <div className={s.secHead}>
-            <p className={s.secLabel}>02 / Plans</p>
-            <h2 id="plans-h">Four ways to be a member</h2>
-            <p className={s.secNote}>
+            <p data-edit="plans.secLabel" data-edit-max="240" data-edit-multiline className={s.secLabel}>02 / Plans</p>
+            <h2 data-edit="plans.title" data-edit-max="60" id="plans-h">Four ways to be a member</h2>
+            <p data-edit="plans.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Monthly plans roll on and stop with a month's notice. No
               deposit, no setup fee, and you can move between plans whenever
               a desk is free.
             </p>
           </div>
-          <p className={s.swipe}>Swipe the table to compare all four plans.</p>
+          <p data-edit="plans.swipe" data-edit-max="240" data-edit-multiline className={s.swipe}>Swipe the table to compare all four plans.</p>
           <div className={s.matrixScroll}>
             <table className={s.matrix}>
-              <caption className={s.srOnly}>What each membership plan includes</caption>
+              <caption data-edit="plans.srOnly" className={s.srOnly}>What each membership plan includes</caption>
               <thead>
                 <tr>
                   <td className={s.corner} />
-                  {PLANS.map((p) => (
+                  {PLANS.map((p, i) => (
                     <th key={p.name} scope="col" className={p.name === 'Fixed desk' ? s.planHot : s.planCol}>
-                      <span className={s.planName}>{p.name}</span>
-                      <span className={s.planPrice}>{p.price}</span>
-                      <span className={s.planPer}>{p.per}</span>
-                      <span className={s.planNote}>{p.note}</span>
+                      <span data-edit={`plans.planName.${i}`} data-edit-max="60" className={s.planName}>{p.name}</span>
+                      <span data-edit={`plans.planPrice.${i}`} data-edit-max="60" className={s.planPrice}>{p.price}</span>
+                      <span data-edit={`plans.planPer.${i}`} data-edit-max="60" className={s.planPer}>{p.per}</span>
+                      <span data-edit={`plans.planNote.${i}`} data-edit-max="60" className={s.planNote}>{p.note}</span>
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {MATRIX.map((row) => (
+                {MATRIX.map((row, i) => (
                   <tr key={row.feature}>
-                    <th scope="row">{row.feature}</th>
+                    <th data-edit={`plans.heading.${i}`} scope="row">{row.feature}</th>
                     {row.values.map((v, j) => (
                       <td key={PLANS[j].name}>
                         {typeof v === 'string' ? (
-                          <span className={s.cellText}>{v}</span>
+                          <span data-edit={`plans.cellText.${i}.${j}`} data-edit-max="60" className={s.cellText}>{v}</span>
                         ) : v ? (
                           <span className={s.yes}>
-                            <span className={s.srOnly}>Included</span>
+                            <span data-edit={`plans.srOnly2.${i}.${j}`} data-edit-max="60" className={s.srOnly}>Included</span>
                           </span>
                         ) : (
                           <span className={s.no}>
-                            <span className={s.srOnly}>Not included</span>
+                            <span data-edit={`plans.srOnly3.${i}.${j}`} data-edit-max="60" className={s.srOnly}>Not included</span>
                           </span>
                         )}
                       </td>
@@ -424,9 +436,9 @@ export default function CommonsCoworkPage() {
               <tfoot>
                 <tr>
                   <td />
-                  {PLANS.map((p) => (
+                  {PLANS.map((p, i) => (
                     <td key={p.name}>
-                      <a className={s.planLink} href="#tour">Start with a tour</a>
+                      <a data-edit={`plans.planLink.${i}`} data-edit-max="28" className={s.planLink} href="#tour">Start with a tour</a>
                     </td>
                   ))}
                 </tr>
@@ -438,25 +450,25 @@ export default function CommonsCoworkPage() {
         {/* --------------------------------------------------- MEETING ROOMS */}
         <section id="rooms" className={s.sec} aria-labelledby="rooms-h">
           <div className={s.secHead}>
-            <p className={s.secLabel}>03 / Meeting rooms</p>
-            <h2 id="rooms-h">Rooms by the hour, for members and not</h2>
-            <p className={s.secNote}>
+            <p data-edit="rooms.secLabel" data-edit-max="240" data-edit-multiline className={s.secLabel}>03 / Meeting rooms</p>
+            <h2 data-edit="rooms.title" data-edit-max="60" id="rooms-h">Rooms by the hour, for members and not</h2>
+            <p data-edit="rooms.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Book online or at reception. Members spend their monthly hours
               first, then pay these rates less a quarter.
             </p>
           </div>
           <ul className={s.rooms}>
-            {ROOMS.map((r) => (
+            {ROOMS.map((r, i) => (
               <li key={r.name} className={s.room}>
-                <span className={s.roomNo}>{r.no}</span>
-                <h3>{r.name}</h3>
-                <p className={s.roomSeats}>{r.seats}</p>
-                <p className={s.roomKit}>{r.kit}</p>
+                <span data-edit={`rooms.roomNo.${i}`} data-edit-max="60" className={s.roomNo}>{r.no}</span>
+                <h3 data-edit={`rooms.title2.${i}`} data-edit-max="40">{r.name}</h3>
+                <p data-edit={`rooms.roomSeats.${i}`} data-edit-max="240" data-edit-multiline className={s.roomSeats}>{r.seats}</p>
+                <p data-edit={`rooms.roomKit.${i}`} data-edit-max="240" data-edit-multiline className={s.roomKit}>{r.kit}</p>
                 <dl className={s.roomRates}>
-                  {r.rates.map(([label, price]) => (
+                  {r.rates.map(([label, price], i2) => (
                     <div key={label}>
-                      <dt>{label}</dt>
-                      <dd>{price}</dd>
+                      <dt data-edit={`rooms.term.${i}.${i2}`} data-edit-max="28">{label}</dt>
+                      <dd data-edit={`rooms.body.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                     </div>
                   ))}
                 </dl>
@@ -468,18 +480,18 @@ export default function CommonsCoworkPage() {
         {/* ------------------------------------------------------- AMENITIES */}
         <section id="amenities" className={s.sec} aria-labelledby="amenities-h">
           <div className={s.secHead}>
-            <p className={s.secLabel}>04 / Amenities</p>
-            <h2 id="amenities-h">In every plan, even the day pass</h2>
-            <p className={s.secNote}>
+            <p data-edit="amenities.secLabel" data-edit-max="240" data-edit-multiline className={s.secLabel}>04 / Amenities</p>
+            <h2 data-edit="amenities.title" data-edit-max="60" id="amenities-h">In every plan, even the day pass</h2>
+            <p data-edit="amenities.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The small things that decide whether a place works: the coffee,
               the wifi, somewhere to take a call and somewhere to shower.
             </p>
           </div>
           <dl className={s.amenities}>
-            {AMENITIES.map(([name, body]) => (
+            {AMENITIES.map(([name, body], i) => (
               <div key={name}>
-                <dt>{name}</dt>
-                <dd>{body}</dd>
+                <dt data-edit={`amenities.term.${i}`} data-edit-max="28">{name}</dt>
+                <dd data-edit={`amenities.body.${i}`} data-edit-max="200" data-edit-multiline>{body}</dd>
               </div>
             ))}
           </dl>
@@ -488,29 +500,29 @@ export default function CommonsCoworkPage() {
         {/* ---------------------------------------------------------- EVENTS */}
         <section id="events" className={s.sec} aria-labelledby="events-h">
           <div className={s.secHead}>
-            <p className={s.secLabel}>05 / Events</p>
-            <h2 id="events-h">This autumn in the lounge</h2>
-            <p className={s.secNote}>
+            <p data-edit="events.secLabel" data-edit-max="240" data-edit-multiline className={s.secLabel}>05 / Events</p>
+            <h2 data-edit="events.title" data-edit-max="60" id="events-h">This autumn in the lounge</h2>
+            <p data-edit="events.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Small, regular and never compulsory. Members sign up on the
               board by the kitchen; guests can write to us.
             </p>
           </div>
           <ol className={s.events}>
-            {EVENTS.map((e) => (
+            {EVENTS.map((e, i) => (
               <li key={e.title} className={s.event}>
                 <p className={s.eventDate}>
-                  <span className={s.eventDay}>{e.day}</span>
-                  <span className={s.eventMonth}>{e.month}</span>
+                  <span data-edit={`events.eventDay.${i}`} data-edit-max="60" className={s.eventDay}>{e.day}</span>
+                  <span data-edit={`events.eventMonth.${i}`} data-edit-max="60" className={s.eventMonth}>{e.month}</span>
                 </p>
                 <p className={s.eventWhen}>
-                  <span>{e.weekday}</span>
-                  <span>{e.time}</span>
+                  <span data-edit={`events.text.${i}`} data-edit-max="60">{e.weekday}</span>
+                  <span data-edit={`events.text2.${i}`} data-edit-max="60">{e.time}</span>
                 </p>
                 <div className={s.eventText}>
-                  <h3>{e.title}</h3>
-                  <p>{e.body}</p>
+                  <h3 data-edit={`events.title2.${i}`} data-edit-max="40">{e.title}</h3>
+                  <p data-edit={`events.body.${i}`} data-edit-max="240" data-edit-multiline>{e.body}</p>
                 </div>
-                <span className={s.eventWho}>{e.who}</span>
+                <span data-edit={`events.eventWho.${i}`} data-edit-max="60" className={s.eventWho}>{e.who}</span>
               </li>
             ))}
           </ol>
@@ -520,34 +532,34 @@ export default function CommonsCoworkPage() {
         <section id="tour" className={s.tourSec} aria-labelledby="tour-h">
           <div className={s.tour}>
             <div className={s.tourIntro}>
-              <p className={s.secLabel}>06 / Book a tour</p>
-              <h2 id="tour-h">Come and see it working</h2>
-              <p>
+              <p data-edit="tour.secLabel" data-edit-max="240" data-edit-multiline className={s.secLabel}>06 / Book a tour</p>
+              <h2 data-edit="tour.title" data-edit-max="60" id="tour-h">Come and see it working</h2>
+              <p data-edit="tour.body" data-edit-max="240" data-edit-multiline>
                 A tour takes twenty minutes and ends with a coffee. Stay
                 afterwards and the rest of the day is on us, at any desk on
                 the flex floor.
               </p>
               <ul className={s.tourList}>
-                <li>We confirm by email within a working day.</li>
-                <li>Bring a laptop if you want to try the free day.</li>
-                <li>Teams of more than four: ask for a studio viewing.</li>
+                <li data-edit="tour.item" data-edit-max="80">We confirm by email within a working day.</li>
+                <li data-edit="tour.item2" data-edit-max="80">Bring a laptop if you want to try the free day.</li>
+                <li data-edit="tour.item3" data-edit-max="80">Teams of more than four: ask for a studio viewing.</li>
               </ul>
             </div>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="co-name">Name</label>
+                <label data-edit="tour.label" htmlFor="co-name">Name</label>
                 <input id="co-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="co-email">Email</label>
+                <label data-edit="tour.label2" htmlFor="co-email">Email</label>
                 <input id="co-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.field}>
-                <label htmlFor="co-work">What you do</label>
+                <label data-edit="tour.label3" htmlFor="co-work">What you do</label>
                 <input id="co-work" name="work" type="text" placeholder="Designer, a team of three" />
               </div>
               <div className={s.field}>
-                <label htmlFor="co-plan">Interested in</label>
+                <label data-edit="tour.label4" htmlFor="co-plan">Interested in</label>
                 <select id="co-plan" name="plan" defaultValue="">
                   <option value="">Not sure yet</option>
                   <option>Day pass</option>
@@ -558,11 +570,11 @@ export default function CommonsCoworkPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="co-date">Day</label>
+                <label data-edit="tour.label5" htmlFor="co-date">Day</label>
                 <input id="co-date" name="date" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="co-time">Time</label>
+                <label data-edit="tour.label6" htmlFor="co-time">Time</label>
                 <select id="co-time" name="time" defaultValue="">
                   <option value="">Any time</option>
                   <option>Morning, 9 to 12</option>
@@ -571,8 +583,8 @@ export default function CommonsCoworkPage() {
                 </select>
               </div>
               <div className={s.formFoot}>
-                <button className={s.btn} type="submit">Book the tour</button>
-                <small>We never share your details.</small>
+                <button data-edit="tour.btn" data-edit-max="24" className={s.btn} type="submit">Book the tour</button>
+                <small data-edit="tour.note">We never share your details.</small>
               </div>
             </form>
           </div>
@@ -581,41 +593,41 @@ export default function CommonsCoworkPage() {
         {/* --------------------------------------------------------- FIND US */}
         <section id="find-us" className={s.sec} aria-labelledby="find-h">
           <div className={s.secHead}>
-            <p className={s.secLabel}>07 / Find us</p>
-            <h2 id="find-h">On Canal Street, by the swing bridge</h2>
-            <p className={s.secNote}>
+            <p data-edit="findUs.secLabel" data-edit-max="240" data-edit-multiline className={s.secLabel}>07 / Find us</p>
+            <h2 data-edit="findUs.title" data-edit-max="60" id="find-h">On Canal Street, by the swing bridge</h2>
+            <p data-edit="findUs.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The brick building with PRINT WORKS still painted across the
               top. The door is the yellow one.
             </p>
           </div>
           <div className={s.find}>
             <address className={s.address}>
-              <span className={s.addrBig}>Commons</span>
-              <span className={s.addrBig}>40 Canal Street</span>
-              <span className={s.addrBig}>Harbor District</span>
-              <a href="tel:+15554029911">(555) 402-9911</a>
-              <a href="mailto:desk@commons.example">desk@commons.example</a>
+              <span data-edit="findUs.addrBig" data-edit-max="60" className={s.addrBig}>Commons</span>
+              <span data-edit="findUs.addrBig2" data-edit-max="60" className={s.addrBig}>40 Canal Street</span>
+              <span data-edit="findUs.addrBig3" data-edit-max="60" className={s.addrBig}>Harbor District</span>
+              <a data-edit="findUs.link" data-edit-max="28" href="tel:+15554029911">(555) 402-9911</a>
+              <a data-edit="findUs.link2" data-edit-max="28" href="mailto:desk@commons.example">desk@commons.example</a>
             </address>
             <dl className={s.hours}>
-              {HOURS.map(([who, when]) => (
+              {HOURS.map(([who, when], i) => (
                 <div key={who}>
-                  <dt>{who}</dt>
-                  <dd>{when}</dd>
+                  <dt data-edit={`findUs.term.${i}`} data-edit-max="28">{who}</dt>
+                  <dd data-edit={`findUs.body.${i}`} data-edit-max="200" data-edit-multiline>{when}</dd>
                 </div>
               ))}
             </dl>
             <ul className={s.getting}>
               <li>
-                <strong>Tram</strong>
-                <span>Line 2 to Swing Bridge, then two minutes along the canal.</span>
+                <strong data-edit="findUs.emphasis">Tram</strong>
+                <span data-edit="findUs.text" data-edit-max="60">Line 2 to Swing Bridge, then two minutes along the canal.</span>
               </li>
               <li>
-                <strong>Bike</strong>
-                <span>The towpath runs past the door; the bike store is through reception.</span>
+                <strong data-edit="findUs.emphasis2">Bike</strong>
+                <span data-edit="findUs.text2" data-edit-max="60">The towpath runs past the door; the bike store is through reception.</span>
               </li>
               <li>
-                <strong>Car</strong>
-                <span>No parking of our own. The Wharf garage is $9 a day with a member card.</span>
+                <strong data-edit="findUs.emphasis3">Car</strong>
+                <span data-edit="findUs.text3" data-edit-max="60">No parking of our own. The Wharf garage is $9 a day with a member card.</span>
               </li>
             </ul>
           </div>
@@ -623,7 +635,7 @@ export default function CommonsCoworkPage() {
       </main>
 
       {/* The blocks again, as a strip along the foot of the page. */}
-      <div className={s.strip} aria-hidden="true">
+      <div data-edit-pattern="page.field" data-edit-roles="transparent,1,3,2,4" className={s.strip} aria-hidden="true">
         <TabbiedPattern
           pattern={rabbet}
           palette={STRIP}
@@ -639,30 +651,30 @@ export default function CommonsCoworkPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Commons</p>
-            <p className={s.footTag}>Coworking in the old print works, 40 Canal Street.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Commons</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Coworking in the old print works, 40 Canal Street.</p>
           </div>
           <ul className={s.footLinks}>
-            <li><a href="#floor">Floor plan</a></li>
-            <li><a href="#plans">Plans and prices</a></li>
-            <li><a href="#rooms">Meeting rooms</a></li>
+            <li><a data-edit="footer.floor" data-edit-max="28" href="#floor">Floor plan</a></li>
+            <li><a data-edit="footer.plans" data-edit-max="28" href="#plans">Plans and prices</a></li>
+            <li><a data-edit="footer.rooms" data-edit-max="28" href="#rooms">Meeting rooms</a></li>
           </ul>
           <ul className={s.footLinks}>
-            <li><a href="#amenities">Amenities</a></li>
-            <li><a href="#events">Events</a></li>
-            <li><a href="#tour">Book a tour</a></li>
+            <li><a data-edit="footer.amenities" data-edit-max="28" href="#amenities">Amenities</a></li>
+            <li><a data-edit="footer.events" data-edit-max="28" href="#events">Events</a></li>
+            <li><a data-edit="footer.tour" data-edit-max="28" href="#tour">Book a tour</a></li>
           </ul>
           <ul className={s.footLinks}>
-            <li><a href="mailto:desk@commons.example">desk@commons.example</a></li>
-            <li><a href="tel:+15554029911">(555) 402-9911</a></li>
+            <li><a data-edit="footer.link" data-edit-max="28" href="mailto:desk@commons.example">desk@commons.example</a></li>
+            <li><a data-edit="footer.link2" data-edit-max="28" href="tel:+15554029911">(555) 402-9911</a></li>
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional coworking space. Plans, prices, rooms and events are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional coworking space. Plans, prices, rooms and events are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on a transparent ground.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link3" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
           </p>
         </div>
       </footer>

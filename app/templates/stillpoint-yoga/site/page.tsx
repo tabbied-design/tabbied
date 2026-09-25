@@ -242,7 +242,20 @@ const COUNT = WEEK.reduce((n, d) => n + d.sessions.length, 0);
 
 export default function StillpointYogaPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f5f1ea',
+        '--ink': '#2a2a26',
+        '--sage': '#7c8c6e',
+        '--stone': '#a39c92',
+        '--pale': '#e6e0d5',
+        '--clay': '#c0795a',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,sage,stone,pale,clay"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -252,16 +265,16 @@ export default function StillpointYogaPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Stillpoint</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Stillpoint</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#prices">Two weeks for $40</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#prices">Two weeks for $40</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -273,23 +286,23 @@ export default function StillpointYogaPage() {
             screen. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Yoga studio, 48 Alder Street</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Yoga studio, 48 Alder Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               A quiet room, a full week,
               <br />
               <em>and a mat kept for you.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               Twenty-four classes from early morning to late evening, from
               floor-bound Yin to a sweaty Strong Flow. Fourteen mats a class,
               so the teacher knows your name by the second week.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#timetable">See this week</a>
-              <a className={s.btnQuiet} href="#prices">New here? Two weeks for $40</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#timetable">See this week</a>
+              <a data-edit="hero.btnQuiet" data-edit-max="28" className={s.btnQuiet} href="#prices">New here? Two weeks for $40</a>
             </div>
           </div>
-          <div className={s.heroPlate} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,5,3" className={s.heroPlate} aria-hidden="true">
             <TabbiedPattern
               pattern={spiralrosette}
               palette={ROSETTE}
@@ -308,10 +321,10 @@ export default function StillpointYogaPage() {
         <section id="timetable" className={s.timetable} aria-labelledby="timetable-h">
           <div className={s.ttHead}>
             <div>
-              <p className={s.secNo}>This week</p>
-              <h2 id="timetable-h">The timetable</h2>
+              <p data-edit="timetable.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>This week</p>
+              <h2 data-edit="timetable.title" data-edit-max="60" id="timetable-h">The timetable</h2>
             </div>
-            <p className={s.ttNote}>
+            <p data-edit="timetable.ttNote" data-edit-max="240" data-edit-multiline className={s.ttNote}>
               Book in the Stillpoint app or at the desk. Classes open for
               booking seven days ahead and most evening classes fill by the
               afternoon before.
@@ -319,37 +332,37 @@ export default function StillpointYogaPage() {
           </div>
 
           <ul className={s.legend} aria-label="Intensity">
-            {LEGEND.map((l) => (
+            {LEGEND.map((l, i) => (
               <li key={l.level} className={s[l.level]}>
                 <span className={s.swatch} aria-hidden="true" />
-                <strong>{LEVEL_WORD[l.level]}</strong>
-                <span>{l.note}</span>
+                <strong data-edit={`timetable.emphasis.${i}`}>{LEVEL_WORD[l.level]}</strong>
+                <span data-edit={`timetable.text.${i}`} data-edit-max="60">{l.note}</span>
               </li>
             ))}
           </ul>
 
           <div className={s.grid}>
             <ol className={s.bands} aria-hidden="true">
-              {BANDS.map(([band, span]) => (
+              {BANDS.map(([band, span], i) => (
                 <li key={band}>
-                  <span className={s.bandName}>{band}</span>
-                  <span className={s.bandSpan}>{span}</span>
+                  <span data-edit={`timetable.bandName.${i}`} data-edit-max="60" className={s.bandName}>{band}</span>
+                  <span data-edit={`timetable.bandSpan.${i}`} data-edit-max="60" className={s.bandSpan}>{span}</span>
                 </li>
               ))}
             </ol>
             <ol className={s.week}>
-              {WEEK.map((d) => (
+              {WEEK.map((d, i) => (
                 <li key={d.day} className={s.day}>
-                  <h3 className={s.dayName}>{d.day}</h3>
+                  <h3 data-edit={`timetable.dayName.${i}`} data-edit-max="40" className={s.dayName}>{d.day}</h3>
                   <ul className={s.sessions}>
-                    {d.sessions.map((c) => (
+                    {d.sessions.map((c, i2) => (
                       <li
                         key={c.time + c.name}
                         className={`${s.session} ${s[c.level]} ${s[`band${c.band}`]}`}>
-                        <time className={s.sTime}>{c.time}</time>
-                        <span className={s.sName}>{c.name}</span>
-                        <span className={s.sWho}>{c.teacher}</span>
-                        <span className={s.sLevel}>{LEVEL_WORD[c.level]}</span>
+                        <time data-edit={`timetable.sTime.${i}.${i2}`} className={s.sTime}>{c.time}</time>
+                        <span data-edit={`timetable.sName.${i}.${i2}`} data-edit-max="60" className={s.sName}>{c.name}</span>
+                        <span data-edit={`timetable.sWho.${i}.${i2}`} data-edit-max="60" className={s.sWho}>{c.teacher}</span>
+                        <span data-edit={`timetable.sLevel.${i}.${i2}`} data-edit-max="60" className={s.sLevel}>{LEVEL_WORD[c.level]}</span>
                       </li>
                     ))}
                   </ul>
@@ -360,20 +373,20 @@ export default function StillpointYogaPage() {
 
           <dl className={s.ttFacts}>
             <div>
-              <dt>{COUNT}</dt>
-              <dd>Classes a week</dd>
+              <dt data-edit="timetable.term" data-edit-max="28">{COUNT}</dt>
+              <dd data-edit="timetable.body" data-edit-max="200" data-edit-multiline>Classes a week</dd>
             </div>
             <div>
-              <dt>14</dt>
-              <dd>Mats a class</dd>
+              <dt data-edit="timetable.term2" data-edit-max="28">14</dt>
+              <dd data-edit="timetable.body2" data-edit-max="200" data-edit-multiline>Mats a class</dd>
             </div>
             <div>
-              <dt>60</dt>
-              <dd>Minutes, most classes</dd>
+              <dt data-edit="timetable.term3" data-edit-max="28">60</dt>
+              <dd data-edit="timetable.body3" data-edit-max="200" data-edit-multiline>Minutes, most classes</dd>
             </div>
             <div>
-              <dt>12 h</dt>
-              <dd>To cancel for free</dd>
+              <dt data-edit="timetable.term4" data-edit-max="28">12 h</dt>
+              <dd data-edit="timetable.body4" data-edit-max="200" data-edit-multiline>To cancel for free</dd>
             </div>
           </dl>
         </section>
@@ -381,22 +394,22 @@ export default function StillpointYogaPage() {
         {/* --------------------------------------------------------- CLASSES */}
         <section id="classes" className={s.sec} aria-labelledby="classes-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>01</p>
-            <h2 id="classes-h">The classes</h2>
-            <p className={s.secNote}>
+            <p data-edit="classes.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>01</p>
+            <h2 data-edit="classes.title" data-edit-max="60" id="classes-h">The classes</h2>
+            <p data-edit="classes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Nine kinds, three intensities. If you are not sure, start with
               Slow Flow or the Beginners Course and ask the teacher afterward.
             </p>
           </div>
           <ul className={s.classes}>
-            {CLASSES.map((c) => (
+            {CLASSES.map((c, i) => (
               <li key={c.name} className={s.classItem}>
                 <div className={s.classTop}>
-                  <h3>{c.name}</h3>
-                  <span className={s.classMeta}>{c.length}</span>
+                  <h3 data-edit={`classes.title2.${i}`} data-edit-max="40">{c.name}</h3>
+                  <span data-edit={`classes.classMeta.${i}`} data-edit-max="60" className={s.classMeta}>{c.length}</span>
                 </div>
-                <span className={s.classLevel}>{c.level}</span>
-                <p>{c.body}</p>
+                <span data-edit={`classes.classLevel.${i}`} data-edit-max="60" className={s.classLevel}>{c.level}</span>
+                <p data-edit={`classes.body.${i}`} data-edit-max="240" data-edit-multiline>{c.body}</p>
               </li>
             ))}
           </ul>
@@ -405,20 +418,20 @@ export default function StillpointYogaPage() {
         {/* -------------------------------------------------------- TEACHERS */}
         <section id="teachers" className={s.sec} aria-labelledby="teachers-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>02</p>
-            <h2 id="teachers-h">The teachers</h2>
-            <p className={s.secNote}>
+            <p data-edit="teachers.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02</p>
+            <h2 data-edit="teachers.title" data-edit-max="60" id="teachers-h">The teachers</h2>
+            <p data-edit="teachers.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Five of us, all trained to at least 500 hours, all insured, and
               all still taking classes from each other every week.
             </p>
           </div>
           <ul className={s.teachers}>
-            {TEACHERS.map((t) => (
+            {TEACHERS.map((t, i) => (
               <li key={t.name} className={s.teacher}>
-                <h3>{t.name}</h3>
-                <p className={s.teacherRole}>{t.role}</p>
-                <p className={s.teacherBody}>{t.body}</p>
-                <span className={s.teacherSince}>{t.since}</span>
+                <h3 data-edit={`teachers.title2.${i}`} data-edit-max="40">{t.name}</h3>
+                <p data-edit={`teachers.teacherRole.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherRole}>{t.role}</p>
+                <p data-edit={`teachers.teacherBody.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherBody}>{t.body}</p>
+                <span data-edit={`teachers.teacherSince.${i}`} data-edit-max="60" className={s.teacherSince}>{t.since}</span>
               </li>
             ))}
           </ul>
@@ -429,16 +442,16 @@ export default function StillpointYogaPage() {
             one center, the rosette's quieter relative. */}
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>03</p>
-            <h2 id="prices-h">Intro offer and memberships</h2>
-            <p className={s.secNote}>
+            <p data-edit="prices.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03</p>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Intro offer and memberships</h2>
+            <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Students, over-65s and anyone between jobs pay 30% less on every
               membership. Just ask at the desk; we do not ask for proof.
             </p>
           </div>
 
           <div className={s.offer}>
-            <div className={s.offerField} aria-hidden="true">
+            <div data-edit-pattern="prices.field" data-edit-roles="transparent,3,2,4" className={s.offerField} aria-hidden="true">
               <TabbiedPattern
                 pattern={gyre}
                 palette={DRIFT}
@@ -450,24 +463,24 @@ export default function StillpointYogaPage() {
               />
             </div>
             <div className={s.offerText}>
-              <p className={s.offerKicker}>New to Stillpoint</p>
-              <h3 className={s.offerTitle}>Two weeks unlimited</h3>
-              <p className={s.offerPrice}>$40</p>
-              <p className={s.offerBody}>
+              <p data-edit="prices.offerKicker" data-edit-max="240" data-edit-multiline className={s.offerKicker}>New to Stillpoint</p>
+              <h3 data-edit="prices.offerTitle" data-edit-max="40" className={s.offerTitle}>Two weeks unlimited</h3>
+              <p data-edit="prices.offerPrice" data-edit-max="240" data-edit-multiline className={s.offerPrice}>$40</p>
+              <p data-edit="prices.offerBody" data-edit-max="240" data-edit-multiline className={s.offerBody}>
                 Every class on the timetable for fourteen days from your first
                 visit. Mat, blocks and a towel included. Once per person, and
                 it turns into nothing unless you choose a membership.
               </p>
-              <a className={s.btn} href="#timetable">Start with any class</a>
+              <a data-edit="prices.btn" data-edit-max="28" className={s.btn} href="#timetable">Start with any class</a>
             </div>
           </div>
 
           <ul className={s.priceList}>
-            {PRICES.map(([name, note, price]) => (
+            {PRICES.map(([name, note, price], i) => (
               <li key={name} className={s.priceRow}>
-                <span className={s.priceName}>{name}</span>
-                <span className={s.priceNote}>{note}</span>
-                <span className={s.priceValue}>{price}</span>
+                <span data-edit={`prices.priceName.${i}`} data-edit-max="60" className={s.priceName}>{name}</span>
+                <span data-edit={`prices.priceNote.${i}`} data-edit-max="60" className={s.priceNote}>{note}</span>
+                <span data-edit={`prices.priceValue.${i}`} data-edit-max="60" className={s.priceValue}>{price}</span>
               </li>
             ))}
           </ul>
@@ -476,17 +489,17 @@ export default function StillpointYogaPage() {
         {/* ------------------------------------------------------- ETIQUETTE */}
         <section id="etiquette" className={s.sec} aria-labelledby="etiquette-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>04</p>
-            <h2 id="etiquette-h">How the room works</h2>
-            <p className={s.secNote}>
+            <p data-edit="etiquette.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>04</p>
+            <h2 data-edit="etiquette.title" data-edit-max="60" id="etiquette-h">How the room works</h2>
+            <p data-edit="etiquette.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Six things, so that fourteen people can share one quiet room.
             </p>
           </div>
           <ol className={s.rules}>
-            {RULES.map(([title, body]) => (
+            {RULES.map(([title, body], i) => (
               <li key={title}>
-                <h3>{title}</h3>
-                <p>{body}</p>
+                <h3 data-edit={`etiquette.title2.${i}`} data-edit-max="40">{title}</h3>
+                <p data-edit={`etiquette.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
               </li>
             ))}
           </ol>
@@ -495,9 +508,9 @@ export default function StillpointYogaPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>05</p>
-            <h2 id="visit-h">The room, and how to find it</h2>
-            <p className={s.secNote}>
+            <p data-edit="visit.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">The room, and how to find it</h2>
+            <p data-edit="visit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               One long room on the second floor, facing west, with a sprung
               oak floor and heat under it. Changing rooms, two showers and
               lockers at the back.
@@ -505,50 +518,50 @@ export default function StillpointYogaPage() {
           </div>
           <div className={s.visit}>
             <div className={s.visitCol}>
-              <h3 className={s.visitHead}>Address</h3>
-              <p className={s.visitBig}>
+              <h3 data-edit="visit.visitHead" data-edit-max="40" className={s.visitHead}>Address</h3>
+              <p data-edit="visit.body4" data-edit-max="240" data-edit-multiline className={s.visitBig}>
                 48 Alder Street, second floor
                 <br />
                 Above Spoke and Chain bicycles
               </p>
-              <p className={s.visitNote}>
+              <p data-edit="visit.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>
                 The door is to the left of the bike shop, with a small brass
                 plate. There is a lift; ring the bell marked Stillpoint and we
                 will send it down.
               </p>
             </div>
             <div className={s.visitCol}>
-              <h3 className={s.visitHead}>Getting here</h3>
+              <h3 data-edit="visit.visitHead2" data-edit-max="40" className={s.visitHead}>Getting here</h3>
               <dl className={s.visitList}>
                 <div>
-                  <dt>Bus</dt>
-                  <dd>Routes 12 and 40, stop Alder and Fifth, two minutes</dd>
+                  <dt data-edit="visit.term" data-edit-max="28">Bus</dt>
+                  <dd data-edit="visit.body" data-edit-max="200" data-edit-multiline>Routes 12 and 40, stop Alder and Fifth, two minutes</dd>
                 </div>
                 <div>
-                  <dt>Bike</dt>
-                  <dd>Ten hoops in the yard behind the building</dd>
+                  <dt data-edit="visit.term2" data-edit-max="28">Bike</dt>
+                  <dd data-edit="visit.body2" data-edit-max="200" data-edit-multiline>Ten hoops in the yard behind the building</dd>
                 </div>
                 <div>
-                  <dt>Car</dt>
-                  <dd>Street parking is free after 6 pm and on Sundays</dd>
+                  <dt data-edit="visit.term3" data-edit-max="28">Car</dt>
+                  <dd data-edit="visit.body3" data-edit-max="200" data-edit-multiline>Street parking is free after 6 pm and on Sundays</dd>
                 </div>
               </dl>
             </div>
             <div className={s.visitCol}>
-              <h3 className={s.visitHead}>Front desk</h3>
+              <h3 data-edit="visit.visitHead3" data-edit-max="40" className={s.visitHead}>Front desk</h3>
               <dl className={s.visitList}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term4.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body4.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
               <p className={s.visitContact}>
-                <a href="tel:+15550148820">(555) 014-8820</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550148820">(555) 014-8820</a>
               </p>
               <p className={s.visitContact}>
-                <a href="mailto:hello@stillpoint.example">hello@stillpoint.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@stillpoint.example">hello@stillpoint.example</a>
               </p>
             </div>
           </div>
@@ -558,21 +571,21 @@ export default function StillpointYogaPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Stillpoint Yoga</p>
-            <p className={s.footTag}>A small yoga studio above the bike shop on Alder Street.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Stillpoint Yoga</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>A small yoga studio above the bike shop on Alder Street.</p>
           </div>
           <ul className={s.footLinks}>
-            <li><a href="#timetable">Timetable</a></li>
-            <li><a href="#classes">Classes</a></li>
-            <li><a href="#prices">Prices</a></li>
-            <li><a href="#visit">Visit</a></li>
+            <li><a data-edit="footer.timetable" data-edit-max="28" href="#timetable">Timetable</a></li>
+            <li><a data-edit="footer.classes" data-edit-max="28" href="#classes">Classes</a></li>
+            <li><a data-edit="footer.prices" data-edit-max="28" href="#prices">Prices</a></li>
+            <li><a data-edit="footer.visit" data-edit-max="28" href="#visit">Visit</a></li>
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional yoga studio. Classes, prices and teachers are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional yoga studio. Classes, prices and teachers are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
           </p>
         </div>
       </footer>

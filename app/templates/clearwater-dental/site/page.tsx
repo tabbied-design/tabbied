@@ -199,7 +199,19 @@ const FAQ = [
 
 export default function ClearwaterDentalPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f6faf9',
+        '--slate': '#14232b',
+        '--teal': '#2ba59a',
+        '--gray': '#7f9096',
+        '--pale': '#ddebe8',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,slate,teal,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -212,39 +224,39 @@ export default function ClearwaterDentalPage() {
           content on a desktop, a top bar with a menu below 900px. */}
       <header className={s.side}>
         <a className={s.mark} href="#top">
-          <span className={s.markName}>Clearwater</span>
-          <span className={s.markSub}>Dental</span>
+          <span data-edit="side.markName" data-edit-max="60" className={s.markName}>Clearwater</span>
+          <span data-edit="side.markSub" data-edit-max="60" className={s.markSub}>Dental</span>
         </a>
 
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`side.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
 
         <div className={s.sideCall}>
-          <span className={s.sideLabel}>Call the front desk</span>
-          <a className={s.sidePhone} href="tel:+15550142290">(555) 014-2290</a>
+          <span data-edit="side.sideLabel" data-edit-max="60" className={s.sideLabel}>Call the front desk</span>
+          <a data-edit="side.sidePhone" data-edit-max="28" className={s.sidePhone} href="tel:+15550142290">(555) 014-2290</a>
         </div>
 
-        <a className={s.book} href="#book">Book a visit</a>
+        <a data-edit="side.book" data-edit-max="28" className={s.book} href="#book">Book a visit</a>
 
         <div className={s.sideHours}>
-          <span className={s.sideLabel}>Hours</span>
+          <span data-edit="side.sideLabel2" data-edit-max="60" className={s.sideLabel}>Hours</span>
           <dl>
-            {HOURS.map(([d, h]) => (
+            {HOURS.map(([d, h], i) => (
               <div key={d}>
-                <dt>{d}</dt>
-                <dd>{h}</dd>
+                <dt data-edit={`side.term.${i}`} data-edit-max="28">{d}</dt>
+                <dd data-edit={`side.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
               </div>
             ))}
           </dl>
-          <small className={s.sideNote}>Saturdays: the first and third of each month.</small>
+          <small data-edit="side.sideNote" className={s.sideNote}>Saturdays: the first and third of each month.</small>
         </div>
 
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`side.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -254,23 +266,23 @@ export default function ClearwaterDentalPage() {
           {/* ------------------------------------------------------------ HERO */}
           <section className={s.hero} aria-labelledby="hero-h">
             <div className={s.heroText}>
-              <p className={s.kicker}>Family dentistry in Brookmere</p>
-              <h1 id="hero-h" className={s.heroTitle}>
+              <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Family dentistry in Brookmere</p>
+              <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
                 Calm, careful dentistry <em>for the whole family.</em>
               </h1>
-              <p className={s.lede}>
+              <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 Checkups for toddlers and grandparents in the same afternoon,
                 fees printed before you sit down, and a dentist who explains
                 what she sees. New patients are welcome this month.
               </p>
               <div className={s.actions}>
-                <a className={s.primary} href="#book">Book a visit</a>
-                <a className={s.secondary} href="#new-patients">New patient? Start here</a>
+                <a data-edit="hero.primary" data-edit-max="28" className={s.primary} href="#book">Book a visit</a>
+                <a data-edit="hero.secondary" data-edit-max="28" className={s.secondary} href="#new-patients">New patient? Start here</a>
               </div>
             </div>
 
             {/* The primary field: a plate of slow bubbles on the slate. */}
-            <div className={s.heroPlate} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,4,3,2" className={s.heroPlate} aria-hidden="true">
               <TabbiedPattern
                 pattern={softbubbles}
                 palette={BUBBLES}
@@ -283,10 +295,10 @@ export default function ClearwaterDentalPage() {
             </div>
 
             <dl className={s.facts}>
-              {FACTS.map(([v, k]) => (
+              {FACTS.map(([v, k], i) => (
                 <div key={v}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
@@ -295,25 +307,25 @@ export default function ClearwaterDentalPage() {
           {/* ------------------------------------------------------ TREATMENTS */}
           <section id="treatments" className={s.sec} aria-labelledby="treatments-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>01</span>
-              <h2 id="treatments-h">Treatments and what they cost</h2>
-              <p className={s.secNote}>
+              <span data-edit="treatments.secNo" data-edit-max="60" className={s.secNo}>01</span>
+              <h2 data-edit="treatments.title" data-edit-max="60" id="treatments-h">Treatments and what they cost</h2>
+              <p data-edit="treatments.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Fees before insurance. The range is the difference between a
                 small job and a large one, and you will know which yours is
                 before we start.
               </p>
             </div>
             <div className={s.groups}>
-              {GROUPS.map((g) => (
+              {GROUPS.map((g, i) => (
                 <div key={g.title} className={s.group}>
-                  <h3>{g.title}</h3>
-                  <p className={s.groupLede}>{g.lede}</p>
+                  <h3 data-edit={`treatments.title2.${i}`} data-edit-max="40">{g.title}</h3>
+                  <p data-edit={`treatments.groupLede.${i}`} data-edit-max="240" data-edit-multiline className={s.groupLede}>{g.lede}</p>
                   <ul className={s.fees}>
-                    {g.items.map((t) => (
+                    {g.items.map((t, i2) => (
                       <li key={t.name}>
-                        <span className={s.feeName}>{t.name}</span>
-                        <span className={s.feeAmount}>{t.fee}</span>
-                        <small className={s.feeNote}>{t.note}</small>
+                        <span data-edit={`treatments.feeName.${i}.${i2}`} data-edit-max="60" className={s.feeName}>{t.name}</span>
+                        <span data-edit={`treatments.feeAmount.${i}.${i2}`} data-edit-max="60" className={s.feeAmount}>{t.fee}</span>
+                        <small data-edit={`treatments.feeNote.${i}.${i2}`} className={s.feeNote}>{t.note}</small>
                       </li>
                     ))}
                   </ul>
@@ -325,27 +337,27 @@ export default function ClearwaterDentalPage() {
           {/* ---------------------------------------------------- NEW PATIENTS */}
           <section id="new-patients" className={s.sec} aria-labelledby="new-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>02</span>
-              <h2 id="new-h">New patients, in four steps</h2>
-              <p className={s.secNote}>
+              <span data-edit="newPatients.secNo" data-edit-max="60" className={s.secNo}>02</span>
+              <h2 data-edit="newPatients.title" data-edit-max="60" id="new-h">New patients, in four steps</h2>
+              <p data-edit="newPatients.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 The new patient visit is $165 without insurance, with the
                 x-rays and the cleaning included.
               </p>
             </div>
             <ol className={s.steps}>
-              {STEPS.map((st) => (
+              {STEPS.map((st, i) => (
                 <li key={st.no}>
-                  <span className={s.stepNo}>{st.no}</span>
-                  <h3>{st.title}</h3>
-                  <p>{st.body}</p>
+                  <span data-edit={`newPatients.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
+                  <h3 data-edit={`newPatients.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                  <p data-edit={`newPatients.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
                 </li>
               ))}
             </ol>
             <div className={s.bring}>
-              <h3>What to bring</h3>
+              <h3 data-edit="newPatients.title3" data-edit-max="40">What to bring</h3>
               <ul>
-                {BRING.map((b) => (
-                  <li key={b}>{b}</li>
+                {BRING.map((b, i) => (
+                  <li data-edit={`newPatients.item.${i}`} data-edit-max="80" key={b}>{b}</li>
                 ))}
               </ul>
             </div>
@@ -354,48 +366,48 @@ export default function ClearwaterDentalPage() {
           {/* ------------------------------------------------------- INSURANCE */}
           <section id="insurance" className={s.sec} aria-labelledby="insurance-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>03</span>
-              <h2 id="insurance-h">Insurance and paying</h2>
-              <p className={s.secNote}>
+              <span data-edit="insurance.secNo" data-edit-max="60" className={s.secNo}>03</span>
+              <h2 data-edit="insurance.title" data-edit-max="60" id="insurance-h">Insurance and paying</h2>
+              <p data-edit="insurance.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 We send the claim for you and tell you your share before
                 treatment, not after.
               </p>
             </div>
             <div className={s.payGrid}>
               <div className={s.payCol}>
-                <h3>In network with</h3>
+                <h3 data-edit="insurance.title2" data-edit-max="40">In network with</h3>
                 <ul className={s.planList}>
-                  {PLANS.map((p) => (
-                    <li key={p}>{p}</li>
+                  {PLANS.map((p, i) => (
+                    <li data-edit={`insurance.item.${i}`} data-edit-max="80" key={p}>{p}</li>
                   ))}
                 </ul>
-                <p className={s.payNote}>
+                <p data-edit="insurance.payNote" data-edit-max="240" data-edit-multiline className={s.payNote}>
                   Another plan? We are glad to file out of network and most
                   PPO plans still pay their share.
                 </p>
               </div>
               <div className={s.payCol}>
-                <h3>No insurance: the Clearwater plan</h3>
-                <p className={s.payBody}>
+                <h3 data-edit="insurance.title3" data-edit-max="40">No insurance: the Clearwater plan</h3>
+                <p data-edit="insurance.payBody" data-edit-max="240" data-edit-multiline className={s.payBody}>
                   Two checkups and cleanings a year, the x-rays you need, one
                   emergency exam, and 15% off any other treatment.
                 </p>
                 <dl className={s.memberList}>
-                  {MEMBERSHIP.map(([who, price]) => (
+                  {MEMBERSHIP.map(([who, price], i) => (
                     <div key={who}>
-                      <dt>{who}</dt>
-                      <dd>{price}</dd>
+                      <dt data-edit={`insurance.term.${i}`} data-edit-max="28">{who}</dt>
+                      <dd data-edit={`insurance.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                     </div>
                   ))}
                 </dl>
               </div>
               <div className={s.payCol}>
-                <h3>Spreading the cost</h3>
-                <p className={s.payBody}>
+                <h3 data-edit="insurance.title4" data-edit-max="40">Spreading the cost</h3>
+                <p data-edit="insurance.payBody2" data-edit-max="240" data-edit-multiline className={s.payBody}>
                   Treatment over $500 can be paid in equal parts over 3, 6 or
                   12 months with no interest and no credit check.
                 </p>
-                <p className={s.payNote}>
+                <p data-edit="insurance.payNote2" data-edit-max="240" data-edit-multiline className={s.payNote}>
                   We take cards, HSA and FSA cards, checks and cash. Payment
                   is due on the day for your share of each visit.
                 </p>
@@ -406,9 +418,9 @@ export default function ClearwaterDentalPage() {
           {/* ------------------------------------------------------------ TEAM */}
           <section id="team" className={s.sec} aria-labelledby="team-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>04</span>
-              <h2 id="team-h">The people you will see</h2>
-              <p className={s.secNote}>
+              <span data-edit="team.secNo" data-edit-max="60" className={s.secNo}>04</span>
+              <h2 data-edit="team.title" data-edit-max="60" id="team-h">The people you will see</h2>
+              <p data-edit="team.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Three dentists, two hygienists and Grace, who knows every
                 insurance form by heart.
               </p>
@@ -417,7 +429,7 @@ export default function ClearwaterDentalPage() {
               {TEAM.map((p, i) => (
                 <li key={p.name} className={s.member}>
                   {/* A pattern tile stands in for the portrait. */}
-                  <span className={s.avatar} aria-hidden="true">
+                  <span data-edit-pattern={`team.field.${i}`} data-edit-roles="transparent,2,1,3" className={s.avatar} aria-hidden="true">
                     <TabbiedPattern
                       pattern={pebble}
                       palette={AVATAR}
@@ -428,10 +440,10 @@ export default function ClearwaterDentalPage() {
                       style={{ position: 'absolute', inset: 0 }}
                     />
                   </span>
-                  <h3>{p.name}</h3>
-                  <span className={s.memberRole}>{p.role}</span>
-                  <p className={s.memberNote}>{p.note}</p>
-                  <span className={s.memberDays}>{p.days}</span>
+                  <h3 data-edit={`team.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                  <span data-edit={`team.memberRole.${i}`} data-edit-max="60" className={s.memberRole}>{p.role}</span>
+                  <p data-edit={`team.memberNote.${i}`} data-edit-max="240" data-edit-multiline className={s.memberNote}>{p.note}</p>
+                  <span data-edit={`team.memberDays.${i}`} data-edit-max="60" className={s.memberDays}>{p.days}</span>
                 </li>
               ))}
             </ul>
@@ -440,21 +452,21 @@ export default function ClearwaterDentalPage() {
           {/* ----------------------------------------------------- EMERGENCIES */}
           <section id="emergencies" className={s.urgent} aria-labelledby="urgent-h">
             <div className={s.urgentHead}>
-              <span className={s.secNo}>05</span>
-              <h2 id="urgent-h">Dental emergencies</h2>
-              <p className={s.urgentLede}>
+              <span data-edit="emergencies.secNo" data-edit-max="60" className={s.secNo}>05</span>
+              <h2 data-edit="emergencies.title" data-edit-max="60" id="urgent-h">Dental emergencies</h2>
+              <p data-edit="emergencies.urgentLede" data-edit-max="240" data-edit-multiline className={s.urgentLede}>
                 Call at 8:00 for a same-day slot. After hours, the message on
                 the front desk line gives you the number of the dentist on
                 call.
               </p>
-              <a className={s.urgentPhone} href="tel:+15550142290">(555) 014-2290</a>
-              <p className={s.urgentFee}>Emergency exam and x-ray: $95</p>
+              <a data-edit="emergencies.urgentPhone" data-edit-max="28" className={s.urgentPhone} href="tel:+15550142290">(555) 014-2290</a>
+              <p data-edit="emergencies.urgentFee" data-edit-max="240" data-edit-multiline className={s.urgentFee}>Emergency exam and x-ray: $95</p>
             </div>
             <dl className={s.urgentList}>
-              {URGENT.map((u) => (
+              {URGENT.map((u, i) => (
                 <div key={u.title}>
-                  <dt>{u.title}</dt>
-                  <dd>{u.body}</dd>
+                  <dt data-edit={`emergencies.term.${i}`} data-edit-max="28">{u.title}</dt>
+                  <dd data-edit={`emergencies.body.${i}`} data-edit-max="200" data-edit-multiline>{u.body}</dd>
                 </div>
               ))}
             </dl>
@@ -463,14 +475,14 @@ export default function ClearwaterDentalPage() {
           {/* ------------------------------------------------------------- FAQ */}
           <section id="faq" className={s.sec} aria-labelledby="faq-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>06</span>
-              <h2 id="faq-h">Questions we are asked</h2>
+              <span data-edit="faq.secNo" data-edit-max="60" className={s.secNo}>06</span>
+              <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Questions we are asked</h2>
             </div>
             <div className={s.faq}>
-              {FAQ.map((f) => (
+              {FAQ.map((f, i) => (
                 <details key={f.q} className={s.faqItem}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+                  <summary data-edit={`faq.question.${i}`} data-edit-max="80">{f.q}</summary>
+                  <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{f.a}</p>
                 </details>
               ))}
             </div>
@@ -479,74 +491,74 @@ export default function ClearwaterDentalPage() {
           {/* ----------------------------------------------------------- VISIT */}
           <section id="visit" className={s.sec} aria-labelledby="visit-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>07</span>
-              <h2 id="visit-h">Find us, and book</h2>
-              <p className={s.secNote}>
+              <span data-edit="visit.secNo" data-edit-max="60" className={s.secNo}>07</span>
+              <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Find us, and book</h2>
+              <p data-edit="visit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Ground floor of the old post office, across from the library.
               </p>
             </div>
             <div className={s.visit}>
               <div className={s.where}>
-                <h3>Address</h3>
-                <p className={s.address}>
+                <h3 data-edit="visit.title2" data-edit-max="40">Address</h3>
+                <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.address}>
                   Clearwater Dental
                   <br />
                   220 Harbor Street, Suite 2
                   <br />
                   Brookmere
                 </p>
-                <h3>Hours</h3>
+                <h3 data-edit="visit.title3" data-edit-max="40">Hours</h3>
                 <dl className={s.hoursList}>
-                  {HOURS.map(([d, h]) => (
+                  {HOURS.map(([d, h], i) => (
                     <div key={d}>
-                      <dt>{d}</dt>
-                      <dd>{h}</dd>
+                      <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                      <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                     </div>
                   ))}
                 </dl>
-                <p className={s.hoursNote}>Saturdays are the first and third of each month. Evening slots go first, so book them early.</p>
-                <h3>Getting here</h3>
+                <p data-edit="visit.hoursNote" data-edit-max="240" data-edit-multiline className={s.hoursNote}>Saturdays are the first and third of each month. Evening slots go first, so book them early.</p>
+                <h3 data-edit="visit.title4" data-edit-max="40">Getting here</h3>
                 <ul className={s.directions}>
-                  <li>Free parking behind the building, 14 spaces, two of them wide</li>
-                  <li>Bus 12 and 31 stop at Harbor and Fifth, one minute away</li>
-                  <li>Bike racks by the side door</li>
+                  <li data-edit="visit.item" data-edit-max="80">Free parking behind the building, 14 spaces, two of them wide</li>
+                  <li data-edit="visit.item2" data-edit-max="80">Bus 12 and 31 stop at Harbor and Fifth, one minute away</li>
+                  <li data-edit="visit.item3" data-edit-max="80">Bike racks by the side door</li>
                 </ul>
-                <h3>Write</h3>
+                <h3 data-edit="visit.title5" data-edit-max="40">Write</h3>
                 <p>
-                  <a className={s.mail} href="mailto:hello@clearwaterdental.example">hello@clearwaterdental.example</a>
+                  <a data-edit="visit.mail" data-edit-max="28" className={s.mail} href="mailto:hello@clearwaterdental.example">hello@clearwaterdental.example</a>
                 </p>
               </div>
 
               <form id="book" className={s.form} action="#">
-                <h3 className={s.formTitle}>Request an appointment</h3>
-                <p className={s.formNote}>
+                <h3 data-edit="visit.formTitle" data-edit-max="40" className={s.formTitle}>Request an appointment</h3>
+                <p data-edit="visit.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>
                   We call back within one working day to find a time.
                 </p>
                 <div className={s.field}>
-                  <label htmlFor="cw-name">Name</label>
+                  <label data-edit="visit.label" htmlFor="cw-name">Name</label>
                   <input id="cw-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="cw-phone">Phone</label>
+                  <label data-edit="visit.label2" htmlFor="cw-phone">Phone</label>
                   <input id="cw-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="cw-email">Email</label>
+                  <label data-edit="visit.label3" htmlFor="cw-email">Email</label>
                   <input id="cw-email" name="email" type="email" autoComplete="email" />
                 </div>
                 <fieldset className={s.choice}>
-                  <legend>I am</legend>
+                  <legend data-edit="visit.legend">I am</legend>
                   <label>
                     <input type="radio" name="who" value="new" defaultChecked />
-                    <span>A new patient</span>
+                    <span data-edit="visit.text" data-edit-max="60">A new patient</span>
                   </label>
                   <label>
                     <input type="radio" name="who" value="existing" />
-                    <span>A current patient</span>
+                    <span data-edit="visit.text2" data-edit-max="60">A current patient</span>
                   </label>
                 </fieldset>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="cw-reason">Reason for the visit</label>
+                  <label data-edit="visit.label4" htmlFor="cw-reason">Reason for the visit</label>
                   <select id="cw-reason" name="reason" defaultValue="checkup">
                     <option value="checkup">Checkup and cleaning</option>
                     <option value="child">A child's first visit</option>
@@ -556,26 +568,26 @@ export default function ClearwaterDentalPage() {
                   </select>
                 </div>
                 <fieldset className={s.choice}>
-                  <legend>Times that suit you</legend>
+                  <legend data-edit="visit.legend2">Times that suit you</legend>
                   <label>
                     <input type="checkbox" name="when" value="morning" />
-                    <span>Mornings</span>
+                    <span data-edit="visit.text3" data-edit-max="60">Mornings</span>
                   </label>
                   <label>
                     <input type="checkbox" name="when" value="afternoon" />
-                    <span>Afternoons</span>
+                    <span data-edit="visit.text4" data-edit-max="60">Afternoons</span>
                   </label>
                   <label>
                     <input type="checkbox" name="when" value="evening" />
-                    <span>Tue or Thu evening</span>
+                    <span data-edit="visit.text5" data-edit-max="60">Tue or Thu evening</span>
                   </label>
                   <label>
                     <input type="checkbox" name="when" value="saturday" />
-                    <span>Saturday</span>
+                    <span data-edit="visit.text6" data-edit-max="60">Saturday</span>
                   </label>
                 </fieldset>
-                <button type="submit" className={s.submit}>Send the request</button>
-                <small className={s.formFine}>Please keep medical details for the phone call.</small>
+                <button data-edit="visit.submit" data-edit-max="24" type="submit" className={s.submit}>Send the request</button>
+                <small data-edit="visit.formFine" className={s.formFine}>Please keep medical details for the phone call.</small>
               </form>
             </div>
           </section>
@@ -583,17 +595,17 @@ export default function ClearwaterDentalPage() {
 
         <footer className={s.footer}>
           <div className={s.footTop}>
-            <p className={s.footName}>Clearwater Dental</p>
-            <p className={s.footTag}>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Clearwater Dental</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>
               A family practice on Harbor Street, Brookmere.
             </p>
           </div>
           <div className={s.footFine}>
-            <p>A fictional dental practice. Prices, hours and people are invented.</p>
+            <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional dental practice. Prices, hours and people are invented.</p>
             <p>
-              <span>Patterns by </span>
-              <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-              <span>, drawn live on the page.</span>
+              <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+              <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+              <span data-edit="footer.text2" data-edit-max="60">, drawn live on the page.</span>
             </p>
           </div>
         </footer>

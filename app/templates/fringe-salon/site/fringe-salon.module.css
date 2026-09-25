@@ -165,7 +165,9 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr) minmax(0, 0.62fr);
   gap: clamp(1.5rem, 4vw, 3.5rem);
   align-items: end;
-  margin-top: clamp(2rem, 4vw, 3.5rem);
+  /* Clear of the wordmark's descender, which its 0.8 line height leaves
+     hanging below the line box. */
+  margin-top: clamp(2rem, 7.5vw, 7.5rem);
 }
 
 .heroLead {

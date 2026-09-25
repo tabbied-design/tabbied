@@ -353,7 +353,19 @@ const HOURS = [
 
 export default function CadenceMusicPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#faf8f3',
+        '--ink': '#1b1a24',
+        '--vermilion': '#e0533c',
+        '--gray': '#8d8a93',
+        '--pale': '#e9e6df',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,vermilion,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -364,18 +376,18 @@ export default function CadenceMusicPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span className={s.markName}>Cadence</span>
-          <span className={s.markSub}>Music School</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Cadence</span>
+          <span data-edit="bar.markSub" data-edit-max="60" className={s.markSub}>Music School</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#trial">Book a trial</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#trial">Book a trial</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -386,31 +398,31 @@ export default function CadenceMusicPage() {
             the middle of the plate like sound, and the violin on them. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Music lessons for all ages, Millbrook</p>
-            <h1 className={s.heroTitle} id="hero-h">
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Music lessons for all ages, Millbrook</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" className={s.heroTitle} id="hero-h">
               From the first note <em>to Grade 8,</em> and every week between.
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               One-to-one lessons on six instruments, group classes from age
               three, and three concerts a year for anyone who wants to play in
               them. Nine teachers, fourteen rooms and one very patient grand
               piano on Foundry Row.
             </p>
             <div className={s.heroActions}>
-              <a className={s.btn} href="#trial">Book a $20 trial lesson</a>
-              <a className={s.btnLine} href="#instruments">See the instruments</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#trial">Book a $20 trial lesson</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#instruments">See the instruments</a>
             </div>
             <dl className={s.facts}>
-              {FACTS.map(([value, label]) => (
+              {FACTS.map(([value, label], i) => (
                 <div key={label}>
-                  <dt>{value}</dt>
-                  <dd>{label}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{value}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{label}</dd>
                 </div>
               ))}
             </dl>
           </div>
           <div className={s.heroPlate}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,1" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={concentricrings}
                 palette={RINGS}
@@ -421,7 +433,7 @@ export default function CadenceMusicPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <Figure
+            <Figure editId="photo.cadence-music-violin-cutout"
               slug="cadence-music-violin-cutout"
               cutout
               priority
@@ -436,25 +448,25 @@ export default function CadenceMusicPage() {
             allows. */}
         <section id="instruments" className={s.sec} aria-labelledby="instruments-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>01</span>
-            <h2 id="instruments-h">Six instruments</h2>
-            <p className={s.secNote}>
+            <span data-edit="instruments.secNo" data-edit-max="60" className={s.secNo}>01</span>
+            <h2 data-edit="instruments.title" data-edit-max="60" id="instruments-h">Six instruments</h2>
+            <p data-edit="instruments.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every lesson is one to one, every week of term, in a room with
               its own instrument. Prices are for a 30-minute lesson.
             </p>
           </div>
           <ul className={s.grid}>
-            {INSTRUMENTS.map((inst) => (
+            {INSTRUMENTS.map((inst, i) => (
               <li key={inst.no} className={s.tile}>
                 <div className={s.tileTop}>
-                  <span className={s.tileNo}>{inst.no}</span>
-                  <span className={s.tileAges}>{inst.ages}</span>
+                  <span data-edit={`instruments.tileNo.${i}`} data-edit-max="60" className={s.tileNo}>{inst.no}</span>
+                  <span data-edit={`instruments.tileAges.${i}`} data-edit-max="60" className={s.tileAges}>{inst.ages}</span>
                 </div>
-                <h3 className={s.tileName}>{inst.name}</h3>
-                <p className={s.tileBody}>{inst.body}</p>
+                <h3 data-edit={`instruments.tileName.${i}`} data-edit-max="40" className={s.tileName}>{inst.name}</h3>
+                <p data-edit={`instruments.tileBody.${i}`} data-edit-max="240" data-edit-multiline className={s.tileBody}>{inst.body}</p>
                 <div className={s.tileFoot}>
-                  <strong>{inst.from}</strong>
-                  <span>{inst.teachers}</span>
+                  <strong data-edit={`instruments.emphasis.${i}`}>{inst.from}</strong>
+                  <span data-edit={`instruments.text.${i}`} data-edit-max="60">{inst.teachers}</span>
                 </div>
               </li>
             ))}
@@ -464,22 +476,22 @@ export default function CadenceMusicPage() {
         {/* -------------------------------------------------------- TEACHERS */}
         <section id="teachers" className={s.sec} aria-labelledby="teachers-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>02</span>
-            <h2 id="teachers-h">The teachers</h2>
-            <p className={s.secNote}>
+            <span data-edit="teachers.secNo" data-edit-max="60" className={s.secNo}>02</span>
+            <h2 data-edit="teachers.title" data-edit-max="60" id="teachers-h">The teachers</h2>
+            <p data-edit="teachers.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               All nine are working musicians with a degree or a diploma in
               teaching, and all are background checked every two years.
             </p>
           </div>
           <ul className={s.teachers}>
-            {TEACHERS.map((t) => (
+            {TEACHERS.map((t, i) => (
               <li key={t.name} className={s.teacher}>
                 <span className={s.initials} aria-hidden="true">{t.initials}</span>
                 <div className={s.teacherText}>
-                  <h3>{t.name}</h3>
-                  <p className={s.teaches}>{t.teaches}</p>
-                  <p className={s.teacherNote}>{t.note}</p>
-                  <p className={s.days}>{t.days}</p>
+                  <h3 data-edit={`teachers.title2.${i}`} data-edit-max="40">{t.name}</h3>
+                  <p data-edit={`teachers.teaches.${i}`} data-edit-max="240" data-edit-multiline className={s.teaches}>{t.teaches}</p>
+                  <p data-edit={`teachers.teacherNote.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherNote}>{t.note}</p>
+                  <p data-edit={`teachers.days.${i}`} data-edit-max="240" data-edit-multiline className={s.days}>{t.days}</p>
                 </div>
               </li>
             ))}
@@ -493,9 +505,9 @@ export default function CadenceMusicPage() {
         <section id="term" className={s.termSec} aria-labelledby="term-h">
           <div className={s.termInner}>
             <div className={s.secHead}>
-              <span className={s.secNo}>03</span>
-              <h2 id="term-h">Autumn term, 2026</h2>
-              <p className={s.secNote}>
+              <span data-edit="term.secNo" data-edit-max="60" className={s.secNo}>03</span>
+              <h2 data-edit="term.title" data-edit-max="60" id="term-h">Autumn term, 2026</h2>
+              <p data-edit="term.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Fourteen weeks of lessons, one recital, one concert and the
                 exam season. No lessons on Thanksgiving Thursday and Friday.
               </p>
@@ -505,29 +517,29 @@ export default function CadenceMusicPage() {
                 <li className={s.track} aria-hidden="true">
                   <span className={s.breakHalf} />
                   <span className={s.breakWinter} />
-                  {WEEKS.map((w) => (
-                    <span key={w} className={s.tick}>{w}</span>
+                  {WEEKS.map((w, i) => (
+                    <span data-edit={`term.tick.${i}`} data-edit-max="60" key={w} className={s.tick}>{w}</span>
                   ))}
                 </li>
-                {TERM.map((e) => (
+                {TERM.map((e, i) => (
                   <li
                     key={e.title}
                     className={e.row === 'up' ? s.eventUp : s.eventDown}
                     style={{ gridColumn: `${e.week} / span ${e.span}` }}>
-                    <span className={s.eventKind}>{e.kind}</span>
-                    <time className={s.eventDate}>{e.date}</time>
-                    <h3 className={s.eventTitle}>{e.title}</h3>
-                    <p className={s.eventBody}>{e.body}</p>
+                    <span data-edit={`term.eventKind.${i}`} data-edit-max="60" className={s.eventKind}>{e.kind}</span>
+                    <time data-edit={`term.eventDate.${i}`} className={s.eventDate}>{e.date}</time>
+                    <h3 data-edit={`term.eventTitle.${i}`} data-edit-max="40" className={s.eventTitle}>{e.title}</h3>
+                    <p data-edit={`term.eventBody.${i}`} data-edit-max="240" data-edit-multiline className={s.eventBody}>{e.body}</p>
                   </li>
                 ))}
               </ol>
             </div>
             <dl className={s.year}>
-              {YEAR.map(([term, dates, weeks]) => (
+              {YEAR.map(([term, dates, weeks], i) => (
                 <div key={term}>
-                  <dt>{term}</dt>
-                  <dd className={s.yearDates}>{dates}</dd>
-                  <dd className={s.yearWeeks}>{weeks}</dd>
+                  <dt data-edit={`term.term.${i}`} data-edit-max="28">{term}</dt>
+                  <dd data-edit={`term.yearDates.${i}`} data-edit-max="200" data-edit-multiline className={s.yearDates}>{dates}</dd>
+                  <dd data-edit={`term.yearWeeks.${i}`} data-edit-max="200" data-edit-multiline className={s.yearWeeks}>{weeks}</dd>
                 </div>
               ))}
             </dl>
@@ -537,33 +549,33 @@ export default function CadenceMusicPage() {
         {/* ----------------------------------------------------------- RATES */}
         <section id="rates" className={s.sec} aria-labelledby="rates-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>04</span>
-            <h2 id="rates-h">Lesson rates</h2>
-            <p className={s.secNote}>
+            <span data-edit="rates.secNo" data-edit-max="60" className={s.secNo}>04</span>
+            <h2 data-edit="rates.title" data-edit-max="60" id="rates-h">Lesson rates</h2>
+            <p data-edit="rates.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The same on every instrument and with every teacher. Pay by the
               lesson or by the term; either way, a lesson missed with a
               day's notice is made up.
             </p>
           </div>
           <ul className={s.rates}>
-            {RATES.map((r) => (
+            {RATES.map((r, i) => (
               <li key={r.minutes} className={s.rate}>
                 <p className={s.rateMin}>
-                  <strong>{r.minutes}</strong>
-                  <span>minutes</span>
+                  <strong data-edit={`rates.emphasis.${i}`}>{r.minutes}</strong>
+                  <span data-edit={`rates.text.${i}`} data-edit-max="60">minutes</span>
                 </p>
                 <p className={s.ratePrice}>
-                  <strong>{r.lesson}</strong>
-                  <span>a lesson</span>
+                  <strong data-edit={`rates.emphasis2.${i}`}>{r.lesson}</strong>
+                  <span data-edit={`rates.text2.${i}`} data-edit-max="60">a lesson</span>
                 </p>
-                <p className={s.rateTerm}>{r.term}</p>
-                <p className={s.rateSuits}>{r.suits}</p>
+                <p data-edit={`rates.rateTerm.${i}`} data-edit-max="240" data-edit-multiline className={s.rateTerm}>{r.term}</p>
+                <p data-edit={`rates.rateSuits.${i}`} data-edit-max="240" data-edit-multiline className={s.rateSuits}>{r.suits}</p>
               </li>
             ))}
           </ul>
           <ul className={s.rateNotes}>
-            {RATE_NOTES.map((n) => (
-              <li key={n}>{n}</li>
+            {RATE_NOTES.map((n, i) => (
+              <li data-edit={`rates.item.${i}`} data-edit-max="80" key={n}>{n}</li>
             ))}
           </ul>
         </section>
@@ -571,30 +583,30 @@ export default function CadenceMusicPage() {
         {/* --------------------------------------------------------- CLASSES */}
         <section id="classes" className={s.sec} aria-labelledby="classes-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>05</span>
-            <h2 id="classes-h">Group classes</h2>
-            <p className={s.secNote}>
+            <span data-edit="classes.secNo" data-edit-max="60" className={s.secNo}>05</span>
+            <h2 data-edit="classes.title" data-edit-max="60" id="classes-h">Group classes</h2>
+            <p data-edit="classes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Small groups of six to twelve, once a week in term time. Open to
               anyone, whether or not you have lessons here.
             </p>
           </div>
           <table className={s.classes}>
-            <caption className={s.srOnly}>Group classes, ages, times and prices per term</caption>
+            <caption data-edit="classes.srOnly" className={s.srOnly}>Group classes, ages, times and prices per term</caption>
             <thead>
               <tr>
-                <th scope="col">Class</th>
-                <th scope="col">Who</th>
-                <th scope="col">When</th>
-                <th scope="col">Price</th>
+                <th data-edit="classes.heading" scope="col">Class</th>
+                <th data-edit="classes.heading2" scope="col">Who</th>
+                <th data-edit="classes.heading3" scope="col">When</th>
+                <th data-edit="classes.heading4" scope="col">Price</th>
               </tr>
             </thead>
             <tbody>
-              {CLASSES.map((c) => (
+              {CLASSES.map((c, i) => (
                 <tr key={c.name}>
-                  <th scope="row" className={s.className}>{c.name}</th>
-                  <td className={s.classAges}>{c.ages}</td>
-                  <td className={s.classWhen}>{c.when}</td>
-                  <td className={s.classPrice}>{c.price}</td>
+                  <th data-edit={`classes.className.${i}`} scope="row" className={s.className}>{c.name}</th>
+                  <td data-edit={`classes.classAges.${i}`} className={s.classAges}>{c.ages}</td>
+                  <td data-edit={`classes.classWhen.${i}`} className={s.classWhen}>{c.when}</td>
+                  <td data-edit={`classes.classPrice.${i}`} className={s.classPrice}>{c.price}</td>
                 </tr>
               ))}
             </tbody>
@@ -602,7 +614,7 @@ export default function CadenceMusicPage() {
         </section>
 
         {/* A band of stripes, quiet as a row of piano keys, before the form. */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,1,4,3,4,2" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={picket}
             palette={KEYS}
@@ -619,39 +631,39 @@ export default function CadenceMusicPage() {
         <section id="trial" className={s.trialSec} aria-labelledby="trial-h">
           <div className={s.trial}>
             <div className={s.trialIntro}>
-              <span className={s.secNo}>06</span>
-              <h2 id="trial-h">Book a trial lesson</h2>
-              <p>
+              <span data-edit="trial.secNo" data-edit-max="60" className={s.secNo}>06</span>
+              <h2 data-edit="trial.title" data-edit-max="60" id="trial-h">Book a trial lesson</h2>
+              <p data-edit="trial.body" data-edit-max="240" data-edit-multiline>
                 Thirty minutes with the teacher you would have, for $20, taken
                 off your first term if you stay. Bring nothing but the player:
                 we have the instrument.
               </p>
               <ol className={s.trialSteps}>
                 <li>
-                  <strong>Send the form</strong>
-                  <span>We reply within one working day with two or three times.</span>
+                  <strong data-edit="trial.emphasis">Send the form</strong>
+                  <span data-edit="trial.text" data-edit-max="60">We reply within one working day with two or three times.</span>
                 </li>
                 <li>
-                  <strong>Come and play</strong>
-                  <span>Parents are welcome in the room for the under-tens.</span>
+                  <strong data-edit="trial.emphasis2">Come and play</strong>
+                  <span data-edit="trial.text2" data-edit-max="60">Parents are welcome in the room for the under-tens.</span>
                 </li>
                 <li>
-                  <strong>Decide at home</strong>
-                  <span>No forms on the day. We hold the slot for a week.</span>
+                  <strong data-edit="trial.emphasis3">Decide at home</strong>
+                  <span data-edit="trial.text3" data-edit-max="60">No forms on the day. We hold the slot for a week.</span>
                 </li>
               </ol>
             </div>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="cm-name">Your name</label>
+                <label data-edit="trial.label" htmlFor="cm-name">Your name</label>
                 <input id="cm-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="cm-student">Student's age</label>
+                <label data-edit="trial.label2" htmlFor="cm-student">Student's age</label>
                 <input id="cm-student" name="age" type="number" min="3" max="99" />
               </div>
               <div className={s.field}>
-                <label htmlFor="cm-instrument">Instrument</label>
+                <label data-edit="trial.label3" htmlFor="cm-instrument">Instrument</label>
                 <select id="cm-instrument" name="instrument" defaultValue="">
                   <option value="" disabled>Choose one</option>
                   <option>Piano</option>
@@ -664,7 +676,7 @@ export default function CadenceMusicPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="cm-level">Playing so far</label>
+                <label data-edit="trial.label4" htmlFor="cm-level">Playing so far</label>
                 <select id="cm-level" name="level" defaultValue="">
                   <option value="" disabled>Choose one</option>
                   <option>Never played</option>
@@ -674,11 +686,11 @@ export default function CadenceMusicPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="cm-email">Email</label>
+                <label data-edit="trial.label5" htmlFor="cm-email">Email</label>
                 <input id="cm-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.field}>
-                <label htmlFor="cm-days">Best days</label>
+                <label data-edit="trial.label6" htmlFor="cm-days">Best days</label>
                 <select id="cm-days" name="days" defaultValue="">
                   <option value="" disabled>Choose one</option>
                   <option>Weekdays after school</option>
@@ -688,12 +700,12 @@ export default function CadenceMusicPage() {
                 </select>
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="cm-note">Anything else</label>
+                <label data-edit="trial.label7" htmlFor="cm-note">Anything else</label>
                 <textarea id="cm-note" name="note" rows={3} placeholder="Music they love, a teacher you have heard about" />
               </div>
               <div className={s.formFoot}>
-                <button className={s.btn} type="submit">Request a trial</button>
-                <small>Or call the office on (555) 310-4477.</small>
+                <button data-edit="trial.btn" data-edit-max="24" className={s.btn} type="submit">Request a trial</button>
+                <small data-edit="trial.note">Or call the office on (555) 310-4477.</small>
               </div>
             </form>
           </div>
@@ -702,39 +714,39 @@ export default function CadenceMusicPage() {
         {/* --------------------------------------------------------- FIND US */}
         <section id="find-us" className={s.sec} aria-labelledby="find-h">
           <div className={s.secHead}>
-            <span className={s.secNo}>07</span>
-            <h2 id="find-h">Find us</h2>
-            <p className={s.secNote}>
+            <span data-edit="findUs.secNo" data-edit-max="60" className={s.secNo}>07</span>
+            <h2 data-edit="findUs.title" data-edit-max="60" id="find-h">Find us</h2>
+            <p data-edit="findUs.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The red brick building with the round window, between the
               library and the old foundry.
             </p>
           </div>
           <div className={s.find}>
             <address className={s.address}>
-              <span className={s.addrName}>Cadence Music School</span>
-              <span>22 Foundry Row</span>
-              <span>Millbrook</span>
-              <a href="tel:+15553104477">(555) 310-4477</a>
-              <a href="mailto:hello@cadencemusic.example">hello@cadencemusic.example</a>
+              <span data-edit="findUs.addrName" data-edit-max="60" className={s.addrName}>Cadence Music School</span>
+              <span data-edit="findUs.text" data-edit-max="60">22 Foundry Row</span>
+              <span data-edit="findUs.text2" data-edit-max="60">Millbrook</span>
+              <a data-edit="findUs.link" data-edit-max="28" href="tel:+15553104477">(555) 310-4477</a>
+              <a data-edit="findUs.link2" data-edit-max="28" href="mailto:hello@cadencemusic.example">hello@cadencemusic.example</a>
             </address>
             <div>
-              <h3 className={s.findHead}>Office hours</h3>
+              <h3 data-edit="findUs.findHead" data-edit-max="40" className={s.findHead}>Office hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([day, time]) => (
+                {HOURS.map(([day, time], i) => (
                   <div key={day}>
-                    <dt>{day}</dt>
-                    <dd>{time}</dd>
+                    <dt data-edit={`findUs.term.${i}`} data-edit-max="28">{day}</dt>
+                    <dd data-edit={`findUs.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div>
-              <h3 className={s.findHead}>Getting here</h3>
+              <h3 data-edit="findUs.findHead2" data-edit-max="40" className={s.findHead}>Getting here</h3>
               <ul className={s.getting}>
-                <li>Bus 4 and 11 stop outside the library, a minute away.</li>
-                <li>Free parking behind the building after 5 pm and all Saturday.</li>
-                <li>Step-free entrance on Mill Street, and a lift to every floor.</li>
-                <li>A waiting room with wifi for parents, and a quiet corner for homework.</li>
+                <li data-edit="findUs.item" data-edit-max="80">Bus 4 and 11 stop outside the library, a minute away.</li>
+                <li data-edit="findUs.item2" data-edit-max="80">Free parking behind the building after 5 pm and all Saturday.</li>
+                <li data-edit="findUs.item3" data-edit-max="80">Step-free entrance on Mill Street, and a lift to every floor.</li>
+                <li data-edit="findUs.item4" data-edit-max="80">A waiting room with wifi for parents, and a quiet corner for homework.</li>
               </ul>
             </div>
           </div>
@@ -743,32 +755,32 @@ export default function CadenceMusicPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <p className={s.footName}>Cadence</p>
-          <p className={s.footLine}>Music lessons for all ages, on Foundry Row since 2011.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Cadence</p>
+          <p data-edit="footer.footLine" data-edit-max="240" data-edit-multiline className={s.footLine}>Music lessons for all ages, on Foundry Row since 2011.</p>
         </div>
         <div className={s.footGrid}>
           <ul className={s.footLinks}>
-            <li><a href="#instruments">Instruments</a></li>
-            <li><a href="#teachers">Teachers</a></li>
-            <li><a href="#term">Term dates</a></li>
+            <li><a data-edit="footer.instruments" data-edit-max="28" href="#instruments">Instruments</a></li>
+            <li><a data-edit="footer.teachers" data-edit-max="28" href="#teachers">Teachers</a></li>
+            <li><a data-edit="footer.term" data-edit-max="28" href="#term">Term dates</a></li>
           </ul>
           <ul className={s.footLinks}>
-            <li><a href="#rates">Lesson rates</a></li>
-            <li><a href="#classes">Group classes</a></li>
-            <li><a href="#trial">Trial lesson</a></li>
+            <li><a data-edit="footer.rates" data-edit-max="28" href="#rates">Lesson rates</a></li>
+            <li><a data-edit="footer.classes" data-edit-max="28" href="#classes">Group classes</a></li>
+            <li><a data-edit="footer.trial" data-edit-max="28" href="#trial">Trial lesson</a></li>
           </ul>
           <ul className={s.footLinks}>
-            <li><a href="tel:+15553104477">(555) 310-4477</a></li>
-            <li><a href="mailto:hello@cadencemusic.example">hello@cadencemusic.example</a></li>
-            <li><a href="#find-us">22 Foundry Row, Millbrook</a></li>
+            <li><a data-edit="footer.link" data-edit-max="28" href="tel:+15553104477">(555) 310-4477</a></li>
+            <li><a data-edit="footer.link2" data-edit-max="28" href="mailto:hello@cadencemusic.example">hello@cadencemusic.example</a></li>
+            <li><a data-edit="footer.findUs" data-edit-max="28" href="#find-us">22 Foundry Row, Millbrook</a></li>
           </ul>
         </div>
         <div className={s.footFine}>
-          <p>A fictional music school. Teachers, prices and dates are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional music school. Teachers, prices and dates are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on a transparent ground.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link3" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
           </p>
         </div>
       </footer>

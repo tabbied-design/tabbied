@@ -223,7 +223,19 @@ const ROOM = [
 
 export default function MorrowCoffeePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--oat': '#f3eee6',
+        '--espresso': '#231a14',
+        '--roast': '#b06a3b',
+        '--gray': '#8d8177',
+        '--pale': '#e3dacd',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="oat,espresso,roast,gray,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -238,28 +250,28 @@ export default function MorrowCoffeePage() {
         <div className={s.leftTop}>
           <p className={s.status}>
             <span className={s.statusDot} aria-hidden="true" />
-            <span>Open now, until 6 pm</span>
+            <span data-edit="left.text" data-edit-max="60">Open now, until 6 pm</span>
           </p>
           <nav className={s.nav} aria-label="Sections">
-            {NAV.map(([label, href]) => (
-              <a key={href} href={href}>{label}</a>
+            {NAV.map(([label, href], i) => (
+              <a data-edit={`left.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
             ))}
           </nav>
           <TemplateMenu className={s.siteMenu}>
-            {NAV.map(([label, href]) => (
-              <a key={href} href={href}>{label}</a>
+            {NAV.map(([label, href], i) => (
+              <a data-edit={`left.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
             ))}
           </TemplateMenu>
         </div>
 
         <div className={s.title}>
-          <h1 className={s.name}>Morrow Coffee</h1>
-          <p className={s.tagline}>A coffee bar at the front, a roaster at the back.</p>
+          <h1 data-edit="left.name" data-edit-max="70" className={s.name}>Morrow Coffee</h1>
+          <p data-edit="left.tagline" data-edit-max="240" data-edit-multiline className={s.tagline}>A coffee bar at the front, a roaster at the back.</p>
         </div>
 
         <div className={s.stage}>
           <div className={s.saucer}>
-            <div className={s.saucerField} aria-hidden="true">
+            <div data-edit-pattern="left.field" data-edit-roles="transparent,2,1" className={s.saucerField} aria-hidden="true">
               <TabbiedPattern
                 pattern={goldencoil}
                 palette={SAUCER}
@@ -269,7 +281,7 @@ export default function MorrowCoffeePage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <Figure
+            <Figure editId="photo.morrow-coffee-cup-cutout"
               slug="morrow-coffee-cup-cutout"
               cutout
               alt="A flat white in a stoneware cup, a heart poured in the foam"
@@ -280,10 +292,10 @@ export default function MorrowCoffeePage() {
         </div>
 
         <dl className={s.today}>
-          {TODAY.map(([k, v]) => (
+          {TODAY.map(([k, v], i) => (
             <div key={k}>
-              <dt>{k}</dt>
-              <dd>{v}</dd>
+              <dt data-edit={`left.term.${i}`} data-edit-max="28">{k}</dt>
+              <dd data-edit={`left.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
             </div>
           ))}
         </dl>
@@ -292,7 +304,7 @@ export default function MorrowCoffeePage() {
       {/* ----------------------------------------------------- RIGHT HALF */}
       <div className={s.right}>
         <main id="top">
-          <p className={s.intro}>
+          <p data-edit="top.intro" data-edit-max="240" data-edit-multiline className={s.intro}>
             We roast twice a week in the back room on Canal Street and pour it
             in the front, seven days a week. Everything below is on the board
             today.
@@ -301,31 +313,31 @@ export default function MorrowCoffeePage() {
           {/* ---------------------------------------------------------- MENU */}
           <section id="menu" className={s.sec} aria-labelledby="menu-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>01</span>
-              <h2 id="menu-h">The menu</h2>
+              <span data-edit="menu.secNo" data-edit-max="60" className={s.secNo}>01</span>
+              <h2 data-edit="menu.title" data-edit-max="60" id="menu-h">The menu</h2>
             </div>
             <div className={s.menuGrid}>
-              {MENU.map((g) => (
+              {MENU.map((g, i) => (
                 <div key={g.title} className={s.group}>
                   <div className={s.groupHead}>
-                    <h3>{g.title}</h3>
-                    {g.sizes ? <span className={s.sizes}>{g.sizes}</span> : null}
+                    <h3 data-edit={`menu.title2.${i}`} data-edit-max="40">{g.title}</h3>
+                    {g.sizes ? <span data-edit={`menu.sizes.${i}`} data-edit-max="60" className={s.sizes}>{g.sizes}</span> : null}
                   </div>
                   <ul className={s.items}>
-                    {g.items.map((it) => (
+                    {g.items.map((it, i2) => (
                       <li key={it.name}>
                         <div className={s.itemText}>
-                          <span className={s.itemName}>{it.name}</span>
-                          {it.note ? <span className={s.itemNote}>{it.note}</span> : null}
+                          <span data-edit={`menu.itemName.${i}.${i2}`} data-edit-max="60" className={s.itemName}>{it.name}</span>
+                          {it.note ? <span data-edit={`menu.itemNote.${i}.${i2}`} data-edit-max="60" className={s.itemNote}>{it.note}</span> : null}
                         </div>
-                        <span className={s.itemPrice}>{it.price}</span>
+                        <span data-edit={`menu.itemPrice.${i}.${i2}`} data-edit-max="60" className={s.itemPrice}>{it.price}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               ))}
             </div>
-            <p className={s.fine}>
+            <p data-edit="menu.fine" data-edit-max="240" data-edit-multiline className={s.fine}>
               Oat, almond or whole milk at no charge. An extra shot is $1, and
               any drink can be made with decaf.
             </p>
@@ -334,21 +346,21 @@ export default function MorrowCoffeePage() {
           {/* --------------------------------------------------------- BEANS */}
           <section id="beans" className={s.sec} aria-labelledby="beans-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>02</span>
-              <h2 id="beans-h">Beans on the shelf</h2>
+              <span data-edit="beans.secNo" data-edit-max="60" className={s.secNo}>02</span>
+              <h2 data-edit="beans.title" data-edit-max="60" id="beans-h">Beans on the shelf</h2>
             </div>
-            <p className={s.secNote}>
+            <p data-edit="beans.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Whole bean or ground to order, in 12 oz bags with the roast date
               on the front. Two pounds of any coffee for twice the bag price,
               less ten percent.
             </p>
             <ul className={s.beans}>
-              {BEANS.map((b) => (
+              {BEANS.map((b, i) => (
                 <li key={b.name} className={s.bean}>
                   <div className={s.beanMain}>
-                    <h3>{b.name}</h3>
-                    <p className={s.beanOrigin}>{b.origin}</p>
-                    <p className={s.beanNotes}>{b.notes}</p>
+                    <h3 data-edit={`beans.title2.${i}`} data-edit-max="40">{b.name}</h3>
+                    <p data-edit={`beans.beanOrigin.${i}`} data-edit-max="240" data-edit-multiline className={s.beanOrigin}>{b.origin}</p>
+                    <p data-edit={`beans.beanNotes.${i}`} data-edit-max="240" data-edit-multiline className={s.beanNotes}>{b.notes}</p>
                   </div>
                   <div className={s.beanRoast}>
                     <span className={s.roastScale} aria-hidden="true">
@@ -356,9 +368,9 @@ export default function MorrowCoffeePage() {
                         <span key={n} className={n <= b.roast ? s.roastOn : s.roastOff} />
                       ))}
                     </span>
-                    <span className={s.roastLabel}>{b.roastLabel}</span>
+                    <span data-edit={`beans.roastLabel.${i}`} data-edit-max="60" className={s.roastLabel}>{b.roastLabel}</span>
                   </div>
-                  <span className={s.beanPrice}>{b.price}</span>
+                  <span data-edit={`beans.beanPrice.${i}`} data-edit-max="60" className={s.beanPrice}>{b.price}</span>
                 </li>
               ))}
             </ul>
@@ -367,57 +379,57 @@ export default function MorrowCoffeePage() {
           {/* ------------------------------------------------- SUBSCRIPTIONS */}
           <section id="subscriptions" className={s.sec} aria-labelledby="subscriptions-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>03</span>
-              <h2 id="subscriptions-h">Subscriptions</h2>
+              <span data-edit="subscriptions.secNo" data-edit-max="60" className={s.secNo}>03</span>
+              <h2 data-edit="subscriptions.title" data-edit-max="60" id="subscriptions-h">Subscriptions</h2>
             </div>
-            <p className={s.secNote}>
+            <p data-edit="subscriptions.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Fresh coffee on a schedule, roasted the day before it leaves.
             </p>
             <ul className={s.plans}>
-              {PLANS.map((p) => (
+              {PLANS.map((p, i) => (
                 <li key={p.name}>
-                  <h3>{p.name}</h3>
-                  <p className={s.planWhat}>{p.what}</p>
-                  <p className={s.planPrice}>{p.price}</p>
+                  <h3 data-edit={`subscriptions.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                  <p data-edit={`subscriptions.planWhat.${i}`} data-edit-max="240" data-edit-multiline className={s.planWhat}>{p.what}</p>
+                  <p data-edit={`subscriptions.planPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.planPrice}>{p.price}</p>
                 </li>
               ))}
             </ul>
             <ul className={s.terms}>
-              {PLAN_TERMS.map((t) => (
-                <li key={t}>{t}</li>
+              {PLAN_TERMS.map((t, i) => (
+                <li data-edit={`subscriptions.item.${i}`} data-edit-max="80" key={t}>{t}</li>
               ))}
             </ul>
-            <a className={s.button} href="mailto:beans@morrowcoffee.example">Start a subscription</a>
+            <a data-edit="subscriptions.button" data-edit-max="28" className={s.button} href="mailto:beans@morrowcoffee.example">Start a subscription</a>
           </section>
 
           {/* ----------------------------------------------------- WHOLESALE */}
           <section id="wholesale" className={s.sec} aria-labelledby="wholesale-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>04</span>
-              <h2 id="wholesale-h">Wholesale</h2>
+              <span data-edit="wholesale.secNo" data-edit-max="60" className={s.secNo}>04</span>
+              <h2 data-edit="wholesale.title" data-edit-max="60" id="wholesale-h">Wholesale</h2>
             </div>
-            <p className={s.secNote}>
+            <p data-edit="wholesale.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               We roast for nine cafes, two restaurants and a bike shop. If you
               want to serve Morrow, we will come and pull shots on your machine
               before you decide anything.
             </p>
             <dl className={s.facts}>
-              {WHOLESALE.map(([k, v]) => (
+              {WHOLESALE.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`wholesale.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`wholesale.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
             <p className={s.contactLine}>
-              <span>Write to Dana at </span>
-              <a href="mailto:wholesale@morrowcoffee.example">wholesale@morrowcoffee.example</a>
+              <span data-edit="wholesale.text" data-edit-max="60">Write to Dana at </span>
+              <a data-edit="wholesale.link" data-edit-max="28" href="mailto:wholesale@morrowcoffee.example">wholesale@morrowcoffee.example</a>
             </p>
           </section>
 
           {/* The chaff: thin flakes blown off the beans in the roaster, the
               one field on this half of the page. */}
-          <div className={s.chaff} aria-hidden="true">
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3" className={s.chaff} aria-hidden="true">
             <TabbiedPattern
               pattern={sliver}
               palette={CHAFF}
@@ -432,24 +444,24 @@ export default function MorrowCoffeePage() {
           {/* -------------------------------------------------------- EVENTS */}
           <section id="events" className={s.sec} aria-labelledby="events-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>05</span>
-              <h2 id="events-h">Events</h2>
+              <span data-edit="events.secNo" data-edit-max="60" className={s.secNo}>05</span>
+              <h2 data-edit="events.title" data-edit-max="60" id="events-h">Events</h2>
             </div>
-            <p className={s.secNote}>
+            <p data-edit="events.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Small, early and mostly free. Sign up at the counter or by email;
               we keep a waiting list.
             </p>
             <ol className={s.events}>
-              {EVENTS.map((e) => (
+              {EVENTS.map((e, i) => (
                 <li key={e.title}>
                   <p className={s.date}>
-                    <span className={s.dateDay}>{e.day}</span>
-                    <span className={s.dateMonth}>{e.month}</span>
+                    <span data-edit={`events.dateDay.${i}`} data-edit-max="60" className={s.dateDay}>{e.day}</span>
+                    <span data-edit={`events.dateMonth.${i}`} data-edit-max="60" className={s.dateMonth}>{e.month}</span>
                   </p>
                   <div className={s.eventText}>
-                    <h3>{e.title}</h3>
-                    <p className={s.eventWhen}>{e.when}</p>
-                    <p className={s.eventDetail}>{e.detail}</p>
+                    <h3 data-edit={`events.title2.${i}`} data-edit-max="40">{e.title}</h3>
+                    <p data-edit={`events.eventWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.eventWhen}>{e.when}</p>
+                    <p data-edit={`events.eventDetail.${i}`} data-edit-max="240" data-edit-multiline className={s.eventDetail}>{e.detail}</p>
                   </div>
                 </li>
               ))}
@@ -459,24 +471,24 @@ export default function MorrowCoffeePage() {
           {/* --------------------------------------------------------- VISIT */}
           <section id="visit" className={s.sec} aria-labelledby="visit-h">
             <div className={s.secHead}>
-              <span className={s.secNo}>06</span>
-              <h2 id="visit-h">Visit</h2>
+              <span data-edit="visit.secNo" data-edit-max="60" className={s.secNo}>06</span>
+              <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Visit</h2>
             </div>
             <div className={s.visit}>
               <div>
-                <h3 className={s.label}>Hours</h3>
+                <h3 data-edit="visit.label" data-edit-max="40" className={s.label}>Hours</h3>
                 <dl className={s.hours}>
-                  {HOURS.map(([d, h]) => (
+                  {HOURS.map(([d, h], i) => (
                     <div key={d}>
-                      <dt>{d}</dt>
-                      <dd>{h}</dd>
+                      <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                      <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                     </div>
                   ))}
                 </dl>
               </div>
               <div>
-                <h3 className={s.label}>Address</h3>
-                <p className={s.address}>
+                <h3 data-edit="visit.label2" data-edit-max="40" className={s.label}>Address</h3>
+                <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.address}>
                   Morrow Coffee
                   <br />
                   88 Canal Street
@@ -484,17 +496,17 @@ export default function MorrowCoffeePage() {
                   at Mill Bridge
                 </p>
                 <p className={s.address}>
-                  <a href="tel:+15550134478">(555) 013-4478</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550134478">(555) 013-4478</a>
                   <br />
-                  <a href="mailto:hello@morrowcoffee.example">hello@morrowcoffee.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@morrowcoffee.example">hello@morrowcoffee.example</a>
                 </p>
               </div>
             </div>
             <dl className={s.room}>
-              {ROOM.map(([k, v]) => (
+              {ROOM.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`visit.term2.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`visit.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -502,11 +514,11 @@ export default function MorrowCoffeePage() {
         </main>
 
         <footer className={s.footer}>
-          <p className={s.footName}>Morrow Coffee</p>
-          <p>A fictional coffee shop and roastery. Coffees, prices and hours are invented.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Morrow Coffee</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional coffee shop and roastery. Coffees, prices and hours are invented.</p>
           <p>
             Patterns by{' '}
-            <a href="https://tabbied.com" rel="noopener">
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">
               Tabbied
             </a>
             , drawn live on a transparent ground; the cup is a generated image.

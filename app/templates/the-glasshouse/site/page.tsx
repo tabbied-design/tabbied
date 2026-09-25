@@ -204,7 +204,19 @@ const GUESTS = ['Up to 40', '40-80', '80-120', '120-140', 'More than 140'];
 
 export default function TheGlasshousePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f8f5ef',
+        '--ink': '#1b2420',
+        '--evergreen': '#2f5d4e',
+        '--champagne': '#b89b6a',
+        '--pale': '#e8e2d6',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,evergreen,champagne,pale"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -214,15 +226,15 @@ export default function TheGlasshousePage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">The Glasshouse</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">The Glasshouse</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -233,7 +245,7 @@ export default function TheGlasshousePage() {
             field reads as a frame of glass panes around the name; a mask
             keeps the middle clear for the type. */}
         <section className={`${s.panel} ${s.hero}`} aria-labelledby="hero-h">
-          <div className={s.heroField} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,2,4" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={randomrings}
               palette={RINGS}
@@ -245,19 +257,19 @@ export default function TheGlasshousePage() {
             />
           </div>
           <div className={s.panelInner}>
-            <span className={s.count}>01 / 06</span>
-            <p className={s.kicker}>Weddings and events in a walled garden, Larkfield</p>
-            <h1 className={s.heroTitle} id="hero-h">The Glasshouse</h1>
-            <p className={s.heroLede}>
+            <span data-edit="hero.count" data-edit-max="60" className={s.count}>01 / 06</span>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Weddings and events in a walled garden, Larkfield</p>
+            <h1 data-edit="hero.heroTitle" data-edit-max="70" className={s.heroTitle} id="hero-h">The Glasshouse</h1>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               An 1887 palm house in a walled acre of garden. Ceremonies under glass,
               dinner for 140, and eight rooms for the people who would rather not
               drive home.
             </p>
             <div className={s.actions}>
-              <a className={s.btn} href="#enquire">Check a date</a>
-              <a className={s.btnGhost} href="#packages">See packages</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#enquire">Check a date</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#packages">See packages</a>
             </div>
-            <p className={s.heroNote}>Open days on the first Sunday of every month, 11:00-15:00</p>
+            <p data-edit="hero.heroNote" data-edit-max="240" data-edit-multiline className={s.heroNote}>Open days on the first Sunday of every month, 11:00-15:00</p>
           </div>
           <span className={s.cue} aria-hidden="true" />
         </section>
@@ -265,18 +277,18 @@ export default function TheGlasshousePage() {
         {/* ------------------------------------------------------------ 02 */}
         <section id="ceremonies" className={`${s.panel} ${s.panelPale}`} aria-labelledby="ceremonies-h">
           <div className={s.panelInner}>
-            <span className={s.count}>02 / 06</span>
-            <h2 className={s.panelTitle} id="ceremonies-h">Ceremonies</h2>
-            <p className={s.panelLede}>
+            <span data-edit="ceremonies.count" data-edit-max="60" className={s.count}>02 / 06</span>
+            <h2 data-edit="ceremonies.panelTitle" data-edit-max="60" className={s.panelTitle} id="ceremonies-h">Ceremonies</h2>
+            <p data-edit="ceremonies.panelLede" data-edit-max="240" data-edit-multiline className={s.panelLede}>
               Under the dome, among palms older than the town hall. Licensed for civil
               ceremonies and partnerships, with the registrar booked through us. In
               summer the doors fold back and the aisle runs out onto the lawn.
             </p>
             <dl className={s.facts}>
-              {CEREMONY_FACTS.map(([v, k]) => (
+              {CEREMONY_FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`ceremonies.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`ceremonies.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
@@ -288,7 +300,7 @@ export default function TheGlasshousePage() {
             The one dark panel with stars: champagne points on the ink,
             thinned out so they read as candlelight rather than confetti. */}
         <section id="receptions" className={`${s.panel} ${s.panelInk}`} aria-labelledby="receptions-h">
-          <div className={s.starField} aria-hidden="true">
+          <div data-edit-pattern="receptions.field" data-edit-roles="transparent,3" className={s.starField} aria-hidden="true">
             <TabbiedPattern
               pattern={sparkle}
               palette={STARS}
@@ -300,18 +312,18 @@ export default function TheGlasshousePage() {
             />
           </div>
           <div className={s.panelInner}>
-            <span className={s.count}>03 / 06</span>
-            <h2 className={s.panelTitle} id="receptions-h">Receptions</h2>
-            <p className={s.panelLede}>
+            <span data-edit="receptions.count" data-edit-max="60" className={s.count}>03 / 06</span>
+            <h2 data-edit="receptions.panelTitle" data-edit-max="60" className={s.panelTitle} id="receptions-h">Receptions</h2>
+            <p data-edit="receptions.panelLede" data-edit-max="240" data-edit-multiline className={s.panelLede}>
               The terrace, the Long Room and the dome, one after another: drinks
               outside while the light goes, dinner at long tables, then dancing under
               the glass until midnight.
             </p>
             <dl className={s.facts}>
-              {RECEPTION_FACTS.map(([v, k]) => (
+              {RECEPTION_FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`receptions.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`receptions.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
@@ -323,7 +335,7 @@ export default function TheGlasshousePage() {
             Leaves at both edges, like the box hedges either side of the
             path, and clear paper in the middle for the words. */}
         <section id="garden" className={`${s.panel} ${s.panelGarden}`} aria-labelledby="garden-h">
-          <div className={s.leafField} aria-hidden="true">
+          <div data-edit-pattern="garden.field" data-edit-roles="transparent,2,4,3" className={s.leafField} aria-hidden="true">
             <TabbiedPattern
               pattern={lobe}
               palette={LEAVES}
@@ -335,18 +347,18 @@ export default function TheGlasshousePage() {
             />
           </div>
           <div className={s.panelInner}>
-            <span className={s.count}>04 / 06</span>
-            <h2 className={s.panelTitle} id="garden-h">The garden</h2>
-            <p className={s.panelLede}>
+            <span data-edit="garden.count" data-edit-max="60" className={s.count}>04 / 06</span>
+            <h2 data-edit="garden.panelTitle" data-edit-max="60" className={s.panelTitle} id="garden-h">The garden</h2>
+            <p data-edit="garden.panelLede" data-edit-max="240" data-edit-multiline className={s.panelLede}>
               A walled acre with a lawn for games, a pear walk for photographs and a
               kitchen garden that feeds the menu in season. If it rains, the Palm
               House, the orangery and the terrace awning are all a few steps away.
             </p>
             <dl className={s.facts}>
-              {GARDEN_FACTS.map(([v, k]) => (
+              {GARDEN_FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`garden.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`garden.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
@@ -357,32 +369,32 @@ export default function TheGlasshousePage() {
         {/* ------------------------------------------------------------ 05 */}
         <section id="dining" className={`${s.panel} ${s.panelPale}`} aria-labelledby="dining-h">
           <div className={s.panelInner}>
-            <span className={s.count}>05 / 06</span>
-            <h2 className={s.panelTitle} id="dining-h">Dining</h2>
-            <p className={s.panelLede}>
+            <span data-edit="dining.count" data-edit-max="60" className={s.count}>05 / 06</span>
+            <h2 data-edit="dining.panelTitle" data-edit-max="60" className={s.panelTitle} id="dining-h">Dining</h2>
+            <p data-edit="dining.panelLede" data-edit-max="240" data-edit-multiline className={s.panelLede}>
               Our own kitchen, not a caterer. Three courses from the season and the
               garden, cooked in the old boiler house, with a tasting for two before
               you choose a thing.
             </p>
             <ul className={s.menu}>
               <li>
-                <span className={s.menuCourse}>To start</span>
-                <span className={s.menuDish}>Garden beets, whipped goat cheese, toasted hazelnuts</span>
+                <span data-edit="dining.menuCourse" data-edit-max="60" className={s.menuCourse}>To start</span>
+                <span data-edit="dining.menuDish" data-edit-max="60" className={s.menuDish}>Garden beets, whipped goat cheese, toasted hazelnuts</span>
               </li>
               <li>
-                <span className={s.menuCourse}>Main</span>
-                <span className={s.menuDish}>Roast chicken, tarragon, the first potatoes from the walled beds</span>
+                <span data-edit="dining.menuCourse2" data-edit-max="60" className={s.menuCourse}>Main</span>
+                <span data-edit="dining.menuDish2" data-edit-max="60" className={s.menuDish}>Roast chicken, tarragon, the first potatoes from the walled beds</span>
               </li>
               <li>
-                <span className={s.menuCourse}>Pudding</span>
-                <span className={s.menuDish}>Poached pears from the pear walk, brown butter cake, cream</span>
+                <span data-edit="dining.menuCourse3" data-edit-max="60" className={s.menuCourse}>Pudding</span>
+                <span data-edit="dining.menuDish3" data-edit-max="60" className={s.menuDish}>Poached pears from the pear walk, brown butter cake, cream</span>
               </li>
             </ul>
             <dl className={s.facts}>
-              {DINING_FACTS.map(([v, k]) => (
+              {DINING_FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`dining.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`dining.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
@@ -393,57 +405,57 @@ export default function TheGlasshousePage() {
         {/* ------------------------------------------------------------ 06 */}
         <section id="stay" className={`${s.panel} ${s.panelGreen}`} aria-labelledby="stay-h">
           <div className={s.panelInner}>
-            <span className={s.count}>06 / 06</span>
-            <h2 className={s.panelTitle} id="stay-h">Stay</h2>
-            <p className={s.panelLede}>
+            <span data-edit="stay.count" data-edit-max="60" className={s.count}>06 / 06</span>
+            <h2 data-edit="stay.panelTitle" data-edit-max="60" className={s.panelTitle} id="stay-h">Stay</h2>
+            <p data-edit="stay.panelLede" data-edit-max="240" data-edit-multiline className={s.panelLede}>
               Eight rooms in the gardener's cottage and the old bothy, kept for the
               wedding party from the afternoon before until the morning after.
               Breakfast is in the orangery, and nobody asks what time you went to bed.
             </p>
             <dl className={s.facts}>
-              {STAY_FACTS.map(([v, k]) => (
+              {STAY_FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`stay.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`stay.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
-            <a className={s.btnLight} href="#packages">Rooms come with The Weekend</a>
+            <a data-edit="stay.btnLight" data-edit-max="28" className={s.btnLight} href="#packages">Rooms come with The Weekend</a>
           </div>
         </section>
 
         {/* ------------------------------------------------------- CAPACITY */}
         <section id="capacity" className={s.sec} aria-labelledby="capacity-h">
           <div className={s.secHead}>
-            <span className={s.secKicker}>The spaces</span>
-            <h2 id="capacity-h">Capacity, room by room</h2>
-            <p className={s.secNote}>
+            <span data-edit="capacity.secKicker" data-edit-max="60" className={s.secKicker}>The spaces</span>
+            <h2 data-edit="capacity.title" data-edit-max="60" id="capacity-h">Capacity, room by room</h2>
+            <p data-edit="capacity.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Ceremonies are seated in rows. Dinner is at round tables of ten; long
               tables seat about a tenth more.
             </p>
           </div>
           <table className={s.table}>
-            <caption className={s.visuallyHidden}>Guest numbers for each space</caption>
+            <caption data-edit="capacity.visuallyHidden" className={s.visuallyHidden}>Guest numbers for each space</caption>
             <thead>
               <tr>
-                <th scope="col">Space</th>
-                <th scope="col">Ceremony</th>
-                <th scope="col">Dinner</th>
-                <th scope="col">Standing</th>
-                <th scope="col">Size</th>
+                <th data-edit="capacity.heading" scope="col">Space</th>
+                <th data-edit="capacity.heading2" scope="col">Ceremony</th>
+                <th data-edit="capacity.heading3" scope="col">Dinner</th>
+                <th data-edit="capacity.heading4" scope="col">Standing</th>
+                <th data-edit="capacity.heading5" scope="col">Size</th>
               </tr>
             </thead>
             <tbody>
-              {SPACES.map((sp) => (
+              {SPACES.map((sp, i) => (
                 <tr key={sp.name}>
                   <th scope="row">
-                    <span className={s.spaceName}>{sp.name}</span>
-                    <span className={s.spaceWhere}>{sp.where}</span>
+                    <span data-edit={`capacity.spaceName.${i}`} data-edit-max="60" className={s.spaceName}>{sp.name}</span>
+                    <span data-edit={`capacity.spaceWhere.${i}`} data-edit-max="60" className={s.spaceWhere}>{sp.where}</span>
                   </th>
-                  <td data-label="Ceremony">{sp.ceremony}</td>
-                  <td data-label="Dinner">{sp.dinner}</td>
-                  <td data-label="Standing">{sp.standing}</td>
-                  <td data-label="Size">{sp.size}</td>
+                  <td data-edit={`capacity.cell.${i}`} data-label="Ceremony">{sp.ceremony}</td>
+                  <td data-edit={`capacity.cell2.${i}`} data-label="Dinner">{sp.dinner}</td>
+                  <td data-edit={`capacity.cell3.${i}`} data-label="Standing">{sp.standing}</td>
+                  <td data-edit={`capacity.cell4.${i}`} data-label="Size">{sp.size}</td>
                 </tr>
               ))}
             </tbody>
@@ -453,26 +465,26 @@ export default function TheGlasshousePage() {
         {/* ------------------------------------------------------- PACKAGES */}
         <section id="packages" className={s.sec} aria-labelledby="packages-h">
           <div className={s.secHead}>
-            <span className={s.secKicker}>Packages</span>
-            <h2 id="packages-h">Three ways to have the place</h2>
-            <p className={s.secNote}>
+            <span data-edit="packages.secKicker" data-edit-max="60" className={s.secKicker}>Packages</span>
+            <h2 data-edit="packages.title" data-edit-max="60" id="packages-h">Three ways to have the place</h2>
+            <p data-edit="packages.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Prices include tax, service, the coordinator and every table, chair and
               candle. Saturdays from May to September are $2,200 more.
             </p>
           </div>
           <div className={s.packages}>
-            {PACKAGES.map((p) => (
+            {PACKAGES.map((p, i) => (
               <article key={p.name} className={p.featured ? `${s.pack} ${s.packFeatured}` : s.pack}>
-                <h3>{p.name}</h3>
-                <p className={s.packWhen}>{p.when}</p>
-                <p className={s.packPrice}>{p.price}</p>
-                <p className={s.packGuests}>{p.guests}</p>
+                <h3 data-edit={`pack.title.${i}`} data-edit-max="40">{p.name}</h3>
+                <p data-edit={`pack.packWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.packWhen}>{p.when}</p>
+                <p data-edit={`pack.packPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.packPrice}>{p.price}</p>
+                <p data-edit={`pack.packGuests.${i}`} data-edit-max="240" data-edit-multiline className={s.packGuests}>{p.guests}</p>
                 <ul className={s.packList}>
-                  {p.items.map((item) => (
-                    <li key={item}>{item}</li>
+                  {p.items.map((item, i2) => (
+                    <li data-edit={`pack.item.${i}.${i2}`} data-edit-max="80" key={item}>{item}</li>
                   ))}
                 </ul>
-                <a className={s.packLink} href="#enquire">Ask about dates</a>
+                <a data-edit={`pack.packLink.${i}`} data-edit-max="28" className={s.packLink} href="#enquire">Ask about dates</a>
               </article>
             ))}
           </div>
@@ -481,19 +493,19 @@ export default function TheGlasshousePage() {
         {/* -------------------------------------------------------- PLANNING */}
         <section id="planning" className={s.sec} aria-labelledby="planning-h">
           <div className={s.secHead}>
-            <span className={s.secKicker}>Planning</span>
-            <h2 id="planning-h">From the first visit to the last dance</h2>
-            <p className={s.secNote}>
+            <span data-edit="planning.secKicker" data-edit-max="60" className={s.secKicker}>Planning</span>
+            <h2 data-edit="planning.title" data-edit-max="60" id="planning-h">From the first visit to the last dance</h2>
+            <p data-edit="planning.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Most couples book a year to eighteen months ahead. Short notice is
               welcome; we will tell you honestly what is left.
             </p>
           </div>
           <ol className={s.plan}>
-            {PLAN.map((st) => (
+            {PLAN.map((st, i) => (
               <li key={st.title}>
-                <span className={s.planWhen}>{st.when}</span>
-                <h3>{st.title}</h3>
-                <p>{st.body}</p>
+                <span data-edit={`planning.planWhen.${i}`} data-edit-max="60" className={s.planWhen}>{st.when}</span>
+                <h3 data-edit={`planning.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                <p data-edit={`planning.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
               </li>
             ))}
           </ol>
@@ -503,52 +515,52 @@ export default function TheGlasshousePage() {
         <section id="enquire" className={s.enquire} aria-labelledby="enquire-h">
           <div className={s.enquireInner}>
             <div className={s.enquireIntro}>
-              <span className={s.secKicker}>Enquire</span>
-              <h2 id="enquire-h">Check a date</h2>
-              <p className={s.secNote}>
+              <span data-edit="enquire.secKicker" data-edit-max="60" className={s.secKicker}>Enquire</span>
+              <h2 data-edit="enquire.title" data-edit-max="60" id="enquire-h">Check a date</h2>
+              <p data-edit="enquire.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Tell us roughly when and roughly how many. We reply within one working
                 day with the dates we have and a written proposal.
               </p>
               <dl className={s.contact}>
                 <div>
-                  <dt>Call</dt>
-                  <dd>(555) 014-2270</dd>
+                  <dt data-edit="enquire.term" data-edit-max="28">Call</dt>
+                  <dd data-edit="enquire.body" data-edit-max="200" data-edit-multiline>(555) 014-2270</dd>
                 </div>
                 <div>
-                  <dt>Write</dt>
+                  <dt data-edit="enquire.term2" data-edit-max="28">Write</dt>
                   <dd>
-                    <a href="mailto:events@theglasshouse.example">events@theglasshouse.example</a>
+                    <a data-edit="enquire.link" data-edit-max="28" href="mailto:events@theglasshouse.example">events@theglasshouse.example</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Visit</dt>
-                  <dd>The Walled Garden, 4 Orchard Lane, Larkfield</dd>
+                  <dt data-edit="enquire.term3" data-edit-max="28">Visit</dt>
+                  <dd data-edit="enquire.body2" data-edit-max="200" data-edit-multiline>The Walled Garden, 4 Orchard Lane, Larkfield</dd>
                 </div>
                 <div>
-                  <dt>Parking</dt>
-                  <dd>60 cars, and a coach drop-off at the gate</dd>
+                  <dt data-edit="enquire.term4" data-edit-max="28">Parking</dt>
+                  <dd data-edit="enquire.body3" data-edit-max="200" data-edit-multiline>60 cars, and a coach drop-off at the gate</dd>
                 </div>
               </dl>
             </div>
             <form className={s.form} action="#">
               <label className={s.field}>
-                <span>Your names</span>
+                <span data-edit="enquire.text" data-edit-max="60">Your names</span>
                 <input type="text" name="names" autoComplete="name" required />
               </label>
               <label className={s.field}>
-                <span>Email</span>
+                <span data-edit="enquire.text2" data-edit-max="60">Email</span>
                 <input type="email" name="email" autoComplete="email" required />
               </label>
               <label className={s.field}>
-                <span>Phone</span>
+                <span data-edit="enquire.text3" data-edit-max="60">Phone</span>
                 <input type="tel" name="phone" autoComplete="tel" />
               </label>
               <label className={s.field}>
-                <span>Preferred date</span>
+                <span data-edit="enquire.text4" data-edit-max="60">Preferred date</span>
                 <input type="date" name="date" />
               </label>
               <label className={s.field}>
-                <span>Guests</span>
+                <span data-edit="enquire.text5" data-edit-max="60">Guests</span>
                 <select name="guests" defaultValue="80-120">
                   {GUESTS.map((g) => (
                     <option key={g} value={g}>{g}</option>
@@ -556,7 +568,7 @@ export default function TheGlasshousePage() {
                 </select>
               </label>
               <label className={s.field}>
-                <span>Package</span>
+                <span data-edit="enquire.text6" data-edit-max="60">Package</span>
                 <select name="package" defaultValue="The Day">
                   {PACKAGES.map((p) => (
                     <option key={p.name} value={p.name}>{p.name}</option>
@@ -565,14 +577,14 @@ export default function TheGlasshousePage() {
                 </select>
               </label>
               <label className={`${s.field} ${s.fieldWide}`}>
-                <span>Anything we should know</span>
+                <span data-edit="enquire.text7" data-edit-max="60">Anything we should know</span>
                 <textarea name="message" rows={4} />
               </label>
               <label className={s.check}>
                 <input type="checkbox" name="openday" />
-                <span>Put us down for the next open day</span>
+                <span data-edit="enquire.text8" data-edit-max="60">Put us down for the next open day</span>
               </label>
-              <button className={s.btn} type="submit">Send enquiry</button>
+              <button data-edit="enquire.btn" data-edit-max="24" className={s.btn} type="submit">Send enquiry</button>
             </form>
           </div>
         </section>
@@ -580,16 +592,16 @@ export default function TheGlasshousePage() {
 
       <footer className={s.footer}>
         <div className={s.footInner}>
-          <p className={s.footName}>The Glasshouse</p>
-          <p className={s.footAddr}>The Walled Garden, 4 Orchard Lane, Larkfield</p>
-          <p className={s.footAddr}>(555) 014-2270, events@theglasshouse.example</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>The Glasshouse</p>
+          <p data-edit="footer.footAddr" data-edit-max="240" data-edit-multiline className={s.footAddr}>The Walled Garden, 4 Orchard Lane, Larkfield</p>
+          <p data-edit="footer.footAddr2" data-edit-max="240" data-edit-multiline className={s.footAddr}>(555) 014-2270, events@theglasshouse.example</p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional wedding venue. Dates, prices, rooms and menus are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional wedding venue. Dates, prices, rooms and menus are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on a transparent ground.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
           </p>
         </div>
       </footer>

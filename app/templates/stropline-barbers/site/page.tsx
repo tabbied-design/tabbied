@@ -134,7 +134,19 @@ const SHELF = [
 
 export default function StroplineBarbersPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--night': '#121417',
+        '--chalk': '#f1ede4',
+        '--stripe': '#d63a2f',
+        '--steel': '#6f737a',
+        '--deep': '#1d2126',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="night,chalk,stripe,steel,deep"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -144,16 +156,16 @@ export default function StroplineBarbersPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Stropline</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Stropline</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href="tel:+15550173300">(555) 017-3300</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href="tel:+15550173300">(555) 017-3300</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -165,26 +177,26 @@ export default function StroplineBarbersPage() {
         <section className={`${s.band} ${s.night} ${s.heroBand}`} aria-labelledby="hero-h">
           <div className={s.hero}>
             <div className={s.heroHead}>
-              <p className={s.kicker}>118 Canal Street. Seven days. Since 2011.</p>
-              <h1 id="hero-h" className={s.heroTitle}>
+              <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>118 Canal Street. Seven days. Since 2011.</p>
+              <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
                 Stropline
                 <br />
                 <em>Barbers</em>
               </h1>
             </div>
             <div className={s.heroText}>
-              <p className={s.heroLead}>
+              <p data-edit="hero.heroLead" data-edit-max="240" data-edit-multiline className={s.heroLead}>
                 Cuts, fades and hot towel shaves by four barbers who know your
                 name by the second visit. Walk in, or book a chair.
               </p>
               <div className={s.actions}>
-                <a className={s.button} href="#walk-ins">Walk-in wait</a>
-                <a className={s.ghost} href="#services">See prices</a>
+                <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#walk-ins">Walk-in wait</a>
+                <a data-edit="hero.ghost" data-edit-max="28" className={s.ghost} href="#services">See prices</a>
               </div>
             </div>
           </div>
           <div className={s.strop} aria-hidden="true">
-            <div className={s.stropField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,1,3" className={s.stropField} aria-hidden="true">
               <TabbiedPattern
                 pattern={tidewashbands}
                 palette={STROP}
@@ -204,32 +216,32 @@ export default function StroplineBarbersPage() {
           <div className={s.inner}>
             <div className={s.walk}>
               <div className={s.walkMain}>
-                <h2 id="walk-h" className={s.bandTitle}>Walk-ins welcome</h2>
-                <p className={s.waitLabel}>Typical wait, weekday afternoon</p>
+                <h2 data-edit="walkIns.bandTitle" data-edit-max="60" id="walk-h" className={s.bandTitle}>Walk-ins welcome</h2>
+                <p data-edit="walkIns.waitLabel" data-edit-max="240" data-edit-multiline className={s.waitLabel}>Typical wait, weekday afternoon</p>
                 <p className={s.waitNumber}>
-                  <span>20</span>
-                  <span className={s.waitUnit}>min</span>
+                  <span data-edit="walkIns.text" data-edit-max="60">20</span>
+                  <span data-edit="walkIns.waitUnit" data-edit-max="60" className={s.waitUnit}>min</span>
                 </p>
-                <p className={s.walkNote}>
+                <p data-edit="walkIns.walkNote" data-edit-max="240" data-edit-multiline className={s.walkNote}>
                   Two chairs are kept for walk-ins every day. Put your name on
                   the board at the counter, get a coffee next door, and we text
                   you when you are next.
                 </p>
               </div>
               <div className={s.walkSide}>
-                <h3 className={s.smallHead}>When it is quiet</h3>
+                <h3 data-edit="walkIns.smallHead" data-edit-max="40" className={s.smallHead}>When it is quiet</h3>
                 <dl className={s.waits}>
-                  {WAITS.map(([when, wait]) => (
+                  {WAITS.map(([when, wait], i) => (
                     <div key={when}>
-                      <dt>{when}</dt>
-                      <dd>{wait}</dd>
+                      <dt data-edit={`walkIns.term.${i}`} data-edit-max="28">{when}</dt>
+                      <dd data-edit={`walkIns.body.${i}`} data-edit-max="200" data-edit-multiline>{wait}</dd>
                     </div>
                   ))}
                 </dl>
                 <p className={s.textLine}>
-                  <span>Text your name to </span>
-                  <a href="sms:+15550173300">(555) 017-3300</a>
-                  <span> to join the board from home.</span>
+                  <span data-edit="walkIns.text2" data-edit-max="60">Text your name to </span>
+                  <a data-edit="walkIns.link" data-edit-max="28" href="sms:+15550173300">(555) 017-3300</a>
+                  <span data-edit="walkIns.text3" data-edit-max="60"> to join the board from home.</span>
                 </p>
               </div>
             </div>
@@ -240,16 +252,16 @@ export default function StroplineBarbersPage() {
         <section id="services" className={`${s.band} ${s.night}`} aria-labelledby="services-h">
           <div className={s.inner}>
             <div className={s.bandHead}>
-              <h2 id="services-h" className={s.bandTitle}>Services</h2>
-              <p className={s.bandNote}>Every price includes a hot towel and a neck shave. Card or cash.</p>
+              <h2 data-edit="services.bandTitle" data-edit-max="60" id="services-h" className={s.bandTitle}>Services</h2>
+              <p data-edit="services.bandNote" data-edit-max="240" data-edit-multiline className={s.bandNote}>Every price includes a hot towel and a neck shave. Card or cash.</p>
             </div>
             <ul className={s.services}>
-              {SERVICES.map((sv) => (
+              {SERVICES.map((sv, i) => (
                 <li key={sv.name} className={s.service}>
-                  <h3 className={s.serviceName}>{sv.name}</h3>
-                  <p className={s.serviceNote}>{sv.note}</p>
-                  <p className={s.serviceTime}>{sv.time}</p>
-                  <p className={s.servicePrice}>{sv.price}</p>
+                  <h3 data-edit={`services.serviceName.${i}`} data-edit-max="40" className={s.serviceName}>{sv.name}</h3>
+                  <p data-edit={`services.serviceNote.${i}`} data-edit-max="240" data-edit-multiline className={s.serviceNote}>{sv.note}</p>
+                  <p data-edit={`services.serviceTime.${i}`} data-edit-max="240" data-edit-multiline className={s.serviceTime}>{sv.time}</p>
+                  <p data-edit={`services.servicePrice.${i}`} data-edit-max="240" data-edit-multiline className={s.servicePrice}>{sv.price}</p>
                 </li>
               ))}
             </ul>
@@ -260,22 +272,22 @@ export default function StroplineBarbersPage() {
         <section id="chairs" className={`${s.band} ${s.deep}`} aria-labelledby="chairs-h">
           <div className={s.inner}>
             <div className={s.bandHead}>
-              <h2 id="chairs-h" className={s.bandTitle}>The chairs</h2>
-              <p className={s.bandNote}>Four chairs, four barbers. Ask for one by name or take the next free chair.</p>
+              <h2 data-edit="chairs.bandTitle" data-edit-max="60" id="chairs-h" className={s.bandTitle}>The chairs</h2>
+              <p data-edit="chairs.bandNote" data-edit-max="240" data-edit-multiline className={s.bandNote}>Four chairs, four barbers. Ask for one by name or take the next free chair.</p>
             </div>
             <ol className={s.chairs}>
-              {BARBERS.map((b) => (
+              {BARBERS.map((b, i) => (
                 <li key={b.chair} className={s.chair}>
-                  <p className={s.chairNo}>{b.chair}</p>
-                  <h3 className={s.chairName}>{b.name}</h3>
-                  <p className={s.chairSince}>{b.since}</p>
-                  <p className={s.chairKnown}>{b.known}</p>
+                  <p data-edit={`chairs.chairNo.${i}`} data-edit-max="240" data-edit-multiline className={s.chairNo}>{b.chair}</p>
+                  <h3 data-edit={`chairs.chairName.${i}`} data-edit-max="40" className={s.chairName}>{b.name}</h3>
+                  <p data-edit={`chairs.chairSince.${i}`} data-edit-max="240" data-edit-multiline className={s.chairSince}>{b.since}</p>
+                  <p data-edit={`chairs.chairKnown.${i}`} data-edit-max="240" data-edit-multiline className={s.chairKnown}>{b.known}</p>
                   <ul className={s.week} aria-hidden="true">
                     {DAYS.map((d, i) => (
                       <li key={i} className={b.on[i] ? s.dayOn : s.dayOff}>{d}</li>
                     ))}
                   </ul>
-                  <p className={s.chairDays}>{b.days}</p>
+                  <p data-edit={`chairs.chairDays.${i}`} data-edit-max="240" data-edit-multiline className={s.chairDays}>{b.days}</p>
                 </li>
               ))}
             </ol>
@@ -288,18 +300,18 @@ export default function StroplineBarbersPage() {
           <div className={s.inner}>
             <div className={s.loyalty}>
               <div className={s.loyaltyText}>
-                <h2 id="loyalty-h" className={s.bandTitle}>Ten cuts, the tenth is on us</h2>
+                <h2 data-edit="loyalty.bandTitle" data-edit-max="60" id="loyalty-h" className={s.bandTitle}>Ten cuts, the tenth is on us</h2>
                 <dl className={s.rules}>
-                  {CARD_RULES.map(([t, d]) => (
+                  {CARD_RULES.map(([t, d], i) => (
                     <div key={t}>
-                      <dt>{t}</dt>
-                      <dd>{d}</dd>
+                      <dt data-edit={`loyalty.term.${i}`} data-edit-max="28">{t}</dt>
+                      <dd data-edit={`loyalty.body.${i}`} data-edit-max="200" data-edit-multiline>{d}</dd>
                     </div>
                   ))}
                 </dl>
               </div>
               <div className={s.card}>
-                <div className={s.cardStrip} aria-hidden="true">
+                <div data-edit-pattern="loyalty.field" data-edit-roles="transparent,2,1,3,2,1" className={s.cardStrip} aria-hidden="true">
                   <TabbiedPattern
                     pattern={slashbar}
                     palette={SLASHES}
@@ -311,13 +323,13 @@ export default function StroplineBarbersPage() {
                   />
                 </div>
                 <div className={s.cardBody}>
-                  <p className={s.cardName}>Stropline Barbers</p>
-                  <p className={s.cardSub}>Loyalty card. Seven stamps so far.</p>
+                  <p data-edit="loyalty.cardName" data-edit-max="240" data-edit-multiline className={s.cardName}>Stropline Barbers</p>
+                  <p data-edit="loyalty.cardSub" data-edit-max="240" data-edit-multiline className={s.cardSub}>Loyalty card. Seven stamps so far.</p>
                   <ol className={s.stamps}>
                     {STAMPS.map((n, i) => (
-                      <li key={n} className={i < 7 ? s.stamped : s.empty}>{n}</li>
+                      <li data-edit={`loyalty.stamped.${i}`} data-edit-max="80" key={n} className={i < 7 ? s.stamped : s.empty}>{n}</li>
                     ))}
-                    <li className={s.free}>Free</li>
+                    <li data-edit="loyalty.free" data-edit-max="80" className={s.free}>Free</li>
                   </ol>
                 </div>
               </div>
@@ -329,25 +341,25 @@ export default function StroplineBarbersPage() {
         <section id="hours" className={`${s.band} ${s.deep}`} aria-labelledby="hours-h">
           <div className={s.inner}>
             <div className={s.bandHead}>
-              <h2 id="hours-h" className={s.bandTitle}>Hours</h2>
-              <p className={s.bandNote}>Last walk-in half an hour before we close. Open every public holiday except two.</p>
+              <h2 data-edit="hours.bandTitle" data-edit-max="60" id="hours-h" className={s.bandTitle}>Hours</h2>
+              <p data-edit="hours.bandNote" data-edit-max="240" data-edit-multiline className={s.bandNote}>Last walk-in half an hour before we close. Open every public holiday except two.</p>
             </div>
             <table className={s.hours}>
               <thead>
                 <tr>
-                  <th scope="col">Day</th>
-                  <th scope="col">Open</th>
-                  <th scope="col">Close</th>
-                  <th scope="col">Note</th>
+                  <th data-edit="hours.heading" scope="col">Day</th>
+                  <th data-edit="hours.heading2" scope="col">Open</th>
+                  <th data-edit="hours.heading3" scope="col">Close</th>
+                  <th data-edit="hours.heading4" scope="col">Note</th>
                 </tr>
               </thead>
               <tbody>
-                {HOURS.map((h) => (
+                {HOURS.map((h, i) => (
                   <tr key={h.day} className={h.note === 'Late night' ? s.late : undefined}>
-                    <th scope="row">{h.day}</th>
-                    <td>{h.open}</td>
-                    <td>{h.close}</td>
-                    <td className={s.hourNote}>{h.note}</td>
+                    <th data-edit={`hours.heading5.${i}`} scope="row">{h.day}</th>
+                    <td data-edit={`hours.cell.${i}`}>{h.open}</td>
+                    <td data-edit={`hours.cell2.${i}`}>{h.close}</td>
+                    <td data-edit={`hours.hourNote.${i}`} className={s.hourNote}>{h.note}</td>
                   </tr>
                 ))}
               </tbody>
@@ -359,37 +371,37 @@ export default function StroplineBarbersPage() {
         <section id="shop" className={`${s.band} ${s.night}`} aria-labelledby="shop-h">
           <div className={s.inner}>
             <div className={s.bandHead}>
-              <h2 id="shop-h" className={s.bandTitle}>The shop</h2>
-              <p className={s.bandNote}>Between the bakery and the bike shop, under the red and white awning.</p>
+              <h2 data-edit="shop.bandTitle" data-edit-max="60" id="shop-h" className={s.bandTitle}>The shop</h2>
+              <p data-edit="shop.bandNote" data-edit-max="240" data-edit-multiline className={s.bandNote}>Between the bakery and the bike shop, under the red and white awning.</p>
             </div>
             <div className={s.shop}>
               <div className={s.shopCol}>
-                <h3 className={s.smallHead}>Find us</h3>
-                <p className={s.shopAddr}>
+                <h3 data-edit="shop.smallHead" data-edit-max="40" className={s.smallHead}>Find us</h3>
+                <p data-edit="shop.body" data-edit-max="240" data-edit-multiline className={s.shopAddr}>
                   118 Canal Street
                   <br />
                   Ground floor, step-free
                 </p>
-                <p className={s.shopText}>
+                <p data-edit="shop.shopText" data-edit-max="240" data-edit-multiline className={s.shopText}>
                   Two-hour street parking on Canal Street, and the number 9 bus
                   stops across the road.
                 </p>
               </div>
               <div className={s.shopCol}>
-                <h3 className={s.smallHead}>Book a chair</h3>
-                <a className={s.shopPhone} href="tel:+15550173300">(555) 017-3300</a>
-                <a className={s.shopMail} href="mailto:chair@stropline.example">chair@stropline.example</a>
-                <p className={s.shopText}>
+                <h3 data-edit="shop.smallHead2" data-edit-max="40" className={s.smallHead}>Book a chair</h3>
+                <a data-edit="shop.shopPhone" data-edit-max="28" className={s.shopPhone} href="tel:+15550173300">(555) 017-3300</a>
+                <a data-edit="shop.shopMail" data-edit-max="28" className={s.shopMail} href="mailto:chair@stropline.example">chair@stropline.example</a>
+                <p data-edit="shop.shopText2" data-edit-max="240" data-edit-multiline className={s.shopText}>
                   Bookings open seven days ahead. Card, cash or phone; no checks.
                 </p>
               </div>
               <div className={s.shopCol}>
-                <h3 className={s.smallHead}>On the shelf</h3>
+                <h3 data-edit="shop.smallHead3" data-edit-max="40" className={s.smallHead}>On the shelf</h3>
                 <dl className={s.shelf}>
-                  {SHELF.map(([item, price]) => (
+                  {SHELF.map(([item, price], i) => (
                     <div key={item}>
-                      <dt>{item}</dt>
-                      <dd>{price}</dd>
+                      <dt data-edit={`shop.term.${i}`} data-edit-max="28">{item}</dt>
+                      <dd data-edit={`shop.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                     </div>
                   ))}
                 </dl>
@@ -401,20 +413,20 @@ export default function StroplineBarbersPage() {
 
       <footer className={s.footer}>
         <div className={s.footInner}>
-          <p className={s.footMark}>Stropline Barbers</p>
+          <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Stropline Barbers</p>
           <ul className={s.footLinks}>
-            {NAV.map(([label, href]) => (
+            {NAV.map(([label, href], i) => (
               <li key={href}>
-                <a href={href}>{label}</a>
+                <a data-edit={`footer.link.${i}`} data-edit-max="28" href={href}>{label}</a>
               </li>
             ))}
           </ul>
           <div className={s.footFine}>
-            <p>A fictional barbershop. Prices, hours and people are invented.</p>
+            <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional barbershop. Prices, hours and people are invented.</p>
             <p>
-              <span>Patterns by </span>
-              <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-              <span>, drawn live in the shop's own colors.</span>
+              <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+              <a data-edit="footer.link2" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+              <span data-edit="footer.text2" data-edit-max="60">, drawn live in the shop's own colors.</span>
             </p>
           </div>
         </div>

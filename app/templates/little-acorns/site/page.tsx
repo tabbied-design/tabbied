@@ -229,7 +229,20 @@ const HOURS = [
 
 export default function LittleAcornsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--cream': '#fff9f0',
+        '--ink': '#2b2a33',
+        '--coral': '#f28c6b',
+        '--sage': '#6cb8a8',
+        '--sun': '#f5c85b',
+        '--lilac': '#a9a2b0',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="cream,ink,coral,sage,sun,lilac"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -241,16 +254,16 @@ export default function LittleAcornsPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markBadge} aria-hidden="true" />
-          <span className={s.markName}>Little Acorns</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Little Acorns</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -259,31 +272,31 @@ export default function LittleAcornsPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Nursery and daycare for ages 1 to 5</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Nursery and daycare for ages 1 to 5</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Big days for <em>small people.</em>
             </h1>
-            <p className={s.heroLede}>
+            <p data-edit="hero.heroLede" data-edit-max="240" data-edit-multiline className={s.heroLede}>
               A small nursery on Chestnut Row with three rooms, a garden, a
               cook who makes lunch every morning, and a day with a shape your
               child can learn by heart.
             </p>
             <div className={s.actions}>
-              <a className={s.btn} href="#visit">Book a visit</a>
-              <a className={s.btnSoft} href="#day">See our day</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#visit">Book a visit</a>
+              <a data-edit="hero.btnSoft" data-edit-max="28" className={s.btnSoft} href="#day">See our day</a>
             </div>
             <dl className={s.facts}>
-              {FACTS.map(([v, k]) => (
+              {FACTS.map(([v, k], i) => (
                 <div key={k}>
-                  <dt>{v}</dt>
-                  <dd>{k}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{v}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{k}</dd>
                 </div>
               ))}
             </dl>
           </div>
           <div className={s.blocks} aria-hidden="true">
-            {BLOCKS.map((b) => (
-              <div key={b.seed} className={s.block} aria-hidden="true">
+            {BLOCKS.map((b, i) => (
+              <div data-edit-pattern={`hero.field.${i}`} data-edit-roles="transparent,2,3,4,0" key={b.seed} className={s.block} aria-hidden="true">
                 <TabbiedPattern
                   pattern={quartercirclequilt}
                   palette={QUILT}
@@ -302,22 +315,22 @@ export default function LittleAcornsPage() {
             stop a small quilt tile on the line and a soft card beside it. */}
         <section id="day" className={s.day} aria-labelledby="day-h">
           <div className={s.dayHead}>
-            <p className={s.kicker}>A day at Little Acorns</p>
-            <h2 id="day-h">From hello to home time</h2>
-            <p className={s.secNote}>
+            <p data-edit="day.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>A day at Little Acorns</p>
+            <h2 data-edit="day.title" data-edit-max="60" id="day-h">From hello to home time</h2>
+            <p data-edit="day.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Small children do best when they know what comes next, so every
               day has the same shape. The youngest nap and eat when they need
               to, and the day bends around them.
             </p>
           </div>
           <ol className={s.timeline}>
-            {DAY.map((m) => (
+            {DAY.map((m, i) => (
               <li key={m.seed} className={s.moment}>
                 <p className={s.when}>
-                  <span className={s.time}>{m.time}</span>
-                  <span className={s.meridiem}>{m.meridiem}</span>
+                  <span data-edit={`day.time.${i}`} data-edit-max="60" className={s.time}>{m.time}</span>
+                  <span data-edit={`day.meridiem.${i}`} data-edit-max="60" className={s.meridiem}>{m.meridiem}</span>
                 </p>
-                <div className={s.node} aria-hidden="true">
+                <div data-edit-pattern={`day.field.${i}`} data-edit-roles="transparent,2,3,4,0" className={s.node} aria-hidden="true">
                   <TabbiedPattern
                     pattern={quartercirclequilt}
                     palette={QUILT}
@@ -328,9 +341,9 @@ export default function LittleAcornsPage() {
                   />
                 </div>
                 <div className={s.momentCard}>
-                  <span className={s.where}>{m.where}</span>
-                  <h3>{m.title}</h3>
-                  <p>{m.body}</p>
+                  <span data-edit={`day.where.${i}`} data-edit-max="60" className={s.where}>{m.where}</span>
+                  <h3 data-edit={`day.title2.${i}`} data-edit-max="40">{m.title}</h3>
+                  <p data-edit={`day.body.${i}`} data-edit-max="240" data-edit-multiline>{m.body}</p>
                 </div>
               </li>
             ))}
@@ -340,30 +353,30 @@ export default function LittleAcornsPage() {
         {/* ----------------------------------------------------------- ROOMS */}
         <section id="rooms" className={s.sec} aria-labelledby="rooms-h">
           <div className={s.secHead}>
-            <h2 id="rooms-h">Three rooms, by age</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="rooms.title" data-edit-max="60" id="rooms-h">Three rooms, by age</h2>
+            <p data-edit="rooms.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Children move up when they are ready, not on a birthday, and
               spend a few mornings visiting the next room first.
             </p>
           </div>
           <ul className={s.rooms}>
-            {ROOMS.map((r) => (
+            {ROOMS.map((r, i) => (
               <li key={r.name} className={s.room}>
                 <div className={s.roomTop}>
-                  <h3>{r.name}</h3>
-                  <span className={s.roomAges}>{r.ages}</span>
+                  <h3 data-edit={`rooms.title2.${i}`} data-edit-max="40">{r.name}</h3>
+                  <span data-edit={`rooms.roomAges.${i}`} data-edit-max="60" className={s.roomAges}>{r.ages}</span>
                 </div>
                 <dl className={s.roomFacts}>
                   <div>
-                    <dt>Group</dt>
-                    <dd>{r.group}</dd>
+                    <dt data-edit={`rooms.term.${i}`} data-edit-max="28">Group</dt>
+                    <dd data-edit={`rooms.body.${i}`} data-edit-max="200" data-edit-multiline>{r.group}</dd>
                   </div>
                   <div>
-                    <dt>Ratio</dt>
-                    <dd>{r.ratio}</dd>
+                    <dt data-edit={`rooms.term2.${i}`} data-edit-max="28">Ratio</dt>
+                    <dd data-edit={`rooms.body2.${i}`} data-edit-max="200" data-edit-multiline>{r.ratio}</dd>
                   </div>
                 </dl>
-                <p className={s.roomBody}>{r.body}</p>
+                <p data-edit={`rooms.roomBody.${i}`} data-edit-max="240" data-edit-multiline className={s.roomBody}>{r.body}</p>
               </li>
             ))}
           </ul>
@@ -372,32 +385,32 @@ export default function LittleAcornsPage() {
         {/* ------------------------------------------------------- FOOD, NAPS */}
         <section id="food" className={s.sec} aria-labelledby="food-h">
           <div className={s.secHead}>
-            <h2 id="food-h">Food and naps</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="food.title" data-edit-max="60" id="food-h">Food and naps</h2>
+            <p data-edit="food.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Everything is cooked here, nut-free, with a separate plate for
               every allergy we know about. This is a typical week of lunches.
             </p>
           </div>
           <div className={s.foodGrid}>
             <div className={s.menuCard}>
-              <h3 className={s.cardTitle}>This week's lunches</h3>
+              <h3 data-edit="food.cardTitle" data-edit-max="40" className={s.cardTitle}>This week's lunches</h3>
               <dl className={s.menu}>
-                {MENU.map(([d, main, pud]) => (
+                {MENU.map(([d, main, pud], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd className={s.menuMain}>{main}</dd>
-                    <dd className={s.menuPud}>{pud}</dd>
+                    <dt data-edit={`food.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`food.menuMain.${i}`} data-edit-max="200" data-edit-multiline className={s.menuMain}>{main}</dd>
+                    <dd data-edit={`food.menuPud.${i}`} data-edit-max="200" data-edit-multiline className={s.menuPud}>{pud}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div className={s.napCard}>
-              <h3 className={s.cardTitle}>Naps</h3>
+              <h3 data-edit="food.cardTitle2" data-edit-max="40" className={s.cardTitle}>Naps</h3>
               <dl className={s.naps}>
-                {NAPS.map(([room, text]) => (
+                {NAPS.map(([room, text], i) => (
                   <div key={room}>
-                    <dt>{room}</dt>
-                    <dd>{text}</dd>
+                    <dt data-edit={`food.term2.${i}`} data-edit-max="28">{room}</dt>
+                    <dd data-edit={`food.body.${i}`} data-edit-max="200" data-edit-multiline>{text}</dd>
                   </div>
                 ))}
               </dl>
@@ -408,38 +421,38 @@ export default function LittleAcornsPage() {
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.sec} aria-labelledby="fees-h">
           <div className={s.secHead}>
-            <h2 id="fees-h">Fees and funded hours</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="fees.title" data-edit-max="60" id="fees-h">Fees and funded hours</h2>
+            <p data-edit="fees.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Per child, per session, with everything included. There is no
               registration fee.
             </p>
           </div>
           <div className={s.feeCard}>
             <table className={s.feeTable}>
-              <caption className={s.srOnly}>Session fees by age</caption>
+              <caption data-edit="fees.srOnly" className={s.srOnly}>Session fees by age</caption>
               <thead>
                 <tr>
-                  <th scope="col">Session</th>
-                  <th scope="col">1-2 yrs</th>
-                  <th scope="col">2-3 yrs</th>
-                  <th scope="col">3-5 yrs</th>
+                  <th data-edit="fees.heading" scope="col">Session</th>
+                  <th data-edit="fees.heading2" scope="col">1-2 yrs</th>
+                  <th data-edit="fees.heading3" scope="col">2-3 yrs</th>
+                  <th data-edit="fees.heading4" scope="col">3-5 yrs</th>
                 </tr>
               </thead>
               <tbody>
-                {FEES.map(([session, a, b, c]) => (
+                {FEES.map(([session, a, b, c], i) => (
                   <tr key={session}>
-                    <th scope="row">{session}</th>
-                    <td>{a}</td>
-                    <td>{b}</td>
-                    <td>{c}</td>
+                    <th data-edit={`fees.heading5.${i}`} scope="row">{session}</th>
+                    <td data-edit={`fees.cell.${i}`}>{a}</td>
+                    <td data-edit={`fees.cell2.${i}`}>{b}</td>
+                    <td data-edit={`fees.cell3.${i}`}>{c}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <ul className={s.feeNotes}>
-            {FEE_NOTES.map((n) => (
-              <li key={n}>{n}</li>
+            {FEE_NOTES.map((n, i) => (
+              <li data-edit={`fees.item.${i}`} data-edit-max="80" key={n}>{n}</li>
             ))}
           </ul>
         </section>
@@ -447,21 +460,21 @@ export default function LittleAcornsPage() {
         {/* ------------------------------------------------------------ TEAM */}
         <section id="team" className={s.sec} aria-labelledby="team-h">
           <div className={s.secHead}>
-            <h2 id="team-h">The people your child will know</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="team.title" data-edit-max="60" id="team-h">The people your child will know</h2>
+            <p data-edit="team.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every child has a key person who settles them in, writes the
               daily note and is the one you talk to. Everyone here is
               first-aid trained and background checked.
             </p>
           </div>
           <ul className={s.team}>
-            {TEAM.map((t) => (
+            {TEAM.map((t, i) => (
               <li key={t.name} className={s.person}>
                 <span className={s.initials} aria-hidden="true">{t.initials}</span>
                 <div>
-                  <h3>{t.name}</h3>
-                  <span className={s.role}>{t.role}</span>
-                  <p>{t.note}</p>
+                  <h3 data-edit={`team.title2.${i}`} data-edit-max="40">{t.name}</h3>
+                  <span data-edit={`team.role.${i}`} data-edit-max="60" className={s.role}>{t.role}</span>
+                  <p data-edit={`team.body.${i}`} data-edit-max="240" data-edit-multiline>{t.note}</p>
                 </div>
               </li>
             ))}
@@ -473,24 +486,24 @@ export default function LittleAcornsPage() {
           <div className={s.enrollGrid}>
             <div>
               <div className={s.secHeadStack}>
-                <h2 id="enroll-h">How to enroll</h2>
-                <p className={s.secNote}>
+                <h2 data-edit="enroll.title" data-edit-max="60" id="enroll-h">How to enroll</h2>
+                <p data-edit="enroll.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                   We have places in Acorns from January, and a short waiting
                   list for Saplings. Four steps, and you will not be rushed
                   through any of them.
                 </p>
               </div>
               <ol className={s.steps}>
-                {STEPS.map((st) => (
+                {STEPS.map((st, i) => (
                   <li key={st.no}>
-                    <span className={s.stepNo}>{st.no}</span>
-                    <h3>{st.title}</h3>
-                    <p>{st.body}</p>
+                    <span data-edit={`enroll.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{st.no}</span>
+                    <h3 data-edit={`enroll.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                    <p data-edit={`enroll.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
                   </li>
                 ))}
               </ol>
             </div>
-            <div className={s.pipes} aria-hidden="true">
+            <div data-edit-pattern="enroll.field" data-edit-roles="transparent,2,3,4,5" className={s.pipes} aria-hidden="true">
               <TabbiedPattern
                 pattern={elbow}
                 palette={PIPES}
@@ -508,12 +521,12 @@ export default function LittleAcornsPage() {
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInner}>
             <div className={s.visitInfo}>
-              <h2 id="visit-h">Visit us</h2>
-              <p className={s.visitLede}>
+              <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Visit us</h2>
+              <p data-edit="visit.visitLede" data-edit-max="240" data-edit-multiline className={s.visitLede}>
                 The best way to know if we are right for your child is to come
                 and see a morning. Pick a day and we will confirm by email.
               </p>
-              <p className={s.address}>
+              <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 Little Acorns Nursery
                 <br />
                 14 Chestnut Row
@@ -521,38 +534,38 @@ export default function LittleAcornsPage() {
                 Linden Park
               </p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
               <ul className={s.contactList}>
                 <li>
-                  <a href="tel:+15550148820">(555) 014-8820</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550148820">(555) 014-8820</a>
                 </li>
                 <li>
-                  <a href="mailto:hello@littleacorns.example">hello@littleacorns.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@littleacorns.example">hello@littleacorns.example</a>
                 </li>
               </ul>
             </div>
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Book a visit</h3>
+              <h3 data-edit="visit.formTitle" data-edit-max="40" className={s.formTitle}>Book a visit</h3>
               <div className={s.field}>
-                <label htmlFor="la-name">Your name</label>
+                <label data-edit="visit.label" htmlFor="la-name">Your name</label>
                 <input id="la-name" name="name" type="text" autoComplete="name" required />
               </div>
               <div className={s.field}>
-                <label htmlFor="la-email">Email</label>
+                <label data-edit="visit.label2" htmlFor="la-email">Email</label>
                 <input id="la-email" name="email" type="email" autoComplete="email" required />
               </div>
               <div className={s.field}>
-                <label htmlFor="la-phone">Phone</label>
+                <label data-edit="visit.label3" htmlFor="la-phone">Phone</label>
                 <input id="la-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <div className={s.field}>
-                <label htmlFor="la-age">Your child's age</label>
+                <label data-edit="visit.label4" htmlFor="la-age">Your child's age</label>
                 <select id="la-age" name="age" defaultValue="2">
                   <option value="0">Under 1, planning ahead</option>
                   <option value="1">1 year</option>
@@ -562,7 +575,7 @@ export default function LittleAcornsPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="la-day">Best day to visit</label>
+                <label data-edit="visit.label5" htmlFor="la-day">Best day to visit</label>
                 <select id="la-day" name="day" defaultValue="tue">
                   <option value="mon">Monday</option>
                   <option value="tue">Tuesday</option>
@@ -572,7 +585,7 @@ export default function LittleAcornsPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="la-start">Hoping to start</label>
+                <label data-edit="visit.label6" htmlFor="la-start">Hoping to start</label>
                 <select id="la-start" name="start" defaultValue="soon">
                   <option value="soon">As soon as there is a place</option>
                   <option value="jan">January</option>
@@ -582,10 +595,10 @@ export default function LittleAcornsPage() {
                 </select>
               </div>
               <div className={s.fieldWide}>
-                <label htmlFor="la-note">Anything we should know</label>
+                <label data-edit="visit.label7" htmlFor="la-note">Anything we should know</label>
                 <textarea id="la-note" name="note" rows={3} />
               </div>
-              <button className={s.btn} type="submit">Send</button>
+              <button data-edit="visit.btn" data-edit-max="24" className={s.btn} type="submit">Send</button>
             </form>
           </div>
         </section>
@@ -594,20 +607,20 @@ export default function LittleAcornsPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div>
-            <p className={s.footName}>Little Acorns</p>
-            <p className={s.footTag}>Nursery and daycare for ages 1 to 5, on Chestnut Row.</p>
+            <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Little Acorns</p>
+            <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Nursery and daycare for ages 1 to 5, on Chestnut Row.</p>
           </div>
           <ul className={s.footLinks}>
-            <li><a href="#day">Our day</a></li>
-            <li><a href="#rooms">Rooms</a></li>
-            <li><a href="#food">Food and naps</a></li>
+            <li><a data-edit="footer.day" data-edit-max="28" href="#day">Our day</a></li>
+            <li><a data-edit="footer.rooms" data-edit-max="28" href="#rooms">Rooms</a></li>
+            <li><a data-edit="footer.food" data-edit-max="28" href="#food">Food and naps</a></li>
           </ul>
           <ul className={s.footLinks}>
-            <li><a href="#fees">Fees</a></li>
-            <li><a href="#enroll">Enroll</a></li>
-            <li><a href="#visit">Visit</a></li>
+            <li><a data-edit="footer.fees" data-edit-max="28" href="#fees">Fees</a></li>
+            <li><a data-edit="footer.enroll" data-edit-max="28" href="#enroll">Enroll</a></li>
+            <li><a data-edit="footer.visit" data-edit-max="28" href="#visit">Visit</a></li>
           </ul>
-          <p className={s.footAddr}>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline className={s.footAddr}>
             14 Chestnut Row, Linden Park
             <br />
             (555) 014-8820
@@ -616,11 +629,11 @@ export default function LittleAcornsPage() {
           </p>
         </div>
         <div className={s.footFine}>
-          <p>A fictional nursery. Fees, hours, places and people are invented.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional nursery. Fees, hours, places and people are invented.</p>
           <p>
-            <span>Patterns by </span>
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
-            <span>, drawn live on a transparent ground.</span>
+            <span data-edit="footer.text" data-edit-max="60">Patterns by </span>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <span data-edit="footer.text2" data-edit-max="60">, drawn live on a transparent ground.</span>
           </p>
         </div>
       </footer>
