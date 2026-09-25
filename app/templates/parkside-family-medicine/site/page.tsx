@@ -92,12 +92,12 @@ type Day = {
 };
 
 const HOURS: Day[] = [
-  { day: 'Monday', doors: '7:30 am to 7:00 pm', phones: 'from 8:00 am', slots: 32, note: 'Late clinic to 7' },
-  { day: 'Tuesday', doors: '8:00 am to 6:00 pm', phones: 'from 8:00 am', slots: 28, note: 'Travel clinic' },
-  { day: 'Wednesday', doors: '8:00 am to 6:00 pm', phones: 'from 8:00 am', slots: 28, note: 'Baby clinic, mornings' },
-  { day: 'Thursday', doors: '7:30 am to 7:00 pm', phones: 'from 8:00 am', slots: 32, note: 'Travel clinic, late to 7' },
-  { day: 'Friday', doors: '8:00 am to 5:00 pm', phones: 'from 8:00 am', slots: 24, note: 'Flu shots in season' },
-  { day: 'Saturday', doors: '9:00 am to 12:00 pm', phones: 'from 9:00 am', slots: 12, note: 'Urgent visits only' },
+  { day: 'Monday', doors: '7:30 am to 7 pm', phones: 'from 8 am', slots: 32, note: 'Late clinic to 7' },
+  { day: 'Tuesday', doors: '8 am to 6 pm', phones: 'from 8 am', slots: 28, note: 'Travel clinic' },
+  { day: 'Wednesday', doors: '8 am to 6 pm', phones: 'from 8 am', slots: 28, note: 'Baby clinic, mornings' },
+  { day: 'Thursday', doors: '7:30 am to 7 pm', phones: 'from 8 am', slots: 32, note: 'Travel clinic, late to 7' },
+  { day: 'Friday', doors: '8 am to 5 pm', phones: 'from 8 am', slots: 24, note: 'Flu shots in season' },
+  { day: 'Saturday', doors: '9 am to noon', phones: 'from 9 am', slots: 12, note: 'Urgent visits only' },
 ];
 
 const TODAY_STEPS = [

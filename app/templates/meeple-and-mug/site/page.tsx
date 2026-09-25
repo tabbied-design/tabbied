@@ -51,6 +51,8 @@ type Game = {
 
 type Shelf = {
   id: string;
+  art: string;
+  ink: string;
   label: string;
   who: string;
   length: string;
@@ -61,6 +63,8 @@ type Shelf = {
 const SHELVES: Shelf[] = [
   {
     id: 'A',
+    art: 'meeple-and-mug-knight',
+    ink: 'var(--ink)',
     label: 'Shelf A',
     who: 'For two',
     length: '15-45 minutes',
@@ -79,6 +83,8 @@ const SHELVES: Shelf[] = [
   },
   {
     id: 'B',
+    art: 'meeple-and-mug-mug',
+    ink: 'var(--tomato)',
     label: 'Shelf B',
     who: 'Three to five',
     length: 'About an hour',
@@ -96,6 +102,8 @@ const SHELVES: Shelf[] = [
   },
   {
     id: 'C',
+    art: 'meeple-and-mug-die',
+    ink: 'var(--teal)',
     label: 'Shelf C',
     who: 'Six and up',
     length: '15-30 minutes',
@@ -112,6 +120,8 @@ const SHELVES: Shelf[] = [
   },
   {
     id: 'D',
+    art: 'meeple-and-mug-knight',
+    ink: 'var(--tomato)',
     label: 'Shelf D',
     who: 'The long table',
     length: 'Two hours and up',
@@ -325,6 +335,9 @@ export default function MeepleAndMugPage() {
                       {g.pick ? <span className={s.pick}>Staff pick</span> : null}
                     </li>
                   ))}
+                  <li className={s.ornament} aria-hidden="true">
+                    <Artwork slug={shelf.art} alt="" inks={[shelf.ink]} className={s.ornamentArt} />
+                  </li>
                 </ul>
               </div>
             ))}
@@ -351,49 +364,51 @@ export default function MeepleAndMugPage() {
               </div>
             </div>
 
-            <ul className={s.rates}>
-              {RATES.map((r) => (
-                <li key={r.table}>
-                  <h3>{r.table}</h3>
-                  <span className={s.rateSeats}>{r.seats}</span>
-                  <strong className={s.ratePrice}>{r.price}</strong>
-                  <span className={s.rateUnit}>{r.unit}</span>
-                </li>
-              ))}
-            </ul>
+            <div className={s.tablesMain}>
+              <ul className={s.rates}>
+                {RATES.map((r) => (
+                  <li key={r.table}>
+                    <h3>{r.table}</h3>
+                    <span className={s.rateSeats}>{r.seats}</span>
+                    <strong className={s.ratePrice}>{r.price}</strong>
+                    <span className={s.rateUnit}>{r.unit}</span>
+                  </li>
+                ))}
+              </ul>
 
-            <div className={s.tonight}>
-              <div className={s.tonightHead}>
-                <h3>Tonight's tables</h3>
-                <p>Updated at 4 pm. Shaded hours are booked.</p>
-              </div>
-              <div className={s.boardScroll}>
-                <table className={s.avail}>
-                  <caption className={s.srOnly}>Table availability by hour, noon to midnight</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Table</th>
-                      {HOURS_ROW.map((h) => (
-                        <th key={h} scope="col">{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {BOARD_ROWS.map((row) => (
-                      <tr key={row.name}>
-                        <th scope="row">
-                          <span className={s.availName}>{row.name}</span>
-                          <span className={s.availSeats}>{row.seats}</span>
-                        </th>
-                        {row.slots.split('').map((c, i) => (
-                          <td key={i} data-booked={c === 'x' ? 'yes' : 'no'}>
-                            <span className={s.srOnly}>{c === 'x' ? 'Booked' : 'Free'}</span>
-                          </td>
+              <div className={s.tonight}>
+                <div className={s.tonightHead}>
+                  <h3>Tonight's tables</h3>
+                  <p>Updated at 4 pm. Shaded hours are booked.</p>
+                </div>
+                <div className={s.boardScroll}>
+                  <table className={s.avail}>
+                    <caption className={s.srOnly}>Table availability by hour, noon to midnight</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Table</th>
+                        {HOURS_ROW.map((h) => (
+                          <th key={h} scope="col">{h}</th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {BOARD_ROWS.map((row) => (
+                        <tr key={row.name}>
+                          <th scope="row">
+                            <span className={s.availName}>{row.name}</span>
+                            <span className={s.availSeats}>{row.seats}</span>
+                          </th>
+                          {row.slots.split('').map((c, i) => (
+                            <td key={i} data-booked={c === 'x' ? 'yes' : 'no'}>
+                              <span className={s.srOnly}>{c === 'x' ? 'Booked' : 'Free'}</span>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 

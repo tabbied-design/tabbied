@@ -492,6 +492,18 @@
   color: inherit;
 }
 
+/* A house piece stands at the end of each shelf, like a bookend. */
+.ornament {
+  flex: none;
+  align-self: flex-end;
+  margin-left: auto;
+  padding: 0 0.5rem;
+}
+
+.ornamentArt {
+  height: 8.5rem;
+}
+
 .shelfFoot {
   margin-top: 2.5rem;
   max-width: 44rem;
@@ -513,11 +525,16 @@
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   grid-template-areas:
     'head head'
-    'rates form'
-    'tonight form';
+    'main form';
   column-gap: clamp(2rem, 5vw, 5rem);
   row-gap: 2.5rem;
   align-items: start;
+}
+
+.tablesMain {
+  grid-area: main;
+  display: grid;
+  gap: 2.75rem;
 }
 
 .tablesHead {
@@ -525,6 +542,11 @@
   display: flex;
   gap: clamp(1.5rem, 3vw, 2.5rem);
   align-items: center;
+}
+
+.tablesHead h2 {
+  margin-top: 0.7rem;
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
 }
 
 .tablesHead .secNote {
@@ -537,7 +559,6 @@
 }
 
 .rates {
-  grid-area: rates;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.75rem;
@@ -574,10 +595,6 @@
   font-size: 0.85rem;
 }
 
-.tonight {
-  grid-area: tonight;
-}
-
 .tonightHead {
   display: flex;
   flex-wrap: wrap;
@@ -605,6 +622,7 @@
 .avail {
   width: 100%;
   min-width: 34rem;
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 3px;
   font-size: 0.8rem;
@@ -618,6 +636,7 @@
 }
 
 .avail thead th:first-child {
+  width: 8.2rem;
   text-align: left;
 }
 
@@ -1134,8 +1153,7 @@
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       'head'
-      'rates'
-      'tonight'
+      'main'
       'form';
   }
 

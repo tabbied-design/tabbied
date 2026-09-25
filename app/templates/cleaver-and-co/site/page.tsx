@@ -421,7 +421,7 @@ export default function CleaverAndCoPage() {
             fit="grid"
             cellSize={44}
             seed="tile-wall"
-            options={{ frequency: 0.7 }}
+            options={{ frequency: 0.85 }}
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
@@ -464,6 +464,10 @@ export default function CleaverAndCoPage() {
           <div className={s.secHead}>
             <p className={s.secKick}>Across the counter</p>
             <h2 id="faq-h">What people ask us</h2>
+            <p className={s.secNote}>
+              The answers we give most often. Anything else, ask at the counter
+              or call; the phone is by the block.
+            </p>
           </div>
           <div className={s.faqList}>
             {FAQS.map((f) => (

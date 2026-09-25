@@ -1178,6 +1178,46 @@
     grid-template-columns: 1fr;
   }
 
+  .member {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr;
+    grid-template-areas:
+      'av name'
+      'av role'
+      'facts facts';
+    column-gap: 1rem;
+    row-gap: 0.1rem;
+    align-items: center;
+  }
+
+  .initials {
+    grid-area: av;
+    width: 3.2rem;
+    height: 3.2rem;
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .memberName {
+    grid-area: name;
+    align-self: end;
+  }
+
+  .memberRole {
+    grid-area: role;
+    align-self: start;
+  }
+
+  .memberFacts {
+    grid-area: facts;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem 1rem;
+  }
+
+  .memberFacts div:first-child {
+    grid-column: 1 / -1;
+  }
+
   .urgent {
     grid-template-columns: 1fr 6.5rem;
     grid-template-areas:
