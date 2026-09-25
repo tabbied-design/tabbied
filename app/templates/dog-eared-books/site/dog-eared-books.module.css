@@ -829,8 +829,8 @@
 
   /* The index becomes one "Sections" button in the same band. */
   .siteMenu {
-    display: flex;
-    justify-content: center;
+    display: block;
+    text-align: center;
     padding: 0.35rem 0;
     border-bottom: 1px solid var(--ink);
   }
