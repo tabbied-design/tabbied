@@ -349,25 +349,25 @@
 .drawing {
   position: relative;
   height: 17rem;
-  --left: 6.2rem;
+  --left: 5.6rem;
   --foot: 3.4rem;
 }
 
 .drawing[data-shape='satchel'] {
-  --w: 11rem;
-  --h: 8.6rem;
-  --d: 2.4rem;
+  --w: 10.4rem;
+  --h: 8.1rem;
+  --d: 2.3rem;
 }
 
 .drawing[data-shape='tote'] {
-  --w: 10.4rem;
-  --h: 9.4rem;
-  --d: 2.8rem;
+  --w: 9.8rem;
+  --h: 8.8rem;
+  --d: 2.6rem;
 }
 
 .drawing[data-shape='wallet'] {
-  --w: 10.6rem;
-  --h: 8.7rem;
+  --w: 10rem;
+  --h: 8.2rem;
   --d: 1.3rem;
 }
 
@@ -472,8 +472,10 @@
 }
 
 .dimD {
-  left: calc(var(--left) + var(--w) + var(--d) + 0.7rem);
-  bottom: calc(var(--foot) + var(--h) + var(--d) * 0.5 - 0.5rem);
+  left: calc(var(--left) + var(--d));
+  bottom: calc(var(--foot) + var(--h) + var(--d) + 0.5rem);
+  width: var(--w);
+  text-align: center;
 }
 
 .spec {
@@ -1009,7 +1011,21 @@
   }
 
   .stamps {
-    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .stampMark {
+    aspect-ratio: 4 / 3;
+    font-size: 1.3rem;
+    outline-offset: -0.4rem;
+  }
+
+  .stamp h3 {
+    font-size: 1.1rem;
+  }
+
+  .stamp p {
+    font-size: 0.8rem;
   }
 
   .monoPrices {

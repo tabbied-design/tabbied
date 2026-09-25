@@ -136,6 +136,16 @@
   z-index: -1;
 }
 
+/* A dark wash on the left, so the lights stay behind the words. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--night) 78%, transparent) 0%, color-mix(in srgb, var(--night) 55%, transparent) 45%, transparent 75%);
+  pointer-events: none;
+}
+
 .heroInner {
   max-width: var(--max);
   margin: 0 auto;
@@ -518,8 +528,8 @@
   display: grid;
   gap: 1rem;
   padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2.5rem) clamp(1.2rem, 3vw, 2rem);
-  background-color: var(--velvet);
-  background-image: radial-gradient(ellipse 60% 55% at 50% 30%, color-mix(in srgb, var(--gold) 40%, transparent), transparent 70%);
+  background-color: var(--gold);
+  background-image: radial-gradient(ellipse 60% 55% at 50% 35%, color-mix(in srgb, var(--cream) 55%, transparent), transparent 72%);
   border-radius: 0.35rem;
 }
 
@@ -529,8 +539,9 @@
 
 .seatsNote {
   font-size: 0.9rem;
+  font-weight: 600;
   text-align: center;
-  color: var(--cream);
+  color: var(--night);
 }
 
 .screensBody h2 {
@@ -988,6 +999,10 @@
 
   .projWrap {
     width: min(70%, 20rem);
+  }
+
+  .hero::before {
+    background: color-mix(in srgb, var(--night) 55%, transparent);
   }
 
   .beam {

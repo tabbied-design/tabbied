@@ -19,9 +19,9 @@ const OLIVE = '#4A5D3F';
 const GRAY = '#8F857B';
 const PALE = '#E6DACB';
 
-const SATCHEL = [SADDLE, INK, PALE];
+const SATCHEL = [SADDLE, INK, SADDLE];
 const TOTE = [OLIVE, PALE, SADDLE];
-const WALLET = [GRAY, INK, PALE];
+const WALLET = [GRAY, INK, SADDLE];
 const SEAM = ['transparent', SADDLE, PALE];
 
 const NAV = [

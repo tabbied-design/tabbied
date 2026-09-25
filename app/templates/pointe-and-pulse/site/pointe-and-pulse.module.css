@@ -394,6 +394,8 @@
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.25;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .clsAges {
@@ -887,7 +889,7 @@
 
   /* The week scrolls sideways inside its own box; the times stay put. */
   .table {
-    min-width: 50rem;
+    min-width: 58rem;
   }
 
   .table tbody th,
@@ -927,7 +929,7 @@
 
   .panelBallet,
   .panelPulse {
-    min-height: 15rem;
+    min-height: 19rem;
   }
 
   .styles,
@@ -939,7 +941,11 @@
   }
 
   .trialArt {
-    min-height: 20rem;
+    min-height: 22rem;
+  }
+
+  .trialDancer {
+    width: 60%;
   }
 }
 

@@ -1,0 +1,1029 @@
+/* ==========================================================================
+   HERON POINT - a public golf club
+   Full bleed at both ends. The fairway fills the first screen as a tinted
+   photograph whose empty sky is the page's own paper, with the words in
+   that sky and the day's course conditions laid along the bottom. The
+   green and its pond fill the tee-time section the same way, in duotone.
+   Between them, a printed scorecard (front nine and back nine side by
+   side, a note for every hole), the range, the clubhouse and the fees.
+   Cormorant for the club, Figtree for the card. The mown-turf checker is
+   the pattern; golf-ball dimples back the range board.
+   ========================================================================== */
+
+.page {
+  --paper: #eff2ea;
+  --ink: #172117;
+  --green: #2f6b3a;
+  --sand: #c8a45a;
+  --gray: #8b9488;
+  --pale: #dce3d5;
+  --muted: color-mix(in srgb, var(--ink) 72%, transparent);
+  --line: color-mix(in srgb, var(--ink) 15%, transparent);
+  --gut: clamp(1rem, 4.5vw, 4rem);
+  --max: 80rem;
+  --air: clamp(4rem, 8vw, 7rem);
+  --serif: 'Cormorant Garamond', Garamond, Georgia, serif;
+  --sans: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.8rem var(--gut);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.mark {
+  display: grid;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.markName {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.markSub {
+  margin-top: 0.15rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2.2vw, 2.2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--green);
+}
+
+.barBook {
+  flex: none;
+  padding: 0.65rem 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--paper);
+  background: var(--green);
+  border-radius: 3px;
+  transition: background-color 160ms ease;
+}
+
+.barBook:hover {
+  background: var(--ink);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero
+   The picture fills the section; its sky is the section's paper. The words
+   sit in the gap between the two stands of trees, a little left of center,
+   where the fairway runs away from you. */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: max(40rem, calc(100svh - 4.6rem));
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.heroArt {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+}
+
+.heroText {
+  width: min(34rem, 100%);
+  margin-left: calc(49% - 17rem);
+  padding: clamp(3rem, 7vh, 4.75rem) 1rem 0;
+  text-align: center;
+}
+
+.kicker,
+.secKicker {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.heroTitle {
+  margin-top: 0.9rem;
+  font-size: clamp(3rem, 5.4vw, 5rem);
+  font-weight: 600;
+  line-height: 0.95;
+}
+
+.heroTitle em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--green);
+}
+
+.heroLede {
+  max-width: 28rem;
+  margin: 1.1rem auto 0;
+  font-size: 1.1rem;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.75rem 1.3rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid var(--green);
+  border-radius: 3px;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  background: var(--green);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btnLine {
+  background: var(--paper);
+  border-color: var(--ink);
+}
+
+.btnLine:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.conditions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+}
+
+.conditions div {
+  padding: 0.9rem var(--gut) 1rem;
+}
+
+.conditions div + div {
+  border-left: 1px solid var(--line);
+}
+
+.conditions dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.conditions dd {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: 5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.bandField {
+  position: absolute;
+  inset: 0;
+}
+
+/* ------------------------------------------------------------------ course */
+
+.course {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.courseHead {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: 2.75rem;
+}
+
+.courseHead h2,
+.secHead h2,
+.lessonsText h2,
+.ratesText h2,
+.teeText h2 {
+  margin-top: 0.7rem;
+  font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+  line-height: 1;
+}
+
+.secNote {
+  max-width: 36rem;
+  margin-top: 1rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem 2rem;
+}
+
+.stats div {
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--ink);
+}
+
+.stats dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stats dd {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* The card itself: two nines, printed in green on the paper. */
+.card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.nine {
+  border: 1.5px solid var(--green);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.nineTitle {
+  padding: 0.7rem 1rem;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--green);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  padding: 0.55rem 0.7rem;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid color-mix(in srgb, var(--green) 22%, transparent);
+}
+
+.table thead th {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  background: color-mix(in srgb, var(--pale) 60%, var(--paper));
+}
+
+.table thead th:nth-child(1) {
+  width: 3.6rem;
+}
+
+.table thead th:nth-child(2) {
+  width: 3.2rem;
+  text-align: center;
+}
+
+.table thead th:nth-child(3) {
+  width: 4.4rem;
+  text-align: right;
+}
+
+.holeNo {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--green);
+  border: 1.5px solid var(--green);
+  border-radius: 50%;
+}
+
+.par {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-align: center !important;
+}
+
+.yards {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: right !important;
+}
+
+.note {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.table tfoot th,
+.table tfoot td {
+  border-bottom: 0;
+  background: var(--pale);
+}
+
+.table tfoot th {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.table tfoot .note {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ----------------------------------------------------------------- lessons */
+
+.lessons {
+  border-top: 1px solid var(--line);
+}
+
+.lessonsInner {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.pros {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.pro {
+  padding-top: 0.9rem;
+  border-top: 2px solid var(--green);
+}
+
+.proName {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.proRole {
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.proNote {
+  margin-top: 0.6rem;
+  color: var(--muted);
+}
+
+.priceList {
+  display: grid;
+  margin-top: 2.25rem;
+}
+
+.priceList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.priceList dd {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.range {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--pale);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.rangeField {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+}
+
+.rangeBoard {
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  background: var(--paper);
+  border: 1.5px solid var(--green);
+  border-radius: 4px;
+  box-shadow: 0 20px 40px -28px rgb(0 0 0 / 0.5);
+}
+
+.rangeTitle {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.rangeNote {
+  margin-top: 0.6rem;
+  color: var(--muted);
+}
+
+.buckets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.bucket {
+  display: grid;
+  gap: 0.1rem;
+  padding: 1rem 0.75rem;
+  text-align: center;
+  background: color-mix(in srgb, var(--pale) 55%, var(--paper));
+  border-radius: 4px;
+}
+
+.bucketSize {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.bucketBalls {
+  font-size: 0.92rem;
+}
+
+.bucketPrice {
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.rangeFree {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  font-size: 0.95rem;
+  border-top: 1px solid var(--line);
+}
+
+/* --------------------------------------------------------------- clubhouse */
+
+.clubhouse {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: 2.5rem;
+}
+
+.houseList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.houseItem {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--ink);
+}
+
+.houseNo {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--green);
+}
+
+.houseTitle {
+  font-size: 1.7rem;
+  line-height: 1.05;
+}
+
+.houseBody {
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- rates */
+
+.rates {
+  background: var(--green);
+  color: var(--paper);
+}
+
+.ratesInner {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.rates .secKicker {
+  color: color-mix(in srgb, var(--sand) 55%, var(--paper));
+}
+
+.rates .secNote {
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.members {
+  display: grid;
+  margin-top: 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+}
+
+.members div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+}
+
+.members dd {
+  font-weight: 600;
+}
+
+.rateWrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.rateTable {
+  width: 100%;
+  min-width: 26rem;
+  border-collapse: collapse;
+}
+
+.rateTable th,
+.rateTable td {
+  padding: 1rem 0.75rem;
+  text-align: right;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 30%, transparent);
+}
+
+.rateTable thead th {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--sand) 55%, var(--paper));
+  border-bottom: 2px solid var(--paper);
+}
+
+.rateTable th:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+
+.rateTable tbody th {
+  font-weight: 600;
+}
+
+.rateTable td {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* -------------------------------------------------------------------- tees
+   The green, the pin and the pond behind the whole section in duotone; the
+   sky above the trees is the section's pale, and holds the heading. */
+
+.tee {
+  position: relative;
+  isolation: isolate;
+  min-height: 52rem;
+  overflow: hidden;
+  background: var(--pale);
+}
+
+.teeArt {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+}
+
+.teeInner {
+  display: grid;
+  align-content: space-between;
+  gap: 3rem;
+  min-height: 52rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) clamp(2.5rem, 5vw, 4rem);
+}
+
+.teeText {
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.teeLede {
+  margin-top: 0.9rem;
+  font-size: 1.1rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 58rem;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--paper);
+  border: 1.5px solid var(--green);
+  border-radius: 6px;
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.55);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: span 2;
+}
+
+.field label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  border-radius: 3px;
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  border-color: var(--green);
+}
+
+.formBtn {
+  grid-column: 1 / -1;
+  padding: 0.9rem 1.2rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--green);
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.formBtn:hover {
+  background: var(--ink);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.footGrid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  gap: 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.footTag,
+.footText {
+  margin-top: 0.5rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footHead {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sand);
+}
+
+.footLink {
+  display: block;
+  margin-top: 0.5rem;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.footLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 2rem;
+  max-width: var(--max);
+  margin: 2.75rem auto 0;
+  padding-top: 1.2rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--paper) 68%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .card,
+  .lessonsInner {
+    grid-template-columns: 1fr;
+  }
+
+  .houseList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ratesInner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .barBook {
+    margin-left: auto;
+  }
+
+  .heroText {
+    margin: 0 auto;
+  }
+
+  .conditions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .conditions div:nth-child(3) {
+    border-left: 0;
+  }
+
+  .conditions div:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+
+  .courseHead {
+    grid-template-columns: 1fr;
+  }
+
+  .form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .barBook {
+    display: none;
+  }
+
+  .siteMenu {
+    margin-left: auto;
+  }
+
+  .conditions div {
+    padding: 0.7rem 1rem 0.8rem;
+  }
+
+  .conditions dd {
+    font-size: 1.1rem;
+  }
+
+  .pros,
+  .houseList,
+  .footGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem 0.4rem;
+  }
+
+  .table thead th:nth-child(1) {
+    width: 2.8rem;
+  }
+
+  .table thead th:nth-child(2) {
+    width: 2.4rem;
+  }
+
+  .table thead th:nth-child(3) {
+    width: 3.4rem;
+  }
+
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  .fieldWide {
+    grid-column: auto;
+  }
+
+  .rateTable {
+    min-width: 0;
+  }
+
+  .rateTable th,
+  .rateTable td {
+    padding: 0.8rem 0.3rem;
+  }
+
+  .rateTable thead th {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .rateTable tbody th {
+    font-size: 0.92rem;
+  }
+
+  .rateTable td {
+    font-size: 1.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barBook,
+  .btn,
+  .btnLine,
+  .formBtn {
+    transition: none;
+  }
+}

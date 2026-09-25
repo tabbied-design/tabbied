@@ -17,7 +17,7 @@ const VELVET = '#C9302C';
 const CREAM = '#F2E8DA';
 const PLUM = '#1F191C';
 
-const BULBS = ['transparent', GOLD, VELVET, CREAM];
+const BULBS = ['transparent', GOLD, VELVET, PLUM];
 const CURTAIN = ['transparent', VELVET, PLUM];
 
 const NAV = [
@@ -256,9 +256,9 @@ export default function TheRialtoCinemaPage() {
               pattern={lantern}
               palette={BULBS}
               fit="grid"
-              cellSize={96}
+              cellSize={104}
               seed="marquee"
-              options={{ frequency: 0.4 }}
+              options={{ frequency: 0.3 }}
               redrawInterval={9000}
               style={{ position: 'absolute', inset: 0 }}
             />
@@ -370,7 +370,7 @@ export default function TheRialtoCinemaPage() {
             <Artwork
               slug="the-rialto-cinema-seats"
               alt="A row of three folding velvet cinema seats"
-              inks={['var(--night)', 'var(--gold)']}
+              inks={['var(--night)', 'var(--velvet)']}
               className={s.seats}
             />
             <p className={s.seatsNote}>Row F, Screen One. Every seat was reupholstered in 2019.</p>

@@ -1,0 +1,1062 @@
+/* ==========================================================================
+   CRABAPPLE ORCHARD - pick-your-own, Hollow Road
+   Full bleed: the orchard rows run across the foot of the opening screen
+   and the barn across the foot of the booking section, both drawn in the
+   page's own inks with their skies left empty, so the section color is
+   the sky (pale on the way in, gold at the barn). Between them the season
+   as a picking calendar of bars, a hedge of leaves, and the farm shop
+   beside a big panel of fronds. A warm book serif and a plain sans.
+   ========================================================================== */
+
+.page {
+  --paper: #f5f1e6;
+  --ink: #1f2419;
+  --red: #c0392b;
+  --green: #5b8c3a;
+  --gold: #e3b23c;
+  --gray: #9a9483;
+  --pale: #e6e0cf;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 82rem;
+  --air: clamp(4rem, 9vw, 7.5rem);
+  --serif: 'Vollkorn', 'Iowan Old Style', Georgia, serif;
+
+  font-family: 'Mulish', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* -------------------------------------------------------------------- bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.8rem var(--gut);
+  background: var(--paper);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+/* A little apple: a round, a leaf. */
+.markApple {
+  position: relative;
+  width: 1.15rem;
+  height: 1.05rem;
+  border-radius: 50% 50% 46% 46%;
+  background: var(--red);
+}
+
+.markApple::after {
+  content: '';
+  position: absolute;
+  left: 55%;
+  top: -0.45rem;
+  width: 0.5rem;
+  height: 0.32rem;
+  border-radius: 0 100% 0 100%;
+  background: var(--green);
+}
+
+.markName {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.1rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--red);
+}
+
+.barBtn {
+  padding: 0.55rem 1.1rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  color: var(--paper);
+  background: var(--red);
+  border-radius: 999px;
+  transition: background-color 160ms ease;
+}
+
+.barBtn:hover {
+  background: var(--ink);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------------- hero
+   The rows are drawn at their own proportions across the full width and
+   hang below the fold, so the hills start about halfway down and the
+   words sit in the sky over the middle, clear of the big trees either
+   side. */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: max(46rem, calc(100svh - 4.4rem));
+  overflow: hidden;
+  background: var(--pale);
+}
+
+.heroArt {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: -14vw;
+  height: 66.67vw;
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+  width: min(46rem, 58%);
+  margin: 0 auto;
+  padding-top: clamp(3rem, 7vh, 4.5rem);
+  text-align: center;
+}
+
+.kicker,
+.secKick,
+.visitKick {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.title {
+  margin-top: 0.8rem;
+  font-size: clamp(2.7rem, 5.2vw, 4.8rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+.title em {
+  font-weight: 500;
+  color: var(--green);
+}
+
+.lede {
+  margin: 1.1rem auto 0;
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.3vw, 1.18rem);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.8rem 1.35rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  color: var(--paper);
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btnLine {
+  background: var(--paper);
+}
+
+.btnLine:hover {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.ripe {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  background: var(--paper);
+  border-radius: 999px;
+}
+
+.ripeDot {
+  flex: none;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--green) 25%, transparent);
+}
+
+/* --------------------------------------------------------------- sections */
+
+.calendar,
+.picking {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(1.5rem, 5vw, 5rem);
+  row-gap: 0.8rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secKick {
+  grid-column: 1;
+}
+
+.secHead h2,
+.shopBody h2,
+.visitText h2,
+.faqHead h2 {
+  font-size: clamp(2.1rem, 4vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+.secHead h2 {
+  grid-column: 1;
+}
+
+.secNote {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  max-width: 34rem;
+}
+
+/* --------------------------------------------------------------- calendar
+   A row per variety: its name, then a track of eight half months with the
+   picking window as a bar. The red rule is this week. */
+
+.chart {
+  --name-w: 17rem;
+  --now: 3.5;
+  position: relative;
+}
+
+.chartHead,
+.variety {
+  display: grid;
+  grid-template-columns: var(--name-w) minmax(0, 1fr);
+}
+
+.chartHead {
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.chartCorner,
+.months span {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.months span {
+  padding-left: 0.6rem;
+}
+
+.variety {
+  align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.varName {
+  padding: 0.7rem 1rem 0.7rem 0;
+}
+
+.varName h3 {
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.varName p {
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.track {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  align-self: stretch;
+  align-items: center;
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--ink) 16%, transparent) 1px, transparent 1px);
+  background-size: 25% 100%;
+}
+
+.span {
+  grid-row: 1;
+  margin: 0.6rem 0.25rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--paper);
+  background: var(--red);
+  border-radius: 999px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.span[data-kind='pear'] {
+  background: var(--green);
+}
+
+.span[data-kind='squash'] {
+  color: var(--ink);
+  background: var(--gold);
+}
+
+.now {
+  position: absolute;
+  top: -1.6rem;
+  bottom: 0;
+  left: calc(var(--name-w) + (100% - var(--name-w)) * var(--now) / 8);
+  width: 2px;
+  background: var(--red);
+  pointer-events: none;
+}
+
+.nowLabel {
+  position: absolute;
+  top: 0;
+  left: 0.4rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--paper);
+  background: var(--red);
+  border-radius: 3px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend li::before {
+  content: '';
+  width: 1.6rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: var(--red);
+}
+
+.legend li[data-kind='pear']::before {
+  background: var(--green);
+}
+
+.legend li[data-kind='squash']::before {
+  background: var(--gold);
+}
+
+/* The hedge. */
+.hedge {
+  position: relative;
+  height: clamp(4.5rem, 8vw, 6.5rem);
+  margin-top: var(--air);
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------- picking */
+
+.pickGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.steps li {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--green);
+  border-radius: 50%;
+}
+
+.steps h3 {
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.bags {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.bag {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  align-items: center;
+  padding: 1.1rem 1.3rem;
+  background: var(--pale);
+  border-radius: 1rem;
+}
+
+.bag h3 {
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+
+.bag p {
+  grid-column: 1;
+  font-size: 0.9rem;
+}
+
+.bag strong {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--red);
+}
+
+/* ------------------------------------------------------------------- shop */
+
+.shop {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: stretch;
+}
+
+.leafPanel {
+  position: relative;
+  min-height: 30rem;
+  overflow: hidden;
+  background: var(--pale);
+  border-radius: 999px 999px 1.5rem 1.5rem;
+}
+
+.shopBody h2 {
+  margin-top: 0.8rem;
+}
+
+.shopLede {
+  margin-top: 1rem;
+  max-width: 36rem;
+}
+
+.bakery {
+  display: grid;
+  margin-top: 1.6rem;
+  border-top: 2px solid var(--ink);
+}
+
+.bakery li {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.bakeHead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.bakeHead h3 {
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.bakeDots {
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 2px dotted var(--gray);
+}
+
+.bakeHead strong {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.bakery p {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.shopNote {
+  margin-top: 1.2rem;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ visit
+   The barn is drawn across the foot of the section with its sky left
+   empty, so the section's gold is the evening sky. */
+
+.visit {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--air) var(--gut) max(24rem, 44vw);
+  background: var(--gold);
+}
+
+.visitArt {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: -3vw;
+  height: 66.67vw;
+}
+
+.visitInner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 27rem);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.visitKick {
+  color: var(--ink);
+}
+
+.visitText h2 {
+  margin-top: 0.8rem;
+}
+
+.visitLede {
+  margin-top: 1rem;
+  max-width: 32rem;
+  font-size: 1.08rem;
+}
+
+.hours {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  border-top: 2px solid var(--ink);
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.hours dt {
+  font-weight: 800;
+}
+
+.address {
+  margin-top: 1rem;
+  max-width: 30rem;
+  font-weight: 600;
+}
+
+.form {
+  display: grid;
+  gap: 0.95rem;
+  padding: clamp(1.3rem, 3vw, 2rem);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 1.2rem;
+  box-shadow: 0 20px 40px -24px rgb(0 0 0 / 0.5);
+}
+
+.formHead {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field label,
+.slots legend {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid color-mix(in srgb, var(--ink) 60%, transparent);
+  border-radius: 0.6rem;
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.slots legend {
+  margin-bottom: 0.35rem;
+  padding: 0;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border: 2px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  border-radius: 0.6rem;
+  cursor: pointer;
+}
+
+.slot:has(input:checked) {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--green) 14%, transparent);
+}
+
+.slot input {
+  accent-color: var(--green);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.8rem;
+}
+
+.submit {
+  padding: 0.85rem 1.3rem;
+  font: inherit;
+  font-weight: 800;
+  color: var(--paper);
+  background: var(--red);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.submit:hover {
+  background: var(--ink);
+}
+
+.formNote {
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* -------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.faqHead h2 {
+  margin-top: 0.8rem;
+}
+
+.faqList {
+  border-top: 2px solid var(--ink);
+}
+
+.faqItem {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.faqItem summary {
+  position: relative;
+  padding: 1rem 2.4rem 1rem 0;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.2rem;
+  top: 0.95rem;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  font-family: 'Mulish', Arial, sans-serif;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--paper);
+  background: var(--green);
+  border-radius: 50%;
+}
+
+.faqItem[open] summary::after {
+  content: '\2212';
+}
+
+.faqItem p {
+  padding-bottom: 1.1rem;
+  max-width: 40rem;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: 2rem;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.footTag {
+  margin-top: 0.7rem;
+  max-width: 24rem;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.footAddr {
+  line-height: 1.8;
+}
+
+.footLinks {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.footLinks a {
+  text-decoration: none;
+}
+
+.footLinks a:hover {
+  text-decoration: underline;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--paper) 74%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 20%, transparent);
+}
+
+.credit a {
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1100px) {
+  .heroText {
+    width: min(44rem, 72%);
+  }
+
+  .pickGrid,
+  .visitInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    max-width: 32rem;
+  }
+
+  .visit {
+    padding-bottom: max(22rem, 50vw);
+  }
+}
+
+@media (max-width: 900px) {
+  .chart {
+    --name-w: 12rem;
+  }
+
+  .shop,
+  .faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .leafPanel {
+    min-height: 16rem;
+    border-radius: 999px 999px 1.2rem 1.2rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.7rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNote {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .footTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Narrow: the words take the width and the rows sit under them, larger
+   than the screen and centered on the road; the calendar puts each name
+   over its own track. */
+@media (max-width: 640px) {
+  .barBtn {
+    display: none;
+  }
+
+  .markName {
+    font-size: 1.2rem;
+  }
+
+  .hero {
+    min-height: 0;
+    padding-bottom: 92vw;
+  }
+
+  .heroText {
+    width: auto;
+    padding: 2.4rem var(--gut) 0;
+  }
+
+  .heroArt {
+    left: -35%;
+    right: -35%;
+    bottom: -6vw;
+    height: 118vw;
+  }
+
+  .ripe {
+    border-radius: 1rem;
+    text-align: left;
+  }
+
+  .chart {
+    --name-w: 0rem;
+  }
+
+  .chartCorner {
+    display: none;
+  }
+
+  .chartHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .variety {
+    grid-template-columns: minmax(0, 1fr);
+    padding-bottom: 0.4rem;
+  }
+
+  .varName {
+    padding: 0.8rem 0 0.1rem;
+  }
+
+  .span {
+    margin: 0.35rem 0.15rem;
+    padding: 0.2rem 0.55rem;
+    font-size: 0.72rem;
+  }
+
+  .nowLabel {
+    left: auto;
+    right: 0.4rem;
+  }
+
+  .steps,
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .visit {
+    padding-bottom: 88vw;
+  }
+
+  .visitArt {
+    left: -30%;
+    right: -30%;
+    bottom: -4vw;
+    height: 100vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barBtn,
+  .btn,
+  .btnLine,
+  .submit {
+    transition: none;
+  }
+}
