@@ -819,7 +819,7 @@
   bottom: 0;
   left: 0;
   width: min(44rem, 100%);
-  opacity: 0.35;
+  opacity: 0.5;
   mask-image: radial-gradient(farthest-side at 20% 50%, var(--ink) 20%, transparent);
 }
 

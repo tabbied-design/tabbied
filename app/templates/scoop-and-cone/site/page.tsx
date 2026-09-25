@@ -20,6 +20,7 @@ const INK = '#2A1E24';
 const BURST = ['transparent', PINK, BLUE, YELLOW, INK];
 const SCALLOP = ['transparent', PINK, YELLOW, BLUE];
 const SPRINKLES = ['transparent', YELLOW, PINK, BLUE];
+const DRIP = ['transparent', BLUE, YELLOW];
 
 const NAV = [
   ['Flavors', '#flavors'],
@@ -229,6 +230,16 @@ export default function ScoopAndConePage() {
         {/* ----------------------------------------------------- FLAVOR BOARD
             The parlor's board: ink ground, every flavor with its chip. */}
         <section id="flavors" className={s.board} aria-labelledby="flavors-h">
+          <div className={s.boardSprinkles} aria-hidden="true">
+            <TabbiedPattern
+              pattern={confettidotfield}
+              palette={SPRINKLES}
+              fit="grid"
+              cellSize={80}
+              seed="scoop-board"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.boardInner}>
             <div className={s.boardHead}>
               <h2 data-edit="flavors.title" data-edit-max="60" id="flavors-h">Today's board</h2>
@@ -357,12 +368,25 @@ export default function ScoopAndConePage() {
         <section id="hours" className={s.sec} aria-labelledby="hours-h">
           <div className={s.hoursWrap}>
             <div className={s.hoursLead}>
-              <Artwork
-                slug="scoop-and-cone-popsicle"
-                alt="An ice lolly with a bite taken out"
-                inks={{ red: 'var(--pink)', blue: 'var(--blue)', yellow: 'var(--yellow)' }}
-                className={s.pop}
-              />
+              <div className={s.popPlate}>
+                <div className={s.popCove} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={cove}
+                    palette={DRIP}
+                    options={{ frequency: 0.8 }}
+                    fit="grid"
+                    cellSize={36}
+                    seed="scoop-pop"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+                <Artwork
+                  slug="scoop-and-cone-popsicle"
+                  alt="An ice lolly with a bite taken out"
+                  inks={{ red: 'var(--pink)', blue: 'var(--blue)', yellow: 'var(--yellow)' }}
+                  className={s.pop}
+                />
+              </div>
               <div>
                 <h2 data-edit="hours.title" data-edit-max="60" id="hours-h">Hours by season</h2>
                 <p data-edit="hours.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>The boardwalk sets our clock. If it is warm and busy we stay open late, and say so on the door.</p>
@@ -407,6 +431,16 @@ export default function ScoopAndConePage() {
               </dl>
             </div>
             <div className={s.party}>
+              <div className={s.partySprinkles} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={confettidotfield}
+                  palette={SPRINKLES}
+                  fit="grid"
+                  cellSize={90}
+                  seed="scoop-party"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <h3 data-edit="visit.title2" data-edit-max="40">Parties and pints</h3>
               <p data-edit="visit.body" data-edit-max="240" data-edit-multiline>The back room seats sixteen for a birthday: a sundae each, a candle in the big dipper, two hours, $180. Pints and quarts to go all year, and we pack them in dry ice for the drive home.</p>
               <a data-edit="visit.btn" data-edit-max="28" className={s.btn} href="mailto:parties@scoopandcone.example">Book the back room</a>

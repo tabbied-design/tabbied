@@ -255,9 +255,21 @@
 /* ------------------------------------------------------------ flavor board */
 
 .board {
+  position: relative;
+  isolation: isolate;
   background: var(--ink);
   color: var(--cream);
   padding: clamp(3.5rem, 8vw, 6rem) var(--gut);
+}
+
+/* Sprinkles down both edges of the board, clear of the flavors. */
+.boardSprinkles {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.7;
+  mask-image: linear-gradient(90deg, var(--ink) 0, transparent 7.5%, transparent 92.5%, var(--ink) 100%);
 }
 
 .boardInner {
@@ -702,7 +714,26 @@
   margin-top: 0.8rem;
 }
 
+.popPlate {
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+
+/* A scalloped disc behind the ice lolly, like a paper doily. */
+.popCove {
+  grid-area: 1 / 1;
+  position: relative;
+  width: clamp(8rem, 14vw, 11.5rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.55;
+}
+
 .pop {
+  grid-area: 1 / 1;
+  position: relative;
   flex: none;
   height: clamp(9rem, 16vw, 13rem);
   width: auto;
@@ -841,11 +872,26 @@
 }
 
 .party {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
   background: color-mix(in srgb, var(--blue) 45%, var(--cream));
+}
+
+/* Party sprinkles in the far corner, away from the words. */
+.partySprinkles {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 70%;
+  z-index: -1;
+  overflow: hidden;
+  mask-image: radial-gradient(ellipse at 100% 0%, var(--ink) 22%, transparent 62%);
 }
 
 .party h3 {
@@ -987,6 +1033,10 @@
   .buildArt {
     width: min(100%, 20rem);
   }
+
+  .boardSprinkles {
+    display: none;
+  }
 }
 
 @media (max-width: 560px) {
@@ -1017,6 +1067,10 @@
 
   .pop {
     height: 7rem;
+  }
+
+  .popCove {
+    width: 6.5rem;
   }
 }
 

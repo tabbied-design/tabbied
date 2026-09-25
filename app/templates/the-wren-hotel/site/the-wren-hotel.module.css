@@ -296,6 +296,8 @@
 /* A wallpaper sample in an arch, hung under the section label. */
 .rates .secHead {
   position: relative;
+  align-content: start;
+  min-height: 11.5rem;
 }
 
 .swatch {
@@ -1228,6 +1230,10 @@
 
   .swatch {
     display: none;
+  }
+
+  .rates .secHead {
+    min-height: 0;
   }
 
   .room {

@@ -409,14 +409,14 @@
   color: var(--terra);
 }
 
-/* A glaze test tile hung over the section number. */
+/* A glaze test tile hung above the section number. */
 .tiledHead {
   position: relative;
 }
 
 .testTile {
   position: absolute;
-  top: 0;
+  bottom: calc(100% + 1.2rem);
   left: 0;
   width: 3.75rem;
   aspect-ratio: 1;

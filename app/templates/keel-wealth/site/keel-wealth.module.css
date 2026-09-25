@@ -383,9 +383,25 @@
 /* --------------------------------------------------------------- compare */
 
 .compare {
+  position: relative;
+  isolation: isolate;
   background: var(--navy);
   color: var(--paper);
   padding: clamp(3rem, 6vw, 4.5rem) var(--gut);
+  overflow: hidden;
+}
+
+/* The hero's depth lines again, faint, sounding under the argument. */
+.compareChart {
+  position: absolute;
+  z-index: -1;
+  top: -40%;
+  left: -12%;
+  width: 60%;
+  height: 180%;
+  opacity: 0.3;
+  -webkit-mask-image: radial-gradient(closest-side, var(--navy) 55%, transparent);
+  mask-image: radial-gradient(closest-side, var(--navy) 55%, transparent);
 }
 
 .compareInner {
@@ -554,9 +570,25 @@
 /* -------------------------------------------------------------- process */
 
 .process {
+  position: relative;
+  isolation: isolate;
   margin-top: var(--air);
   padding: var(--air) var(--gut);
   background: color-mix(in srgb, var(--pale) 60%, var(--paper));
+  overflow: hidden;
+}
+
+/* A current of threads along the top edge, fading into the section. */
+.processSwell {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--air) - 0.5rem);
+  opacity: 0.75;
+  -webkit-mask-image: linear-gradient(180deg, var(--navy) 35%, transparent);
+  mask-image: linear-gradient(180deg, var(--navy) 35%, transparent);
 }
 
 .processInner {
@@ -692,6 +724,17 @@
 }
 
 /* ---------------------------------------------------------- disclosures */
+
+/* A round survey seal under the small print. */
+.seal {
+  position: relative;
+  width: 7.5rem;
+  height: 7.5rem;
+  margin-top: 2rem;
+  overflow: hidden;
+  border: 1px solid var(--navy);
+  border-radius: 50%;
+}
 
 .discGrid {
   display: grid;
@@ -985,6 +1028,13 @@
     right: -30%;
     width: 130%;
     height: 70%;
+  }
+
+  .compareChart {
+    top: -25%;
+    left: -30%;
+    width: 130%;
+    height: 90%;
   }
 
   .advisors {

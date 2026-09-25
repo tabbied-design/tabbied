@@ -17,9 +17,13 @@ const CREAM = '#F1ECE2';
 const BLUE = '#5D6BD6';
 const GRAY = '#6E7185';
 const DEEP = '#1A1F33';
+const NIGHT = '#0F1220';
 
 const HALO = ['transparent', GOLD, BLUE, GOLD, CREAM];
 const GROOVES = ['transparent', GRAY, BLUE, DEEP];
+const SWING = ['transparent', CREAM, GOLD, DEEP, CREAM];
+const RIPPLE = ['transparent', GOLD, GRAY, GOLD];
+const MARQUEE = ['transparent', NIGHT, BLUE, DEEP, NIGHT];
 
 const NAV = [
   ['Listings', '#listings'],
@@ -230,6 +234,18 @@ export default function BlueNoteRoomPage() {
             </ol>
             <aside className={s.listAside} aria-labelledby="aside-h">
               <div className={s.bassPanel}>
+                <div className={s.bassField} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={gyre}
+                    palette={SWING}
+                    options={{ frequency: 0.7 }}
+                    fit="grid"
+                    cellSize={32}
+                    seed="bnr-bass"
+                    redrawInterval={10000}
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
                 <Artwork
                   slug="blue-note-room-bass"
                   alt="An upright double bass"
@@ -290,6 +306,16 @@ export default function BlueNoteRoomPage() {
         <section id="room" className={s.room} aria-labelledby="room-h">
           <div className={s.roomInner}>
             <div className={s.spot}>
+              <div className={s.ripple} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={spiralrosette}
+                  palette={RIPPLE}
+                  fit="grid"
+                  cellSize={28}
+                  seed="bnr-ripple"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="blue-note-room-mic"
                 alt="A vintage chrome microphone on a stand"
@@ -421,6 +447,17 @@ export default function BlueNoteRoomPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footMarks} aria-hidden="true">
+          <TabbiedPattern
+            pattern={gyre}
+            palette={MARQUEE}
+            options={{ frequency: 0.8 }}
+            fit="grid"
+            cellSize={28}
+            seed="bnr-footer"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Blue Note Room</p>
           <ul className={s.footLinks}>

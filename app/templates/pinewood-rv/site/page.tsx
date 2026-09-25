@@ -433,7 +433,7 @@ export default function PinewoodRvPage() {
                 palette={NIGHT}
                 options={{ frequency: 0.22 }}
                 fit="grid"
-                cellSize={22}
+                cellSize={24}
                 seed="pinewood-window"
                 style={{ position: 'absolute', inset: 0 }}
               />

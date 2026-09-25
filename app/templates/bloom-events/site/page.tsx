@@ -22,6 +22,8 @@ const BLUSH = '#FFF9F5';
 
 const CONFETTI = ['transparent', PLUM, PLUM, PINK, GOLD];
 const BLOSSOMS = ['transparent', BLUSH, PINK, GOLD, MINT, MAUVE];
+/* The footer's blossoms are laid on the plum instead. */
+const BLOSSOMS_NIGHT = ['transparent', PLUM, PINK, GOLD, MINT, MAUVE];
 
 const NAV = [
   ['Occasions', '#occasions'],
@@ -306,6 +308,18 @@ export default function BloomEventsPage() {
         {/* ------------------------------------------------------------ PLAN */}
         <section id="plan" className={s.plan} aria-labelledby="plan-h">
           <div className={s.planInner}>
+            <div className={s.planGems} aria-hidden="true">
+              <div className={s.halfField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={scatteredgems}
+                  palette={CONFETTI}
+                  fit="grid"
+                  cellSize={80}
+                  seed="bloom-confetti"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+            </div>
             <div className={s.head}>
               <p data-edit="plan.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>How we plan</p>
               <h2 data-edit="plan.title" data-edit-max="60" id="plan-h">A year of planning, one calm day</h2>
@@ -403,12 +417,26 @@ export default function BloomEventsPage() {
                 <dd data-edit="enquire.body" data-edit-max="200" data-edit-multiline>9 Pier Lane, by appointment</dd>
               </div>
             </dl>
-            <Artwork
-              slug="bloom-events-gift"
-              alt=""
-              inks={{ red: 'var(--gold)', blue: 'var(--pink)', yellow: 'var(--mint)', black: 'var(--plum)' }}
-              className={s.asideGift}
-            />
+            <div className={s.giftStage}>
+              <div className={s.giftPlate} aria-hidden="true">
+                <div className={s.halfField} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={scatteredgems}
+                    palette={CONFETTI}
+                    fit="grid"
+                    cellSize={80}
+                    seed="bloom-confetti"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+              </div>
+              <Artwork
+                slug="bloom-events-gift"
+                alt=""
+                inks={{ red: 'var(--gold)', blue: 'var(--pink)', yellow: 'var(--mint)', black: 'var(--plum)' }}
+                className={s.asideGift}
+              />
+            </div>
           </div>
           <form className={s.form} action="#">
             <div className={s.formRow}>
@@ -464,6 +492,19 @@ export default function BloomEventsPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footBlossoms} aria-hidden="true">
+          <div className={s.halfField} aria-hidden="true">
+            <TabbiedPattern
+              pattern={midnightblossoms}
+              palette={BLOSSOMS_NIGHT}
+              fit="grid"
+              cellSize={40}
+              seed="bloom-foot"
+              options={{ frequency: 0.6 }}
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
+        </div>
         <div className={s.footInner}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Bloom Events</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Birthdays, weddings and company events, planned start to finish.</p>

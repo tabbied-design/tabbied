@@ -18,6 +18,8 @@ const PALE = '#E1E3E8';
 
 const CHART = ['transparent', BLUE, GRAY, PALE];
 const SWELL = ['transparent', GRAY, BLUE];
+const SOUNDING = ['transparent', BLUE, GRAY, BLUE];
+const SEAL = ['transparent', BLUE, GRAY, PALE];
 
 const NAV = [
   ['Fees', '#fees'],
@@ -263,6 +265,17 @@ export default function KeelWealthPage() {
 
         {/* --------------------------------------------------------- COMPARE */}
         <section className={s.compare} aria-labelledby="compare-h">
+          <div className={s.compareChart} aria-hidden="true">
+            <TabbiedPattern
+              pattern={contourlines}
+              palette={SOUNDING}
+              options={{ frequency: 0.6 }}
+              fit="grid"
+              cellSize={120}
+              seed="keel-sounding"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.compareInner}>
             <div className={s.compareText}>
               <h2 data-edit="compare.compareTitle" data-edit-max="60" id="compare-h" className={s.compareTitle}>Why a flat fee matters</h2>
@@ -313,6 +326,16 @@ export default function KeelWealthPage() {
 
         {/* --------------------------------------------------------- PROCESS */}
         <section id="process" className={s.process} aria-labelledby="process-h">
+          <div className={s.processSwell} aria-hidden="true">
+            <TabbiedPattern
+              pattern={warpribbon}
+              palette={SWELL}
+              fit="grid"
+              cellSize={32}
+              seed="keel-current"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.processInner}>
             <div className={s.secHead}>
               <p data-edit="process.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>How we work</p>
@@ -379,6 +402,17 @@ export default function KeelWealthPage() {
                 What a regulator would ask us, answered before you have to. Our
                 full client agreement and brochure are free on request.
               </p>
+              <div className={s.seal} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={contourlines}
+                  palette={SEAL}
+                  options={{ frequency: 0.3 }}
+                  fit="grid"
+                  cellSize={120}
+                  seed="keel-seal"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </div>
             <div className={s.discs}>
               {DISCLOSURES.map((d, i) => (

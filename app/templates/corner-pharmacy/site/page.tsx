@@ -12,6 +12,8 @@ export const metadata = {
 
 /* Site colors. The lattice lays its own pale tile down, so the sign reads
    as a panel; the blossoms sit on the same pale. */
+const PAPER = '#F6F8F6';
+const INK = '#13201A';
 const GREEN = '#1E8A5A';
 const GRAY = '#86918B';
 const PALE = '#DDE7E1';
@@ -19,6 +21,8 @@ const PALE = '#DDE7E1';
 const SIGN = ['transparent', PALE, GREEN];
 const STRIP = ['transparent', GREEN, PALE];
 const BLOSSOM = ['transparent', PALE, GREEN, GRAY];
+const MAT = ['transparent', PALE, PAPER];
+const NIGHT = ['transparent', INK, GREEN, GRAY, PALE];
 
 const PHONE = '(555) 017-3321';
 const PHONE_HREF = 'tel:+15550173321';
@@ -219,6 +223,16 @@ export default function CornerPharmacyPage() {
             {/* Delivery carries all three engravings, as the bag does. */}
             <div className={`${s.service} ${s.delivery}`}>
               <div className={s.bag} aria-hidden="true">
+                <div className={s.bagMat} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={crosslattice}
+                    palette={MAT}
+                    fit="grid"
+                    cellSize={40}
+                    seed="corner-bag"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
                 <Artwork slug="corner-pharmacy-bottle" alt="" inks={['var(--green)']} className={s.bagBottle} />
                 <Artwork slug="corner-pharmacy-leaf" alt="" inks={['var(--green)']} className={s.bagLeaf} />
                 <Artwork slug="corner-pharmacy-mortar" alt="" inks={['var(--green)']} className={s.bagMortar} />
@@ -306,13 +320,25 @@ export default function CornerPharmacyPage() {
 
         {/* -------------------------------------------------------- VACCINES */}
         <section id="vaccines" className={s.sec} aria-labelledby="vaccines-h">
-          <div className={s.secHead}>
-            <span data-edit="vaccines.secNo" data-edit-max="60" className={s.secNo}>02</span>
-            <h2 data-edit="vaccines.title" data-edit-max="60" id="vaccines-h">Vaccines this season</h2>
-            <p data-edit="vaccines.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
-              Most plans cover all of these at $0; bring your card. The price
-              is what you pay without insurance.
-            </p>
+          <div className={s.vaccinesTop}>
+            <div className={s.secHead}>
+              <span data-edit="vaccines.secNo" data-edit-max="60" className={s.secNo}>02</span>
+              <h2 data-edit="vaccines.title" data-edit-max="60" id="vaccines-h">Vaccines this season</h2>
+              <p data-edit="vaccines.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
+                Most plans cover all of these at $0; bring your card. The price
+                is what you pay without insurance.
+              </p>
+            </div>
+            <div className={s.crossSign} aria-hidden="true">
+              <TabbiedPattern
+                pattern={crosslattice}
+                palette={SIGN}
+                fit="grid"
+                cellSize={36}
+                seed="corner-cross"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </div>
           <div className={s.tableWrap}>
             <table className={s.vaccines}>
@@ -446,6 +472,17 @@ export default function CornerPharmacyPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footBlooms} aria-hidden="true">
+          <TabbiedPattern
+            pattern={midnightblossoms}
+            palette={NIGHT}
+            options={{ frequency: 0.9 }}
+            fit="grid"
+            cellSize={120}
+            seed="corner-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div className={s.footBrand}>
             <Artwork slug="corner-pharmacy-bottle" alt="" inks={['var(--pale)']} className={s.footArt} />

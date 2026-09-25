@@ -820,6 +820,7 @@
 }
 
 .sliceStage .orderSlice {
+  justify-self: center;
   width: 56%;
   margin-left: 0;
 }

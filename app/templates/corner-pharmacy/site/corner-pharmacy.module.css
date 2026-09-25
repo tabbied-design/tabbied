@@ -368,6 +368,18 @@
   height: clamp(9rem, 14vw, 12rem);
 }
 
+/* A pale tile of the lattice behind the three engravings. */
+.bagMat {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  width: 104%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
 .bagBottle,
 .bagLeaf,
 .bagMortar {
@@ -534,6 +546,23 @@
 
 .secHead h2 {
   font-size: clamp(2.1rem, 4.4vw, 3.3rem);
+}
+
+/* The vaccines heading, with the shop's cross beside it, tiled. */
+.vaccinesTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.crossSign {
+  position: relative;
+  flex: none;
+  width: clamp(5.5rem, 8vw, 7rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  clip-path: polygon(33% 0, 67% 0, 67% 33%, 100% 33%, 100% 67%, 67% 67%, 67% 100%, 33% 100%, 33% 67%, 0 67%, 0 33%, 33% 33%);
 }
 
 .secNote {
@@ -849,10 +878,22 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
+  position: relative;
   margin-top: var(--air);
   background: var(--ink);
   color: var(--paper);
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  padding: calc(clamp(2rem, 4vw, 3rem) + 5.5rem) var(--gut) 2rem;
+}
+
+/* Chamomile along the top of the footer, the band's flowers at night. */
+.footBlooms {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5.5rem;
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
 }
 
 .footGrid {
@@ -1025,6 +1066,10 @@
 
   .secHead {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .crossSign {
+    width: 4.5rem;
   }
 
   .secNote {

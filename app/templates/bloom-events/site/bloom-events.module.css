@@ -484,6 +484,7 @@
 }
 
 .planInner {
+  position: relative;
   max-width: var(--max);
   margin: 0 auto;
   padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
@@ -768,6 +769,56 @@
   transform: rotate(-8deg);
 }
 
+/* A field twice the box, shrunk by half, so the confetti and the blossoms
+   are drawn at the hero's scale. */
+.halfField {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  transform: scale(0.5);
+  transform-origin: 0 0;
+}
+
+/* A scatter of it in the top corner of the plum timeline band. */
+.planGems {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 46%;
+  height: 24rem;
+  overflow: hidden;
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(farthest-side at 100% 0, var(--plum) 30%, transparent);
+  mask-image: radial-gradient(farthest-side at 100% 0, var(--plum) 30%, transparent);
+}
+
+.planInner > :not(.planGems) {
+  position: relative;
+}
+
+/* The gift on a small arched plate, the hero's in miniature. */
+.giftStage {
+  position: relative;
+  justify-self: start;
+  margin-top: 1.5rem;
+  padding: 2.5rem 2rem 1rem;
+}
+
+.giftStage .asideGift {
+  position: relative;
+  margin-top: 0;
+}
+
+.giftPlate {
+  position: absolute;
+  inset: 0 0.25rem;
+  overflow: hidden;
+  background: var(--plum);
+  border-radius: 999px 999px var(--radius) var(--radius);
+}
+
 .form {
   display: grid;
   gap: 1.1rem;
@@ -820,6 +871,16 @@
 .footer {
   color: var(--blush);
   background: var(--plum);
+}
+
+/* The kind-words blossoms, a row of them along the top of the footer. */
+.footBlossoms {
+  position: relative;
+  height: 3rem;
+  margin-bottom: calc(-1 * clamp(1rem, 3vw, 2rem));
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, var(--plum) 45%, transparent);
+  mask-image: linear-gradient(180deg, var(--plum) 45%, transparent);
 }
 
 .footInner {
@@ -923,6 +984,10 @@
 
   .siteMenu {
     display: block;
+  }
+
+  .planGems {
+    display: none;
   }
 
   /* The timeline folds to one side: the line on the left, every stage to

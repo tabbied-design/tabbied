@@ -533,6 +533,29 @@
   margin-right: clamp(0rem, 3vw, 3rem);
 }
 
+/* The placement form's route lines, circling the globe. */
+.globeStage {
+  position: relative;
+}
+
+.globeStage .globe {
+  position: relative;
+}
+
+.globeRoutes {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 180%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.8;
+  transform: translate(-56%, -50%);
+  -webkit-mask-image: radial-gradient(closest-side, var(--ink) 45%, transparent);
+  mask-image: radial-gradient(closest-side, var(--ink) 45%, transparent);
+}
+
 .langGrid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -593,6 +616,8 @@
 }
 
 .courseArt {
+  position: relative;
+  overflow: hidden;
   display: grid;
   place-items: center;
   aspect-ratio: 1;
@@ -600,7 +625,16 @@
   border-radius: 50%;
 }
 
+/* The staircase diamonds as a ring round the edge of the disc. */
+.courseRing {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: radial-gradient(closest-side, transparent 84%, var(--ink) 85%);
+  mask-image: radial-gradient(closest-side, transparent 84%, var(--ink) 85%);
+}
+
 .book {
+  position: relative;
   width: 78%;
 }
 
@@ -881,6 +915,13 @@
   background: var(--ink);
 }
 
+/* A narrow run of the staircase diamonds along the top edge. */
+.footStairs {
+  position: relative;
+  height: 28px;
+  overflow: hidden;
+}
+
 .footGrid {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr;
@@ -1056,6 +1097,15 @@
   .globe {
     width: 7rem;
     margin: 0;
+  }
+
+  .globeStage {
+    justify-self: start;
+  }
+
+  .globeRoutes {
+    width: 150%;
+    transform: translate(-50%, -50%);
   }
 
   .formRow {

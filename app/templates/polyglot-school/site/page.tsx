@@ -319,12 +319,25 @@ export default function PolyglotPage() {
                 for speakers of other languages runs all year, at every level.
               </p>
             </div>
-            <Artwork
-              slug="polyglot-school-globe"
-              alt="A desk globe on its stand"
-              inks={{ red: 'var(--coral)', blue: 'var(--blue)', black: 'var(--ink)' }}
-              className={s.globe}
-            />
+            <div className={s.globeStage}>
+              <div className={s.globeRoutes} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={metro}
+                  palette={ROUTES}
+                  fit="grid"
+                  cellSize={44}
+                  seed="polyglot-globe"
+                  options={{ frequency: 0.7 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <Artwork
+                slug="polyglot-school-globe"
+                alt="A desk globe on its stand"
+                inks={{ red: 'var(--coral)', blue: 'var(--blue)', black: 'var(--ink)' }}
+                className={s.globe}
+              />
+            </div>
           </div>
           <ul className={s.langGrid}>
             {LANGUAGES.map((l, i) => (
@@ -342,6 +355,16 @@ export default function PolyglotPage() {
         <section id="courses" className={s.courses} aria-labelledby="courses-h">
           <div className={s.coursesInner}>
             <div className={s.courseArt}>
+              <div className={s.courseRing} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={diamondconfetti}
+                  palette={STAIRS}
+                  fit="grid"
+                  cellSize={40}
+                  seed="polyglot-ring"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="polyglot-school-book"
                 alt="An open book"
@@ -487,6 +510,16 @@ export default function PolyglotPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footStairs} aria-hidden="true">
+          <TabbiedPattern
+            pattern={diamondconfetti}
+            palette={STAIRS}
+            fit="grid"
+            cellSize={28}
+            seed="polyglot-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Polyglot</p>

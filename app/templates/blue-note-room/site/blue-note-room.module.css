@@ -470,6 +470,13 @@
   background: var(--blue);
 }
 
+/* The halo's marks again, swinging round the bass. */
+.bassField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+}
+
 .bassPanel .bass {
   position: absolute;
   bottom: -2%;
@@ -622,6 +629,21 @@
 }
 
 /* A spotlight: a pool of gold light with the microphone standing in it. */
+/* Rings spreading out from the microphone, faint, in the spotlight. */
+.ripple {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: min(100%, 26rem);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.4;
+  -webkit-mask-image: radial-gradient(closest-side, var(--night) 55%, transparent);
+  mask-image: radial-gradient(closest-side, var(--night) 55%, transparent);
+}
+
 .spot {
   position: relative;
   min-height: 34rem;
@@ -892,10 +914,22 @@
 /* --------------------------------------------------------------- footer */
 
 .footer {
+  position: relative;
   margin-top: var(--air);
   background: var(--gold);
   color: var(--night);
-  padding: clamp(2.2rem, 5vw, 3.2rem) var(--gut) 1.4rem;
+  padding: calc(clamp(2.2rem, 5vw, 3.2rem) + 2.25rem) var(--gut) 1.4rem;
+}
+
+/* A marquee of the halo's dashes along the top edge. */
+.footMarks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  opacity: 0.75;
+  border-bottom: 2px solid var(--night);
 }
 
 .footTop {
