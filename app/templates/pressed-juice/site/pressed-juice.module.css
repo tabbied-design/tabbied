@@ -564,7 +564,7 @@
 .planFruit {
   display: flex;
   align-items: flex-end;
-  height: 4.6rem;
+  height: 4.2rem;
   margin-bottom: 0.4rem;
 }
 
@@ -574,7 +574,7 @@
 }
 
 .half + .half {
-  margin-left: -1.9rem;
+  margin-left: -2.3rem;
 }
 
 .planDays {
@@ -699,8 +699,8 @@
   content: '';
   position: absolute;
   z-index: 1;
-  left: 4%;
-  right: 4%;
+  left: 9%;
+  right: 9%;
   bottom: 0;
   aspect-ratio: 2 / 1;
   background: var(--berry);
@@ -710,8 +710,8 @@
 
 .bowlPine {
   position: relative;
-  width: 58%;
-  margin-bottom: 18%;
+  width: 60%;
+  margin-bottom: 16%;
 }
 
 .bowlLede {

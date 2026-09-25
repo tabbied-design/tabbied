@@ -386,9 +386,9 @@ export default function PressedJuicePage() {
             pattern={polkadot}
             palette={SEEDS}
             fit="grid"
-            cellSize={72}
+            cellSize={60}
             seed="pips"
-            options={{ frequency: 0.5 }}
+            options={{ frequency: 0.85 }}
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
@@ -483,7 +483,7 @@ export default function PressedJuicePage() {
           <Artwork
             slug="pressed-juice-bottle"
             alt=""
-            inks={{ red: 'var(--lime)', blue: 'var(--paper)', yellow: 'var(--pale)' }}
+            inks={{ red: 'var(--lime)', blue: 'var(--orange)', yellow: 'var(--pale)' }}
             className={s.footBottle}
           />
         </div>

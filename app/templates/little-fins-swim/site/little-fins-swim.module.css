@@ -253,7 +253,6 @@
   left: 11%;
   top: 16%;
   width: 62%;
-  filter: drop-shadow(0 18px 0 color-mix(in srgb, var(--deep) 16%, transparent));
 }
 
 .heroDuck {

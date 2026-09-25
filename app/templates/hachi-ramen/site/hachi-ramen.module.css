@@ -1,0 +1,1023 @@
+/* ==========================================================================
+   HACHI RAMEN - ramen counter
+   Broth and chili: a warm paper, a lacquer red, the gold of the egg and
+   the noodles, and a near-black. The header hangs like a shop curtain,
+   split at the hem. The first screen is the bowl itself, drawn large with
+   its six parts numbered on leader lines, over a field of pale noodle
+   loops. Heavy Japanese display type for names, a rounded sans for the
+   rest.
+   ========================================================================== */
+
+.page {
+  --paper: #f5efe4;
+  --ink: #161311;
+  --chili: #c8102e;
+  --gold: #d9a441;
+  --gray: #8a8176;
+  --pale: #e6dccb;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --max: 80rem;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+  --display: 'Dela Gothic One', 'Arial Black', sans-serif;
+  --sans: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Helvetica Neue', sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ header
+   The curtain: chili, with the hem cut into five panels. */
+
+.bar {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.85rem var(--gut);
+  background: var(--chili);
+  color: var(--paper);
+}
+
+.bar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 16px;
+  background: repeating-linear-gradient(90deg, var(--chili) 0 calc(20% - 4px), transparent calc(20% - 4px) 20%);
+  pointer-events: none;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+}
+
+.brandMark {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  line-height: 1;
+  background: var(--paper);
+  color: var(--chili);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--gold);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--chili);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(3.5rem, 7vw, 5rem) var(--gut) clamp(2rem, 4vw, 3.5rem);
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.heroHead {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: 1.5rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+}
+
+.kicker {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.heroTitle {
+  margin-top: 1rem;
+  font-size: clamp(2.6rem, 5.6vw, 5.2rem);
+  line-height: 1.02;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--chili);
+}
+
+.heroAside {
+  padding: 1.2rem 1.3rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+}
+
+.heroLede {
+  font-size: 1.05rem;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.7rem 1.2rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.btn {
+  background: var(--chili);
+  border-color: var(--chili);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* The stage keeps the plate's 100 by 48 proportions; the bowl sits in the
+   middle 46% and the labels in the outer 22% either side. */
+
+.stage {
+  position: relative;
+  max-width: var(--max);
+  margin: clamp(1.5rem, 3vw, 2.5rem) auto 0;
+  aspect-ratio: 100 / 48;
+}
+
+.plate {
+  position: absolute;
+  inset: 0;
+}
+
+.bowl {
+  position: absolute;
+  left: 27%;
+  top: 5.2%;
+  width: 46%;
+}
+
+.leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.leaders line {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.pin {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  line-height: 1;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.parts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.partLeft,
+.partRight {
+  position: absolute;
+  width: 22%;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 0.15rem 0.8rem;
+  padding: 0.8rem 1rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+}
+
+.partLeft {
+  left: 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'name no' 'text no';
+  text-align: right;
+}
+
+.partRight {
+  left: 78%;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: 'no name' 'no text';
+}
+
+.partNo {
+  grid-area: no;
+  align-self: start;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-size: 0.9rem;
+  line-height: 1;
+  background: var(--chili);
+  color: var(--paper);
+}
+
+.partName {
+  grid-area: name;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.partText {
+  grid-area: text;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* -------------------------------------------------------------------- menu */
+
+.menu {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  padding-bottom: 1.4rem;
+  border-bottom: 3px solid var(--ink);
+}
+
+.secHead h2 {
+  font-size: clamp(2.3rem, 4.6vw, 4rem);
+}
+
+.secNote {
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+.broths {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2.2rem;
+}
+
+.broth {
+  --tone: var(--pale);
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.3rem 1.2rem;
+  background: color-mix(in srgb, var(--pale) 50%, var(--paper));
+  border-top: 3px solid var(--ink);
+}
+
+.pale {
+  --tone: var(--pale);
+}
+
+.gold {
+  --tone: var(--gold);
+}
+
+.chili {
+  --tone: var(--chili);
+}
+
+.ink {
+  --tone: var(--ink);
+}
+
+.brothHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'swatch name body' 'swatch from from';
+  gap: 0.1rem 0.8rem;
+  align-items: center;
+}
+
+/* A little bowl, filled with the broth's color. */
+.swatch {
+  grid-area: swatch;
+  width: 3rem;
+  height: 1.55rem;
+  border-radius: 0 0 999px 999px;
+  background: var(--tone);
+  border: 2px solid var(--ink);
+  border-top-width: 3px;
+}
+
+.brothHead h3 {
+  grid-area: name;
+  font-size: 1.55rem;
+}
+
+.brothFrom {
+  grid-area: from;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.brothBody {
+  grid-area: body;
+  justify-self: end;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+}
+
+.brothText {
+  margin-top: 0.9rem;
+  font-size: 0.97rem;
+}
+
+.bowls {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.bowls li {
+  padding: 0.75rem 0;
+  border-top: 1.5px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+}
+
+.bowlTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.8rem;
+}
+
+.bowlTop strong {
+  font-weight: 700;
+}
+
+.bowlPrice {
+  font-family: var(--display);
+  color: var(--chili);
+}
+
+.bowlWhat {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* The extras run along one pale band, the lantern hanging off its end. */
+.extras {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 1rem 2rem;
+  align-items: center;
+  margin-top: 2.5rem;
+  padding: 1rem 2rem 1rem 1.4rem;
+  background: var(--pale);
+  border-radius: 999px;
+}
+
+.extrasArt {
+  width: 3.6rem;
+}
+
+.extrasHead {
+  font-size: 1.3rem;
+  white-space: nowrap;
+}
+
+.extrasList {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  font-size: 0.95rem;
+}
+
+.extrasList div {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.extrasList dd {
+  margin: 0;
+  font-weight: 700;
+  color: var(--chili);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(5rem, 8vw, 7rem);
+  margin-top: var(--air);
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------ sides, drinks */
+
+.pair {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.sides h2,
+.drinks h2 {
+  font-size: clamp(2.3rem, 4.6vw, 4rem);
+}
+
+.sidesArt {
+  width: min(100%, 23rem);
+  margin-bottom: 1.4rem;
+}
+
+.pairNote {
+  margin-top: 0.6rem;
+  max-width: 30rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+.list {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.listTop {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.listTop strong {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.dots {
+  flex: 1;
+  min-width: 1.5rem;
+  border-bottom: 2px dotted color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.listPrice {
+  font-family: var(--display);
+  color: var(--chili);
+}
+
+.listNote {
+  display: block;
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.drinks {
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  background: color-mix(in srgb, var(--pale) 70%, var(--paper));
+  border: 2px solid var(--ink);
+}
+
+.drinkGroup {
+  margin-top: 1.8rem;
+}
+
+.drinkGroup h3 {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--chili);
+}
+
+.drinkGroup .list {
+  margin-top: 0.6rem;
+  gap: 0.5rem;
+}
+
+/* ------------------------------------------------------------------- queue */
+
+.queue {
+  margin-top: var(--air);
+  padding: var(--air) var(--gut);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.queueInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.queueArt {
+  display: grid;
+  justify-items: center;
+  margin-top: calc(var(--air) * -1);
+}
+
+.cord {
+  display: block;
+  width: 3px;
+  height: calc(var(--air) + 1.5rem);
+  background: var(--gold);
+}
+
+.queueLantern {
+  width: min(100%, 14rem);
+  margin-top: -2px;
+  filter: drop-shadow(0 0 48px color-mix(in srgb, var(--gold) 45%, transparent));
+}
+
+.queueKicker {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.queueBody h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+}
+
+.qSteps {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  counter-reset: q;
+  display: grid;
+  gap: 1rem;
+}
+
+.qSteps li {
+  counter-increment: q;
+  position: relative;
+  display: grid;
+  gap: 0.15rem;
+  padding-left: 3.1rem;
+}
+
+.qSteps li::before {
+  content: counter(q);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  background: var(--chili);
+  color: var(--paper);
+}
+
+.qSteps strong {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.qSteps span {
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+.wait {
+  margin-top: 2.4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.wait h3 {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.bars {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  height: 11rem;
+}
+
+.bars li {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.barValue {
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.barFill {
+  display: block;
+  width: 100%;
+  height: calc(var(--m) * 0.2rem + 3px);
+  background: var(--gold);
+  border-radius: 3px 3px 0 0;
+}
+
+.barTime {
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--paper) 75%, transparent);
+}
+
+.visit h3 {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.visit h3 + * {
+  margin-top: 0.8rem;
+}
+
+.visit h3:not(:first-child) {
+  margin-top: 2rem;
+}
+
+.hours {
+  margin-bottom: 0;
+}
+
+.hours div {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+  color: color-mix(in srgb, var(--paper) 84%, transparent);
+}
+
+.address {
+  max-width: 22rem;
+}
+
+.visitLink {
+  display: block;
+  margin-top: 0.4rem;
+  font-weight: 700;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.visitLink:hover {
+  color: var(--gold);
+}
+
+.takeaway {
+  margin-top: 1.4rem;
+  padding: 0.9rem 1rem;
+  font-size: 0.93rem;
+  border: 1.5px dashed color-mix(in srgb, var(--gold) 70%, transparent);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 1.8rem;
+  background: var(--chili);
+  color: var(--paper);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem 3rem;
+}
+
+.footBrand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footMark {
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-size: 1.9rem;
+  line-height: 1;
+  background: var(--paper);
+  color: var(--chili);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.6rem;
+}
+
+.footTag {
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+.footNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+}
+
+.footNav a {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.footNav a:hover {
+  text-decoration: underline;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.2rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 30%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--paper) 84%, transparent);
+}
+
+.footFine a {
+  color: var(--paper);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+/* Below 1100px the labels leave the sides: the plate is zoomed so the bowl
+   fills the width (pins and all), and the parts list follows it. */
+@media (max-width: 1100px) {
+  .stage {
+    aspect-ratio: auto;
+    max-width: 46rem;
+    overflow-x: clip;
+  }
+
+  .plate {
+    position: relative;
+    inset: auto;
+    width: 217.4%;
+    margin-left: -58.7%;
+    aspect-ratio: 100 / 48;
+  }
+
+  .leaders {
+    display: none;
+  }
+
+  .parts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  .partLeft,
+  .partRight {
+    position: static;
+    width: auto;
+    transform: none;
+    text-align: left;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'no name' 'no text';
+  }
+
+  .broths {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .queueInner {
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+  }
+
+  .visit {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+    margin-left: auto;
+  }
+
+  .heroHead,
+  .secHead,
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .extras {
+    grid-template-columns: auto minmax(0, 1fr);
+    border-radius: 2rem;
+    padding: 1.2rem 1.4rem;
+  }
+
+  .extrasList {
+    grid-column: 1 / -1;
+  }
+
+  .queueInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .queueArt {
+    margin-top: calc(var(--air) * -1);
+  }
+
+  .cord {
+    height: calc(var(--air) + 0.5rem);
+  }
+
+  .queueLantern {
+    width: 9rem;
+  }
+
+  .visit {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .brandName {
+    font-size: 1.15rem;
+  }
+
+  .bar::after {
+    background: repeating-linear-gradient(90deg, var(--chili) 0 calc(33.333% - 4px), transparent calc(33.333% - 4px) 33.333%);
+  }
+
+  .parts,
+  .broths {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bars {
+    gap: 0.35rem;
+  }
+
+  .barValue {
+    font-size: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost {
+    transition: none;
+  }
+}
