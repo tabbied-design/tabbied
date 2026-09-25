@@ -315,7 +315,7 @@ export default function LittleFinsPage() {
 
         {/* ------------------------------------------------------- TIMETABLE */}
         <section id="timetable" className={s.timetable} aria-labelledby="timetable-h">
-          <div className={s.ttTile} aria-hidden="true">
+          <div data-edit-pattern="timetable.field" data-edit-roles="transparent,0,4,1" className={s.ttTile} aria-hidden="true">
             <TabbiedPattern
               pattern={lagoon}
               palette={RIPPLES}
@@ -451,7 +451,7 @@ export default function LittleFinsPage() {
               ))}
             </ul>
             <p data-edit="enroll.priceNote" data-edit-max="240" data-edit-multiline className={s.priceNote}>Brothers and sisters: 10% off the second child and every one after.</p>
-            <div className={s.pond} aria-hidden="true">
+            <div data-edit-pattern="enroll.field" data-edit-roles="transparent,2,4,0" className={s.pond} aria-hidden="true">
               <TabbiedPattern
                 pattern={lagoon}
                 palette={POND}
@@ -528,7 +528,7 @@ export default function LittleFinsPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBubbles} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,4" className={s.footBubbles} aria-hidden="true">
           <TabbiedPattern
             pattern={polkadot}
             palette={BUBBLES}

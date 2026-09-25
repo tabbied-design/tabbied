@@ -278,7 +278,7 @@ export default function KeywayLocksmithsPage() {
               </li>
             ))}
           </ul>
-          <div className={s.pickerEdge} aria-hidden="true">
+          <div data-edit-pattern="services.field" data-edit-roles="transparent,2" className={s.pickerEdge} aria-hidden="true">
             <TabbiedPattern
               pattern={battlement}
               palette={CUTS}
@@ -314,7 +314,7 @@ export default function KeywayLocksmithsPage() {
                 a zone call-out fee is added outside Zone 1 or outside the day.
               </p>
             </div>
-            <div className={s.pricesTile} aria-hidden="true">
+            <div data-edit-pattern="prices.field" data-edit-roles="transparent,2,3,4" className={s.pricesTile} aria-hidden="true">
               <TabbiedPattern
                 pattern={keyway}
                 palette={CYLINDERS}
@@ -361,7 +361,7 @@ export default function KeywayLocksmithsPage() {
           <div className={s.areas}>
             <div className={s.zoneMap} aria-hidden="true">
               <span className={s.ring3}>
-                <span className={s.ringField} aria-hidden="true">
+                <span data-edit-pattern="areas.field" data-edit-roles="transparent,3,2" className={s.ringField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={keyway}
                     palette={QUIET}

@@ -407,7 +407,7 @@ export default function PointeAndPulsePage() {
                   <li data-edit={`fees.item.${i}`} data-edit-max="80" key={n}>{n}</li>
                 ))}
               </ul>
-              <div className={s.feesTile} aria-hidden="true">
+              <div data-edit-pattern="fees.field" data-edit-roles="transparent,5,0,3" className={s.feesTile} aria-hidden="true">
                 <TabbiedPattern
                   pattern={cendal}
                   palette={SASH_ROSE}
@@ -434,7 +434,7 @@ export default function PointeAndPulsePage() {
         <section id="trial" className={s.trial} aria-labelledby="trial-h">
           <div className={s.trialInner}>
             <div className={s.trialArt}>
-              <div className={s.trialField} aria-hidden="true">
+              <div data-edit-pattern="trial.field" data-edit-roles="transparent,0,2,3" className={s.trialField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={cendal}
                   palette={SASH_BLUSH}
@@ -503,7 +503,7 @@ export default function PointeAndPulsePage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footStars} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,5,2,3,5" className={s.footStars} aria-hidden="true">
           <TabbiedPattern
             pattern={northstar}
             palette={STARS}

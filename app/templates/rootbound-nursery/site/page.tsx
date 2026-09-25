@@ -326,7 +326,7 @@ export default function RootboundNurseryPage() {
               {SHELF.map((it, i) => (
                 <div key={it.slug} className={s.shelfItem}>
                   <div className={s.shelfPlate}>
-                    <div className={s.shelfArch} aria-hidden="true">
+                    <div data-edit-pattern={`shelf.field.${i}`} data-edit-roles="transparent,0,3,4,0" className={s.shelfArch} aria-hidden="true">
                       <TabbiedPattern
                         pattern={apse}
                         palette={ARCH_PLATE}
@@ -387,7 +387,7 @@ export default function RootboundNurseryPage() {
         <section id="delivery" className={s.delivery} aria-labelledby="delivery-h">
           <div className={s.deliveryInner}>
             <div className={s.canBox}>
-              <div className={s.canLeaves} aria-hidden="true">
+              <div data-edit-pattern="delivery.field" data-edit-roles="5,2,4,3,1" className={s.canLeaves} aria-hidden="true">
                 <TabbiedPattern
                   pattern={frond}
                   palette={FRONDS}
@@ -494,7 +494,7 @@ export default function RootboundNurseryPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footFronds} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="1,2,4,3" className={s.footFronds} aria-hidden="true">
           <TabbiedPattern
             pattern={frond}
             palette={FRONDS_NIGHT}

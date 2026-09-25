@@ -433,7 +433,7 @@ export default function ParksideFamilyMedicinePage() {
               </p>
             </div>
             <div className={s.stethSpot}>
-              <div className={s.stethField} aria-hidden="true">
+              <div data-edit-pattern="doctors.field" data-edit-roles="transparent,2,0,4" className={s.stethField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={frond}
                   palette={LEAVES}
@@ -571,7 +571,7 @@ export default function ParksideFamilyMedicinePage() {
 
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
-          <div className={s.hedge} aria-hidden="true">
+          <div data-edit-pattern="visit.field" data-edit-roles="transparent,2,4" className={s.hedge} aria-hidden="true">
             <TabbiedPattern
               pattern={frond}
               palette={HEDGE}
@@ -622,7 +622,7 @@ export default function ParksideFamilyMedicinePage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footDots} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,5,2" className={s.footDots} aria-hidden="true">
           <TabbiedPattern
             pattern={pindot}
             palette={SPECKS}

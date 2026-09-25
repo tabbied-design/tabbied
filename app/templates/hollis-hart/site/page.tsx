@@ -343,7 +343,7 @@ export default function HollisHartPage() {
               </tbody>
             </table>
           </div>
-          <div className={s.planStrip} aria-hidden="true">
+          <div data-edit-pattern="listings.field" data-edit-roles="transparent,3,4,1" className={s.planStrip} aria-hidden="true">
             <TabbiedPattern
               pattern={ortho}
               palette={PLAN}
@@ -503,7 +503,7 @@ export default function HollisHartPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footFan} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,4,2,3" className={s.footFan} aria-hidden="true">
           <TabbiedPattern
             pattern={lunette}
             palette={ARCHES}

@@ -408,7 +408,7 @@ export default function LakeshoreCabinsPage() {
                   mode="tint"
                   inks={['var(--deep)', 'var(--amber)']}
                 />
-                <div className={s.lakeSky} aria-hidden="true">
+                <div data-edit-pattern="lake.field" data-edit-roles="transparent,1,2,3" className={s.lakeSky} aria-hidden="true">
                   <TabbiedPattern
                     pattern={sparkle}
                     palette={STARS}
@@ -519,7 +519,7 @@ export default function LakeshoreCabinsPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked on the dock, most summers</h2>
           </div>
           <div className={s.faq}>
-            <div className={s.faqRipple} aria-hidden="true">
+            <div data-edit-pattern="faq.field" data-edit-roles="transparent,3,4,2" className={s.faqRipple} aria-hidden="true">
               <TabbiedPattern
                 pattern={tidering}
                 palette={RIPPLE}
@@ -541,7 +541,7 @@ export default function LakeshoreCabinsPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footWake} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,4,2" className={s.footWake} aria-hidden="true">
           <TabbiedPattern
             pattern={tidering}
             palette={RIPPLE}

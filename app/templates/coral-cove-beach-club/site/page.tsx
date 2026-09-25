@@ -210,7 +210,7 @@ export default function CoralCoveBeachClubPage() {
 
         {/* ----------------------------------------------------------- TODAY */}
         <section className={s.today} aria-labelledby="today-h">
-          <span className={s.todayRing} aria-hidden="true">
+          <span data-edit-pattern="today.field" data-edit-roles="transparent,2,4,3,6,2" className={s.todayRing} aria-hidden="true">
             <TabbiedPattern
               pattern={lagoon}
               palette={RINGS}
@@ -277,7 +277,7 @@ export default function CoralCoveBeachClubPage() {
 
         {/* ------------------------------------------------------------- BAR */}
         <section id="bar" className={s.barMenu} aria-labelledby="bar-h">
-          <div className={s.barRings} aria-hidden="true">
+          <div data-edit-pattern="bar.field" data-edit-roles="transparent,0" className={s.barRings} aria-hidden="true">
             <TabbiedPattern
               pattern={lagoon}
               palette={PALE_RINGS}
@@ -458,7 +458,7 @@ export default function CoralCoveBeachClubPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footWaves} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,0" className={s.footWaves} aria-hidden="true">
           <TabbiedPattern
             pattern={wander}
             palette={FOAM}

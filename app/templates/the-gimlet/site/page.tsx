@@ -359,7 +359,7 @@ export default function TheGimletPage() {
         <section id="hire" className={s.hire} aria-labelledby="hire-h">
           <div className={s.hireInner}>
             <div className={s.hireArt}>
-              <div className={s.bottleStars} aria-hidden="true">
+              <div data-edit-pattern="hire.field" data-edit-roles="transparent,3,2,4" className={s.bottleStars} aria-hidden="true">
                 <TabbiedPattern
                   pattern={northstar}
                   palette={STARS}
@@ -433,7 +433,7 @@ export default function TheGimletPage() {
             <p data-edit="rules.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>House rules</p>
             <h2 data-edit="rules.title" data-edit-max="60" id="rules-h">Four, and we keep to them</h2>
           </div>
-          <div className={s.rulesRule} aria-hidden="true">
+          <div data-edit-pattern="rules.field" data-edit-roles="transparent,3,1,2" className={s.rulesRule} aria-hidden="true">
             <TabbiedPattern
               pattern={diadem}
               palette={DIAMONDS}
@@ -501,7 +501,7 @@ export default function TheGimletPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footStars} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,4" className={s.footStars} aria-hidden="true">
           <TabbiedPattern
             pattern={northstar}
             palette={STARS}

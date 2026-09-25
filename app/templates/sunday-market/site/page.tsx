@@ -258,7 +258,7 @@ export default function SundayMarketPage() {
             The square as a grid of numbered stalls, colored by what they
             sell, with the directory in the same numbers beside it. */}
         <section id="map" className={s.mapSec} aria-labelledby="map-h">
-          <div className={s.valance} aria-hidden="true">
+          <div data-edit-pattern="map.field" data-edit-roles="transparent,0,2,3,4,1" className={s.valance} aria-hidden="true">
             <TabbiedPattern
               pattern={cornerbloom}
               palette={BLOOM}
@@ -348,7 +348,7 @@ export default function SundayMarketPage() {
                 or two.
               </p>
               <div className={s.seasonArt}>
-                <div className={s.carrotPlate} aria-hidden="true">
+                <div data-edit-pattern="season.field" data-edit-roles="transparent,3,4,2" className={s.carrotPlate} aria-hidden="true">
                   <TabbiedPattern
                     pattern={lobe}
                     palette={LEAVES}
@@ -407,7 +407,7 @@ export default function SundayMarketPage() {
 
         {/* -------------------------------------------------------- PAYMENTS */}
         <section id="payments" className={s.payments} aria-labelledby="pay-h">
-          <div className={s.payLeaves} aria-hidden="true">
+          <div data-edit-pattern="payments.field" data-edit-roles="transparent,4,0,2" className={s.payLeaves} aria-hidden="true">
             <TabbiedPattern
               pattern={lobe}
               palette={LEAVES_ON_GREEN}

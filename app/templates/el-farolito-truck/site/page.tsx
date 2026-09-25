@@ -314,7 +314,7 @@ export default function ElFarolitoPage() {
         {/* ------------------------------------------------------------ MENU */}
         <section id="menu" className={s.menu} aria-labelledby="menu-h">
           <div className={s.menuArt}>
-            <div className={s.menuBunting} aria-hidden="true">
+            <div data-edit-pattern="menu.field" data-edit-roles="transparent,2,3,4" className={s.menuBunting} aria-hidden="true">
               <TabbiedPattern
                 pattern={circusposter}
                 palette={BUNTING}
@@ -526,7 +526,7 @@ export default function ElFarolitoPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footLanterns} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,4,2,3" className={s.footLanterns} aria-hidden="true">
           <TabbiedPattern
             pattern={lantern}
             palette={LANTERNS}

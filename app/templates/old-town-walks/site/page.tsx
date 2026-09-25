@@ -448,7 +448,7 @@ export default function OldTownWalksPage() {
               <a data-edit="private.btnInk" data-edit-max="28" className={s.btnInk} href="mailto:walks@oldtownwalks.example">Write to plan one</a>
             </div>
             <div className={s.pricesMat}>
-              <div className={s.pricesField} aria-hidden="true">
+              <div data-edit-pattern="private.field" data-edit-roles="transparent,3,2,4,1" className={s.pricesField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={baste}
                   palette={ROUTES}
@@ -527,7 +527,7 @@ export default function OldTownWalksPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Before you come</h2>
           </div>
           <div className={s.faq}>
-            <div className={s.faqStreet} aria-hidden="true">
+            <div data-edit-pattern="faq.field" data-edit-roles="transparent,2,6,5,4" className={s.faqStreet} aria-hidden="true">
               <TabbiedPattern
                 pattern={garret}
                 palette={HOUSES}
@@ -549,7 +549,7 @@ export default function OldTownWalksPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footStreet} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,6,5,4" className={s.footStreet} aria-hidden="true">
           <TabbiedPattern
             pattern={garret}
             palette={HOUSES}

@@ -441,7 +441,7 @@ export default function TerraceHillPage() {
               </ul>
             </div>
             <div className={s.tiersMat}>
-              <div className={s.tiersField} aria-hidden="true">
+              <div data-edit-pattern="club.field" data-edit-roles="transparent,3,4" className={s.tiersField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={teardropleaves}
                   palette={LEAVES}
@@ -519,7 +519,7 @@ export default function TerraceHillPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Questions at the bar</h2>
           </div>
           <div className={s.faq}>
-            <div className={s.faqGrapes} aria-hidden="true">
+            <div data-edit-pattern="faq.field" data-edit-roles="transparent,2,4,6" className={s.faqGrapes} aria-hidden="true">
               <TabbiedPattern
                 pattern={dotset}
                 palette={GRAPES}
@@ -541,7 +541,7 @@ export default function TerraceHillPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footLeaves} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,4" className={s.footLeaves} aria-hidden="true">
           <TabbiedPattern
             pattern={teardropleaves}
             palette={LEAVES}

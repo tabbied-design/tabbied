@@ -244,7 +244,7 @@ export default function CacaoAndCoPage() {
         {/* ------------------------------------------------------------ BARS */}
         <section id="bars" className={s.bars} aria-labelledby="bars-h">
           <div className={s.barsArt}>
-            <div className={s.barsMat} aria-hidden="true">
+            <div data-edit-pattern="bars.field" data-edit-roles="transparent,0,3" className={s.barsMat} aria-hidden="true">
               <TabbiedPattern
                 pattern={gravure}
                 palette={MAT}
@@ -315,7 +315,7 @@ export default function CacaoAndCoPage() {
               </ol>
             </div>
           </div>
-          <div className={s.makingStrip} aria-hidden="true">
+          <div data-edit-pattern="making.field" data-edit-roles="transparent,2,3" className={s.makingStrip} aria-hidden="true">
             <TabbiedPattern
               pattern={bothcut}
               palette={STRIP}
@@ -449,7 +449,7 @@ export default function CacaoAndCoPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <span className={s.footBonbon} aria-hidden="true">
+          <span data-edit-pattern="footer.field" data-edit-roles="transparent,3,5,2" className={s.footBonbon} aria-hidden="true">
             <TabbiedPattern
               pattern={diadem}
               palette={TRANSFER}

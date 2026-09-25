@@ -184,7 +184,7 @@ export default function PlatenPressPage() {
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.plate}>
             <span data-edit="hero.plateNo" data-edit-max="60" className={s.plateNo}>Plate I</span>
-            <div className={s.plateTint} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,2" className={s.plateTint} aria-hidden="true">
               <TabbiedPattern
                 pattern={halftone}
                 palette={SCREEN}
@@ -394,7 +394,7 @@ export default function PlatenPressPage() {
               ))}
             </ol>
           </div>
-          <div className={s.processRamp} aria-hidden="true">
+          <div data-edit-pattern="process.field" data-edit-roles="transparent,1,2" className={s.processRamp} aria-hidden="true">
             <TabbiedPattern
               pattern={halftone}
               palette={TINT}
@@ -509,7 +509,7 @@ export default function PlatenPressPage() {
         <section id="studio" className={s.studio} aria-labelledby="studio-h">
           <div className={s.studioInner}>
             <div className={s.studioArt}>
-              <div className={s.studioDisc} aria-hidden="true">
+              <div data-edit-pattern="studio.field" data-edit-roles="transparent,3,4,3,4" className={s.studioDisc} aria-hidden="true">
                 <TabbiedPattern
                   pattern={misprint}
                   palette={BLIND}

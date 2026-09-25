@@ -364,7 +364,7 @@ export default function HighPassLodgePage() {
               </dl>
             </div>
             <div className={s.menuCard}>
-              <div className={s.menuMat} aria-hidden="true">
+              <div data-edit-pattern="dining.field" data-edit-roles="transparent,2,4,1" className={s.menuMat} aria-hidden="true">
                 <TabbiedPattern
                   pattern={contourlines}
                   palette={SURVEY}
@@ -562,7 +562,7 @@ export default function HighPassLodgePage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Good to know</h2>
           </div>
           <div className={s.faq}>
-            <div className={s.faqRail} aria-hidden="true">
+            <div data-edit-pattern="faq.field" data-edit-roles="transparent,2,4,1" className={s.faqRail} aria-hidden="true">
               <TabbiedPattern
                 pattern={contourlines}
                 palette={SURVEY}
@@ -584,7 +584,7 @@ export default function HighPassLodgePage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footStrip} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,5,3,4" className={s.footStrip} aria-hidden="true">
           <TabbiedPattern
             pattern={terrain}
             palette={BAND}

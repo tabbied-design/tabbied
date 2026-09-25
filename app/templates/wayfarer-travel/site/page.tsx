@@ -524,7 +524,7 @@ export default function WayfarerTravelPage() {
         {/* ------------------------------------------------------ POSTCARDS
             Three notes from travelers, each on a postcard with its stamp. */}
         <section id="postcards" className={s.postcards} aria-labelledby="postcards-h">
-          <div className={s.postSwirl} aria-hidden="true">
+          <div data-edit-pattern="postcards.field" data-edit-roles="transparent,4,3,2" className={s.postSwirl} aria-hidden="true">
             <TabbiedPattern
               pattern={radiantswirl}
               palette={SWIRL_NIGHT}
@@ -592,7 +592,7 @@ export default function WayfarerTravelPage() {
                 A planner replies within one working day to set a time. Bring
                 photos, a rough budget and anyone who is coming with you.
               </p>
-              <div className={s.consultSea} aria-hidden="true">
+              <div data-edit-pattern="consult.field" data-edit-roles="transparent,3,4" className={s.consultSea} aria-hidden="true">
                 <TabbiedPattern
                   pattern={contourlines}
                   palette={CONTOUR_NIGHT}
@@ -701,7 +701,7 @@ export default function WayfarerTravelPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footRoute} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,1,3" className={s.footRoute} aria-hidden="true">
           <TabbiedPattern
             pattern={dashfield}
             palette={ROUTE_FOOT}

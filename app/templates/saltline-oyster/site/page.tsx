@@ -394,7 +394,7 @@ export default function SaltlineOysterPage() {
                 that morning and chilled. Towers take about fifteen minutes.
               </p>
               <div className={s.rawPlate}>
-                <div className={s.rawIce} aria-hidden="true">
+                <div data-edit-pattern="raw.field" data-edit-roles="transparent,4,4,4,3,4" className={s.rawIce} aria-hidden="true">
                   <TabbiedPattern
                     pattern={tidering}
                     palette={ICE}
@@ -429,7 +429,7 @@ export default function SaltlineOysterPage() {
         {/* --------------------------------------------------------- KITCHEN
             The mackerel stretched across the top of the menu like a label. */}
         <section id="kitchen" className={s.kitchen} aria-labelledby="kitchen-h">
-          <div className={s.kitchenBand} aria-hidden="true">
+          <div data-edit-pattern="kitchen.field" data-edit-roles="transparent,2,4,3" className={s.kitchenBand} aria-hidden="true">
             <TabbiedPattern
               pattern={eclipserings}
               palette={SWELL}
@@ -644,7 +644,7 @@ export default function SaltlineOysterPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,2" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={tidering}
             palette={QUAY}

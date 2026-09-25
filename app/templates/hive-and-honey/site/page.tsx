@@ -464,7 +464,7 @@ export default function HiveAndHoneyPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked at the stall every week</h2>
             <p data-edit="faq.faqAside" data-edit-max="240" data-edit-multiline className={s.faqAside}>Something else? Ask Ruth at the Saturday stall, or call the farm between 9 and 5.</p>
             <a data-edit="faq.faqPhone" data-edit-max="28" className={s.faqPhone} href="tel:+15550142290">(555) 014-2290</a>
-            <div className={s.faqCell} aria-hidden="true">
+            <div data-edit-pattern="faq.field" data-edit-roles="transparent,2,5,4" className={s.faqCell} aria-hidden="true">
               <TabbiedPattern
                 pattern={isocube}
                 palette={COMB_FIELD}
@@ -488,7 +488,7 @@ export default function HiveAndHoneyPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footMeadow} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,5" className={s.footMeadow} aria-hidden="true">
           <TabbiedPattern
             pattern={petalcut}
             palette={MEADOW}

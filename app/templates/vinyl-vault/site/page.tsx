@@ -345,7 +345,7 @@ export default function VinylVaultPage() {
           <div className={s.picksInner}>
             <div className={s.station}>
               <div className={s.stationDisc} aria-hidden="true">
-                <div className={s.discGrooves} aria-hidden="true">
+                <div data-edit-pattern="picks.field" data-edit-roles="transparent,1,3,0" className={s.discGrooves} aria-hidden="true">
                   <TabbiedPattern
                     pattern={ringfield}
                     palette={GROOVES}
@@ -406,7 +406,7 @@ export default function VinylVaultPage() {
               </ol>
             </div>
             <div className={s.buyArt}>
-              <div className={s.buyGrooves} aria-hidden="true">
+              <div data-edit-pattern="buy.field" data-edit-roles="transparent,4,0" className={s.buyGrooves} aria-hidden="true">
                 <TabbiedPattern
                   pattern={ringfield}
                   palette={DUST}
@@ -537,7 +537,7 @@ export default function VinylVaultPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footRunout} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3" className={s.footRunout} aria-hidden="true">
           <TabbiedPattern
             pattern={truchetrings}
             palette={RUNOUT}

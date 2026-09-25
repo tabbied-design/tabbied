@@ -334,7 +334,7 @@ export default function TinkerToysPage() {
             Four cards filed like dividers in a box: each has a tab with its
             age, and the tabs step across so all four can be read at once. */}
         <section id="ages" className={s.ages} aria-labelledby="ages-h">
-          <div className={s.agesBlock} aria-hidden="true">
+          <div data-edit-pattern="ages.field" data-edit-roles="transparent,2,3,4,1" className={s.agesBlock} aria-hidden="true">
             <TabbiedPattern
               pattern={bauhaus}
               palette={BLOCKS}
@@ -474,7 +474,7 @@ export default function TinkerToysPage() {
                 twelve places, so sign up at the counter.
               </p>
               <div className={s.eventsStage}>
-                <div className={s.eventsRug} aria-hidden="true">
+                <div data-edit-pattern="events.field" data-edit-roles="transparent,2,4,0,3" className={s.eventsRug} aria-hidden="true">
                   <TabbiedPattern
                     pattern={stitch}
                     palette={RUG}
@@ -598,7 +598,7 @@ export default function TinkerToysPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footShapes} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,4,1" className={s.footShapes} aria-hidden="true">
           <TabbiedPattern
             pattern={bauhaus}
             palette={BLOCKS}

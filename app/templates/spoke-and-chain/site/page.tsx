@@ -390,7 +390,7 @@ export default function SpokeAndChainPage() {
                 </dl>
               </div>
               <div className={s.pumpBox}>
-                <div className={s.pumpWheels} aria-hidden="true">
+                <div data-edit-pattern="service.field" data-edit-roles="transparent,2,5,3" className={s.pumpWheels} aria-hidden="true">
                   <TabbiedPattern
                     pattern={ring}
                     palette={WHEELS}
@@ -423,7 +423,7 @@ export default function SpokeAndChainPage() {
               <p data-edit="rentals.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03 / Rentals</p>
               <h2 data-edit="rentals.secTitle" data-edit-max="60" id="rentals-h" className={s.secTitle}>By the hour, the day or the week</h2>
             </div>
-            <div className={s.helmetPlate} aria-hidden="true">
+            <div data-edit-pattern="rentals.field" data-edit-roles="transparent,5,2,3,4,2" className={s.helmetPlate} aria-hidden="true">
               <TabbiedPattern
                 pattern={confettitriangles}
                 palette={CONFETTI}
@@ -598,7 +598,7 @@ export default function SpokeAndChainPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footConfetti} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,1,2,3,4,2" className={s.footConfetti} aria-hidden="true">
           <TabbiedPattern
             pattern={confettitriangles}
             palette={CONFETTI_INK}

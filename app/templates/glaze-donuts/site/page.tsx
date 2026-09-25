@@ -315,7 +315,7 @@ export default function GlazeDonutsPage() {
               ))}
             </ul>
             <p data-edit="board.boardFoot" data-edit-max="240" data-edit-multiline className={s.boardFoot}>Vegan Fridays: two flavors, fried separately. Ask what they are.</p>
-            <div className={s.boardLedge} aria-hidden="true">
+            <div data-edit-pattern="board.field" data-edit-roles="transparent,2,4,0,3" className={s.boardLedge} aria-hidden="true">
               <TabbiedPattern
                 pattern={sliver}
                 palette={LEDGE}
@@ -345,7 +345,7 @@ export default function GlazeDonutsPage() {
         {/* ----------------------------------------------------------- DOZEN */}
         <section id="dozen" className={s.dozen} aria-labelledby="dozen-h">
           <div className={s.dozenArt}>
-            <div className={s.dozenField} aria-hidden="true">
+            <div data-edit-pattern="dozen.field" data-edit-roles="transparent,2,4,3,2" className={s.dozenField} aria-hidden="true">
               <TabbiedPattern
                 pattern={annulus}
                 palette={RINGS}
@@ -456,7 +456,7 @@ export default function GlazeDonutsPage() {
               <p data-edit="coffee.combo" data-edit-max="240" data-edit-multiline className={s.combo}>Any donut and a drip coffee: $5</p>
             </div>
             <div className={s.coffeeArt}>
-              <div className={s.coffeeField} aria-hidden="true">
+              <div data-edit-pattern="coffee.field" data-edit-roles="transparent,2,3,4,5" className={s.coffeeField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={sliver}
                   palette={SPRINKLES}
@@ -529,7 +529,7 @@ export default function GlazeDonutsPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footRings} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,4,3,2" className={s.footRings} aria-hidden="true">
           <TabbiedPattern
             pattern={annulus}
             palette={RINGS}

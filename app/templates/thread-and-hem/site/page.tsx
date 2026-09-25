@@ -271,7 +271,7 @@ export default function ThreadAndHemPage() {
               Ten pieces this season, each made in small runs and each
               altered here, free, to fit you before it leaves the shop.
             </p>
-            <div className={s.cutting} aria-hidden="true">
+            <div data-edit-pattern="lookbook.field" data-edit-roles="transparent,2,3,2,4,2" className={s.cutting} aria-hidden="true">
               <TabbiedPattern
                 pattern={batiste}
                 palette={CLOTH}
@@ -439,7 +439,7 @@ export default function ThreadAndHemPage() {
               </p>
             </div>
             <form className={s.form} action="#">
-              <div className={s.formStitch} aria-hidden="true">
+              <div data-edit-pattern="visit.field" data-edit-roles="transparent,2,3,2,1" className={s.formStitch} aria-hidden="true">
                 <TabbiedPattern
                   pattern={baste}
                   palette={SEAM}
@@ -485,7 +485,7 @@ export default function ThreadAndHemPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footHem} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,4,2" className={s.footHem} aria-hidden="true">
           <TabbiedPattern
             pattern={baste}
             palette={HEM}

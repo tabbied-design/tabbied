@@ -387,7 +387,7 @@ export default function DoubleStackBurgersPage() {
                   </div>
                 ))}
               </dl>
-              <div className={s.bagTrim} aria-hidden="true">
+              <div data-edit-pattern="order.field" data-edit-roles="transparent,3,2,0" className={s.bagTrim} aria-hidden="true">
                 <TabbiedPattern
                   pattern={ziggy}
                   palette={BUNS}
@@ -419,7 +419,7 @@ export default function DoubleStackBurgersPage() {
           </div>
           <div className={s.findUs}>
             <div className={s.shakeSpot}>
-              <div className={s.shakeField} aria-hidden="true">
+              <div data-edit-pattern="hours.field" data-edit-roles="transparent,0,3" className={s.shakeField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={bowl}
                   palette={SAUCE}

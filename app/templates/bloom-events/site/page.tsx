@@ -309,7 +309,7 @@ export default function BloomEventsPage() {
         <section id="plan" className={s.plan} aria-labelledby="plan-h">
           <div className={s.planInner}>
             <div className={s.planGems} aria-hidden="true">
-              <div className={s.halfField} aria-hidden="true">
+              <div data-edit-pattern="plan.field" data-edit-roles="transparent,1,1,2,4" className={s.halfField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={scatteredgems}
                   palette={CONFETTI}
@@ -419,7 +419,7 @@ export default function BloomEventsPage() {
             </dl>
             <div className={s.giftStage}>
               <div className={s.giftPlate} aria-hidden="true">
-                <div className={s.halfField} aria-hidden="true">
+                <div data-edit-pattern="enquire.field" data-edit-roles="transparent,1,1,2,4" className={s.halfField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={scatteredgems}
                     palette={CONFETTI}
@@ -493,7 +493,7 @@ export default function BloomEventsPage() {
 
       <footer className={s.footer}>
         <div className={s.footBlossoms} aria-hidden="true">
-          <div className={s.halfField} aria-hidden="true">
+          <div data-edit-pattern="footer.field" data-edit-roles="transparent,1,2,4,3,5" className={s.halfField} aria-hidden="true">
             <TabbiedPattern
               pattern={midnightblossoms}
               palette={BLOSSOMS_NIGHT}

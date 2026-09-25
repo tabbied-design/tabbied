@@ -234,7 +234,7 @@ export default function BlueNoteRoomPage() {
             </ol>
             <aside className={s.listAside} aria-labelledby="aside-h">
               <div className={s.bassPanel}>
-                <div className={s.bassField} aria-hidden="true">
+                <div data-edit-pattern="aside.field" data-edit-roles="transparent,1,2,5,1" className={s.bassField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={gyre}
                     palette={SWING}
@@ -306,7 +306,7 @@ export default function BlueNoteRoomPage() {
         <section id="room" className={s.room} aria-labelledby="room-h">
           <div className={s.roomInner}>
             <div className={s.spot}>
-              <div className={s.ripple} aria-hidden="true">
+              <div data-edit-pattern="room.field" data-edit-roles="transparent,2,4,2" className={s.ripple} aria-hidden="true">
                 <TabbiedPattern
                   pattern={spiralrosette}
                   palette={RIPPLE}
@@ -447,7 +447,7 @@ export default function BlueNoteRoomPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footMarks} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,0,3,5,0" className={s.footMarks} aria-hidden="true">
           <TabbiedPattern
             pattern={gyre}
             palette={MARQUEE}

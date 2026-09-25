@@ -302,7 +302,7 @@ export default function VeilAndVowPage() {
                 </p>
               </div>
               <div className={s.fitArch}>
-                <div className={s.fitLace} aria-hidden="true">
+                <div data-edit-pattern="fittings.field" data-edit-roles="transparent,3,5,2" className={s.fitLace} aria-hidden="true">
                   <TabbiedPattern
                     pattern={ogee}
                     palette={LACE}
@@ -352,7 +352,7 @@ export default function VeilAndVowPage() {
 
         {/* ------------------------------------------------------------ BOOK */}
         <section id="book" className={s.book} aria-labelledby="book-h">
-          <div className={s.bookPetals} aria-hidden="true">
+          <div data-edit-pattern="book.field" data-edit-roles="transparent,0,5,2" className={s.bookPetals} aria-hidden="true">
             <TabbiedPattern
               pattern={petalcut}
               palette={PETALS}
@@ -439,7 +439,7 @@ export default function VeilAndVowPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footHem} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2" className={s.footHem} aria-hidden="true">
           <TabbiedPattern
             pattern={petalcut}
             palette={HEM}

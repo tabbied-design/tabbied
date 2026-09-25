@@ -373,7 +373,7 @@ export default function GrainAndGlowPage() {
         <section id="esthetician" className={s.sec} aria-labelledby="esthetician-h">
           <div className={s.about}>
             <div className={s.portraitFrame}>
-              <div className={s.portraitGlow} aria-hidden="true">
+              <div data-edit-pattern="esthetician.field" data-edit-roles="transparent,0,4" className={s.portraitGlow} aria-hidden="true">
                 <TabbiedPattern
                   pattern={bokeh}
                   palette={GLOW}
@@ -434,7 +434,7 @@ export default function GrainAndGlowPage() {
         {/* ------------------------------------------------------------- BOOK */}
         <section id="book" className={s.bookSec} aria-labelledby="book-h">
           <div className={s.book}>
-            <div className={s.bookGlow} aria-hidden="true">
+            <div data-edit-pattern="book.field" data-edit-roles="transparent,2,3" className={s.bookGlow} aria-hidden="true">
               <TabbiedPattern
                 pattern={bokeh}
                 palette={EMBER}
@@ -513,7 +513,7 @@ export default function GrainAndGlowPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footGrain} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,4" className={s.footGrain} aria-hidden="true">
           <TabbiedPattern
             pattern={grainfall}
             palette={GRAIN}

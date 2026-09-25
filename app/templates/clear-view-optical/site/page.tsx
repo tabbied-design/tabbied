@@ -325,7 +325,7 @@ export default function ClearViewOpticalPage() {
         {/* ----------------------------------------------------------- EXAMS */}
         <section id="exams" className={s.exams} aria-labelledby="exams-h">
           <div className={s.examsInner}>
-            <div className={s.examsField} aria-hidden="true">
+            <div data-edit-pattern="exams.field" data-edit-roles="transparent,2,4,3" className={s.examsField} aria-hidden="true">
               <TabbiedPattern
                 pattern={recession}
                 palette={STAGE}
@@ -386,7 +386,7 @@ export default function ClearViewOpticalPage() {
               </p>
             </div>
           </div>
-          <div className={s.sunStrip} aria-hidden="true">
+          <div data-edit-pattern="sun.field" data-edit-roles="transparent,1,2" className={s.sunStrip} aria-hidden="true">
             <TabbiedPattern
               pattern={gimbal}
               palette={SHADES}
@@ -445,7 +445,7 @@ export default function ClearViewOpticalPage() {
                 you an itemized receipt to claim yourself. FSA and HSA cards
                 are welcome.
               </p>
-              <div className={s.insField} aria-hidden="true">
+              <div data-edit-pattern="insurance.field" data-edit-roles="transparent,2,4,3" className={s.insField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={recession}
                   palette={STAGE}
@@ -539,7 +539,7 @@ export default function ClearViewOpticalPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footStrip} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3" className={s.footStrip} aria-hidden="true">
           <TabbiedPattern
             pattern={gimbal}
             palette={RIMS}

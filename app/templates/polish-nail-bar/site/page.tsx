@@ -344,7 +344,7 @@ export default function PolishNailBarPage() {
                 include polish from the wall and a hand or foot massage.
               </p>
               <div className={s.servicesNail}>
-                <div className={s.nailField} aria-hidden="true">
+                <div data-edit-pattern="services.field" data-edit-roles="transparent,2,3,4" className={s.nailField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={polkadot}
                     palette={DOTS}
@@ -433,7 +433,7 @@ export default function PolishNailBarPage() {
 
         {/* ------------------------------------------------------------ BOOK */}
         <section id="book" className={s.book} aria-labelledby="book-h">
-          <div className={s.bookPetals} aria-hidden="true">
+          <div data-edit-pattern="book.field" data-edit-roles="transparent,2,3" className={s.bookPetals} aria-hidden="true">
             <TabbiedPattern
               pattern={petalcut}
               palette={ART}
@@ -566,7 +566,7 @@ export default function PolishNailBarPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footEdge} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3" className={s.footEdge} aria-hidden="true">
           <TabbiedPattern
             pattern={petalcut}
             palette={ART}

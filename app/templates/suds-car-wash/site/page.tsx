@@ -411,7 +411,7 @@ export default function SudsCarWashPage() {
             </ol>
           </div>
           <div className={s.posts} aria-hidden="true">
-            <div className={s.postsFoam} aria-hidden="true">
+            <div data-edit-pattern="washes.field" data-edit-roles="transparent,2,5,2" className={s.postsFoam} aria-hidden="true">
               <TabbiedPattern
                 pattern={recession}
                 palette={PUDDLE}
@@ -433,7 +433,7 @@ export default function SudsCarWashPage() {
         {/* ------------------------------------------------------------- HOW */}
         <section id="how" className={s.how} aria-labelledby="how-h">
           <div className={s.howArt}>
-            <div className={s.howDisc} aria-hidden="true">
+            <div data-edit-pattern="how.field" data-edit-roles="transparent,0,2,0,3" className={s.howDisc} aria-hidden="true">
               <TabbiedPattern
                 pattern={recession}
                 palette={SPRAY}
@@ -550,7 +550,7 @@ export default function SudsCarWashPage() {
         {/* ---------------------------------------------------------- EXTRAS */}
         <section id="extras" className={s.extras} aria-labelledby="extras-h">
           <div className={s.extrasArt}>
-            <div className={s.extrasField} aria-hidden="true">
+            <div data-edit-pattern="extras.field" data-edit-roles="transparent,2,5,3" className={s.extrasField} aria-hidden="true">
               <TabbiedPattern
                 pattern={softbubbles}
                 palette={RINSE}
@@ -654,7 +654,7 @@ export default function SudsCarWashPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footFoam} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,5,2" className={s.footFoam} aria-hidden="true">
           <TabbiedPattern
             pattern={recession}
             palette={PUDDLE}

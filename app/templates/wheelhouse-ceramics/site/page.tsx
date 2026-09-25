@@ -313,7 +313,7 @@ export default function WheelhouseCeramicsPage() {
         {/* --------------------------------------------------------- CLASSES */}
         <section id="classes" className={s.sec} aria-labelledby="classes-h">
           <div className={`${s.secHead} ${s.tiledHead}`}>
-            <div className={s.testTile} aria-hidden="true">
+            <div data-edit-pattern="classes.field" data-edit-roles="2,5,1" className={s.testTile} aria-hidden="true">
               <TabbiedPattern
                 pattern={raku}
                 palette={EMBER}
@@ -362,7 +362,7 @@ export default function WheelhouseCeramicsPage() {
 
         {/* ---------------------------------------------------------- STUDIO */}
         <section id="studio" className={s.studio} aria-labelledby="studio-h">
-          <div className={s.studioEdge} aria-hidden="true">
+          <div data-edit-pattern="studio.field" data-edit-roles="transparent,2,3,4" className={s.studioEdge} aria-hidden="true">
             <TabbiedPattern
               pattern={lobe}
               palette={GLAZE_RUN}
@@ -511,7 +511,7 @@ export default function WheelhouseCeramicsPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
-          <div className={s.footPlate} aria-hidden="true">
+          <div data-edit-pattern="footer.field" data-edit-roles="3,5,1" className={s.footPlate} aria-hidden="true">
             <TabbiedPattern
               pattern={lobe}
               palette={GREEN}

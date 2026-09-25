@@ -259,7 +259,7 @@ export default function HarborLightToursPage() {
                 It is always colder on the water than on the pier. The cabin is
                 heated, and there are blankets on the top deck.
               </p>
-              <div className={s.burgee} aria-hidden="true">
+              <div data-edit-pattern="know.field" data-edit-roles="transparent,3,2,5,1" className={s.burgee} aria-hidden="true">
                 <TabbiedPattern
                   pattern={sail}
                   palette={SAILS}
@@ -301,7 +301,7 @@ export default function HarborLightToursPage() {
                 </div>
               ))}
             </dl>
-            <div className={s.regatta} aria-hidden="true">
+            <div data-edit-pattern="charters.field" data-edit-roles="transparent,5,2,1" className={s.regatta} aria-hidden="true">
               <TabbiedPattern
                 pattern={sail}
                 palette={REGATTA}
@@ -378,7 +378,7 @@ export default function HarborLightToursPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footDrizzle} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,4,5" className={s.footDrizzle} aria-hidden="true">
           <TabbiedPattern
             pattern={tidewashbands}
             palette={DRIZZLE}

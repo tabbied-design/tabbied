@@ -616,7 +616,7 @@ export default function TrailheadClubPage() {
         {/* ------------------------------------------------------------ GEAR
             The checklist, one icon per list, large enough to lead. */}
         <section id="gear" className={s.gearSec} aria-labelledby="gear-h">
-          <div className={s.gearField} aria-hidden="true">
+          <div data-edit-pattern="gear.field" data-edit-roles="transparent,3,4,2" className={s.gearField} aria-hidden="true">
             <TabbiedPattern
               pattern={contourlines}
               palette={CODA}
@@ -684,7 +684,7 @@ export default function TrailheadClubPage() {
           </div>
 
           <form className={s.joinForm} action="#">
-            <div className={s.joinTrail} aria-hidden="true">
+            <div data-edit-pattern="join.field" data-edit-roles="transparent,2,3,1" className={s.joinTrail} aria-hidden="true">
               <TabbiedPattern
                 pattern={baste}
                 palette={TRAIL}
@@ -736,7 +736,7 @@ export default function TrailheadClubPage() {
           </div>
           <div className={s.faqWrap}>
             <div className={s.faqArt} aria-hidden="true">
-              <div className={s.faqRings}>
+              <div data-edit-pattern="firstHike.field" data-edit-roles="transparent,3,4,2" className={s.faqRings}>
                 <TabbiedPattern
                   pattern={contourlines}
                   palette={CODA}

@@ -351,7 +351,7 @@ export default function OffshoreSurfPage() {
                 Morning slots are am, the rest pm. Full lessons show on the
                 booking page; we keep two places back for walk-ins every Saturday.
               </p>
-              <div className={s.weekSea} aria-hidden="true">
+              <div data-edit-pattern="lessons.field" data-edit-roles="transparent,2,2" className={s.weekSea} aria-hidden="true">
                 <TabbiedPattern
                   pattern={wavelet}
                   palette={SWELL}
@@ -368,7 +368,7 @@ export default function OffshoreSurfPage() {
 
         {/* ----------------------------------------------------------- TIDES */}
         <section id="tides" className={s.tides} aria-labelledby="tides-h">
-          <div className={s.tideRings} aria-hidden="true">
+          <div data-edit-pattern="tides.field" data-edit-roles="transparent,2,0" className={s.tideRings} aria-hidden="true">
             <TabbiedPattern
               pattern={tidering}
               palette={TIDE_LINES}
@@ -555,7 +555,7 @@ export default function OffshoreSurfPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footSea} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3" className={s.footSea} aria-hidden="true">
           <TabbiedPattern
             pattern={wavelet}
             palette={NIGHT_SWELL}

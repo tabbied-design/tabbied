@@ -320,7 +320,7 @@ export default function PolyglotPage() {
               </p>
             </div>
             <div className={s.globeStage}>
-              <div className={s.globeRoutes} aria-hidden="true">
+              <div data-edit-pattern="languages.field" data-edit-roles="transparent,5,2,5,4" className={s.globeRoutes} aria-hidden="true">
                 <TabbiedPattern
                   pattern={metro}
                   palette={ROUTES}
@@ -355,7 +355,7 @@ export default function PolyglotPage() {
         <section id="courses" className={s.courses} aria-labelledby="courses-h">
           <div className={s.coursesInner}>
             <div className={s.courseArt}>
-              <div className={s.courseRing} aria-hidden="true">
+              <div data-edit-pattern="courses.field" data-edit-roles="transparent,1,2,5,3,0,2,5" className={s.courseRing} aria-hidden="true">
                 <TabbiedPattern
                   pattern={diamondconfetti}
                   palette={STAIRS}
@@ -510,7 +510,7 @@ export default function PolyglotPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footStairs} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,1,2,5,3,0,2,5" className={s.footStairs} aria-hidden="true">
           <TabbiedPattern
             pattern={diamondconfetti}
             palette={STAIRS}

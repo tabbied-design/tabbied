@@ -337,7 +337,7 @@ export default function TinRoofGuitarsPage() {
               </dl>
             </div>
             <div className={s.amp}>
-              <div className={s.grille} aria-hidden="true">
+              <div data-edit-pattern="lessons.field" data-edit-roles="transparent,2,1" className={s.grille} aria-hidden="true">
                 <TabbiedPattern
                   pattern={drypoint}
                   palette={GRILLE}
@@ -425,7 +425,7 @@ export default function TinRoofGuitarsPage() {
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInner}>
             <div>
-              <span className={s.pick} aria-hidden="true">
+              <span data-edit-pattern="visit.field" data-edit-roles="1,2,4" className={s.pick} aria-hidden="true">
                 <TabbiedPattern
                   pattern={sunray}
                   palette={SUNBURST}
@@ -473,7 +473,7 @@ export default function TinRoofGuitarsPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footRoof} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,5,0" className={s.footRoof} aria-hidden="true">
           <TabbiedPattern
             pattern={picket}
             palette={ROOF}

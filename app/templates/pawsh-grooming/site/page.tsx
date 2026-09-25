@@ -308,7 +308,7 @@ export default function PawshGroomingPage() {
                 Add them when you book or at drop-off. Same price for a
                 chihuahua and a great dane.
               </p>
-              <div className={s.brushBubble} aria-hidden="true">
+              <div data-edit-pattern="addons.field" data-edit-roles="0,3,2,4" className={s.brushBubble} aria-hidden="true">
                 <TabbiedPattern
                   pattern={quoit}
                   palette={BUBBLES_PAPER}
@@ -364,7 +364,7 @@ export default function PawshGroomingPage() {
               <p data-edit="firstVisit.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>First visit</p>
               <h2 data-edit="firstVisit.secTitle" data-edit-max="60" id="first-h" className={s.secTitle}>Six things to know before the first bath</h2>
               <div className={s.firstDog}>
-                <div className={s.dogSparks} aria-hidden="true">
+                <div data-edit-pattern="firstVisit.field" data-edit-roles="transparent,2,3,4" className={s.dogSparks} aria-hidden="true">
                   <TabbiedPattern
                     pattern={sparkle}
                     palette={SPARKS_INK}
@@ -477,7 +477,7 @@ export default function PawshGroomingPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footLoops} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="5,3,2,4" className={s.footLoops} aria-hidden="true">
           <TabbiedPattern
             pattern={quoit}
             palette={BUBBLES}

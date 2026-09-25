@@ -300,7 +300,7 @@ export default function BoltAndBenchPage() {
                 can usually have it by Thursday.
               </p>
             </div>
-            <div className={s.aislesTile} aria-hidden="true">
+            <div data-edit-pattern="aisles.field" data-edit-roles="transparent,1,2" className={s.aislesTile} aria-hidden="true">
               <TabbiedPattern
                 pattern={squarelabyrinth}
                 palette={MAZE}
@@ -451,7 +451,7 @@ export default function BoltAndBenchPage() {
               </li>
             ))}
           </ul>
-          <div className={s.shelfEdge} aria-hidden="true">
+          <div data-edit-pattern="deals.field" data-edit-roles="transparent,3" className={s.shelfEdge} aria-hidden="true">
             <TabbiedPattern
               pattern={perforate}
               palette={SHELF}
@@ -467,7 +467,7 @@ export default function BoltAndBenchPage() {
         <section id="hours" className={s.hoursSec} aria-labelledby="hours-h">
           <div className={s.hoursInner}>
             <div className={s.hoursArt}>
-              <div className={s.hoursPlate} aria-hidden="true">
+              <div data-edit-pattern="hours.field" data-edit-roles="transparent,3,4" className={s.hoursPlate} aria-hidden="true">
                 <TabbiedPattern
                   pattern={squarelabyrinth}
                   palette={MAZE_FAINT}

@@ -293,7 +293,7 @@ export default function PinewoodRvPage() {
                 Mostly about sleep and fire. The host couple in site 1 can help
                 with anything after the office closes.
               </p>
-              <div className={s.rulesPatch} aria-hidden="true">
+              <div data-edit-pattern="rules.field" data-edit-roles="transparent,2,3,4,1" className={s.rulesPatch} aria-hidden="true">
                 <TabbiedPattern
                   pattern={stitch}
                   palette={BLANKET}
@@ -427,7 +427,7 @@ export default function PinewoodRvPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked at the office window</h2>
           </div>
           <div className={s.faq}>
-            <div className={s.faqWindow} aria-hidden="true">
+            <div data-edit-pattern="faq.field" data-edit-roles="transparent,5,3,4" className={s.faqWindow} aria-hidden="true">
               <TabbiedPattern
                 pattern={northstar}
                 palette={NIGHT}
@@ -449,7 +449,7 @@ export default function PinewoodRvPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footStitch} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,4,5" className={s.footStitch} aria-hidden="true">
           <TabbiedPattern
             pattern={stitch}
             palette={HEARTH}

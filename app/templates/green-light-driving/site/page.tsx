@@ -303,7 +303,7 @@ export default function GreenLightPage() {
               </p>
             </div>
             <div className={s.signSpot}>
-              <div className={s.signField} aria-hidden="true">
+              <div data-edit-pattern="test.field" data-edit-roles="transparent,2,5" className={s.signField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={switchback}
                   palette={BENDS}
@@ -459,7 +459,7 @@ export default function GreenLightPage() {
             />
           </div>
           <form className={s.form} action="#">
-            <div className={s.formCrossing} aria-hidden="true">
+            <div data-edit-pattern="book.field" data-edit-roles="transparent,0,3" className={s.formCrossing} aria-hidden="true">
               <TabbiedPattern
                 pattern={percale}
                 palette={CROSSING}
@@ -530,7 +530,7 @@ export default function GreenLightPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footMarks} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,5" className={s.footMarks} aria-hidden="true">
           <TabbiedPattern
             pattern={slashbar}
             palette={MARKINGS}

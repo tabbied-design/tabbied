@@ -277,7 +277,7 @@ export default function TheWrenHotelPage() {
             {ROOMS.map((r, i) => (
               <article key={r.id} className={s.room} id={`room-${r.id}`}>
                 <div className={`${s.roomArt} ${s[r.id]}`}>
-                  <div className={s.roomWall} aria-hidden="true">
+                  <div data-edit-pattern={`room.field.${i}`} data-edit-roles="transparent,3,4" className={s.roomWall} aria-hidden="true">
                     <TabbiedPattern
                       pattern={ogee}
                       palette={ROOM_WALL}
@@ -394,7 +394,7 @@ export default function TheWrenHotelPage() {
         <section id="rates" className={s.rates} aria-labelledby="rates-h">
           <div className={s.secHead}>
             <p data-edit="rates.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>Rates</p>
-            <div className={s.swatch} aria-hidden="true">
+            <div data-edit-pattern="rates.field" data-edit-roles="transparent,2,3" className={s.swatch} aria-hidden="true">
               <TabbiedPattern
                 pattern={lunette}
                 palette={PAPER_WALL}

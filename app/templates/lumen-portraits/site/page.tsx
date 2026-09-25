@@ -324,7 +324,7 @@ export default function LumenPortraitsPage() {
           <div className={s.extras}>
             <div className={s.extrasSide}>
               <h3 data-edit="sessions.extrasHead" data-edit-max="40" className={s.extrasHead}>Extras and prints</h3>
-              <div className={s.proof} aria-hidden="true">
+              <div data-edit-pattern="sessions.field" data-edit-roles="transparent,2,3" className={s.proof} aria-hidden="true">
                 <TabbiedPattern
                   pattern={halftone}
                   palette={SCREEN}
@@ -350,7 +350,7 @@ export default function LumenPortraitsPage() {
         <section id="day" className={s.day} aria-labelledby="day-h">
           <div className={s.dayInner}>
             <div className={s.enlarge}>
-              <div className={s.enlargeScreen} aria-hidden="true">
+              <div data-edit-pattern="day.field" data-edit-roles="transparent,3,2" className={s.enlargeScreen} aria-hidden="true">
                 <TabbiedPattern
                   pattern={halftone}
                   palette={WEDGE}
@@ -565,7 +565,7 @@ export default function LumenPortraitsPage() {
       <footer className={s.footer}>
         <div className={s.footGrid}>
           <div className={s.footBrand}>
-            <span className={s.footLens} aria-hidden="true">
+            <span data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,4" className={s.footLens} aria-hidden="true">
               <TabbiedPattern
                 pattern={concentricrings}
                 palette={LENS}

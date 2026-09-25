@@ -313,7 +313,7 @@ export default function NoriSushiPage() {
         <section id="omakase" className={s.omakase} aria-labelledby="omakase-h">
           <div className={s.omakaseHead}>
             <span className={s.seal}>
-              <span className={s.sealField} aria-hidden="true">
+              <span data-edit-pattern="omakase.field" data-edit-roles="transparent,0,5,2,0" className={s.sealField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={tidering}
                   palette={WAVES}
@@ -442,7 +442,7 @@ export default function NoriSushiPage() {
 
         {/* ------------------------------------------------------------ SAKE */}
         <section id="sake" className={s.sake} aria-labelledby="sake-h">
-          <div className={s.sakeField} aria-hidden="true">
+          <div data-edit-pattern="sake.field" data-edit-roles="transparent,3,4,3,2" className={s.sakeField} aria-hidden="true">
             <TabbiedPattern
               pattern={tidering}
               palette={DEEP}
@@ -510,7 +510,7 @@ export default function NoriSushiPage() {
             </dl>
           </div>
           <form className={s.form} action="#">
-            <div className={s.formEdge} aria-hidden="true">
+            <div data-edit-pattern="reserve.field" data-edit-roles="transparent,4,2,5,3" className={s.formEdge} aria-hidden="true">
               <TabbiedPattern
                 pattern={dashfield}
                 palette={DASHES}
@@ -602,7 +602,7 @@ export default function NoriSushiPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footWaves} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,0,5,2,0" className={s.footWaves} aria-hidden="true">
           <TabbiedPattern
             pattern={tidering}
             palette={WAVES}

@@ -512,7 +512,7 @@ export default function HewnFurniturePage() {
         <section id="workshop" className={s.workshop} aria-labelledby="workshop-h">
           <div className={s.workshopInner}>
             <div className={s.workshopLamp}>
-              <div className={s.lampHalo} aria-hidden="true">
+              <div data-edit-pattern="workshop.field" data-edit-roles="transparent,2,3" className={s.lampHalo} aria-hidden="true">
                 <TabbiedPattern
                   pattern={randomrings}
                   palette={HALO}
@@ -595,7 +595,7 @@ export default function HewnFurniturePage() {
               </p>
             </div>
             <form className={s.form} action="#">
-              <div className={s.formStrip} aria-hidden="true">
+              <div data-edit-pattern="showroom.field" data-edit-roles="transparent,0,3" className={s.formStrip} aria-hidden="true">
                 <TabbiedPattern
                   pattern={reeding}
                   palette={FORM_FLUTE}
@@ -643,7 +643,7 @@ export default function HewnFurniturePage() {
       <footer className={s.footer}>
         <div className={s.footTop}>
           <div>
-            <div className={s.footPlate} aria-hidden="true">
+            <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,4" className={s.footPlate} aria-hidden="true">
               <TabbiedPattern
                 pattern={randomrings}
                 palette={GRAIN}

@@ -354,7 +354,7 @@ export default function LiveWireElectricPage() {
         <section id="licensed" className={s.licensed} aria-labelledby="licensed-h">
           <div className={s.licInner}>
             <div className={s.licArt}>
-              <div className={s.licField} aria-hidden="true">
+              <div data-edit-pattern="licensed.field" data-edit-roles="transparent,1,3,0,1" className={s.licField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={circuit}
                   palette={BOARD}
@@ -411,7 +411,7 @@ export default function LiveWireElectricPage() {
           <div className={s.areaGrid}>
             <div className={s.rings} aria-hidden="true">
               <span className={s.ringOuter} />
-              <div className={s.ringStreets} aria-hidden="true">
+              <div data-edit-pattern="areas.field" data-edit-roles="transparent,1,3,0,1" className={s.ringStreets} aria-hidden="true">
                 <TabbiedPattern
                   pattern={circuit}
                   palette={BOARD}
@@ -528,7 +528,7 @@ export default function LiveWireElectricPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footTape} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2" className={s.footTape} aria-hidden="true">
           <TabbiedPattern
             pattern={rafter}
             palette={TAPE}

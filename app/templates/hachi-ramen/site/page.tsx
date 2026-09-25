@@ -400,7 +400,7 @@ export default function HachiRamenPage() {
         <div className={s.pair}>
           <section id="sides" className={s.sides} aria-labelledby="sides-h">
             <div className={s.sidesArt}>
-              <div className={s.sidesPlate} aria-hidden="true">
+              <div data-edit-pattern="sides.field" data-edit-roles="transparent,0,0,3" className={s.sidesPlate} aria-hidden="true">
                 <TabbiedPattern
                   pattern={curl}
                   palette={PLATE}
@@ -435,7 +435,7 @@ export default function HachiRamenPage() {
           </section>
 
           <section id="drinks" className={s.drinks} aria-labelledby="drinks-h">
-            <div className={s.drinksTop} aria-hidden="true">
+            <div data-edit-pattern="drinks.field" data-edit-roles="transparent,2,3,1" className={s.drinksTop} aria-hidden="true">
               <TabbiedPattern
                 pattern={bowl}
                 palette={BOWLS}
@@ -472,7 +472,7 @@ export default function HachiRamenPage() {
         <section id="queue" className={s.queue} aria-labelledby="queue-h">
           <div className={s.queueInner}>
             <div className={s.queueArt}>
-              <div className={s.queueGlow} aria-hidden="true">
+              <div data-edit-pattern="queue.field" data-edit-roles="transparent,3,2" className={s.queueGlow} aria-hidden="true">
                 <TabbiedPattern
                   pattern={curl}
                   palette={STEAM}
@@ -540,7 +540,7 @@ export default function HachiRamenPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footHem} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,5,3" className={s.footHem} aria-hidden="true">
           <TabbiedPattern
             pattern={curl}
             palette={HEM}

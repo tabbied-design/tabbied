@@ -323,7 +323,7 @@ export default function BrightSmilesPage() {
               <h2 data-edit="parents.title" data-edit-max="60" id="parents-h">Questions parents ask</h2>
               <p data-edit="parents.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>And if yours is not here, call the front desk: Dana has heard all of them.</p>
               <div className={s.chairPlate}>
-                <div className={s.chairRings} aria-hidden="true">
+                <div data-edit-pattern="parents.field" data-edit-roles="transparent,5,2" className={s.chairRings} aria-hidden="true">
                   <TabbiedPattern
                     pattern={scattershrink}
                     palette={QUIET}
@@ -361,7 +361,7 @@ export default function BrightSmilesPage() {
           </div>
           <div className={s.insurance}>
             <div className={s.plans}>
-              <div className={s.plansSmiles} aria-hidden="true">
+              <div data-edit-pattern="insurance.field" data-edit-roles="transparent,3,2,4" className={s.plansSmiles} aria-hidden="true">
                 <TabbiedPattern
                   pattern={bangle}
                   palette={SMILES}
@@ -487,7 +487,7 @@ export default function BrightSmilesPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footSmiles} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,4" className={s.footSmiles} aria-hidden="true">
           <TabbiedPattern
             pattern={bangle}
             palette={SMILES}

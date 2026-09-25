@@ -232,7 +232,7 @@ export default function ScoopAndConePage() {
         {/* ----------------------------------------------------- FLAVOR BOARD
             The parlor's board: ink ground, every flavor with its chip. */}
         <section id="flavors" className={s.board} aria-labelledby="flavors-h">
-          <div className={s.awning} aria-hidden="true">
+          <div data-edit-pattern="flavors.field" data-edit-roles="transparent,2,0" className={s.awning} aria-hidden="true">
             <TabbiedPattern
               pattern={cove}
               palette={AWNING}
@@ -371,7 +371,7 @@ export default function ScoopAndConePage() {
           <div className={s.hoursWrap}>
             <div className={s.hoursLead}>
               <div className={s.popPlate}>
-                <div className={s.popBurst} aria-hidden="true">
+                <div data-edit-pattern="hours.field" data-edit-roles="transparent,2,3,4,1" className={s.popBurst} aria-hidden="true">
                   <TabbiedPattern
                     pattern={confettidotfield}
                     palette={BURST}
@@ -435,7 +435,7 @@ export default function ScoopAndConePage() {
               <h3 data-edit="visit.title2" data-edit-max="40">Parties and pints</h3>
               <p data-edit="visit.body" data-edit-max="240" data-edit-multiline>The back room seats sixteen for a birthday: a sundae each, a candle in the big dipper, two hours, $180. Pints and quarts to go all year, and we pack them in dry ice for the drive home.</p>
               <a data-edit="visit.btn" data-edit-max="28" className={s.btn} href="mailto:parties@scoopandcone.example">Book the back room</a>
-              <div className={s.partyEdge} aria-hidden="true">
+              <div data-edit-pattern="visit.field" data-edit-roles="transparent,3" className={s.partyEdge} aria-hidden="true">
                 <TabbiedPattern
                   pattern={cove}
                   palette={DOILY}

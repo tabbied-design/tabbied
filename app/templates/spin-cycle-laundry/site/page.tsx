@@ -300,7 +300,7 @@ export default function SpinCycleLaundryPage() {
             the minutes it has left. */}
         <section id="machines" className={s.machines} aria-labelledby="machines-h">
           <div className={s.board}>
-            <div className={s.boardDoors} aria-hidden="true">
+            <div data-edit-pattern="machines.field" data-edit-roles="1,2,3,4,2" className={s.boardDoors} aria-hidden="true">
               <TabbiedPattern
                 pattern={loophole}
                 palette={DOORS}
@@ -407,7 +407,7 @@ export default function SpinCycleLaundryPage() {
         {/* ---------------------------------------------------- WASH AND FOLD */}
         <section id="wash-fold" className={s.fold} aria-labelledby="fold-h">
           <div className={s.foldArt}>
-            <div className={s.foldCloth} aria-hidden="true">
+            <div data-edit-pattern="washFold.field" data-edit-roles="transparent,2,3,0" className={s.foldCloth} aria-hidden="true">
               <TabbiedPattern
                 pattern={picket}
                 palette={HEM}
@@ -506,7 +506,7 @@ export default function SpinCycleLaundryPage() {
               ))}
             </dl>
             <form className={s.form} action="#">
-              <div className={s.formEdge} aria-hidden="true">
+              <div data-edit-pattern="pickup.field" data-edit-roles="transparent,2,5,3,4" className={s.formEdge} aria-hidden="true">
                 <TabbiedPattern
                   pattern={picket}
                   palette={STRIPE}
@@ -619,7 +619,7 @@ export default function SpinCycleLaundryPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footField} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="1,2,3,4,2" className={s.footField} aria-hidden="true">
           <TabbiedPattern
             pattern={loophole}
             palette={DOORS}

@@ -372,7 +372,7 @@ export default function SliceTheoryPage() {
 
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.prices} aria-labelledby="prices-h">
-          <div className={s.pricesOven} aria-hidden="true">
+          <div data-edit-pattern="prices.field" data-edit-roles="1,2,4,2" className={s.pricesOven} aria-hidden="true">
             <TabbiedPattern
               pattern={turbulentsunburst}
               palette={OVEN}
@@ -516,7 +516,7 @@ export default function SliceTheoryPage() {
             <p data-edit="order.orderText2" data-edit-max="240" data-edit-multiline className={s.orderText}>Twenty seats inside, eight on the sidewalk</p>
           </div>
           <div className={s.sliceStage}>
-            <div className={s.sliceOven} aria-hidden="true">
+            <div data-edit-pattern="order.field" data-edit-roles="1,2,4,2" className={s.sliceOven} aria-hidden="true">
               <TabbiedPattern
                 pattern={turbulentsunburst}
                 palette={OVEN}
@@ -537,7 +537,7 @@ export default function SliceTheoryPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footCloth} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2" className={s.footCloth} aria-hidden="true">
           <TabbiedPattern
             pattern={damier}
             palette={CLOTH}

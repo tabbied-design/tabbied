@@ -426,7 +426,7 @@ export default function MeepleAndMugPage() {
             </div>
 
             <div className={s.bookMat}>
-              <div className={s.bookBoard} aria-hidden="true">
+              <div data-edit-pattern="tables.field" data-edit-roles="transparent,3,2,1,5" className={s.bookBoard} aria-hidden="true">
                 <TabbiedPattern
                   pattern={damier}
                   palette={BOARD}
@@ -585,7 +585,7 @@ export default function MeepleAndMugPage() {
             The house rules as a rulebook page. */}
         <section id="rules" className={s.rules} aria-labelledby="rules-h">
           <div className={s.rulesCard}>
-            <div className={s.rulesTile} aria-hidden="true">
+            <div data-edit-pattern="rules.field" data-edit-roles="transparent,2,3,5" className={s.rulesTile} aria-hidden="true">
               <TabbiedPattern
                 pattern={dieblock}
                 palette={BAND}
@@ -652,7 +652,7 @@ export default function MeepleAndMugPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footPips} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,4" className={s.footPips} aria-hidden="true">
           <TabbiedPattern
             pattern={polkadot}
             palette={PIPS}

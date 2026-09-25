@@ -297,7 +297,7 @@ export default function CellarDoorWinesPage() {
                   </li>
                 ))}
               </ol>
-              <div className={s.indexTile} aria-hidden="true">
+              <div data-edit-pattern="wines.field" data-edit-roles="transparent,2,1" className={s.indexTile} aria-hidden="true">
                 <TabbiedPattern
                   pattern={kilngrid}
                   palette={CELLAR}
@@ -449,7 +449,7 @@ export default function CellarDoorWinesPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitArt}>
-            <div className={s.visitArch} aria-hidden="true">
+            <div data-edit-pattern="visit.field" data-edit-roles="transparent,4,4,3" className={s.visitArch} aria-hidden="true">
               <TabbiedPattern
                 pattern={lobe}
                 palette={LEAF}
@@ -496,7 +496,7 @@ export default function CellarDoorWinesPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footVine} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,4,3,2" className={s.footVine} aria-hidden="true">
           <TabbiedPattern
             pattern={lobe}
             palette={VINE}

@@ -303,7 +303,7 @@ export default function CruxClimbingPage() {
               </p>
               <a data-edit="firstVisit.btnDark" data-edit-max="28" className={s.btnDark} href="mailto:desk@cruxclimbing.example">Book an induction</a>
               <div className={s.chalkWall}>
-                <div className={s.chalkField} aria-hidden="true">
+                <div data-edit-pattern="firstVisit.field" data-edit-roles="transparent,0,0,4,3,2" className={s.chalkField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={pebble}
                     palette={HOLDS}
@@ -425,7 +425,7 @@ export default function CruxClimbingPage() {
 
         {/* ----------------------------------------------------------- HOURS */}
         <section id="hours" className={s.hours} aria-labelledby="hours-h">
-          <div className={s.hoursField} aria-hidden="true">
+          <div data-edit-pattern="hours.field" data-edit-roles="transparent,4,4,3,2" className={s.hoursField} aria-hidden="true">
             <TabbiedPattern
               pattern={pebble}
               palette={NIGHT}
@@ -477,7 +477,7 @@ export default function CruxClimbingPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footDraws} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,1,0" className={s.footDraws} aria-hidden="true">
           <TabbiedPattern
             pattern={jibboom}
             palette={ROPE}

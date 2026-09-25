@@ -381,7 +381,7 @@ export default function HeronPointGolfPage() {
 
         {/* ------------------------------------------------------- CLUBHOUSE */}
         <section id="clubhouse" className={s.clubhouse} aria-labelledby="clubhouse-h">
-          <span className={s.ball} aria-hidden="true">
+          <span data-edit-pattern="clubhouse.field" data-edit-roles="transparent,4,5" className={s.ball} aria-hidden="true">
             <TabbiedPattern
               pattern={bobbinet}
               palette={BALL}
@@ -408,7 +408,7 @@ export default function HeronPointGolfPage() {
 
         {/* ----------------------------------------------------------- RATES */}
         <section id="rates" className={s.rates} aria-labelledby="rates-h">
-          <div className={s.ratesMown} aria-hidden="true">
+          <div data-edit-pattern="rates.field" data-edit-roles="transparent,5,3" className={s.ratesMown} aria-hidden="true">
             <TabbiedPattern
               pattern={hurdle}
               palette={STRIPES}
@@ -522,7 +522,7 @@ export default function HeronPointGolfPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footMown} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,5" className={s.footMown} aria-hidden="true">
           <TabbiedPattern
             pattern={hurdle}
             palette={MOWN}

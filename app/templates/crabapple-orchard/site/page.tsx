@@ -279,7 +279,7 @@ export default function CrabappleOrchardPage() {
               ))}
             </ol>
             <div className={s.crate}>
-              <div className={s.crateLeaves} aria-hidden="true">
+              <div data-edit-pattern="picking.field" data-edit-roles="transparent,3,6,4" className={s.crateLeaves} aria-hidden="true">
                 <TabbiedPattern
                   pattern={ivy}
                   palette={HEDGE}
@@ -416,7 +416,7 @@ export default function CrabappleOrchardPage() {
           <div className={s.faqHead}>
             <p data-edit="faq.secKick" data-edit-max="240" data-edit-multiline className={s.secKick}>Before you come</p>
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Questions we hear at the gate</h2>
-            <div className={s.faqApple} aria-hidden="true">
+            <div data-edit-pattern="faq.field" data-edit-roles="transparent,3,4,2,1" className={s.faqApple} aria-hidden="true">
               <TabbiedPattern
                 pattern={frond}
                 palette={LEAVES}
@@ -440,7 +440,7 @@ export default function CrabappleOrchardPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footHedge} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,4" className={s.footHedge} aria-hidden="true">
           <TabbiedPattern
             pattern={ivy}
             palette={VINE}

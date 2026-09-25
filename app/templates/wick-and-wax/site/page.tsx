@@ -481,7 +481,7 @@ export default function WickAndWaxPage() {
               </li>
             ))}
           </ol>
-          <div className={s.careBand} aria-hidden="true">
+          <div data-edit-pattern="care.field" data-edit-roles="transparent,2,3,4" className={s.careBand} aria-hidden="true">
             <TabbiedPattern
               pattern={roundpair}
               palette={LEAF_ROW}
@@ -524,7 +524,7 @@ export default function WickAndWaxPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footGlow} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3" className={s.footGlow} aria-hidden="true">
           <TabbiedPattern
             pattern={bokeh}
             palette={GLOW}

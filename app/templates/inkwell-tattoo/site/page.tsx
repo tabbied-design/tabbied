@@ -455,7 +455,7 @@ export default function InkwellTattooPage() {
             {ARTISTS.map((a, i) => (
               <article key={a.name} className={s.artist}>
                 <div className={s.artistPlate}>
-                  <span className={s.plateStars} aria-hidden="true">
+                  <span data-edit-pattern={`artist.field.${i}`} data-edit-roles="transparent,2,4,3" className={s.plateStars} aria-hidden="true">
                     <TabbiedPattern
                       pattern={sparkle}
                       palette={STARS}
@@ -561,7 +561,7 @@ export default function InkwellTattooPage() {
             </div>
 
             <form className={s.form} action="#">
-              <div className={s.formBand} aria-hidden="true">
+              <div data-edit-pattern="book.field" data-edit-roles="transparent,1,2,0,1,2,4" className={s.formBand} aria-hidden="true">
                 <TabbiedPattern
                   pattern={diamondconfetti}
                   palette={FILLER}
@@ -651,7 +651,7 @@ export default function InkwellTattooPage() {
               </ul>
             </div>
             <div className={s.visitArt}>
-              <div className={s.visitDisc} aria-hidden="true">
+              <div data-edit-pattern="visit.field" data-edit-roles="transparent,3,0,4,0,4,0,4" className={s.visitDisc} aria-hidden="true">
                 <TabbiedPattern
                   pattern={diamondconfetti}
                   palette={DISC}

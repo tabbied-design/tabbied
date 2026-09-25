@@ -381,7 +381,7 @@ export default function RestoreClinicPage() {
             {TEAM.map((p, i) => (
               <article key={p.name} className={s.person}>
                 <div className={`${s.portraitFrame} ${s[`frame_${p.frame}`]}`}>
-                  <div className={s.frameField} aria-hidden="true">
+                  <div data-edit-pattern={`person.field.${i}`} data-edit-roles="transparent,transparent,5" className={s.frameField} aria-hidden="true">
                     <TabbiedPattern
                       pattern={teardropleaves}
                       palette={FRAME_LEAVES}
@@ -464,7 +464,7 @@ export default function RestoreClinicPage() {
 
         {/* -------------------------------------------------------- INSURANCE */}
         <section id="insurance" className={s.insurance} aria-labelledby="insurance-h">
-          <div className={s.insuranceField} aria-hidden="true">
+          <div data-edit-pattern="insurance.field" data-edit-roles="transparent,transparent,2" className={s.insuranceField} aria-hidden="true">
             <TabbiedPattern
               pattern={teardropleaves}
               palette={NIGHT_LEAVES}
@@ -592,7 +592,7 @@ export default function RestoreClinicPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footStrip} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,4,3" className={s.footStrip} aria-hidden="true">
           <TabbiedPattern
             pattern={pebble}
             palette={SHORE}

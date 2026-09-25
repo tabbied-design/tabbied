@@ -228,7 +228,7 @@ export default function FormAndFieldPage() {
             </h1>
           </div>
           <div className={s.introSide}>
-            <div className={s.swatch} aria-hidden="true">
+            <div data-edit-pattern="intro.field" data-edit-roles="transparent,4,0,3,4" className={s.swatch} aria-hidden="true">
               <TabbiedPattern
                 pattern={isometricweave}
                 palette={WEAVE}
@@ -457,7 +457,7 @@ export default function FormAndFieldPage() {
                 inks={['var(--ink)', 'var(--paper)']}
                 className={s.faqArt}
               />
-              <div className={s.plinth} aria-hidden="true">
+              <div data-edit-pattern="questions.field" data-edit-roles="transparent,3,4,2,3" className={s.plinth} aria-hidden="true">
                 <TabbiedPattern
                   pattern={circuit}
                   palette={PLINTH}
@@ -559,7 +559,7 @@ export default function FormAndFieldPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footPlan} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,4,2,3" className={s.footPlan} aria-hidden="true">
           <TabbiedPattern
             pattern={circuit}
             palette={WIRING}

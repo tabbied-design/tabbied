@@ -377,7 +377,7 @@ export default function CleaverAndCoPage() {
               <p data-edit="week.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>Stock bones are free on Tuesdays, while they last.</p>
             </div>
             <div className={s.hook}>
-              <div className={s.hookTiles} aria-hidden="true">
+              <div data-edit-pattern="week.field" data-edit-roles="transparent,4,3" className={s.hookTiles} aria-hidden="true">
                 <TabbiedPattern
                   pattern={hurdle}
                   palette={TILES}
@@ -526,7 +526,7 @@ export default function CleaverAndCoPage() {
             </div>
           </div>
           <div className={s.formWall}>
-            <div className={s.formHatch} aria-hidden="true">
+            <div data-edit-pattern="visit.field" data-edit-roles="transparent,3,4,2" className={s.formHatch} aria-hidden="true">
               <TabbiedPattern
                 pattern={reedpen}
                 palette={HATCH}
@@ -574,7 +574,7 @@ export default function CleaverAndCoPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footTiles} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,4,3" className={s.footTiles} aria-hidden="true">
           <TabbiedPattern
             pattern={hurdle}
             palette={TILES}

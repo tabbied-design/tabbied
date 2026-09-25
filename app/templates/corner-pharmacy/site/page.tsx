@@ -223,7 +223,7 @@ export default function CornerPharmacyPage() {
             {/* Delivery carries all three engravings, as the bag does. */}
             <div className={`${s.service} ${s.delivery}`}>
               <div className={s.bag} aria-hidden="true">
-                <div className={s.bagMat} aria-hidden="true">
+                <div data-edit-pattern="services.field" data-edit-roles="transparent,4,0" className={s.bagMat} aria-hidden="true">
                   <TabbiedPattern
                     pattern={crosslattice}
                     palette={MAT}
@@ -329,7 +329,7 @@ export default function CornerPharmacyPage() {
                 is what you pay without insurance.
               </p>
             </div>
-            <div className={s.crossSign} aria-hidden="true">
+            <div data-edit-pattern="vaccines.field" data-edit-roles="transparent,4,2" className={s.crossSign} aria-hidden="true">
               <TabbiedPattern
                 pattern={crosslattice}
                 palette={SIGN}
@@ -472,7 +472,7 @@ export default function CornerPharmacyPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBlooms} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,1,2,3,4" className={s.footBlooms} aria-hidden="true">
           <TabbiedPattern
             pattern={midnightblossoms}
             palette={NIGHT}

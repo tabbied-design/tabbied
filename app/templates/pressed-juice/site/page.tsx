@@ -409,7 +409,7 @@ export default function PressedJuicePage() {
         {/* ----------------------------------------------------------- BOWLS */}
         <section id="bowls" className={s.bowls} aria-labelledby="bowls-h">
           <div className={s.bowlArt}>
-            <div className={s.bowlLeaves} aria-hidden="true">
+            <div data-edit-pattern="bowls.field" data-edit-roles="transparent,0,2,6" className={s.bowlLeaves} aria-hidden="true">
               <TabbiedPattern
                 pattern={lobe}
                 palette={LEAVES}
@@ -483,7 +483,7 @@ export default function PressedJuicePage() {
           </ul>
           <div className={s.faq}>
             <h3 data-edit="locations.faqHead" data-edit-max="40" className={s.faqHead}>Good to know</h3>
-            <div className={s.faqSeeds} aria-hidden="true">
+            <div data-edit-pattern="locations.field" data-edit-roles="transparent,2,3,4,6" className={s.faqSeeds} aria-hidden="true">
               <TabbiedPattern
                 pattern={pebble}
                 palette={SEEDS}
@@ -505,7 +505,7 @@ export default function PressedJuicePage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footLeaves} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,0,2,6" className={s.footLeaves} aria-hidden="true">
           <TabbiedPattern
             pattern={lobe}
             palette={LEAVES}

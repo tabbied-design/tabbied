@@ -380,7 +380,7 @@ export default function TheRialtoCinemaPage() {
         {/* --------------------------------------------------------- SCREENS */}
         <section id="screens" className={s.screens} aria-labelledby="screens-h">
           <div className={s.screensArt}>
-            <div className={s.valance} aria-hidden="true">
+            <div data-edit-pattern="screens.field" data-edit-roles="transparent,2,5" className={s.valance} aria-hidden="true">
               <TabbiedPattern
                 pattern={picket}
                 palette={CURTAIN}
@@ -478,7 +478,7 @@ export default function TheRialtoCinemaPage() {
               </ul>
             </div>
             <div className={s.barArt}>
-              <div className={s.foyerLights} aria-hidden="true">
+              <div data-edit-pattern="bar.field" data-edit-roles="transparent,3,3,2" className={s.foyerLights} aria-hidden="true">
                 <TabbiedPattern
                   pattern={lantern}
                   palette={FOYER}
@@ -556,7 +556,7 @@ export default function TheRialtoCinemaPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBulbs} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,5" className={s.footBulbs} aria-hidden="true">
           <TabbiedPattern
             pattern={lantern}
             palette={BULBS}

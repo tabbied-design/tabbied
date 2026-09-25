@@ -265,7 +265,7 @@ export default function KeelWealthPage() {
 
         {/* --------------------------------------------------------- COMPARE */}
         <section className={s.compare} aria-labelledby="compare-h">
-          <div className={s.compareChart} aria-hidden="true">
+          <div data-edit-pattern="compare.field" data-edit-roles="transparent,2,3,2" className={s.compareChart} aria-hidden="true">
             <TabbiedPattern
               pattern={contourlines}
               palette={SOUNDING}
@@ -326,7 +326,7 @@ export default function KeelWealthPage() {
 
         {/* --------------------------------------------------------- PROCESS */}
         <section id="process" className={s.process} aria-labelledby="process-h">
-          <div className={s.processSwell} aria-hidden="true">
+          <div data-edit-pattern="process.field" data-edit-roles="transparent,3,2" className={s.processSwell} aria-hidden="true">
             <TabbiedPattern
               pattern={warpribbon}
               palette={SWELL}
@@ -402,7 +402,7 @@ export default function KeelWealthPage() {
                 What a regulator would ask us, answered before you have to. Our
                 full client agreement and brochure are free on request.
               </p>
-              <div className={s.seal} aria-hidden="true">
+              <div data-edit-pattern="disclosures.field" data-edit-roles="transparent,2,3,4" className={s.seal} aria-hidden="true">
                 <TabbiedPattern
                   pattern={contourlines}
                   palette={SEAL}

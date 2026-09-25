@@ -419,7 +419,7 @@ export default function PineconeCampPage() {
               </p>
             </div>
             <div className={s.tentBed}>
-              <div className={s.tentLeaves} aria-hidden="true">
+              <div data-edit-pattern="day.field" data-edit-roles="transparent,2,4,5" className={s.tentLeaves} aria-hidden="true">
                 <TabbiedPattern
                   pattern={frond}
                   palette={LEAVES}
@@ -499,7 +499,7 @@ export default function PineconeCampPage() {
               invoice. A $75 deposit a week confirms them.
             </p>
             <div className={s.canoeBay}>
-              <div className={s.fireflies} aria-hidden="true">
+              <div data-edit-pattern="enroll.field" data-edit-roles="transparent,3,5,3,2" className={s.fireflies} aria-hidden="true">
                 <TabbiedPattern
                   pattern={driftspiral}
                   palette={SPARKS}
@@ -591,7 +591,7 @@ export default function PineconeCampPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.hedge} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="5,2,4,3" className={s.hedge} aria-hidden="true">
           <TabbiedPattern
             pattern={frond}
             palette={HEDGE}
