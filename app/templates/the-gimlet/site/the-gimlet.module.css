@@ -912,6 +912,24 @@
     border-left: 0;
     border-top: 1px solid var(--hair);
   }
+
+  /* No margins to fill: the stars become a strip under the buttons. */
+  .hero {
+    padding-bottom: 8rem;
+  }
+
+  .heroStarsLeft {
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    height: 5rem;
+    border-right: 0;
+    border-top: 1px solid var(--hair);
+  }
+
+  .heroStarsRight {
+    display: none;
+  }
 }
 
 @media (max-width: 600px) {
