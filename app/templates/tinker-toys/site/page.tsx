@@ -46,7 +46,8 @@ const AGES: Age[] = [
     id: 'tiny',
     band: '0-2',
     label: 'Babies and toddlers',
-    blurb: 'Things to hold, chew, stack and drop again. Nothing smaller than a toilet-paper tube, and nothing that needs a battery.',
+    blurb:
+      'Things to hold, chew, stack and drop again. Nothing smaller than a toilet-paper tube, and nothing that needs a battery.',
     look: 'Solid wood, water-based paint, washable cloth.',
     picks: [
       { name: 'Rainbow ring stacker', price: '$24' },
@@ -59,7 +60,8 @@ const AGES: Age[] = [
     id: 'small',
     band: '3-5',
     label: 'Preschool',
-    blurb: 'Pretend play and first puzzles. Trains that link with magnets, kitchens with real-feeling pans, and puzzles of 12 to 48 pieces.',
+    blurb:
+      'Pretend play and first puzzles. Trains that link with magnets, kitchens with real-feeling pans, and puzzles of 12 to 48 pieces.',
     look: 'Toys that grow a story rather than tell one.',
     picks: [
       { name: 'Magnetic train, 3 cars', price: '$38' },
@@ -72,7 +74,8 @@ const AGES: Age[] = [
     id: 'middle',
     band: '6-8',
     label: 'Early readers',
-    blurb: 'Building sets, first board games and the rocket everyone asks about. Instructions they can read on their own, mostly.',
+    blurb:
+      'Building sets, first board games and the rocket everyone asks about. Instructions they can read on their own, mostly.',
     look: 'Two players or more, and nothing over an hour.',
     picks: [
       { name: 'Stomp rocket, 3 rockets', price: '$29' },
@@ -358,7 +361,12 @@ export default function TinkerToysPage() {
                     <Artwork
                       slug="tinker-toys-rings"
                       alt="A stacking ring toy in two colors"
-                      inks={{ red: 'var(--yellow)', blue: 'var(--pink)', yellow: 'var(--cream)', black: 'var(--cream)' }}
+                      inks={{
+                        red: 'var(--yellow)',
+                        blue: 'var(--pink)',
+                        yellow: 'var(--cream)',
+                        black: 'var(--cream)',
+                      }}
                       className={s.artRings}
                     />
                   ) : null}
@@ -387,7 +395,9 @@ export default function TinkerToysPage() {
         <section id="featured" className={s.featured} aria-labelledby="featured-h">
           <div className={s.secHead}>
             <h2 id="featured-h">On the front table this month</h2>
-            <p className={s.secNote}>Six things we cannot keep in stock. Ask at the counter and we will set one aside.</p>
+            <p className={s.secNote}>
+              Six things we cannot keep in stock. Ask at the counter and we will set one aside.
+            </p>
           </div>
           <ul className={s.toys}>
             {TOYS.map((t, i) => (
@@ -467,7 +477,7 @@ export default function TinkerToysPage() {
             with a ribbon drawn in CSS. */}
         <section id="gifts" className={s.gifts} aria-labelledby="gifts-h">
           <div className={s.gift} aria-hidden="true">
-            <div className={s.giftPaper}>
+            <div className={s.giftPaper} aria-hidden="true">
               <TabbiedPattern
                 pattern={stitch}
                 palette={PAPER}
@@ -490,8 +500,8 @@ export default function TinkerToysPage() {
               <em>on everything.</em>
             </h2>
             <p className={s.secNote}>
-              Bring the toy to the counter and choose a paper. It takes us about five minutes, and we have never once run
-              out of tape.
+              Bring the toy to the counter and choose a paper. It takes us about five minutes, and we have never once
+              run out of tape.
             </p>
             <dl className={s.wrapList}>
               {WRAP.map(([k, v]) => (
@@ -517,7 +527,9 @@ export default function TinkerToysPage() {
             <div className={s.visitCard}>
               <h3>Find us</h3>
               <p className={s.visitBig}>27 Orchard Street</p>
-              <p>Across from the library, next to the ice cream shop. Two-hour parking on the street and behind the bank.</p>
+              <p>
+                Across from the library, next to the ice cream shop. Two-hour parking on the street and behind the bank.
+              </p>
             </div>
             <div className={s.visitCard}>
               <h3>Hours</h3>

@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useId, type CSSProperties, type ReactNode } from 'react';
 import artworkManifest from 'lib/generated/artwork';
 
 /**
@@ -18,9 +18,11 @@ import artworkManifest from 'lib/generated/artwork';
  *   mono              one ink painted through the picture as a CSS mask
  *   layers (vector)   inline SVG, one path per key color, each filled with an ink
  *   layers (masks)    one masked layer per key color, stacked
- *   tone, duotone     an SVG filter maps shadows to inks[0], light to inks[1]
- *   tone, tint        the same mapping in CSS: inks[0] through the picture's
- *                     alpha, inks[1] through its luminance. Blend modes were
+ *   tone, duotone     an SVG filter maps shadows to the darker of the two
+ *                     inks and light to the lighter, whichever order they
+ *                     come in, so a re-color to a dark palette is no negative
+ *   tone, tint        the same mapping in CSS: the darker ink through the
+ *                     picture's alpha, the lighter through its luminance. Blend modes were
  *                     tried first and dropped: multiply-then-lighten only
  *                     works while inks[0] is the darker, and a re-color to a
  *                     dark palette flips that and paints a flat box.
@@ -54,7 +56,7 @@ type ArtworkProps = {
   alt: string;
   /**
    * The colors, normally `var(--ink)` and the like. A list for mono (the one
-   * ink) and a photograph (the shadow color, then the light); for layers, an
+   * ink) and a photograph (two inks; the darker takes the shadows); for layers, an
    * object keyed by layer name (`{ red: 'var(--accent)', black: 'var(--ink)' }`),
    * since a picture may lack one of its prompt's keys and a list would shift.
    */
@@ -74,13 +76,6 @@ type ArtworkProps = {
 const src = (entry: Entry, file: string) => `${entry.base}/${file}?v=${entry.hash.slice(0, 8)}`;
 const maskUrl = (entry: Entry, file: string) => `url(${src(entry, file)})`;
 
-/** A short, stable suffix, so two filters on one page never share an id. */
-function idFor(slug: string, inks: string[]) {
-  let h = 5381;
-  for (const c of `${slug}|${inks.join('|')}`) h = ((h << 5) + h + c.charCodeAt(0)) | 0;
-  return `artwork-${slug}-${(h >>> 0).toString(36)}`;
-}
-
 export function Artwork({
   slug,
   alt,
@@ -92,6 +87,7 @@ export function Artwork({
   children,
   ...rest
 }: ArtworkProps) {
+  const reactId = useId();
   const entry = manifest[slug];
 
   if (!entry) {
@@ -187,7 +183,7 @@ export function Artwork({
   }
 
   // duotone: luminance picks between the two inks, the file's alpha is kept.
-  const id = idFor(slug, Object.values(inks));
+  const id = `artwork-${slug}-${reactId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
   return (
     <svg
       {...label}
@@ -198,11 +194,15 @@ export function Artwork({
       preserveAspectRatio={aspect}
       style={{ ...box, ...inkProperties, ...style } as CSSProperties}>
       <filter id={id} x="0" y="0" width="1" height="1" colorInterpolationFilters="sRGB">
+        {/* The darker of the two inks takes the shadows whichever it is, so a
+            re-color that swaps light for dark does not print a negative. */}
+        <feFlood style={{ floodColor: 'var(--art-1)' }} result="one" />
+        <feFlood style={{ floodColor: 'var(--art-2)' }} result="two" />
+        <feBlend in="one" in2="two" mode="darken" result="dark" />
+        <feBlend in="one" in2="two" mode="lighten" result="bright" />
         <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -0.2126 -0.7152 -0.0722 0 1" result="shadow" />
-        <feFlood style={{ floodColor: 'var(--art-1)' }} result="dark" />
         <feComposite in="dark" in2="shadow" operator="in" result="darkPart" />
         <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0.2126 0.7152 0.0722 0 0" result="light" />
-        <feFlood style={{ floodColor: 'var(--art-2)' }} result="bright" />
         <feComposite in="bright" in2="light" operator="in" result="lightPart" />
         <feComposite in="darkPart" in2="lightPart" operator="arithmetic" k2="1" k3="1" result="mixed" />
         <feComposite in="mixed" in2="SourceAlpha" operator="in" />

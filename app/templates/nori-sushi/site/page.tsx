@@ -459,8 +459,8 @@ export default function NoriSushiPage() {
             <p className={s.kicker}>Tuesday to Saturday</p>
             <h2 id="reserve-h">Reserve a seat</h2>
             <p className={s.lede}>
-              Bookings open on the first of each month for the month after. The counter seats eight; for a party of
-              six to eight, ask about taking the whole counter.
+              Bookings open on the first of each month for the month after. The counter seats eight; for a party of six
+              to eight, ask about taking the whole counter.
             </p>
             <dl className={s.policies}>
               {POLICIES.map(([k, v]) => (

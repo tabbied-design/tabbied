@@ -846,8 +846,8 @@
 .postmark {
   position: absolute;
   z-index: 1;
-  top: 4.8rem;
-  right: 4.6rem;
+  top: 5rem;
+  right: 5.1rem;
   display: grid;
   place-items: center;
   width: 4.4rem;

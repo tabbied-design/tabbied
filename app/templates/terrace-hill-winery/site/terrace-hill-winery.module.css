@@ -994,11 +994,16 @@
   }
 
   .secHead {
-    grid-template-columns: 4rem minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .secRule {
+    width: 3rem;
   }
 
   .grapes {
-    width: 4rem;
+    width: 4.5rem;
   }
 
   .tasting {

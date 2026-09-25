@@ -24,7 +24,7 @@ const PALE = '#E8E0D4';
 const HERO_JAR = [AMBER, AMBER, WAX];
 const WOODS = [PALE, AMBER, SMOKE];
 const FLORALS = [HEATHER, HEATHER, PALE, AMBER, WAX];
-const GARDEN = [PALE, PALE, INK];
+const GARDEN = [SMOKE, SMOKE, WAX];
 const GLOW = ['transparent', AMBER, HEATHER];
 
 const NAV = [

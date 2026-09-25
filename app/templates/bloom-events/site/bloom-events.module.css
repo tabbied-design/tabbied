@@ -592,7 +592,7 @@
   inset: 0;
   z-index: -1;
   overflow: hidden;
-  opacity: 0.75;
+  opacity: 0.6;
 }
 
 .wordsInner {

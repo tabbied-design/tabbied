@@ -303,8 +303,9 @@ svg.artwork {
 }
 
 /* A photograph in two inks, by masks: the shadow ink through the picture's
-   alpha, the light ink over it through its luminance. Correct whichever ink
-   is the darker, which blend modes are not. */
+   alpha, the light ink over it through its luminance. Blend modes over the
+   picture itself (multiply, then lighten) were tried first and paint a flat
+   box once a re-color makes the shadow ink the lighter one. */
 .artwork--tint {
   isolation: isolate;
 }
@@ -319,12 +320,19 @@ svg.artwork {
   mask: var(--artwork-mask) center / contain no-repeat;
 }
 
+/* Each layer is both inks blended, darken for the shadows and lighten for
+   the light, so the darker ink takes the shadows whichever order they come
+   in and a re-color to a dark palette is no negative. */
 .artwork--tint::before {
-  background: var(--art-1);
+  background-color: var(--art-1);
+  background-image: linear-gradient(var(--art-2), var(--art-2));
+  background-blend-mode: darken;
 }
 
 .artwork--tint::after {
-  background: var(--art-2);
+  background-color: var(--art-1);
+  background-image: linear-gradient(var(--art-2), var(--art-2));
+  background-blend-mode: lighten;
   mask-mode: luminance;
 }
 
