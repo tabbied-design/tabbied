@@ -95,15 +95,6 @@ const PICKS: Pick[] = [
     price: 'Paperback, $18',
   },
   {
-    section: 'Practical',
-    title: 'How to Fix a Chair',
-    author: 'Anders Holm',
-    review:
-      'A joiner explains glue, joints and patience with clear drawings. I fixed the wobbly stool behind the counter with it; you may sit on it to check.',
-    by: 'Picked by Ama',
-    price: 'Paperback, $24',
-  },
-  {
     section: "Children's, ages 5-8",
     title: 'Moth and the Midnight Bus',
     author: 'Sadie Quill',
@@ -271,7 +262,7 @@ export default function DogEaredBooksPage() {
             <span>Page 1</span>
           </div>
           <h2 className={s.headline} id="picks-h">
-            Eight books the staff cannot stop pressing into people's hands
+            Seven books the staff cannot stop pressing into people's hands
           </h2>
           <p className={s.standfirst}>
             Chosen by the four of us who work here, read cover to cover, and on the

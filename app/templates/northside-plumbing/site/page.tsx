@@ -456,7 +456,7 @@ export default function NorthsidePlumbingPage() {
                 </div>
                 <div>
                   <dt>Email</dt>
-                  <dd><a href="mailto:office@northsideplumbing.example">office@northsideplumbing.example</a></dd>
+                  <dd><a href="mailto:office@northside.example">office@northside.example</a></dd>
                 </div>
               </dl>
             </div>

@@ -17,7 +17,7 @@
   --pad: clamp(4rem, 9vw, 7.5rem);
   --rule: color-mix(in srgb, var(--chalk) 14%, transparent);
   --soft: color-mix(in srgb, var(--chalk) 72%, transparent);
-  --display: 'Big Shoulders Display', 'Oswald', 'Arial Narrow', sans-serif;
+  --display: 'Big Shoulders Display', Impact, 'Arial Narrow', sans-serif;
 
   font-family: 'Public Sans', 'Helvetica Neue', Arial, sans-serif;
   font-size: 1rem;
@@ -174,7 +174,7 @@
   margin: 0 auto;
   padding: 0 var(--gut);
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 24rem);
   align-items: end;
   gap: 2rem clamp(2rem, 6vw, 6rem);
 }

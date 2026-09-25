@@ -197,7 +197,7 @@ const HOURS = [
   ['Monday to Friday', '7:30-6:00'],
   ['Saturday', '8:00-1:00'],
   ['Sunday', 'Closed'],
-  ['Inspections, walk-in', 'Weekdays 8:00-3:00'],
+  ['Inspections', 'Mon-Fri 8:00-3:00'],
 ];
 
 export default function KesslerAutoPage() {
@@ -435,7 +435,7 @@ export default function KesslerAutoPage() {
             </div>
             <div className={s.warrantyCopy}>
               <p className={s.secNo}>04</p>
-              <h2 id="warranty-h">Warranty: 24 months, 24,000 miles</h2>
+              <h2 id="warranty-h">Two years or 24,000 miles on every repair</h2>
               <ul className={s.warrantyList}>
                 {WARRANTY.map((w) => (
                   <li key={w}>{w}</li>

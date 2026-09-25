@@ -436,7 +436,7 @@
 .off::before {
   width: 0.7rem;
   height: 1px;
-  background: color-mix(in srgb, var(--crust) 30%, transparent);
+  background: var(--gray);
 }
 
 /* ------------------------------------------------------------------- orders */

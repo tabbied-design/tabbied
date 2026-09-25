@@ -600,7 +600,7 @@
 }
 
 .footInner {
-  max-width: calc(var(--measure) + 26rem);
+  max-width: calc(68rem - 2 * var(--gut));
   margin: 0 auto;
   padding-top: 2rem;
   border-top: 1px solid var(--line);

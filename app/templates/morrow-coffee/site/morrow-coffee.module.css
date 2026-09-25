@@ -149,7 +149,7 @@
   inset: 0;
   overflow: hidden;
   border-radius: 50%;
-  outline: 1px solid color-mix(in srgb, var(--oat) 22%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--gray) 70%, transparent);
   outline-offset: 12px;
 }
 
@@ -667,7 +667,25 @@
 }
 
 /* --------------------------------------------------------------- responsive
-   Below 960px the halves stack: the left half becomes the top of the page
+   Between 960px and 1180px the right half is too narrow for side-by-side
+   menu groups and plan cards, so they stack while the split holds. */
+
+@media (min-width: 961px) and (max-width: 1180px) {
+  .menuGrid,
+  .plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plans li {
+    grid-template-rows: none;
+  }
+
+  .planWhat {
+    margin-bottom: 0.8rem;
+  }
+}
+
+/* Below 960px the halves stack: the left half becomes the top of the page
    and scrolls away like any other section. */
 
 @media (max-width: 960px) {

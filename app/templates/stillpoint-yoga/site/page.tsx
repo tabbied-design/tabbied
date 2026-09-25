@@ -17,7 +17,7 @@ const PALE = '#E6E0D5';
 const CLAY = '#C0795A';
 
 const ROSETTE = ['transparent', SAGE, CLAY, STONE];
-const DRIFT = ['transparent', SAGE, PALE, CLAY];
+const DRIFT = ['transparent', STONE, SAGE, PALE];
 
 const NAV = [
   ['Timetable', '#timetable'],
@@ -444,7 +444,7 @@ export default function StillpointYogaPage() {
                 palette={DRIFT}
                 fit="grid"
                 cellSize={34}
-                options={{ frequency: 0.55 }}
+                options={{ frequency: 0.45 }}
                 redrawInterval={9000}
                 style={{ position: 'absolute', inset: 0 }}
               />

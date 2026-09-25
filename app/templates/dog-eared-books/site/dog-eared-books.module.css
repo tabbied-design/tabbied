@@ -205,7 +205,7 @@ main > .sec:first-child {
   color: color-mix(in srgb, var(--ink) 70%, transparent);
 }
 
-.headline {
+.page .headline {
   margin-top: clamp(1.2rem, 2.6vw, 1.8rem);
   max-width: 24ch;
   font-size: clamp(2rem, 4.3vw, 3.5rem);
@@ -275,7 +275,7 @@ main > .sec:first-child {
   color: var(--blue);
 }
 
-.leadTitle {
+.page .leadTitle {
   margin-top: 0.6rem;
   font-size: clamp(1.8rem, 2.8vw, 2.4rem);
   font-weight: 600;
@@ -337,7 +337,7 @@ main > .sec:first-child {
   padding-bottom: 1.6rem;
 }
 
-.pickTitle {
+.page .pickTitle {
   margin-top: 0.35rem;
   font-size: 1.45rem;
   font-weight: 700;
@@ -516,8 +516,6 @@ main > .sec:first-child {
 
 .ordersCols p {
   margin: 0 0 1rem;
-  text-align: justify;
-  hyphens: auto;
 }
 
 /* The boxed advertisement: a double rule all round, a band of halftone
@@ -638,8 +636,12 @@ main > .sec:first-child {
   aspect-ratio: 4 / 5;
 }
 
-.shelvesGrid .headline {
+.page .shelvesGrid .headline {
   margin-top: 0;
+}
+
+.page .newIntro .headline {
+  font-size: clamp(2rem, 3.4vw, 2.8rem);
 }
 
 .shelves {

@@ -307,9 +307,9 @@ export default function TallyAndCoPage() {
               <TabbiedPattern
                 pattern={trigram}
                 palette={MARKS}
-                options={{ frequency: 0.6, roundedCorners: false }}
+                options={{ frequency: 0.8, roundedCorners: false }}
                 fit="grid"
-                cellSize={40}
+                cellSize={36}
                 redrawInterval={8600}
                 style={{ position: 'absolute', inset: 0 }}
               />
