@@ -467,9 +467,13 @@
 }
 
 .table caption {
-  display: grid;
   text-align: left;
   padding-bottom: 1rem;
+}
+
+.table caption strong,
+.table caption span {
+  display: block;
 }
 
 .table caption strong {
