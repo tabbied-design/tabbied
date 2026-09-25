@@ -1,0 +1,991 @@
+.page {
+  --paper: #ffffff;
+  --ink: #111111;
+  --signal: #3b5bdb;
+  --gray: #8c8c8c;
+  --pale: #ededed;
+  --col: clamp(300px, 27vw, 400px);
+  --gut: clamp(1.25rem, 5vw, 4rem);
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --measure: 52rem;
+  --soft: color-mix(in srgb, var(--ink) 66%, transparent);
+  --rule: 1px solid var(--pale);
+
+  font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   MAREN HOLT - independent brand strategist
+   A CV, not a brochure. The left column is the profile card and the site's
+   header at once: it holds still while the record scrolls beside it. One
+   serif for names and claims, one sans for everything else, black on white,
+   and a single blue that means "this is the point".
+   ========================================================================== */
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: var(--col) minmax(0, 1fr);
+  align-items: start;
+}
+
+/* ----------------------------------------------------------------- profile
+   Sticky, full height, a faint grey ground so the column reads as a card
+   pinned to the page. Its own scroll takes over on a short window. */
+
+.profile {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  padding: clamp(1.6rem, 3.2vh, 2.4rem) clamp(1.4rem, 2.4vw, 2.4rem);
+  background: color-mix(in srgb, var(--pale) 42%, var(--paper));
+  border-right: var(--rule);
+  scrollbar-width: thin;
+}
+
+.profileTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.name {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(2.1rem, 2.8vw, 2.7rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+.role {
+  margin: 0.55rem 0 0;
+  font-size: 0.95rem;
+  color: var(--soft);
+}
+
+/* The portrait slot, filled by the primary field instead of a photograph. */
+.plate {
+  position: relative;
+  height: clamp(96px, 17vh, 176px);
+  margin: clamp(1.1rem, 2.6vh, 1.8rem) 0;
+  overflow: hidden;
+  background: var(--paper);
+  border: var(--rule);
+}
+
+.bio {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.status {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.7rem;
+  align-items: baseline;
+  margin-top: clamp(1rem, 2.4vh, 1.6rem);
+}
+
+.statusDot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--signal) 18%, transparent);
+  transform: translateY(-0.05rem);
+}
+
+.statusText {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.statusNote {
+  grid-column: 2;
+  margin: 0.1rem 0 0;
+  font-size: 0.82rem;
+  color: var(--soft);
+}
+
+.nav {
+  counter-reset: nav;
+  display: grid;
+  margin-top: clamp(1.2rem, 3vh, 2.2rem);
+  border-bottom: var(--rule);
+}
+
+.nav a {
+  counter-increment: nav;
+  display: flex;
+  gap: 0.9rem;
+  align-items: baseline;
+  padding: clamp(0.3rem, 0.9vh, 0.5rem) 0;
+  border-top: var(--rule);
+  font-size: 0.95rem;
+  transition: color 160ms ease, padding-left 160ms ease;
+}
+
+.nav a::before {
+  content: counter(nav, decimal-leading-zero);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--gray);
+}
+
+.nav a:hover {
+  color: var(--signal);
+  padding-left: 0.3rem;
+}
+
+.links {
+  list-style: none;
+  display: grid;
+  gap: 0.25rem;
+  margin: auto 0 0;
+  padding: clamp(1.2rem, 3vh, 2rem) 0 0;
+  font-size: 0.86rem;
+}
+
+.links a {
+  color: var(--soft);
+  border-bottom: 1px solid transparent;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.links a:hover {
+  color: var(--signal);
+  border-color: currentColor;
+}
+
+/* -------------------------------------------------------------------- main */
+
+.main {
+  min-width: 0;
+  padding: 0 clamp(1.5rem, 6vw, 7rem) var(--air);
+}
+
+.intro {
+  max-width: var(--measure);
+  padding-top: clamp(4rem, 12vh, 8rem);
+}
+
+.kicker {
+  margin: 0 0 1.8rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(2.5rem, 4.8vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--signal);
+}
+
+.lede {
+  max-width: 40rem;
+  margin: 2rem 0 0;
+  font-size: clamp(1.02rem, 1.3vw, 1.15rem);
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: clamp(2.8rem, 6vw, 4rem) 0 0;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--ink);
+}
+
+.facts div {
+  margin: 0;
+}
+
+.facts dt {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(2.2rem, 3.4vw, 3rem);
+  line-height: 1;
+}
+
+.facts dd {
+  margin: 0.5rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------ section frame */
+
+.sec {
+  max-width: var(--measure);
+  padding-top: var(--air);
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 0.2rem 1rem;
+  align-items: baseline;
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.secNo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--signal);
+}
+
+.secHead h2 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(2rem, 3.3vw, 2.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.secNote {
+  grid-column: 2;
+  max-width: 36rem;
+  margin: 0.7rem 0 0;
+  font-size: 0.95rem;
+  color: var(--soft);
+}
+
+/* -------------------------------------------------------------------- work
+   A ledger of engagements: year, client, what it was, and the one number
+   the client cared about. */
+
+.work {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: var(--rule);
+}
+
+.workRow {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1.05fr) minmax(0, 1fr);
+  grid-template-areas:
+    'year main outcome'
+    'kind main outcome';
+  grid-template-rows: auto 1fr;
+  gap: 0.3rem 1.5rem;
+  padding: 1.35rem 0 1.4rem;
+  border-top: var(--rule);
+}
+
+.workYear {
+  grid-area: year;
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--soft);
+  padding-top: 0.3rem;
+}
+
+.workKind {
+  grid-area: kind;
+  align-self: start;
+  justify-self: start;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.workMain {
+  grid-area: main;
+}
+
+.workMain h3 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.65rem;
+  line-height: 1.15;
+  transition: color 160ms ease;
+}
+
+.workRow:hover .workMain h3 {
+  color: var(--signal);
+}
+
+.workProject {
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+  color: var(--soft);
+}
+
+.workOutcome {
+  grid-area: outcome;
+  margin: 0;
+  padding-top: 0.35rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------------------------- services */
+
+.services {
+  border-bottom: var(--rule);
+}
+
+.service {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem 9.5rem;
+  gap: 0.35rem 1.5rem;
+  align-items: baseline;
+  padding: 1.25rem 0 1.35rem;
+  border-top: var(--rule);
+}
+
+.service h3 {
+  font-size: 1.12rem;
+  font-weight: 600;
+}
+
+.serviceTime {
+  font-size: 0.88rem;
+  color: var(--soft);
+}
+
+.servicePrice {
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.service p {
+  grid-column: 1 / 3;
+  max-width: 34rem;
+  margin: 0.2rem 0 0;
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.rates {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 2rem 0 0;
+  background: color-mix(in srgb, var(--pale) 55%, var(--paper));
+}
+
+.rates div {
+  padding: 1rem 1.2rem 1.1rem;
+}
+
+.rates div + div {
+  border-left: 1px solid var(--paper);
+}
+
+.rates dt {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.rates dd {
+  margin: 0.3rem 0 0;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.fine {
+  max-width: 36rem;
+  margin: 1.2rem 0 0;
+  font-size: 0.86rem;
+  color: var(--soft);
+}
+
+/* ---------------------------------------------------------------- timeline
+   Dates in their own column, a hairline for the years, one filled dot for
+   the present. */
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.tlWhen {
+  padding-top: 0.2rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--soft);
+}
+
+.tlBody {
+  position: relative;
+  padding: 0 0 2.2rem 1.6rem;
+  border-left: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.timeline li:last-child .tlBody {
+  padding-bottom: 0;
+}
+
+.tlBody::before {
+  content: '';
+  position: absolute;
+  top: 0.55rem;
+  left: -0.3rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  box-sizing: border-box;
+}
+
+.timeline li:first-child .tlBody::before {
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.tlBody h3 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.55rem;
+  line-height: 1.15;
+}
+
+.tlWhere {
+  margin: 0.15rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.tlNote {
+  max-width: 34rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+/* ----------------------------------------------------------------- writing */
+
+.writing {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem;
+}
+
+.listHead {
+  margin-bottom: 0.8rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.pieces {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: var(--rule);
+}
+
+.pieces li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.2rem 1rem;
+  padding: 0.95rem 0 1rem;
+  border-top: var(--rule);
+}
+
+.pieceTitle {
+  margin: 0;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.pieceMeta {
+  grid-column: 1;
+  font-size: 0.84rem;
+  color: var(--soft);
+}
+
+.pieceWhen {
+  grid-column: 2;
+  grid-row: 1;
+  padding-top: 0.25rem;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--soft);
+}
+
+.signup {
+  display: grid;
+  grid-template-columns: auto minmax(0, 20rem) auto;
+  gap: 0.8rem;
+  align-items: center;
+  margin-top: 2.2rem;
+}
+
+.signupLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ quotes */
+
+.quotes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.4rem 2.5rem;
+}
+
+.quote {
+  margin: 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--ink);
+}
+
+.quote:first-child {
+  grid-column: 1 / -1;
+}
+
+.quote blockquote {
+  margin: 0;
+}
+
+.quote blockquote p {
+  margin: 0;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.45rem;
+  line-height: 1.3;
+}
+
+.quote:first-child blockquote p {
+  max-width: 44rem;
+  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+  line-height: 1.2;
+}
+
+.quote figcaption {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 1rem;
+}
+
+.quote cite {
+  font-style: normal;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.quote figcaption span {
+  font-size: 0.84rem;
+  color: var(--soft);
+}
+
+/* -------------------------------------------------------------------- band
+   Halftone dots grow toward the bottom, then the contact form starts. */
+
+.band {
+  position: relative;
+  max-width: var(--measure);
+  height: 168px;
+  margin-top: var(--air);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent 0%, var(--ink) 12%, var(--ink) 88%, transparent 100%);
+}
+
+/* ----------------------------------------------------------------- contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 15rem;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--soft);
+}
+
+.page input,
+.page select,
+.page textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 0;
+  box-sizing: border-box;
+  transition: border-color 160ms ease;
+}
+
+.page textarea {
+  resize: vertical;
+}
+
+.page input::placeholder,
+.page textarea::placeholder {
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.page input:focus,
+.page select:focus,
+.page textarea:focus {
+  border-color: var(--signal);
+}
+
+.button,
+.buttonGhost {
+  justify-self: start;
+  padding: 0.8rem 1.6rem;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--ink);
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.button {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.button:hover {
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.buttonGhost {
+  color: var(--ink);
+  background: transparent;
+}
+
+.buttonGhost:hover {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.direct {
+  display: grid;
+  gap: 1.2rem;
+  margin: 0;
+}
+
+.direct div {
+  padding-top: 0.8rem;
+  border-top: var(--rule);
+}
+
+.direct dt {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.direct dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.direct a {
+  border-bottom: 1px solid var(--pale);
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.direct a:hover {
+  color: var(--signal);
+  border-color: var(--signal);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  display: grid;
+  grid-template-columns: var(--col) minmax(0, 1fr) auto;
+  gap: 1rem 2rem;
+  align-items: baseline;
+  padding: 1.6rem clamp(1.4rem, 2.4vw, 2.4rem);
+  border-top: var(--rule);
+}
+
+.footName {
+  margin: 0;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.3rem;
+}
+
+.footFine {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--soft);
+}
+
+.footFine a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footFine a:hover {
+  color: var(--signal);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .workRow {
+    grid-template-columns: 4rem minmax(0, 1fr);
+    grid-template-areas:
+      'year main'
+      'kind main'
+      '. outcome';
+    grid-template-rows: auto auto auto;
+  }
+
+  .workOutcome {
+    padding-top: 0.2rem;
+  }
+
+  .contact {
+    grid-template-columns: 1fr;
+  }
+
+  .direct {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Below this the profile stops being a column: it becomes the top of the
+   page, its section list moves into the menu, and the rest stays. */
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .profile {
+    position: static;
+    height: auto;
+    overflow: visible;
+    padding: 1.1rem var(--gut) 2rem;
+    border-right: 0;
+    border-bottom: var(--rule);
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .plate {
+    height: 132px;
+  }
+
+  .bio {
+    max-width: 36rem;
+  }
+
+  .links {
+    margin-top: 0;
+    padding-top: 1.2rem;
+  }
+
+  .main {
+    padding: 0 var(--gut) var(--air);
+  }
+
+  .intro {
+    padding-top: 3.5rem;
+  }
+
+  .footer {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 1.6rem var(--gut) 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .secHead {
+    grid-template-columns: 1fr;
+  }
+
+  .secNote {
+    grid-column: 1;
+  }
+
+  .workRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'main year'
+      'outcome outcome'
+      'kind kind';
+  }
+
+  .workYear {
+    padding-top: 0.45rem;
+  }
+
+  .workKind {
+    margin-top: 0.3rem;
+  }
+
+  .service {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .serviceTime {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .servicePrice {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .service p {
+    grid-column: 1 / -1;
+  }
+
+  .rates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rates div:nth-child(3) {
+    border-left: 0;
+  }
+
+  .rates div:nth-child(n + 3) {
+    border-top: 1px solid var(--paper);
+  }
+
+  .timeline li {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .tlWhen {
+    padding: 0 0 0 1.6rem;
+    text-align: left;
+    border-left: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+
+  .writing,
+  .quotes,
+  .form,
+  .direct {
+    grid-template-columns: 1fr;
+  }
+
+  .signup {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .signupLabel {
+    grid-column: 1 / -1;
+  }
+
+  .band {
+    height: 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .links a,
+  .workMain h3,
+  .page input,
+  .page select,
+  .page textarea,
+  .button,
+  .buttonGhost,
+  .direct a {
+    transition: none;
+  }
+}

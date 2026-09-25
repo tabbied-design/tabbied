@@ -1,0 +1,1100 @@
+/* ==========================================================================
+   NORTHGATE HOMES - independent real estate agent
+   A listings grid is the front page. Warm off-white paper, near-black ink,
+   one brick red for what is new or wanted, and slate for the fine print.
+   The only pictures are the cube tile standing in for each home's photo,
+   cropped differently card by card, and a field of facades in the one
+   band that changes ground.
+   ========================================================================== */
+
+.page {
+  --paper: #f6f4f1;
+  --ink: #1b1d22;
+  --brick: #b5523b;
+  --slate: #858a92;
+  --pale: #e3e1dc;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 84rem;
+  --air: clamp(4.5rem, 10vw, 8.5rem);
+  --rule: color-mix(in srgb, var(--ink) 14%, transparent);
+  --soft: color-mix(in srgb, var(--ink) 68%, transparent);
+
+  font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(a):hover {
+  color: var(--brick);
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--brick);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(input, select, textarea, button) {
+  font: inherit;
+  color: inherit;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.95rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+.barPhone {
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ---------------------------------------------------------------- listings
+   A short promise, the filter strip, then the grid. The strip is a real
+   form of radio chips, so a choice shows as chosen without any script. */
+
+.listings {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) 0;
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 6vw, 5rem);
+  align-items: end;
+}
+
+.kicker {
+  grid-column: 1 / -1;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brick);
+}
+
+.title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(2rem, 4.2vw, 3.3rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--soft);
+}
+
+.lede {
+  max-width: 30rem;
+  font-size: 0.98rem;
+  color: var(--soft);
+}
+
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.2rem clamp(1.5rem, 3vw, 2.75rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding: 1.1rem 0 1.2rem;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+
+.group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.group legend,
+.selectLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip {
+  position: relative;
+  cursor: pointer;
+}
+
+.chip input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.chip span {
+  display: inline-block;
+  padding: 0.4rem 0.95rem;
+  font-size: 0.88rem;
+  line-height: 1.2;
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 999px;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.chip:hover span {
+  border-color: var(--ink);
+}
+
+.chip input:checked + span {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.chip input:focus-visible + span {
+  outline: 2px solid var(--brick);
+  outline-offset: 2px;
+}
+
+.select {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.88rem;
+  line-height: 1.2;
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 999px;
+}
+
+.filterGo {
+  margin-left: auto;
+  padding: 0.55rem 1.3rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: var(--ink);
+  color: var(--paper);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.filterGo:hover {
+  background: var(--brick);
+}
+
+.gridHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.4rem 0 1.2rem;
+  font-size: 0.85rem;
+}
+
+.count {
+  font-weight: 500;
+}
+
+.sort {
+  color: var(--soft);
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3rem) clamp(1rem, 2.2vw, 1.75rem);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--pale);
+}
+
+/* The field is half as large again as the photo on every side, so each
+   card can crop, turn or mirror the same tile and still cover its frame.
+   A scale never goes below 0.7, and a quarter turn keeps it at 0.9. */
+.photoField {
+  position: absolute;
+  inset: -25%;
+  overflow: hidden;
+  transform-origin: 50% 50%;
+}
+
+.card:nth-child(2) .photoField { transform: rotate(90deg) scale(0.92); }
+.card:nth-child(3) .photoField { transform: scale(0.7); }
+.card:nth-child(4) .photoField { transform: scale(1.45) translate(8%, 4%); }
+.card:nth-child(5) .photoField { transform: scaleX(-1) scale(0.84); }
+.card:nth-child(6) .photoField { transform: rotate(90deg) scale(1.3); }
+.card:nth-child(7) .photoField { transform: scaleX(-1) scale(0.74); }
+.card:nth-child(8) .photoField { transform: scale(1.15) translate(-6%, 0); }
+.card:nth-child(9) .photoField { transform: rotate(-90deg) scale(1); }
+
+.tag {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.accent {
+  background: var(--brick);
+  color: var(--paper);
+}
+
+.ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.muted {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 1rem;
+}
+
+.price {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums;
+}
+
+.street {
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.place {
+  font-size: 0.88rem;
+  color: var(--soft);
+}
+
+.specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.2rem;
+  margin: 0.9rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.88rem;
+}
+
+.specs div {
+  display: flex;
+  gap: 0.3rem;
+  align-items: baseline;
+}
+
+.specs dt {
+  color: var(--soft);
+}
+
+.specs dd {
+  order: -1;
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cardLink {
+  align-self: flex-start;
+  margin-top: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--brick);
+}
+
+.more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem 2rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.more p {
+  font-size: 0.95rem;
+  color: var(--soft);
+}
+
+.moreLink {
+  font-weight: 500;
+  border-bottom: 1px solid var(--brick);
+}
+
+/* --------------------------------------------------------------- valuation
+   Full bleed on the pale ground. The copy keeps to the page's column and
+   the facade field runs off the right edge. */
+
+.valuation {
+  margin-top: var(--air);
+  background: var(--pale);
+}
+
+.valInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 34rem;
+}
+
+.valCopy {
+  padding: clamp(3.5rem, 7vw, 6rem) clamp(2rem, 5vw, 4.5rem) clamp(3.5rem, 7vw, 6rem)
+    max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+}
+
+.valTitle {
+  margin-top: 1rem;
+  max-width: 16ch;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.valLede {
+  margin-top: 1.2rem;
+  max-width: 32rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.valForm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+  max-width: 32rem;
+}
+
+.valForm .button {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.valField {
+  position: relative;
+  overflow: hidden;
+  min-height: 22rem;
+}
+
+/* ------------------------------------------------------------ form parts */
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field span {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font-size: 0.95rem;
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 24%, transparent);
+  border-radius: 2px;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.button {
+  padding: 0.8rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background: var(--brick);
+  color: var(--paper);
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+
+.button:hover {
+  background: var(--ink);
+}
+
+/* ----------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 6vw, 5rem);
+  align-items: end;
+  padding-bottom: 1.4rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--ink);
+}
+
+.secHead h2 {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.secNote {
+  max-width: 30rem;
+  font-size: 0.92rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------------ agents */
+
+.agents {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3.5rem);
+}
+
+.agent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  margin-bottom: 1.2rem;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 50%;
+}
+
+.agentName {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
+.agentRole {
+  margin-top: 0.2rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--brick);
+}
+
+.agentMeta {
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  color: var(--soft);
+}
+
+.agentStats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  width: 100%;
+  margin: 1.2rem 0;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.agentStats div {
+  display: flex;
+  flex-direction: column;
+}
+
+.agentStats dt {
+  font-size: 0.76rem;
+  color: var(--soft);
+}
+
+.agentStats dd {
+  order: -1;
+  margin: 0;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.9rem;
+  line-height: 1.1;
+  font-variant-numeric: lining-nums;
+}
+
+.agentLink {
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.agentLink + .agentLink {
+  margin-top: 0.2rem;
+}
+
+/* ------------------------------------------------------------------ market */
+
+.headlines {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem clamp(1rem, 3vw, 2.5rem);
+  margin: 0;
+}
+
+.headlines div {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1rem;
+  border-left: 2px solid var(--brick);
+}
+
+.headlines dt {
+  order: 2;
+  margin-top: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.headValue {
+  order: 1;
+  margin: 0;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: lining-nums;
+}
+
+.headNote {
+  order: 3;
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  color: var(--soft);
+}
+
+.areas {
+  width: 100%;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.areas caption {
+  padding-bottom: 0.8rem;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.areas th,
+.areas td {
+  padding: 0.85rem 0.5rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: right;
+}
+
+.areas th:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+
+.areas td:last-child,
+.areas th:last-child {
+  padding-right: 0;
+}
+
+.areas thead th {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--soft);
+  border-bottom-color: var(--ink);
+}
+
+.areas tbody th {
+  font-weight: 500;
+}
+
+.cellLabel {
+  display: none;
+}
+
+/* -------------------------------------------------------------------- fees */
+
+.fees {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.fee {
+  padding: clamp(1.4rem, 2.6vw, 2rem);
+  border: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--pale) 35%, var(--paper));
+}
+
+.fee:first-child {
+  border-color: var(--ink);
+}
+
+.feeName {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.feePrice {
+  margin-top: 0.8rem;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--brick);
+  font-variant-numeric: lining-nums;
+}
+
+.feeTerms {
+  margin-top: 0.7rem;
+  min-height: 3em;
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+.feeList {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  gap: 0.5rem;
+}
+
+.feeList li {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+}
+
+.feeList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.6rem;
+  height: 1px;
+  background: var(--brick);
+}
+
+.terms {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem clamp(1rem, 2.4vw, 2rem);
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+}
+
+.terms div {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.terms dt {
+  font-weight: 500;
+}
+
+.terms dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+/* ----------------------------------------------------------------- contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.smallHead {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.smallHead + * {
+  margin-top: 0.6rem;
+}
+
+.address {
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+.bigLink {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.bigLink + .smallHead {
+  margin-top: 2rem;
+}
+
+.hours {
+  width: 100%;
+  max-width: 24rem;
+  margin: 0.6rem 0 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.92rem;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.parking {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  color: var(--soft);
+}
+
+.contactForm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border: 1px solid var(--rule);
+}
+
+.contactForm .field:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+.contactForm .button {
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--ink);
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+
+.footName {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.footTag {
+  margin-top: 0.4rem;
+  max-width: 22rem;
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 0.4rem 2rem;
+  font-size: 0.9rem;
+}
+
+.footAddr {
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.8rem;
+  color: var(--soft);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .headlines {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .agents,
+  .fees,
+  .terms {
+    grid-template-columns: 1fr;
+    max-width: 36rem;
+  }
+
+  .feeTerms {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .intro,
+  .secHead,
+  .contact {
+    grid-template-columns: 1fr;
+  }
+
+  .valInner {
+    grid-template-columns: 1fr;
+  }
+
+  .valCopy {
+    padding: clamp(3rem, 8vw, 4rem) var(--gut);
+  }
+
+  .valField {
+    min-height: 14rem;
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .barPhone {
+    display: none;
+  }
+
+  .filter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterGo {
+    margin-left: 0;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .valForm,
+  .contactForm {
+    grid-template-columns: 1fr;
+  }
+
+  /* The neighborhood table restacks: each row a small block, its figures
+     in a two-by-two grid labelled from the cells themselves. */
+  .areas thead {
+    display: none;
+  }
+
+  .areas,
+  .areas tbody,
+  .areas tr,
+  .areas th,
+  .areas td {
+    display: block;
+  }
+
+  .areas tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.6rem 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .areas th,
+  .areas td {
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+
+  .areas tbody th {
+    grid-column: 1 / -1;
+    font-size: 1.05rem;
+  }
+
+  .cellLabel {
+    display: block;
+    font-size: 0.74rem;
+    color: var(--soft);
+  }
+
+  .footGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip span,
+  .button {
+    transition: none;
+  }
+}

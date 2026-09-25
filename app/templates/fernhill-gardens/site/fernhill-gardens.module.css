@@ -1,0 +1,1067 @@
+/* ==========================================================================
+   FERNHILL GARDENS - landscaping and garden design
+   A calm paper page in a serif and a plain sans. The two things it is
+   built around: a twelve-month strip near the top, because a garden is
+   planned by the season, and the services as a zigzag of rows, each beside
+   a bed of leaves. The moss green is the only color that is not a tint of
+   the ground or the ink.
+   ========================================================================== */
+
+.page {
+  --paper: #f3f2eb;
+  --ink: #1e2419;
+  --moss: #4e7a3a;
+  --stone: #9a9a8a;
+  --pale: #e1e3d6;
+  --gut: clamp(1rem, 4.5vw, 3.5rem);
+  --max: 78rem;
+  --wide: 90rem;
+  --air: clamp(4.5rem, 10vw, 8.5rem);
+  --serif: 'Young Serif', Georgia, 'Times New Roman', serif;
+  --muted: color-mix(in srgb, var(--ink) 68%, transparent);
+  --rule: color-mix(in srgb, var(--ink) 14%, transparent);
+
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--moss);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: grid;
+  line-height: 1.15;
+}
+
+.markName {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+}
+
+.markSub {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--moss);
+}
+
+/* The last link is the booking one, drawn as the page's only pill. */
+.nav a:last-child {
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: var(--moss);
+  color: var(--paper);
+}
+
+.nav a:last-child:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) var(--gut) clamp(3rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: end;
+}
+
+.kicker {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+
+.heroTitle {
+  margin-top: 1.4rem;
+  font-size: clamp(2.6rem, 5.6vw, 4.9rem);
+  line-height: 1.04;
+  max-width: 13ch;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--moss);
+}
+
+.heroLede {
+  margin-top: 1.8rem;
+  max-width: 34rem;
+  font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2.2rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.95rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--moss);
+  color: var(--paper);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.btn:hover {
+  background: var(--ink);
+}
+
+.btnQuiet {
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--moss);
+  padding-bottom: 2px;
+}
+
+.btnQuiet:hover {
+  color: var(--moss);
+}
+
+.facts {
+  margin: clamp(2.5rem, 6vw, 4rem) 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 34rem;
+}
+
+.facts div {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.facts dt {
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  line-height: 1.1;
+}
+
+.facts dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* An arch, like a view through a garden gate. The pattern brings its own
+   pale plate, so nothing here paints behind it. */
+.arch {
+  position: relative;
+  width: 100%;
+  max-width: 34rem;
+  justify-self: end;
+  aspect-ratio: 4 / 5;
+  border-radius: 999px 999px 6px 6px;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------- section heads */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.5rem clamp(1rem, 3vw, 2rem);
+  align-items: baseline;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.secNo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--moss);
+  font-variant-numeric: tabular-nums;
+}
+
+.secHead h2 {
+  font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+  line-height: 1.1;
+}
+
+.secNote {
+  grid-column: 2;
+  max-width: 38rem;
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ garden year
+   One strip of twelve. The season row above spans its months; the months
+   of the season we are in sit on the pale tint. */
+
+.seasons {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.seasons .secHead {
+  max-width: calc(var(--max) - 2 * var(--gut));
+}
+
+.seasonRow {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.season,
+.seasonNow {
+  padding: 0.7rem 0.8rem 0.6rem;
+  border-top: 3px solid color-mix(in srgb, var(--moss) 30%, transparent);
+  color: var(--muted);
+}
+
+.seasonNow {
+  border-top-color: var(--moss);
+  background: var(--pale);
+  color: var(--moss);
+}
+
+.months {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  border-bottom: 1px solid var(--rule);
+}
+
+.month,
+.monthNow {
+  padding: 0.6rem 0.8rem 1.6rem;
+  border-left: 1px solid var(--rule);
+}
+
+.month:first-child {
+  border-left: 0;
+}
+
+.monthNow {
+  background: var(--pale);
+  border-left-color: color-mix(in srgb, var(--moss) 30%, transparent);
+}
+
+.monthName {
+  font-size: 1.45rem;
+  line-height: 1.2;
+}
+
+.monthNow .monthName {
+  color: var(--moss);
+}
+
+/* The month's own season label: the season row says it on a wide screen,
+   so this only shows once the strip has folded. */
+.monthSeason {
+  display: none;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.monthNow .monthSeason {
+  color: var(--moss);
+}
+
+.tasks {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.tasks li {
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ---------------------------------------------------------------- zigzag
+   Each service is a row of two halves, the bed of leaves and the words,
+   and every other row swaps them. The beds are leaf-shaped, two rounded
+   corners across the diagonal, mirrored when the row flips. */
+
+.zigzag {
+  display: grid;
+  gap: clamp(3.5rem, 8vw, 6.5rem);
+}
+
+.svc {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.svcPanel {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border-radius: 6px 160px 6px 160px;
+  background: var(--pale);
+}
+
+.svc:nth-child(even) .svcPanel {
+  order: 2;
+  border-radius: 160px 6px 160px 6px;
+}
+
+.svcBody {
+  max-width: 32rem;
+}
+
+.svc:nth-child(even) .svcBody {
+  justify-self: end;
+}
+
+.svcNo {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--moss);
+  font-variant-numeric: tabular-nums;
+}
+
+.svcTitle {
+  margin-top: 0.6rem;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  line-height: 1.12;
+}
+
+.svcText {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.svcList {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.svcList li {
+  position: relative;
+  padding: 0.6rem 0 0.6rem 1.4rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.94rem;
+}
+
+/* A small leaf for a bullet: a square with two opposite corners rounded. */
+.svcList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.05rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 0 100% 0 100%;
+  background: var(--moss);
+}
+
+.svcMeta {
+  margin: 1.4rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.svcMeta dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.svcMeta dd {
+  margin: 0.2rem 0 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ----------------------------------------------------------------- process
+   Five steps on one line, joined by a hairline through their numbers. */
+
+.steps {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.5rem);
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  left: 1.4rem;
+  right: 1.4rem;
+  top: 1.4rem;
+  height: 1px;
+  background: color-mix(in srgb, var(--moss) 45%, transparent);
+}
+
+.steps li {
+  position: relative;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  border: 1px solid var(--moss);
+  background: var(--paper);
+  color: var(--moss);
+  font-family: var(--serif);
+  font-size: 1.15rem;
+}
+
+.steps h3 {
+  margin-top: 1.3rem;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.stepTime {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+
+.steps p {
+  margin-top: 0.7rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- plans
+   A ruled list rather than cards: name, visits, time, price. The plan most
+   people choose sits on the pale tint. */
+
+.plans {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.plan,
+.planFeatured {
+  display: grid;
+  grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 0.9fr);
+  gap: 1rem clamp(1rem, 3vw, 2.5rem);
+  align-items: baseline;
+  padding: 1.6rem clamp(0.5rem, 2vw, 1.5rem);
+  border-bottom: 1px solid var(--rule);
+}
+
+.planFeatured {
+  background: var(--pale);
+}
+
+.planName h3 {
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.planFeatured .planName h3 {
+  color: var(--moss);
+}
+
+.planName p {
+  margin-top: 0.4rem;
+  max-width: 28rem;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.planVisits,
+.planHours {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.planPrice {
+  display: grid;
+  justify-items: end;
+  line-height: 1.2;
+}
+
+.planPrice strong {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.planPrice span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.planNotes {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem 2.5rem;
+}
+
+.planNotes li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.planNotes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 0.7rem;
+  height: 1px;
+  background: var(--moss);
+}
+
+/* -------------------------------------------------------------------- area */
+
+.area {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.areaHead {
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--ink);
+  font-size: 1.25rem;
+}
+
+.places {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 2;
+  column-gap: 1.5rem;
+}
+
+.places li {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+  break-inside: avoid;
+  font-size: 0.95rem;
+}
+
+.yardAddr {
+  margin-top: 0.9rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.hours {
+  margin: 1rem 0 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.92rem;
+}
+
+.hours dt {
+  color: var(--muted);
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ----------------------------------------------------------------- contact
+   The one section on the pale tint, so the form reads as a place to stop. */
+
+.contact {
+  margin-top: var(--air);
+  padding: clamp(3.5rem, 8vw, 6rem) var(--gut);
+  background: var(--pale);
+}
+
+.contactInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.contactIntro h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+  line-height: 1.1;
+}
+
+.contactLede {
+  margin-top: 1.2rem;
+  max-width: 28rem;
+  color: var(--muted);
+}
+
+.contactList {
+  margin: 2rem 0 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.contactList div {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.contactList dt {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--moss);
+  padding-top: 0.2rem;
+}
+
+.contactList dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.contactList a {
+  border-bottom: 1px solid var(--moss);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem 1.4rem;
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  background: var(--paper);
+  border-radius: 6px 48px 6px 48px;
+}
+
+.field,
+.fieldWide {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.form label {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.form input:focus-visible,
+.form select:focus-visible,
+.form textarea:focus-visible {
+  outline: 2px solid var(--moss);
+  outline-offset: 1px;
+  border-color: var(--moss);
+}
+
+.form .btn {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------------- hedge */
+
+.hedge {
+  position: relative;
+  height: 168px;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: clamp(2.5rem, 6vw, 4rem) var(--gut) 2rem;
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.3fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+}
+
+.footTag {
+  margin-top: 0.5rem;
+  max-width: 20rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.footLinks a {
+  font-size: 0.92rem;
+}
+
+.footLinks a:hover {
+  color: var(--moss);
+}
+
+.footAddr {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: clamp(2rem, 5vw, 3rem) auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+}
+
+.footFine p {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footFine a:hover {
+  color: var(--moss);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .seasonRow {
+    display: none;
+  }
+
+  .months {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    border-top: 1px solid var(--rule);
+  }
+
+  .month,
+  .monthNow {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .month:nth-child(7) {
+    border-left: 0;
+  }
+
+  .monthSeason {
+    display: block;
+  }
+
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2.5rem;
+  }
+
+  .steps::before {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .arch {
+    justify-self: center;
+    max-width: 26rem;
+  }
+
+  .svc,
+  .svc:nth-child(even) {
+    grid-template-columns: 1fr;
+  }
+
+  .svc:nth-child(even) .svcPanel {
+    order: 0;
+  }
+
+  .svc:nth-child(even) .svcBody {
+    justify-self: start;
+  }
+
+  .svcPanel {
+    aspect-ratio: 16 / 9;
+  }
+
+  .area {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contactInner {
+    grid-template-columns: 1fr;
+  }
+
+  .footGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .secHead {
+    grid-template-columns: 1fr;
+  }
+
+  .secNote {
+    grid-column: 1;
+  }
+
+  .months {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .month,
+  .monthNow,
+  .month:first-child,
+  .month:nth-child(7) {
+    border-left: 0;
+  }
+
+  .months li:nth-child(even) {
+    border-left: 1px solid var(--rule);
+  }
+
+  .svcPanel,
+  .svc:nth-child(even) .svcPanel {
+    border-radius: 6px 90px 6px 90px;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+  }
+
+  .steps li {
+    display: grid;
+    grid-template-columns: 2.8rem minmax(0, 1fr);
+    column-gap: 1.1rem;
+  }
+
+  .steps li > :not(.stepNo) {
+    grid-column: 2;
+  }
+
+  .stepNo {
+    grid-row: 1 / span 3;
+  }
+
+  .steps h3 {
+    margin-top: 0.4rem;
+  }
+
+  .plan,
+  .planFeatured {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding-inline: 0.8rem;
+  }
+
+  .planName {
+    grid-column: 1 / -1;
+  }
+
+  .planVisits {
+    grid-column: 1;
+  }
+
+  .planHours {
+    grid-column: 1;
+    margin-top: -0.8rem;
+    color: var(--muted);
+  }
+
+  .planPrice {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: center;
+  }
+
+  .planNotes,
+  .area,
+  .form,
+  .footGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .hedge {
+    height: 112px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn {
+    transition: none;
+  }
+}
