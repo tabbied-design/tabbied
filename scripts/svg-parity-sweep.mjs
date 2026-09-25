@@ -21,7 +21,6 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Every path below is from the repository root, wherever the sweep is run from.
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const patternsDir = path.join(repoRoot, 'packages', 'tabbied', 'patterns');
 
@@ -62,10 +61,10 @@ const MAX_BAD_FRACTION = 0.01; // 1% of pixels
 //   seams from rasterizing the nested foreignObject mask; the vector export
 //   intentionally renders clean solid tiles instead.
 // - drypoint: the browser rasterizes the @svg mask image with slightly
-//   different sub-pixel rounding than the inlined symbol (≤1 CSS px).
+//   different sub-pixel rounding than the inlined symbol (<=1 CSS px).
 // - windowpane: mixed-width borders on rounded cells blend their corner
 //   arcs progressively in CSS; the per-side arc strokes junction within
-//   ≤1 CSS px of it.
+//   <=1 CSS px of it.
 // Keep in sync with e2e/svg-export.spec.ts (which documents each entry).
 const PER_PATTERN_MAX = {
   fractal: 0.03,
@@ -192,13 +191,10 @@ for (const slug of slugs) {
         const a = mine.getContext('2d').getImageData(0, 0, W, H).data;
         const b = ref.getContext('2d').getImageData(0, 0, W, H).data;
         // CSS painters snap edges to device pixels; SVG anti-aliases true
-        // fractional geometry. A differing pixel is an edge artifact (not a
-        // defect) when each image's neighborhood in the other image contains
-        // a matching color. Radius 2 device px = 1 CSS px.
-        // A differing pixel is an anti-aliasing artifact when its color lies
-        // channel-wise between the other image's neighborhood extremes (an
-        // AA blend of two adjacent colors need not literally appear in the
-        // snapped rendering).
+        // fractional geometry. A differing pixel is an anti-aliasing artifact
+        // when its color lies channel-wise between the other image's
+        // neighborhood extremes (radius 2 device px = 1 CSS px): an AA blend
+        // need not literally appear in the snapped rendering.
         const nearMatch = (data, i, other, x, y) => {
           let lo0 = 255, lo1 = 255, lo2 = 255;
           let hi0 = 0, hi1 = 0, hi2 = 0;

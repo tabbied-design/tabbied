@@ -11,9 +11,8 @@ test.describe('Tabbied site', () => {
       page.getByRole('heading', { level: 1, name: /Free patterns and\s+websites/ })
     ).toBeVisible();
 
-    // Every figure on the page is derived from the catalog at build time
-    // (lib/siteCounts), so this asserts the shape rather than the value - a
-    // literal typed into the copy is exactly what it is there to prevent.
+    // Every figure is derived from the catalog at build time (lib/siteCounts),
+    // so this asserts the shape rather than the value.
     const patternsStat = page.getByRole('link', { name: /^\d+ Patterns$/ });
     await expect(patternsStat).toBeVisible();
     const patternCount = Number(
@@ -21,8 +20,7 @@ test.describe('Tabbied site', () => {
     );
     expect(patternCount).toBeGreaterThan(1);
 
-    // The same number has to appear in the hero sentence and on the library
-    // section's "View all" link, because all three read the one source.
+    // The same number appears in the hero sentence and on "View all".
     await expect(
       page.getByText(
         new RegExp(`growing library of ${patternCount} customizable patterns`)
@@ -83,9 +81,8 @@ test.describe('Tabbied site', () => {
   }) => {
     await page.goto('/patterns');
 
-    // Jump to page 2 - the URL gains ?page=2 and the grid shows a new design.
-    // The numbers are links to each page, and following one from the foot of
-    // the grid lands at the top of the next page, heading focused.
+    // Page 2: the URL gains ?page=2, the grid shows a new design, and the
+    // page lands at the top with its heading focused.
     const firstCard = page.locator('main a[href^="/patterns/"] h2').first();
     const beforeName = await firstCard.textContent();
     const two = page.getByRole('link', { name: 'Page 2', exact: true });
@@ -110,14 +107,9 @@ test.describe('Tabbied site', () => {
   });
 
   test('the gallery grid reflows when the window narrows', async ({ page }) => {
-    // Regression guard: the grid's tracks were a bare `1fr`
-    // (= minmax(auto, 1fr)), so `min-width: auto` floored each track at the
-    // item's min-content width. Because the cards carry
-    // `content-visibility: auto`, a card that had been scrolled past reported
-    // the size it last rendered at as that floor - narrowing the window could
-    // then no longer shrink the tracks and the grid overflowed its column
-    // until a reload. Tracks are minmax(0, 1fr) now; this asserts the grid
-    // still fits after a resize, without one.
+    // Guards the minmax(0, 1fr) tracks. With a bare `1fr`, a scrolled-past
+    // `content-visibility: auto` card floors its track at the size it last
+    // rendered at, and a narrowed window overflows until a reload.
     await page.setViewportSize({ width: 1640, height: 1000 });
     await page.goto('/patterns');
     await page
@@ -125,8 +117,7 @@ test.describe('Tabbied site', () => {
       .first()
       .waitFor({ state: 'attached', timeout: 15000 });
 
-    // Scroll far enough that lower cards render and are then skipped again,
-    // which is what seeded the stale minimum.
+    // Scroll far enough that lower cards render and are then skipped again.
     await page.mouse.wheel(0, 1600);
     await page.waitForTimeout(500);
     await page.mouse.wheel(0, -1600);
@@ -170,8 +161,8 @@ test.describe('Tabbied site', () => {
       .waitFor({ state: 'attached', timeout: 15000 });
 
     // The rail is fixed to the window, so scrolling the grid leaves its pinned
-    // "Mixed" row (a random palette per pattern) in place. (There is no "New
-    // palette" button any more: the pencil on a row is the way to a new one.)
+    // "Mixed" row in place. No "New palette" button: the pencil on a row makes
+    // one.
     const random = page
       .locator('aside')
       .getByRole('button', { name: /^Mixed/ });
@@ -193,9 +184,8 @@ test.describe('Tabbied site', () => {
       .first()
       .waitFor({ state: 'attached', timeout: 15000 });
 
-    // The rail lists every palette from the start (no "Browse all" step): a
-    // bounded scroll container that overflows its box (it auto-fills the
-    // available height) and loads more rows as it scrolls.
+    // The rail is a bounded scroll container listing every palette, loading
+    // more rows as it scrolls.
     const findScroller = () =>
       page.evaluate(() => {
         const el = [...document.querySelectorAll('aside *')].find(
@@ -279,11 +269,8 @@ test.describe('Tabbied site', () => {
   }) => {
     await page.goto('/patterns');
 
-    // The raster <img> thumbnails were replaced by per-design css-doodle
-    // rendered through the tabbied package's <TabbiedPattern fit="cover">, so
-    // a thumbnail element must mount and actually paint cells (guards against
-    // the client mount boundary / source-building / the package's css-doodle
-    // registration side effect regressing to an empty grid).
+    // Thumbnails are live <TabbiedPattern fit="cover">s: one must mount and
+    // actually paint cells, not an empty grid.
     await page.waitForFunction(() => !!window.customElements.get('css-doodle'));
     await expect(
       page.locator('[data-pattern="radius"] css-doodle')
@@ -340,9 +327,8 @@ test.describe('Tabbied site', () => {
     await expect(page.getByText('0.50', { exact: true })).toBeVisible();
     await expect(page.locator('figcaption').getByText(/\d+\u00D7\d+ grid/)).toBeVisible();
 
-    // Regression guard: the generative grid must actually paint its cells.
-    // css-doodle >= 0.5 reinterpreted `@random(1)`, which collapsed the
-    // default (max-frequency) pattern to a single shape until shimmed.
+    // The grid must paint its cells: css-doodle >= 0.5 reinterpreted
+    // `@random(1)`, which collapses the default pattern to one shape unshimmed.
     await expect
       .poll(
         () =>
@@ -501,8 +487,7 @@ test.describe('Tabbied site', () => {
       .toContain('blob:');
     // The swatch and the transparent toggle stand down while a picture is set.
     await expect(page.locator('input[type="color"]')).toHaveCount(5);
-    // The control that clears it is an X beside the caption, named in full:
-    // the caption row wrapped onto two lines when it read "remove image".
+    // The control that clears it is an X beside the caption, named in full.
     const removeImage = page.getByRole('button', {
       name: 'Remove the background image',
     });
@@ -533,9 +518,6 @@ test.describe('Tabbied site', () => {
   test('gallery cards link with a seed so edits sync to the URL', async ({
     page,
   }) => {
-    // This used to enter from the homepage, which carried its own strip of
-    // gallery cards; the redesigned homepage sends people to /patterns instead,
-    // so the guard belongs on the cards that are actually clicked now.
     await page.goto('/patterns');
 
     // Without a query param on the link, the editor never mirrors state into
@@ -634,10 +616,9 @@ test.describe('Tabbied site (mobile viewport)', () => {
   }) => {
     await page.goto('/patterns');
 
-    // The fixed rail is hidden below the two-column breakpoint; the palettes
-    // become a horizontal chip shelf, "Mixed" first, with a
-    // trailing "All ›" browser pill. No "New palette" anywhere: the pencil
-    // on a chip is the way to a new one.
+    // Below the two-column breakpoint the rail becomes a horizontal chip
+    // shelf, "Mixed" first, with a trailing "All" browser pill. No "New
+    // palette" anywhere.
     await expect(page.locator('aside')).toBeHidden();
     await expect(
       page.getByRole('button', { name: /^Mixed/ })
@@ -647,7 +628,7 @@ test.describe('Tabbied site (mobile viewport)', () => {
     const allPill = page.getByRole('button', { name: /^All/ });
     await expect(allPill).toBeVisible();
 
-    // Tapping "All ›" swaps the shelf for the embedded palette browser.
+    // Tapping "All" swaps the shelf for the embedded palette browser.
     await allPill.click();
     await expect(
       page.getByRole('button', { name: 'Close palette browser' })
@@ -869,7 +850,7 @@ test.describe('Shared site header', () => {
     await page.goto('/templates');
 
     // Home / Patterns / Websites in the middle, Sign in on the right. GitHub
-    // and Docs are in the footer now, not the bar.
+    // and Docs are in the footer, not the bar.
     const nav = page.getByRole('navigation', { name: 'Main' });
     await expect(nav.getByRole('link', { name: 'Home' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();

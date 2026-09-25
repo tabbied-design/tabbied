@@ -4,14 +4,12 @@
  * `lib/generated/images.js` so pages can set intrinsic width/height (no CLS)
  * without importing the file.
  *
- * These bytes are NEVER re-encoded: promotion already produced the exact bytes to
- * serve, and a second lossy pass costs ~1.8 dB PSNR to save ~3 kB. This script only
- * reads dimensions.
+ * The images are NEVER re-encoded (promotion already wrote the served bytes);
+ * this only reads dimensions.
  *
- * Incremental and idempotent: an entry whose content hash is unchanged is reused
- * without touching sharp, and the manifest file is only rewritten when it actually
- * changed - so this stays a true no-op (and produces no git diff) on a clean tree,
- * which is what makes it safe on `dev` / `build` / `postinstall`.
+ * Incremental and idempotent: an unchanged hash reuses its entry without sharp,
+ * and the file is only rewritten when it changed, so it is a true no-op on a
+ * clean tree and safe on `dev` / `build` / `postinstall`.
  *
  * Bump MANIFEST_VERSION to invalidate every cached hash.
  */
@@ -21,9 +19,9 @@ import { dirname, extname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
-// Served image roots. `sites` holds the template photography; `mockups` holds
-// objects wearing a real pattern (see docs/pattern-mockups.md). A manifest entry
-// records which root it came from so <Figure> can build the right URL.
+// Served image roots: template photography, and objects wearing a real pattern
+// (docs/pattern-mockups.md). An entry records its root so <Figure> can build
+// the right URL.
 const IMAGE_DIRS = [
   { dir: join(ROOT, "public", "images", "sites"), base: "/images/sites" },
   { dir: join(ROOT, "public", "images", "mockups"), base: "/images/mockups" },
@@ -78,7 +76,6 @@ async function main() {
     }
   }
 
-  // Rewrite only when it changed, so the script stays a true no-op.
   const next = render(manifest);
   const current = existsSync(MANIFEST_FILE) ? readFileSync(MANIFEST_FILE, "utf8") : null;
   if (next !== current) writeFileSync(MANIFEST_FILE, next);

@@ -1,23 +1,17 @@
 #!/usr/bin/env node
 // Derive each template site's editable-section spec from the static export.
 //
-// Everything here is read out of out/templates/<slug>/site/index.html - the current
-// text, the image sources, the pattern configuration, the brand palette. That
-// is the same doctrine as the download packager (see the "Downloadable
-// templates" section of CLAUDE.md): the spec is generated from the
-// bytes that shipped, so it cannot describe a page that no longer exists.
-// Hand-writing any of it would reintroduce exactly the drift the packager was
-// built to avoid.
+// Everything is read out of out/templates/<slug>/site/index.html (text, image
+// sources, pattern configuration, palette), so the spec describes the bytes
+// that shipped, as the download packager does.
 //
 // **This script is also the build gate.** An annotation that resolves to
-// nothing - an image slot with no <img>, two elements sharing an id while
-// saying different things - exits non-zero. That failure is otherwise
-// completely silent: the spec looks fine and the editor's control just does
-// nothing. The repo has been here before, with 278 gallery thumbnail configs
-// naming designs that no longer existed, and the cure was the same.
+// nothing (an image slot with no <img>, two elements sharing an id while
+// saying different things) exits non-zero; otherwise the editor's control
+// would silently do nothing.
 //
 // Runs inside `npm run build`, between the two `next build` passes, and writes
-// into public/ so the second pass exports it like any other static asset.
+// into public/ so the second pass exports it.
 //
 //   npm run editable            every annotated site
 //   npm run editable solstice   just one
@@ -56,9 +50,9 @@ if (!existsSync(exportDir)) {
   process.exit(1);
 }
 
-// Option ranges come from the design catalog, so a pattern slot in the spec
-// carries the same bounds `get_design` publishes. Without them a slot still
-// extracts; it just cannot offer typed controls or validate a value.
+// Option ranges come from the design catalog, so a pattern slot carries the
+// bounds `get_design` publishes. Without them a slot still extracts, with no
+// typed controls or validation.
 let designOptions = () => undefined;
 
 if (existsSync(designCatalogPath)) {
@@ -86,9 +80,7 @@ const titleOf = (html) => {
 
 // The name the gallery shows, read off the framed preview page's
 // `tabbied:template-name` meta (app/templates/[slug]/page.tsx). A template's
-// own <title> is a whole line with a tagline after a dot, a pipe or a colon,
-// and it is markup: taken raw it put "The Children&#x27;s Discovery Museum"
-// in front of people on the account's downloads list.
+// own <title> carries a tagline, and both are entity-encoded.
 const galleryNameOf = (slug) => {
   const previewPath = path.join(repoRoot, 'out', 'templates', slug, 'index.html');
 
@@ -114,7 +106,7 @@ const slugs = readdirSync(exportDir, { withFileTypes: true })
   .map((entry) => entry.name)
   // out/templates/<slug>/ is the framed preview; the site is its site/.
   .filter((slug) => existsSync(path.join(exportDir, slug, 'site', 'index.html')))
-  .filter((slug) => (only.length === 0 ? true : only.includes(slug)))
+  .filter((slug) => only.length === 0 || only.includes(slug))
   .sort();
 
 if (only.length > 0) {
@@ -126,7 +118,7 @@ if (only.length > 0) {
   }
 }
 
-// Packaging everything rewrites the folder, so a retired site can't linger in
+// Generating everything rewrites the folder, so a retired site can't linger in
 // the deploy. Naming slugs updates those in place.
 if (only.length === 0) rmSync(outDir, { recursive: true, force: true });
 mkdirSync(outDir, { recursive: true });
@@ -137,16 +129,11 @@ let skipped = 0;
 
 for (const slug of slugs) {
   const pagePath = path.join(exportDir, slug, 'site', 'index.html');
-
-  if (!existsSync(pagePath)) continue;
-
   const html = readFileSync(pagePath, 'utf8');
   const { slots, root, problems } = extractFromHtml(html, { designOptions });
 
-  // A site with no annotations is not a failure. Coverage is deliberately
-  // incremental - the shared-component sites are annotated first and the
-  // bespoke pages follow in batches - so an unannotated page is just one the
-  // editor cannot open yet.
+  // A site with no annotations is not a failure, just one the editor cannot
+  // open yet.
   if (!root && slots.length === 0) {
     skipped += 1;
     continue;
@@ -181,9 +168,8 @@ for (const slug of slugs) {
       colors: root.colors,
       derivation: root.derivation,
       ...(root.flatSections ? { flatSections: true } : {}),
-      // A `vars` page owns its property names, so the spec has to carry them:
-      // without them a re-color would compute the right colors and write
-      // them nowhere.
+      // A `vars` page owns its property names, so the spec carries them, or a
+      // re-color would have nowhere to write.
       ...(root.varNames ? { varNames: root.varNames } : {}),
     },
     ...(fonts ? { fonts } : {}),
@@ -217,11 +203,9 @@ if (failures.length > 0) {
 const counts = (spec, kind) =>
   spec.slots.filter((slot) => slot.kind === kind).length;
 
-// The aggregate index: what /create lists, and what the MCP `list_templates`
-// tool serves. Small enough to return whole - 77 entries needs no query
-// language. Naming slugs regenerates those specs in place, so the index is
-// merged rather than rewritten: written from `specs` alone, `npm run
-// editable <slug>` used to leave a catalog of one template behind.
+// The aggregate index the MCP `list_templates` tool serves, small enough to
+// return whole. Merged rather than rewritten when slugs are named, so
+// `npm run editable <slug>` keeps the other templates.
 const entryOf = (spec) => ({
     slug: spec.site.slug,
     name: spec.site.name,
@@ -235,9 +219,8 @@ const entryOf = (spec) => ({
           .map((slot) => slot.config.slug)
       ),
     ],
-    // Which pieces of brand copy this template can be handed. Studio reads
-    // this to decide whether a generated direction can be previewed *as* the
-    // business, or only as the template in its colors - see brand.ts.
+    // Which pieces of brand copy this template can be handed; Studio reads it
+    // to decide whether a direction can be previewed *as* the business.
     copyRoles: declaredCopyRoles(spec),
     slots: {
       text: counts(spec, 'text'),

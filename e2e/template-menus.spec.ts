@@ -1,16 +1,11 @@
 // Every template's header links on a phone.
 //
-// 57 of the 77 templates hid their header nav below a breakpoint and offered
-// nothing in its place, so a visitor on a phone had the footer and nothing
-// else, and so did every site shipped from the download. They now carry
-// components/template/TemplateMenu, a <details> that works with no script at
-// all, and this is the gate that keeps the next template from repeating it:
-// at 390px, every link the header hides must be reachable through a visible
-// menu, and the menu must fit on the screen.
+// A template that hides its header nav below a breakpoint carries
+// components/template/TemplateMenu. The gate: at 390px, every link the header
+// hides must be reachable through a visible menu that fits on the screen.
 //
-// Plus the one thing the HTML package does differently from the site: it has
-// no React left, so a plain script closes the menu on a followed link. That
-// is checked against the packaged page itself.
+// The HTML package has no React left, so a plain script closes the menu on a
+// followed link; that is checked against the packaged page itself.
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';

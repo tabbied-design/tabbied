@@ -1,7 +1,6 @@
-// One-shot recompression of the oversized marketing images in public/images.
-// With `output: 'export'` the site serves these files as-is (no /_next/image
-// optimizer), so they are pre-sized here to ~2x their largest rendered width
-// instead of shipping the 1MB+ originals. Re-run after replacing any source
+// Recompression of the oversized marketing images in public/images. The static
+// export serves them as-is (no /_next/image optimizer), so they are pre-sized
+// to ~2x their largest rendered width. Re-run after replacing any source
 // image: node scripts/optimize-images.mjs
 import path from 'node:path';
 import { stat, writeFile } from 'node:fs/promises';
@@ -13,7 +12,7 @@ import sharp from 'sharp';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIR = path.join(ROOT, 'public/images');
 
-// maxWidth ≈ 2x the widest layout slot the image ever occupies.
+// maxWidth is ~2x the widest layout slot the image ever occupies.
 const TARGETS = [
   { file: 'uses_wall_art.jpg', maxWidth: 1200 },
   { file: 'uses_notebook.jpg', maxWidth: 1200 },
@@ -37,10 +36,9 @@ for (const { file, maxWidth } of TARGETS) {
       ? pipeline.png({ palette: true, compressionLevel: 9 })
       : pipeline.jpeg({ quality: 78, progressive: true, mozjpeg: true });
 
-  // Buffering decouples input from output (sharp can't write over its own
-  // input file); write the already-encoded buffer as-is - piping it through
-  // sharp() again would re-encode at library defaults, discarding the
-  // quality/palette settings above.
+  // Buffered because sharp can't write over its own input file; the encoded
+  // buffer is written as-is, since another sharp() pass would re-encode at
+  // library defaults.
   const buffer = await pipeline.toBuffer();
   await writeFile(filePath, buffer);
   const after = (await stat(filePath)).size;

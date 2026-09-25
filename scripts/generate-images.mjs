@@ -44,11 +44,8 @@ import { loadPromptData, selectPrompts } from "./lib/prompts.mjs";
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const DATA_FILE = join(ROOT, "data", "image-prompts.json");
 const API_BASE = "https://api.openai.com/v1";
-// Two spellings of the same endpoint, and they are not interchangeable.
-// `IMAGES_ENDPOINT` goes inside the Batch API's JSONL and create call, which
-// wants an absolute API path. `IMAGES_PATH` is for direct calls through api(),
-// which prepends API_BASE - already ending in /v1, so passing the other one
-// there asks for /v1/v1/... and 404s.
+// Not interchangeable: the Batch API's JSONL and create call want the absolute
+// path, while api() prepends API_BASE (already ending in /v1).
 const IMAGES_ENDPOINT = "/v1/images/generations";
 const IMAGES_PATH = "/images/generations";
 
@@ -121,10 +118,8 @@ const outputExt = (opts) => (opts.outputFormat === "jpeg" ? "jpg" : opts.outputF
 
 function requestBody(e, opts, model) {
   const body = { model, prompt: e.prompt, size: sizeOf(e, opts), quality: qualityOf(e, opts), n: 1 };
-  // Cut-outs are generated with a real alpha channel: gpt-image-2 honors
-  // background:"transparent" now (it used to 400 on it), which is what retired
-  // the separate background-removal vendor. Transparency needs an alpha-capable
-  // output format - png (the default) or webp. See docs/image-pipeline.md.
+  // Cut-outs get a real alpha channel, which needs png (the default) or webp.
+  // See docs/image-pipeline.md.
   if (e.cutout) body.background = "transparent";
   if (opts.outputFormat !== "png") body.output_format = opts.outputFormat;
   return body;
@@ -141,10 +136,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const RETRY_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
 
 /**
- * One OpenAI API call. `retries` defaults to 0 and is opted into PER CALL SITE,
- * deliberately: this helper also creates batches and submits generations, and
- * silently re-sending one of those would duplicate work and double the bill.
- * Only idempotent GETs pass a retry count.
+ * One OpenAI API call. `retries` is opted into per call site: re-sending a
+ * batch create or a generation would double the bill, so only idempotent GETs
+ * pass one.
  */
 async function api(path, { method = "GET", key, json, form, retries = 0 } = {}) {
   const headers = { Authorization: `Bearer ${key}` };

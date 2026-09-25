@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 // Screenshots of template sites, for the /templates gallery's cards.
 //
-// A pilot: the gallery's cards drew only the template's pattern, and a person
-// choosing a website template could not see a website. This renders a site's
-// first screen from the static export (1280x960, the hero as a visitor meets
-// it) and writes public/template-shots/<slug>.webp at 960x720. The gallery
-// uses a shot wherever one exists and falls back to the pattern alone, so a
-// template with no shot is unchanged; the set is whatever files are here.
+// A pilot. This renders a site's first screen from the static export
+// (1280x960) and writes public/template-shots/<slug>.webp at 960x720. A card
+// with no shot shows the pattern alone; the set is whatever files are here.
 //
 // Committed rather than built per deploy, like public/previews: the deploy
 // build has no browser. Regenerate after a template's hero changes.

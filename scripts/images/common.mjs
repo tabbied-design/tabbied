@@ -1,8 +1,5 @@
 // Shared helpers for the template image pipeline (extract -> build -> submit ->
 // import), which generates through KIE AI's job API (https://docs.kie.ai).
-//
-// Dependency-free apart from sharp, which the import step uses and which already
-// ships as a devDependency for scripts/optimize-images.mjs.
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -11,29 +8,25 @@ export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 
 // Working files: the prompt manifest, the pending-task list and the run state.
 // Git-ignored; nothing here is a build input.
-export const WORK_DIR = path.join(ROOT, 'scripts/images/.batch');
+const WORK_DIR = path.join(ROOT, 'scripts/images/.batch');
 export const MANIFEST = path.join(WORK_DIR, 'prompts.json');
 export const TASKS = path.join(WORK_DIR, 'tasks.json');
 export const STATE = path.join(WORK_DIR, 'state.json');
 
-// Where finished images land. With `output: 'export'` these are served as-is,
-// so the import step pre-sizes them instead of shipping the originals.
+// Where finished images land. The export serves them as-is, so the import step
+// pre-sizes them.
 export const IMAGE_DIR = path.join(ROOT, 'public/images/template');
 export const imagePath = (id) => path.join(IMAGE_DIR, `${id}.webp`);
-export const imageSrc = (id) => `/images/template/${id}.webp`;
 
-export const API = process.env.KIE_API_BASE ?? 'https://api.kie.ai/api/v1';
+const API = process.env.KIE_API_BASE ?? 'https://api.kie.ai/api/v1';
 export const MODEL = process.env.KIE_MODEL ?? 'z-image';
 
-// z-image caps the prompt; every composed template prompt currently sits around
-// 230-330 characters, so this is a guard rather than something that trips.
+// z-image's prompt cap; a guard rather than something that trips.
 export const PROMPT_MAX = 1000;
 
-// KIE takes an aspect ratio rather than a pixel size, and z-image offers only
-// 1:1, 4:3, 3:4, 16:9 and 9:16. The layouts' 4/3 and 1/1 slots map exactly; the
-// tall gallery cell is 4/5 (0.80) and takes the nearest supported portrait,
-// 3:4 (0.75). The extra height is cropped by `object-fit: cover`, never
-// stretched, which is the same rule the patterns follow.
+// KIE takes an aspect ratio, and z-image offers only 1:1, 4:3, 3:4, 16:9 and
+// 9:16. The tall 4/5 gallery cell takes the nearest portrait, 3:4, and
+// `object-fit: cover` crops the extra height.
 export const ASPECT_RATIO = {
   '4/3': '4:3',
   '1/1': '1:1',
@@ -58,16 +51,14 @@ export const SLOTS = {
   gallery: { aspect: (i) => (i % 4 === 0 ? '4/5' : '1/1'), maxWidth: 700 },
 };
 
-// Terminal + in-flight task states, per KIE's job API.
+// Terminal task states, per KIE's job API.
 export const DONE = 'success';
-export const FAILED = 'fail';
+const FAILED = 'fail';
 export const TERMINAL = new Set([DONE, FAILED]);
 
 // ---- .env loading ---------------------------------------------------------
-// These scripts run as plain `node scripts/images/*.mjs`, outside Next.js, so
-// they read the env files themselves. Precedence matches the Next.js
-// convention: real environment variables win over .env.local, which wins over
-// .env. Values may be quoted; `export ` prefixes and # comments are tolerated.
+// These scripts run outside Next.js, so they read the env files themselves,
+// with its precedence: the real environment, then .env.local, then .env.
 const parseEnv = (text) => {
   const out = {};
 
@@ -98,11 +89,10 @@ const parseEnv = (text) => {
   return out;
 };
 
-export function loadEnvFiles() {
+function loadEnvFiles() {
   const loaded = [];
   const merged = {};
 
-  // Later files override earlier ones; the real environment overrides both.
   for (const name of ['.env', '.env.local']) {
     const file = path.join(ROOT, name);
 
@@ -138,34 +128,26 @@ export function apiKey() {
 }
 
 // ---- rate limiting --------------------------------------------------------
-// KIE accepts 20 new requests per 10 seconds per account, and anything over
-// that comes back 429 *without being queued*, so an un-paced run would silently
-// drop images. Every call in this pipeline goes through one shared pacer,
-// polling included: with a few hundred open jobs, the recordInfo passes are
-// what actually eat the budget, not the createTask burst at the start.
-//
-// The default leaves a little headroom under the documented ceiling. Raise it
-// with KIE_RATE_LIMIT if support has lifted your account's limit.
+// KIE accepts 20 new requests per 10 seconds per account and answers the rest
+// 429 *without queueing them*. Every call goes through one shared pacer,
+// polling included, since the polls are what eat the budget. The default
+// leaves headroom under the ceiling; KIE_RATE_LIMIT raises it.
 const RATE_WINDOW_MS = 10_000;
 const RATE_MAX = Math.max(1, Number(process.env.KIE_RATE_LIMIT ?? 18));
 const RATE_RETRIES = 5;
 
-// Minimum gap between two requests leaving this process.
 const RATE_GAP_MS = RATE_WINDOW_MS / RATE_MAX;
 
 let nextSlot = 0;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Even pacing rather than a sliding window. A window that simply allows N per
-// 10s lets all N leave at once, and then N more the instant the window rolls;
-// the server's 10s window does not share our boundary, so it can observe up to
-// 2N together and reject the overflow. Spacing every request by
-// window/limit (555ms at 18 per 10s) means any 10s window anyone measures holds
-// at most ceil(10000 / 555) = 19 requests, comfortably under the ceiling of 20.
+// Even pacing rather than a sliding window: the server's window does not share
+// our boundary, so a burst of N either side of a roll can reach it as 2N.
+// Spacing by window/limit keeps any 10s window under the ceiling.
 //
 // Reserving the slot is synchronous, so concurrent callers each get a distinct
-// one and queue up in arrival order.
+// one, in arrival order.
 async function throttle() {
   const now = Date.now();
   const at = Math.max(now, nextSlot);
@@ -199,7 +181,6 @@ export async function api(pathname, { method = 'GET', body, key } = {}) {
         body: body ? JSON.stringify(body) : undefined,
       });
     } catch (error) {
-      // Network hiccup: back off and try again.
       lastError = error;
       await sleep(Math.min(2 ** attempt * 500, 8000));
       continue;
@@ -264,11 +245,10 @@ export function writeJson(file, value) {
 
 // ---- generated-image index ------------------------------------------------
 // The React tree cannot stat the filesystem at render time, so the set of
-// finished images is mirrored into a tiny generated module. The static
-// generator runs in Node and reads the directory directly.
+// finished images is mirrored into a tiny generated module.
 export const IMAGE_INDEX = path.join(ROOT, 'components/template/generatedImages.ts');
 
-export function availableImages() {
+function availableImages() {
   if (!fs.existsSync(IMAGE_DIR)) return [];
 
   return fs

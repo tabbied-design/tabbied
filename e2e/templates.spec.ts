@@ -1,14 +1,10 @@
 // The packaged HTML templates: does a zip somebody downloads actually work?
 //
-// This is the test that keeps `scripts/package-templates.mjs` honest. The
-// templates are derived from the static export, so a change to a template page
-// silently reshapes them - a smoke test that opens the generated template and
-// asserts its patterns came up is what catches a template that stopped working
-// because a page changed.
+// Keeps `scripts/package-templates.mjs` honest: the templates are derived from
+// the static export, so a change to a template page silently reshapes them.
 //
-// Requires `npm run build && node scripts/package-templates.mjs` to have run;
-// the suite skips (loudly) rather than failing when the templates aren't there,
-// so the rest of the e2e run isn't blocked by a missing optional build step.
+// Requires `npm run build && node scripts/package-templates.mjs`; the suite
+// skips (loudly) rather than failing when the templates aren't there.
 import { test, expect } from '@playwright/test';
 import { unzipSync } from 'fflate';
 import fs from 'node:fs';
@@ -19,16 +15,11 @@ const PACKAGE_DIR = path.join(REPO_ROOT, 'packages', 'tabbied');
 const dirFor = (slug: string) =>
   path.join(REPO_ROOT, 'out', 'downloads', slug);
 
-// Two sites, because the packager has two stylesheet paths and they fail
-// differently. werkraum has its own authored `<slug>.module.css`, which ships
-// verbatim. solstice is one of the five built on the shared TemplateSite
-// component: it has no per-page sheet, so the component's is shipped trimmed
-// to the rules the page can actually match - a transform with real room to be
-// silently wrong, which is why it is covered here too.
-// hopscotch-museum is the third path: its authored sheet uses `composes:`,
-// which CSS Modules resolves in the markup rather than the stylesheet. The
-// packager drops the (inert, non-CSS) declaration after checking the build
-// really did put both classes on the element.
+// One site per stylesheet path, since they fail differently. werkraum ships
+// its own `<slug>.module.css` verbatim. solstice is built on the shared
+// TemplateSite component, whose sheet is trimmed to what the page can match.
+// hopscotch-museum's sheet uses `composes:`, which the packager drops after
+// checking the build put both classes on the element.
 const FIXTURES = [
   { slug: 'werkraum', shared: false, patterns: 8, hero: 'werkraum-hero.webp' },
   { slug: 'solstice', shared: true, patterns: 4, hero: null },
@@ -36,9 +27,8 @@ const FIXTURES = [
 ] as const;
 
 // The template pins its bootstrap to the published package on esm.sh. Serving
-// this branch's built dist in its place keeps the test deterministic and
-// offline - and means it exercises the code about to ship rather than the
-// version that happens to be on the CDN.
+// this branch's built dist in its place keeps the test offline and exercises
+// the code about to ship.
 const distFileFor = (url: string): string | null => {
   const pathname = new URL(url).pathname;
 
@@ -104,12 +94,9 @@ for (const fixture of FIXTURES) {
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
 
-    // The directory form, with the trailing slash, on purpose. `serve`
-    // rewrites `<dir>/index.html` to an extensionless `<dir>` - no trailing
-    // slash - and every relative asset in the template then resolves one
-    // level too high and 404s. The template is fine (opened from disk, or
-    // served by anything that doesn't do that rewrite); the URL is what has
-    // to be right here, or this spec silently tests an unstyled page.
+    // The trailing slash is deliberate: `serve` rewrites `<dir>/index.html`
+    // to an extensionless `<dir>`, every relative asset then resolves a level
+    // too high, and this would silently test an unstyled page.
     await page.goto(`/downloads/${fixture.slug}/`);
 
     const hosts = page.locator('[data-pattern]');
@@ -170,11 +157,8 @@ for (const fixture of FIXTURES) {
     expect(css).not.toContain(':global(');
     expect(css).not.toContain('composes:');
 
-    // Every class the markup uses must survive into the stylesheet -
-    // this is what the trim could get wrong on a shared sheet. Declared
-    // means in a rule: the trimmer keeps comments, and this codebase's
-    // comments name classes, so a rule the trim dropped still "declared"
-    // its class through the comment above it.
+    // Every class the markup uses must survive into the stylesheet, in a
+    // rule: comments are stripped first because they name classes too.
     const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
     const declared = new Set(
       [...withoutComments.matchAll(/\.(-?[A-Za-z_][A-Za-z0-9_-]*)/g)].map((m) => m[1])
@@ -183,10 +167,9 @@ for (const fixture of FIXTURES) {
     for (const attr of html.matchAll(/class="([^"]*)"/g)) {
       for (const name of attr[1].split(/\s+/)) if (name) onPage.add(name);
     }
-    // Two sets of class names are hooks rather than styles: lucide's own
-    // icon classes, and the `figure`/`figure--cutout` markers the Figure
-    // component puts on every image for pages that want to target them.
-    // A page that styles neither is not missing anything.
+    // Hooks rather than styles: lucide's icon classes and Figure's
+    // `figure`/`figure--cutout` markers. A page that styles neither is not
+    // missing anything.
     const HOOKS = new Set([
       'figure',
       'figure--cutout',
@@ -203,8 +186,8 @@ for (const fixture of FIXTURES) {
     expect(orphans, `classes used by the page but absent from its stylesheet`)
       .toEqual([]);
 
-    // Braces balance - the trim walks the sheet by hand, and a comment
-    // containing a literal `{` once desynchronized it.
+    // Braces balance: the trim walks the sheet by hand, skipping comments
+    // that contain a literal `{`.
     expect((withoutComments.match(/\{/g) ?? []).length).toBe(
       (withoutComments.match(/\}/g) ?? []).length
     );
@@ -241,16 +224,11 @@ for (const fixture of FIXTURES) {
     `run \`npm run build\` then \`npm run templates ${fixture.slug}\` first`
   );
 
-  // The React package ships the page's *source*, so it asks for its images by
-  // the URL it was written with - and unlike the HTML package there is no
-  // markup rewrite to point those URLs somewhere else. Flattening the files
-  // into one folder therefore breaks any page whose image path is hardcoded
-  // rather than read from the manifest (ImageCard's `/images/template/<id>`),
-  // and it breaks them quietly: Vite's dev server answers the miss with
-  // index.html and a 200, so nothing 404s and the images just render blank.
-  //
-  // The exported page is the ground truth for what gets requested: it is the
-  // same component tree, rendered by Next.
+  // The React package ships the page's *source*, which asks for its images by
+  // their authored URL (ImageCard hardcodes `/images/template/<id>`). A miss
+  // is silent: Vite's dev server answers it with index.html and a 200. The
+  // exported page, the same component tree, is the ground truth for what gets
+  // requested.
   test('serves every image URL the page requests', () => {
     const exported = fs.readFileSync(EXPORTED_PAGE, 'utf-8');
     const requested = new Set(
@@ -394,11 +372,9 @@ test.describe('the /templates gallery', () => {
       expect(file.suggestedFilename()).toBe(`werkraum-${format}.zip`);
       const bytes = fs.readFileSync(await file.path());
 
-      // Actually parse it. A size check alone passes on a corrupt archive, and
-      // the packager writes these itself now (fflate, not the `zip` binary -
-      // Cloudflare's build image has no `zip`), so nothing else would notice a
-      // malformed one. unzipSync throws on a bad central directory, and CRCs
-      // are checked per entry on inflate.
+      // Actually parse it: the packager writes the archive itself (fflate),
+      // and nothing else would notice a malformed one. unzipSync throws on a
+      // bad central directory, and CRCs are checked per entry on inflate.
       const entries = unzipSync(bytes);
       const names = Object.keys(entries);
       expect(names.length).toBeGreaterThan(3);

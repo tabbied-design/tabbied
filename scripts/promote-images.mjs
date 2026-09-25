@@ -47,8 +47,8 @@ import { CUTOUT_SUFFIX, loadPromptData, selectPrompts } from "./lib/prompts.mjs"
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const DATA_FILE = join(ROOT, "data", "image-prompts.json");
-// Promotion writes the *served* file directly. There is deliberately no source copy
-// elsewhere: that would put every image in git twice and add a second lossy encode.
+// The *served* file, written directly: a source copy elsewhere would put every
+// image in git twice and add a second lossy encode.
 const OUT_DIR = join(ROOT, "public", "images", "sites");
 
 function parseArgs(argv) {
@@ -85,7 +85,7 @@ function printHelp() {
  * high-quality WebP is both smaller and visually equivalent. alphaQuality 100 matters
  * here - every cut-out lands on a busy pattern, where a lossy alpha edge shows.
  */
-export async function toWebp(buf, quality) {
+async function toWebp(buf, quality) {
   return sharp(buf).webp({ quality, alphaQuality: 100, effort: 6 }).toBuffer();
 }
 
@@ -98,11 +98,8 @@ function plan(r, opts) {
       : { error: `no ${r.id}.png in ${opts.from}` };
   }
   const cutStem = `${r.id}${CUTOUT_SUFFIX}`;
-  // Generation returns the cut-out directly (background:"transparent"), so the
-  // original IS the cut-out. A legacy <id>-cutout.png beside it is output from
-  // the retired removal pass and takes precedence - its sibling <id>.png is the
-  // OPAQUE original in that layout, and promoting it as the cut-out would ship
-  // an un-cut image under the -cutout name.
+  // <id>.png is the cut-out. A legacy <id>-cutout.png takes precedence, since
+  // in that layout <id>.png is the OPAQUE original.
   const legacy = existsSync(src(cutStem));
   const native = existsSync(src(r.id));
   if (!legacy && !native) {
@@ -116,8 +113,7 @@ function plan(r, opts) {
         `\n    Regenerate: node scripts/generate-images.mjs submit --only ${r.id} --force`,
     };
   }
-  // requireAlpha guards the native path: an opaque PNG promoted under the
-  // -cutout name is exactly the silent failure this script exists to refuse.
+  // requireAlpha refuses an opaque PNG promoted under the -cutout name.
   const jobs = [{ src: legacy ? cutStem : r.id, out: cutStem, requireAlpha: !legacy }];
   if (opts.keepOriginal && legacy && native) jobs.push({ src: r.id, out: r.id });
   return { jobs };

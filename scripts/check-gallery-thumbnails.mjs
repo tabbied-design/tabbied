@@ -3,20 +3,13 @@
  * Fails the build if components/select-pattern-page/galleryThumbnails.ts holds
  * a config for a design that no longer exists.
  *
- * That file is hand-maintained (palettes and densities were tuned by eye), so
- * nothing regenerates it and a stale entry is invisible: the gallery looks it
- * up as `galleryThumbnails[item.slug]`, keyed off the shipped catalog, so an
- * entry whose slug names nothing is simply never read. 278 of them accumulated
- * that way when the catalog moved from `artworks/` to `patterns/` and the
- * configs for the designs dropped in that move were left behind.
+ * That file is tuned by eye and nothing regenerates it. The gallery reads it as
+ * `galleryThumbnails[item.slug]`, so an entry whose slug names nothing is never
+ * read and rots silently. The batch generators prune only their own
+ * gallery-order range; this is the backstop for everything else.
  *
- * The batch generators already delete the entries for designs they drop, but
- * only within the gallery-order range each one owns - anything removed outside
- * a generator (a migration, a hand-deleted JSON) rots unnoticed. This is the
- * backstop for that case.
- *
- * The reverse is NOT an error: a design with no entry at all falls back to its
- * own palette and option defaults, which is how most of the catalog renders.
+ * The reverse is NOT an error: a design with no entry falls back to its own
+ * palette and option defaults.
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -41,9 +34,8 @@ const entries = [
   ...readFileSync(THUMBNAILS_FILE, 'utf-8').matchAll(/^ {2}([a-z][a-z0-9]*): \{/gm),
 ].map((m) => m[1]);
 
-// The match above is tied to the file's formatting. Reformatted (four-space
-// indent, quoted keys) it finds nothing, and a gate that finds nothing has
-// checked nothing: that is the vacuous pass, not a clean one.
+// The match is tied to the file's formatting; finding nothing is a vacuous
+// pass, not a clean one.
 if (entries.length === 0) {
   console.error(
     'galleryThumbnails.ts: no entries matched the expected shape (two-space indent, ' +

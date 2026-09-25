@@ -1,11 +1,9 @@
 // The customizer: a site's latest revision, on its template.
 //
-// Same seam as e2e/studio-preview.spec.ts, one document up: the route fetches
-// a stored *revision* rather than deriving three strings from a direction, and
-// what has to hold is that a full document - every text slot - lands on the
-// packaged page, that the owner can change its colors and patterns through
-// the engine live, and that the page says what it knows about the document's
-// state.
+// Same seam as e2e/studio-preview.spec.ts, one document up: a stored
+// *revision* (every text slot) lands on the packaged page, the owner changes
+// its colors and patterns through the engine live, and the page says what it
+// knows about the document's state.
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';

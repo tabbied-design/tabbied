@@ -1,17 +1,13 @@
 #!/usr/bin/env node
 // What a design costs the gallery, measured in headless Chromium.
 //
-// The gallery draws 24 live cards a page, each at the cover render, and keeps
-// every card it has drawn. So a design's cost is paid 24 times over, and
-// three numbers decide whether a page survives on a phone: how many DOM nodes
-// it makes across its shadow roots, how many SVG image documents its `@svg`
-// and `@doodle` backgrounds open, and how many compositing layers it asks
-// for. The last one is the killer: an animated cell is a layer whether the
-// animation runs or is paused, a layer is a texture of the cell's size times
-// the device pixel ratio squared, and a phone is 3x. The September drop put
-// 317 layers on page 14 (267 MB of textures at 1x, nine times that on an
-// iPhone) and crashed it; see CLAUDE.md, "Importing a pattern authored
-// outside this repo".
+// The gallery draws 24 live cards a page and keeps every card it has drawn,
+// so a design's cost is paid 24 times over. Three numbers decide whether a
+// page survives on a phone: DOM nodes across shadow roots, SVG image documents
+// opened by `@svg` and `@doodle` backgrounds, and compositing layers. Layers
+// matter most: an animated cell is one even when paused, and its texture
+// scales with the device pixel ratio squared. See CLAUDE.md, "Importing a
+// pattern authored outside this repo".
 //
 //   node scripts/gallery-cost.mjs                 # every design, sorted by layers
 //   node scripts/gallery-cost.mjs <slug> ...      # just those

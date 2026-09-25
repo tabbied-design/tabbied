@@ -1,11 +1,8 @@
 // Packages a template site as a downloadable, framework-free HTML template.
 //
-// The static export is the source of truth: `next build` already renders every
-// template page to complete HTML, so a template is derived from that rather
-// than hand-ported. A hand-port is four artifacts per site to keep in step,
-// and within two edits the download and the live site disagree - which is why
-// this whole file reads out/ instead of any source tree (see the
-// "Downloadable templates" section of CLAUDE.md).
+// The static export is the source of truth: a template is derived from the
+// HTML `next build` rendered, never hand-ported (see "Downloadable templates"
+// in CLAUDE.md).
 //
 // What comes out is a folder somebody can open from the filesystem and edit:
 //
@@ -17,12 +14,10 @@
 //     images/             only the images this page references
 //     README.md
 //
-// The stylesheet is the point worth spelling out. The build emits minified CSS
-// with hashed class names (.werkraum-module__N8Ibmq__page), which is unreadable
-// in a template. Rather than un-minify and de-hash that, this copies the
-// *authored* module file - which is already the clean, commented stylesheet a
-// person should be editing - and rewrites the hashed names in the HTML back to
-// the plain ones the authored file already uses.
+// The build's CSS is minified with hashed class names
+// (.werkraum-module__N8Ibmq__page). Rather than un-minify that, this ships the
+// *authored* module file and rewrites the hashed names in the HTML back to the
+// plain ones it uses.
 //
 // Usage:
 //   node scripts/package-templates.mjs                # every packageable site
@@ -36,8 +31,7 @@ import { zipSync } from 'fflate';
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const exportDir = path.join(repoRoot, 'out');
-// Derived, never typed: both READMEs quote it, and the typed one said 254
-// while 338 shipped.
+// Derived, never typed: both READMEs quote it.
 const DESIGN_COUNT = fsSync
   .readdirSync(path.join(repoRoot, 'packages', 'tabbied', 'patterns'))
   .filter((file) => file.endsWith('.json')).length;
@@ -61,32 +55,18 @@ const templateDir = path.join(repoRoot, 'app', 'templates');
 const publicDir = path.join(repoRoot, 'public');
 const globalsCss = path.join(repoRoot, 'styles', 'globals.css');
 
-// Sites the packager knowingly can't handle. Listed (rather than left to
-// fail) so a *new* failure is a real signal: anything not in here that throws
-// exits non-zero, which is what makes this safe to wire into a build.
-// Currently empty - all 77 sites package.
+// Sites the packager knowingly can't handle, skipped with their reason. Anything
+// not in here that throws exits non-zero, which is what makes this safe to wire
+// into a build.
 const KNOWN_UNSUPPORTED = new Map();
 
 // ---- archiving -----------------------------------------------------------
 
-// What `zip -qr <name>.zip <dir>` did, in-process.
+// `zip -qr <name>.zip <dir>`, in-process with fflate. Don't reintroduce a PATH
+// lookup: Cloudflare's Workers Builds image ships `unzip` but not `zip`.
 //
-// This used to shell out to the `zip` binary, which is on GitHub Actions'
-// runner and on most developer machines but is NOT in Cloudflare's Workers
-// Builds image - that image ships `unzip` and not `zip`. So CI stayed green
-// while the deploy died with `spawn zip ENOENT` on all 57 sites, which is the
-// same shape of failure the two-pass build exists to prevent: the packaging
-// step is the one part of the build whose output nothing else validates.
-//
-// Deriving the download from the export is supposed to assume nothing about
-// the host, and a binary on
-// PATH is an assumption. fflate is a zero-dependency deflate/zip
-// implementation, so the archive is written by the same Node that walked the
-// tree and there is no host tool left to be missing.
-//
-// Archived from the *parent* so the zip expands into a named folder rather
-// than scattering files into the download directory - hence `dirName` being
-// relative to `parentDir` and forming the first path segment of every entry.
+// Archived from the *parent*, so `dirName` is the first path segment of every
+// entry and the zip expands into a named folder.
 async function zipDirectory(parentDir, dirName, zipName) {
   /** @type {Record<string, [Uint8Array, { mtime: Date }]>} */
   const entries = {};
@@ -96,13 +76,9 @@ async function zipDirectory(parentDir, dirName, zipName) {
 
   const walk = async (relativeDir) => {
     const absoluteDir = path.join(parentDir, relativeDir);
-    // A directory gets an entry of its own - zero bytes, name ending in `/` -
-    // exactly as `zip -r` writes one. For a directory with children this is
-    // redundant (every extractor creates parents on the way to a file), but
-    // for an *empty* one it is the only record that it existed, and 30 of the
-    // 77 sites reference no images: without this their `images/` (and the
-    // React package's `public/`) silently vanish from the download while the
-    // README still lists them.
+    // Every directory gets its own zero-length `<name>/` entry, as `zip -r`
+    // writes one: it is the only record of an empty one, and a site with no
+    // images would otherwise lose the `images/` (or `public/`) its README lists.
     entries[`${entryName(relativeDir)}/`] = [
       new Uint8Array(0),
       { mtime: (await fs.stat(absoluteDir)).mtime },
@@ -118,8 +94,8 @@ async function zipDirectory(parentDir, dirName, zipName) {
       const absolutePath = path.join(parentDir, relativePath);
       entries[entryName(relativePath)] = [
         await fs.readFile(absolutePath),
-        // Carry the real mtime across, as `zip -r` did. Without this fflate
-        // stamps every entry with the time the archive was written.
+        // The real mtime, as `zip -r` keeps it; fflate would stamp the time
+        // the archive was written.
         { mtime: (await fs.stat(absolutePath)).mtime },
       ];
     }
@@ -129,8 +105,7 @@ async function zipDirectory(parentDir, dirName, zipName) {
 
   const target = path.join(parentDir, zipName);
   await fs.rm(target, { force: true });
-  // level 6 is both `zip`'s default and fflate's, so the archives stay the
-  // size the /templates copy quotes.
+  // Level 6 is both `zip`'s default and fflate's.
   await fs.writeFile(target, zipSync(entries, { level: 6 }));
 
   return (await fs.stat(target)).size;
@@ -147,14 +122,12 @@ const stripNextRuntime = (html) =>
     .replace(/<link[^>]*\bas="script"[^>]*>/g, '')
     .replace(/<link[^>]*href="\/_next\/[^"]*"[^>]*>/g, '');
 
-// Tabbied's own favicons, manifest, tile and theme color. They resolve
-// against tabbied.com and would 404 in a template; the site's identity isn't
-// the template's to carry either.
+// Tabbied's own share card, canonical URL, favicons, manifest, tile and theme
+// color: they resolve against tabbied.com, and a site made from the template
+// must not carry them. The template pages set none of the first two, so those
+// lines are a backstop.
 const stripSiteChrome = (html) =>
   html
-    // tabbied.com's share card and canonical URL, which a site made from the
-    // template must not carry. The template pages set none (lib/seo.ts is
-    // for the site's own pages), so this is the second line, not the first.
     .replace(/<meta[^>]*property="og:[^"]*"[^>]*>/g, '')
     .replace(/<meta[^>]*name="twitter:[^"]*"[^>]*>/g, '')
     .replace(/<link[^>]*rel="canonical"[^>]*>/g, '')
@@ -221,12 +194,10 @@ function dehashClassNames(html, slug) {
 }
 
 /**
- * The stylesheet to ship, and whether it is this page's own.
- *
- * Most sites have an authored `<slug>.module.css` next to their page - that
- * file ships verbatim, comments and all. The five sites built on the shared
- * TemplateSite component have no per-page sheet; they use the component's,
- * which is shipped trimmed to what the page can match (see trimUnusedRules).
+ * The stylesheet to ship, and whether it is shared. A site's own
+ * `<slug>.module.css` ships verbatim; the sites built on the shared
+ * TemplateSite component have none and get the component's, trimmed later by
+ * trimUnusedRules.
  */
 async function resolveStylesheet(slug, moduleName) {
   const own = path.join(templateDir, slug, 'site', `${slug}.module.css`);
@@ -265,9 +236,8 @@ async function resolveStylesheet(slug, moduleName) {
  */
 function rewriteImagePaths(html) {
   const used = new Set();
-  // Flattening keeps only the file name, so two files of one name from two
-  // folders (`sites/x.webp`, `template/x.webp`) would land on one path and
-  // the second copy would overwrite the first, silently. Fail instead.
+  // Flattening keeps only the file name, so two same-named files from two
+  // folders would silently overwrite each other. Fail instead.
   const byBasename = new Map();
 
   const rewritten = html.replace(
@@ -300,14 +270,9 @@ const patternSlugs = (html) => [
 
 /**
  * The authored stylesheet, made valid outside the CSS-modules pipeline.
- *
- * `:global(img)` is a CSS-modules construct, not CSS - left in place a browser
- * drops the whole rule. Once class names are plain, the wrapper has nothing
- * left to do, so unwrapping it to `img` is exactly equivalent.
- *
- * `composes:` is a genuine transform (the composed declarations have to be
- * folded in, or the composed class added to the markup), so a site using it
- * fails here rather than shipping a stylesheet that quietly loses rules.
+ * `:global(img)` is not CSS (a browser drops the whole rule), and once class
+ * names are plain, unwrapping it to `img` is exactly equivalent. `composes:`
+ * is removed by dropComposes.
  */
 function prepareStylesheet(css, slug, usedClasses) {
   return dropComposes(css, slug, usedClasses).replace(
@@ -319,24 +284,18 @@ function prepareStylesheet(css, slug, usedClasses) {
 /**
  * Remove `composes:` declarations, having checked they were already resolved.
  *
- * `composes` needs no flattening here, which is easy to get wrong: CSS Modules
- * resolves a local `composes` in the *markup*, not the stylesheet. A rule
- * `.h2Light { composes: h2 }` compiles to `class="...__h2Light ...__h2"` on every
- * element that used it, and both rules are already in the sheet. So the
- * declaration is inert - it is simply not valid CSS outside the pipeline, and
- * dropping it leaves rendering untouched.
- *
- * That is a premise about the build's output, so it is verified rather than
- * assumed: if a page uses the composing class but its markup never picked up
- * the composed one, the assumption is wrong for that site and it fails here.
- * `composes: x from './other.css'` would pull in a second module, which the
- * one-module check in dehashClassNames already rejects before this runs.
+ * CSS Modules resolves a local `composes` in the *markup*:
+ * `.h2Light { composes: h2 }` compiles to `class="...__h2Light ...__h2"`, and
+ * both rules are already in the sheet, so the declaration is inert. That is a
+ * premise about the build's output, so it is verified: a page using the
+ * composing class without the composed one fails. `composes ... from` would
+ * be a second module, which dehashClassNames already rejects.
  */
 function dropComposes(css, slug, usedClasses) {
   const problems = [];
 
-  // Rules with a `composes` are simple single-class blocks by definition -
-  // CSS Modules rejects anything else - so a nesting-free block match is safe.
+  // CSS Modules only allows `composes` in a single-class block, so a
+  // nesting-free block match is safe.
   const out = css.replace(
     /\.([A-Za-z0-9_-]+)([^{}]*)\{([^{}]*)\}/g,
     (rule, className, _rest, body) => {
@@ -367,24 +326,13 @@ function dropComposes(css, slug, usedClasses) {
 }
 
 /**
- * Drop rules that can never match the page.
+ * Drop rules that can never match the page. Only the shared
+ * TemplateSite.module.css is trimmed; it carries layout kits for other sites.
  *
- * Only needed for the five sites that share TemplateSite.module.css: a
- * stylesheet written for every site in that collection carries ~45% rules for
- * layout kits the page in hand doesn't use, and shipping those in a download
- * called "this page's stylesheet" is misleading. A site with its own authored
- * sheet uses 100% of it and is left byte-for-byte alone.
- *
- * Conservative by construction: a rule is dropped only when it names at least
- * one class AND some class it needs is absent from the page. A selector with
- * no class at all (`html`, `:root`, `a:hover`) is always kept, because whether
- * it matches can't be decided from the class list. Selector lists are filtered
- * per-selector, so `.used, .dead` keeps `.used`.
- *
- * Safe here specifically because the packaged page has no framework: the only
- * script left is the pattern bootstrap, which sets inline styles, never
- * classes. Nothing can add a class after load. The pixel diff against the live
- * page is what proves it for real.
+ * Conservative: a rule goes only when some class it needs is absent from the
+ * page. A selector with no class (`html`, `:root`) is always kept, and lists
+ * are filtered per selector, so `.used, .dead` keeps `.used`. Safe only
+ * because the packaged page has no framework left to add a class after load.
  */
 function trimUnusedRules(css, usedClasses) {
   // Every class the selector requires. `.a.b .c:hover::after` -> a, b, c.
@@ -396,9 +344,8 @@ function trimUnusedRules(css, usedClasses) {
     return classes.length === 0 || classes.every((c) => usedClasses.has(c));
   };
 
-  // A selector list splits on the commas between selectors, not the ones
-  // inside `:is(.a, .b)` or `:not(.a, .b)`: split naively, an unused `.b`
-  // there took `:is(.a` with it and left broken CSS.
+  // Split on the commas between selectors, not the ones inside `:is(.a, .b)`
+  // or `:not(.a, .b)`, which a naive split breaks into invalid CSS.
   const splitSelectorList = (text) => {
     const parts = [];
     let depth = 0;
@@ -421,10 +368,9 @@ function trimUnusedRules(css, usedClasses) {
     return parts.map((part) => part.trim()).filter(Boolean);
   };
 
-  // Scanning has to skip comments, not just count braces. This codebase
-  // documents its CSS heavily and at least one comment contains a literal
-  // `{ color: inherit }` as an example - counted naively, that desynchronizes
-  // the brace depth for the rest of the file and the output is silently wrong.
+  // Scanning must skip comments: one contains a literal `{ color: inherit }`,
+  // which desynchronizes a naive brace count. Don't simplify this back to
+  // `indexOf('{')`.
   const COMMENT = /\/\*[\s\S]*?\*\//g;
 
   // Index of the next `char` at top level, ignoring anything inside a comment.
@@ -468,7 +414,8 @@ function trimUnusedRules(css, usedClasses) {
 
       const prelude = source.slice(index, brace);
       const body = source.slice(brace + 1, end - 1);
-      // The selector is the prelude minus the comments sitting above it.
+      // Comments are stripped before parsing the selector, since they may name
+      // classes, and put back on the way out.
       const selectorText = prelude.replace(COMMENT, '').trim();
 
       if (/^@(media|supports|container|layer)/.test(selectorText)) {
@@ -481,7 +428,6 @@ function trimUnusedRules(css, usedClasses) {
         const kept = splitSelectorList(selectorText).filter(keepSelector);
 
         if (kept.length) {
-          // Keep the comments that documented this rule.
           const comments = (prelude.match(COMMENT) ?? []).join('\n');
           out += `\n${comments ? comments + '\n' : ''}${kept.join(',\n')} {${body}}\n`;
         }
@@ -498,31 +444,14 @@ function trimUnusedRules(css, usedClasses) {
 
 // ---- React package -------------------------------------------------------
 
-/**
- * The React format, as a copy rather than a port.
- *
- * The HTML package is derived from the export because the markup has to be -
- * there is no framework-free source to copy. React is the opposite case: a
- * template page is *already* a plain React component. The only Next.js API any
- * of the 77 uses is `export const metadata`, and there is no next/image,
- * next/link, 'use client' or generateStaticParams anywhere. So the page ships
- * as it was written, and what changes is only the frame around it.
- *
- * That also means the CSS needs no transform at all - Vite resolves
- * `.module.css` natively, so the authored stylesheet ships byte-for-byte with
- * its `composes:` and `:global()` intact and working. Only the HTML package,
- * which has no bundler, needs those flattened.
- */
+// The React format is a copy of the page, not a port: a template page is
+// already a plain React component whose only Next.js API is
+// `export const metadata`. Only the frame around it changes, and Vite resolves
+// `.module.css` natively, so the CSS ships untransformed.
 
-// A page's non-relative imports, and where each one lands in the package.
-// `tabbied/*` stay as npm deps; local components are copied in beside the page.
-// Packages a template page may import that are *not* copied into the package
-// as source, keyed to the range the scaffold should install. `tabbied` itself
-// is always a dependency and is pinned separately, from the workspace version.
-//
-// `tabbied-templates` is here because the five shared-component sites carry the
-// editable-section annotations, and the component derives its brand custom
-// properties through that package (see docs/editable-templates.md).
+// Packages a template page may import that are *not* copied in as source,
+// keyed to the range the scaffold installs. `tabbied` itself is always a
+// dependency, pinned separately from the workspace version.
 const TEMPLATES_PACKAGE_VERSION = `^${
   JSON.parse(
     fsSync.readFileSync(
@@ -537,6 +466,7 @@ const EXTERNAL_DEPENDENCIES = new Map([
   ['tabbied-templates', TEMPLATES_PACKAGE_VERSION],
 ]);
 
+// Local modules a page may import by workspace path, and where each lands.
 const LOCAL_IMPORTS = new Map([
   ['components/Figure', { from: 'components/Figure.tsx', to: 'Figure.tsx' }],
   ['components/template/TemplateSite', { from: 'components/template/TemplateSite.tsx', to: 'TemplateSite.tsx' }],
@@ -568,13 +498,10 @@ function toStandaloneComponent(source, componentName) {
 }
 
 /**
- * Which local modules a set of sources pulls in, transitively.
- *
- * Two specifier shapes reach a local file. A page imports it by workspace path
- * (`components/template/TemplateSite`); that component then imports its
- * siblings relatively (`./templateContent`). Both are followed, and because
- * every copied module lands flat in `src/`, the relative ones already resolve
- * in the package - they only have to be *present*.
+ * Which local modules a set of sources pulls in, transitively: by workspace
+ * path (`components/template/TemplateSite`) or relatively from a sibling
+ * (`./templateContent`). Every copy lands flat in `src/`, so the relative ones
+ * already resolve and only have to be present.
  */
 function collectLocalImports(sources) {
   const needed = new Map();
@@ -669,13 +596,8 @@ async function packageReactSite(slug, outDir, version, name, images) {
     toStandaloneComponent(pageSource, 'App')
   );
 
-  // Copied components keep their own local imports rewritten the same way.
-  //
-  // While reading them, note which external packages the shipped source
-  // actually imports. A package that is imported but missing from the
-  // scaffold's package.json fails at `npm install` time in somebody else's
-  // folder, which is the worst place to find out - so this is derived from the
-  // source rather than maintained by hand.
+  // The dependencies are derived from what the shipped source imports, not
+  // maintained by hand: a missing one fails in somebody else's folder.
   const externals = new Set();
   const noteExternals = (source) => {
     for (const name of EXTERNAL_DEPENDENCIES.keys()) {
@@ -704,9 +626,7 @@ async function packageReactSite(slug, outDir, version, name, images) {
         .replace(/^[\s\S]*?export default /, '')
         .replace(/;\s*$/, '')
     );
-    // Each entry keeps the `base` it has on the site (`/images/sites`), because
-    // the images are copied in under the paths they already have - see the
-    // copy loop below for why the React package can't flatten them.
+    // Entries keep their site `base`, since the images keep their sub-paths.
     const mine = Object.fromEntries(
       Object.entries(manifest).filter(([id]) =>
         images.some((file) => path.basename(file, '.webp') === id)
@@ -720,8 +640,6 @@ async function packageReactSite(slug, outDir, version, name, images) {
     );
   }
 
-  // The page's own stylesheet, byte-for-byte - Vite handles CSS modules, so
-  // nothing here needs the flattening the HTML package does.
   const own = path.join(templateDir, slug, 'site', `${slug}.module.css`);
   if (fsSync.existsSync(own)) {
     await fs.copyFile(own, path.join(srcDir, `${slug}.module.css`));
@@ -735,17 +653,10 @@ async function packageReactSite(slug, outDir, version, name, images) {
 
   await fs.copyFile(globalsCss, path.join(srcDir, 'base.css'));
 
-  // Images keep the sub-path they have on the site - `sites/...`, `template/...` -
-  // where the HTML package flattens them into one folder. The two formats
-  // differ because of what each one ships: the HTML package rewrites the
-  // markup, so it can put the files anywhere and point the `src` at them,
-  // while the React package ships the page's *source*, which asks for its
-  // images by the URL it was written with. Figure resolves one from the
-  // manifest's `base` (`/images/sites/<id>.webp`) and ImageCard hardcodes
-  // `/images/template/<id>.webp`; flattening 404s the second kind outright,
-  // which is what emptied the five TemplateSite pages under `vite dev`.
-  // Keeping the structure also means two same-named files from different
-  // folders can't collide on the way in.
+  // Images keep their site sub-paths (`sites/...`, `template/...`), unlike the
+  // HTML package: the source asks for them by their authored URL (ImageCard
+  // hardcodes `/images/template/<id>.webp`), and Vite answers a miss under
+  // `public/` with index.html, so flattening blanks them silently.
   for (const relativePath of images) {
     const destination = path.join(siteDir, 'public', 'images', relativePath);
     await fs.mkdir(path.dirname(destination), { recursive: true });
@@ -819,7 +730,7 @@ async function packageReactSite(slug, outDir, version, name, images) {
       `  <StrictMode>\n    <App />\n  </StrictMode>\n);\n`
   );
 
-  // The <head> the page used to get from Next's metadata export.
+  // The <head> Next's metadata export gave the page on the site.
   await fs.writeFile(
     path.join(siteDir, 'index.html'),
     `<!doctype html>\n<html lang="en">\n  <head>\n` +
@@ -899,13 +810,9 @@ const bootstrapScript = (version, slugs) => `
     </script>
 `;
 
-// The small-screen menu (components/template/TemplateMenu) opens and shuts
-// as a <details> with nothing running; on the site and in the React package
-// the component also closes it on a followed link, a click outside and
-// Escape. This is that, for the package with no framework left in it, so
-// the menu does not stay open over the section it just scrolled to. A plain
-// script, and not part of the bootstrap: the Studio preview replaces the
-// esm.sh bootstrap with its own, and this should survive into it.
+// TemplateMenu's close-on-link/outside-click/Escape behavior, for the package
+// with no React left. A plain script rather than part of the bootstrap, since
+// the Studio preview replaces the esm.sh bootstrap and this should survive it.
 const MENU_SCRIPT = `
     <!-- Closes the small-screen menu on a followed link, a click outside, or Escape. -->
     <script>
@@ -964,7 +871,6 @@ async function packageSite(slug, outDir, version) {
     `${html.includes('template-menu') ? MENU_SCRIPT : ''}${bootstrapScript(version, slugs)}  </body>`
   );
 
-  // Write the folder.
   const siteDir = path.join(outDir, slug);
   await fs.rm(siteDir, { recursive: true, force: true });
   await fs.mkdir(path.join(siteDir, 'styles'), { recursive: true });
@@ -977,8 +883,6 @@ async function packageSite(slug, outDir, version) {
   let siteCss = prepareStylesheet(stylesheet.css, slug, usedClasses);
 
   if (stylesheet.shared) {
-    // A sheet written for a whole collection carries rules for layout kits
-    // this page never uses. Ship what this page can actually match.
     const before = siteCss.length;
     siteCss = trimUnusedRules(siteCss, usedClasses);
     stylesheet.trimmedPercent = Math.round((1 - siteCss.length / before) * 100);
@@ -993,8 +897,7 @@ async function packageSite(slug, outDir, version) {
     );
   }
 
-  // The page's own <title> is the site's name. Decoded: the export writes
-  // entities, and "Ember &amp; Oak" was the heading of two READMEs.
+  // The page's <title> is the site's name, with the export's entities decoded.
   const name = unescapeHtml(/<title>([^<]*)<\/title>/.exec(html)?.[1] ?? slug);
   await fs.writeFile(
     path.join(siteDir, 'README.md'),
@@ -1027,9 +930,7 @@ if (outDirIndex !== -1 && !args[outDirIndex + 1]) {
 
 const outDir = path.resolve(
   repoRoot,
-  // Not out/templates: that is now the exported /templates route, and a site
-  // slug landing next to its index.html would be a collision waiting to
-  // happen. /downloads/<slug>-html.zip is the public URL anyway.
+  // Not out/templates, which is the exported /templates route.
   outDirIndex === -1 ? 'out/downloads' : args[outDirIndex + 1]
 );
 // Positional args are slugs. A flag's value is not one.
@@ -1041,10 +942,8 @@ const requested = args.filter(
 );
 
 // Templates pin the package version so a download keeps rendering the way it
-// looked. That comes from the workspace's package.json, which changesets has
-// already bumped by the time a release builds the site - so a template always
-// points at a version that is either published or about to be. Override it
-// when generating templates against an unreleased build.
+// looked. The workspace version is already bumped by changesets when a release
+// builds the site; override it to package against an unreleased build.
 const versionIndex = args.indexOf('--tabbied-version');
 const version =
   versionIndex !== -1
@@ -1066,10 +965,8 @@ const packageable = (await fs.readdir(templateDir, { withFileTypes: true }))
 
 const targets = requested.length > 0 ? requested : packageable;
 
-// Packaging everything owns the whole folder, so a site that has since been
-// renamed or retired doesn't linger in it. This matters on the deploy path,
-// where the folder is `public/downloads` and `next build` copies whatever is
-// in it into the export. Naming a slug repackages just that one, in place.
+// Packaging everything wipes the folder first, so a retired site can't linger
+// in the deploy. Naming a slug repackages just that one, in place.
 if (requested.length === 0) {
   await fs.rm(outDir, { recursive: true, force: true });
 }
@@ -1083,8 +980,7 @@ let failed = 0;
 for (const slug of targets) {
   const knownReason = KNOWN_UNSUPPORTED.get(slug);
 
-  // A site named explicitly is still attempted, so the reason is a fresh
-  // error message rather than a stale note.
+  // A site named explicitly is still attempted, for a fresh error message.
   if (knownReason && requested.length === 0) {
     skipped += 1;
     console.log(`package-templates: skipping ${slug} - ${knownReason}`);
@@ -1115,9 +1011,6 @@ console.log(
     (failed > 0 ? `, ${failed} FAILED` : '')
 );
 
-
-// Only unexpected failures are fatal - the known-unsupported set is skipped
-// above, so this stays safe to run as part of a build.
 if (failed > 0) {
   process.exitCode = 1;
 }

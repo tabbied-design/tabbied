@@ -1,17 +1,12 @@
 // Studio's preview: does a generated direction actually reach the template?
 //
-// The unit tests in packages/tabbied-templates cover the mapping with no DOM,
-// and e2e/editable.spec.ts covers the engine against a packaged download. What
-// neither can cover is the seam this page is made of: that the exported route
-// fetches the package, that rewriting the esm.sh bootstrap to a same-origin
-// bundle still mounts the patterns *inside the iframe's own document* (a custom
-// element registry is per-document, which is the whole reason the runtime is
-// injected rather than driven from the parent), and that the packaged
-// stylesheet survives the trip.
+// The seam this page is made of: the exported route fetches the package, the
+// same-origin bundle that replaces the esm.sh bootstrap mounts the patterns
+// *inside the iframe's own document* (a custom element registry is
+// per-document), and the packaged stylesheet survives the trip.
 //
-// The generation is the one thing stubbed: it needs D1 and a session, and
-// worker/test/api.test.ts already owns that. Everything else here is the real
-// exported artifact.
+// Only the generation is stubbed (it needs D1 and a session, which
+// worker/test/api.test.ts covers).
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -20,8 +15,7 @@ const REPO_ROOT = path.join(__dirname, '..');
 const SLUG = 'verdant';
 
 // The route, the packaged template and the bundled runtime all have to be in
-// the export; skip loudly rather than failing when `npm run build` hasn't run,
-// matching e2e/templates.spec.ts and e2e/editable.spec.ts.
+// the export; skip loudly rather than failing when `npm run build` hasn't run.
 const REQUIRED = [
   path.join(REPO_ROOT, 'out', 'studio', 'preview', 'index.html'),
   path.join(REPO_ROOT, 'out', 'downloads', SLUG, 'index.html'),
@@ -159,22 +153,17 @@ test.describe('studio preview', () => {
 
     await expect(nav).toBeVisible({ timeout: 15_000 });
 
-    // `display: flex` comes from the packaged stylesheet, which is loaded by a
-    // relative href - so this fails if the injected <base> is missing or wrong,
-    // the failure that once had e2e/templates.spec.ts passing against a
-    // completely unstyled page.
+    // `display: flex` comes from the packaged stylesheet, loaded by a relative
+    // href, so this fails if the injected <base> is missing or wrong.
     await expect
       .poll(() => nav.evaluate((el) => getComputedStyle(el).display))
       .not.toBe('block');
   });
 
   test('asks for nothing relative to the route', async ({ page }) => {
-    // Chromium's preload scanner does not honor the injected <base> in a
-    // srcdoc document: with relative hrefs it fetched every stylesheet and
-    // preloaded image against this route first - `/studio/preview/styles/...`,
-    // a 404 and a console full of errors for a preview that then drew fine.
-    // The builder now spells those references out as absolute paths under the
-    // package, so nothing the frame asks for lives under the route.
+    // Chromium's preload scanner ignores the injected <base> in a srcdoc
+    // document, so the builder writes absolute paths under the package and
+    // nothing the frame asks for lives under this route.
     const underRoute: string[] = [];
     page.on('request', (request) => {
       const { pathname } = new URL(request.url());

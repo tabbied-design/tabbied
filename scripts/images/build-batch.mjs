@@ -5,14 +5,12 @@
 //   node scripts/images/build-batch.mjs --only static   # one stack, site, or id substring
 //   node scripts/images/build-batch.mjs --model z-image
 //
-// To redo a finished image, pair the two: `--all --only <id>` plans just that
-// one, and `submit-batch.mjs --force` is what actually lets it be regenerated
-// (the id is already recorded as successful, so it would otherwise be skipped).
+// To redo a finished image, pair `--all --only <id>` here with
+// `submit-batch.mjs --force`, which lets an id already recorded as successful
+// be regenerated.
 //
-// KIE has no bulk-submit endpoint: each image is its own job, created and polled
-// individually (see submit-batch.mjs). So this step writes a plain plan rather
-// than an upload file. Each entry keeps the manifest id, which is the filename
-// the finished image lands under, so results route themselves back to slots.
+// KIE has no bulk-submit endpoint, so this writes a plain plan of one job per
+// image. Each entry keeps the manifest id, the finished image's filename.
 import path from 'node:path';
 import fs from 'node:fs';
 import { MANIFEST, MODEL, PROMPT_MAX, ROOT, TASKS, argv, imagePath, readJson, writeJson } from './common.mjs';
@@ -37,8 +35,8 @@ const matches = (p) =>
   (p.aliases ?? []).some((alias) => alias.includes(only));
 
 const selected = manifest.prompts.filter(matches);
-// --force is an alias of --all, so the whole regenerate chain reads the same:
-// build --force, submit --force, import --force.
+// --force is an alias of --all, so the regenerate chain reads the same in
+// every step.
 const all = Boolean(args.all || args.force);
 const pending = all ? selected : selected.filter((p) => !fs.existsSync(imagePath(p.id)));
 

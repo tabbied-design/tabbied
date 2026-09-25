@@ -7,14 +7,12 @@
 //   node scripts/images/submit-batch.mjs --stall-after 15 # give up waiting after N minutes
 //
 // The API key comes from .env.local / .env at the repo root, or from the
-// environment (see scripts/images/README.md). Every generation is asynchronous:
-// createTask returning 200 only means the job was accepted, so each taskId is
-// recorded in .batch/state.json and polled until it reaches success or fail.
-// Because the ids are on disk, closing the shell mid-run loses nothing.
+// environment (see scripts/images/README.md). createTask only accepts a job, so
+// each taskId is recorded in .batch/state.json and polled to success or fail;
+// closing the shell mid-run loses nothing.
 //
-// --concurrency only sets how many sockets are open at once; the account-wide
-// request budget is enforced by the shared limiter in common.mjs, which covers
-// polling as well as submission.
+// --concurrency only sets how many sockets are open at once; the request
+// budget is the shared limiter's in common.mjs.
 import path from 'node:path';
 import {
   MODEL, ROOT, STATE, TASKS, TERMINAL, api, apiKey, argv, pooled, rateLimit, readJson, resultUrls, writeJson,
@@ -91,9 +89,8 @@ const state = loadState();
 state.model = plan.model;
 state.submittedAt = state.submittedAt ?? new Date().toISOString();
 
-// --retry drops everything that did not succeed, so those ids look unsubmitted
-// again and get fresh jobs. Without it a task wedged in `generating` is skipped
-// forever: it stays in the plan (no image on disk) but already carries a taskId.
+// --retry drops everything that did not succeed, so those ids get fresh jobs.
+// Without it a task wedged in `generating` keeps its taskId and is skipped.
 if (args.retry) {
   const stale = Object.entries(state.tasks).filter(([, t]) => t.state !== 'success');
   for (const [id] of stale) delete state.tasks[id];
@@ -101,10 +98,8 @@ if (args.retry) {
 }
 
 // --force drops the state for everything in the current plan, successes
-// included, which is what makes an already-generated image regenerable: --retry
-// deliberately leaves a good result alone, and a task that still carries a
-// taskId is skipped below however many times it is replanned. Scope it with
-// build-batch's --only so this rerolls the one image you meant.
+// included, so an already-generated image can be regenerated. Scope it with
+// build-batch's --only.
 if (args.force) {
   const planned = plan.tasks.filter((task) => state.tasks[task.id]);
   for (const task of planned) delete state.tasks[task.id];

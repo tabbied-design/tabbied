@@ -1,19 +1,11 @@
 #!/usr/bin/env node
 // Plain punctuation, enforced.
 //
-// Every tracked text file is scanned for the characters that word processors
-// and language models reach for and that this repo does not use: em and en
-// dashes, curly quotes, the ellipsis character, arrows, bullets, check marks,
-// emoji, and the invisible ones (no-break space, zero-width space, a stray
-// byte-order mark). The rule and its reasons are in CLAUDE.md ("Plain
-// punctuation"); this is the gate that makes it hold across sessions rather
-// than across the one that read the rule.
-//
-// A glyph that is genuinely part of a design (a CSS `content`, an icon, a
-// timetable arrow) is written as an escape (`\2714`, `\u2192`) so the source
-// stays ASCII and the choice is visible in review. Prose never gets that
-// exemption: a dash in a sentence is a comma, a colon, a period, or a pair of
-// parentheses waiting to be chosen.
+// Every tracked text file is scanned for em and en dashes, curly quotes, the
+// ellipsis character, arrows, bullets, check marks, emoji, and the invisible
+// ones (no-break space, zero-width space, a stray byte-order mark). The rule
+// and its reasons are in CLAUDE.md ("Plain punctuation"). A glyph that is part
+// of a design is written as an escape (`\2714`, `\u2192`).
 //
 // Usage: node scripts/check-typography.mjs [path ...]
 // With no paths, every file `git ls-files` reports that has a text extension.
@@ -65,8 +57,7 @@ function trackedFiles() {
     execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
       .split('\0')
       .filter((file) => file && isText(file) && !SKIP.some((pattern) => pattern.test(file)))
-      // A tracked file deleted in the working tree is still listed by the
-      // index; there is nothing to scan, and reading it threw instead.
+      // A tracked file deleted in the working tree is still listed by the index.
       .filter((file) => existsSync(file))
   );
 }
