@@ -1,0 +1,1356 @@
+/* ==========================================================================
+   MEEPLE & MUG - board game cafe, Tollgate Street
+   A game shelf. The library is a bookcase of boxes stood on their spines,
+   one shelf for each kind of evening, and the three house pieces (a
+   knight, a mug, a die) are single-ink cut-outs that take whatever colors
+   the cafe is painted. A round, heavy display face for names, a plain
+   grotesque for the rest, and a checkerboard for a table top.
+   ========================================================================== */
+
+.page {
+  --paper: #f6f0e6;
+  --ink: #1f1b2e;
+  --tomato: #e4572e;
+  --teal: #2a9d8f;
+  --gray: #8d8697;
+  --pale: #e8dfd0;
+  --gut: clamp(1rem, 4.5vw, 4rem);
+  --max: 84rem;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+  --display: 'Gabarito', 'Avenir Next', 'Helvetica Neue', sans-serif;
+  --muted: color-mix(in srgb, var(--ink) 72%, var(--paper));
+
+  font-family: 'Rethink Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 5rem;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.85rem var(--gut);
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+}
+
+.markArt {
+  width: 1.7rem;
+}
+
+.markName {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.9rem, 1.8vw, 1.8rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--tomato);
+}
+
+.barCta {
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5.5rem);
+  align-items: center;
+}
+
+.kicker,
+.secKick {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tomato);
+}
+
+.title {
+  margin-top: 1.1rem;
+  font-size: clamp(2.6rem, 5.4vw, 4.9rem);
+  font-weight: 900;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--teal);
+}
+
+.lede {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid var(--ink);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.btn {
+  background: var(--tomato);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.btnGhost {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 2.25rem;
+  margin-top: 2.5rem;
+  padding-top: 1.4rem;
+  border-top: 2px solid var(--ink);
+}
+
+.facts dt {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.facts dd {
+  margin-top: 0.3rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* The table: a checkerboard plate, and the three pieces standing on its
+   near edge. Each piece is sized by height; its width follows. */
+.table {
+  position: relative;
+  aspect-ratio: 1 / 0.92;
+}
+
+.board {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 3%;
+  bottom: 24%;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  border-radius: 1.4rem;
+  background: var(--pale);
+}
+
+/* The table top the pieces stand on, drawn in front of the board's foot. */
+.tableEdge {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 31%;
+  border: 2px solid var(--ink);
+  border-bottom-width: 0.85rem;
+  border-radius: 1.2rem;
+  background: var(--paper);
+}
+
+.heroKnight,
+.heroMug,
+.heroDie {
+  position: absolute;
+  z-index: 2;
+}
+
+.heroKnight {
+  left: 5%;
+  bottom: 9%;
+  height: 70%;
+}
+
+.heroMug {
+  left: 37%;
+  bottom: 9%;
+  height: 46%;
+}
+
+.heroDie {
+  right: 7%;
+  bottom: 8%;
+  height: 30%;
+}
+
+/* ----------------------------------------------------------------- shelf */
+
+.shelfSec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.secHead {
+  max-width: 44rem;
+}
+
+.secHead h2 {
+  margin-top: 0.7rem;
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.bookcase {
+  display: grid;
+  gap: clamp(2.5rem, 4vw, 3.5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.shelf {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: end;
+}
+
+.shelfLabel {
+  padding-bottom: 1.2rem;
+}
+
+.shelfId {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.55rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 0.35rem;
+}
+
+.shelfLabel h3 {
+  margin-top: 0.8rem;
+  font-size: 1.8rem;
+}
+
+.shelfLength {
+  margin-top: 0.3rem;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.shelfNote {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* The plank is the list's own bottom border; the boxes stand on it. */
+.spines {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.3rem;
+  height: 17.5rem;
+  padding: 0 0.9rem;
+  border-bottom: 0.8rem solid var(--ink);
+  box-shadow: 0 0.55rem 0 -0.1rem color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.spine {
+  position: relative;
+  flex: none;
+  writing-mode: vertical-rl;
+  display: block;
+  padding: 1rem 0.35rem 2.2rem;
+  border-radius: 0.3rem 0.3rem 0 0;
+  border: 2px solid var(--ink);
+  border-bottom: 0;
+  background-image: linear-gradient(
+    to bottom,
+    transparent 0.45rem,
+    color-mix(in srgb, currentColor 30%, transparent) 0.45rem 0.6rem,
+    transparent 0.6rem calc(100% - 1.3rem),
+    color-mix(in srgb, currentColor 30%, transparent) calc(100% - 1.3rem) calc(100% - 1.15rem),
+    transparent calc(100% - 1.15rem)
+  );
+  transition: transform 160ms ease;
+}
+
+.spine:hover {
+  transform: translateY(-0.5rem);
+}
+
+.spine[data-tone='tomato'] {
+  background-color: var(--tomato);
+  color: var(--ink);
+}
+
+.spine[data-tone='teal'] {
+  background-color: var(--teal);
+  color: var(--ink);
+}
+
+.spine[data-tone='ink'] {
+  background-color: var(--ink);
+  color: var(--paper);
+}
+
+.spine[data-tone='pale'] {
+  background-color: var(--pale);
+  color: var(--ink);
+}
+
+.spine[data-tone='gray'] {
+  background-color: var(--gray);
+  color: var(--ink);
+}
+
+.spine[data-h='1'] {
+  height: 60%;
+}
+
+.spine[data-h='2'] {
+  height: 72%;
+}
+
+.spine[data-h='3'] {
+  height: 86%;
+}
+
+.spine[data-h='4'] {
+  height: 100%;
+}
+
+.spine[data-w='1'] {
+  width: 2.9rem;
+}
+
+.spine[data-w='2'] {
+  width: 3.7rem;
+}
+
+.spine[data-w='3'] {
+  width: 4.6rem;
+}
+
+.spineName {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 100%;
+}
+
+.spineMeta {
+  display: block;
+  margin-inline-start: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+/* A staff pick is a dot near the foot of the spine; the words stay for
+   screen readers. */
+.pick {
+  position: absolute;
+  left: 50%;
+  bottom: 0.45rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-left: -0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+  font-size: 0;
+  color: inherit;
+}
+
+.shelfFoot {
+  margin-top: 2.5rem;
+  max-width: 44rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- tables */
+
+.tables {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.tablesInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-areas:
+    'head head'
+    'rates form'
+    'tonight form';
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: 2.5rem;
+  align-items: start;
+}
+
+.tablesHead {
+  grid-area: head;
+  display: flex;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: center;
+}
+
+.tablesHead .secNote {
+  color: color-mix(in srgb, var(--paper) 78%, var(--ink));
+}
+
+.tablesDie {
+  flex: none;
+  width: clamp(4.5rem, 8vw, 7rem);
+}
+
+.rates {
+  grid-area: rates;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.rates li {
+  display: flex;
+  flex-direction: column;
+  padding: 1.1rem 1rem 1.2rem;
+  border: 1.5px solid color-mix(in srgb, var(--paper) 30%, transparent);
+  border-radius: 0.9rem;
+}
+
+.rates h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.rateSeats {
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+}
+
+.ratePrice {
+  margin-top: 1.4rem;
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--tomato);
+}
+
+.rateUnit {
+  font-size: 0.85rem;
+}
+
+.tonight {
+  grid-area: tonight;
+}
+
+.tonightHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.tonightHead h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.tonightHead p {
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+}
+
+.boardScroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.avail {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: separate;
+  border-spacing: 3px;
+  font-size: 0.8rem;
+}
+
+.avail thead th {
+  font-weight: 600;
+  text-align: center;
+  padding-bottom: 0.3rem;
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+}
+
+.avail thead th:first-child {
+  text-align: left;
+}
+
+.avail tbody th {
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  padding-right: 0.6rem;
+}
+
+.availName {
+  display: inline-block;
+  min-width: 5.6rem;
+}
+
+.availSeats {
+  display: inline-block;
+  min-width: 1.4rem;
+  padding: 0 0.3rem;
+  border-radius: 0.3rem;
+  text-align: center;
+  font-size: 0.72rem;
+  background: color-mix(in srgb, var(--paper) 16%, transparent);
+}
+
+.avail td {
+  height: 1.8rem;
+  border-radius: 0.3rem;
+  background: color-mix(in srgb, var(--paper) 10%, transparent);
+}
+
+.avail td[data-booked='yes'] {
+  background: var(--tomato);
+}
+
+.book {
+  grid-area: form;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border-radius: 1.2rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.book h3 {
+  grid-column: 1 / -1;
+  font-size: 1.6rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 0.6rem;
+}
+
+.book .btn {
+  grid-column: 1 / -1;
+  margin-top: 0.4rem;
+}
+
+.bookNote {
+  grid-column: 1 / -1;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ menu */
+
+.menu {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.menuArt {
+  position: sticky;
+  top: 6rem;
+  aspect-ratio: 1 / 1.15;
+}
+
+.menuField {
+  position: absolute;
+  inset: 12% 0 0;
+  overflow: hidden;
+  border-radius: 50% 50% 1.2rem 1.2rem;
+  background: var(--pale);
+}
+
+.menuMug {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  height: 80%;
+  transform: translateX(-50%);
+}
+
+.menuCols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: 2.5rem;
+}
+
+.menuCol h3 {
+  font-size: 1.45rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.menuWhen {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.menuCol ul {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.menuCol li {
+  display: grid;
+  grid-template-columns: auto minmax(1rem, 1fr) auto;
+  grid-template-areas:
+    'name lead price'
+    'note note note';
+  align-items: baseline;
+  column-gap: 0.4rem;
+}
+
+.menuCol li::before {
+  content: '';
+  grid-area: lead;
+  border-bottom: 2px dotted color-mix(in srgb, var(--ink) 35%, transparent);
+  transform: translateY(-0.25rem);
+}
+
+.itemName {
+  grid-area: name;
+  font-weight: 700;
+}
+
+.itemPrice {
+  grid-area: price;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.itemNote {
+  grid-area: note;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ band */
+
+.band {
+  position: relative;
+  height: clamp(4.5rem, 8vw, 6.5rem);
+  overflow: hidden;
+  border-block: 2px solid var(--ink);
+}
+
+/* ---------------------------------------------------------------- nights */
+
+.nights {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.nightsHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+.nightsKnight {
+  flex: none;
+  height: clamp(7rem, 13vw, 11rem);
+  margin-right: clamp(0rem, 3vw, 3rem);
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1rem 1.2rem;
+  border: 2px solid var(--ink);
+  border-radius: 0.9rem;
+  background: var(--paper);
+}
+
+.day:nth-child(odd) {
+  background: var(--pale);
+}
+
+.dayName {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--tomato);
+}
+
+.day h3 {
+  margin-top: 0.5rem;
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.dayTime {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.day p {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.specials {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.specialsHead {
+  font-size: 1.6rem;
+}
+
+.specials ul {
+  border-top: 2px solid var(--ink);
+}
+
+.specials li {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 1.5rem;
+  align-items: baseline;
+  padding: 1rem 0;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+.spDate {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--tomato);
+}
+
+.spName {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.spNote {
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- rules */
+
+.rules {
+  padding: 0 var(--gut) var(--air);
+}
+
+.rulesCard {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1.75rem, 5vw, 4rem);
+  border: 2px solid var(--ink);
+  border-radius: 1.6rem;
+  background: var(--pale);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.rulesHead h2 {
+  margin-top: 0.7rem;
+  max-width: 36rem;
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+}
+
+.ruleList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 3rem);
+  margin-top: 2.5rem;
+}
+
+.ruleList li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1rem;
+  row-gap: 0.4rem;
+}
+
+.ruleNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.6rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+
+.ruleList h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  align-self: center;
+}
+
+.ruleList p {
+  font-size: 0.97rem;
+}
+
+/* ----------------------------------------------------------------- visit */
+
+.visit {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 4rem);
+  margin-top: 2.5rem;
+}
+
+.visitCol {
+  display: grid;
+  align-content: start;
+  gap: 0.8rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--ink);
+}
+
+.visitCol h3 {
+  font-size: 1.35rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  font-variant-numeric: tabular-nums;
+}
+
+.contact {
+  display: grid;
+  gap: 0.3rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.contact a {
+  text-decoration-color: var(--tomato);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1.5rem 3rem;
+  align-items: center;
+}
+
+.footMark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.footDie {
+  width: 2.4rem;
+}
+
+.footTag {
+  color: color-mix(in srgb, var(--paper) 75%, var(--ink));
+}
+
+.footNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.3rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.footNav a {
+  text-decoration: none;
+}
+
+.footNav a:hover {
+  color: var(--tomato);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+}
+
+.footFine a {
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1180px) {
+  .shelf {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shelfLabel {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 1rem;
+    padding-bottom: 0;
+  }
+
+  .shelfLabel h3 {
+    margin-top: 0;
+  }
+
+  .shelfNote {
+    grid-column: 1 / -1;
+  }
+
+  .spines {
+    overflow: hidden;
+  }
+
+  .tablesInner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'head'
+      'rates'
+      'tonight'
+      'form';
+  }
+
+  .week {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ruleList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav,
+  .barCta {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+    margin-left: auto;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .table {
+    max-width: 34rem;
+  }
+
+  .menu {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .menuArt {
+    position: relative;
+    top: 0;
+    width: min(18rem, 70%);
+  }
+
+  .menuCols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .specials {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* On a phone the boxes are laid flat, a stack on each shelf, and the
+   names read across. */
+@media (max-width: 640px) {
+  .title {
+    font-size: clamp(2.4rem, 10.5vw, 3rem);
+  }
+
+  .facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .facts dt {
+    font-size: 1.5rem;
+  }
+
+  .shelfLabel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .spines {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    height: auto;
+    padding: 0;
+  }
+
+  .spine {
+    writing-mode: horizontal-tb;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.55rem 2rem 0.55rem 0.8rem;
+    border: 2px solid var(--ink);
+    border-bottom: 0;
+    border-radius: 0.3rem 0.3rem 0 0;
+    background-image: none;
+  }
+
+  .spine:hover {
+    transform: none;
+  }
+
+  .spine[data-h='1'] {
+    width: 74%;
+    height: auto;
+  }
+
+  .spine[data-h='2'] {
+    width: 82%;
+    height: auto;
+  }
+
+  .spine[data-h='3'] {
+    width: 91%;
+    height: auto;
+  }
+
+  .spine[data-h='4'] {
+    width: 100%;
+    height: auto;
+  }
+
+  .spine[data-w='1'] {
+    min-height: 2.5rem;
+  }
+
+  .spine[data-w='2'] {
+    min-height: 2.9rem;
+  }
+
+  .spine[data-w='3'] {
+    min-height: 3.3rem;
+  }
+
+  .spineName {
+    font-size: 1rem;
+  }
+
+  .pick {
+    left: auto;
+    right: 0.7rem;
+    bottom: auto;
+    top: 50%;
+    margin: -0.4rem 0 0;
+  }
+
+  .tablesHead {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .menuCols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nightsHead {
+    align-items: center;
+  }
+
+  .nightsKnight {
+    height: 6rem;
+    margin-right: 0;
+  }
+
+  .week {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .day {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    column-gap: 0.8rem;
+    row-gap: 0.2rem;
+  }
+
+  .dayName {
+    grid-row: span 3;
+  }
+
+  .day h3 {
+    margin-top: 0;
+  }
+
+  .specials li {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: 0.3rem 1rem;
+  }
+
+  .spNote {
+    grid-column: 2;
+  }
+
+  .ruleList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .spine {
+    transition: none;
+  }
+
+  .btn:hover,
+  .spine:hover {
+    transform: none;
+  }
+}
