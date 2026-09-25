@@ -1,19 +1,14 @@
 'use client';
 
-// The customizer's top bar: the way back, Download, and the person.
+// The customizer's top bar: the way back, Download, and the person. Dark,
+// like the template preview's, so the chrome reads apart from the site on the
+// canvas.
 //
-// Dark, like the template preview's, so the chrome reads apart from the site
-// on the canvas. Save is not up here: it sits at the foot of the rail, next
-// to the controls that make the changes it saves.
-//
-// Download is a menu because there are two packages and they are not the
-// same thing. The static package is rebuilt in the browser with the site's
-// colors and patterns in it (lib/studioDownload.ts); the React package is the
-// template's source, which the customizer's document cannot be applied to,
-// and the menu says so rather than implying otherwise. The design draws a
-// gauge of downloads used above the two; nothing counts downloads yet (the
-// account's usage page says the same), so the gauge waits for a counter
-// rather than reading a number nobody keeps.
+// Download is a menu because the two packages differ: the static one is
+// rebuilt in the browser with the site's colors and patterns in it
+// (lib/studioDownload.ts), while the React one is the template's source, which
+// the document cannot be applied to, and the menu says so. The design's gauge
+// of downloads used is left out until something counts downloads.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';

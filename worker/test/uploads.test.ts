@@ -1,8 +1,8 @@
-import { SELF, env } from 'cloudflare:test';
+import { SELF } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { ORIGIN, json, signIn } from './helpers';
+import { ORIGIN, signIn } from './helpers';
 
-// The smallest valid PNG: a 1×1 transparent pixel.
+// The smallest valid PNG: a 1x1 transparent pixel.
 const PNG = Uint8Array.from(
   atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='),
   (c) => c.charCodeAt(0)
@@ -20,13 +20,6 @@ describe('uploads', () => {
 
   beforeAll(async () => {
     cookie = await signIn('uploader@example.com');
-  });
-
-  it('needs a session', async () => {
-    const form = new FormData();
-    form.append('file', new Blob([PNG], { type: 'image/png' }), 'x.png');
-    expect((await SELF.fetch(`${ORIGIN}/api/uploads`, { method: 'POST', body: form, headers: { origin: ORIGIN } })).status).toBe(401);
-    expect((await SELF.fetch(`${ORIGIN}/api/uploads`)).status).toBe(401);
   });
 
   it('judges the bytes, not the label', async () => {

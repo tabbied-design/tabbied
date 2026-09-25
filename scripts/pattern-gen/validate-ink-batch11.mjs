@@ -1,18 +1,14 @@
 // Ink-coverage check for batch 11.
 //
-// validate-batch11.mjs asks whether a design *paints* - it reads computed
-// styles, so a cell with a background counts even when a mask hides all of it.
-// This one asks whether the paint is *visible*, by rendering the design and
-// measuring how much of the sheet its single most common color takes up.
+// validate-batch11.mjs asks whether a design *paints*, reading computed
+// styles, so a cell counts even when a mask hides all of it. This one asks
+// whether the paint is *visible*: it renders the design and measures how much
+// of the sheet its single most common color takes up. A blank sheet (a mask
+// that never opens, two shapes intersected to nothing, a sector aimed out of
+// its own cell) renders and exports without error, so only this catches it.
 //
-// A design that is one flat color is a blank sheet - a mask that never opens,
-// two shapes intersected to nothing, a sector aimed out of its own cell. All
-// three render without error and export without error, which is exactly why
-// neither of the other validators catches them.
-//
-// The dominant-color measure is used rather than "pixels differing from the
-// background" because plenty of good designs here are full-bleed: two inks
-// meeting edge to edge cover the sheet completely and show none of it.
+// Dominant color rather than "pixels differing from the background", because
+// a full-bleed design (two inks meeting edge to edge) shows none of it.
 //
 // Usage: node scripts/pattern-gen/validate-ink-batch11.mjs
 // Env: CHROMIUM_PATH, SLUGS=a,b to narrow, MAX_DOMINANT to move the bound.

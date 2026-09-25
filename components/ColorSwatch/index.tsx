@@ -6,9 +6,8 @@ import styles from './ColorSwatch.module.css';
 type ColorSwatchProps = {
   /** Current color (any hex form; alpha is ignored by the native input). */
   color: string;
-  /** Accessible name for the swatch. */
   ariaLabel: string;
-  /** Called with the picked `#rrggbb` value when the color changes. */
+  /** Called with the picked `#rrggbb` value. */
   onChange: (hex: string) => void;
   /**
    * Render as a transparent slot: the checkerboard shows through and the native
@@ -18,11 +17,7 @@ type ColorSwatchProps = {
   className?: string;
 };
 
-/**
- * A browser-native `<input type="color">` restyled into a compact swatch. The
- * native picker replaces the previous Pickr dependency; a `transparent` slot
- * shows the standard checkerboard while staying clickable.
- */
+/** A browser-native `<input type="color">` restyled into a compact swatch. */
 export default function ColorSwatch({
   color,
   ariaLabel,

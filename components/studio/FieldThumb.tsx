@@ -1,14 +1,10 @@
 'use client';
 
 // A pattern field's thumbnail in the customizer's rail, drawn live in the
-// colors the field wears on the page.
-//
-// It used to be the design's committed preview, which is the design in its
-// own authored palette: a Solstice field in the site's plum and coral showed
-// in a thumbnail of blues and greens. The preview is still here, underneath,
-// as what shows while the pattern catalog loads; the catalog is imported on
-// first use, since only the Patterns tab needs it and the rest of the
-// customizer draws its patterns inside the iframe.
+// colors the field wears on the page, since the committed preview is in the
+// design's own palette. The preview underneath shows while the catalog loads;
+// the catalog is imported on first use, since only the Patterns tab needs it
+// and the rest of the customizer draws its patterns inside the iframe.
 import { useEffect, useState } from 'react';
 import { TabbiedPattern } from 'tabbied/react';
 import type { PatternDefinition } from 'tabbied';

@@ -13,7 +13,6 @@ export const metadata = {
 
 /* Night ground, bone type, one acid yellow. Fields take `transparent` in the
    background slot so the black of the page is the black of the pattern. */
-const BONE = '#efeee7';
 const ACID = '#e8ff00';
 const GRAY = '#6d6d66';
 const DEEP = '#22222a';

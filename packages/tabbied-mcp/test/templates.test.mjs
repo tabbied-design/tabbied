@@ -1,12 +1,7 @@
-// The template tools.
-//
-// Unlike the design tools, these read *site* artifacts rather than the
-// installed package, so a fixture is the honest choice here - the generated
-// specs are not in this package's dependency tree, and a test that fetched
-// tabbied.com would be testing the deploy.
-//
-// The fixture mirrors what scripts/generate-editable.mjs actually emits; the
-// shapes are pinned by e2e/editable.spec.ts against the real thing.
+// The template tools. They read *site* artifacts that are not in this
+// package's dependency tree, and fetching tabbied.com would test the deploy, so
+// a fixture stands in. It mirrors what scripts/generate-editable.mjs emits;
+// e2e/editable.spec.ts pins those shapes against the real thing.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
@@ -77,8 +72,6 @@ const requested = [];
 
 const context = {
   catalog,
-  fetchPreview: async () => ({ data: 'ZmFrZQ==', mimeType: 'image/webp' }),
-  fetchDocs: async () => 'THE REFERENCE',
   fetchTemplateCatalog: async () => templateCatalog,
   fetchTemplate: async (slug) => {
     requested.push(slug);
@@ -93,41 +86,6 @@ const toolset = createToolset(catalogTools(context));
 
 const parse = (result) => JSON.parse(result.content[0].text);
 const call = (name, args = {}) => toolset.call(name, args);
-
-test('the template tools are advertised when their data is resolvable', () => {
-  assert.deepEqual(
-    toolset.list().map((tool) => tool.name),
-    [
-      'search_designs',
-      'get_design',
-      'preview_design',
-      'get_docs',
-      'list_templates',
-      'get_template',
-    ]
-  );
-});
-
-test('a host that cannot resolve templates does not advertise them', () => {
-  // A listed tool that always fails is worse than a missing one - the same
-  // rule the preview and docs tools already follow.
-  const bare = createToolset(catalogTools({ catalog }));
-
-  assert.deepEqual(
-    bare.list().map((tool) => tool.name),
-    ['search_designs', 'get_design']
-  );
-
-  // The index alone is not enough for get_template, which needs both.
-  const indexOnly = createToolset(
-    catalogTools({ catalog, fetchTemplateCatalog: async () => templateCatalog })
-  );
-
-  assert.deepEqual(
-    indexOnly.list().map((tool) => tool.name),
-    ['search_designs', 'get_design', 'list_templates']
-  );
-});
 
 test('list_templates returns every annotated site with its editable counts', async () => {
   const result = parse(await call('list_templates'));

@@ -1,20 +1,14 @@
 // C. Stipple - a dot field with a ramp laid over it.
 //
-// Two mask layers intersected: a tiled dot field, and a smooth gradient. The
-// field decides where ink can go, the ramp decides how much of it survives, and
-// what comes out is a halftone that thins across the cell - dense at one edge,
-// scattered in the middle, gone at the other.
-//
-// `mask-composite: intersect` is what multiplies them, and it exports as one
-// <mask> nested inside the next, which is the correct reading of what CSS did.
-// The dot field itself becomes an SVG <pattern> holding a single dot, so a
-// field of four hundred costs one gradient however dense it gets.
+// Two mask layers intersected: the tiled dot field decides where ink can go,
+// the ramp how much of it survives, and the result is a halftone that thins
+// across the cell. `mask-composite: intersect` exports as one <mask> nested
+// inside the next, and the dot field as an SVG <pattern> holding one dot, so
+// a dense field costs one gradient.
 import {
   section,
-  A,
   F,
   TR,
-  ink,
   rot,
   fade,
   rise,

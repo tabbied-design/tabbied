@@ -10,30 +10,19 @@ import { SESSION_HINT_KEY, readSessionHint, signOut, useSessionUser } from 'lib/
 import useMediaQuery from 'lib/useMediaQuery';
 import styles from './SiteNav.module.css';
 
-// The site's masthead, in the two tones the design draws it in: ink on paper
-// for the library, the account pages and the content pages, and paper on the
-// dark shell for the homepage and the template gallery. One component, so
-// the three destinations and the way into an account are the same everywhere
-// and a change to either is made once.
+// The site's masthead, in two tones: ink on paper (`light`) and paper on the
+// dark shell (`dark`, the homepage and the template gallery). See CLAUDE.md,
+// "The masthead - one bar, two tones".
 //
-// What it shows follows the session. Signed out: Home / Patterns / Websites
-// in the middle and "Sign in" on the right. Signed in: the first destination
-// becomes My Account and the right-hand slot is the person's initials, which
-// open a menu naming the account and letting them leave it. Below 768px the
-// destinations fold into that same menu (or, signed out, into one behind a
-// hamburger), which is what the artboards do.
+// Signed out: Home / Patterns / Websites and "Sign in". Signed in: My Account
+// first, and the person's initials opening the account menu. Below 768px the
+// destinations fold into that menu (signed out, into one behind a hamburger).
 //
-// GitHub and Docs are not up here; the footer carries them. The masthead is
-// for the three places a visitor goes, not for everything the site links to.
-//
-// Until the session answers, the export's signed-out chrome is what draws,
-// since a prerendered page cannot know who is looking. For a browser that
-// was signed in last time (SESSION_HINT_KEY) that meant "Sign in" flashing
-// to the person's initials on every load, so the bar marks itself
-// `data-session="likely"` and draws a placeholder in that slot instead: from
-// a script inline in the bar, before the page hydrates, and from state once
-// it has. A browser with no hint keeps the signed-out chrome throughout,
-// menu and all.
+// A prerendered page cannot know who is looking, so the signed-out chrome
+// draws until the session answers. A browser signed in last time
+// (SESSION_HINT_KEY) would see "Sign in" flash to its initials, so the bar
+// marks itself `data-session="likely"` and draws a placeholder instead: from
+// the inline script before hydration, and from state after it.
 
 /** Runs as the bar is parsed: the hint, before React has done anything. */
 const HINT_SCRIPT = `try{localStorage.getItem(${JSON.stringify(
@@ -42,7 +31,7 @@ const HINT_SCRIPT = `try{localStorage.getItem(${JSON.stringify(
 
 const noSubscription = () => () => {};
 
-export type NavTone = 'dark' | 'light';
+type NavTone = 'dark' | 'light';
 
 const DESTINATIONS = [
   ['/patterns', 'Patterns'],
@@ -82,16 +71,14 @@ export default function SiteNav({
   const router = useRouter();
   const rawPathname = usePathname() ?? '/';
   const pathname = normalize(rawPathname);
-  // The two destinations join the account menu only where the inline nav has
-  // folded. Decided here rather than by a display: none class: a menu item
-  // that is hidden is still in the list Base UI arrows through, so on the
-  // desktop two invisible items sat between My Account and Settings, and a
-  // screen reader counted five where three showed. Menus open after mount,
-  // so the query's server value never draws.
+  // The destinations join the account menu only where the inline nav has
+  // folded, decided here rather than by `display: none`: a hidden menu item is
+  // still in the list Base UI arrows through and a screen reader counts.
+  // Menus open after mount, so the query's server value never draws.
   const narrow = useMediaQuery('(max-width: 767.98px)');
 
-  // Signing in returns the person to the page they were on - the homepage's
-  // signed-in face is the account, so from there it is the account.
+  // Signing in returns the person to the page they were on, except that the
+  // homepage's signed-in face is the account.
   const signInHref = `/sign-in?next=${encodeURIComponent(
     pathname === '/' ? '/account' : rawPathname
   )}`;
@@ -142,10 +129,8 @@ export default function SiteNav({
       <div className={styles.end}>
         {user ? (
           <Menu.Root>
-            {/* The artboards draw the person as a pill: the initials in a
-                circle and, beside them, the two rules that say it opens.
-                Below 768px it is also the only way into the menu, so the
-                affordance has to be on it. */}
+            {/* The two rules say it opens: below 768px this is the only
+                way into the menu, so the affordance has to be on it. */}
             <Menu.Trigger className={styles.account} aria-label="Account menu">
               <span className={styles.avatar}>{initials(user.name, user.email)}</span>
               <span className={styles.lines} aria-hidden="true">
@@ -167,18 +152,15 @@ export default function SiteNav({
                   {narrow && item('/patterns', 'Patterns')}
                   {narrow && item('/templates', 'Websites')}
                   {item('/account/settings', 'Settings')}
-                  {/* The admin area, for the people whose row says so. The
-                      role rides in the session the client already holds;
-                      every /api/admin route reads it again for itself, so
-                      this decides only whether the way in is drawn. */}
+                  {/* This decides only whether the way in is drawn: every
+                      /api/admin route checks the role again for itself. */}
                   {user.role === 'admin' && item('/admin', 'Admin')}
                   <Menu.Separator className={styles.menuRule} />
                   <Menu.Item
                     className={styles.menuItem}
                     onClick={async () => {
-                      // Leave whether or not the sign-out call answered: a
-                      // rejected call was an unhandled rejection and a menu
-                      // that simply closed.
+                      // Leave whether or not the sign-out call succeeded,
+                      // so a rejection is never unhandled.
                       try {
                         await signOut();
                       } finally {

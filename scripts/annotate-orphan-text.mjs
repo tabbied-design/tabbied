@@ -1,10 +1,8 @@
 // Second codemod: give the bespoke templates' orphaned text a slot.
 //
-// annotate-templates.mjs only made a slot of an element whose whole content is
-// one text run (`isSimpleText`). Anything with mixed inline content was passed
-// over and only its annotatable *descendants* got slots, which left the
-// container's own text with no id on it - unreachable by an edits document,
-// forever. Cobalt Works' headline is the shape:
+// annotate-templates.mjs only slots an element whose whole content is one text
+// run, so a container with mixed inline content has only its descendants
+// annotated and its own words unreachable:
 //
 //     <h1>
 //       Color is a <br />
@@ -12,25 +10,15 @@
 //       it is an effect.
 //     </h1>
 //
-// Rewriting hero.text replaced "material" and left the rest of the sentence
-// standing, so a generated site read "Color is a Find your place. before it is
-// an effect." - the template's words with the model's spliced in.
-//
-// Two shapes are fixed, matching what the five shared TemplateSite pages
-// already do by hand:
+// Two shapes are fixed, matching what the shared TemplateSite pages do:
 //
 //   text-only    the container becomes a plain slot with a new id
-//   one accent   the container takes over the accent's *existing* id and gains
-//                data-edit-format="emphasis", and the accent's own annotation
-//                is removed
+//   one accent   the container takes over the accent's *existing* id (so a
+//                stored document keyed by it still resolves) and gains
+//                data-edit-format="emphasis"; the accent's annotation goes
 //
-// Taking over the id rather than minting one is what keeps stored revisions
-// working: a document that says `hero.text` still resolves, and now writes the
-// whole headline instead of one word inside it.
-//
-// Anything else - two accents, an expression, a link mid-sentence - is left
-// alone and reported. Those need a person, and generate-editable.mjs fails the
-// build while any of them remain.
+// Anything else (two accents, an expression, a link mid-sentence) is left
+// alone and reported for a person.
 //
 //   node scripts/annotate-orphan-text.mjs            every annotated page
 //   node scripts/annotate-orphan-text.mjs cobalt-works
@@ -41,8 +29,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from '@babel/parser';
 
-// From the script's own location, like its siblings: run from any other
-// directory this reported every slug as "skipped: no page.tsx" and exited 0.
+// From the script's own location, so it works from any directory.
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const templateDir = path.join(repoRoot, 'app', 'templates');
 const args = process.argv.slice(2);
@@ -135,11 +122,8 @@ function realChildren(element) {
 }
 
 /**
- * The id prefix this part of the page already uses.
- *
- * Read off the page's own annotations rather than re-derived from class names:
- * these files are already annotated, so the neighbors are the definition of
- * what this section is called, and a fresh derivation could disagree with them.
+ * The id prefix this part of the page already uses, read off its neighbors'
+ * annotations rather than re-derived, which could disagree with them.
  */
 function sectionPrefixOf(code, element) {
   let current = element.parent;
@@ -199,10 +183,7 @@ function classify(element) {
     expressions.length === 0 &&
     ACCENT_TAGS.has(tagNameOf(nonBr[0]))
   ) {
-    // The accent may or may not already carry an id. Cobalt Works' headline
-    // does (`hero.text` on the span); its masthead does not - the <i> holding
-    // "Dry pigment, Sheffield" was never annotated at all, which is why the
-    // brand name was unreachable too.
+    // The accent may or may not already carry an id.
     return { shape: 'accent', accent: nonBr[0] };
   }
 
@@ -268,18 +249,14 @@ function annotate(slug) {
       continue;
     }
 
-    // The tag's budget, but never less than what the design already fits: a
-    // container that takes over from a child holds more than the child did, and
-    // an <a> masthead inheriting the 28 of a nav link warns on the template's
-    // own words. Rounded up so the number reads as a budget, not a measurement.
+    // The tag's budget, but never less than what the design already fits, or
+    // the template's own words warn. Rounded up to read as a budget.
     const held = currentTextOf(element).length;
     const max = MAX_CHARS[tag]
       ? Math.max(MAX_CHARS[tag], Math.ceil(held / 10) * 10)
       : undefined;
-    // Only the prose tags get a textarea. A <br> in a headline is not a reason
-    // for one: htmlToTextValue collapses whitespace, so a newline in the value
-    // comes back as a space and the editor would be promising a line break it
-    // cannot keep.
+    // Only the prose tags get a textarea. A <br> is not a reason for one:
+    // htmlToTextValue reads a newline back as a space.
     const multiline = MULTILINE_TAGS.has(tag) ? ' data-edit-multiline' : '';
 
     if (verdict.shape === 'text') {
@@ -294,10 +271,8 @@ function annotate(slug) {
       continue;
     }
 
-    // The accent shape: where the child already has an id the container takes
-    // it over, so a stored document keyed by it keeps resolving and now reaches
-    // the whole sentence instead of one word inside it. Where it has none there
-    // is nothing to preserve, so the container mints one.
+    // The accent shape: the container takes over the child's id if it has one,
+    // so a stored document keeps resolving, and mints one otherwise.
     const accent = verdict.accent;
     const idAttribute = attributeNamed(accent, 'data-edit');
     const copyAttribute = attributeNamed(accent, 'data-edit-copy');
@@ -355,10 +330,8 @@ function annotate(slug) {
 const slugs = readdirSync(templateDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
-  // A template site is app/templates/<slug>/site/page.tsx; the folder also
-  // holds the framed preview's [slug] route.
   .filter((slug) => existsSync(path.join(templateDir, slug, 'site', 'page.tsx')))
-  .filter((slug) => (only.length === 0 ? true : only.includes(slug)))
+  .filter((slug) => only.length === 0 || only.includes(slug))
   .sort();
 
 let text = 0;

@@ -1,15 +1,11 @@
 // A. Shore - land held against an edge, and the water that shapes it.
 //
-// Every design starts from a slab of ground pushed up against one side of the
-// cell and asks what the sea does to it: bites a bay out of its seaward edge,
-// parts around an islet, leaves a bar lying offshore, or faces a second shore
-// across open water. Everything is a hard-stop radial or linear layer used as
-// a mask over one ink, so the water is a real hole - set the background slot
-// to transparent and the sheet shows through every inlet.
-//
-// `farthest-side` radials are what keep the geometry honest at the edge: a
-// stop at 100% means "one cell side" wherever the center sits, where the
-// default `farthest-corner` would quietly rescale as the center moved.
+// A slab of ground pushed up against one side of the cell, and what the sea
+// does to it: a bay bitten out, an islet, a bar offshore, a second shore
+// across open water. Every layer is a hard-stop mask over one ink, so the
+// water is a real hole. `farthest-side` radials keep a stop at 100% meaning
+// "one cell side" wherever the center sits; the default `farthest-corner`
+// would rescale as the center moved.
 import {
   section,
   F,

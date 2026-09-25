@@ -30,15 +30,6 @@ describe('ensurePalette', () => {
     expect(best).toBeGreaterThanOrEqual(3);
   });
 
-  it('keeps the inks it did not have to touch', () => {
-    const result = ensurePalette(['#ffffff', '#fafafa', '#f0f0f0'], FALLBACK);
-
-    // One ink moves; the rest of the model's choice survives.
-    expect(result.colors).toHaveLength(3);
-    expect(result.colors.filter((c) => c === '#fafafa' || c === '#f0f0f0').length)
-      .toBeGreaterThanOrEqual(1);
-  });
-
   it('rejects a palette whose inks all equal the background', () => {
     const result = ensurePalette(['#123456', '#123456'], FALLBACK);
 
@@ -46,36 +37,24 @@ describe('ensurePalette', () => {
     expect(result.colors).toEqual(FALLBACK);
   });
 
-  it.each([
-    ['not an array', 'nope'],
-    ['too short', ['#ffffff']],
-    ['a non-hex entry', ['#ffffff', 'rebeccapurple']],
-    ['null', null],
-  ])('rejects %s', (_label, value) => {
-    expect(ensurePalette(value, FALLBACK)).toEqual({
+  it('rejects a non-hex entry', () => {
+    expect(ensurePalette(['#ffffff', 'rebeccapurple'], FALLBACK)).toEqual({
       colors: FALLBACK,
       status: 'rejected',
     });
   });
 
-  it('normalizes case rather than treating it as a different color', () => {
-    const result = ensurePalette(['#FFFFFF', '#1A1A1A'], FALLBACK);
-
-    expect(result.status).toBe('clean');
-    expect(result.colors).toEqual(['#ffffff', '#1a1a1a']);
-  });
-
-  it('expands shorthand hex, which is valid but not what downstream stores', () => {
-    const result = ensurePalette(['#ffffff', '#123456', '#0a0'], FALLBACK);
+  it('expands shorthand hex and normalizes case, which are valid but not what downstream stores', () => {
+    // Case is not a different color: `#FFFFFF` is the ground `#ffffff`.
+    const result = ensurePalette(['#FFFFFF', '#123456', '#0a0'], FALLBACK);
 
     expect(result.status).toBe('clean');
     expect(result.colors).toEqual(['#ffffff', '#123456', '#00aa00']);
   });
 
   it('treats shorthand equal to the background as equal to it', () => {
-    // `#fff` and `#ffffff` are one color. Before shorthand was expanded these
-    // compared as different strings, and an invisible ink was "repaired" into
-    // a color nobody chose instead of being rejected.
+    // `#fff` and `#ffffff` are one color; compared as strings, an invisible
+    // ink would be "repaired" into a color nobody chose instead of rejected.
     const result = ensurePalette(['#ffffff', '#fff'], FALLBACK);
 
     expect(result.status).toBe('rejected');

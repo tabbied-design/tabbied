@@ -1,9 +1,8 @@
-/* 69px tall, as it was with the old 40px shuffle button: the plate under it
-   is fitted to the pane's height, and the SVG parity thresholds in
-   e2e/svg-export.spec.ts were tuned on the cell size that height gives
-   (see the stepramp note there). A 4px shorter bar moved every cell edge
-   onto different fractional pixels and put four hairline designs over their
-   thresholds, and one into an exporter edge case. */
+/* 69px tall: the plate under it is fitted to the pane's height, and the SVG
+   parity thresholds in e2e/svg-export.spec.ts were tuned on the cell size
+   that height gives (see the stepramp note there). A shorter bar moves every
+   cell edge onto different fractional pixels and puts hairline designs over
+   their thresholds. */
 .header {
   flex: none;
   display: flex;
@@ -131,9 +130,8 @@
   outline-offset: 2px;
 }
 
-/* Export is the one thing the page exists to get you to, so it carries the
-   brand gradient. No hairline round it: the gradient is edge enough on the
-   white bar, and the ring read as noise beside the plain Shuffle. */
+/* Export is what the page exists for, so it carries the brand gradient,
+   with no ring: the gradient is edge enough on the white bar. */
 .btnExport {
   color: #0e0e13;
   background: linear-gradient(135deg, #3ff0b2, #2ee6f0);

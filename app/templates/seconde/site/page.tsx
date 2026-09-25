@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  bothways, dotmatrix, dotset, fadedbar, hairpin, ring, tailoff, taper,
+  dotmatrix, dotset, fadedbar, hairpin, ring, tailoff, taper,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './seconde.module.css';
@@ -18,15 +18,14 @@ const INK = '#101010';
 const MAGENTA = '#FF0059';
 const GRAY = '#8E8E8E';
 const PALE = '#D6D6D2';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PALE;
-
 
 const SYSTEMS = [
   { code: 'PF-4', name: 'Photo finish', res: '1 / 10 000 s', body: 'A 10,000 fps line-scan camera on the finish plane, levelled to 0.2 mm over 8 meters. The image is the result; everything else is a convenience.' },

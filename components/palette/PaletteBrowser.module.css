@@ -11,7 +11,7 @@
   flex: 1;
 }
 
-/* In the editor panel it fills the flex column and scrolls its own list. */
+/* In the editor's sheet it fills the flex column and scrolls its own list. */
 .panel {
   flex: 1;
   min-height: 0;

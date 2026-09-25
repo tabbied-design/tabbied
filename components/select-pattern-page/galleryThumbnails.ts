@@ -1,8 +1,8 @@
-// Per-pattern settings for the live css-doodle gallery thumbnails. Palettes
-// and densities were derived from the raster thumbnails these replaced (since
-// deleted); `color0` is always the background. Each
-// thumbnail draws with a fresh random seed on every load, so only the look
-// (palette / density / render size) is pinned here, not the placement.
+// Per-pattern settings for the live css-doodle gallery thumbnails, tuned by
+// eye (scripts/check-gallery-thumbnails.mjs keeps every key a real design).
+// `color0` is always the background. Each thumbnail draws with a fresh random
+// seed on every load, so only the look (palette / density / render size) is
+// pinned here, not the placement.
 import type { OptionValue } from 'tabbied';
 
 export type ThumbnailConfig = {

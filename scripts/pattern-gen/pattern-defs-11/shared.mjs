@@ -1,50 +1,31 @@
 // Batch 11 - shared vocabulary.
 //
-// Batch 11's constraint is not a motif, it is a *format*: every design in it
-// must export as native SVG with no caveat at all. No `svgExport: false`, no
-// `svgExportNote`, no converter warning, and pixel parity with the live render
-// well inside the house budget. That rules a lot of CSS out, and the ban is
-// enforced twice - by the lints in generate-batch11.mjs (which reject the
-// unsafe declarations at authoring time) and by
-// validate-svg-batch11.mjs (which runs the shipped converter over every
-// design and fails on a throw, a warning or a pixel diff).
+// Every design in batch 11 must export as native SVG with no caveat (no
+// `svgExport: false`, no `svgExportNote`, no converter warning) and with pixel
+// parity to the live render. pattern-lints.mjs rejects the unsafe CSS at
+// authoring time; validate-svg-batch11.mjs runs the shipped converter over
+// every design and fails on a throw, a warning or a pixel diff.
 //
 // What is off the table, and why (docs/svg-export.md has the full reasoning):
 //
-//   * box-shadow, filter: blur(), mix-blend-mode - these export as SVG
-//     *filters*. Valid SVG that browsers render correctly, but design tools
-//     import filters imperfectly, which is exactly what an svgExportNote
-//     exists to warn about. The converter emits a warning for each.
+//   * box-shadow, filter: blur(), mix-blend-mode - they export as SVG
+//     *filters*, which design tools import imperfectly; the converter warns.
 //   * repeating-conic-gradient - the converter rejects it outright.
 //   * conic-gradient with a nonzero span between two different colors - a
 //     smooth angular sweep, which SVG has no primitive for. Hard-stop conic
 //     sectors are fine and are how this batch draws every pie and fan.
-//   * nested @doodle() images - they export cleanly but the *live* rendering
-//     shows hairline seams from rasterizing the nested foreignObject, so the
-//     export deviates from the screen by a documented ≤1px.
-//   * @svg() payloads - supported, but the browser rasterizes an @svg mask
-//     with different sub-pixel rounding than the inlined symbol.
-//   * a border on a partially-rounded box - the converter throws, and mixed
-//     border widths around rounded corners deviate by up to a pixel. A border
-//     may go on a square box or on a full circle, never in between; no design
-//     in the batch as it ships uses one.
+//   * nested @doodle() images - the *live* rendering shows hairline seams from
+//     rasterizing the nested foreignObject, so the export deviates from the
+//     screen by up to 1px.
+//   * @svg() payloads - the browser rasterizes an @svg mask with different
+//     sub-pixel rounding than the inlined symbol.
+//   * a border on a partially-rounded box - the converter throws. A border
+//     goes on a square box or on a full circle, never in between.
 //
-// What is left is still a wide vocabulary: solid fills, border-radius shapes,
-// clip paths, every linear and radial gradient (smooth or hard-stop, plain or
-// repeating), CSS masks including mask-composite: intersect, hard-stop conic
-// sectors, transforms, opacity and z-index. Each of those is parity-verified
-// pixel-for-pixel by the existing catalog.
-//
-// The house rules inherited from batches 6-10 still apply and are enforced by
-// generate-batch11.mjs:
-//
-//   * exactly one @random(${shapeFrequency}) gate per design, so the frequency
-//     slider always thins the whole field;
-//   * every design samples a transition-able ink per cell (a background-color
-//     or border-color), so a reseed morphs rather than snapping;
-//   * a randomized custom property read more than once goes through @var(--x);
-//   * nothing paints var(--color0) - a hole knocked out in the background
-//     color stops being a hole the moment the background is transparent.
+// What is left: solid fills, border-radius shapes, clip paths, every linear
+// and radial gradient (smooth or hard-stop, plain or repeating), CSS masks
+// including mask-composite: intersect, hard-stop conic sectors, transforms,
+// opacity and z-index. The house rules are listed in pattern-defs-11.mjs.
 
 export { TAKEN, RESERVED } from '../pattern-defs-10.mjs';
 
@@ -143,7 +124,7 @@ export const poly = (pts) => `polygon(${P(pts)})`;
 // repeats its background, and every palette carries at least one ink with real
 // contrast against color0 so a design always reads. Designs that want fewer
 // inks slice the front of the list, so color0 stays the background either way.
-export const PAL = [
+const PAL = [
   ['#0B1F3A', '#3E8BFF', '#3EECFF', '#97F4FF', '#9EFFD8', '#FFFFFF'],
   ['#F7F9FC', '#0B1F3A', '#3E8BFF', '#3EECFF', '#FF3D8B', '#9EFFD8'],
   ['#101A2E', '#3E8BFF', '#3EECFF', '#FF3D8B', '#3FFFB2', '#F5DD32'],

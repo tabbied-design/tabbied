@@ -1,11 +1,9 @@
-// `render_design` - the one tool that only exists over stdio.
+// `render_design`, the one tool that only exists over stdio.
 //
-// It shells out to the `tabbied` CLI rather than reimplementing rendering,
-// which is not laziness but the same rule the rest of this repo follows: the
-// only faithful renderer for a css-doodle pattern is css-doodle in a real
-// browser (see docs/svg-export.md). The CLI already owns the headless-browser
-// dance, the SVG converter, and the option parsing, so this is a wrapper over
-// argv - and a Worker, having no browser, simply doesn't offer the tool.
+// It shells out to the `tabbied` CLI: the only faithful renderer for a
+// css-doodle pattern is css-doodle in a real browser (see docs/svg-export.md),
+// and the CLI already owns the headless browser, the SVG converter, and the
+// option parsing. A Worker has no browser, so it doesn't offer the tool.
 import { execFile } from 'node:child_process';
 import { mkdtemp, readFile, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -123,9 +121,8 @@ export function renderTool(catalog: Catalog): Tool {
       }
 
       const inline = typeof args.out !== 'string' || args.out.length === 0;
-      // An inline render's file lives only until its bytes have been read
-      // back; a directory per call otherwise accumulated for the life of the
-      // machine.
+      // An inline render gets a scratch directory, removed once its bytes
+      // have been read back.
       const scratch = inline ? await mkdtemp(path.join(tmpdir(), 'tabbied-')) : null;
       const outPath = scratch ? path.join(scratch, `${slug}.${format}`) : (args.out as string);
       const discard = () => (scratch ? rm(scratch, { recursive: true, force: true }) : Promise.resolve());

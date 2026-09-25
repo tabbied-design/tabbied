@@ -1,22 +1,14 @@
 import { SELF, env } from 'cloudflare:test';
 import { describe, expect, it } from 'vitest';
+import { ORIGIN, json } from './helpers';
 
 // These drive the real Worker over real (local) bindings: the routing, the
-// auth gate, the R2 media path. Anything that would reach the AI upstream is
-// out of scope here and is covered by the browser flow in the e2e script,
-// which runs against a local OpenAI-shaped stub.
+// auth gate, the trusted origins, the R2 media path. Nothing here reaches the
+// AI upstream.
 
 describe('the platform tier', () => {
-  it('answers its own health probe', async () => {
-    const response = await SELF.fetch('https://x/api/health');
-
-    expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toMatchObject({ status: 'ok' });
-  });
-
   it('lists the social providers it can complete - none, here', async () => {
-    // The test environment configures no client ids, so the honest answer is
-    // an empty list: the sign-in form then draws no provider buttons at all.
+    // The test environment configures no client ids, so the list is empty.
     const response = await SELF.fetch('https://x/api/auth-providers');
 
     expect(response.status).toBe(200);
@@ -25,8 +17,7 @@ describe('the platform tier', () => {
 
   it('answers a miss under /api with JSON, not the site 404 page', async () => {
     // A sub-app's notFound handler is not used once it is mounted with
-    // route(), so this would otherwise fall through and hand an API client
-    // the marketing 404.
+    // route(), so this would otherwise fall through to the marketing 404.
     const response = await SELF.fetch('https://x/api/nope');
 
     expect(response.status).toBe(404);
@@ -34,30 +25,37 @@ describe('the platform tier', () => {
   });
 });
 
-describe('generation requires a session', () => {
-  it('refuses an anonymous generate', async () => {
-    const response = await SELF.fetch('https://x/api/studio/directions', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ description: 'a bakery in a small coastal town' }),
-    });
+describe('the session gate', () => {
+  // Every route that is a person's own, each with a body it would otherwise
+  // accept: /api/studio/make reads the body before it asks for a session.
+  const ROUTES: [method: string, path: string, body?: unknown][] = [
+    ['POST', '/api/studio/directions', { description: 'a bakery in a small coastal town' }],
+    ['POST', '/api/studio/direction-image', { generationId: 'whatever', index: 0 }],
+    ['POST', '/api/studio/make', { description: 'A bakery in a small coastal town, sourdough and coffee.' }],
+    ['GET', '/api/studio/generations'],
+    ['POST', '/api/studio/sites', { generationId: 'whatever0', index: 0 }],
+    ['GET', '/api/studio/sites'],
+    ['POST', '/api/studio/sites/nope/revise', { instruction: 'Make the headline warmer.' }],
+    ['POST', '/api/studio/sites/nope/images', { slot: 'hero.photo' }],
+    ['GET', '/api/account/usage'],
+    ['POST', '/api/uploads', {}],
+    ['GET', '/api/uploads'],
+  ];
 
-    expect(response.status).toBe(401);
-  });
-
-  it('refuses anonymous imagery', async () => {
-    const response = await SELF.fetch('https://x/api/studio/direction-image', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ generationId: 'whatever', index: 0 }),
-    });
-
-    expect(response.status).toBe(401);
+  it('refuses an anonymous request on every signed-in route', async () => {
+    for (const [method, path, body] of ROUTES) {
+      const response = await SELF.fetch(`${ORIGIN}${path}`, {
+        method,
+        headers: json,
+        body: body === undefined ? undefined : JSON.stringify(body),
+      });
+      expect(response.status, `${method} ${path}`).toBe(401);
+    }
   });
 
   it('404s a generation that does not exist', async () => {
-    // Reads are unauthenticated by design - the id is the capability - so the
-    // failure mode for a bad link is "not found", never "not allowed".
+    // Reads are unauthenticated by design (the id is the capability), so a bad
+    // link is "not found", never "not allowed".
     const response = await SELF.fetch('https://x/api/studio/generations/nope');
 
     expect(response.status).toBe(404);
@@ -75,8 +73,7 @@ describe('media', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toBe('image/webp');
-    // A key is written once and never rewritten, so this is honest rather
-    // than optimistic.
+    // A key is written once and never rewritten.
     expect(response.headers.get('cache-control')).toContain('immutable');
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(
       new Uint8Array([1, 2, 3])
@@ -99,17 +96,40 @@ describe('media', () => {
   });
 });
 
-describe('the schema is the boundary', () => {
-  it('answers an anonymous, malformed request with the auth gate', async () => {
-    // The session is checked before the body, so an anonymous request with a
-    // description too short to match on is refused as anonymous. Either way
-    // it never reaches the upstream.
-    const response = await SELF.fetch('https://x/api/studio/directions', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ description: 'hi' }),
-    });
+// better-auth answers a request from an origin it does not trust with 403
+// "Invalid origin" before it reads the body. PUBLIC_ORIGIN is trusted
+// through baseURL; these are the two origins trusted beside it, and the
+// ones that must stay untrusted.
 
-    expect(response.status).toBe(401);
+const PREVIEW = 'https://a1b2c3d4-tabbied.example.workers.dev';
+
+const signInFrom = (url: string, origin: string) =>
+  SELF.fetch(`${url}/api/auth/sign-in/email`, {
+    method: 'POST',
+    headers: { ...json, origin },
+    body: JSON.stringify({ email: 'nobody@example.com', password: 'not the password' }),
+  });
+
+describe('trusted origins', () => {
+  it('trusts a preview deployment for a request that is same-origin with it', async () => {
+    // Past the origin check: the credentials are wrong, which is the answer
+    // the form gets on the production origin too.
+    const preview = await signInFrom(PREVIEW, PREVIEW);
+    expect(preview.status, await preview.text()).toBe(401);
+
+    const production = await signInFrom(ORIGIN, ORIGIN);
+    expect(production.status, await production.text()).toBe(401);
+  });
+
+  it('does not trust a workers.dev origin the request did not arrive on', async () => {
+    // A page on any other workers.dev host, or on any other site, naming the
+    // preview host as its origin is still someone else's page.
+    const borrowed = await signInFrom(PREVIEW, 'https://evil.workers.dev');
+    expect(borrowed.status).toBe(403);
+    expect(await borrowed.text()).toContain('Invalid origin');
+
+    const elsewhere = await signInFrom(ORIGIN, 'https://evil.example.com');
+    expect(elsewhere.status).toBe(403);
+    expect(await elsewhere.text()).toContain('Invalid origin');
   });
 });

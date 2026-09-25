@@ -1,10 +1,6 @@
-// The index Studio matches against, built once at build time.
-//
-// Server-only, like lib/siteCounts.ts: the catalog is 384 KB and the template
-// data pulls in every pattern definition, none of which should reach the
-// browser. What crosses to the client is this reduced list - 77 entries of
-// names, palettes and vocabulary, a few kilobytes - which the matcher in
-// lib/studioMatch.ts then works over without another round trip.
+// The index Studio matches against, built at build time. Server-only, like
+// lib/siteCounts.ts: the catalog and template data must not reach the browser.
+// Only this reduced list crosses to the client, for lib/studioMatch.ts.
 import catalog from 'tabbied/catalog.json';
 import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
@@ -53,7 +49,7 @@ function toEntry(site: RawSite): StudioEntry {
     // "Black and white" should reach a palette that is mostly gray with one
     // accent, not only the handful with no color at all.
     neutral: hues.length <= Math.floor(site.palette.length * 0.4),
-    // The card's second line - how the design feels, then what it is made of.
+    // The card's second line: how the design feels, then what it is made of.
     descriptors: [...moods.slice(0, 2), ...tags.slice(0, 1)].map(titleCase),
     topicTerms: Array.from(
       new Set([...tokenize(site.topic), ...tokenize(site.name)].map(stem))
@@ -62,10 +58,9 @@ function toEntry(site: RawSite): StudioEntry {
 }
 
 /**
- * Both template collections, in the same order /templates lists them. The two
- * carry different field names for the same things - `brand`/`name`,
- * `pattern`/`patternSlug`, `colors`/`palette` - so they are normalized here the
- * way that gallery normalizes them for its cards.
+ * Both template collections, in the order /templates lists them, normalized
+ * from their different field names (`brand`/`name`, `pattern`/`patternSlug`,
+ * `colors`/`palette`).
  */
 export const STUDIO_ENTRIES: StudioEntry[] = [
   ...TEMPLATE_SITES.map((site) =>

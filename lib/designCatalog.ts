@@ -1,14 +1,9 @@
-// The design library as the customizer offers it: every catalog design's slug,
-// name and density, and nothing else.
-//
-// Server-only, like lib/siteCounts.ts and lib/studioDirections.ts: the catalog
-// is 384 KB and carries each design's description, options and metadata,
-// none of which "Shuffle patterns" needs. The site workspace page reads this
-// in its server component and passes the reduced list down, a few kilobytes
-// for 338 designs.
+// The design library as the customizer offers it: each catalog design's slug,
+// name and density. Server-only, like lib/siteCounts.ts: the full catalog is
+// 384 KB, so the page's server component passes this reduced list down.
 import catalog from 'tabbied/catalog.json';
 
-export type DesignDensity = 'sparse' | 'medium' | 'dense';
+type DesignDensity = 'sparse' | 'medium' | 'dense';
 
 /** One design a pattern field may be swapped to. */
 export type DesignChoice = {

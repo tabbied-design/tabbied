@@ -1,6 +1,5 @@
-/* Shared palette editor dialog (4a). The backdrop is deliberately faint so the
-   page behind it - whose patterns recolor live to the palette being edited -
-   stays visible. */
+/* The backdrop is deliberately faint so the page behind it, whose patterns
+   recolor live to the palette being edited, stays visible. */
 
 .dialogBackdrop {
   position: fixed;
@@ -44,7 +43,7 @@
   color: #0e0e13;
 }
 
-/* Shuffle-color-order icon button, pushed to the trailing edge of the title. */
+/* Randomize icon button, pushed to the trailing edge of the title. */
 .shuffleButton {
   display: inline-flex;
   align-items: center;
@@ -356,10 +355,8 @@
   outline-offset: 2px;
 }
 
-/* On phones the dialog docks to the bottom as a sheet (7c): a grab handle up
-   top, the form scrolls, and the Cancel / Save bar sticks to the bottom. The
-   fold is the site's (768px): between 641 and 767px the editor was already in
-   its phone layout while this stayed a centerd card. */
+/* On phones the dialog docks to the bottom as a sheet: a grab handle up top,
+   the form scrolls, and the Cancel / Save bar sticks to the bottom. */
 @media (max-width: 767.98px) {
   .dialogPopup {
     top: auto;

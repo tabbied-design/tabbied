@@ -1,16 +1,11 @@
 // Every template's header links on a phone.
 //
-// 57 of the 77 templates hid their header nav below a breakpoint and offered
-// nothing in its place, so a visitor on a phone had the footer and nothing
-// else, and so did every site shipped from the download. They now carry
-// components/template/TemplateMenu, a <details> that works with no script at
-// all, and this is the gate that keeps the next template from repeating it:
-// at 390px, every link the header hides must be reachable through a visible
-// menu, and the menu must fit on the screen.
+// A template that hides its header nav below a breakpoint carries
+// components/template/TemplateMenu. The gate: at 390px, every link the header
+// hides must be reachable through a visible menu that fits on the screen.
 //
-// Plus the one thing the HTML package does differently from the site: it has
-// no React left, so a plain script closes the menu on a followed link. That
-// is checked against the packaged page itself.
+// The HTML package has no React left, so a plain script closes the menu on a
+// followed link; that is checked against the packaged page itself.
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -39,6 +34,7 @@ test.describe('template headers on a phone', () => {
   test('every link a header hides is in a menu that fits the screen', async ({ page }) => {
     test.setTimeout(240_000);
     const failures: string[] = [];
+    let closeChecked = false;
 
     for (const slug of SLUGS) {
       await page.goto(`/templates/${slug}/site/`, { waitUntil: 'domcontentloaded' });
@@ -81,8 +77,13 @@ test.describe('template headers on a phone', () => {
       if (!fits) failures.push(`${slug}: the open menu runs off the screen`);
 
       // A followed link closes it (the component's own handler, on the site).
-      await panel.locator('a').first().click();
-      await expect(page.locator('details.template-menu').first()).not.toHaveAttribute('open', '');
+      // The handler is the same component on every template, so it is
+      // checked once, on the first template that has a menu.
+      if (!closeChecked) {
+        closeChecked = true;
+        await panel.locator('a').first().click();
+        await expect(page.locator('details.template-menu').first()).not.toHaveAttribute('open', '');
+      }
     }
 
     expect(failures).toEqual([]);

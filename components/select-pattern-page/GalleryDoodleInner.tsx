@@ -10,12 +10,8 @@ import styles from './SelectPattern.module.css';
 const DEFAULT_RENDER = { width: 800, height: 800 };
 
 // Each card redraws every 6-9s; the random spread keeps the cards out of
-// phase so the gallery shimmers card by card instead of strobing in unison.
-//
-// It was 2.5-4s, which on a page holding this many cards at once reads as
-// constant movement rather than as each design turning over. A template page
-// runs its one or two fields at 4.2-6.6s; the gallery has far more in view,
-// so it sits past the slow end of that.
+// phase so the gallery turns over card by card instead of strobing in unison.
+// Slower than a template page's 4.2-6.6s, since far more fields are in view.
 const REDRAW_INTERVAL_MS = 6000;
 const REDRAW_STAGGER_MS = 3000;
 
@@ -55,13 +51,11 @@ export default function GalleryDoodleInner({
   const baseColors = config?.palette ?? item.palette;
   const defaultCount = item.colors?.default ?? baseColors.length;
 
-  // No seed prop: a fresh random seed per mount keeps the gallery dynamic -
-  // every visit draws a new variation of each design - and redrawInterval
-  // rotates it from there (the controller skips ticks while the card is out
-  // of view, in a hidden tab, or under reduced motion). The cover fit reproduces the
-  // fixed-resolution + transform-scale technique, so fixed-px strokes and
-  // shadows keep the proportions of the original 800px pattern at any card
-  // size. onReady fires on first paint, letting the parent drop its shimmer.
+  // No seed prop: every mount draws a new variation, and redrawInterval
+  // rotates it from there (the controller skips ticks while the card is out of
+  // view, in a hidden tab, or under reduced motion). The cover fit draws at a
+  // fixed resolution and scales, so fixed-px strokes and shadows keep the
+  // proportions of the original 800px pattern at any card size.
   return (
     <TabbiedPattern
       pattern={pattern}

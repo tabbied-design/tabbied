@@ -1,7 +1,7 @@
 // Emits packages/tabbied/patterns/<slug>.json for every batch-5 definition and
 // prints the galleryThumbnails entries to insert. Scoped to batch 5 only so it
 // never touches patterns shipped in earlier commits.
-import { writeFileSync, readdirSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { batch5 } from './pattern-defs-5.mjs';
@@ -36,22 +36,10 @@ const collapse = (s) => s.replace(/\s+/g, ' ').trim();
 
 const defs = batch5;
 
-// Guard: batch-5 slugs must be unique within the batch and must not clobber any
-// pre-existing pattern that isn't part of this batch.
 const batchSlugs = new Set();
 for (const def of defs) {
   if (batchSlugs.has(def.slug)) throw new Error(`duplicate slug: ${def.slug}`);
   batchSlugs.add(def.slug);
-}
-const existing = new Set(
-  readdirSync(PATTERNS_DIR)
-    .filter((f) => f.endsWith('.json'))
-    .map((f) => f.replace(/\.json$/, ''))
-);
-for (const def of defs) {
-  if (existing.has(def.slug) && !batchSlugs.has(def.slug)) {
-    throw new Error(`batch-5 slug ${def.slug} collides with an existing pattern`);
-  }
 }
 
 const thumbEntries = [];

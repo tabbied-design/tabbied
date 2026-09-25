@@ -1,17 +1,15 @@
 // The account area and the admin tier, rendered against a stubbed session.
 //
-// Sessions come from /api/auth/get-session, which the export has no Worker
-// behind here, so each test answers it itself: no session, a member's, an
-// admin's. What is under test is the pages' own logic - who sees the nav,
-// who sees "Not found", that the data lands in the tables - not better-auth.
-// The account's templates come from /api/account/templates, stubbed the same
-// way.
+// The export has no Worker behind it here, so each test answers
+// /api/auth/get-session (and /api/account/templates) itself. Under test is the
+// pages' own logic (who sees the nav, who sees "Not found", that the data
+// lands in the tables), not better-auth.
 import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 
 const REPO_ROOT = path.join(__dirname, '..');
-const REQUIRED = ['account', 'account/sites', 'account/usage', 'admin', 'admin/users', 'admin/requests'].map((route) =>
+const REQUIRED = ['account', 'account/sites', 'admin', 'admin/users', 'admin/requests'].map((route) =>
   path.join(REPO_ROOT, 'out', route, 'index.html')
 );
 
@@ -28,9 +26,8 @@ const stubSession = (page: Page, role: string | null | 'none') =>
 test.describe('account and admin pages', () => {
   test.skip(REQUIRED.some((file) => !fs.existsSync(file)), 'run `npm run build` first');
 
-  // The layout links typekit and Google Fonts; with no outbound network those
-  // requests hang until a proxy resets them and `load` waits on stylesheets.
-  // Nothing under test needs the fonts, so they are refused outright.
+  // Fonts are not under test, and without outbound network their requests
+  // hang and `load` waits on them.
   test.beforeEach(async ({ page }) => {
     await page.route(/https:\/\/(use\.typekit\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)\//, (route) => route.abort());
   });
@@ -42,7 +39,7 @@ test.describe('account and admin pages', () => {
     await expect(page.getByRole('heading', { name: /signed out/ })).toBeVisible();
   });
 
-  test('a member sees their sites and usage', async ({ page }) => {
+  test('a member sees their sites', async ({ page }) => {
     await stubSession(page, null);
     await page.route('**/api/studio/sites', (route) =>
       route.fulfill({
@@ -50,18 +47,6 @@ test.describe('account and admin pages', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           sites: [{ id: 'abc', slug: 'verdant', templateName: 'Verdant', title: 'Ye Joo Park', stance: 'Warmly Grounded', palette: ['#fff', '#000'], revisions: 3, createdAt: '2026-09-01T00:00:00Z', updatedAt: '2026-09-02T00:00:00Z' }],
-        }),
-      })
-    );
-    await page.route('**/api/account/usage', (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          resetsAt: '2026-09-03T00:00:00Z',
-          usage: [{ endpoint: 'site', label: 'sites', used: 2, cap: 10 }],
-          recent: [],
-          downloads: { used: 4, cap: 30, resetsAt: '2026-10-01T00:00:00Z' },
         }),
       })
     );
@@ -77,8 +62,8 @@ test.describe('account and admin pages', () => {
     await expect(page.getByRole('menuitem', { name: 'Settings' })).toBeVisible();
     await expect(page.getByRole('menuitem', { name: 'Admin' })).toHaveCount(0);
     await page.keyboard.press('Escape');
-    // The table names the site's direction and template, and no longer
-    // counts its revisions.
+    // The table names the site's direction and template, and does not count
+    // its revisions.
     await expect(page.getByText('Warmly Grounded on Verdant')).toBeVisible();
     await expect(page.getByText(/revisions?$/)).toHaveCount(0);
 
@@ -93,9 +78,6 @@ test.describe('account and admin pages', () => {
     await page.getByRole('button', { name: 'Delete Ye Joo Park for good' }).click();
     await expect(page.getByRole('link', { name: /Ye Joo Park/ })).toHaveCount(0);
     expect(deletes).toEqual(['DELETE']);
-
-    await page.goto('/account/usage/');
-    await expect(page.getByText('2 / 10 today')).toBeVisible();
   });
 
   test('the overview is the chosen templates, and "Request more" in two rounds', async ({ page }) => {

@@ -1,13 +1,9 @@
 // N. Speck - hard-edged dot fields.
 //
-// The same tiled radial-gradient section C fades, left alone: every dot the
-// same weight, all the way across. Change the tile and the pitch changes;
-// change the stop and the dot grows or shrinks - from a tint with texture in
-// it up to a field so dense the gaps become the drawing.
-//
-// The converter turns a tiled layer into an SVG <pattern> holding one dot, so
-// a field of four hundred costs one gradient and lands on the browser's own
-// tile origin. Everything here is a mask, so the gaps are real holes.
+// Section C's tiled radial-gradient left unfaded: every dot the same weight.
+// The tile sets the pitch and the stop the dot size. The converter turns a
+// tiled layer into an SVG <pattern> holding one dot, landing on the browser's
+// own tile origin. Everything here is a mask, so the gaps are real holes.
 import { section, F, TR, dotsL, faded } from './shared.mjs';
 
 const { add, all } = section('N. Speck');

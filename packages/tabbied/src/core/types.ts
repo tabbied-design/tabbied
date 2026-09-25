@@ -61,19 +61,18 @@ export type PatternSizing = {
   /**
    * The cell must be a whole multiple of this. A design that subdivides its
    * cell puts a boundary at `cell / n`, and an indivisible cell lands that
-   * boundary on a fraction of a pixel - which the browser seams, however
-   * exact the outer grid is. Only the three designs that mask the cell with
-   * a grid of their own need it: subdivide (2), fractal (3), matryoshka (4).
-   * Defaults to 2, which also keeps centerd rules and strokes off half-pixels.
+   * boundary on a fraction of a pixel, which the browser seams however
+   * exact the outer grid is. Only the designs that mask the cell with a grid
+   * of their own declare it: subdivide (2), fractal (3), matryoshka (4).
+   * Defaults to 2, which also keeps centered rules and strokes off half-pixels.
    */
   cellMultiple?: number;
   /**
    * The most cells a derived grid may have. For the designs whose cells are
    * a count of things rather than a tiling (rings, rays, dots, bars, laid
    * out by `@i` over the whole canvas), where every cell is a full-canvas
-   * layer and a dense grid multiplies the cost: at the editor's finest
-   * density radiantswirl drew 187 rings where it was designed for 28. Set to
-   * the largest count the design's grid option offers. Unset means no cap.
+   * layer and a dense grid multiplies the cost. Set to the largest count the
+   * design's grid option offers. Unset means no cap.
    */
   maxCells?: number;
 };
@@ -100,8 +99,8 @@ export type PatternDefinition = {
   /** Sort position in the gallery (ascending). Unset sorts last. */
   galleryOrder?: number;
   /**
-   * False disables native SVG export - for designs that paint effects SVG
-   * cannot represent (smooth conic-gradient sweeps). Defaults to true.
+   * False disables native SVG export, for designs the converter cannot
+   * represent faithfully (see docs/svg-export.md). Defaults to true.
    */
   svgExport?: boolean;
   /**
@@ -116,10 +115,8 @@ export type PatternDefinition = {
 
 /**
  * Whether a pattern can be exported as native SVG. False only for designs
- * whose definition opts out via `svgExport: false` (smooth conic-gradient
- * sweeps have no SVG equivalent). Lives here - not in the converter module -
- * so UI gating never pulls the converter into the bundle (exportSvg() loads
- * it on demand).
+ * whose definition opts out via `svgExport: false`. Lives here, not in the
+ * converter module, so UI gating never pulls the converter into the bundle.
  */
 export function supportsSvgExport(pattern: { svgExport?: boolean }): boolean {
   return pattern.svgExport !== false;

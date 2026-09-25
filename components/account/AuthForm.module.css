@@ -1,10 +1,6 @@
-/* The account forms - sign in, sign up, the three password pages. Each is one
-   card in AuthShell, and takes its tokens (`--a-...`) from it.
-
-   The card is why the measure shrank from Studio's 592px column to 440px: a
-   form on a sheet wants to be narrower than a form on a page, and the eyebrow
-   above the title is what replaces the masthead's "Account" label now that
-   the bar carries the lockup instead. */
+/* The account forms: sign in, sign up, the three password pages. Each is one
+   card in AuthShell, and takes its tokens (`--a-...`) from it. The eyebrow
+   above the title names the page, since the bar carries only the lockup. */
 
 .form {
   box-sizing: border-box;

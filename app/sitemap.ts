@@ -23,10 +23,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'privacy-policy',
     'terms-of-service',
     ...patternIds.map((slug) => `patterns/${slug}`),
-    // The framed previews, which are the templates' canonical pages: they
-    // say what the template is and how to take it. The bare /templates/<slug>/site/
-    // pages are the sites themselves, a fictional business each, and are
-    // left for the previews to frame rather than listed on their own.
+    // The framed previews are the templates' canonical pages; the bare
+    // /templates/<slug>/site/ pages (a fictional business each) are not listed.
     ...TEMPLATE_SITES.map((site) => `templates/${site.slug}`),
     ...NEW_TEMPLATE_SITES.map((site) => `templates/${site.slug}`),
   ].map((path) => ({ url: url(path) }));

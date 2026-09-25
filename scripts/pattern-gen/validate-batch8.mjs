@@ -2,13 +2,11 @@
 // settings and verifies it paints, keeps its cells across a reseed (so
 // transitions animate), re-inks on that reseed, and logs no console errors.
 //
-// Batch 7 is the *scattered* batch - @rand() and @pick() place shapes, so
-// unlike batch 6 the geometry is allowed to move on reseed. What it does
-// inherit from batch 6 is background independence: re-rendering with the
-// background slot set to a zero-alpha color must produce byte-identical
-// cells. A design that knocked its holes out with var(--color0) would quietly
-// fill them in here. (Same seed -> same rolls, so the two passes are directly
-// comparable even though the design is random.)
+// Unlike batch 6 the geometry may move on reseed (@rand() and @pick() place
+// shapes). What is checked is background independence: re-rendering with the
+// background slot at zero alpha must produce byte-identical cells, so a design
+// that knocked its holes out with var(--color0) fails. Same seed -> same
+// rolls, so the two passes compare directly even though the design is random.
 //
 // Contact sheets land in /tmp/sheet-b8-*.png - the transparent pass is shot
 // over a checkerboard so real holes are visible as see-through.
@@ -33,8 +31,8 @@ const ALL_CELLS = 9999;
 const TRANSPARENT = '#00000000';
 
 // Mirrors buildDoodleSource() in packages/tabbied/src/core/doodleSource.ts,
-// including the ToggleSwitch semantics (on -> substitute the snippet, off ->
-// drop the token) that batch 8's Shadow / Rounded Corners switches rely on.
+// including its ToggleSwitch semantics (on -> substitute the snippet, off ->
+// drop the token).
 function buildSource(pattern, { width, height, optionOverrides = {}, transparentBg = false }) {
   let style = pattern.code.style;
   let doodle = pattern.code.doodle;

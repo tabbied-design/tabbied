@@ -14,7 +14,6 @@ export const metadata = {
 const INK = '#2B1F16';
 const TERRACOTTA = '#C75B2A';
 const SKY = '#3B8EA5';
-const GRAY = '#8C7E6E';
 const PALE = '#E4D5BE';
 /* Tiles pin their doodle to a whole multiple of the cell (6 x 72px) and let
    the plate clip it, so every grid track lands on a whole pixel. */

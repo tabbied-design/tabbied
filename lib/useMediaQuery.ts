@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 
 /**
- * Small `window.matchMedia` based replacement for the Material UI
- * `useMediaQuery` hook. Returns `false` during SSR / the first client render
- * (matching MUI's default behavior) and updates once mounted.
+ * Whether a media query matches. `false` during SSR and the first client
+ * render, then live once mounted.
  */
 export default function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);

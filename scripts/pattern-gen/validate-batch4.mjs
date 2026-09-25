@@ -37,10 +37,10 @@ function buildSource(pattern, { width, height, optionOverrides = {} }) {
   return { style: colors + ' ' + style, doodle };
 }
 
-// Mirror of validate-patterns.mjs: backgroundImage/height are intentionally
-// excluded so a design whose only per-seed change is a gradient (which can't
-// transition and would snap) fails the reseed check - every design must vary a
-// transition-able property so reseeds morph.
+// backgroundImage/height are intentionally excluded, so a design whose only
+// per-seed change is a gradient (which can't transition and would snap) fails
+// the reseed check: every design must vary a transition-able property so
+// reseeds morph.
 const CELL_PROPS = ['backgroundColor', 'transform', 'clipPath', 'opacity', 'borderTopWidth', 'borderLeftWidth', 'borderRadius', 'width', 'left', 'top', 'margin'];
 const PSEUDO_PROPS = ['content', 'left', 'top', 'width', 'height', 'backgroundColor', 'opacity', 'transform', 'borderTopWidth', 'boxShadow', 'clipPath', 'borderRadius'];
 

@@ -1,14 +1,9 @@
 // B. Rule - stripe fields. Pitch, duty, angle, phase.
 //
-// A repeating-linear-gradient used as a mask is the cheapest real drawing in
-// CSS and one of the most exact things the SVG converter does: the whole run
-// becomes one gradient with spreadMethod="repeat", so a hundred stripes cost
-// what two cost and land on the sub-pixel positions the browser used.
-//
-// The variables are few and the results are not: how wide the rule is, how
-// much of the period it fills, which way it runs, where in the period it
-// starts, and whether a second field is laid over the first at another phase.
-import { section, A, B, F, TR, ink, slot1, R2 } from './shared.mjs';
+// A repeating-linear-gradient mask exports as one gradient with
+// spreadMethod="repeat", so a hundred stripes cost what two cost and land on
+// the sub-pixel positions the browser used.
+import { section, F, TR, ink, slot1, R2 } from './shared.mjs';
 
 const { add, all } = section('B. Rule');
 

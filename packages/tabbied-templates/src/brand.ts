@@ -1,22 +1,15 @@
 // Brand copy: the three strings every small-business site needs, and the
 // mapping from them onto a particular template's slots.
 //
-// A template spec describes slots by *id*, and those ids are local to the page
-// that declares them - `brand.name` on the five shared TemplateSite pages,
-// `bar.mark` or `colophon.colophonMark` on the bespoke ones, because 52 of
-// them were annotated by codemod from whatever the component happened to be
-// called. So an id is not something a caller can address a template by.
+// Slot ids are local to the page that declares them (`brand.name` on the
+// shared TemplateSite pages, `bar.mark` on a bespoke one), so a caller cannot
+// address a template by id. It can by *role*: `data-edit-copy="brandName"`
+// marks the slot holding the business's name, the generator carries it into
+// the spec, and this module places the strings without knowing the template.
+// Everything downstream is `planEdits`.
 //
-// A *role* is. `data-edit-copy="brandName"` marks the slot that holds the
-// business's name whatever the surrounding component is named, the generator
-// carries it into the spec, and a caller that has three strings and no idea
-// which template it is talking to can place them. That is the whole of what
-// this module does; everything downstream is `planEdits`.
-//
-// Why only three: they are the three a generated direction actually authors
-// (worker/ai/schema.ts), and they are the three that are unambiguous on every
-// template. A body-copy or section-heading role would have to pick between a
-// dozen candidates per page and would be guessing.
+// Only three roles: they are the three a generated direction authors
+// (worker/ai/schema.ts) and the three that are unambiguous on every template.
 import { isHexColor } from './color.js';
 import { MIN_PALETTE_COLORS } from './plan.js';
 import { isTextSlot } from './spec.js';
@@ -39,10 +32,9 @@ export const parseCopyRole = (value: string | undefined): CopyRole | undefined =
 /**
  * Every text slot carrying each role.
  *
- * A list rather than one slot per role, for the same reason `applyPlan`
- * queries all elements for an id: a template may legitimately name two
- * separate slots as the headline (a hero and a repeated banner), and both
- * should move together. Roles a template does not declare are simply absent.
+ * A list, because a template may name two separate slots as the headline (a
+ * hero and a repeated banner) and both should move together. Roles a template
+ * does not declare are absent.
  */
 export function copySlots(spec: TemplateSpec): Partial<Record<CopyRole, TextSlot[]>> {
   const found: Partial<Record<CopyRole, TextSlot[]>> = {};
@@ -61,10 +53,9 @@ export const declaredCopyRoles = (spec: TemplateSpec): CopyRole[] =>
   COPY_ROLES.filter((role) => (copySlots(spec)[role]?.length ?? 0) > 0);
 
 /**
- * True when a template can be rebranded at all - it names the business
+ * True when a template can be rebranded at all, i.e. it names the business
  * somewhere. A page with no `brandName` slot would render a generated
- * direction under the template's own name, which is the failure this exists to
- * let a caller avoid rather than discover in a screenshot.
+ * direction under the template's own name.
  */
 export const supportsBrandCopy = (spec: TemplateSpec): boolean =>
   (copySlots(spec).brandName?.length ?? 0) > 0;
@@ -87,11 +78,9 @@ const usablePalette = (palette: string[] | null | undefined): boolean =>
  * Turn a brand direction into an edits document for one template.
  *
  * Total and lossy by design: a role the template does not declare is dropped
- * rather than reported, because the caller asking for a rebrand did not choose
- * the template's annotations and cannot act on the complaint. What it *can*
- * act on is `declaredCopyRoles`, ahead of time. A palette that would fail
- * `planEdits` is dropped for the same reason - the template keeps its own,
- * which is a working page rather than an error.
+ * rather than reported, because the caller cannot act on the complaint (it can
+ * check `declaredCopyRoles` ahead of time). A palette that would fail
+ * `planEdits` is dropped too, and the template keeps its own.
  */
 export function directionToEdits(
   spec: TemplateSpec,

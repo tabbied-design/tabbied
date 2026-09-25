@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  bothways, dotfield, picket, rungs, sliver, streaking,
+  bothways, dotfield, picket, rungs, sliver,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './nachtzug.module.css';
@@ -18,15 +18,14 @@ const BONE = '#EDE8DA';
 const GOLD = '#E0A83C';
 const STEEL = '#545C74';
 const DEEP = '#141827';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = STEEL;
 const TILE_B = DEEP;
-
 
 const LINES = [
   { no: 'NZ 401', from: 'Wien Hbf', to: 'Roma Termini', dep: '19.42', arr: '09.12', nights: '1', runs: 'Daily' },

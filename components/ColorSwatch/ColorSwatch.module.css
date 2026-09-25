@@ -1,5 +1,4 @@
-/* A native color input dressed as a small swatch button (replacing Pickr's
-   .pcr-button). Fill-and-shadow language, scales up slightly on hover/focus. */
+/* A native color input dressed as a small swatch button. */
 .swatch {
   position: relative;
   display: inline-block;
@@ -22,8 +21,7 @@
   outline-offset: 2px;
 }
 
-/* Transparent (background) slot: the checkerboard reads through while the input
-   above stays clickable, so the picker still opens. */
+/* Transparent (background) slot. */
 .swatchTransparent {
   background-image: repeating-conic-gradient(#dfe3e8 0% 25%, #ffffff 0% 50%);
   background-size: 10px 10px;

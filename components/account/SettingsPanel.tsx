@@ -2,10 +2,9 @@
 
 // Name, password, what is connected, and the one irreversible thing.
 //
-// Confirmations are toasts and validation is inline, which is the split the
-// 2026 design draws and also the right one: "Name saved." is worth a glance
-// and gone, while "the new passwords do not match" has to stay on screen
-// beside the fields it is about.
+// Confirmations are toasts and validation is inline: "Name saved." is worth
+// a glance and gone, while "the new passwords do not match" has to stay on
+// screen beside the fields it is about.
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Toaster, { toaster } from 'components/Toaster';

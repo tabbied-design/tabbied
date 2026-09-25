@@ -5,10 +5,8 @@ import * as schema from '../db/schema';
 import { rateWindow } from '../db/schema';
 import { consume } from '../lib/ratelimit';
 
-// The counter that replaced the KV one. What matters is that it is exact:
-// KV could not compare-and-set, so it under-counted the burst it existed to
-// catch - and threw on a second write to the same key within a second, turning
-// a 429 into a 500.
+// What matters is that the counter is exact, and that a second write to one
+// key within a second neither loses an update nor throws (KV did both).
 
 const db = drizzle(env.DB, { schema });
 
@@ -38,8 +36,8 @@ describe('consume', () => {
   });
 
   it('loses no update when requests land together', async () => {
-    // The KV version could not survive this: two reads of the same value, two
-    // writes of value+1, one increment silently dropped.
+    // Read-then-write would give two reads of the same value, two writes of
+    // value+1, and one increment silently dropped.
     const burst = await Promise.all(
       Array.from({ length: 10 }, () => consume(db, { ...LIMIT, max: 100 }))
     );
@@ -48,14 +46,6 @@ describe('consume', () => {
 
     expect(new Set(counts).size).toBe(10);
     expect(Math.max(...counts)).toBe(10);
-  });
-
-  it('does not throw on a second write to one key inside a second', async () => {
-    // The bug this table exists to fix: KV rejects that with a 429, which the
-    // route surfaced as a 500 rather than as rate limiting.
-    await expect(
-      Promise.all([consume(db, LIMIT), consume(db, LIMIT)])
-    ).resolves.toHaveLength(2);
   });
 
   it('starts a new window when the old one has passed', async () => {

@@ -200,10 +200,8 @@ const myPattern: PatternDefinition = {
   },
 };`;
 
-// The fit-mode gallery below. Every entry draws `radius` at the same seed into
-// the same landscape and portrait boxes, so the only variable on show is `fit`;
-// describing the modes in prose never makes clear how differently they treat
-// a box that doesn't match the drawing.
+// The fit-mode gallery. Every entry draws `radius` at the same seed into the
+// same landscape and portrait boxes, so the only variable on show is `fit`.
 const FIT_DEMOS = [
   {
     fit: 'grid',
@@ -236,9 +234,8 @@ function Callout({ children }: { children: ReactNode }) {
   );
 }
 
-// One fit mode, drawn into both box shapes. Density 1 (90px cells) keeps the
-// cells big enough to read as shapes at preview size - and to make it obvious
-// when they stay square.
+// One fit mode, drawn into both box shapes. Density 0.25 (90px cells) keeps
+// the cells big enough to read as shapes, and to show whether they stay square.
 function FitDemo({
   fit,
   label,

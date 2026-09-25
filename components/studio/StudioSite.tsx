@@ -1,32 +1,23 @@
 'use client';
 
 // The customizer: a site's latest revision on its template, and the two things
-// a person changes about it in this release - its colors and its patterns.
+// a person changes about it in this release, its colors and its patterns.
 //
-// Everything a person does here is planned and applied by the edits engine
-// against the iframe's document, live, the same engine the canvas was drawn
-// with. A color change plans the properties and the pattern-host rewrites,
-// then asks the runtime inside the iframe to draw its patterns again, since a
-// rewritten attribute is not a re-render. A shuffle swaps every field's design
-// the same way. Saving posts the whole document as the next revision, and the
-// download rebuilds the packaged zip with that document in it.
+// Every change is planned and applied by the edits engine against the
+// iframe's document, live, and the runtime inside is then asked to draw its
+// patterns again, since a rewritten attribute is not a re-render. Saving posts
+// the whole document as the next revision; the download rebuilds the packaged
+// zip with that document in it.
 //
-// What is deliberately not here: editing words and pictures. The Worker still
-// holds the routes for both (revise, images), and the document still carries
-// whatever text Studio wrote for a generated site; the rail's Content tab says
-// they are not edited here yet, which is the first release's scope.
+// Words and pictures are not edited here yet (the Worker keeps the routes, and
+// the rail's Content tab says so). Below 768px the rail is hidden and the page
+// is the site alone, to preview and download.
 //
-// Nor is the editor offered on a phone. Below 768px the rail is hidden, a
-// notice says customizing wants a larger screen, and the page is the site
-// alone, full bleed, to preview and download.
-//
-// A site started from a template is a draft until its first Save. Opening
-// Customize used to make the site on the visit, so every look at a template
-// left a copy of it in the account ("Real Estate" three times over, none of
-// them touched). Now /studio/customize/ renders this with `template` and a
-// document held here; the first Save makes the site with that document as
-// revision 1 and moves the address to /studio/site/?id= in place, without a
-// navigation, so the canvas and the rail stay as they are.
+// A site started from a template is a draft until its first Save, so a look at
+// a template leaves nothing in the account: /studio/customize/ renders this
+// with `template`, and the first Save makes the site with the draft as
+// revision 1 and moves the address to /studio/site/?id= with replaceState, so
+// the canvas and the rail stay as they are.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -131,11 +122,10 @@ export default function StudioSite({
   const [downloading, setDownloading] = useState(false);
   const [shuffling, setShuffling] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  // Bumped to remount the iframe. React diffs `srcDoc` against the prop it
-  // last rendered, not against the live document: a rebuilt page that is
-  // byte-for-byte the one first loaded (the template's own patterns, put back
-  // after a shuffle) would otherwise be no change at all, and the frame would
-  // keep the attributes the live edits wrote into it.
+  // Bumped to remount the iframe. React diffs `srcDoc` against its last prop,
+  // not the live document, so a rebuilt page identical to the first load (the
+  // template's own patterns, put back after a shuffle) would otherwise keep
+  // the attributes the live edits wrote into it.
   const [canvasKey, setCanvasKey] = useState(0);
   const frameRef = useRef<HTMLIFrameElement | null>(null);
   const shuffleTimer = useRef<number | null>(null);
@@ -238,9 +228,9 @@ export default function StudioSite({
   const patternSlots = useMemo<PatternSlot[]>(() => spec?.slots.filter(isPatternSlot) ?? [], [spec]);
 
   /**
-   * Rebuild the canvas from the package with a document, and remount it. The
-   * way back when a live plan cannot express the change (a reset, which has
-   * to put authored options back) or has nowhere to run yet.
+   * Rebuild the canvas from the package with a document, and remount it: for
+   * a change a live plan cannot express (a reset, which puts authored options
+   * back) or a frame not loaded yet.
    */
   const rebuild = useCallback(
     (next: EditsDocument) => {
@@ -258,16 +248,13 @@ export default function StudioSite({
 
   /**
    * Run a document against the live page: plan it whole, apply the plan to
-   * the iframe's document, and ask the runtime inside to draw its patterns
-   * again. Whole, not the changed part: the planner gives a field's own
-   * palette precedence over the brand palette only when both are in the
-   * document it plans, so a palette change planned alone re-colored a field
-   * the saved document leaves alone, and the canvas disagreed with what Save
-   * would store and Download would build. Text operations are idempotent, so
-   * planning them again costs nothing. What the engine could not place is
-   * reported with the page's other notices rather than dropped; before the
-   * frame has loaded its document and runtime there is nothing to plan
-   * against, so the canvas is rebuilt instead.
+   * the iframe's document, and ask the runtime inside to redraw. Whole, not
+   * the changed part: a field's own palette beats the brand palette only when
+   * both are in the planned document, so a partial plan would disagree with
+   * what Save stores and Download builds; text operations are idempotent, so
+   * replanning them costs nothing. What the engine could not place joins the
+   * page's notices. Before the frame has loaded there is nothing to plan
+   * against, so the canvas is rebuilt.
    */
   const applyDocument = useCallback(
     (next: EditsDocument) => {
@@ -323,11 +310,9 @@ export default function StudioSite({
   const palette = draft.edits.palette ?? spec.palette.colors;
   const fieldsChanged = patternsChanged(patternSlots, draft.edits.patterns);
 
-  // A whole palette at a time: a row in the rail, or the dialog's Save. The
-  // spec's role count is the shape the page reads, so a shorter or longer
-  // array never reaches the document. The template's own row is the way back
-  // to its colors: they are written as inline properties, the same values
-  // the class rule holds, so the page reads as it did.
+  // A whole palette at a time, from a rail row or the dialog's Save, fitted to
+  // the spec's role count (the shape the page reads). The template's own row
+  // is the way back: it writes the class rule's own values inline.
   const setPalette = (colors: string[]) => {
     const next = spec.palette.colors.map((authored, index) => colors[index] ?? authored);
     const document = { ...draft, edits: { ...draft.edits, palette: next } };
@@ -353,18 +338,15 @@ export default function StudioSite({
     const next = { ...draft, edits: rest };
 
     touch(next);
-    // A swap removed the field's authored options and seed, which a plan of
-    // the document without them cannot put back; the canvas is rebuilt from
-    // the package instead, and remounted, since the rebuilt page may equal
-    // the one already loaded.
+    // A swap removed the field's authored options and seed, which a plan
+    // cannot put back, so the canvas is rebuilt from the package.
     rebuild(next);
     toaster.add({ title: `Back to ${site.templateName}'s own patterns` });
   };
 
-  // One field at a time: a design chosen from the picker, or the field put
-  // back to the template's own. The same two paths as the page-wide actions,
-  // so a pick applies live through the engine and a reset rebuilds, since
-  // only the package still holds the authored seed and options.
+  // One field at a time: a pick applies live, and putting the field back to
+  // the template's own design rebuilds, since only the package still holds
+  // the authored seed and options.
   const setFieldDesign = (slot: PatternSlot, slug: string) => {
     const patterns = pickDesign(patternSlots, draft.edits.patterns, slot.id, slug);
     const { patterns: _dropped, ...rest } = draft.edits;
@@ -382,11 +364,9 @@ export default function StudioSite({
 
   const resetFieldDesign = (slot: PatternSlot) => setFieldDesign(slot, slot.config.slug);
 
-  // The handlers below update state functionally. Each closes over the render
-  // it was created in, and the rail stays live while its request is out: a
-  // palette click during a save, or a reset during a rename, used to be
-  // overwritten by the stale `ready` the response then spread back in, which
-  // put the shuffled patterns back on a canvas the person had just reset.
+  // The handlers below update state functionally: the rail stays live while a
+  // request is out, and spreading this render's stale `ready` back in would
+  // undo a change made meanwhile (a reset during a rename, say).
   const save = async () => {
     const saving = draft;
 
@@ -433,9 +413,8 @@ export default function StudioSite({
               },
             }
       );
-      // "Saved" only if nothing changed while the request was out: a change
-      // in flight has already marked the draft dirty, and the button saying
-      // "Saved to your custom sites" over unsaved changes was a lie.
+      // "Saved" only if nothing changed while the request was out; a change
+      // in flight has already marked the draft dirty.
       setSaveState((current) => (current === 'saving' ? 'saved' : current));
       toaster.add({ title: 'Saved. It is under Your templates in your account.' });
     } catch (cause) {
@@ -497,11 +476,9 @@ export default function StudioSite({
         reactHref={`/downloads/${site.slug}-react.zip`}
       />
 
-      {/* Two notices this page owns, distinct from the engine's. A fallback
-          revision is the three-string rebrand, said out loud rather than passed
-          off as the full document. Drift is the pinned template no longer
-          matching the packaged one - the document still applies, but a person
-          should hear it here, not from a missing headline. */}
+      {/* Two notices this page owns, distinct from the engine's: a fallback
+          revision is only the three-string rebrand, and drift is the pinned
+          template no longer matching the packaged one. */}
       {site.latest.source === 'fallback' ? (
         <p className={styles.notice} role="status">
           The model didn&apos;t return a usable page, so only the brand name,
@@ -550,9 +527,7 @@ export default function StudioSite({
           </div>
         ) : null}
 
-        {/* Shown only where the rail is not (see SiteWorkspace.module.css):
-            on a phone the editor is a larger screen's, and this is the page
-            to preview and download from. */}
+        {/* Shown only where the rail is not (see SiteWorkspace.module.css). */}
         {site.mine ? (
           <div className={styles.smallNotice} role="status">
             <span className={styles.smallNoticeIcon} aria-hidden="true">
@@ -582,8 +557,7 @@ export default function StudioSite({
               <span className={styles.dot} aria-hidden="true" />
               <span className={styles.dot} aria-hidden="true" />
               <span className={styles.pill}>
-                {/* "Solstice on Solstice" said nothing: the template is named
-                    only when the site is called something else. */}
+                {/* The template is named only when the site is called something else. */}
                 {site.title === site.templateName ? site.title : `${site.title} on ${site.templateName}`}
                 {site.latest.n > 1 ? ` (revision ${site.latest.n})` : ''}
               </span>
@@ -634,15 +608,10 @@ export default function StudioSite({
                 className={styles.iframe}
                 title={`${site.title} - built on the ${site.templateName} template`}
                 srcDoc={ready.html}
-                // `allow-same-origin` is required, not lazy: without it the
-                // document gets an opaque origin and the same-origin runtime
-                // import is blocked as cross-origin, so the page renders with
-                // every pattern missing. What stays denied is what this page
-                // actually has: the packaged template's `<form action="#">`
-                // and its `<a href="#">` links cannot navigate the top frame,
-                // submit, or open a popup. See PreviewFrame for the whole
-                // reasoning, which holds until user-supplied markup or images
-                // enter this document.
+                // `allow-same-origin` is required: with an opaque origin the
+                // same-origin runtime import is blocked and every pattern is
+                // missing. See PreviewFrame for what stays denied, which holds
+                // until user-supplied markup or images enter this document.
                 sandbox="allow-scripts allow-same-origin"
               />
               {shuffling ? (

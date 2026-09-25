@@ -16,7 +16,6 @@ export const metadata = {
 /* Palette. Ground first, as the pattern expects it. */
 const PAPER = '#FAFAF7';
 const INK = '#14150F';
-const GREEN = '#2E7D4F';
 const WARM = '#C9C4B4';
 const PALE = '#E7E5DC';
 const UMBER = '#6B6656';

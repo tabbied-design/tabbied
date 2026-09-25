@@ -1,15 +1,11 @@
-// A small tokenizer for the code samples on the docs page: comments, strings,
-// a handful of keywords and JSX tag names, and everything else left as it is.
+// A small tokenizer for the docs page's code samples: comments, strings, a
+// handful of keywords and JSX tag names, everything else plain. It runs at
+// build time over the page's own samples, so a token it is not sure of stays
+// plain. A real highlighter would bring a grammar and a bundle to color a
+// dozen snippets.
 //
-// It runs at build time over samples the page authors itself, never over
-// input, so it can afford to be conservative: a token it is not sure of stays
-// plain, which reads as unhighlighted rather than wrong. A real highlighter
-// would bring a grammar and a bundle to color a dozen snippets.
-//
-// The scan is sequential, and that is what keeps it right: an apostrophe in
-// a comment ("the box's shape") is never mistaken for a string opening,
-// because the comment consumed the line first, and a `//` inside a string is
-// never a comment because the string consumed it.
+// The scan is sequential, which is what keeps it right: an apostrophe in a
+// comment is never a string opening, and a `//` in a string is never a comment.
 
 export type TokenKind = 'plain' | 'comment' | 'string' | 'keyword' | 'tag';
 

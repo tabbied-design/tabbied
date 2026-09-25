@@ -11,10 +11,9 @@ const MOUNT_MARGIN = '400px';
 
 /**
  * A gallery tile that builds its pattern only once it approaches the viewport,
- * then keeps it mounted. The page carries twenty of these, and rendering them
- * all on load means thousands of cells competing for the main thread before
- * anything is on screen. Until a tile mounts it shows its own background color,
- * so the grid still reads as complete while scrolling.
+ * then keeps it mounted, so the initial load does not render every tile's
+ * cells before anything is on screen. Until a tile mounts it shows its own
+ * background color, so the grid still reads as complete while scrolling.
  *
  * The same treatment the main /patterns gallery uses (see
  * components/select-pattern-page/GalleryDoodle.tsx).
@@ -38,8 +37,6 @@ export default function LazyPattern({
       return;
     }
 
-    // Already near the viewport on load (the first rows): mount immediately
-    // rather than waiting for the observer's first callback.
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[entries.length - 1].isIntersecting) {

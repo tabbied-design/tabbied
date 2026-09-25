@@ -1,33 +1,12 @@
 // Batch 13 - shared vocabulary.
 //
-// Batch 13 inherits the constraint batches 11 and 12 established: every design
-// must export as native SVG with *no* caveat - no `svgExport: false`, no
-// `svgExportNote`, no converter warning, and pixel parity with the live render
-// well inside the house budget. pattern-defs-11/shared.mjs is where the
-// vocabulary that satisfies it was worked out, pattern-defs-12/shared.mjs is
-// where the smooth ramps were added, and this module re-exports what this
-// batch actually uses rather than restating any of it.
-//
-// What is off the table is unchanged: box-shadow, filter: blur(),
-// mix-blend-mode (all export as SVG *filters*, which design tools import
-// imperfectly), repeating-conic-gradient and smooth conic sweeps (SVG has no
-// angular gradient), nested @doodle() images and @svg() payloads (documented
-// sub-pixel deviations from the live render), and borders on partially-rounded
-// boxes (the converter throws).
-//
-// Where batch 13 goes further is *placement*: batches 11 and 12 drew almost
-// everything from the middle of the cell out, and this batch anchors its
-// geometry to the cell's corners and edges instead - a shore held against one
-// side, a frame hugging the perimeter, a light thrown in from an edge. The
-// helpers below exist for that: `farthest-side` radials so a stop at 100%
-// means "one cell side" wherever the center sits, and hard linear bands that
-// read as bars without needing a pseudo-element.
-//
-// The house rules inherited from batches 6-12 still apply and are enforced by
-// generate-batch13.mjs: exactly one @random(${shapeFrequency}) gate per
-// design; every design samples a transition-able ink per cell so a reseed
-// morphs; a randomized custom prop read more than once goes through @var(--x);
-// nothing paints var(--color0).
+// Batch 13 keeps the constraint of batches 11 and 12 (native SVG export with
+// no caveat) and re-exports what it uses of their vocabulary;
+// pattern-defs-11/shared.mjs lists what is off the table and why. The helpers
+// below are for anchoring geometry to the cell's corners and edges:
+// `farthest-side` radials, so a stop at 100% means "one cell side" wherever
+// the center sits, and hard linear bands that read as bars without needing a
+// pseudo-element. The house rules are listed in pattern-defs-13.mjs.
 export {
   RESERVED,
   section,
@@ -61,7 +40,6 @@ import { TAKEN12 } from '../pattern-defs-12/shared.mjs';
 import { batch12 } from '../pattern-defs-12.mjs';
 
 // Every motif name used anywhere in the project, batches 11 and 12 included.
-// A name should never come to mean two different things.
 export const TAKEN13 = new Set([...TAKEN12, ...batch12.map((d) => d.slug)]);
 
 // -- anchored radials -------------------------------------------------------
@@ -71,11 +49,11 @@ export const TAKEN13 = new Set([...TAKEN12, ...batch12.map((d) => d.slug)]);
 // quietly rescales as the center moves. Every layer paints #000/transparent
 // only, so the ink stays a transitionable background-color underneath.
 
-/** A solid disc of radius `r`, centerd at `at`. */
+/** A solid disc of radius `r`, centered at `at`. */
 export const discL = (r, at = '50% 50%') =>
   `radial-gradient(circle farthest-side at ${at}, #000 ${r}, transparent ${r})`;
 
-/** The band between two radii, centerd at `at`, sized against one cell side. */
+/** The band between two radii, centered at `at`, sized against one cell side. */
 export const bandFS = (inner, outer, at = '50% 50%') =>
   `radial-gradient(circle farthest-side at ${at}, transparent ${inner}, #000 ${inner} ${outer}, transparent ${outer})`;
 
@@ -121,7 +99,7 @@ export const stepGlow = (at, steps, span = 100) => {
 // A gradient smaller than its box tiles, and the converter turns the layer
 // into an SVG <pattern> holding one tile.
 
-/** Any gradient, tiled at `w` × `h` from the top-left corner. */
+/** Any gradient, tiled at `w` x `h` from the top-left corner. */
 const tiled = (gradient, w, h = w) => `${gradient} 0 0 / ${w} ${h}`;
 
 /** A hard-edged ring (eyelet) in each `pitch`-sized tile. */

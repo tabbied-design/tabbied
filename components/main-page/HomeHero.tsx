@@ -18,8 +18,7 @@ import {
 import styles from './HomeHero.module.css';
 
 // The hero and the stats strip are one component because they share a clock:
-// the palette that recolors the skyline is the same one that tints the three
-// numbers underneath it. Splitting them would mean two timers drifting apart.
+// the palette that recolors the skyline also tints the numbers under it.
 
 const COLS = 10;
 const ROWS = 3;
@@ -80,11 +79,10 @@ export default function HomeHero({
     return () => clearInterval(paletteTimer);
   }, [reduceMotion]);
 
-  // Read through a ref rather than a dependency: the cell timer runs three times
-  // per palette step, and restarting it on every step would swallow the tick
-  // that lands on the changeover. Written in an effect, not during render:
-  // a render-time ref write is order-dependent under StrictMode's double
-  // render and is what the React Compiler refuses.
+  // Read through a ref rather than a dependency: restarting the cell timer on
+  // every palette step would swallow the tick that lands on the changeover.
+  // Written in an effect, since the React Compiler refuses a render-time ref
+  // write.
   const paletteRef = useRef(palette);
 
   useEffect(() => {
@@ -99,6 +97,7 @@ export default function HomeHero({
     }
 
     const cellTimer = setInterval(() => {
+      // After mount, so real randomness cannot disturb hydration.
       const rand = Math.random;
       const current = paletteRef.current;
 
@@ -126,9 +125,7 @@ export default function HomeHero({
 
         <div className={styles.heroPad}>
           <div className={styles.inner}>
-            {/* The two things the site offers are links to them, each in
-                its own gradient; the rest of the sentence is plain type.
-                The break is authored: the design sets the second line on
+            {/* The break is authored: the design sets the second line on
                 "websites", which a wrap at the measure would not do. On a
                 phone it goes, or "and" sits on a line of its own. */}
             <h1 className={styles.title}>

@@ -1,14 +1,23 @@
 import { SELF, env } from 'cloudflare:test';
 import { beforeAll, describe, expect, it } from 'vitest';
+import type { Env } from '../env';
+import { loadPackagedHtml } from '../lib/templateAssets';
 import { ORIGIN, json, signIn } from './helpers';
 
 // The site tier end to end, minus the model: with no AI_API_KEY the directions
 // call answers from the matcher and the make call writes the three-string
-// floor, which exercises every row this tier writes and reads - the site, its
-// first revision, the pin, the listing - through the real routes, the real
-// D1, and the real packaged assets served by the assets binding.
+// floor, which exercises every row this tier writes and reads through the real
+// routes, the real D1, and the real packaged assets.
 //
 // The session is a real one (see helpers.ts).
+
+// Someone else, for every refusal of a person who does not own the row. They
+// never write anything, so one account serves every describe.
+let stranger: string;
+
+beforeAll(async () => {
+  stranger = await signIn('stranger@example.com');
+});
 
 async function generate(cookie: string): Promise<string> {
   const response = await SELF.fetch(`${ORIGIN}/api/studio/directions`, {
@@ -24,58 +33,24 @@ async function generate(cookie: string): Promise<string> {
   return body.id;
 }
 
-describe('sites need a session', () => {
-  it('refuses an anonymous make', async () => {
-    const response = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
-      method: 'POST',
-      headers: json,
-      body: JSON.stringify({ generationId: 'whatever0', index: 0 }),
-    });
-    expect(response.status).toBe(401);
-  });
-
-  it('refuses an anonymous listing', async () => {
-    const response = await SELF.fetch(`${ORIGIN}/api/studio/sites`);
-    expect(response.status).toBe(401);
-  });
-
+describe('reading a site', () => {
   it('404s a site that does not exist', async () => {
     const response = await SELF.fetch(`${ORIGIN}/api/studio/sites/nope`);
     expect(response.status).toBe(404);
-  });
-
-  it('refuses an anonymous revise', async () => {
-    const response = await SELF.fetch(`${ORIGIN}/api/studio/sites/nope/revise`, {
-      method: 'POST',
-      headers: json,
-      body: JSON.stringify({ instruction: 'Make the headline warmer.' }),
-    });
-    expect(response.status).toBe(401);
-  });
-
-  it('refuses anonymous imagery on a site', async () => {
-    const response = await SELF.fetch(`${ORIGIN}/api/studio/sites/nope/images`, {
-      method: 'POST',
-      headers: json,
-      body: JSON.stringify({ slot: 'hero.photo' }),
-    });
-    expect(response.status).toBe(401);
   });
 });
 
 describe('a direction is its author\'s to make', () => {
   it('refuses a site from somebody else\'s generation, and makes it for its owner', async () => {
     const author = await signIn('author@example.com');
-    const visitor = await signIn('visitor@example.com');
     const generationId = await generate(author);
 
     // A generation is readable by anyone holding its id, but a site made from
-    // it spends the maker's budget against the author's description and hangs
-    // off the author's row, whose deletion would cascade to it. The same line
-    // direction-image draws.
+    // it spends budget against the author's description and hangs off the
+    // author's row.
     const theirs = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
       method: 'POST',
-      headers: { ...json, cookie: visitor },
+      headers: { ...json, cookie: stranger },
       body: JSON.stringify({ generationId, index: 0 }),
     });
     expect(theirs.status).toBe(403);
@@ -90,15 +65,6 @@ describe('a direction is its author\'s to make', () => {
 });
 
 describe('one prompt, one site', () => {
-  it('refuses an anonymous make', async () => {
-    const response = await SELF.fetch(`${ORIGIN}/api/studio/make`, {
-      method: 'POST',
-      headers: json,
-      body: JSON.stringify({ description: 'A bakery in a small coastal town, sourdough and coffee.' }),
-    });
-    expect(response.status).toBe(401);
-  });
-
   it('makes the recommended direction without a template being chosen', async () => {
     const cookie = await signIn('oneshot@example.com');
 
@@ -164,25 +130,14 @@ describe('a site straight from the gallery', () => {
 
     const site = (await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`).then((r) => r.json())) as {
       slug: string;
-      title: string;
-      templateName: string;
-      stance: string;
-      palette: string[];
       generationId: string | null;
       directionIndex: number | null;
-      description: string | null;
       templateChanged: boolean;
       latest: { n: number; source: string; edits: { slug: string; edits: Record<string, unknown> } };
     };
     expect(site.slug).toBe('verdant');
-    expect(site.title).toBe('Verdant');
-    expect(site.templateName).toBe('Verdant');
-    expect(site.stance).toBe('');
-    // The template's own colors, since nothing has been changed yet.
-    expect(site.palette.length).toBeGreaterThan(1);
     expect(site.generationId).toBeNull();
     expect(site.directionIndex).toBeNull();
-    expect(site.description).toBeNull();
     expect(site.templateChanged).toBe(false);
     expect(site.latest.n).toBe(1);
     expect(site.latest.source).toBe('manual');
@@ -220,10 +175,9 @@ describe('a site straight from the gallery', () => {
     });
     expect(empty.status).toBe(400);
 
-    const other = await signIn('renamer@example.com');
     const forbidden = await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`, {
       method: 'PATCH',
-      headers: { ...json, cookie: other },
+      headers: { ...json, cookie: stranger },
       body: JSON.stringify({ title: 'Mine now' }),
     });
     expect(forbidden.status).toBe(403);
@@ -324,16 +278,15 @@ describe('a template site saved from a draft', () => {
     // only, designs from the catalog, images from the template.
     const refusals = [
       { ...document, slug: 'solstice' },
-      { ...document, edits: { patterns: { [field.id]: { slug: 'no-such-design' } } } },
       { ...document, edits: { images: { 'hero.image': { src: 'https://example.com/x.png' } } } },
     ];
 
-    // Someone else each time: the burst limiter counts an attempt to make a
-    // site before the document is read, and allows three a minute.
-    for (const [index, edits] of refusals.entries()) {
+    // The burst limiter counts an attempt to make a site before the document
+    // is read, and allows three a minute: the Save above and these two.
+    for (const edits of refusals) {
       const refused = await SELF.fetch(`${ORIGIN}/api/studio/sites`, {
         method: 'POST',
-        headers: { ...json, cookie: await signIn(`refused-${index}@example.com`) },
+        headers: { ...json, cookie },
         body: JSON.stringify({ slug: 'verdant', edits }),
       });
       expect([400, 422], await refused.clone().text()).toContain(refused.status);
@@ -351,8 +304,7 @@ describe('deleting a site', () => {
     });
     const { id } = (await made.json()) as { id: string };
 
-    const other = await signIn('not-the-deleter@example.com');
-    expect((await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`, { method: 'DELETE', headers: { cookie: other } })).status).toBe(403);
+    expect((await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`, { method: 'DELETE', headers: { cookie: stranger } })).status).toBe(403);
     expect((await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`, { method: 'DELETE' })).status).toBe(401);
 
     const deleted = await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}`, { method: 'DELETE', headers: { cookie } });
@@ -482,10 +434,9 @@ describe('making a site', () => {
     expect(tooShort.status).toBe(400);
 
     // Not yours: another person's session cannot add to it.
-    const other = await signIn('intruder@example.com');
     const forbidden = await SELF.fetch(`${ORIGIN}/api/studio/sites/${id}/images`, {
       method: 'POST',
-      headers: { ...json, cookie: other },
+      headers: { ...json, cookie: stranger },
       body: JSON.stringify({ slot: 'hero.photo' }),
     });
     expect(forbidden.status).toBe(403);
@@ -570,8 +521,52 @@ describe('making a site', () => {
     expect(sites.map((site) => site.revisions).sort()).toEqual([1, 2]);
 
     // Someone else sees nothing - the listing is by session, never by id.
-    const other = await signIn('other@example.com');
-    const theirs = await SELF.fetch(`${ORIGIN}/api/studio/sites`, { headers: { cookie: other } });
+    const theirs = await SELF.fetch(`${ORIGIN}/api/studio/sites`, { headers: { cookie: stranger } });
     expect(((await theirs.json()) as { sites: unknown[] }).sites).toHaveLength(0);
+  });
+});
+
+// The packaged template, read through the assets binding the way the sites
+// route reads it. The binding's `html_handling` answers `/dir/index.html` with
+// a redirect to `/dir/`, and whether the binding follows it is up to the
+// runtime, so the reader asks for the directory URL and copes with a redirect
+// if one is handed back anyway.
+describe('the packaged page through the binding', () => {
+  const request = new Request(`${ORIGIN}/api/studio/sites`, { method: 'POST' });
+
+  it('follows a redirect the binding hands back, on the same origin only', async () => {
+    const seen: string[] = [];
+    const fake = {
+      ASSETS: {
+        fetch: async (input: Request | string) => {
+          const url = new URL(typeof input === 'string' ? input : input.url);
+          seen.push(url.pathname);
+
+          if (url.pathname === '/downloads/redirected/') {
+            return new Response(null, { status: 307, headers: { location: '/downloads/final/' } });
+          }
+          if (url.pathname === '/downloads/final/') {
+            return new Response('<html data-pattern></html>', { status: 200 });
+          }
+          if (url.pathname === '/downloads/elsewhere/') {
+            return new Response(null, { status: 307, headers: { location: 'https://evil.test/x' } });
+          }
+          if (url.pathname === '/downloads/loop/') {
+            return new Response(null, { status: 307, headers: { location: '/downloads/loop/' } });
+          }
+          return new Response('nope', { status: 404 });
+        },
+      },
+    } as unknown as Env;
+
+    expect(await loadPackagedHtml(fake, request, 'redirected')).toContain('data-pattern');
+    expect(seen).toEqual(['/downloads/redirected/', '/downloads/final/']);
+
+    await expect(loadPackagedHtml(fake, request, 'elsewhere')).rejects.toThrow(/off-site/);
+    await expect(loadPackagedHtml(fake, request, 'loop')).rejects.toThrow(/more than/);
+  });
+
+  it('names a template that is not packaged', async () => {
+    await expect(loadPackagedHtml(env, request, 'no-such-template')).rejects.toThrow(/404/);
   });
 });

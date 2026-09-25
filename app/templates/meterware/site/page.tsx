@@ -17,15 +17,14 @@ const INK = '#14161F';
 const INDIGO = '#2B3FAE';
 const GRAY = '#8E8A7E';
 const PALE = '#DCD7C9';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PALE;
-
 
 const QUALITIES = [
   { art: '1104', name: 'Zwirnköper', comp: 'Cotton 100 %', weight: '340 g/m²', width: '150 cm', price: '€28 / m' },

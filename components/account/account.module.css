@@ -1,7 +1,7 @@
-/* The account area: its shell (masthead below, then a 1180px column), the
-   sub-navigation, and the pieces its pages are made of - cards, tables,
-   meters, fields. Tokens are Studio's (`--s-...`, studio.module.css), which
-   every account page wraps itself in. */
+/* The account area: its shell (masthead, then a 1180px column) and the
+   pieces its pages are made of: cards, tables, meters, fields. Tokens are
+   Studio's (`--s-...`, studio.module.css), which every account page wraps
+   itself in. */
 
 /* -- Shell ----------------------------------------------------------------- */
 
@@ -12,7 +12,7 @@
   padding: 0 48px 120px;
 }
 
-/* The area's own pages, as a quiet row under the masthead. */
+/* The link back to the overview, as a quiet row under the masthead. */
 .backLink {
   display: inline-block;
   margin: 0 0 28px;

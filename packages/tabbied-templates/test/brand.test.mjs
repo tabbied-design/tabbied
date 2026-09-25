@@ -1,10 +1,9 @@
 // Placing three brand strings onto a template nobody knew the slot ids of.
 //
-// The mapping is small; what it has to get right is the *absences*. A template
-// that declares no headline, a model that returned no tagline, and a palette
-// that would fail validation all reach this code, and none of them may produce
-// an edits document that `planEdits` then rejects - the caller's alternative to
-// a partial rebrand is no rebrand at all, which is worse.
+// What it has to get right is the *absences*: a template that declares no
+// headline, a model that returned no tagline, and a palette that would fail
+// validation must never produce an edits document `planEdits` rejects, because
+// the caller's alternative to a partial rebrand is none at all.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 

@@ -1,13 +1,9 @@
 // K. Overlap - two shapes crossing, and what the crossing does.
 //
-// A pair of shapes, and the interest is in the third region they make: the
-// part where both of them are, which reads as its own color because the upper
-// one is let down rather than opaque.
-//
-// opacity is the property doing the work, and it exports exactly - it becomes
-// a group attribute. What is deliberately *not* here is mix-blend-mode: it
-// exports as an SVG blend style, the least portable thing the converter emits,
-// and it carries a caveat in the catalog.
+// The region where both shapes are reads as its own color because the upper
+// one is let down with opacity, which exports exactly as a group attribute.
+// mix-blend-mode is deliberately not used: it exports as an SVG blend style,
+// the least portable thing the converter emits, and needs a caveat.
 import { section, A, B, F, TR, ink, rot, R4, c1 } from './shared.mjs';
 
 const { add, all } = section('K. Overlap');

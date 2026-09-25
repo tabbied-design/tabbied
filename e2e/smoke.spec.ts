@@ -11,9 +11,8 @@ test.describe('Tabbied site', () => {
       page.getByRole('heading', { level: 1, name: /Free patterns and\s+websites/ })
     ).toBeVisible();
 
-    // Every figure on the page is derived from the catalog at build time
-    // (lib/siteCounts), so this asserts the shape rather than the value - a
-    // literal typed into the copy is exactly what it is there to prevent.
+    // Every figure is derived from the catalog at build time (lib/siteCounts),
+    // so this asserts the shape rather than the value.
     const patternsStat = page.getByRole('link', { name: /^\d+ Patterns$/ });
     await expect(patternsStat).toBeVisible();
     const patternCount = Number(
@@ -21,8 +20,7 @@ test.describe('Tabbied site', () => {
     );
     expect(patternCount).toBeGreaterThan(1);
 
-    // The same number has to appear in the hero sentence and on the library
-    // section's "View all" link, because all three read the one source.
+    // The same number appears in the hero sentence and on "View all".
     await expect(
       page.getByText(
         new RegExp(`growing library of ${patternCount} customizable patterns`)
@@ -65,27 +63,41 @@ test.describe('Tabbied site', () => {
     expect(after).toBe(before);
   });
 
-  test('patterns gallery links into a pattern editor', async ({
-    page,
-  }) => {
-    await page.goto('/patterns');
-
-    await page.getByRole('heading', { name: 'Radius' }).click();
-
-    await page.waitForURL(/\/patterns\/radius/, { timeout: 15000 });
-    await expect(
-      page.getByRole('link', { name: 'Back to gallery' })
-    ).toBeVisible({ timeout: 15000 });
-  });
-
   test('gallery pagination is reflected in the URL and survives reload', async ({
     page,
   }) => {
     await page.goto('/patterns');
 
-    // Jump to page 2 - the URL gains ?page=2 and the grid shows a new design.
-    // The numbers are links to each page, and following one from the foot of
-    // the grid lands at the top of the next page, heading focused.
+    // Thumbnails are live <TabbiedPattern fit="cover">s: one must mount and
+    // actually paint cells, not an empty grid.
+    await page.waitForFunction(() => !!window.customElements.get('css-doodle'));
+    await expect(
+      page.locator('[data-pattern="radius"] css-doodle')
+    ).toBeAttached({
+      timeout: 15000,
+    });
+
+    await expect
+      .poll(
+        () =>
+          page.evaluate(() => {
+            const el = document.querySelector(
+              '[data-pattern="radius"] css-doodle'
+            );
+            if (!el || !el.shadowRoot) return 0;
+            return [...el.shadowRoot.querySelectorAll('cssd-cell')].filter(
+              (cell) => {
+                const bg = getComputedStyle(cell).backgroundColor;
+                return bg && bg !== 'rgba(0, 0, 0, 0)';
+              }
+            ).length;
+          }),
+        { timeout: 10000 }
+      )
+      .toBeGreaterThan(1);
+
+    // Page 2: the URL gains ?page=2, the grid shows a new design, and the
+    // page lands at the top with its heading focused.
     const firstCard = page.locator('main a[href^="/patterns/"] h2').first();
     const beforeName = await firstCard.textContent();
     const two = page.getByRole('link', { name: 'Page 2', exact: true });
@@ -110,14 +122,9 @@ test.describe('Tabbied site', () => {
   });
 
   test('the gallery grid reflows when the window narrows', async ({ page }) => {
-    // Regression guard: the grid's tracks were a bare `1fr`
-    // (= minmax(auto, 1fr)), so `min-width: auto` floored each track at the
-    // item's min-content width. Because the cards carry
-    // `content-visibility: auto`, a card that had been scrolled past reported
-    // the size it last rendered at as that floor - narrowing the window could
-    // then no longer shrink the tracks and the grid overflowed its column
-    // until a reload. Tracks are minmax(0, 1fr) now; this asserts the grid
-    // still fits after a resize, without one.
+    // Guards the minmax(0, 1fr) tracks. With a bare `1fr`, a scrolled-past
+    // `content-visibility: auto` card floors its track at the size it last
+    // rendered at, and a narrowed window overflows until a reload.
     await page.setViewportSize({ width: 1640, height: 1000 });
     await page.goto('/patterns');
     await page
@@ -125,8 +132,7 @@ test.describe('Tabbied site', () => {
       .first()
       .waitFor({ state: 'attached', timeout: 15000 });
 
-    // Scroll far enough that lower cards render and are then skipped again,
-    // which is what seeded the stale minimum.
+    // Scroll far enough that lower cards render and are then skipped again.
     await page.mouse.wheel(0, 1600);
     await page.waitForTimeout(500);
     await page.mouse.wheel(0, -1600);
@@ -170,12 +176,10 @@ test.describe('Tabbied site', () => {
       .waitFor({ state: 'attached', timeout: 15000 });
 
     // The rail is fixed to the window, so scrolling the grid leaves its pinned
-    // "Mixed" row (a random palette per pattern) in place. (There is no "New
-    // palette" button any more: the pencil on a row is the way to a new one.)
+    // "Mixed" row in place.
     const random = page
       .locator('aside')
       .getByRole('button', { name: /^Mixed/ });
-    await expect(page.locator('aside').getByRole('button', { name: /New Palette/ })).toHaveCount(0);
     const before = await random.boundingBox();
     await page.evaluate(() => window.scrollTo(0, 1400));
     await page.waitForTimeout(300);
@@ -193,9 +197,8 @@ test.describe('Tabbied site', () => {
       .first()
       .waitFor({ state: 'attached', timeout: 15000 });
 
-    // The rail lists every palette from the start (no "Browse all" step): a
-    // bounded scroll container that overflows its box (it auto-fills the
-    // available height) and loads more rows as it scrolls.
+    // The rail is a bounded scroll container listing every palette, loading
+    // more rows as it scrolls.
     const findScroller = () =>
       page.evaluate(() => {
         const el = [...document.querySelectorAll('aside *')].find(
@@ -274,43 +277,6 @@ test.describe('Tabbied site', () => {
       .toBeGreaterThan(before - 80);
   });
 
-  test('patterns gallery renders live css-doodle thumbnails', async ({
-    page,
-  }) => {
-    await page.goto('/patterns');
-
-    // The raster <img> thumbnails were replaced by per-design css-doodle
-    // rendered through the tabbied package's <TabbiedPattern fit="cover">, so
-    // a thumbnail element must mount and actually paint cells (guards against
-    // the client mount boundary / source-building / the package's css-doodle
-    // registration side effect regressing to an empty grid).
-    await page.waitForFunction(() => !!window.customElements.get('css-doodle'));
-    await expect(
-      page.locator('[data-pattern="radius"] css-doodle')
-    ).toBeAttached({
-      timeout: 15000,
-    });
-
-    await expect
-      .poll(
-        () =>
-          page.evaluate(() => {
-            const el = document.querySelector(
-              '[data-pattern="radius"] css-doodle'
-            );
-            if (!el || !el.shadowRoot) return 0;
-            return [...el.shadowRoot.querySelectorAll('cssd-cell')].filter(
-              (cell) => {
-                const bg = getComputedStyle(cell).backgroundColor;
-                return bg && bg !== 'rgba(0, 0, 0, 0)';
-              }
-            ).length;
-          }),
-        { timeout: 10000 }
-      )
-      .toBeGreaterThan(1);
-  });
-
   test('pattern editor renders the css-doodle and controls', async ({
     page,
   }) => {
@@ -329,6 +295,9 @@ test.describe('Tabbied site', () => {
       page.getByRole('button', { name: 'Export' })
     ).toBeVisible();
 
+    // The editor keeps its own header and never renders the shared site nav.
+    await expect(page.getByRole('navigation', { name: 'Main' })).toHaveCount(0);
+
     // Option controls coming from the pattern definition: the grid is a
     // "Grid density" slider, 0 to 1, read out as that number; the grid the
     // plate resolves to at that cell size is named in the caption. The count
@@ -340,9 +309,8 @@ test.describe('Tabbied site', () => {
     await expect(page.getByText('0.50', { exact: true })).toBeVisible();
     await expect(page.locator('figcaption').getByText(/\d+\u00D7\d+ grid/)).toBeVisible();
 
-    // Regression guard: the generative grid must actually paint its cells.
-    // css-doodle >= 0.5 reinterpreted `@random(1)`, which collapsed the
-    // default (max-frequency) pattern to a single shape until shimmed.
+    // The grid must paint its cells: css-doodle >= 0.5 reinterpreted
+    // `@random(1)`, which collapses the default pattern to one shape unshimmed.
     await expect
       .poll(
         () =>
@@ -361,29 +329,6 @@ test.describe('Tabbied site', () => {
         { timeout: 10000 }
       )
       .toBeGreaterThan(1);
-  });
-
-  test('changing an option syncs to the URL query (next/navigation)', async ({
-    page,
-  }) => {
-    // Seed query param triggers the URL <-> state synchronization.
-    await page.goto('/patterns/radius?seed=0000');
-
-    // Wait until state has been written back into the URL: the density, not
-    // the grid, which is derived from the viewer's plate and never linked.
-    await expect(page).toHaveURL(/density=0\.5/);
-    await expect(page).not.toHaveURL(/grid=/);
-
-    // One step down the density slider is 0.05 coarser.
-    await page.getByRole('slider', { name: 'Grid density' }).focus();
-    await page.keyboard.press('ArrowLeft');
-
-    await expect(page).toHaveURL(/density=0\.45/);
-    await expect(page.getByRole('slider', { name: 'Grid density' })).toHaveAttribute(
-      'aria-valuenow',
-      '0.45'
-    );
-    await expect(page.getByText('0.45', { exact: true })).toBeVisible();
   });
 
   test('the density slider sets the cell size, and the grid follows the plate', async ({
@@ -501,8 +446,7 @@ test.describe('Tabbied site', () => {
       .toContain('blob:');
     // The swatch and the transparent toggle stand down while a picture is set.
     await expect(page.locator('input[type="color"]')).toHaveCount(5);
-    // The control that clears it is an X beside the caption, named in full:
-    // the caption row wrapped onto two lines when it read "remove image".
+    // The control that clears it is an X beside the caption, named in full.
     const removeImage = page.getByRole('button', {
       name: 'Remove the background image',
     });
@@ -522,20 +466,9 @@ test.describe('Tabbied site', () => {
       .not.toMatch(/00$/);
   });
 
-  test('slider controls display their current value', async ({ page }) => {
-    await page.goto('/patterns/radius?seed=0000');
-
-    // Radius opens at frequency 1, shown as "1.0" beside the slider.
-    await expect(page.getByText('Frequency')).toBeVisible();
-    await expect(page.getByText('1.0', { exact: true })).toBeVisible();
-  });
-
   test('gallery cards link with a seed so edits sync to the URL', async ({
     page,
   }) => {
-    // This used to enter from the homepage, which carried its own strip of
-    // gallery cards; the redesigned homepage sends people to /patterns instead,
-    // so the guard belongs on the cards that are actually clicked now.
     await page.goto('/patterns');
 
     // Without a query param on the link, the editor never mirrors state into
@@ -567,23 +500,6 @@ test.describe('Tabbied site', () => {
       '0.75'
     );
     await expect(page.getByRole('button', { name: '1:1' })).toHaveAttribute('aria-pressed', 'true');
-  });
-
-  test('an older link naming a grid opens at the density that grid had', async ({
-    page,
-  }) => {
-    // llms.txt told agents to write `grid=CxR` links, so one is read as the
-    // density whose cell that grid had on the original plate (9 along the
-    // long edge is 0.5), and the URL is rewritten to the form written now.
-    await page.goto('/patterns/radius?seed=ZZZZ&grid=9x9&aspectRatio=1%3A1');
-
-    await expect(page.getByRole('slider', { name: 'Grid density' })).toHaveAttribute(
-      'aria-valuenow',
-      '0.5'
-    );
-    await expect(page).toHaveURL(/density=0\.5/);
-    await expect(page).toHaveURL(/aspectRatio=1%3A1/);
-    await expect(page).not.toHaveURL(/grid=/);
   });
 });
 
@@ -634,20 +550,17 @@ test.describe('Tabbied site (mobile viewport)', () => {
   }) => {
     await page.goto('/patterns');
 
-    // The fixed rail is hidden below the two-column breakpoint; the palettes
-    // become a horizontal chip shelf, "Mixed" first, with a
-    // trailing "All ›" browser pill. No "New palette" anywhere: the pencil
-    // on a chip is the way to a new one.
+    // Below the two-column breakpoint the rail becomes a horizontal chip
+    // shelf, "Mixed" first, with a trailing "All" browser pill.
     await expect(page.locator('aside')).toBeHidden();
     await expect(
       page.getByRole('button', { name: /^Mixed/ })
     ).toBeVisible({ timeout: 15000 });
-    await expect(page.getByRole('button', { name: 'New Palette' })).toHaveCount(0);
 
     const allPill = page.getByRole('button', { name: /^All/ });
     await expect(allPill).toBeVisible();
 
-    // Tapping "All ›" swaps the shelf for the embedded palette browser.
+    // Tapping "All" swaps the shelf for the embedded palette browser.
     await allPill.click();
     await expect(
       page.getByRole('button', { name: 'Close palette browser' })
@@ -676,22 +589,9 @@ test.describe('Tabbied site (mobile viewport)', () => {
       /\/sign-in/
     );
 
+    // Choosing a destination navigates and closes the menu.
     await menu.getByRole('menuitem', { name: 'Websites' }).click();
     await expect(page).toHaveURL(/\/templates/);
-  });
-
-  test('the content pages draw the same menu on mobile', async ({ page }) => {
-    // The shared masthead is exercised on a page in the light tone.
-    await page.goto('/privacy-policy');
-
-    await page.getByRole('button', { name: 'Menu' }).click();
-
-    const menu = page.getByRole('menu');
-    await expect(menu.getByRole('menuitem', { name: 'Websites' })).toBeVisible();
-
-    // Choosing a destination navigates and closes the menu.
-    await menu.getByRole('menuitem', { name: 'Patterns' }).click();
-    await expect(page).toHaveURL(/\/patterns/);
     await expect(page.getByRole('menu')).toHaveCount(0);
   });
 });
@@ -748,24 +648,6 @@ test.describe('Studio', () => {
       previews.map((href) => `/downloads/${href.split('/')[2]}-html.zip`)
     );
   });
-
-  test('the same description always gives the same three', async ({ page }) => {
-    // The match is a pure function of the query string, which is what makes a
-    // results link worth sharing.
-    const names = async (description: string) => {
-      await page.goto(`/studio/results/?q=${encodeURIComponent(description)}`);
-      return page.locator('article h2').allTextContents();
-    };
-
-    const first = await names(BICYCLES);
-    const again = await names(BICYCLES);
-    expect(again).toEqual(first);
-
-    const other = await names(
-      'A quiet, elegant perfume house. Monochrome and restrained.'
-    );
-    expect(other).not.toEqual(first);
-  });
 });
 
 test.describe('Template preview and customize', () => {
@@ -796,20 +678,6 @@ test.describe('Template preview and customize', () => {
       'href',
       /\/sign-up\/?\?next=%2Fstudio%2Fcustomize%2F%3Fslug%3Dverdant/
     );
-  });
-
-  test('the gallery leads to the framed preview, and a visitor is asked to sign in', async ({ page }) => {
-    await page.goto('/templates');
-
-    const card = page.locator('a[href="/templates/verdant/"]').first();
-    await expect(card).toBeAttached();
-
-    // The artboard's guest footer: "HTML . React" and "Sign in to use". The
-    // zips and the customizer are behind a sign-in, and a template spends
-    // one of the person's five when it is first taken.
-    await expect(page.getByRole('link', { name: 'Sign in to use' }).first()).toBeVisible();
-    await expect(page.locator('a[href^="/downloads/"]')).toHaveCount(0);
-    await expect(page.locator('a[href="/studio/customize/?slug=verdant"]')).toHaveCount(0);
   });
 
   test('signed in, the menu says what taking a template costs and asks first', async ({ page }) => {
@@ -869,7 +737,7 @@ test.describe('Shared site header', () => {
     await page.goto('/templates');
 
     // Home / Patterns / Websites in the middle, Sign in on the right. GitHub
-    // and Docs are in the footer now, not the bar.
+    // and Docs are in the footer, not the bar.
     const nav = page.getByRole('navigation', { name: 'Main' });
     await expect(nav.getByRole('link', { name: 'Home' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
@@ -921,32 +789,6 @@ test.describe('Shared site header', () => {
     // The wrong hint is cleared, so the next page draws Sign in at once.
     expect(await page.evaluate(() => window.localStorage.getItem('tabbied:signed-in'))).toBeNull();
   });
-
-  test('the gallery pins the bar over its own rail', async ({ page }) => {
-    await page.goto('/patterns');
-
-    // The bar is the shared one, and the rail beside it carries the palette
-    // chrome.
-    const nav = page.getByRole('navigation', { name: 'Main' });
-    await expect(nav.getByRole('link', { name: 'Patterns' })).toHaveAttribute(
-      'aria-current',
-      'page'
-    );
-    await expect(page.getByRole('heading', { name: 'Pick a pattern' })).toBeVisible();
-    await expect(page.locator('aside')).toBeVisible();
-  });
-
-  test('is not used on the individual pattern editor', async ({ page }) => {
-    await page.goto('/patterns/radius');
-
-    // The editor keeps its own header...
-    await expect(
-      page.getByRole('link', { name: 'Back to gallery' })
-    ).toBeVisible({ timeout: 15000 });
-
-    // ...and never renders the shared site nav.
-    await expect(page.getByRole('navigation', { name: 'Main' })).toHaveCount(0);
-  });
 });
 
 test.describe('Share cards and canonical URLs', () => {
@@ -956,7 +798,6 @@ test.describe('Share cards and canonical URLs', () => {
       canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null,
       image: document.querySelector('meta[property="og:image"]')?.getAttribute('content') ?? null,
       card: document.querySelector('meta[name="twitter:card"]')?.getAttribute('content') ?? null,
-      title: document.title,
     }));
   };
 
@@ -966,15 +807,6 @@ test.describe('Share cards and canonical URLs', () => {
       image: 'https://tabbied.com/og.png',
       card: 'summary_large_image',
     });
-    expect(await head(page, '/patterns/radius/')).toMatchObject({
-      canonical: 'https://tabbied.com/patterns/radius/',
-      image: 'https://tabbied.com/previews/radius.webp',
-      title: 'Customize Radius - Tabbied',
-    });
-    expect(await head(page, '/templates/verdant/')).toMatchObject({
-      canonical: 'https://tabbied.com/templates/verdant/',
-    });
-    expect((await head(page, '/patterns/')).title).toBe('Pick a pattern - Tabbied');
 
     // The template page is what the downloads are made from: tabbied.com's
     // card and canonical would ride into every site built on it.

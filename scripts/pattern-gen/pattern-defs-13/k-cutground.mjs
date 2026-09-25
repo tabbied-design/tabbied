@@ -1,14 +1,9 @@
 // K. Cutground - ground stepped and notched, all clip-path.
 //
-// A solid sheet with a profile taken out of it: one bench cut into a sheer
-// face, and the two notches a river wears - a wide V, and the near-vertical
-// slot it deepens into. Each is a single polygon, and the cut runs right to
-// the edge of the cell so neighboring cells read as continuous ground rather
-// than as a row of separate marks.
-//
-// Nothing is filled back in behind the notch. On a transparent background the
-// cut is genuinely see-through, which is the whole reason these are clipped
-// rather than drawn as two abutting shapes.
+// A solid sheet with a profile taken out of it: a bench cut into a sheer face,
+// a wide V, and the near-vertical slot it deepens into. Each is one polygon
+// cut right to the cell's edge, so neighboring cells read as continuous
+// ground, and nothing is filled back in behind the notch.
 import { section, F, TR, cp, ink, poly, rot, R4 } from './shared.mjs';
 
 const { add, all } = section('K. Cutground');

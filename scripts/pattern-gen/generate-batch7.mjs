@@ -49,10 +49,9 @@ for (const def of defs) {
   if (batchSlugs.has(def.slug)) throw new Error(`duplicate slug: ${def.slug}`);
   batchSlugs.add(def.slug);
 }
-// Batch 7 owns gallery orders 700-799, so a file already on disk is either this
-// batch's own output (safe to rewrite) or another batch's pattern (never
-// clobber it). The range is bounded at both ends so later batches, which live
-// above it, survive a batch-7 regeneration.
+// A file on disk whose order falls in the range below is this batch's own
+// output (safe to rewrite); anything else is another batch's (never clobber
+// it). The upper bound keeps a rerun from deleting the patterns above it.
 const FIRST_ORDER = 700;
 const LAST_ORDER = 799;
 const ownedByBatch7 = (order) => order >= FIRST_ORDER && order <= LAST_ORDER;
@@ -135,11 +134,9 @@ for (const def of defs) {
       );
     }
   }
-  // Batch 7 inherits batch 6's background independence: painting var(--color0)
-  // only *looks* like a knockout while the background is opaque. With the
-  // background slot set to #rrggbb00 the "hole" paints nothing and the shape
-  // underneath stays solid. Cut the shape instead (clip-path hole, mask, or a
-  // gap between elements).
+  // Painting var(--color0) only *looks* like a knockout while the background
+  // is opaque: set to #rrggbb00, the "hole" paints nothing. Cut the shape
+  // instead (clip-path hole, mask, or a gap between elements).
   if (/var\(\s*--color0\s*\)/.test(style)) {
     throw new Error(
       `${def.slug}: style paints var(--color0) - that knockout disappears on a transparent background`

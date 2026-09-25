@@ -1,26 +1,21 @@
-// Builds the agent-facing docs from catalog.json (itself written by
-// codegen.mjs). Owned by the package so the published tarball can't ship
-// without them: `npm run build` (and therefore prepublishOnly) writes
-// packages/tabbied/llms.txt, and the site's scripts/generate-llms.mjs imports
-// the same builder to write public/llms.txt, public/llms-full.txt and
-// public/catalog.json - one template, two consumers, no drift.
+// Builds the agent-facing docs from catalog.json (written by codegen.mjs).
+// Owned by the package so the published tarball cannot ship without them: the
+// package build (and so prepublishOnly) writes packages/tabbied/llms.txt, and
+// the site's scripts/generate-llms.mjs imports the same builder to write
+// public/llms.txt, public/llms-full.txt and public/catalog.json.
 //
 // Two texts, in increasing depth, so a tool can stop as soon as it has enough:
 //
 //   llms      the llms.txt convention (llmstxt.org): a short index that
 //             links to everything else. Served at tabbied.com/llms.txt.
 //   llmsFull  the whole API contract, the recipes, and a one-line entry for
-//             every design - enough to pick a design and wire it up from a
-//             single fetch. Served at tabbied.com/llms-full.txt and shipped
-//             in the npm tarball as llms.txt (in node_modules, depth beats
-//             brevity - it's the only file an agent will find).
+//             every design, enough to pick one and wire it up from a single
+//             fetch. Served at tabbied.com/llms-full.txt and shipped in the
+//             npm tarball as llms.txt.
 //
-// The point of all this is design discovery. The API is small enough to
-// memorize, but the ~300 slugs are opaque ("cleat", "gnomonwedge", "karst"),
-// so an assistant with no catalog either guesses a slug that doesn't exist or
-// imports the whole record and loses tree-shaking. The authored descriptions,
-// the closed-vocabulary tags, and the preview images are what make the set
-// searchable - see scripts/catalog-vocabulary.mjs.
+// The point is design discovery: the slugs are opaque ("cleat", "karst"), so
+// an assistant with no catalog guesses a slug that does not exist or imports
+// the whole record and loses tree-shaking.
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -276,8 +271,7 @@ one of 1:2 | 2:3 | 1:1 | 3:2 | 2:1 (the ids in src/core/aspectRatio.ts),
 (\`frequency=0.6\`). The \`grid\` option is not a link parameter: the editor
 derives it from the plate at that density, as \`fit: "grid"\` derives it from
 a container. Unknown or out-of-range values fall back to defaults, so a
-partial link is safe, and an older \`grid=8x12\` link is read as the density
-that grid had.
+partial link is safe.
 
 ## Reduced motion
 
@@ -386,8 +380,8 @@ npx tabbied info radius
 Rendering runs css-doodle in a headless browser via whatever Playwright the
 project already has (\`playwright\`, \`playwright-core\`, or
 \`@playwright/test\`); pass \`--browser <path>\` (or set \`TABBIED_CHROMIUM\`) to
-use a specific Chromium binary. \`--out\`'s extension picks SVG or PNG; the
-${designs.filter((design) => !design.svgExport.supported).length} \`[no SVG]\` designs below render as PNG only.
+use a specific Chromium binary. \`--out\`'s extension (or \`--format svg|png\`)
+picks SVG or PNG; the ${designs.filter((design) => !design.svgExport.supported).length} \`[no SVG]\` designs below render as PNG only.
 
 ## SVG export
 
@@ -401,8 +395,10 @@ pay nothing.
 
 Call \`supportsSvgExport(pattern)\` before offering the option: ${
     designs.filter((design) => !design.svgExport.supported).length
-  } designs paint
-smooth conic sweeps that SVG cannot represent and are marked unsupported below.
+  } designs use CSS
+the converter cannot reproduce faithfully (smooth conic sweeps, double or
+dashed borders, 3D transforms and \`color-mix()\` among them) and are marked
+unsupported below.
 Designs with partial limitations carry a note (filter-based effects that
 browsers render correctly but design tools may import imperfectly); surface
 those to the user before downloading. Unsupported CSS throws
@@ -446,8 +442,8 @@ ${designs.map(designLine).join('\n')}
 }
 
 // Run as a script (part of the package build): write the package's own
-// llms.txt - the full text, since in node_modules it's the only file an
-// agent will find, and a fetch of the site may never happen.
+// llms.txt as the full text, since in node_modules it is the only file an
+// agent will find.
 const isMain =
   process.argv[1] &&
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);

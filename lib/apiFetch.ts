@@ -1,10 +1,7 @@
-// One place that knows where the API is.
-//
-// In production the site and the Worker are the same origin, so the base is
-// empty and every call is a relative path - which is what lets the session
-// cookie work with no CORS surface at all. In development `next dev` serves
-// :3000 while the Worker runs on :8787, so the base is set by `npm run dev` and
-// credentials have to be sent explicitly. Nothing else may hardcode a host.
+// The one place that knows where the API is. In production the site and the
+// Worker share an origin, so the base is empty and the session cookie needs no
+// CORS. In development the Worker is on :8787 and `npm run dev` sets the base.
+// Nothing else may hardcode a host.
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? '';
 
 export const apiUrl = (path: string) => `${API_BASE}${path}`;
@@ -30,13 +27,11 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const response = await fetch(apiUrl(path), {
     ...init,
-    // The session lives in a cookie; a cross-port dev request drops it without
-    // this, which reads as "signed out" for reasons nothing in the UI explains.
+    // The session is a cookie; a cross-port dev request drops it without this.
     credentials: 'include',
     headers: {
-      // Only a request with a body has a content type. On a GET or DELETE the
-      // header is meaningless, and in development it made every cross-port
-      // read a CORS preflight.
+      // Only a request with a body gets a content type: on a GET it would make
+      // every cross-port dev read a CORS preflight.
       ...(init.body !== undefined && init.body !== null
         ? { 'content-type': 'application/json' }
         : {}),

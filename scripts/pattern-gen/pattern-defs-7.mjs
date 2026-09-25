@@ -1,4 +1,4 @@
-// Batch 7 - 24 motifs (gallery orders 700+).
+// Batch 7 - gallery orders 700-799.
 //
 // Where batch 6 was the *ordered* batch (nothing placed by a dice roll), batch
 // 7 goes back to the hand-scattered feel of the eleven patterns Syung Hong
@@ -15,7 +15,7 @@
 //   * the palette does the rest. A single ink sampled per cell, drawn from the
 //     inks only, and a transition so a reseed morphs rather than snaps.
 //
-// House rules (inherited from every earlier batch):
+// House rules (enforced by generate-batch7.mjs and validate-batch7.mjs):
 //   * every rule paints through exactly one @random(${shapeFrequency}) gate,
 //     so the frequency slider always thins the field; nested @random(k) blocks
 //     inside that gate are how a design varies itself (Blossom's trick);
@@ -24,12 +24,11 @@
 //     ends in a transition, so a redraw morphs;
 //   * a randomized custom prop read more than once goes through @var(--x)
 //     (a plain var() re-rolls at every occurrence);
-//   * nothing paints var(--color0). Batch 6 established that a hole knocked
-//     out in the background color is a fake hole - set the background slot to
-//     transparent and it stops erasing anything. Every gap here is real
-//     geometry: a clip-path hole, a mask, a border, or a gap between two
-//     elements. generate-batch7.mjs enforces this, and validate-batch7.mjs
-//     re-renders the whole batch over a checkerboard to prove it.
+//   * nothing paints var(--color0). A hole knocked out in the background
+//     color is a fake hole once the background slot is transparent; every
+//     gap here is real geometry (a clip-path hole, a mask, a border, or a gap
+//     between two elements), and validate-batch7.mjs re-renders the batch
+//     over a checkerboard to prove it.
 
 const isDark = (hex) => {
   const m = /^#([0-9a-f]{6})/i.exec(hex);
@@ -61,7 +60,7 @@ const R4 = '@pick(0deg, 90deg, 180deg, 270deg)';
 const R8 = '@pick(0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg)';
 
 // -- the originals' own shape library ---------------------------------------
-// Radius picks between four corner circles and a centerd one; Mixtape adds the
+// Radius picks between four corner circles and a centered one; Mixtape adds the
 // four half-square triangles. Section A draws from the same short list rather
 // than inventing a new outline per cell.
 const CORNER = 'circle(100% at 0 0), circle(100% at 100% 0), circle(100% at 100% 100%), circle(100% at 0 100%)';
@@ -77,7 +76,7 @@ const poly = (pts) => `polygon(${P(pts)})`;
 const withHole = (inner) =>
   `polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, ${P(inner)}, ${P([inner[0]])})`;
 
-// Centerd rectangular hole inset `x`% horizontally and `y`% vertically.
+// Centered rectangular hole inset `x`% horizontally and `y`% vertically.
 const rectHole = (x, y) => [
   [x, y],
   [x, 100 - y],
@@ -164,7 +163,7 @@ const PAL = [
   ['#FEFAE0', '#606C38', '#283618', '#DDA15E', '#BC6C25', '#A3B18A'],
   ['#10002B', '#5A189A', '#9D4EDD', '#C77DFF', '#E0AAFF', '#FFD6FF'],
   ['#FFFFFF', '#06AED5', '#086788', '#F0C808', '#FFF1D0', '#DD1C1A'],
-  // Twenty new colorways mixed in for this batch.
+  // Colorways added for this batch.
   ['#101820', '#FEE715', '#F2F2F2', '#8A8D91', '#00A6A6', '#FF6B35'],
   ['#FDF0D5', '#003049', '#C1121F', '#780000', '#669BBC', '#8D99AE'],
   ['#1A1A2E', '#16213E', '#0F3460', '#E94560', '#F5F5F5', '#53BF9D'],
@@ -346,8 +345,8 @@ add('Drift', 26, 'Triangles all leaning the same way within a row and flipping o
 }), { grid: '10x15', tg: '8x8' });
 
 // --------------------------------------------------------------------------
-// B. After Bloks and Ring - turned blocks under the Shadow switch, and rings
-//    breached so the gap walks around the rim.
+// B. After Bloks and Ring - turned blocks, and rings breached so the gap
+//    walks around the rim.
 // --------------------------------------------------------------------------
 
 add('Cupola', 17, 'Domed blocks turning to face all four quarters, each one rolled a quarter turn from its neighbor.', (c) => ({

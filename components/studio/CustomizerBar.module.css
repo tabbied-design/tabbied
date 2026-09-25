@@ -1,10 +1,8 @@
 /* The customizer's bar. Dark, so the chrome reads apart from the site on the
    canvas, and sticky, so Download stays in reach however far down the canvas
-   a person has scrolled. One height whatever it holds: the workspace pins its
-   rail under the bar and sizes the phone's shell against it as 63px
-   (SiteWorkspace.module.css), and padding round the tallest child made the
-   bar 71px whenever the account pill was in it - which, since the rail is
-   drawn only for the site's owner, was every time the rail was. */
+   a person has scrolled. One height whatever it holds, never padding round
+   the tallest child: the workspace pins its rail under the bar and sizes the
+   phone's shell against it as 63px (SiteWorkspace.module.css). */
 
 .bar {
   position: sticky;

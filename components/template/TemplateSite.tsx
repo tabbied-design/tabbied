@@ -28,15 +28,14 @@ const imageId = (
 
 // ---- editable slots -------------------------------------------------------
 // The `data-edit*` attributes below are the editable-section contract: they
-// name the parts of this page a person or an agent may change, and they are
-// read back out of the static export to generate the template's spec (see
-// docs/editable-templates.md). Five sites share this component, so annotating
-// it once annotates all five.
+// name the parts of this page a person or an agent may change, and are read
+// back out of the static export into the template's spec (see
+// docs/editable-templates.md).
 //
 // The palette roles a pattern field follows. A field drawn on the page's own
 // ground takes the whole palette; one drawn *over* something keeps
-// `transparent` in color0 - that literal is what leaves real negative space
-// for the photograph underneath, so it must never be re-colored.
+// `transparent` in color0, which leaves real negative space for the
+// photograph underneath, so it must never be re-colored.
 const fullRoles = (site: Site) => site.colors.map((_, i) => i).join(',');
 const overlayRoles = (site: Site) =>
   ['transparent', ...site.colors.slice(1).map((_, i) => i + 1)].join(',');
@@ -52,8 +51,8 @@ function renderTitle(title: string): ReactNode {
         segment.emphasis ? (
           <em key={i} className={s.em}>{segment.text}</em>
         ) : (
-          // A keyed Fragment renders no element, so the markup is exactly what
-          // the single-accent regex this replaced produced: text, <em>, text.
+          // A keyed Fragment renders no element, so the markup stays
+          // text, <em>, text.
           <Fragment key={i}>{segment.text}</Fragment>
         )
       )}
@@ -94,11 +93,10 @@ export default function TemplateSite({ site, patterns }: Props) {
   const { colors } = site;
 
   // Color enters the page exactly once, here, as custom properties. The
-  // derivation moved into `tabbied-templates` because applyEdits has to
-  // recompute these same variables when somebody re-colors a downloaded copy:
-  // `--ink` and the card tints are functions of the palette rather than
-  // members of it, and a second implementation of that math is how a
-  // re-colored page ends up with body copy nobody can read.
+  // derivation lives in `tabbied-templates` because applyEdits recomputes the
+  // same variables when a downloaded copy is re-colored: `--ink` and the card
+  // tints are functions of the palette, and a second copy of that math is how
+  // a re-colored page gets unreadable body copy.
   const vars: Record<string, string> = {
     ...derivePaletteProperties(colors, 'templateSite', {
       // A flat-section site drops the alternating band tone entirely: every
@@ -361,12 +359,10 @@ function Features({ data }: { data: NonNullable<Ctx['content']>['features'] }) {
 }
 
 // One header treatment for every section: kicker, title, and a supporting line
-// sitting on a hairline. Consistency here is what stops the page reading as a
-// pile of unrelated blocks.
+// sitting on a hairline.
 function SectionHead({ kicker, title, sub, slot }: { kicker?: string; title: string; sub?: string; slot?: string }) {
-  // `slot` namespaces this header's ids: several sections share this component,
-  // so the prefix is what keeps "the items heading" and "the pricing heading"
-  // distinct editable things.
+  // `slot` namespaces this header's ids, which keeps the items heading and the
+  // pricing heading distinct editable things.
   return (
     <div className={s.sectionHead}>
       <div>
@@ -450,17 +446,14 @@ function Specs({ data }: { data: NonNullable<NonNullable<Ctx['sec']>['specs']> }
   );
 }
 
-// Portraits are the site's own pattern, re-seeded per person, which is the
-// point of the template: the generative system carries the brand everywhere.
 /**
  * The prompt for one portrait: the team's shared scene, this person's role, and
  * their authored `look`.
  *
- * The `look` is not decoration. Prompting on role and scene alone returned the
- * same face for all twenty-four people - leaving appearance unsaid does not
- * produce a varied cast, it just hands the casting to the model's default. It
- * is authored per person rather than inferred from a name, which would be
- * guessing someone's gender and ethnicity from its spelling.
+ * The `look` is what varies the cast: left unsaid, appearance falls to the
+ * model's default and every portrait is the same face. It is authored per
+ * person rather than inferred from a name, which would be guessing someone's
+ * gender and ethnicity from its spelling.
  *
  * "Exactly one person" is explicit because these prompts otherwise return spare
  * bodies and extra hands.
@@ -599,18 +592,15 @@ function SplitHero({ site, patterns, heroImage, overlay }: HeroProps) {
 }
 
 /**
- * Whatever fills a hero's art panel: the site's pattern on its own, or - when
- * the site supplies a `heroImage` prompt - a generated photograph with an
- * pattern drawn across it. Every layout renders this, so the photograph is a
- * per-site choice rather than something only one hero shape supports.
+ * Whatever fills a hero's art panel: the site's pattern on its own, or, when
+ * the site supplies a `heroImage` prompt, a generated photograph with a
+ * pattern drawn across it. Every layout renders this.
  *
- * The overlay is drawn at full opacity with no blend mode. What makes the
- * photograph readable underneath is `transparent` in color0, the pattern's
- * background slot: the design's own marks land opaquely and everything it would
- * otherwise fill is left as real negative space. That only works for a sparse
- * design, which is why the site names its overlay (`heroOverlayPattern`) rather
- * than taking whatever is to hand. Density is the coarsest authored level, so
- * what crosses the picture is a few large shapes rather than a texture.
+ * The overlay is drawn at full opacity with no blend mode. `transparent` in
+ * color0 is what keeps the photograph readable: the design's marks land
+ * opaquely and everything else is real negative space. That only works for a
+ * sparse design, which is why the site names its overlay
+ * (`heroOverlayPattern`), and density 0 keeps it to a few large shapes.
  */
 function HeroArt({ site, patterns, heroImage, overlay }: HeroProps) {
   if (!heroImage) {

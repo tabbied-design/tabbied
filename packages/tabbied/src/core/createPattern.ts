@@ -153,10 +153,9 @@ async function settleAnimations(element: CssDoodleElement): Promise<void> {
 }
 
 // Delay before a resize-driven grid change re-renders. Every grid step
-// re-randomizes the arrangement (same seed + different grid ⇒ different
-// layout - inherent to the medium), so wait for the resize to settle instead
-// of re-rolling the design on every frame of a drag. Between steps the canvas
-// stretches fluidly via CSS.
+// re-randomizes the arrangement (same seed + different grid is a different
+// layout), so wait for the resize to settle instead of re-rolling the design
+// on every frame of a drag. Between steps the canvas stretches via CSS.
 const GRID_RESIZE_DEBOUNCE_MS = 180;
 
 // Uniqueness for the per-instance <style> scope. An attribute selector
@@ -166,28 +165,21 @@ let instanceCounter = 0;
 
 // Every pattern's rules carry their own `transition`, which is what makes
 // redraw() morph one arrangement into the next instead of cutting. This
-// override switches that off, and it is used for two different reasons.
+// override switches that off, for two reasons:
 //
 // 1. The first paint has nothing to morph from, so every cell would animate in
-//    from its unstyled state: the drawing visibly assembles itself, and a page
-//    of patterns pays for thousands of simultaneous transitions while it is
-//    still loading. Muted for two frames, then dropped.
-// 2. Under prefers-reduced-motion it stays on for the controller's whole life.
-//    The ambient redraw timer is switched off separately (see
-//    syncRedrawTimer), but that is not the only motion: a resize re-derives
-//    the grid and re-renders, which morphs every cell without the user having
-//    asked for anything. That is the passive motion the preference is about.
+//    from its unstyled state, and a page of patterns would pay for thousands
+//    of transitions while loading. Muted for two frames, then dropped.
+// 2. Under prefers-reduced-motion it stays for the controller's whole life.
+//    The redraw timer is switched off separately (see syncRedrawTimer), but a
+//    resize also re-derives the grid and re-renders, which would morph every
+//    cell unasked.
 //
-// The override lives in the shadow root because that is where css-doodle puts
-// the generated cell styles; a rule in the light DOM cannot reach them.
-//
-// Keyframe animations are the third source of motion, and the September
-// designs brought seven of them (a sunburst that turns, bands that drift,
-// rings that pulse). They are paused rather than removed: `animation: none`
-// would also drop the `to` state a paused design is authored to rest in,
-// while a paused animation holds its first frame, which is the still image
-// the design's own `animation-play-state: paused` already shows for four of
-// the seven.
+// It lives in the shadow root because that is where css-doodle puts the cell
+// styles; a light-DOM rule cannot reach them. Keyframe animations are paused
+// rather than removed: a paused animation holds its first frame (the still a
+// design authored as paused already shows), while `animation: none` would
+// also drop its `to` state.
 const MUTE_TRANSITIONS =
   'cssd-cell,cssd-cell *,cssd-cell::before,cssd-cell::after{transition:none !important;animation-play-state:paused !important}';
 
@@ -207,10 +199,9 @@ const appendMuteStyle = (
   return mute;
 };
 
-// One MediaQueryList for the module: `prefersReducedMotion()` is read on every
-// update and every reconcile of every pattern on a page, and each read built
-// a new list. Every instance adds its own `change` listener to the shared one
-// and removes it in destroy(), so sharing changes nothing else.
+// One MediaQueryList for the module, since `prefersReducedMotion()` is read on
+// every update and reconcile of every pattern on a page. Each instance adds
+// its own `change` listener to it and removes it in destroy().
 let reducedMotionList: MediaQueryList | null | undefined;
 
 const reducedMotionQuery = (): MediaQueryList | null => {
@@ -236,24 +227,6 @@ type ResolvedConfig = {
   fixedWidth: number;
   fixedHeight: number;
   coverRender: CoverRender;
-};
-
-// `density` was an integer level 0..4 before it became a number 0..1 (level
-// n is now n / 4). A value above 1 can only be the old scale, so it is named
-// once per page; a legacy 1 (90px then, 36px now) cannot be told apart.
-let warnedLegacyDensity = false;
-
-const clampDensity = (density: number): number => {
-  if (density > 1 && !warnedLegacyDensity) {
-    warnedLegacyDensity = true;
-    console.warn(
-      `[tabbied] density ${density} is above 1. density is now a number from ` +
-        '0 (coarse) to 1 (fine); the old levels 0..4 map to 0, 0.25, 0.5, ' +
-        '0.75 and 1.'
-    );
-  }
-
-  return Math.min(Math.max(density, 0), 1);
 };
 
 export function createPattern(
@@ -323,7 +296,7 @@ export function createPattern(
       targetCellPx:
         config.cellSize ??
         (config.density != null
-          ? densityToCellPx(clampDensity(config.density))
+          ? densityToCellPx(config.density)
           : DEFAULT_CELL_PX),
       fixedWidth: config.width ?? DEFAULT_FIXED_SIZE.width,
       fixedHeight: config.height ?? DEFAULT_FIXED_SIZE.height,
@@ -417,9 +390,8 @@ export function createPattern(
 
       // Snap the render box the same way a grid canvas is snapped: whole,
       // divisible, square cells. On its own this does nothing for a scaled
-      // canvas (measured: 6 seams either way), but it is what gives
-      // fitRenderToBox a whole `cell` to quantize the scale against, and the
-      // pair together take the seams to zero.
+      // canvas, but it gives fitRenderToBox a whole `cell` to quantize the
+      // scale against, and only the pair removes the seams.
       const cell = snapCellToBox(
         renderBox.width,
         renderBox.height,
@@ -452,18 +424,12 @@ export function createPattern(
     };
   };
 
-  // Size a `grid` canvas so every track lands on a whole pixel.
-  //
-  // The grid fills the host, and `repeat(cols, 1fr)` over a container that
-  // isn't divisible by cols puts every cell boundary on a sub-pixel, which
-  // paints a hairline seam at each one. Overriding the canvas inline (the
-  // source still says 100%, so the generated pattern and its SVG export are
-  // untouched) rounds each axis up to a whole multiple of its track count;
-  // the host clips the sub-cell overflow.
-  //
-  // Pure arithmetic, so it runs on every resize tick - between debounced grid
-  // steps the canvas keeps covering the host at whole tracks, where plain
-  // percentage sizing would drift back onto sub-pixels.
+  // Size a `grid` canvas so every track lands on a whole pixel; plain 100%
+  // sizing puts cell boundaries on sub-pixels, where the browser draws seams
+  // (see snapSpanToTracks). The override is inline, so the source still says 100%
+  // and the generated pattern and its SVG export are untouched; the host clips
+  // the overflow. Pure arithmetic, so it runs on every resize tick and keeps
+  // the canvas on whole tracks between debounced grid steps.
   const applyGridSnap = (resolved: ResolvedConfig) => {
     if (!element || !hostSize || resolved.fit !== 'grid') {
       return;
@@ -579,10 +545,9 @@ export function createPattern(
   };
 
   // css-doodle's update() regenerates the shadow root when the grid changes,
-  // which takes the injected override with it - so under reduced motion the
-  // override has to be re-asserted after every update, not just at mount.
-  // Re-appending synchronously means it is in place for the same style
-  // recalculation that would otherwise start the transitions.
+  // taking the override with it, so under reduced motion it is re-asserted
+  // after every update, not just at mount. Synchronously, so it is in place
+  // for the style recalculation that would otherwise start the transitions.
   const ensureMuted = () => {
     if (!element || !prefersReducedMotion() || muteStyle?.isConnected) {
       return;
@@ -686,13 +651,9 @@ export function createPattern(
     syncObserver(resolved);
     syncRedrawTimer();
 
-    // A measured fit waits for a usable size, not merely a first one. The
-    // resize handler records a 0x0 host (a pattern in a hidden tab or a
-    // collapsed section) without mounting, but a config update from the
-    // wrapper's per-commit effect came through here, saw a size, and mounted
-    // a 1x1 grid at zero pixels: onReady fired with nothing painted, and
-    // when the host appeared that canvas was stretched over it for the
-    // resize debounce.
+    // A measured fit waits for a usable size, not merely a first one: a 0x0
+    // host (a hidden tab, a collapsed section) would mount a 1x1 grid at zero
+    // pixels and fire onReady with nothing painted.
     const measured = hostSize !== null && hostSize.width > 0 && hostSize.height > 0;
 
     if (needsMeasure(resolved.fit) && !measured) {
@@ -713,10 +674,9 @@ export function createPattern(
     }
 
     applyUpdate(resolved);
-    // A non-structural config change can still change the derived grid (a
-    // cellSize/density update re-renders with new cols/rows), and the inline
-    // canvas size must be re-snapped to the new track count or every boundary
-    // lands back on a sub-pixel - the seams the snap exists to prevent.
+    // A non-structural change can still change the derived grid (cellSize or
+    // density), and the inline canvas size must be re-snapped to the new
+    // track count or every boundary lands back on a sub-pixel.
     applyGridSnap(resolved);
     applyTransform(resolved);
   };
@@ -782,14 +742,10 @@ export function createPattern(
   };
 
   // Ambient redraws: rotate the seed on a timer so designs with authored CSS
-  // transitions morph between arrangements. This lives in the controller
-  // rather than in each framework wrapper so the vanilla, React and
-  // declarative entry points all inherit the same gating.
-  //
-  // Three gates keep a wall of animated patterns from costing what it looks
-  // like it should: prefers-reduced-motion switches the effect off entirely,
-  // a hidden tab stops ticking, and a host scrolled out of view stops
-  // ticking. `paused` is a fourth, consumer-controlled gate on top.
+  // transitions morph between arrangements. It lives in the controller so the
+  // vanilla, React and declarative entry points all inherit the same gates:
+  // prefers-reduced-motion switches it off, and a hidden tab or a host out of
+  // view stops ticking. `paused` is a consumer-controlled gate on top.
   const clearRedrawTimer = () => {
     if (firstRedrawTimer !== null) {
       clearTimeout(firstRedrawTimer);

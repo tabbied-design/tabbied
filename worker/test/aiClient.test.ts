@@ -2,10 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { respondJson, UpstreamError } from '../ai/client';
 import type { Env } from '../env';
 
-// The Responses API's answer is an *item in an array*, not a field, and two of
+// The Responses API's answer is an item in an array, not a field, and two of
 // its failure modes look like an empty answer unless they are named. These
-// tests pin the walker and both of those, at the fetch boundary - nothing here
-// reaches a paid API.
+// tests pin the walker and both of those at the fetch boundary.
 
 const env = (extra: Partial<Env> = {}) =>
   ({
@@ -41,13 +40,12 @@ const message = (text: string) => ({
   content: [{ type: 'output_text', text }],
 });
 
-const ask = (e: Env = env(), previousResponseId?: string) =>
+const ask = (e: Env = env()) =>
   respondJson(e, {
     instructions: 'be brief',
     input: 'a business',
     schemaName: 'studio_directions',
     schema: { type: 'object' },
-    previousResponseId,
   });
 
 afterEach(() => {
@@ -55,7 +53,7 @@ afterEach(() => {
 });
 
 describe('respondJson', () => {
-  it('reads the message past the reasoning item, and reports the turn id', async () => {
+  it('sends the schema as text.format, reads the message past the reasoning item, and reports the turn id', async () => {
     const calls = stub({
       id: 'resp_1',
       status: 'completed',
@@ -73,6 +71,15 @@ describe('respondJson', () => {
     const result = await ask();
 
     expect(calls[0].url).toBe('https://upstream.test/v1/responses');
+
+    const format = (calls[0].body.text as { format: Record<string, unknown> }).format;
+    expect(format.type).toBe('json_schema');
+    expect(format.name).toBe('studio_directions');
+    expect(format.strict).toBe(true);
+    // Storing is what makes previous_response_id resolvable at all.
+    expect(calls[0].body.store).toBe(true);
+    expect(calls[0].body.previous_response_id).toBeUndefined();
+
     expect(result.content).toBe('{"ok":true}');
     expect(result.model).toBe('test-model-2026');
     expect(result.responseId).toBe('resp_1');
@@ -82,32 +89,6 @@ describe('respondJson', () => {
       reasoningTokens: 250,
       cachedTokens: 900,
     });
-  });
-
-  it('sends the schema as text.format and stores the turn', async () => {
-    const calls = stub({ id: 'resp_1', status: 'completed', output: [message('{}')] });
-
-    await ask();
-
-    const format = (calls[0].body.text as { format: Record<string, unknown> }).format;
-
-    expect(format.type).toBe('json_schema');
-    expect(format.name).toBe('studio_directions');
-    expect(format.strict).toBe(true);
-    // Storing is what makes previous_response_id resolvable at all.
-    expect(calls[0].body.store).toBe(true);
-    expect(calls[0].body.previous_response_id).toBeUndefined();
-  });
-
-  it('chains a turn when given a previous response id', async () => {
-    const calls = stub({ id: 'resp_2', status: 'completed', output: [message('{}')] });
-
-    await ask(env(), 'resp_1');
-
-    expect(calls[0].body.previous_response_id).toBe('resp_1');
-    // Instructions are re-sent every turn: the Responses API does not carry
-    // them forward, so a chained turn would otherwise lose the contract.
-    expect(calls[0].body.instructions).toBe('be brief');
   });
 
   it('omits reasoning unless an effort is configured', async () => {
@@ -123,10 +104,8 @@ describe('respondJson', () => {
   });
 
   it('names an exhausted reasoning budget rather than reporting empty output', async () => {
-    // The regression this exists for: on a reasoning model the cap is spent on
-    // thinking before any message is emitted, so the answer is a `reasoning`
-    // item and nothing else. Indistinguishable from a broken upstream unless
-    // `incomplete_details` is read.
+    // On a reasoning model the cap can be spent on thinking before any message
+    // is emitted, so the answer is a `reasoning` item and nothing else.
     stub({
       id: 'resp_1',
       status: 'incomplete',

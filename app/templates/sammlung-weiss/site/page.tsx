@@ -17,15 +17,14 @@ const INK = '#111111';
 const STONE = '#6E6A60';
 const PALE = '#CFCBBF';
 const LIGHT = '#EAE7DD';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = STONE;
 const TILE_B = PALE;
-
 
 const ROOMS = [
   { n: 'I', name: 'The long room', hangs: '14 works', note: 'North light, no artificial source. Closed on days when the meter reads under 180 lux at noon.' },

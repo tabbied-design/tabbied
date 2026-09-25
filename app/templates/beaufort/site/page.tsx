@@ -13,7 +13,6 @@ export const metadata = {
 
 /* Night navy, bone, one sea green. Every field takes `transparent` in the
    background slot so the water of the page runs through the pattern. */
-const BONE = '#efeae0';
 const GREEN = '#00b37a';
 const GRAY = '#6e808f';
 const DEEP = '#14293d';

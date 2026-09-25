@@ -1,14 +1,9 @@
 // H. Bar - marks assembled from plain rectangles.
 //
-// No clip path, no mask, no gradient: an absolutely-positioned pseudo-element
-// with four offsets is a rectangle, and two of them are a cross, a tee, an
-// ell, a pair of rails. It is the least expressive tool in the batch and the
-// most exact - a rectangle exports as a <rect> with the same four numbers, so
-// everything in this section sits at a flat zero against its live render.
-//
-// The section is about *placed* marks rather than fields: where a bar starts
-// and stops, what it meets, and what is left between them. Section B has the
-// repeating fields.
+// An absolutely-positioned pseudo-element is a rectangle, and two of them are
+// a cross, a tee, an ell, a pair of rails. A rectangle exports as a <rect>
+// with the same four numbers, the most exact thing the converter does. These
+// are *placed* marks; section B has the repeating fields.
 import { section, A, B, F, TR, ink, rot, R2, R4 } from './shared.mjs';
 
 const { add, all } = section('H. Bar');

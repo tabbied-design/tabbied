@@ -1,11 +1,9 @@
 // The customizer: a site's latest revision, on its template.
 //
-// Same seam as e2e/studio-preview.spec.ts, one document up: the route fetches
-// a stored *revision* rather than deriving three strings from a direction, and
-// what has to hold is that a full document - every text slot - lands on the
-// packaged page, that the owner can change its colors and patterns through
-// the engine live, and that the page says what it knows about the document's
-// state.
+// Same seam as e2e/studio-preview.spec.ts, one document up: a stored
+// *revision* (every text slot) lands on the packaged page, the owner changes
+// its colors and patterns through the engine live, and the page says what it
+// knows about the document's state.
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -88,6 +86,11 @@ test.describe('studio site', () => {
     await expect(page.getByText('Ye Joo Park on Verdant')).toBeVisible();
     await expect(page.getByText(/revision \d/)).toHaveCount(0);
     await expect(page.getByRole('status')).toHaveCount(0);
+
+    // The document says `mine: false`: a visitor by link gets the page and no
+    // editor.
+    await expect(page.getByRole('complementary', { name: 'Customize this site' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Save/ })).toHaveCount(0);
   });
 
   test('says when the document is only the brand copy, and when the template moved', async ({
@@ -363,21 +366,6 @@ test.describe('studio site', () => {
     await expect(page).toHaveURL(/\/studio\/site\/\?id=e2edraft$/);
     await expect(page.getByText('Harbour Plants on Verdant')).toBeVisible();
     await expect(frame.locator('[data-edit-root]')).toBeAttached();
-  });
-
-  test('a visitor by link gets the page and no editor', async ({ page }) => {
-    await page.route('**/api/studio/sites/**', (route) =>
-      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(siteDocument()) })
-    );
-
-    await page.goto('/studio/site/?id=e2esite');
-
-    await expect(page.frameLocator('iframe').locator('[data-edit="brand.name"]').first()).toHaveText(
-      'Ye Joo Park',
-      { timeout: 15_000 }
-    );
-    await expect(page.getByRole('complementary', { name: 'Customize this site' })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /Save/ })).toHaveCount(0);
   });
 
   test('404 reads as a missing site, with a way back', async ({ page }) => {

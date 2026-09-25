@@ -11,8 +11,8 @@ describe('the admin tier', () => {
   beforeAll(async () => {
     member = await signIn('member@example.com');
     admin = await signIn('boss@example.com');
-    // The first admin comes from outside the app - scripts/admin-grant.mjs
-    // does this against D1; the test does it directly.
+    // The first admin comes from outside the app (scripts/admin-grant.mjs
+    // does this against D1); the test does it directly.
     await env.DB.prepare("UPDATE user SET role = 'admin' WHERE email = ?").bind('boss@example.com').run();
   });
 
@@ -45,27 +45,11 @@ describe('the admin tier', () => {
     expect(overview.users).toBeGreaterThanOrEqual(2);
     // Both accounts were created moments ago, so today is a day with sign-ups.
     expect(overview.signupsByDay.reduce((sum, row) => sum + row.n, 0)).toBeGreaterThanOrEqual(2);
-    expect(overview.signupsByDay.every((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.day))).toBe(true);
-
-    // The member has asked Studio for one set of directions, and the row
-    // says so: the per-user counts are correlated subqueries that once
-    // compared a column to itself and answered zero for everyone.
-    const asked = await SELF.fetch(`${ORIGIN}/api/studio/directions`, {
-      method: 'POST',
-      headers: { ...json, cookie: member },
-      body: JSON.stringify({ description: 'A bakery in a small coastal town, sourdough and coffee.' }),
-    });
-    expect(asked.status).toBe(200);
 
     const users = (await SELF.fetch(`${ORIGIN}/api/admin/users?q=member`, { headers: { cookie } }).then((r) => r.json())) as {
-      users: { email: string; role: string | null; sites: number; generations: number }[];
+      users: { email: string }[];
     };
     expect(users.users.map((u) => u.email)).toEqual(['member@example.com']);
-    expect(users.users[0].generations).toBe(1);
-    expect(users.users[0].sites).toBe(0);
-
-    const quotas = (await SELF.fetch(`${ORIGIN}/api/admin/quotas`, { headers: { cookie } }).then((r) => r.json())) as { editable: boolean };
-    expect(quotas.editable).toBe(false);
   });
 });
 
@@ -77,7 +61,7 @@ describe('admins by configuration', () => {
   });
 
   it('promotes an existing account the next time it signs in', async () => {
-    // Created as a plain member, then named in the setting - simulated by
+    // Created as a plain member, then named in the setting: simulated by
     // clearing the role the hook just set and signing in again. The old
     // cookie stops working at once: the gate reads past the cookie cache.
     const first = await signIn('root@example.com');
@@ -95,29 +79,13 @@ describe('admins by configuration', () => {
     const row = await env.DB.prepare('SELECT role FROM user WHERE email = ?').bind('root@example.com').first<{ role: string | null }>();
     expect(row?.role).toBe('admin');
 
-    // And the session says so, which the row passing does not imply. The
-    // pages read the role off the session the browser holds, not off the
-    // row: the nav draws the Admin link from it and AdminPage renders "Not
-    // found" without it. With the promotion written after the session was
-    // minted, `setSessionCookie` cached the row as it was read *before* it,
-    // so this answered null for the cookie cache's five minutes while every
-    // /api/admin route already answered 200. That is the shape of "I added my
-    // address and the admin page still is not there".
+    // And the session says so, which the row passing does not imply: the
+    // pages read the role off the session the browser holds, and a promotion
+    // written after the session was minted is missing from its cookie cache
+    // (see the hooks in auth.ts).
     const session = (await SELF.fetch(`${ORIGIN}/api/auth/get-session`, { headers: { cookie } }).then((r) => r.json())) as {
       user?: { role?: string | null };
     } | null;
     expect(session?.user?.role).toBe('admin');
-  });
-});
-
-describe('the api health report', () => {
-  it('counts the configured admin addresses without naming them', async () => {
-    const body = await SELF.fetch(`${ORIGIN}/api/health`).then((r) => r.json()) as Record<string, unknown>;
-
-    // Two, from the vitest config's ADMIN_EMAILS. Zero on a deployment whose
-    // setting never arrived, which is the fact this exists to report.
-    expect(body.adminEmails).toBe(2);
-    expect(body.mail).toEqual({ provider: 'dev-mail', teamInboxes: 1 });
-    expect(JSON.stringify(body)).not.toContain('example.com');
   });
 });

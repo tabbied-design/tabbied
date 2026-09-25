@@ -229,8 +229,8 @@
   }
 }
 
-/* The two other ways out: the same paths as before, as quieter text actions
-   under the one button the page leads with. */
+/* The two other ways out, as quieter text actions under the one button the
+   page leads with. */
 .alternatives {
   margin: 18px 0 0;
   font: 400 14px / 1.7 var(--s-sans);

@@ -5,14 +5,13 @@ import { hydratePatterns } from 'tabbied';
 import { radius, windowpane } from 'tabbied/patterns';
 
 /**
- * The declarative mounting path, exercised the way a packaged HTML template
- * uses it: plain markup carrying its config in data-* attributes, brought to
- * life by one hydratePatterns() call with no component involved.
+ * The declarative mounting path, as a packaged HTML template uses it: plain
+ * markup carrying its config in data-* attributes, mounted by one
+ * hydratePatterns() call.
  *
- * `root` is scoped to this section on purpose. The page's <TabbiedPattern>
- * placeholders now serialize the same attributes, so an unscoped call would
- * find them too and mount a second controller on top of React's - which is
- * exactly the mistake the `root` option exists to prevent.
+ * `root` is scoped to this section on purpose: the page's <TabbiedPattern>
+ * placeholders carry the same attributes, and an unscoped call would mount a
+ * second controller on top of React's.
  */
 export function HydrateProbe() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -32,7 +31,7 @@ export function HydrateProbe() {
 
   return (
     <div ref={rootRef} style={{ display: 'grid', gap: 16 }}>
-      {/* Hand-written markup - no component, no props. */}
+      {/* Hand-written markup: no component, no props. */}
       <div
         id="hydrate-basic"
         data-pattern="radius"
@@ -42,9 +41,8 @@ export function HydrateProbe() {
         data-cell-size="60"
         style={{ width: '100%', height: 200 }}
       />
-      {/* fit:"fixed" is the one strategy that keeps the authored grid option
-          rather than re-deriving it from the box, so it's what shows that
-          data-options actually reached the controller. */}
+      {/* fit:"fixed" is the one strategy that keeps the authored grid option,
+          so it shows that data-options reached the controller. */}
       <div
         id="hydrate-options"
         data-pattern="radius"

@@ -20,7 +20,6 @@ const WARM = '#B9B4A8';
 
 /* Background first. Each field is a reordering or subset of the six above:
    red leads only where the accent is meant to be read. */
-const FIELD_HERO = [PAPER, RED];
 const FIELD_QUIET = [PALE, INK];
 const FIELD_BAND = [PAPER, WARM, PALE, GRAY];
 const FIELD_STRIP = [PAPER, INK, GRAY, PALE, WARM];

@@ -15,9 +15,8 @@ import { loadEditableCatalog } from '../lib/templateAssets';
 
 // The admin tier: reads over everything, for people whose user row says
 // `role = 'admin'`. Bans and impersonation are better-auth's own endpoints
-// under /api/auth/admin/* and are not repeated here; this is the data those
-// pages show. Every route runs the gate - the pages hiding themselves is
-// cosmetic.
+// under /api/auth/admin/*. Every route runs the gate; the pages hiding
+// themselves is cosmetic.
 
 type AdminUser = { id: string; role?: string | null };
 
@@ -25,9 +24,8 @@ async function requireAdmin(env: Env, headers: Headers): Promise<AdminUser | nul
   // No secret, no admins: see requireUser for why this is not a lookup.
   if (!authConfigured(env)) return null;
 
-  // Past the cookie cache, on purpose: a role revoked a minute ago must not
-  // keep answering here for the cache's remaining minutes. One D1 read per
-  // admin request is the right price for that.
+  // Past the cookie cache, on purpose: a revoked role must not keep answering
+  // here for the cache's remaining minutes.
   const session = await buildAuth(env).api.getSession({
     headers,
     query: { disableCookieCache: true },
@@ -78,8 +76,7 @@ admin.get('/overview', async (c) => {
       .from(aiUsage)
       .where(gte(aiUsage.createdAt, week)),
     // The growth chart: accounts created per UTC day over the last fortnight.
-    // Days with none are absent here and filled in by the page, so the
-    // answer stays small and the chart stays honest about quiet days.
+    // Days with none are absent here and filled in by the page.
     db
       .select({ day: sql<string>`date(${user.createdAt}, 'unixepoch')`, n: sql<number>`count(*)` })
       .from(user)
@@ -116,9 +113,7 @@ const usageQuery = z.object({
   days: z.coerce.number().int().min(1).max(90).default(14),
 });
 
-// A query string that does not parse is the caller's mistake, answered as
-// one. `parse` threw, and a `?limit=abc` came back as a 500 with a needless
-// schema check behind it.
+// A query string that does not parse is the caller's mistake: a 400, not a 500.
 const badQuery = (c: { json: (body: unknown, status: 400) => Response }) =>
   c.json({ error: 'Bad query.' }, 400);
 
@@ -141,7 +136,7 @@ admin.get('/users', async (c) => {
       createdAt: user.createdAt,
       // Qualified by hand: with no join in the outer query drizzle renders
       // `${user.id}` as a bare "id", which inside the subquery resolves to
-      // *site*.id and counts nothing. `${site}` alone is the table name.
+      // site.id (see CLAUDE.md). `${site}` alone is the table name.
       sites: sql<number>`(select count(*) from ${site} where ${site}.user_id = ${user}.id)`,
       generations: sql<number>`(select count(*) from ${generation} where ${generation}.user_id = ${user}.id)`,
       chosen: sql<number>`(select count(*) from ${templateChoice} where ${templateChoice}.user_id = ${user}.id)`,
@@ -211,18 +206,14 @@ admin.get('/users/:id', async (c) => {
 });
 
 // ---- "Request more" --------------------------------------------------------
-// The requests people at their limit sent (lib/templates.ts). A first
-// request is granted by the person following its emailed link and is only
-// listed here; a later one takes the admin's answer. A grant adds its number
-// to the person's allowance while the status says 'granted'; declining, or
-// undoing back to pending, takes it away again.
-// Every decision but an undo mails the person (lib/mail.ts), after the row
-// is written, and a failed send is reported in the answer rather than
-// unwinding the decision.
+// The requests people at their limit sent (lib/templates.ts). A first request
+// is granted by the person following its emailed link, so it is only listed
+// here, on a tab of its own; a later one takes the admin's answer. A grant
+// counts toward the allowance while the status says 'granted'. Every decision
+// but an undo mails the person after the row is written, and a failed send is
+// reported in the answer rather than unwinding the decision.
 
 // The tabs of the Requests page: what each shows, as a WHERE clause.
-// First requests are answered by the person following the emailed link, so
-// they have a tab of their own and no decision; the rest wait for a person.
 const REQUEST_TABS = {
   review: sql`${templateRequest.round} > 1 and ${templateRequest.status} = 'pending'`,
   link: sql`${templateRequest.round} = 1`,
@@ -334,9 +325,8 @@ admin.post('/requests/:id', async (c) => {
       status: decision.status,
       granted,
       total: status.total,
-      // The configured origin, as the sign-up and password mails use, never
-      // the host this request arrived on: a preview alias would otherwise
-      // be what gets mailed out.
+      // The configured origin, never the host this request arrived on (a
+      // preview alias would otherwise be mailed out).
       origin: c.env.PUBLIC_ORIGIN,
     })
       .then(() => true)
@@ -435,9 +425,8 @@ admin.get('/generations/:id', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  // Qualified by hand, as in /users: no join in the outer query, so drizzle
-  // would render both columns bare and the subquery would compare
-  // revision.site_id to revision.id - every count was 0.
+  // Qualified by hand, as in /users: bare columns would compare
+  // revision.site_id to revision.id.
   const sites = await db
     .select({
       id: site.id,
@@ -510,9 +499,8 @@ admin.delete('/uploads/:id', async (c) => {
 
 admin.get('/quotas', (c) =>
   c.json({
-    // Read-only for now: the caps are constants in worker/lib/quota.ts and the
-    // burst windows in the routes. Editing them from here means a `setting`
-    // table and a read on every call; the page says so.
+    // Read-only: the caps are constants in worker/lib/quota.ts and the burst
+    // windows in the routes.
     caps: {
       ...DAILY_CAPS,
       'template-choice': { calls: FREE_TEMPLATES, label: 'templates an account may choose' },

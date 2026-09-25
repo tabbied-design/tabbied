@@ -71,7 +71,7 @@ export const DEFAULT_FIT_MODE: FitMode = 'grid';
 /** How big the element a pattern renders into should be. */
 export type PatternBoxSize = {
   /**
-   * Fill the containing block (`width: 100%; height: 100%`). Default, so an
+   * Fill the containing block (`width: 100%; height: 100%`). Default, so a
    * pattern dropped into a sized parent shows up without extra CSS. An
    * explicit `width`/`height` takes over that axis; `fill: false` opts out of
    * both, leaving the box to a class name or the surrounding layout.
@@ -148,18 +148,14 @@ export function resolveBoxStyle(size: PatternBoxSize = {}): PatternBoxStyle {
   return style;
 }
 
-// "cols × rows" for an arbitrary box at a target cell size, keeping cells
-// near-square. Generalizes deriveGrid() from the five preset aspect ratios to
-// any measured container: respect the pattern's cell-size bounds (px-effect
-// designs need a floor) - though never a cell larger than the box's short
-// edge - then css-doodle's hard 64×64 cap.
+// "cols x rows" for an arbitrary box at a target cell size, keeping cells
+// near-square: respect the pattern's cell-size bounds (px-effect designs need
+// a floor), though never a cell larger than the box's short edge, then
+// css-doodle's hard 64x64 cap.
 //
-// cols and rows are chosen *jointly*: the floor/ceil candidates on each axis
-// are scored by how square the resulting cells are (squareness dominating,
-// closeness to the target size breaking ties). Rounding each axis on its own
-// could pair a rounded-up axis with a rounded-down one, stretching cells up
-// to ~2× at small counts - a 1×1 grid across a 3:2 card turns a square motif
-// into a visibly distorted one.
+// cols and rows are chosen jointly, squareness first and closeness to the
+// target breaking ties. Rounding each axis on its own can pair a rounded-up
+// axis with a rounded-down one and stretch cells up to ~2x at small counts.
 export function deriveGridForBox(
   width: number,
   height: number,
@@ -227,23 +223,18 @@ export function deriveGridForBox(
  * The canvas span that makes every grid track a whole pixel: the smallest
  * multiple of the track count that still covers the box.
  *
- * css-doodle lays its grid out as `repeat(n, 1fr)` (see `get_basic_styles` in
- * the component), so a box that isn't divisible by n puts every cell boundary
- * on a sub-pixel - and the browser draws a hairline seam at each one. Since a
- * fluid container is almost never divisible by its derived track count, the
- * default `fit: "grid"` in a page layout hits this nearly every time.
+ * css-doodle lays its grid out as `repeat(n, 1fr)`, so a box that isn't
+ * divisible by n puts every cell boundary on a sub-pixel, and the browser
+ * draws a hairline seam at each one. A fluid container almost never divides.
  *
  * The cell is snapped to a whole multiple of `cellMultiple`, not merely to a
- * whole pixel. A design that subdivides its cell puts a boundary at
- * `cell / n`, and an indivisible cell lands that boundary on a fraction of a
- * pixel - which seams however exact the outer grid is. Sichtbeton's hero was
- * a clean 8 × 180 across and 3 × 197 down, and 197 halves to 98.5.
- *
- * The default of 2 covers centerd rules and strokes; the three designs that
- * mask with a nested `@doodle` declare their own (see `PatternSizing`).
+ * whole pixel: a design that subdivides its cell puts a boundary at
+ * `cell / n`, which seams if the cell doesn't divide. The default of 2 covers
+ * centered rules and strokes; designs that mask with a finer grid declare
+ * their own (see `PatternSizing`). See docs/grid-snapping.md.
  *
  * The returned span overflows the box by less than two cells, which the host
- * clips. Rounding *down* instead would leave a strip of the container
+ * clips. Rounding down instead would leave a strip of the container
  * uncovered, which is far more visible on a background field.
  */
 export function snapSpanToTracks(
@@ -268,13 +259,12 @@ export function snapSpanToTracks(
  * clips what overflows it (under `cellMultiple` px per track on the axis
  * that decided the cell, plus what squaring added on the other).
  *
- * Square, not merely whole. Well over a hundred designs rotate their cell by
- * a quarter turn (`transform: rotate(@pick(0deg, 90deg, 180deg, 270deg))`),
- * and a quarter turn of an oblong swaps its axes: a 120 x 124 cell paints
- * 124 x 120 once rotated, leaving 2px uncovered top and bottom. That reads as
- * a seam between blocks even though every track is exact. Cobalt Works' coda
- * band was the case that proved it, 12 x 120 across and 2 x 124 down. Both
- * snapped cells are multiples of `cellMultiple`, so the larger is too.
+ * Square, not merely whole. Many designs rotate their cell by a quarter turn
+ * (`transform: rotate(@pick(0deg, 90deg, 180deg, 270deg))`), and a quarter
+ * turn of an oblong swaps its axes: a 120 x 124 cell paints 124 x 120 once
+ * rotated, leaving 2px uncovered top and bottom, which reads as a seam even
+ * though every track is exact. Both snapped cells are multiples of
+ * `cellMultiple`, so the larger is too.
  *
  * `applyGridSnap` runs this on a `grid` fit's host and the `cover` fit on its
  * render box; the editor runs it on its plate, which is why it is exported.
@@ -318,9 +308,8 @@ const DENSITY_REFERENCE_LONG_EDGE = 540;
 /**
  * The density whose cell, on the original 360x540 plate, has the long edge
  * of a "colsxrows" grid; null when the value is not one. Reads a preset's
- * authored default and the old editor's `grid=8x12` links: 6x9 is 0.5,
- * 10x15 is 1, and anything finer clamps to 1. Two decimals, the precision a
- * share link carries.
+ * authored grid default: 6x9 is 0.5, 10x15 is 1, and anything finer clamps
+ * to 1. Two decimals, the precision a share link carries.
  */
 export function densityFromGrid(grid: string): number | null {
   const parsed = parseGridValue(grid);
@@ -387,14 +376,11 @@ export function fitRenderToBox(
 ): { scale: number; translateX: number; translateY: number } {
   let scale = Math.max(hostWidth / render.width, hostHeight / render.height);
 
-  // Land every cell edge on a whole pixel *after* the transform. Snapping the
+  // Land every cell edge on a whole pixel after the transform. Snapping the
   // render box is not enough on its own: a scaled canvas maps exact layout
-  // tracks onto fractional device pixels, and the browser seams there. An
-  // isolated test - same grid, same color in every cell - measured 6 interior
-  // seams both with fractional tracks and with integral ones under a 1.44
-  // scale, and 0 once the scale was quantized so `cell * scale` was a whole
-  // number. The scale rounds up, which only ever crops further - and the box
-  // is filled either way, so the ratio is unaffected.
+  // tracks onto fractional device pixels, and the browser seams there unless
+  // `cell * scale` is whole (measured in docs/grid-snapping.md). The scale
+  // rounds up, which only ever crops further; the box is filled either way.
   if (cellPx && cellPx > 0 && Number.isFinite(scale)) {
     const quantized = Math.ceil(cellPx * scale);
 
@@ -403,9 +389,8 @@ export function fitRenderToBox(
     }
   }
 
-  // The offset has to be whole too - half a pixel of translation puts every
-  // boundary back on a fraction, which is the thing the quantized scale just
-  // bought.
+  // The offset has to be whole too: half a pixel of translation puts every
+  // boundary back on a fraction.
   return {
     scale,
     translateX: Math.round((hostWidth - render.width * scale) / 2),

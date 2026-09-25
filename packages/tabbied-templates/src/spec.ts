@@ -1,13 +1,9 @@
 // The editable-section contract for a Tabbied template site.
 //
-// A template site is a finished, hand-designed page. This spec describes the
-// part of it that is *brand* rather than *layout* - the headline, the
-// photographs, the colors, the pattern fields - so that a person in the
-// editor, a coding agent holding the downloaded zip, and the branding service
-// can all change those things without understanding the page, and without
-// being able to break it.
-//
-// Two halves, deliberately separate:
+// It describes the part of a finished page that is *brand* rather than
+// *layout* (the headline, the photographs, the colors, the pattern fields), so
+// a person in the editor, an agent holding the downloaded zip, and the branding
+// service can change those without understanding the page or breaking it.
 //
 //   TemplateSpec   what may change, and what it currently is. Generated from
 //                  the exported HTML, never hand-written (see
@@ -15,13 +11,10 @@
 //   EditsDocument  what somebody wants changed. Portable, tiny, and the unit
 //                  that gets saved, sent to an agent, or produced by an LLM.
 //
-// The spec's slot ids are the stable names in that exchange, and they exist in
-// the page itself as `data-edit*` attributes - which is what lets the same ids
-// survive a static export, the HTML download package, and the React download
-// package (where they are anchors in the source a person or an agent greps
-// for). That is the same trick `patternConfigToAttributes` already plays for
-// pattern configuration: put the machine-readable form in the markup, and
-// every downstream derivation carries it for free.
+// Slot ids are the stable names in that exchange. They live in the page as
+// `data-edit*` attributes, so they survive the static export and both download
+// packages (in the React one, as anchors a person or an agent greps for): the
+// same trick `patternConfigToAttributes` plays for pattern configuration.
 
 /**
  * Bumped when a change would make an older edits document apply wrongly rather
@@ -60,10 +53,9 @@ export type SlotKind = 'text' | 'image' | 'pattern';
 /**
  * How a text slot's value maps onto markup.
  *
- * `plain` is text content. `emphasis` carries the `{em}...{/em}` convention the
- * template sites already use for an accented span in a headline: the *value*
- * keeps the markers, so editing a headline can keep (or move, or drop) the
- * accent instead of flattening it the first time anybody touches it.
+ * `plain` is text content. `emphasis` carries the `{em}...{/em}` convention for
+ * an accented span in a headline: the *value* keeps the markers, so editing a
+ * headline can keep (or move, or drop) the accent instead of flattening it.
  */
 export type TextFormat = 'plain' | 'emphasis';
 
@@ -105,9 +97,8 @@ export type TextSlot = {
    */
   emphasisClass?: string;
   /**
-   * The tag the accent uses on this page - `em` on the five shared sites,
-   * but `span` wherever a bespoke page's stylesheet targets one (Cobalt Works
-   * styles `.hero h1 span`). Rebuilding the run with the wrong tag drops the
+   * The tag the accent uses on this page, when it is not `em` (a bespoke page
+   * may style `.hero h1 span`). Rebuilding the run with the wrong tag drops the
    * styling silently, so it is read off the markup rather than assumed.
    */
   emphasisTag?: string;
@@ -152,8 +143,8 @@ export type PatternSlotConfig = {
  * Option metadata copied from the catalog at generate time.
  *
  * It is here so this package stays dependency-free and still validates an
- * option against the range it actually has, and so an editing UI can build a
- * control without loading 338 pattern definitions.
+ * option against its real range, and so an editing UI can build a control
+ * without loading the pattern catalog.
  */
 export type PatternOptionSpec = {
   id: string;
@@ -190,8 +181,10 @@ export type Slot = TextSlot | ImageSlot | PatternSlot;
  * `direct` writes `--brand-0...n` and nothing else: the stylesheet consumes the
  * roles as authored. `templateSite` additionally recomputes the derived
  * variables the shared TemplateSite component works in (`--ink`, `--card`,
- * `--soft`, ...), which are functions of the palette rather than members of it -
+ * `--soft`, ...), which are functions of the palette rather than members of it,
  * so a re-color has to recompute them or the page keeps its old contrast.
+ * `vars` writes the page's own property names instead (see
+ * `PaletteSpec.varNames`).
  */
 export type PaletteDerivation = 'direct' | 'templateSite' | 'vars';
 
@@ -207,16 +200,13 @@ export type PaletteSpec = {
    */
   flatSections?: boolean;
   /**
-   * `vars` only: the page's own custom-property names, in role order - so role
+   * `vars` only: the page's own custom-property names, in role order, so role
    * 0 writes `--<varNames[0]>`.
    *
-   * The 52 bespoke template pages already had their color in one place before
-   * any of this existed: each declares `--paper`, `--ink`, `--ochre`... on its
-   * root rule and the stylesheet only ever reads `var(--...)`. Renaming those to
-   * `--brand-N` would have meant a codemod over 52 stylesheets to gain nothing,
-   * so instead the page declares which name each role owns and a re-color
-   * writes those. An inline property beats the class rule that holds the
-   * authored default, so the page keeps working with no edits applied.
+   * A bespoke page declares its colors under its own names (`--paper`,
+   * `--ink`, ...) on its root rule and the stylesheet reads `var(--...)`, so a
+   * re-color writes those names. It writes them inline, which beats the class
+   * rule holding the authored default.
    */
   varNames?: string[];
 };

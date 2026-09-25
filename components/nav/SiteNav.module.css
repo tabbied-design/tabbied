@@ -1,6 +1,5 @@
 /* The masthead. Its colors are tokens on the bar itself, redefined for the
-   dark tone, so the one stylesheet draws both the paper and the ink version
-   and the sections below never reach in. The menus are portaled to <body>,
+   dark tone, so one stylesheet draws both. The menus are portaled to <body>,
    so they take the light treatment in both tones, as the artboards do. */
 
 .nav {
@@ -11,8 +10,7 @@
   --n-avatar-fg: #ffffff;
   --n-pill: oklch(0 0 0 / 0.14);
   --n-pill-hover: oklch(0 0 0 / 0.32);
-  /* The ground a pinned bar needs. The bar is otherwise transparent and
-     takes whatever the page is; pinned, the page scrolls behind it. */
+  /* The ground a pinned bar needs; otherwise the bar is transparent. */
   --n-bg: oklch(1 0 0 / 0.94);
   --n-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
     'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -28,14 +26,10 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   box-sizing: border-box;
-  /* A height, not vertical padding, and it is the artboards' measured bar:
-     62px light, 67px dark, both counting the hairline. Padding plus whatever
-     the right-hand slot happened to be drew a 75px light bar and a 79px dark
-     one - 13px taller than the design everywhere - because the 34px circle,
-     not the lockup, was the tallest thing in the row. Stating the height
-     instead keeps the two tones on their artboards AND keeps the bar from
-     changing height when the session resolves, which is what the circle's
-     own min-height used to be for.
+  /* A stated height, not vertical padding: the artboards' measured bar, 62px
+     light and 67px dark, counting the hairline. Padding let the tallest thing
+     in the row (the circle, not the lockup) set it, 13px too tall, and a
+     stated height also keeps the bar steady when the session resolves.
      `--gallery-bar-h` in SelectPattern.module.css is this light number: the
      library's rail is fixed below the bar, so the two have to agree. */
   min-height: 62px;
@@ -53,18 +47,16 @@
   --n-avatar-fg: #0e0e13;
   --n-pill: oklch(1 0 0 / 0.22);
   --n-pill-hover: oklch(1 0 0 / 0.5);
-  /* The dark shell's own ground (#0e0e13), at the same opacity. Written as
-     rgb so it is exactly that color: the shell declares it as a hex, and an
-     oklch conversion of it is a value nobody can check by reading. */
+  /* The dark shell's own ground (#0e0e13), at the same opacity. rgb, not
+     oklch, so it can be checked against the shell's hex by reading. */
   --n-bg: rgb(14 14 19 / 0.94);
 
   min-height: 67px;
 }
 
-/* The library scrolls under its bar, so the bar has to stay legible over it.
-   The same treatment is what every route gets on a phone (see the narrow
-   block at the foot of this file), so the ground is a tone token rather than
-   white: one declaration, both tones. */
+/* The library scrolls under its bar, so the bar needs a ground. Every route
+   gets the same on a phone (see Narrow below), so the ground is a tone token
+   rather than white. */
 .sticky {
   position: sticky;
   top: 0;
@@ -81,8 +73,7 @@
 }
 
 /* The legacy `a:hover { color: var(--pink) }` in globals.css outranks a bare
-   class, and the mark and wordmark are currentColor: the lockup went pink on
-   hover in every masthead. */
+   class, and the lockup is currentColor, so it would turn pink on hover. */
 .logo:hover,
 .logo:focus-visible {
   color: var(--n-fg);
@@ -112,10 +103,9 @@
   color: var(--n-fg);
 }
 
-/* The right-hand slot holds either the sign-in link or the person. It keeps
-   the pill's height as a floor so the slot itself does not collapse, but
-   the bar's own height is what holds the row steady across a session
-   resolving - see the note on .nav. */
+/* The sign-in link or the person. The pill's height is a floor so the slot
+   does not collapse; the bar's stated height (see .nav) holds the row
+   steady as the session resolves. */
 .end {
   display: flex;
   gap: 12px;
@@ -257,10 +247,9 @@
   z-index: 70;
 }
 
-/* Portaled to <body>, so the tokens on .nav are out of reach here: a `font:`
-   naming an undeclared property is invalid as a whole and every longhand
-   falls back to the body's (1.2rem, line-height 1.7). The face is redeclared
-   on the popup, as the other portaled menus on the site do. */
+/* Portaled to <body>, so the tokens on .nav are out of reach: a `font:`
+   naming an undeclared property is invalid as a whole and falls back to the
+   body's. The face is redeclared on the popup. */
 .menu {
   --n-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
     'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -323,11 +312,10 @@
 /* ---- Narrow ---- */
 
 @media (max-width: 767.98px) {
-  /* Pinned on a phone, on every route. The destinations live behind this bar
-     at these widths - folded into its menu - so a bar that scrolls away
-     takes the site's navigation with it. `position` is set here rather than
-     by the `sticky` flag because the flag is one page's choice and this is
-     the width's. */
+  /* Pinned on a phone, on every route: the destinations are folded into
+     this bar's menu, so a bar that scrolled away would take the site's
+     navigation with it. Set here, not by the `sticky` flag, which is one
+     page's choice. */
   .nav,
   .nav[data-tone='dark'] {
     position: sticky;

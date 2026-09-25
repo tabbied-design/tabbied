@@ -7,7 +7,7 @@ import { galleryThumbnails } from './galleryThumbnails';
 import styles from './SelectPattern.module.css';
 
 // css-doodle registers a browser custom element on import, so the renderer can
-// only run on the client. The square frame is rendered here (outside the lazy
+// only run on the client. The frame is rendered here (outside the lazy
 // boundary) so the card reserves its space and nothing shifts when the doodle
 // mounts.
 const GalleryDoodleInner = dynamic(() => import('./GalleryDoodleInner'), {
@@ -48,13 +48,11 @@ export default function GalleryDoodle({
 }) {
   const frameRef = useRef<HTMLDivElement>(null);
 
-  // The gallery holds 100+ live doodles; rendering all of them at once chokes
-  // the main thread. Each card mounts its doodle only once it approaches the
-  // viewport, and then stays mounted, so the initial work is bounded by the
-  // viewport rather than by the size of the gallery. The observer has one
-  // thing to report and disconnects once it has: the reseed ticks are gated
-  // by the pattern controller's own viewport observer (createPattern.ts), so
-  // a second gate here only re-rendered the card on every crossing.
+  // Each card mounts its doodle only once it approaches the viewport, and then
+  // stays mounted, so the initial work is bounded by the viewport rather than
+  // by the size of the gallery. The observer disconnects after its one report:
+  // reseed ticks are gated by the pattern controller's own viewport observer
+  // (createPattern.ts), and a second gate here would only re-render the card.
   const [hasApproached, setHasApproached] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -81,13 +79,10 @@ export default function GalleryDoodle({
   }, []);
 
   // The design's background color (color0) drives the loading shimmer's tone and
-  // the transparent-background checkerboard. The card name now sits below the
-  // tile (not overlaid), so no title-legibility gradient is needed.
+  // the transparent-background checkerboard.
   const background =
     palette?.[0] ?? galleryThumbnails[item.slug]?.palette?.[0] ?? item.palette[0];
 
-  // Transparent-background previews sit on a checkerboard, the usual "this is
-  // transparent" affordance.
   const transparent = background === 'transparent';
 
   return (
@@ -106,9 +101,8 @@ export default function GalleryDoodle({
           onReady={() => setReady(true)}
         />
       )}
-      {/* Loading shimmer in the pattern's own background color, shown (and
-          server-rendered, so it animates before any JS runs) until the doodle
-          first paints, then faded out. */}
+      {/* Server-rendered, so it animates before any JS runs; faded out once
+          the doodle first paints. */}
       <div
         className={[
           styles.thumbShimmer,

@@ -1,9 +1,9 @@
 // tabbied-templates - the editable-section contract for Tabbied template
 // sites, and the engine that applies an edit.
 //
-// Framework-free and dependency-free by contract, because it runs in three
-// places: the browser (the site builder's live preview and its client-side
-// export), Node (the build-time generator and its gate), and a test.
+// Framework-free and dependency-free by contract, because it runs in the
+// browser (the live preview and the client-side export), in Node (the
+// build-time generator and its gate), and in the Worker.
 //
 // See docs/editable-templates.md for the whole picture.
 

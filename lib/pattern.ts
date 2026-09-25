@@ -1,6 +1,5 @@
-// Site-side accessors over the `tabbied` package's generated pattern presets.
-// The JSON files live in packages/tabbied/patterns/ (the package's codegen
-// turns them into a typed module), so the site no longer reads from disk.
+// Site-side accessors over the `tabbied` package's generated pattern presets
+// (packages/tabbied/patterns/, compiled into a typed module by codegen).
 import {
   patterns,
   isPatternSlug,
@@ -13,8 +12,7 @@ export type { PatternOption } from 'tabbied';
 export type Pattern = PatternDefinition;
 
 // Card metadata for the gallery pages. The thumbnails render through
-// <TabbiedPattern pattern={slug}>, which pulls the option/code data from the
-// package on the client, so the server props stay small.
+// <TabbiedPattern pattern={slug}>, so the server props stay small.
 export type GalleryItem = {
   slug: PatternSlug;
   name: string;
@@ -23,8 +21,7 @@ export type GalleryItem = {
   colors?: PatternDefinition['colors'];
 };
 
-// The accessors stay async so callers (App Router pages) keep their existing
-// await-based shape, even though the data now resolves in-memory.
+// Async only for the pages' await-based shape; the data is in memory.
 export async function getAllPatternIds(): Promise<string[]> {
   return Object.keys(patterns);
 }
@@ -37,8 +34,7 @@ export async function getPattern(patternId: string): Promise<Pattern> {
   return patterns[patternId];
 }
 
-// Gallery list derived from the pattern presets, so a new preset only needs a
-// JSON file in packages/tabbied/patterns/.
+// Sorted by galleryOrder, then name.
 export async function getGalleryItems(): Promise<GalleryItem[]> {
   return (Object.keys(patterns) as PatternSlug[])
     .map((slug) => {

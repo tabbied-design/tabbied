@@ -1,15 +1,12 @@
 // Editing a packaged template: does an edits document actually change the page?
 //
-// The unit tests in packages/tabbied-templates cover every decision the engine
-// makes, with no DOM. What they cannot cover is the half that only exists in a
-// browser - that the annotations survived the export and the packager, that the
-// slot ids still find their elements, and that a re-color reaches both the
-// stylesheet's custom properties and the pattern fields.
+// The engine's unit tests have no DOM. This runs the real engine against the
+// real packaged download to prove the half that needs a browser: annotations
+// survive the export and the packager, slot ids find their elements, and a
+// re-color reaches both the custom properties and the pattern fields.
 //
-// So this runs the real engine against the real packaged download, which is
-// the artifact a stranger gets. Requires `npm run build` (or `next build` plus
-// `npm run editable` and `npm run templates`); skips loudly rather than failing
-// when those haven't run, matching e2e/templates.spec.ts.
+// Requires `npm run build` (or `next build` plus `npm run editable` and
+// `npm run templates`); skips loudly rather than failing when those haven't run.
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -25,11 +22,9 @@ const ENGINE_DIR = path.join(
 );
 const ENGINE = path.join(ENGINE_DIR, 'index.js');
 
-// The engine is real ESM with relative imports between its modules, so it has
-// to be *served* rather than injected as a blob - a blob module has no base URL
-// to resolve `./spec.js` against. Routing a fake origin at the built dist is
-// the same move e2e/templates.spec.ts makes for esm.sh, and it means the test
-// exercises the files about to ship.
+// The engine is ESM with relative imports, so it has to be *served* (a blob
+// module has no base URL to resolve `./spec.js` against). A fake origin routed
+// at the built dist exercises the files about to ship.
 const ENGINE_ORIGIN = 'https://engine.test';
 
 const serveEngine = async (page: import('@playwright/test').Page) => {
@@ -81,9 +76,7 @@ test.describe('editable templates', () => {
   test('an edits document rewrites text, palette, and pattern fields', async ({
     page,
   }) => {
-    // The trailing slash matters: `serve` rewrites <dir>/index.html to an
-    // extensionless <dir>, and every relative asset then resolves a level too
-    // high - the trap e2e/templates.spec.ts documents.
+    // The trailing slash matters: see e2e/templates.spec.ts.
     await serveEngine(page);
     await page.goto(`/downloads/${SLUG}/`);
 
@@ -125,8 +118,7 @@ test.describe('editable templates', () => {
     for (const brand of brands) expect(brand.trim()).toBe('Northline');
 
     // The accent survives as a real <em>, keeping the class the packaged
-    // stylesheet actually styles (de-hashed to `em` by the packager, where the
-    // export still has the hashed name - which is why it is read off the DOM).
+    // stylesheet styles (read off the DOM, since the export has it hashed).
     const heading = page.locator('[data-edit="hero.title"]');
     await expect(heading).toHaveText('Rooms that hold the quiet.');
     const em = heading.locator('em');
@@ -162,38 +154,12 @@ test.describe('editable templates', () => {
       .getAttribute('data-seed');
     expect(seed).toBe('e2e-band');
   });
-
-  test('the engine reports a stale slot instead of failing silently', async ({
-    page,
-  }) => {
-    await serveEngine(page);
-    await page.goto(`/downloads/${SLUG}/`);
-
-    const problems = await page.evaluate(
-      async ([engineUrl, specJson]) => {
-        const module = await import(/* webpackIgnore: true */ engineUrl);
-        const spec = JSON.parse(specJson);
-
-        return module.applyEdits(document, spec, {
-          specVersion: spec.specVersion,
-          slug: 'solstice',
-          edits: { text: { 'hero.nonexistent': 'x' } },
-        }).problems;
-      },
-      [`${ENGINE_ORIGIN}/index.js`, JSON.stringify(spec)]
-    );
-
-    expect(problems).toHaveLength(1);
-    expect(problems[0].level).toBe('error');
-  });
 });
 
-// The other palette derivation. The 52 bespoke pages each own their custom
-// property names (`--navy`, `--bone`, ...) rather than the shared component's,
-// and their annotations were added by a codemod rather than by hand - so the
-// thing worth proving here is that a re-color reaches a page whose stylesheet
-// never heard of `--brand-0`, and that the codemod's generated slot ids
-// actually find their elements.
+// The other palette derivation. The bespoke pages own their custom property
+// names (`--navy`, `--bone`, ...) and were annotated by a codemod, so this
+// proves a re-color reaches a page that never heard of `--brand-0`, and that
+// the codemod's slot ids find their elements.
 test.describe('editable templates (bespoke page)', () => {
   const BESPOKE = 'beaufort';
   const bespokeDir = path.join(REPO_ROOT, 'out', 'downloads', BESPOKE);

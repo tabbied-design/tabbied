@@ -57,26 +57,22 @@ import {
 // started on, with a revision history from the first document on. It starts
 // one of two ways:
 //
-// - From a direction Studio generated: the full document - every text slot on
-//   the template rewritten for the business. The directions call picks three
-//   from a scored dozen and writes three strings each; this is the second,
-//   dearer stage, and it is behind a click for that reason.
+// - From a direction Studio generated: the full document, every text slot on
+//   the template rewritten for the business. This is the second, dearer stage
+//   after the directions call, and it is behind a click for that reason.
 // - Straight from the template gallery, with nothing written for the
-//   business: the customizer's colors and patterns are the whole of what
-//   changes, and the site is made on the first Save with that document as
-//   revision 1. No model is called, so no daily cap applies; the burst
-//   limiter still does.
+//   business: the site is made on the first Save with the customizer's
+//   document as revision 1. No model is called, so no daily cap applies; the
+//   burst limiter still does.
 //
-// Nothing here reaches the 52 unannotated pages any differently from the five
-// annotated ones: the document is keyed by slot id, and every template has
-// those.
+// The document is keyed by slot id, so this reaches every template alike.
 
 const BURST = {
   make: { max: 3, windowSeconds: 60 },
   image: { max: 4, windowSeconds: 60 },
   revise: { max: 6, windowSeconds: 60 },
-  // A manual save calls no model, so it needs no daily cap, but it appends a
-  // row each time and had no gate at all: the one unlimited write path.
+  // A manual save calls no model, so it has no daily cap, but it appends a
+  // row each time.
   save: { max: 30, windowSeconds: 60 },
 };
 
@@ -95,10 +91,9 @@ const ESTIMATED_TOKENS = { prompt: 8_000, completion: 4_000 };
 
 // Bounded throughout: the planner treats a value over a slot's budget as a
 // warning, not an error, so without these a megabyte of text under a real
-// slot id was stored verbatim. The bounds are generous against anything the
-// customizer writes; a color is a hex string, a design slug is short (the
-// planner, not the schema, refuses one the catalog lacks, with its reason),
-// an option key is an identifier.
+// slot id would be stored verbatim. The bounds are generous against anything
+// the customizer writes (the planner, not the schema, refuses a design slug
+// the catalog lacks, with its reason).
 const slotId = z.string().min(1).max(120);
 const color = z.string().max(32);
 const editsDocumentSchema = z.object({
@@ -126,10 +121,9 @@ const editsDocumentSchema = z.object({
   }),
 });
 
-// A direction to make, or a template to start from. A template site is
-// made on its first Save, not on the visit (the customizer holds the draft
-// until then), so it arrives with the document to store as revision 1 and
-// whatever name the person gave it; a bare {slug} is still revision 1 empty.
+// A direction to make, or a template to start from. A template site arrives
+// on its first Save with the document to store as revision 1 and whatever
+// name the person gave it; a bare {slug} makes an empty revision 1.
 const requestSchema = z.union([
   z.object({
     generationId: z.string().min(8).max(64),
@@ -316,12 +310,9 @@ sites.post('/', async (c) => {
   const db = drizzle(c.env.DB, { schema });
 
   // ---- from the gallery ---------------------------------------------------
-  // Nothing is written for the business; the person starts from the template
-  // as it is and changes its colors and patterns. The customizer calls this
-  // on the first Save, with the document it has been holding: opening
-  // Customize and leaving writes nothing, where it used to leave a copy of
-  // the template in the account for every visit. Not idempotent: each Save
-  // of a new draft is a new site.
+  // The customizer calls this on the first Save, with the document it has
+  // been holding, so opening Customize and leaving writes nothing. Not
+  // idempotent: each Save of a new draft is a new site.
   if ('slug' in parsed.data) {
     const { slug, title } = parsed.data;
     const entry = await templateEntry(c.env, c.req.raw, slug);
@@ -349,9 +340,8 @@ sites.post('/', async (c) => {
       return c.json(refused.body, refused.status);
     }
 
-    // Saving a customized copy makes the template one of the person's, the
-    // same claim a first download makes (lib/templates.ts). A template
-    // already theirs is free to save again, as another site.
+    // Saving makes the template one of the person's, the same claim a first
+    // download makes (lib/templates.ts). One already theirs saves freely.
     const claim = await claimTemplate(db, userId, slug);
 
     if (!claim.ok) {
@@ -363,10 +353,9 @@ sites.post('/', async (c) => {
     const id = newId();
     const now = new Date();
 
-    // One batch, so a site cannot exist without its first revision. And a
-    // claim this request made is given back if the write fails, as the
-    // download route gives back a claim whose zip was a miss: a D1 error
-    // here would otherwise spend one of the five on a site never saved.
+    // One batch, so a site cannot exist without its first revision. A claim
+    // this request made is given back if the write fails, so a D1 error does
+    // not spend one of the five on a site never saved.
     try {
       await db.batch([
         db.insert(site).values({
@@ -419,10 +408,9 @@ sites.post('/', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  // Reading a generation is a capability; spending money against one is not
-  // (the same line direction-image draws). A site made from somebody else's
-  // generation would also hang off their row: `site.generation_id` cascades,
-  // so their account deletion would take the site with it.
+  // Reading a generation is a capability; spending money against one is not.
+  // A site made from somebody else's generation would also be deleted with
+  // their account, since `site.generation_id` cascades.
   if (row.userId !== userId) {
     return c.json({ error: 'Not yours to make. Generate your own directions first.' }, 403);
   }
@@ -635,8 +623,7 @@ sites.get('/', async (c) => {
     .limit(100);
 
   // The swatches a row shows are the colors the site wears now, so the
-  // latest document is read for each - a site whose palette was changed and
-  // saved should not list under the template's own.
+  // latest document is read for each.
   const [index, latest] = await Promise.all([
     loadStudioIndex(c.env, c.req.raw),
     latestEditsFor(
@@ -686,10 +673,8 @@ sites.get('/:id', async (c) => {
     return c.json({ error: 'Not found' }, 404);
   }
 
-  // Four independent reads, one round trip: the revision count, the
-  // template's index entry, the packaged page's hash (a missing package is
-  // drift too - the template was retired) and the viewer. Reads are by
-  // capability; whether the reader may *write* is a session question,
+  // A missing package counts as drift too (the template was retired). Reads
+  // are by capability; whether the reader may write is a session question,
   // answered here so the workspace knows to show its editor.
   const [[{ count }], entry, currentHash, viewer] = await Promise.all([
     db
@@ -772,9 +757,7 @@ sites.patch('/:id', async (c) => {
 
 /**
  * Delete a site, its owner only: the row, every revision (they cascade), and
- * the pictures Studio generated for it, which R2 does not cascade and which
- * nothing could reach once the site is gone. There was no way to do this at
- * all, so a site made by accident stayed in the account for good.
+ * the pictures Studio generated for it, which R2 does not cascade.
  */
 sites.delete('/:id', async (c) => {
   const userId = await requireUser(c.env, c.req.raw.headers);
@@ -982,9 +965,9 @@ async function refuseDocument(
     return { body: { error: 'That document is for a different template.' }, status: 400 };
   }
 
-  // An image src may only point at this site's own media or the template's
-  // own files: the document is applied into a page, and a src is a fetch.
-  // "This site's", not any site's: the prefix used to stop at gen/site/.
+  // An image src may only point at this site's own media (not any site's) or
+  // the template's own files: the document is applied into a page, and a src
+  // is a fetch.
   const ownMedia = siteId ? `/api/media/gen/site/${siteId}/` : null;
   const foreign = Object.values(edits.edits.images ?? {}).find(
     (image) => !((ownMedia && image.src.startsWith(ownMedia)) || TEMPLATE_FILE.test(image.src))
@@ -1143,14 +1126,13 @@ const reviseRequestSchema = z.object({
 
 /**
  * "Make the headline warmer." A revision by request: the model sees the page
- * as it currently reads - the person's document, not the template's - and
+ * as it currently reads (the person's document, not the template's) and
  * answers with a diff, which is merged, planned and stored as the next
  * revision with the request beside it.
  *
- * Continuity is used when it is there: the latest AI revision's turn is
- * quoted as `previous_response_id`, so the call carries the request alone
- * against a context that still holds the page. An upstream that stored
- * nothing gets the whole page restated, which costs more and changes nothing.
+ * The latest AI revision's turn is quoted as `previous_response_id` when
+ * there is one, so the call carries the request alone; otherwise the whole
+ * page is restated.
  */
 sites.post('/:id/revise', async (c) => {
   const userId = await requireUser(c.env, c.req.raw.headers);
@@ -1222,10 +1204,9 @@ sites.post('/:id/revise', async (c) => {
   let repairNote = '';
   let next: EditsDocument | null = null;
   let note = '';
-  // A stored turn the upstream no longer holds (retention ran out, or the
-  // upstream pruned it) is a cache miss, not a failure: the call is made
-  // again with the page restated, and that restatement gets its own repair
-  // turn. Continuity is an optimization and never a dependency.
+  // A stored turn the upstream no longer holds is a cache miss, not a
+  // failure: the call is made again with the page restated, and that
+  // restatement gets its own repair turn.
   let restated = false;
 
   for (let attempt = 0; attempt < (restated ? 3 : 2) && !next; attempt++) {

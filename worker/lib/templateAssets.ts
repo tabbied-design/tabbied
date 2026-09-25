@@ -1,17 +1,12 @@
 import type { TemplateSpec } from 'tabbied-templates';
 import type { Env } from '../env';
 
-// The template artifacts, read through the assets binding.
-//
-// Same doctrine as the catalog and the studio index: the Worker describes and
-// authors against exactly the bytes this deployment serves, so a template
-// re-packaged in this commit cannot be missing from, or disagree with, what
-// the model is handed. The specs and pages are read fresh each time: there
-// are 77 slugs each read rarely. What is memoized is the page's hash (and the
-// design catalog below), for the same reason the catalog is: an isolate lives
-// inside one deployment, so a value that changes only with a deploy cannot go
-// stale within it - and a site read by link re-hashed a whole packaged page
-// on every visit.
+// The template artifacts, read through the assets binding, so the Worker
+// authors against exactly the bytes this deployment serves. Specs and pages
+// are read fresh (many slugs, each read rarely). The page hashes and the
+// design catalog are memoized: an isolate lives inside one deployment, so a
+// value that changes only with a deploy cannot go stale within it. A memoized
+// promise is dropped on failure, so a transient miss does not stick.
 
 type CatalogEntry = { slug: string; name?: string; copyRoles?: string[] };
 type EditableCatalog = { templates: CatalogEntry[] };
@@ -21,17 +16,11 @@ type DesignCatalog = { designs: { slug: string }[] };
 const MAX_HOPS = 3;
 
 /**
- * Read one asset, the way a browser would.
- *
- * The binding applies the same `html_handling` the edge does, and under the
- * default (`auto-trailing-slash`) a request for `/dir/index.html` is not
- * served: it is answered with a 307 to `/dir/`. workerd follows that on a
- * request made from a URL string, which is why reading the packaged page by
- * file name worked; but a reader that throws on anything but a 200 was one
- * runtime detail away from a 500 on every "Make this one". So callers ask
- * for the URL the router serves outright (see `loadPackagedHtml`), and a
- * same-origin redirect handed back anyway is followed here, a bounded
- * number of times.
+ * Read one asset, the way a browser would. The binding applies the edge's
+ * `html_handling`, which answers `/dir/index.html` with a 307 to `/dir/`, so
+ * callers ask for the URL the router serves outright (see `loadPackagedHtml`)
+ * and a same-origin redirect handed back anyway is followed, a bounded number
+ * of times.
  */
 async function readAsset(env: Env, request: Request, path: string): Promise<Response> {
   let url = new URL(path, request.url);
@@ -66,11 +55,7 @@ export async function loadEditableCatalog(env: Env, request: Request): Promise<E
   return (await readAsset(env, request, '/editable-catalog.json')).json() as Promise<EditableCatalog>;
 }
 
-// The design catalog is the one asset here that is memoized, the way the
-// studio index is: it is read on every save that swaps a pattern, and it
-// changes only with a deploy, which is a new isolate. Cached as the promise
-// so concurrent first reads share one fetch, and dropped on failure so a
-// transient miss does not poison the isolate for its lifetime.
+// Read on every save that swaps a pattern.
 let designsPromise: Promise<ReadonlySet<string>> | null = null;
 
 /**
@@ -105,9 +90,8 @@ export async function loadTemplateSpec(env: Env, request: Request, slug: string)
 /**
  * The packaged page, `out/downloads/<slug>/index.html`: the artifact previewed
  * and shipped. Asked for as `/downloads/<slug>/`, the URL the asset router
- * serves it under, which is also what the browser-side preview fetches
- * (`packagedTemplateUrl` in lib/studioPreview.ts). Asking for `index.html`
- * by name gets a redirect instead of the bytes; see `readAsset`.
+ * serves it under (as `packagedTemplateUrl` in lib/studioPreview.ts does);
+ * see `readAsset`.
  */
 export async function loadPackagedHtml(env: Env, request: Request, slug: string): Promise<string> {
   return (await readAsset(env, request, `/downloads/${slug}/`)).text();
@@ -125,8 +109,7 @@ const hashPromises = new Map<string, Promise<string>>();
 /**
  * The packaged page's hash, once per slug per isolate. Written into
  * `site.templateHash` when a site is made and compared to it on every read,
- * so a re-packaged template is announced rather than discovered. A miss is
- * dropped so a transient failure does not stick for the isolate's life.
+ * so a re-packaged template is announced rather than discovered.
  */
 export function hashPackagedHtml(env: Env, request: Request, slug: string): Promise<string> {
   let promise = hashPromises.get(slug);

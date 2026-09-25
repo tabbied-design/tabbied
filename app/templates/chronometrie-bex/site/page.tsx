@@ -10,7 +10,6 @@ export const metadata = {
 };
 
 const BONE = '#EDEDEB';
-const INK = '#0E0E0E';
 const STEEL = '#9C9C98';
 const PALE = '#DAD9D5';
 const SHADOW = '#3A3A38';

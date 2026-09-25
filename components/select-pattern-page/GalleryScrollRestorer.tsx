@@ -12,15 +12,16 @@ import {
 // gallery so it only tracks scrolling while the gallery is mounted.
 export default function GalleryScrollRestorer() {
   useEffect(() => {
-    // Restore only when arming flag is set (i.e. arrived via "Back to
-    // gallery"); a fresh visit still starts at the top.
+    // Restore only when armed (arrived via "Back to gallery"); a fresh visit
+    // starts at the top.
     try {
       if (sessionStorage.getItem(GALLERY_SCROLL_RESTORE)) {
         sessionStorage.removeItem(GALLERY_SCROLL_RESTORE);
         const y = Number(sessionStorage.getItem(GALLERY_SCROLL_Y) ?? '0');
         if (y > 0) {
-          // The grid is fixed-aspect-ratio, so the document is already its full
-          // height on mount; a frame's wait keeps the scroll out of layout.
+          // The cards' heights are fixed row spans, so the document is already
+          // its full height on mount; a frame's wait keeps the scroll out of
+          // layout.
           requestAnimationFrame(() => window.scrollTo(0, y));
         }
       }
@@ -34,11 +35,10 @@ export default function GalleryScrollRestorer() {
       ticking = true;
       requestAnimationFrame(() => {
         try {
-          // Once a card has been clicked the next scroll is the router's own
+          // Once a card has been clicked, the next scroll is the router's own
           // scroll to the top of the editor, which can land while this is
-          // still mounted and record 0 over the position worth coming back
-          // to. The card sets the marker before navigating; the editor
-          // consumes it on mount.
+          // still mounted and record 0. The card sets the marker before
+          // navigating; the editor consumes it on mount.
           if (!sessionStorage.getItem(GALLERY_NAVIGATION)) {
             sessionStorage.setItem(GALLERY_SCROLL_Y, String(window.scrollY));
           }

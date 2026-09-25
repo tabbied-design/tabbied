@@ -1,15 +1,11 @@
 // L. Intersect - one shape cut by another, and only what they agree on left.
 //
-// `mask-composite: intersect` takes a list of mask layers and keeps the part
-// every layer covers. It is the one CSS operator that makes genuinely new
-// shapes out of old ones: two stripe fields crossed leave a lattice of blocks,
-// two sectors aimed at each other leave the diamond where they meet.
-//
-// The converter nests one <mask> inside the next, which is the correct
-// reading, so what comes out is exactly what CSS composited.
+// `mask-composite: intersect` keeps the part every mask layer covers: two
+// stripe fields crossed leave a lattice of blocks, two sectors aimed at each
+// other the diamond where they meet. The converter nests one <mask> inside
+// the next, which composites exactly as CSS did.
 import {
   section,
-  A,
   F,
   TR,
   cp,

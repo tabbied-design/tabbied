@@ -7,11 +7,10 @@ import type { LibraryPalette } from 'lib/paletteLibrary';
 import styles from './GalleryMobileHeader.module.css';
 
 /**
- * Mobile gallery chrome, under the shared masthead: the search, or the
- * embedded browser when "All" is tapped. The palette chip shelf itself is
- * rendered by SelectPattern just below this - as a direct child of the
- * scrolling page - so it can stay pinned with `position: sticky` across the
- * whole grid scroll.
+ * Mobile gallery chrome, under the shared masthead: the search, and the
+ * embedded browser when "All" is tapped. The palette chip shelf is rendered by
+ * SelectPattern, as a direct child of the scrolling page, so it can stay
+ * pinned across the whole grid scroll.
  */
 export default function GalleryMobileHeader({
   search,

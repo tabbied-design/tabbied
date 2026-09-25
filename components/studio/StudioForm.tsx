@@ -7,16 +7,11 @@ import { apiFetch, ApiError, apiUrl } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
 import styles from './StudioForm.module.css';
 
-// Three ways out of this form, and the page leads with one.
-//
-// "Generate websites" is the one the title promises - three directions to
-// choose between, each a complete site. It costs money and therefore needs an
-// account. "Make my website" skips the choosing (the model picks and writes the
-// one it would lead with); "Match from the library" is the shipped, free,
-// offline path - a pure function of the text, available to everybody. The two
-// are kept as quieter actions under the button rather than dropped: they are
-// real paths with real users, and the difference between them is honest on its
-// face.
+// Three ways out of this form, and the page leads with one. "Generate
+// websites" is three directions to choose between, each a complete site; it
+// costs money and so needs an account, as does "Make my website", which skips
+// the choosing. "Match from the library" is the free path, a pure function of
+// the text, available to everybody.
 const MAX_LENGTH = 600;
 
 /** Short enough to be a slip rather than a description. */
@@ -39,7 +34,7 @@ type Photo = {
   note: string;
   /** Why the API would refuse it, decided here; a problem photo is never sent. */
   problem: string | null;
-  /** Already in the person's library - a retry after a later failure skips it. */
+  /** Already in the person's library; a retry after a later failure skips it. */
   uploaded: boolean;
 };
 
@@ -107,9 +102,8 @@ export default function StudioForm({ templateCount }: { templateCount: number })
   const drop = (event: DragEvent) => {
     event.preventDefault();
     setOver(false);
-    // The same gate the click has: the photos go to the person's library, so
-    // dropped signed out they were kept in memory until Generate sent the
-    // person to sign in and lost them on the way.
+    // The same gate the click has: the photos go to the person's library, and
+    // a drop kept while signed out would be lost on the way to sign in.
     if (!user && !sessionPending) {
       signInFirst();
       return;
@@ -150,8 +144,7 @@ export default function StudioForm({ templateCount }: { templateCount: number })
 
   /**
    * The two paid paths. `directions` is three sites to choose between;
-   * `make` is one request, one site - the model picks the direction it
-   * would lead with and writes every word of it.
+   * `make` is one site, the direction the model would lead with.
    */
   async function generate(kind: 'directions' | 'make') {
     if (!user) {
@@ -355,7 +348,6 @@ export default function StudioForm({ templateCount }: { templateCount: number })
       </p>
 
       <p className={styles.note}>
-        {/* Says plainly what each path does and what it costs you. */}
         All three draw on the {templateCount} template sites in the library.{' '}
         <strong>Generate websites</strong> shows you three directions to choose
         from. <strong>Make my website</strong> has a model pick the best fit and

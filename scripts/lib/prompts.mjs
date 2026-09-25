@@ -28,7 +28,7 @@ export function loadPromptData(file) {
 }
 
 /** prompt -> set -> project -> meta.defaults */
-export function resolvePrompt(prompt, data) {
+function resolvePrompt(prompt, data) {
   const project = data.projects[prompt.project];
   if (!project) throw new Error(`prompt "${prompt.id}": unknown project "${prompt.project}"`);
   const set = prompt.set ? data.sets?.[prompt.set] : undefined;
@@ -60,7 +60,7 @@ export function resolvePrompt(prompt, data) {
 const period = (s) => (/[.!?]$/.test(s.trim()) ? s.trim() : `${s.trim()}.`);
 
 /** The exact text sent to the model. Keep any UI copy of this byte-identical. */
-export function buildPrompt(r) {
+function buildPrompt(r) {
   const article = /^[aeiou]/i.test(r.style) ? "An" : "A";
   const sentences = [`${article} ${r.style} of ${r.subject}.`];
   for (const s of r.sentences) sentences.push(period(s));
@@ -83,11 +83,6 @@ export function buildPrompt(r) {
   return `${head}\n\n${header}\n${lines.join("\n")}`;
 }
 
-/** The slug the site actually serves: the cut-out when there is one. */
-export function servedSlug(resolved) {
-  return resolved.cutout ? `${resolved.id}${CUTOUT_SUFFIX}` : resolved.id;
-}
-
 /** Resolved prompts matching the usual CLI filters. */
 export function selectPrompts(data, { only = null, project = null, slot = null, cutout = null } = {}) {
   let list = data.prompts;
@@ -95,7 +90,7 @@ export function selectPrompts(data, { only = null, project = null, slot = null, 
   if (project) list = list.filter((p) => p.project === project);
   const resolved = list.map((p) => resolvePrompt(p, data));
   const filtered = resolved
-    .filter((r) => (slot ? r.slot === slot : true))
-    .filter((r) => (cutout === null ? true : r.cutout === cutout));
+    .filter((r) => !slot || r.slot === slot)
+    .filter((r) => cutout === null || r.cutout === cutout);
   return filtered.map((r) => ({ ...r, prompt: buildPrompt(r) }));
 }

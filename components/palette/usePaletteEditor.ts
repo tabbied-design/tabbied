@@ -78,7 +78,7 @@ const copyDraftFromLibrary = (palette: LibraryPalette): PaletteDraft => ({
 // The draft resolved for the live page preview: a transparent background paints
 // as an actual `transparent` fill, and any mid-edit invalid hex falls back to a
 // neutral so the recolored patterns always get a paintable color.
-export const resolveDraftColors = (draft: PaletteDraft): string[] =>
+const resolveDraftColors = (draft: PaletteDraft): string[] =>
   draft.colors.map((color, index) =>
     index === 0 && draft.transparent
       ? 'transparent'
@@ -88,11 +88,10 @@ export const resolveDraftColors = (draft: PaletteDraft): string[] =>
   );
 
 /**
- * Shared new/edit-palette editor state, used by both the gallery bar and the
- * individual pattern page. Owns the draft, its mutations, and the debounced
- * live-preview broadcast (B1) so the page's own patterns recolor as the palette
- * is edited. `onSaved` lets each host react to a saved palette (e.g. mark it
- * active, or apply it to the open pattern).
+ * New/edit-palette editor state, shared by the gallery and the pattern page.
+ * Owns the draft, its mutations, and the debounced live-preview broadcast so
+ * the page's own patterns recolor as the palette is edited. `onSaved` lets
+ * each host react to a saved palette (mark it active, apply it).
  */
 export function usePaletteEditor({
   onSaved,

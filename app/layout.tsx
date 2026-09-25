@@ -37,11 +37,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* proxima-nova (Adobe Fonts). Linked here instead of an @import in
-            globals.css so the browser discovers it from the HTML right away
-            (an @import is only found after the CSS bundle downloads), and
-            preconnected so the font files skip connection setup. React hoists
-            both links into <head>; stylesheets need `precedence` for that. */}
+        {/* proxima-nova (Adobe Fonts), linked rather than @imported from
+            globals.css so the browser finds it in the HTML, and preconnected.
+            React hoists both links into <head>; a stylesheet needs
+            `precedence` for that. */}
         <link
           rel="preconnect"
           href="https://use.typekit.net"

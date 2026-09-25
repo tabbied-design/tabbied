@@ -1,52 +1,34 @@
-// Batch 11 - 55 designs that export as native SVG with no caveat at all.
+// Batch 11 - designs that export as native SVG with no caveat at all: no
+// warning dialog, no filter effects for a design tool to mangle, and no
+// sub-pixel deviation from what is on screen. That rules out a lot of CSS:
+// pattern-defs-11/shared.mjs lists what and why and holds the helpers;
+// docs/svg-export.md is the export contract itself.
 //
-// The earlier batches were organized around a motif: batch 9 asked what
-// happens when the canvas is the unit rather than the cell, batch 10 built
-// drawings larger than the cell they start in. This one is organized around a
-// *format*. Native SVG export shipped with three tiers - four designs it
-// cannot represent, eighteen it exports with a caveat the user has to be shown
-// first, and the rest clean - and this batch is 55 more of the clean tier.
-// Every design here downloads as a true vector file with no warning dialog, no
-// filter effects for a design tool to mangle, and no sub-pixel deviation from
-// what is on screen.
+// The families, in the order they ship:
 //
-// That is a real constraint, not a label. Ruled out: box-shadow, blur, blend
-// modes (all export as SVG filters), smooth conic sweeps and
-// repeating-conic-gradient (no SVG primitive), nested @doodle() images and
-// @svg() payloads (documented sub-pixel deviations), and borders on
-// partially-rounded boxes (the converter throws). What is left - solid fills,
-// radii, clip paths, every linear and radial gradient, masks including
-// mask-composite: intersect, hard-stop conic sectors, transforms, opacity,
-// z-index - is the vocabulary of the whole batch. See
-// pattern-defs-11/shared.mjs for the reasoning and the helpers, and
-// docs/svg-export.md for the export contract itself.
+//   A. Split       one straight cut across the cell; two inks meet.
+//   B. Rule        stripe fields - pitch, duty, angle.
+//   C. Sector      hard-stop conic pies.
+//   D. Annulus     radial hard stops: rings and bands.
+//   E. Chamfer     polygons that cut corners, notches and steps.
+//   F. Lobe        border-radius forms.
+//   H. Bar         placed bars rather than repeating fields.
+//   I. Wedge       triangles.
+//   J. Speck       dot fields and halftones.
+//   K. Overlap     two shapes crossing, read through opacity.
+//   L. Intersect   mask-composite: intersect - one shape cut by another.
+//   M. Fade        smooth linear ramps, used as masks.
 //
-// The twelve families, in the order they ship:
+// (G, N, O and P were authored and cut; the letters skip them rather than
+// renumber designs that already have their gallery order.)
 //
-//   A. Split       one straight cut across the cell; two inks meet.        (6)
-//   B. Rule        stripe fields - pitch, duty, angle.                     (3)
-//   C. Sector      hard-stop conic pies.                                   (2)
-//   D. Annulus     radial hard stops: rings and bands.                     (4)
-//   E. Chamfer     polygons that cut corners, notches and steps.          (14)
-//   F. Lobe        border-radius forms.                                    (2)
-//   H. Bar         placed bars rather than repeating fields.               (2)
-//   I. Wedge       triangles.                                              (2)
-//   J. Speck       dot fields and halftones.                               (7)
-//   K. Overlap     two shapes crossing, read through opacity.              (1)
-//   L. Intersect   mask-composite: intersect - one shape cut by another.   (3)
-//   M. Fade        smooth linear ramps, used as masks.                     (9)
-//
-// (The letters are the families the batch was drawn from; G, N, O and P were
-// authored and cut, so the sequence skips them rather than renumbering
-// designs that already have their gallery order.)
-//
-// House rules, inherited from every earlier batch and enforced by
-// generate-batch11.mjs and validate-batch11.mjs: exactly one
-// @random(${shapeFrequency}) gate per design; every design samples a
-// transition-able ink per cell so a reseed morphs; a randomized custom prop
-// read more than once goes through @var(--x); nothing paints var(--color0),
-// because a hole knocked out in the background color stops being a hole the
-// moment the background is transparent.
+// House rules, enforced by generate-batch11.mjs (via pattern-lints.mjs) and
+// validate-batch11.mjs: exactly one @random(${shapeFrequency}) gate per
+// design; every design samples a transition-able ink per cell so a reseed
+// morphs; a randomized custom prop read more than once goes through
+// @var(--x); nothing paints var(--color0), because a hole knocked out in the
+// background color stops being a hole the moment the background is
+// transparent.
 import { RESERVED, TAKEN } from './pattern-defs-11/shared.mjs';
 import { sectionA } from './pattern-defs-11/a-split.mjs';
 import { sectionB } from './pattern-defs-11/b-rule.mjs';
@@ -76,7 +58,7 @@ const SECTIONS = [
   sectionM,
 ];
 
-// Batch 11 owns gallery orders 1200+; batch 10 stops at 1112.
+// Batch 11 owns gallery orders 1200-1399 (see generate-batch11.mjs).
 const FIRST_ORDER = 1200;
 
 let order = FIRST_ORDER;
@@ -88,9 +70,8 @@ for (const { title, all } of SECTIONS) {
     if (RESERVED.has(def.slug)) {
       throw new Error(`${def.slug}: slug is a JS reserved word`);
     }
-    // A name should never come to mean two different things - TAKEN carries
-    // every motif name used anywhere in the project, including designs cut
-    // before they shipped.
+    // A name should never come to mean two different things: TAKEN carries
+    // every motif name used anywhere in the project, cut designs included.
     if (TAKEN.has(def.slug)) {
       throw new Error(`${def.slug} (${title}): name already used elsewhere`);
     }

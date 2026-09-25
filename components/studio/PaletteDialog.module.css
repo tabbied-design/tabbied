@@ -11,9 +11,8 @@
 
 /* Portaled to <body>, so Studio's tokens on the page are not in scope; the
    five this dialog reads are declared again here, as the customizer's menu
-   does. Without them every `font:` here was invalid as a whole, and the Save
-   button's `background-color: var(--s-ink)` under `color: #fff` painted white
-   text and a white check on the white popup. */
+   does, or every `font:` and `background-color:` naming one is invalid as a
+   whole (the Save button turns white on white). */
 .popup {
   --s-ink: #0e0e13;
   --s-muted: oklch(0.4 0.01 260);

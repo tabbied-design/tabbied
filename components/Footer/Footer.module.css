@@ -29,11 +29,8 @@
   margin-top: 0.5rem;
 }
 
-/*
- * Product Hunt badge. The badge has a fixed natural size (238x49); cap the
- * width to its column so it never overflows on narrow screens and let the
- * aspect ratio scale the height.
- */
+/* Product Hunt badge: natural size 238x49, capped to its column on narrow
+   screens. */
 .productHuntBadge {
   display: inline-block;
   width: 238px;

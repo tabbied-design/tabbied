@@ -4,12 +4,10 @@ import app from '../index';
 import type { Env } from '../env';
 import { ORIGIN, json, signIn } from './helpers';
 
-// The sites route's model branch, which the stub upstream cannot reach: it
-// answers every /responses call with a *directions* payload, so a local run
-// of "Make this one" always lands on the fallback and the branch that writes
-// a full document had only ever run in production. Here the upstream is faked
-// at the fetch boundary with an answer shaped by the schema the route sent,
-// which is what a compliant upstream does.
+// The sites route's model branch, which the stub upstream cannot reach (it
+// answers every /responses call with a directions payload). Here the upstream
+// is faked at the fetch boundary with an answer shaped by the schema the route
+// sent, which is what a compliant upstream does.
 
 
 type SiteSchema = { properties: { text: { required: string[] } } };

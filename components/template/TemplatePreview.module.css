@@ -1,14 +1,12 @@
 /* The template preview: a dark bar over the page framed on Studio's paper.
-   The bar is dark so the chrome reads apart from whatever the template is -
-   most of them open on a pale ground, and a white bar over a white page
-   left nothing between the site and the site it was showing. The iframe
-   shows the live /templates/<slug>/site/ route, which is the page the packager
-   derives the download from; nothing in this file reaches it. */
+   The bar is dark so the chrome reads apart from whatever the template is,
+   since most of them open on a pale ground. The iframe shows the live
+   /templates/<slug>/site/ route; nothing in this file reaches it. */
 
 /* The tokens are declared on the page and again on the two popups, because
    the popups are portaled to <body>: outside the page they would read none
    of these, and a `font:` or `background-color:` naming one is then invalid
-   as a whole, which is how the sign-in card lost its dark pill. */
+   as a whole. */
 .page,
 .menu,
 .signCard {
@@ -43,8 +41,7 @@
   align-items: center;
   justify-content: space-between;
   /* One height whatever it holds (see CustomizerBar.module.css): the framed
-     page below sizes itself against 71px, and padding round the account pill
-     made the bar 79px signed in, which scrolled the flush-bottomed frame. */
+     page below sizes itself against 71px. */
   box-sizing: border-box;
   min-height: 71px;
   padding: 0 40px;
@@ -121,7 +118,7 @@
 
 .menu {
   /* A fixed width, not a range: at 210px the tracked-out eyebrow wraps onto a
-     second line, which is what made this menu read as a different control. */
+     second line. */
   width: 300px;
   padding: 7px;
   font-family: var(--s-sans);

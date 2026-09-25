@@ -1,17 +1,13 @@
-// The Tabbied toolset: four thin wrappers over catalog.json, plus whatever the
-// host adds (the stdio server adds `render_design`).
+// The Tabbied toolset: four thin wrappers over catalog.json, the template tools
+// (templates.ts), and whatever the host adds (the stdio server adds
+// `render_design`).
 //
-// Nothing here touches node or the Worker runtime - the host injects the two
-// things that differ (preview bytes, docs text) via ToolContext. That is what
-// lets the same definitions serve both transports, so a design an agent finds
-// over HTTP is described identically to one it finds over stdio.
+// Nothing here touches node or the Worker runtime; the host injects what
+// differs via ToolContext, so both transports describe a design identically.
 //
-// The point of the whole toolset is design *selection*. Slugs are opaque
-// ("cleat", "karst"), so an agent that cannot query the metadata either guesses
-// a slug that does not exist or gives up; and metadata alone is not enough
-// either, because these are pictures. So: search narrows on closed-vocabulary
-// enums, then preview_design puts the shortlist in front of the model's eyes
-// before it commits.
+// The point is design *selection*. Slugs are opaque ("cleat", "karst") and
+// these are pictures, so search narrows on closed-vocabulary enums, then
+// preview_design puts the shortlist in front of the model before it commits.
 import { templateTools } from './templates.js';
 import type {
   Catalog,
@@ -27,10 +23,9 @@ const SEARCH_LIMIT_DEFAULT = 20;
 const SEARCH_LIMIT_MAX = 50;
 const PREVIEW_MAX_SLUGS = 6;
 
-// Previews run from 5 KB to 444 KB (median 35 KB), and base64 adds a third. Six
-// of the largest would be ~3.5 MB of context spent on images the agent did not
-// ask to be that big, so the batch stops early and says so rather than
-// silently truncating the list.
+// Previews reach a few hundred KB and base64 adds a third, so six large ones
+// would spend megabytes of context. The batch stops early and says so rather
+// than silently truncating the list.
 const PREVIEW_BYTE_BUDGET = 1_500_000;
 
 // ---- helpers ---------------------------------------------------------------
@@ -84,7 +79,7 @@ function findDesign(catalog: Catalog, slug: unknown): CatalogDesign | null {
   return catalog.designs.find((design) => design.slug === slug) ?? null;
 }
 
-/** The same "did you mean" list the CLI would give: slugs sharing a prefix. */
+/** Near misses for an unknown slug: a shared three-letter prefix, or a name match. */
 function suggestSlugs(catalog: Catalog, slug: string): string[] {
   const needle = slug.toLowerCase();
   return catalog.designs
@@ -150,8 +145,8 @@ function searchTool(catalog: Catalog): Tool {
           type: 'boolean',
           description:
             'Restrict to designs that can (true) or cannot (false) be exported ' +
-            'as true vector SVG. A handful paint smooth conic sweeps that SVG ' +
-            'cannot represent.',
+            'as true vector SVG. Some use CSS (smooth conic sweeps, double or ' +
+            'dashed borders, 3D transforms) that SVG cannot represent faithfully.',
         },
         limit: {
           type: 'integer',
@@ -204,9 +199,8 @@ function searchTool(catalog: Catalog): Tool {
 
       const hits = catalog.designs.filter(matches);
 
-      // An empty result is the failure mode worth designing for: the agent has
-      // no way to tell an over-narrow AND from a vocabulary it guessed wrong.
-      // Report how each filter would do on its own so the next call is informed.
+      // From an empty result an agent can't tell an over-narrow AND from a
+      // wrongly guessed vocabulary, so report how each filter does on its own.
       if (hits.length === 0) {
         const alone = (label: string, predicate: (d: CatalogDesign) => boolean) => ({
           filter: label,
@@ -470,12 +464,9 @@ function docsTool(context: ToolContext): Tool | null {
 // ---- assembly --------------------------------------------------------------
 
 /**
- * The catalog-backed tools available in every runtime.
- *
- * The template tools join them here rather than in a separate assembly so a
- * host opts in by supplying their fetchers, exactly as it already does for
- * previews and docs - one context, and the tool list follows from what the
- * host can actually resolve.
+ * The catalog-backed tools available in every runtime, template tools
+ * included. A host opts into a tool by supplying its fetcher in the one
+ * context, so the tool list follows from what the host can resolve.
  */
 export function catalogTools(context: ToolContext): Tool[] {
   return [
@@ -494,10 +485,9 @@ export type Toolset = {
 };
 
 /**
- * Bundle tools into the lookup the protocol layer talks to. Handler throws are
- * converted to `isError` results rather than JSON-RPC errors: the spec reserves
- * protocol errors for malformed requests, and asks that execution failures go
- * back to the model so it can retry with better arguments.
+ * Bundle tools into a name lookup. Handler throws become `isError` results
+ * rather than JSON-RPC errors: the spec reserves protocol errors for malformed
+ * requests and sends execution failures back to the model to retry.
  */
 export function createToolset(tools: Tool[]): Toolset {
   const byName = new Map(tools.map((tool) => [tool.definition.name, tool]));

@@ -9,13 +9,10 @@ import type { Env } from './env';
 import { isDev } from './env';
 import { sendMail } from './lib/mail';
 
-// better-auth over D1, built per request.
-//
-// It is a factory for the same reason `buildServer` is one on the MCP side:
-// a Worker isolate is shared across requests and across *environments* during
-// local dev, so capturing bindings in a module-scope singleton is a bug that
-// only shows up under concurrency. Construction is cheap - no I/O - and the
-// expensive part (session lookup) is a KV read, not a rebuild.
+// better-auth over D1, built per request. It is a factory for the same reason
+// `buildServer` is on the MCP side: an isolate is shared across requests, so a
+// module-scope singleton capturing bindings breaks under concurrency.
+// Construction does no I/O.
 
 function socialProviders(env: Env) {
   const providers: Record<string, { clientId: string; clientSecret: string }> = {};
@@ -57,11 +54,9 @@ export function configuredProviders(env: Env): string[] {
 
 /**
  * The addresses named in ADMIN_EMAILS, lower-cased, in the order given. Empty
- * or unset means nobody is an admin by configuration. Exported so `/api/health`
- * can report *how many* there are: a deploy that has the setting and a deploy
- * that silently lost it are otherwise indistinguishable from outside, which is
- * the whole diagnosis of "I added my address and I still am not an admin". The
- * addresses themselves are never reported.
+ * or unset means nobody is an admin by configuration. `/api/health` reports
+ * how many (never the addresses), which is how a deploy that silently lost
+ * the setting is told apart from one that has it.
  */
 export function configuredAdmins(env: Env): string[] {
   return (env.ADMIN_EMAILS ?? '')
@@ -70,23 +65,16 @@ export function configuredAdmins(env: Env): string[] {
     .filter((entry) => entry.length > 0);
 }
 
-/** Is this address in ADMIN_EMAILS? Empty or unset means nobody is. */
-export function isConfiguredAdmin(env: Env, email: string): boolean {
+function isConfiguredAdmin(env: Env, email: string): boolean {
   return configuredAdmins(env).includes(email.trim().toLowerCase());
 }
 
 /**
  * The one statement behind admins-by-configuration: give the role to the row
  * `where` names, if that row is named in ADMIN_EMAILS and does not have it
- * yet. Both call sites below pass a different `where` - the address a sign-in
- * arrived with, or the id a new session belongs to - and neither restates the
- * rule, so a promotion cannot mean one thing on one path and another on the
- * next.
- *
- * It is one UPDATE rather than a read and a write, which makes it atomic and
- * idempotent: it runs on every sign-in by a configured address and writes
- * nothing once the role is there. better-auth stores addresses lower-cased,
- * but the comparison says `lower()` anyway rather than trust that.
+ * yet. Both call sites use it, so the rule has one implementation. One UPDATE
+ * rather than a read and a write keeps it atomic and idempotent. better-auth
+ * stores addresses lower-cased, but the comparison says `lower()` anyway.
  */
 async function grantConfiguredAdmin(
   env: Env,
@@ -105,9 +93,9 @@ async function grantConfiguredAdmin(
       and(
         where,
         inArray(sql`lower(${schema.user.email})`, named),
-        // `role <> 'admin'` alone is NULL for the NULL role that every account
-        // predating the admin plugin's migration carries - i.e. exactly the
-        // accounts this exists to promote - so it would match none of them.
+        // `role <> 'admin'` alone is NULL for the NULL role every account
+        // predating the admin plugin's migration carries, so it would match
+        // none of the accounts this exists to promote.
         sql`(${schema.user.role} is null or ${schema.user.role} <> 'admin')`
       )
     );
@@ -117,38 +105,25 @@ export function buildAuth(env: Env) {
   const db = drizzle(env.DB, { schema });
 
   return betterAuth({
-    // Missing in dev is survivable (the account is throwaway); missing in
-    // production would silently sign cookies with a constant, so it throws
-    // there via the same check the routes make before mounting.
+    // Unset only in dev: every caller checks first (`authConfigured`, or the
+    // 503 on /api/auth/*), since better-auth would otherwise sign cookies with
+    // a well-known default.
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.PUBLIC_ORIGIN,
     basePath: '/api/auth',
 
-    // Roles, bans and impersonation. The first admin is granted by hand
-    // (`npm run admin:grant -- you@example.com`); after that /admin/users does
-    // it. Every /api/admin/* route reads the role server-side - the pages
-    // hiding themselves is cosmetic.
+    // Roles, bans and impersonation. Every /api/admin/* route reads the role
+    // server-side; the pages hiding themselves is cosmetic.
     plugins: [admin()],
 
-    // Admins by configuration, promoted *before* the session is minted.
-    //
-    // `ADMIN_EMAILS` names accounts that get the role without anyone running
-    // the grant script, and there are two moments to catch: the account being
-    // created, and an account that predates the setting signing in. The first
-    // is a database hook below. The second has to run here, in front of the
-    // endpoint, and not in a `session.create` hook, because of what the role
-    // is read from afterwards.
-    //
-    // `signInEmail` reads the user row, creates the session, and only then
-    // calls `setSessionCookie(ctx, { session, user })` with the row it read
-    // *first*. With `cookieCache` on, that row is what the browser is handed
-    // and what `getSession` answers from for the cache's lifetime - so a
-    // promotion written from `session.create.after` lands in D1 and is absent
-    // from the very session it was triggered by. The nav drew no Admin link
-    // and /admin rendered "Not found" for five minutes after doing everything
-    // right, which is indistinguishable from the setting not working at all.
-    // Promoting here means the row the endpoint goes on to read already says
-    // admin. `worker/test/admin.test.ts` pins the session, not just the row.
+    // Admins by configuration, promoted before the session is minted. A new
+    // account is caught by the user hook below; an existing one signing in
+    // has to be caught here, in front of the endpoint, not in a
+    // `session.create` hook: `signInEmail` reads the user row, creates the
+    // session, then sets the cookie from the row it read first, and with
+    // `cookieCache` on that row is what `getSession` answers from. A role
+    // written after the fact is missing from the very session that triggered
+    // it. `worker/test/admin.test.ts` pins the session, not just the row.
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
         // Only the one endpoint, and only when there is something to do: this
@@ -175,11 +150,10 @@ export function buildAuth(env: Env) {
       session: {
         create: {
           after: async (created) => {
-            // The catch-all, for a session minted by any path the hook above
-            // does not see: a social callback, where the address is not known
-            // until the provider answers, or the auto-sign-in on a
-            // verification link. Those pay the cookie cache's few minutes
-            // before the role shows in the session; nothing goes unpromoted.
+            // The catch-all, for a session minted by a path the hook above
+            // does not see (a social callback, the auto-sign-in on a
+            // verification link). Those wait out the cookie cache before the
+            // role shows in the session; nothing goes unpromoted.
             await grantConfiguredAdmin(env, db, eq(schema.user.id, created.userId));
           },
         },
@@ -189,27 +163,22 @@ export function buildAuth(env: Env) {
     database: drizzleAdapter(db, { provider: 'sqlite', schema }),
 
     session: {
-      // A signed, short-lived copy of the session in the cookie itself, so the
-      // common case - an authenticated request - costs no database read at
-      // all. Five minutes is the upstream default and the right trade here:
-      // revoking a session takes at most that long to be felt, and the
-      // endpoints that spend money re-check nothing more sensitive than
-      // identity.
+      // A signed, short-lived copy of the session in the cookie, so an
+      // authenticated request costs no database read. Five minutes (the
+      // upstream default) is how long a revocation can take to be felt.
       cookieCache: { enabled: true, maxAge: 5 * 60 },
     },
 
     rateLimit: {
-      // The default is an in-memory map, which is per-isolate - a distributed
-      // brute force against the credential endpoints would be counted as a
-      // handful of unrelated attempts. D1 is shared, so it is one count.
+      // The default is an in-memory map per isolate, which counts a
+      // distributed brute force as unrelated attempts. D1 is one shared count.
       storage: 'database',
     },
 
     emailAndPassword: {
       enabled: true,
-      // The account exists but cannot sign in until the link is followed. The
-      // AI endpoints check the session, so this is also the first gate on
-      // spending money for a throwaway address.
+      // The account cannot sign in until the link is followed, which is also
+      // the first gate on a throwaway address spending AI budget.
       requireEmailVerification: true,
       sendResetPassword: async ({ user, url }) => {
         await sendMail(env, {
@@ -222,9 +191,8 @@ export function buildAuth(env: Env) {
     },
 
     user: {
-      // Deleting an account is the person's to do; with no verification mail
-      // configured better-auth asks for the password instead, which is the
-      // right friction for the only irreversible thing on the settings page.
+      // With no verification mail configured better-auth asks for the password
+      // instead, which is the right friction for an irreversible action.
       deleteUser: { enabled: true },
     },
     emailVerification: {
@@ -243,31 +211,22 @@ export function buildAuth(env: Env) {
     socialProviders: socialProviders(env),
 
     advanced: {
-      // The site and the API are the same origin in production, so the cookie
-      // needs no cross-site relaxation. In dev they are :3000 and :8787, which
-      // is cross-*port* - same-site by the cookie spec - so only Secure has to
-      // give way for plain http.
+      // Same origin in production. In dev :3000 and :8787 are cross-port,
+      // which is same-site by the cookie spec, so only Secure gives way for
+      // plain http.
       useSecureCookies: !isDev(env),
     },
 
-    // Two origins beside PUBLIC_ORIGIN, and nothing else: the origin check
-    // otherwise falls back to baseURL, which is the whole point of being
-    // same-origin.
+    // Beside PUBLIC_ORIGIN (the baseURL fallback), two kinds of origin:
     //
-    // In dev, any loopback origin rather than a list of ports. The site runs
-    // on :3000 while the Worker runs on :8787, `npm run preview` picks its
-    // own, and a test harness picks another again - a hardcoded pair silently
-    // rejects every one it does not name, as "Invalid origin", which reads
-    // like a bug in the form rather than a missing entry here.
+    // In dev, any loopback origin rather than a list of ports: the site, the
+    // Worker, `npm run preview` and a test harness each pick their own, and a
+    // hardcoded list rejects the rest as "Invalid origin".
     //
-    // On a preview deployment, the deployment's own origin. Workers Builds
-    // gives every branch and every version a *.workers.dev host, so a sign-in
-    // there arrives from that host and not from PUBLIC_ORIGIN, and answered
-    // "Invalid origin" on every preview. The host is trusted only for a
-    // request that is same-origin with it (the Origin header naming the very
-    // host the request arrived on), so nothing is gained by naming a
-    // workers.dev origin from anywhere else; the cookie a preview issues is
-    // host-only, so it never reaches production.
+    // On a preview deployment, its own *.workers.dev origin, so sign-in works
+    // on every branch's host. It is trusted only when same-origin with the
+    // host the request arrived on, and a preview's cookie is host-only, so it
+    // never reaches production.
     trustedOrigins: (request) => {
       if (!request) {
         return [];
@@ -292,10 +251,10 @@ export function buildAuth(env: Env) {
 
 /**
  * A preview deployment's own origin: a *.workers.dev host that is also the
- * host this request arrived on. Same-origin is the whole test, since a
- * request from any other page carries that page's origin, not this host's.
+ * host this request arrived on. A request from any other page carries that
+ * page's origin, not this host's.
  */
-export function isPreviewOrigin(origin: string, request: Request): boolean {
+function isPreviewOrigin(origin: string, request: Request): boolean {
   try {
     const { hostname } = new URL(origin);
 

@@ -1,11 +1,10 @@
 // Reading a spec back out of exported markup.
 //
-// The scanner is the part most likely to be quietly wrong - HTML has several
-// shapes that defeat a regex, and the failure mode is a slot that silently
-// isn't there. These fixtures are the shapes the real export actually
+// The scanner is the part most likely to be quietly wrong, and the failure is a
+// slot that silently isn't there. The fixtures are shapes the real export
 // contains: a headline with an accent span, a figure wrapping an image, a
-// pattern placeholder inside a positioned box, and a page full of scripts and
-// comments around all of it.
+// pattern placeholder inside a positioned box, and scripts and comments around
+// all of it.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -14,10 +13,8 @@ import {
   scanElements,
   parseAttributes,
   labelFromId,
-  parsePaletteRoles,
   parseBrandColors,
   htmlToTextValue,
-  stripCacheBuster,
 } from '../dist/index.js';
 
 const designOptions = (slug) =>
@@ -230,14 +227,8 @@ test('the small helpers behave', () => {
     b: '',
     c: '2',
   });
-  assert.deepEqual(parsePaletteRoles('transparent, 1, 3'), [
-    'transparent',
-    1,
-    3,
-  ]);
   assert.equal(labelFromId('hero.title'), 'Hero title');
   assert.equal(labelFromId('band.ctaLabel'), 'Band cta Label');
-  assert.equal(stripCacheBuster('/a.webp?v=abc123'), '/a.webp');
   assert.equal(htmlToTextValue('a <em>b</em> c'), 'a {em}b{/em} c');
 });
 
@@ -256,32 +247,9 @@ test('a gap in the brand roles stops the palette rather than compacting it', () 
 
 // ---- accents that are not <em> --------------------------------------------
 //
-// The 52 bespoke pages predate the {em} convention and each accents with
-// whichever tag its stylesheet targets. Cobalt Works styles `.hero h1 span`,
-// so reading its headline as though the accent were an <em> loses the accent
-// and rebuilding it as one loses the color. Both halves take the tag now.
-
-test('htmlToTextValue marks up the page\'s own accent tag', () => {
-  const html = 'Color is a<br/><span class="x">material</span> before<br/>it is an effect.';
-
-  assert.equal(
-    htmlToTextValue(html, 'span'),
-    'Color is a {em}material{/em} before it is an effect.'
-  );
-});
-
-test('htmlToTextValue still defaults to em', () => {
-  assert.equal(
-    htmlToTextValue('Evenings that <em>wind down</em>.'),
-    'Evenings that {em}wind down{/em}.'
-  );
-});
-
-test('a <br> becomes a space, not nothing', () => {
-  // JSX leaves no whitespace either side of a break, so dropping the tag
-  // outright ran "before" and "it" together into "beforeit".
-  assert.equal(htmlToTextValue('before<br/>it'), 'before it');
-});
+// A bespoke page accents with whichever tag its stylesheet targets (e.g.
+// `.hero h1 span`). Reading it as an <em> loses the accent and rebuilding it
+// as one loses the color, so both halves take the tag.
 
 test('accentTagOf reads the tag off the markup, and skips <br>', async () => {
   const { accentTagOf } = await import('../dist/index.js');
@@ -307,5 +275,7 @@ test('an emphasis slot carries the tag it was read with', () => {
   assert.equal(slot.format, 'emphasis');
   assert.equal(slot.emphasisTag, 'span');
   assert.equal(slot.emphasisClass, 'hashed');
+  // The <br> reads back as a space, not nothing: JSX leaves no whitespace
+  // either side of a break.
   assert.equal(slot.value, 'Color is a {em}material{/em} before');
 });

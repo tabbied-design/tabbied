@@ -6,13 +6,10 @@
 //
 //   * it is the *ordered* batch, so with the frequency gate forced fully open
 //     a reseed must leave every geometric property (position, size, angle,
-//     clip, radius) exactly as it was and change only the inks - the
-//     machine-checkable form of "the pattern is predictable, only the
-//     colorway is redrawn";
+//     clip, radius) exactly as it was and change only the inks;
 //   * it is *background-independent*, so re-rendering with the background
-//     slot set to a zero-alpha color must produce byte-identical cells. A
-//     design that knocked its holes out with var(--color0) would quietly
-//     fill them in here.
+//     slot at zero alpha must produce byte-identical cells, which a design
+//     that knocked its holes out with var(--color0) fails.
 //
 // Contact sheets land in /tmp/sheet-b6-*.png - the transparent pass is shot
 // over a checkerboard so real holes are visible as see-through.

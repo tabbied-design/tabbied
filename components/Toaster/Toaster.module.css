@@ -1,6 +1,5 @@
-/* Bottom-center toast stack: where the 2026 designs put it, over the editor's
-   stage and the customizer's canvas alike, so a confirmation lands in the
-   same place whatever page asked for it. */
+/* Bottom-center toast stack, so a confirmation lands in the same place
+   whatever page asked for it. */
 .viewport {
   position: fixed;
   bottom: 2rem;
@@ -25,7 +24,7 @@
   background: #232529;
   color: #ffffff;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
-  /* Base UI drives enter/leave via data attributes + these vars. */
+  /* Base UI drives enter/leave via the data attributes below. */
   transition: transform 260ms ease, opacity 260ms ease;
 }
 

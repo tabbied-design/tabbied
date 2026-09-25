@@ -1,9 +1,9 @@
 // Where the stdio server gets its catalog, previews, and docs.
 //
 // The catalog is read from the installed `tabbied` package rather than fetched,
-// so the tools describe exactly the version the caller will `npm install` - an
-// agent told about a design that only exists on the site would write an import
-// that doesn't resolve. The network is the fallback, not the default.
+// so the tools describe exactly the version the caller will `npm install`: a
+// design that only exists on the site would give an import that doesn't
+// resolve. The network is the fallback, not the default.
 import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -17,7 +17,7 @@ import type {
 
 const require = createRequire(import.meta.url);
 
-export const SITE = 'https://tabbied.com';
+const SITE = 'https://tabbied.com';
 
 /** Root of the installed `tabbied` package, or null when it isn't resolvable. */
 export function tabbiedRoot(): string | null {
@@ -59,9 +59,8 @@ export async function loadCatalog(): Promise<Catalog> {
 }
 
 /**
- * Preview bytes for one design. These are the committed @2x renders the site
- * serves, so what the agent sees is the same image a human browsing the gallery
- * sees - not a fresh render that might differ.
+ * Preview bytes for one design: the committed @2x renders the site serves, so
+ * the agent sees the same image a human browsing the gallery does.
  */
 export async function fetchPreview(
   design: CatalogDesign
@@ -78,9 +77,8 @@ export async function fetchPreview(
 }
 
 /**
- * The full reference. The package ships its own copy as llms.txt (the tarball
- * gets the *full* text under that name - in node_modules, depth beats brevity),
- * so this works offline too.
+ * The full reference. The package's own llms.txt is the *full* text (in
+ * node_modules depth beats brevity), so this works offline too.
  */
 export async function fetchDocs(): Promise<string> {
   const root = tabbiedRoot();
@@ -100,12 +98,9 @@ export async function fetchDocs(): Promise<string> {
 }
 
 /**
- * The editable-template index and one site's spec.
- *
- * These come from the network with no local fallback, and that is not an
- * oversight: they are *site* artifacts, generated from the static export
- * (docs/editable-templates.md), and the `tabbied` package does not contain
- * them. There is nothing local to prefer.
+ * The editable-template index and one site's spec. Network only, deliberately:
+ * they are *site* artifacts generated from the static export
+ * (docs/editable-templates.md), and the `tabbied` package does not contain them.
  */
 export async function fetchTemplateCatalog(): Promise<TemplateCatalog> {
   const response = await fetch(`${SITE}/editable-catalog.json`);

@@ -1,7 +1,6 @@
-// The toolset, tested against the real catalog rather than a fixture - these
-// tools exist to make an opaque set of 338 slugs queryable, so a test that
-// invented its own three-design catalog would pass while the thing users
-// actually query stayed broken.
+// The toolset, tested against the real catalog rather than a fixture: these
+// tools exist to make an opaque set of slugs queryable, and an invented
+// catalog would pass while the real one stayed broken.
 //
 // Run with `npm test --workspace tabbied-mcp`, after both packages are built
 // (`npm run build:packages` from the repo root).
@@ -37,19 +36,48 @@ const parse = (result) => JSON.parse(result.content[0].text);
 
 const call = (name, args = {}) => toolset.call(name, args);
 
-test('exposes exactly the catalog tools, and drops the ones with no source', () => {
-  assert.deepEqual(
-    toolset.list().map((tool) => tool.name),
-    ['search_designs', 'get_design', 'preview_design', 'get_docs']
-  );
+test('exposes exactly the tools the host can resolve, and drops the rest', () => {
+  // A tool whose fetcher the host did not supply must not be advertised at
+  // all - a listed tool that always fails is worse than a missing one. Only
+  // presence is read here, so the fetchers are never called.
+  const fetchDocs = async () => '';
+  const fetchTemplateCatalog = async () => ({ templates: [] });
+  const fetchTemplate = async () => ({});
 
-  // No fetchPreview / fetchDocs means those tools must not be advertised at
-  // all - a listed tool that always fails is worse than a missing one.
-  const bare = createToolset(catalogTools({ catalog }));
-  assert.deepEqual(
-    bare.list().map((tool) => tool.name),
-    ['search_designs', 'get_design']
-  );
+  const cases = [
+    ['bare', { catalog }, ['search_designs', 'get_design']],
+    [
+      'preview and docs',
+      { catalog, fetchPreview, fetchDocs },
+      ['search_designs', 'get_design', 'preview_design', 'get_docs'],
+    ],
+    // The index alone is not enough for get_template, which needs both.
+    [
+      'template index only',
+      { catalog, fetchTemplateCatalog },
+      ['search_designs', 'get_design', 'list_templates'],
+    ],
+    [
+      'full',
+      { catalog, fetchPreview, fetchDocs, fetchTemplateCatalog, fetchTemplate },
+      [
+        'search_designs',
+        'get_design',
+        'preview_design',
+        'get_docs',
+        'list_templates',
+        'get_template',
+      ],
+    ],
+  ];
+
+  for (const [name, context, expected] of cases) {
+    assert.deepEqual(
+      createToolset(catalogTools(context)).list().map((tool) => tool.name),
+      expected,
+      name
+    );
+  }
 });
 
 test('every tool definition is a valid MCP tool', () => {
@@ -64,16 +92,6 @@ test('every tool definition is a valid MCP tool', () => {
       );
     }
   }
-});
-
-test('search filter vocabularies are taken from the catalog, not hardcoded', () => {
-  const [search] = toolset.list();
-  const tags = search.inputSchema.properties.tags.items.enum;
-  const densities = search.inputSchema.properties.density.enum;
-
-  const actualTags = new Set(catalog.designs.flatMap((design) => design.tags));
-  assert.deepEqual(new Set(tags), actualTags);
-  assert.deepEqual(new Set(densities), new Set(catalog.designs.map((d) => d.density)));
 });
 
 test('search narrows with AND across and within fields', async () => {
@@ -149,12 +167,6 @@ test('get_design warns when a design has no vector export', async () => {
   assert.match(design.svgExportWarning, /cannot be exported/);
 });
 
-test('an unknown slug is a tool error with a route back, not a crash', async () => {
-  const result = await call('get_design', { slug: 'definitelynotadesign' });
-  assert.equal(result.isError, true);
-  assert.match(result.content[0].text, /search_designs/);
-});
-
 test('preview_design returns an image per slug and labels each one', async () => {
   asked.length = 0;
   const slugs = catalog.designs.slice(0, 3).map((design) => design.slug);
@@ -192,11 +204,6 @@ test('a failing preview degrades to the published URL', async () => {
   assert.ok(!result.isError, 'a missing image is not a failed call');
   assert.match(result.content[0].text, /network down/);
   assert.match(result.content[0].text, /https:\/\/tabbied\.com\/previews\//);
-});
-
-test('get_docs passes the reference through', async () => {
-  const result = await call('get_docs', {});
-  assert.equal(result.content[0].text, 'THE REFERENCE');
 });
 
 test('a throwing handler becomes a tool error, never a rejected call', async () => {

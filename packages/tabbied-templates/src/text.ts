@@ -1,13 +1,10 @@
 // The `{em}...{/em}` convention for accented text.
 //
-// The template sites mark one span of a headline as an accent - Tabbied's
-// house move, styled per site. It has to survive editing: if a headline slot
-// were plain text, the first person to change "Homes that {em}hold your
-// life{/em}." would silently lose the accent the design was built around.
-//
-// So the *value* carries the markers, and both renderers parse them: the React
-// component (building elements) and applyEdits (building DOM nodes on a page
-// with no React). One parser, two renderers, no drift.
+// The template sites mark one span of a headline as an accent, styled per
+// site, and it has to survive editing. So the *value* carries the markers and
+// both renderers parse them with this one parser: the React component
+// (building elements) and applyEdits (building DOM nodes on a page with no
+// React).
 
 export type TextSegment = {
   text: string;
@@ -102,10 +99,9 @@ export function decodeEntities(value: string): string {
 /**
  * The inline tags a template may use for its accent run.
  *
- * `<em>` is the house default, but the 52 bespoke pages were written before
- * there was a convention and reach for whichever tag their stylesheet targets
- * - Cobalt Works styles `.hero h1 span`. The accent is therefore a property of
- * the page, read off the markup, never assumed.
+ * `<em>` is the house default, but a bespoke page accents with whichever tag
+ * its stylesheet targets (`.hero h1 span`), so the accent is read off the
+ * markup, never assumed.
  */
 export const ACCENT_TAGS = ['em', 'span', 'i', 'b', 'strong', 'mark'] as const;
 
@@ -132,14 +128,11 @@ export function accentTagOf(html: string): string | null {
  * Read an annotated element's inner HTML back into a slot value.
  *
  * The generator's side of the contract: the accent tag becomes `{em}...{/em}`
- * so the value round-trips, and every other tag is dropped to its text.
- * Dropping is right rather than lossy-by-accident - a text slot promises "this
- * is text", and anything richer than one accent belongs in a different slot
- * kind.
+ * so the value round-trips, and every other tag is dropped to its text,
+ * deliberately: a text slot promises "this is text", and anything richer than
+ * one accent belongs in a different slot kind.
  *
- * `emphasisTag` is the page's own accent tag. It defaults to `em` so a caller
- * that does not know one behaves exactly as this did before the bespoke pages
- * needed a `<span>`.
+ * `emphasisTag` is the page's own accent tag, `em` by default.
  */
 export function htmlToTextValue(html: string, emphasisTag = 'em'): string {
   const tag = emphasisTag.toLowerCase();
@@ -150,9 +143,8 @@ export function htmlToTextValue(html: string, emphasisTag = 'em'): string {
   );
 
   return decodeEntities(
-    // A <br> is a word boundary, so it becomes a space rather than nothing.
-    // Dropping it outright ran "before" and "it" together in Cobalt Works'
-    // headline, because JSX leaves no whitespace either side of the break.
+    // A <br> becomes a space, not nothing: JSX leaves no whitespace either
+    // side of a break, so dropping it would run two words together.
     withMarkers.replace(/<br\b[^>]*>/gi, ' ').replace(/<[^>]*>/g, '')
   )
     .replace(/\s+/g, ' ')

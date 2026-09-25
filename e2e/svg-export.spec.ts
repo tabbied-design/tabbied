@@ -31,44 +31,23 @@ const allPatterns = fs
 const supportedSlugs = allPatterns
   .filter((pattern) => pattern.svgExport !== false)
   .map((pattern) => pattern.slug);
-const unsupportedSlugs = allPatterns
-  .filter((pattern) => pattern.svgExport === false)
-  .map((pattern) => pattern.slug);
 
 // One pattern per feature family: solid cells + pseudo-elements, radii,
-// clip-paths, masks, every gradient kind, hard-stop conic sectors, nested
-// @doodle masks, @svg payloads, borders, filters, blend modes, z-index.
-//
-// Four come from batch 11: a tiled dot pattern, a smooth gradient used as a
-// mask, two stripe fields composited with mask-composite: intersect, and a
-// many-vertex clip path.
-//
-// The last three come from batch 12, which is built on smooth ramps and adds
-// gradient shapes nothing else in the list exercises: a fade posterized into
-// flat alpha levels (`stepramp`), a radial ramp thrown from a corner and used
-// as a mask (`radiance`), and a dot field intersected with a radial ramp
-// (`dotwash`).
-//
-// Batch 13 (orders 2000-2041) adds three, one per family it's built from: a
-// linear+radial gradient mask (`bight`), a pure clip-path composition
-// (`bench`), and the batch's only stepped-conic mask (`mirrorblack`).
-//
-// The September drop (orders 3000-3042) adds three of the 15 it landed in
-// tier 4, chosen for shapes the list did not already cover: a
-// repeating-radial ramp read off a rule-local custom property
-// (`contourlines`), per-cell scaled ring borders (`concentricrings`), and a
-// skewed two-tone tile mosaic (`patternsampler`). The drop's other 28 are
-// tier 1 and are covered by the disabled-menu cases below instead.
+// clip-paths, masks, every gradient kind, hard-stop conic sectors, a nested
+// @doodle mask, @svg payloads, borders, filters, blend modes, z-index, stripe
+// fields under mask-composite: intersect. Later additions cover shapes
+// nothing earlier did: a posterized fade (`stepramp`), a corner radial ramp
+// mask (`radiance`), a stepped-conic mask (`mirrorblack`), a repeating-radial
+// ramp read off a rule-local custom property (`contourlines`), scaled ring
+// borders (`concentricrings`) and a skewed two-tone mosaic
+// (`patternsampler`). Every listed design with its own PER_PATTERN_MAX
+// headroom stays, so each looser threshold is exercised; SVG_FULL_SWEEP runs
+// the rest. Designs with `svgExport: false` are covered by the disabled-menu
+// case.
 const REPRESENTATIVE = [
   'damier',
-  'radius',
   'bauhaus',
-  'chip',
-  'battlement',
-  'annulus',
   'mixtape',
-  'disque',
-  'fluting',
   'gasket',
   'bokeh',
   'neon',
@@ -76,24 +55,14 @@ const REPRESENTATIVE = [
   'terrain',
   'misprint',
   'glyph',
-  'spray',
-  'sunray',
   'fractal',
-  'matryoshka',
   'subdivide',
   'charcoal',
   'circuit',
   'ring',
-  'bloks',
-  'dotfield',
-  'shading',
   'bothways',
-  'dieblock',
   'stepramp',
   'radiance',
-  'dotwash',
-  'bight',
-  'bench',
   'mirrorblack',
   'contourlines',
   'concentricrings',
@@ -104,28 +73,19 @@ const REPRESENTATIVE = [
 // patterns run looser, for documented sub-CSS-pixel deviations:
 // - fractal: css-doodle's live rendering shows hairline seams from
 //   rasterizing the nested foreignObject @doodle mask, which the clean vector
-//   export intentionally does not reproduce. (matryoshka and subdivide used to
-//   share this; their masks are gradient layers now, and export exactly.)
+//   export intentionally does not reproduce.
 // - drypoint: the browser rasterizes the @svg mask image with slightly
-//   different sub-pixel rounding than the inlined symbol (≤1 CSS px).
+//   different sub-pixel rounding than the inlined symbol (<=1 CSS px).
 // - windowpane: CSS blends mixed-width borders progressively around rounded
-//   corners; the per-side arc strokes junction within ≤1 CSS px of it.
-// - glyph: every quadrant boundary is a maximum-contrast edge, so ordinary
+//   corners; the per-side arc strokes junction within <=1 CSS px of it.
+// - glyph: every quadrant boundary is a maximum-contrast edge, so
 //   anti-aliasing variance between Chromium builds lands right at the
-//   default threshold (measured 0.50% locally, 1.004% on CI).
-// - terrain/neon/lantern: box-shadow glows approximate as feDropShadow;
-//   the falloff differs slightly per Chromium build (terrain hit 1.37% on
-//   CI vs 0.99% locally).
-// - stepramp: the same phenomenon as glyph, from edge *density* rather than
-//   contrast. It draws four full-width hard edges in every cell (one per alpha
-//   level). The headroom was measured when the editor's plate still put its
-//   cell boundaries on fractional pixels (60.66px at 6x9), where every one of
-//   those edges landed mid-device-pixel, CSS snapping and SVG anti-aliasing.
-//   The plate snaps its cells to whole pixels now (docs/grid-snapping.md),
-//   which can only lower the measurement; the allowance stays because it is
-//   a property of the geometry, not of the design: swept at a fractional cell
-//   size the shipped batch-11 catalog lands in the same 0.5-1.8% band (toning
-//   1.84%, dimmer 1.71%, tinting 1.36%). See docs/svg-export.md.
+//   default threshold (1.004% measured on CI).
+// - terrain/neon/lantern: box-shadow glows approximate as feDropShadow, and
+//   the falloff differs slightly per Chromium build (terrain 1.37% on CI).
+// - stepramp: as glyph, from edge *density*: four full-width hard edges per
+//   cell. At a fractional cell size every one lands mid-device-pixel, and the
+//   batch-11 catalog measures 0.5-1.8% there. See docs/svg-export.md.
 const MAX_BAD_FRACTION = 0.01;
 const PER_PATTERN_MAX: Record<string, number> = {
   fractal: 0.03,
@@ -192,7 +152,7 @@ test.describe('native SVG export', () => {
           const el = document.querySelector(
             `div[data-pattern="${slug}"] css-doodle`
           ) as HTMLElement;
-          const res = (window as never as {
+          const svgx = (window as never as {
             __svgx: {
               doodleToSvg: (
                 el: HTMLElement,
@@ -204,7 +164,12 @@ test.describe('native SVG export', () => {
                 warnings: string[];
               };
             };
-          }).__svgx.doodleToSvg(el, { clip: { width: gridRect.w, height: gridRect.h } });
+          }).__svgx;
+          const clip = { width: gridRect.w, height: gridRect.h };
+          const res = svgx.doodleToSvg(el, { clip });
+          // Determinism, checked on one design: the same DOM exported again
+          // must be byte-identical (deterministic def ids).
+          const repeatSvg = slug === 'damier' ? svgx.doodleToSvg(el, { clip }).svg : null;
 
           const scale = 2;
           const W = Math.round(res.width * scale);
@@ -294,6 +259,7 @@ test.describe('native SVG export', () => {
           return {
             badFraction: bad / (W * H),
             svg: res.svg,
+            repeatSvg,
             warnings: res.warnings,
           };
         },
@@ -304,6 +270,10 @@ test.describe('native SVG export', () => {
         result.badFraction,
         `pixel diff vs live render (allowed ${PER_PATTERN_MAX[slug] ?? MAX_BAD_FRACTION})`
       ).toBeLessThanOrEqual(PER_PATTERN_MAX[slug] ?? MAX_BAD_FRACTION);
+
+      if (slug === 'damier') {
+        expect(result.repeatSvg, 'same DOM exports byte-identical SVG').toBe(result.svg);
+      }
 
       // Validity: parseable XML, native content only, scalable viewBox.
       expect(result.svg).toContain('xmlns="http://www.w3.org/2000/svg"');
@@ -320,22 +290,9 @@ test.describe('native SVG export', () => {
     });
   }
 
-  test('same DOM exports byte-identical SVG (determinism)', async ({ page }) => {
-    await openPattern(page, 'damier');
-    await page.addScriptTag({ content: injectedConverter });
-    const [first, second] = await page.evaluate(() => {
-      const el = document.querySelector('div[data-pattern] css-doodle') as HTMLElement;
-      const svgx = (window as never as {
-        __svgx: { doodleToSvg: (el: HTMLElement) => { svg: string } };
-      }).__svgx;
-      return [svgx.doodleToSvg(el).svg, svgx.doodleToSvg(el).svg];
-    });
-    expect(first).toBe(second);
-  });
-
   test('editor downloads a native .svg file', async ({ page }) => {
-    // radius (shadow toggle off) has no limitations - no warning icon, no
-    // confirmation dialog, straight to the download.
+    // radius has no limitations: no warning icon, no confirmation dialog,
+    // straight to the download.
     await openPattern(page, 'radius');
     await page.getByRole('button', { name: 'Export' }).click();
     const item = page.getByRole('menuitem', { name: 'Download SVG' });
@@ -387,21 +344,19 @@ test.describe('native SVG export', () => {
     expect((await downloadPromise).suggestedFilename()).toBe('neon.svg');
   });
 
-  // There is deliberately no toggle-dependent case here. The Shadow toggle on
-  // bloks/cupola/foliage/mixtape/odessa/quarterfall/radius was the only
-  // option-level svgExportNote and the option has been removed, so no pattern
-  // can exercise that path. The mechanism still works; it has no fixture.
-  for (const slug of unsupportedSlugs) {
-    test(`menu item is disabled for ${slug}`, async ({ page }) => {
-      await openPattern(page, slug);
-      await page.getByRole('button', { name: 'Export' }).click();
-      const item = page.getByRole('menuitem', { name: 'Download SVG' });
-      await expect(item).toBeVisible();
-      await expect(item).toHaveAttribute('data-disabled', '');
-      // The PNG item stays enabled.
-      await expect(
-        page.getByRole('menuitem', { name: 'Download PNG' })
-      ).not.toHaveAttribute('data-disabled', '');
-    });
-  }
+  // No option-level svgExportNote case: no pattern uses that mechanism, so it
+  // has no fixture. One `svgExport: false` design is enough to prove the UI
+  // gate; the unit tests in packages/tabbied/test pin which designs are in
+  // that tier.
+  test('menu item is disabled for coil', async ({ page }) => {
+    await openPattern(page, 'coil');
+    await page.getByRole('button', { name: 'Export' }).click();
+    const item = page.getByRole('menuitem', { name: 'Download SVG' });
+    await expect(item).toBeVisible();
+    await expect(item).toHaveAttribute('data-disabled', '');
+    // The PNG item stays enabled.
+    await expect(
+      page.getByRole('menuitem', { name: 'Download PNG' })
+    ).not.toHaveAttribute('data-disabled', '');
+  });
 });

@@ -8,11 +8,9 @@ import styles from './account.module.css';
 
 /**
  * The frame every account page sits in: the light masthead, then an eyebrow,
- * a title and the page. There is no sub-navigation: the overview is the
- * account, and a page beyond it (settings, sites) carries one link back to
- * it, as the 2026 designs draw it. It waits for the session and
- * turns a signed-out visitor away with a link. Shared so the five pages
- * differ only in their body.
+ * a title and the page. There is no sub-navigation: a page beyond the
+ * overview carries one link back to it. It waits for the session and turns
+ * a signed-out visitor away with a link.
  *
  * A static export has no server-side route protection and needs none: the
  * page renders a signed-out state client-side, and the *data* is protected
@@ -32,7 +30,7 @@ export default function AccountPage({
   /** A pill on the title's baseline - the plan the account is on. */
   badge?: string;
   lede?: ReactNode;
-  /** Something to do, beside the title - the "+ New Studio request" pill. */
+  /** Something to do, beside the title (the sites page's "+ Create new site"). */
   action?: { href: string; label: string };
   /** The link back to the overview; the overview itself has none. */
   back?: boolean;

@@ -1,16 +1,14 @@
 'use client';
 
-// The one confirmation before a template becomes one of a person's five.
-//
-// Every way to take a template that is not already the person's (Choose
+// The one confirmation before a template becomes one of a person's chosen
+// few. Every way to take a template that is not already the person's (Choose
 // template on a card, Customize or a download from the preview's menu) asks
-// first, because it spends one of a small number: the dialog says how many
-// are chosen, what this one costs, and that after it the template is
-// unlimited. At the limit it says so instead, names the ones that are
-// chosen, and points at the account page, where "Request more" lives.
+// first, because it spends one of a small number. At the limit the dialog
+// names the chosen ones and points at the account page, where "Request more"
+// lives.
 //
-// The Worker is what enforces the rule (worker/lib/templates.ts); a person
-// who skips this dialog, by opening a zip's URL, is held to the same five.
+// The Worker enforces the rule (worker/lib/templates.ts); a person who skips
+// this dialog, by opening a zip's URL, is held to the same allowance.
 import { useCallback, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { Dialog } from '@base-ui-components/react/dialog';

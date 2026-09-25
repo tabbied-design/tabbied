@@ -1,4 +1,5 @@
-// Batch 5 - 200 structurally-distinct motifs (gallery orders 410+).
+// Batch 5 - structurally-distinct motifs (gallery orders 410+), of which the
+// KEEP set at the bottom of the file ships.
 //
 // Every entry is its own shape / composition: a different primitive,
 // subdivision, symmetry or tiling. Palettes may repeat across designs (they are
@@ -6,7 +7,7 @@
 // in batches 1-4 or the originals (see TAKEN below, which the add() helper
 // enforces).
 //
-// House rules (matching every earlier batch):
+// House rules:
 //   * reseed variation rides on a transition-able, *sampled* property
 //     (background-color, transform, clip-path, opacity, border or border-radius),
 //     never a gradient alone (gradients can't transition and would snap);
@@ -159,10 +160,8 @@ const add = (name, palIdx, description, build, cfg = {}) => {
     colors: { min: 2, max: c, default: c },
     gridDefault: cfg.grid ?? '8x12',
     freqDefault: cfg.freq ?? 1,
-    // SVG-export tier (docs/svg-export.md). It belongs in the definition, not
-    // hand-added to the generated JSON: the generator rewrites every file it
-    // owns, so metadata that only exists downstream is silently dropped the
-    // next time anyone regenerates the batch.
+    // SVG-export tier (docs/svg-export.md). It belongs here: the generator
+    // rewrites every file it owns, dropping anything hand-added to the JSON.
     ...(cfg.svgExport === false ? { svgExport: false } : {}),
     ...(cfg.svgExportNote ? { svgExportNote: cfg.svgExportNote } : {}),
     thumb: { grid: cfg.tg ?? '5x5', frequency: cfg.tf ?? 0.92 },

@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  dotmatrix, dotset, halftone, kern, misprint, ortho, peppering, stitch, thickset,
+  dotmatrix, dotset, halftone, kern, misprint, ortho, peppering, thickset,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './halbfett.module.css';
@@ -18,15 +18,14 @@ const INK = '#000000';
 const RED = '#FF3B14';
 const GRAY = '#9A9A9A';
 const PALE = '#DCDCDC';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PALE;
-
 
 const FAMILIES = [
   { name: 'Halbfett Grotesk', styles: 18, axes: 'Weight, Width', year: '2019', note: 'The house workhorse. Drawn for signage first, screens second, and it shows in the counters.' },

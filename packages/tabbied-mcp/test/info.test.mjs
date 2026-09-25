@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { INSTRUCTIONS, SERVER_NAME, VERSION } from '../dist/info.js';
+import { INSTRUCTIONS, VERSION } from '../dist/info.js';
 
 const packageRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const pkg = JSON.parse(
@@ -21,10 +21,6 @@ test('the reported version matches package.json', () => {
     pkg.version,
     'bump VERSION in src/info.ts alongside package.json'
   );
-});
-
-test('the server identifies itself', () => {
-  assert.equal(SERVER_NAME, 'tabbied');
 });
 
 test('instructions carry the three things no tool description can', () => {

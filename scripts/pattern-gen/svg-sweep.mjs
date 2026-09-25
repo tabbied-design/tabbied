@@ -1,7 +1,6 @@
 // The SVG-export gate, shared by the batches that promise a clean export
-// (11 and 12). Their defining constraint is that every design exports as
-// native SVG with *no* caveat: no `svgExport: false`, no `svgExportNote`, no
-// converter warning.
+// (11-13): every design exports as native SVG with *no* caveat, meaning no
+// `svgExport: false`, no `svgExportNote`, no converter warning.
 //
 // For each pattern it renders the design in headless Chromium, runs the
 // shipped converter (packages/tabbied/dist/core/svgExport.js, injected as a
@@ -16,10 +15,9 @@
 //
 // Unlike scripts/svg-parity-sweep.mjs this needs no dev server and no pattern
 // route: it renders a page of doodles directly from the JSON definitions, so
-// 400 designs sweep in minutes. Designs are checked at a wide-open frequency
+// a batch sweeps in minutes. Designs are checked at a wide-open frequency
 // gate (every cell paints) across two seeds, so the @pick() branches a design
-// can take are all exercised rather than whichever ones one seed happened to
-// roll.
+// can take are exercised rather than whichever ones one seed rolled.
 //
 // Env read here: SLUGS (comma-separated slugs; defaults to the whole batch),
 //                CHROMIUM_PATH, SVG_SEEDS (comma-separated, default two),
@@ -38,17 +36,16 @@ const PATTERNS_DIR = path.join(ROOT, 'packages/tabbied/patterns');
 // The tolerance matches e2e/svg-export.spec.ts, but the budget is deliberately
 // tighter than the shipped 1%: these batches get no per-pattern headroom, and
 // a design that needs more than a rounding edge's worth of slack has an
-// abutment problem to fix rather than a threshold to raise. In practice these
-// designs land between 0.00% and 0.10%; anything near 1% is a clip-path edge
-// butted against a plain box edge, which CSS pixel-snaps and SVG does not.
+// abutment problem to fix rather than a threshold to raise. Clean designs land
+// under 0.10%; near 1% is usually a clip-path edge butted against a plain box
+// edge, which CSS pixel-snaps and SVG does not.
 const TOLERANCE = 12;
 const MAX_BAD_FRACTION = 0.004;
 
 const ALL_CELLS = 9999; // gate wide open: every cell paints
-// SVG_CELL widens the box each design is drawn in, which is how a design gets
-// checked at something like the editor's own cell size rather than a
-// thumbnail's. Fewer fit on a page, so the sweep drops to one column/row pair
-// once the box is large.
+// SVG_CELL widens the box each design is drawn in, to check a design near the
+// editor's own cell size rather than a thumbnail's. Past 500px only one fits a
+// page.
 const CELL = Number(process.env.SVG_CELL) || 300;
 const COLS = CELL > 500 ? 1 : 4;
 const ROWS = CELL > 500 ? 1 : 3;

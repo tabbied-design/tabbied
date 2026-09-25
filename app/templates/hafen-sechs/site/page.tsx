@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  bothways, dotmatrix, gravure, hurdle, isocube, staple,
+  bothways, dotmatrix, hurdle, isocube, staple,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './hafen-sechs.module.css';
@@ -18,15 +18,14 @@ const BONE = '#F0EFEA';
 const YELLOW = '#FFD400';
 const STEEL = '#6E747C';
 const DEEP = '#1C2026';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = BONE;
 const TILE_B = STEEL;
-
 
 const BERTHS = [
   { no: '61', length: '400 m', depth: '−16.5 m', cranes: '4 × STS', max: '24,000 TEU', status: 'Occupied' },

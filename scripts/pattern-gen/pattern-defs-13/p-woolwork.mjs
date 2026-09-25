@@ -1,14 +1,9 @@
 // P. Woolwork - a periodic field crossed with a smooth ramp.
 //
 // `mask-composite: intersect` multiplies two mask layers: the field decides
-// where ink *can* go, the ramp decides how much of it survives. What comes out
-// is a halftone that lives in a band - rules that exist only across the middle
-// of the cell, dots given a luster on the bias - and neither layer could draw
-// it alone.
-//
-// The intersection exports as one <mask> nested inside the next, which is the
-// correct reading of what CSS did, and the field itself becomes an SVG
-// <pattern> holding a single tile however dense it gets.
+// where ink *can* go, the ramp how much of it survives, giving a halftone that
+// lives in a band. The intersection exports as one <mask> nested inside the
+// next, and the field as an SVG <pattern> holding a single tile.
 import {
   section,
   F,

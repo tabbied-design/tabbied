@@ -14,7 +14,6 @@ export const metadata = {
 const INK = '#1B1A2E';
 const VIOLET = '#6D5DF5';
 const MINT = '#2ED3A5';
-const GRAY = '#7D7A94';
 const PALE = '#ECEAFB';
 /* Tiles pin their doodle to a whole multiple of the cell (6 x 72px) and let
    the card clip it, so every grid track is a whole pixel. */

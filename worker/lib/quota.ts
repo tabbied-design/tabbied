@@ -3,22 +3,15 @@ import type { DrizzleD1Database } from 'drizzle-orm/d1';
 import { aiUsage } from '../db/schema';
 import * as schema from '../db/schema';
 
-// The spend ceiling, and the only one that is exact.
-//
-// KV counters (lib/ratelimit.ts) smooth bursts and can under-count, because KV
-// has no compare-and-set. This does not: it sums the ledger in D1, which is
-// written from the upstream's own usage numbers after every call. So the shape
-// is deliberately "cheap approximate check, then exact check": a flood is
-// stopped by the limiter before it reaches here, and the day's real total is
-// what decides whether money gets spent.
+// The daily spend ceiling. lib/ratelimit.ts stops a flood within seconds; this
+// sums the ledger in D1, written after every call from the upstream's own
+// usage numbers, and the day's real total decides whether money gets spent.
 
 export type Endpoint = 'directions' | 'direction-image' | 'site' | 'site-image';
 
 /**
  * Per-endpoint daily caps for the unpriced tier: generous enough that ordinary
- * use never notices, finite enough that a scripted loop stops. A paid tier
- * changes these numbers and nothing else - which is why they are a table and
- * not scattered through the routes.
+ * use never notices, finite enough that a scripted loop stops.
  */
 export const DAILY_CAPS: Record<Endpoint, { calls: number; label: string }> = {
   // Each is one Responses turn over a dozen candidates - two when the answer
@@ -90,10 +83,10 @@ export type UsageRecord = {
 };
 
 /**
- * Written after the call, from what the upstream reported. An "OpenAI-compatible"
- * server that omits `usage` is not an excuse to record zero - the caller passes a
- * conservative estimate instead, so the ledger can over-count but never
- * under-count. A failed row still counts: the money was spent either way.
+ * Written after the call, from what the upstream reported. A server that omits
+ * `usage` gets a conservative estimate from the caller, not zero, so the
+ * ledger can over-count but never under-count. A failed call still counts:
+ * the money was spent either way.
  */
 export async function recordUsage(db: Db, record: UsageRecord): Promise<void> {
   await db.insert(aiUsage).values({

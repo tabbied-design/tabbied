@@ -1,18 +1,11 @@
-// Content + theming for the twenty template sites. Each site is a fictional
-// brand whose primary design accent is a Tabbied pattern rendered by the
-// `TabbiedPattern` React component (see TemplateSite.tsx). Every site is themed
-// with one palette from the Tabbied library (lib/paletteLibrary.ts) and built
-// around one preset pattern, so the template spans twenty distinct
-// palette/pattern pairings.
+// Content and theming for the template sites built on TemplateSite. Each is a
+// fictional brand whose primary design accent is a Tabbied pattern rendered by
+// the `TabbiedPattern` React component, themed with one palette from the
+// Tabbied library (lib/paletteLibrary.ts) and built around one preset pattern.
 //
-// Sites 11-20 were authored here; sites 1-10 began life as self-contained
-// static-HTML builds under public/samples/ and were ported into this stack once
-// it was clear both were rendering the same four layouts and the same nineteen
-// section types from two separate codebases.
-//
-// The pattern definition itself is imported by each route's page.tsx (so the
-// bundler ships only the presets in use) and passed to TemplateSite; this file
-// carries everything else.
+// The pattern definitions themselves are imported by each route's page.tsx (so
+// the bundler ships only the presets in use) and passed to TemplateSite; this
+// file carries everything else.
 
 export type TemplateLayout = 'spotlight' | 'split' | 'editorial' | 'boutique';
 
@@ -37,7 +30,7 @@ export type TemplateSite = {
   paletteName: string;
   colors: string[];
   layout: TemplateLayout;
-  /** Google Fonts family names: [display, body]. Loaded via <link> in the page. */
+  /** A Google Fonts stylesheet and the display and body stacks. Loaded via <link> in the page. */
   fonts: { href: string; display: string; body: string };
   /**
    * Optional per-site letter-spacing, added on top of every tracked rule in
@@ -52,12 +45,12 @@ export type TemplateSite = {
   favicon: string;
   nav: string[];
   eyebrow: string;
-  /** Hero title supports a single {em}...{/em} span for the accent color. */
+  /** Hero title; {em}...{/em} marks the accent color. */
   title: string;
   lede: string;
   primaryCta: string;
   secondaryCta: string;
-  /** Small marquee / ticker phrases (spotlight + editorial). */
+  /** Small marquee / ticker phrases (spotlight). */
   ticker?: string[];
   /** Stat strip (split/spotlight). */
   stats?: { n: string; l: string }[];
@@ -77,7 +70,6 @@ const gf = (families: string) =>
   `https://fonts.googleapis.com/css2?${families}&display=swap`;
 
 export const TEMPLATE_SITES: TemplateSite[] = [
-  // 11, Solstice · wellness / yoga retreat · Sunset · lobe
   {
     slug: 'solstice',
     flatSections: true,
@@ -117,10 +109,6 @@ export const TEMPLATE_SITES: TemplateSite[] = [
     bandCta: 'Reserve your mat',
   },
 
-  // 12, Harbor & Vine · natural wine bar · Cranberry · quilt
-// 13, Lumen · design conference · Arcade · spectrum
-// 14, Fathom · ocean research nonprofit · Lagoon · lattice
-// 15, Ember & Oak · wood-fire restaurant · Ember · windowpane
   {
     slug: 'ember-and-oak',
     flatSections: true,
@@ -155,10 +143,6 @@ export const TEMPLATE_SITES: TemplateSite[] = [
     bandCta: 'Book your evening',
   },
 
-  // 16, Petal & Post · florist + stationery · Blush · frond
-// 17, Northwind · outdoor apparel · Forest · maze
-// 18, Honeycomb · kids learning app · Honey · bokeh
-// 19, Facet · fine jewelry · Jewel · prisma
   {
     slug: 'facet',
     flatSections: true,
@@ -193,8 +177,6 @@ export const TEMPLATE_SITES: TemplateSite[] = [
     bandCta: 'Design something bespoke',
   },
 
-  // 20, Seabright · coastal skincare · Seaglass · metro
-// ---- Ported from the static-HTML samples (sites 1-10) ----
 {
     slug: 'verdant',
     brand: 'Verdant',

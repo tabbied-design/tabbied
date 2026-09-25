@@ -2,13 +2,11 @@
 
 // The one door into the customizer from a template: /studio/customize/?slug=.
 //
-// The template preview's "Use this template" links here rather than holding
-// the customizer itself, so there is one place the sign-in detour lives.
-// Signed out, the person is sent to sign in with this page as the way back;
-// signed in, the customizer opens on the template as an unsaved draft.
-// Nothing is written until its first Save (see StudioSite): opening this page
-// and leaving used to leave a copy of the template in the account, one per
-// visit, phones included, where customizing is not even offered.
+// The template preview's "Use this template" links here, so the sign-in
+// detour lives in one place. Signed out, the person is sent to sign in with
+// this page as the way back; signed in, the customizer opens on the template
+// as an unsaved draft, and nothing is written until its first Save (see
+// StudioSite).
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';

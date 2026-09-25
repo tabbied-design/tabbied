@@ -11,9 +11,8 @@
 }
 
 /* -- Margin columns -------------------------------------------------------- */
-/* The strips either side of the 1280px column are filled with the same cells
-   the skyline uses, at low opacity - the page bleeding pattern into its own
-   gutters. Purely decorative, and never in the way of a pointer. */
+/* The strips either side of the 1280px column carry the skyline's cells at
+   low opacity. Decorative, and never in the way of a pointer. */
 
 .margin {
   position: absolute;
@@ -65,11 +64,10 @@
   letter-spacing: -0.02em;
 }
 
-/* Wider than the lede's measure, into the column's right padding, so the
-   headline sets on two lines as the artboard has it; the size follows the
-   viewport below 1400px so the second line still fits. Measured: the line
-   runs 11.4 times its font size in the fallback sans, a little less in
-   proxima-nova. */
+/* Into the column's right padding, so the headline sets on two lines as the
+   artboard has it; below 1400px the size follows the viewport so the second
+   line still fits. Measured: the line runs 11.4 times its font size in the
+   fallback sans, a little less in proxima-nova. */
 @media (min-width: 768px) {
   .title {
     margin-right: calc(-1 * var(--h-pad));
@@ -86,9 +84,7 @@
   }
 }
 
-/* "Free patterns" and "websites" are links to the two galleries, each in a
-   gradient, so the headline names the product and takes you to it. The
-   underline is drawn rather than inherited: a text-decoration under
+/* The underline is drawn rather than inherited: a text-decoration under
    gradient-filled type paints in the fill color, which is transparent. */
 .titleLink {
   position: relative;
@@ -199,9 +195,8 @@ a.stat:hover {
   background-color: oklch(1 0 0 / 0.03);
 }
 
-/* The arrow rides the label rather than a corner of the cell, so the label
-   reads as the link it is. A box centered on the label's line, not a glyph
-   on its baseline: inline, the icon sat below the middle of the caps. */
+/* A box centered on the label's line, not a glyph on its baseline, where
+   the icon sits below the middle of the caps. */
 .statArrow {
   display: flex;
   align-items: center;
@@ -216,11 +211,9 @@ a.stat:hover .statArrow {
   transform: translateX(3px);
 }
 
-/* The artboard's inline style says 200, and the artboard does not render it:
-   its Proxima Nova ships 400 and 700 only, so the figure a reader of the design
-   actually sees is bold, matching the story section's stat row lower down the
-   page. Typekit's proxima-nova does have a 200, so taking the number literally
-   was the one place the site drew a weight the design never showed. */
+/* Bold, though the artboard's inline style says 200: its Proxima Nova ships
+   400 and 700 only, so the design renders the figure bold (as the story
+   section's stats are). Typekit's proxima-nova does have a 200. */
 .statNumber {
   display: block;
   font: 700 64px var(--h-display);

@@ -11,7 +11,6 @@ export const metadata = {
 
 const CONCRETE = '#F1F1EF';
 const INK = '#17181A';
-const SIGNAL = '#FFD400';
 const STEEL = '#7E858C';
 const PALE = '#DCDEDE';
 const DARK = '#2A2E33';
@@ -661,7 +660,6 @@ export default function LinieNordPage() {
           </div>
         </section>
 
-        {/* 04 Fares */}
         {/* Departure-board lattice, run slim across the page. */}
         <div className={styles.bleed}>
           <div data-edit-pattern="main.field3" data-edit-roles="4,3,1" className={styles.bandSlim}>
@@ -677,6 +675,7 @@ export default function LinieNordPage() {
           </div>
         </div>
 
+        {/* 04 Fares */}
         <section
           id="fares"
           className={styles.section}

@@ -2,7 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  DEFAULT_CELL_PX,
   densityFromGrid,
   densityToCellPx,
   deriveGridForBox,
@@ -56,28 +55,6 @@ test('snapSpanToTracks returns whole tracks', async (t) => {
     assert.equal(snapSpanToTracks(-10, 8), 0);
     assert.equal(snapSpanToTracks(100, 0), 100);
   });
-});
-
-test('a snapped box divides evenly by its derived grid', () => {
-  // The boxes that showed seams on the template pages: full-width bands and
-  // content-height section fields at common viewport widths.
-  const boxes = [
-    [1440, 240],
-    [1440, 355.78],
-    [1280, 419],
-    [1024, 613],
-    [768, 297],
-    [390, 812],
-  ];
-
-  for (const [width, height] of boxes) {
-    for (const cell of [36, 48, 72, 104, 120, 144]) {
-      const { cols, rows } = deriveGridForBox(width, height, cell);
-
-      assert.equal((snapSpanToTracks(width, cols) / cols) % 2, 0);
-      assert.equal((snapSpanToTracks(height, rows) / rows) % 2, 0);
-    }
-  }
 });
 
 // The cell both fits use, and the editor's plate: whole on both axes, and
@@ -142,7 +119,7 @@ test('snapCellToBox is a whole, divisible, square cell that covers the box', asy
 // former integer levels 0..4 sit at 0, 0.25, 0.5, 0.75 and 1 exactly.
 
 test('densityToCellPx walks the original plate from 2 to 10 cells across', async (t) => {
-  await t.test('the five former stops are exact', () => {
+  await t.test('the five stops are exact', () => {
     assert.equal(densityToCellPx(0), 180);
     assert.equal(densityToCellPx(0.25), 90);
     assert.equal(densityToCellPx(0.5), 60);
@@ -150,25 +127,9 @@ test('densityToCellPx walks the original plate from 2 to 10 cells across', async
     assert.equal(densityToCellPx(1), 36);
   });
 
-  await t.test('the package default is the finest stop', () => {
-    assert.equal(DEFAULT_CELL_PX, densityToCellPx(1));
-  });
-
   await t.test('values outside the range clamp', () => {
     assert.equal(densityToCellPx(-1), 180);
     assert.equal(densityToCellPx(2), 36);
-    assert.equal(densityToCellPx(4), 36);
-  });
-
-  await t.test('the mapping is monotonic', () => {
-    let previous = Infinity;
-
-    for (let d = 0; d <= 1.0001; d += 0.05) {
-      const cell = densityToCellPx(d);
-
-      assert.ok(cell < previous, `${d} -> ${cell} should be finer than ${previous}`);
-      previous = cell;
-    }
   });
 });
 

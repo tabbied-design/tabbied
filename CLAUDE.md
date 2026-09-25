@@ -448,18 +448,26 @@ agree) behind a "Menu" toggle. Four things it depends on:
   header hides must be in a visible menu that fits on the screen. A new
   template that hides its nav fails it until it carries the menu.
 
-## Template screenshots on the gallery cards - a pilot
+## Template screenshots on the cards
 
-A `/templates` card drew only its pattern, so a person choosing a website
-could not see one. `scripts/generate-template-shots.mjs <slug> ...` renders a
-site's first screen from `out/` (1280x960, the card's own 4:3, so nothing is
-cropped) into `public/template-shots/<slug>.webp`, and a card with a file
-there shows the site with its live pattern as a tile in the corner. The set
-is whatever files exist, read at build time, so a card with no shot is the
-pattern alone as before. Six are shot (solstice, werkraum, hopscotch-museum,
-cobalt-works, zenith-observatory, mistral-cycles). Committed like the
-previews, because the deploy build has no browser; reshoot after a hero
-changes.
+Every template has a screenshot in `public/template-shots/<slug>.webp`: the
+`/templates` card shows it with the site's live pattern as a tile in the
+corner, and the homepage's template rails show it alone. `lib/templateShots.ts`
+reads the folder at build time, so a template with no shot falls back to its
+pattern on both.
+
+`npm run build`, then `node scripts/generate-template-shots.mjs [slug ...]`
+(no slugs shoots all). A shot starts **below the site's top bar**: a
+thumbnail is small, and the brand and nav are the clutter it can least
+afford. `contentTop` walks down from y=0 through stacked full-width bars (a
+strip, the header, a rule under it; a masthead up to 420px if it holds nav
+links; a first bar inset up to 24px, like Orbital's pill) and stops at
+anything holding the `h1`. The page is scrolled past the bars, which are
+hidden so a sticky one does not follow, and the first 1280x960 of content is
+written at 960x720. A page that opens on its hero (Oxbow) is shot from 0.
+Committed like the previews, because the deploy build has no browser; reshoot
+a template after its hero or header changes, and check a new one's crop by
+eye.
 
 ## The mark, and the font that travels with it
 
@@ -615,7 +623,7 @@ drew at its five stops: `cellPx = 360 / (2 + 8 * density)`, so the former
 integer levels 0..4 sit at 0, 0.25, 0.5, 0.75 and 1, and 0.5 is the 60px cell
 most designs open at (`densityToCellPx` in `sizing.ts`;
 `agent-outputs/20260922-remove-aspect-ratio-plan.md` has the discussion). The
-aspect ratio picker stayed; only the grid control changed. Four things worth
+aspect ratio picker stayed; only the grid control changed. Five things worth
 not re-litigating:
 
 - **Density is a cell size in px, not a count.** The editor derives the
@@ -625,20 +633,20 @@ not re-litigating:
   embed the cells the plate showed at the size it showed them. A count along
   the long edge would keep one picture on every screen, and the snippet
   could not then say it honestly, because the package's unit is px.
-- **The grid is not a link parameter.** A share link carries `density=`;
-  `grid=CxR` is read as a legacy density (`densityFromGrid`, the long edge
-  against the original 540px plate) and the URL is rewritten, since
-  llms.txt told agents to write it for a year. The grid option's slot in
-  `optionValues` is inert and never reaches the URL or the snippet.
+- **The grid is not a link parameter.** A share link carries `density=`,
+  and a `grid=` parameter is ignored like any unknown one. A design's
+  authored grid default only sets the density it opens at
+  (`densityFromGrid`, the long edge against the original 540px plate). The
+  grid option's slot in `optionValues` is inert and never reaches the URL
+  or the snippet.
 - **Expand pins the grid.** Same seed plus a different `cols x rows` is a
   different arrangement, so expanding the plate holds the grid it showed
   and scales the cells; a ratio change, a density change or a collapse
   releases it. A plain window resize re-derives, as every embed does.
-- **The rescale is a breaking change to a shipped prop.** A legacy
-  `density={2}` clamps to 1 (36px cells, not 60px), and `createPattern`
-  warns once per page on a value above 1; a legacy `1` (90px then, 36px
-  now) is the silent case nothing can tell apart. Every call site in this
-  repo migrated level n to n / 4 in the same change.
+- **The rescale is a breaking change to a shipped prop**, made without a
+  compatibility path: a `density` above 1 clamps to 1 (36px cells), and
+  nothing warns about it. Every call site in this repo migrated level n to
+  n / 4 in the same change.
 - **The plate is clipped, the way a `fit: "grid"` field is.** The plate is
   the ratio's box; the canvas drawn in it is that box snapped to whole,
   square cells (`snapCellToBox`, the arithmetic `applyGridSnap` runs on a
@@ -707,10 +715,11 @@ Three things worth not re-litigating:
   animation and transition has a `@media (prefers-reduced-motion: reduce)`
   override; a marquee that merely slows down is the failure this guards against.
 
-The mono is loaded by `next/font` **in the page**, not the root layout, so only
-this route preloads it. IBM Plex Sans is deliberately not loaded - proxima-nova
-from the layout's typekit link is the sans, and the design only ever named Plex
-Sans as its fallback.
+IBM Plex Mono and IBM Plex Sans are loaded by `next/font` (`lib/fonts.ts`)
+**in the page**, not the root layout, so only the routes that use them preload
+them. The two sans split by role, as the artboards do: proxima-nova, from the
+layout's typekit link, sets display type (headings, stat figures, primary
+buttons), and Plex Sans sets body and UI copy.
 
 ## The platform tier - auth, generation, media
 
@@ -726,7 +735,7 @@ npm run dev            # site on :3000, with NEXT_PUBLIC_API_BASE set
 npm run dev:api        # the Worker on :8787 - run both
 npm run db:migrate     # apply worker/migrations to the local D1
 npm run stub:ai        # a local OpenAI-shaped upstream on :8788
-npm run test:worker    # 36 tests in workerd, over local D1 and R2
+npm run test:worker    # workerd, over local D1 and R2
 ```
 
 **No binding declares an id, deliberately.** Wrangler provisions a binding
@@ -1220,14 +1229,11 @@ whatever text Studio wrote, so putting them back is a UI change.
   implementation. `worker/test/admin.test.ts` pins the *session*, not just
   the row - the row passing is what let this ship.
 
-Two things about the tests. `worker/test/*.test.ts` sign up real users and
-follow the verification link out of `dev_mail`; run them **after** a build,
-not during one - `next build` empties `out/` and the assets binding reads
-from there, which reads as a random failure in `beforeAll`. And one smoke
-test (`the same description always gives the same three`) can time out on
-`page.goto` in a sandbox with no outbound network: the results page's
-typekit and Google Fonts stylesheets hang until the proxy resets them, and
-`load` waits for stylesheets. Not a regression; it passes with network.
+`worker/test/*.test.ts` sign up real users and follow the verification link
+out of `dev_mail`; run them **after** a build, not during one: `next build`
+empties `out/` and the assets binding reads from there, which reads as a
+random failure in `beforeAll`. Each test file pays its own setup (about 10s),
+so a new test joins an existing file unless it needs a fresh database.
 
 ## Agent-facing docs - all generated, never hand-edited
 

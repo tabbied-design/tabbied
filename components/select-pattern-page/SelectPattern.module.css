@@ -2,8 +2,8 @@
    grid on a near-white sheet with a hairline between them. */
 .gallery {
   /* Height of the masthead: the fixed rail starts below it, and the main
-     column is inset by it. One number, two consumers - and it is the light
-     tone's `min-height` in SiteNav.module.css, so the two move together. */
+     column is inset by it. It is the light tone's `min-height` in
+     SiteNav.module.css, so the two must agree. */
   --gallery-bar-h: 62px;
   /* Width of the rail, read by the rail itself and by the column beside it. */
   --gallery-rail-w: clamp(268px, 20vw, 340px);
@@ -92,28 +92,23 @@
 
 /* ---- Design grid ---- */
 
-/* Tracks are minmax(0, 1fr), never a bare 1fr. A bare `1fr` is
-   minmax(auto, 1fr), and `min-width: auto` on a grid item floors the track at
-   the item's min-content width. The cards carry `content-visibility: auto`
-   (.doodleThumb), so once a card has been scrolled past, the size it last
-   rendered at becomes that floor - and narrowing the window could no longer
-   shrink the tracks, overflowing the column until a reload cleared the
-   remembered size. The explicit 0 minimum lets tracks shrink on resize. */
+/* Tracks are minmax(0, 1fr), never a bare 1fr (which is minmax(auto, 1fr)).
+   The cards carry `content-visibility: auto` (.doodleThumb), so a card
+   scrolled past keeps the size it last rendered at as its min-content width,
+   and an auto minimum would stop the tracks shrinking on resize. */
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   /* Masonry: every card is one column wide and a whole number of these rows
-     tall, and dense flow puts each one under the shortest column. The rows are
-     fine enough (52px) that the three heights read as a rhythm rather than a
-     step, and flushGridBottom evens the columns at the end of the page. */
+     tall, and dense flow puts each one under the shortest column;
+     flushGridBottom evens the columns at the end of the page. */
   grid-auto-rows: 52px;
   grid-auto-flow: dense;
   gap: 20px;
 }
 
-/* Row spans, assigned per card in SelectPattern.tsx. A card is never wider
-   than a column: at four columns of a 1100px sheet that is 196-340px tall on
-   ~250px wide, which is the tallest the design lets a card get. */
+/* Row spans, assigned per card in SelectPattern.tsx: 196-340px tall on a
+   ~250px column at four columns of a 1100px sheet. */
 .rows3 {
   grid-row: span 3;
 }
@@ -230,9 +225,8 @@
 }
 
 /* Below the two-column breakpoint the rail stacks above the grid, and the
-   palette shelf pins under the masthead. Both are sticky at the top of the
-   same page; at `top: 0` the shelf pinned in the masthead's own rows and the
-   bar, above it in the stack, covered it for the whole grid scroll. */
+   palette shelf pins under the masthead: both are sticky on the same page, so
+   at `top: 0` the bar would cover the shelf. */
 @media (max-width: 991.98px) {
   .gallery {
     min-height: 0;
@@ -256,8 +250,7 @@
 }
 
 /* The masthead folds at 768px to the phone bar, 56px with its rule
-   (SiteNav.module.css). This said 67px, and the shelf pinned 11px below the
-   bar with the grid scrolling through the strip between them. */
+   (SiteNav.module.css). */
 @media (max-width: 767.98px) {
   .gallery {
     --gallery-bar-h: 56px;
@@ -321,15 +314,14 @@
 
 /* ---- Live css-doodle thumbnail (shared with GalleryDoodle/Inner) ---- */
 
-/* A square frame that clips the scaled pattern. content-visibility lets the
-   browser skip rendering work for cards far outside the viewport (their size is
+/* A frame that clips the scaled pattern. content-visibility lets the browser
+   skip rendering work for cards far outside the viewport (their size is
    layout-determined, so skipping is safe). */
 .doodleThumb {
   position: relative;
   width: 100%;
-  /* Fills the tile the mosaic sized, rather than forcing a square. The height
-     resolves because the grid rows are a fixed 52px, which is also what keeps
-     content-visibility safe here. */
+  /* Fills the tile the masonry sized. The height resolves because the grid
+     rows are a fixed 52px, which is also what keeps content-visibility safe. */
   height: 100%;
   overflow: hidden;
   line-height: 0;

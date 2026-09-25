@@ -3,16 +3,11 @@
 // editor's densest grid.
 //
 // scripts/gallery-cost.mjs counts what a design costs the gallery to keep on
-// screen (nodes, image documents, compositing layers). This counts what it
-// costs css-doodle to produce: the stylesheet it writes into the shadow root,
-// and how long generating and reshuffling it take. The two are different
-// failures. A design can be one layer and still write megabytes of CSS,
-// because css-doodle evaluates `--rule` once per cell and writes the result
-// into a block of its own: a polygon of 240 points, or an `@svg` texture, that
-// is the same in every cell is copied into every cell. That is what the
-// review of 22 September 2026 measured (evolute 3.4 MB, blossom and sparkle
-// 1.7 MB each), and what `@var` on a `:doodle` custom property fixes: the
-// value is generated once on the host and each cell reads it.
+// screen. This counts what it costs css-doodle to produce: the stylesheet it
+// writes into the shadow root, and how long generating and reshuffling take.
+// css-doodle evaluates `--rule` once per cell, so a value that is the same in
+// every cell (a 240-point `@shape`, an `@svg` texture) is copied into every
+// cell; `@var` on a `:doodle` custom property computes it once on the host.
 //
 //   node scripts/pattern-cost.mjs                 # every design, heaviest first
 //   node scripts/pattern-cost.mjs <slug> ...      # just those
@@ -37,12 +32,10 @@ const PATTERNS_DIR = join(ROOT, 'packages/tabbied/patterns');
 const PLATE = { width: 418, height: 646, cell: 36 };
 
 /**
- * Per design, at the plate above. Every design is under it; the heaviest is
- * cornerbloom at about 275 KB. A design that goes over is either writing a
+ * Per design, at the plate above. A design that goes over is either writing a
  * value into every cell that could be computed once on `:doodle` and read
- * with `@var` (a `@shape`, an `@svg` or `@doodle` texture, a stack of
- * gradients that repeats), or has cells that are a count of things and
- * wants `sizing.maxCells`.
+ * with `@var`, or has cells that are a count of things and wants
+ * `sizing.maxCells`.
  */
 const BUDGET = { cssKB: 300, nodes: 800 };
 

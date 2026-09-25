@@ -1,6 +1,6 @@
 import { TabbiedPattern } from 'tabbied/react';
 import {
-  curl, dotwash, lagoon, pebble, ripplering, tidering,
+  dotwash, lagoon, pebble, ripplering, tidering,
 } from 'tabbied/patterns';
 import { Figure } from 'components/Figure';
 import s from './kaella.module.css';
@@ -17,15 +17,14 @@ const INK = '#0F1A1D';
 const AQUA = '#00A6A6';
 const STEEL = '#7E9296';
 const MIST = '#DCE7E7';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = STEEL;
 const TILE_B = MIST;
-
 
 const TODAY = [
   { p: 'Hardness', v: '5.8', u: '°dH', note: 'Medium soft' },

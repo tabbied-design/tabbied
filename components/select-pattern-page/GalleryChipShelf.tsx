@@ -13,26 +13,21 @@ import styles from './GalleryChipShelf.module.css';
 const MAX_CHIPS = 6;
 
 /**
- * How many palettes the shelf shows before "All" takes over. It is a single
- * swipeable row pinned to the top of a phone, and the merged list is over
- * four hundred palettes: laid out whole it was some five thousand nodes in a
- * sticky bar that repaints on every scroll, with the chosen palette possibly
- * three hundred chips off-screen. The editor's strip draws the same line.
+ * How many palettes the shelf shows before "All" takes over. The merged list
+ * runs to hundreds, which laid out whole is thousands of nodes in a sticky bar
+ * that repaints on every scroll. The editor's strip draws the same line.
  */
 const SHELF_LIMIT = 30;
 
 /**
- * Mobile: the merged palette list as a horizontal, scrollable shelf of the
- * rail's rows - "Mixed" (a random palette per pattern) first, then name,
- * inks, pencil - laid
- * side by side. Custom chips carry a delete mark (single-click delete);
- * library chips a pencil (edit-as-copy). A trailing "All" pill opens the
- * embedded palette browser.
+ * Mobile: the merged palette list as a horizontal, scrollable shelf of chips,
+ * "Mixed" (a random palette per pattern) first. Custom chips carry a delete
+ * mark (single-click delete); library chips a pencil (edit-as-copy). A
+ * trailing "All" pill opens the embedded palette browser.
  *
- * Each chip is a pill holding two buttons, the palette and its mark, rather
- * than a button with a `role="button"` span inside it: HTML forbids a control
- * inside a button, the nested label leaked into the chip's accessible name,
- * and a keypress on the mark also fired the chip.
+ * Each chip is a pill holding two buttons, the palette and its mark, not a
+ * button with a `role="button"` span inside: HTML forbids a control inside a
+ * button, and the mark would leak into the chip's name and keypresses.
  */
 export default function GalleryChipShelf({
   className,
@@ -79,8 +74,7 @@ export default function GalleryChipShelf({
 
   const randomActive = selectedId === RANDOM_PALETTE_ID;
 
-  // The palette in use is scrolled into the row: at thirty chips it could sit
-  // at x = 600 on a 390px phone, and nothing said which one was applied.
+  // The palette in use is scrolled into the row, so the applied one is visible.
   const shelf = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

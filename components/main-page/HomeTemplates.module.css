@@ -84,9 +84,8 @@
   animation: marqueeRight 130s linear infinite;
 }
 
-/* Pausing on hover is what makes the cards clickable rather than a moving
-   target; pausing on focus is the same for a keyboard, whose card otherwise
-   kept sliding under the clip. */
+/* Pausing on hover makes the cards clickable rather than a moving target;
+   pausing on focus does the same for a keyboard. */
 .track:hover,
 .track:focus-within {
   animation-play-state: paused;

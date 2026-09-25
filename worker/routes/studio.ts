@@ -27,12 +27,10 @@ import { loadStudioIndex } from '../lib/studioIndex';
 
 // Studio's generation tier.
 //
-// The shipped client-side matcher is not replaced by any of this: it is the
-// signed-out path, and here it becomes *candidate assembly*. The model picks
-// three from a scored dozen rather than hallucinating over the whole library, and the slug
-// enum in the response schema is built from exactly that dozen - so an invented
-// template cannot survive validation, and every card still leads to a real page
-// and a real zip.
+// The client-side matcher stays the signed-out path; here it is candidate
+// assembly. The model picks three from a scored dozen, and the response
+// schema's slug enum is built from exactly that dozen, so an invented template
+// cannot survive validation.
 
 /** How many scored candidates the model gets to choose from. */
 const CANDIDATE_COUNT = 12;
@@ -43,9 +41,8 @@ const requestSchema = z.object({
 });
 
 /**
- * Burst gates: a short window on top of the daily ledger, so a script cannot
- * spend a whole day's budget in ten seconds. Both are exact - the counter is
- * one atomic statement (lib/ratelimit.ts).
+ * Burst gates (lib/ratelimit.ts): a short window on top of the daily ledger,
+ * so a script cannot spend a whole day's budget in ten seconds.
  */
 const BURST = {
   directions: { max: 6, windowSeconds: 60 },
@@ -119,10 +116,8 @@ studio.post('/directions', async (c) => {
   const entries = await loadStudioIndex(c.env, c.req.raw);
   const candidates = matchDirections(entries, description, CANDIDATE_COUNT);
 
-  // Which templates can take brand copy, recorded on each direction now rather
-  // than looked up by the page later: the stored document then stands on its
-  // own, and a generation read a year from now still knows what its own
-  // preview can promise.
+  // Which templates can take brand copy, recorded on each direction now so the
+  // stored document stands on its own when it is read later.
   const copyRoles = new Map(
     (await loadEditableCatalog(c.env, c.req.raw)).templates.map((template) => [
       template.slug,
@@ -142,13 +137,11 @@ studio.post('/directions', async (c) => {
   let result: StoredResult;
   let model = 'matcher';
   // The turn the stored document came from, so a later revision can continue
-  // it rather than restating it. Null for a matched answer, and null whenever
-  // the upstream declined to store the response.
+  // it. Null for a matched answer, or when the upstream stored nothing.
   let responseId: string | undefined;
 
   if (!hasUpstream(c.env)) {
-    // No key configured: the endpoint still answers, with the matcher's own
-    // three. Nothing is charged and nothing is pretended.
+    // No key configured: the matcher's own three, and nothing is charged.
     result = fallback();
   } else {
     const slugs = candidates.map((entry) => entry.slug) as [string, ...string[]];
@@ -160,16 +153,11 @@ studio.post('/directions', async (c) => {
     let usage = { promptTokens: 0, completionTokens: 0 };
     let repairNote = '';
 
-    // One repair retry, carrying the validation errors. A second failure is an
-    // upstream that cannot hold the contract, and the user gets the matcher
-    // rather than an error page.
-    //
-    // On the Responses API that retry is a genuine second *turn*: quoting the
-    // rejected response as `previous_response_id` makes the input the
-    // correction alone, against a context that still holds what the model just
-    // wrote - which is what it needs to see to fix it. An upstream that stored
-    // nothing returns no id and the retry re-sends the whole thing instead, so
-    // chaining is an improvement here and never a dependency.
+    // One repair retry, carrying the validation errors; a second failure gets
+    // the matcher rather than an error page. The retry quotes the rejected
+    // response as `previous_response_id`, so it sends the correction alone
+    // against a context that still holds what the model wrote. An upstream
+    // that stored nothing returns no id, and the retry re-sends everything.
     let previousResponseId: string | undefined;
 
     for (let attempt = 0; attempt < 2 && !payload; attempt++) {
@@ -189,8 +177,7 @@ studio.post('/directions', async (c) => {
         previousResponseId = completion.responseId;
 
         // Accumulated, not replaced: a rejected first turn spent real tokens,
-        // and a chained retry is billed for the context it re-reads on top of
-        // them. Summing both turns is what the invoice will say.
+        // and a chained retry is billed for the context it re-reads.
         usage = {
           promptTokens:
             usage.promptTokens +
@@ -213,9 +200,8 @@ studio.post('/directions', async (c) => {
               .join('\n');
         }
       } catch (error) {
-        // An answer that is not JSON is the model getting it wrong once, which
-        // is what the repair turn exists for; only the upstream failing ends
-        // the attempt.
+        // An answer that is not JSON is what the repair turn exists for; only
+        // the upstream failing ends the attempt.
         if (error instanceof SyntaxError) {
           repairNote = 'Your previous answer was not valid JSON. Answer with the JSON object alone.';
           continue;
@@ -228,9 +214,8 @@ studio.post('/directions', async (c) => {
       }
     }
 
-    // The attempt is recorded whether or not it produced a usable answer -
-    // a failed call still spent tokens, and a ledger that only counts
-    // successes is a ledger a bad prompt can loop against for free.
+    // Recorded whether or not it produced a usable answer: a ledger that only
+    // counts successes is one a bad prompt can loop against for free.
     await recordUsage(db, {
       userId,
       endpoint: 'directions',
@@ -296,16 +281,10 @@ studio.post('/directions', async (c) => {
 });
 
 /**
- * Reads are unauthenticated by design: the 128-bit id is the capability, the
- * way an unlisted link is. There is deliberately no listing endpoint, so there
- * is nothing to enumerate.
- */
-/**
- * The signed-in person's own generations, newest first. Session-scoped and
- * never by id - the same split as sites: the no-listing rule is about
- * anonymous *enumeration*, not a person's own rows. Each row carries the
- * three directions' names and palettes, which is what a history list shows,
- * and not the copy, which is what makes 100 rows a small answer.
+ * The signed-in person's own generations, newest first. Session-scoped: the
+ * no-listing rule is about anonymous enumeration, not a person's own rows.
+ * Each row carries the directions' names and palettes but not the copy, which
+ * keeps 100 rows a small answer.
  */
 studio.get('/generations', async (c) => {
   const userId = await requireUser(c.env, c.req.raw.headers);
@@ -324,9 +303,8 @@ studio.get('/generations', async (c) => {
       createdAt: generation.createdAt,
       result: generation.result,
       // Qualified by hand: with no join in the outer query drizzle renders
-      // both columns bare, and inside the subquery `generation_id = id`
-      // compares two columns of *site* - every count came back 0 (see the
-      // same note in admin.ts and CLAUDE.md).
+      // both columns bare, and `generation_id = id` would compare two columns
+      // of site (see CLAUDE.md).
       sites: sql<number>`(select count(*) from ${site} where ${site}.generation_id = ${generation}.id)`,
     })
     .from(generation)
@@ -354,6 +332,10 @@ studio.get('/generations', async (c) => {
   });
 });
 
+/**
+ * Unauthenticated by design: the 128-bit id is the capability, the way an
+ * unlisted link is, and there is no endpoint that enumerates ids.
+ */
 studio.get('/generations/:id', async (c) => {
   const db = drizzle(c.env.DB, { schema });
 
@@ -381,12 +363,9 @@ const imageRequestSchema = z.object({
 });
 
 /**
- * Imagery for one direction, on demand.
- *
- * Never three up front: text directions are cheap and images are not, so this
- * is behind a deliberate click and capped separately. Idempotent per
- * (generation, index) - a second call returns the stored key rather than
- * spending again, which is what makes a double-click or a retry safe.
+ * Imagery for one direction, on demand and capped separately, never three up
+ * front. Idempotent per (generation, index): a second call returns the stored
+ * key rather than spending again, so a double-click or a retry is safe.
  */
 studio.post('/direction-image', async (c) => {
   const userId = await requireUser(c.env, c.req.raw.headers);
@@ -450,9 +429,8 @@ studio.post('/direction-image', async (c) => {
   let image;
 
   try {
-    // Transparent: the model returns the subject on a real alpha channel, so
-    // the still life sits on the card's own ground rather than in a box of
-    // its own - and later drops into a template's image slot the same way.
+    // Transparent, so the still life sits on the card's own ground (and in a
+    // template's image slot) rather than in a box of its own.
     image = await generateImage(c.env, {
       prompt: directionImagePrompt(direction, row.description),
       transparent: true,

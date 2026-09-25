@@ -21,9 +21,7 @@ const GRAPHITE = '#4A4F55';
 /* Background first. Each field is a reordering or subset of the six above:
    blue leads only where the accent is meant to be read. */
 const FIELD_STRIP = [WHITE, BLUE, STEEL, PALE, GRAPHITE, INK];
-const FIELD_RESEARCH = [WHITE, PALE, STEEL, GRAPHITE];
 const FIELD_INSTRUMENT = [PALE, STEEL, BLUE, GRAPHITE];
-const FIELD_PEOPLE = [WHITE, BLUE, STEEL, PALE];
 const FIELD_SAMPLES = [WHITE, PALE, STEEL, GRAPHITE];
 const FIELD_DARK = [INK, BLUE, GRAPHITE, STEEL];
 

@@ -1,14 +1,10 @@
 // D. Drybrush - a ruled field with a ramp laid over it.
 //
-// The same intersection as section C with a stripe field in place of the dot
-// field, and it behaves like a loaded brush running out: the rules stay the
-// same width all the way across, but less and less of them survives, until the
-// far end of the stroke is bare ground.
-//
-// Which way the ramp runs against the rules is the whole variety of the
-// section: square across upright rules, and square across rules that lean at
-// forty-five degrees.
-import { section, A, F, TR, rot, slotL, fade, both, R2, R4 } from './shared.mjs';
+// Section C's intersection with a stripe field in place of the dots: the
+// rules keep their width all the way across, but less and less of them
+// survives, like a brush running out. The variety is which way the ramp runs
+// against the rules.
+import { section, F, TR, rot, slotL, fade, both, R2, R4 } from './shared.mjs';
 
 const { add, all } = section('D. Drybrush');
 

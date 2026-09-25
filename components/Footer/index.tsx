@@ -12,10 +12,9 @@ export default function Footer() {
 
             <p>Copyright {new Date().getFullYear()}.</p>
 
-            {/* The Product Hunt badge used to live in the homepage header; it
-                now sits in the footer. A lazy <img> (not a CSS background) so
-                the third-party request neither starts before the footer nears
-                the viewport nor delays the page's load event. */}
+            {/* A lazy <img> (not a CSS background) so the third-party request
+                neither starts before the footer nears the viewport nor delays
+                the page's load event. */}
             <a
               href="https://www.producthunt.com/posts/tabbied?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-tabbied"
               className={styles.productHuntBadge}

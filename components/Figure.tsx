@@ -41,7 +41,7 @@ export function Figure({
   const entry = imageManifest[slug];
 
   // A slug with no image yet: surface it in dev, render nothing in production,
-  // so a layout can be built before its pattern exists.
+  // so a layout can be built before its image exists.
   if (!entry) {
     if (process.env.NODE_ENV !== 'development') return null;
     return (

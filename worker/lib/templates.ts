@@ -11,10 +11,9 @@ import type { Db } from './quota';
 // (`templateRequest`) adds to that: a first request by an emailed link that
 // adds FIRST_REQUEST_GRANT, a later one by an admin's grant.
 //
-// This replaced a cap of thirty distinct templates a month. What stayed is
-// the shape of the claim: the check and the write are one statement
-// (`claimTemplate`), because read, compare, then write let a burst of
-// concurrent downloads all read a count under the limit before any wrote.
+// The check and the write are one statement (`claimTemplate`): read, compare,
+// then write lets a burst of concurrent downloads all read a count under the
+// limit before any writes.
 
 export const FREE_TEMPLATES = 5;
 
@@ -34,10 +33,8 @@ const COUNTED = sql`('activated', 'granted')`;
  * drizzle note in CLAUDE.md says). The inner table is aliased so a query
  * over template_request itself still correlates to its outer row.
  *
- * One implementation, deliberately: the admin directory carried a third
- * copy that read one row where this sums them and counted 'granted' alone,
- * so an account that had followed the emailed link read "10 / 5" there
- * while its own page and the claim agreed on 10 of 10.
+ * Every reader of the allowance uses this one implementation, so the
+ * account page, the claim and the admin lists cannot disagree.
  */
 export const allowanceSql = (userId: string | SQL) => sql`(
   ${FREE_TEMPLATES} + coalesce((
@@ -46,7 +43,7 @@ export const allowanceSql = (userId: string | SQL) => sql`(
   ), 0)
 )`;
 
-export type ChosenTemplate = { slug: string; createdAt: Date };
+type ChosenTemplate = { slug: string; createdAt: Date };
 
 export type TemplateStatus = {
   chosen: ChosenTemplate[];
@@ -74,7 +71,7 @@ export async function templateStatus(db: Db, userId: string): Promise<TemplateSt
 }
 
 /** Whether this template is already one of this person's. */
-export async function hasChosen(db: Db, userId: string, slug: string): Promise<boolean> {
+async function hasChosen(db: Db, userId: string, slug: string): Promise<boolean> {
   const [row] = await db
     .select({ id: templateChoice.id })
     .from(templateChoice)
@@ -135,17 +132,10 @@ export const limitMessage = (total: number) =>
 //
 // Round 1 is a person's first request: three questions, then an email a few
 // minutes later with a link that adds FIRST_REQUEST_GRANT when followed. The
-// delay is the design's ("usually within 5 minutes"): it reads as a request
-// that was looked at rather than a button that pays out. Resend holds the
-// message (`scheduled_at`), so nothing here has to wake up later. Every
-// later round goes to the team (`pending`, then `granted` or `declined`).
-
-export type RequestStatus = 'sent' | 'activated' | 'pending' | 'granted' | 'declined';
-
-export const REQUEST_STATUSES: readonly RequestStatus[] = ['sent', 'activated', 'pending', 'granted', 'declined'];
-
-/** The statuses that are still waiting on something, one per person at most. */
-export const OPEN_STATUSES: readonly RequestStatus[] = ['sent', 'pending'];
+// delay is the design's, so the request reads as looked at rather than paid
+// out. Resend holds the message (`scheduled_at`), so nothing here has to wake
+// up later. Every later round goes to the team (`pending`, then `granted` or
+// `declined`).
 
 /** How long after a first request its email arrives. */
 export const FIRST_REQUEST_DELAY_MS = 5 * 60_000;
@@ -189,7 +179,7 @@ export async function newLinkToken(): Promise<{ token: string; hash: string }> {
   return { token, hash: await hashToken(token) };
 }
 
-export async function hashToken(token: string): Promise<string> {
+async function hashToken(token: string): Promise<string> {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token));
 
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');

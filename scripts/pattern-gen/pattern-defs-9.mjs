@@ -1,4 +1,4 @@
-// Batch 9 - 22 motifs (gallery orders 1000+); 23 as authored, less Wireframe.
+// Batch 9 - gallery orders 1000-1099.
 //
 // Every batch before this one draws a *tile*: each cell is an independent
 // motif, and the canvas is however many copies of it happen to fit. This batch
@@ -27,23 +27,20 @@
 //                         (Ortho, Isometry, Dimetric, Recession, Raking).
 //   G. Weights            rule widths graded across the sheet (Thickset).
 //
-// House rules (inherited from every earlier batch, enforced by
-// generate-batch9.mjs and validate-batch9.mjs):
+// House rules (enforced by generate-batch9.mjs and validate-batch9.mjs):
 //
 //   * exactly one @random(${shapeFrequency}) gate per design, so the frequency
 //     slider always thins the field;
 //   * every design samples a transition-able ink per cell -
 //     background-color, color, border-color or box-shadow - so a reseed
-//     morphs. background-image is deliberately excluded from the validator's
-//     reseed check: a design whose only variation lived in a gradient would
-//     snap instead of morphing;
+//     morphs. A design whose only variation lived in a background-image
+//     gradient would snap instead;
 //   * a randomized custom prop read more than once goes through @var(--x);
 //   * nothing paints var(--color0). A hole knocked out in the background
-//     color is a fake hole - set the background slot to transparent and it
-//     stops erasing anything. Every gap here is a mask, a clip-path hole, or
-//     a gap between elements, and validate-batch9.mjs re-renders the whole
-//     batch over a checkerboard with the background slot set to #00000000 and
-//     requires byte-identical cells;
+//     color is a fake hole once the background slot is transparent; every gap
+//     here is a mask, a clip-path hole or a gap between elements, and
+//     validate-batch9.mjs re-renders the batch with the background slot set
+//     to #00000000 and requires byte-identical cells;
 //   * every cell must still paint something at the widest end of a ramp. A
 //     field that fades to nothing at one edge leaves blank cells, and the
 //     validator counts them.
@@ -75,7 +72,6 @@ const A = (css) => `:after { content: ''; position: absolute; ${css}${pt} }`;
 const svgMask = (body) => msk(`@svg(${body})`);
 
 const R2 = '@pick(0deg, 90deg)';
-const R4 = '@pick(0deg, 90deg, 180deg, 270deg)';
 const R8 = '@pick(0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg)';
 
 // A px length authored for a six-column grid and scaled down as the grid
@@ -88,16 +84,13 @@ const u = (v) => `calc(${v}px * 6 / @size-col)`;
 // put the origin at the middle of the *canvas*, so a design written against
 // them holds its composition at any grid density.
 //
-// One hard constraint shapes how they are written. css-doodle's @calc honors
+// One hard constraint shapes how they are written: css-doodle's @calc honors
 // operator precedence, but a *bare grouping paren* does not survive it -
-// `@calc(90 - 74 * (2 * @x / @X - 1))` quietly evaluates the group to zero and
-// the whole field goes flat. Only a function call's own parentheses are safe,
-// so every grouping below is done with @abs(), @sqrt() or @atan2() rather than
-// with brackets, and anything needing a signed value times a constant is
-// multiplied out by hand (see sxTimes).
-//
-// The same rule kills the obvious tidy-up: routing these through a cell-level
-// custom property and reading it back with @var() also comes out flat, so the
+// `@calc(90 - 74 * (2 * @x / @X - 1))` evaluates the group to zero and the
+// field goes flat. Only a function call's own parentheses are safe, so every
+// grouping is done with @abs(), @sqrt() or @atan2(), and a signed value times
+// a constant is multiplied out by hand. Routing these through a cell-level
+// custom property read back with @var() also comes out flat, so the
 // expressions are inlined at every use even though it makes the CSS long.
 
 // Distance from the vertical / horizontal centerline: 0 in the middle of the
@@ -108,8 +101,7 @@ const AY = '@abs(2 * @y / @Y - 1 - 1 / @Y)';
 const RAD = `@sqrt(${AX} * ${AX} + ${AY} * ${AY})`;
 // Bearing from the center, in degrees.
 const ANG = '@atan2(2 * @y / @Y - 1 - 1 / @Y, 2 * @x / @X - 1 - 1 / @X) * 57.2958';
-// A sweep across the sheet, left to right and top to bottom.
-const RX = '@x / @X';
+// A sweep across the sheet, top to bottom.
 const RY = '@y / @Y';
 
 // A percentage ramping from `a` to `b` along `t`. The sign is folded into the
@@ -131,11 +123,9 @@ const pieMask = (deg, from = '0deg') =>
 // data - calc() does not survive inside a path's `d`, so anything that has to
 // vary per cell varies through a repeated element's own attributes instead.
 //
-// The cap matters. A round cap overhangs the end of a segment by half the
-// stroke width, which reads as a rounded terminal on an open stroke - right
-// for these designs, but wrong on a path that stops at a corner, where the
-// overhang shows as a thorn poking out past the join. A design like that
-// wants `butt` and a neighboring miter join to fill the corner instead.
+// A round cap overhangs the end of a segment by half the stroke width: right
+// for these open strokes, wrong on a path that stops at a corner, where it
+// pokes out past the join (that wants `butt` and a miter join instead).
 const strokePath = (d, w) =>
   svgMask(`viewBox: 0 0 100 100; path { d: ${d}; fill: none; stroke: #000; stroke-width: ${w}; stroke-linecap: round; }`);
 
@@ -375,10 +365,8 @@ const add = (name, palIdx, description, build, cfg = {}) => {
     gridDefault: cfg.grid ?? '8x12',
     freqDefault: cfg.freq ?? 1,
     ...(cfg.min ? { minCellPx: cfg.min } : {}),
-    // SVG-export tier (docs/svg-export.md). It belongs in the definition, not
-    // hand-added to the generated JSON: the generator rewrites every file it
-    // owns, so metadata that only exists downstream is silently dropped the
-    // next time anyone regenerates the batch.
+    // SVG-export tier (docs/svg-export.md). It belongs here: the generator
+    // rewrites every file it owns, dropping anything hand-added to the JSON.
     ...(cfg.svgExport === false ? { svgExport: false } : {}),
     ...(cfg.svgExportNote ? { svgExportNote: cfg.svgExportNote } : {}),
     thumb: { grid: cfg.tg ?? '6x6', frequency: cfg.tf ?? 1 },
@@ -532,8 +520,8 @@ add('Thickset', 2, 'Heavy throughout, and heavier still as it goes: frames that 
   rule: `${F} { ${A(`inset: 2%; border-style: solid; border-color: ${ink(c)}; border-width: ${wRamp(4, 15, RY)}; box-sizing: border-box;`)} }${TR}`,
 }), { tg: '6x6', min: 34 });
 
-// 23 as authored, less Wireframe (retired) - the count is asserted so a
-// definition cannot be lost to a bad edit without the generator saying so.
+// The count is asserted so a definition cannot be lost to a bad edit without
+// the generator saying so.
 if (all.length !== 22) {
   throw new Error(`batch 9 must hold exactly 22 designs, found ${all.length}`);
 }

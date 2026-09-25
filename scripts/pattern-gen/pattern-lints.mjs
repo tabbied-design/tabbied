@@ -1,24 +1,11 @@
 // Authoring-time lints shared by the batch generators that promise a clean
-// SVG export (batches 11 and 12).
-//
-// Two groups of rules live here:
-//
-//   * the *house* rules every batch since 6 has been checked against - one
-//     frequency gate, a transitionable ink per cell, no plain var() re-rolls,
-//     nothing painted in the background color;
-//   * the *SVG* rules that keep a design in tier 4 of docs/svg-export.md - no
-//     declaration that exports as an SVG filter, no smooth conic sweep, no
-//     border on a partially-rounded box.
-//
-// These are the cheap first pass. The real gate is running the shipped
-// converter over every rendered design (validate-svg-batch11.mjs /
-// validate-svg-batch12.mjs); this file exists to catch at authoring time the
-// mistakes that would otherwise cost a browser launch to find.
+// SVG export (batches 11-13): the house rules every batch since 6 is checked
+// against, plus the rules that keep a design in tier 4 of docs/svg-export.md.
+// This is the cheap first pass; validate-svg-batchN.mjs, which runs the
+// shipped converter over every rendered design, is the real gate.
 
-// Declarations that would cost a design the clean SVG-export tier. Each maps
-// to a tier-2 caveat in docs/svg-export.md, which these batches exist not to
-// have.
-export const SVG_BANNED = [
+// Declarations that would cost a design the clean SVG-export tier.
+const SVG_BANNED = [
   [/box-shadow\s*:/, 'box-shadow exports as an SVG drop-shadow filter'],
   [/(^|[^-\w])filter\s*:/, 'filter() exports as an SVG filter primitive'],
   [/mix-blend-mode\s*:/, 'mix-blend-mode exports as an SVG blend style'],
@@ -77,7 +64,7 @@ const splitTokens = (text) => {
  * expression resolve to the same angle in every cell, which is all a hard stop
  * requires.
  */
-export const assertHardStopConic = (slug, style) => {
+const assertHardStopConic = (slug, style) => {
   for (const m of style.matchAll(
     /conic-gradient\(([^()]*(?:\([^()]*\)[^()]*)*)\)/g
   )) {

@@ -73,7 +73,7 @@ function printHelp() {
  * ordinary scene direction; the fidelity clause is what stops the model
  * treating the reference as loose inspiration.
  */
-export function buildPrompt(m) {
+function buildPrompt(m) {
   return [
     `A product photograph of ${m.subject}.`,
     'The pattern in the provided image is the printed design on it:',
@@ -88,9 +88,8 @@ export function buildPrompt(m) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
- * One edit call. Deliberately NOT retried: this POST creates paid work, and a
- * silent re-send would double the bill. A failure is reported and the run
- * carries on with the other mockups.
+ * One edit call. Deliberately NOT retried: a silent re-send of paid work would
+ * double the bill. A failure is reported and the run carries on.
  */
 async function editImage({ refPath, prompt, size, quality, fidelity, model, key }) {
   const form = new FormData();

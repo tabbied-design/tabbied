@@ -18,15 +18,14 @@ const INK = '#131416';
 const GREEN = '#00843D';
 const GRAY = '#8E9094';
 const PALE = '#E2E2DE';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = GRAY;
 const TILE_B = PALE;
-
 
 const PROJECTS = [
   { code: 'K-46', client: 'Bergen Sentralstasjon', kind: 'Rail interchange', pts: '212', year: '2026' },

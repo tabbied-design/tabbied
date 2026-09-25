@@ -2,17 +2,10 @@ import Link from 'next/link';
 import styles from './HomeFooter.module.css';
 
 // The dark shell's footer, under the homepage, the template gallery and the
-// docs. The legal pages and the 404 keep the shared light Footer in
-// components/Footer.
-//
-// Docs and GitHub live here rather than in the masthead: the bar is for the
-// three destinations, and this is where the artboards put everything else. The
-// legal pages stay listed because they exist; the artboard's "Colophon" is a
-// page nobody has written.
-//
-// Product is Patterns, Websites and My Account, which is the artboard's own
-// list. Studio is not in it: the generation flow is held back from the first
-// launch, and this footer was its last link.
+// docs; the legal pages and the 404 keep components/Footer. Docs and GitHub
+// live here rather than in the masthead, which is for the three destinations.
+// Studio is left out while the generation flow is held back (see CLAUDE.md,
+// "Studio"); the artboard's "Colophon" is a page nobody has written.
 
 const GITHUB_URL = 'https://github.com/tabbied-design/tabbied/';
 

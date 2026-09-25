@@ -7,11 +7,9 @@ import {
 
 /**
  * The mono that carries every label, eyebrow and figure in the 2026 design.
- *
- * Declared here and applied per route rather than in the root layout, so only
- * the routes that use it preload it - the legal pages are still the older
- * light theme and never ask for it. next/font memoizes by call site, so
- * importing this from several pages emits one font, not one per page.
+ * Applied per route rather than in the root layout, so only the routes that
+ * use it preload it. next/font memoizes by call site, so several importers
+ * still emit one font.
  */
 export const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -21,23 +19,11 @@ export const plexMono = IBM_Plex_Mono({
 });
 
 /**
- * The text face of the 2026 design, and the reason there are two sans here.
- *
- * The artboards run two families and switch between them by role: display type
- * (headings, the stat figures, primary buttons) is Proxima Nova, and body and
- * UI copy - paragraphs, labels, fields, table cells - is IBM Plex Sans. Reading
- * the stack in a design file left to right is what tells them apart:
- * `'Proxima Nova','IBM Plex Sans'` is a heading and `'IBM Plex Sans','Proxima
- * Nova'` is body text, and the second name in each is only a fallback.
- *
- * The site collapsed both onto proxima-nova, on the reading that Plex Sans was
- * never more than that fallback. It is not: 276 of the design's 383 sans
- * declarations name Plex Sans first, against 109 for Proxima, and the two are
- * different enough at 13-18px that running body copy in the display face is
- * visible on the hero paragraph.
- *
- * Applied per route beside `plexMono`, for the same reason: the legal pages
- * are still the older light theme and should not download it.
+ * The body and UI face of the 2026 design. The artboards switch sans by role:
+ * display type (headings, stat figures, primary buttons) is Proxima Nova, and
+ * body copy, labels, fields and table cells are IBM Plex Sans. In a design
+ * file's stack the first name is the face and the second only a fallback.
+ * Applied per route beside `plexMono`, for the same reason.
  */
 export const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -47,9 +33,8 @@ export const plexSans = IBM_Plex_Sans({
 });
 
 /**
- * The editor's plate caption, and only that - a serif is what makes the stage
- * read as a print of the pattern rather than a preview of it. Loaded on the
- * editor route alone.
+ * The serif of the editor's plate caption (it makes the stage read as a print
+ * of the pattern) and the template preview. Loaded on those routes alone.
  */
 export const ebGaramond = EB_Garamond({
   subsets: ['latin'],
@@ -61,9 +46,8 @@ export const ebGaramond = EB_Garamond({
 
 /**
  * The wordmark, and only the wordmark. Applied by `components/logo/Logo`
- * itself rather than by a route: the lockup is in a dozen mastheads and in
- * none of the 77 template pages, so the component is the only place that
- * knows where the word is actually drawn. One weight, latin only.
+ * itself rather than by a route or the root layout, so it never rides onto a
+ * template page (see CLAUDE.md, "The mark").
  */
 export const cormorantGaramond = Cormorant_Garamond({
   subsets: ['latin'],

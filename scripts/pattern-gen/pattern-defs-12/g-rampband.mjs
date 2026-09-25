@@ -1,23 +1,16 @@
 // G. Rampband - a ramp cut into steps.
 //
 // `stepFade()` writes a fall as a handful of flat translucent levels, every
-// stop pair sitting at the same position. It is a hard-stop gradient that
-// reads as a ramp, and it is the one place in the batch where the *amount* of
-// ink is quantized rather than the geometry - the cell goes down in counted
-// stages instead of sliding.
-//
-// The alpha is carried by the mask, not by the ink, so the levels stay real
-// holes: on a transparent background the sheet shows through each step in
-// proportion.
+// stop pair at the same position: a hard-stop gradient that reads as a ramp,
+// with the *amount* of ink quantized rather than the geometry. The alpha is
+// carried by the mask, so on a transparent background the sheet shows
+// through each step in proportion.
 import {
   section,
-  A,
   F,
   TR,
-  ink,
   rot,
   stepFade,
-  fade,
   faded,
   R4,
 } from './shared.mjs';

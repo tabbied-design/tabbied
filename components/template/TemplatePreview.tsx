@@ -3,17 +3,11 @@
 // A template in a frame, with one thing to do with it: use it.
 //
 // "Use this template" is the only action. Signed in, it opens a menu headed
-// by how many of the person's five templates are chosen and what taking
-// this one costs, then the ways to take it: customize it (a link to the
-// customizer, which makes nothing until it is saved), or download the
-// original as HTML or as the React project. A template that is not yet the
-// person's asks first (ChooseTemplate.tsx), since taking it spends one of
-// the five. On a phone the customizer's rail is not offered at all, so
-// neither is Customize. Signed out, the same button opens a card that asks
-// for a sign-in first, with the customizer as the way back.
-//
-// The bar's left edge is the Tabbied mark and "Websites", the way back to
-// the gallery, as the artboard draws it.
+// by the count of chosen templates and what taking this one costs, then
+// Customize (not on a phone, where the customizer's rail is not offered) and
+// the two original downloads. A template that is not yet the person's asks
+// first (ChooseTemplate.tsx). Signed out, the same button opens a card that
+// asks for a sign-in, with the customizer as the way back.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu } from '@base-ui-components/react/menu';
@@ -39,8 +33,8 @@ export default function TemplatePreview({
   name: string;
   /** Every template's name by slug, for the choose dialog's list. */
   names: Readonly<Record<string, string>>;
-  /** Not drawn in the bar any more - both still name the frame for a screen
-      reader, which "tabbied.com/templates/<slug>/site/" does not. */
+  /** Names the page and the frame for a screen reader, which the URL in the
+      bar does not. */
   topic: string;
 }) {
   const { user, isPending } = useSessionUser();

@@ -88,9 +88,8 @@ export default function HomePatternLibrary({
     }
 
     const timer = setInterval(() => {
-      // Every random draw that does not depend on the previous state happens
-      // here rather than inside the updater, which React may run twice in
-      // development and which must stay a function of its argument.
+      // Draws that do not depend on the previous state happen here, not in the
+      // updater, which React may run twice and which must stay pure.
       const spun = sampleCells(SPUN_CELLS);
       const turns = spun.map(() => (Math.random() < 0.5 ? 90 : 180));
       const sparse = sampleCells(SPARSE_CELLS);

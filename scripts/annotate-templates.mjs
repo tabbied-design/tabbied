@@ -1,28 +1,18 @@
 #!/usr/bin/env node
-// One-time migration: add editable-section annotations to the bespoke template
-// pages.
-//
-// The five shared-component sites were annotated by hand, because annotating
-// one component annotated all five. The other 52 are hand-written JSX - 29,000
-// lines of it - and hand-editing them is neither feasible nor reviewable. But
-// they are far more uniform than they look, in the ways that matter:
+// Codemod: add editable-section annotations to the bespoke template pages. Run
+// it after adding a new bespoke template. It relies on three regularities:
 //
 //   1. Every page declares its color once, as custom properties on its root
-//      rule (`--paper`, `--ink`, ...), and the stylesheet only reads `var(--...)`.
-//      So a re-color is already a property rewrite - it just needs those
-//      properties set *inline*, where an edit can override them. There is no
-//      hex-to-var() codemod to write, which was the riskiest part of the job.
-//   2. No wrapper in the corpus holds two <TabbiedPattern>s, so a pattern slot
-//      on the wrapper is never ambiguous.
+//      rule (`--paper`, `--ink`, ...), and the stylesheet only reads
+//      `var(--...)`. A re-color just needs those properties set *inline*.
+//   2. A pattern slot goes on the wrapper, so a wrapper holding two
+//      <TabbiedPattern>s is reported rather than annotated.
 //   3. Copy is a text literal or a single expression inside a small set of
-//      content tags, in both the mapped and the inline halves of a page.
+//      content tags.
 //
-// **It writes to source and is meant to run once.** The annotations are then
-// committed and maintained by hand, which is what keeps slot ids stable: an id
-// that regenerated on every build would shift whenever a page changed, and
-// every saved edits document referencing it would break. A page that already
-// carries `data-edit-root` is left alone, so a re-run is safe and a page
-// annotated by hand is never overwritten.
+// **It writes to source.** The annotations are committed and then maintained
+// by hand, which keeps slot ids stable for saved edits documents. A page that
+// already carries `data-edit-root` is left alone, so a re-run is safe.
 //
 //   node scripts/annotate-templates.mjs            every un-annotated page
 //   node scripts/annotate-templates.mjs grafit     one page
@@ -32,11 +22,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from '@babel/parser';
 
-// @babel/parser rather than the TypeScript compiler API: typescript@7 is the
-// native port and its npm package no longer exposes createSourceFile to JS at
-// all. A build-time devDependency, never bundled and never shipped in a
-// template download - the parse has to be real, because a regex that mis-reads
-// one of these files rewrites it wrongly and silently.
+// @babel/parser rather than the TypeScript compiler API, which typescript@7 no
+// longer exposes to JS. The parse has to be real: a regex that mis-reads a
+// page rewrites it wrongly and silently.
 
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const templateDir = path.join(repoRoot, 'app', 'templates');
@@ -45,9 +33,8 @@ const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const only = args.filter((arg) => !arg.startsWith('-'));
 
-// Tags whose text is page copy. Deliberately a closed list: annotating a
-// layout <div> would put a slot in the spec whose "text" is really a container,
-// and editing it would delete its children.
+// Tags whose text is page copy. A closed list: a slot on a layout <div> would
+// delete its children when edited.
 const CONTENT_TAGS = new Set([
   'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'a', 'li', 'dt', 'dd',
   'cite', 'blockquote', 'figcaption', 'summary', 'strong', 'small', 'time',
@@ -56,8 +43,8 @@ const CONTENT_TAGS = new Set([
 
 const SECTION_TAGS = ['section', 'header', 'footer', 'main', 'article', 'aside'];
 
-// Roughly what the design was set for. A soft warning in an editor, never a
-// limit - it is the user's page.
+// Roughly what the design was set for: a soft warning in an editor, never a
+// limit.
 const MAX_CHARS = {
   h1: 70, h2: 60, h3: 40, h4: 36, h5: 32, h6: 32,
   p: 240, blockquote: 240, dd: 200, li: 80, a: 28, button: 24,
@@ -66,9 +53,9 @@ const MAX_CHARS = {
 
 const MULTILINE_TAGS = new Set(['p', 'blockquote', 'dd', 'figcaption']);
 
-// What to call a slot whose element has no class name to borrow. Better than
-// the tag itself: `faq.0.answer` says what it is where `faq.0.p` does not, and
-// these ids are what an agent reads and an LLM is asked to fill.
+// What to call a slot whose element has no class name to borrow:
+// `faq.0.answer` says what it is where `faq.0.p` does not, and agents read
+// these ids.
 const TAG_WORDS = {
   a: 'link', p: 'body', span: 'text', li: 'item', dt: 'term', dd: 'body',
   h1: 'title', h2: 'title', h3: 'title', h4: 'title', h5: 'title', h6: 'title',
@@ -160,12 +147,9 @@ const sourceOf = (code, node) => code.slice(node.start, node.end);
 
 /**
  * The page's palette: the custom properties its root rule declares, in
- * declaration order, with role 0 the page ground.
- *
- * Read from the stylesheet rather than from the page's own `const INK = ...`
- * declarations, because the stylesheet is what actually paints the page - and
- * most pages declare a color in CSS (the paper) that has no JS constant at
- * all, since nothing but CSS needed it until now.
+ * declaration order, with role 0 the page ground. Read from the stylesheet,
+ * not the page's `const INK = ...`, because most pages have CSS colors (the
+ * paper) with no JS constant.
  */
 function readPalette(cssPath) {
   if (!existsSync(cssPath)) return null;
@@ -190,13 +174,9 @@ function readPalette(cssPath) {
 }
 
 /**
- * Module-scope color constants, by identifier.
- *
- * Aliases are resolved: `const TILE_A = STEEL` is as much a color constant as
- * `const STEEL = '#9C9C98'`, and about twenty pages name their tile colors
- * that way. Missing that is what left 109 pattern fields with no role map on
- * the first pass - they had ordinary palettes, just written one indirection
- * away.
+ * Module-scope color constants, by identifier. Aliases are resolved:
+ * `const TILE_A = STEEL` is as much a color constant as
+ * `const STEEL = '#9C9C98'`, and many pages name their tile colors that way.
  */
 function readColorConstants(program) {
   const literals = new Map();
@@ -239,11 +219,8 @@ function readColorConstants(program) {
 }
 
 /**
- * Module-scope arrays of colors, by identifier - `const FULL = [NAVY, ICE]`.
- *
- * Several pages pass one of these straight to a pattern (`palette={FULL}`)
- * rather than writing the array inline, so resolving them is what lets those
- * fields follow a re-color.
+ * Module-scope arrays of colors, by identifier (`const FULL = [NAVY, ICE]`),
+ * so a pattern passed one (`palette={FULL}`) can follow a re-color.
  */
 function readColorArrays(program, constants) {
   const arrays = new Map();
@@ -282,9 +259,8 @@ function readColorArrays(program, constants) {
 }
 
 /**
- * The identifier a page imports its stylesheet as. Not uniform across the
- * corpus - 38 pages use `s`, 14 use `styles` - so it is read per file rather
- * than assumed, which is the difference between annotating 52 pages and 38.
+ * The identifier a page imports its stylesheet as (`s` or `styles`, among
+ * others), read per file rather than assumed.
  */
 function styleAliasOf(program) {
   for (const statement of program.body) {
@@ -326,11 +302,8 @@ function classKeyOf(code, node, alias) {
  * applied with the rest.
  */
 function enclosingMaps(node, pendingParams) {
-  // Collect the whole chain before naming anything. Naming as we walk looked
-  // right and was wrong: an inner callback would take `i` while the outer one
-  // already bound `i`, the inner binding would shadow it, and an id built from
-  // both would read `${i}.${i}` - the same value twice. That produced 224
-  // colliding slots across 12 pages, all caught by the build gate.
+  // Collect the whole chain before naming anything, or an inner callback can
+  // take a name the outer one already binds and an id reads `${i}.${i}`.
   const chain = [];
   let current = node.parent;
 
@@ -404,12 +377,9 @@ function enclosingMaps(node, pendingParams) {
 }
 
 /**
- * Components declared in this file and rendered more than once.
- *
- * Anything inside one of them is rendered N times from a single piece of
- * source, so there is no static id that could name each instance - the way a
- * `.map()` index does. Those subtrees are left un-annotated rather than
- * annotated wrongly.
+ * Components declared in this file and rendered more than once. No static id
+ * can name each instance of their contents, so those subtrees are left
+ * un-annotated rather than annotated wrongly.
  */
 function repeatedComponents(program) {
   const declared = new Set();
@@ -476,12 +446,9 @@ function enclosingFunctionName(node) {
 }
 
 /**
- * What to call one text slot.
- *
- * The element's own class name where it has one - those are already
- * descriptive (`heroKicker`, `rowTitle`). Failing that, a nav link's own
- * anchor names it far better than its position does (`bar.making` rather than
- * `bar.link2`), and otherwise the tag's semantic word.
+ * What to call one text slot: the element's own class name (`heroKicker`),
+ * else a link's anchor (`bar.making` rather than `bar.link2`), else the tag's
+ * semantic word.
  */
 function keyFor(code, node, alias, tag) {
   const own = classKeyOf(code, node, alias);
@@ -587,8 +554,8 @@ function annotate(slug) {
   const constants = readColorConstants(program);
   const repeated = repeatedComponents(program);
 
-  // Which role each JS color constant is, so a pattern's palette can be
-  // expressed as a role map instead of frozen hexes.
+  // Which role each color is, so a pattern's palette can be a role map
+  // instead of frozen hexes.
   const roleOfHex = new Map(
     palette.colors.map((color, index) => [color.toLowerCase(), index])
   );
@@ -649,10 +616,9 @@ function annotate(slug) {
     });
   };
 
-  // A color becomes a role when it is one of the page's, and stays a literal
-  // when it is not - an off-palette accent is not part of the brand and must
-  // not move when the brand does. `transparent` is the important literal: it
-  // is what leaves real negative space so a field reads over what is beneath.
+  // A color becomes a role when it is one of the page's and stays a literal
+  // when it is not, so an off-palette accent does not move with the brand.
+  // `transparent` must stay literal: it lets a field read over what is beneath.
   const roleOfColor = (value) => {
     const role = roleOfHex.get(String(value).toLowerCase());
 
@@ -767,9 +733,8 @@ function annotate(slug) {
         );
 
         if (siblings.length > 1) {
-          // Two fields under one wrapper would be ambiguous: applying an edit
-          // takes the first [data-pattern] inside a slot. The corpus has none
-          // today - this exists so a new page cannot introduce one silently.
+          // Ambiguous: applying an edit takes the first [data-pattern] inside
+          // a slot.
           notes.push(
             `${slug}: ${siblings.length} patterns share one wrapper - not annotated`
           );
@@ -812,9 +777,8 @@ function annotate(slug) {
           : null;
 
       if (literalSlug) {
-        // Every image on a page has a distinct committed slug, so it is
-        // already the stable name for this slot - better than a positional id,
-        // which would move if a section were reordered.
+        // An image's committed slug is distinct on the page and, unlike a
+        // positional id, survives reordering.
         const id = `photo.${literalSlug}`;
 
         if (!usedIds.has(id)) {
@@ -896,10 +860,8 @@ function annotate(slug) {
 const slugs = readdirSync(templateDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
-  // A template site is app/templates/<slug>/site/page.tsx; the folder also
-  // holds the framed preview's [slug] route.
   .filter((slug) => existsSync(path.join(templateDir, slug, 'site', 'page.tsx')))
-  .filter((slug) => (only.length === 0 ? true : only.includes(slug)))
+  .filter((slug) => only.length === 0 || only.includes(slug))
   .sort();
 
 let annotated = 0;

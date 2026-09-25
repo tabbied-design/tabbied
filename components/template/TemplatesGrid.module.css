@@ -59,8 +59,8 @@
 }
 
 /* Above a phone the row wraps instead: a desktop has no swipe, the scrollbar
-   is hidden, and a mouse wheel scrolls vertically, so "Wellness & sport" and
-   "Media" sat behind the fade at 1024px with no way to reach them. */
+   is hidden, and a mouse wheel scrolls vertically, so a chip behind the fade
+   would be unreachable. */
 @media (min-width: 768px) {
   .filters {
     flex-wrap: wrap;
@@ -129,8 +129,8 @@
   background: var(--h-card);
 }
 
-/* One card per row on a phone, and 77 of them: at 4:3 the list ran to some
-   38,000px. A wider field keeps the pattern legible at a third less height. */
+/* One card per row on a phone, down a long list: a wider field than 4:3
+   keeps the pattern legible at a third less height. */
 @media (max-width: 768px) {
   .thumb {
     aspect-ratio: 16 / 9;

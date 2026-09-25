@@ -2,10 +2,9 @@
 // worker/migrations/ are emitted from this file by `npm run db:generate`, never
 // hand-written.
 //
-// Two halves. The first four tables are better-auth's own - their *property*
-// names are the contract (the Drizzle adapter looks up `schema.user.email` by
-// better-auth's field name, so those may not be renamed), while the SQL column
-// names underneath are ordinary snake_case. Run
+// Two halves. The first tables are better-auth's own: their property names are
+// the contract (the Drizzle adapter looks fields up by better-auth's names, so
+// they may not be renamed), while the SQL columns are ordinary snake_case. Run
 // `node -e "import('@better-auth/core/db').then(m => console.log(m.getAuthTables({})))"`
 // after a better-auth upgrade: a field added upstream is a migration here.
 //
@@ -85,11 +84,7 @@ export const account = sqliteTable(
   (table) => [index('account_user_id_idx').on(table.userId)]
 );
 
-/**
- * better-auth's own rate limiting, over its credential endpoints. Storage is
- * set to 'database' rather than the default in-memory map, which is per-isolate
- * and so counts a distributed brute force as a handful of separate attempts.
- */
+/** better-auth's own rate limiting, over its credential endpoints (auth.ts). */
 export const rateLimit = sqliteTable('rateLimit', {
   id: text('id').primaryKey(),
   key: text('key').notNull(),
@@ -115,11 +110,10 @@ export const verification = sqliteTable(
 // -- Studio ------------------------------------------------------------------
 
 /**
- * One answered description. Immutable once written, with a single declared
- * exception: `result` is patched to attach a generated image to a direction
- * that had none (see routes/studio.ts). The id is the capability - 128 bits of
- * randomness, and holding it is what grants read access to a shared link - so
- * it is never derived from the user or the text.
+ * One answered description. Immutable once written, except that `result` is
+ * patched to attach a generated image to a direction (routes/studio.ts). The
+ * id is the capability (128 random bits grant read access to a shared link),
+ * so it is never derived from the user or the text.
  */
 export const generation = sqliteTable(
   'generation',
@@ -137,10 +131,9 @@ export const generation = sqliteTable(
     /**
      * The Responses API turn this document came from, to be quoted as
      * `previous_response_id` when a revision continues it. Nullable and must
-     * stay so: a matched answer has no turn, and an upstream that does not
-     * store responses returns no id - a revision then restates the document
-     * instead of chaining, which is a cost difference and not a failure.
-     * Upstream retention is finite, so treat a stale id as a cache miss.
+     * stay so: a matched answer has no turn, and an upstream that stores
+     * nothing returns no id (a revision then restates the document). A stale
+     * id is a cache miss.
      */
     responseId: text('response_id'),
     createdAt: createdAt(),
@@ -149,18 +142,14 @@ export const generation = sqliteTable(
 );
 
 /**
- * A site: a template a person is customizing, and the thing "Your sites"
- * lists. It starts one of two ways - as a direction Studio generated (the
- * generation and index are recorded) or straight from the template gallery
- * with nothing written yet (both null). Distinct from a generation because a
- * generation holds three directions and a person may make more than one of
- * them.
+ * A site: a template a person is customizing. It starts as a direction Studio
+ * generated (the generation and index are recorded) or straight from the
+ * template gallery (both null). A generation holds three directions and a
+ * person may make more than one of them, hence a table of its own.
  *
- * The template is *pinned* here, not looked up. `specVersion` and
- * `templateHash` record the editable spec and the packaged HTML the site was
- * authored against, so that when a template is later re-packaged with different
- * slots the difference is detected and said, rather than an old document being
- * silently misapplied to a page it no longer describes.
+ * The template is pinned, not looked up: `specVersion` and `templateHash`
+ * record what the site was authored against, so a re-packaged template is
+ * detected and announced rather than silently misapplied.
  */
 export const site = sqliteTable(
   'site',
@@ -194,9 +183,8 @@ export const site = sqliteTable(
 );
 
 /**
- * One version of a site's edits document. Append-only: a conversational edit
- * or a manual one writes revision n+1 rather than overwriting, which is what
- * makes "go back" possible and what lets a revision quote the turn it came from.
+ * One version of a site's edits document. Append-only: every edit writes
+ * revision n+1, which is what makes "go back" possible.
  */
 export const revision = sqliteTable(
   'revision',
@@ -227,8 +215,8 @@ export const revision = sqliteTable(
 
 /**
  * The spend ledger. Read before every upstream call (today's totals against
- * the cap) and written after, from the response's own usage numbers - so the
- * index that matters is (user, createdAt), which is exactly the daily query.
+ * the cap) and written after, so the index is (user, createdAt), the daily
+ * query.
  */
 export const aiUsage = sqliteTable(
   'ai_usage',
@@ -237,7 +225,7 @@ export const aiUsage = sqliteTable(
     userId: text('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
-    /** 'directions' | 'direction-image' - capped separately. */
+    /** An `Endpoint` from lib/quota.ts; each is capped separately. */
     endpoint: text('endpoint').notNull(),
     model: text('model').notNull(),
     promptTokens: integer('prompt_tokens').notNull().default(0),
@@ -250,18 +238,9 @@ export const aiUsage = sqliteTable(
 );
 
 /**
- * Studio's own burst counters, one row per (user, endpoint).
- *
- * These were on KV, which was wrong in a way worth recording: KV allows one
- * write per second to a key and *throws* on the second, so a client sending
- * two requests in a second - precisely the burst this exists to catch - turned
- * the intended 429 into a 500. It also has no compare-and-set, so the count
- * could only ever be approximate.
- *
- * In D1 the increment is a single atomic statement (see lib/ratelimit.ts) and
- * the count is exact. The row set does not grow without bound either: a window
- * rollover resets the existing row rather than inserting a new one, so this
- * table holds at most one row per user per endpoint.
+ * Studio's own burst counters, one row per (user, endpoint), incremented by a
+ * single atomic statement (lib/ratelimit.ts). A window rollover resets the
+ * row in place, so the table does not grow.
  */
 export const rateWindow = sqliteTable('rate_window', {
   /** "<endpoint>:<userId>" - the caller composes it. */
@@ -272,11 +251,9 @@ export const rateWindow = sqliteTable('rate_window', {
 });
 
 /**
- * Verification and reset mail in development, where no provider is configured.
- * Was KV; moved here so the Worker needs one datastore rather than two. Rows
- * are overwritten per address and are never written in production - the mailer
- * throws there instead, because a silently swallowed verification strands the
- * account.
+ * Mail in development, where no provider is configured. Rows are overwritten
+ * per address and never written in production, where the mailer throws
+ * instead.
  */
 export const devMail = sqliteTable('dev_mail', {
   email: text('email').primaryKey(),
@@ -309,9 +286,7 @@ export const download = sqliteTable(
 
 /**
  * A template a person has made theirs: one of the five an account may choose
- * during the beta (lib/templates.ts). A template is chosen explicitly, or on
- * the first download or the first customizer save of it, and after that it is
- * downloaded and customized without limit. Unique per person and template, so
+ * during the beta (lib/templates.ts). Unique per person and template, so
  * choosing twice is one row, and the claim that writes it checks the count in
  * the same statement.
  */
@@ -332,16 +307,14 @@ export const templateChoice = sqliteTable(
  * "Request more": a person asking for templates beyond their five, and what
  * came of it (lib/templates.ts). Two kinds, told apart by `round`:
  *
- * - Round 1, a person's first request, answers three questions and is
- *   granted by the person themselves: an email carrying a single-use link
- *   goes out a few minutes later (`sendAt`), and following it adds 5
- *   (`status` 'sent', then 'activated'). Only the link's SHA-256 is kept.
- * - Every later round is read by a person on the team, who grants any
- *   number or declines ('pending', then 'granted' or 'declined').
+ * - Round 1, a person's first request, is granted by the person themselves:
+ *   an email with a single-use link goes out at `sendAt`, and following it
+ *   adds 5 (`status` 'sent', then 'activated'). Only the link's SHA-256 is kept.
+ * - Every later round is read by the team, who grant or decline it
+ *   ('pending', then 'granted' or 'declined').
  *
- * `granted` counts toward the allowance while the status is 'activated' or
- * 'granted'. A person has at most one open request at a time; the route
- * checks that, since the rows themselves are a history.
+ * A person has at most one open request at a time; `openRequest` checks that
+ * in its insert, since the rows themselves are a history.
  */
 export const templateRequest = sqliteTable(
   'template_request',

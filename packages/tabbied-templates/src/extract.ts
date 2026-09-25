@@ -1,14 +1,12 @@
 // Building a spec out of exported HTML.
 //
-// Everything the spec says a slot *currently is* comes from here, read off the
-// bytes the site actually shipped. Nothing is hand-written, so the spec cannot
-// drift from the page - the same reason the download packager derives its HTML
-// from the export instead of keeping a second copy of every template.
+// Everything the spec says a slot *currently is* is read off the bytes the site
+// actually shipped, so the spec cannot drift from the page.
 //
 // The annotations carry their own metadata rather than pointing at a sidecar
-// file. Five of the template sites share one component, so per-site sidecars
-// would have nowhere to live for them, and a label sitting on the element it
-// labels is one fewer thing to keep in sync.
+// file: the pages built on the shared TemplateSite component would have
+// nowhere to keep one, and a label on the element it labels is one fewer thing
+// to keep in sync.
 
 import { scanElements, parseAttributes, stripCacheBuster } from './html.js';
 import { accentTagOf, hasEmphasis, htmlToTextValue } from './text.js';
@@ -261,7 +259,6 @@ function imageSlotFrom(
 
 function patternSlotFrom(
   id: string,
-  tagName: string,
   attributes: Record<string, string>,
   innerHtml: string,
   options: ExtractOptions
@@ -306,12 +303,8 @@ export type ExtractedRoot = {
   /** `vars` roots: the property names role 0 upward write to. */
   varNames?: string[];
   /**
-   * The brand palette, read back off the root's inline `--brand-*` properties.
-   *
-   * Taking the colors from the page rather than from the module that rendered
-   * it is the same discipline as the rest of this file: a spec that sourced its
-   * palette separately could disagree with what shipped, and nothing would say
-   * so.
+   * The brand palette, read back off the root's inline properties (`--brand-*`,
+   * or the `vars` names), so it cannot disagree with what shipped.
    */
   colors: string[];
 };
@@ -368,10 +361,8 @@ export function parseBrandColors(style: string): string[] {
  * Read every annotated slot out of a page.
  *
  * An annotation that resolves to nothing (an image slot with no `<img>`, a
- * pattern slot with no placeholder) is reported rather than skipped: a slot
- * that silently vanishes is exactly the failure mode that let 278 dead gallery
- * thumbnail configs accumulate, and the cure was the same - a build gate that
- * fails on one.
+ * pattern slot with no placeholder) is reported rather than skipped, so the
+ * build gate can fail on it instead of shipping a control that does nothing.
  */
 export function extractFromHtml(
   html: string,
@@ -435,7 +426,7 @@ export function extractFromHtml(
     }
 
     if (attribute === EDIT_PATTERN_ATTRIBUTE) {
-      const slot = patternSlotFrom(id, tagName, attributes, innerHtml, options);
+      const slot = patternSlotFrom(id, attributes, innerHtml, options);
 
       if (slot) slots.push(slot);
       else problems.push(`pattern slot "${id}" contains no [data-pattern] host`);
@@ -462,12 +453,10 @@ function sameContent(a: Slot, b: Slot): boolean {
 /**
  * Collapse repeats of one id into a single slot.
  *
- * A slot is a piece of content, and content repeats: the brand name is in the
- * masthead and again in the footer. Applying an edit reaches every element
- * carrying the id, so the spec needs one entry - but only if they currently
- * agree. Two elements sharing an id while saying different things is a real
- * authoring bug: whichever value the spec recorded, the first edit would make
- * the other one change to match, silently.
+ * Content repeats (the brand name in the masthead and the footer), and an edit
+ * reaches every element carrying the id, so the spec needs one entry, but only
+ * if they currently agree. Otherwise the first edit would silently change one
+ * of them to match the other, so a disagreement is reported.
  */
 function dedupe(slots: Slot[], problems: string[]): Slot[] {
   const byId = new Map<string, Slot>();

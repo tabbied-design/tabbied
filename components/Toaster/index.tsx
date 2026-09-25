@@ -6,7 +6,7 @@ import styles from './Toaster.module.css';
 
 // A standalone toast manager: `toaster.add({ title })` can be called from
 // anywhere (event handlers, non-React code) and the mounted <Toaster/> renders
-// the toasts. Bottom-right, matching Base UI's toast primitives.
+// the toasts.
 export const toaster = Toast.createToastManager();
 
 function ToastList() {
@@ -27,7 +27,7 @@ function ToastList() {
   ));
 }
 
-/** Mounts the toast viewport (bottom-right). Render once per page. */
+/** Mounts the toast viewport. Render once per page. */
 export default function Toaster() {
   return (
     <Toast.Provider toastManager={toaster}>

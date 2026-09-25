@@ -1,15 +1,10 @@
 // A. Split - one straight cut across the cell, with an ink either side.
 //
-// The simplest thing a cell can do and still be a drawing: divide. Where the
-// cut lands, how it leans, whether the two parts touch or leave a gap between
-// them, and whether one of them sits proud of the other is the whole of this
-// section.
-//
-// Most of these lay the second ink *over* a full-bleed first rather than
-// butting two clipped shapes edge to edge. One anti-aliased edge instead of
-// two abutting ones is both the better drawing and the better export:
-// abutting AA edges are exactly where a vector renderer and a CSS painter
-// disagree.
+// Where the cut lands, how it leans, whether the parts touch or leave a gap,
+// and whether one sits proud of the other is the whole of this section. Most
+// lay the second ink *over* a full-bleed first rather than butting two
+// clipped shapes: one anti-aliased edge instead of two abutting ones, which
+// is exactly where a vector renderer and a CSS painter disagree.
 import { section, A, B, F, TR, cp, ink, poly, rot, R2, R4, c1 } from './shared.mjs';
 
 const { add, all } = section('A. Split');

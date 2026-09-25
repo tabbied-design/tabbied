@@ -17,15 +17,14 @@ const INK = '#15171A';
 const ORANGE = '#FF6A00';
 const STEEL = '#8C9096';
 const PALE = '#D9D8D2';
-/* The two inks the decorative tiles draw with: always the quiet pair, so a
-   tile reads as a sample rather than as another headline. */
 /* The tiles pin their doodle to a whole multiple of the cell (9 × 72px)
    and let the plate clip it. A fluid box gives fractional grid tracks and
    a hairline seam at every cell edge. */
 const TILE_BOX = 648;
+/* The two inks the decorative tiles draw with: always the quiet pair, so a
+   tile reads as a sample rather than as another headline. */
 const TILE_A = STEEL;
 const TILE_B = PALE;
-
 
 const CAPABILITIES = [
   { n: '01', t: 'Long-span steel', d: 'Trusses, arches and space frames from 30 to 180 meters. Fabrication drawings issued from the same model we analyzed.' },

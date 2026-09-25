@@ -15,7 +15,6 @@ export const metadata = {
 /* Bone ground, ink, one pine green. Every decorative field takes
    `transparent` in the background slot, so the paper of the page - and, in
    the plates, the plate itself - is what shows through the drawing. */
-const INK = '#141614';
 const ACCENT = '#1d6f5c';
 const GRAY = '#87887f';
 const PANEL = '#dfdcd0';

@@ -1,13 +1,10 @@
 // G. Beacon - two fans of light thrown from opposite edges.
 //
-// A hard-stop conic sector is the one angular form the converter can carry:
-// SVG has no angular gradient, so a sector whose color changes anywhere but
-// at a shared stop angle is banned outright, and the lints hold this section
-// to that. Two sectors aimed at each other from facing edges leave a gap down
-// the middle that belongs to neither, which is the whole drawing.
-//
-// The sectors are mask layers over one ink, so the dark between the beams is
-// a real hole rather than a second color standing in for one.
+// A hard-stop conic sector is the one angular form the converter can carry
+// (SVG has no angular gradient, and the lints reject any other). Two sectors
+// aimed at each other from facing edges leave a gap down the middle that
+// belongs to neither. They are mask layers over one ink, so the dark between
+// the beams is a real hole.
 import { section, F, TR, rot, faded, pieL, R2 } from './shared.mjs';
 
 const { add, all } = section('G. Beacon');

@@ -35,7 +35,6 @@ await mkdir(publicDir, { recursive: true });
 await Promise.all([
   writeFile(path.join(publicDir, 'llms.txt'), llms),
   writeFile(path.join(publicDir, 'llms-full.txt'), llmsFull),
-  // Served alongside so a tool can fetch the structured form directly.
   writeFile(
     path.join(publicDir, 'catalog.json'),
     `${JSON.stringify(catalog, null, 2)}\n`

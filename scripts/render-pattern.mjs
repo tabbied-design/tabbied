@@ -3,17 +3,12 @@
  * Rasterize a real Tabbied pattern to PNG, for use as an image input to an
  * image model (see docs/pattern-mockups.md).
  *
- * This exists because a mockup has to contain the ACTUAL pattern. Pasting the
- * css-doodle source into a text prompt does not work: the model cannot execute
- * CSS, so it invents a pattern that merely rhymes with ours. The only way to
- * get our geometry into the picture is to render it here and hand the model
- * the pixels.
+ * A mockup has to contain the ACTUAL pattern, and a model cannot execute
+ * css-doodle, so it is rendered here and the model is handed the pixels.
  *
- * Rendering runs in a real browser because css-doodle is a custom element:
- * a tiny static server exposes the repo, Playwright loads the built core plus
- * css-doodle from it, and the mounted element is screenshotted directly. That
- * screenshot is the ground truth for what a user sees, which is exactly what
- * the SVG-export parity sweep also compares against.
+ * css-doodle is a custom element, so this runs in a real browser: a tiny
+ * static server exposes the repo, Playwright loads the built core from it, and
+ * the mounted element is screenshotted directly.
  *
  * Usage:
  *   node scripts/render-pattern.mjs --design prisma --out refs/poster.png \
@@ -83,9 +78,7 @@ export async function renderPattern(opts) {
 
   const { server, port } = await serveRepo();
   const browser = await chromium.launch({
-    // Playwright's own browser unless a binary is named, like every other
-    // browser script here (svg-parity-sweep, render-sweep): a hard-coded
-    // sandbox path failed to launch on any machine that lacked it.
+    // Playwright's own browser unless a binary is named.
     ...(process.env.MOCKUP_CHROMIUM ? { executablePath: process.env.MOCKUP_CHROMIUM } : {}),
   });
   try {

@@ -4,10 +4,9 @@
 //   node scripts/images/import-batch.mjs           # everything that succeeded
 //   node scripts/images/import-batch.mjs --force   # overwrite existing files
 //
-// KIE returns a URL per job rather than inline data, so each result is fetched
-// and then recompressed to roughly 2x its widest rendered slot before it lands
-// in public/, the same treatment scripts/optimize-images.mjs gives the marketing
-// images. With `output: 'export'` there is no /_next/image optimizer to lean on.
+// Each result URL is fetched and recompressed to roughly 2x its widest
+// rendered slot, as scripts/optimize-images.mjs does: the static export has no
+// /_next/image optimizer.
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -71,8 +70,7 @@ await pooled(entries, concurrency, async ([id, task]) => {
   }
 });
 
-// The React tree reads this module to know which slots have an image; the static
-// generator stats the directory itself, so it only needs a rerun.
+// The React tree reads this module to know which slots have an image.
 const indexed = writeImageIndex();
 
 const totalBytes = written.reduce((n, w) => n + w.bytes, 0);

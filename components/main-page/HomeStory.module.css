@@ -31,7 +31,7 @@
 }
 
 /* A zero-size anchor at the center; the ring hangs off it, so one rotation
-   here carries all fourteen squares round. */
+   here carries every orbiting square round. */
 .orbit {
   position: absolute;
   top: 50%;
@@ -113,8 +113,8 @@
   text-transform: uppercase;
 }
 
-/* The two that lead somewhere are underlined in teal, which is the whole of
-   the difference between a figure and a link here. */
+/* The stats that lead somewhere are underlined in teal, the whole of the
+   difference between a figure and a link here. */
 .statLink {
   color: #0d9488;
   text-decoration: underline;

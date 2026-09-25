@@ -1,17 +1,12 @@
 // F. Cutfade - a ramp shut inside a cut shape.
 //
-// clip-path decides the silhouette and the mask decides how much of it is
-// there. They are separate steps in the Filter Effects model - children, then
-// filter, then clip, then mask - and the converter emits them in that order,
-// so a faded triangle is a <clipPath> and a <mask> on the same group rather
-// than one shape approximating both.
-//
-// Both read as hard-edged marks that are only half printed: the profile stays
-// exact wherever the ink reaches, and where it does not, the outline stops
-// with it.
+// clip-path decides the silhouette and the mask how much of it is there.
+// They are separate steps in the Filter Effects model (children, filter,
+// clip, mask) and the converter emits them in that order, so a faded triangle
+// is a <clipPath> and a <mask> on the same group rather than one shape
+// approximating both.
 import {
   section,
-  A,
   F,
   TR,
   cp,

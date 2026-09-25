@@ -1,16 +1,8 @@
-// The palettes the customizer's Colors tab offers, and how a palette of one
-// length becomes a palette of another.
-//
-// A template declares as many roles as its stylesheet reads - a ground and
-// anywhere from one to a dozen inks - while a library palette carries three to
-// seven colors. So the two cannot simply be assigned across: the roles are
-// filled by cycling the library's inks, which keeps the ground the ground and
-// spreads the inks evenly rather than running out partway down the page.
-//
-// Nothing here touches the API. A palette choice is only ever a starting set
-// of colors for the edits document; the pencil beside each row opens the same
-// per-role editor the rail used to be, so a person is never limited to what
-// the library happens to hold.
+// The palettes the customizer's Colors tab offers. A template declares as many
+// roles as its stylesheet reads (a ground and one to a dozen inks) while a
+// library palette carries three to seven colors, so the roles are filled by
+// cycling the library's inks, the ground staying the ground. A choice is only
+// a starting set of colors; the pencil on each row opens the per-role editor.
 import { PALETTE_LIBRARY, type LibraryPalette } from './paletteLibrary';
 
 export type PaletteChoice = {
@@ -28,13 +20,11 @@ export const isTransparent = (value: string): boolean => {
 };
 
 /**
- * Fill `roles` positions from `source`, ground first and then the inks in turn.
- *
- * A role the template authored as transparent stays transparent: a pattern
- * field drawn over a photograph reads only because its ground is not painted,
- * and a palette swap that filled it in would cover the picture.
+ * Fill the authored roles from `source`, ground first and then the inks in
+ * turn. A role authored as transparent stays so: a pattern field drawn over a
+ * photograph reads only because its ground is not painted.
  */
-export function fitPalette(source: readonly string[], authored: readonly string[]): string[] {
+function fitPalette(source: readonly string[], authored: readonly string[]): string[] {
   const inks = source.slice(1);
 
   return authored.map((original, index) => {
@@ -48,13 +38,12 @@ export function fitPalette(source: readonly string[], authored: readonly string[
 const sameColor = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
 
 /** Two palettes are the same palette when every role matches, case aside. */
-export const samePalette = (a: readonly string[], b: readonly string[]): boolean =>
+const samePalette = (a: readonly string[], b: readonly string[]): boolean =>
   a.length === b.length && a.every((color, index) => sameColor(color, b[index] ?? ''));
 
 /**
- * The rows the rail draws: the template's own palette first - it is the one
- * the site was designed in, and choosing it is the way back to them - then
- * the library, fitted to this template's roles.
+ * The rows the rail draws: the template's own palette first (choosing it is
+ * the reset), then the library, fitted to this template's roles.
  */
 export function paletteChoices(templateName: string, authored: readonly string[]): PaletteChoice[] {
   const library: LibraryPalette[] = PALETTE_LIBRARY;

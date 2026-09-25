@@ -1,13 +1,9 @@
 // D. Scantling - the two halves of a rebated joint.
 //
-// One block with a step plowed out of its corner, and the block that step
-// was cut to receive. They are the same carpentry read from either side, and
-// putting them next to each other in a grid is the point: at any frequency
-// the field mixes both halves, so the cells look like timber waiting to be
-// fitted rather than one shape repeated.
-//
-// Both are a single clip-path polygon over one ink. The notch is cut, never
-// filled, so it stays open on a transparent background.
+// One block with a step plowed out of its corner, and the block that step was
+// cut to receive; at any frequency the field mixes both halves, so the cells
+// read as timber waiting to be fitted. Each is a single clip-path polygon over
+// one ink, so the notch stays open on a transparent background.
 import { section, F, TR, cp, ink, poly, rot, R4 } from './shared.mjs';
 
 const { add, all } = section('D. Scantling');
