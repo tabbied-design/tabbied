@@ -537,38 +537,38 @@ export default function CleaverAndCoPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-          <form className={s.form} action="#">
-            <h3 data-edit="visit.formHead" data-edit-max="40" className={s.formHead}>Order for pickup</h3>
-            <div className={s.field}>
-              <label data-edit="visit.label" htmlFor="cc-name">Name</label>
-              <input id="cc-name" name="name" type="text" autoComplete="name" />
-            </div>
-            <div className={s.formRow}>
+            <form className={s.form} action="#">
+              <h3 data-edit="visit.formHead" data-edit-max="40" className={s.formHead}>Order for pickup</h3>
               <div className={s.field}>
-                <label data-edit="visit.label2" htmlFor="cc-phone">Phone</label>
-                <input id="cc-phone" name="phone" type="tel" autoComplete="tel" />
+                <label data-edit="visit.label" htmlFor="cc-name">Name</label>
+                <input id="cc-name" name="name" type="text" autoComplete="name" />
+              </div>
+              <div className={s.formRow}>
+                <div className={s.field}>
+                  <label data-edit="visit.label2" htmlFor="cc-phone">Phone</label>
+                  <input id="cc-phone" name="phone" type="tel" autoComplete="tel" />
+                </div>
+                <div className={s.field}>
+                  <label data-edit="visit.label3" htmlFor="cc-day">Pickup</label>
+                  <select id="cc-day" name="day" defaultValue="sat">
+                    <option value="fri">Friday</option>
+                    <option value="sat">Saturday</option>
+                    <option value="sun">Sunday</option>
+                  </select>
+                </div>
               </div>
               <div className={s.field}>
-                <label data-edit="visit.label3" htmlFor="cc-day">Pickup</label>
-                <select id="cc-day" name="day" defaultValue="sat">
-                  <option value="fri">Friday</option>
-                  <option value="sat">Saturday</option>
-                  <option value="sun">Sunday</option>
-                </select>
+                <label data-edit="visit.label4" htmlFor="cc-order">Your order</label>
+                <textarea
+                  id="cc-order"
+                  name="order"
+                  rows={5}
+                  placeholder="Two ribeyes, 1.5 in thick. 2 lb ground chuck. One whole chicken, spatchcocked."
+                />
               </div>
-            </div>
-            <div className={s.field}>
-              <label data-edit="visit.label4" htmlFor="cc-order">Your order</label>
-              <textarea
-                id="cc-order"
-                name="order"
-                rows={5}
-                placeholder="Two ribeyes, 1.5 in thick. 2 lb ground chuck. One whole chicken, spatchcocked."
-              />
-            </div>
-            <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">Send my order</button>
-            <small data-edit="visit.formNote" className={s.formNote}>We call to confirm the weight and price. Pay at pickup.</small>
-          </form>
+              <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">Send my order</button>
+              <small data-edit="visit.formNote" className={s.formNote}>We call to confirm the weight and price. Pay at pickup.</small>
+            </form>
           </div>
         </section>
       </main>

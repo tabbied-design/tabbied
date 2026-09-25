@@ -322,12 +322,24 @@ export default function BrightSmilesPage() {
               <span data-edit="parents.secTag" data-edit-max="60" className={s.secTag}>For grown-ups</span>
               <h2 data-edit="parents.title" data-edit-max="60" id="parents-h">Questions parents ask</h2>
               <p data-edit="parents.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>And if yours is not here, call the front desk: Dana has heard all of them.</p>
-              <Artwork
-                slug="bright-smiles-kids-chair"
-                alt=""
-                inks={{ yellow: 'var(--sun)', blue: 'var(--blue)', red: 'var(--pink)' }}
-                className={s.parentsChair}
-              />
+              <div className={s.chairPlate}>
+                <div className={s.chairRings} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={scattershrink}
+                    palette={QUIET}
+                    fit="grid"
+                    cellSize={90}
+                    seed="bright-chair"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+                <Artwork
+                  slug="bright-smiles-kids-chair"
+                  alt=""
+                  inks={{ yellow: 'var(--sun)', blue: 'var(--blue)', red: 'var(--pink)' }}
+                  className={s.parentsChair}
+                />
+              </div>
             </div>
             <div className={s.faq}>
               {FAQ.map((f, i) => (
@@ -349,6 +361,17 @@ export default function BrightSmilesPage() {
           </div>
           <div className={s.insurance}>
             <div className={s.plans}>
+              <div className={s.plansSmiles} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={bangle}
+                  palette={SMILES}
+                  options={{ frequency: 0.7 }}
+                  fit="grid"
+                  cellSize={44}
+                  seed="bright-plans"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <h3 data-edit="insurance.title2" data-edit-max="40">We take</h3>
               <ul className={s.planList}>
                 {PLANS.map((p, i) => (
@@ -464,6 +487,17 @@ export default function BrightSmilesPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footSmiles} aria-hidden="true">
+          <TabbiedPattern
+            pattern={bangle}
+            palette={SMILES}
+            options={{ frequency: 0.6 }}
+            fit="grid"
+            cellSize={40}
+            seed="bright-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footInner}>
           <div className={s.footBrand}>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Bright Smiles</p>

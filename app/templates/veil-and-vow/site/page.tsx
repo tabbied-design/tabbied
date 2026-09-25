@@ -313,13 +313,13 @@ export default function VeilAndVowPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-              <Artwork
-                slug="veil-and-vow-bouquet"
-                alt=""
-                mode="tint"
-                inks={['var(--ink)', 'var(--rose)']}
-                className={s.fitBouquet}
-              />
+                <Artwork
+                  slug="veil-and-vow-bouquet"
+                  alt=""
+                  mode="tint"
+                  inks={['var(--ink)', 'var(--rose)']}
+                  className={s.fitBouquet}
+                />
               </div>
             </div>
 

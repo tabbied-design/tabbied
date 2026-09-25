@@ -347,15 +347,15 @@ export default function TinRoofGuitarsPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-            <ul className={s.teachers}>
-              {TEACHERS.map((t, i) => (
-                <li key={t.name} className={s.teacher}>
-                  <h3 data-edit={`lessons.teacherName.${i}`} data-edit-max="40" className={s.teacherName}>{t.name}</h3>
-                  <p data-edit={`lessons.teacherPlays.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherPlays}>{t.plays}</p>
-                  <p data-edit={`lessons.teacherDays.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherDays}>{t.days}</p>
-                </li>
-              ))}
-            </ul>
+              <ul className={s.teachers}>
+                {TEACHERS.map((t, i) => (
+                  <li key={t.name} className={s.teacher}>
+                    <h3 data-edit={`lessons.teacherName.${i}`} data-edit-max="40" className={s.teacherName}>{t.name}</h3>
+                    <p data-edit={`lessons.teacherPlays.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherPlays}>{t.plays}</p>
+                    <p data-edit={`lessons.teacherDays.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherDays}>{t.days}</p>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>

@@ -355,13 +355,13 @@ export default function PolishNailBarPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-              <Artwork
-                slug="polish-nail-bar-bottle"
-                alt=""
-                mode="tint"
-                inks={['var(--violet)', 'var(--paper)']}
-                className={s.servicesBottle}
-              />
+                <Artwork
+                  slug="polish-nail-bar-bottle"
+                  alt=""
+                  mode="tint"
+                  inks={['var(--violet)', 'var(--paper)']}
+                  className={s.servicesBottle}
+                />
               </div>
             </div>
             <div className={s.menu}>

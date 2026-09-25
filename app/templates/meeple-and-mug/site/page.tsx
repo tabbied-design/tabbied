@@ -437,48 +437,48 @@ export default function MeepleAndMugPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-            <form className={s.book} action="#">
-              <h3 data-edit="tables.title4" data-edit-max="40">Book a table</h3>
-              <label className={s.field}>
-                <span data-edit="tables.text" data-edit-max="60">Date</span>
-                <input type="date" name="date" required />
-              </label>
-              <label className={s.field}>
-                <span data-edit="tables.text2" data-edit-max="60">From</span>
-                <select name="time" defaultValue="18:00">
-                  <option value="12:00">12 pm</option>
-                  <option value="14:00">2 pm</option>
-                  <option value="16:00">4 pm</option>
-                  <option value="18:00">6 pm</option>
-                  <option value="19:00">7 pm</option>
-                  <option value="20:00">8 pm</option>
-                  <option value="21:00">9 pm</option>
-                </select>
-              </label>
-              <label className={s.field}>
-                <span data-edit="tables.text3" data-edit-max="60">Hours</span>
-                <select name="hours" defaultValue="3">
-                  <option value="2">2 hours</option>
-                  <option value="3">3 hours</option>
-                  <option value="4">4 hours</option>
-                  <option value="5">5 hours</option>
-                </select>
-              </label>
-              <label className={s.field}>
-                <span data-edit="tables.text4" data-edit-max="60">Players</span>
-                <input type="number" name="players" min="1" max="12" defaultValue="4" />
-              </label>
-              <label className={`${s.field} ${s.fieldWide}`}>
-                <span data-edit="tables.text5" data-edit-max="60">Name</span>
-                <input type="text" name="name" autoComplete="name" required />
-              </label>
-              <label className={`${s.field} ${s.fieldWide}`}>
-                <span data-edit="tables.text6" data-edit-max="60">Email</span>
-                <input type="email" name="email" autoComplete="email" required />
-              </label>
-              <button data-edit="tables.btn" data-edit-max="24" className={s.btn} type="submit">Request the table</button>
-              <p data-edit="tables.bookNote" data-edit-max="240" data-edit-multiline className={s.bookNote}>We confirm by email within the hour. No deposit under six players.</p>
-            </form>
+              <form className={s.book} action="#">
+                <h3 data-edit="tables.title4" data-edit-max="40">Book a table</h3>
+                <label className={s.field}>
+                  <span data-edit="tables.text" data-edit-max="60">Date</span>
+                  <input type="date" name="date" required />
+                </label>
+                <label className={s.field}>
+                  <span data-edit="tables.text2" data-edit-max="60">From</span>
+                  <select name="time" defaultValue="18:00">
+                    <option value="12:00">12 pm</option>
+                    <option value="14:00">2 pm</option>
+                    <option value="16:00">4 pm</option>
+                    <option value="18:00">6 pm</option>
+                    <option value="19:00">7 pm</option>
+                    <option value="20:00">8 pm</option>
+                    <option value="21:00">9 pm</option>
+                  </select>
+                </label>
+                <label className={s.field}>
+                  <span data-edit="tables.text3" data-edit-max="60">Hours</span>
+                  <select name="hours" defaultValue="3">
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                    <option value="4">4 hours</option>
+                    <option value="5">5 hours</option>
+                  </select>
+                </label>
+                <label className={s.field}>
+                  <span data-edit="tables.text4" data-edit-max="60">Players</span>
+                  <input type="number" name="players" min="1" max="12" defaultValue="4" />
+                </label>
+                <label className={`${s.field} ${s.fieldWide}`}>
+                  <span data-edit="tables.text5" data-edit-max="60">Name</span>
+                  <input type="text" name="name" autoComplete="name" required />
+                </label>
+                <label className={`${s.field} ${s.fieldWide}`}>
+                  <span data-edit="tables.text6" data-edit-max="60">Email</span>
+                  <input type="email" name="email" autoComplete="email" required />
+                </label>
+                <button data-edit="tables.btn" data-edit-max="24" className={s.btn} type="submit">Request the table</button>
+                <p data-edit="tables.bookNote" data-edit-max="240" data-edit-multiline className={s.bookNote}>We confirm by email within the hour. No deposit under six players.</p>
+              </form>
             </div>
           </div>
         </section>
