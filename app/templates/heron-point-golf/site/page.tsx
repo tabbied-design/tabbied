@@ -176,7 +176,7 @@ export default function HeronPointGolfPage() {
             />
           </div>
           <div className={s.heroText}>
-            <p className={s.kicker}>Public golf on the marsh road, since 1964</p>
+            <p className={s.kicker}>Public golf on the marsh road</p>
             <h1 id="hero-h" className={s.heroTitle}>
               Eighteen holes
               <br />

@@ -135,15 +135,14 @@
 }
 
 /* ------------------------------------------------------------------ hero
-   The words take the top of the sky and the picture starts under them,
-   drawn at its own proportions across the full width, so the masts rise
-   from below and nothing but the section's own color sits behind the
-   type. The water is cropped, never the sky. */
+   The picture is drawn at its own proportions across the full width, its
+   top under the words, and its sky fades into the section's own color, a
+   harbor fog the masts rise out of. The water is cropped, never the sky. */
 
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: calc(19rem + 52vw);
+  min-height: calc(12rem + 52vw);
   overflow: hidden;
   background: var(--pale);
 }
@@ -153,8 +152,21 @@
   z-index: -1;
   left: 0;
   right: 0;
-  top: 19rem;
+  top: 12rem;
   height: 66.7vw;
+}
+
+.heroArt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--pale) 0%,
+    color-mix(in srgb, var(--pale) 82%, transparent) 16%,
+    color-mix(in srgb, var(--pale) 45%, transparent) 30%,
+    transparent 43%
+  );
 }
 
 .heroText {
@@ -820,11 +832,11 @@
   }
 
   .hero {
-    min-height: calc(26rem + 52vw);
+    min-height: calc(20rem + 52vw);
   }
 
   .heroArt {
-    top: 26rem;
+    top: 20rem;
   }
 
   .siteMenu {

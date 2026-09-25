@@ -245,7 +245,7 @@ export default function ParksideFamilyMedicinePage() {
             <h1 id="hero-h" className={s.heroTitle}>
               Your doctors,
               <br />
-              <em>across from the park.</em>
+              <em>by the park.</em>
             </h1>
             <p className={s.heroLede}>
               Five clinicians who know your family by name. Tell us what you

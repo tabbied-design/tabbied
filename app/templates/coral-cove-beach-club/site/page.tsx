@@ -175,7 +175,7 @@ export default function CoralCoveBeachClubPage() {
             />
           </div>
           <div className={s.heroText}>
-            <p className={s.kicker}>Beach club on Palm Strand, open daily</p>
+            <p className={s.kicker}>Beach club on Palm Strand</p>
             <h1 id="hero-h" className={s.heroTitle}>
               Sand, sea and
               <br />

@@ -887,15 +887,15 @@
   .heroText {
     width: auto;
     margin: 0;
-    padding: 6.5rem var(--gut) 118vw;
+    padding: 6.5rem var(--gut) 112vw;
   }
 
   .heroArt {
-    left: -26vw;
+    left: -20vw;
     right: auto;
-    width: 250vw;
-    height: 166.67vw;
-    bottom: -28vw;
+    width: 220vw;
+    height: 146.67vw;
+    bottom: -12vw;
   }
 
   .today,
