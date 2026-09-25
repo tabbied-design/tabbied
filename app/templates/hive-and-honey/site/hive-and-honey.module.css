@@ -517,6 +517,7 @@
 }
 
 .monthHarvest {
+  min-height: 2.6em;
   margin-top: 0.35rem;
   font-size: 0.7rem;
   font-weight: 700;
@@ -903,6 +904,19 @@
   gap: clamp(2rem, 5vw, 5rem);
 }
 
+.faqAside {
+  margin-top: 1.2rem;
+  max-width: 22rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.faqPhone {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--honey);
+}
+
 .faqList {
   border-top: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
 }
@@ -952,7 +966,7 @@
 
 .footTop,
 .footFine {
-  max-width: var(--max);
+  max-width: calc(var(--max) - 2 * var(--gut));
   margin: 0 auto;
 }
 
@@ -1068,6 +1082,10 @@
   .faq {
     grid-template-columns: 1fr;
     gap: 0;
+  }
+
+  .faq .secHead {
+    margin-bottom: 1.5rem;
   }
 }
 

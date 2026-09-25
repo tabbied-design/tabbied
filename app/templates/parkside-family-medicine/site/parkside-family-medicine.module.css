@@ -1108,6 +1108,14 @@
   .team {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .hoursGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .todaySteps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1080px) {
@@ -1278,7 +1286,8 @@
 
   .fieldRow,
   .visitList,
-  .footGrid {
+  .footGrid,
+  .todaySteps {
     grid-template-columns: 1fr;
   }
 

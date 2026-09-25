@@ -449,6 +449,8 @@ export default function HiveAndHoneyPage() {
           <div className={s.secHead}>
             <p className={s.secKick}>Questions</p>
             <h2 id="faq-h">Asked at the stall every week</h2>
+            <p className={s.faqAside}>Something else? Ask Ruth at the Saturday stall, or call the farm between 9 and 5.</p>
+            <a className={s.faqPhone} href="tel:+15550142290">(555) 014-2290</a>
           </div>
           <div className={s.faqList}>
             {FAQ.map((f) => (
