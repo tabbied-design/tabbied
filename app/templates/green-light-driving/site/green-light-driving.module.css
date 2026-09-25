@@ -233,7 +233,11 @@
   position: relative;
   height: clamp(24rem, 44vw, 36rem);
   display: grid;
-  place-items: end center;
+  place-items: end;
+}
+
+.heroArt > .heroLight {
+  margin-right: 6%;
 }
 
 .heroField {
@@ -1080,8 +1084,9 @@
     place-items: end start;
   }
 
-  .heroLight {
+  .heroArt > .heroLight {
     width: min(13rem, 46%);
+    margin-right: 0;
   }
 
   .heroStat {

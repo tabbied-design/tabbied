@@ -912,6 +912,14 @@
 /* ------------------------------------------------------------ responsive */
 
 @media (max-width: 1180px) {
+  .footTop {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .footNav {
+    grid-column: 1 / -1;
+  }
+
   .faces {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

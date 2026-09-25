@@ -1194,6 +1194,18 @@
 /* -------------------------------------------------------------- responsive */
 
 @media (max-width: 1100px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .barCall {
+    margin-left: auto;
+  }
+
   .steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1209,18 +1221,6 @@
 }
 
 @media (max-width: 900px) {
-  .nav {
-    display: none;
-  }
-
-  .siteMenu {
-    display: block;
-  }
-
-  .barCall {
-    margin-left: auto;
-  }
-
   .hero {
     grid-template-columns: minmax(0, 1fr);
   }

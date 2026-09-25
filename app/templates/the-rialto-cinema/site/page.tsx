@@ -14,7 +14,6 @@ export const metadata = {
    `transparent`, so they glow straight out of the dark of the house. */
 const GOLD = '#D4A64A';
 const VELVET = '#C9302C';
-const CREAM = '#F2E8DA';
 const PLUM = '#1F191C';
 
 const BULBS = ['transparent', GOLD, VELVET, PLUM];

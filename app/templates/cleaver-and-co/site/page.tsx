@@ -12,7 +12,6 @@ export const metadata = {
 
 /* Site colors. The hatching around the charts sits on `transparent`, so
    the strokes are laid straight onto the butcher paper. */
-const INK = '#1C1714';
 const RED = '#A8322D';
 const GRAY = '#8C8378';
 const PALE = '#E3D8C8';

@@ -321,7 +321,7 @@ export default function HachiRamenPage() {
 
           <div className={s.broths}>
             {BROTHS.map((b) => (
-              <article key={b.name} className={`${s.broth} ${s[b.tone]}`} aria-labelledby={`broth-${b.name}`}>
+              <article key={b.name} className={s.broth} data-tone={b.tone} aria-labelledby={`broth-${b.name}`}>
                 <div className={s.brothHead}>
                   <span className={s.swatch} aria-hidden="true" />
                   <h3 id={`broth-${b.name}`}>{b.name}</h3>

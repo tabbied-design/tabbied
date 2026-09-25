@@ -16,7 +16,6 @@ const INK = '#231815';
 const KETCHUP = '#E03A1E';
 const MUSTARD = '#F7B32B';
 const CREAM = '#FFF6E9';
-const GRAY = '#A59483';
 
 const BUNS = ['transparent', MUSTARD, KETCHUP, CREAM];
 const ZIGZAG = ['transparent', INK, KETCHUP, MUSTARD];
@@ -420,7 +419,7 @@ export default function DoubleStackBurgersPage() {
             fit="grid"
             cellSize={48}
             seed="bun-row"
-            options={{ frequency: 0.6 }}
+            options={{ frequency: 0.8 }}
             redrawInterval={8000}
             style={{ position: 'absolute', inset: 0 }}
           />

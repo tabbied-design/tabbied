@@ -373,19 +373,15 @@
   border-top: 3px solid var(--ink);
 }
 
-.pale {
-  --tone: var(--pale);
-}
-
-.gold {
+.broth[data-tone='gold'] {
   --tone: var(--gold);
 }
 
-.chili {
+.broth[data-tone='chili'] {
   --tone: var(--chili);
 }
 
-.ink {
+.broth[data-tone='ink'] {
   --tone: var(--ink);
 }
 

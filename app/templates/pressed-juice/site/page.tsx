@@ -12,7 +12,6 @@ export const metadata = {
 
 /* Site colors. Both fields sit on `transparent`: the leaves on the lime
    panel behind the bottle, the seeds on the page's own cream. */
-const INK = '#1E2A1C';
 const ORANGE = '#FF8A1F';
 const LIME = '#7CB518';
 const BERRY = '#E63946';

@@ -414,7 +414,7 @@
    half cells, each row a quarter cell into the one above. */
 @media (min-width: 1000px) {
   .comb {
-    --w: clamp(12.5rem, 18.5vw, 15.5rem);
+    --w: clamp(12.5rem, 21vw, 15.5rem);
     --g: 0.6rem;
 
     display: grid;
