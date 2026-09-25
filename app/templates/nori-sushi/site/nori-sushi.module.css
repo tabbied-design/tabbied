@@ -288,6 +288,22 @@
   text-align: center;
 }
 
+/* A small round seal of the hero's waves over the heading. */
+.seal {
+  position: relative;
+  width: 5.5rem;
+  height: 5.5rem;
+  overflow: hidden;
+  background: var(--green);
+  border-radius: 50%;
+}
+
+.sealField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+}
+
 .omakaseHead h2 {
   font-size: clamp(2.4rem, 5vw, 3.8rem);
 }
@@ -535,9 +551,25 @@
 /* -------------------------------------------------------------------- sake */
 
 .sake {
+  position: relative;
+  isolation: isolate;
   padding: var(--air) var(--gut);
   color: var(--rice);
   background: var(--ink);
+  overflow: hidden;
+}
+
+/* Deep water in the lower left, under the heading and clear of the list. */
+.sakeField {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 46%;
+  height: 58%;
+  z-index: -1;
+  opacity: 0.4;
+  -webkit-mask-image: radial-gradient(ellipse at 0% 100%, var(--ink) 30%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 0% 100%, var(--ink) 30%, transparent 72%);
 }
 
 .sakeInner {
@@ -650,10 +682,21 @@
 }
 
 .form {
+  --form-pad: clamp(1.4rem, 3vw, 2.2rem);
   display: grid;
   gap: 1.1rem;
-  padding: clamp(1.4rem, 3vw, 2.2rem);
+  padding: var(--form-pad);
   background: var(--pale);
+  overflow: hidden;
+}
+
+/* Chopsticks set down along the top of the booking card. */
+.formEdge {
+  position: relative;
+  height: 44px;
+  margin: calc(-1 * var(--form-pad)) calc(-1 * var(--form-pad)) 0.2rem;
+  border-top: 3px solid var(--green);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
 }
 
 .formRow {
@@ -797,13 +840,28 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
+  position: relative;
+  isolation: isolate;
   display: grid;
   justify-items: center;
   gap: 0.5rem;
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 3rem) var(--gut) 2rem;
   text-align: center;
   color: var(--rice);
   background: var(--green);
+}
+
+/* The hero's sea again, a strip of it along the top edge. */
+.footWaves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: -1;
+  opacity: 0.45;
+  -webkit-mask-image: linear-gradient(to bottom, var(--ink) 40%, transparent);
+  mask-image: linear-gradient(to bottom, var(--ink) 40%, transparent);
 }
 
 .footName {
@@ -842,6 +900,16 @@
   .sakeInner,
   .reserve {
     grid-template-columns: 1fr;
+  }
+
+  /* Stacked, the water runs along the top, above the words. */
+  .sakeField {
+    width: 100%;
+    height: calc(var(--air) - 0.75rem);
+    top: 0;
+    bottom: auto;
+    -webkit-mask-image: linear-gradient(to bottom, var(--ink) 30%, transparent);
+    mask-image: linear-gradient(to bottom, var(--ink) 30%, transparent);
   }
 }
 

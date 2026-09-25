@@ -409,6 +409,22 @@
   color: var(--terra);
 }
 
+/* A glaze test tile hung over the section number. */
+.tiledHead {
+  position: relative;
+}
+
+.testTile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3.75rem;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px -6px color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
 .secHead h2 {
   font-size: clamp(2rem, 3.8vw, 3.2rem);
 }
@@ -491,8 +507,23 @@
 /* ---------------------------------------------------------------- studio */
 
 .studio {
+  position: relative;
+  isolation: isolate;
   margin-top: var(--air);
   background: var(--slip);
+}
+
+/* Glaze leaves running along the top edge of the studio, fading out. */
+.studioEdge {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(3rem, 6vw, 4.5rem);
+  overflow: hidden;
+  opacity: 0.6;
+  mask-image: linear-gradient(180deg, var(--ink), transparent);
 }
 
 .studioInner {
@@ -824,6 +855,18 @@
   font-family: var(--serif);
   font-size: clamp(1.8rem, 3.6vw, 2.8rem);
   line-height: 1;
+  margin-right: auto;
+}
+
+/* A celadon plate seen from above, beside the name. */
+.footPlate {
+  position: relative;
+  align-self: center;
+  width: 3rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px var(--celadon), 0 0 0 5px var(--ink), 0 0 0 6px color-mix(in srgb, var(--clay) 30%, transparent);
 }
 
 .footLinks {
@@ -895,6 +938,10 @@
   .secHead {
     grid-template-columns: 3.5rem minmax(0, 1fr);
     row-gap: 0.8rem;
+  }
+
+  .testTile {
+    display: none;
   }
 
   .secNote {

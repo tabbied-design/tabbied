@@ -302,12 +302,25 @@ export default function GreenLightPage() {
                 failed on the first list, not the second.
               </p>
             </div>
-            <Artwork
-              slug="green-light-driving-sign"
-              alt="A round road sign on a post"
-              inks={{ red: 'var(--red)', blue: 'var(--asphalt)', yellow: 'var(--amber)', black: 'var(--gray)' }}
-              className={s.testSign}
-            />
+            <div className={s.signSpot}>
+              <div className={s.signField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={switchback}
+                  palette={BENDS}
+                  fit="grid"
+                  cellSize={36}
+                  options={{ frequency: 0.6 }}
+                  seed="test-bends"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <Artwork
+                slug="green-light-driving-sign"
+                alt="A round road sign on a post"
+                inks={{ red: 'var(--red)', blue: 'var(--asphalt)', yellow: 'var(--amber)', black: 'var(--gray)' }}
+                className={s.testSign}
+              />
+            </div>
           </div>
           <div className={s.checks}>
             {CHECKS.map((group, i) => (
@@ -446,6 +459,17 @@ export default function GreenLightPage() {
             />
           </div>
           <form className={s.form} action="#">
+            <div className={s.formCrossing} aria-hidden="true">
+              <TabbiedPattern
+                pattern={percale}
+                palette={CROSSING}
+                fit="grid"
+                cellSize={32}
+                options={{ frequency: 0.7 }}
+                seed="form-crossing"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <div className={s.formRow}>
               <div className={s.field}>
                 <label data-edit="book.label" htmlFor="gl-name">Name</label>
@@ -506,6 +530,17 @@ export default function GreenLightPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footMarks} aria-hidden="true">
+          <TabbiedPattern
+            pattern={slashbar}
+            palette={MARKINGS}
+            fit="grid"
+            cellSize={32}
+            options={{ frequency: 0.8 }}
+            seed="footer-markings"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Green Light</p>

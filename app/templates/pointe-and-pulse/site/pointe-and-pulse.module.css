@@ -646,6 +646,17 @@
   font-size: clamp(2.2rem, 4.4vw, 3.6rem);
 }
 
+/* A small arch of the ballet panel's sashes, under the notes. */
+.feesTile {
+  position: relative;
+  margin-top: 2.2rem;
+  width: clamp(5rem, 8vw, 7rem);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 999px 999px 0.5rem 0.5rem;
+  background: var(--rose);
+}
+
 .feeNotes {
   margin: 1.2rem 0 0;
   padding-left: 1.1rem;
@@ -702,6 +713,13 @@
   overflow: hidden;
   background: var(--blush);
   border-radius: 999px 999px 1.4rem 1.4rem;
+}
+
+/* The hero's sashes again, pale, inside the arch. */
+.trialField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
 }
 
 .trialDancer {
@@ -781,9 +799,20 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2rem) var(--gut) 2rem;
   background: var(--ink);
   color: var(--paper);
+}
+
+/* The recital's stars again, in a line along the top of the footer. */
+.footStars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  overflow: hidden;
 }
 
 .footGrid {
@@ -911,6 +940,10 @@
   .trialArt {
     min-height: 24rem;
     max-width: 28rem;
+  }
+
+  .feesTile {
+    display: none;
   }
 
   .footGrid {

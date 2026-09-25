@@ -20,6 +20,8 @@ const PALE = '#E5E0D6';
 const REGISTER = ['transparent', RED, INK];
 const PROOF = ['transparent', RED, GRAY, RED, PALE];
 const TINT = ['transparent', INK, RED];
+const SCREEN = ['transparent', GRAY, RED];
+const BLIND = ['transparent', GRAY, PALE, GRAY, PALE];
 
 const NAV = [
   ['Papers', '#papers'],
@@ -182,6 +184,16 @@ export default function PlatenPressPage() {
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.plate}>
             <span data-edit="hero.plateNo" data-edit-max="60" className={s.plateNo}>Plate I</span>
+            <div className={s.plateTint} aria-hidden="true">
+              <TabbiedPattern
+                pattern={halftone}
+                palette={SCREEN}
+                fit="grid"
+                cellSize={26}
+                seed="platen-plate"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <div className={s.plateImage}>
               <Artwork
                 slug="platen-press-press"
@@ -382,6 +394,16 @@ export default function PlatenPressPage() {
               ))}
             </ol>
           </div>
+          <div className={s.processRamp} aria-hidden="true">
+            <TabbiedPattern
+              pattern={halftone}
+              palette={TINT}
+              fit="grid"
+              cellSize={24}
+              seed="platen-ramp"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
         </section>
 
         {/* ------------------------------------------------------- ORDER */}
@@ -487,6 +509,17 @@ export default function PlatenPressPage() {
         <section id="studio" className={s.studio} aria-labelledby="studio-h">
           <div className={s.studioInner}>
             <div className={s.studioArt}>
+              <div className={s.studioDisc} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={misprint}
+                  palette={BLIND}
+                  fit="grid"
+                  cellSize={44}
+                  options={{ frequency: 0.7 }}
+                  seed="platen-disc"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork slug="platen-press-nib" alt="" inks={['var(--red)']} className={s.studioNib} />
             </div>
             <div className={s.studioText}>

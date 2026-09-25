@@ -20,6 +20,7 @@ const PALE = '#E6DBCF';
 const CELLAR = ['transparent', CLARET, INK];
 const VINE = ['transparent', PALE, GRAY, CLARET];
 const RACK = ['transparent', INK, CLARET];
+const LEAF = ['transparent', PALE, PALE, GRAY];
 
 const NAV = [
   ['Wines', '#wines'],
@@ -296,6 +297,16 @@ export default function CellarDoorWinesPage() {
                   </li>
                 ))}
               </ol>
+              <div className={s.indexTile} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={kilngrid}
+                  palette={CELLAR}
+                  fit="grid"
+                  cellSize={30}
+                  seed="cellar-index"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </nav>
 
             <div className={s.groups}>
@@ -438,6 +449,17 @@ export default function CellarDoorWinesPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitArt}>
+            <div className={s.visitArch} aria-hidden="true">
+              <TabbiedPattern
+                pattern={lobe}
+                palette={LEAF}
+                fit="grid"
+                cellSize={48}
+                options={{ frequency: 0.8 }}
+                seed="cellar-arch"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="cellar-door-wines-grapes"
               alt="An engraved bunch of grapes with a vine leaf"
@@ -474,6 +496,16 @@ export default function CellarDoorWinesPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footVine} aria-hidden="true">
+          <TabbiedPattern
+            pattern={lobe}
+            palette={VINE}
+            fit="grid"
+            cellSize={36}
+            seed="cellar-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footInner}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Cellar Door</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Wine shop and tasting bar, 41 Linden Street.</p>

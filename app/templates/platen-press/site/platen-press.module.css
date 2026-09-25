@@ -187,6 +187,18 @@
   margin: 0 auto;
 }
 
+/* A tint screen under the press, the dots growing toward its feet. */
+.plateTint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5.5rem;
+  height: 45%;
+  overflow: hidden;
+  opacity: 0.4;
+  mask-image: linear-gradient(180deg, transparent, var(--ink) 70%);
+}
+
 .pressInk {
   width: 100%;
 }
@@ -618,8 +630,9 @@
 /* ------------------------------------------------------------- process */
 
 .process {
+  position: relative;
   margin-top: clamp(4.5rem, 9vw, 7rem);
-  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) calc(clamp(4rem, 8vw, 6rem) + 3rem);
   background: var(--pale);
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
@@ -628,6 +641,17 @@
 .processInner {
   max-width: var(--max);
   margin: 0 auto;
+}
+
+/* A proofing ramp along the foot of the section, light to heavy. */
+.processRamp {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3rem;
+  overflow: hidden;
+  border-top: 1px solid var(--ink);
 }
 
 .steps {
@@ -847,7 +871,24 @@
   place-items: center;
 }
 
+/* A blind proof of the misprint, gray on the paper, behind the nib. */
+.studioDisc {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(100%, 20rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+}
+
+.studioDisc > * {
+  opacity: 0.5;
+}
+
 .studioNib {
+  grid-area: 1 / 1;
+  position: relative;
   width: auto;
   height: clamp(14rem, 26vw, 22rem);
   transform: rotate(-28deg);
@@ -1017,6 +1058,10 @@
 
   .studioNib {
     height: 12rem;
+  }
+
+  .studioDisc {
+    width: 14rem;
   }
 }
 

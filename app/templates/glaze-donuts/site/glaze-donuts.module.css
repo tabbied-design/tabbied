@@ -880,7 +880,8 @@
   }
 
   .dozenArt {
-    position: static;
+    position: relative;
+    top: auto;
     width: 100%;
     max-width: 30rem;
     margin: 0 auto;

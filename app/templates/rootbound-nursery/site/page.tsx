@@ -19,9 +19,14 @@ const CLAY = '#D98E4A';
 const GRAY = '#919C92';
 const PALE = '#DFE7DC';
 const INK = '#1A261D';
+const PAPER = '#F3F5EF';
 
 const ARCHES = ['transparent', PALE, CLAY, GRAY, PALE];
 const FRONDS = [PALE, LEAF, GRAY, CLAY, INK];
+/* The arches again inside the pale shelf plates, so paper where the hero
+   has pale; the fronds again on the ink footer, veined in ink. */
+const ARCH_PLATE = ['transparent', PAPER, CLAY, GRAY, PAPER];
+const FRONDS_NIGHT = [INK, LEAF, GRAY, CLAY];
 
 const NAV = [
   ['Catalog', '#catalog'],
@@ -321,6 +326,17 @@ export default function RootboundNurseryPage() {
               {SHELF.map((it, i) => (
                 <div key={it.slug} className={s.shelfItem}>
                   <div className={s.shelfPlate}>
+                    <div className={s.shelfArch} aria-hidden="true">
+                      <TabbiedPattern
+                        pattern={apse}
+                        palette={ARCH_PLATE}
+                        options={{ frequency: 0.6 }}
+                        fit="grid"
+                        cellSize={28}
+                        seed={`rootbound-shelf-${i}`}
+                        style={{ position: 'absolute', inset: 0 }}
+                      />
+                    </div>
                     <Artwork
                       slug={it.slug}
                       alt={it.alt}
@@ -371,6 +387,17 @@ export default function RootboundNurseryPage() {
         <section id="delivery" className={s.delivery} aria-labelledby="delivery-h">
           <div className={s.deliveryInner}>
             <div className={s.canBox}>
+              <div className={s.canLeaves} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={frond}
+                  palette={FRONDS}
+                  options={{ frequency: 0.5 }}
+                  fit="grid"
+                  cellSize={48}
+                  seed="rootbound-can"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="rootbound-nursery-can"
                 alt="A watering can"
@@ -467,6 +494,17 @@ export default function RootboundNurseryPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footFronds} aria-hidden="true">
+          <TabbiedPattern
+            pattern={frond}
+            palette={FRONDS_NIGHT}
+            options={{ frequency: 0.75 }}
+            fit="grid"
+            cellSize={34}
+            seed="rootbound-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Rootbound</p>
           <ul className={s.footLinks}>

@@ -20,6 +20,7 @@ const PALE = '#E0DDD4';
 
 const WAVES = ['transparent', RICE, PALE, RED, RICE];
 const DASHES = ['transparent', GRAY, RED, PALE, GREEN];
+const DEEP = ['transparent', GREEN, GRAY, GREEN, RED];
 
 const NAV = [
   ['Omakase', '#omakase'],
@@ -311,6 +312,18 @@ export default function NoriSushiPage() {
             course, the words on one side and the source on the other. */}
         <section id="omakase" className={s.omakase} aria-labelledby="omakase-h">
           <div className={s.omakaseHead}>
+            <span className={s.seal}>
+              <span className={s.sealField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={tidering}
+                  palette={WAVES}
+                  fit="grid"
+                  cellSize={44}
+                  seed="nori-seal"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </span>
+            </span>
             <p data-edit="omakase.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Omakase, about two hours</p>
             <h2 data-edit="omakase.title" data-edit-max="60" id="omakase-h">The twelve courses</h2>
             <p data-edit="omakase.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
@@ -429,6 +442,18 @@ export default function NoriSushiPage() {
 
         {/* ------------------------------------------------------------ SAKE */}
         <section id="sake" className={s.sake} aria-labelledby="sake-h">
+          <div className={s.sakeField} aria-hidden="true">
+            <TabbiedPattern
+              pattern={tidering}
+              palette={DEEP}
+              fit="grid"
+              cellSize={64}
+              seed="nori-sake"
+              redrawInterval={12000}
+              options={{ frequency: 0.5 }}
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.sakeInner}>
             <div className={s.secHead}>
               <p data-edit="sake.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Poured cold unless you ask</p>
@@ -485,6 +510,16 @@ export default function NoriSushiPage() {
             </dl>
           </div>
           <form className={s.form} action="#">
+            <div className={s.formEdge} aria-hidden="true">
+              <TabbiedPattern
+                pattern={dashfield}
+                palette={DASHES}
+                fit="grid"
+                cellSize={36}
+                seed="nori-mat"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <div className={s.formRow}>
               <label className={s.field}>
                 <span data-edit="reserve.text" data-edit-max="60">Name</span>
@@ -567,6 +602,17 @@ export default function NoriSushiPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footWaves} aria-hidden="true">
+          <TabbiedPattern
+            pattern={tidering}
+            palette={WAVES}
+            fit="grid"
+            cellSize={40}
+            seed="nori-footer"
+            options={{ frequency: 0.7 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Nori</p>
         <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Omakase and a la carte, 18 Harbor Lane.</p>
         <div className={s.footFine}>

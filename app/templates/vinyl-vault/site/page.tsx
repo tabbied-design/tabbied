@@ -43,6 +43,8 @@ const JAZZ_SLEEVE = [CHARCOAL, PAPER, RED, GRAY];
 const SOUL_SLEEVE = [RED, BLACK, PAPER, PALE];
 const ROCK_SLEEVE = [PALE, BLACK, RED, CHARCOAL];
 const BEATS_SLEEVE = [BLACK, RED, PALE, GRAY];
+const DUST = ['transparent', GRAY, PAPER];
+const RUNOUT = ['transparent', RED, CHARCOAL];
 
 const NAV = [
   ['Crates', '#crates'],
@@ -342,7 +344,19 @@ export default function VinylVaultPage() {
         <section id="picks" className={s.picks} aria-labelledby="picks-h">
           <div className={s.picksInner}>
             <div className={s.station}>
-              <div className={s.stationDisc} aria-hidden="true" />
+              <div className={s.stationDisc} aria-hidden="true">
+                <div className={s.discGrooves} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={ringfield}
+                    palette={GROOVES}
+                    options={{ frequency: 0.5 }}
+                    fit="grid"
+                    cellSize={88}
+                    seed="vault-station"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+              </div>
               <Artwork
                 slug="vinyl-vault-headphones"
                 alt="A pair of over-ear headphones from one of the listening stations"
@@ -392,6 +406,17 @@ export default function VinylVaultPage() {
               </ol>
             </div>
             <div className={s.buyArt}>
+              <div className={s.buyGrooves} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={ringfield}
+                  palette={DUST}
+                  options={{ frequency: 0.7 }}
+                  fit="grid"
+                  cellSize={72}
+                  seed="vault-buy"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="vinyl-vault-records"
                 alt="A plastic milk crate full of records"
@@ -512,6 +537,16 @@ export default function VinylVaultPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footRunout} aria-hidden="true">
+          <TabbiedPattern
+            pattern={truchetrings}
+            palette={RUNOUT}
+            fit="grid"
+            cellSize={28}
+            seed="vault-runout"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <p data-edit="footer.footMark" data-edit-max="240" data-edit-multiline className={s.footMark}>Vinyl Vault</p>
         <ul className={s.footLinks}>
           {NAV.map(([label, href], i) => (

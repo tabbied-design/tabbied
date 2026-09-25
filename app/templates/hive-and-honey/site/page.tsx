@@ -464,6 +464,17 @@ export default function HiveAndHoneyPage() {
             <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Asked at the stall every week</h2>
             <p data-edit="faq.faqAside" data-edit-max="240" data-edit-multiline className={s.faqAside}>Something else? Ask Ruth at the Saturday stall, or call the farm between 9 and 5.</p>
             <a data-edit="faq.faqPhone" data-edit-max="28" className={s.faqPhone} href="tel:+15550142290">(555) 014-2290</a>
+            <div className={s.faqCell} aria-hidden="true">
+              <TabbiedPattern
+                pattern={isocube}
+                palette={COMB_FIELD}
+                fit="grid"
+                cellSize={40}
+                options={{ frequency: 0.8 }}
+                seed="stall-comb"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </div>
           <div className={s.faqList}>
             {FAQ.map((f, i) => (
@@ -477,6 +488,17 @@ export default function HiveAndHoneyPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footMeadow} aria-hidden="true">
+          <TabbiedPattern
+            pattern={petalcut}
+            palette={MEADOW}
+            fit="grid"
+            cellSize={40}
+            options={{ frequency: 0.7 }}
+            seed="meadow-edge"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <div className={s.footBrand}>
             <Artwork slug="hive-and-honey-dipper" alt="" inks={['var(--honey)']} className={s.footDipper} />

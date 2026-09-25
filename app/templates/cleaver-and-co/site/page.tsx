@@ -377,6 +377,17 @@ export default function CleaverAndCoPage() {
               <p data-edit="week.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>Stock bones are free on Tuesdays, while they last.</p>
             </div>
             <div className={s.hook}>
+              <div className={s.hookTiles} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={hurdle}
+                  palette={TILES}
+                  fit="grid"
+                  cellSize={36}
+                  seed="hook-wall"
+                  options={{ frequency: 0.7 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <span className={s.hookRail} aria-hidden="true" />
               <Artwork
                 slug="cleaver-and-co-cleaver"
@@ -514,42 +525,66 @@ export default function CleaverAndCoPage() {
               <a data-edit="visit.link2" data-edit-max="28" href="mailto:orders@cleaverandco.example">orders@cleaverandco.example</a>
             </div>
           </div>
-          <form className={s.form} action="#">
-            <h3 data-edit="visit.formHead" data-edit-max="40" className={s.formHead}>Order for pickup</h3>
-            <div className={s.field}>
-              <label data-edit="visit.label" htmlFor="cc-name">Name</label>
-              <input id="cc-name" name="name" type="text" autoComplete="name" />
-            </div>
-            <div className={s.formRow}>
-              <div className={s.field}>
-                <label data-edit="visit.label2" htmlFor="cc-phone">Phone</label>
-                <input id="cc-phone" name="phone" type="tel" autoComplete="tel" />
-              </div>
-              <div className={s.field}>
-                <label data-edit="visit.label3" htmlFor="cc-day">Pickup</label>
-                <select id="cc-day" name="day" defaultValue="sat">
-                  <option value="fri">Friday</option>
-                  <option value="sat">Saturday</option>
-                  <option value="sun">Sunday</option>
-                </select>
-              </div>
-            </div>
-            <div className={s.field}>
-              <label data-edit="visit.label4" htmlFor="cc-order">Your order</label>
-              <textarea
-                id="cc-order"
-                name="order"
-                rows={5}
-                placeholder="Two ribeyes, 1.5 in thick. 2 lb ground chuck. One whole chicken, spatchcocked."
+          <div className={s.formWall}>
+            <div className={s.formHatch} aria-hidden="true">
+              <TabbiedPattern
+                pattern={reedpen}
+                palette={HATCH}
+                fit="grid"
+                cellSize={44}
+                seed="order-wall"
+                options={{ frequency: 0.5 }}
+                style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">Send my order</button>
-            <small data-edit="visit.formNote" className={s.formNote}>We call to confirm the weight and price. Pay at pickup.</small>
-          </form>
+            <form className={s.form} action="#">
+              <h3 data-edit="visit.formHead" data-edit-max="40" className={s.formHead}>Order for pickup</h3>
+              <div className={s.field}>
+                <label data-edit="visit.label" htmlFor="cc-name">Name</label>
+                <input id="cc-name" name="name" type="text" autoComplete="name" />
+              </div>
+              <div className={s.formRow}>
+                <div className={s.field}>
+                  <label data-edit="visit.label2" htmlFor="cc-phone">Phone</label>
+                  <input id="cc-phone" name="phone" type="tel" autoComplete="tel" />
+                </div>
+                <div className={s.field}>
+                  <label data-edit="visit.label3" htmlFor="cc-day">Pickup</label>
+                  <select id="cc-day" name="day" defaultValue="sat">
+                    <option value="fri">Friday</option>
+                    <option value="sat">Saturday</option>
+                    <option value="sun">Sunday</option>
+                  </select>
+                </div>
+              </div>
+              <div className={s.field}>
+                <label data-edit="visit.label4" htmlFor="cc-order">Your order</label>
+                <textarea
+                  id="cc-order"
+                  name="order"
+                  rows={5}
+                  placeholder="Two ribeyes, 1.5 in thick. 2 lb ground chuck. One whole chicken, spatchcocked."
+                />
+              </div>
+              <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">Send my order</button>
+              <small data-edit="visit.formNote" className={s.formNote}>We call to confirm the weight and price. Pay at pickup.</small>
+            </form>
+          </div>
         </section>
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footTiles} aria-hidden="true">
+          <TabbiedPattern
+            pattern={hurdle}
+            palette={TILES}
+            fit="grid"
+            cellSize={32}
+            seed="footer-wall"
+            options={{ frequency: 0.8 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <div className={s.footBrand}>
             <Artwork slug="cleaver-and-co-pig" alt="" inks={['var(--pale)']} className={s.footPig} />

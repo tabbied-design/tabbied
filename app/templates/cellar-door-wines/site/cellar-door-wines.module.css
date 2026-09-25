@@ -307,6 +307,16 @@
   color: color-mix(in srgb, var(--ink) 62%, var(--paper));
 }
 
+/* A tile of the kiln mosaic under the index, like a cellar's floor. */
+.indexTile {
+  position: relative;
+  height: 7.5rem;
+  margin-top: 1.75rem;
+  overflow: hidden;
+  border-radius: 999px 999px 0 0;
+  box-shadow: 0 0 0 1px var(--ink), 0 0 0 6px var(--paper), 0 0 0 7px var(--ink);
+}
+
 .groups {
   min-width: 0;
 }
@@ -714,7 +724,20 @@
   place-items: center;
 }
 
+/* An arch of pale leaves behind the grapes, the hero's plate in daylight. */
+.visitArch {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(100%, 22rem);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 50% 50% 0 0 / 34% 34% 0 0;
+  box-shadow: 0 0 0 1px var(--ink), 0 0 0 9px var(--paper), 0 0 0 10px var(--ink);
+}
+
 .visitGrapes {
+  grid-area: 1 / 1;
+  position: relative;
   width: min(100%, 20rem);
 }
 
@@ -778,9 +801,22 @@
 /* ---------------------------------------------------------------- footer */
 
 .footer {
-  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 2rem;
+  position: relative;
+  padding: calc(clamp(2.5rem, 5vw, 3.5rem) + 2.25rem) var(--gut) 2rem;
   background: var(--pale);
   border-top: 1px solid var(--ink);
+}
+
+/* A run of vine leaves along the top of the footer. */
+.footVine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.25rem;
+  overflow: hidden;
+  background: var(--paper);
+  border-bottom: 1px solid var(--ink);
 }
 
 .footInner {
@@ -858,6 +894,14 @@
 
   .visitGrapes {
     width: min(60%, 14rem);
+  }
+
+  .visitArch {
+    width: min(72%, 16rem);
+  }
+
+  .indexTile {
+    display: none;
   }
 
   /* The index becomes a strip of regions that sticks to the top of the

@@ -18,6 +18,7 @@ const PLUM = '#1F191C';
 
 const BULBS = ['transparent', GOLD, VELVET, PLUM];
 const CURTAIN = ['transparent', VELVET, PLUM];
+const FOYER = ['transparent', GOLD, GOLD, VELVET];
 
 const NAV = [
   ['This week', '#programme'],
@@ -379,6 +380,17 @@ export default function TheRialtoCinemaPage() {
         {/* --------------------------------------------------------- SCREENS */}
         <section id="screens" className={s.screens} aria-labelledby="screens-h">
           <div className={s.screensArt}>
+            <div className={s.valance} aria-hidden="true">
+              <TabbiedPattern
+                pattern={picket}
+                palette={CURTAIN}
+                fit="grid"
+                cellSize={28}
+                seed="screen-valance"
+                options={{ frequency: 0.9 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="the-rialto-cinema-seats"
               alt="A row of three folding velvet cinema seats"
@@ -466,6 +478,18 @@ export default function TheRialtoCinemaPage() {
               </ul>
             </div>
             <div className={s.barArt}>
+              <div className={s.foyerLights} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={lantern}
+                  palette={FOYER}
+                  fit="grid"
+                  cellSize={64}
+                  seed="foyer"
+                  options={{ frequency: 0.35 }}
+                  redrawInterval={11000}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="the-rialto-cinema-popcorn"
                 alt="A striped paper box of popcorn"
@@ -532,6 +556,17 @@ export default function TheRialtoCinemaPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footBulbs} aria-hidden="true">
+          <TabbiedPattern
+            pattern={lantern}
+            palette={BULBS}
+            fit="grid"
+            cellSize={36}
+            seed="footer-marquee"
+            options={{ frequency: 0.8 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>The Rialto</p>

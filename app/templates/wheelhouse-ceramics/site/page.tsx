@@ -22,6 +22,7 @@ const EMBER = [TERRA, SLIP, INK];
 const GREEN = [CELADON, SLIP, INK];
 const SPECKLE = [ASH, SLIP, INK];
 const KILN = ['transparent', TERRA, CELADON, SLIP];
+const GLAZE_RUN = ['transparent', TERRA, CELADON, ASH];
 
 const NAV = [
   ['Shop', '#shop'],
@@ -311,7 +312,17 @@ export default function WheelhouseCeramicsPage() {
 
         {/* --------------------------------------------------------- CLASSES */}
         <section id="classes" className={s.sec} aria-labelledby="classes-h">
-          <div className={s.secHead}>
+          <div className={`${s.secHead} ${s.tiledHead}`}>
+            <div className={s.testTile} aria-hidden="true">
+              <TabbiedPattern
+                pattern={raku}
+                palette={EMBER}
+                fit="grid"
+                cellSize={28}
+                seed="test-tile"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <p data-edit="classes.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02</p>
             <h2 data-edit="classes.title" data-edit-max="60" id="classes-h">Wheel classes, fall term</h2>
             <p data-edit="classes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
@@ -351,6 +362,17 @@ export default function WheelhouseCeramicsPage() {
 
         {/* ---------------------------------------------------------- STUDIO */}
         <section id="studio" className={s.studio} aria-labelledby="studio-h">
+          <div className={s.studioEdge} aria-hidden="true">
+            <TabbiedPattern
+              pattern={lobe}
+              palette={GLAZE_RUN}
+              fit="grid"
+              cellSize={36}
+              seed="studio-edge"
+              options={{ frequency: 0.5 }}
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.studioInner}>
             <div className={s.secHead}>
               <p data-edit="studio.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03</p>
@@ -489,6 +511,16 @@ export default function WheelhouseCeramicsPage() {
 
       <footer className={s.footer}>
         <div className={s.footTop}>
+          <div className={s.footPlate} aria-hidden="true">
+            <TabbiedPattern
+              pattern={lobe}
+              palette={GREEN}
+              fit="grid"
+              cellSize={24}
+              seed="foot-plate"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Wheelhouse Ceramics</p>
           <ul className={s.footLinks}>
             {NAV.map(([label, href], i) => (

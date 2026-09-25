@@ -19,6 +19,8 @@ const STONE = '#8E968F';
 
 const SPARKS = ['transparent', EMBER, MIST, EMBER, MOSS];
 const LEAVES = ['transparent', MOSS, STONE, MIST];
+/* The footer's hedge is laid on the mist, which also veins each leaf. */
+const HEDGE = [MIST, MOSS, STONE, EMBER];
 
 const NAV = [
   ['Sessions', '#sessions'],
@@ -416,12 +418,25 @@ export default function PineconeCampPage() {
                 The same shape every day, so the youngest know what comes next.
               </p>
             </div>
-            <Artwork
-              slug="pinecone-camp-tent"
-              alt="A tent pitched under a tall pine"
-              inks={{ red: 'var(--ember)', blue: 'var(--moss)' }}
-              className={s.tent}
-            />
+            <div className={s.tentBed}>
+              <div className={s.tentLeaves} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={frond}
+                  palette={LEAVES}
+                  fit="grid"
+                  cellSize={44}
+                  seed="pinecone-tent"
+                  options={{ frequency: 0.5 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <Artwork
+                slug="pinecone-camp-tent"
+                alt="A tent pitched under a tall pine"
+                inks={{ red: 'var(--ember)', blue: 'var(--moss)' }}
+                className={s.tent}
+              />
+            </div>
             <div className={s.pack}>
               <h3 data-edit="day.packHead" data-edit-max="40" className={s.packHead}>In the backpack</h3>
               <ul className={s.packList}>
@@ -444,6 +459,16 @@ export default function PineconeCampPage() {
 
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.fees} aria-labelledby="fees-h">
+          <div className={s.embers} aria-hidden="true">
+            <TabbiedPattern
+              pattern={driftspiral}
+              palette={SPARKS}
+              fit="grid"
+              cellSize={28}
+              seed="pinecone-embers"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.feesInner}>
             <div className={s.head}>
               <p data-edit="fees.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Fees</p>
@@ -564,6 +589,17 @@ export default function PineconeCampPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.hedge} aria-hidden="true">
+          <TabbiedPattern
+            pattern={frond}
+            palette={HEDGE}
+            fit="grid"
+            cellSize={36}
+            seed="pinecone-hedge"
+            options={{ frequency: 0.8 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pinecone Camp</p>

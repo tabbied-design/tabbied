@@ -18,8 +18,13 @@ const BLUE = '#3A7BD5';
 const GRAY = '#8A8A8F';
 const PALE = '#D8D5CF';
 
+const CHALK = '#EDEBE7';
+
 const WALL = ['transparent', PALE, PALE, PALE, GRAY, BLUE];
 const DRAWS = ['transparent', INK, ORANGE, GRAY];
+const HOLDS = ['transparent', CHALK, CHALK, GRAY, BLUE, ORANGE];
+const NIGHT = ['transparent', GRAY, GRAY, BLUE, ORANGE];
+const ROPE = ['transparent', INK, CHALK];
 
 const NAV = [
   ['Grades', '#grades'],
@@ -297,12 +302,25 @@ export default function CruxClimbingPage() {
                 at a time. Book a slot, or walk in and wait for the next one.
               </p>
               <a data-edit="firstVisit.btnDark" data-edit-max="28" className={s.btnDark} href="mailto:desk@cruxclimbing.example">Book an induction</a>
-              <Artwork
-                slug="crux-climbing-chalk"
-                alt="A chalk bag with a drawstring"
-                inks={{ red: 'var(--orange)', blue: 'var(--blue)', black: 'var(--ink)' }}
-                className={s.chalkBag}
-              />
+              <div className={s.chalkWall}>
+                <div className={s.chalkField} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={pebble}
+                    palette={HOLDS}
+                    options={{ frequency: 0.5 }}
+                    fit="grid"
+                    cellSize={40}
+                    seed="crux-chalk"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+                <Artwork
+                  slug="crux-climbing-chalk"
+                  alt="A chalk bag with a drawstring"
+                  inks={{ red: 'var(--orange)', blue: 'var(--blue)', black: 'var(--ink)' }}
+                  className={s.chalkBag}
+                />
+              </div>
             </div>
 
             <ol className={s.steps}>
@@ -407,6 +425,17 @@ export default function CruxClimbingPage() {
 
         {/* ----------------------------------------------------------- HOURS */}
         <section id="hours" className={s.hours} aria-labelledby="hours-h">
+          <div className={s.hoursField} aria-hidden="true">
+            <TabbiedPattern
+              pattern={pebble}
+              palette={NIGHT}
+              options={{ frequency: 0.4 }}
+              fit="grid"
+              cellSize={52}
+              seed="crux-night"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.hoursInner}>
             <div>
               <p data-edit="hours.eyebrowLight" data-edit-max="240" data-edit-multiline className={s.eyebrowLight}>Hours and finding us</p>
@@ -448,6 +477,17 @@ export default function CruxClimbingPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footDraws} aria-hidden="true">
+          <TabbiedPattern
+            pattern={jibboom}
+            palette={ROPE}
+            options={{ frequency: 0.7 }}
+            fit="grid"
+            cellSize={32}
+            seed="crux-footer"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footInner}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Crux</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Bouldering and rope climbing, 40 Quarry Road.</p>

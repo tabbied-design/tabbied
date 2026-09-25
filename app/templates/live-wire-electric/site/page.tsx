@@ -354,6 +354,17 @@ export default function LiveWireElectricPage() {
         <section id="licensed" className={s.licensed} aria-labelledby="licensed-h">
           <div className={s.licInner}>
             <div className={s.licArt}>
+              <div className={s.licField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={circuit}
+                  palette={BOARD}
+                  options={{ frequency: 0.5 }}
+                  fit="grid"
+                  cellSize={44}
+                  seed="live-wire-bench"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork slug="live-wire-electric-pliers" alt="A pair of lineman's pliers" inks={['var(--ink)']} className={s.pliers} />
             </div>
 
@@ -400,6 +411,17 @@ export default function LiveWireElectricPage() {
           <div className={s.areaGrid}>
             <div className={s.rings} aria-hidden="true">
               <span className={s.ringOuter} />
+              <div className={s.ringStreets} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={circuit}
+                  palette={BOARD}
+                  options={{ frequency: 0.6 }}
+                  fit="grid"
+                  cellSize={28}
+                  seed="live-wire-streets"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <span className={s.ringInner} />
               <span className={s.depot} />
               <span data-edit="areas.ringLabelOne" data-edit-max="60" className={s.ringLabelOne}>5 mi</span>
@@ -506,6 +528,16 @@ export default function LiveWireElectricPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footTape} aria-hidden="true">
+          <TabbiedPattern
+            pattern={rafter}
+            palette={TAPE}
+            fit="grid"
+            cellSize={34}
+            seed="live-wire-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div className={s.footBrand}>
             <Artwork slug="live-wire-electric-bulb" alt="" inks={['var(--volt)']} className={s.footBulb} />

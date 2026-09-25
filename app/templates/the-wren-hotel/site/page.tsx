@@ -20,6 +20,7 @@ const LINEN = '#E6DED3';
 const PAPER_WALL = ['transparent', WREN, STONE];
 const NIGHT_WALL = ['transparent', WREN, INK];
 const ARCHES = ['transparent', LINEN, STONE];
+const ROOM_WALL = ['transparent', STONE, LINEN];
 
 const NAV = [
   ['Rooms', '#rooms'],
@@ -276,6 +277,17 @@ export default function TheWrenHotelPage() {
             {ROOMS.map((r, i) => (
               <article key={r.id} className={s.room} id={`room-${r.id}`}>
                 <div className={`${s.roomArt} ${s[r.id]}`}>
+                  <div className={s.roomWall} aria-hidden="true">
+                    <TabbiedPattern
+                      pattern={ogee}
+                      palette={ROOM_WALL}
+                      fit="grid"
+                      cellSize={60}
+                      seed={`wren-room-${r.id}`}
+                      options={{ frequency: 0.7 }}
+                      style={{ position: 'absolute', inset: 0 }}
+                    />
+                  </div>
                   {r.pictures.map((p) => (
                     <Artwork
                       key={p.place}
@@ -382,6 +394,17 @@ export default function TheWrenHotelPage() {
         <section id="rates" className={s.rates} aria-labelledby="rates-h">
           <div className={s.secHead}>
             <p data-edit="rates.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>Rates</p>
+            <div className={s.swatch} aria-hidden="true">
+              <TabbiedPattern
+                pattern={lunette}
+                palette={PAPER_WALL}
+                fit="grid"
+                cellSize={32}
+                seed="wren-rates"
+                options={{ frequency: 0.8 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <h2 data-edit="rates.title" data-edit-max="60" id="rates-h">What a night costs, all year.</h2>
             <p data-edit="rates.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Per room, per night, for two guests. A third guest in the Loft is

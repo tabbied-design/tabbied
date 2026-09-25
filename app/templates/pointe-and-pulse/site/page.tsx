@@ -21,6 +21,7 @@ const BLUSH = '#EDE3E6';
 const SASH_ROSE = ['transparent', BLUSH, PAPER, VIOLET];
 const SASH_VIOLET = ['transparent', ROSE, BLUSH, PAPER];
 const STARS = ['transparent', BLUSH, ROSE, VIOLET, BLUSH];
+const SASH_BLUSH = ['transparent', PAPER, ROSE, VIOLET];
 
 const NAV = [
   ['Timetable', '#timetable'],
@@ -406,6 +407,17 @@ export default function PointeAndPulsePage() {
                   <li data-edit={`fees.item.${i}`} data-edit-max="80" key={n}>{n}</li>
                 ))}
               </ul>
+              <div className={s.feesTile} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={cendal}
+                  palette={SASH_ROSE}
+                  options={{ frequency: 0.9 }}
+                  fit="grid"
+                  cellSize={30}
+                  seed="fees-sash"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </div>
             <dl className={s.feeList}>
               {FEES.map(([what, price], i) => (
@@ -422,6 +434,18 @@ export default function PointeAndPulsePage() {
         <section id="trial" className={s.trial} aria-labelledby="trial-h">
           <div className={s.trialInner}>
             <div className={s.trialArt}>
+              <div className={s.trialField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={cendal}
+                  palette={SASH_BLUSH}
+                  options={{ frequency: 0.45 }}
+                  fit="grid"
+                  cellSize={72}
+                  seed="trial-sash"
+                  redrawInterval={9500}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <Artwork
                 slug="pointe-and-pulse-hiphop"
                 alt=""
@@ -479,6 +503,17 @@ export default function PointeAndPulsePage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footStars} aria-hidden="true">
+          <TabbiedPattern
+            pattern={northstar}
+            palette={STARS}
+            options={{ frequency: 0.3 }}
+            fit="grid"
+            cellSize={32}
+            seed="footer-stars"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pointe &amp; Pulse</p>

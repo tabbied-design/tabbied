@@ -444,14 +444,28 @@
   display: grid;
   justify-items: center;
   gap: 1.5rem;
+  overflow: hidden;
   padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2.5rem);
+  padding-top: clamp(4.5rem, 7vw, 6rem);
   background: color-mix(in srgb, var(--sol) 30%, var(--masa));
   border: var(--line);
   border-radius: 50% 50% var(--radius) var(--radius) / 34% 34% var(--radius) var(--radius);
 }
 
 .tacos {
+  position: relative;
   width: 100%;
+}
+
+/* The hero's pennants, strung across the top of the arch. */
+.menuBunting {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vw, 2rem);
+  left: 0;
+  right: 0;
+  height: 40px;
+  overflow: hidden;
+  border-top: 2px solid var(--char);
 }
 
 .menuDeal {
@@ -876,6 +890,17 @@
   background: var(--char);
 }
 
+/* A string of the catering lanterns along the top of the footer. */
+.footLanterns {
+  position: relative;
+  height: clamp(3rem, 5vw, 4rem);
+  margin-bottom: calc(-1 * clamp(1rem, 3vw, 2rem));
+  overflow: hidden;
+  opacity: 0.85;
+  -webkit-mask-image: linear-gradient(180deg, var(--char) 40%, transparent);
+  mask-image: linear-gradient(180deg, var(--char) 40%, transparent);
+}
+
 .footGrid {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr;
@@ -965,7 +990,8 @@
   }
 
   .menuArt {
-    position: static;
+    position: relative;
+    top: auto;
     max-width: 30rem;
     width: 100%;
     margin: 0 auto;

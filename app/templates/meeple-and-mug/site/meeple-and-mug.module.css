@@ -692,6 +692,24 @@
   font-size: 1.6rem;
 }
 
+/* The booking card set on a corner of the hero's board. */
+.bookMat {
+  grid-area: form;
+  position: relative;
+  isolation: isolate;
+  padding: 0.9rem;
+  overflow: hidden;
+  border-radius: 1.8rem;
+}
+
+.bookBoard {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  background: var(--pale);
+}
+
 .field {
   display: grid;
   gap: 0.35rem;
@@ -950,11 +968,25 @@
 }
 
 .rulesCard {
+  position: relative;
   padding: clamp(1.75rem, 5vw, 4rem);
   border: 2px solid var(--ink);
   border-radius: 1.6rem;
   background: var(--pale);
   box-shadow: 6px 6px 0 var(--ink);
+}
+
+/* A square of the band's pips in the rulebook's corner. */
+.rulesTile {
+  position: absolute;
+  top: clamp(1.75rem, 5vw, 4rem);
+  right: clamp(1.75rem, 5vw, 4rem);
+  width: 8.5rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  border-radius: 1rem;
+  background: var(--paper);
 }
 
 .rulesHead h2 {
@@ -1065,6 +1097,14 @@
   background: var(--ink);
   color: var(--paper);
   padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+}
+
+/* The menu's pips, a dotted strip along the footer's top edge. */
+.footPips {
+  position: relative;
+  height: 1.75rem;
+  margin: calc(-1 * clamp(3rem, 6vw, 4.5rem) + 0.75rem) calc(-1 * var(--gut)) clamp(2rem, 4vw, 3rem);
+  overflow: hidden;
 }
 
 .footTop {
@@ -1182,6 +1222,10 @@
 @media (max-width: 900px) {
   .nav,
   .barCta {
+    display: none;
+  }
+
+  .rulesTile {
     display: none;
   }
 

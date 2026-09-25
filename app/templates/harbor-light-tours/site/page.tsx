@@ -20,6 +20,8 @@ const PALE = '#D3DDE3';
 
 const SAILS = ['transparent', SEA, SIGNAL, PALE, INK];
 const SWELL = ['transparent', SEA, GRAY];
+const REGATTA = ['transparent', PALE, SIGNAL, INK];
+const DRIZZLE = ['transparent', SEA, GRAY, PALE];
 
 const NAV = [
   ['Departures', '#departures'],
@@ -257,6 +259,16 @@ export default function HarborLightToursPage() {
                 It is always colder on the water than on the pier. The cabin is
                 heated, and there are blankets on the top deck.
               </p>
+              <div className={s.burgee} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={sail}
+                  palette={SAILS}
+                  fit="grid"
+                  cellSize={30}
+                  seed="burgee"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </div>
             <div className={s.faqs}>
               {FAQS.map((f, i) => (
@@ -289,6 +301,17 @@ export default function HarborLightToursPage() {
                 </div>
               ))}
             </dl>
+            <div className={s.regatta} aria-hidden="true">
+              <TabbiedPattern
+                pattern={sail}
+                palette={REGATTA}
+                fit="grid"
+                cellSize={36}
+                seed="regatta"
+                options={{ frequency: 0.5 }}
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </div>
         </section>
 
@@ -355,6 +378,16 @@ export default function HarborLightToursPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footDrizzle} aria-hidden="true">
+          <TabbiedPattern
+            pattern={tidewashbands}
+            palette={DRIZZLE}
+            fit="grid"
+            cellSize={120}
+            seed="foot-drizzle"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footTop}>
           <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Harbor Light Tours</p>
           <p data-edit="footer.footTag" data-edit-max="240" data-edit-multiline className={s.footTag}>Boat trips from Pier 3, Gull Harbor, April to November.</p>

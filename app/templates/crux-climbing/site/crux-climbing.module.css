@@ -560,9 +560,28 @@
   max-width: 28rem;
 }
 
-.chalkBag {
-  width: clamp(9rem, 16vw, 14rem);
+/* The chalk bag hung on a small panel of holds. */
+.chalkWall {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(13rem, 23vw, 20rem);
+  aspect-ratio: 1;
   margin-top: 2.5rem;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--pale) 45%, var(--chalk));
+}
+
+.chalkField {
+  position: absolute;
+  inset: 0;
+}
+
+.chalkBag {
+  position: relative;
+  width: 68%;
   transform: rotate(-8deg);
 }
 
@@ -844,12 +863,27 @@
 /* ------------------------------------------------------------------- hours */
 
 .hours {
+  position: relative;
   padding: var(--air) var(--gut);
   background: var(--ink);
   color: var(--chalk);
 }
 
+/* A few holds on the dark wall, in the lower corner. */
+.hoursField {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 40%;
+  height: 46%;
+  overflow: hidden;
+  opacity: 0.45;
+  -webkit-mask-image: radial-gradient(ellipse at 100% 100%, var(--ink) 25%, transparent 70%);
+  mask-image: radial-gradient(ellipse at 100% 100%, var(--ink) 25%, transparent 70%);
+}
+
 .hoursInner {
+  position: relative;
   max-width: var(--max);
   margin: 0 auto;
   display: grid;
@@ -991,9 +1025,21 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
-  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 1.8rem;
+  position: relative;
+  padding: calc(clamp(2.5rem, 5vw, 3.5rem) + 2rem) var(--gut) 1.8rem;
   background: var(--orange);
   color: var(--ink);
+}
+
+/* Quickdraws along the top edge of the footer. */
+.footDraws {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  overflow: hidden;
+  border-bottom: 2px solid var(--ink);
 }
 
 .footInner {
@@ -1104,7 +1150,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .chalkBag {
+  .chalkWall {
     display: none;
   }
 

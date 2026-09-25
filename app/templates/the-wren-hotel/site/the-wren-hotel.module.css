@@ -293,6 +293,22 @@
   font-size: clamp(2.1rem, 4.4vw, 3.6rem);
 }
 
+/* A wallpaper sample in an arch, hung under the section label. */
+.rates .secHead {
+  position: relative;
+}
+
+.swatch {
+  position: absolute;
+  top: 3.2rem;
+  left: 0;
+  width: 6rem;
+  aspect-ratio: 4 / 5;
+  border-radius: 999px 999px 0 0;
+  background: var(--linen);
+  overflow: hidden;
+}
+
 .secNote {
   max-width: 38rem;
   font-weight: 300;
@@ -344,6 +360,17 @@
   height: 9%;
   border-radius: 50%;
   background: radial-gradient(closest-side, color-mix(in srgb, var(--ink) 30%, transparent), transparent);
+}
+
+/* The landing wallpaper, faint, on the wall above the skirting board. */
+.roomWall {
+  position: absolute;
+  z-index: -2;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 9%;
+  opacity: 0.22;
 }
 
 .nest {
@@ -1197,6 +1224,10 @@
     grid-row: auto;
     justify-self: start;
     padding-top: 0.6rem;
+  }
+
+  .swatch {
+    display: none;
   }
 
   .room {

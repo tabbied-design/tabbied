@@ -21,6 +21,8 @@ const PAPER = '#EEEDEA';
 const WEAVE = ['transparent', PALE, PAPER, GRAY, PALE];
 const BOARDS = ['transparent', BLUE, GRAY, PALE, BLUE];
 const PLAN = ['transparent', GRAY, BLUE, INK, BLUE, INK];
+const PLINTH = ['transparent', GRAY, PALE, BLUE, GRAY];
+const WIRING = ['transparent', GRAY, BLUE, PALE, BLUE, GRAY];
 
 const NAV = [
   ['Projects', '#projects'],
@@ -226,6 +228,16 @@ export default function FormAndFieldPage() {
             </h1>
           </div>
           <div className={s.introSide}>
+            <div className={s.swatch} aria-hidden="true">
+              <TabbiedPattern
+                pattern={isometricweave}
+                palette={WEAVE}
+                fit="grid"
+                cellSize={48}
+                seed="ff-swatch"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <p data-edit="intro.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               A practice of seven. We design houses, extensions and small public
               buildings within an hour of the studio, and we stay on every job
@@ -445,6 +457,17 @@ export default function FormAndFieldPage() {
                 inks={['var(--ink)', 'var(--paper)']}
                 className={s.faqArt}
               />
+              <div className={s.plinth} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={circuit}
+                  palette={PLINTH}
+                  options={{ frequency: 0.7 }}
+                  fit="grid"
+                  cellSize={28}
+                  seed="ff-plinth"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </div>
             <div className={s.faqs}>
               {FAQS.map((f, i) => (
@@ -536,6 +559,17 @@ export default function FormAndFieldPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footPlan} aria-hidden="true">
+          <TabbiedPattern
+            pattern={circuit}
+            palette={WIRING}
+            options={{ frequency: 0.6 }}
+            fit="grid"
+            cellSize={48}
+            seed="ff-footer"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Form &amp; Field</p>

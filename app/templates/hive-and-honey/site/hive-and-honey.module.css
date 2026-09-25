@@ -917,6 +917,17 @@
   border-bottom: 2px solid var(--honey);
 }
 
+/* One cell of the hero's comb, beside the questions. */
+.faqCell {
+  position: relative;
+  width: 10rem;
+  aspect-ratio: 1 / 1.1547;
+  margin-top: 2.5rem;
+  overflow: hidden;
+  background: var(--wax);
+  clip-path: var(--hexagon);
+}
+
 .faqList {
   border-top: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
 }
@@ -962,6 +973,15 @@
   background: var(--ink);
   color: var(--cream);
   padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+}
+
+/* The meadow band's petals, a strip along the footer's top edge. */
+.footMeadow {
+  position: relative;
+  height: 2.5rem;
+  margin: calc(-1 * clamp(3rem, 6vw, 4.5rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  opacity: 0.85;
 }
 
 .footTop,
@@ -1131,6 +1151,10 @@
 
   .footFine {
     flex-direction: column;
+  }
+
+  .faqCell {
+    display: none;
   }
 }
 

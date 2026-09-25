@@ -516,6 +516,17 @@
   align-items: start;
 }
 
+/* A burgee, the club flag, flown under the heading. */
+.burgee {
+  position: relative;
+  width: 7.5rem;
+  aspect-ratio: 3 / 2;
+  margin-top: 2.2rem;
+  overflow: hidden;
+  background: var(--fog);
+  clip-path: polygon(0 0, 100% 0, 74% 50%, 100% 100%, 0 100%);
+}
+
 .faqs {
   border-top: 2px solid var(--ink);
 }
@@ -571,10 +582,22 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(2rem, 5vw, 5rem);
   align-items: center;
-  padding: clamp(1.75rem, 5vw, 4rem);
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.75rem, 5vw, 4rem) clamp(1.75rem, 5vw, 4rem) calc(clamp(1.75rem, 5vw, 4rem) + 36px);
   border-radius: 0.8rem;
   background: var(--sea);
   color: var(--fog);
+}
+
+/* A regatta along the foot of the card. */
+.regatta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36px;
+  overflow: hidden;
 }
 
 .charterCard h2 {
@@ -727,9 +750,23 @@
 /* ---------------------------------------------------------------- footer */
 
 .footer {
+  position: relative;
+  overflow: hidden;
   padding: clamp(3rem, 6vw, 4rem) var(--gut) 2rem;
   background: var(--ink);
   color: var(--fog);
+}
+
+/* Harbor drizzle behind the footer, faint. */
+.footDrizzle {
+  position: absolute;
+  inset: 0;
+  opacity: 0.45;
+}
+
+.footTop,
+.footFine {
+  position: relative;
 }
 
 .footTop {

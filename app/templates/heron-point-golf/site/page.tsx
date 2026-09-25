@@ -19,6 +19,8 @@ const PALE = '#DCE3D5';
 
 const MOWN = ['transparent', GREEN, PALE];
 const DIMPLES = ['transparent', GREEN, SAND, GRAY];
+const BALL = ['transparent', GRAY, PALE];
+const STRIPES = ['transparent', PALE, SAND];
 
 const NAV = [
   ['The course', '#course'],
@@ -379,6 +381,16 @@ export default function HeronPointGolfPage() {
 
         {/* ------------------------------------------------------- CLUBHOUSE */}
         <section id="clubhouse" className={s.clubhouse} aria-labelledby="clubhouse-h">
+          <span className={s.ball} aria-hidden="true">
+            <TabbiedPattern
+              pattern={bobbinet}
+              palette={BALL}
+              fit="grid"
+              cellSize={24}
+              seed="ball"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </span>
           <div className={s.secHead}>
             <p data-edit="clubhouse.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>The clubhouse</p>
             <h2 data-edit="clubhouse.title" data-edit-max="60" id="clubhouse-h">Above the eighteenth green</h2>
@@ -396,6 +408,16 @@ export default function HeronPointGolfPage() {
 
         {/* ----------------------------------------------------------- RATES */}
         <section id="rates" className={s.rates} aria-labelledby="rates-h">
+          <div className={s.ratesMown} aria-hidden="true">
+            <TabbiedPattern
+              pattern={hurdle}
+              palette={STRIPES}
+              fit="grid"
+              cellSize={64}
+              seed="rates-mown"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.ratesInner}>
             <div className={s.ratesText}>
               <p data-edit="rates.secKicker" data-edit-max="240" data-edit-multiline className={s.secKicker}>Green fees</p>
@@ -500,6 +522,16 @@ export default function HeronPointGolfPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footMown} aria-hidden="true">
+          <TabbiedPattern
+            pattern={hurdle}
+            palette={MOWN}
+            fit="grid"
+            cellSize={24}
+            seed="foot-mown"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Heron Point</p>

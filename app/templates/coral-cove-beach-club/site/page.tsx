@@ -21,6 +21,8 @@ const SHELL = '#F8E1D1';
 
 const RINGS = ['transparent', CORAL, SUN, LAGOON, SHELL, CORAL];
 const WAVES = ['transparent', LAGOON, INK, SAND];
+const FOAM = ['transparent', LAGOON, SAND];
+const PALE_RINGS = ['transparent', SAND];
 
 const NAV = [
   ['Beds', '#beds'],
@@ -208,6 +210,16 @@ export default function CoralCoveBeachClubPage() {
 
         {/* ----------------------------------------------------------- TODAY */}
         <section className={s.today} aria-labelledby="today-h">
+          <span className={s.todayRing} aria-hidden="true">
+            <TabbiedPattern
+              pattern={lagoon}
+              palette={RINGS}
+              fit="grid"
+              cellSize={28}
+              seed="life-ring"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </span>
           <h2 data-edit="today.todayHead" data-edit-max="60" id="today-h" className={s.todayHead}>Today at the cove</h2>
           <dl className={s.todayList}>
             {TODAY.map(([term, value], i) => (
@@ -265,6 +277,17 @@ export default function CoralCoveBeachClubPage() {
 
         {/* ------------------------------------------------------------- BAR */}
         <section id="bar" className={s.barMenu} aria-labelledby="bar-h">
+          <div className={s.barRings} aria-hidden="true">
+            <TabbiedPattern
+              pattern={lagoon}
+              palette={PALE_RINGS}
+              options={{ frequency: 0.3 }}
+              fit="grid"
+              cellSize={96}
+              seed="bar-rings"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
           <div className={s.barInner}>
             <div className={s.secHead}>
               <h2 data-edit="bar.title" data-edit-max="60" id="bar-h">From the beach bar</h2>
@@ -435,6 +458,16 @@ export default function CoralCoveBeachClubPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footWaves} aria-hidden="true">
+          <TabbiedPattern
+            pattern={wander}
+            palette={FOAM}
+            fit="grid"
+            cellSize={28}
+            seed="foot-waves"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Coral Cove</p>

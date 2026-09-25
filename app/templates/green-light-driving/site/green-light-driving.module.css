@@ -558,10 +558,28 @@
   gap: 2rem;
 }
 
-.testSign {
+/* The sign stands in a patch of bends, faded at the edge like the hero's. */
+.signSpot {
+  position: relative;
   flex: none;
-  width: clamp(5rem, 9vw, 7.5rem);
-  margin-bottom: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  place-items: end center;
+  width: clamp(10rem, 17vw, 14rem);
+  aspect-ratio: 1;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.signField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  -webkit-mask: radial-gradient(closest-side, var(--asphalt) 50%, transparent 100%);
+  mask: radial-gradient(closest-side, var(--asphalt) 50%, transparent 100%);
+}
+
+.testSign {
+  position: relative;
+  width: 54%;
 }
 
 .checks {
@@ -881,13 +899,26 @@
 }
 
 .form {
+  --pad: clamp(1.3rem, 3vw, 2rem);
+
   display: grid;
   gap: 1.1rem;
-  padding: clamp(1.3rem, 3vw, 2rem);
+  padding: var(--pad);
   border-radius: 12px;
   border: 2px solid var(--asphalt);
   box-shadow: 8px 8px 0 var(--green);
   background: var(--paper);
+}
+
+/* A crossing painted across the top of the form. */
+.formCrossing {
+  position: relative;
+  height: 2.5rem;
+  margin: calc(var(--pad) * -1) calc(var(--pad) * -1) 0.4rem;
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+  border-bottom: 2px solid var(--asphalt);
+  background: var(--asphalt);
 }
 
 .formRow {
@@ -982,9 +1013,21 @@
 /* ------------------------------------------------------------------ footer */
 
 .footer {
+  position: relative;
   background: var(--asphalt);
   color: var(--paper);
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2rem) var(--gut) 2rem;
+}
+
+/* Road markings along the top edge of the footer. */
+.footMarks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  overflow: hidden;
+  opacity: 0.7;
 }
 
 .footTop,
@@ -1183,8 +1226,12 @@
     align-items: flex-start;
   }
 
+  .signSpot {
+    width: 6rem;
+  }
+
   .testSign {
-    width: 4rem;
+    width: 64%;
   }
 
   .checks,

@@ -314,6 +314,16 @@ export default function ElFarolitoPage() {
         {/* ------------------------------------------------------------ MENU */}
         <section id="menu" className={s.menu} aria-labelledby="menu-h">
           <div className={s.menuArt}>
+            <div className={s.menuBunting} aria-hidden="true">
+              <TabbiedPattern
+                pattern={circusposter}
+                palette={BUNTING}
+                fit="grid"
+                cellSize={40}
+                seed="farolito-plate"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <Artwork
               slug="el-farolito-truck-tacos"
               alt="Three tacos on a plate"
@@ -516,6 +526,17 @@ export default function ElFarolitoPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footLanterns} aria-hidden="true">
+          <TabbiedPattern
+            pattern={lantern}
+            palette={LANTERNS}
+            fit="grid"
+            cellSize={56}
+            seed="farolito-foot"
+            options={{ frequency: 0.55 }}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <div className={s.footGrid}>
           <div>
             <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>El Farolito</p>

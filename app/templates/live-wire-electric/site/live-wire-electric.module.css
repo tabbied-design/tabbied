@@ -756,6 +756,15 @@
   transform: rotate(12deg);
 }
 
+/* The hero's board again, cleared in the middle where the pliers lie. */
+.licField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.7;
+  mask-image: radial-gradient(closest-side, transparent 55%, var(--ink) 95%);
+}
+
 .licBody h2 {
   margin-top: 0.8rem;
   font-size: clamp(2.6rem, 5vw, 4.4rem);
@@ -875,6 +884,15 @@
 .ringInner {
   inset: 26%;
   background: var(--volt);
+}
+
+/* Traces for the streets of the outer ring. */
+.ringStreets {
+  position: absolute;
+  inset: 2px;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.3;
 }
 
 .depot {
@@ -1118,6 +1136,14 @@
   padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
   background: var(--ink);
   color: var(--paper);
+}
+
+/* The emergency section's hazard tape, along the footer's top edge. */
+.footTape {
+  position: relative;
+  height: 34px;
+  margin: calc(-1 * clamp(3rem, 6vw, 4.5rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
 }
 
 .footGrid {
