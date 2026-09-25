@@ -872,8 +872,20 @@
     margin-top: 1rem;
   }
 
-  .reserveArt::after {
+  .reserveArt::after,
+  .reserveStars {
     display: none;
+  }
+
+  /* The words run the full width here, so the glow starts below them. */
+  .hero {
+    background: linear-gradient(
+      180deg,
+      var(--pale) 0%,
+      var(--pale) 44%,
+      color-mix(in srgb, var(--orange) 60%, var(--pale)) 62%,
+      var(--orange) 85%
+    );
   }
 
   .glow {
