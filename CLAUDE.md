@@ -689,13 +689,14 @@ step is exactly the work this component removes.
 
 ## The masthead - one bar, two tones
 
-`components/nav/SiteNav` is the site's masthead: the lockup on the left,
-Home / Patterns / Websites in the middle, and on the right either "Sign in" or
+`components/nav/SiteNav` is the site's masthead: the lockup on the left (the
+way home, so there is no Home link), Patterns / Websites / React Component in
+the middle, and on the right either "Sign in" or
 the person as a pill - the initials in a circle beside two rules - opening a
 menu (email, My account, Settings, and Admin for a person whose row says
 `role = 'admin'`, then Sign out; the item for the current page is ink and
-600, the rest grey). Signed in, the first destination reads My account,
-in sentence case as every design writes it. Below 768px the destinations fold into that menu, or behind
+600, the rest grey). My account is only in that menu, never in the middle.
+Below 768px the destinations fold into that menu, or behind
 a hamburger when signed out. It takes a `tone` (`dark` for the homepage and
 the template gallery, `light` for everything else) and a `sticky` flag the
 pattern library uses because its rail starts where the bar ends. `HomeNav`,
@@ -721,9 +722,10 @@ Four things worth not re-litigating:
   (`oklch(0.17 0.012 285 / 0.82)` under a 14px blur), since the homepage and
   gallery artboards both draw it that way; for the light tone the `sticky`
   flag stays a page's own choice.
-- **GitHub and Docs are in the footer, not the bar.** The 2026 artboards put
-  three destinations and the account up top and everything else in
-  `HomeFooter`; the bar used to carry a different set of links on every
+- **GitHub is in the footer, not the bar.** The 2026 artboards put three
+  destinations and the account up top and everything else in `HomeFooter`;
+  the React docs joined the bar later as its last destination (and stay in
+  the footer too). The bar used to carry a different set of links on every
   page, which is what one component ends. Studio is in neither now: the
   generation flow is held back from the first launch (see below), and the
   footer's Product list is the artboard's own - Patterns, Websites, My
