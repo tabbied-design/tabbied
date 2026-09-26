@@ -205,16 +205,6 @@ const BY_SLUG: Record<string, TemplateCategory> = {
   'polish-nail-bar': 'Services',
   'tin-roof-guitars': 'Shop',
   'heron-point-golf': 'Wellness & sport',
-  'harbor-notary': 'Services',
-  'true-north-hvac': 'Services',
-  'good-dog-walks': 'Services',
-  'bellows-chimney': 'Services',
-  'keynote-piano': 'Services',
-  'ledger-tax': 'Services',
-  'patch-and-plane': 'Services',
-  'stillwater-massage': 'Wellness & sport',
-  'steadfast-pest': 'Services',
-  'northline-appliance': 'Services',
 };
 
 /**
