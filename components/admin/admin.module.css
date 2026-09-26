@@ -354,7 +354,7 @@
 }
 
 .search input {
-  width: 130px;
+  width: 134px;
   font: 400 14px var(--a-sans);
   color: var(--a-ink);
   background: none;
@@ -529,6 +529,11 @@
 
 .sortHead[data-on] {
   color: var(--a-ink);
+}
+
+/* Off the text's line box, so the header row stays as tall as its words. */
+.sortHead svg {
+  display: block;
 }
 
 .row {
