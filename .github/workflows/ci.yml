@@ -58,6 +58,30 @@ jobs:
       - name: Typecheck worker
         run: npm run typecheck:worker
 
+  video:
+    name: Video typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            video/package-lock.json
+      - run: npm ci
+      - run: npm ci
+        working-directory: video
+      # video/ is its own package, outside the workspaces and the site's
+      # tsconfig, so nothing else would notice a change to tabbied's API, a
+      # design, a palette id or the docs tokenizer that the showcase reads.
+      - name: Build tabbied
+        run: npm run build --workspace tabbied
+      - name: Typecheck video
+        working-directory: video
+        run: npm run prepare-assets && npm run typecheck
+
   e2e:
     name: Playwright e2e
     runs-on: ubuntu-latest

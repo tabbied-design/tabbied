@@ -1672,3 +1672,28 @@ follow from how the ground is actually painted:
   picture as a data URL in an `<image>` that is the root's first child, cover
   fitted to the viewBox, so the converter's own primitives paint over it
   exactly as the pattern paints over the stage.
+
+## The showcase video - Remotion, in its own package
+
+`video/` is the product video, authored in Remotion (`video/README.md`). It
+is deliberately **not** a workspace: its ~260 packages (Remotion ships its
+own ffmpeg) would otherwise ride along in every deploy's `npm ci`. It takes
+`tabbied` through `file:../packages/tabbied`, is excluded from the site's
+tsconfig like `worker/`, and has its own CI typecheck job. Three things
+worth not re-litigating:
+
+- **A live pattern is driven by the frame, not the clock.** `PatternField`
+  pauses every Animation a reseed or recolor starts and sets `currentTime`
+  from the frame number. Remotion renders frames out of order in parallel
+  tabs, so a transition left running is caught at a random point; the
+  component also brings the field to each frame's state from whatever it
+  shows, which is why `--concurrency=4` matches `--concurrency=1` frame for
+  frame. Pick designs whose transition covers the whole change: some cut
+  their colors on a reseed, which reads as a flicker on video.
+- **Figures and pictures are derived.** `scripts/prepare.mjs` reads the
+  counts, palettes and template order from the same modules
+  `lib/siteCounts.ts` does, before every render. The UI screenshots in
+  `video/public/ui/` are committed (a render should not need the site
+  running) and retaken with `npm run capture` against `npm run dev`.
+- **The code scene reuses the docs tokenizer**
+  (`components/react-docs-page/highlight.ts`) rather than a copy of it.

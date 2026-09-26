@@ -1,0 +1,5 @@
+node_modules/
+out/
+# Written by scripts/prepare.mjs on every render.
+src/generated/
+public/generated/
