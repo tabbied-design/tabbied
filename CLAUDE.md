@@ -561,6 +561,11 @@ its upright, slanted), so a web font still drew the text. Any face
 `document.fonts` reports as `error` fails the shot too. A failure gets one
 reload, then the slug is reported and its shot left as it was.
 
+That check also found a page bug the old shots had hidden: Solstice asked
+for `Karla:opsz,...`, an axis Karla does not have, and Google answers such
+a request with 200 and silently leaves the family out, so the live page had
+never set its body type in Karla at all.
+
 ## The template gallery - a mixed order, pages, and the URL
 
 `/templates` shows 50 cards a page, in the order `GALLERY_ORDER` in
