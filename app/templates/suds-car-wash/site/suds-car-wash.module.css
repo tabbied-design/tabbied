@@ -1,0 +1,1268 @@
+/* ==========================================================================
+   SUDS - express tunnel car wash, two locations
+   Built like the sign at the gate: wide, heavy capitals, a clean paper
+   ground and one strong blue. The wash menu is the signboard itself, three
+   panels stepping up from Basic to Ultimate on two posts. Bubbles are the
+   only ornament: pale ones rising behind the car, glowing ones on the one
+   dark panel, where the membership is sold.
+   ========================================================================== */
+
+.page {
+  --paper: #f3f8fc;
+  --ink: #0f1e33;
+  --blue: #1e88e5;
+  --sun: #ffca28;
+  --gray: #8795a8;
+  --pale: #dceaf7;
+  --gut: clamp(1rem, 4.5vw, 3.5rem);
+  --max: 76rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --radius: 22px;
+
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+  padding: 0;
+}
+
+.page :where(ul, ol) {
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.85rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--pale);
+}
+
+.mark {
+  position: relative;
+  justify-self: start;
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  font-weight: 900;
+  font-size: 1.65rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  padding-right: 0.9rem;
+}
+
+/* Three bubbles off the last letter. */
+.mark::before,
+.mark::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.mark::before {
+  right: 0;
+  top: -0.1rem;
+  width: 0.55rem;
+  height: 0.55rem;
+}
+
+.mark::after {
+  right: 0.45rem;
+  top: -0.45rem;
+  width: 0.32rem;
+  height: 0.32rem;
+  background: var(--sun);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(0.9rem, 2.2vw, 2rem);
+  flex-wrap: wrap;
+}
+
+.nav a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--blue);
+}
+
+.barCta {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--blue);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.barCta:hover {
+  background: var(--ink);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------ shared bits */
+
+.secHead {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.secHead h2 {
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  text-transform: uppercase;
+}
+
+.secNo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.secNote {
+  max-width: 36rem;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.btn,
+.btnGhost,
+.btnSun {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.5rem;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.btn::after {
+  content: '\2193';
+}
+
+.btn:hover {
+  background: var(--blue);
+}
+
+.btnGhost {
+  border: 2px solid var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btnSun {
+  color: var(--ink);
+  background: var(--sun);
+}
+
+.btnSun:hover {
+  background: var(--paper);
+}
+
+.cur {
+  font-size: 0.45em;
+  vertical-align: 0.95em;
+  margin-right: 0.08em;
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) var(--air);
+}
+
+.heroCopy {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.kicker::before {
+  content: '';
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--sun);
+}
+
+.heroTitle {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 900;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--blue);
+}
+
+.heroLede {
+  max-width: 34rem;
+  font-size: 1.12rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--pale);
+}
+
+.facts dt {
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.facts dd {
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+/* The plate: pale, rounded, bubbles rising through it, the car parked on
+   its lower edge. */
+.heroPlate {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-items: end;
+  justify-items: center;
+  min-height: clamp(22rem, 42vw, 36rem);
+  padding: 3rem clamp(1rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);
+  background: var(--pale);
+  border-radius: calc(var(--radius) * 1.6);
+  overflow: hidden;
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.heroCar {
+  width: min(100%, 38rem);
+  filter: drop-shadow(0 22px 18px rgb(0 0 0 / 0.14));
+}
+
+.heroTag {
+  position: absolute;
+  top: 1.4rem;
+  left: 1.4rem;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--sun);
+  border-radius: 999px;
+}
+
+/* --------------------------------------------------------------- signboard */
+
+.washes {
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.sign {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  background: var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.45);
+}
+
+.signTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1.2rem;
+  padding: 0.4rem 0.6rem 1.4rem;
+  color: var(--paper);
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  text-transform: uppercase;
+}
+
+.signBrand {
+  font-weight: 900;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--sun);
+}
+
+.signSub {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+}
+
+.signOpen {
+  margin-left: auto;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+/* Three panels bottom-aligned. The caps grow from left to right, so the
+   tops step up like tiers. */
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.6rem, 1.2vw, 1rem);
+  align-items: end;
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border-radius: calc(var(--radius) - 8px);
+  overflow: hidden;
+}
+
+.tierCap {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.2rem 1.4rem 4.2rem;
+}
+
+.basic .tierCap {
+  background: var(--pale);
+}
+
+.deluxe .tierCap {
+  padding-top: 4.6rem;
+  color: var(--paper);
+  background: var(--blue);
+}
+
+.ultimate .tierCap {
+  padding-top: 8rem;
+  background: var(--sun);
+}
+
+.tierNo {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+.tierBadge {
+  position: absolute;
+  top: 1rem;
+  left: 1.4rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--sun);
+  border-radius: 999px;
+}
+
+.tierName {
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  text-transform: uppercase;
+}
+
+.tierPrice {
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  font-weight: 900;
+  font-size: clamp(3.6rem, 7vw, 5.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.tierTime {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+/* The picture sits across the cap's lower edge. */
+.tierArt {
+  display: grid;
+  place-items: center;
+  height: 8.5rem;
+  margin-top: -4rem;
+  padding: 0 1rem;
+}
+
+.artNozzle,
+.artBucket,
+.artCar {
+  height: 100%;
+  width: auto;
+  filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.12));
+}
+
+.artCar {
+  height: auto;
+  width: min(100%, 13rem);
+}
+
+.tierLine {
+  padding: 0.8rem 1.4rem 0.4rem;
+  min-height: 4.6rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.steps {
+  display: grid;
+  padding: 0.6rem 1.4rem 1.6rem;
+}
+
+.stepOn,
+.stepOff {
+  display: grid;
+  grid-template-columns: 1.3rem 1fr;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.42rem 0;
+  font-size: 0.92rem;
+  border-top: 1px solid var(--pale);
+}
+
+.stepOn::before,
+.stepOff::before {
+  content: '\2713';
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--blue);
+  border-radius: 50%;
+}
+
+.stepOff {
+  color: color-mix(in srgb, var(--ink) 48%, var(--paper));
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.stepOff::before {
+  content: '';
+  background: transparent;
+  border: 1.5px solid color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+/* Two posts under the board, planted on a ground line. */
+.posts {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  height: clamp(2.5rem, 5vw, 4rem);
+  padding: 0 18%;
+  border-bottom: 3px solid var(--ink);
+}
+
+.posts span {
+  position: relative;
+  width: clamp(0.8rem, 1.4vw, 1.2rem);
+  background: var(--ink);
+}
+
+/* Suds pooling on the ground line around the posts. */
+.postsFoam {
+  position: absolute;
+  inset: 0 4%;
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(90deg, transparent, var(--ink) 18%, var(--ink) 82%, transparent);
+  mask-image: linear-gradient(90deg, transparent, var(--ink) 18%, var(--ink) 82%, transparent);
+}
+
+.signNote {
+  max-width: 40rem;
+  margin: 1.2rem auto 0;
+  font-size: 0.9rem;
+  text-align: center;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+/* --------------------------------------------------------------------- how */
+
+.how {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.howArt {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+}
+
+/* A sun disc behind the nozzle, a plain CSS circle. */
+.howArt::before {
+  content: '';
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sun) 55%, var(--paper));
+}
+
+/* Spray on the disc, clipped to it, the nozzle over the top. */
+.howDisc {
+  position: absolute;
+  inset: 8%;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.howNozzle {
+  position: relative;
+  width: 88%;
+}
+
+.howList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.howList li {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.howNo {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  font-weight: 800;
+  color: var(--paper);
+  background: var(--blue);
+  border-radius: 50%;
+}
+
+.howList h3 {
+  font-size: 1.25rem;
+  text-transform: uppercase;
+}
+
+.howList p {
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* -------------------------------------------------------------- membership */
+
+.member {
+  position: relative;
+  isolation: isolate;
+  margin: 0 clamp(0rem, 2vw, 1.5rem);
+  padding: var(--air) var(--gut);
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: calc(var(--radius) * 1.6);
+  overflow: hidden;
+}
+
+.memberField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.85;
+  /* Calm behind the headline, full strength toward the right. */
+  -webkit-mask-image: linear-gradient(105deg, transparent 25%, var(--ink) 70%);
+  mask-image: linear-gradient(105deg, transparent 25%, var(--ink) 70%);
+}
+
+.memberInner {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.memberTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: 2rem;
+  align-items: center;
+}
+
+.memberCar {
+  width: 100%;
+  transform: rotate(-4deg);
+  filter: drop-shadow(0 26px 22px rgb(0 0 0 / 0.35));
+}
+
+.memberHead {
+  display: grid;
+  gap: 1rem;
+  max-width: 44rem;
+}
+
+.memberHead .secNo {
+  color: var(--sun);
+}
+
+.memberHead h2 {
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.memberHead h2 em {
+  font-style: normal;
+  color: var(--sun);
+}
+
+.memberLede {
+  max-width: 36rem;
+  font-size: 1.08rem;
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.plan {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1.6rem;
+  background: color-mix(in srgb, var(--ink) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+  border-radius: var(--radius);
+  backdrop-filter: blur(6px);
+}
+
+.plan h3 {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.planPrice {
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  font-weight: 900;
+  font-size: clamp(2.6rem, 4.4vw, 3.4rem);
+  line-height: 1;
+  color: var(--sun);
+}
+
+.per {
+  margin-left: 0.4rem;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--paper);
+}
+
+.planNote {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.terms {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.4rem;
+  padding: 1.6rem;
+  background: color-mix(in srgb, var(--ink) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+  border-radius: var(--radius);
+  backdrop-filter: blur(6px);
+}
+
+.terms dt {
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+  color: var(--sun);
+}
+
+.terms dd {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+.memberActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.4rem;
+}
+
+.memberAside {
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+/* ------------------------------------------------------------------ extras */
+
+.extras {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.extrasArt {
+  position: relative;
+  isolation: isolate;
+  order: 2;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: var(--pale);
+  border-radius: 50% 50% var(--radius) var(--radius);
+  overflow: hidden;
+}
+
+.extrasField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.7;
+}
+
+.bigBucket {
+  width: min(100%, 22rem);
+}
+
+.extraList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 1rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.extraName {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.extraWhat {
+  grid-column: 1;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.extraPrice {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--blue);
+  white-space: nowrap;
+}
+
+.free {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.freeHead {
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.freeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.freeList li {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  background: var(--pale);
+  border-radius: 999px;
+}
+
+/* --------------------------------------------------------------- locations */
+
+.locations {
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.places {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.place {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-top-width: 10px;
+  border-radius: var(--radius);
+}
+
+.place:nth-child(2) {
+  border-top-color: var(--blue);
+}
+
+.placeName {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  text-transform: uppercase;
+}
+
+.placeStreet {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.placeTown {
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.hours {
+  display: grid;
+  margin: 0.8rem 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  font-weight: 700;
+  text-align: right;
+}
+
+.placeFacts {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.placePhone {
+  justify-self: start;
+  margin-top: 0.4rem;
+  font-weight: 700;
+  color: var(--blue);
+  border-bottom: 2px solid currentColor;
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: calc(52rem + 2 * var(--gut));
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.faqList {
+  border-top: 2px solid var(--ink);
+}
+
+.faqItem {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.faqItem summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  padding: 1.15rem 3rem 1.15rem 0;
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A plus that turns into a minus. */
+.faqItem summary::before,
+.faqItem summary::after {
+  content: '';
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  width: 1rem;
+  height: 2.5px;
+  background: var(--blue);
+  transform: translateY(-50%);
+  transition: transform 180ms ease;
+}
+
+.faqItem summary::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.faqItem[open] summary::after {
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.faqItem p {
+  max-width: 44rem;
+  padding: 0 0 1.3rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 3rem) var(--gut) 2rem;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+/* Foam along the top edge: the big bubbles at the seam, shrinking down. */
+.footFoam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4.5rem;
+  opacity: 0.6;
+  transform: scaleY(-1);
+}
+
+.footGrid {
+  display: grid;
+  grid-template-columns: 1.6fr repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.footName {
+  font-family: 'Archivo', 'Arial Black', sans-serif;
+  font-stretch: 125%;
+  font-weight: 900;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.footTag {
+  max-width: 20rem;
+  margin-top: 0.8rem;
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+
+.footHead {
+  margin-bottom: 0.8rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sun);
+}
+
+.footLinks {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.footLinks a,
+.footAddr {
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+.footLinks a:hover {
+  color: var(--sun);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  max-width: var(--max);
+  margin: 3rem auto 0;
+  padding-top: 1.4rem;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .terms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tierCap {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .how,
+  .extras {
+    grid-template-columns: 1fr;
+  }
+
+  .howArt {
+    width: 100%;
+    max-width: 22rem;
+    margin: 0 auto;
+  }
+
+  .extrasArt {
+    order: 0;
+    max-width: 26rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .plans,
+  .memberTop {
+    grid-template-columns: 1fr;
+  }
+
+  .memberCar {
+    max-width: 20rem;
+  }
+
+  .footGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .bar {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  /* The board turns into a stack of panels, no longer stepped. */
+  .tiers {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .tierCap,
+  .deluxe .tierCap,
+  .ultimate .tierCap {
+    padding-top: 1.2rem;
+    padding-bottom: 1.4rem;
+    padding-right: 42%;
+  }
+
+  .deluxe .tierCap {
+    padding-top: 3rem;
+  }
+
+  .tierArt {
+    position: absolute;
+    right: 1rem;
+    top: 1.2rem;
+    width: 38%;
+    height: 7rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tier {
+    position: relative;
+  }
+
+  .tierNo {
+    display: none;
+  }
+
+  .tierLine {
+    min-height: 0;
+  }
+
+  .posts {
+    padding: 0 30%;
+  }
+
+  .places {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .barCta {
+    display: none;
+  }
+
+  .facts {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .facts dt {
+    font-size: 1.25rem;
+  }
+
+  .heroPlate {
+    min-height: 17rem;
+    padding-top: 3.6rem;
+  }
+
+  .howList,
+  .terms {
+    grid-template-columns: 1fr;
+  }
+
+  .footGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .btnSun,
+  .faqItem summary::before,
+  .faqItem summary::after {
+    transition: none;
+  }
+}

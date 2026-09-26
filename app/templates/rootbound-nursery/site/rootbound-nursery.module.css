@@ -1,0 +1,1042 @@
+.page {
+  --paper: #f3f5ef;
+  --ink: #1a261d;
+  --leaf: #3e7d4f;
+  --clay: #d98e4a;
+  --gray: #919c92;
+  --pale: #dfe7dc;
+  --gut: clamp(1.25rem, 4.5vw, 3.5rem);
+  --max: 80rem;
+  --radius: 14px;
+  --line: color-mix(in srgb, var(--ink) 13%, transparent);
+  --muted: color-mix(in srgb, var(--ink) 72%, var(--paper));
+  --display: 'Petrona', 'Georgia', serif;
+
+  font-family: 'Epilogue', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   ROOTBOUND - plant nursery and greenhouse
+   A grower's catalog: cool greenhouse paper, a deep green ink, the leaf
+   green and a terracotta for pots. The plant table is the page, each row
+   read at a glance through its chips (light, water, care), with a shelf of
+   drawn plants beside it. The plants and the watering can are flat color
+   layers in the palette, so they re-color with the page. The arch behind
+   the monstera is the one big pattern.
+   ========================================================================== */
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.85rem max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: color-mix(in srgb, var(--paper) 93%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1;
+  color: var(--leaf);
+}
+
+.brandMeta {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--leaf);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------ shared heads */
+
+.secHead {
+  max-width: 42rem;
+}
+
+.secKicker {
+  margin-bottom: 0.8rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+.secTitle {
+  font-size: clamp(2rem, 4.2vw, 3.3rem);
+}
+
+.secLede {
+  margin-top: 1rem;
+  max-width: 36rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.kicker {
+  margin-bottom: 1.3rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.heroTitle {
+  font-size: clamp(2.9rem, 6vw, 5.4rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.heroTitle em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--leaf);
+}
+
+.heroLede {
+  margin-top: 1.5rem;
+  max-width: 33rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.4rem;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.btn {
+  color: var(--paper);
+  background: var(--leaf);
+}
+
+.btn:hover {
+  background: var(--ink);
+}
+
+.btnLine {
+  border: 1.5px solid var(--ink);
+}
+
+.btnLine:hover {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: clamp(1.2rem, 3vw, 2.8rem);
+  margin: 2.8rem 0 0;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.heroFacts dd {
+  order: -1;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.1rem;
+  line-height: 1;
+  color: var(--leaf);
+}
+
+.heroFacts dt {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* A greenhouse arch full of arches, with the monstera on the bench in front.
+   The pattern fades toward the bench so the pot stands on clean ground. */
+.heroArt {
+  position: relative;
+  width: 100%;
+  max-width: 32rem;
+  aspect-ratio: 4 / 5;
+  justify-self: end;
+  border-bottom: 3px solid var(--ink);
+}
+
+.arch {
+  position: absolute;
+  inset: 0 6% 0;
+  overflow: hidden;
+  border: 1.5px solid var(--ink);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 50%, transparent 92%);
+  mask-image: linear-gradient(180deg, var(--ink) 50%, transparent 92%);
+}
+
+.heroPlant {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 76%;
+  transform: translateX(-50%);
+}
+
+/* --------------------------------------------------------------- catalog */
+
+.catalog {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+  border-top: 1px solid var(--line);
+}
+
+.catHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 2rem 4rem;
+}
+
+.legend {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 1.2rem 1.4rem;
+  list-style: none;
+  background: var(--pale);
+  border-radius: var(--radius);
+}
+
+.legend li {
+  display: grid;
+  grid-template-columns: 8.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.legend .chip {
+  justify-self: start;
+}
+
+.legendText {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.catGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 15.5rem;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.plants {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.plants thead th {
+  position: sticky;
+  top: 3.9rem;
+  z-index: 2;
+  padding: 0.7rem 0.8rem 0.7rem 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+}
+
+.plants tbody th,
+.plants td {
+  padding: 0.95rem 0.8rem 0.95rem 0;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+}
+
+.plants tbody tr:hover {
+  background: color-mix(in srgb, var(--pale) 55%, transparent);
+}
+
+.plants tbody th {
+  font-weight: 400;
+}
+
+.plantName {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.plantLatin {
+  display: block;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.petSafe {
+  display: inline-block;
+  margin-top: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--leaf);
+}
+
+.petSafe::before {
+  content: '\2713  ';
+}
+
+.sizes {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* The chips. Light is a sun that fills as it gets brighter; water is a drop;
+   care is the only one that changes its ground, from leaf to ink. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.28rem 0.7rem 0.28rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--pale);
+  border-radius: 999px;
+}
+
+.chip::before {
+  content: '';
+  flex: none;
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 50%;
+}
+
+.sunFull::before {
+  background: var(--clay);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--clay) 35%, transparent);
+}
+
+.sunHigh::before {
+  background: linear-gradient(90deg, var(--clay) 50%, transparent 50%);
+  border: 1.5px solid var(--clay);
+}
+
+.sunMid::before {
+  background: linear-gradient(90deg, var(--clay) 25%, transparent 25%);
+  border: 1.5px solid var(--clay);
+}
+
+.sunLow::before {
+  border: 1.5px solid var(--gray);
+}
+
+.water::before {
+  background: var(--leaf);
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg) scale(0.9);
+}
+
+.careEasy {
+  color: var(--paper);
+  background: var(--leaf);
+}
+
+.careEasy::before {
+  background: var(--paper);
+}
+
+.careMid {
+  background: color-mix(in srgb, var(--clay) 32%, var(--paper));
+}
+
+.careMid::before {
+  background: linear-gradient(90deg, var(--clay) 50%, transparent 50%);
+  border: 1.5px solid var(--clay);
+}
+
+.careFussy {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.careFussy::before {
+  background: var(--clay);
+}
+
+/* The shelf: two drawn plants in pale arches, kept in view beside the table. */
+.shelf {
+  position: sticky;
+  top: 5.5rem;
+  display: grid;
+  gap: 1.8rem;
+  align-self: start;
+}
+
+.shelfItem {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.shelfPlate {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 15rem;
+  padding: 1.6rem 1rem 0;
+  margin-bottom: 0.5rem;
+  background: var(--pale);
+  border-radius: 999px 999px 0 0;
+  border-bottom: 3px solid var(--ink);
+}
+
+.shelfTall {
+  position: relative;
+  height: 92%;
+  width: auto;
+}
+
+.shelfNarrow {
+  position: relative;
+  height: 94%;
+  width: auto;
+}
+
+/* The hero's arches, small, in the top of each plate. */
+.shelfArch {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 20%, transparent 75%);
+  mask-image: linear-gradient(180deg, var(--ink) 20%, transparent 75%);
+}
+
+.shelfName {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.shelfNote {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- workshops */
+
+.workshops {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(4rem, 8vw, 7rem);
+}
+
+.wsList {
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--ink);
+}
+
+.ws {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr) 11rem;
+  gap: 1.5rem clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  padding: 1.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.wsDate {
+  display: grid;
+  justify-items: start;
+  line-height: 1;
+}
+
+.wsDay {
+  font-family: var(--display);
+  font-size: 3.2rem;
+  font-weight: 500;
+  color: var(--leaf);
+}
+
+.wsMonth {
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.wsTitle {
+  font-size: 1.6rem;
+}
+
+.wsText {
+  margin-top: 0.4rem;
+  max-width: 40rem;
+  color: var(--muted);
+}
+
+.wsTime {
+  margin-top: 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.wsMeta {
+  display: grid;
+  justify-items: end;
+  gap: 0.3rem;
+  text-align: right;
+}
+
+.wsPrice {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.wsLeft {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--clay);
+}
+
+/* -------------------------------------------------------------- delivery */
+
+.delivery {
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+  background: var(--pale);
+}
+
+.deliveryInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.canBox {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+/* A round bed of fronds the can is about to water. */
+.canLeaves {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(100%, 26rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  transform: translate(-40%, -50%);
+  -webkit-mask-image: radial-gradient(closest-side, var(--ink) 55%, transparent);
+  mask-image: radial-gradient(closest-side, var(--ink) 55%, transparent);
+}
+
+.can {
+  position: relative;
+  width: min(100%, 30rem);
+}
+
+.rates {
+  display: grid;
+  margin: 2rem 0 0;
+  border-top: 1.5px solid var(--ink);
+}
+
+.rates div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.rates dt {
+  font-weight: 500;
+}
+
+.rates dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* ------------------------------------------------------------ greenhouse */
+
+.greenhouse {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut);
+}
+
+/* A glazed pane: the fronds behind glazing bars drawn in the paper color. */
+.pane {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--pale);
+  border: 6px solid var(--ink);
+  border-radius: 999px 999px 0 0;
+}
+
+.pane::before,
+.pane::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pane::before {
+  inset: 0 auto 0 50%;
+  width: 6px;
+  background: var(--ink);
+  transform: translateX(-50%);
+}
+
+.pane::after {
+  inset: 58% 0 auto;
+  height: 6px;
+  background: var(--ink);
+}
+
+.ghBody {
+  margin-top: 1.1rem;
+  max-width: 34rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.ghFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 2.5rem 0 0;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.ghFacts div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ghFacts dd {
+  order: -1;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--leaf);
+}
+
+.ghFacts dt {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+  border-top: 1px solid var(--line);
+}
+
+.visitAddr {
+  margin-top: 1.1rem;
+  color: var(--muted);
+}
+
+.hours {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+}
+
+.hours div {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hours dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+.hours dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+.contact {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.contact a {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  border-bottom: 1.5px solid var(--leaf);
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  padding: 2.6rem var(--gut) 2rem;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+/* The greenhouse fronds, in a hedge along the top of the footer. */
+.footFronds {
+  position: relative;
+  height: 2.5rem;
+  margin: -2.6rem calc(-1 * var(--gut)) 2.2rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 30%, transparent);
+  mask-image: linear-gradient(180deg, var(--ink) 30%, transparent);
+}
+
+.footTop,
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop {
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--pale);
+}
+
+.footLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footLinks a:hover {
+  color: var(--clay);
+}
+
+.footFine {
+  padding-top: 1.3rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--paper) 66%, transparent);
+}
+
+.footFine a {
+  border-bottom: 1px solid currentColor;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1080px) {
+  .catGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The shelf becomes a row above the table. */
+  .shelf {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    order: -1;
+  }
+
+  .shelfPlate {
+    height: 12rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+    justify-self: end;
+  }
+
+  .brandMeta {
+    display: none;
+  }
+
+  .hero,
+  .catHead,
+  .deliveryInner,
+  .greenhouse,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    justify-self: center;
+    max-width: 24rem;
+  }
+
+  .can {
+    width: min(100%, 20rem);
+  }
+
+  .canLeaves {
+    width: min(100%, 18rem);
+  }
+
+  .pane {
+    max-width: 22rem;
+    width: 100%;
+    justify-self: center;
+  }
+
+  /* The table becomes a stack of cards: name and Latin first, then the
+     chips in a row, then the sizes. */
+  .plants thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .plants,
+  .plants tbody {
+    display: block;
+  }
+
+  .plants tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .plants tbody th,
+  .plants td {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .plants tbody th {
+    flex-basis: 100%;
+    margin-bottom: 0.3rem;
+  }
+
+  .plants .sizes {
+    flex-basis: 100%;
+    margin-top: 0.3rem;
+  }
+
+  .ws {
+    grid-template-columns: 4.2rem minmax(0, 1fr);
+  }
+
+  .wsMeta {
+    grid-column: 2;
+    justify-items: start;
+    text-align: left;
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: baseline;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .heroFacts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .heroFacts dd {
+    font-size: 1.7rem;
+  }
+
+  .legend li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+  }
+
+  .shelfPlate {
+    height: 9rem;
+  }
+
+  .shelfNote {
+    display: none;
+  }
+
+  .wsDay {
+    font-size: 2.4rem;
+  }
+
+  .ghFacts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    transition: none !important;
+  }
+}

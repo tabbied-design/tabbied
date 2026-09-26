@@ -1,0 +1,915 @@
+/* ==========================================================================
+   THREAD & HEM - clothing and alterations, Mercer Lane
+   A lookbook. The opening plate sets the name huge with the model standing
+   in front of it; then each look holds its picture still on the left while
+   the pieces pass on the right. Linen ground, one warm umber, Gilda Display
+   for anything that is a name, Work Sans for the rest. Basting stitches are
+   the pattern: loose in the plate, and pulled tight into a seam.
+   ========================================================================== */
+
+.page {
+  --paper: #f6f2ec;
+  --ink: #1c1917;
+  --umber: #8c6a4f;
+  --gray: #9a938a;
+  --pale: #e7dfd4;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 88rem;
+  --bar: 64px;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --display: 'Gilda Display', 'Didot', Georgia, serif;
+
+  font-family: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 1px solid var(--umber);
+  outline-offset: 4px;
+}
+
+.page h1,
+.page h2,
+.page h3,
+.page h4 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------- bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--bar);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 var(--gut);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--pale);
+}
+
+.season {
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--umber);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ----------------------------------------------------------------- plate */
+
+.plate {
+  position: relative;
+  height: clamp(560px, calc(100svh - var(--bar)), 940px);
+  background: var(--umber);
+  color: var(--paper);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+}
+
+.plateField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.55;
+}
+
+.masthead {
+  position: absolute;
+  z-index: 1;
+  top: 5%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-family: var(--display);
+  font-size: clamp(4rem, 14.5vw, 15rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--pale);
+}
+
+.stage .model {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 60%;
+  height: 90%;
+  width: auto;
+  max-width: none;
+  translate: -50% 0;
+}
+
+.plateCaption {
+  position: absolute;
+  z-index: 3;
+  right: var(--gut);
+  bottom: 2.2rem;
+  margin: 0;
+  max-width: 14rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--paper);
+}
+
+.plateText {
+  position: absolute;
+  z-index: 3;
+  left: var(--gut);
+  bottom: 2.2rem;
+  max-width: 19rem;
+}
+
+.plateKicker {
+  margin: 0 0 0.9rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+.title {
+  font-size: clamp(2.2rem, 3.6vw, 3.2rem);
+  line-height: 1.05;
+}
+
+.title em {
+  font-style: italic;
+}
+
+.plateLink {
+  display: inline-block;
+  margin-top: 1.3rem;
+  padding: 0.7rem 1.3rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--paper);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.plateLink:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* -------------------------------------------------------------- lookbook */
+
+.lookbook {
+  padding-top: var(--air);
+}
+
+.lookHead {
+  max-width: var(--max);
+  margin: 0 auto clamp(2.5rem, 5vw, 4rem);
+  padding: 0 var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr) auto;
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+}
+
+.secTitle {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.secNote {
+  margin: 0;
+  max-width: 30rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.look {
+  max-width: var(--max);
+  margin: 0 auto clamp(3rem, 7vw, 6rem);
+  padding: 0 var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+/* The picture holds still while its pieces pass. */
+.stick {
+  position: sticky;
+  top: calc(var(--bar) + 1rem);
+  height: calc(100svh - var(--bar) - 2rem);
+  min-height: 30rem;
+  max-height: 60rem;
+  overflow: hidden;
+}
+
+.panelPale {
+  background: var(--pale);
+}
+
+.panelGray {
+  background: color-mix(in srgb, var(--gray) 50%, var(--paper));
+}
+
+.panelUmber {
+  background: var(--umber);
+}
+
+.stick .lookArt {
+  position: absolute;
+  left: 50%;
+  max-width: none;
+  translate: -50% 0;
+}
+
+.stick .fitTall {
+  bottom: 7%;
+  height: 84%;
+  width: auto;
+}
+
+.stick .fitFigure {
+  bottom: 0;
+  height: 90%;
+  width: auto;
+}
+
+.stick .fitWide {
+  bottom: 24%;
+  width: 70%;
+  height: auto;
+}
+
+.lookNo {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.4rem;
+  margin: 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.panelUmber .lookNo {
+  color: var(--paper);
+}
+
+.pieces {
+  padding-top: clamp(0.5rem, 3vw, 2.5rem);
+}
+
+.lookIntro {
+  padding-bottom: 2rem;
+}
+
+.lookTitle {
+  font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+  line-height: 1;
+}
+
+.lookLede {
+  margin: 1rem 0 0;
+  max-width: 28rem;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.pieceList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.piece {
+  min-height: 15rem;
+  padding: 2rem 0 2.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.pieceTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.pieceName {
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  line-height: 1.1;
+}
+
+.piecePrice {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.5rem;
+}
+
+.pieceFabric {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  color: var(--umber);
+}
+
+.pieceFacts {
+  margin: 1.1rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2.5rem;
+}
+
+.pieceFacts div {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.pieceFacts dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+}
+
+.pieceFacts dd {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.95rem;
+}
+
+.chip {
+  display: inline-block;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.chipGray {
+  background: var(--gray);
+}
+
+.chipInk {
+  background: var(--ink);
+}
+
+.chipUmber {
+  background: var(--umber);
+}
+
+.chipPale {
+  background: var(--pale);
+}
+
+.pieceNote {
+  margin: 1rem 0 0;
+  max-width: 32rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ------------------------------------------------------------------ seam */
+
+/* A cutting of the season's cloth, pinned beside the note. */
+.cutting {
+  position: relative;
+  width: 8rem;
+  height: 6.25rem;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px dashed color-mix(in srgb, var(--umber) 60%, transparent);
+  outline: 4px solid var(--pale);
+  box-shadow: 0 10px 22px -16px rgb(0 0 0 / 0.5);
+  transform: rotate(3deg);
+}
+
+.seam {
+  position: relative;
+  height: 64px;
+  margin: 0 var(--gut);
+  overflow: hidden;
+  border-top: 1px dashed color-mix(in srgb, var(--umber) 50%, transparent);
+  border-bottom: 1px dashed color-mix(in srgb, var(--umber) 50%, transparent);
+}
+
+/* -------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead .kicker {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+
+.kicker {
+  margin: 0 0 0.9rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--umber);
+}
+
+.body {
+  margin: 1.2rem 0 0;
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ----------------------------------------------------------------- sizes */
+
+.tableWrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.sizeTable {
+  width: 100%;
+  min-width: 20rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.caption {
+  caption-side: bottom;
+  padding-top: 0.9rem;
+  text-align: left;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 64%, transparent);
+}
+
+.sizeTable th,
+.sizeTable td {
+  padding: 0.95rem 1rem 0.95rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--pale);
+}
+
+.sizeTable thead th {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+  border-bottom: 1px solid var(--ink);
+}
+
+.sizeTable tbody th {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+
+.sizeTable td {
+  font-size: 1.05rem;
+}
+
+/* ----------------------------------------------------------- alterations */
+
+.alter {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: stretch;
+}
+
+/* A swatch of cloth: the weave in the page's colors, on its own ground. */
+.swatch {
+  position: relative;
+  min-height: 28rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--pale) 60%, var(--paper));
+  box-shadow: 0 16px 36px -24px rgb(0 0 0 / 0.45);
+}
+
+.alterText {
+  align-self: center;
+}
+
+.alterList {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.alterList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 4rem;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--pale);
+}
+
+.alterJob {
+  font-size: 1rem;
+}
+
+.alterTime {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, var(--ink) 64%, transparent);
+}
+
+.alterPrice {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  text-align: right;
+}
+
+.fine {
+  margin: 1.2rem 0 0;
+  max-width: 34rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* ----------------------------------------------------------------- visit */
+
+.visit {
+  margin-top: var(--air);
+  background: var(--pale);
+  padding: var(--air) var(--gut);
+}
+
+.visitInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.hours {
+  margin: 1.8rem 0 0;
+  max-width: 26rem;
+  border-top: 1px solid var(--ink);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.hours dd {
+  margin: 0;
+}
+
+.contactLine {
+  margin: 1.6rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+}
+
+.contactLine a {
+  border-bottom: 1px solid var(--umber);
+  overflow-wrap: anywhere;
+}
+
+.form {
+  --form-pad: clamp(1.4rem, 3vw, 2.2rem);
+  display: grid;
+  gap: 1rem;
+  padding: var(--form-pad);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+/* Basting along the top of the fitting card. */
+.formStitch {
+  position: relative;
+  height: 32px;
+  margin: calc(-1 * var(--form-pad)) calc(-1 * var(--form-pad)) 0.4rem;
+  border-bottom: 1px dashed color-mix(in srgb, var(--umber) 50%, transparent);
+}
+
+.formTitle {
+  font-size: 1.9rem;
+}
+
+.formNote {
+  margin: -0.3rem 0 0.4rem;
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.field {
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 50%, transparent);
+  border-radius: 0;
+  padding: 0.55rem 0;
+}
+
+.field input::placeholder {
+  color: color-mix(in srgb, var(--ink) 48%, transparent);
+}
+
+.submit {
+  justify-self: start;
+  margin-top: 0.6rem;
+  font: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.6rem;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.submit:hover {
+  background: var(--umber);
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  background: var(--ink);
+  color: var(--paper);
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2.5rem) var(--gut) 1.6rem;
+  text-align: center;
+}
+
+/* A hem basted along the top edge. */
+.footHem {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  opacity: 0.7;
+}
+
+.footMark {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1;
+}
+
+.footLinks {
+  list-style: none;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 2rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.footLinks a:hover {
+  color: var(--pale);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.footAddr {
+  margin: 1.2rem 0 0;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--paper) 74%, transparent);
+  overflow-wrap: anywhere;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  text-align: left;
+}
+
+.footFine p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--paper) 62%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1100px) {
+  .stage .model {
+    left: 64%;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .season,
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  /* The plate stacks: the picture, then the words on the linen. */
+  .plate {
+    height: auto;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .stage {
+    position: relative;
+    height: min(78svh, 40rem);
+    background: var(--umber);
+    overflow: hidden;
+  }
+
+  .stage .model {
+    left: 50%;
+    height: 80%;
+  }
+
+  .masthead {
+    top: 4%;
+    font-size: 13.5vw;
+  }
+
+  .plateCaption {
+    display: none;
+  }
+
+  .plateText {
+    position: static;
+    max-width: none;
+    padding: 1.8rem var(--gut) 0;
+  }
+
+  .plateKicker {
+    color: var(--umber);
+  }
+
+  .plateLink {
+    color: var(--paper);
+    background: var(--ink);
+  }
+
+  .lookHead,
+  .look,
+  .secHead,
+  .alter,
+  .visitInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stick {
+    position: relative;
+    top: 0;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    max-height: 34rem;
+  }
+
+  .swatch {
+    min-height: 14rem;
+  }
+
+  .cutting {
+    width: 100%;
+    height: 2.75rem;
+    transform: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .alterList li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .alterTime {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .alterPrice {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+
+  .piece {
+    min-height: 0;
+  }
+
+  .sizeTable th,
+  .sizeTable td {
+    padding-right: 0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .plateLink,
+  .submit {
+    transition: none;
+  }
+}

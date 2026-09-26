@@ -1,0 +1,1225 @@
+/* ==========================================================================
+   VINYL VAULT - used and new records, Canal Street
+   A record shop's wall: condensed capitals, a black bar, a red that means
+   "look here". The crates are the page: four rows, each a divider card and
+   four sleeves, and every sleeve is a Tabbied pattern printed in its crate's
+   palette with a record sliding out of it. The turntable, the headphones
+   and the crate of records are photographs tinted by CSS masks in the
+   page's own black and paper. Archivo (condensed for display) and DM Mono.
+   ========================================================================== */
+
+.page {
+  --paper: #f2efe9;
+  --black: #121212;
+  --red: #e94f37;
+  --charcoal: #393e41;
+  --gray: #8b8883;
+  --pale: #dcd7cf;
+  --gut: clamp(1.25rem, 4vw, 3.5rem);
+  --max: 84rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --soft: color-mix(in srgb, var(--black) 76%, var(--paper));
+  --rule: color-mix(in srgb, var(--black) 16%, transparent);
+  --mono: 'DM Mono', 'Courier New', monospace;
+
+  font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--black);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-weight: 800;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.8rem var(--gut);
+  background: var(--black);
+  color: var(--paper);
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.markDisc {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--black) 0 7%, var(--red) 8% 30%, transparent 31%),
+    repeating-radial-gradient(circle, var(--charcoal) 0 1px, var(--black) 1px 3px);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 25%, transparent);
+}
+
+.markName {
+  font-size: 1.55rem;
+  font-weight: 900;
+  font-stretch: 62%;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--red);
+}
+
+.barHours {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--red);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--black);
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut);
+}
+
+.heroText .kicker {
+  color: var(--soft);
+}
+
+.heroTitle {
+  margin-top: 1.2rem;
+  font-size: clamp(5.5rem, 13vw, 12.5rem);
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 0.84;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--red);
+}
+
+.lede {
+  margin-top: 1.8rem;
+  max-width: 30rem;
+  font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+  color: var(--soft);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.buttonGhost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  border: 2px solid var(--black);
+  border-radius: 0;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.button {
+  background: var(--black);
+  color: var(--paper);
+}
+
+.button:hover {
+  background: var(--red);
+  color: var(--black);
+}
+
+.buttonGhost:hover {
+  background: var(--black);
+  color: var(--paper);
+}
+
+/* The red panel: grooves drawn over it, the turntable across its floor. */
+.heroPanel {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 1 / 0.92;
+  background: var(--red);
+  overflow: hidden;
+}
+
+.grooves {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.4;
+}
+
+.heroPanel .turntable {
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  width: 90%;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 22px 18px rgb(0 0 0 / 0.3));
+}
+
+.nowPlaying {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0.55rem 0.8rem;
+  background: var(--black);
+  color: var(--paper);
+}
+
+.nowLabel {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.nowTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ----------------------------------------------------------------- ticker */
+
+.ticker {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0 max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: var(--black);
+  color: var(--paper);
+}
+
+.ticker li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: 1.2rem 0;
+}
+
+.ticker li + li {
+  padding-left: 1.4rem;
+  border-left: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+
+.ticker strong {
+  font-size: clamp(2rem, 3.4vw, 2.8rem);
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 1;
+  color: var(--red);
+}
+
+.ticker span {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'kicker kicker'
+    'title note';
+  gap: 0.9rem var(--gut);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead .kicker {
+  grid-area: kicker;
+  color: var(--soft);
+}
+
+.secHead h2 {
+  grid-area: title;
+  font-size: clamp(3rem, 6.4vw, 5.6rem);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 0.9;
+}
+
+.secNote {
+  grid-area: note;
+  max-width: 32rem;
+  color: var(--soft);
+}
+
+/* ----------------------------------------------------------------- crates
+   A row per crate: the divider card with its tab, then four sleeves. */
+
+.crates {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.crate {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: clamp(1.2rem, 3vw, 2.5rem);
+  padding: 2.4rem 0 2.8rem;
+  border-top: 3px solid var(--black);
+}
+
+.divider {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1.1rem 1rem 1rem;
+  min-height: 12rem;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: -0.9rem;
+  left: 0;
+  width: 58%;
+  height: 1rem;
+  border-radius: 0.4rem 0.4rem 0 0;
+  background: inherit;
+}
+
+.dividerCharcoal {
+  background: var(--charcoal);
+  color: var(--paper);
+}
+
+.dividerRed {
+  background: var(--red);
+  color: var(--black);
+}
+
+.dividerPale {
+  background: var(--pale);
+  color: var(--black);
+}
+
+.dividerBlack {
+  background: var(--black);
+  color: var(--paper);
+}
+
+.divider h3 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.dividerCount {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.sleeves {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2.6rem clamp(1.6rem, 3vw, 2.6rem);
+  margin: 0;
+  padding: 0 1.2rem 0 0;
+}
+
+.record {
+  position: relative;
+  min-width: 0;
+}
+
+/* The record behind the sleeve: grooves, a label, a hole. */
+.disc {
+  position: absolute;
+  top: 3%;
+  left: 3%;
+  z-index: 0;
+  width: 94%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--paper) 0 2.5%, var(--red) 3% 17%, transparent 17.5%),
+    repeating-radial-gradient(circle, var(--black) 0 2px, var(--charcoal) 2px 3px);
+  transform: translateX(14%);
+  transition: transform 260ms ease;
+}
+
+.record:hover .disc {
+  transform: translateX(24%) rotate(40deg);
+}
+
+.cover {
+  position: relative;
+  z-index: 1;
+  aspect-ratio: 1;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 rgb(0 0 0 / 0.2),
+    6px 10px 18px -8px rgb(0 0 0 / 0.45);
+}
+
+.sticker {
+  position: absolute;
+  top: -0.6rem;
+  left: -0.6rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--black);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  transform: rotate(-12deg);
+}
+
+.title {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.artist {
+  margin-top: 0.2rem;
+  font-size: 0.92rem;
+  color: var(--soft);
+}
+
+.meta {
+  margin-top: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------ staff picks */
+
+.picks {
+  margin-top: var(--air);
+  background: var(--charcoal);
+  color: var(--paper);
+}
+
+.picksInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.station {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stationDisc {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  z-index: -1;
+  width: 88%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--red);
+  transform: translateX(-50%);
+  overflow: hidden;
+}
+
+/* The hero panel's grooves, cut into the disc behind the headphones. */
+.discGrooves {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+}
+
+.station .headphones {
+  width: 78%;
+  filter: drop-shadow(0 24px 22px rgb(0 0 0 / 0.35));
+}
+
+.stationNote {
+  margin-top: 1.6rem;
+  max-width: 22rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-align: center;
+  color: color-mix(in srgb, var(--paper) 80%, var(--charcoal));
+}
+
+.picksText .kicker {
+  color: var(--red);
+}
+
+.picksText h2 {
+  margin: 0.9rem 0 2rem;
+  font-size: clamp(2.8rem, 5.4vw, 4.6rem);
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.pickList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pick {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 1.3rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.pick > * {
+  grid-column: 2;
+}
+
+.pick .pickNo {
+  grid-column: 1;
+  grid-row: 1 / span 4;
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  color: var(--red);
+}
+
+.pickWho {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 72%, var(--charcoal));
+}
+
+.pick h3 {
+  margin-top: 0.35rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.pickWhy {
+  margin-top: 0.5rem;
+  color: color-mix(in srgb, var(--paper) 84%, var(--charcoal));
+}
+
+.pickWhere {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--red);
+}
+
+/* ----------------------------------------------------------------- we buy */
+
+.buy {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.buyText .kicker {
+  color: var(--soft);
+}
+
+.buyText h2 {
+  margin: 0.9rem 0 1.2rem;
+  font-size: clamp(3rem, 6vw, 5.2rem);
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.buyLede {
+  max-width: 34rem;
+  font-size: 1.08rem;
+  color: var(--soft);
+}
+
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+  margin: 2.2rem 0 0;
+  padding: 0;
+}
+
+.steps li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.9rem;
+  border-top: 3px solid var(--black);
+}
+
+.stepNo {
+  font-size: 2.6rem;
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 1;
+  color: var(--red);
+}
+
+.steps h3 {
+  font-size: 1.15rem;
+}
+
+.steps p {
+  font-size: 0.92rem;
+  color: var(--soft);
+}
+
+.buyArt {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--pale);
+  overflow: hidden;
+}
+
+/* Faint grooves on the plate behind the crate, stopping above the note. */
+.buyGrooves {
+  position: absolute;
+  inset: 0 0 5rem;
+  z-index: -1;
+  opacity: 0.55;
+  mask-image: linear-gradient(180deg, var(--black) 60%, transparent);
+}
+
+.buyArt .crateArt {
+  width: 100%;
+}
+
+.buyNote {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.grades {
+  width: 100%;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  border-collapse: collapse;
+}
+
+.grades caption {
+  padding-bottom: 0.9rem;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.grades th,
+.grades td {
+  padding: 1rem 1.2rem 1rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.grades thead th {
+  padding-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  border-top: 3px solid var(--black);
+  border-bottom: 1px solid var(--black);
+}
+
+.grades tbody th {
+  font-size: 1.1rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.grades td {
+  color: var(--soft);
+}
+
+.grades .pay {
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--black);
+  text-align: right;
+  white-space: nowrap;
+  padding-right: 0;
+}
+
+.grades thead th:last-child {
+  text-align: right;
+  padding-right: 0;
+}
+
+/* ----------------------------------------------------------------- events */
+
+.events {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 3px solid var(--black);
+}
+
+.event {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr) 8rem 7rem;
+  gap: 1.4rem;
+  align-items: center;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.date {
+  display: grid;
+  justify-items: center;
+  padding: 0.5rem 0;
+  background: var(--black);
+  color: var(--paper);
+}
+
+.dateDay,
+.dateMonth {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.dateDay {
+  color: var(--red);
+}
+
+.dateNum {
+  font-size: 2.2rem;
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 1;
+}
+
+.eventText h3 {
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  text-transform: uppercase;
+}
+
+.eventText p {
+  margin-top: 0.35rem;
+  max-width: 40rem;
+  color: var(--soft);
+}
+
+.eventTime,
+.eventPrice {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+}
+
+.eventPrice {
+  justify-self: end;
+  padding: 0.3rem 0.6rem;
+  border: 2px solid var(--black);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ visit */
+
+.visit {
+  margin-top: var(--air);
+  background: var(--red);
+  color: var(--black);
+}
+
+.visitInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.8fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.visitInner h2 {
+  margin: 0.8rem 0 1rem;
+  font-size: clamp(3rem, 5.4vw, 4.8rem);
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.visitNote {
+  max-width: 26rem;
+}
+
+.contactLine {
+  margin-top: 0.6rem;
+  font-weight: 700;
+}
+
+.contactLine a {
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 2px;
+}
+
+.hours {
+  margin: 0;
+  border-top: 3px solid var(--black);
+}
+
+.hours div {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--black) 30%, transparent);
+}
+
+.hours dt {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+}
+
+.hours dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-stretch: 75%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.3rem, 3vw, 2rem);
+  background: var(--black);
+  color: var(--paper);
+}
+
+.form h3 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+}
+
+.formNote {
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--paper) 78%, var(--black));
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field span,
+.likes legend {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.field input {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 2px solid var(--paper);
+  border-radius: 0;
+  background: var(--black);
+  color: var(--paper);
+  font: inherit;
+}
+
+.likes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.1rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.likes legend {
+  margin-bottom: 0.5rem;
+}
+
+.likes label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.92rem;
+}
+
+.likes input {
+  accent-color: var(--red);
+}
+
+.form .button {
+  align-self: flex-start;
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--black);
+}
+
+.form .button:hover {
+  background: var(--paper);
+  border-color: var(--paper);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  --foot-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding: var(--foot-top) var(--gut) 2rem;
+  background: var(--black);
+  color: var(--paper);
+}
+
+/* The run-out groove: interlocking rings along the top of the footer. */
+.footRunout {
+  position: relative;
+  height: 1.75rem;
+  margin: calc(-1 * var(--foot-top)) calc(-1 * var(--gut)) var(--foot-top);
+  overflow: hidden;
+  opacity: 0.8;
+}
+
+.footMark {
+  font-size: clamp(3.4rem, 11vw, 9rem);
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 0.85;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.footLinks {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+}
+
+.footLinks a {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.footLinks a:hover {
+  color: var(--red);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 2.4rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 20%, transparent);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: color-mix(in srgb, var(--paper) 75%, var(--black));
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .sleeves {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .visitInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .visitInner > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .event {
+    grid-template-columns: 5rem minmax(0, 1fr) auto;
+  }
+
+  .eventTime {
+    grid-column: 2;
+  }
+
+  .eventPrice {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .picksInner,
+  .buy {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ticker {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ticker li:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .ticker li:nth-child(n + 3) {
+    border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'kicker'
+      'title'
+      'note';
+  }
+
+  .crate {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .divider {
+    flex-direction: row;
+    align-items: baseline;
+    min-height: 0;
+  }
+
+  .divider::before {
+    width: 30%;
+  }
+
+  .station {
+    max-width: 26rem;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .barHours {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .sleeves {
+    gap: 2.2rem 1.6rem;
+    padding-right: 0.8rem;
+  }
+
+  .sticker {
+    width: 2.7rem;
+    height: 2.7rem;
+    font-size: 0.72rem;
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grades thead {
+    display: none;
+  }
+
+  .grades,
+  .grades tbody,
+  .grades tr,
+  .grades th,
+  .grades td {
+    display: block;
+  }
+
+  .grades caption {
+    display: block;
+  }
+
+  .grades tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.3rem 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .grades th,
+  .grades td {
+    padding: 0;
+    border: 0;
+  }
+
+  .grades td:not(.pay) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .event {
+    grid-template-columns: 4.2rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.6rem 1rem;
+  }
+
+  .date {
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+
+  .eventText {
+    grid-column: 2 / -1;
+  }
+
+  .eventTime {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .eventPrice {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .visitInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .button,
+  .buttonGhost,
+  .disc {
+    transition: none;
+  }
+}

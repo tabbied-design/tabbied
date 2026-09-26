@@ -1,0 +1,1016 @@
+/* ==========================================================================
+   POLISH - a nail salon
+   The shade wall is the page: thirty round swatches on shelves, five
+   families of six, each one mixed from the palette so a re-color repaints
+   the whole wall. The hero is an almond arch of petals with a hand across
+   its foot and three bottles, tinted photographs in pink, violet and plum.
+   Gloock for display, Outfit for the rest; the service menu draws each
+   treatment as a bar the length of its appointment.
+   ========================================================================== */
+
+.page {
+  --paper: #fff5f5;
+  --ink: #2a1520;
+  --pink: #e0306d;
+  --violet: #7a5cfa;
+  --gray: #a38d96;
+  --pale: #f9e1e8;
+  --muted: color-mix(in srgb, var(--ink) 72%, transparent);
+  --line: color-mix(in srgb, var(--ink) 13%, transparent);
+  --gut: clamp(1rem, 4.5vw, 4rem);
+  --max: 80rem;
+  --air: clamp(4rem, 8vw, 7rem);
+  --display: 'Gloock', Georgia, serif;
+  --text: 'Outfit', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--text);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.9rem var(--gut);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--display);
+  font-size: 1.9rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.mark::after {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50% 50% 50% 0;
+  background: var(--pink);
+  transform: rotate(-45deg);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2.2vw, 2.2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.3rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--pink);
+}
+
+.barBook {
+  flex: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 999px;
+  transition: background-color 160ms ease;
+}
+
+.barBook:hover {
+  background: var(--violet);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker,
+.secKicker {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+.heroTitle {
+  margin-top: 1rem;
+  font-size: clamp(2.8rem, 4.9vw, 4.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--pink);
+}
+
+.heroLede {
+  max-width: 31rem;
+  margin-top: 1.4rem;
+  font-size: clamp(1.08rem, 1.35vw, 1.22rem);
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.85rem 1.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--pink);
+  border-color: var(--pink);
+}
+
+.btnLine:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.heroFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  margin-top: 2.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.heroFacts dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  line-height: 1.2;
+}
+
+/* The arch is an almond nail standing up: round at the tip, flat at the
+   cuticle. The hand reaches in from outside it, so the arch crops the
+   wrist. */
+.heroArt {
+  position: relative;
+  min-height: clamp(26rem, 44vw, 38rem);
+}
+
+.arch {
+  position: absolute;
+  top: 0;
+  right: 6%;
+  bottom: 4%;
+  width: 76%;
+  overflow: hidden;
+  border-radius: 999px 999px 1.5rem 1.5rem;
+  background: var(--pale);
+  isolation: isolate;
+}
+
+.archField {
+  position: absolute;
+  inset: 0;
+}
+
+.heroHand {
+  position: absolute;
+  z-index: 1;
+  left: -30%;
+  top: 20%;
+  width: 100%;
+}
+
+.heroBottles {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+.bottle {
+  width: clamp(2.8rem, 4.2vw, 4rem);
+}
+
+.heroBottles .bottle:nth-child(2) {
+  width: clamp(3.4rem, 5vw, 4.8rem);
+}
+
+/* -------------------------------------------------------------------- wall */
+
+.wall {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.wallHead {
+  display: grid;
+  gap: 0.8rem;
+  max-width: 46rem;
+  margin-bottom: 2.75rem;
+}
+
+.wallHead h2,
+.secHead h2,
+.servicesHead h2,
+.bookText h2,
+.visitCol h2 {
+  font-size: clamp(2.1rem, 4vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+}
+
+.secNote {
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.wallBoard {
+  padding: clamp(1rem, 3vw, 2.5rem) clamp(1rem, 3vw, 2.75rem);
+  background: var(--pale);
+  border-radius: 2rem;
+}
+
+.family {
+  display: grid;
+  grid-template-columns: minmax(11rem, 14rem) 1fr;
+  gap: 1.5rem 2rem;
+  align-items: center;
+  padding: 1.6rem 0 1.4rem;
+  border-bottom: 6px solid color-mix(in srgb, var(--ink) 12%, var(--pale));
+}
+
+.family:last-child {
+  border-bottom: 0;
+}
+
+.familyHead h3 {
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.familyHead p {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.swatch {
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  text-align: center;
+}
+
+/* A drop of polish: its shade, a shadow under it and a gloss on top. */
+.chip {
+  position: relative;
+  width: min(100%, 4.8rem);
+  aspect-ratio: 1;
+  margin-bottom: 0.55rem;
+  border-radius: 50%;
+  background-color: var(--sw);
+  box-shadow:
+    inset 0 -0.45rem 0.9rem rgb(0 0 0 / 0.18),
+    0 0 0 1px color-mix(in srgb, var(--ink) 10%, transparent),
+    0 10px 16px -10px rgb(0 0 0 / 0.45);
+}
+
+.chip::after {
+  content: '';
+  position: absolute;
+  left: 20%;
+  top: 14%;
+  width: 34%;
+  height: 20%;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
+  transform: rotate(-28deg);
+}
+
+.chip[data-finish='Matte'] {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--ink) 10%, transparent),
+    0 10px 16px -10px rgb(0 0 0 / 0.35);
+}
+
+.chip[data-finish='Matte']::after {
+  display: none;
+}
+
+.chip[data-finish='Shimmer'] {
+  background-image: radial-gradient(color-mix(in srgb, var(--paper) 60%, transparent) 0.9px, transparent 1.4px);
+  background-size: 7px 7px;
+}
+
+.chip[data-finish='Sheer'] {
+  box-shadow:
+    inset 0 0 0 4px color-mix(in srgb, var(--paper) 45%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent),
+    0 10px 16px -10px rgb(0 0 0 / 0.3);
+}
+
+.chip[data-finish='Jelly']::after {
+  width: 44%;
+  height: 26%;
+  background: color-mix(in srgb, var(--paper) 55%, transparent);
+}
+
+.shadeName {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.shadeFinish {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- services */
+
+.services {
+  border-top: 1px solid var(--line);
+}
+
+.servicesInner {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.8fr) 2fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.servicesHead {
+  position: sticky;
+  top: 6rem;
+  align-self: start;
+  display: grid;
+  gap: 0.8rem;
+}
+
+/* The bottle stood in front of a nail painted with dots. */
+.servicesNail {
+  position: relative;
+  width: 10rem;
+  aspect-ratio: 3 / 4;
+  margin-top: 1.5rem;
+  overflow: hidden;
+  border-radius: 999px 999px 1.2rem 1.2rem;
+  background: var(--pale);
+  isolation: isolate;
+}
+
+.nailField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.75;
+}
+
+.servicesBottle {
+  position: absolute;
+  left: 50%;
+  bottom: 0.8rem;
+  width: 3.9rem;
+  transform: translateX(-50%);
+}
+
+.menu {
+  display: grid;
+  gap: 2.75rem;
+}
+
+.groupName {
+  padding-bottom: 0.75rem;
+  font-size: 1.9rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(6rem, 11rem) 4.2rem 3.4rem;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.rowName {
+  font-family: var(--text);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.rowNote {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.rowBar {
+  display: block;
+  height: 0.55rem;
+  background: var(--pale);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.rowFill {
+  display: block;
+  height: 100%;
+  min-width: 0.55rem;
+  background: var(--pink);
+  border-radius: 999px;
+}
+
+.rowTime {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-align: right;
+}
+
+.rowPrice {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  text-align: right;
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  padding: 0 var(--gut);
+}
+
+.bandField {
+  position: relative;
+  max-width: var(--max);
+  height: 6.5rem;
+  margin: 0 auto;
+}
+
+/* ----------------------------------------------------------------- artists */
+
+.artists {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  gap: 0.8rem;
+  max-width: 44rem;
+  margin-bottom: 2.75rem;
+}
+
+.artistList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.artist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.6rem 1.5rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+}
+
+.artistChip {
+  width: 3.4rem;
+  height: 4.4rem;
+  margin-bottom: 1rem;
+  border-radius: 999px 999px 0.9rem 0.9rem;
+  background: var(--sw);
+  box-shadow:
+    inset 0 -0.4rem 0.8rem rgb(0 0 0 / 0.16),
+    0 0 0 1px color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+.artistName {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.artistRole {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+.artistNote {
+  margin-top: 0.4rem;
+  color: var(--muted);
+}
+
+.artistFacts {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.artistFacts div {
+  display: flex;
+  gap: 0.6rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.artistFacts dt {
+  min-width: 3.5rem;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------- book
+   The one dark section: plum ground, the hand lit in pink beside the form. */
+
+.book {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Petals drift in from the right, behind the hand, and fade out before
+   the words. */
+.bookPetals {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  -webkit-mask-image: linear-gradient(to right, transparent 45%, var(--ink) 85%);
+  mask-image: linear-gradient(to right, transparent 45%, var(--ink) 85%);
+}
+
+.bookInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 0.8fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.bookText .secNote {
+  margin-top: 0.8rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.bookText h2 {
+  margin-top: 0.8rem;
+}
+
+.book .secKicker {
+  color: var(--pale);
+}
+
+.policies {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.policies div {
+  padding-top: 0.8rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
+}
+
+.policies dt {
+  font-weight: 600;
+}
+
+.policies dd {
+  font-size: 0.97rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 1.75rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field:first-child {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  border-radius: 0.8rem;
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  border-color: var(--violet);
+}
+
+.formBtn {
+  grid-column: 1 / -1;
+  margin-top: 0.4rem;
+  padding: 0.95rem 1.2rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.formBtn:hover {
+  background: var(--violet);
+}
+
+/* Turned to reach in from the right, the wrist running off the page. */
+.bookArt {
+  position: relative;
+  align-self: stretch;
+  min-height: 20rem;
+}
+
+.bookHand {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 185%;
+  max-width: none;
+  transform: translateY(-50%) scaleX(-1);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.visitCol h2 {
+  margin-top: 0.8rem;
+}
+
+.visitNote {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.hoursList {
+  display: grid;
+  margin-top: 1.5rem;
+}
+
+.hoursList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hoursList dt {
+  font-weight: 600;
+}
+
+.visitHead {
+  font-size: 1.6rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.cleanList {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1.1rem;
+}
+
+.cleanList li {
+  position: relative;
+  padding-left: 1.4rem;
+  color: var(--muted);
+}
+
+.cleanList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--pink);
+}
+
+.contact {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+.contact dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+.contact dd {
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 28px) var(--gut) 2rem;
+  background: var(--pale);
+}
+
+.footEdge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  overflow: hidden;
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.footMark {
+  font-family: var(--display);
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+.footTag {
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 2rem;
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .family {
+    grid-template-columns: 1fr;
+  }
+
+  .artistList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bookInner {
+    grid-template-columns: 1fr 1.2fr;
+  }
+
+  .bookArt {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .barBook {
+    margin-left: auto;
+  }
+
+  .hero,
+  .servicesInner,
+  .bookInner,
+  .visit {
+    grid-template-columns: 1fr;
+  }
+
+  .heroArt {
+    width: 100%;
+    max-width: 34rem;
+    min-height: 0;
+    aspect-ratio: 1 / 0.95;
+  }
+
+  .servicesHead {
+    position: static;
+  }
+
+  .servicesNail {
+    display: none;
+  }
+
+  .bookPetals {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 40%, var(--ink) 75%);
+    mask-image: linear-gradient(to bottom, transparent 40%, var(--ink) 75%);
+  }
+
+  .swatches {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 1.4rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .barBook {
+    display: none;
+  }
+
+  .siteMenu {
+    margin-left: auto;
+  }
+
+  .artistList,
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'text price'
+      'bar time';
+    gap: 0.5rem 1rem;
+  }
+
+  .rowText {
+    grid-area: text;
+  }
+
+  .rowPrice {
+    grid-area: price;
+    align-self: start;
+  }
+
+  .rowBar {
+    grid-area: bar;
+  }
+
+  .rowTime {
+    grid-area: time;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barBook,
+  .btn,
+  .btnLine,
+  .formBtn {
+    transition: none;
+  }
+}

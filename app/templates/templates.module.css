@@ -40,16 +40,20 @@
   padding: 96px var(--h-pad) 44px;
 }
 
-.eyebrow {
-  margin: 0 0 22px;
+/* Two classes deep on purpose: the eyebrow is a <p>, and `.hero p` below,
+   the intro's rule, outranks a single class, which drew the eyebrow as a
+   17px grey paragraph instead of the design's mint mono label. */
+.hero .eyebrow {
+  max-width: none;
+  margin: 0;
   font: 400 12px var(--h-mono);
   color: var(--h-mint);
-  letter-spacing: 0.3em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
 }
 
 .hero h1 {
-  margin: 0;
+  margin: 34px 0 0;
   font: 700 92px / 1.02 var(--h-display);
   color: var(--h-fg);
   letter-spacing: -0.025em;
@@ -91,13 +95,10 @@
     padding-left: 24px;
   }
 
+  /* The intro keeps its 17px on a phone; only the headline steps down. */
   .hero h1 {
     font-size: 52px;
     line-height: 1.05;
-  }
-
-  .hero p {
-    font-size: 16px;
   }
 
   .wrap {

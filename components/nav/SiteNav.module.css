@@ -12,6 +12,7 @@
   --n-pill-hover: oklch(0 0 0 / 0.32);
   /* The ground a pinned bar needs; otherwise the bar is transparent. */
   --n-bg: oklch(1 0 0 / 0.94);
+  --n-blur: 8px;
   --n-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
     'Helvetica Neue', Helvetica, Arial, sans-serif;
   --n-display: 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'),
@@ -41,15 +42,16 @@
 
 .nav[data-tone='dark'] {
   --n-fg: #eef0f6;
-  --n-link: oklch(0.58 0.01 260);
+  --n-link: oklch(0.62 0.01 260);
   --n-rule: oklch(1 0 0 / 0.08);
   --n-avatar-bg: #eef0f6;
   --n-avatar-fg: #0e0e13;
   --n-pill: oklch(1 0 0 / 0.22);
   --n-pill-hover: oklch(1 0 0 / 0.5);
-  /* The dark shell's own ground (#0e0e13), at the same opacity. rgb, not
-     oklch, so it can be checked against the shell's hex by reading. */
-  --n-bg: rgb(14 14 19 / 0.94);
+  /* The dark artboards' pinned bar: a violet-leaning ink, more
+     translucent than the light one and blurred harder. */
+  --n-bg: oklch(0.17 0.012 285 / 0.82);
+  --n-blur: 14px;
 
   min-height: 67px;
 }
@@ -61,7 +63,7 @@
   position: sticky;
   top: 0;
   background-color: var(--n-bg);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(var(--n-blur));
 }
 
 .logo {
@@ -176,6 +178,14 @@
   border-radius: 50%;
 }
 
+/* The dark artboards draw the desktop circle a size down (their phone bar
+   keeps 34px, see Narrow). */
+.nav[data-tone='dark'] .avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 11px;
+}
+
 .lines {
   display: flex;
   flex: none;
@@ -254,7 +264,9 @@
   --n-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
     'Helvetica Neue', Helvetica, Arial, sans-serif;
 
-  min-width: 210px;
+  /* The artboards' 230px is a content-box width; this box counts its
+     padding, so the menu is the 242px they draw. */
+  min-width: 242px;
   padding: 6px;
   font-family: var(--n-sans);
   color: #0e0e13;
@@ -283,17 +295,19 @@
 
 .menuRule {
   height: 1px;
-  margin: 4px 6px 5px;
+  margin: 5px 6px;
   background-color: oklch(0 0 0 / 0.08);
 }
 
+/* Grey, with the page you are on in ink and bold, as every artboard's menu
+   has it. */
 .menuItem {
   display: block;
   box-sizing: border-box;
   width: 100%;
   padding: 9px 12px;
   font: 400 13px var(--n-sans);
-  color: #0e0e13;
+  color: oklch(0.46 0.01 260);
   text-align: left;
   text-decoration: none;
   background: none;
@@ -303,10 +317,18 @@
   cursor: pointer;
 }
 
+/* The color is restated because the legacy `a:hover` in globals.css would
+   otherwise turn a linked item pink. */
 .menuItem[data-highlighted],
 .menuItem:hover {
-  color: #0e0e13;
+  color: oklch(0.46 0.01 260);
   background-color: oklch(0 0 0 / 0.05);
+}
+
+.menuItem[aria-current='page'],
+.menuItem[aria-current='page']:hover {
+  font-weight: 600;
+  color: #0e0e13;
 }
 
 /* ---- Narrow ---- */
@@ -326,11 +348,13 @@
     min-height: 56px;
     padding: 0 20px;
     background-color: var(--n-bg);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(var(--n-blur));
   }
 
-  .nav[data-tone='dark'] .logo {
-    margin-left: 0;
+  .nav[data-tone='dark'] .avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 11.5px;
   }
 
   .links,
@@ -343,7 +367,6 @@
   }
 
   .menu {
-    min-width: 230px;
     border-radius: 14px;
     box-shadow: 0 14px 38px oklch(0 0 0 / 0.22);
   }
@@ -351,6 +374,10 @@
   .menuEmail {
     padding: 11px 12px 9px;
     font-size: 14px;
+  }
+
+  .menuEmail + .menuRule {
+    margin: 4px 6px 5px;
   }
 
   /* 40px rows: the menu is the phone's navigation. */

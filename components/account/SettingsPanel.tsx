@@ -40,6 +40,7 @@ export default function SettingsPanel() {
   }, []);
 
   const nameDirty = name.trim() !== '' && name.trim() !== (user?.name ?? '');
+  const passwordReady = current !== '' && next !== '' && confirm !== '';
 
   return (
     <div className={styles.settings}>
@@ -75,9 +76,15 @@ export default function SettingsPanel() {
 
       <form
         className={styles.card}
+        noValidate
         onSubmit={async (event) => {
           event.preventDefault();
           setPasswordNote(null);
+
+          if (!passwordReady) {
+            setPasswordNote('Fill in all three fields.');
+            return;
+          }
 
           if (next !== confirm) {
             setPasswordNote('The new passwords do not match.');
@@ -119,7 +126,10 @@ export default function SettingsPanel() {
             autoComplete="current-password"
             required
             value={current}
-            onChange={(event) => setCurrent(event.target.value)}
+            onChange={(event) => {
+              setCurrent(event.target.value);
+              setPasswordNote(null);
+            }}
           />
         </label>
         <label className={styles.fieldRow}>
@@ -130,7 +140,10 @@ export default function SettingsPanel() {
             required
             minLength={8}
             value={next}
-            onChange={(event) => setNext(event.target.value)}
+            onChange={(event) => {
+              setNext(event.target.value);
+              setPasswordNote(null);
+            }}
           />
         </label>
         <label className={styles.fieldRow}>
@@ -141,10 +154,17 @@ export default function SettingsPanel() {
             required
             minLength={8}
             value={confirm}
-            onChange={(event) => setConfirm(event.target.value)}
+            onChange={(event) => {
+              setConfirm(event.target.value);
+              setPasswordNote(null);
+            }}
           />
         </label>
-        <button type="submit" className={styles.button} disabled={busy !== null}>
+        <button
+          type="submit"
+          className={`${styles.button} ${styles.change} ${passwordReady ? '' : styles.waiting}`}
+          disabled={busy !== null}
+        >
           {busy === 'password' ? 'Changing...' : 'Change password'}
         </button>
         {passwordNote ? (

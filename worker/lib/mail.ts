@@ -130,6 +130,14 @@ export async function sendApprovalLink(
   const after =
     'If you need more after these, send another request from your account. Our team reviews those personally and replies within 2 business days.';
   const sans = "'IBM Plex Sans',Helvetica,Arial,sans-serif";
+  // The design's oklch colors as hex, since few mail clients read oklch():
+  // ink at 0.3, 0.4, 0.5 and 0.55 lightness, and an 8% black rule on white.
+  // The eyebrow's green (#005c44) and the page (#f2f3f6) are written inline.
+  const text = '#2b2e33';
+  const quiet = '#45484d';
+  const note = '#606369';
+  const faint = '#6e7278';
+  const rule = '#ebebeb';
 
   await sendMail(env, {
     to: approval.email,
@@ -149,23 +157,31 @@ export async function sendApprovalLink(
       '',
       'The Tabbied team',
     ].join('\n'),
-    html: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f5f7">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:40px 16px 80px">
+    // The fonts load where a client allows it (Apple Mail, iOS) and fall back
+    // elsewhere. The mark is components/logo/LogoMark's paths, inline: a client
+    // that drops SVG (Gmail) is left with the wordmark alone.
+    html: `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&amp;family=IBM+Plex+Sans:wght@400;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap" rel="stylesheet">
+</head><body style="margin:0;padding:0;background:#f2f3f6">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f3f6;padding:40px 16px 80px">
 <tr><td align="center">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid #e6e7ea;border-radius:14px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid ${rule};border-radius:14px">
 <tr><td style="padding:44px 44px 36px;font-family:${sans};color:#0e0e13">
-<p style="margin:0 0 40px;font:300 19px Georgia,serif">tabbied</p>
-<p style="margin:0 0 12px;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#0f766e">Your request</p>
-<h1 style="margin:0 0 18px;font:700 32px/1.15 ${sans};letter-spacing:-.015em">${approval.granted} more templates, on us</h1>
-<p style="margin:0 0 14px;font:400 16px/1.65 ${sans};color:#3a3b40">${escapeHtml(greeting)}</p>
-<p style="margin:0 0 28px;font:400 16px/1.65 ${sans};color:#3a3b40">${escapeHtml(body)}</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 40px"><tr>
+<td style="padding:0 10px 0 0;vertical-align:middle"><svg viewBox="107 92 391 391" width="20" height="20" style="display:block" aria-hidden="true"><g fill="none" stroke="#0e0e13" stroke-width="17"><path d="M191 261 H277 C277 172.6 205.4 101 116 101 V311 C116 401.1 188.7 474 277 474 V312 H221"/><path d="M414 261 H328 C328 172.6 399.6 101 489 101 V311 C489 401.1 416.3 474 328 474 V312 H391"/></g></svg></td>
+<td style="vertical-align:middle;font:300 19px 'Cormorant Garamond',Georgia,serif;color:#0e0e13">tabbied</td>
+</tr></table>
+<p style="margin:0 0 12px;font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#005c44">Your request</p>
+<h1 style="margin:0 0 18px;font:700 32px/1.15 'Proxima Nova',${sans};letter-spacing:-.015em">${approval.granted} more templates, on us</h1>
+<p style="margin:0 0 14px;font:400 16px/1.65 ${sans};color:${text}">${escapeHtml(greeting)}</p>
+<p style="margin:0 0 28px;font:400 16px/1.65 ${sans};color:${text}">${escapeHtml(body)}</p>
 <a href="${escapeHtml(approval.url)}" style="display:inline-block;padding:15px 28px;border-radius:999px;background:#0e0e13;color:#ffffff;font:600 15px ${sans};text-decoration:none">Add ${approval.granted} templates</a>
-<p style="margin:16px 0 36px;font:400 13.5px/1.6 ${sans};color:#6b6d74">The link works once and expires in 7 days.</p>
-<div style="height:1px;background:#e6e7ea;margin-bottom:24px"></div>
-<p style="margin:0 0 20px;font:400 14.5px/1.6 ${sans};color:#55575e">${escapeHtml(after)}</p>
-<p style="margin:0;font:400 14.5px/1.6 ${sans};color:#55575e">The Tabbied team</p>
+<p style="margin:16px 0 36px;font:400 13.5px/1.6 ${sans};color:${note}">The link works once and expires in 7 days.</p>
+<div style="height:1px;background:${rule};margin-bottom:24px"></div>
+<p style="margin:0 0 20px;font:400 14.5px/1.6 ${sans};color:${quiet}">${escapeHtml(after)}</p>
+<p style="margin:0;font:400 14.5px/1.6 ${sans};color:${quiet}">The Tabbied team</p>
 </td></tr></table>
-<p style="max-width:600px;margin:0 auto;padding:18px 4px 0;font:400 12px/1.6 ${sans};color:#7a7c83;text-align:left">You're getting this because you requested more templates on tabbied.com.</p>
+<p style="max-width:600px;margin:0 auto;padding:18px 4px 0;font:400 12px/1.6 ${sans};color:${faint};text-align:left">You're getting this because you requested more templates on tabbied.com.</p>
 </td></tr></table></body></html>`,
   });
 }

@@ -222,7 +222,7 @@ test.describe('account and admin pages', () => {
     await page.goto('/admin/');
     await expect(page.getByRole('navigation', { name: 'Admin' })).toBeVisible();
     await expect(page.getByText('42')).toBeVisible();
-    await expect(page.getByText('12%')).toBeVisible();
+    await expect(page.getByText('of 5 templates per user')).toBeVisible();
     await expect(page.getByText('105')).toBeVisible();
 
     // And an admin's masthead menu names the way in.

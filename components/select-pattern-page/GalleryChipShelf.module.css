@@ -2,24 +2,42 @@
    under the masthead across the whole grid scroll. The offset is the
    gallery's `--gallery-bar-h`, set where the shelf is placed
    (SelectPattern.module.css). Solid white, closed by a hairline like the
-   masthead: a fade reads as a drop shadow over the grid. */
+   masthead: a fade reads as a drop shadow over the grid. The row scrolls
+   inside it from 4px to 14px short of the edges, so the first pill hangs
+   10px off the page's 20px gutter and its name sits near it, as the
+   artboard draws the shelf. */
 .shelf {
   position: sticky;
   top: 0;
   z-index: 5;
+  padding: 10px 14px 12px 4px;
+  background: #ffffff;
+  border-bottom: 1px solid oklch(0 0 0 / 0.09);
+}
+
+.row {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
-  background: #ffffff;
-  border-bottom: 1px solid oklch(0 0 0 / 0.08);
+  padding: 2px 6px 4px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 
-.shelf::-webkit-scrollbar {
+.row::-webkit-scrollbar {
   display: none;
+}
+
+/* Over the row's right end, where it runs on out of view. */
+.fade {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  bottom: 12px;
+  width: 34px;
+  background: linear-gradient(to right, transparent, #ffffff 90%);
+  pointer-events: none;
 }
 
 /* No outline around each palette, as the design has it: the name and its inks
@@ -40,7 +58,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 12px;
+  min-height: 44px;
+  padding: 11px 7px 11px 12px;
   border: none;
   border-radius: 999px;
   background: transparent;
@@ -81,6 +100,7 @@
 
 .name {
   font-size: 13px;
+  line-height: normal;
   white-space: nowrap;
 }
 
@@ -130,7 +150,7 @@
   width: 22px;
   height: 22px;
   flex: none;
-  margin-right: -4px;
+  opacity: 0.5;
 }
 
 /* Trailing delete mark (custom) / pencil (library). */
@@ -142,7 +162,7 @@
   width: 22px;
   height: 22px;
   flex: none;
-  margin: 0 8px;
+  margin: 0 7px 0 8px;
   padding: 0;
   border: none;
   border-radius: 6px;
@@ -174,7 +194,8 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 8px 12px;
+  min-height: 44px;
+  padding: 0 12px;
   border: none;
   border-radius: 999px;
   background: oklch(0 0 0 / 0.05);
@@ -194,19 +215,9 @@
   outline-offset: 2px;
 }
 
-/* The shelf is a touch surface first. On a coarse pointer the chips grow to
-   a 40px row and the 22px marks get a 40px hit area behind their box. */
+/* The shelf is a touch surface first: the chips are a 44px row already, and
+   on a coarse pointer the 22px marks get a 40px hit area behind their box. */
 @media (pointer: coarse) {
-  .chipMain {
-    padding-top: 9px;
-    padding-bottom: 9px;
-  }
-
-  .allPill {
-    padding-top: 11px;
-    padding-bottom: 11px;
-  }
-
   .trailing::before {
     content: '';
     position: absolute;

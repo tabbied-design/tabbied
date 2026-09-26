@@ -113,6 +113,14 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   would otherwise hand it to anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
   under the folder, the packaged pages the previews read, back to the binding.
 
+**tabbied.com and www.tabbied.com are Worker Custom Domains**, declared in
+`wrangler.jsonc`'s `routes` with `custom_domain: true` and enabled for
+production only (PR previews stay on `*-tabbied.<account>.workers.dev`).
+Cloudflare owns their DNS records. They replaced two zone Routes that hung
+off leftover Vercel A and CNAME records, which a Route needs and a Custom
+Domain refuses: re-creating one means deleting any record on its hostname
+first.
+
 **Redirects live in `public/_redirects`**, beside `_headers` and read the
 same way. The template sites moved from `/template/<slug>/` to
 `/templates/<slug>/site/` (one noun, one tree: the framed preview is
@@ -127,14 +135,15 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is comfortably inside the platform limits - roughly 4,300 files
-against a 20,000 free-plan ceiling, largest file 2.8 MB against 25 MiB - but
+The export is comfortably inside the platform limits - roughly 9,500 files
+against a 20,000 free-plan ceiling, largest file 3.0 MB against 25 MiB - but
 both are counted per Worker *version*. Don't treat that file count as stable:
 most of it is per-route RSC payloads, and a Next minor can move it a lot (16.3
 cut ~1,400 files off 16.2's output without changing a page). What is stable is
-`public/downloads/`, a flat 1,711 files, so a batch of new template sites is
-the thing most likely to actually threaten the ceiling. `wrangler deploy`
-prints the count it uploaded.
+`public/downloads/`, a flat 4,256 files for 177 sites (the artwork ones ship
+their pictures in both packages), so a batch of new template sites is the
+thing most likely to actually threaten the ceiling. `wrangler deploy` prints
+the count it uploaded.
 
 `vercel.json` and `scripts/vercel-ignore-build.sh` are gone. The ignore-build
 script's job - don't redeploy when only `agent-outputs/` changed - has no
@@ -226,8 +235,9 @@ and *not* `zip` - so CI stayed green while the first Workers deploy died with
 fflate (zero dependencies), so the only thing the packaging step needs is the
 Node that is already running it. Don't reintroduce a PATH lookup here. Two
 details it depends on: every directory gets its own zero-length `<name>/`
-entry, because 54 of the 107 sites reference no images and their empty `images/`
-(and the React package's `public/`) would otherwise vanish from the download;
+entry, because 74 of the 177 sites reference no images and their empty
+`images/` (and the React package's `public/`) would otherwise vanish from
+the download;
 and entries carry the source file's real mtime, which `zip -r` did and fflate
 does not do on its own.
 
@@ -251,7 +261,7 @@ The two formats are built in opposite directions, and that is the point:
   source to copy - hand-porting is the trap the derive-don't-port strategy
   above exists to avoid.
 - **React is a copy of the page**, because a template page already *is* a plain
-  React component. The only Next.js API any of the 107 uses is `export const
+  React component. The only Next.js API any of the 177 uses is `export const
   metadata`; there is no next/image, next/link, `'use client'` or
   `generateStaticParams` anywhere. So `page.tsx` ships as authored and only the
   frame changes: metadata lifted into `index.html`, workspace imports pointed
@@ -283,7 +293,7 @@ code: the placeholders already carry their config as `data-*` attributes
 `hydratePatterns()` call revives the whole page.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
-page, or two hashed names collapsing onto one plain name. All 107 sites
+page, or two hashed names collapsing onto one plain name. All 177 sites
 package, so `KNOWN_UNSUPPORTED` is empty - anything that throws is a new
 problem and exits non-zero.
 
@@ -355,7 +365,7 @@ Four things worth not re-litigating:
   footer) and an edit reaches all of them; the generator fails the build if
   they don't currently agree.
 
-All 107 sites are annotated. The 102 bespoke pages were done by
+All 177 sites are annotated. The 172 bespoke pages were done by
 `scripts/annotate-templates.mjs`, a one-time codemod (`npm run
 annotate:templates`) - run it after adding a new bespoke template, and note it
 skips any page already carrying `data-edit-root`, so a hand-annotated page is
@@ -384,14 +394,14 @@ revisions resolving - a document keyed by `hero.text` still applies, and now
 reaches the whole sentence. Its budget is the tag's, but never less than what
 the design already fits, or the template's own words warn against themselves.
 
-87 runs are deliberately left: text beside a link, or beside an expression in a
+92 runs are deliberately left: text beside a link, or beside an expression in a
 `.map()` (`{h.d} on the year`). Wrapping those in a span is not safe in
 general - a page that styles `.hero h1 span` would color the wrapper too - and
 most of them are units and connectives rather than copy, so they want a person.
 
 **The accent tag is read off the page, never assumed.** `writeText` used to
 rebuild an accented run as an `<em>`, which is right for the five shared pages
-and wrong for the 102 bespoke ones: each accents with whatever its stylesheet
+and wrong for the 172 bespoke ones: each accents with whatever its stylesheet
 targets, and Cobalt Works styles `.hero h1 span`. `accentTagOf` reads it at
 generate time and the slot carries it as `emphasisTag`, so the round trip keeps
 the tag it found. It defaults to `em`, so a page that declares none is
@@ -427,8 +437,9 @@ nothing in its place, so a phone visitor, on the site or on a site shipped
 from the download, had the footer and nothing else. Each of them now renders
 `components/template/TemplateMenu` in its header: a copy of the nav's links
 (same `data-edit` ids, which is allowed, and the editable gate checks they
-agree) behind a "Menu" toggle. The 30 minimal templates were built with it,
-so 87 of the 107 carry one. Four things it depends on:
+agree) behind a "Menu" toggle. The 30 minimal templates and the 70 artwork
+ones were built with it, so 157 of the 177 carry one. Four things it
+depends on:
 
 - **It is a `<details>`, because the HTML package has no React left.** Open
   and shut are the browser's own there. Closing on a followed link, an
@@ -451,12 +462,12 @@ so 87 of the 107 carry one. Four things it depends on:
 
 ## The minimal set - the businesses that most need a site
 
-The last 30 entries in `lib/templateSites.ts` (2026-09-25) are sites for
-ordinary local businesses: a restaurant, a cafe, a dentist, a law firm, a
-plumber, a salon, a vet, a daycare, and so on. Each is built on a different
-layout (a printed menu card, a split screen, a fixed sidebar, a sticky
-contents rail, a timetable grid, a bento, a tap board, a letter, a floor
-plan), and the pattern is the only ornament. Seven carry one or two product
+The 30 entries before the artwork set in `lib/templateSites.ts` (2026-09-25)
+are sites for ordinary local businesses: a restaurant, a cafe, a dentist, a
+law firm, a plumber, a salon, a vet, a daycare, and so on. Each is built
+on a different layout (a printed menu card, a split screen, a fixed
+sidebar, a sticky contents rail, a timetable grid, a bento, a tap board, a
+letter, a floor plan), and the pattern is the only ornament. Seven carry one or two product
 cut-outs generated on gpt-image-2.5-flare (`docs/image-pipeline.md`); the
 rest have no pictures. They brought three gallery categories, Services,
 Health and Community, because none of the nine before fit a dentist or a
@@ -476,6 +487,51 @@ plumber. Four things worth knowing before editing one:
   its petals in fixed hues. It was Wild Stem's first hero and was swapped
   for `foliage` for that reason; a primary pattern that ignores the palette
   breaks the customizer's promise.
+
+## Pictures that follow the palette - Artwork
+
+The 70 templates after the minimal set are built around generated pictures
+that re-color with the page: `components/Artwork.tsx`, fed by
+`lib/generated/artwork.js` and `public/images/art/`, which
+`scripts/promote-artwork.mjs` derives from prompts carrying `recolor`
+(`docs/image-pipeline.md`, "Recolorable artwork"). A file holds only shape
+or tone; every color is an ink the page passes (`var(--ink)`), written as
+an inline `--art-*` property. That is the whole trick, and it is why the
+edits engine needed no change: a re-color rewrites the root's custom
+properties and the pictures follow. Nine sites (High Pass Lodge through
+Pinewood RV, then Crabapple Orchard, Coral Cove, Harbor Light Tours and
+Heron Point) put one full-bleed behind their hero with `fit="cover"`, the
+generated sky left transparent so the section's own color is the sky.
+Five things worth not re-litigating:
+
+- **Never a hex in `inks`**, and never `hue-rotate`: a color not taken from
+  the palette is one a re-color cannot reach, and a filter can only shift
+  hues, not land on one.
+- **Layer inks are keyed by layer name** (`{ red: 'var(--accent)' }`), not
+  by position: a picture may lack one of its prompt's key colors, and a
+  list would shift every ink after it.
+- **The duotone in CSS is two masks, not blend modes.** Multiply-then-
+  lighten only works while the shadow ink is the darker one; a re-color to
+  a dark palette flipped it and painted a flat box. `mode="tint"` is the
+  mask version, correct either way round; the default, an SVG filter,
+  takes the same care with `feBlend` darken and lighten.
+- **The HTML package inlines every `--artwork-mask`** as a data URI
+  (`inlineArtworkMasks` in the packager). A CSS mask is a CORS fetch, and
+  a page opened from disk, as its README says to, is refused every one.
+- **A pattern fill's pattern is the Artwork's only child**, and the
+  annotator treats the Artwork as the pattern's wrapper, so the
+  `data-edit-pattern` and `data-edit-roles` it writes land on `<Artwork>`,
+  which forwards every `data-*` prop to the element it renders. That is how
+  a fill re-colors: through its pattern, by the engine, not through CSS.
+
+`e2e/recolor.spec.ts` is the gate: every page with artwork is re-colored
+through its root palette properties and each picture's pixels must move; a
+fill must carry its role map; the HTML package must carry its masks inline.
+It also holds the family to its pattern: a field in at least four parts of
+the page (the nearest header, footer, section or aside), three of them past
+the hero, measured at 1440px. The first cut had most of its patterns in the
+hero; a field added after a page was annotated gets its slot and role map
+from `annotate-templates.mjs --patterns`, which touches nothing else.
 
 ## Template screenshots on the cards
 
@@ -498,6 +554,64 @@ Committed like the previews, because the deploy build has no browser; reshoot
 a template after its hero or header changes, and check a new one's crop by
 eye.
 
+**A shot is written only once its web fonts have drawn.** The pages load
+their faces from Google Fonts, and a stylesheet that fails to load leaves
+nothing to wait for: `document.fonts.ready` resolves at once and the
+fallback is photographed. Bogen Papier's card set its Inter headline in
+DejaVu Sans that way, and so did others, with nothing to say so. So before
+each shot the script marks one visible element per family, weight and style
+the page loads from Google Fonts (read off the stylesheet links, since
+`document.fonts` is empty for exactly the stylesheet that failed) and asks
+the browser, through CDP's `CSS.getPlatformFontsForNode`, what drew it. That
+alone misses half the failures: when one weight or style of a family fails
+and the others load, the browser fakes it from them (Cerulean's italic was
+its upright, slanted), so a web font still drew the text. Any face
+`document.fonts` reports as `error` fails the shot too. A failure gets one
+reload, then the slug is reported and its shot left as it was.
+
+That check also found a page bug the old shots had hidden: Solstice asked
+for `Karla:opsz,...`, an axis Karla does not have, and Google answers such
+a request with 200 and silently leaves the family out, so the live page had
+never set its body type in Karla at all.
+
+## The template gallery - a mixed order, pages, and the URL
+
+`/templates` shows 50 cards a page, in the order `GALLERY_ORDER` in
+`lib/templateOrder.ts` commits, with the category and the page in the query
+string (`?category=food-and-drink&page=2`). Four things worth not
+re-litigating:
+
+- **The order spreads the batches, and a batch is a seed prefix.** The
+  registries list templates in the batches they were made in, and a batch
+  shares a look, so registry order made a page one style repeated. Each
+  batch (`art-`, `min-`, `dir-`, `set-`, `bold-`, `img-`, and the first
+  five) is shuffled and laid at even, jittered steps along the whole list,
+  then neighbors that share a batch, or a category or pattern within two
+  cards, are pulled apart. A card at a time was tried first and spent the
+  artwork batch (40% of the catalog) slowest, leaving the last page all
+  artwork. A new batch of templates should get its own seed prefix, or it
+  is spread as part of whichever batch its prefix names.
+- **The order is committed and append-only**, so a page keeps its cards,
+  and each category's pages keep theirs, when templates are added: a link to
+  `?page=3` means the same cards next month. A template missing from
+  `GALLERY_ORDER` fails the export, as one missing from the category table
+  does, and the error prints the lines to append, already spread among
+  themselves; a name no template has fails too, because removing one shifts
+  every card after it. The cost is that an addition is spread only through
+  itself, so a large batch of one look sits together on the last pages.
+  The first 177 were laid out by `spreadTemplates` and frozen as they were
+  first published.
+- **The URL is read after mount, not with `useSearchParams`**, the same as
+  the pattern library's `?page=`: `useSearchParams` in a static export
+  renders the whole route on the client. The first paint is All, page 1,
+  and a deep link moves to its view when the script runs. Defaults are left
+  out, so All on page 1 is plain `/templates/`. A chip or a page pushes a
+  history entry, and the page numbers are real links. A page past the end
+  shows the last page, an unknown category shows All, and so does
+  `?category=yours` for a visitor who is signed out.
+- **A card's "Sign in to use" carries the view** as `?next=`, so signing in
+  comes back to the category and page it left from.
+
 ## The mark, and the font that travels with it
 
 `components/logo/` is the whole of the brand mark: `LogoMark` is the glyph,
@@ -514,9 +628,10 @@ step is exactly the work this component removes.
 `components/nav/SiteNav` is the site's masthead: the lockup on the left,
 Home / Patterns / Websites in the middle, and on the right either "Sign in" or
 the person as a pill - the initials in a circle beside two rules - opening a
-menu (email, My Account, Settings, and Admin for a person whose row says
-`role = 'admin'`, then Sign out). Signed in, the first destination reads My
-Account. Below 768px the destinations fold into that menu, or behind
+menu (email, My account, Settings, and Admin for a person whose row says
+`role = 'admin'`, then Sign out; the item for the current page is ink and
+600, the rest grey). Signed in, the first destination reads My account,
+in sentence case as every design writes it. Below 768px the destinations fold into that menu, or behind
 a hamburger when signed out. It takes a `tone` (`dark` for the homepage and
 the template gallery, `light` for everything else) and a `sticky` flag the
 pattern library uses because its rail starts where the bar ends. `HomeNav`,
@@ -537,15 +652,18 @@ Four things worth not re-litigating:
 - **Below 768px it is pinned**, on every route and in both tones, which is
   why `--n-bg` exists - the bar is otherwise transparent and takes whatever
   the page is. At those widths the destinations live *behind* this bar, so a
-  bar that scrolled away would take the site's navigation with it. The
-  `sticky` flag stays a page's own choice; the narrow rule is the width's.
+  bar that scrolled away would take the site's navigation with it. **The
+  dark tone is pinned at every width**, on the designs' translucent ground
+  (`oklch(0.17 0.012 285 / 0.82)` under a 14px blur), since the homepage and
+  gallery artboards both draw it that way; for the light tone the `sticky`
+  flag stays a page's own choice.
 - **GitHub and Docs are in the footer, not the bar.** The 2026 artboards put
   three destinations and the account up top and everything else in
   `HomeFooter`; the bar used to carry a different set of links on every
   page, which is what one component ends. Studio is in neither now: the
   generation flow is held back from the first launch (see below), and the
   footer's Product list is the artboard's own - Patterns, Websites, My
-  Account.
+  account.
 - **It renders the signed-out chrome until a session says otherwise, unless
   this browser was signed in last time.** The export cannot know who is
   looking, and most visitors are nobody; a ghost in the right-hand slot for
@@ -562,7 +680,7 @@ it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
 
 **The wordmark's font is declared by `Logo` itself**, not by a route and not
 by the root layout. `plexMono` and `ebGaramond` are applied by the routes that
-use them; the lockup is in a dozen mastheads and in none of the 107 template
+use them; the lockup is in a dozen mastheads and in none of the 177 template
 pages, so the component that draws the word is the only place that knows
 where the font is actually read.
 
@@ -601,7 +719,7 @@ not obvious from the diff:
   span, which is exactly how the first version of it did nothing.
 - **No "New palette" button anywhere.** The pencil on any row opens the
   editor, and saving a library palette's edit is how a new one is made; the
-  editor's desktop rail keeps its "+ New Palette" text, the only place the
+  editor's desktop rail keeps its "+ New palette" text, the only place the
   design still draws one.
 - **Shuffle shuffles the layout.** The three scopes (layout, colors, both)
   and the remembered default are gone with `shuffleActions.ts`; the colors
@@ -643,6 +761,18 @@ not obvious from the diff:
   the gallery, or, at the limit, "Request more". There is no account
   sub-navigation: pages beyond the overview (settings, sites) carry one
   "Account overview" link back, and the downloads history page is gone.
+
+## Comparing against a Claude Design export
+
+The designs arrive as `*.dc.html` pages with inline styles, and the inline
+values are the spec: read a size, weight or color from the source, and
+compare it with `getComputedStyle` on the site, not by eye. Two things make
+their pixels lie. The 24 September export bundles a
+`fonts/ProximaNova-Regular.otf` that is in fact the Bold cut, so every
+Proxima Nova weight in those artboards draws bold whatever the source says;
+the site follows the source's weight (400, 500), not the render. And the
+pages load React and Babel from unpkg at runtime, so they render blank
+wherever that host is unreachable; serve those scripts locally to see them.
 
 ## The editor's density - one number, the cell's size
 
@@ -885,7 +1015,7 @@ another). Five things worth not re-litigating:
   (`components/template/ChooseTemplate.tsx`): how many are chosen, what this
   one costs, and at the limit the chosen ones and "Request more". The page
   learns what is chosen from `GET /api/account/templates`, read once per
-  page into a small store (`lib/myTemplates.ts`) the 107 gallery cards
+  page into a small store (`lib/myTemplates.ts`) the 177 gallery cards
   share. Someone who opens a zip's URL directly is held to the same five.
 - **A click and a fetch are answered differently.** A navigation (a download
   link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
@@ -955,14 +1085,14 @@ they stay reachable from the framed template preview and from the account.
 The rest of this section describes the flow as built, for when it comes back.
 
 `/studio` takes a description of a business and `/studio/results` answers with
-three template sites. Studio answers with what the repo actually has: 107
+three template sites. Studio answers with what the repo actually has: 177
 finished template sites, each on one of the 338 patterns and one of the 437
 palettes, each with a real page and a real zip. (The AI tier this was designed
 against - `agent-outputs/20260827-studio-ai-plan.md` - has since landed; see
 below. The matcher was not replaced by it.)
 
 - **`lib/studioMatch.ts` is pure and isomorphic; `lib/studioDirections.ts` is
-  server-only.** The index - 107 entries of names, palettes and vocabulary - is
+  server-only.** The index - 177 entries of names, palettes and vocabulary - is
   built at build time and passed to the client as plain data. Importing the
   catalog (384 KB) or the template data into the browser to match against it is
   the thing this split exists to prevent.
@@ -1107,7 +1237,7 @@ the template and shows the result.
   `planEdits`, which is pure and so runs in the Worker with no DOM; one repair
   retry; a second failure writes the three-string `directionToEdits` floor as
   revision 1 with `source: 'fallback'`, and the workspace says so. Because the
-  document is keyed by slot id, **this reaches all 107 templates today** -
+  document is keyed by slot id, **this reaches all 177 templates today** -
   `data-edit-copy` roles matter only for the cheap card-stage preview.
 - **Sites are pinned and versioned.** `site` records `specVersion` and a
   SHA-256 of the packaged `index.html` it was authored against; `GET

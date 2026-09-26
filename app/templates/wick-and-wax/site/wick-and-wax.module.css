@@ -1,0 +1,955 @@
+/* ==========================================================================
+   WICK & WAX - candle maker, Chandler Lane
+   A scent library: every candle is an index card on a shelf, the picture
+   on the left cut out of a Tabbied pattern in its family's colors, the
+   notes ruled like a card catalog on the right. A thin, high-waisted
+   display face for names, a plain sans for the notes, and warm wax paper.
+   The workshop is the one dark room, lit by soft amber rounds.
+   ========================================================================== */
+
+.page {
+  --wax: #f6f2ec;
+  --ink: #231f1c;
+  --amber: #b8864b;
+  --heather: #7c6f8e;
+  --smoke: #a39a90;
+  --pale: #e8e0d4;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 82rem;
+  --air: clamp(4.5rem, 10vw, 8.5rem);
+  --display: 'Italiana', 'Didot', Georgia, serif;
+
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--wax);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.9rem var(--gut);
+  background: color-mix(in srgb, var(--wax) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.markAmp {
+  color: var(--amber);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.2rem, 3vw, 2.8rem);
+}
+
+.nav a {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--amber);
+}
+
+.barMeta {
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.barMeta::before {
+  content: '';
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 25%, transparent);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--wax);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.kicker,
+.secKick {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.title {
+  margin-top: 1.2rem;
+  font-size: clamp(2.8rem, 5.4vw, 4.8rem);
+  line-height: 1;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--heather);
+}
+
+.lede {
+  margin-top: 1.5rem;
+  max-width: 32rem;
+  font-size: 1.06rem;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+
+.formats {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  max-width: 32rem;
+  border-top: 1px solid var(--ink);
+}
+
+.formats li {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.formats strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.35rem;
+}
+
+.formats span {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.formats .formatPrice {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.95rem 1.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wax);
+  background: var(--ink);
+  border-radius: 999px;
+  transition: background 160ms ease;
+}
+
+.btn:hover {
+  background: var(--amber);
+}
+
+/* The niche: a tall arch in the pale tone, a warm glow where the pillar
+   burns, and three candles on one shelf. */
+.niche {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 5 / 6;
+  max-height: 40rem;
+  width: 100%;
+  justify-self: end;
+  border-radius: 999px 999px 0 0;
+  background:
+    radial-gradient(circle at 28% 20%, color-mix(in srgb, var(--amber) 30%, transparent), transparent 42%),
+    var(--pale);
+}
+
+.niche .nichePillar {
+  z-index: 1;
+  left: 13%;
+  bottom: 5%;
+  height: 80%;
+  transform: none;
+}
+
+.nicheJar {
+  position: absolute;
+  z-index: 2;
+  left: 36%;
+  bottom: 3.5%;
+  height: 54%;
+}
+
+.nicheTin {
+  position: absolute;
+  z-index: 3;
+  right: 6%;
+  bottom: 3%;
+  width: 34%;
+}
+
+.shelf {
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  bottom: 0;
+  height: 4.5%;
+  background: var(--ink);
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(1.5rem, 5vw, 5rem);
+  row-gap: 0.8rem;
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.secKick {
+  grid-column: 1 / -1;
+}
+
+.secHead h2 {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+}
+
+.secNote {
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+/* ---------------------------------------------------------------- library */
+
+.library {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.shelfHead {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 3rem 0 1.2rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.shelfHead:first-of-type {
+  margin-top: 0;
+}
+
+.shelfMark {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+}
+
+.shelfHead h3 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+
+.cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.9rem, 2vw, 1.6rem);
+}
+
+/* An index card: a ruled face, the red-line margin in amber. */
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  background: color-mix(in srgb, var(--pale) 35%, var(--wax));
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 8%, transparent), 0 10px 24px -18px rgb(0 0 0 / 0.35);
+}
+
+.cardArt {
+  position: relative;
+  min-height: 15rem;
+  background:
+    radial-gradient(ellipse 60% 8% at 50% 92%, color-mix(in srgb, var(--ink) 22%, transparent), transparent),
+    var(--pale);
+  border-right: 2px solid var(--amber);
+}
+
+/* A candle stands in a box of its own shape. The pillar's photograph was
+   lit; its flame and halo are cut off and a flame is drawn in the amber
+   instead, so it burns in the page's colors too. */
+.candleBox {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+}
+
+.candle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.Jar {
+  width: 70%;
+  aspect-ratio: 668 / 931;
+}
+
+.Tin {
+  width: 80%;
+  bottom: 10%;
+  aspect-ratio: 979 / 689;
+}
+
+.Pillar {
+  height: 90%;
+  aspect-ratio: 340 / 1024;
+}
+
+.Pillar .candle {
+  clip-path: inset(18.4% 0 0 0);
+}
+
+.Pillar::before,
+.Pillar::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.Pillar::before {
+  top: 14.5%;
+  width: 2px;
+  height: 4.4%;
+  border-radius: 1px;
+  background: var(--ink);
+}
+
+.Pillar::after {
+  top: 5%;
+  width: 16%;
+  height: 10.5%;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: radial-gradient(ellipse 45% 55% at 50% 72%, var(--wax) 0 35%, var(--amber) 75%);
+  box-shadow: 0 0 1.2rem 0.35rem color-mix(in srgb, var(--amber) 40%, transparent);
+}
+
+.cardBody {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.1rem 1.1rem;
+}
+
+.callNo {
+  align-self: flex-end;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.cardName {
+  margin-top: 0.1rem;
+  font-size: 1.85rem;
+}
+
+.cardMood {
+  margin-top: 0.3rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.notes {
+  margin: 0.8rem 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--heather) 45%, transparent);
+}
+
+.notes div {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--heather) 30%, transparent);
+}
+
+.notes dt {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.9;
+  color: var(--heather);
+}
+
+.notes dd {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.cardPrice {
+  margin-top: auto;
+  padding-top: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 0.86rem;
+}
+
+.cardPrice span {
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.cardPrice strong {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.libraryNote {
+  margin-top: 1.6rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* --------------------------------------------------------------- workshop */
+
+.workshop {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--air);
+  color: var(--wax);
+  background: var(--ink);
+  overflow: hidden;
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+.workshopInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.workshopText h2 {
+  margin-top: 1rem;
+  font-size: clamp(2.4rem, 4.6vw, 3.9rem);
+}
+
+.workshopLede {
+  margin-top: 1.3rem;
+  max-width: 32rem;
+  color: color-mix(in srgb, var(--wax) 86%, transparent);
+}
+
+.facts {
+  margin: 2rem 0 0;
+  max-width: 32rem;
+  border-top: 1px solid color-mix(in srgb, var(--wax) 30%, transparent);
+}
+
+.facts div {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--wax) 16%, transparent);
+}
+
+.facts dt {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.9;
+  color: var(--amber);
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.private {
+  margin-top: 1.5rem;
+  max-width: 32rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--wax) 80%, transparent);
+}
+
+.form {
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--ink);
+  background: var(--wax);
+  border-radius: 6px;
+}
+
+.sessions {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.sessions legend {
+  margin-bottom: 0.7rem;
+  padding: 0;
+  font-family: var(--display);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.session {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'radio when left' 'radio time left';
+  column-gap: 0.8rem;
+  align-items: center;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.session:has(input:checked) {
+  border-color: var(--amber);
+  background: color-mix(in srgb, var(--amber) 12%, var(--wax));
+}
+
+.session:has(input:disabled) {
+  cursor: not-allowed;
+  background: color-mix(in srgb, var(--pale) 55%, var(--wax));
+}
+
+.session input {
+  grid-area: radio;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--amber);
+}
+
+.sessionWhen {
+  grid-area: when;
+  font-weight: 600;
+}
+
+.sessionTime {
+  grid-area: time;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.sessionLeft {
+  grid-area: left;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: right;
+  color: var(--heather);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6rem;
+  gap: 0.8rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  font: inherit;
+  color: var(--ink);
+  padding: 0.7rem 0.8rem;
+  background: var(--wax);
+  border: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  border-radius: 4px;
+}
+
+.submit {
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 1rem;
+  color: var(--wax);
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.submit:hover {
+  background: var(--amber);
+}
+
+.formNote {
+  font-size: 0.84rem;
+  text-align: center;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+/* ------------------------------------------------------------------- care */
+
+.care {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.careList {
+  list-style: none;
+  counter-reset: care;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.5rem);
+}
+
+.careList li {
+  counter-increment: care;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ink);
+}
+
+.careList li::before {
+  content: counter(care);
+  display: block;
+  font-family: var(--display);
+  font-size: 3.4rem;
+  line-height: 1;
+  color: var(--amber);
+}
+
+.careList h3 {
+  margin-top: 0.6rem;
+  font-size: 1.6rem;
+}
+
+.careList p {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+/* A printed row of leaves, like the edge of a candle label. */
+.careBand {
+  position: relative;
+  height: 1.75rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------- stockists */
+
+.stockists {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.areas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.5rem);
+}
+
+.area h3 {
+  font-size: 1.8rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.area ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.area li {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.area strong {
+  font-weight: 600;
+}
+
+.area span {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.area small {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--heather);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) 1.8rem;
+  color: var(--wax);
+  background: var(--ink);
+  overflow: hidden;
+}
+
+/* The workshop's candlelight, low, behind the name. */
+.footGlow {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: min(44rem, 100%);
+  opacity: 0.5;
+  mask-image: radial-gradient(farthest-side at 20% 50%, var(--ink) 20%, transparent);
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 7vw, 5.5rem);
+  line-height: 1;
+}
+
+.footAddr {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  text-align: right;
+  color: color-mix(in srgb, var(--wax) 82%, transparent);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2rem auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--wax) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.84rem;
+  color: color-mix(in srgb, var(--wax) 72%, transparent);
+}
+
+.credit a {
+  border-bottom: 1px solid var(--amber);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .careList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.8rem;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .niche {
+    max-width: 30rem;
+    justify-self: center;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workshopInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .areas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footAddr {
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .barMeta {
+    display: none;
+  }
+
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .cardArt {
+    min-height: 15rem;
+  }
+
+  .careList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formats li {
+    grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  }
+
+  .facts div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .submit {
+    transition: none;
+  }
+}

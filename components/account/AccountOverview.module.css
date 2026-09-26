@@ -1,11 +1,12 @@
 /* The overview's own pieces: the two summary cards, the chosen templates,
    and the "Request more" dialog. */
 
-/* The artboard's box: the chosen-templates ring on paper, the AI card in ink. */
+/* The artboard's box: the chosen-templates ring on paper, the AI card in ink.
+   Not clipped, since the (i) tip hangs out of it: each half rounds its own
+   corners instead. */
 .cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  overflow: hidden;
   border: 1px solid oklch(0 0 0 / 0.1);
   border-radius: 14px;
 }
@@ -29,6 +30,7 @@
   padding: 32px;
   background-color: #fff;
   border-right: 1px solid oklch(0 0 0 / 0.08);
+  border-radius: 13px 0 0 13px;
 }
 
 .gauge {
@@ -74,13 +76,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
   padding: 0;
-  font: italic 500 11px Georgia, serif;
-  color: oklch(0.5 0.01 260);
+  font: 600 10px var(--s-mono);
+  color: oklch(0.45 0.01 260);
   background: none;
-  border: 1px solid oklch(0 0 0 / 0.18);
+  border: 1px solid oklch(0 0 0 / 0.28);
   border-radius: 50%;
   cursor: pointer;
 }
@@ -93,16 +95,16 @@
 
 .tip {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 9px);
   left: 50%;
-  z-index: 5;
+  z-index: 30;
   width: 250px;
-  padding: 12px 14px;
-  font: 400 13px / 1.5 var(--s-sans);
+  padding: 11px 13px;
+  font: 400 12.5px / 1.5 var(--s-sans);
   color: #eef0f6;
   background: #0e0e13;
   border-radius: 10px;
-  box-shadow: 0 12px 30px oklch(0 0 0 / 0.25);
+  box-shadow: 0 10px 28px oklch(0 0 0 / 0.22);
   transform: translateX(-50%);
 }
 
@@ -114,7 +116,7 @@
 
 .gaugeNames {
   margin: 0;
-  font: 400 13px / 1.5 var(--s-sans);
+  font: 400 13px var(--s-sans);
   color: oklch(0.45 0.01 260);
 }
 
@@ -129,6 +131,7 @@
   padding: 32px;
   color: #eef0f6;
   background-color: #0e0e13;
+  border-radius: 0 13px 13px 0;
 }
 
 .darkHead {
@@ -188,7 +191,7 @@
   gap: 20px;
   align-items: center;
   justify-content: space-between;
-  margin: 64px 0 20px;
+  margin: 64px 0 18px;
 }
 
 .recentsTitle {
@@ -199,6 +202,13 @@
 
 .recentsHead h2 {
   margin: 0;
+  letter-spacing: normal;
+}
+
+/* The artboard's "Browse templates" is a size down from the page's CTA. */
+.recentsHead .browse {
+  padding: 12px 22px;
+  font-size: 14.5px;
 }
 
 .count {
@@ -206,19 +216,30 @@
   color: oklch(0.5 0.01 260);
 }
 
+/* The artboard's columns. Its first is at least 200px; here it may shrink
+   instead, so a table a little over the breakpoint does not overflow. */
 .columns {
-  grid-template-columns: minmax(0, 2.3fr) minmax(0, 0.8fr) minmax(0, 0.8fr) 250px;
+  grid-template-columns: minmax(0, 1fr) 150px 110px 230px;
+  gap: 24px;
 }
 
 /* The artboard's header row: plain sans, not the mono of the other tables. */
 .head {
   display: grid;
-  gap: 16px;
   align-items: center;
   padding: 12px 26px;
-  font: 400 12.5px var(--s-sans);
-  color: oklch(0.45 0.01 260);
-  background-color: oklch(0 0 0 / 0.028);
+  font: 400 12px var(--s-sans);
+  color: oklch(0.52 0.01 260);
+  background-color: oklch(0 0 0 / 0.02);
+}
+
+/* A chosen template: the artboard's row, a little tighter than the other
+   account tables'. */
+.tplRow {
+  display: grid;
+  align-items: center;
+  padding: 18px 26px;
+  border-top: 1px solid oklch(0 0 0 / 0.08);
 }
 
 .templateCell {
@@ -232,9 +253,18 @@
   min-width: 0;
 }
 
+/* A block, not inline: an inline box sits on the page's taller line and
+   pushes the row open. */
 .templateText a {
-  display: inline-block;
+  display: block;
+  width: fit-content;
+  font: 600 17px var(--s-sans);
   text-decoration: none;
+}
+
+.templateText p {
+  font-size: 14px;
+  color: oklch(0.52 0.01 260);
 }
 
 .templateText a:hover {
@@ -259,6 +289,10 @@
   color: oklch(0.58 0.01 260);
 }
 
+.dateAdded {
+  color: oklch(0.45 0.01 260);
+}
+
 /* The status repeats under the name once the columns are gone. */
 .narrowOnly {
   display: none;
@@ -275,7 +309,7 @@
   display: inline-flex;
   gap: 6px;
   align-items: center;
-  padding: 7px 14px;
+  padding: 8px 14px;
   font: 400 14px var(--s-sans);
   color: var(--s-ink);
   white-space: nowrap;
@@ -292,7 +326,20 @@
 
 .caret {
   font-size: 9px;
-  opacity: 0.6;
+  opacity: 0.55;
+}
+
+/* The artboard's link: the arrow is a character, underlined with the word. */
+.customize {
+  font: 400 15px var(--s-sans);
+  color: var(--s-ink);
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.customize:hover {
+  color: var(--s-ink);
 }
 
 /* The Download menu, portaled under <body>: it names its fonts outright. */
@@ -302,13 +349,13 @@
 
 .menu {
   box-sizing: border-box;
-  width: 250px;
+  width: 280px;
   padding: 7px;
   color: #0e0e13;
   background: #fff;
   border-radius: 14px;
   outline: none;
-  box-shadow: 0 16px 40px oklch(0 0 0 / 0.18), 0 0 0 1px oklch(0 0 0 / 0.06);
+  box-shadow: 0 16px 40px oklch(0 0 0 / 0.18);
 }
 
 .menuLabel {
@@ -322,7 +369,7 @@
 .menuItem {
   display: block;
   padding: 9px 12px;
-  font: 500 13.5px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  font: 500 14px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
   color: #0e0e13;
   text-decoration: none;
   border-radius: 10px;
@@ -367,20 +414,20 @@
   height: 44px;
   font: 300 20px var(--s-sans);
   color: oklch(0.5 0.01 260);
-  border: 1px dashed oklch(0 0 0 / 0.22);
+  border: 1px dashed oklch(0 0 0 / 0.25);
   border-radius: 8px;
 }
 
 .slotTitle {
   display: block;
-  margin-bottom: 3px;
-  font: 600 15px var(--s-sans);
+  margin-bottom: 5px;
+  font: 600 16px var(--s-sans);
 }
 
 .slotNote {
   display: block;
   font: 400 14px var(--s-sans);
-  color: oklch(0.5 0.01 260);
+  color: oklch(0.52 0.01 260);
 }
 
 /* At the limit: what that means, and the one message the beta allows. */
@@ -390,21 +437,28 @@
   gap: 16px;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 26px;
-  background-color: oklch(0 0 0 / 0.028);
+  padding: 18px 26px;
+  background-color: oklch(0 0 0 / 0.02);
   border-top: 1px solid oklch(0 0 0 / 0.08);
 }
 
 .limitTitle {
-  margin: 0 0 4px;
-  font: 600 15px var(--s-sans);
+  margin: 0 0 5px;
+  font: 600 16px var(--s-sans);
   color: var(--s-ink);
 }
 
 .limitNote {
   margin: 0;
-  font: 400 14px var(--s-sans);
-  color: oklch(0.45 0.01 260);
+  font: 400 14px / 1.5 var(--s-sans);
+  color: oklch(0.52 0.01 260);
+}
+
+/* The row's own button is a size down from the dialog's. */
+.limit .primary,
+.limit .secondary {
+  padding: 10px 18px;
+  white-space: nowrap;
 }
 
 .primary,
@@ -451,28 +505,30 @@
   background: oklch(0.1 0.01 260 / 0.55);
 }
 
+/* Hung 48px from the top, as the artboard does, not centered: a form that
+   grows (the fair-price field) then grows downward. */
 .dialog {
   position: fixed;
-  top: 50%;
+  top: 48px;
   left: 50%;
   z-index: 91;
   box-sizing: border-box;
-  width: min(480px, calc(100vw - 40px));
-  padding: 30px;
+  width: min(560px, calc(100vw - 40px));
+  padding: 32px;
   color: #0e0e13;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 24px 60px oklch(0 0 0 / 0.3);
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 }
 
 .dialogClose {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  font: 400 20px / 1 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  font: 300 22px / 1 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
   color: oklch(0.45 0.01 260);
   background: none;
   border: none;
@@ -485,7 +541,7 @@
 }
 
 .dialogCount {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font: 400 11px var(--font-plex-mono, 'IBM Plex Mono'), ui-monospace, monospace;
   color: oklch(0.4 0.13 175);
   letter-spacing: 0.14em;
@@ -493,26 +549,27 @@
 }
 
 .dialogTitle {
-  margin: 0 0 10px;
-  font: 700 24px / 1.2 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+  font: 700 28px / 1.15 'proxima-nova', var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  letter-spacing: -0.015em;
 }
 
 .dialogBody {
-  margin: 0 0 16px;
+  margin: 0 0 24px;
   font: 400 15px / 1.6 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
   color: oklch(0.45 0.01 260);
+  text-wrap: pretty;
 }
 
 .textarea {
   box-sizing: border-box;
   width: 100%;
   margin: 0 0 20px;
-  padding: 12px 14px;
+  padding: 11px 13px;
   font: 400 14px / 1.5 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
   color: #0e0e13;
   resize: vertical;
-  border: 1px solid oklch(0 0 0 / 0.16);
+  border: 1px solid oklch(0 0 0 / 0.14);
   border-radius: 10px;
   outline: none;
 }
@@ -528,9 +585,22 @@
   justify-content: flex-end;
 }
 
+/* The artboard's Cancel and Done sit a pixel taller than its Send. */
+.dialogActions .secondary,
+.dialogActions .done {
+  padding: 12px 20px;
+}
+
+/* Send, until the form is answered: a pale pill rather than a faded black one. */
+.dialogActions .primary:disabled {
+  color: oklch(0 0 0 / 0.35);
+  background: oklch(0 0 0 / 0.08);
+  opacity: 1;
+}
+
 .sent {
   margin: 6px 0 20px;
-  padding: 14px 16px;
+  padding: 16px 18px;
   background: oklch(0.96 0.03 168);
   border-radius: 12px;
 }
@@ -542,8 +612,9 @@
 
 .sentBody {
   margin: 0;
-  font: 400 14px / 1.5 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
-  color: oklch(0.4 0.01 260);
+  font: 400 14px / 1.55 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  color: oklch(0.35 0.02 200);
+  text-wrap: pretty;
 }
 
 /* Shown while the templates load. Two rows' worth, so the page does not
@@ -573,7 +644,12 @@
 
   .gaugeCard {
     border-right: none;
-    border-bottom: 1px solid oklch(0 0 0 / 0.1);
+    border-bottom: 1px solid oklch(0 0 0 / 0.08);
+    border-radius: 13px 13px 0 0;
+  }
+
+  .dark {
+    border-radius: 0 0 13px 13px;
   }
 
   .recentsHead {
@@ -581,14 +657,21 @@
   }
 }
 
-@media (max-width: 768px) {
-  /* A template per block: name and status, then its two actions. */
+/* A template per block: name and status, then its two actions, still at the
+   right. At the width the other account tables collapse, not the artboard's
+   768px: four columns of dates need the room. */
+@media (max-width: 900px) {
   .head {
     display: none;
   }
 
   .columns {
     grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .tplRow {
+    align-items: flex-start;
   }
 
   .date {
@@ -597,10 +680,6 @@
 
   .narrowOnly {
     display: inline;
-  }
-
-  .rowActions {
-    justify-content: flex-start;
   }
 }
 
@@ -616,12 +695,11 @@
     white-space: nowrap;
   }
 
-  .gaugeCard {
-    padding: 24px;
-  }
-
-  .dark {
-    padding: 24px;
+  /* The tip opens leftward from the (i), which sits near the right edge here. */
+  .tip {
+    right: -12px;
+    left: auto;
+    transform: none;
   }
 }
 
@@ -634,19 +712,19 @@
 /* -- The request forms (portaled: fonts named outright) ----------------------- */
 
 .dialog {
-  max-height: calc(100dvh - 40px);
+  max-height: calc(100dvh - 96px);
   overflow-y: auto;
 }
 
 .form {
   display: grid;
-  gap: 18px;
-  margin: 0 0 22px;
+  gap: 22px;
+  margin: 0 0 24px;
 }
 
 .question {
   display: grid;
-  gap: 9px;
+  gap: 10px;
   min-width: 0;
   margin: 0;
   padding: 0;
@@ -655,14 +733,19 @@
 
 .questionLabel {
   padding: 0;
-  font: 600 13.5px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  font: 600 14px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
   color: #0e0e13;
+}
+
+/* A legend is no grid item, so the fieldset's gap never reaches it. */
+legend.questionLabel {
+  margin-bottom: 10px;
 }
 
 .chipRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
 }
 
 .chip {
@@ -688,10 +771,10 @@
 .input {
   box-sizing: border-box;
   width: 100%;
-  padding: 11px 14px;
+  padding: 11px 13px;
   font: 400 14px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
   color: #0e0e13;
-  border: 1px solid oklch(0 0 0 / 0.16);
+  border: 1px solid oklch(0 0 0 / 0.14);
   border-radius: 10px;
   outline: none;
 }
@@ -710,32 +793,32 @@
   gap: 14px;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
+  padding: 14px 16px;
   background: oklch(0 0 0 / 0.035);
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .priorLabel {
-  margin: 0 0 3px;
-  font: 500 10.5px var(--font-plex-mono, 'IBM Plex Mono'), ui-monospace, monospace;
+  margin: 0 0 5px;
+  font: 600 11px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
   color: oklch(0.5 0.01 260);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .priorSummary {
   margin: 0;
-  font: 400 13.5px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  font: 400 14px / 1.5 var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
   color: #0e0e13;
 }
 
 .priorEdit {
   flex: none;
   padding: 0;
-  font: 400 13px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
+  font: 400 14px var(--font-plex-sans, 'IBM Plex Sans'), sans-serif;
   color: #0e0e13;
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
   background: none;
   border: none;
   cursor: pointer;
@@ -750,8 +833,9 @@
 
 .limitText {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
 }
 
 .dotWait,
@@ -759,7 +843,6 @@
   flex: none;
   width: 10px;
   height: 10px;
-  margin-top: 5px;
   border-radius: 50%;
 }
 
@@ -773,15 +856,16 @@
 
 /* -- "5 more templates added", after the emailed link --------------------------- */
 
+/* The text keeps 220px, so on a phone the button wraps under it. */
 .added {
   display: flex;
-  gap: 14px;
+  flex-wrap: wrap;
+  gap: 16px;
   align-items: center;
   margin: 0 0 20px;
-  padding: 14px 16px 14px 18px;
-  background: oklch(0.96 0.04 168);
-  border: 1px solid oklch(0.88 0.06 168);
-  border-radius: 12px;
+  padding: 18px 22px;
+  background: oklch(0.96 0.03 168);
+  border-radius: 14px;
 }
 
 .addedMark {
@@ -789,36 +873,37 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  font: 700 13px var(--s-sans);
+  width: 34px;
+  height: 34px;
+  font: 600 16px var(--s-sans);
   color: #fff;
-  background: oklch(0.45 0.1 168);
+  background: oklch(0.4 0.13 175);
   border-radius: 50%;
 }
 
 .addedText {
   flex: 1;
-  min-width: 0;
+  min-width: 220px;
 }
 
 .addedTitle {
-  margin: 0 0 2px;
-  font: 600 14.5px var(--s-sans);
+  margin: 0 0 3px;
+  font: 600 16px var(--s-sans);
   color: var(--s-ink);
 }
 
 .addedBody {
   margin: 0;
-  font: 400 13.5px / 1.5 var(--s-sans);
-  color: oklch(0.38 0.02 200);
+  font: 400 14px / 1.5 var(--s-sans);
+  color: oklch(0.35 0.02 200);
 }
 
 .addedAction {
   flex: none;
-  padding: 9px 16px;
-  font: 600 13.5px var(--s-sans);
+  padding: 10px 18px;
+  font: 600 14px var(--s-sans);
   color: #fff;
+  white-space: nowrap;
   text-decoration: none;
   background: #0e0e13;
   border-radius: 999px;
@@ -831,10 +916,10 @@
 
 .addedClose {
   flex: none;
-  width: 28px;
-  height: 28px;
-  font: 400 18px / 1 var(--s-sans);
-  color: oklch(0.4 0.02 200);
+  width: 32px;
+  height: 32px;
+  font: 300 20px / 1 var(--s-sans);
+  color: oklch(0.35 0.02 200);
   background: none;
   border: none;
   border-radius: 50%;
@@ -843,10 +928,4 @@
 
 .addedClose:hover {
   background: oklch(0 0 0 / 0.05);
-}
-
-@media (max-width: 640px) {
-  .added {
-    flex-wrap: wrap;
-  }
 }

@@ -6,7 +6,6 @@ import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 're
 import { Menu } from '@base-ui-components/react/menu';
 import {
   ArrowDownToLine,
-  ChevronDown,
   ChevronLeft,
   FileCode,
   ImageDown,
@@ -168,7 +167,7 @@ export default function EditPatternHeader({
           className={styles.backCircle}
           aria-label="Back to gallery"
         >
-          <ChevronLeft size={16} aria-hidden="true" />
+          <ChevronLeft size={17} strokeWidth={1.7} aria-hidden="true" />
         </NextLink>
 
         <h1 className={styles.srOnly}>{patternName}</h1>
@@ -190,7 +189,7 @@ export default function EditPatternHeader({
             aria-label="Export"
             title="Export"
           >
-            <ArrowDownToLine size={17} />
+            <ArrowDownToLine size={18} strokeWidth={1.7} />
           </Menu.Trigger>
         )}
       </header>
@@ -206,7 +205,7 @@ export default function EditPatternHeader({
         className={styles.backCircle}
         aria-label="Back to gallery"
       >
-        <ChevronLeft size={16} aria-hidden="true" />
+        <ChevronLeft size={17} strokeWidth={1.7} aria-hidden="true" />
       </NextLink>
       <span className={styles.crumb} aria-hidden="true">
         Patterns
@@ -233,7 +232,9 @@ export default function EditPatternHeader({
             aria-label="Export"
           >
             <span className={styles.label}>Export</span>
-            <ChevronDown className={styles.chevronIcon} size={13} />
+            <span className={styles.caret} aria-hidden="true">
+              {'\u25BE'}
+            </span>
           </Menu.Trigger>
         )}
       </div>

@@ -1,0 +1,1062 @@
+/* ==========================================================================
+   FORM & FIELD - architects, Alder Valley
+   A project gallery first: a row of plates that scrolls sideways, each a
+   building cut out of its sky and drawn in two of the page's colors, the
+   plate behind it standing in for the sky. Concrete ground, hairlines, a
+   mono face for the facts, and one blueprint panel of isometric lattice.
+   ========================================================================== */
+
+.page {
+  --paper: #eeedea;
+  --ink: #151515;
+  --blue: #3d5a80;
+  --gray: #8d8c88;
+  --pale: #d8d6d0;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 88rem;
+  --air: clamp(4.5rem, 10vw, 8.5rem);
+  --mono: 'Red Hat Mono', ui-monospace, Menlo, monospace;
+
+  font-family: 'Red Hat Display', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------- bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.95rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--pale);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+/* The mark: a square with its ground line, the plate in miniature. */
+.markBox {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--ink);
+  box-shadow: inset 0 -5px 0 var(--blue);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.9rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+  transition: color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--blue);
+}
+
+.barCta {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--ink);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.barCta:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ----------------------------------------------------------------- intro */
+
+.intro {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.2rem, 4.5vw, 3.6rem) var(--gut) clamp(1.6rem, 3vw, 2.4rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  align-items: end;
+}
+
+.kicker {
+  margin: 0 0 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.title {
+  font-size: clamp(2.3rem, 4.6vw, 4.1rem);
+  line-height: 1.02;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  max-width: 19ch;
+}
+
+.page .title {
+  font-weight: 400;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--blue);
+}
+
+/* A material sample of the practice panel's lattice, over the lede. */
+.swatch {
+  position: relative;
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: 1.4rem;
+  background: var(--blue);
+  overflow: hidden;
+}
+
+.lede {
+  margin: 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.introLink {
+  display: inline-block;
+  margin-top: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+}
+
+.introLink::after {
+  content: ' \2192';
+}
+
+.introLink:hover {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
+/* -------------------------------------------------------------- gallery */
+
+.projects {
+  padding-bottom: clamp(1rem, 3vw, 2rem);
+}
+
+.galleryHead {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0.9rem var(--gut);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  border-top: 1px solid var(--ink);
+}
+
+.galleryTitle {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.page .galleryTitle {
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.galleryHint {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+.galleryHint::after {
+  content: ' \2192';
+}
+
+/* The row itself. The next plate always shows at the right edge, which is
+   what says "there is more this way" without a button. */
+.gallery {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem var(--gut) 1.4rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(68vw, 56rem);
+  gap: clamp(1rem, 2.2vw, 2rem);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gut);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink) var(--pale);
+}
+
+.card {
+  scroll-snap-align: start;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 1.1rem;
+  min-width: 0;
+}
+
+.plate {
+  position: relative;
+  aspect-ratio: 16 / 7.8;
+  overflow: hidden;
+  background: var(--pale);
+}
+
+/* The ground the building stands on. */
+.plate::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 7%;
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.skyPale {
+  background: var(--pale);
+}
+
+.skyBlue {
+  background: var(--blue);
+}
+
+.skyPaper {
+  background: color-mix(in srgb, var(--blue) 16%, var(--paper));
+}
+
+.plate .building {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 7%;
+  height: 86%;
+  width: auto;
+  max-width: 88%;
+  translate: -50% 0;
+}
+
+.plateNo {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  left: 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+}
+
+.boards .plateNo {
+  padding: 0.15rem 0.45rem;
+  background: var(--paper);
+  border: 1px solid var(--pale);
+}
+
+.skyBlue .plateNo {
+  color: var(--paper);
+}
+
+.caption {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 0.6rem clamp(1rem, 3vw, 2.5rem);
+  align-content: start;
+}
+
+.cardName {
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  line-height: 1.1;
+}
+
+.cardFacts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, auto));
+  justify-content: start;
+  gap: 0.2rem clamp(1rem, 2.4vw, 2rem);
+}
+
+.cardFacts dt {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 58%, transparent);
+}
+
+.cardFacts dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.cardNote {
+  grid-column: 2;
+  margin: 0;
+  max-width: 38rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* The fourth plate has no photograph yet: the lattice stands in for the
+   drawings on the board. */
+.boards {
+  background: var(--paper);
+  outline: 1px solid var(--pale);
+  outline-offset: -1px;
+}
+
+.boards::after {
+  display: none;
+}
+
+.boardsField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.boardsStamp {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  margin: 0;
+  padding: 0.8rem 1.3rem;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  white-space: nowrap;
+}
+
+.index {
+  max-width: var(--max);
+  margin: 0.6rem auto 0;
+  padding: 0 var(--gut);
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.8rem;
+  counter-reset: proj;
+}
+
+.index li {
+  counter-increment: proj;
+  font-size: 0.9rem;
+}
+
+.index li::before {
+  content: '0' counter(proj) ' ';
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: color-mix(in srgb, var(--ink) 56%, transparent);
+}
+
+.index a {
+  border-bottom: 1px solid transparent;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.index a:hover {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
+/* ------------------------------------------------------------- practice */
+
+.practice {
+  max-width: var(--max);
+  margin: var(--air) auto 0;
+  padding: 0 var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: stretch;
+}
+
+/* A blueprint: the lattice in light lines on the accent ground. */
+.weave {
+  position: relative;
+  min-height: 36rem;
+  background: var(--blue);
+  overflow: hidden;
+}
+
+.practiceText {
+  align-self: center;
+  padding: clamp(0rem, 2vw, 1.5rem) 0;
+}
+
+.secNo {
+  margin: 0 0 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.secTitle {
+  font-size: clamp(1.8rem, 3.4vw, 2.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  max-width: 20ch;
+}
+
+.body {
+  margin: 1.3rem 0 0;
+  max-width: 36rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.facts {
+  margin: 2.2rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--ink);
+}
+
+.facts div {
+  margin: 0;
+}
+
+.facts dt {
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.facts dd {
+  margin: 0.45rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+.people {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.5rem;
+}
+
+.people li {
+  display: grid;
+  gap: 0.1rem;
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--pale);
+}
+
+.personName {
+  font-weight: 600;
+}
+
+.personRole {
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+/* -------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 clamp(2rem, 6vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead .secNo {
+  grid-column: 1 / -1;
+}
+
+.secNote {
+  margin: 0;
+  max-width: 32rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+/* ------------------------------------------------------------- services */
+
+.services {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.service {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 1.6fr);
+  gap: 0.4rem clamp(1rem, 3vw, 2.5rem);
+  align-items: baseline;
+  padding: 1.3rem 0;
+  border-bottom: 1px solid var(--pale);
+}
+
+.serviceName {
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+}
+
+.serviceFee {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  color: var(--blue);
+}
+
+.serviceBody {
+  margin: 0;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* -------------------------------------------------------------- process */
+
+.process {
+  margin-top: var(--air);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+  background: color-mix(in srgb, var(--pale) 55%, var(--paper));
+}
+
+/* A strip of plan lines across the top of the section. */
+.planBand {
+  position: relative;
+  height: clamp(96px, 11vw, 150px);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 30%, transparent);
+  mask-image: linear-gradient(180deg, var(--ink) 30%, transparent);
+}
+
+.processInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3vw, 2.5rem) var(--gut) 0;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.step {
+  position: relative;
+  padding-top: 1.1rem;
+  border-top: 2px solid var(--ink);
+}
+
+.stepNo {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--blue);
+}
+
+.stepTitle {
+  margin-top: 0.7rem;
+  font-size: 1.2rem;
+}
+
+.page .stepTitle {
+  margin-top: 0.7rem;
+}
+
+.stepTime {
+  margin: 0.3rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.stepBody {
+  margin: 0.8rem 0 0;
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ------------------------------------------------------------ questions */
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.faqSide {
+  position: sticky;
+  top: 6rem;
+}
+
+.faqArt {
+  width: min(100%, 22rem);
+  margin-top: 2.5rem;
+}
+
+/* The pavilion stands on its own floor plan. */
+.plinth {
+  position: relative;
+  width: min(100%, 22rem);
+  height: 3.5rem;
+  margin-top: -0.2rem;
+  overflow: hidden;
+  border-top: 2px solid var(--ink);
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 35%, transparent);
+  mask-image: linear-gradient(180deg, var(--ink) 35%, transparent);
+}
+
+.faqs {
+  border-top: 1px solid var(--ink);
+}
+
+.faq {
+  border-bottom: 1px solid var(--pale);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  font-family: var(--mono);
+  font-weight: 400;
+  color: var(--blue);
+}
+
+.faq[open] summary::after {
+  content: '\2212';
+}
+
+.faq p {
+  margin: 0 0 1.3rem;
+  max-width: 40rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* -------------------------------------------------------------- contact */
+
+.contact {
+  max-width: var(--max);
+  margin: var(--air) auto 0;
+  padding: clamp(2rem, 5vw, 4rem) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  border-top: 1px solid var(--ink);
+}
+
+.studio {
+  margin: 2rem 0 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.studio div {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--pale);
+}
+
+.studio dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+  padding-top: 0.2rem;
+}
+
+.studio dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.studio a {
+  border-bottom: 1px solid var(--blue);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem 1.4rem;
+  align-content: start;
+}
+
+.field {
+  margin: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--paper) 50%, var(--pale));
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  padding: 0.7rem 0.75rem;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
+}
+
+.submit {
+  justify-self: start;
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.6rem;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.submit:hover {
+  background: var(--blue);
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--air);
+  background: var(--ink);
+  color: var(--paper);
+  padding: calc(clamp(2.5rem, 5vw, 3.5rem) + 3rem) var(--gut) 1.6rem;
+}
+
+/* The plan's traces again, running along the top of the footer. */
+.footPlan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 96px;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.6;
+  -webkit-mask-image: linear-gradient(180deg, var(--ink) 25%, transparent);
+  mask-image: linear-gradient(180deg, var(--ink) 25%, transparent);
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.footName {
+  margin: 0 0 0.4rem;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.footTag {
+  margin: 0;
+  max-width: 24rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem 1rem;
+  font-size: 0.9rem;
+}
+
+.footLinks a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footAddr {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+  overflow-wrap: anywhere;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+}
+
+.footFine p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--paper) 62%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+
+  .caption {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cardNote {
+    grid-column: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .intro,
+  .practice,
+  .faqGrid,
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .weave {
+    min-height: 22rem;
+  }
+
+  .faqSide {
+    position: static;
+  }
+
+  .faqArt {
+    width: min(70%, 16rem);
+    margin-top: 1.5rem;
+  }
+
+  .plinth {
+    width: min(70%, 16rem);
+  }
+
+  .service {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .serviceBody {
+    grid-column: 1 / -1;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barCta {
+    display: none;
+  }
+
+  .gallery {
+    grid-auto-columns: 86vw;
+  }
+
+  .plate {
+    aspect-ratio: 4 / 3.4;
+  }
+
+  .cardFacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 0.7rem;
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 1.3rem;
+  }
+
+  .people,
+  .form,
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .service {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCta,
+  .index a,
+  .introLink,
+  .submit {
+    transition: none;
+  }
+
+  .gallery {
+    scroll-behavior: auto;
+  }
+}

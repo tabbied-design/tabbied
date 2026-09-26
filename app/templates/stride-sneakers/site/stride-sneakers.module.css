@@ -1,0 +1,1122 @@
+/* ==========================================================================
+   STRIDE - sneaker store, Dock Row
+   Loud, square and legible: an ultra-condensed grotesque for names and
+   numbers, a mono for sizes and prices, 2px ink rules, and the release
+   calendar as a strip of days right under this Saturday's pair. Every shoe
+   is its photograph cut out of a Tabbied pattern, the leather's shading laid
+   back over it, so the colorways are the palette's.
+   ========================================================================== */
+
+.page {
+  --court: #f2f2ef;
+  --ink: #121212;
+  --flame: #ff4f1f;
+  --cobalt: #2d6cdf;
+  --gray: #8e8e8a;
+  --pale: #deded9;
+  --gut: clamp(1rem, 3.4vw, 3rem);
+  --max: 90rem;
+  --air: clamp(4.5rem, 9vw, 8rem);
+  --rule: 2px solid var(--ink);
+  --mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace;
+
+  font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--court);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--cobalt);
+  outline-offset: 2px;
+}
+
+.page :where(h1, h2, h3) {
+  font-weight: 850;
+  font-stretch: 62%;
+  line-height: 0.92;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.7rem var(--gut);
+  background: var(--court);
+  border-bottom: var(--rule);
+}
+
+.mark {
+  font-size: 1.7rem;
+  font-weight: 900;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transform: skewX(-10deg);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(0.8rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.1rem;
+  border-bottom: 3px solid transparent;
+  transition: border-color 140ms ease;
+}
+
+.nav a:hover {
+  border-color: var(--flame);
+}
+
+.barNext {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.45rem 0.8rem;
+  color: var(--court);
+  background: var(--ink);
+}
+
+.barNext::before {
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.55rem;
+  border-radius: 50%;
+  background: var(--flame);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--court);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3vw, 2.5rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: stretch;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.tag {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tag span {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.3rem 0.6rem;
+  border: var(--rule);
+}
+
+.tag span:first-child {
+  color: var(--court);
+  background: var(--flame);
+  border-color: var(--flame);
+}
+
+.title {
+  margin-top: 1.1rem;
+  font-size: clamp(3.9rem, 8.2vw, 7.6rem);
+  line-height: 0.86;
+}
+
+.title em {
+  display: block;
+  font-style: normal;
+  color: var(--flame);
+}
+
+.lede {
+  margin-top: 1.2rem;
+  max-width: 30rem;
+  font-size: 1.02rem;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+
+.stats {
+  margin: 1.6rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 30rem;
+  border-top: var(--rule);
+  border-bottom: var(--rule);
+}
+
+.stats div {
+  padding: 0.6rem 0.8rem 0.7rem 0;
+}
+
+.stats div + div {
+  padding-left: 0.8rem;
+  border-left: 1px solid var(--ink);
+}
+
+.stats dt {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.stats dd {
+  margin: 0.1rem 0 0;
+  font-size: 2rem;
+  font-weight: 850;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.actions {
+  margin-top: 1.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.95rem 1.4rem;
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border: var(--rule);
+  transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.btn {
+  color: var(--court);
+  background: var(--ink);
+}
+
+.btn:hover {
+  background: var(--flame);
+  border-color: var(--flame);
+}
+
+.btnLine:hover {
+  background: var(--ink);
+  color: var(--court);
+}
+
+/* A half court: pale boards, lines in the ground color, a huge number,
+   and the shoe tipped forward over all of it. */
+.court {
+  position: relative;
+  isolation: isolate;
+  min-height: 30rem;
+  background: var(--pale);
+  border: var(--rule);
+  overflow: hidden;
+}
+
+.courtLines {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.courtLines::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -30%;
+  width: 70%;
+  aspect-ratio: 1;
+  border: 4px solid var(--court);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.courtLines::after {
+  content: '';
+  position: absolute;
+  left: 32%;
+  right: 32%;
+  top: -4px;
+  height: 42%;
+  border: 4px solid var(--court);
+}
+
+.courtNo {
+  position: absolute;
+  z-index: -1;
+  right: 4%;
+  top: -2%;
+  font-size: clamp(10rem, 22vw, 20rem);
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 3px var(--ink);
+  opacity: 0.18;
+}
+
+.heroShoe {
+  position: absolute;
+  left: 5%;
+  width: 90%;
+  top: 50%;
+  transform: translateY(-46%) rotate(-7deg);
+}
+
+/* ------------------------------------------------------------------ drops */
+
+.drops {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3rem) var(--gut) 0;
+}
+
+.dropsHead {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: end;
+  gap: 0.6rem 1.6rem;
+  padding-bottom: 1rem;
+}
+
+.dropsHead h2 {
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+}
+
+.dropsMonth {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding-bottom: 0.35rem;
+}
+
+.dropsNote {
+  justify-self: end;
+  max-width: 30rem;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.strip {
+  border: var(--rule);
+  background: var(--court);
+}
+
+.swipe {
+  display: none;
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.days {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(22, minmax(0, 1fr));
+}
+
+.day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 15.5rem;
+  padding: 0.7rem 0.6rem;
+  border-right: 1px solid var(--ink);
+}
+
+.day:last-child {
+  border-right: 0;
+}
+
+.wd {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.dd {
+  font-size: 2.2rem;
+  font-weight: 850;
+  font-stretch: 62%;
+  line-height: 1;
+}
+
+.dayNote {
+  margin-top: auto;
+  align-self: flex-start;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.dropDay {
+  grid-column: span 3;
+  color: var(--court);
+  background: var(--ink);
+  border-right-color: var(--court);
+}
+
+.dropDay .wd {
+  color: var(--flame);
+}
+
+.dropBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dropShoe {
+  width: 94%;
+  margin: 0.6rem auto 0.8rem;
+  transform: rotate(-6deg);
+}
+
+.dropName {
+  margin-top: auto;
+  font-size: 1.35rem;
+  font-weight: 850;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.dropColor {
+  font-size: 1.35rem;
+  font-weight: 850;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--flame);
+}
+
+.dropPrice {
+  margin-top: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.dropHow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--court) 80%, transparent);
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.secHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 26rem);
+  align-items: end;
+  gap: 0.6rem clamp(1rem, 3vw, 2.5rem);
+  padding-bottom: 1rem;
+  margin-bottom: 1.6rem;
+  border-bottom: var(--rule);
+}
+
+.secNo {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  color: var(--court);
+  background: var(--ink);
+  align-self: center;
+}
+
+.secHead h2 {
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+}
+
+.secNote {
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ------------------------------------------------------------------- shop */
+
+.shop {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.shoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
+}
+
+.shoe {
+  display: flex;
+  flex-direction: column;
+  border: var(--rule);
+  background: var(--court);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.shoe:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.shoeArt {
+  position: relative;
+  aspect-ratio: 5 / 3.4;
+  background:
+    linear-gradient(var(--court), var(--court)) 0 78% / 100% 2px no-repeat,
+    var(--pale);
+  border-bottom: var(--rule);
+}
+
+.shoePic {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -54%) rotate(-5deg);
+}
+
+.hightop {
+  width: 74%;
+}
+
+.runner {
+  width: 84%;
+}
+
+.slipon {
+  width: 86%;
+}
+
+.shoeCap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.15rem 1rem;
+  padding: 0.9rem 1rem 1rem;
+}
+
+.shoeCap h3 {
+  font-size: 1.9rem;
+}
+
+.shoePrice {
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 600;
+  align-self: center;
+}
+
+.shoeColor {
+  grid-column: 1 / -1;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--cobalt);
+}
+
+.shoeSizes {
+  grid-column: 1 / -1;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+/* ------------------------------------------------------------------ sizes */
+
+.sizes {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.tableWrap {
+  max-width: 100%;
+  overflow-x: auto;
+  border: var(--rule);
+}
+
+.sizeTable {
+  width: 100%;
+  min-width: 46rem;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+}
+
+.sizeTable caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sizeTable th,
+.sizeTable td {
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--ink);
+}
+
+.sizeTable tr:last-child th,
+.sizeTable tr:last-child td {
+  border-bottom: 0;
+}
+
+.sizeTable th {
+  position: sticky;
+  left: 0;
+  width: 8.5rem;
+  text-align: left;
+  padding-left: 0.9rem;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  background: var(--pale);
+  border-right: var(--rule);
+}
+
+.sizeTable tr:first-child td {
+  font-weight: 600;
+  color: var(--court);
+  background: var(--ink);
+}
+
+.sizeTable tr:first-child th {
+  color: var(--court);
+  background: var(--ink);
+}
+
+.sizeTable td:nth-child(even) {
+  background: color-mix(in srgb, var(--pale) 45%, transparent);
+}
+
+.sizeTable tr:first-child td:nth-child(even) {
+  background: color-mix(in srgb, var(--court) 12%, var(--ink));
+}
+
+.fit {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.8rem, 2vw, 1.6rem);
+}
+
+.fit li {
+  display: grid;
+  gap: 0.3rem;
+  padding-top: 0.8rem;
+  border-top: 4px solid var(--cobalt);
+  font-size: 0.95rem;
+}
+
+.fit strong {
+  font-size: 1.5rem;
+  font-weight: 850;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* ----------------------------------------------------------------- raffle */
+
+.raffle {
+  margin-top: var(--air);
+}
+
+.raffleBand {
+  position: relative;
+  height: clamp(4rem, 7vw, 6rem);
+  overflow: hidden;
+  border-top: var(--rule);
+}
+
+.raffleInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  padding: var(--air) max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  color: var(--court);
+  background: var(--ink);
+}
+
+.raffleRules .secNo {
+  display: inline-block;
+  color: var(--ink);
+  background: var(--flame);
+}
+
+.raffleRules h2 {
+  margin-top: 1rem;
+  font-size: clamp(3rem, 7vw, 6rem);
+}
+
+.raffleLede {
+  margin-top: 1rem;
+  max-width: 32rem;
+  color: color-mix(in srgb, var(--court) 84%, transparent);
+}
+
+.rules {
+  list-style: none;
+  counter-reset: rule;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem 2rem;
+}
+
+.rules li {
+  counter-increment: rule;
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  column-gap: 0.8rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--court) 30%, transparent);
+}
+
+.rules li::before {
+  content: counter(rule);
+  grid-row: span 2;
+  font-size: 3rem;
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: 0.85;
+  color: var(--flame);
+}
+
+.rules strong {
+  font-size: 1.3rem;
+  font-weight: 850;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+.rules span {
+  margin-top: 0.3rem;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--court) 82%, transparent);
+}
+
+.form {
+  align-self: start;
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.3rem, 2.6vw, 2rem);
+  color: var(--ink);
+  background: var(--court);
+  border: var(--rule);
+  box-shadow: 10px 10px 0 var(--flame);
+}
+
+.formTitle {
+  font-size: 2.2rem;
+}
+
+.formSub {
+  margin-top: -0.6rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--flame);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 0.8rem;
+}
+
+.field label,
+.choice legend {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--ink);
+  padding: 0.7rem 0.75rem;
+  background: var(--court);
+  border: var(--rule);
+  border-radius: 0;
+}
+
+.choice {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+}
+
+.choice legend {
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+
+.choice label,
+.agree {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.choice input,
+.agree input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--flame);
+}
+
+.agree {
+  align-items: flex-start;
+}
+
+.agree input {
+  margin-top: 0.2rem;
+  flex: none;
+}
+
+.submit {
+  font: inherit;
+  font-weight: 850;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 1rem;
+  color: var(--court);
+  background: var(--ink);
+  border: var(--rule);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+
+.submit:hover {
+  background: var(--flame);
+  border-color: var(--flame);
+}
+
+/* ------------------------------------------------------------------ store */
+
+.store {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.storeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
+}
+
+.storeCard {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 1.2rem;
+  border: var(--rule);
+}
+
+.storeCard h3 {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+}
+
+.storeCard a {
+  border-bottom: 2px solid var(--flame);
+}
+
+.storeSmall {
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.hours {
+  margin: 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--ink);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  padding: clamp(2rem, 4vw, 3rem) var(--gut) 1.6rem;
+  color: var(--court);
+  background: var(--ink);
+}
+
+.footMark {
+  font-size: clamp(3.2rem, 15.5vw, 16rem);
+  font-weight: 900;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.8;
+  transform: skewX(-10deg);
+  transform-origin: bottom left;
+  color: var(--flame);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.footLinks a:hover {
+  color: var(--flame);
+}
+
+.footFine {
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--court) 24%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: color-mix(in srgb, var(--court) 76%, transparent);
+}
+
+.credit a {
+  border-bottom: 1px solid var(--flame);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .days {
+    grid-template-columns: repeat(22, minmax(3.4rem, 1fr));
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .strip {
+    overflow-x: auto;
+  }
+
+  .swipe {
+    display: block;
+  }
+
+  .dropDay {
+    min-width: 12rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.7rem;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .court {
+    min-height: 0;
+    aspect-ratio: 5 / 4;
+  }
+
+  .dropsHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dropsNote {
+    justify-self: start;
+  }
+
+  .secHead {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .secNote {
+    grid-column: 1 / -1;
+  }
+
+  .shoes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .raffleInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .storeGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barNext {
+    font-size: 0.68rem;
+    padding: 0.4rem 0.55rem;
+  }
+
+  .mark {
+    font-size: 1.4rem;
+  }
+
+  .shoes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rules {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fieldRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form {
+    box-shadow: 6px 6px 0 var(--flame);
+  }
+}
+
+@media (max-width: 420px) {
+  .barNext {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine,
+  .shoe,
+  .submit {
+    transition: none;
+  }
+
+  .shoe:hover {
+    transform: none;
+  }
+}

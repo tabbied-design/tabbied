@@ -1,0 +1,1169 @@
+/* ==========================================================================
+   CORNER PHARMACY - independent pharmacy, Bellhaven
+   Two columns, like the counter itself: what we do on the left, each under
+   an engraving printed in the page's ink, and the refill form on the right,
+   held in view the whole way down. Newsreader for the old-shop voice,
+   Public Sans for everything a person has to read quickly. One green, used
+   the way a pharmacy uses its cross: sparingly, and where it matters.
+   ========================================================================== */
+
+.page {
+  --paper: #f6f8f6;
+  --ink: #13201a;
+  --green: #1e8a5a;
+  --gray: #86918b;
+  --pale: #dde7e1;
+  --gut: clamp(1.25rem, 4.5vw, 4rem);
+  --max: 78rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --bar-h: 4.2rem;
+  --rule: color-mix(in srgb, var(--ink) 14%, transparent);
+  --soft: color-mix(in srgb, var(--ink) 74%, transparent);
+
+  font-family: 'Public Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+:where(.page) :is(h1, h2, h3, h4) {
+  margin: 0;
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+:where(.page) p {
+  margin: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--bar-h);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0 var(--gut);
+  background: color-mix(in srgb, var(--paper) 95%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* The pharmacy cross, drawn with two bars. */
+.cross {
+  width: 1.7rem;
+  height: 1.7rem;
+  background:
+    linear-gradient(var(--green), var(--green)) center / 34% 100% no-repeat,
+    linear-gradient(var(--green), var(--green)) center / 100% 34% no-repeat;
+}
+
+.markName {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--soft);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--green);
+}
+
+.barCta {
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.6rem 1.1rem;
+  background: var(--green);
+  color: var(--paper);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* The hours strip under the header. */
+.today {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem 1.2rem;
+  padding: 0.55rem var(--gut);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.88rem;
+}
+
+.todayDot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 35%, transparent);
+}
+
+.todayPhone {
+  font-weight: 700;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 50%, transparent);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 5.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: center;
+}
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.heroTitle {
+  margin-top: 1.3rem !important;
+  font-size: clamp(2.7rem, 5.8vw, 5rem);
+  line-height: 1.02 !important;
+  letter-spacing: -0.025em !important;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--green);
+}
+
+.heroLede {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.18rem);
+  color: var(--soft);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 0.98rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  border: 2px solid var(--green);
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn {
+  background: var(--green);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btnLine {
+  color: var(--ink);
+}
+
+.btnLine:hover {
+  background: var(--pale);
+}
+
+/* The sign: the lattice as its tiled frame, an arched green window in it. */
+.sign {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  width: min(100%, 30rem);
+  justify-self: center;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+.signField {
+  position: absolute;
+  inset: 0;
+}
+
+.signWindow {
+  position: absolute;
+  inset: 9% 11%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1rem;
+  background: var(--green);
+  border-radius: 999px 999px 8px 8px;
+  box-shadow:
+    0 0 0 6px var(--paper),
+    0 0 0 7px var(--green);
+}
+
+.signArt {
+  width: 70%;
+  margin-top: 12%;
+}
+
+.signCaption {
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--paper);
+  letter-spacing: 0.04em;
+}
+
+/* ---------------------------------------------------- the two columns */
+
+.split {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: start;
+  border-top: 1px solid var(--rule);
+}
+
+.colHead {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 1.4rem;
+}
+
+.colHead h2 {
+  font-size: clamp(2rem, 3.8vw, 2.9rem);
+}
+
+.secNo {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
+}
+
+.service {
+  display: grid;
+  grid-template-columns: clamp(8rem, 13vw, 11rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+  padding: clamp(2rem, 4vw, 2.8rem) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.serviceArt {
+  display: flex;
+  justify-content: center;
+  padding: 0.4rem 0;
+}
+
+.serviceMark {
+  height: clamp(9rem, 14vw, 12rem);
+  width: auto;
+}
+
+.serviceText h3 {
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+}
+
+.serviceText > p {
+  margin-top: 0.7rem;
+  max-width: 36rem;
+  color: var(--soft);
+}
+
+.serviceFacts {
+  margin: 1.3rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem 1.2rem;
+}
+
+.serviceFacts div {
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--green);
+}
+
+.serviceFacts dt {
+  font-size: 0.78rem;
+  color: var(--soft);
+}
+
+.serviceFacts dd {
+  margin: 0.2rem 0 0;
+  font-weight: 700;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+/* Delivery: the three engravings packed together, as in the bag. */
+.bag {
+  position: relative;
+  height: clamp(9rem, 14vw, 12rem);
+}
+
+/* A pale tile of the lattice behind the three engravings. */
+.bagMat {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  width: 104%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.bagBottle,
+.bagLeaf,
+.bagMortar {
+  position: absolute;
+  bottom: 0;
+  width: auto;
+}
+
+.bagLeaf {
+  left: 0;
+  height: 92%;
+}
+
+.bagBottle {
+  left: 30%;
+  height: 72%;
+}
+
+.bagMortar {
+  right: -6%;
+  height: 58%;
+}
+
+/* The refill form, held in view beside the services. */
+.refill {
+  position: sticky;
+  top: calc(var(--bar-h) + 1.5rem);
+  margin-top: 0.4rem;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgb(0 0 0 / 0.08);
+}
+
+.refillTop {
+  position: relative;
+  height: 3.2rem;
+  overflow: hidden;
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.4rem, 2.5vw, 1.9rem);
+}
+
+.formTitle {
+  font-size: clamp(1.7rem, 2.6vw, 2.1rem);
+}
+
+.formNote {
+  margin-top: -0.4rem !important;
+  font-size: 0.93rem;
+  color: var(--soft);
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.field label,
+.choice legend {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select {
+  font: inherit;
+  color: var(--ink);
+  padding: 0.65rem 0.75rem;
+  background: var(--paper);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
+.field input::placeholder {
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
+}
+
+.choice {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.choice legend {
+  margin-bottom: 0.4rem;
+}
+
+.choice label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.choice label:has(input:checked) {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--pale) 70%, transparent);
+}
+
+.choice input {
+  accent-color: var(--green);
+  margin: 0;
+}
+
+.submit {
+  font: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.9rem 1.2rem;
+  background: var(--green);
+  color: var(--paper);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.submit:hover {
+  background: var(--ink);
+}
+
+.formFine {
+  font-size: 0.8rem;
+  color: var(--soft);
+  text-align: center;
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  column-gap: clamp(0.75rem, 2vw, 1.5rem);
+  align-items: baseline;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  font-size: clamp(2.1rem, 4.4vw, 3.3rem);
+}
+
+/* The vaccines heading, with the shop's cross beside it, tiled. */
+.vaccinesTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.crossSign {
+  position: relative;
+  flex: none;
+  width: clamp(5.5rem, 8vw, 7rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  clip-path: polygon(33% 0, 67% 0, 67% 33%, 100% 33%, 100% 67%, 67% 67%, 67% 100%, 33% 100%, 33% 67%, 0 67%, 0 33%, 33% 33%);
+}
+
+.secNote {
+  grid-column: 2;
+  margin-top: 0.7rem !important;
+  max-width: 40rem;
+  color: var(--soft);
+}
+
+/* --------------------------------------------------------------- vaccines */
+
+.vaccines {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vaccines thead th {
+  padding: 0 1rem 0.8rem 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--soft);
+  border-bottom: 2px solid var(--ink);
+}
+
+.vaccines thead th:last-child {
+  text-align: right;
+  padding-right: 0;
+}
+
+.vaccines tbody th,
+.vaccines td {
+  padding: 1rem 1rem 1rem 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+
+.vaccines tbody th {
+  text-align: left;
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.vaccines td {
+  color: var(--soft);
+}
+
+.vaccines .price {
+  text-align: right;
+  padding-right: 0;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.walk,
+.book {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.walk {
+  background: var(--green);
+  color: var(--paper);
+}
+
+.book {
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(90px, 10vw, 130px);
+  margin-top: var(--air);
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------- hours */
+
+.week {
+  --label-w: 7.5rem;
+}
+
+.ticks {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) 0;
+  margin-left: calc(var(--label-w) + 1rem);
+  padding-bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.ticks span {
+  justify-self: start;
+  white-space: nowrap;
+  translate: -50% 0;
+}
+
+.ticks span:first-child {
+  translate: 0 0;
+}
+
+.ticks span:last-child {
+  translate: -100% 0;
+}
+
+.days {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.dayRow {
+  display: grid;
+  grid-template-columns: var(--label-w) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.dayName,
+.dayShort {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.2rem;
+}
+
+.dayShort {
+  display: none;
+}
+
+.track {
+  position: relative;
+  height: 2.6rem;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ink) 14%, transparent) 0 1px,
+      transparent 1px calc(100% / 7)
+    ),
+    var(--pale);
+}
+
+.open {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 0.9rem;
+  background: var(--green);
+  border-radius: 6px;
+}
+
+.openLabel {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--paper);
+  white-space: nowrap;
+}
+
+.lunch {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(45deg, var(--paper) 0 3px, var(--ink) 3px 5px);
+}
+
+.weekKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 1.2rem 0 0 calc(var(--label-w) + 1rem);
+  font-size: 0.85rem;
+  color: var(--soft);
+}
+
+.keyOpen,
+.keyLunch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.keyOpen::before,
+.keyLunch::before {
+  content: '';
+  width: 1.4rem;
+  height: 0.8rem;
+  border-radius: 3px;
+  background: var(--green);
+}
+
+.keyLunch::before {
+  background: repeating-linear-gradient(45deg, var(--paper) 0 3px, var(--ink) 3px 5px);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.contact {
+  margin: 0;
+  display: grid;
+  gap: 0;
+}
+
+.contact div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.contact div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.contact dt {
+  font-size: 0.85rem;
+  color: var(--soft);
+}
+
+.contact dd {
+  margin: 0;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.contact dd a {
+  border-bottom: 1.5px solid var(--green);
+}
+
+.switch {
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: var(--pale);
+  border-radius: 12px;
+}
+
+.switchHead {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.switchArt {
+  height: 5.5rem;
+  width: auto;
+  flex: none;
+}
+
+.switchHead h3 {
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+}
+
+.steps {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  column-gap: 0.9rem;
+}
+
+.stepNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.steps h4 {
+  font-size: 1.2rem;
+  padding-top: 0.25rem;
+}
+
+.steps p {
+  margin-top: 0.2rem;
+  font-size: 0.94rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  position: relative;
+  margin-top: var(--air);
+  background: var(--ink);
+  color: var(--paper);
+  padding: calc(clamp(2rem, 4vw, 3rem) + 5.5rem) var(--gut) 2rem;
+}
+
+/* Chamomile along the top of the footer, the band's flowers at night. */
+.footBlooms {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5.5rem;
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.footBrand {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+}
+
+.footArt {
+  height: 6rem;
+  width: auto;
+  flex: none;
+}
+
+.footName {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.footTag {
+  margin-top: 0.5rem !important;
+  max-width: 22rem;
+  color: color-mix(in srgb, var(--paper) 76%, transparent);
+}
+
+.footHead {
+  font-family: 'Public Sans', Arial, sans-serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase;
+  color: var(--pale);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.footLinks a:hover {
+  text-decoration: underline;
+}
+
+.footAddr {
+  margin-top: 0.9rem !important;
+  line-height: 1.8;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 20%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .refill {
+    position: static;
+    max-width: 36rem;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sign {
+    order: -1;
+    width: min(100%, 22rem);
+  }
+
+  .footGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footBrand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .barCta {
+    display: none;
+  }
+
+  .sign {
+    width: min(80%, 17rem);
+  }
+
+  .service {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .serviceArt {
+    justify-content: flex-start;
+  }
+
+  .serviceMark,
+  .bag {
+    height: 8rem;
+  }
+
+  .bag {
+    width: 10rem;
+  }
+
+  .serviceFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .serviceFacts div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .serviceFacts dd {
+    margin: 0;
+    text-align: right;
+  }
+
+  .fieldRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .crossSign {
+    width: 4.5rem;
+  }
+
+  .secNote {
+    grid-column: 1;
+  }
+
+  /* The vaccine table restacks: one block per vaccine. */
+  .vaccines thead {
+    display: none;
+  }
+
+  .vaccines,
+  .vaccines tbody,
+  .vaccines tr,
+  .vaccines th,
+  .vaccines td {
+    display: block;
+    width: auto;
+  }
+
+  .vaccines tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.3rem 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .vaccines tbody th,
+  .vaccines td {
+    padding: 0;
+    border: 0;
+  }
+
+  .vaccines td:nth-of-type(1) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .vaccines td:nth-of-type(2) {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .vaccines .price {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .week {
+    --label-w: 3rem;
+  }
+
+  .dayName {
+    display: none;
+  }
+
+  .dayShort {
+    display: inline;
+    font-size: 1.05rem;
+  }
+
+  .ticks span:nth-child(even) {
+    visibility: hidden;
+  }
+
+  .open {
+    padding: 0 0.5rem;
+  }
+
+  .openLabel {
+    font-size: 0.75rem;
+  }
+
+  .contact div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footBrand {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine,
+  .submit {
+    transition: none;
+  }
+}

@@ -55,10 +55,15 @@
 }
 
 .stepBody {
-  max-width: 400px;
   margin: 0;
   font: 400 16px / 1.6 var(--h-sans);
   color: var(--h-ink-muted);
+}
+
+/* Only the last step's copy is held to a measure; the first two run the
+   width of their column, as the artboard sets them. */
+.row:last-child .stepBody {
+  max-width: 400px;
 }
 
 /* -- The panels ------------------------------------------------------------ */

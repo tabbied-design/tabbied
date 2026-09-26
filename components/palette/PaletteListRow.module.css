@@ -8,7 +8,7 @@
   box-sizing: border-box;
   width: 100%;
   margin: 0 0 2px;
-  padding: 0 12px;
+  padding: 0 7px 0 12px;
   font-family: var(--font-sans-serif);
   color: #0e0e13;
   background: transparent;
@@ -25,13 +25,15 @@
   background-color: #0e0e13;
 }
 
-/* The apply button: name and inks, the height of the pill. */
+/* The apply button: name and inks, the height of the pill, which is the
+   22px mark's with 7px above and below it. */
 .main {
   display: flex;
   flex: 1;
   gap: 8px;
   align-items: center;
   min-width: 0;
+  min-height: 36px;
   padding: 7px 0;
   font: inherit;
   color: inherit;
@@ -63,6 +65,7 @@
   min-width: 0;
   overflow: hidden;
   font-size: 13px;
+  line-height: normal;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

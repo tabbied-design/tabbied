@@ -1,8 +1,10 @@
 /* The customizer's bar. Dark, so the chrome reads apart from the site on the
    canvas, and sticky, so Download stays in reach however far down the canvas
    a person has scrolled. One height whatever it holds, never padding round
-   the tallest child: the workspace pins its rail under the bar and sizes the
-   phone's shell against it as 63px (SiteWorkspace.module.css). */
+   the tallest child: the workspace pins its rail and stage under the bar as
+   71px, and sizes the narrow shell against it as 75px
+   (SiteWorkspace.module.css). Those are the design's own bars: 14px (16px
+   below 1024px) either side of the 42px account pill, and the rule. */
 
 .bar {
   position: sticky;
@@ -13,7 +15,7 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  min-height: 63px;
+  min-height: 71px;
   padding: 0 32px;
   background-color: #14141a;
   border-bottom: 1px solid oklch(1 0 0 / 0.1);
@@ -99,9 +101,10 @@
   flex: none;
 }
 
-.chevron {
+.caret {
   flex: none;
-  opacity: 0.55;
+  font-size: 9px;
+  opacity: 0.6;
 }
 
 /* ---- Menus ------------------------------------------------------------- */
@@ -119,16 +122,10 @@
     'Helvetica Neue', Helvetica, Arial, sans-serif;
   --s-mono: var(--font-plex-mono, ui-monospace), ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Fixed, like the preview's: a range lets the tracked-out eyebrows wrap at
-     whatever width the items happen to ask for. */
-  width: 290px;
-  padding: 7px;
   font-family: var(--s-sans);
   color: #0e0e13;
   background-color: #fff;
-  border-radius: 14px;
   outline: none;
-  box-shadow: 0 16px 40px oklch(0 0 0 / 0.18);
   transform-origin: var(--transform-origin);
   transition: opacity 120ms ease, transform 120ms ease;
 }
@@ -139,71 +136,180 @@
   transform: scale(0.97);
 }
 
-.menuHead {
-  padding: 9px 12px 7px;
-  font: 400 10.5px var(--s-mono);
-  color: oklch(0.55 0.01 260);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+/* -- Download: the customized version over the original, in two panes. -- */
+
+.downloadMenu {
+  width: 310px;
+  padding: 0 0 7px;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px oklch(0 0 0 / 0.18);
+}
+
+.dlCustom {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid oklch(0 0 0 / 0.08);
+}
+
+.dlOriginal {
+  padding: 14px 18px 6px;
+}
+
+.dlHead {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.dlTitle {
+  font: 600 14px var(--s-sans);
+  color: #0e0e13;
+}
+
+.dlOriginal .dlTitle {
+  margin-bottom: 4px;
+}
+
+.dlMeta {
+  font: 400 11px var(--s-mono);
+  color: oklch(0.5 0.01 260);
+  white-space: nowrap;
+}
+
+.dlSummary {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.dlSwatches {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+
+.dlSwatches span {
+  display: block;
+  width: 12px;
+  height: 22px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+}
+
+.dlNote,
+.dlSub {
+  font: 400 12.5px / 1.45 var(--s-sans);
+  color: oklch(0.5 0.01 260);
+}
+
+.dlSub {
+  margin-bottom: 12px;
+}
+
+.dlActions {
+  display: flex;
+  gap: 8px;
+}
+
+.dlButton {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 10px;
+  font: 500 13px var(--s-sans);
+  text-decoration: none;
+  border: none;
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+}
+
+.dlPrimary,
+.dlPrimary:hover {
+  color: #fff;
+  background-color: #0e0e13;
+}
+
+.dlPrimary[data-highlighted] {
+  color: #fff;
+  background-color: #25252e;
+}
+
+.dlSecondary,
+.dlSecondary:hover {
+  color: #0e0e13;
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.18);
+}
+
+.dlSecondary[data-highlighted] {
+  color: #0e0e13;
+  background-color: oklch(0 0 0 / 0.04);
+}
+
+.dlFoot {
+  margin: 14px 0 0;
+  padding-top: 10px;
+  font: 400 11.5px / 1.5 var(--s-sans);
+  color: oklch(0.52 0.01 260);
+  border-top: 1px solid oklch(0 0 0 / 0.08);
+}
+
+/* -- The person's menu ---------------------------------------------------- */
+
+/* The design's 230px, which it measures inside its padding. */
+.accountMenu {
+  min-width: 242px;
+  padding: 6px;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px oklch(0 0 0 / 0.16);
 }
 
 .menuEmail {
-  padding: 10px 12px;
+  padding: 10px 12px 8px;
   overflow: hidden;
-  font-size: 13px;
-  color: oklch(0.45 0.01 260);
+  font: 400 13px var(--s-sans);
+  color: oklch(0.5 0.01 260);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .menuRule {
   height: 1px;
-  margin: 4px 0;
+  margin: 5px 6px;
   background-color: oklch(0 0 0 / 0.08);
 }
 
-.option,
 .menuItem {
   display: block;
   width: 100%;
-  color: #0e0e13;
+  padding: 9px 12px;
+  font: 400 13px var(--s-sans);
+  color: oklch(0.46 0.01 260);
   text-align: left;
   text-decoration: none;
   background: none;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   outline: none;
   cursor: pointer;
 }
 
-.option {
-  padding: 11px 12px;
-}
-
-.menuItem {
-  padding: 9px 12px;
-  font: 400 13px var(--s-sans);
-  border-radius: 8px;
-}
-
-.option[data-highlighted],
-.option:hover,
 .menuItem[data-highlighted],
 .menuItem:hover {
-  color: #0e0e13;
+  color: oklch(0.46 0.01 260);
   background-color: oklch(0 0 0 / 0.05);
 }
 
-.optionTitle {
-  display: block;
-  margin-bottom: 3px;
-  font: 600 14px var(--s-sans);
-}
-
-.optionNote {
-  display: block;
-  font: 400 13px / 1.35 var(--s-sans);
-  color: oklch(0.5 0.01 260);
+.menuItemOn,
+.menuItemOn[data-highlighted],
+.menuItemOn:hover {
+  font-weight: 600;
+  color: #0e0e13;
 }
 
 /* ---- The person ---------------------------------------------------------- */
@@ -282,16 +388,18 @@
 
 @media (max-width: 1024px) {
   .bar {
+    min-height: 75px;
     padding: 0 20px;
-  }
-
-  .backLabel {
-    display: none;
   }
 }
 
-/* On a phone Download is a circle with the icon, as the design draws it. */
+/* On a phone Download is a circle with the icon, as the design draws it, and
+   the way back is the circle alone. */
 @media (max-width: 768px) {
+  .backLabel {
+    display: none;
+  }
+
   .download {
     width: 34px;
     height: 34px;
@@ -304,7 +412,7 @@
   }
 
   .downloadLabel,
-  .chevron {
+  .caret {
     display: none;
   }
 }

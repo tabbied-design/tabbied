@@ -1,0 +1,1105 @@
+/* ==========================================================================
+   OFFSHORE SURF CO. - surf shop and surf school, Breakwater Road
+   The quiver is the hero: seven boards standing in a row on a deep-water
+   panel, each drawn to scale against a height chart and cut out of a
+   Tabbied pattern in the board's own colors, with its numbers under its
+   tail. Around it, a sea-glass page: foam ground, navy type, teal and a
+   sunset orange, a friendly grotesque and a mono for the numbers.
+   ========================================================================== */
+
+.page {
+  --foam: #f1f5f4;
+  --deep: #0e2230;
+  --teal: #1ba3b8;
+  --sun: #f4a259;
+  --gray: #86979e;
+  --pale: #dde9ea;
+  --gut: clamp(1rem, 3.6vw, 3rem);
+  --max: 84rem;
+  --air: clamp(4.5rem, 9vw, 8rem);
+  --rack: clamp(19rem, 34vw, 30rem);
+  --mono: 'DM Mono', 'SFMono-Regular', Menlo, monospace;
+
+  font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  background: var(--foam);
+  color: var(--deep);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.8rem var(--gut);
+  background: color-mix(in srgb, var(--foam) 93%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--deep) 12%, transparent);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* A low sun over two lines of swell. */
+.markSun {
+  position: relative;
+  width: 1.9rem;
+  height: 1.3rem;
+  overflow: hidden;
+  border-radius: 0.15rem;
+  background:
+    linear-gradient(var(--teal), var(--teal)) 0 70% / 100% 2px no-repeat,
+    linear-gradient(var(--teal), var(--teal)) 0 90% / 100% 2px no-repeat;
+}
+
+.markSun::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 38%;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--sun);
+  transform: translate(-50%, 50%);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-weight: 600;
+  font-size: 0.98rem;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-color: var(--sun);
+}
+
+.barReport {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  color: var(--foam);
+  background: var(--deep);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--foam);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.heroHead {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) clamp(1.8rem, 3vw, 2.6rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+}
+
+.kicker,
+.secKick {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, var(--deep) 78%, transparent);
+}
+
+.title {
+  margin-top: 0.9rem;
+  font-size: clamp(2.8rem, 6.4vw, 5.6rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--teal);
+}
+
+.lede {
+  margin-top: 1.1rem;
+  max-width: 36rem;
+  font-size: 1.08rem;
+  color: color-mix(in srgb, var(--deep) 86%, transparent);
+}
+
+.report {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  border-radius: 10px;
+  color: var(--foam);
+  background: var(--deep);
+}
+
+.report div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--foam) 16%, transparent);
+}
+
+.report .reportHead {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.reportHead dt {
+  color: var(--sun);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.report dd {
+  margin: 0;
+  text-align: right;
+}
+
+.report dt {
+  color: color-mix(in srgb, var(--foam) 76%, transparent);
+}
+
+/* The rack: deep water, a foot-by-foot height chart, the swell at the
+   bottom, and the boards standing on it. */
+.rackWrap {
+  position: relative;
+  color: var(--foam);
+  background: var(--deep);
+}
+
+.rack {
+  position: relative;
+  isolation: isolate;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3rem) var(--gut) 2rem calc(var(--gut) + 3.2rem);
+}
+
+.rack::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: calc(var(--gut) + 3.2rem);
+  right: var(--gut);
+  top: clamp(2rem, 4vw, 3rem);
+  height: var(--rack);
+  background: repeating-linear-gradient(
+    to top,
+    color-mix(in srgb, var(--foam) 16%, transparent) 0 1px,
+    transparent 1px calc(var(--rack) / 10)
+  );
+  border-top: 1px solid color-mix(in srgb, var(--foam) 16%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--foam) 50%, transparent);
+}
+
+.rackSea {
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  right: 0;
+  top: calc(clamp(2rem, 4vw, 3rem) + var(--rack) * 0.72);
+  height: calc(var(--rack) * 0.28);
+  overflow: hidden;
+  opacity: 0.3;
+}
+
+.scale {
+  list-style: none;
+  position: absolute;
+  left: var(--gut);
+  top: clamp(2rem, 4vw, 3rem);
+  width: 2.8rem;
+  height: calc(var(--rack) * 0.6);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: color-mix(in srgb, var(--foam) 70%, transparent);
+}
+
+.scale li {
+  flex: 1;
+  line-height: 1;
+  transform: translateY(-0.5em);
+}
+
+.boards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.4vw, 1.4rem);
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.boardStand {
+  height: var(--rack);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.boardPic {
+  height: calc(var(--rack) * var(--len) / 120);
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--foam) 82%, transparent);
+}
+
+.specKind {
+  align-self: flex-start;
+  margin-bottom: 0.35rem;
+  padding: 0.05rem 0.45rem;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+  color: var(--deep);
+  background: var(--sun);
+}
+
+.board:nth-child(n + 3) .specKind {
+  background: var(--teal);
+}
+
+.board:nth-child(n + 5) .specKind {
+  background: var(--pale);
+}
+
+.specName {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.12rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--foam);
+}
+
+.specLen {
+  margin-bottom: 0.3rem;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--sun);
+}
+
+.specPrice {
+  margin-top: 0.35rem;
+  font-size: 0.86rem;
+  color: var(--foam);
+}
+
+.specRent {
+  color: var(--teal);
+}
+
+.swipe {
+  display: none;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0.8rem var(--gut) 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--deep) 74%, transparent);
+}
+
+.rackNote {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.1rem var(--gut) 0;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--deep) 82%, transparent);
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.secHead {
+  display: grid;
+  gap: 0.7rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.secNote {
+  color: color-mix(in srgb, var(--deep) 84%, transparent);
+}
+
+/* ---------------------------------------------------------------- lessons */
+
+.lessons {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.lessonGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.lessonTypes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.lessonType {
+  padding: 1rem 1.2rem 1.1rem;
+  border-radius: 10px;
+  background: var(--pale);
+  border-left: 8px solid var(--teal);
+}
+
+.lessonType.private {
+  border-left-color: var(--deep);
+}
+
+.lessonType.kids {
+  border-left-color: var(--sun);
+}
+
+.lessonType.coach {
+  border-left-color: var(--gray);
+}
+
+.lessonTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.lessonTop h3 {
+  font-size: 1.4rem;
+}
+
+.lessonTop strong {
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.lessonTime {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--deep) 76%, transparent);
+}
+
+.lessonType p {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--deep) 88%, transparent);
+}
+
+.week {
+  --week-pad: clamp(1.2rem, 2.4vw, 1.8rem);
+  padding: var(--week-pad);
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--deep) 18%, transparent);
+  overflow: hidden;
+}
+
+/* The rack's swell again, as the waterline along the foot of the week. */
+.weekSea {
+  position: relative;
+  height: 3rem;
+  margin: 1.2rem calc(-1 * var(--week-pad)) calc(-1 * var(--week-pad));
+  overflow: hidden;
+  opacity: 0.3;
+}
+
+.weekHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.weekHead h3 {
+  font-size: 1.5rem;
+}
+
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-size: 0.85rem;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+}
+
+.days {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.dayCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.dayName {
+  padding-bottom: 0.35rem;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 2px solid var(--deep);
+}
+
+.slots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.slot {
+  padding: 0.7rem 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.slot.group,
+.dot.group {
+  color: var(--deep);
+  background: var(--teal);
+}
+
+.slot.private,
+.dot.private {
+  color: var(--foam);
+  background: var(--deep);
+}
+
+.slot.kids,
+.dot.kids {
+  color: var(--deep);
+  background: var(--sun);
+}
+
+.slot.coach,
+.dot.coach {
+  color: var(--deep);
+  background: var(--pale);
+  box-shadow: inset 0 0 0 2px var(--gray);
+}
+
+.weekNote {
+  margin-top: 1.1rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--deep) 80%, transparent);
+}
+
+/* ------------------------------------------------------------------ tides */
+
+.tides {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--air);
+  background: var(--pale);
+  overflow: hidden;
+}
+
+/* Tide rings rising from the top right corner, clear of the heading. */
+.tideRings {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  width: min(46rem, 55%);
+  height: min(24rem, 60%);
+  opacity: 0.45;
+  mask-image: radial-gradient(farthest-side at 100% 0, var(--deep) 30%, transparent);
+}
+
+.tidesInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.tideHead,
+.tideRow {
+  display: grid;
+  grid-template-columns: minmax(6rem, 0.7fr) repeat(3, minmax(0, 1fr)) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--deep) 16%, transparent);
+}
+
+.tideHead {
+  padding-top: 0;
+  border-bottom: 2px solid var(--deep);
+}
+
+.tideHead span {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--deep) 76%, transparent);
+}
+
+.tideDay strong {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.tideDay span {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--deep) 76%, transparent);
+}
+
+.tideCell small {
+  display: none;
+}
+
+.tideCell span {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.tideHigh span {
+  font-weight: 500;
+  color: var(--deep);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--teal) 30%, var(--pale));
+}
+
+.tideBest span {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-weight: 500;
+  border-radius: 999px;
+  color: var(--deep);
+  background: var(--sun);
+}
+
+/* ---------------------------------------------------------------- rentals */
+
+.rentals {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.rentHead,
+.rentRow {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 0.8fr));
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--deep) 14%, transparent);
+}
+
+.rentHead {
+  padding-top: 0;
+  border-bottom: 2px solid var(--deep);
+}
+
+.rentHead span {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--deep) 76%, transparent);
+}
+
+.rentItem strong {
+  display: block;
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.rentItem span {
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--deep) 78%, transparent);
+}
+
+.rentCell small {
+  display: none;
+}
+
+.rentCell span {
+  font-family: var(--mono);
+  font-size: 1rem;
+}
+
+.fins {
+  position: relative;
+  padding: 1.5rem 1.5rem 1.6rem;
+  border-radius: 16px;
+  color: var(--foam);
+  background: var(--deep);
+}
+
+.finArt {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0 1.2rem;
+}
+
+.finPic {
+  width: min(78%, 17rem);
+}
+
+.fins h3 {
+  font-size: 1.6rem;
+}
+
+.finList {
+  margin: 0.9rem 0 0;
+}
+
+.finList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--foam) 16%, transparent);
+}
+
+.finList dt {
+  color: color-mix(in srgb, var(--foam) 84%, transparent);
+}
+
+.finList dd {
+  margin: 0;
+  font-family: var(--mono);
+  color: var(--sun);
+}
+
+.finNote {
+  margin-top: 0.9rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--foam) 78%, transparent);
+}
+
+/* ------------------------------------------------------------------ visit */
+
+.visit {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.visitCard {
+  padding: 1.4rem;
+  border-radius: 14px;
+  background: var(--pale);
+}
+
+.visitCard h3 {
+  font-size: 1.5rem;
+}
+
+.hours {
+  margin: 0.8rem 0 1.2rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--deep) 16%, transparent);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.addr {
+  margin-top: 0.5rem;
+}
+
+.addr a {
+  border-bottom: 2px solid var(--teal);
+}
+
+.faq {
+  border-top: 2px solid var(--deep);
+}
+
+.faq details {
+  border-bottom: 1px solid color-mix(in srgb, var(--deep) 16%, transparent);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.05rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  border-radius: 50%;
+  color: var(--deep);
+  background: var(--sun);
+}
+
+.faq details[open] summary::after {
+  content: '\2212';
+}
+
+.faq details p {
+  padding-bottom: 1.1rem;
+  max-width: 40rem;
+  color: color-mix(in srgb, var(--deep) 86%, transparent);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  --foot-top: clamp(2.5rem, 5vw, 4rem);
+  padding: var(--foot-top) var(--gut) 1.8rem;
+  color: var(--foam);
+  background: var(--deep);
+}
+
+/* A line of swell along the top edge of the footer. */
+.footSea {
+  position: relative;
+  height: 3rem;
+  margin: calc(-1 * var(--foot-top)) calc(-1 * var(--gut)) var(--foot-top);
+  overflow: hidden;
+  opacity: 0.85;
+  mask-image: linear-gradient(180deg, var(--deep) 25%, transparent);
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem 2rem;
+}
+
+.footName {
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.footTag {
+  max-width: 24rem;
+  color: color-mix(in srgb, var(--foam) 80%, transparent);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2rem auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--foam) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--foam) 74%, transparent);
+}
+
+.credit a {
+  border-bottom: 1px solid var(--sun);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .rack {
+    overflow-x: auto;
+  }
+
+  .swipe {
+    display: block;
+  }
+
+  .boards {
+    grid-template-columns: repeat(7, minmax(8.5rem, 1fr));
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .rack::before {
+    right: auto;
+    width: calc(7 * 8.5rem + 6 * 0.9rem);
+  }
+
+  .lessonGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rentals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.7rem;
+  }
+
+  .heroHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tideHead {
+    display: none;
+  }
+
+  .tideRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 0.7rem;
+  }
+
+  .tideDay {
+    grid-column: 1 / -1;
+  }
+
+  .tideCell small {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--deep) 72%, transparent);
+  }
+
+  .tideBest,
+  .tideCell:last-child {
+    grid-column: span 3;
+  }
+
+  .tideCell:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .tideBest {
+    grid-column: 1 / -1;
+  }
+
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barReport {
+    display: none;
+  }
+
+  .tideRings {
+    width: 50%;
+    height: 7rem;
+  }
+
+  .rack {
+    padding-left: calc(var(--gut) + 2.4rem);
+  }
+
+  .rack::before {
+    left: calc(var(--gut) + 2.4rem);
+  }
+
+  .days {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    row-gap: 1rem;
+  }
+
+  .tideRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tideCell:nth-child(4) {
+    grid-column: 1 / -1;
+  }
+
+  .rentHead {
+    display: none;
+  }
+
+  .rentRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 0.4rem;
+  }
+
+  .rentItem {
+    grid-column: 1 / -1;
+  }
+
+  .rentCell small {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--deep) 72%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a {
+    transition: none;
+  }
+}

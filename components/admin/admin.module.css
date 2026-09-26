@@ -49,10 +49,12 @@
   border-right: 1px solid var(--a-rule);
 }
 
+/* The design's wordmark sits in a 22px line box, so the row is 54px tall
+   where the lockup alone would make it 52. */
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
+  min-height: 54px;
   padding: 4px 8px 28px;
   color: var(--a-ink);
   line-height: 0;
@@ -180,21 +182,20 @@
 
 .title {
   margin: 0 0 10px;
-  font: 700 40px / 1.1 var(--a-display);
+  font: 700 40px var(--a-display);
   letter-spacing: -0.02em;
 }
 
 .lede {
   max-width: 640px;
   margin: 0 0 34px;
-  font: 400 16px / 1.5 var(--a-sans);
+  font: 400 16px var(--a-sans);
   color: var(--a-muted);
 }
 
 .h2 {
   margin: 0;
   font: 700 24px var(--a-display);
-  letter-spacing: -0.01em;
 }
 
 .h3 {
@@ -353,7 +354,7 @@
 }
 
 .search input {
-  width: 150px;
+  width: 134px;
   font: 400 14px var(--a-sans);
   color: var(--a-ink);
   background: none;
@@ -389,8 +390,6 @@
 .statValue {
   margin: 16px 0 14px;
   font: 700 38px / 1 var(--a-display);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
 }
 
 .statNote {
@@ -532,6 +531,11 @@
   color: var(--a-ink);
 }
 
+/* Off the text's line box, so the header row stays as tall as its words. */
+.sortHead svg {
+  display: block;
+}
+
 .row {
   display: grid;
   gap: 16px;
@@ -540,12 +544,18 @@
   border-top: 1px solid oklch(0 0 0 / 0.07);
 }
 
-/* Seven columns need about 960px; narrower than that the panel scrolls
-   sideways rather than crushing the person's name to nothing, and under
-   1000px the rows stack instead (below). */
+/* The rules run between rows, not under the header. */
+.tableHead + .row {
+  border-top: none;
+}
+
+/* Seven columns need about 1,080px, with room for "Templates chosen" on one
+   line as the design sets it; narrower than that the panel scrolls sideways
+   rather than crushing the person's name to nothing, and at 1024px and under
+   the rows stack instead (below). */
 .userCols {
-  grid-template-columns: minmax(200px, 2fr) 90px 120px 70px 100px 110px minmax(170px, auto);
-  min-width: 960px;
+  grid-template-columns: minmax(200px, 2fr) 90px 120px 140px 100px 110px minmax(170px, auto);
+  min-width: 1080px;
 }
 
 .person {
@@ -637,9 +647,15 @@
   color: var(--a-dim);
 }
 
-/* Every template the person may choose is chosen: the people who write in. */
+/* Every template the person may choose is chosen: the people who write in.
+   The dot stays, transparent, so the words line up with "Active". */
+.statusFull {
+  font-weight: 600;
+  color: oklch(0.55 0.19 25);
+}
+
 .statusFull::before {
-  background-color: oklch(0.78 0.14 75);
+  background-color: transparent;
 }
 
 .plainList {
@@ -655,7 +671,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 0 0 22px;
+  margin: 0 0 18px;
 }
 
 .tab {
@@ -676,38 +692,81 @@
 
 .requests {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .request {
-  padding: 22px 24px;
+  padding: 22px 26px;
   background: #fff;
-  border: 1px solid oklch(0 0 0 / 0.1);
+  border: 1px solid var(--a-line);
   border-radius: 14px;
 }
 
+/* The actions keep to the top edge of the card, beside the name. */
 .requestHead {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
+  gap: 20px;
+  align-items: flex-start;
   justify-content: space-between;
 }
 
+.requestAvatar {
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+}
+
+.requestName {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+  margin: 0;
+  font: 600 16px var(--a-sans);
+  overflow-wrap: anywhere;
+}
+
+/* Three lines under the name: the address and dates, then (for a later
+   round) what they asked for in ink, then their answers. */
 .requestMeta {
-  margin: 3px 0 0;
+  margin: 4px 0 0;
   font: 400 13px var(--a-sans);
   color: var(--a-dim);
 }
 
+.requestName + .requestMeta {
+  margin-top: 0;
+}
+
+.requestAsk {
+  color: var(--a-ink);
+}
+
+.requestAnswers {
+  color: oklch(0.4 0.01 260);
+}
+
+.requestMeta a,
+.requestMeta a:hover {
+  color: inherit;
+}
+
+.requestMeta a:hover,
+.metaLink {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
 .roundBadge {
-  display: inline-block;
-  margin-left: 6px;
   padding: 3px 9px;
   font: 500 11.5px var(--a-sans);
   color: oklch(0.45 0.01 260);
   white-space: nowrap;
-  vertical-align: 2px;
   background: oklch(0 0 0 / 0.05);
   border-radius: 999px;
 }
@@ -721,9 +780,9 @@
   margin: 16px 0 0;
   padding: 14px 16px;
   font: 400 14.5px / 1.6 var(--a-sans);
-  color: var(--a-ink);
+  color: oklch(0.3 0.01 260);
   white-space: pre-wrap;
-  background: oklch(0 0 0 / 0.028);
+  background: oklch(0 0 0 / 0.03);
   border-radius: 10px;
 }
 
@@ -734,17 +793,38 @@
   align-items: center;
 }
 
+.decided {
+  gap: 14px;
+}
+
+.decline {
+  padding: 8px 16px;
+  font: 500 13.5px var(--a-sans);
+  color: oklch(0.4 0.01 260);
+  white-space: nowrap;
+  background: #fff;
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.decline:hover:enabled {
+  background: oklch(0 0 0 / 0.035);
+}
+
 .stepper {
   display: flex;
   align-items: center;
   overflow: hidden;
+  background: #fff;
   border: 1px solid oklch(0 0 0 / 0.14);
   border-radius: 999px;
 }
 
 .stepper button {
-  width: 32px;
+  width: 34px;
   height: 34px;
+  padding: 0;
   font: 400 16px var(--a-sans);
   color: var(--a-ink);
   background: #fff;
@@ -758,19 +838,30 @@
 }
 
 .stepper span {
-  min-width: 22px;
+  min-width: 28px;
   font: 600 14px var(--a-sans);
   text-align: center;
 }
 
 .grant {
   padding: 8px 16px;
-  font: 600 13.5px var(--a-sans);
+  font: 500 13.5px var(--a-sans);
   color: #fff;
+  white-space: nowrap;
   background: var(--a-ink);
-  border: none;
+  border: 1px solid var(--a-ink);
   border-radius: 999px;
   cursor: pointer;
+}
+
+.grant:hover:enabled {
+  background: #25252e;
+}
+
+.decline:disabled,
+.grant:disabled {
+  cursor: default;
+  opacity: 0.5;
 }
 
 .outcome {
@@ -787,9 +878,11 @@
 }
 
 .undo {
+  padding: 0;
   font: 400 13px var(--a-sans);
-  color: var(--a-dim);
+  color: var(--a-muted);
   text-decoration: underline;
+  text-underline-offset: 3px;
   background: none;
   border: none;
   cursor: pointer;
@@ -816,18 +909,22 @@
   margin-top: 20px;
 }
 
+/* One pill per page, so a long directory wraps them rather than running
+   off the edge. */
 .pages {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
 }
 
+/* 56 by 36: the design's 34px box with its padding and border outside it. */
 .page {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 34px;
-  height: 34px;
+  min-width: 56px;
+  height: 36px;
   padding: 0 10px;
   font: 500 14px var(--a-sans);
   color: var(--a-ink);
@@ -965,7 +1062,7 @@
 
 /* -- Narrow screens -------------------------------------------------------- */
 
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
   .shell {
     grid-template-columns: 1fr;
   }
@@ -983,11 +1080,11 @@
   }
 
   .sideFoot {
-    margin-top: 20px;
+    margin-top: 24px;
   }
 
   .topbar {
-    padding: 16px 24px;
+    padding: 16px 20px;
   }
 
   .main {
@@ -1015,6 +1112,12 @@
     justify-content: flex-start;
   }
 
+  /* The design's 56px pills put four pages and the arrows past a phone's
+     edge; narrower ones fit them. */
+  .page {
+    min-width: 40px;
+  }
+
   /* With the header row gone, each value says what it is. */
   .cell[data-label]::before {
     margin-right: 6px;
@@ -1027,16 +1130,6 @@
 
   .barLabel:nth-child(even) {
     visibility: hidden;
-  }
-}
-
-@media (max-width: 560px) {
-  .stats {
-    grid-template-columns: 1fr;
-  }
-
-  .title {
-    font-size: 32px;
   }
 }
 

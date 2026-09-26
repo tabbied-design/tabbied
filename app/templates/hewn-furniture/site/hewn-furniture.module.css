@@ -1,0 +1,1194 @@
+/* ==========================================================================
+   HEWN - furniture store and workshop, the Mill District
+   A printed catalog on screen: a cover with a contents list, then chapters
+   of product cards, each a photograph on a pale plate with its item number,
+   a small dimensions table and the materials. The photographs are drawn in
+   two of the page's own colors (a duotone by SVG filter), so the same chair
+   is shown twice, once per colorway. Instrument Serif for the display type,
+   Instrument Sans for everything else.
+   ========================================================================== */
+
+.page {
+  --paper: #f3efe8;
+  --ink: #201a16;
+  --walnut: #9a5b36;
+  --gray: #8e857b;
+  --pale: #e4dbcf;
+  --gut: clamp(1.25rem, 4vw, 3.5rem);
+  --max: 84rem;
+  --air: clamp(4.5rem, 10vw, 8.5rem);
+  --soft: color-mix(in srgb, var(--ink) 74%, var(--paper));
+  --rule: color-mix(in srgb, var(--ink) 16%, transparent);
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
+
+  font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--walnut);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  padding: 0.9rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  line-height: 1;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.edition {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+  padding-left: clamp(1rem, 2.5vw, 2rem);
+  border-left: 1px solid var(--rule);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: var(--soft);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--walnut);
+}
+
+.barCta {
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.barCta:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------------ cover */
+
+.cover {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.coverText {
+  display: flex;
+  flex-direction: column;
+  padding-top: clamp(0.5rem, 3vw, 2.5rem);
+}
+
+.kicker {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--walnut);
+}
+
+.coverTitle {
+  margin-top: 1.4rem;
+  font-size: clamp(3.2rem, 7.2vw, 6.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+}
+
+.coverTitle em {
+  font-style: italic;
+  color: var(--walnut);
+}
+
+.lede {
+  margin-top: 1.6rem;
+  max-width: 30rem;
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  color: var(--soft);
+}
+
+.coverActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.button:hover {
+  background: var(--walnut);
+}
+
+.textLink {
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+}
+
+.textLink:hover {
+  color: var(--walnut);
+}
+
+/* The contents, set like the inside cover of a printed catalog. */
+.contents {
+  list-style: none;
+  margin: auto 0 0;
+  padding: 2.5rem 0 0;
+}
+
+.contents li {
+  display: grid;
+  grid-template-columns: 2.4rem auto 1fr auto;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.contents li::after {
+  content: '';
+  grid-column: 3;
+  grid-row: 1;
+  align-self: center;
+  border-bottom: 1px dotted color-mix(in srgb, var(--ink) 35%, transparent);
+}
+
+.contentsNo {
+  font-size: 0.75rem;
+  color: var(--walnut);
+  font-variant-numeric: tabular-nums;
+}
+
+.contents a {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.contents a:hover {
+  color: var(--walnut);
+}
+
+.contentsPage {
+  grid-column: 4;
+  font-size: 0.8rem;
+  color: var(--soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Plate one: the chair on a pale plate, grain lines behind it. */
+.plate {
+  position: relative;
+  isolation: isolate;
+  margin: 0;
+  min-height: clamp(26rem, 46vw, 42rem);
+  background: var(--pale);
+  overflow: hidden;
+}
+
+.plateField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.8;
+}
+
+.plateNo {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.4rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.plate .coverChair {
+  position: absolute;
+  left: 50%;
+  bottom: 5.2rem;
+  width: min(68%, 34rem);
+  transform: translateX(-50%);
+  filter: drop-shadow(0 24px 22px rgb(0 0 0 / 0.16));
+}
+
+.plateCaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.4rem;
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+  font-size: 0.85rem;
+}
+
+.plateItem {
+  font-weight: 500;
+}
+
+.platePrice {
+  color: var(--walnut);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------- promises */
+
+.promises {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gut);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.promises li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-top: 1.1rem;
+  border-top: 2px solid var(--ink);
+}
+
+.promises strong {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.promises span {
+  font-size: 0.92rem;
+  color: var(--soft);
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'no no'
+    'title note';
+  gap: 1rem var(--gut);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secNo {
+  grid-area: no;
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--walnut);
+}
+
+.secHead h2 {
+  grid-area: title;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+}
+
+.secNote {
+  grid-area: note;
+  max-width: 34rem;
+  color: var(--soft);
+}
+
+/* ---------------------------------------------------------------- catalog
+   Each chapter is one row of three: the intro, then two product cards. */
+
+.catalog {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.chapter {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.8rem, 3vw, 2.4rem) 0 clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--ink);
+  scroll-margin-top: 4.5rem;
+}
+
+.chapterIntro {
+  position: sticky;
+  top: 5.5rem;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding-right: clamp(0rem, 2vw, 1.5rem);
+}
+
+.chapterNo {
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  line-height: 0.85;
+  color: var(--walnut);
+}
+
+.chapterIntro h3 {
+  font-size: clamp(2rem, 3.4vw, 2.8rem);
+}
+
+.chapterBody {
+  color: var(--soft);
+}
+
+.chapterAside {
+  margin-top: 0.6rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.88rem;
+  color: var(--soft);
+}
+
+.product {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* The plate a piece is photographed on: a seamless pale ground with a
+   soft floor shadow, the piece standing on its bottom edge. */
+.productPlate {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--pale);
+  overflow: hidden;
+}
+
+.productPlate::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 7%;
+  height: 7%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--ink) 22%, transparent), transparent);
+  z-index: 0;
+}
+
+.productNo {
+  position: absolute;
+  top: 0.9rem;
+  left: 1rem;
+  z-index: 2;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.productPlate .productPic {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 9.5%;
+  width: 78%;
+  transform: translateX(-50%);
+}
+
+.productPlate > [data-artwork='hewn-furniture-lamp'] {
+  width: auto;
+  height: 80%;
+}
+
+.productPlate > [data-artwork='hewn-furniture-sideboard'] {
+  width: 88%;
+  bottom: 10%;
+}
+
+.productHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+.productHead h4 {
+  font-size: 1.65rem;
+}
+
+.productPrice {
+  font-size: 1.05rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.productVariant {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+.dims {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  table-layout: fixed;
+}
+
+.dims caption {
+  text-align: left;
+  padding-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--walnut);
+}
+
+.dims th,
+.dims td {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--rule);
+  text-align: left;
+}
+
+.dims th {
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--soft);
+  background: color-mix(in srgb, var(--pale) 55%, transparent);
+}
+
+.specs {
+  margin: 0.9rem 0 0;
+}
+
+.specs div {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.38rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.87rem;
+}
+
+.specs dt {
+  color: var(--soft);
+}
+
+.specs dd {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------- materials */
+
+.materials {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  padding: var(--air) max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: var(--pale);
+}
+
+.materialsPic {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.materialsBoard {
+  width: 100%;
+  filter: drop-shadow(0 30px 24px rgb(0 0 0 / 0.14));
+}
+
+.materialsCaption {
+  font-size: 0.85rem;
+  color: var(--soft);
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+.materialsText h2 {
+  margin-top: 1rem;
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+}
+
+.materialsText .secNote {
+  margin-top: 1rem;
+}
+
+.materialList {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.8rem var(--gut);
+}
+
+.material {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  column-gap: 0.9rem;
+  row-gap: 0.35rem;
+}
+
+.chip {
+  grid-row: span 2;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.chip_walnut {
+  background: var(--walnut);
+}
+
+.chip_pale {
+  background: var(--paper);
+}
+
+.chip_ink {
+  background: var(--ink);
+}
+
+.chip_gray {
+  background: var(--gray);
+}
+
+.material h3 {
+  font-size: 1.45rem;
+  align-self: center;
+}
+
+.material p {
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+/* --------------------------------------------------------------- delivery */
+
+.deliveryGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.zones {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.zones caption {
+  text-align: left;
+  padding-bottom: 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--walnut);
+}
+
+.zones th,
+.zones td {
+  padding: 1rem 1rem 1rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.zones thead th {
+  padding-top: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soft);
+  border-bottom: 1px solid var(--ink);
+}
+
+.zones tbody th {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.zoneCost {
+  font-weight: 500;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.zones td:last-child {
+  color: var(--soft);
+}
+
+.terms {
+  margin: 0;
+  display: grid;
+  gap: 1.4rem;
+}
+
+.terms div {
+  padding: 1.2rem 1.3rem;
+  background: var(--pale);
+}
+
+.terms dt {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.terms dd {
+  margin: 0.4rem 0 0;
+  font-size: 0.92rem;
+  color: var(--soft);
+}
+
+/* --------------------------------------------------------------- workshop
+   The one dark page: the lamp in walnut and paper, as if it were lit. */
+
+.workshop {
+  margin-top: var(--air);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.workshopInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.workshopLamp {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  justify-content: center;
+}
+
+/* Rings round the lamp, like the light it throws on the workshop wall. */
+.lampHalo {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: clamp(17rem, 30vw, 26rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -12%);
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0.7;
+  -webkit-mask-image: radial-gradient(closest-side, var(--ink) 55%, transparent);
+  mask-image: radial-gradient(closest-side, var(--ink) 55%, transparent);
+}
+
+.lamp {
+  position: relative;
+  height: clamp(24rem, 44vw, 36rem);
+  width: auto;
+}
+
+.workshopText .secNo {
+  color: color-mix(in srgb, var(--walnut) 55%, var(--paper));
+}
+
+.workshopText h2 {
+  margin: 1rem 0 1.6rem;
+  font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+}
+
+.workshopText p {
+  max-width: 36rem;
+  margin-bottom: 1rem;
+  color: color-mix(in srgb, var(--paper) 82%, var(--ink));
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 2.4rem 0 0;
+  padding-top: 1.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
+}
+
+.facts dt {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.4vw, 2.8rem);
+  line-height: 1;
+}
+
+.facts dd {
+  margin: 0.45rem 0 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+}
+
+/* --------------------------------------------------------------- showroom */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.visitHead {
+  font-size: 1.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.hours {
+  margin: 0 0 2.2rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.address {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+.visitNote {
+  margin-top: 0.8rem;
+  color: var(--soft);
+  font-size: 0.92rem;
+}
+
+.contactLine {
+  margin-top: 0.4rem;
+  font-weight: 500;
+}
+
+.contactLine a {
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+
+.form {
+  --form-pad: clamp(1.4rem, 3vw, 2.4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: var(--form-pad);
+  background: var(--pale);
+}
+
+/* Fluted edge along the top of the booking card, from the band above. */
+.formStrip {
+  position: relative;
+  height: 2.6rem;
+  margin: calc(-1 * var(--form-pad)) calc(-1 * var(--form-pad)) 0.6rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--rule);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field span {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+}
+
+.check input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--walnut);
+}
+
+.form .button {
+  align-self: flex-start;
+  margin-top: 0.4rem;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: var(--air);
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) 2rem;
+  border-top: 1px solid var(--ink);
+}
+
+.footTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gut);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop > :first-child {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1.2rem;
+  align-items: start;
+}
+
+.footTop > :first-child > p {
+  grid-column: 2;
+}
+
+/* A small plate of the cover's rings beside the name. */
+.footPlate {
+  position: relative;
+  grid-row: span 2;
+  width: 6.5rem;
+  aspect-ratio: 1;
+  background: var(--pale);
+  overflow: hidden;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.footTag {
+  margin-top: 0.6rem;
+  max-width: 22rem;
+  color: var(--soft);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.footLinks a {
+  text-decoration: none;
+}
+
+.footLinks a:hover {
+  color: var(--walnut);
+}
+
+.footAddr {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--soft);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.8rem;
+  color: var(--soft);
+}
+
+.footFine a {
+  text-underline-offset: 0.2em;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .edition {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .chapter {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chapterIntro {
+    position: static;
+    grid-column: 1 / -1;
+    padding-right: 0;
+  }
+
+  .materialList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .nav,
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .cover {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contents {
+    margin-top: 2.5rem;
+  }
+
+  .plate {
+    min-height: 26rem;
+  }
+
+  .promises {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'no'
+      'title'
+      'note';
+  }
+
+  .materials,
+  .deliveryGrid,
+  .workshopInner,
+  .visit,
+  .footTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lamp {
+    height: 22rem;
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .chapter {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .productPlate {
+    aspect-ratio: 1 / 1;
+  }
+
+  .productPlate > [data-artwork='hewn-furniture-lamp'] {
+    height: 78%;
+  }
+
+  .plate .coverChair {
+    width: 78%;
+  }
+
+  .zones thead {
+    display: none;
+  }
+
+  .zones,
+  .zones tbody,
+  .zones tr,
+  .zones th,
+  .zones td {
+    display: block;
+  }
+
+  .zones tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.2rem 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .zones th,
+  .zones td {
+    padding: 0;
+    border: 0;
+  }
+
+  .zones caption {
+    display: block;
+  }
+
+  .zones td:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .fieldRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCta,
+  .button {
+    transition: none;
+  }
+}

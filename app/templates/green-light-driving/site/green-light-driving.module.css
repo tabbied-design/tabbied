@@ -1,0 +1,1263 @@
+/* ==========================================================================
+   GREEN LIGHT - driving school, Eastfield
+   Road stops. The lesson packages are stops along one road drawn down the
+   page, asphalt with a dashed center line, the cards pulled off to either
+   side; on a phone the road runs down the left edge. The traffic light,
+   the car and the road sign are flat drawings stacked as masks, one per
+   color, so they wear the page's signal colors. A highway gothic face.
+   ========================================================================== */
+
+.page {
+  --paper: #f3f5f2;
+  --asphalt: #141a16;
+  --green: #1f9d55;
+  --amber: #f6c026;
+  --red: #e5483a;
+  --gray: #858d87;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 80rem;
+  --air: clamp(4rem, 9vw, 7rem);
+  --road: 5.5rem;
+  --mono: 'Overpass Mono', ui-monospace, Menlo, monospace;
+
+  font-family: 'Overpass', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--asphalt);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.page :where(p, figure) {
+  margin: 0;
+}
+
+.page :where(ul, ol, dl, dd) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.8rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--asphalt);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 900;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.markLight {
+  display: inline-flex;
+  gap: 3px;
+  padding: 4px 5px;
+  border-radius: 999px;
+  background: var(--asphalt);
+}
+
+.markLight span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--gray) 60%, var(--asphalt));
+}
+
+.markLight span:last-child {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0;
+  border-bottom: 3px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--green);
+}
+
+.barPhone {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  background: var(--green);
+  color: var(--paper);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.kicker,
+.secKick {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.kicker::before,
+.secKick::before {
+  content: '';
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.title {
+  margin-top: 1.2rem;
+  font-size: clamp(3rem, 7vw, 6.2rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.title em {
+  display: block;
+  font-style: normal;
+  color: var(--green);
+}
+
+.lede {
+  margin-top: 1.6rem;
+  max-width: 34rem;
+  font-size: 1.15rem;
+  color: color-mix(in srgb, var(--asphalt) 84%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.9rem 1.4rem;
+  border-radius: 6px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn {
+  background: var(--asphalt);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--green);
+}
+
+.btnLine {
+  border: 2px solid var(--asphalt);
+}
+
+.btnLine:hover {
+  background: var(--amber);
+}
+
+.heroArt {
+  position: relative;
+  height: clamp(24rem, 44vw, 36rem);
+  display: grid;
+  place-items: end;
+}
+
+.heroArt > .heroLight {
+  margin-right: 6%;
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  -webkit-mask: radial-gradient(closest-side, var(--asphalt) 55%, transparent 100%);
+  mask: radial-gradient(closest-side, var(--asphalt) 55%, transparent 100%);
+}
+
+.heroLight {
+  position: relative;
+  width: min(18rem, 58%);
+}
+
+.heroStat {
+  position: absolute;
+  left: 0;
+  top: 4%;
+  padding: 0.9rem 1.1rem;
+  border-radius: 8px;
+  background: var(--asphalt);
+  color: var(--paper);
+  display: flex;
+  flex-direction: column-reverse;
+  box-shadow: 0 18px 30px -18px rgb(0 0 0 / 0.5);
+}
+
+.heroStat dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  max-width: 10rem;
+  line-height: 1.3;
+}
+
+.heroStat dd {
+  font-weight: 900;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--amber);
+}
+
+/* ------------------------------------------------------------------ street */
+
+.street {
+  position: relative;
+  height: clamp(10rem, 18vw, 14rem);
+}
+
+.streetRoad {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(2.5rem, 4vw, 3.25rem);
+  background:
+    repeating-linear-gradient(90deg, var(--amber) 0 44px, transparent 44px 88px) center / 100% 4px no-repeat,
+    var(--asphalt);
+  border-top: 4px solid var(--gray);
+}
+
+.streetCar {
+  position: absolute;
+  left: max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  bottom: calc(clamp(2.5rem, 4vw, 3.25rem) + 2px);
+  width: clamp(12rem, 22vw, 18rem);
+}
+
+/* ------------------------------------------------------------ section head */
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  margin-top: 0.9rem;
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.08rem;
+  color: color-mix(in srgb, var(--asphalt) 82%, transparent);
+}
+
+/* ----------------------------------------------------------------- lessons */
+
+.lessons {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.lessons .secHead {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.lessons .secKick {
+  justify-content: center;
+}
+
+.route {
+  position: relative;
+  display: grid;
+}
+
+/* The road: asphalt, a white edge line each side, dashes down the middle. */
+.route::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: var(--road);
+  transform: translateX(-50%);
+  background:
+    repeating-linear-gradient(180deg, var(--amber) 0 34px, transparent 34px 68px) center / 5px 100% no-repeat,
+    var(--asphalt);
+  box-shadow: inset 5px 0 0 -1px var(--paper), inset -5px 0 0 -1px var(--paper), 0 0 0 3px var(--gray);
+}
+
+.routeStart {
+  position: relative;
+  justify-self: center;
+  margin-bottom: 2rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 4px;
+  background: var(--paper);
+  border: 2px solid var(--asphalt);
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--road) minmax(0, 1fr);
+  align-items: center;
+}
+
+.stop + .stop {
+  margin-top: -2.5rem;
+}
+
+.stopSign {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  position: relative;
+  z-index: 1;
+  width: 4.25rem;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--paper);
+  border: 4px solid var(--paper);
+  box-shadow: 0 0 0 3px var(--green);
+  line-height: 1;
+}
+
+.stopLabel {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stopSign strong {
+  font-weight: 900;
+  font-size: 1.6rem;
+}
+
+.stopCard {
+  grid-row: 1;
+  grid-column: 1;
+  position: relative;
+  justify-self: end;
+  width: min(100% - 2.2rem, 30rem);
+  margin-right: 2.2rem;
+  padding: 1.4rem 1.5rem 1.3rem;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 2px solid var(--asphalt);
+  box-shadow: 6px 6px 0 color-mix(in srgb, var(--asphalt) 14%, transparent);
+  display: grid;
+}
+
+/* A short lane from the card to its stop on the road. */
+.stopCard::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -2.3rem;
+  width: 2.2rem;
+  border-top: 3px dashed var(--gray);
+}
+
+.stop:nth-child(odd) .stopCard {
+  grid-column: 3;
+  justify-self: start;
+  margin-right: 0;
+  margin-left: 2.2rem;
+}
+
+.stop:nth-child(odd) .stopCard::after {
+  right: auto;
+  left: -2.3rem;
+}
+
+.stopTag {
+  justify-self: start;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  background: var(--amber);
+  color: var(--asphalt);
+}
+
+.stopName {
+  margin-top: 0.7rem;
+  font-size: 1.7rem;
+}
+
+.stopTime {
+  margin-top: 0.2rem;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.stopBody {
+  margin-top: 0.6rem;
+  font-size: 0.97rem;
+  color: color-mix(in srgb, var(--asphalt) 84%, transparent);
+}
+
+.stopPrice {
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid color-mix(in srgb, var(--asphalt) 16%, transparent);
+  font-weight: 900;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.routeEnd {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--road) minmax(0, 1fr);
+  align-items: end;
+  margin-top: 1.5rem;
+}
+
+.endSign {
+  grid-column: 3;
+  grid-row: 1;
+  width: 5.5rem;
+  margin-left: 1.2rem;
+}
+
+.endText {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: center;
+  margin-left: 7.8rem;
+  font-weight: 900;
+  font-size: 1.35rem;
+  line-height: 1.15;
+  max-width: 14rem;
+}
+
+.refresher {
+  max-width: 34rem;
+  margin: 2.5rem auto 0;
+  text-align: center;
+  color: color-mix(in srgb, var(--asphalt) 82%, transparent);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(4.5rem, 7vw, 6rem);
+  background: var(--asphalt);
+}
+
+.bandField {
+  position: absolute;
+  inset: 0;
+}
+
+/* -------------------------------------------------------------------- test */
+
+.test {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.testHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+/* The sign stands in a patch of bends, faded at the edge like the hero's. */
+.signSpot {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: end center;
+  width: clamp(10rem, 17vw, 14rem);
+  aspect-ratio: 1;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.signField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  -webkit-mask: radial-gradient(closest-side, var(--asphalt) 50%, transparent 100%);
+  mask: radial-gradient(closest-side, var(--asphalt) 50%, transparent 100%);
+}
+
+.testSign {
+  position: relative;
+  width: 54%;
+}
+
+.checks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.checkGroup {
+  margin: 0;
+  padding: 1.3rem 1.4rem 1.4rem;
+  border: 2px solid var(--asphalt);
+  border-radius: 10px;
+  display: grid;
+  gap: 0.2rem;
+  align-content: start;
+}
+
+.checkGroup legend {
+  padding: 0 0.5rem;
+  margin-left: -0.5rem;
+  font-weight: 900;
+  font-size: 1.3rem;
+}
+
+.check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7rem;
+  align-items: start;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--asphalt) 12%, transparent);
+  cursor: pointer;
+}
+
+.check:last-child {
+  border-bottom: 0;
+}
+
+.check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0.15rem 0 0;
+  accent-color: var(--green);
+}
+
+.check:has(input:checked) span {
+  text-decoration: line-through;
+  text-decoration-color: var(--green);
+  text-decoration-thickness: 2px;
+  color: color-mix(in srgb, var(--asphalt) 62%, transparent);
+}
+
+/* ------------------------------------------------------------- instructors */
+
+.instructors {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.people {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 1.8rem);
+}
+
+.person {
+  --tone: var(--green);
+  --on: var(--paper);
+
+  padding: 1.5rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--gray) 14%, var(--paper));
+}
+
+.person[data-tone='amber'] {
+  --tone: var(--amber);
+  --on: var(--asphalt);
+}
+
+.person[data-tone='red'] {
+  --tone: var(--red);
+}
+
+.initials {
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background: var(--tone);
+  color: var(--on);
+  font-weight: 900;
+  font-size: 1.2rem;
+  box-shadow: 0 0 0 5px var(--asphalt);
+  margin: 5px 0 1.1rem 5px;
+}
+
+.person h3 {
+  font-size: 1.4rem;
+}
+
+.personYears {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+  color: color-mix(in srgb, var(--asphalt) 74%, transparent);
+}
+
+.personFacts {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--asphalt) 16%, transparent);
+  font-size: 0.92rem;
+}
+
+.personFacts div {
+  display: grid;
+  grid-template-columns: 4.2rem 1fr;
+}
+
+.personFacts dt {
+  font-weight: 800;
+}
+
+.personNote {
+  margin-top: 0.9rem;
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--asphalt) 82%, transparent);
+}
+
+/* ----------------------------------------------------------------- results */
+
+.results {
+  position: relative;
+  background: var(--asphalt);
+  color: var(--paper);
+  overflow: hidden;
+}
+
+.resultsField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.32;
+}
+
+.resultsInner {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.resultsText h2 {
+  margin-top: 0.9rem;
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+}
+
+.results .secKick::before {
+  background: var(--amber);
+}
+
+.resultsNote {
+  margin-top: 1rem;
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 2rem;
+  margin-top: 2.2rem;
+}
+
+.figures div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 0.8rem;
+  border-top: 2px solid color-mix(in srgb, var(--paper) 25%, transparent);
+}
+
+.figures dt {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.figures dd {
+  font-weight: 900;
+  font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+  line-height: 1.05;
+  color: var(--amber);
+}
+
+.chart {
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--asphalt) 88%, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+
+.chart figcaption {
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.bars {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 1.4rem;
+}
+
+.barItem {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+}
+
+.barValue {
+  font-weight: 900;
+  font-size: 1.05rem;
+}
+
+.barTrack {
+  position: relative;
+  width: 100%;
+  height: 13rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  border-bottom: 2px solid color-mix(in srgb, var(--paper) 40%, transparent);
+}
+
+/* The state average, drawn across every bar at 52%. */
+.barTrack::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 52%;
+  border-top: 2px dashed var(--amber);
+}
+
+.barFill {
+  width: 52%;
+  border-radius: 4px 4px 0 0;
+  background: var(--green);
+}
+
+.barYear {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+/* -------------------------------------------------------------------- book */
+
+.book {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.bookInfo h2 {
+  margin-top: 0.9rem;
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+}
+
+.bookLede {
+  margin-top: 1rem;
+  color: color-mix(in srgb, var(--asphalt) 84%, transparent);
+}
+
+.bookFacts {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.8rem;
+}
+
+.bookFacts div {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--asphalt) 14%, transparent);
+}
+
+.bookFacts dt {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-top: 0.15rem;
+}
+
+.bookFacts dd {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.bookLight {
+  width: 5.5rem;
+  margin-top: 2rem;
+}
+
+.form {
+  --pad: clamp(1.3rem, 3vw, 2rem);
+
+  display: grid;
+  gap: 1.1rem;
+  padding: var(--pad);
+  border-radius: 12px;
+  border: 2px solid var(--asphalt);
+  box-shadow: 8px 8px 0 var(--green);
+  background: var(--paper);
+}
+
+/* A crossing painted across the top of the form. */
+.formCrossing {
+  position: relative;
+  height: 2.5rem;
+  margin: calc(var(--pad) * -1) calc(var(--pad) * -1) 0.4rem;
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+  border-bottom: 2px solid var(--asphalt);
+  background: var(--asphalt);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label,
+.radios legend {
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.field input,
+.field select {
+  font: inherit;
+  padding: 0.7rem 0.85rem;
+  border-radius: 6px;
+  border: 2px solid color-mix(in srgb, var(--asphalt) 24%, transparent);
+  background: var(--paper);
+  color: var(--asphalt);
+  min-width: 0;
+}
+
+.field input::placeholder {
+  color: color-mix(in srgb, var(--asphalt) 55%, transparent);
+}
+
+.radios {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.radios legend {
+  padding: 0;
+  margin-bottom: 0.5rem;
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  border: 2px solid color-mix(in srgb, var(--asphalt) 18%, transparent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.radio input {
+  margin: 0;
+  accent-color: var(--green);
+}
+
+.radio:has(input:checked) {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--green) 12%, var(--paper));
+}
+
+.submit {
+  font: inherit;
+  font-weight: 900;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  padding: 1rem 1.2rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--green);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: var(--asphalt);
+}
+
+.formNote {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--asphalt) 74%, transparent);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  position: relative;
+  background: var(--asphalt);
+  color: var(--paper);
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2rem) var(--gut) 2rem;
+}
+
+/* Road markings along the top edge of the footer. */
+.footMarks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  overflow: hidden;
+  opacity: 0.7;
+}
+
+.footTop,
+.footFine {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  padding-bottom: 2.4rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 20%, transparent);
+}
+
+.footName {
+  font-weight: 900;
+  font-size: 2.2rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.footTag {
+  margin-top: 0.5rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+}
+
+.footLinks a {
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.footLinks a:hover {
+  color: var(--amber);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--paper) 74%, transparent);
+}
+
+.credit a {
+  color: var(--paper);
+  border-bottom: 2px solid var(--green);
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1100px) {
+  .people {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .checks {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav,
+  .barPhone {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .hero,
+  .resultsInner,
+  .book {
+    grid-template-columns: 1fr;
+  }
+
+  .heroArt {
+    height: 24rem;
+    place-items: end start;
+  }
+
+  .heroArt > .heroLight {
+    width: min(13rem, 46%);
+    margin-right: 0;
+  }
+
+  .heroStat {
+    top: auto;
+    left: auto;
+    right: 0;
+    bottom: 34%;
+  }
+}
+
+/* A phone: the road runs down the left edge, every card to its right. */
+@media (max-width: 720px) {
+  .page {
+    --road: 2.75rem;
+  }
+
+  .lessons .secHead {
+    text-align: left;
+  }
+
+  .lessons .secKick {
+    justify-content: flex-start;
+  }
+
+  .route::before {
+    left: calc(var(--road) / 2);
+    background:
+      repeating-linear-gradient(180deg, var(--amber) 0 22px, transparent 22px 44px) center / 3px 100% no-repeat,
+      var(--asphalt);
+    box-shadow: inset 3px 0 0 -1px var(--paper), inset -3px 0 0 -1px var(--paper), 0 0 0 2px var(--gray);
+  }
+
+  .routeStart {
+    justify-self: start;
+    margin-left: calc(var(--road) + 1rem);
+  }
+
+  .stop,
+  .routeEnd {
+    grid-template-columns: var(--road) minmax(0, 1fr);
+  }
+
+  .stop + .stop {
+    margin-top: 1.2rem;
+  }
+
+  .stopSign {
+    grid-column: 1;
+    align-self: start;
+    margin-top: 1.1rem;
+    width: 3rem;
+    border-width: 3px;
+    box-shadow: 0 0 0 2px var(--green);
+  }
+
+  .stopLabel {
+    display: none;
+  }
+
+  .stopSign strong {
+    font-size: 1.25rem;
+  }
+
+  .stopCard,
+  .stop:nth-child(odd) .stopCard {
+    grid-column: 2;
+    justify-self: stretch;
+    width: auto;
+    margin: 0 0 0 1rem;
+    padding: 1.1rem 1.1rem 1rem;
+  }
+
+  .stopCard::after,
+  .stop:nth-child(odd) .stopCard::after {
+    display: none;
+  }
+
+  .endSign,
+  .endText {
+    grid-column: 2;
+  }
+
+  .endSign {
+    width: 4rem;
+    margin-left: 1rem;
+  }
+
+  .endText {
+    margin-left: 6rem;
+    font-size: 1.15rem;
+  }
+
+  .testHead {
+    align-items: flex-start;
+  }
+
+  .signSpot {
+    width: 6rem;
+  }
+
+  .testSign {
+    width: 64%;
+  }
+
+  .checks,
+  .people,
+  .figures,
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .figures {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .barTrack {
+    height: 10rem;
+  }
+
+  .footFine {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine {
+    transition: none;
+  }
+}

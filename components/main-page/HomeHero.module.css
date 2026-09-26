@@ -59,19 +59,19 @@
 
 .title {
   margin: 0 0 24px;
-  font: 700 96px / 1.02 var(--h-display);
+  font: 700 80px / 1.05 var(--h-display);
   color: var(--h-fg);
   letter-spacing: -0.02em;
 }
 
 /* Into the column's right padding, so the headline sets on two lines as the
-   artboard has it; below 1400px the size follows the viewport so the second
+   artboard has it; below 1160px the size follows the viewport so the second
    line still fits. Measured: the line runs 11.4 times its font size in the
    fallback sans, a little less in proxima-nova. */
 @media (min-width: 768px) {
   .title {
     margin-right: calc(-1 * var(--h-pad));
-    font-size: clamp(64px, 6.9vw, 96px);
+    font-size: clamp(64px, 6.9vw, 80px);
   }
 }
 
@@ -211,9 +211,10 @@ a.stat:hover .statArrow {
   transform: translateX(3px);
 }
 
-/* Bold, though the artboard's inline style says 200: its Proxima Nova ships
-   400 and 700 only, so the design renders the figure bold (as the story
-   section's stats are). Typekit's proxima-nova does have a 200. */
+/* Bold, though the artboard's inline style says 200: the design's bundled
+   ProximaNova-Regular.otf is in fact the Bold face, so it renders every
+   Proxima weight bold (as the story section's stats are). Typekit's
+   proxima-nova does have a 200. */
 .statNumber {
   display: block;
   font: 700 64px var(--h-display);
@@ -241,9 +242,9 @@ a.stat:hover .statArrow {
 
 /* -- Responsive ------------------------------------------------------------ */
 
-/* The display sizes step down twice. Without the middle step the 96px headline
-   runs to four lines between 768px and the desktop layout, which is where a
-   portrait tablet sits. */
+/* The display sizes step down twice. Without the middle step the 80px
+   headline's unbroken second line would run past the column between 768px
+   and the desktop layout, which is where a portrait tablet sits. */
 @media (max-width: 1023.98px) {
   .title {
     font-size: min(64px, 7.8vw);

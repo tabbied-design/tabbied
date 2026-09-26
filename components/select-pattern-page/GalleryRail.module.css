@@ -17,8 +17,9 @@
   height: calc(100dvh - var(--gallery-bar-h, 62px));
   /* 36px, plus the rows' own 12px, puts the search, "Mixed" and every
      palette name on the masthead lockup's left edge (48px), as the artboard
-     rules them; the pills' ink reaches 12px past that line. */
-  padding: 20px 20px 0 36px;
+     rules them; the pills' ink reaches 12px past that line, on the right
+     too, where the search stops 12px short of them. */
+  padding: 18px 14px 0 36px;
   background: #ffffff;
   overflow: hidden;
 }
@@ -31,7 +32,7 @@
    rows' own padding, so the placeholder starts where the palette names do. */
 .search {
   display: flex;
-  margin-left: 12px;
+  margin: 0 12px;
   align-items: center;
   gap: 10px;
   padding: 6px 0 9px;
@@ -70,8 +71,8 @@
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  margin: 12px 0 2px;
-  padding: 7px 12px;
+  margin: 14px 0 0;
+  padding: 7px 7px 7px 12px;
   font-family: var(--font-sans-serif);
   font-size: 13px;
   color: #0e0e13;
@@ -132,7 +133,7 @@
   justify-content: center;
   width: 22px;
   height: 22px;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 /* ---- Scrolling palette list ---- */

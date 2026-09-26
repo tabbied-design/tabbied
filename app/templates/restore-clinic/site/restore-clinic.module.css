@@ -1,0 +1,1069 @@
+/* ==========================================================================
+   RESTORE - chiropractic and massage clinic, Elm Park
+   Calm and rounded: arches for the pictures, soft cards for the treatments,
+   a lot of pale green air. The treatments are the page, as two columns of
+   disclosure cards that open to say what happens. The stones and the two
+   portraits are photographs tinted by CSS masks in the page's ink and mist,
+   so they follow any palette the site is given. Young Serif for headings,
+   Figtree for everything else.
+   ========================================================================== */
+
+.page {
+  --mist: #f3f6f3;
+  --ink: #1b2622;
+  --eucalyptus: #5e8c7a;
+  --clay: #c98c6b;
+  --gray: #8f9b96;
+  --pale: #e0e8e3;
+  --gut: clamp(1.25rem, 4vw, 3.5rem);
+  --max: 80rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --soft: color-mix(in srgb, var(--ink) 74%, var(--mist));
+  --deep: color-mix(in srgb, var(--eucalyptus) 62%, var(--ink));
+  --rule: color-mix(in srgb, var(--ink) 14%, transparent);
+  --card: color-mix(in srgb, var(--pale) 55%, var(--mist));
+  --serif: 'Young Serif', Georgia, serif;
+
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--mist);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--eucalyptus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.85rem var(--gut);
+  background: color-mix(in srgb, var(--mist) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  line-height: 1.1;
+}
+
+.markName {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  color: var(--deep);
+}
+
+.markSub {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.93rem;
+  text-decoration: none;
+  color: var(--soft);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--deep);
+}
+
+.barCta {
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  background: var(--eucalyptus);
+  color: var(--mist);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 160ms ease;
+}
+
+.barCta:hover {
+  background: var(--deep);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--mist);
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) clamp(3rem, 7vw, 6rem);
+}
+
+.kicker,
+.eyebrow {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--deep);
+}
+
+.heroTitle {
+  margin-top: 1.3rem;
+  font-size: clamp(3rem, 6.6vw, 5.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--eucalyptus);
+}
+
+.lede {
+  margin-top: 1.6rem;
+  max-width: 33rem;
+  font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+  color: var(--soft);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.9rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--mist);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.button:hover {
+  background: var(--deep);
+}
+
+.textLink {
+  font-weight: 600;
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+}
+
+.heroFacts {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  padding: 0;
+}
+
+.heroFacts li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.heroFacts strong {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.45rem;
+  line-height: 1.1;
+  color: var(--deep);
+}
+
+.heroFacts span {
+  font-size: 0.86rem;
+  color: var(--soft);
+}
+
+/* The arch: leaves on the pale tint, the stones standing on its floor. */
+.heroArt {
+  position: relative;
+  padding-bottom: 2rem;
+}
+
+.arch {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 4 / 5;
+  max-height: 40rem;
+  margin-left: auto;
+  border-radius: 999px 999px 1.5rem 1.5rem;
+  background: var(--pale);
+  overflow: hidden;
+}
+
+.archField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.85;
+  mask-image: linear-gradient(180deg, var(--ink) 0%, var(--ink) 50%, transparent 92%);
+}
+
+.arch .stones {
+  position: absolute;
+  left: 50%;
+  bottom: 7%;
+  width: 52%;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 18px 18px rgb(0 0 0 / 0.14));
+}
+
+.heroCard {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.3rem;
+  border-radius: 1.2rem;
+  background: var(--mist);
+  box-shadow: 0 14px 34px rgb(0 0 0 / 0.1);
+}
+
+.heroCardName {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+}
+
+.heroCardMeta {
+  font-size: 0.88rem;
+  color: var(--soft);
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 46rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.1rem, 4.2vw, 3.3rem);
+}
+
+.secNote {
+  margin-top: 1rem;
+  max-width: 38rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------- treatments
+   Two menus side by side. A card is a <details>: closed it is one line of
+   name, length and price; open it says what happens and who it is for. */
+
+.treatments {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+  scroll-margin-top: 4rem;
+}
+
+.menus {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.menuHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  padding-bottom: 0.9rem;
+  margin-bottom: 0.3rem;
+  border-bottom: 2px solid var(--eucalyptus);
+}
+
+.menuHead h3 {
+  font-size: clamp(1.7rem, 2.6vw, 2.1rem);
+}
+
+.menuWho {
+  font-size: 0.88rem;
+  color: var(--soft);
+}
+
+.treatment {
+  border-radius: 1.1rem;
+  background: var(--card);
+  transition: background-color 180ms ease;
+}
+
+.treatment[open] {
+  background: var(--pale);
+}
+
+.treatment summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto 1.8rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.05rem 1.2rem 1.05rem 1.35rem;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 1.1rem;
+}
+
+.treatment summary::-webkit-details-marker {
+  display: none;
+}
+
+.treatment summary::after {
+  content: '\002B';
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--deep);
+}
+
+.treatment[open] summary::after {
+  content: '\2212';
+  background: var(--eucalyptus);
+  border-color: var(--eucalyptus);
+  color: var(--mist);
+}
+
+.tName {
+  font-family: var(--serif);
+  font-size: 1.22rem;
+  line-height: 1.25;
+}
+
+.tLength {
+  font-size: 0.86rem;
+  color: var(--soft);
+  white-space: nowrap;
+}
+
+.tPrice {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 0 1.35rem 1.35rem;
+}
+
+.tBody p {
+  color: var(--soft);
+  max-width: 36rem;
+}
+
+.tHelps {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+}
+
+.tHelps li {
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--eucalyptus) 60%, transparent);
+  font-size: 0.82rem;
+  color: var(--deep);
+}
+
+.tBody .tNote {
+  font-size: 0.86rem;
+  color: var(--ink);
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--clay);
+}
+
+.tBook {
+  align-self: flex-start;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--deep);
+  text-underline-offset: 0.3em;
+}
+
+.tBook::after {
+  content: ' \2192';
+}
+
+/* ----------------------------------------------------------- practitioners */
+
+.team {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.people {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.person {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: clamp(1.2rem, 2.5vw, 2rem);
+  align-items: end;
+}
+
+/* The arch a portrait stands in; its color is the person's own. */
+.portraitFrame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 999px 999px 1.2rem 1.2rem;
+  overflow: hidden;
+}
+
+/* The hero's leaves, pale and sparse, in the top of each arch. */
+.frameField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  mask-image: linear-gradient(180deg, var(--ink) 0%, var(--ink) 35%, transparent 80%);
+}
+
+.frame_eucalyptus {
+  background: var(--eucalyptus);
+}
+
+.frame_clay {
+  background: var(--clay);
+}
+
+.portraitFrame .portrait {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 84%;
+  transform: translateX(-50%);
+}
+
+.personText h3 {
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+}
+
+.personRole {
+  margin-top: 0.3rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--deep);
+}
+
+.personBio {
+  margin-top: 1rem;
+  color: var(--soft);
+}
+
+.personFacts {
+  margin: 1.2rem 0 0;
+}
+
+.personFacts div {
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.personFacts dt {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.personFacts dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.95rem;
+}
+
+/* ------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(4.5rem, 9vw, 7rem);
+  margin-top: var(--air);
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------ first visit */
+
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin: 0;
+  padding: 0;
+}
+
+.steps li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1.5rem 1.4rem 1.6rem;
+  border-radius: 1.2rem;
+  background: var(--card);
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: var(--eucalyptus);
+  color: var(--mist);
+  font-family: var(--serif);
+  font-size: 1.1rem;
+}
+
+.steps h3 {
+  font-size: 1.3rem;
+}
+
+.steps p {
+  font-size: 0.93rem;
+  color: var(--soft);
+}
+
+.questions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(1.5rem, 4vw, 3.5rem);
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+}
+
+.questions div {
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.questions dt {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+}
+
+.questions dd {
+  margin: 0.35rem 0 0;
+  color: var(--soft);
+}
+
+/* -------------------------------------------------------------- insurance */
+
+.insurance {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--air);
+  background: var(--ink);
+  color: var(--mist);
+  overflow: hidden;
+}
+
+/* Leaves in the dark, kept to the right where the insurer card sits. */
+.insuranceField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+  mask-image: linear-gradient(90deg, transparent 40%, var(--ink) 85%);
+}
+
+.insuranceInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.insuranceText .eyebrow {
+  color: color-mix(in srgb, var(--eucalyptus) 55%, var(--mist));
+}
+
+.insuranceText h2 {
+  margin: 0.8rem 0 1.2rem;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+}
+
+.insuranceText p {
+  max-width: 36rem;
+  color: color-mix(in srgb, var(--mist) 80%, var(--ink));
+}
+
+.pay {
+  margin: 2rem 0 0;
+}
+
+.pay div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--mist) 20%, transparent);
+}
+
+.pay dt {
+  font-weight: 600;
+}
+
+.pay dd {
+  margin: 0;
+  color: color-mix(in srgb, var(--mist) 80%, var(--ink));
+}
+
+.insurers {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border-radius: 1.4rem;
+  background: color-mix(in srgb, var(--mist) 7%, var(--ink));
+  border: 1px solid color-mix(in srgb, var(--mist) 16%, transparent);
+}
+
+.insurers h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.insurers ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.2rem 1.2rem;
+}
+
+.insurers li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--mist) 12%, transparent);
+}
+
+.insurers li::before {
+  content: '';
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--eucalyptus);
+}
+
+/* ------------------------------------------------------------------- book */
+
+.book {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.bookInfo h2 {
+  margin: 0.8rem 0 1.8rem;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+}
+
+.hours {
+  margin: 0 0 1.8rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.address {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.35;
+}
+
+.bookNote {
+  margin-top: 0.7rem;
+  font-size: 0.93rem;
+  color: var(--soft);
+}
+
+.contactLine {
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.contactLine a {
+  text-underline-offset: 0.25em;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  border-radius: 1.6rem;
+  background: var(--pale);
+}
+
+.form h3 {
+  font-size: 1.6rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field span {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 0.7rem;
+  background: var(--mist);
+  color: var(--ink);
+  font: inherit;
+}
+
+.times {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.times legend {
+  margin-bottom: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.times label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: var(--mist);
+  font-size: 0.92rem;
+}
+
+.times input {
+  accent-color: var(--eucalyptus);
+}
+
+.form .button {
+  align-self: flex-start;
+}
+
+.formNote {
+  font-size: 0.86rem;
+  color: var(--soft);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  --foot-top: clamp(2.5rem, 5vw, 4rem);
+  margin-top: var(--air);
+  padding: var(--foot-top) var(--gut) 2rem;
+  background: var(--pale);
+}
+
+/* A row of stones along the top edge of the footer. */
+.footStrip {
+  position: relative;
+  height: 2.25rem;
+  margin: calc(-1 * var(--foot-top)) calc(-1 * var(--gut)) var(--foot-top);
+  overflow: hidden;
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--deep);
+}
+
+.footTag {
+  margin-top: 0.6rem;
+  color: var(--soft);
+}
+
+.footLinks {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  margin: 0;
+  padding: 0;
+}
+
+.footLinks a {
+  text-decoration: none;
+}
+
+.footLinks a:hover {
+  color: var(--deep);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.82rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .person {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .portraitFrame {
+    max-width: 22rem;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.8rem;
+  }
+
+  .hero,
+  .menus,
+  .insuranceInner,
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .insuranceField {
+    mask-image: linear-gradient(180deg, transparent 50%, var(--ink) 90%);
+  }
+
+  .heroArt {
+    max-width: 28rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .people {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3rem;
+  }
+
+  .person {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    align-items: end;
+  }
+
+  .questions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .heroFacts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .treatment summary {
+    grid-template-columns: minmax(0, 1fr) auto 1.8rem;
+    grid-template-areas:
+      'name price icon'
+      'length length icon';
+    row-gap: 0.15rem;
+  }
+
+  .treatment summary::after {
+    grid-area: icon;
+  }
+
+  .tName {
+    grid-area: name;
+  }
+
+  .tLength {
+    grid-area: length;
+  }
+
+  .tPrice {
+    grid-area: price;
+  }
+
+  .person {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .portraitFrame {
+    max-width: 17rem;
+  }
+
+  .steps,
+  .insurers ul,
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pay div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCta,
+  .button,
+  .treatment {
+    transition: none;
+  }
+}

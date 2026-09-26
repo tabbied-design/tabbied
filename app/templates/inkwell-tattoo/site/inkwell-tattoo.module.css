@@ -1,0 +1,1229 @@
+/* ==========================================================================
+   INKWELL TATTOO - street shop, Harbor Row
+   A flash wall: framed sheets hung salon-style on a wall papered in the
+   primary pattern, every design painted through its mask in the shop's red
+   or black. Heavy slab type for the names and prices, plain grotesque for
+   everything a customer has to read. The house rules are pinned beside the
+   wall in a sticky black column, the way a shop tapes them by the counter.
+   ========================================================================== */
+
+.page {
+  --paper: #f4efe6;
+  --ink: #141414;
+  --red: #c8352b;
+  --gray: #8a857c;
+  --pale: #e4dccd;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 84rem;
+  --frame: 6px;
+  --bar-h: 4.25rem;
+  --display: 'Alfa Slab One', 'Rockwell', Georgia, serif;
+
+  font-family: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page p {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  height: var(--bar-h);
+  padding: 0 var(--gut);
+  background: var(--paper);
+  border-bottom: 3px solid var(--ink);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.mark::before {
+  content: '\2605';
+  margin-right: 0.4rem;
+  color: var(--red);
+  font-size: 0.8em;
+  vertical-align: 0.1em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.3rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--red);
+}
+
+.barCta {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.65rem 1rem;
+  color: var(--paper);
+  background: var(--red);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.barCta:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------ the wall
+   The primary pattern papers the wall in the page's own paper, pale and
+   gray, so it is felt more than seen. The sheets and the rules sit on it. */
+
+.wall {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(2rem, 5vw, 4rem) var(--gut) clamp(3rem, 7vw, 6rem);
+  border-bottom: 3px solid var(--ink);
+}
+
+.wallField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.9;
+}
+
+.wallInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 21rem;
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+  align-items: start;
+}
+
+.sheets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: row dense;
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+/* The title card is the biggest frame on the wall. */
+.titleCard {
+  grid-column: span 2;
+  padding: clamp(1.5rem, 3.4vw, 2.75rem);
+  background: var(--paper);
+  border: var(--frame) solid var(--ink);
+  box-shadow: 0 18px 30px -22px rgb(0 0 0 / 0.55);
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.title {
+  font-family: var(--display);
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--red);
+}
+
+.lede {
+  margin-top: 1.4rem;
+  max-width: 36rem;
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+}
+
+.facts {
+  margin: 1.75rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding-top: 1.1rem;
+  border-top: 2px solid var(--ink);
+}
+
+.facts div {
+  margin: 0;
+}
+
+.facts dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.facts dd {
+  margin: 0.25rem 0 0;
+  font-family: var(--display);
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  line-height: 1.15;
+}
+
+/* A strip of tape with a label on it, across the whole wall. */
+.wallLabel {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1.25rem;
+  margin: 0.4rem 0 -0.2rem;
+}
+
+.wallHead {
+  display: inline-block;
+  padding: 0.35rem 0.9rem 0.3rem;
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+  background: var(--red);
+  transform: rotate(-1.2deg);
+  box-shadow: 2px 3px 0 var(--ink);
+}
+
+.wallNote {
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.15rem 0.5rem;
+  background: var(--paper);
+}
+
+/* ------------------------------------------------------------- a sheet
+   A black frame, a strip with the number and size, the design on the flash
+   paper, and the name and price under it. */
+
+.sheet {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: var(--frame) solid var(--ink);
+  box-shadow: 0 16px 26px -20px rgb(0 0 0 / 0.6);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.sheet:hover {
+  transform: translateY(-3px) rotate(-0.4deg);
+  box-shadow: 0 22px 30px -20px rgb(0 0 0 / 0.6);
+}
+
+.sheetTall {
+  grid-row: span 2;
+}
+
+.sheetWide {
+  grid-column: span 2;
+}
+
+.sheetTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--ink);
+}
+
+.sheetRed .sheetTop {
+  color: var(--paper);
+  background: var(--red);
+}
+
+.sheetNo {
+  font-variant-numeric: tabular-nums;
+}
+
+.sheetSize {
+  color: inherit;
+}
+
+.sheetPaper {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 15rem;
+  padding: 1.4rem 1rem;
+  background: color-mix(in srgb, var(--pale) 55%, var(--paper));
+}
+
+.flash {
+  width: auto;
+  height: 11.5rem;
+  max-width: 100%;
+}
+
+.sheetTall .flash {
+  height: min(30rem, 100%);
+  min-height: 20rem;
+}
+
+.sheetFeature .flash {
+  height: min(17rem, 100%);
+}
+
+.flip {
+  transform: scaleX(-1);
+}
+
+.pairPaper {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.pairBird {
+  height: 9.5rem;
+}
+
+.sheetFoot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.2rem 0.75rem;
+  align-items: baseline;
+  padding: 0.8rem 0.85rem 0.9rem;
+  border-top: 2px solid var(--ink);
+}
+
+.sheetName {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.sheetPrice {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--red);
+}
+
+.sheetNote {
+  grid-column: 1 / -1;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--ink) 70%, var(--paper));
+}
+
+/* The filler sheet is the pattern itself, framed like any other design. */
+.sheetFiller .sheetPaper {
+  display: none;
+}
+
+/* Tall beside the pair while the wall is three sheets wide. */
+@media (min-width: 901px) {
+  .sheetFiller {
+    grid-row: span 2;
+  }
+}
+
+.fillerField {
+  position: relative;
+  flex: 1;
+  min-height: 15rem;
+  overflow: hidden;
+  outline: 1.25rem solid color-mix(in srgb, var(--pale) 55%, var(--paper));
+  outline-offset: -1.25rem;
+}
+
+/* ----------------------------------------------------------------- rules
+   Pinned beside the wall and sticky while it scrolls. */
+
+.rules {
+  position: sticky;
+  top: calc(var(--bar-h) + 1.5rem);
+  color: var(--paper);
+  background: var(--ink);
+  border: var(--frame) solid var(--ink);
+  outline: 2px solid var(--paper);
+  outline-offset: -12px;
+  box-shadow: 0 18px 30px -20px rgb(0 0 0 / 0.6);
+}
+
+.rulesInner {
+  padding: 2rem 1.75rem 1.9rem;
+}
+
+.rulesTag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+}
+
+.rulesHead {
+  margin-top: 0.4rem;
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.rulesList {
+  counter-reset: rule;
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.rulesList li {
+  counter-increment: rule;
+  position: relative;
+  padding-left: 2.2rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.rulesList li::before {
+  content: counter(rule);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  color: var(--paper);
+  background: var(--red);
+  border-radius: 50%;
+}
+
+.today {
+  margin-top: 1.5rem;
+  padding: 0.9rem 1rem;
+  border: 2px dashed color-mix(in srgb, var(--paper) 45%, var(--ink));
+}
+
+.todayLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  filter: brightness(1.35);
+}
+
+.todayText {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.rulesCta {
+  display: block;
+  margin-top: 1.5rem;
+  padding: 0.85rem 1rem;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--paper);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.rulesCta:hover {
+  color: var(--paper);
+  background: var(--red);
+}
+
+/* -------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.35rem 1.1rem;
+  align-items: baseline;
+  margin-bottom: clamp(2rem, 4.5vw, 3.25rem);
+}
+
+.secNo {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.6rem;
+  height: 2.6rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  color: var(--paper);
+  background: var(--red);
+  border-radius: 50%;
+}
+
+.secTitle {
+  font-family: var(--display);
+  font-size: clamp(1.8rem, 3.8vw, 3rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.secNote {
+  grid-column: 2;
+  max-width: 38rem;
+  margin-top: 0.4rem;
+  color: color-mix(in srgb, var(--ink) 78%, var(--paper));
+}
+
+/* --------------------------------------------------------------- artists */
+
+.artists {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.artist {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1.4rem;
+  border-bottom: 3px solid var(--ink);
+}
+
+.artistPlate {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 1.25rem;
+  background: var(--ink);
+  border: var(--frame) solid var(--ink);
+  outline: 2px solid var(--paper);
+  outline-offset: -12px;
+}
+
+.artist:nth-child(2) .artistPlate {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.artistArt {
+  width: auto;
+  height: 68%;
+}
+
+/* Filler stars in the plate's corners, clear of the design in the middle. */
+.plateStars {
+  position: absolute;
+  inset: 12px;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.8;
+  mask-image: radial-gradient(ellipse at 50% 50%, transparent 42%, var(--ink) 78%);
+}
+
+.artistName {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.artistStyle {
+  margin-top: 0.3rem;
+  font-weight: 600;
+  color: var(--red);
+}
+
+.artistBio {
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.artistFacts {
+  margin: 1.1rem 0 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.artistFacts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.artistFacts dt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 62%, var(--paper));
+}
+
+.artistFacts dd {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: right;
+}
+
+.booksOpen,
+.booksShut {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 2px solid var(--ink);
+}
+
+.booksOpen {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.booksShut {
+  color: var(--ink);
+  background: transparent;
+  border-style: dashed;
+}
+
+/* ------------------------------------------------------------- aftercare */
+
+.care {
+  position: relative;
+  isolation: isolate;
+  margin-top: clamp(4rem, 9vw, 7rem);
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  color: var(--paper);
+  background: var(--ink);
+}
+
+/* Stars in the top right corner only, clear of the heading and the steps. */
+.careField {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 46%;
+  height: 58%;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.7;
+  mask-image: radial-gradient(ellipse at 100% 0%, var(--ink) 20%, transparent 72%);
+}
+
+.careInner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.care .secNote {
+  color: color-mix(in srgb, var(--paper) 80%, var(--ink));
+}
+
+.careSteps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.careSteps li {
+  padding: 1.25rem 1.1rem 1.4rem;
+  background: var(--ink);
+  border: 2px solid color-mix(in srgb, var(--paper) 40%, var(--ink));
+}
+
+.careNo {
+  font-family: var(--display);
+  font-size: 0.95rem;
+  color: var(--red);
+  filter: brightness(1.35);
+}
+
+.careWhen {
+  margin-top: 0.5rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.careWhat {
+  margin-top: 0.7rem;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--paper) 88%, var(--ink));
+}
+
+/* -------------------------------------------------------- deposits, book */
+
+.book {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.bookHead {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  text-transform: uppercase;
+  margin-bottom: 1.1rem;
+}
+
+.depositList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 3px solid var(--ink);
+}
+
+.depositList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.15rem 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.depWhat {
+  font-weight: 600;
+}
+
+.depCost {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  color: var(--red);
+}
+
+.depNote {
+  grid-column: 1 / -1;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 70%, var(--paper));
+}
+
+.bookArt {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 1.25rem;
+  background: var(--pale);
+}
+
+.bookDagger {
+  width: 3.25rem;
+}
+
+.bookArtNote {
+  font-size: 0.92rem;
+}
+
+.form {
+  --form-pad: clamp(1.25rem, 3vw, 2.25rem);
+  display: grid;
+  gap: 1rem;
+  padding: var(--form-pad);
+  background: var(--paper);
+  border: var(--frame) solid var(--ink);
+  box-shadow: 8px 8px 0 var(--red);
+}
+
+/* An armband of the filler across the top of the form. */
+.formBand {
+  position: relative;
+  height: 2rem;
+  margin: calc(-1 * var(--form-pad)) calc(-1 * var(--form-pad)) 0.4rem;
+  overflow: hidden;
+  border-bottom: var(--frame) solid var(--ink);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field span {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.75rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--pale) 35%, var(--paper));
+  border: 2px solid var(--ink);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: color-mix(in srgb, var(--ink) 50%, var(--paper));
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.9rem 1.5rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.submit:hover {
+  background: var(--red);
+}
+
+.formNote {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ink) 70%, var(--paper));
+}
+
+/* ----------------------------------------------------------------- visit */
+
+.visit {
+  margin-top: clamp(4rem, 9vw, 7rem);
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut);
+  background: var(--pale);
+  border-top: 3px solid var(--ink);
+}
+
+.visitInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.visitText .secNo {
+  margin-bottom: 1rem;
+}
+
+.visitAddr {
+  margin-top: 1rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.hours {
+  margin: 1.5rem 0 0;
+  max-width: 28rem;
+  border-top: 2px solid var(--ink);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  margin: 0;
+  font-family: var(--display);
+}
+
+.visitNote {
+  margin-top: 1.25rem;
+  max-width: 32rem;
+  font-size: 0.95rem;
+}
+
+.contact {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.contact a {
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.contact a:hover {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.visitArt {
+  display: grid;
+  place-items: center;
+}
+
+/* A plate of the wallpaper behind the swallow, like a round of flash. */
+.visitDisc {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(86%, 22rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+}
+
+.visitBird {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(100%, 26rem);
+  transform: rotate(-8deg);
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.footBand {
+  position: relative;
+  height: 4.5rem;
+  overflow: hidden;
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 3rem var(--gut) 2.5rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footTag {
+  margin-top: 0.6rem;
+  color: color-mix(in srgb, var(--paper) 80%, var(--ink));
+}
+
+.footFine {
+  margin-top: 2.5rem;
+  padding-top: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+  border-top: 1px solid color-mix(in srgb, var(--paper) 25%, var(--ink));
+}
+
+.footFine a {
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1180px) {
+  .wallInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rules {
+    position: static;
+  }
+
+  .rulesList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+
+  .careSteps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.75rem;
+  }
+
+  .sheets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .artists {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 34rem;
+  }
+
+  .book,
+  .visitInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .visitArt {
+    order: -1;
+  }
+
+  .visitBird {
+    width: min(70%, 18rem);
+  }
+
+  .visitDisc {
+    width: min(76%, 17rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    --frame: 4px;
+    --bar-h: 3.75rem;
+  }
+
+  .barCta {
+    display: none;
+  }
+
+  .mark {
+    font-size: 1.3rem;
+  }
+
+  .titleCard {
+    grid-column: 1 / -1;
+  }
+
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .facts div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .sheets {
+    gap: 0.75rem;
+  }
+
+  .sheetTop {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .sheetPaper {
+    min-height: 9.5rem;
+    padding: 0.9rem 0.6rem;
+  }
+
+  .flash {
+    height: 7.25rem;
+  }
+
+  .sheetTall .flash {
+    height: 16rem;
+    min-height: 0;
+  }
+
+  .sheetFeature .flash {
+    height: 7.25rem;
+  }
+
+  .pairBird {
+    height: 6.5rem;
+  }
+
+  .sheetFoot {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0.6rem 0.6rem 0.7rem;
+  }
+
+  .sheetName {
+    font-size: 0.88rem;
+  }
+
+  .sheetPrice {
+    font-size: 1.1rem;
+  }
+
+  .sheetNote {
+    font-size: 0.76rem;
+  }
+
+  .fillerField {
+    min-height: 9.5rem;
+    outline-width: 0.75rem;
+    outline-offset: -0.75rem;
+  }
+
+  .rulesList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead .secNo {
+    justify-self: start;
+  }
+
+  .secNote {
+    grid-column: 1;
+  }
+
+  .careSteps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCta,
+  .sheet,
+  .rulesCta,
+  .submit,
+  .contact a {
+    transition: none;
+  }
+
+  .sheet:hover,
+  .barCta:hover {
+    transform: none;
+  }
+}

@@ -120,7 +120,7 @@ export default function PaletteEditorDialog({
               aria-label="Randomize colors"
               title="Randomize colors"
             >
-              <Shuffle size={17} />
+              <Shuffle size={19} strokeWidth={1.7} />
             </button>
           </div>
 
@@ -219,7 +219,7 @@ export default function PaletteEditorDialog({
                             })
                           }
                         >
-                          <X size={15} />
+                          <X size={15} strokeWidth={1.7} />
                         </button>
                       </div>
                     );
@@ -240,7 +240,7 @@ export default function PaletteEditorDialog({
                       })
                     }
                   >
-                    <Plus size={15} /> Add color
+                    <Plus size={15} strokeWidth={1.5} /> Add color
                   </button>
                 )}
               </div>
@@ -277,14 +277,14 @@ export default function PaletteEditorDialog({
                     </button>
                   ))}
                 <Dialog.Close className={styles.cancelButton}>
-                  <X size={15} /> Cancel
+                  <X size={15} strokeWidth={1.7} /> Cancel
                 </Dialog.Close>
                 <button
                   type="button"
                   className={styles.saveButton}
                   onClick={onSave}
                 >
-                  <Check size={15} /> Save palette
+                  <Check size={16} strokeWidth={2} /> Save palette
                 </button>
               </div>
             </>

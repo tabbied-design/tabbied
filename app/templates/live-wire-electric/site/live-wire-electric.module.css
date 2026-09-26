@@ -1,0 +1,1455 @@
+/* ==========================================================================
+   LIVE WIRE ELECTRIC - electrician
+   Hi-vis: a pale workshop gray, black and one safety yellow, with a blue
+   for the numbers. Condensed type set tall. The services hang off a single
+   wire that runs down the middle of the page from a plug to the ground
+   symbol, a node for each job. The pictures are bold one-ink icons, the
+   bulb on a yellow circuit board in the hero.
+   ========================================================================== */
+
+.page {
+  --paper: #f2f2ee;
+  --ink: #111418;
+  --volt: #ffc21a;
+  --blue: #2f5bea;
+  --gray: #83868c;
+  --pale: #dcddd8;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --max: 76rem;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+  --wire: 4px;
+  --display: 'Saira Condensed', 'Arial Narrow', sans-serif;
+  --sans: 'Saira', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.8rem var(--gut);
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+}
+
+.brandMark {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--volt);
+  border: 2px solid var(--ink);
+}
+
+.brandBulb {
+  width: 0.95rem;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2.2vw, 2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 3px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--volt);
+}
+
+.barCall {
+  flex: none;
+  padding: 0.55rem 1rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  background: var(--volt);
+  border: 2px solid var(--ink);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.barCall:hover {
+  background: var(--ink);
+  color: var(--volt);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: 84rem;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) 0;
+}
+
+.heroText {
+  align-self: center;
+  padding-bottom: clamp(1rem, 3vw, 2rem);
+}
+
+.kicker,
+.eyebrow {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.heroTitle {
+  margin-top: 1rem;
+  font-size: clamp(3.4rem, 7.4vw, 7rem);
+  line-height: 0.88;
+  letter-spacing: -0.005em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  background: linear-gradient(transparent 48%, var(--volt) 48%, var(--volt) 84%, transparent 84%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0 0.06em;
+}
+
+.heroLede {
+  margin-top: 1.6rem;
+  max-width: 33rem;
+  font-size: clamp(1.05rem, 1.3vw, 1.2rem);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-flex;
+  gap: 0.4em;
+  align-items: center;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.btnLine:hover {
+  background: var(--volt);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2.6rem 0 0;
+  max-width: 34rem;
+}
+
+.facts div {
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--ink);
+}
+
+.facts dt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.facts dd {
+  margin: 0.1rem 0 0;
+  font-family: var(--display);
+  font-size: clamp(1.7rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* The yellow board: circuit traces, a cord from the top edge and the bulb
+   hanging from it, base up, in a paper socket. */
+
+.board {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(30rem, 44vw, 38rem);
+  overflow: hidden;
+  background: var(--volt);
+  border: 2px solid var(--ink);
+}
+
+.boardField {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.cord {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 50%;
+  width: var(--wire);
+  height: 22%;
+  transform: translateX(-50%);
+  background: var(--ink);
+}
+
+.socket {
+  position: absolute;
+  z-index: 1;
+  top: 22%;
+  left: 50%;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  width: clamp(14rem, 22vw, 18.5rem);
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: 0 0 0 14px color-mix(in srgb, var(--paper) 45%, transparent);
+}
+
+.heroBulb {
+  width: 50%;
+  margin-top: -3px;
+  transform: rotate(180deg);
+}
+
+.boardTag {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  bottom: 0;
+  padding: 0.45rem 0.9rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---------------------------------------------------------- section heads */
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 27rem);
+  gap: 0.6rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  padding-bottom: 1.4rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.secHead h2 {
+  grid-column: 1;
+  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+}
+
+.secHead .eyebrow {
+  grid-column: 1;
+}
+
+.secNote {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: end;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ---------------------------------------------------------------- services
+   The wire runs down the center; each stop is a three-column row with the
+   node on the wire, the card on one side and the price on the other. The
+   sides swap on every other stop. */
+
+.services {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.source {
+  display: grid;
+  justify-items: center;
+  padding-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.sourcePlug {
+  width: clamp(4.5rem, 7vw, 6rem);
+}
+
+.wire {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 1.5rem 0 0;
+}
+
+.wire::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: var(--wire);
+  transform: translateX(-50%);
+  background: var(--ink);
+}
+
+.stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6rem minmax(0, 1fr);
+  align-items: center;
+  padding: clamp(1rem, 2vw, 1.6rem) 0;
+}
+
+.node {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  position: relative;
+  z-index: 1;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--volt);
+  border: var(--wire) solid var(--ink);
+}
+
+.card {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+  padding: clamp(1.3rem, 2.4vw, 1.9rem);
+  background: color-mix(in srgb, var(--pale) 60%, var(--paper));
+  border: 2px solid var(--ink);
+}
+
+/* The trace from the card to its node. */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: calc(-3rem + 0.95rem - 2px);
+  width: calc(3rem - 0.95rem + 2px);
+  height: var(--wire);
+  transform: translateY(-50%);
+  background: var(--ink);
+}
+
+.stopNo {
+  display: inline-block;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--blue);
+}
+
+.card h3 {
+  margin-top: 0.25rem;
+  font-size: clamp(1.6rem, 2.4vw, 2.05rem);
+}
+
+.stopText {
+  margin-top: 0.7rem;
+  font-size: 1rem;
+}
+
+.covers {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0.9rem 0 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+.covers li {
+  position: relative;
+  padding-left: 1.3rem;
+}
+
+.covers li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--volt);
+  border: 2px solid var(--ink);
+}
+
+.price {
+  grid-column: 3;
+  grid-row: 1;
+  display: grid;
+  justify-items: start;
+  gap: 0.2rem;
+  padding-left: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.stop:nth-child(even) .card {
+  grid-column: 3;
+}
+
+.stop:nth-child(even) .card::after {
+  right: auto;
+  left: calc(-3rem + 0.95rem - 2px);
+}
+
+.stop:nth-child(even) .price {
+  grid-column: 1;
+  justify-items: end;
+  text-align: right;
+  padding-left: 0;
+  padding-right: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.priceFrom {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.priceValue {
+  font-family: var(--display);
+  font-size: clamp(3.2rem, 6.2vw, 5.6rem);
+  font-weight: 800;
+  line-height: 0.85;
+}
+
+.priceUnit {
+  max-width: 15rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* Alternate stops interleave, so the cards overlap along the wire. */
+@media (min-width: 901px) {
+  .stop + .stop {
+    margin-top: -4.5rem;
+  }
+}
+
+/* The ground symbol closes the circuit. */
+.ground {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding-top: 2.8rem;
+}
+
+.ground::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--wire);
+  height: 2.8rem;
+  transform: translateX(-50%);
+  background: var(--ink);
+}
+
+.ground span {
+  display: block;
+  height: var(--wire);
+  background: var(--ink);
+}
+
+.ground span:nth-child(1) {
+  width: 5rem;
+}
+
+.ground span:nth-child(2) {
+  width: 3.2rem;
+}
+
+.ground span:nth-child(3) {
+  width: 1.4rem;
+}
+
+/* --------------------------------------------------------------- emergency */
+
+.emergency {
+  margin-top: var(--air);
+  padding-bottom: var(--air);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.tape {
+  position: relative;
+  height: 34px;
+  overflow: hidden;
+}
+
+.emInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+}
+
+.emKicker {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--volt);
+}
+
+.emMain h2 {
+  margin-top: 0.9rem;
+  font-size: clamp(2.5rem, 5vw, 4.4rem);
+}
+
+.emPhone {
+  display: inline-block;
+  margin-top: 1.6rem;
+  padding: 0.05em 0.28em;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  background: var(--volt);
+  color: var(--ink);
+  transition: background-color 150ms ease;
+}
+
+.emPhone:hover {
+  background: var(--paper);
+}
+
+.emNote {
+  margin-top: 1rem;
+  max-width: 32rem;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.emSub {
+  margin-top: 2.6rem;
+  font-size: 1.5rem;
+  color: var(--volt);
+}
+
+.before {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  counter-reset: before;
+  display: grid;
+  gap: 0.2rem;
+  max-width: 36rem;
+}
+
+.before li {
+  counter-increment: before;
+  position: relative;
+  padding: 0.7rem 0 0.7rem 2.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 20%, transparent);
+}
+
+.before li::before {
+  content: counter(before);
+  position: absolute;
+  left: 0;
+  top: 0.62rem;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-weight: 800;
+  background: var(--volt);
+  color: var(--ink);
+}
+
+.emSide {
+  display: grid;
+  align-content: start;
+  gap: 2.4rem;
+}
+
+.emPlug {
+  width: clamp(7rem, 12vw, 10rem);
+  justify-self: center;
+  transform: rotate(-14deg);
+}
+
+.fees {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.fees caption {
+  text-align: left;
+  padding-bottom: 0.8rem;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--volt);
+}
+
+.fees th,
+.fees td {
+  padding: 0.75rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.fees thead th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+  border-bottom: 2px solid var(--volt);
+}
+
+.fees tbody th {
+  font-weight: 500;
+}
+
+.fees td {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- licensed */
+
+.licensed {
+  padding: var(--air) var(--gut);
+  background: var(--pale);
+}
+
+.licInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.licArt {
+  position: sticky;
+  top: 6rem;
+  display: grid;
+  place-items: center;
+  min-height: clamp(24rem, 38vw, 32rem);
+  background: var(--volt);
+  border: 2px solid var(--ink);
+}
+
+.pliers {
+  width: clamp(6rem, 10vw, 8.5rem);
+  transform: rotate(12deg);
+}
+
+/* The hero's board again, cleared in the middle where the pliers lie. */
+.licField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.7;
+  mask-image: radial-gradient(closest-side, transparent 55%, var(--ink) 95%);
+}
+
+.licBody h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.6rem, 5vw, 4.4rem);
+}
+
+.creds {
+  list-style: none;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.cred {
+  padding: 1.3rem 1.4rem 1.4rem;
+  background: var(--paper);
+  border-top: 4px solid var(--ink);
+}
+
+.credBig {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(2.3rem, 3.6vw, 3rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--blue);
+}
+
+.cred h3 {
+  margin-top: 0.6rem;
+  font-size: 1.35rem;
+}
+
+.cred p {
+  margin-top: 0.5rem;
+  font-size: 0.97rem;
+}
+
+.stepsHead {
+  margin-top: 3rem;
+  font-size: 1.6rem;
+}
+
+.steps {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.steps li {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--ink);
+}
+
+.stepNo {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--blue);
+}
+
+.steps strong {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.stepText {
+  font-size: 0.95rem;
+}
+
+/* ------------------------------------------------------------------- areas */
+
+.areas {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.areaGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.rings {
+  position: relative;
+  width: min(100%, 21rem);
+  aspect-ratio: 1;
+}
+
+.ringOuter,
+.ringInner {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+}
+
+.ringOuter {
+  inset: 0;
+  background: var(--pale);
+  border-style: dashed;
+}
+
+.ringInner {
+  inset: 26%;
+  background: var(--volt);
+}
+
+/* Traces for the streets of the outer ring. */
+.ringStreets {
+  position: absolute;
+  inset: 2px;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.depot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.1rem;
+  height: 1.1rem;
+  transform: translate(-50%, -50%);
+  background: var(--ink);
+}
+
+.ringLabelOne,
+.ringLabelTwo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.ringLabelOne {
+  top: 30%;
+}
+
+.ringLabelTwo {
+  top: 6%;
+}
+
+.zone {
+  padding-top: 0.2rem;
+}
+
+.zone h3 {
+  font-size: clamp(2rem, 3.2vw, 2.6rem);
+}
+
+.zoneTerms {
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.towns {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.towns li {
+  padding: 0.5rem 0.7rem;
+  font-weight: 500;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+.zone:nth-child(2) .towns li {
+  background: var(--volt);
+}
+
+.zone:nth-child(3) .towns li {
+  background: var(--pale);
+}
+
+/* ------------------------------------------------------------------- quote */
+
+.quote {
+  padding: var(--air) var(--gut);
+}
+
+.quoteInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+  padding-top: clamp(2.5rem, 5vw, 3.5rem);
+  border-top: 2px solid var(--ink);
+}
+
+.quoteText h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.6rem, 5vw, 4.4rem);
+}
+
+.quoteText > p:not(.eyebrow) {
+  margin-top: 1.2rem;
+  max-width: 30rem;
+}
+
+.hours {
+  margin: 2rem 0 0;
+  max-width: 26rem;
+  border-top: 2px solid var(--ink);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.contact {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 1.6rem;
+}
+
+.contact a {
+  justify-self: start;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.15;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  border-bottom: 3px solid var(--volt);
+}
+
+.contact a:hover {
+  border-bottom-color: var(--blue);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.3rem, 3vw, 2.2rem);
+  background: color-mix(in srgb, var(--pale) 70%, var(--paper));
+  border: 2px solid var(--ink);
+  box-shadow: 10px 10px 0 var(--volt);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.when legend {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.when {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.when legend {
+  padding: 0;
+  margin-bottom: 0.4rem;
+}
+
+.when label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  font-weight: 500;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+.when input {
+  accent-color: var(--blue);
+  margin: 0;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.9rem 1.8rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--volt);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.submit:hover {
+  background: var(--ink);
+  color: var(--volt);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* The emergency section's hazard tape, along the footer's top edge. */
+.footTape {
+  position: relative;
+  height: 34px;
+  margin: calc(-1 * clamp(3rem, 6vw, 4.5rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+
+.footBrand {
+  display: flex;
+  gap: 1.1rem;
+  align-items: flex-start;
+}
+
+.footBulb {
+  flex: none;
+  width: 2.6rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footTag {
+  margin-top: 0.5rem;
+  max-width: 22rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footHead {
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--volt);
+}
+
+.footLink {
+  display: block;
+  margin-top: 0.5rem;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.footLink:hover {
+  color: var(--volt);
+}
+
+.footText {
+  margin-top: 0.5rem;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.6rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 20%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.footFine a {
+  color: var(--paper);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .barCall {
+    margin-left: auto;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .areaGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .rings {
+    grid-column: 1 / -1;
+    width: min(100%, 17rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .board {
+    min-height: 26rem;
+  }
+
+  .socket {
+    width: 13rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNote {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  /* The wire moves to the left edge; card, then price, to its right. */
+  .source {
+    justify-items: start;
+  }
+
+  .sourcePlug {
+    width: 4rem;
+    margin-left: calc(0.95rem - 2rem);
+  }
+
+  .wire::before {
+    left: 0.95rem;
+  }
+
+  .stop,
+  .stop:nth-child(even) {
+    grid-template-columns: 2.9rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .node {
+    grid-column: 1;
+    justify-self: start;
+    margin-top: 1.6rem;
+  }
+
+  .card,
+  .stop:nth-child(even) .card {
+    grid-column: 2;
+  }
+
+  .card::after,
+  .stop:nth-child(even) .card::after {
+    top: 2.55rem;
+    left: calc(-2.9rem + 1.9rem - 2px);
+    right: auto;
+    width: calc(2.9rem - 1.9rem + 2px);
+  }
+
+  .price,
+  .stop:nth-child(even) .price {
+    grid-column: 2;
+    grid-row: 2;
+    justify-items: start;
+    text-align: left;
+    padding: 0.9rem 0 0;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 0.7rem;
+  }
+
+  .priceFrom {
+    grid-column: 1 / -1;
+  }
+
+  .priceValue {
+    font-size: 3rem;
+  }
+
+  .ground {
+    justify-items: start;
+  }
+
+  .ground::before {
+    left: 0.95rem;
+  }
+
+  .ground span:nth-child(1) {
+    margin-left: calc(0.95rem - 2.5rem);
+  }
+
+  .ground span:nth-child(2) {
+    margin-left: calc(0.95rem - 1.6rem);
+  }
+
+  .ground span:nth-child(3) {
+    margin-left: calc(0.95rem - 0.7rem);
+  }
+
+  .emInner,
+  .licInner,
+  .quoteInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .licArt {
+    position: relative;
+    top: auto;
+    min-height: 16rem;
+  }
+
+  .pliers {
+    width: 5rem;
+    transform: rotate(90deg);
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .footBrand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .barCall {
+    display: none;
+  }
+
+  .siteMenu {
+    margin-left: auto;
+  }
+
+  .brandName {
+    font-size: 1.25rem;
+  }
+
+  .facts dd {
+    font-size: 1.5rem;
+  }
+
+  .creds,
+  .steps,
+  .areaGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The fee table restacks: a row per time band, the two prices under it. */
+  .fees thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .fees tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    padding: 0.7rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+  }
+
+  .fees th,
+  .fees td {
+    border: 0;
+    padding: 0.15rem 0;
+  }
+
+  .fees tbody th {
+    grid-column: 1 / -1;
+  }
+
+  .fees td::before {
+    content: attr(data-label);
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--paper) 70%, transparent);
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+    box-shadow: 6px 6px 0 var(--volt);
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCall,
+  .btn,
+  .btnLine,
+  .emPhone,
+  .submit {
+    transition: none;
+  }
+}

@@ -12,6 +12,14 @@ import { readFileSync } from "node:fs";
 
 export const CUTOUT_SUFFIX = "-cutout";
 
+/**
+ * Artwork whose color the palette supplies (docs/image-pipeline.md):
+ *   mono    one ink, kept as the alpha of the ink
+ *   layers  flat illustration in key colors, split one layer per key
+ *   tone    a photograph reduced to its luminance, for duotone or pattern fill
+ */
+export const RECOLOR_KINDS = new Set(["mono", "layers", "tone"]);
+
 /** Read + validate the prompt file. Throws on the mistakes that are silent otherwise. */
 export function loadPromptData(file) {
   const data = JSON.parse(readFileSync(file, "utf8"));
@@ -40,6 +48,17 @@ function resolvePrompt(prompt, data) {
   const style = pick("style");
   if (!style) throw new Error(`prompt "${prompt.id}": no style on the prompt, set, project or defaults`);
 
+  const recolor = pick("recolor", null);
+  if (recolor && !RECOLOR_KINDS.has(recolor)) {
+    throw new Error(`prompt "${prompt.id}": recolor must be one of ${[...RECOLOR_KINDS].join(", ")}`);
+  }
+  if (recolor && pick("cutout", false) !== true) {
+    throw new Error(`prompt "${prompt.id}": recolorable artwork is generated on a transparent ground (cutout: true)`);
+  }
+  if (recolor === "layers" && !pick("keys", null)) {
+    throw new Error(`prompt "${prompt.id}": recolor "layers" needs keys (hex -> layer name, in paint order)`);
+  }
+
   return {
     id: prompt.id,
     project: prompt.project,
@@ -52,6 +71,12 @@ function resolvePrompt(prompt, data) {
     quality: pick("quality", "low"),
     cutout: pick("cutout", false) === true,
     noText: pick("noText", true) !== false,
+    // Recolorable artwork (scripts/promote-artwork.mjs): what the palette
+    // cannot supply is kept, and the color is left to CSS.
+    recolor: pick("recolor", null),
+    keys: pick("keys", null),
+    render: pick("render", "vector"),
+    trim: pick("trim", true) !== false,
     // Authored sentences, appended verbatim in this order.
     sentences: [set?.description, pick("backdrop"), prompt.note].filter(Boolean),
   };

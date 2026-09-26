@@ -58,9 +58,17 @@
   border-radius: 999px;
 }
 
-/* In a menu the bar closes the header rather than opening a dialog. */
+/* In a menu the count is a plain line of UI copy, not the dialog's mono
+   eyebrow, and the bar closes the header rather than opening a dialog. */
+.usageMenu .usageLabel {
+  font: 400 13px var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova', sans-serif;
+  color: #0e0e13;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
 .usageMenu .track {
-  margin-bottom: 10px;
+  margin-bottom: 9px;
 }
 
 .title {

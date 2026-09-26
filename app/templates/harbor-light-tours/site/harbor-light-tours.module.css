@@ -1,0 +1,1020 @@
+/* ==========================================================================
+   HARBOR LIGHT TOURS - boat tours, Gull Harbor
+   Full bleed. The first screen is the harbor at its moorings across the
+   whole width, drawn in two of the page's inks, its empty sky the
+   section's own pale blue and the words written in it. The trips are the
+   departures board at the end of the pier; a row of sails crosses the
+   page; and the coast with its lighthouse fills the booking section. A
+   condensed sign-painter's face for the board and the headings, a plain
+   grotesque for the rest, harbor fog, deep water and a signal red.
+   ========================================================================== */
+
+.page {
+  --fog: #e9eef1;
+  --ink: #14222d;
+  --signal: #d8503c;
+  --sea: #3b6a87;
+  --gray: #8997a1;
+  --pale: #d3dde3;
+  --gut: clamp(1rem, 4.5vw, 4rem);
+  --max: 84rem;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+  --cond: 'Saira Condensed', 'Arial Narrow', sans-serif;
+  --muted: color-mix(in srgb, var(--ink) 72%, var(--fog));
+  --line: color-mix(in srgb, var(--ink) 16%, transparent);
+
+  position: relative;
+  font-family: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--fog);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 1rem;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--cond);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------- top bar
+   Over the sky, like the words; nothing behind it but the section. */
+
+.bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.2rem var(--gut);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--cond);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.markLight {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 0 0.3rem color-mix(in srgb, var(--signal) 25%, transparent);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2vw, 2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--signal);
+}
+
+.barCta {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 0.3rem;
+  background: var(--ink);
+  color: var(--fog);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--fog);
+}
+
+/* ------------------------------------------------------------------ hero
+   The picture is drawn at its own proportions across the full width, its
+   top under the words, and its sky fades into the section's own color, a
+   harbor fog the masts rise out of. The water is cropped, never the sky. */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: calc(12rem + 52vw);
+  overflow: hidden;
+  background: var(--pale);
+}
+
+.heroArt {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  top: 12rem;
+  height: 66.7vw;
+}
+
+.heroArt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--pale) 0%,
+    color-mix(in srgb, var(--pale) 85%, transparent) 17%,
+    color-mix(in srgb, var(--pale) 55%, transparent) 32%,
+    transparent 47%
+  );
+}
+
+.heroText {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 6.5rem var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  column-gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+}
+
+.heroLead {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: end;
+}
+
+.kicker,
+.secKick {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+
+.kicker {
+  grid-column: 1;
+}
+
+.title {
+  grid-column: 1;
+  margin-top: 0.8rem;
+  font-size: clamp(3.2rem, 5.6vw, 5.4rem);
+  line-height: 0.9;
+}
+
+.title em {
+  display: block;
+  font-style: normal;
+  color: var(--sea);
+}
+
+.lede {
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.8rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.35rem;
+  border-radius: 0.3rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.btn {
+  border: 0;
+  background: var(--signal);
+  color: var(--ink);
+}
+
+.btn:hover {
+  background: var(--ink);
+  color: var(--fog);
+}
+
+.btnGhost {
+  border: 2px solid var(--ink);
+  color: var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--fog);
+}
+
+.nextUp {
+  position: absolute;
+  right: var(--gut);
+  bottom: 2rem;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 1rem;
+  align-items: center;
+  padding: 0.9rem 1.2rem;
+  border-radius: 0.4rem;
+  background: var(--ink);
+  color: var(--fog);
+}
+
+.nextLabel {
+  grid-column: 1 / -1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+
+.nextTime {
+  font-family: var(--cond);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.nextTour {
+  font-size: 0.95rem;
+}
+
+/* ------------------------------------------------------------ departures */
+
+.departures {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.boardHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem 3rem;
+  margin-bottom: 2rem;
+}
+
+.boardHead h2,
+.secHead h2 {
+  margin-top: 0.7rem;
+  font-size: clamp(2.4rem, 4.8vw, 4rem);
+}
+
+.boardNote {
+  max-width: 28rem;
+  color: var(--muted);
+}
+
+.board {
+  padding: 0.6rem clamp(1rem, 2.5vw, 2rem) 1rem;
+  border-radius: 0.8rem;
+  background: var(--ink);
+  color: var(--pale);
+  box-shadow: 0 30px 60px -35px rgb(0 0 0 / 0.5);
+}
+
+.boardRow {
+  display: grid;
+  grid-template-columns: minmax(0, 2.1fr) minmax(0, 0.8fr) minmax(0, 2.6fr) minmax(0, 0.7fr) minmax(0, 1.1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 0;
+  font-family: var(--cond);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.boardRow[data-head='yes'] {
+  padding: 0.7rem 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  color: var(--gray);
+}
+
+.boardList .boardRow {
+  border-top: 1px solid color-mix(in srgb, var(--pale) 16%, transparent);
+}
+
+.tourName {
+  font-weight: 700;
+  color: var(--fog);
+}
+
+.tourTimes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* A split-flap tile: a hairline across the middle of each time. */
+.time {
+  padding: 0.1rem 0.45rem;
+  border-radius: 0.2rem;
+  background-color: color-mix(in srgb, var(--pale) 12%, transparent);
+  background-image: linear-gradient(transparent calc(50% - 0.5px), color-mix(in srgb, var(--ink) 80%, transparent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  color: var(--fog);
+}
+
+.tourDays {
+  margin-left: 0.4rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--gray);
+}
+
+.tourPrice {
+  color: var(--fog);
+}
+
+.status {
+  justify-self: start;
+  padding: 0.05rem 0.55rem;
+  border-radius: 0.2rem;
+  font-size: 1.05rem;
+}
+
+.status[data-status='boarding'] {
+  background: var(--signal);
+  color: var(--ink);
+}
+
+.status[data-status='ontime'] {
+  color: var(--pale);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pale) 40%, transparent);
+}
+
+.status[data-status='few'] {
+  color: var(--signal);
+  box-shadow: inset 0 0 0 1px var(--signal);
+}
+
+.status[data-status='full'] {
+  color: var(--gray);
+  text-decoration: line-through;
+}
+
+/* ----------------------------------------------------------------- sails */
+
+.sails {
+  position: relative;
+  height: clamp(5.5rem, 10vw, 8rem);
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------- sights */
+
+.sights {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.secHead {
+  max-width: 44rem;
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+/* The route runs along a strip of swell; each stop is a buoy on it. */
+.route {
+  position: relative;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.routeSwell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3.2rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--pale);
+}
+
+.stops {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.stop {
+  padding-top: 4.4rem;
+  position: relative;
+}
+
+.stop::before {
+  content: '';
+  position: absolute;
+  top: 0.85rem;
+  left: 0.9rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 0 0.35rem var(--fog);
+}
+
+.stopAt {
+  font-family: var(--cond);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--sea);
+}
+
+.stop h3 {
+  margin-top: 0.5rem;
+  font-size: 1.45rem;
+}
+
+.stop p {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ know */
+
+.know {
+  background: var(--pale);
+}
+
+.knowInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+/* A burgee, the club flag, flown under the heading. */
+.burgee {
+  position: relative;
+  width: 7.5rem;
+  aspect-ratio: 3 / 2;
+  margin-top: 2.2rem;
+  overflow: hidden;
+  background: var(--fog);
+  clip-path: polygon(0 0, 100% 0, 74% 50%, 100% 100%, 0 100%);
+}
+
+.faqs {
+  border-top: 2px solid var(--ink);
+}
+
+.faq {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.faq summary {
+  position: relative;
+  padding: 1.15rem 2.5rem 1.15rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--cond);
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--signal);
+}
+
+.faq[open] summary::after {
+  content: '\2212';
+}
+
+.faq p {
+  padding: 0 2.5rem 1.3rem 0;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- charters */
+
+.charters {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.charterCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.75rem, 5vw, 4rem) clamp(1.75rem, 5vw, 4rem) calc(clamp(1.75rem, 5vw, 4rem) + 36px);
+  border-radius: 0.8rem;
+  background: var(--sea);
+  color: var(--fog);
+}
+
+/* A regatta along the foot of the card. */
+.regatta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36px;
+  overflow: hidden;
+}
+
+.charterCard h2 {
+  margin-top: 0.7rem;
+  font-size: clamp(2.4rem, 4.8vw, 4rem);
+}
+
+.charterCard .secKick {
+  color: var(--pale);
+}
+
+.charterCard .secNote {
+  color: color-mix(in srgb, var(--fog) 85%, var(--sea));
+}
+
+.charterList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--fog) 30%, transparent);
+}
+
+.charterList div:first-child {
+  border-top: 1px solid color-mix(in srgb, var(--fog) 30%, transparent);
+}
+
+.charterList dd {
+  font-family: var(--cond);
+  font-size: 1.35rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ book
+   The coast is anchored to the foot of the section and the form stands
+   in the sky to its left, on a panel of its own. */
+
+.book {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 58rem;
+  background: var(--pale);
+}
+
+.bookArt {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: max(66.7vw, 42rem);
+}
+
+.bookInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 30rem);
+  gap: 1rem;
+}
+
+.bookPanel {
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  border-radius: 0.8rem;
+  background: var(--fog);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.45);
+}
+
+.bookPanel h2 {
+  margin-top: 0.6rem;
+  font-size: clamp(2.4rem, 4.2vw, 3.4rem);
+}
+
+.bookLede {
+  margin-top: 0.7rem;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--fog);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 40%, transparent);
+  border-radius: 0.3rem;
+}
+
+.form .btn {
+  grid-column: 1 / -1;
+  margin-top: 0.4rem;
+}
+
+.bookInfo {
+  padding: 1.2rem clamp(1.5rem, 3vw, 2.2rem);
+  border-radius: 0.8rem;
+  background: var(--ink);
+  color: var(--fog);
+}
+
+.bookInfo h3 {
+  font-size: 1.5rem;
+}
+
+.bookInfo p {
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--fog) 80%, var(--ink));
+}
+
+.contact {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.7rem;
+  font-weight: 700;
+}
+
+.contact a {
+  text-decoration-color: var(--signal);
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(3rem, 6vw, 4rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--fog);
+}
+
+/* Harbor drizzle behind the footer, faint. */
+.footDrizzle {
+  position: absolute;
+  inset: 0;
+  opacity: 0.45;
+}
+
+.footTop,
+.footFine {
+  position: relative;
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 3rem;
+  align-items: baseline;
+}
+
+.footName {
+  font-family: var(--cond);
+  font-size: 1.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.footTag {
+  color: color-mix(in srgb, var(--fog) 72%, var(--ink));
+}
+
+.footNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  font-weight: 600;
+}
+
+.footNav a {
+  text-decoration: none;
+}
+
+.footNav a:hover {
+  color: var(--signal);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--fog) 20%, transparent);
+  color: color-mix(in srgb, var(--fog) 70%, var(--ink));
+}
+
+.footFine a {
+  color: var(--fog);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1180px) {
+  .footTop {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .footNav {
+    grid-column: 1 / -1;
+  }
+
+  .stops {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2.5rem;
+  }
+
+  .routeSwell {
+    display: none;
+  }
+
+  .stop {
+    padding-top: 2.6rem;
+  }
+
+  .stop::before {
+    top: 0;
+    left: 0;
+    width: 1.2rem;
+    height: 1.2rem;
+    box-shadow: none;
+  }
+
+  .boardRow {
+    grid-template-columns: minmax(0, 1.8fr) minmax(0, 0.7fr) minmax(0, 2.4fr) minmax(0, 0.6fr) minmax(0, 1.1fr);
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .nav,
+  .barCta {
+    display: none;
+  }
+
+  .heroText {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroLead {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 1.3rem;
+    max-width: 34rem;
+  }
+
+  .hero {
+    min-height: calc(20rem + 52vw);
+  }
+
+  .heroArt {
+    top: 20rem;
+  }
+
+  .siteMenu {
+    display: block;
+    margin-left: auto;
+  }
+
+  .knowInner,
+  .charterCard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* On a phone each departure is a card of its own, and the hero's
+   picture is drawn taller than the screen is wide so the masts still
+   reach the words. */
+@media (max-width: 720px) {
+  .hero {
+    min-height: 0;
+    padding-bottom: 21rem;
+  }
+
+  .heroText {
+    padding-top: 6rem;
+  }
+
+  .mark {
+    font-size: 1.2rem;
+    white-space: nowrap;
+  }
+
+  .nextUp {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: fit-content;
+    margin: 1.8rem var(--gut) 0;
+  }
+
+  .heroArt {
+    top: auto;
+    left: -45%;
+    right: -35%;
+    bottom: -3rem;
+    height: 26rem;
+  }
+
+  .title {
+    font-size: clamp(3rem, 15vw, 4rem);
+  }
+
+  .boardRow[data-head='yes'] {
+    display: none;
+  }
+
+  .boardRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name price'
+      'length status'
+      'times times';
+    row-gap: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .tourName {
+    grid-area: name;
+  }
+
+  .tourLength {
+    grid-area: length;
+    color: var(--gray);
+  }
+
+  .tourTimes {
+    grid-area: times;
+  }
+
+  .tourPrice {
+    grid-area: price;
+  }
+
+  .status {
+    grid-area: status;
+    justify-self: end;
+  }
+
+  .boardList .boardRow:first-child {
+    border-top: 0;
+  }
+
+  .stops {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.8rem;
+    padding-left: 2.2rem;
+    border-left: 2px dashed color-mix(in srgb, var(--sea) 50%, transparent);
+    margin-left: 0.55rem;
+  }
+
+  .stop {
+    padding-top: 0;
+  }
+
+  .stop::before {
+    left: -2.95rem;
+    top: 0.05rem;
+    box-shadow: 0 0 0 0.3rem var(--fog);
+  }
+
+  .book {
+    min-height: 0;
+    padding-bottom: 16rem;
+  }
+
+  .bookArt {
+    left: -60%;
+    right: -10%;
+    height: 26rem;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost {
+    transition: none;
+  }
+}

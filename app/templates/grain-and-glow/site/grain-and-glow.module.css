@@ -1,0 +1,977 @@
+/* ==========================================================================
+   GRAIN & GLOW - skincare studio, Orchard Street
+   Soft and unhurried: blush paper, rose for warmth, a thin italic serif.
+   Two things carry the page. The treatment menu is set like a printed card
+   with dotted leaders to each length and price, and the shelf is the house
+   line standing on a plank against a grained wall. Every bottle and the
+   portrait are photographs tinted by CSS masks in two of the page's colors,
+   so one pump bottle can be six products. Cormorant and Jost.
+   ========================================================================== */
+
+.page {
+  --blush: #f8f2ef;
+  --ink: #2a1f1f;
+  --rose: #c07a6b;
+  --gray: #9c8f8a;
+  --pale: #eedfda;
+  --gut: clamp(1.25rem, 4vw, 3.5rem);
+  --max: 80rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --soft: color-mix(in srgb, var(--ink) 74%, var(--blush));
+  --deep-rose: color-mix(in srgb, var(--rose) 72%, var(--ink));
+  --rule: color-mix(in srgb, var(--ink) 15%, transparent);
+  --serif: 'Cormorant', 'Garamond', 'Times New Roman', serif;
+
+  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.65;
+  background: var(--blush);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.kicker {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--deep-rose);
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.9rem var(--gut);
+  background: color-mix(in srgb, var(--blush) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25em;
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.mark em {
+  font-weight: 400;
+  color: var(--rose);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  color: var(--soft);
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--deep-rose);
+}
+
+.barCta {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.barCta:hover {
+  background: var(--ink);
+  color: var(--blush);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--blush);
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.heroTitle {
+  margin-top: 1.3rem;
+  font-size: clamp(3.8rem, 8.4vw, 8rem);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--rose);
+}
+
+.lede {
+  margin-top: 1.8rem;
+  max-width: 30rem;
+  font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+  font-weight: 300;
+  color: var(--soft);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.8rem;
+  margin-top: 2.2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.9rem 1.6rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--blush);
+  font: inherit;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.button:hover {
+  background: var(--deep-rose);
+}
+
+.textLink {
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  text-underline-offset: 0.35em;
+  text-decoration-thickness: 1px;
+}
+
+/* The disc and the ledge: the glow drawn in the disc, the bottles on a
+   pale stone ledge across its lower third. */
+.heroArt {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 1 / 1.02;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.glow {
+  position: absolute;
+  top: 0;
+  left: 5%;
+  width: 90%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--rose);
+  overflow: hidden;
+}
+
+.ledge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 6%;
+  padding: 0 12%;
+}
+
+.ledge::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.8rem;
+  height: 1.1rem;
+  z-index: -1;
+  border-radius: 0.2rem;
+  background: var(--gray);
+  box-shadow:
+    inset 0 2px 0 color-mix(in srgb, var(--blush) 60%, var(--gray)),
+    0 16px 22px -12px rgb(0 0 0 / 0.3);
+}
+
+.ledge .heroPump {
+  width: auto;
+  height: clamp(15rem, 27vw, 24rem);
+  filter: drop-shadow(8px 0 10px rgb(0 0 0 / 0.12));
+}
+
+.ledge .heroJar {
+  width: clamp(7rem, 12.5vw, 11rem);
+  filter: drop-shadow(8px 0 10px rgb(0 0 0 / 0.12));
+}
+
+/* ------------------------------------------------------------------- menu
+   A printed card: a double rule inset from its edge, a centered head, and
+   leaders running from each name to its length and price. */
+
+.menuSec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.card {
+  position: relative;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1.4rem, 5vw, 4.5rem);
+  background: var(--pale);
+  outline: 1px solid color-mix(in srgb, var(--rose) 60%, transparent);
+  outline-offset: -0.8rem;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--rose) 35%, transparent);
+  pointer-events: none;
+}
+
+.cardHead {
+  position: relative;
+  text-align: center;
+  max-width: 36rem;
+  margin: 0 auto clamp(2rem, 4vw, 3.5rem);
+}
+
+.cardHead h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.cardNote {
+  margin-top: 0.8rem;
+  font-weight: 300;
+  color: var(--soft);
+}
+
+.cardCols {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.courseStack {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+.course h3 {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rose);
+  font-size: 1.9rem;
+  font-weight: 500;
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  padding: 0.85rem 0;
+}
+
+.itemLine {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.itemLine::before {
+  content: '';
+  order: 1;
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 1px dotted color-mix(in srgb, var(--ink) 45%, transparent);
+  transform: translateY(-0.28em);
+}
+
+.itemName {
+  order: 0;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.itemTime {
+  order: 2;
+  font-size: 0.82rem;
+  color: var(--soft);
+  white-space: nowrap;
+}
+
+.itemPrice {
+  order: 3;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.itemNote {
+  margin-top: 0.25rem;
+  max-width: 32rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.08rem;
+  line-height: 1.4;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------------ shelf */
+
+.shelfSec {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--air);
+  padding: var(--air) max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: var(--pale);
+  scroll-margin-top: 3rem;
+}
+
+.wall {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.6;
+  mask-image: linear-gradient(180deg, transparent 25%, var(--ink) 50%, var(--ink) 70%, transparent 92%);
+}
+
+.shelfHead {
+  max-width: 40rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.shelfHead h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.3rem, 4.6vw, 3.6rem);
+  font-weight: 400;
+}
+
+.shelfNote {
+  margin-top: 1rem;
+  font-weight: 300;
+  color: var(--soft);
+}
+
+.shelf {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: 0;
+  row-gap: 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.product {
+  display: flex;
+  flex-direction: column;
+}
+
+/* One stretch of plank under each product; side by side they read as one
+   shelf, and a new row on a phone gets a plank of its own. */
+.productStage {
+  position: relative;
+  height: clamp(13rem, 19vw, 17rem);
+  border-bottom: 0.9rem solid var(--gray);
+}
+
+.productStage::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.9rem);
+  height: 1rem;
+  background: linear-gradient(180deg, rgb(0 0 0 / 0.16), transparent);
+}
+
+.productStage::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: color-mix(in srgb, var(--blush) 60%, var(--gray));
+}
+
+.productStage .productArt {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+.productStage > [data-artwork='grain-and-glow-pump'] {
+  height: 92%;
+  width: auto;
+}
+
+.productStage > [data-artwork='grain-and-glow-jar'] {
+  width: 78%;
+  max-width: 9rem;
+}
+
+.label {
+  flex: 1;
+  margin: 1.3rem 0.5rem 0;
+  padding: 0.9rem 0.9rem 1rem;
+  background: var(--blush);
+  border-radius: 0.3rem;
+  box-shadow: 0 1px 0 var(--rule);
+}
+
+.label h3 {
+  font-size: 1.28rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.labelMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--soft);
+}
+
+.labelPrice {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.labelNote {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--soft);
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+/* ------------------------------------------------------------ esthetician */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.portraitFrame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-width: 30rem;
+  border-radius: 50% 50% 0.5rem 0.5rem / 38% 38% 0.5rem 0.5rem;
+  background: var(--rose);
+  overflow: hidden;
+}
+
+/* The hero's lights again, soft, in the top of the arch. */
+.portraitGlow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  mask-image: linear-gradient(180deg, var(--ink) 0%, var(--ink) 30%, transparent 70%);
+}
+
+.portraitFrame .portrait {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 82%;
+  transform: translateX(-50%);
+}
+
+.aboutText h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.8rem, 5.4vw, 4.4rem);
+  font-weight: 400;
+}
+
+.aboutRole {
+  margin-top: 0.5rem;
+  font-size: 0.86rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.quote {
+  margin: 1.8rem 0;
+  padding-left: 1.2rem;
+  border-left: 2px solid var(--rose);
+}
+
+.quote p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.25;
+}
+
+.aboutText > p:not(.kicker):not(.aboutRole) {
+  max-width: 34rem;
+  font-weight: 300;
+  color: var(--soft);
+}
+
+.creds {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1.5rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+}
+
+.creds li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.92rem;
+}
+
+.creds li::before {
+  content: '';
+  flex: none;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--rose);
+}
+
+/* -------------------------------------------------------------- questions */
+
+.qHead {
+  text-align: center;
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.qHead h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.3rem, 4.6vw, 3.6rem);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.faq {
+  max-width: 50rem;
+  margin: 0 auto;
+  border-top: 1px solid var(--rule);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faqItem summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.25;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '\002B';
+  flex: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--deep-rose);
+  transition: transform 180ms ease;
+}
+
+.faqItem[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.faqItem p {
+  max-width: 42rem;
+  padding: 0 0 1.3rem;
+  font-weight: 300;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------------- book */
+
+.bookSec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.book {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  padding: clamp(1.6rem, 5vw, 4rem);
+  border-radius: 1.5rem;
+  background: var(--ink);
+  color: var(--blush);
+  overflow: hidden;
+}
+
+/* A low glow of lights along the top edge of the booking card. */
+.bookGlow {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(3.5rem, 7vw, 6rem);
+  opacity: 0.45;
+  mask-image: linear-gradient(180deg, var(--ink), transparent);
+}
+
+.book .kicker {
+  color: color-mix(in srgb, var(--rose) 70%, var(--blush));
+}
+
+.bookInfo h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.bookLede {
+  margin-top: 1rem;
+  font-weight: 300;
+  color: color-mix(in srgb, var(--blush) 82%, var(--ink));
+}
+
+.hours {
+  margin: 1.8rem 0 1.4rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--blush) 18%, transparent);
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+}
+
+.address {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+
+.contactLine {
+  margin-top: 0.45rem;
+}
+
+.contactLine a {
+  text-underline-offset: 0.3em;
+}
+
+.policy {
+  margin-top: 1.2rem;
+  font-size: 0.86rem;
+  font-weight: 300;
+  color: color-mix(in srgb, var(--blush) 72%, var(--ink));
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field span {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--blush) 80%, var(--ink));
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--blush) 26%, transparent);
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--blush) 7%, var(--ink));
+  color: var(--blush);
+  font: inherit;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.form .button {
+  align-self: flex-start;
+  margin-top: 0.3rem;
+  background: var(--rose);
+  color: var(--ink);
+}
+
+.form .button:hover {
+  background: var(--blush);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  --foot-top: clamp(2.5rem, 5vw, 3.5rem);
+  margin-top: var(--air);
+  padding: var(--foot-top) var(--gut) 2rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+
+/* The shelf wall's grain, falling from the top edge of the footer. */
+.footGrain {
+  position: relative;
+  height: clamp(2.5rem, 5vw, 3.5rem);
+  margin: calc(-1 * var(--foot-top)) calc(-1 * var(--gut)) calc(var(--foot-top) * 0.6);
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, var(--ink) 30%, transparent);
+}
+
+.footMark {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  line-height: 1;
+}
+
+.footAddr {
+  margin-top: 0.7rem;
+  font-weight: 300;
+  color: var(--soft);
+}
+
+.footFine {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-width: 44rem;
+  margin: 2rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.8rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .shelf {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .productStage {
+    height: 15rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.8rem;
+  }
+
+  .hero,
+  .cardCols,
+  .about,
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    max-width: 26rem;
+  }
+
+  .ledge .heroPump {
+    height: clamp(12rem, 52vw, 17rem);
+  }
+
+  .ledge .heroJar {
+    width: clamp(6rem, 24vw, 8rem);
+  }
+
+  .portraitFrame {
+    max-width: 22rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .barCta {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .productStage {
+    height: 12rem;
+  }
+
+  .label {
+    margin: 1rem 0.3rem 0;
+    padding: 0.75rem 0.7rem 0.85rem;
+  }
+
+  .itemLine {
+    flex-wrap: wrap;
+  }
+
+  .itemName {
+    flex-basis: 100%;
+  }
+
+  .itemLine::before {
+    display: none;
+  }
+
+  .itemTime {
+    margin-right: auto;
+  }
+
+  .card {
+    outline-offset: -0.5rem;
+  }
+
+  .card::before {
+    inset: 0.75rem;
+  }
+
+  .formRow,
+  .creds {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCta,
+  .button,
+  .faqItem summary::after {
+    transition: none;
+  }
+}

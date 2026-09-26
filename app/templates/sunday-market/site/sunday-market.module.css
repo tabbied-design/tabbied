@@ -1,0 +1,1135 @@
+.page {
+  --paper: #fbf7ee;
+  --ink: #26231c;
+  --tomato: #e4572e;
+  --leaf: #4e8f4a;
+  --squash: #f3b63f;
+  --gray: #a39c8c;
+  --gut: clamp(1.25rem, 4.5vw, 3.5rem);
+  --max: 78rem;
+  --radius: 16px;
+  --line: color-mix(in srgb, var(--ink) 14%, transparent);
+  --muted: color-mix(in srgb, var(--ink) 74%, var(--paper));
+  --tint: color-mix(in srgb, var(--squash) 16%, var(--paper));
+  --display: 'Caprasimo', 'Georgia', serif;
+
+  font-family: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   SUNDAY MARKET - farmers market on Mill Square
+   A hand-painted market board: warm paper, a soft ink, and the three colors
+   of a produce table (tomato, leaf and squash) doing all the work. The page
+   is built round the stall map, a grid of numbered squares in the colors of
+   what they sell. The basket, the carrots and the apple crate are flat
+   color layers drawn in the same three inks, so they re-color with it.
+   ========================================================================== */
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--tomato);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Stall kinds: one color each, on the map, in the key and the directory. */
+.produce {
+  --kind: var(--leaf);
+  --kind-ink: var(--paper);
+}
+
+.dairy {
+  --kind: var(--tomato);
+  --kind-ink: var(--paper);
+}
+
+.bakery {
+  --kind: var(--squash);
+  --kind-ink: var(--ink);
+}
+
+.food {
+  --kind: var(--ink);
+  --kind-ink: var(--paper);
+}
+
+.craft {
+  --kind: var(--gray);
+  --kind-ink: var(--ink);
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.8rem max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+  display: grid;
+  line-height: 1.1;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  color: var(--tomato);
+}
+
+.brandMeta {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-color: var(--squash);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------ shared heads */
+
+.secHead {
+  max-width: 42rem;
+}
+
+.secKicker,
+.secKickerLight {
+  margin-bottom: 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.secKickerLight {
+  color: var(--squash);
+}
+
+.secTitle {
+  font-size: clamp(2rem, 4.2vw, 3.3rem);
+  line-height: 1.05;
+}
+
+.secLede {
+  margin-top: 1rem;
+  max-width: 36rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: 1.2rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--leaf);
+  border-radius: 999px;
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5.8vw, 5.2rem);
+  line-height: 1;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--tomato);
+}
+
+.heroLede {
+  margin-top: 1.4rem;
+  max-width: 32rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.badges {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.badges li {
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.8rem;
+  border-top: 3px solid var(--squash);
+}
+
+.badges li:nth-child(2) {
+  border-color: var(--leaf);
+}
+
+.badges li:nth-child(3) {
+  border-color: var(--tomato);
+}
+
+.badges strong {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.badges span {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.btn {
+  display: inline-flex;
+  padding: 0.85rem 1.5rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--tomato);
+  border-radius: 999px;
+  box-shadow: 0 4px 0 var(--ink);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.btn:hover {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--ink);
+}
+
+/* The mosaic hangs like an awning with a scalloped hem; the basket stands
+   below it with a paper outline, like a sticker on a crate. */
+.heroArt {
+  position: relative;
+  aspect-ratio: 1 / 1.02;
+}
+
+.awning {
+  position: absolute;
+  inset: 0 0 26%;
+  overflow: hidden;
+  border-radius: 28px 28px 0 0;
+  -webkit-mask:
+    linear-gradient(var(--ink), var(--ink)) top / 100% calc(100% - 22px) no-repeat,
+    radial-gradient(circle at 50% 0, var(--ink) 21.5px, transparent 22px) bottom / 44px 22px repeat-x;
+  mask:
+    linear-gradient(var(--ink), var(--ink)) top / 100% calc(100% - 22px) no-repeat,
+    radial-gradient(circle at 50% 0, var(--ink) 21.5px, transparent 22px) bottom / 44px 22px repeat-x;
+}
+
+.basketPlate {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 74%;
+  transform: translateX(-50%);
+}
+
+.basket {
+  width: 100%;
+  filter: drop-shadow(4px 0 0 var(--paper)) drop-shadow(-4px 0 0 var(--paper)) drop-shadow(0 4px 0 var(--paper))
+    drop-shadow(0 -4px 0 var(--paper));
+}
+
+.today {
+  position: absolute;
+  top: -1.2rem;
+  right: -0.8rem;
+  display: grid;
+  place-content: center;
+  width: clamp(7.5rem, 11vw, 8.8rem);
+  aspect-ratio: 1;
+  padding: 0.5rem;
+  text-align: center;
+  color: var(--ink);
+  background: var(--squash);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  transform: rotate(10deg);
+}
+
+.todayTop {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.todayMain {
+  font-family: var(--display);
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  line-height: 1.1;
+}
+
+/* --------------------------------------------------------------------- map */
+
+.mapSec {
+  padding: clamp(4rem, 8vw, 7rem) var(--gut);
+  background: var(--tint);
+  border-block: 2px solid var(--ink);
+}
+
+/* The hero's awning again, as a scalloped valance hung from the top rule. */
+.valance {
+  position: relative;
+  height: clamp(3.25rem, 5vw, 4.25rem);
+  margin: calc(-1 * clamp(4rem, 8vw, 7rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 4rem);
+  overflow: hidden;
+  -webkit-mask:
+    linear-gradient(var(--ink), var(--ink)) top / 100% calc(100% - 18px) no-repeat,
+    radial-gradient(circle at 50% 0, var(--ink) 17.5px, transparent 18px) bottom / 36px 18px repeat-x;
+  mask:
+    linear-gradient(var(--ink), var(--ink)) top / 100% calc(100% - 18px) no-repeat,
+    radial-gradient(circle at 50% 0, var(--ink) 17.5px, transparent 18px) bottom / 36px 18px repeat-x;
+}
+
+.mapSec > .secHead {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.mapGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
+}
+
+.mapCol {
+  position: sticky;
+  top: 5.5rem;
+  align-self: start;
+}
+
+.mapFrame {
+  position: relative;
+  padding: 2.6rem clamp(0.75rem, 2vw, 1.4rem);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+}
+
+.gateTop,
+.gateBottom {
+  position: absolute;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.gateTop {
+  top: 0.8rem;
+  left: clamp(0.75rem, 2vw, 1.4rem);
+}
+
+.gateTop::after {
+  content: ' \2193';
+}
+
+.gateBottom {
+  bottom: 0.8rem;
+  left: 50%;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.gateBottom::before {
+  content: '\2191  ';
+}
+
+.map {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+  gap: clamp(3px, 0.6vw, 7px);
+  aspect-ratio: 9 / 7;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stall {
+  display: grid;
+  place-items: center;
+  color: var(--kind-ink);
+  background: var(--kind);
+  border-radius: clamp(3px, 0.6vw, 8px);
+}
+
+.stallNo {
+  font-family: var(--display);
+  font-size: clamp(0.85rem, 1.7vw, 1.35rem);
+  line-height: 1;
+}
+
+/* The middle of the square, laid over the empty cells the stalls leave. */
+.places {
+  position: absolute;
+  top: calc(2.6rem + (100% - 5.2rem) * 2 / 7);
+  left: calc(clamp(0.75rem, 2vw, 1.4rem) + (100% - 2 * clamp(0.75rem, 2vw, 1.4rem)) * 2 / 9);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(4px, 0.8vw, 10px);
+  width: calc((100% - 2 * clamp(0.75rem, 2vw, 1.4rem)) * 5 / 9);
+  height: calc((100% - 5.2rem) * 3 / 7);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.places li {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.1rem;
+  padding: 0.3rem;
+  text-align: center;
+  border: 1.5px dashed color-mix(in srgb, var(--ink) 40%, transparent);
+  border-radius: 10px;
+}
+
+.places strong {
+  font-size: clamp(0.62rem, 1.2vw, 0.9rem);
+  line-height: 1.15;
+}
+
+.places span {
+  font-size: clamp(0.55rem, 0.95vw, 0.74rem);
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+.fountain {
+  border-style: solid !important;
+  border-radius: 50% !important;
+  background: color-mix(in srgb, var(--leaf) 12%, transparent);
+}
+
+.info {
+  background: color-mix(in srgb, var(--squash) 26%, transparent);
+}
+
+.key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.2rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.key li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.keyChip {
+  flex: none;
+  width: 0.95rem;
+  height: 0.95rem;
+  background: var(--kind);
+  border-radius: 4px;
+}
+
+.directory {
+  display: grid;
+  gap: 2rem;
+}
+
+.dirHeadRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.dirHead {
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.dirList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dirList li {
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  column-gap: 0.8rem;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dirNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  color: var(--kind-ink);
+  background: var(--kind);
+  border-radius: 7px;
+}
+
+.dirName {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.dirSells {
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- season */
+
+.season {
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut);
+}
+
+.seasonGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.seasonHead {
+  display: flex;
+  flex-direction: column;
+}
+
+.seasonArt {
+  position: relative;
+  margin-top: auto;
+  padding-top: 2.5rem;
+}
+
+/* A round bed of leaves the carrots were pulled from. */
+.carrotPlate {
+  position: absolute;
+  left: -1.5rem;
+  bottom: -1.5rem;
+  width: min(19rem, 90%);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.4;
+  -webkit-mask-image: radial-gradient(closest-side, var(--ink) 50%, transparent 100%);
+  mask-image: radial-gradient(closest-side, var(--ink) 50%, transparent 100%);
+}
+
+.carrots {
+  position: relative;
+  width: min(15rem, 70%);
+}
+
+.calWrap {
+  min-width: 0;
+}
+
+.cal {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.cal thead th {
+  padding: 0 0 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--ink);
+}
+
+.calCorner {
+  width: 32%;
+  text-align: left;
+}
+
+.cal tbody th {
+  padding: 0.55rem 0.6rem 0.55rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.cal td {
+  padding: 0;
+  border-bottom: 1px solid var(--line);
+  border-left: 1px dotted var(--line);
+}
+
+.leaf {
+  --tone: var(--leaf);
+}
+
+.tomato {
+  --tone: var(--tomato);
+}
+
+.squash {
+  --tone: var(--squash);
+}
+
+/* A bar in the row's color: pale where it is at market, solid where it is
+   at its best. Neighboring cells meet, so a season reads as one bar. */
+.on,
+.peak {
+  display: block;
+  height: 1.05rem;
+  overflow: hidden;
+  color: transparent;
+  white-space: nowrap;
+}
+
+.on {
+  background: color-mix(in srgb, var(--tone) 38%, var(--paper));
+}
+
+.peak {
+  background: var(--tone);
+}
+
+.calKey {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.calKey li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.keyOn,
+.keyPeak {
+  width: 1.6rem;
+  height: 0.8rem;
+}
+
+.keyOn {
+  background: color-mix(in srgb, var(--leaf) 38%, var(--paper));
+}
+
+.keyPeak {
+  background: var(--leaf);
+}
+
+/* --------------------------------------------------------------- payments */
+
+.payments {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut);
+  color: var(--paper);
+  background: var(--leaf);
+}
+
+/* Fallen leaves along the bottom of the band, under the apple crate. */
+.payLeaves {
+  position: absolute;
+  inset: auto 0 0;
+  height: clamp(9rem, 18vw, 15rem);
+  opacity: 0.35;
+  -webkit-mask-image: linear-gradient(180deg, transparent, var(--ink) 75%);
+  mask-image: linear-gradient(180deg, transparent, var(--ink) 75%);
+}
+
+.payInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.payLead {
+  display: flex;
+  flex-direction: column;
+}
+
+.payTitle {
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+  line-height: 1.05;
+}
+
+.payTitle em {
+  font-style: normal;
+  color: var(--squash);
+}
+
+.payBig {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  margin-top: 2rem;
+}
+
+.payFrom,
+.payTo {
+  font-family: var(--display);
+  font-size: clamp(3.5rem, 7vw, 5.5rem);
+  line-height: 1;
+}
+
+.payTo {
+  color: var(--squash);
+}
+
+.payEq {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.payEq::after {
+  content: ' \2192';
+}
+
+.payNote {
+  margin-top: 0.4rem;
+  color: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+
+.apples {
+  width: min(14rem, 60%);
+  margin-top: auto;
+  padding-top: 2.5rem;
+}
+
+.payCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.payCards li {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  padding: 1.5rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.payCardTitle {
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.payCards p {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- directions */
+
+.directions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.address {
+  margin-top: 1.2rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.when {
+  display: grid;
+  gap: 0.8rem;
+  margin: 2rem 0 0;
+}
+
+.when div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.when dt {
+  font-weight: 700;
+}
+
+.when dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.routes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-content: start;
+  margin: 0;
+}
+
+.routes div {
+  padding: 1.3rem;
+  background: var(--tint);
+  border-radius: var(--radius);
+}
+
+.routes dt {
+  margin-bottom: 0.4rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+}
+
+.routes dd {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- faq */
+
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) var(--gut) clamp(4rem, 8vw, 7rem);
+}
+
+.faqList {
+  border-top: 2px solid var(--ink);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--line);
+}
+
+.faqItem summary {
+  position: relative;
+  padding: 1.1rem 2.4rem 1.1rem 0;
+  font-size: 1.08rem;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  position: absolute;
+  top: 0.75rem;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  font-size: 1.2rem;
+  color: var(--paper);
+  background: var(--tomato);
+  border-radius: 50%;
+  transition: transform 150ms ease;
+}
+
+.faqItem[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.faqItem p {
+  padding: 0 2.4rem 1.2rem 0;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- leaves */
+
+.leaves {
+  position: relative;
+  height: clamp(6rem, 12vw, 9rem);
+  -webkit-mask-image: linear-gradient(180deg, transparent, var(--ink) 70%);
+  mask-image: linear-gradient(180deg, transparent, var(--ink) 70%);
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  padding: 2.8rem var(--gut) 2rem;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.footTop,
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop {
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  color: var(--squash);
+}
+
+.footTag {
+  margin-top: 0.3rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footContact {
+  display: grid;
+  gap: 0.3rem;
+  justify-items: end;
+  font-weight: 600;
+}
+
+.footContact a {
+  border-bottom: 2px solid var(--tomato);
+}
+
+.footFine {
+  padding-top: 1.4rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--paper) 66%, transparent);
+}
+
+.footFine a {
+  border-bottom: 1px solid currentColor;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .mapGrid,
+  .seasonGrid,
+  .payInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mapCol {
+    position: static;
+  }
+
+  .directory {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 2.5rem;
+  }
+
+  .seasonArt {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+    justify-self: end;
+  }
+
+  .hero,
+  .directions,
+  .faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    width: min(100%, 32rem);
+    justify-self: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .badges,
+  .directory,
+  .payCards,
+  .routes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .badges {
+    gap: 0.8rem;
+  }
+
+  .today {
+    top: -0.8rem;
+    right: 0;
+  }
+
+  .mapFrame {
+    padding: 2.2rem 0.6rem;
+  }
+
+  .gateTop {
+    left: 0.6rem;
+  }
+
+  .places {
+    top: calc(2.2rem + (100% - 4.4rem) * 2 / 7);
+    left: calc(0.6rem + (100% - 1.2rem) * 2 / 9);
+    width: calc((100% - 1.2rem) * 5 / 9);
+    height: calc((100% - 4.4rem) * 3 / 7);
+  }
+
+  .places span {
+    display: none;
+  }
+
+  .calCorner {
+    width: 30%;
+  }
+
+  .cal thead th {
+    font-size: 0.62rem;
+    letter-spacing: 0;
+  }
+
+  .cal tbody th {
+    font-size: 0.8rem;
+    line-height: 1.25;
+  }
+
+  .when div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .footContact {
+    justify-items: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    transition: none !important;
+  }
+
+  .btn:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,1204 @@
+/* ==========================================================================
+   PLATEN PRESS - letterpress print studio, Foundry Lane
+   A specimen sheet. Every section is a numbered sheet with crop marks and
+   a registration target, the kind of thing that comes off the press before
+   the real job. A high-contrast didone for the display, a typewriter face
+   for the labels and figures. The press is printed twice through its mask,
+   red under black and a hair out of register; the papers are a swatch book
+   with a blind impression of the nib on each; the misprint dots of the
+   primary pattern are the make-ready sheet.
+   ========================================================================== */
+
+.page {
+  --paper: #f7f4ee;
+  --ink: #161616;
+  --red: #d1343a;
+  --gray: #8f8a80;
+  --pale: #e5e0d6;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --hair: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  --mono: 'Courier Prime', 'Courier New', Courier, monospace;
+  --crop:
+    linear-gradient(var(--ink), var(--ink)) 0 20px / 12px 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 20px 0 / 1px 12px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 100% 20px / 12px 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) calc(100% - 20px) 0 / 1px 12px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 0 calc(100% - 20px) / 12px 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 20px 100% / 1px 12px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 100% calc(100% - 20px) / 12px 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) calc(100% - 20px) 100% / 1px 12px no-repeat;
+
+  font-family: 'Bodoni Moda', 'Didot', Georgia, serif;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.page p {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem var(--gut);
+  background: var(--paper);
+  border-bottom: 1px solid var(--ink);
+}
+
+.mark {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.mark::after {
+  content: '';
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-left: 0.2rem;
+  background: var(--red);
+  border-radius: 50%;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.6vw, 2.4rem);
+}
+
+.nav a,
+.barMeta {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.nav a {
+  padding: 0.2rem 0;
+  border-bottom: 1px solid transparent;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+.barMeta {
+  color: color-mix(in srgb, var(--ink) 72%, var(--paper));
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+  font-family: var(--mono);
+}
+
+/* ------------------------------------------------------------ plate I */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: center;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut) clamp(3rem, 6vw, 4.5rem);
+}
+
+/* The plate, with crop marks at its corners and a target over it. */
+.plate {
+  position: relative;
+  padding: 2.25rem clamp(1.25rem, 3vw, 2.5rem) 1.5rem;
+  background: color-mix(in srgb, var(--pale) 45%, var(--paper));
+  border: 1px solid var(--ink);
+}
+
+.plate::before {
+  content: '';
+  position: absolute;
+  inset: -21px;
+  background: var(--crop);
+  pointer-events: none;
+}
+
+.plate::after {
+  content: '';
+  position: absolute;
+  top: -42px;
+  left: calc(50% - 11px);
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--ink), var(--ink)) center / 100% 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) center / 1px 100% no-repeat;
+}
+
+.plateNo {
+  position: absolute;
+  top: 0.8rem;
+  left: 1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.plateImage {
+  position: relative;
+  width: min(100%, 34rem);
+  margin: 0 auto;
+}
+
+/* A tint screen under the press, the dots growing toward its feet. */
+.plateTint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5.5rem;
+  height: 45%;
+  overflow: hidden;
+  opacity: 0.4;
+  mask-image: linear-gradient(180deg, transparent, var(--ink) 70%);
+}
+
+.pressInk {
+  width: 100%;
+}
+
+/* The red plate, printed first and a little to the right and down. */
+.pressRed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  transform: translate(7px, 5px);
+}
+
+.plateCaption {
+  margin-top: 1.25rem;
+  padding-top: 0.8rem;
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+  border-top: var(--hair);
+}
+
+.kicker,
+.secNo {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.title {
+  margin-top: 1rem;
+  font-size: clamp(2.5rem, 4.4vw, 3.9rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.title em {
+  font-weight: 400;
+  color: var(--red);
+}
+
+.lede {
+  margin-top: 1.6rem;
+  max-width: 32rem;
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+}
+
+/* The press set out as a specimen's table of facts. */
+.specs {
+  margin: 2rem 0 0;
+  border-top: 1px solid var(--ink);
+}
+
+.specs div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: var(--hair);
+}
+
+.specs dt {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 70%, var(--paper));
+  padding-top: 0.15rem;
+}
+
+.specs dd {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btnInk,
+.btnLine {
+  display: inline-block;
+  padding: 0.8rem 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.btnInk {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.btnInk:hover {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.btnLine:hover {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+/* ----------------------------------------------------- make-ready band */
+
+.makeready {
+  position: relative;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.makereadyField {
+  position: relative;
+  height: clamp(7rem, 11vw, 9.5rem);
+  overflow: hidden;
+}
+
+.makereadyLabel {
+  position: absolute;
+  right: var(--gut);
+  bottom: -0.7rem;
+  padding: 0.1rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+/* ------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4.5vw, 3.25rem);
+}
+
+.secTitle {
+  font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+}
+
+.secNote {
+  max-width: 36rem;
+  color: color-mix(in srgb, var(--ink) 82%, var(--paper));
+}
+
+/* ---------------------------------------------------------- the papers
+   Each stock's color arrives as --sw, from the page's own palette. */
+
+.papers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem) clamp(1rem, 2vw, 1.5rem);
+}
+
+.paper {
+  --sw: var(--paper);
+  --sw-text: var(--ink);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.tone_white {
+  --sw: var(--paper);
+}
+
+.tone_thin {
+  --sw: color-mix(in srgb, var(--paper) 60%, var(--pale));
+}
+
+.tone_ecru {
+  --sw: var(--pale);
+}
+
+.tone_oat {
+  --sw: color-mix(in srgb, var(--pale) 68%, var(--gray));
+}
+
+.tone_stone {
+  --sw: color-mix(in srgb, var(--gray) 72%, var(--pale));
+}
+
+.tone_coal {
+  --sw: var(--ink);
+  --sw-text: var(--paper);
+}
+
+.tone_red {
+  --sw: var(--red);
+  --sw-text: var(--paper);
+}
+
+.tone_duplex {
+  --sw: var(--paper);
+}
+
+.swatch {
+  position: relative;
+  aspect-ratio: 4 / 3.2;
+  overflow: hidden;
+  color: var(--sw-text);
+  background: var(--sw);
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  box-shadow: 0 16px 24px -20px rgb(0 0 0 / 0.55);
+  transition: transform 180ms ease;
+}
+
+.paper:hover .swatch {
+  transform: translateY(-4px) rotate(-0.6deg);
+}
+
+/* Two sheets pasted together: the red shows along the edge. */
+.tone_duplex .swatch {
+  box-shadow: inset -1.1rem 0 0 var(--red), 0 16px 24px -20px rgb(0 0 0 / 0.55);
+}
+
+.swatchNo {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.swatchNib {
+  position: absolute;
+  top: 12%;
+  right: 12%;
+  width: auto;
+  height: 76%;
+  transform: rotate(24deg);
+}
+
+.swatchWeight {
+  position: absolute;
+  left: 0.8rem;
+  bottom: 0.5rem;
+  font-size: clamp(2.4rem, 3.6vw, 3.3rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.swatchUnit {
+  position: absolute;
+  left: 0.9rem;
+  bottom: clamp(3rem, 4.1vw, 3.8rem);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.label {
+  padding-top: 0.9rem;
+}
+
+.paperName {
+  font-size: 1.3rem;
+  line-height: 1.15;
+}
+
+.paperStock {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--red);
+}
+
+.paperFacts {
+  margin: 0.7rem 0 0;
+  border-top: var(--hair);
+}
+
+.paperFacts div {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: var(--hair);
+}
+
+.paperFacts dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 68%, var(--paper));
+  padding-top: 0.15rem;
+}
+
+.paperFacts dd {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+/* -------------------------------------------------------------- prices */
+
+.pricesHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18rem;
+  gap: 2rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4.5vw, 3.25rem);
+}
+
+.pricesHead .secHead {
+  margin-bottom: 0;
+}
+
+/* A tint ramp, the way a printer checks dot gain. */
+.tintField {
+  position: relative;
+  height: 9rem;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+}
+
+.tableWrap {
+  max-width: 100%;
+  overflow-x: auto;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.caption {
+  padding: 0.6rem 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  caption-side: bottom;
+  color: color-mix(in srgb, var(--ink) 70%, var(--paper));
+}
+
+.table th,
+.table td {
+  padding: 0.8rem 0.9rem 0.8rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: var(--hair);
+}
+
+.table thead th {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--ink);
+}
+
+.table tbody th {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.table td {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+}
+
+.table .num {
+  text-align: right;
+  padding-right: 0;
+  padding-left: 1rem;
+}
+
+.table tbody tr:hover {
+  background: color-mix(in srgb, var(--pale) 50%, transparent);
+}
+
+.extras {
+  margin: 1.75rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.extras div {
+  padding: 0.8rem 1rem;
+  background: color-mix(in srgb, var(--pale) 55%, var(--paper));
+  border-left: 3px solid var(--red);
+}
+
+.extras dt {
+  font-size: 1.02rem;
+  font-weight: 600;
+}
+
+.extras dd {
+  margin: 0.2rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+}
+
+/* ------------------------------------------------------------- process */
+
+.process {
+  position: relative;
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) calc(clamp(4rem, 8vw, 6rem) + 3rem);
+  background: var(--pale);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.processInner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+/* A proofing ramp along the foot of the section, light to heavy. */
+.processRamp {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3rem;
+  overflow: hidden;
+  border-top: 1px solid var(--ink);
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.25rem 0 0;
+}
+
+.step + .step {
+  padding-left: 1.25rem;
+  border-left: var(--hair);
+}
+
+.stepNo {
+  font-size: 2.4rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--red);
+}
+
+.stepArt {
+  display: grid;
+  place-items: center start;
+  height: 9.5rem;
+  margin: 1rem 0;
+}
+
+.stepPic {
+  width: auto;
+  height: 100%;
+}
+
+/* A step without a picture gets a registration target instead. */
+.stepRule {
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--ink) 0 18%, transparent 19%),
+    linear-gradient(var(--ink), var(--ink)) center / 100% 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) center / 1px 100% no-repeat;
+}
+
+.stepTitle {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.stepTime {
+  margin-top: 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.stepBody {
+  margin-top: 0.7rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------- order */
+
+.order {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.orderSide .secTitle {
+  margin-top: 0.5rem;
+}
+
+.orderSide .secNote {
+  margin-top: 0.8rem;
+}
+
+.proofBox {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 17rem;
+  margin-top: 2.25rem;
+  border: 1px solid var(--ink);
+}
+
+.proofField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.orderBrayer {
+  position: relative;
+  width: auto;
+  height: 78%;
+  transform: rotate(-16deg);
+}
+
+.form {
+  position: relative;
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  background: color-mix(in srgb, var(--pale) 40%, var(--paper));
+  border: 1px solid var(--ink);
+}
+
+.form::before {
+  content: '';
+  position: absolute;
+  inset: -21px;
+  background: var(--crop);
+  pointer-events: none;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field span {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.6rem 0.2rem;
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+  padding: 0.6rem;
+  border: 1px solid var(--ink);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: color-mix(in srgb, var(--ink) 50%, var(--paper));
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--red);
+  border: 1px solid var(--red);
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.submit:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.formNote {
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------- studio */
+
+.studio {
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut);
+}
+
+.studioInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--ink);
+}
+
+.studioArt {
+  display: grid;
+  place-items: center;
+}
+
+/* A blind proof of the misprint, gray on the paper, behind the nib. */
+.studioDisc {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(100%, 20rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+}
+
+.studioDisc > * {
+  opacity: 0.5;
+}
+
+.studioNib {
+  grid-area: 1 / 1;
+  position: relative;
+  width: auto;
+  height: clamp(14rem, 26vw, 22rem);
+  transform: rotate(-28deg);
+}
+
+.studioText .secTitle {
+  margin-top: 0.5rem;
+}
+
+.studioAddr {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+.hours {
+  margin: 1.5rem 0 0;
+  max-width: 32rem;
+  border-top: 1px solid var(--ink);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: var(--hair);
+}
+
+.hours dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  text-align: right;
+}
+
+.studioNote {
+  margin-top: 1.25rem;
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--ink) 84%, var(--paper));
+}
+
+.contact {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  font-family: var(--mono);
+}
+
+.contact a {
+  text-decoration-color: var(--red);
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+}
+
+/* -------------------------------------------------------------- footer */
+
+.footer {
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--gut) 2rem;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem 2rem;
+}
+
+.footName {
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+}
+
+.footTag {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2rem auto 0;
+  padding-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--paper) 76%, var(--ink));
+  border-top: 1px solid color-mix(in srgb, var(--paper) 25%, var(--ink));
+}
+
+.footFine a {
+  color: var(--paper);
+}
+
+/* ---------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.25rem;
+    border-top: 0;
+  }
+
+  .step,
+  .step + .step {
+    padding: 1.25rem 0 1.5rem;
+    border-left: 0;
+    border-top: 1px solid var(--ink);
+  }
+
+  .extras {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .papers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.9rem;
+  }
+
+  .hero,
+  .order,
+  .studioInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plate {
+    margin: 2.75rem 12px 0;
+  }
+
+  .pricesHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tintField {
+    height: 6rem;
+  }
+
+  .form {
+    margin: 0 12px;
+  }
+
+  .studioNib {
+    height: 12rem;
+  }
+
+  .studioDisc {
+    width: 14rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .barMeta {
+    display: none;
+  }
+
+  .specs div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .papers {
+    gap: 1.5rem 0.9rem;
+  }
+
+  .swatchNo {
+    top: 0.45rem;
+    left: 0.55rem;
+  }
+
+  .swatchWeight {
+    left: 0.55rem;
+    bottom: 0.35rem;
+    font-size: 2rem;
+  }
+
+  .swatchUnit {
+    left: 0.6rem;
+    bottom: 2.5rem;
+    font-size: 0.64rem;
+  }
+
+  .paperName {
+    font-size: 1.1rem;
+  }
+
+  .paperFacts div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  /* The table restacks: one block per row, the three prices side by side
+     under the item, each labeled with its quantity. */
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .table tbody,
+  .table tr {
+    display: block;
+  }
+
+  .table tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.15rem 0.75rem;
+    padding: 0.9rem 0;
+    border-bottom: var(--hair);
+  }
+
+  .table th,
+  .table td,
+  .table .num {
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+
+  .table tbody th {
+    grid-column: 1 / -1;
+  }
+
+  .table td:nth-child(2) {
+    grid-column: span 2;
+    font-size: 0.85rem;
+  }
+
+  .table td:nth-child(3) {
+    font-size: 0.85rem;
+    text-align: right;
+  }
+
+  .table td:nth-child(3)::before {
+    content: 'Colors ';
+    color: color-mix(in srgb, var(--ink) 65%, var(--paper));
+  }
+
+  .table td:nth-child(n + 4) {
+    margin-top: 0.4rem;
+    display: grid;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .table td:nth-child(n + 4)::before {
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 65%, var(--paper));
+  }
+
+  .table td:nth-child(4)::before {
+    content: '100';
+  }
+
+  .table td:nth-child(5)::before {
+    content: '250';
+  }
+
+  .table td:nth-child(6)::before {
+    content: '500';
+  }
+
+  .steps,
+  .extras,
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btnInk,
+  .btnLine,
+  .swatch,
+  .submit {
+    transition: none;
+  }
+
+  .paper:hover .swatch {
+    transform: none;
+  }
+}

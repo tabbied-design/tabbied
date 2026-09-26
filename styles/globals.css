@@ -266,3 +266,111 @@ button {
     transition: none;
   }
 }
+
+/*
+ * Recolorable artwork (components/Artwork.tsx): pictures whose color comes
+ * from the page's palette. The element carries its inks as --art-1, --art-2
+ * or, for layers, --art-<layer name> (normally var(--ink) and the like) and,
+ * for the masked kinds, the file as --artwork-mask. The page's own class sizes and places it; these rules only
+ * say how the color gets in. Shipped as every package's base.css, like the
+ * menu above.
+ */
+.artwork {
+  display: block;
+  position: relative;
+  max-width: 100%;
+}
+
+svg.artwork {
+  overflow: visible;
+}
+
+/* One ink painted through the picture. */
+.artwork--mask,
+.artwork__layer {
+  background: var(--artwork-ink, var(--art-1, currentColor));
+  -webkit-mask: var(--artwork-mask) center / contain no-repeat;
+  mask: var(--artwork-mask) center / contain no-repeat;
+}
+
+.artwork--masks {
+  isolation: isolate;
+}
+
+.artwork__layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* A photograph in two inks, by masks: the shadow ink through the picture's
+   alpha, the light ink over it through its luminance. Blend modes over the
+   picture itself (multiply, then lighten) were tried first and paint a flat
+   box once a re-color makes the shadow ink the lighter one. */
+.artwork--tint {
+  isolation: isolate;
+}
+
+.artwork--tint::before,
+.artwork--tint::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask: var(--artwork-mask) center / contain no-repeat;
+  mask: var(--artwork-mask) center / contain no-repeat;
+}
+
+/* Each layer is both inks blended, darken for the shadows and lighten for
+   the light, so the darker ink takes the shadows whichever order they come
+   in and a re-color to a dark palette is no negative. */
+.artwork--tint::before {
+  background-color: var(--art-1);
+  background-image: linear-gradient(var(--art-2), var(--art-2));
+  background-blend-mode: darken;
+}
+
+.artwork--tint::after {
+  background-color: var(--art-1);
+  background-image: linear-gradient(var(--art-2), var(--art-2));
+  background-blend-mode: lighten;
+  mask-mode: luminance;
+}
+
+/* A pattern in the shape of the picture, shaded by the picture itself. */
+.artwork--fill {
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-mask: var(--artwork-mask) center / contain no-repeat;
+  mask: var(--artwork-mask) center / contain no-repeat;
+}
+
+.artwork__shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  opacity: var(--artwork-shade, 0.6);
+  pointer-events: none;
+}
+
+/* Full bleed: the box is the page's, and the picture covers it. */
+.artwork--cover {
+  aspect-ratio: auto !important;
+  width: 100%;
+  height: 100%;
+}
+
+.artwork--cover.artwork--mask,
+.artwork--cover .artwork__layer,
+.artwork--cover.artwork--fill,
+.artwork--cover.artwork--tint::before,
+.artwork--cover.artwork--tint::after {
+  -webkit-mask-size: cover;
+  mask-size: cover;
+}
+
+.artwork--cover .artwork__shade {
+  object-fit: cover;
+}

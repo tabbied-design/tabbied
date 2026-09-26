@@ -10,6 +10,7 @@ import TemplatesGrid, { type TemplateCard } from 'components/template/TemplatesG
 import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 import { categoryOf } from 'lib/templateCategories';
+import { orderTemplates } from 'lib/templateOrder';
 import { templateShot } from 'lib/templateShots';
 import { plexMono, plexSans } from 'lib/fonts';
 import { pageMetadata } from 'lib/seo';
@@ -33,9 +34,10 @@ const ART: Record<string, PatternDefinition> = {
 };
 
 export default function TemplatesGallery() {
-  // One list, numbered straight through: the gallery shows a single grid
-  // rather than splitting the collections into separate batches.
-  const cards: TemplateCard[] = [
+  // One list, in the gallery's committed order (lib/templateOrder.ts) rather
+  // than the order the batches were made in, numbered straight through as
+  // shown. The order only grows at the end, so a page keeps its cards.
+  const sites = [
     ...TEMPLATE_SITES.map((x, i) => ({
       slug: x.slug,
       href: `/templates/${x.slug}/`,
@@ -45,6 +47,7 @@ export default function TemplatesGallery() {
       paletteName: x.paletteName,
       colors: x.colors,
       seed: `RCT${i}`,
+      family: 'first',
     })),
     ...NEW_TEMPLATE_SITES.map((x) => ({
       slug: x.slug,
@@ -55,15 +58,21 @@ export default function TemplatesGallery() {
       paletteName: x.paletteName,
       colors: x.palette,
       seed: x.seed,
+      // The seed's prefix names the batch: dir, set, bold, img, min, art.
+      family: x.seed.split('-')[0],
     })),
-  ].map((c, i) => ({
+  ].map((c) => ({
+    ...c,
+    // Throws for a site the category table has not met, which fails the
+    // export rather than shipping a card no filter reaches.
+    category: categoryOf(c.slug),
+  }));
+
+  const cards: TemplateCard[] = orderTemplates(sites).map((c, i) => ({
     ...c,
     n: i + 1,
     shot: templateShot(c.slug),
     art: ART[c.pattern],
-    // Throws for a site the category table has not met, which fails the
-    // export rather than shipping a card no filter reaches.
-    category: categoryOf(c.slug),
   }));
 
   return (

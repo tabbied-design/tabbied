@@ -6,7 +6,7 @@
      SiteNav.module.css, so the two must agree. */
   --gallery-bar-h: 62px;
   /* Width of the rail, read by the rail itself and by the column beside it. */
-  --gallery-rail-w: clamp(268px, 20vw, 340px);
+  --gallery-rail-w: clamp(292px, 21vw, 356px);
 
   position: relative;
   background: #ffffff;
@@ -83,10 +83,6 @@
   .title,
   .intro {
     grid-column: 1 / -1;
-  }
-
-  .title {
-    font-size: 34px;
   }
 }
 

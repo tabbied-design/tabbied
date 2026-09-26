@@ -1,0 +1,1352 @@
+/* ==========================================================================
+   PARKSIDE FAMILY MEDICINE - a family doctor's practice
+   Task first. The page asks what you need before it says who it is: under
+   a large "I need to..." each card finishes the sentence with how to do it
+   and how long it takes, and the same-day card is the one in coral.
+   Clinic sage on a cool white paper, one friendly grotesque for display and
+   a hyperlegible sans for everything read. The pictures are flat vector
+   icons (a heart, a first aid kit, a stethoscope) painted in the palette;
+   leaves in the hero panel and a quiet dot field behind the sign-up form.
+   ========================================================================== */
+
+.page {
+  --paper: #f5f8f6;
+  --ink: #15241e;
+  --sage: #2e7d6b;
+  --coral: #e86f4e;
+  --gray: #8c9a94;
+  --pale: #dde8e3;
+  --muted: color-mix(in srgb, var(--ink) 72%, transparent);
+  --line: color-mix(in srgb, var(--ink) 14%, transparent);
+  --gut: clamp(1rem, 4.5vw, 4rem);
+  --max: 80rem;
+  --air: clamp(4rem, 8vw, 7rem);
+  --display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --text: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--text);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  flex: none;
+}
+
+.brandMark {
+  width: 2rem;
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.9rem, 1.8vw, 1.8rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-size: 0.98rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.3rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--sage);
+}
+
+.barCall {
+  flex: none;
+  padding: 0.55rem 1.05rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--paper);
+  background: var(--sage);
+  border-radius: 999px;
+  transition: background-color 160ms ease;
+}
+
+.barCall:hover {
+  background: var(--ink);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 4.5vw, 4rem) var(--gut) clamp(2.5rem, 4vw, 3.5rem);
+}
+
+.kicker,
+.secKicker {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.heroTitle {
+  margin-top: 1.1rem;
+  font-size: clamp(2.8rem, 5.6vw, 5.3rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--sage);
+}
+
+.heroLede {
+  margin-top: 1.4rem;
+  max-width: 33rem;
+  font-size: clamp(1.1rem, 1.4vw, 1.25rem);
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--sage);
+  border-radius: 999px;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn {
+  background: var(--sage);
+  color: var(--paper);
+}
+
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btnLine {
+  border-color: var(--ink);
+}
+
+.btnLine:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.heroNote {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.heroNote::before {
+  content: '';
+  flex: none;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--coral) 25%, transparent);
+}
+
+.heroArt {
+  position: relative;
+  aspect-ratio: 1 / 0.92;
+  border-radius: 2rem;
+  background: var(--pale);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+}
+
+.heroDisc {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 47%;
+  width: 60%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--paper);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 30px 60px -40px rgb(0 0 0 / 0.45);
+}
+
+.heroHeart {
+  width: 64%;
+}
+
+.heroBadge {
+  position: absolute;
+  z-index: 2;
+  left: 1.25rem;
+  bottom: 1.25rem;
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.85rem 1.1rem;
+  background: var(--paper);
+  border-radius: 1rem;
+  box-shadow: 0 12px 30px -18px rgb(0 0 0 / 0.4);
+}
+
+.heroBadge strong {
+  font-family: var(--display);
+  font-size: 1.05rem;
+}
+
+.heroBadge span {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- paths
+   The heading is the start of the sentence, set as large as the hero. */
+
+.paths {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1rem, 2vw, 2rem) var(--gut) var(--air);
+}
+
+.pathsHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 3rem;
+  padding-bottom: 1.75rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.pathsTitle {
+  font-size: clamp(3.2rem, 8vw, 7rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+
+.pathsNote {
+  max-width: 24rem;
+  color: var(--muted);
+}
+
+.pathGrid {
+  display: grid;
+  grid-template-columns: minmax(16rem, 1fr) 3fr;
+  gap: 1rem;
+}
+
+.urgent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.75rem;
+  background: var(--coral);
+  color: var(--ink);
+  border-radius: 1.5rem;
+}
+
+.urgentNo {
+  align-self: flex-start;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 999px;
+}
+
+.urgentTask {
+  font-size: clamp(1.9rem, 2.6vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.urgentHow {
+  font-size: 1rem;
+}
+
+.urgentKit {
+  width: min(78%, 15rem);
+  margin: auto;
+}
+
+.urgentLink {
+  display: block;
+  padding: 0.8rem 1rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 999px;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.urgentLink:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.pathList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.path {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--pale) 60%, var(--paper));
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+}
+
+.pathNo {
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--sage);
+}
+
+.pathTask {
+  font-size: clamp(1.45rem, 1.9vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.pathFacts {
+  display: grid;
+  gap: 0.7rem;
+  font-size: 0.97rem;
+}
+
+.pathFacts dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.pathFacts div:last-child dd {
+  font-weight: 700;
+}
+
+.pathLink {
+  margin-top: auto;
+  padding-top: 0.4rem;
+  font-weight: 700;
+  color: var(--sage);
+  text-decoration: none;
+}
+
+.pathLink::after {
+  content: ' \2192';
+}
+
+.pathLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------------------------------------------------------- section heads */
+
+.secHead {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 44rem;
+  margin-bottom: 2.5rem;
+}
+
+.secHead h2 {
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.secNote {
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- hours */
+
+.hours {
+  padding: var(--air) max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut)));
+  background: var(--pale);
+}
+
+.hoursGrid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--paper);
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.table thead th {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.dayName,
+.doors {
+  display: block;
+  font-weight: 700;
+}
+
+.dayNote,
+.phones {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.slotBar {
+  display: block;
+  width: 100%;
+  max-width: 11rem;
+  height: 0.6rem;
+  margin-top: 0.45rem;
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.slotFill {
+  display: block;
+  height: 100%;
+  background: var(--sage);
+  border-radius: 999px;
+}
+
+.slotCount {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.closed .doors {
+  color: var(--coral);
+}
+
+.today {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.75rem;
+  background: var(--paper);
+  border-radius: 1.5rem;
+}
+
+.todayTitle {
+  font-size: 1.45rem;
+  letter-spacing: -0.02em;
+}
+
+.todaySteps {
+  display: grid;
+  gap: 1rem;
+  counter-reset: step;
+}
+
+.todaySteps li {
+  position: relative;
+  display: grid;
+  gap: 0.15rem;
+  padding-left: 2.6rem;
+  counter-increment: step;
+}
+
+.todaySteps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--paper);
+  background: var(--sage);
+  border-radius: 50%;
+}
+
+.todaySteps span {
+  font-size: 0.97rem;
+  color: var(--muted);
+}
+
+.emergency {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem 1.1rem;
+  border-left: 4px solid var(--coral);
+  background: color-mix(in srgb, var(--coral) 12%, var(--paper));
+  border-radius: 0 0.75rem 0.75rem 0;
+}
+
+.emergencyHead {
+  font-weight: 700;
+}
+
+.emergencyBody {
+  font-size: 0.95rem;
+}
+
+/* ----------------------------------------------------------------- doctors */
+
+.doctors {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.doctorsHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* The stethoscope on a round of leaves. */
+.stethSpot {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: clamp(9rem, 15vw, 13rem);
+  aspect-ratio: 1;
+  margin-bottom: 1.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--pale);
+}
+
+.stethField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.7;
+}
+
+.steth {
+  position: relative;
+  width: 66%;
+}
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.member {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.4rem 1.3rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+}
+
+.initials {
+  display: grid;
+  place-items: center;
+  width: 3.8rem;
+  height: 3.8rem;
+  margin-bottom: 0.75rem;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 50%;
+  background: var(--sage);
+  color: var(--paper);
+}
+
+.initials[data-tone='coral'] {
+  background: var(--coral);
+  color: var(--ink);
+}
+
+.initials[data-tone='pale'] {
+  background: var(--pale);
+  color: var(--ink);
+}
+
+.memberName {
+  font-size: 1.15rem;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.memberRole {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.memberFacts {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.93rem;
+}
+
+.memberFacts dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+/* ------------------------------------------------------------ new patients
+   Sage, the loudest ground on the page, with a veil of dots on the side
+   the form stands on. */
+
+.join {
+  position: relative;
+  isolation: isolate;
+  background: var(--sage);
+  color: var(--paper);
+}
+
+.joinField {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+}
+
+.joinInner {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.joinText h2 {
+  margin-top: 0.75rem;
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.join .secKicker {
+  color: var(--pale);
+}
+
+.joinSteps {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 2.25rem;
+}
+
+.joinSteps li {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.joinNo {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--display);
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--coral);
+  border-radius: 50%;
+}
+
+.joinSteps h3 {
+  font-size: 1.2rem;
+}
+
+.joinSteps p {
+  margin-top: 0.15rem;
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+
+.prices {
+  display: grid;
+  margin-top: 2.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+}
+
+.prices div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+}
+
+.prices dd {
+  font-weight: 700;
+  text-align: right;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 1.5rem;
+  box-shadow: 0 30px 60px -35px rgb(0 0 0 / 0.5);
+}
+
+.formTitle {
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+}
+
+.formNote {
+  margin-top: -0.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  border-radius: 0.65rem;
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  border-color: var(--sage);
+}
+
+.formBtn {
+  margin-top: 0.25rem;
+  padding: 0.95rem 1.2rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--sage);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.formBtn:hover {
+  background: var(--ink);
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.faqList {
+  border-top: 2px solid var(--ink);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--line);
+}
+
+.faqItem summary {
+  position: relative;
+  padding: 1.2rem 2.5rem 1.2rem 0;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.25rem;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--sage);
+  border: 1.5px solid var(--sage);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  transition: transform 160ms ease;
+}
+
+.faqItem[open] summary::after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.faqItem p {
+  padding: 0 2.5rem 1.4rem 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  position: relative;
+  padding-top: 3rem;
+  background: var(--pale);
+}
+
+/* A low hedge of leaves along the top of the section. */
+.hedge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rem;
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in srgb, var(--sage) 30%, transparent);
+}
+
+.visitInner {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.visitHead h2 {
+  margin-top: 0.75rem;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.visitList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.75rem 2rem;
+}
+
+.visitList div {
+  padding-top: 0.9rem;
+  border-top: 2px solid var(--ink);
+}
+
+.visitList dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.visitList dd {
+  margin-top: 0.35rem;
+  overflow-wrap: anywhere;
+}
+
+.visitList a {
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2.5rem) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* A row of dots along the top edge of the footer. */
+.footDots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5rem;
+  overflow: hidden;
+}
+
+.footGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.footTag,
+.footText {
+  margin-top: 0.5rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footHead {
+  font-family: var(--text);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pale);
+}
+
+.footLinks {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.footLinks a {
+  text-decoration: none;
+}
+
+.footLinks a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  max-width: var(--max);
+  margin: 3rem auto 0;
+  padding-top: 1.25rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .pathGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .urgent {
+    display: grid;
+    grid-template-columns: 1fr minmax(8rem, 13rem);
+    grid-template-areas:
+      'no kit'
+      'task kit'
+      'how kit'
+      'link kit';
+    column-gap: 2rem;
+  }
+
+  .urgentNo {
+    grid-area: no;
+    justify-self: start;
+  }
+
+  .urgentTask {
+    grid-area: task;
+  }
+
+  .urgentHow {
+    grid-area: how;
+    max-width: 34rem;
+  }
+
+  .urgentKit {
+    grid-area: kit;
+    align-self: center;
+    width: 100%;
+    margin: 0;
+  }
+
+  .urgentLink {
+    grid-area: link;
+    justify-self: start;
+    padding-inline: 1.5rem;
+  }
+
+  .team {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hoursGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .todaySteps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1080px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .barCall {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .heroArt {
+    max-width: 36rem;
+    width: 100%;
+  }
+
+  .pathList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hoursGrid,
+  .joinInner,
+  .faq,
+  .visitInner {
+    grid-template-columns: 1fr;
+  }
+
+  .joinField {
+    top: auto;
+    width: 100%;
+    height: 42%;
+  }
+
+  .visitList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .siteMenu {
+    margin-left: auto;
+  }
+
+  .brandName {
+    font-size: 1rem;
+  }
+
+  .pathList,
+  .team {
+    grid-template-columns: 1fr;
+  }
+
+  .member {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr;
+    grid-template-areas:
+      'av name'
+      'av role'
+      'facts facts';
+    column-gap: 1rem;
+    row-gap: 0.1rem;
+    align-items: center;
+  }
+
+  .initials {
+    grid-area: av;
+    width: 3.2rem;
+    height: 3.2rem;
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .memberName {
+    grid-area: name;
+    align-self: end;
+  }
+
+  .memberRole {
+    grid-area: role;
+    align-self: start;
+  }
+
+  .memberFacts {
+    grid-area: facts;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem 1rem;
+  }
+
+  .memberFacts div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .urgent {
+    grid-template-columns: 1fr 6.5rem;
+    grid-template-areas:
+      'no kit'
+      'task kit'
+      'how how'
+      'link link';
+    padding: 1.4rem;
+  }
+
+  .urgentLink {
+    justify-self: stretch;
+  }
+
+  .doctorsHead {
+    align-items: flex-start;
+  }
+
+  .stethSpot {
+    width: 5.5rem;
+  }
+
+  /* The hours table becomes one card per day. */
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .table,
+  .table tbody,
+  .table tr {
+    display: block;
+  }
+
+  .table tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .table tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .table th,
+  .table td {
+    border-bottom: 0;
+    padding: 0.9rem 1rem;
+  }
+
+  .table th {
+    grid-column: 1 / -1;
+    padding-bottom: 0;
+  }
+
+  .fieldRow,
+  .visitList,
+  .footGrid,
+  .todaySteps {
+    grid-template-columns: 1fr;
+  }
+
+  .faqItem summary {
+    font-size: 1.08rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCall,
+  .btn,
+  .btnLine,
+  .urgentLink,
+  .formBtn,
+  .faqItem summary::after {
+    transition: none;
+  }
+}

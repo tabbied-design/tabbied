@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import useMediaQuery from 'lib/useMediaQuery';
+import { paginationWindow } from 'lib/pagination';
 import type { GalleryItem } from 'lib/pattern';
 import {
   deletePalette,
@@ -50,27 +51,6 @@ const ROW_SPANS: readonly number[] = [
 // Wait after the last palette pick before recoloring the grid, so rapidly
 // clicking through palettes recolors the thumbnails once, not once per click.
 const APPLY_DEBOUNCE_MS = 150;
-
-// Page numbers to render: the first two, last two, and current +-2, with `null`
-// standing in for a collapsed range (an ellipsis).
-const paginationWindow = (page: number, pageCount: number): (number | null)[] => {
-  const nums: number[] = [];
-
-  for (let p = 1; p <= pageCount; p += 1) {
-    if (p <= 2 || p > pageCount - 2 || Math.abs(p - page) <= 2) nums.push(p);
-  }
-
-  const out: (number | null)[] = [];
-  let last = 0;
-
-  nums.forEach((p) => {
-    if (last && p - last > 1) out.push(null);
-    out.push(p);
-    last = p;
-  });
-
-  return out;
-};
 
 export default function SelectPattern({ gallery }: { gallery: GalleryItem[] }) {
   const brandState = useBrandPalettes();

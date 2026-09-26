@@ -1,0 +1,1035 @@
+/* ==========================================================================
+   CORAL COVE - beach club
+   Coral and lagoon: a warm sand white, a deep sea ink, coral, a lagoon
+   blue, sun yellow and a shell pink. The day runs down the page. It opens
+   on the beach at sunset, full width, the sky the section's own coral and
+   the palms in ink, and it closes on the pier at night, the sky ink and
+   the sea lagoon. In between: striped awnings over the bed rates, a
+   printed bar menu, a band of waves and a panel of life rings.
+   ========================================================================== */
+
+.page {
+  --sand: #fff4ea;
+  --ink: #16323d;
+  --coral: #ff6f59;
+  --lagoon: #20a4b8;
+  --sun: #f7c873;
+  --gray: #8fa1a6;
+  --shell: #f8e1d1;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --max: 78rem;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+  --display: 'Yeseva One', 'Didot', Georgia, serif;
+  --sans: 'Quicksand', 'Avenir Next', 'Helvetica Neue', sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.07rem;
+  font-weight: 500;
+  line-height: 1.6;
+  background: var(--sand);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.3rem var(--gut);
+}
+
+.brand {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.2vw, 2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--ink);
+}
+
+.nav a:last-child {
+  padding: 0.55rem 1.2rem;
+  background: var(--ink);
+  color: var(--sand);
+  border: 0;
+  border-radius: 999px;
+}
+
+.nav a:last-child:hover {
+  background: var(--sand);
+  color: var(--ink);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--sand);
+}
+
+/* -------------------------------------------------------------------- hero
+   The beach at its own proportions across the full width, pushed a little
+   below the fold so the palms frame the words and the horizon sits under
+   them. */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: max(46rem, 100svh);
+  overflow: hidden;
+  background: var(--coral);
+}
+
+.heroArt {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: -7vw;
+  height: 66.67vw;
+}
+
+.heroSea {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 54%;
+  bottom: 12%;
+  background: var(--lagoon);
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+  width: 44%;
+  margin-left: 24.5%;
+  padding-top: clamp(7rem, 15vh, 9rem);
+  text-align: center;
+}
+
+.kicker {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  margin-top: 0.9rem;
+  font-size: clamp(2.6rem, 4.6vw, 4.5rem);
+  line-height: 1.02;
+}
+
+.heroTitle em {
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-color: var(--sun);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.14em;
+}
+
+.heroLede {
+  margin: 1.1rem auto 0;
+  max-width: 28rem;
+  text-wrap: pretty;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.75rem 1.35rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--sand);
+}
+
+.btn:hover {
+  background: var(--sand);
+  color: var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--sand);
+}
+
+/* ------------------------------------------------------------------- today */
+
+.today {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: center;
+  padding: 1.4rem max(var(--gut), calc((100% - var(--max)) / 2));
+  background: var(--ink);
+  color: var(--sand);
+}
+
+/* A small life ring beside the day's board. */
+.todayRing {
+  position: relative;
+  display: block;
+  width: 3.5rem;
+  aspect-ratio: 1;
+  margin-right: -1.8rem;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--sun);
+}
+
+.todayHead {
+  font-size: 1.4rem;
+  color: var(--sun);
+}
+
+.todayList {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.todayList div {
+  padding-left: 1rem;
+  border-left: 1px solid color-mix(in srgb, var(--sand) 25%, transparent);
+}
+
+.todayList dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--sand) 75%, transparent);
+}
+
+.todayList dd {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------- section heads */
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  padding-bottom: 1.3rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.secHead h2 {
+  font-size: clamp(2.3rem, 4.6vw, 3.8rem);
+}
+
+.secNote {
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+/* -------------------------------------------------------------------- beds
+   Each card hangs under a striped awning with a scalloped valance. */
+
+.beds {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) var(--air);
+}
+
+.bedGrid {
+  list-style: none;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: stretch;
+}
+
+.bed {
+  --stripe: var(--coral);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--shell);
+  border: 2px solid var(--ink);
+  border-radius: 1.2rem;
+}
+
+.bedFeatured {
+  --stripe: var(--lagoon);
+  background: var(--sun);
+}
+
+.awning {
+  position: relative;
+  display: block;
+  height: 3rem;
+  background: repeating-linear-gradient(90deg, var(--stripe) 0 2rem, var(--sand) 2rem 4rem);
+}
+
+.awning::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 1rem;
+  background:
+    radial-gradient(circle at 1rem 0, var(--stripe) 0 1rem, transparent 1rem) 0 0 / 4rem 1rem repeat-x,
+    radial-gradient(circle at 1rem 0, var(--sand) 0 1rem, transparent 1rem) 2rem 0 / 4rem 1rem repeat-x;
+}
+
+.bedBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 2rem 1.5rem 1.5rem;
+}
+
+.bedBody h3 {
+  font-size: 2rem;
+}
+
+.bedWho {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.rates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+  padding: 0.9rem 0;
+  border-top: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.rates p {
+  display: grid;
+}
+
+.rateLabel {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rates strong {
+  font-family: var(--display);
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.bedText {
+  margin-top: 1rem;
+}
+
+.includes {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.97rem;
+}
+
+.includes li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+/* A little life ring for a bullet. */
+.includes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  border: 3px solid var(--stripe);
+  box-sizing: border-box;
+}
+
+.bedNotes {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  font-size: 0.97rem;
+}
+
+.bedNotes li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+
+.bedNotes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--coral);
+}
+
+/* --------------------------------------------------------------------- bar */
+
+.barMenu {
+  position: relative;
+  overflow: hidden;
+  padding: var(--air) var(--gut);
+  background: var(--shell);
+}
+
+/* A few pale rings floating on the shell, well under the menu. */
+.barRings {
+  position: absolute;
+  inset: 0;
+  opacity: 0.8;
+}
+
+.barInner {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.menuCols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.menuCol h3 {
+  display: inline-block;
+  font-size: 1.7rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 4px solid var(--coral);
+}
+
+.menuCol ul {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.itemTop {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.itemTop strong {
+  font-weight: 700;
+  font-size: 1.08rem;
+}
+
+.leader {
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 2px dotted color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.itemPrice {
+  font-weight: 700;
+}
+
+.itemWhat {
+  display: block;
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ------------------------------------------------------------------- waves */
+
+.waves {
+  position: relative;
+  height: clamp(4rem, 7vw, 5.5rem);
+  overflow: hidden;
+  background: var(--lagoon);
+}
+
+/* ------------------------------------------------------------------ events */
+
+.events {
+  padding: var(--air) var(--gut);
+  background: var(--ink);
+  color: var(--sand);
+}
+
+.eventsInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: stretch;
+}
+
+.rings {
+  position: relative;
+  isolation: isolate;
+  min-height: 34rem;
+  overflow: hidden;
+  border-radius: 1.4rem;
+  border: 1px solid color-mix(in srgb, var(--sand) 25%, transparent);
+}
+
+.ringsField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.ringsBadge {
+  position: absolute;
+  left: 1.2rem;
+  bottom: 1.2rem;
+  right: 1.2rem;
+  display: grid;
+  padding: 1.1rem 1.3rem;
+  font-weight: 700;
+  background: var(--sun);
+  color: var(--ink);
+  border-radius: 1rem;
+}
+
+.ringsBig {
+  font-family: var(--display);
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.eventsBody h2 {
+  font-size: clamp(2.3rem, 4.6vw, 3.8rem);
+  color: var(--sand);
+}
+
+.eventList {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+}
+
+.event {
+  display: grid;
+  grid-template-columns: 5.2rem minmax(0, 1fr) auto;
+  gap: 1.2rem;
+  align-items: start;
+  padding: 1.2rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--sand) 22%, transparent);
+}
+
+.eventDate {
+  display: grid;
+  justify-items: center;
+  padding: 0.6rem 0.3rem;
+  background: var(--coral);
+  color: var(--ink);
+  border-radius: 0.8rem;
+}
+
+.eventDay {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  line-height: 1.05;
+}
+
+.eventMonth {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eventText h3 {
+  font-size: 1.5rem;
+}
+
+.eventWhen {
+  font-weight: 700;
+  color: var(--sun);
+}
+
+.eventText p:last-child {
+  margin-top: 0.3rem;
+  color: color-mix(in srgb, var(--sand) 86%, transparent);
+}
+
+.eventPrice {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1.5px solid var(--sun);
+  border-radius: 999px;
+  color: var(--sun);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.visitHead {
+  max-width: 34rem;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin-top: 2rem;
+}
+
+.visitCol {
+  padding-top: 1rem;
+  border-top: 4px solid var(--lagoon);
+}
+
+.visitCol:nth-child(2) {
+  border-top-color: var(--coral);
+}
+
+.visitCol:nth-child(3) {
+  border-top-color: var(--sun);
+}
+
+.visitCol h3 {
+  font-size: 1.4rem;
+}
+
+.visitCol ul {
+  list-style: none;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+/* -------------------------------------------------------------------- book
+   The pier at its own 3:2 proportions, anchored to the bottom. Its sea is
+   painted lagoon, and so is the band behind it, from the waterline down,
+   which fills the holes in the generated water. */
+
+.book {
+  position: relative;
+  isolation: isolate;
+  min-height: 66.67vw;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--sand);
+}
+
+.pier {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 66.67vw;
+}
+
+.pierSea {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 69.5%;
+  bottom: 0;
+  background: var(--lagoon);
+}
+
+.bookInner {
+  position: relative;
+  z-index: 1;
+  max-width: 84rem;
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) clamp(3rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 32rem);
+  gap: 1.8rem;
+}
+
+.bookText h2 {
+  font-size: clamp(2.4rem, 4.8vw, 4rem);
+}
+
+.bookText p {
+  margin-top: 0.8rem;
+  max-width: 28rem;
+  font-size: 1.1rem;
+  color: color-mix(in srgb, var(--sand) 88%, transparent);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  padding: clamp(1.3rem, 3vw, 1.8rem);
+  background: var(--sand);
+  color: var(--ink);
+  border-radius: 1.2rem;
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.6);
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  height: 2.9rem;
+  padding: 0.5rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--sand);
+  border: 2px solid var(--ink);
+  border-radius: 0.7rem;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  height: 3.1rem;
+  font: inherit;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  background: var(--coral);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.submit:hover {
+  background: var(--sun);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  position: relative;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 28px) var(--gut) 2rem;
+  background: var(--ink);
+  color: var(--sand);
+}
+
+.footWaves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  overflow: hidden;
+}
+
+.footGrid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--coral);
+}
+
+.footTag {
+  margin-top: 0.6rem;
+  max-width: 22rem;
+  color: color-mix(in srgb, var(--sand) 80%, transparent);
+}
+
+.footHead {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sun);
+}
+
+.footText {
+  margin-top: 0.5rem;
+}
+
+.footLink {
+  display: block;
+  margin-top: 0.5rem;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.footLink:hover {
+  color: var(--sun);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.6rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--sand) 20%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--sand) 72%, transparent);
+}
+
+.footFine a {
+  color: var(--sand);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .heroText {
+    width: 52%;
+    margin-left: 22%;
+  }
+
+  .bedGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .bedFeatured {
+    grid-row: 1;
+    grid-column: 1 / -1;
+  }
+
+  .todayList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+    margin-left: auto;
+  }
+
+  /* Narrow: the words take the width, and the beach is drawn wider than
+     the screen so the left palm and the parasols stay a size that reads. */
+  .hero {
+    min-height: 0;
+  }
+
+  .heroText {
+    width: auto;
+    margin: 0;
+    padding: 6.5rem var(--gut) 112vw;
+  }
+
+  .heroArt {
+    left: -20vw;
+    right: auto;
+    width: 220vw;
+    height: 146.67vw;
+    bottom: -12vw;
+  }
+
+  .today,
+  .secHead,
+  .eventsInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .todayRing {
+    display: none;
+  }
+
+  .menuCols,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rings {
+    min-height: 20rem;
+  }
+
+  /* The pier moves into the flow between the heading and the form, wider
+     than the screen so the hut stays in view; the form sits on the sea. */
+  .book {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .bookInner {
+    display: contents;
+  }
+
+  .bookText {
+    order: 1;
+    position: relative;
+    z-index: 1;
+    padding: clamp(3.5rem, 9vw, 5rem) var(--gut) 0;
+  }
+
+  .pier {
+    order: 2;
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: 190vw;
+    height: 126.67vw;
+    margin: -24vw 0 0 -86vw;
+  }
+
+  .formWrap {
+    order: 3;
+    position: relative;
+    z-index: 1;
+    padding: 0 var(--gut) clamp(3rem, 8vw, 4.5rem);
+    background: var(--lagoon);
+  }
+
+  .form {
+    margin-top: -20vw;
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .footGrid > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .brand {
+    font-size: 1.5rem;
+  }
+
+  .bedGrid,
+  .form,
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bedFeatured {
+    grid-column: auto;
+  }
+
+  .event {
+    grid-template-columns: 4.4rem minmax(0, 1fr);
+  }
+
+  .eventPrice {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .submit {
+    transition: none;
+  }
+}

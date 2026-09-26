@@ -9,10 +9,9 @@
 // render bails the static route out: `?templates=full`, where the Worker
 // sends a download click it refused, `?request=1` ("Request more" from the
 // gallery), and `?activated=`, where the emailed link lands.
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { Dialog } from '@base-ui-components/react/dialog';
-import { ArrowRight } from 'lucide-react';
 import Toaster, { toaster } from 'components/Toaster';
 import { ApiError, apiFetch } from 'lib/apiFetch';
 import { useSessionUser } from 'lib/authClient';
@@ -111,7 +110,7 @@ function TemplateRow({ row, entry }: { row: ChosenTemplate; entry: TemplateIndex
   const name = entry?.name ?? row.slug;
 
   return (
-    <div className={`${shell.row} ${styles.columns}`}>
+    <div className={`${styles.tplRow} ${styles.columns}`}>
       <div className={styles.templateCell}>
         <Thumb entry={entry} />
         <div className={styles.templateText}>
@@ -130,11 +129,11 @@ function TemplateRow({ row, entry }: { row: ChosenTemplate; entry: TemplateIndex
       <p className={`${styles.date} ${row.site ? '' : styles.dateQuiet}`}>
         {row.site ? day(row.site.updatedAt) : 'Not yet'}
       </p>
-      <p className={styles.date}>{day(row.chosenAt)}</p>
+      <p className={`${styles.date} ${styles.dateAdded}`}>{day(row.chosenAt)}</p>
       <div className={styles.rowActions}>
         <DownloadMenu name={name} chosen={row} side="bottom" classes={MENU} />
-        <Link href={customizeHref(row.slug, row)} prefetch={false} className={shell.rowAction}>
-          Customize <ArrowRight size={14} aria-hidden="true" />
+        <Link href={customizeHref(row.slug, row)} prefetch={false} className={styles.customize}>
+          Customize &#x2192;
         </Link>
       </div>
     </div>
@@ -154,11 +153,14 @@ function Chips({
   options,
   value,
   onChange,
+  children,
 }: {
   label: string;
   options: string[];
   value: string | null;
   onChange: (value: string) => void;
+  /** A follow-up field under the chips (the fair price, after a Yes or Maybe). */
+  children?: ReactNode;
 }) {
   return (
     <fieldset className={styles.question}>
@@ -176,6 +178,7 @@ function Chips({
           </button>
         ))}
       </div>
+      {children}
     </fieldset>
   );
 }
@@ -273,7 +276,7 @@ function RequestDialog({
                 </p>
               </div>
               <div className={styles.dialogActions}>
-                <Dialog.Close className={styles.primary}>Done</Dialog.Close>
+                <Dialog.Close className={`${styles.primary} ${styles.done}`}>Done</Dialog.Close>
               </div>
             </>
           ) : (
@@ -326,17 +329,18 @@ function RequestDialog({
                 {second ? (
                   <>
                     <Chips label="How many more do you need?" options={NEED} value={need} onChange={setNeed} />
-                    <Chips label="Would you pay for more templates?" options={PAY} value={pay} onChange={setPay} />
-                    {pay === 'Yes' || pay === 'Maybe' ? (
-                      <input
-                        className={styles.input}
-                        value={fairPrice}
-                        maxLength={120}
-                        onChange={(event) => setFairPrice(event.target.value)}
-                        placeholder="What would feel fair? (optional)"
-                        aria-label="What would feel fair?"
-                      />
-                    ) : null}
+                    <Chips label="Would you pay for more templates?" options={PAY} value={pay} onChange={setPay}>
+                      {pay === 'Yes' || pay === 'Maybe' ? (
+                        <input
+                          className={styles.input}
+                          value={fairPrice}
+                          maxLength={120}
+                          onChange={(event) => setFairPrice(event.target.value)}
+                          placeholder="What would feel fair? (optional)"
+                          aria-label="What would feel fair?"
+                        />
+                      ) : null}
+                    </Chips>
                     <label className={styles.question}>
                       <span className={styles.questionLabel}>Link to your work (optional)</span>
                       <input
@@ -602,7 +606,7 @@ export default function AccountOverview({ index }: { index: TemplateIndexEntry[]
             <p className={styles.cardLabel}>AI usage</p>
             <span className={styles.notYet}>Not yet available</span>
           </div>
-          <p className={styles.creditsLabel}>AI credits: words and pictures</p>
+          <p className={styles.creditsLabel}>AI credits: words &amp; pictures</p>
           <div className={styles.creditsTrack} aria-hidden="true" />
           <p className={styles.darkNote}>
             Generating custom images and copy with AI is coming in a later release.
@@ -618,7 +622,7 @@ export default function AccountOverview({ index }: { index: TemplateIndexEntry[]
           </span>
         </div>
         {left > 0 ? (
-          <Link href="/templates" prefetch={false} className={shell.cta}>
+          <Link href="/templates" prefetch={false} className={`${shell.cta} ${styles.browse}`}>
             Browse templates
           </Link>
         ) : null}
@@ -634,7 +638,7 @@ export default function AccountOverview({ index }: { index: TemplateIndexEntry[]
 
         {templates.status === 'loading' ? (
           [0, 1].map((i) => (
-            <div key={i} className={`${shell.row} ${styles.columns}`} aria-hidden="true">
+            <div key={i} className={`${styles.tplRow} ${styles.columns}`} aria-hidden="true">
               <div className={styles.skeleton} style={{ width: '60%' }} />
               <div className={styles.skeleton} style={{ width: '50%' }} />
               <div className={styles.skeleton} style={{ width: '50%' }} />

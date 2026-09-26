@@ -1,0 +1,1069 @@
+/* ==========================================================================
+   WHEELHOUSE CERAMICS - pottery studio and shop, Mill Lane
+   The page opens on the shop: a ruled grid like a catalog sheet, one pot
+   to a cell, each pot's silhouette cut out of a Tabbied pattern in its
+   glaze's colors with the photograph's own shading laid back over it.
+   Warm clay paper, a soft slab serif, and hairlines in a tint of the ink.
+   ========================================================================== */
+
+.page {
+  --clay: #f6f1ea;
+  --ink: #2b211c;
+  --terra: #c2643e;
+  --celadon: #6e8c7b;
+  --ash: #a1968c;
+  --slip: #eadfd2;
+  --line: color-mix(in srgb, var(--ink) 16%, var(--clay));
+  --gut: clamp(1rem, 3.6vw, 3rem);
+  --max: 86rem;
+  --air: clamp(4.5rem, 10vw, 8.5rem);
+  --serif: 'Young Serif', 'Rockwell', Georgia, serif;
+
+  font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.58;
+  background: var(--clay);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--terra);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.85rem var(--gut);
+  background: color-mix(in srgb, var(--clay) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--serif);
+  font-size: 1.22rem;
+  line-height: 1;
+}
+
+/* A wheel head seen from above. */
+.markDisc {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, var(--terra) 0 2px, var(--clay) 2px 4px);
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 0.3rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-color: var(--terra);
+}
+
+.barMeta {
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: var(--slip);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--clay);
+}
+
+/* -------------------------------------------------------------- shop grid
+   The ruled sheet: a 1px gap over a line-colored ground draws every rule. */
+
+.shop {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3vw, 2.5rem) var(--gut) 0;
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 1px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: 1px;
+  background: var(--line);
+}
+
+.grid > li {
+  background: var(--clay);
+}
+
+.intro {
+  grid-column: span 2;
+  grid-row: span 2;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.6rem, 3.2vw, 3rem);
+}
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--terra);
+}
+
+.title {
+  margin-top: 1.2rem;
+  font-size: clamp(2.5rem, 4.6vw, 4.3rem);
+  line-height: 1.02;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--terra);
+}
+
+.lede {
+  margin-top: 1.4rem;
+  max-width: 34rem;
+  font-size: 1.06rem;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+
+.glazes {
+  list-style: none;
+  margin: auto 0 0;
+  padding: 2rem 0 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.glazes li {
+  display: grid;
+  grid-template-columns: 1.6rem 5.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.glazes strong {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.08rem;
+}
+
+.glazes span:last-child {
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.swatch {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+}
+
+.ember {
+  background: radial-gradient(circle at 35% 30%, var(--slip) 0 10%, transparent 11%), var(--terra);
+}
+
+.celadon {
+  background: radial-gradient(circle at 35% 30%, var(--slip) 0 10%, transparent 11%), var(--celadon);
+}
+
+.ash {
+  background:
+    radial-gradient(circle at 30% 40%, var(--ink) 0 6%, transparent 7%),
+    radial-gradient(circle at 68% 62%, var(--ink) 0 5%, transparent 6%),
+    radial-gradient(circle at 55% 25%, var(--ash) 0 7%, transparent 8%),
+    var(--slip);
+  box-shadow: inset 0 0 0 1px var(--ash);
+}
+
+/* A pot cell: the picture on a soft shelf shadow, then the caption. */
+.cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cellArt {
+  position: relative;
+  flex: 1;
+  min-height: clamp(13rem, 21vw, 18rem);
+}
+
+.cellArt::after {
+  content: '';
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: 7%;
+  height: 7%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--ink) 26%, transparent), transparent);
+}
+
+.pot {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 9%;
+  transform: translateX(-50%);
+}
+
+.bowl {
+  width: 70%;
+  bottom: 10%;
+}
+
+.jug {
+  height: 74%;
+}
+
+.vase {
+  height: 80%;
+}
+
+.feature {
+  grid-row: span 2;
+}
+
+.feature .cellArt {
+  min-height: 28rem;
+  background: var(--slip);
+}
+
+.featureVase {
+  height: 84%;
+  bottom: 7%;
+}
+
+.cap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.8rem;
+  row-gap: 0.1rem;
+  padding: 0.9rem 1.1rem 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
+.capName {
+  font-size: 1.22rem;
+  line-height: 1.2;
+}
+
+.capPrice {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: baseline;
+  font-family: var(--serif);
+  font-size: 1.22rem;
+}
+
+.capGlaze {
+  grid-column: 1 / -1;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.capStock {
+  grid-column: 1 / -1;
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+.capStock::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--celadon);
+}
+
+.badge {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--clay);
+  background: var(--terra);
+  border-radius: 999px;
+}
+
+.feature .capName {
+  grid-row: 2;
+  font-size: 1.6rem;
+}
+
+.feature .capPrice {
+  grid-row: 2;
+  font-size: 1.6rem;
+}
+
+.shopFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding: 1.4rem 0 0;
+  font-size: 0.95rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--clay);
+  background: var(--ink);
+  border-radius: 999px;
+  transition: background 160ms ease;
+}
+
+.btn:hover {
+  background: var(--terra);
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+  padding-bottom: 1.6rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--ink);
+}
+
+.secNo {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--terra);
+}
+
+/* A glaze test tile hung above the section number. */
+.tiledHead {
+  position: relative;
+}
+
+.testTile {
+  position: absolute;
+  bottom: calc(100% + 1.2rem);
+  left: 0;
+  width: 3.75rem;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px -6px color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.secHead h2 {
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+}
+
+.secNote {
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+/* --------------------------------------------------------------- classes */
+
+.schedHead,
+.schedRow {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.5fr) minmax(0, 0.8fr) minmax(0, 0.6fr) minmax(0, 0.9fr);
+  gap: 1.2rem;
+  align-items: baseline;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.schedHead {
+  padding-top: 0;
+}
+
+.schedHead span {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.schedName strong {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.schedName span {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.schedWhen span {
+  display: block;
+  font-weight: 500;
+}
+
+.schedWhen small {
+  display: block;
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.schedPrice {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+}
+
+.schedLeft {
+  justify-self: start;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 999px;
+  background: var(--slip);
+}
+
+.schedNote {
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ---------------------------------------------------------------- studio */
+
+.studio {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--air);
+  background: var(--slip);
+}
+
+/* Glaze leaves running along the top edge of the studio, fading out. */
+.studioEdge {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(3rem, 6vw, 4.5rem);
+  overflow: hidden;
+  opacity: 0.6;
+  mask-image: linear-gradient(180deg, var(--ink), transparent);
+}
+
+.studioInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.4rem, 2.6vw, 2.2rem);
+  background: var(--clay);
+  border-top: 6px solid var(--ash);
+  border-radius: 0 0 6px 6px;
+}
+
+.tier:nth-child(2) {
+  border-top-color: var(--terra);
+}
+
+.tier:nth-child(3) {
+  border-top-color: var(--celadon);
+}
+
+.tier h3 {
+  font-size: 1.9rem;
+}
+
+.tierPrice {
+  margin-top: 0.8rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.tierPrice strong {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.tierPrice span {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.tierLead {
+  margin-top: 1rem;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+
+.tierList {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+  font-size: 0.95rem;
+}
+
+.tierList li {
+  display: flex;
+  gap: 0.6rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--line);
+}
+
+.tierList li::before {
+  content: '';
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 50%;
+  background: var(--terra);
+}
+
+.openHours {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  gap: 1.5rem;
+  align-items: baseline;
+}
+
+.openHours h3 {
+  font-size: 1.4rem;
+}
+
+.openHours dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.openHours dt {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.openHours dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ---------------------------------------------------------------- firing */
+
+.firing {
+  position: relative;
+}
+
+.kilnBand {
+  position: relative;
+  height: clamp(4.5rem, 8vw, 6.5rem);
+  overflow: hidden;
+}
+
+.firingInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.firingArt {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--slip);
+}
+
+.firingArt::after {
+  content: '';
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 22%;
+  height: 8%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--ink) 26%, transparent), transparent);
+}
+
+.firingBowl {
+  position: absolute;
+  z-index: 1;
+  width: 72%;
+  left: 14%;
+  bottom: 24%;
+}
+
+.firingText .secNo {
+  margin-bottom: 1rem;
+}
+
+.firingText h2 {
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  margin-bottom: 1rem;
+}
+
+.prices {
+  margin: 1.8rem 0 0;
+  border-top: 1px solid var(--ink);
+}
+
+.prices div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.prices dt {
+  font-weight: 500;
+}
+
+.prices dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  text-align: right;
+}
+
+.rules {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+
+.rules li {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.rules li::before {
+  content: '';
+  flex: none;
+  width: 0.8rem;
+  height: 2px;
+  margin-top: 0.75rem;
+  background: var(--terra);
+}
+
+/* ----------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  padding-bottom: var(--air);
+}
+
+.visitCol h3 {
+  font-size: 1.35rem;
+  margin: 0 0 0.8rem;
+}
+
+.visitCol h3 + .addr {
+  margin-top: 0;
+}
+
+.hours {
+  margin: 0 0 2rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  margin: 0;
+}
+
+.addr {
+  margin-top: 0.7rem;
+  color: color-mix(in srgb, var(--ink) 88%, transparent);
+}
+
+.addr a {
+  border-bottom: 1px solid var(--terra);
+}
+
+.faq {
+  border-top: 1px solid var(--ink);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  flex: none;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--terra);
+}
+
+.faq details[open] summary::after {
+  content: '\2212';
+}
+
+.faq details p {
+  padding: 0 0 1.2rem;
+  max-width: 40rem;
+  color: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--clay);
+  padding: clamp(2.5rem, 5vw, 4rem) var(--gut) 2rem;
+}
+
+.footTop {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1.5rem;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  line-height: 1;
+  margin-right: auto;
+}
+
+/* A celadon plate seen from above, beside the name. */
+.footPlate {
+  position: relative;
+  align-self: center;
+  width: 3rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px var(--celadon), 0 0 0 5px var(--ink), 0 0 0 6px color-mix(in srgb, var(--clay) 30%, transparent);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+}
+
+.footLinks a:hover {
+  color: var(--slip);
+  border-bottom: 1px solid var(--terra);
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--clay) 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--clay) 72%, transparent);
+}
+
+.credit a {
+  border-bottom: 1px solid color-mix(in srgb, var(--clay) 40%, transparent);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .intro {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .glazes {
+    margin-top: 0;
+  }
+
+  .openHours dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.8rem;
+  }
+
+  .secHead {
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    row-gap: 0.8rem;
+  }
+
+  .testTile {
+    display: none;
+  }
+
+  .secNote {
+    grid-column: 1 / -1;
+  }
+
+  .schedHead {
+    display: none;
+  }
+
+  .schedRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 0.4rem;
+  }
+
+  .schedName,
+  .schedWhen {
+    grid-column: 1 / -1;
+  }
+
+  .schedWeeks {
+    grid-column: 1;
+  }
+
+  .schedPrice {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .schedLeft {
+    grid-column: 1 / -1;
+  }
+
+  .tiers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .openHours {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .firingInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .firingArt {
+    max-width: 26rem;
+    width: 100%;
+    justify-self: center;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .barMeta {
+    display: none;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .feature {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .feature .cellArt {
+    min-height: 24rem;
+  }
+
+  .cellArt {
+    min-height: 11rem;
+  }
+
+  .cap {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0.75rem 0.8rem 0.9rem;
+  }
+
+  .capName {
+    font-size: 1.05rem;
+  }
+
+  .capPrice {
+    grid-column: 1;
+    grid-row: auto;
+    font-size: 1.05rem;
+  }
+
+  .feature .capPrice {
+    grid-row: auto;
+  }
+
+  .capGlaze {
+    font-size: 0.8rem;
+  }
+
+  .capStock {
+    font-size: 0.74rem;
+    align-items: baseline;
+  }
+
+  .glazes li {
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+  }
+
+  .glazes li span:last-child {
+    grid-column: 2;
+  }
+
+  .openHours dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn {
+    transition: none;
+  }
+}

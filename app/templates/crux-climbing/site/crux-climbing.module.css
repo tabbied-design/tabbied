@@ -1,0 +1,1225 @@
+/* ==========================================================================
+   CRUX - climbing gym
+   Chalk and holds: the warm white of a chalked wall, near-black, and the
+   two hold colors, orange and blue. Wide italic display type like a comp
+   bib. The page is organized around the grade chart: each grade band has
+   a tag color, and the counts on the walls are drawn as stacks of those
+   tags. The hero wall is a field of pebble holds with the drawn panel of
+   holds bolted over it.
+   ========================================================================== */
+
+.page {
+  --chalk: #edebe7;
+  --ink: #16161a;
+  --orange: #ff5a36;
+  --blue: #3a7bd5;
+  --gray: #8a8a8f;
+  --pale: #d8d5cf;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --max: 78rem;
+  --air: clamp(4.5rem, 9vw, 7.5rem);
+  --radius: 1.1rem;
+  --display: 'Anybody', 'Arial Black', sans-serif;
+  --sans: 'Golos Text', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--chalk);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 112%;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.9rem var(--gut);
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+/* A hold, with its bolt hole. */
+.brandMark {
+  width: 1.7rem;
+  height: 1.45rem;
+  border-radius: 62% 38% 55% 45% / 48% 62% 38% 52%;
+  background: radial-gradient(circle at 48% 50%, var(--ink) 0 17%, transparent 19%), var(--orange);
+  transform: rotate(-12deg);
+}
+
+.brandName {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 135%;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.brandSub {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding-top: 0.25rem;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+  margin-left: auto;
+}
+
+.nav a {
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--orange);
+}
+
+.barCta {
+  flex: none;
+  padding: 0.55rem 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--orange);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.barCta:hover {
+  background: var(--ink);
+  color: var(--chalk);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--chalk);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: 86rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3.5rem) var(--gut) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.kicker,
+.eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.heroTitle {
+  margin-top: 1rem;
+  font-size: clamp(2.9rem, 6vw, 5.6rem);
+  font-style: italic;
+  font-stretch: 118%;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--orange);
+  -webkit-text-stroke: 0;
+}
+
+.heroLede {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.3vw, 1.18rem);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.9rem;
+}
+
+.btn,
+.btnGhost,
+.btnDark {
+  display: inline-block;
+  padding: 0.8rem 1.35rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--chalk);
+}
+
+.btn:hover {
+  background: var(--orange);
+  color: var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--chalk);
+}
+
+.btnDark {
+  margin-top: 1.6rem;
+  background: var(--ink);
+  color: var(--chalk);
+}
+
+.btnDark:hover {
+  background: var(--orange);
+  color: var(--ink);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2.4rem 0 0;
+  max-width: 36rem;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.1rem;
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--ink);
+}
+
+.stats dt {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.stats dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 900;
+  font-stretch: 120%;
+  line-height: 1;
+}
+
+/* The wall: a field of holds with the panel bolted on at an angle. */
+.wall {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(30rem, 44vw, 40rem);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--pale) 45%, var(--chalk));
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+}
+
+.wallField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.holds {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 56%;
+  transform: translate(-50%, -50%) rotate(-6deg);
+  filter: drop-shadow(10px 14px 0 rgb(0 0 0 / 0.18));
+}
+
+.wallTag {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: var(--chalk);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+}
+
+.wallTagChip {
+  width: 1.1rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  background: var(--blue);
+  border: 1.5px solid var(--ink);
+}
+
+/* ---------------------------------------------------------- section heads */
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 27rem);
+  gap: 0.6rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  padding-bottom: 1.4rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.secHead h2 {
+  grid-column: 1;
+  font-size: clamp(2.2rem, 4.4vw, 3.8rem);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+}
+
+.secHead .eyebrow {
+  grid-column: 1;
+}
+
+.secNote {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+/* ------------------------------------------------------------------ grades */
+
+.grades {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.chart {
+  margin: 0;
+  padding: clamp(1.3rem, 2.6vw, 2rem);
+  background: var(--pale);
+  border-radius: var(--radius);
+}
+
+.chartHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.3rem 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.chartHead strong {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 120%;
+  text-transform: uppercase;
+}
+
+.chartHead span {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.bars {
+  list-style: none;
+  margin: 0;
+  padding: 1.4rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(0.4rem, 1.2vw, 0.9rem);
+  align-items: end;
+  height: 21rem;
+}
+
+.barCol {
+  --tag: var(--gray);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  text-align: center;
+}
+
+.barCol[data-tag='chalk'] {
+  --tag: var(--chalk);
+}
+
+.barCol[data-tag='gray'] {
+  --tag: var(--gray);
+}
+
+.barCol[data-tag='blue'] {
+  --tag: var(--blue);
+}
+
+.barCol[data-tag='orange'] {
+  --tag: var(--orange);
+}
+
+.barCol[data-tag='ink'] {
+  --tag: var(--ink);
+}
+
+.barCount {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* One tag for every two climbs: a stack of small bars in the band color. */
+.barStack {
+  display: block;
+  width: min(100%, 3.4rem);
+  height: calc(var(--n) * 0.3rem);
+  background: repeating-linear-gradient(to top, var(--tag) 0 0.42rem, transparent 0.42rem 0.6rem);
+}
+
+.barCol[data-tag='chalk'] .barStack {
+  background: repeating-linear-gradient(
+    to top,
+    var(--ink) 0 1.5px,
+    var(--chalk) 1.5px calc(0.42rem - 1.5px),
+    var(--ink) calc(0.42rem - 1.5px) 0.42rem,
+    transparent 0.42rem 0.6rem
+  );
+  box-shadow: inset 1.5px 0 0 var(--ink), inset -1.5px 0 0 var(--ink);
+}
+
+.barCol[data-tag='stripe'] .barStack {
+  background: repeating-linear-gradient(
+    to top,
+    var(--orange) 0 0.42rem,
+    transparent 0.42rem 0.6rem,
+    var(--ink) 0.6rem 1.02rem,
+    transparent 1.02rem 1.2rem
+  );
+}
+
+.barTag {
+  width: 1.7rem;
+  height: 1rem;
+  margin-top: 0.3rem;
+  border-radius: 3px;
+  background: var(--tag);
+  border: 2px solid var(--ink);
+}
+
+.barCol[data-tag='stripe'] .barTag {
+  background: linear-gradient(90deg, var(--orange) 0 50%, var(--ink) 50%);
+}
+
+.barGrade {
+  font-family: var(--display);
+  font-size: clamp(0.8rem, 1.1vw, 1rem);
+  font-weight: 800;
+  font-stretch: 90%;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.barName {
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.newSet {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: 1rem 2rem;
+  align-items: start;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.newSet h3 {
+  font-size: 1.5rem;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.newSet ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.newSet li {
+  display: grid;
+  gap: 0.15rem;
+  padding-top: 0.7rem;
+  border-top: 2px solid var(--ink);
+}
+
+.newSet strong {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.newWhat {
+  font-size: 0.95rem;
+}
+
+.newWhen {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+/* ------------------------------------------------------------- first visit */
+
+.visit {
+  margin-top: var(--air);
+  padding: var(--air) var(--gut);
+  background: var(--pale);
+}
+
+.visitInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.visitIntro h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.2rem, 4.4vw, 3.8rem);
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.visitIntro > p:not(.eyebrow) {
+  margin-top: 1.1rem;
+  max-width: 28rem;
+}
+
+/* The chalk bag hung on a small panel of holds. */
+.chalkWall {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(13rem, 23vw, 20rem);
+  aspect-ratio: 1;
+  margin-top: 2.5rem;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--pale) 45%, var(--chalk));
+}
+
+.chalkField {
+  position: absolute;
+  inset: 0;
+}
+
+.chalkBag {
+  position: relative;
+  width: 68%;
+  transform: rotate(-8deg);
+}
+
+/* The steps climb a rope: a line down the left with a hold for each. */
+.steps {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  left: 1.7rem;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  width: 4px;
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(to bottom, var(--ink) 0 10px, transparent 10px 16px);
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr) auto;
+  gap: 1.2rem;
+  align-items: start;
+  padding: 1.1rem 1.3rem 1.1rem 0;
+}
+
+.stepHold {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 900;
+  border-radius: 58% 42% 52% 48% / 45% 60% 40% 55%;
+  background: var(--orange);
+  border: 2px solid var(--ink);
+}
+
+.step:nth-child(even) .stepHold {
+  background: var(--blue);
+  border-radius: 45% 55% 40% 60% / 58% 42% 58% 42%;
+}
+
+.stepBody {
+  padding: 1rem 1.2rem;
+  background: var(--chalk);
+  border-radius: calc(var(--radius) * 0.7);
+}
+
+.stepBody h3 {
+  font-size: 1.4rem;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.stepBody p {
+  margin-top: 0.35rem;
+  font-size: 0.98rem;
+}
+
+.stepTime {
+  align-self: center;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ prices */
+
+.prices {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.passes {
+  list-style: none;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.pass {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+}
+
+.passFeatured {
+  background: var(--orange);
+}
+
+.pass h3 {
+  font-size: 1.4rem;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.passPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+
+.passPrice strong {
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 4vw, 3.4rem);
+  font-weight: 900;
+  font-stretch: 115%;
+  line-height: 1;
+}
+
+.passPrice span {
+  font-size: 0.95rem;
+}
+
+.passNotes {
+  list-style: none;
+  margin: 1.2rem 0 0;
+  padding: 0.9rem 0 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+  border-top: 1.5px solid color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.passNotes li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+
+.passNotes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.rentals {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: clamp(1.3rem, 3vw, 2rem) clamp(1.5rem, 4vw, 3rem);
+  background: var(--pale);
+  border-radius: var(--radius);
+}
+
+.carabiner {
+  width: clamp(4.5rem, 7vw, 6.5rem);
+  transform: rotate(10deg);
+}
+
+.rentalBody h3 {
+  font-size: 1.5rem;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.rentalList {
+  margin: 0.8rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+}
+
+.rentalList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+.rentalList dd {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(4rem, 7vw, 5.5rem);
+  margin-top: var(--air);
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------- youth */
+
+.youth {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) var(--air);
+}
+
+.youthGrid {
+  list-style: none;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.youthCard {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem;
+  background: var(--pale);
+  border-radius: var(--radius);
+}
+
+.youthAges {
+  align-self: flex-start;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--blue);
+  color: var(--chalk);
+  border-radius: 999px;
+}
+
+.youthCard h3 {
+  margin-top: 1rem;
+  font-size: 1.8rem;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.youthText {
+  margin-top: 0.7rem;
+  flex: 1;
+}
+
+.youthWhen {
+  margin-top: 1.1rem;
+  padding-top: 0.8rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-top: 1.5px solid color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+.youthPrice {
+  margin-top: 0.2rem;
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------- hours */
+
+.hours {
+  position: relative;
+  padding: var(--air) var(--gut);
+  background: var(--ink);
+  color: var(--chalk);
+}
+
+/* A few holds on the dark wall, in the lower corner. */
+.hoursField {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 40%;
+  height: 46%;
+  overflow: hidden;
+  opacity: 0.45;
+  -webkit-mask-image: radial-gradient(ellipse at 100% 100%, var(--ink) 25%, transparent 70%);
+  mask-image: radial-gradient(ellipse at 100% 100%, var(--ink) 25%, transparent 70%);
+}
+
+.hoursInner {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.eyebrowLight {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.hours h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.2rem, 4.4vw, 3.8rem);
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.hoursList {
+  margin: 2rem 0 0;
+  border-top: 2px solid var(--chalk);
+}
+
+.hoursList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--chalk) 22%, transparent);
+}
+
+.hoursList dt {
+  font-weight: 500;
+}
+
+.hoursList dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.busy {
+  margin: 1.8rem 0 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.busy div {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.busy dt {
+  font-weight: 600;
+  color: var(--orange);
+}
+
+.busy dd {
+  margin: 0;
+  color: color-mix(in srgb, var(--chalk) 86%, transparent);
+}
+
+.findUs h3 {
+  font-size: 1.8rem;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.findUs > p {
+  margin-top: 0.7rem;
+  max-width: 30rem;
+  color: color-mix(in srgb, var(--chalk) 88%, transparent);
+}
+
+.findLink {
+  display: inline-block;
+  margin: 0.9rem 1.5rem 0 0;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid var(--orange);
+  overflow-wrap: anywhere;
+}
+
+.findLink:hover {
+  color: var(--orange);
+}
+
+.faq {
+  margin-top: 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--chalk) 22%, transparent);
+}
+
+.faqItem {
+  border-bottom: 1px solid color-mix(in srgb, var(--chalk) 22%, transparent);
+}
+
+.faqItem summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  padding: 1rem 2.5rem 1rem 0;
+  font-weight: 600;
+  font-size: 1.08rem;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--orange);
+}
+
+.faqItem[open] summary::after {
+  content: '-';
+}
+
+.faqItem p {
+  padding: 0 2.5rem 1.1rem 0;
+  color: color-mix(in srgb, var(--chalk) 86%, transparent);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  position: relative;
+  padding: calc(clamp(2.5rem, 5vw, 3.5rem) + 2rem) var(--gut) 1.8rem;
+  background: var(--orange);
+  color: var(--ink);
+}
+
+/* Quickdraws along the top edge of the footer. */
+.footDraws {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  overflow: hidden;
+  border-bottom: 2px solid var(--ink);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 2rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2.6rem;
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 135%;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footTag {
+  font-weight: 500;
+}
+
+.footNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin-left: auto;
+}
+
+.footNav a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footNav a:hover {
+  text-decoration: underline;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2rem auto 0;
+  padding-top: 1.1rem;
+  border-top: 1.5px solid var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.88rem;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .passes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .newSet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .charts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .barCta {
+    margin-left: auto;
+  }
+
+  .hero,
+  .visitInner,
+  .hoursInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wall {
+    min-height: 26rem;
+  }
+
+  .holds {
+    width: min(62%, 20rem);
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secNote {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .newSet ul,
+  .youthGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chalkWall {
+    display: none;
+  }
+
+  .rentalList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footNav {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .barCta {
+    display: none;
+  }
+
+  .siteMenu {
+    margin-left: auto;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .passes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bars {
+    height: 18rem;
+    gap: 0.3rem;
+  }
+
+  .barStack {
+    height: calc(var(--n) * 0.25rem);
+  }
+
+  .barName {
+    display: none;
+  }
+
+  .step {
+    grid-template-columns: 3.4rem minmax(0, 1fr);
+    padding-right: 0;
+  }
+
+  .stepTime {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: -0.6rem;
+  }
+
+  .rentals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .carabiner {
+    width: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .barCta,
+  .btn,
+  .btnGhost,
+  .btnDark {
+    transition: none;
+  }
+}

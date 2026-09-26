@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { Dialog } from '@base-ui-components/react/dialog';
 import {
   Check,
-  ImagePlus,
+  Image as ImageIcon,
   Maximize2,
   Minimize2,
   Minus,
@@ -63,7 +63,7 @@ import styles from './EditPattern.module.css';
 const DEFAULT_DENSITY = 0.5;
 
 // Longest edge of the little aspect-ratio glyph rectangle, in pixels.
-const RATIO_GLYPH_SIZE = 12;
+const RATIO_GLYPH_SIZE = 16;
 
 // Fraction of the preview area the pattern fills, leaving a margin around it.
 const PREVIEW_FIT_MARGIN = 0.9;
@@ -1306,7 +1306,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
             <figcaption className={styles.stageCaption}>
               <span className={styles.stageName}>{pattern.name}</span>
               <span className={styles.stageMeta}>
-                {captionParts.join(', ')}
+                {captionParts.join(' \u00B7 ')}
               </span>
             </figcaption>
           </figure>
@@ -1387,7 +1387,6 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                           setPaletteSource('custom');
                         }}
                       />
-                      <span className={styles.bgStrip} aria-hidden="true" />
                     </span>
                     )}
                     {!backgroundImage && (
@@ -1418,7 +1417,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                       style={imageStyle}
                       title={backgroundImage ? 'Replace the background image' : 'Upload a background image'}
                     >
-                      {!backgroundImage && <ImagePlus size={15} aria-hidden="true" />}
+                      {!backgroundImage && (
+                        <ImageIcon size={15} strokeWidth={1.7} aria-hidden="true" />
+                      )}
                       <input
                         type="file"
                         accept="image/*"
@@ -1508,7 +1509,9 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
 
                 {/* The reveal hook keeps filling until its list overflows
                     vertically, which the one-row strip never does, so only
-                    the desktop list gets it. */}
+                    the desktop list gets it. The list runs under a fade (the
+                    strip, at its right end), which says it continues. */}
+                <div className={styles.paletteListWrap}>
                 <div
                   ref={isMobile ? stripRef : paletteList.listRef}
                   className={isMobile ? `${styles.paletteList} ${styles.paletteStrip}` : styles.paletteList}
@@ -1550,6 +1553,8 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                     </p>
                   )}
                 </div>
+                <span className={styles.paletteFade} aria-hidden="true" />
+                </div>
 
                 {!isMobile && (
                   <div className={styles.chipsActions}>
@@ -1559,7 +1564,7 @@ export default function EditPattern({ pattern }: { pattern: Pattern }) {
                       onClick={() => editor.openEditor()}
                       title="Create a new palette"
                     >
-                      <Plus size={13} /> New Palette
+                      + New palette
                     </button>
                   </div>
                 )}

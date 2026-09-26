@@ -1,0 +1,1125 @@
+/* ==========================================================================
+   BRIGHT SMILES - children's dentist, Maple Hill
+   A page a five-year-old could be shown: round Baloo headings, plain Figtree
+   for the parents, and three flat illustrations that take every one of
+   their colors from the palette. The first visit is the heart of it, told
+   as four big picture cards in a row, one step after another.
+   ========================================================================== */
+
+.page {
+  --cloud: #f7fbff;
+  --navy: #1d2b45;
+  --blue: #3b82f6;
+  --pink: #f472b6;
+  --sun: #facc15;
+  --slate: #94a3b8;
+  --gut: clamp(1.25rem, 4.5vw, 4rem);
+  --max: 80rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --rule: color-mix(in srgb, var(--navy) 14%, transparent);
+  --soft: color-mix(in srgb, var(--navy) 78%, transparent);
+  --wash: color-mix(in srgb, var(--blue) 10%, var(--cloud));
+
+  font-family: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--cloud);
+  color: var(--navy);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--pink);
+  outline-offset: 3px;
+}
+
+:where(.page) :is(h1, h2, h3) {
+  margin: 0;
+  font-family: 'Baloo 2', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+:where(.page) p {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ header */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.65rem var(--gut);
+  background: color-mix(in srgb, var(--cloud) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.markTooth {
+  width: 2.4rem;
+  padding: 0.3rem;
+  background: var(--blue);
+  border-radius: 50%;
+  box-sizing: content-box;
+}
+
+.markText {
+  display: grid;
+  line-height: 1.05;
+}
+
+.markName {
+  font-family: 'Baloo 2', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 1.45rem;
+}
+
+.markSub {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--soft);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.8rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  transition: background-color 160ms ease;
+}
+
+.nav a:hover {
+  background: color-mix(in srgb, var(--blue) 14%, transparent);
+}
+
+.barCta {
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.65rem 1.2rem;
+  background: var(--pink);
+  color: var(--navy);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--cloud);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(2.5rem, 5vw, 4rem);
+  background: var(--wash);
+  overflow: hidden;
+}
+
+/* The rings, clear of the headline and full strength behind the tooth. */
+.heroField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  mask-image: linear-gradient(90deg, transparent 20%, var(--navy) 62%);
+}
+
+.heroInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.kicker {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.9rem;
+  background: var(--sun);
+  border-radius: 999px;
+}
+
+.heroTitle {
+  margin-top: 1.2rem;
+  font-size: clamp(2.8rem, 6.2vw, 5.4rem);
+  line-height: 0.98;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--blue);
+}
+
+.heroLede {
+  margin-top: 1.4rem;
+  max-width: 32rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+  color: var(--soft);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 999px;
+  border: 3px solid var(--navy);
+  transition: transform 160ms ease;
+}
+
+.btn {
+  background: var(--navy);
+  color: var(--cloud);
+}
+
+.btnLine {
+  background: var(--cloud);
+}
+
+.btn:hover,
+.btnLine:hover {
+  transform: translateY(-2px);
+}
+
+.heroArt {
+  position: relative;
+  aspect-ratio: 1;
+  width: min(100%, 31rem);
+  justify-self: center;
+}
+
+.heroDisc {
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 0 12px color-mix(in srgb, var(--blue) 22%, transparent);
+}
+
+.heroTooth {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 60%;
+  translate: -52% -50%;
+}
+
+.heroBrush {
+  position: absolute;
+  right: 0;
+  bottom: 2%;
+  height: 50%;
+  width: auto;
+  rotate: 16deg;
+}
+
+.heroFacts {
+  list-style: none;
+  max-width: var(--max);
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.heroFacts li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--cloud);
+  border: 2px solid var(--navy);
+  border-radius: 999px;
+}
+
+.heroFacts strong {
+  font-family: 'Baloo 2', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+
+.heroFacts span {
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+/* ---------------------------------------------------------- section frame */
+
+.sec,
+.visitSec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin: 0 auto clamp(2.2rem, 4.5vw, 3.4rem);
+  text-align: center;
+}
+
+.secTag {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.85rem;
+  background: color-mix(in srgb, var(--pink) 28%, var(--cloud));
+  border-radius: 999px;
+}
+
+.secHead h2,
+.parentsLead h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.3rem, 5vw, 3.8rem);
+}
+
+.secNote {
+  margin-top: 0.8rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------- first visit
+   Four cards in a row. Each is a colored picture panel over its words,
+   with a round arrow in the gap to the next. */
+
+.steps {
+  --gap: clamp(1.4rem, 2.6vw, 2.4rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--cloud);
+  border: 3px solid var(--navy);
+  border-radius: 30px;
+}
+
+.step + .step::before {
+  content: '\2192';
+  position: absolute;
+  z-index: 2;
+  left: calc(var(--gap) / -2);
+  top: clamp(6.5rem, 9vw, 8rem);
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-weight: 800;
+  font-size: 1.2rem;
+  background: var(--sun);
+  border: 3px solid var(--navy);
+  border-radius: 50%;
+}
+
+.stepArt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(13rem, 18vw, 16rem);
+  margin: 0.6rem 0.6rem 0;
+  border-radius: 24px;
+}
+
+.cardBlue .stepArt {
+  background: var(--blue);
+}
+
+.cardSun .stepArt {
+  background: var(--sun);
+}
+
+.cardPink .stepArt {
+  background: var(--pink);
+}
+
+.cardNavy .stepArt {
+  background: var(--navy);
+}
+
+.stepPicture {
+  height: 76%;
+  width: auto;
+  max-width: 86%;
+}
+
+.stepText {
+  padding: 1.2rem 1.4rem 1.6rem;
+}
+
+.stepTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: 'Baloo 2', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  background: var(--navy);
+  color: var(--cloud);
+  border-radius: 50%;
+}
+
+.stepTime {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.2rem 0.7rem;
+  background: var(--wash);
+  border-radius: 999px;
+}
+
+.stepText h3 {
+  margin-top: 0.8rem;
+  font-size: clamp(1.5rem, 2.2vw, 1.85rem);
+}
+
+.stepText p {
+  margin-top: 0.4rem;
+  font-size: 0.96rem;
+  color: var(--soft);
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(70px, 8vw, 100px);
+  margin-top: var(--air);
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------------- ages
+   A growth chart: the bubbles get bigger as the children do. */
+
+.ages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2vw, 1.6rem);
+  row-gap: 0;
+}
+
+/* Each age spans three shared rows, so the bubbles sit on one line and the
+   headings on the next, whatever their sizes. */
+.age {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  padding-bottom: 1.6rem;
+}
+
+.ageBubble {
+  --size: 4rem;
+  display: grid;
+  place-items: center;
+  align-self: end;
+  width: var(--size);
+  height: var(--size);
+  font-family: 'Baloo 2', Arial, sans-serif;
+  font-weight: 800;
+  font-size: calc(var(--size) / 3.4);
+  border-radius: 50%;
+  background: var(--sun);
+}
+
+.age:nth-child(2) .ageBubble {
+  --size: 4.8rem;
+  background: var(--pink);
+}
+
+.age:nth-child(3) .ageBubble {
+  --size: 5.6rem;
+  background: var(--blue);
+  color: var(--cloud);
+}
+
+.age:nth-child(4) .ageBubble {
+  --size: 6.4rem;
+  background: var(--navy);
+  color: var(--cloud);
+}
+
+.age:nth-child(5) .ageBubble {
+  --size: 7.2rem;
+  background: var(--slate);
+}
+
+.age h3 {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 3px solid var(--navy);
+  font-size: 1.5rem;
+}
+
+.ageList {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  align-content: start;
+}
+
+.ageList li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+
+.ageList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+/* ----------------------------------------------------------------- parents */
+
+.parents {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.parentsLead h2 {
+  margin-top: 0.8rem;
+}
+
+/* The chair on a round mat of quiet rings, the hero's disc in daylight. */
+.chairPlate {
+  display: grid;
+  place-items: center;
+  width: min(100%, 24rem);
+  margin-top: 2rem;
+}
+
+.chairRings {
+  grid-area: 1 / 1;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--blue) 10%, var(--cloud));
+}
+
+.chairRings > * {
+  opacity: 0.5;
+}
+
+.parentsChair {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(100%, 22rem);
+}
+
+.faq {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.faq details {
+  background: var(--wash);
+  border-radius: 20px;
+  padding: 0 1.4rem;
+}
+
+.faq details[open] {
+  background: color-mix(in srgb, var(--sun) 30%, var(--cloud));
+}
+
+.faq summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  font-family: 'Baloo 2', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.3rem;
+  background: var(--navy);
+  color: var(--cloud);
+  border-radius: 50%;
+}
+
+.faq details[open] summary::after {
+  content: '\2212';
+}
+
+.faq details p {
+  padding-bottom: 1.3rem;
+  color: var(--soft);
+}
+
+/* --------------------------------------------------------------- insurance */
+
+.insurance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.plans,
+.priceCard {
+  padding: clamp(1.6rem, 3.5vw, 2.4rem);
+  border-radius: 30px;
+}
+
+.plans {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--blue) 16%, var(--cloud));
+}
+
+/* A few smiles in the far corner of the plans card. */
+.plansSmiles {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 60%;
+  height: 55%;
+  z-index: -1;
+  overflow: hidden;
+  mask-image: radial-gradient(ellipse at 100% 100%, var(--navy) 25%, transparent 68%);
+}
+
+.plans h3,
+.priceCard h3 {
+  font-size: clamp(1.6rem, 2.6vw, 2rem);
+}
+
+.planList {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.planList li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-weight: 700;
+}
+
+.planList li::before {
+  content: '';
+  flex: none;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: inset 0 0 0 4px var(--cloud);
+  border: 2px solid var(--blue);
+}
+
+.plansNote {
+  margin-top: 1.2rem;
+  color: var(--soft);
+}
+
+.priceCard {
+  border: 3px solid var(--navy);
+}
+
+.priceList {
+  margin: 1rem 0 0;
+}
+
+.priceList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 2px dotted color-mix(in srgb, var(--navy) 30%, transparent);
+}
+
+.priceList dt {
+  color: var(--soft);
+}
+
+.priceList dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.smilePlan {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 1.3rem;
+  padding: 1rem 1.2rem;
+  background: var(--sun);
+  border-radius: 18px;
+}
+
+.smilePlan strong {
+  font-family: 'Baloo 2', Arial, sans-serif;
+  font-size: 1.25rem;
+}
+
+.smilePlan span {
+  font-size: 0.93rem;
+}
+
+/* -------------------------------------------------------------------- book */
+
+.book {
+  max-width: var(--max);
+  margin: var(--air) auto 0;
+  padding: 0 var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.bookPanel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(1.8rem, 4vw, 2.8rem);
+  background: var(--navy);
+  color: var(--cloud);
+  border-radius: 30px;
+  min-height: 26rem;
+}
+
+.bookField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.7;
+}
+
+.bookPanel h2 {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+}
+
+.bookText {
+  margin-top: 0.8rem;
+  max-width: 24rem;
+  color: color-mix(in srgb, var(--cloud) 84%, transparent);
+}
+
+.bookInfo {
+  margin: 1.6rem 0 0;
+  display: grid;
+  gap: 0.8rem;
+  max-width: 20rem;
+}
+
+.bookInfo dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sun);
+}
+
+.bookInfo dd {
+  margin: 0.1rem 0 0;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.bookBrush {
+  position: absolute;
+  right: 6%;
+  bottom: -4%;
+  height: 58%;
+  width: auto;
+  rotate: -14deg;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  align-content: start;
+  padding: clamp(1.6rem, 3.5vw, 2.4rem);
+  border: 3px solid var(--navy);
+  border-radius: 30px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide,
+.choice {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.choice legend {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.field input,
+.field select,
+.field textarea {
+  font: inherit;
+  color: var(--navy);
+  padding: 0.7rem 0.9rem;
+  background: var(--cloud);
+  border: 2px solid color-mix(in srgb, var(--navy) 35%, transparent);
+  border-radius: 14px;
+  width: 100%;
+  min-width: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: color-mix(in srgb, var(--navy) 50%, transparent);
+}
+
+.choice {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.choice legend {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.choice label {
+  position: relative;
+  cursor: pointer;
+}
+
+.choice input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.choice span {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  border: 2px solid var(--navy);
+  border-radius: 999px;
+}
+
+.choice input:checked + span {
+  background: var(--sun);
+}
+
+.choice input:focus-visible + span {
+  outline: 3px solid var(--pink);
+  outline-offset: 2px;
+}
+
+.submit {
+  justify-self: start;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.9rem 1.6rem;
+  background: var(--pink);
+  color: var(--navy);
+  border: 3px solid var(--navy);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+
+.submit:hover {
+  transform: translateY(-2px);
+}
+
+.formFine {
+  align-self: center;
+  font-size: 0.82rem;
+  color: var(--soft);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  position: relative;
+  margin-top: var(--air);
+  background: var(--navy);
+  color: var(--cloud);
+  padding: calc(clamp(2.8rem, 6vw, 4rem) + 2.5rem) var(--gut) 2rem;
+}
+
+/* A row of smiles along the top of the footer. */
+.footSmiles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5rem;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.footName {
+  font-family: 'Baloo 2', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.footTag {
+  margin-top: 0.5rem;
+  max-width: 22rem;
+  color: color-mix(in srgb, var(--cloud) 80%, transparent);
+}
+
+.footLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  font-weight: 700;
+}
+
+.footLinks a:hover {
+  color: var(--sun);
+}
+
+.footContact {
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.footFine {
+  max-width: var(--max);
+  margin: 2.5rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--cloud) 20%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--cloud) 74%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* In two rows the arrow between the second and third card would point
+     off the edge, so only the arrows inside a row stay. */
+  .step:nth-child(3)::before {
+    display: none;
+  }
+
+  .ages {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 880px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .heroInner,
+  .parents,
+  .insurance,
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    order: -1;
+    width: min(100%, 22rem);
+  }
+
+  .heroField {
+    mask-image: linear-gradient(180deg, var(--navy) 20%, transparent 55%);
+  }
+
+  .chairPlate {
+    width: min(64%, 15rem);
+    margin-top: 1.4rem;
+  }
+
+  .parentsChair {
+    width: 92%;
+  }
+}
+
+@media (max-width: 600px) {
+  .barCta,
+  .markSub,
+  .plansSmiles {
+    display: none;
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .step + .step::before,
+  .step:nth-child(3)::before {
+    display: grid;
+    content: '\2193';
+    left: 50%;
+    top: calc(var(--gap) / -2);
+  }
+
+  .stepArt {
+    height: 12rem;
+  }
+
+  .ages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bookPanel {
+    min-height: 0;
+    padding-bottom: 10rem;
+  }
+
+  .bookBrush {
+    height: 10rem;
+    bottom: -1.5rem;
+    right: 10%;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine,
+  .submit {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btnLine:hover,
+  .submit:hover {
+    transform: none;
+  }
+}

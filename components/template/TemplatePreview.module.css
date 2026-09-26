@@ -61,10 +61,12 @@
   color: #fff;
 }
 
+/* Centered in a 34px square, as the artboard boxes it (the account circle's
+   size), with the label 13px past the square. */
 .backMark {
   display: block;
   flex: none;
-  margin-left: 6px;
+  margin: 0 6.5px;
 }
 
 .backLabel {
@@ -147,13 +149,15 @@
 }
 
 .useMenu {
-  width: 320px;
+  width: 300px;
 }
 
 /* The menu's header: the count of chosen templates, its bar, and what
-   taking this one costs. */
+   taking this one costs, closed by a rule the popup's full width. */
 .usage {
-  padding: 12px 12px 6px;
+  margin-bottom: 5px;
+  padding: 10px 12px 12px;
+  border-bottom: 1px solid var(--s-rule);
 }
 
 .usageNote {

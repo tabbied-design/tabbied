@@ -1,0 +1,966 @@
+/* ==========================================================================
+   GLAZE - donut shop, Market Street
+   Warm cream, chocolate ink and a fat script face for the loud parts. The
+   page is built around the menu board over the counter: a dark chocolate
+   panel of twelve donuts, every one the same drawing in its own glaze,
+   dough and sprinkles. Rings in the hero, sprinkles in a strip.
+   ========================================================================== */
+
+.page {
+  --cream: #fff6f1;
+  --choc: #2e1b1b;
+  --pink: #f06292;
+  --purple: #7e57c2;
+  --orange: #ffb74d;
+  --gray: #a1887f;
+  --gut: clamp(1rem, 4.5vw, 3.5rem);
+  --max: 74rem;
+  --air: clamp(4.5rem, 10vw, 8rem);
+  --radius: 22px;
+  --script: 'Shrikhand', 'Georgia', serif;
+
+  font-family: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--choc);
+  background: var(--cream);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.page :where(p, ul, ol, dl, dd) {
+  margin: 0;
+  padding: 0;
+}
+
+.page :where(ul, ol) {
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.4rem);
+  padding: 0.75rem var(--gut);
+  background: color-mix(in srgb, var(--cream) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid color-mix(in srgb, var(--choc) 12%, transparent);
+}
+
+.mark {
+  font-family: var(--script);
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--pink);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(0.9rem, 2.4vw, 2rem);
+  flex-wrap: wrap;
+}
+
+.nav a {
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--pink);
+}
+
+.barCta {
+  padding: 0.55rem 1.2rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--cream);
+  background: var(--choc);
+  border-radius: 999px;
+}
+
+.barCta:hover {
+  background: var(--pink);
+}
+
+/* The small-screen menu (TemplateMenu): shown where the nav is hidden. */
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--cream);
+}
+
+/* ------------------------------------------------------------ shared bits */
+
+.page h2 {
+  font-family: var(--script);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  line-height: 1.02;
+}
+
+.page h2 em {
+  font-style: normal;
+  color: var(--pink);
+}
+
+.lede {
+  max-width: 34rem;
+  font-size: 1.1rem;
+  color: color-mix(in srgb, var(--choc) 84%, transparent);
+}
+
+.btn,
+.btnLine,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.5rem;
+  font: inherit;
+  font-weight: 700;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn,
+.submit {
+  color: var(--cream);
+  background: var(--pink);
+  border: 0;
+}
+
+.btn:hover,
+.submit:hover {
+  background: var(--choc);
+}
+
+.btnLine {
+  border: 2px solid var(--choc);
+}
+
+.btnLine:hover {
+  color: var(--cream);
+  background: var(--choc);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) var(--gut) clamp(3rem, 7vw, 6rem);
+}
+
+.heroCopy {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.kicker {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+.heroTitle {
+  font-family: var(--script);
+  font-weight: 400;
+  font-size: clamp(2.8rem, 5.6vw, 5rem);
+  line-height: 1;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--pink);
+}
+
+.heroLede {
+  max-width: 32rem;
+  font-size: 1.15rem;
+  color: color-mix(in srgb, var(--choc) 84%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+/* A round plate of rings; the donut is larger than the plate and its hole
+   shows the rings through. */
+.heroArt {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--pink) 12%, var(--cream));
+}
+
+.heroDonut {
+  position: relative;
+  width: 70%;
+  transform: rotate(-12deg);
+  filter: drop-shadow(0 26px 24px color-mix(in srgb, var(--choc) 28%, transparent));
+}
+
+.heroSticker {
+  position: absolute;
+  top: 3%;
+  right: 2%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: clamp(5.5rem, 10vw, 7.5rem);
+  aspect-ratio: 1;
+  color: var(--choc);
+  background: var(--orange);
+  border-radius: 50%;
+  transform: rotate(10deg);
+}
+
+.stickerBig {
+  font-family: var(--script);
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  line-height: 1;
+}
+
+.stickerSmall {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* -------------------------------------------------------------- the board */
+
+.boardWrap {
+  padding: 0 clamp(0.5rem, 2vw, 1.5rem);
+}
+
+/* A dark board in a thick frame, the shape of the sign over the counter. */
+.board {
+  --board-x: clamp(1rem, 4vw, 3rem);
+  --board-b: clamp(1.2rem, 3vw, 2rem);
+  max-width: calc(var(--max) + 6rem);
+  margin: 0 auto;
+  padding: clamp(1.4rem, 4vw, 3rem) var(--board-x) var(--board-b);
+  overflow: hidden;
+  color: var(--cream);
+  background: var(--choc);
+  border: clamp(8px, 1.2vw, 14px) solid color-mix(in srgb, var(--gray) 70%, var(--choc));
+  border-radius: calc(var(--radius) + 6px);
+  box-shadow: 0 34px 60px -30px rgb(0 0 0 / 0.55);
+}
+
+.boardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-bottom: clamp(1rem, 2vw, 1.6rem);
+  border-bottom: 2px dashed color-mix(in srgb, var(--cream) 30%, transparent);
+}
+
+.boardHead h2 {
+  color: var(--orange);
+}
+
+.boardNote {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--cream) 82%, transparent);
+}
+
+.donuts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.donut {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  justify-items: center;
+  gap: 0.35rem;
+  padding: clamp(1.2rem, 2.4vw, 1.8rem) 1rem clamp(1rem, 2vw, 1.4rem);
+  text-align: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--cream) 16%, transparent);
+}
+
+.donut:not(:nth-child(4n)) {
+  border-right: 1px solid color-mix(in srgb, var(--cream) 16%, transparent);
+}
+
+.donut:nth-last-child(-n + 4) {
+  border-bottom: 0;
+}
+
+.donutTag {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--choc);
+  background: var(--pink);
+  border-radius: 999px;
+}
+
+.donutArt {
+  width: min(78%, 9.5rem);
+  margin-bottom: 0.6rem;
+  filter: drop-shadow(0 10px 10px rgb(0 0 0 / 0.35));
+}
+
+.donutName {
+  font-size: 1.12rem;
+  line-height: 1.2;
+}
+
+.donutNote {
+  max-width: 15rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--cream) 80%, transparent);
+}
+
+.donutPrice {
+  margin-top: 0.4rem;
+  font-family: var(--script);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--orange);
+}
+
+.cur {
+  font-size: 0.6em;
+  vertical-align: 0.5em;
+  margin-right: 0.08em;
+}
+
+.boardFoot {
+  padding-top: 1.2rem;
+  font-size: 0.9rem;
+  text-align: center;
+  color: color-mix(in srgb, var(--cream) 82%, transparent);
+  border-top: 2px dashed color-mix(in srgb, var(--cream) 30%, transparent);
+}
+
+/* Sprinkles spilled along the ledge at the foot of the board. */
+.boardLedge {
+  position: relative;
+  height: 40px;
+  margin: 1.2rem calc(-1 * var(--board-x)) calc(-1 * var(--board-b));
+  opacity: 0.85;
+}
+
+/* ------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: 110px;
+  margin: clamp(3rem, 6vw, 5rem) 0 0;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------- dozen */
+
+.dozen {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.dozenArt {
+  position: sticky;
+  top: 6rem;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: color-mix(in srgb, var(--orange) 26%, var(--cream));
+  border-radius: 50% 50% var(--radius) var(--radius);
+  overflow: hidden;
+}
+
+/* Rings rising behind the box, strongest under the arch. */
+.dozenField {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(to bottom, var(--choc) 35%, transparent 85%);
+  mask-image: linear-gradient(to bottom, var(--choc) 35%, transparent 85%);
+}
+
+.box {
+  width: 100%;
+  filter: drop-shadow(0 20px 18px color-mix(in srgb, var(--choc) 22%, transparent));
+}
+
+.dozenBody {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.ladder {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.ladder div {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem 0.9rem;
+  text-align: center;
+  background: var(--cream);
+  border: 2px solid var(--choc);
+  border-radius: 16px;
+}
+
+.ladder div:nth-child(3) {
+  color: var(--cream);
+  background: var(--pink);
+  border-color: var(--pink);
+}
+
+.ladder dt {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ladder dd {
+  font-family: var(--script);
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.dozenSteps {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.dozenSteps li {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  gap: 0.1rem 1rem;
+}
+
+.stepNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--script);
+  font-size: 1.1rem;
+  color: var(--cream);
+  background: var(--purple);
+  border-radius: 50%;
+}
+
+.dozenSteps h3 {
+  font-size: 1.1rem;
+}
+
+.dozenSteps p {
+  color: color-mix(in srgb, var(--choc) 82%, transparent);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.3rem, 3vw, 1.8rem);
+  background: color-mix(in srgb, var(--pink) 10%, var(--cream));
+  border-radius: var(--radius);
+}
+
+.formHead {
+  font-size: 1.3rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--choc);
+  background: var(--cream);
+  border: 1.5px solid color-mix(in srgb, var(--choc) 30%, transparent);
+  border-radius: 12px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--pink);
+  outline: none;
+}
+
+.submit {
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------------ coffee */
+
+.coffee {
+  padding: var(--air) var(--gut);
+  background: color-mix(in srgb, var(--purple) 12%, var(--cream));
+}
+
+.coffeeInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.coffeeBody {
+  display: grid;
+  gap: 1.3rem;
+}
+
+.drinks li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--choc) 16%, transparent);
+}
+
+.drinkName {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.drinkNote {
+  grid-column: 1;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--choc) 78%, transparent);
+}
+
+.drinkPrice {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.combo {
+  justify-self: start;
+  padding: 0.6rem 1.1rem;
+  font-weight: 700;
+  color: var(--cream);
+  background: var(--purple);
+  border-radius: 999px;
+}
+
+/* The cup with a donut leaning on it. */
+.coffeeArt {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  padding-bottom: 2rem;
+}
+
+/* Sprinkles scattered on the table round the cup. */
+.coffeeField {
+  position: absolute;
+  inset: -8% -12%;
+  z-index: -1;
+  opacity: 0.7;
+  -webkit-mask-image: radial-gradient(closest-side, var(--choc) 55%, transparent);
+  mask-image: radial-gradient(closest-side, var(--choc) 55%, transparent);
+}
+
+.cup {
+  width: min(70%, 17rem);
+  filter: drop-shadow(0 22px 20px color-mix(in srgb, var(--choc) 22%, transparent));
+}
+
+.cupDonut {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+  transform: rotate(18deg);
+  filter: drop-shadow(0 16px 14px color-mix(in srgb, var(--choc) 26%, transparent));
+}
+
+/* ------------------------------------------------------------------- hours */
+
+.hours {
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.hoursHead {
+  display: grid;
+  gap: 1rem;
+  max-width: 44rem;
+  margin-bottom: 2.4rem;
+}
+
+.hoursGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.hoursList {
+  border-top: 3px solid var(--choc);
+}
+
+.hoursList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  font-size: 1.1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--choc) 16%, transparent);
+}
+
+.hoursList dt {
+  font-weight: 600;
+}
+
+.hoursList dd {
+  font-weight: 700;
+}
+
+.hoursList div:last-child dd {
+  color: var(--pink);
+}
+
+.where {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: color-mix(in srgb, var(--orange) 24%, var(--cream));
+  border-radius: var(--radius);
+}
+
+.whereBig {
+  font-family: var(--script);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.1;
+}
+
+.whereLink {
+  justify-self: start;
+  font-weight: 700;
+  border-bottom: 2px solid var(--pink);
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: calc(50rem + 2 * var(--gut));
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.faq h2 {
+  margin-bottom: 2rem;
+}
+
+.faqItem {
+  border-bottom: 1px solid color-mix(in srgb, var(--choc) 16%, transparent);
+}
+
+.faqItem:first-child {
+  border-top: 3px solid var(--choc);
+}
+
+.faqItem summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  padding: 1.15rem 3rem 1.15rem 0;
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A plus that turns into a minus. */
+.faqItem summary::before,
+.faqItem summary::after {
+  content: '';
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  width: 1rem;
+  height: 2.5px;
+  background: var(--pink);
+  transform: translateY(-50%);
+  transition: transform 180ms ease;
+}
+
+.faqItem summary::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.faqItem[open] summary::after {
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.faqItem p {
+  max-width: 42rem;
+  padding: 0 0 1.3rem;
+  color: color-mix(in srgb, var(--choc) 84%, transparent);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+/* Rings along the top edge, fattening toward the words. */
+.footRings {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  opacity: 0.7;
+}
+
+.footer {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: calc(clamp(3rem, 6vw, 4.5rem) + 2.5rem) var(--gut) 2rem;
+  text-align: center;
+  color: var(--cream);
+  background: var(--choc);
+}
+
+.footName {
+  font-family: var(--script);
+  font-size: clamp(3rem, 8vw, 5rem);
+  line-height: 1;
+  color: var(--pink);
+}
+
+.footTag {
+  color: color-mix(in srgb, var(--cream) 84%, transparent);
+}
+
+.footFine {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 2rem;
+  padding-top: 1.3rem;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--cream) 74%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--cream) 18%, transparent);
+}
+
+.footFine a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1040px) {
+  .donuts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .donut:not(:nth-child(4n)) {
+    border-right: 0;
+  }
+
+  .donut:not(:nth-child(3n)) {
+    border-right: 1px solid color-mix(in srgb, var(--cream) 16%, transparent);
+  }
+
+  .donut:nth-last-child(-n + 4) {
+    border-bottom: 1px solid color-mix(in srgb, var(--cream) 16%, transparent);
+  }
+
+  .donut:nth-last-child(-n + 3) {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .dozen,
+  .coffeeInner,
+  .hoursGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroArt {
+    width: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+  }
+
+  .dozenArt {
+    position: relative;
+    top: auto;
+    width: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+  }
+
+  .coffeeArt {
+    width: 100%;
+    max-width: 24rem;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 800px) {
+  .bar {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  .donuts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .donut:not(:nth-child(3n)) {
+    border-right: 0;
+  }
+
+  .donut:nth-child(odd) {
+    border-right: 1px solid color-mix(in srgb, var(--cream) 16%, transparent);
+  }
+
+  .donut:nth-last-child(-n + 3) {
+    border-bottom: 1px solid color-mix(in srgb, var(--cream) 16%, transparent);
+  }
+
+  .donut:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .donut {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .donutTag {
+    top: 0.6rem;
+    left: 0.4rem;
+  }
+
+  .ladder {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .barCta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine,
+  .submit,
+  .faqItem summary::before,
+  .faqItem summary::after {
+    transition: none;
+  }
+}

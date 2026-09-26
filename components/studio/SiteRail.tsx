@@ -24,11 +24,13 @@ type RailTab = 'colors' | 'patterns' | 'content';
 
 export type SaveState = 'clean' | 'dirty' | 'saving' | 'saved';
 
+// One label, as the design draws it: the button is quiet and disabled when
+// there is nothing to save, and a save says so in a toast.
 const SAVE_LABEL: Record<SaveState, string> = {
-  clean: 'No changes to save',
+  clean: 'Save changes',
   dirty: 'Save changes',
   saving: 'Saving...',
-  saved: 'Saved to your custom sites',
+  saved: 'Save changes',
 };
 
 const TABS: [RailTab, string][] = [
@@ -378,7 +380,7 @@ export default function SiteRail({
                   </>
                 )}
               </svg>
-              {shuffling ? 'Drawing...' : 'Shuffle patterns'}
+              {shuffling ? 'Generating...' : 'Shuffle patterns'}
             </button>
           </div>
         </section>

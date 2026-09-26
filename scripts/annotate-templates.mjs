@@ -14,9 +14,14 @@
 // by hand, which keeps slot ids stable for saved edits documents. A page that
 // already carries `data-edit-root` is left alone, so a re-run is safe.
 //
+// `--patterns` is the one way back into an annotated page: it annotates only
+// the pattern fields that have no slot yet (a field added after the page was
+// annotated) and touches nothing else, so every existing id stays put.
+//
 //   node scripts/annotate-templates.mjs            every un-annotated page
 //   node scripts/annotate-templates.mjs grafit     one page
 //   node scripts/annotate-templates.mjs --dry-run  report, write nothing
+//   node scripts/annotate-templates.mjs --patterns grafit   new pattern fields only
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -31,6 +36,7 @@ const templateDir = path.join(repoRoot, 'app', 'templates');
 
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
+const patternsOnly = args.includes('--patterns');
 const only = args.filter((arg) => !arg.startsWith('-'));
 
 // Tags whose text is page copy. A closed list: a slot on a layout <div> would
@@ -538,8 +544,14 @@ function annotate(slug) {
 
   const code = readFileSync(pagePath, 'utf8');
 
-  if (code.includes('data-edit-root')) {
+  const annotated = code.includes('data-edit-root');
+
+  if (annotated && !patternsOnly) {
     return { slug, skipped: 'already annotated' };
+  }
+
+  if (!annotated && patternsOnly) {
+    return { slug, skipped: 'not annotated yet - run it without --patterns first' };
   }
 
   const palette = readPalette(cssPath);
@@ -564,6 +576,13 @@ function annotate(slug) {
   const edits = [];
   const pendingParams = new Map();
   const usedIds = new Set();
+  // In --patterns mode the page already holds pattern slots, and a new one
+  // must not take an id they carry.
+  const takenPatternIds = new Set(
+    [...code.matchAll(/data-edit-pattern=(?:"([^"]+)"|\{`([^`]+)`\})/g)].map(
+      (match) => match[1] ?? match[2]
+    )
+  );
   const counters = new Map();
   const notes = [];
   const skippedComponents = new Set();
@@ -699,6 +718,7 @@ function annotate(slug) {
 
     // ---- the root ---------------------------------------------------------
     if (
+      !patternsOnly &&
       !root &&
       (tag === 'div' || tag === 'main') &&
       classKeyOf(code, node, alias)
@@ -722,6 +742,10 @@ function annotate(slug) {
     if (tag === 'TabbiedPattern') {
       const host = node.parent;
       const roles = patternRoles(node);
+
+      if (host && host.type === 'JSXElement' && attributeNamed(host, 'data-edit-pattern')) {
+        return;
+      }
 
       if (host && host.type === 'JSXFragment') {
         notes.push(
@@ -747,7 +771,12 @@ function annotate(slug) {
           }
 
           const base = `${sectionKeyOf(code, node, alias)}.field`;
-          const { id, templated } = idFor(base, maps);
+          let next = idFor(base, maps);
+
+          while (takenPatternIds.has(next.id)) next = idFor(base, maps);
+          takenPatternIds.add(next.id);
+
+          const { id, templated } = next;
 
           addAttributes(
             host,
@@ -765,6 +794,9 @@ function annotate(slug) {
         }
       }
     }
+
+    // Everything below is text and pictures, which a --patterns run leaves be.
+    if (patternsOnly) return;
 
     // ---- images ------------------------------------------------------------
     if (tag === 'Figure' && !attributeNamed(node, 'editId')) {
@@ -834,7 +866,7 @@ function annotate(slug) {
     }
   });
 
-  if (!root) return { slug, skipped: 'no root element found' };
+  if (!root && !patternsOnly) return { slug, skipped: 'no root element found' };
 
   // Adding the index parameter a templated id refers to. Recorded last so the
   // positions above were all computed against the original text.

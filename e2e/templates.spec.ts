@@ -178,6 +178,17 @@ for (const fixture of FIXTURES) {
       'template-menu__toggle',
       'template-menu__icon',
       'template-menu__panel',
+      // Artwork's, likewise in base.css.
+      'artwork',
+      'artwork--mask',
+      'artwork--masks',
+      'artwork__layer',
+      'artwork--vector',
+      'artwork--duotone',
+      'artwork--tint',
+      'artwork--fill',
+      'artwork__shade',
+      'artwork--cover',
     ]);
     const orphans = [...onPage].filter(
       (name) =>
@@ -305,25 +316,109 @@ test.describe('the /templates gallery', () => {
     );
     await page.goto('/templates/');
 
-    const asks = page.getByRole('link', { name: 'Sign in to use' });
+    const cards = page.getByRole('region', { name: /^Templates/ });
+    const asks = cards.getByRole('link', { name: 'Sign in to use' });
     await expect(asks.first()).toHaveAttribute('href', /^\/sign-in\/?\?next=%2Ftemplates%2F$/);
-    const count = await asks.count();
-    expect(count).toBeGreaterThan(50);
     // The zips and the customizer are behind that sign-in, not on the card.
     await expect(page.locator('a[href^="/downloads/"]')).toHaveCount(0);
     await expect(page.locator('a[href="/studio/customize/?slug=verdant"]')).toHaveCount(0);
 
     // Every card's template has both packages: a card for a site the
     // packager skipped would be a dead download once the template is chosen.
-    const slugs = await page.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
-      [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
-    );
-    expect(slugs.length).toBe(count);
+    // The gallery is paged, so walk every page and gather its cards.
+    const total = Number((await page.getByRole('heading', { level: 1 }).textContent())?.match(/(\d+) sites/)?.[1]);
+    const pages = Number(await page.getByRole('navigation', { name: 'Pages' }).getByRole('link').last().textContent());
+    const slugs = new Set<string>();
+
+    for (let n = 1; n <= pages; n++) {
+      if (n > 1) await page.getByRole('navigation', { name: 'Pages' }).getByRole('link', { name: `Page ${n}` }).click();
+      await expect(page).toHaveURL(n === 1 ? /\/templates\/$/ : new RegExp(`\\?page=${n}$`));
+      const onPage = await cards.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
+        [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
+      );
+      expect(onPage.length).toBeLessThanOrEqual(50);
+      expect(await asks.count()).toBe(onPage.length);
+      onPage.forEach((slug) => slugs.add(slug));
+    }
+
+    expect(total).toBeGreaterThan(100);
+    expect(slugs.size).toBe(total);
     for (const slug of slugs) {
       for (const format of ['html', 'react']) {
         expect(fs.existsSync(path.join(REPO_ROOT, 'out', 'downloads', `${slug}-${format}.zip`)), `${slug}-${format}.zip`).toBe(true);
       }
     }
+  });
+
+  test('the category and the page are in the URL, and the order is fixed and mixed', async ({ page }) => {
+    await page.route('**/api/auth/get-session', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
+    );
+    const pager = page.getByRole('navigation', { name: 'Pages' });
+    const cards = page.getByRole('region', { name: /^Templates/ });
+
+    // A deep link opens on its view, and a card's sign-in comes back to it.
+    // (No category runs past one page, so the category and the page are
+    // opened separately.)
+    await page.goto('/templates/?category=shop');
+    await expect(page.getByRole('button', { name: 'Shop', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await expect(cards.getByRole('link', { name: 'Sign in to use' }).first()).toHaveAttribute(
+      'href',
+      /next=%2Ftemplates%2F%3Fcategory%3Dshop$/
+    );
+    await page.goto('/templates/?page=2');
+    await expect(pager.getByRole('link', { name: 'Page 2' })).toHaveAttribute('aria-current', 'page');
+    await expect(cards.getByRole('link', { name: 'Sign in to use' }).first()).toHaveAttribute(
+      'href',
+      /next=%2Ftemplates%2F%3Fpage%3D2$/
+    );
+
+    // A chip starts its category on page 1; a page number keeps the category.
+    await page.getByRole('button', { name: 'All', exact: true }).click();
+    await expect(page).toHaveURL(/\/templates\/$/);
+    const firstOfAll = await cards.locator('h3').first().textContent();
+    await page.getByRole('button', { name: 'Food & drink' }).click();
+    await expect(page).toHaveURL(/\?category=food-and-drink$/);
+    await page.getByRole('button', { name: 'All', exact: true }).click();
+    await pager.getByRole('link', { name: 'Page 3' }).click();
+    await expect(page).toHaveURL(/\/templates\/\?page=3$/);
+    await expect(cards.locator('h3').first()).not.toHaveText(firstOfAll!);
+
+    // Back and forward walk the same steps.
+    await page.goBack();
+    await expect(page).toHaveURL(/\/templates\/$/);
+    await expect(cards.locator('h3').first()).toHaveText(firstOfAll!);
+    await page.goBack();
+    await expect(page.getByRole('button', { name: 'Food & drink' })).toHaveAttribute('aria-pressed', 'true');
+    await page.goForward();
+    await expect(page.getByRole('button', { name: 'All', exact: true })).toHaveAttribute('aria-pressed', 'true');
+
+    // Past the last page is the last page; an unknown category is All.
+    await page.goto('/templates/?page=99');
+    await expect(pager.getByRole('link').last()).toHaveAttribute('aria-current', 'page');
+    await page.goto('/templates/?category=nonsense');
+    await expect(page.getByRole('button', { name: 'All', exact: true })).toHaveAttribute('aria-pressed', 'true');
+
+    // The order mixes the batches the templates were made in. A seed's
+    // prefix names the batch (art-, min-, dir-, ...; the first five have
+    // none), and no two neighbors on a page share one (lib/templateOrder.ts).
+    const registry = fs.readFileSync(path.join(REPO_ROOT, 'lib', 'templateSites.ts'), 'utf-8');
+    const batchOf = new Map(
+      [...registry.matchAll(/slug: '([^']+)'.*?seed: '([a-z]+)-/g)].map((m) => [m[1], m[2]] as const)
+    );
+    await page.goto('/templates/');
+    const firstPage = await cards.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
+      [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
+    );
+    // And the order is the committed one, which only grows at the end: a
+    // page keeps its cards when templates are added.
+    const committed = fs.readFileSync(path.join(REPO_ROOT, 'lib', 'templateOrder.ts'), 'utf-8');
+    const galleryOrder = [...committed.slice(committed.indexOf('GALLERY_ORDER: readonly')).matchAll(/^  '([^']+)',$/gm)].map((m) => m[1]);
+    expect(firstPage).toEqual(galleryOrder.slice(0, 50));
+
+    const batches = firstPage.map((slug) => batchOf.get(slug) ?? 'first');
+    expect(new Set(batches).size).toBeGreaterThanOrEqual(4);
+    batches.slice(1).forEach((batch, i) => expect(batch, `${firstPage[i]} then ${firstPage[i + 1]}`).not.toBe(batches[i]));
   });
 
   test('a chosen template downloads a real zip, and choosing another asks first', async ({ page }) => {

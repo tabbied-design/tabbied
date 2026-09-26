@@ -133,7 +133,96 @@ const BY_SLUG: Record<string, TemplateCategory> = {
   'linden-guesthouse': 'Travel',
   'cadence-music': 'Community',
   'commons-cowork': 'Services',
+
+  // Pictures that follow the palette (components/Artwork.tsx).
+  'inkwell-tattoo': 'Studio',
+  'saltline-oyster': 'Food & drink',
+  'bolt-and-bench': 'Shop',
+  'cellar-door-wines': 'Shop',
+  'platen-press': 'Studio',
+  'trailhead-club': 'Community',
+  'keyway-locksmiths': 'Services',
+  'corner-pharmacy': 'Health',
+  'scoop-and-cone': 'Food & drink',
+  'bright-smiles-kids': 'Health',
+  'wayfarer-travel': 'Travel',
+  'spoke-and-chain': 'Shop',
+  'sunday-market': 'Food & drink',
+  'pawsh-grooming': 'Services',
+  'rootbound-nursery': 'Shop',
+  'el-farolito-truck': 'Food & drink',
+  'pinecone-camp': 'Community',
+  'slice-theory': 'Food & drink',
+  'polyglot-school': 'Community',
+  'bloom-events': 'Services',
+  'suds-car-wash': 'Services',
+  'spin-cycle-laundry': 'Services',
+  'tinker-toys': 'Shop',
+  'glaze-donuts': 'Food & drink',
+  'nori-sushi': 'Food & drink',
+  'form-and-field': 'Studio',
+  'lumen-portraits': 'Studio',
+  'thread-and-hem': 'Shop',
+  'blue-note-room': 'Culture',
+  'keel-wealth': 'Services',
+  'hewn-furniture': 'Shop',
+  'restore-clinic': 'Health',
+  'hollis-hart': 'Services',
+  'grain-and-glow': 'Wellness & sport',
+  'vinyl-vault': 'Shop',
+  'the-wren-hotel': 'Travel',
+  'wheelhouse-ceramics': 'Studio',
+  'stride-sneakers': 'Shop',
+  'offshore-surf': 'Wellness & sport',
+  'wick-and-wax': 'Shop',
+  'high-pass-lodge': 'Travel',
+  'lakeshore-cabins': 'Travel',
+  'old-town-walks': 'Travel',
+  'terrace-hill-winery': 'Food & drink',
+  'pinewood-rv': 'Travel',
+  'cleaver-and-co': 'Food & drink',
+  'pressed-juice': 'Food & drink',
+  'double-stack-burgers': 'Food & drink',
+  'the-rialto-cinema': 'Culture',
+  'crabapple-orchard': 'Food & drink',
+  'hive-and-honey': 'Shop',
+  'little-fins-swim': 'Wellness & sport',
+  'green-light-driving': 'Services',
+  'cacao-and-co': 'Shop',
+  'brim-hat-shop': 'Shop',
+  'live-wire-electric': 'Services',
+  'hachi-ramen': 'Food & drink',
+  'crux-climbing': 'Wellness & sport',
+  'pointe-and-pulse': 'Culture',
+  'coral-cove-beach-club': 'Travel',
+  'meeple-and-mug': 'Community',
+  'clear-view-optical': 'Health',
+  'veil-and-vow': 'Shop',
+  'satchel-and-strap': 'Studio',
+  'harbor-light-tours': 'Travel',
+  'parkside-family-medicine': 'Health',
+  'the-gimlet': 'Food & drink',
+  'polish-nail-bar': 'Services',
+  'tin-roof-guitars': 'Shop',
+  'heron-point-golf': 'Wellness & sport',
 };
+
+/**
+ * A category as the gallery's URL spells it: `?category=food-and-drink`.
+ * Lowercase, "&" read as "and", anything else not a letter or digit a hyphen.
+ */
+export function categorySlug(category: TemplateCategory): string {
+  return category
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/** The category a URL slug names, or null for one that names none. */
+export function categoryFromSlug(slug: string): TemplateCategory | null {
+  return TEMPLATE_CATEGORIES.find((category) => categorySlug(category) === slug) ?? null;
+}
 
 /** The category a site is filed under; throws for a site the table has not met. */
 export function categoryOf(slug: string): TemplateCategory {

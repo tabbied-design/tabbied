@@ -188,7 +188,7 @@ export default function HomeHero({
             <span className={styles.statLabel}>
               Patterns
               <span className={styles.statArrow} aria-hidden="true">
-                <ArrowRight size={16} />
+                <ArrowRight size={15} strokeWidth={1.5} />
               </span>
             </span>
           </Link>
@@ -200,7 +200,7 @@ export default function HomeHero({
             <span className={styles.statLabel}>
               Free website templates
               <span className={styles.statArrow} aria-hidden="true">
-                <ArrowRight size={16} />
+                <ArrowRight size={15} strokeWidth={1.5} />
               </span>
             </span>
           </Link>

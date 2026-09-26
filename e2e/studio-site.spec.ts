@@ -193,7 +193,9 @@ test.describe('studio site', () => {
     const save = rail.getByRole('button', { name: 'Save changes' });
     await expect(save).toBeEnabled();
     await save.click();
-    await expect(page.getByRole('button', { name: 'Saved to your custom sites' })).toBeVisible();
+    // One label, as the design draws it: quiet once saved, and a toast says so.
+    await expect(page.getByText(/^Saved\. Your customized Verdant/)).toBeVisible();
+    await expect(save).toBeDisabled();
     await expect(page.getByText('(revision 2)')).toBeVisible();
   });
 
@@ -340,7 +342,7 @@ test.describe('studio site', () => {
     // Opened, looked at, and not saved: nothing was made, and the page is
     // still the template's, named once rather than "Verdant on Verdant".
     const rail = page.getByRole('complementary', { name: 'Customize this site' });
-    await expect(rail.getByRole('button', { name: 'No changes to save' })).toBeDisabled();
+    await expect(rail.getByRole('button', { name: 'Save changes' })).toBeDisabled();
     await expect(page.getByText('Verdant', { exact: true }).first()).toBeVisible();
     await expect(page.getByText('Verdant on Verdant')).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Back to the template' })).toHaveAttribute(
@@ -356,7 +358,8 @@ test.describe('studio site', () => {
     await rail.getByRole('button', { name: 'Cobalt', exact: true }).click();
     await rail.getByRole('button', { name: 'Save changes' }).click();
 
-    await expect(page.getByRole('button', { name: 'Saved to your custom sites' })).toBeVisible();
+    await expect(page.getByText(/^Saved\. Your customized Verdant/)).toBeVisible();
+    await expect(rail.getByRole('button', { name: 'Save changes' })).toBeDisabled();
     expect(made).toHaveLength(1);
     expect(made[0]).toMatchObject({
       slug: SLUG,

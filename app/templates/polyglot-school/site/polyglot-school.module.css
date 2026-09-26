@@ -1,0 +1,1136 @@
+/* ==========================================================================
+   POLYGLOT - language school
+   Cool paper, chalkboard-blue ink, one bright blue and one coral. The page
+   is built round the level ladder: six cards on the treads of a staircase
+   whose risers are a single pattern field, clipped to the stair outline, so
+   the climb from A1 to C2 is the first thing you see. The pictures are flat
+   vector layers inked from the palette.
+   ========================================================================== */
+
+.page {
+  --paper: #f6f7fb;
+  --ink: #16213e;
+  --blue: #3d5afe;
+  --coral: #ff7a59;
+  --gray: #8a90a6;
+  --pale: #e6e9f5;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 82rem;
+  --radius: 14px;
+  --display: 'Red Hat Display', 'Helvetica Neue', Arial, sans-serif;
+
+  font-family: 'Red Hat Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: 0.85rem var(--gut);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--pale);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.mark::after {
+  content: '';
+  display: inline-block;
+  width: 0.42em;
+  height: 0.42em;
+  margin-left: 0.12em;
+  background: var(--coral);
+  border-radius: 50%;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.94rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  color: var(--blue);
+}
+
+.barCta {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--paper);
+  background: var(--blue);
+  border-radius: 999px;
+}
+
+.barCta:hover {
+  background: var(--ink);
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 1.5rem;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid var(--blue);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.btn {
+  color: var(--paper);
+  background: var(--blue);
+}
+
+.btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.btnGhost {
+  color: var(--ink);
+  background: transparent;
+  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.btnGhost:hover {
+  border-color: var(--ink);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker,
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.heroTitle {
+  margin-top: 1rem;
+  font-size: clamp(2.8rem, 6vw, 5.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--coral);
+}
+
+.heroLede {
+  max-width: 33rem;
+  margin-top: 1.4rem;
+  font-size: 1.14rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.heroArt {
+  position: relative;
+}
+
+.bubbles {
+  width: 100%;
+}
+
+/* The words sit inside the two bubbles, positioned on the picture's box. */
+.sayOne,
+.sayTwo {
+  position: absolute;
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  transform: translate(-50%, -50%);
+}
+
+.sayOne {
+  left: 31%;
+  top: 30%;
+  font-size: clamp(1.8rem, 3.6vw, 3.2rem);
+  color: var(--ink);
+}
+
+.sayTwo {
+  left: 75%;
+  top: 70%;
+  font-size: clamp(1.3rem, 2.6vw, 2.3rem);
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------- section headings */
+
+.head {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.head h2,
+.ladderHead h2,
+.placementCopy h2 {
+  font-size: clamp(2.1rem, 4vw, 3.4rem);
+}
+
+.headNote {
+  max-width: 36rem;
+  font-size: 1.04rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* ----------------------------------------------------------- level ladder */
+
+.levels {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3rem) var(--gut) clamp(4rem, 8vw, 6rem);
+}
+
+.ladder {
+  position: relative;
+  height: clamp(42rem, 54vw, 48rem);
+}
+
+/* One field for all six risers, clipped to the outline of the stairs. The
+   step heights here and on .s1-.s6 below have to agree. */
+.stairField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -webkit-clip-path: polygon(0 100%, 0 62%, 16.667% 62%, 16.667% 49.6%, 33.333% 49.6%, 33.333% 37.2%, 50% 37.2%, 50% 24.8%, 66.667% 24.8%, 66.667% 12.4%, 83.333% 12.4%, 83.333% 0, 100% 0, 100% 100%);
+  clip-path: polygon(0 100%, 0 62%, 16.667% 62%, 16.667% 49.6%, 33.333% 49.6%, 33.333% 37.2%, 50% 37.2%, 50% 24.8%, 66.667% 24.8%, 66.667% 12.4%, 83.333% 12.4%, 83.333% 0, 100% 0, 100% 100%);
+}
+
+.ladderHead {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  gap: 0.7rem;
+  width: 44%;
+}
+
+.ladderHead h2 {
+  font-size: clamp(2rem, 3.3vw, 3rem);
+}
+
+.steps {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: end;
+}
+
+.step {
+  --h: 100%;
+  height: var(--h);
+}
+
+.s1 {
+  --h: 38%;
+  --i: 0;
+}
+
+.s2 {
+  --h: 50.4%;
+  --i: 1;
+}
+
+.s3 {
+  --h: 62.8%;
+  --i: 2;
+}
+
+.s4 {
+  --h: 75.2%;
+  --i: 3;
+}
+
+.s5 {
+  --h: 87.6%;
+  --i: 4;
+}
+
+.s6 {
+  --h: 100%;
+  --i: 5;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: 13.5rem;
+  padding: 1.1rem 1.1rem 1.2rem;
+  background: var(--paper);
+  border-top: 5px solid var(--ink);
+  box-shadow: 0 16px 30px -22px rgb(0 0 0 / 0.5);
+}
+
+.s6 .card {
+  color: var(--paper);
+  background: var(--ink);
+  border-top-color: var(--coral);
+}
+
+.code {
+  font-family: var(--display);
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--blue);
+}
+
+.s6 .code {
+  color: var(--coral);
+}
+
+.levelName {
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.can {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.hours {
+  margin-top: auto;
+  padding-top: 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.s6 .can {
+  color: color-mix(in srgb, var(--paper) 84%, transparent);
+}
+
+.s6 .hours {
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+/* --------------------------------------------------------------- timetable */
+
+.timetable {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(4rem, 8vw, 6rem);
+}
+
+.tableWrap {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--pale);
+  border-radius: var(--radius);
+}
+
+.table {
+  width: 100%;
+  min-width: 52rem;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  padding: 0.9rem 0.9rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--pale);
+}
+
+.table td + td,
+.table th + td,
+.table th + th {
+  border-left: 1px solid var(--pale);
+}
+
+.table thead th {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 800;
+  background: var(--pale);
+}
+
+.table thead th:first-child {
+  width: 10rem;
+}
+
+.table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.table tbody th {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.slotName {
+  font-weight: 600;
+}
+
+.slotHours {
+  font-size: 0.84rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.hasClass {
+  position: relative;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.hasClass::before {
+  content: '';
+  display: block;
+  width: 1.4rem;
+  height: 4px;
+  margin-bottom: 0.45rem;
+  background: var(--blue);
+  border-radius: 2px;
+}
+
+.table tbody tr:nth-child(2) .hasClass::before,
+.table tbody tr:nth-child(4) .hasClass::before {
+  background: var(--coral);
+}
+
+.noClass {
+  background: repeating-linear-gradient(135deg, transparent 0 7px, color-mix(in srgb, var(--pale) 80%, transparent) 7px 9px);
+}
+
+.tableNote {
+  margin-top: 1rem;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+/* --------------------------------------------------------------- languages */
+
+.languages {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) clamp(4rem, 8vw, 6rem);
+}
+
+.langHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.langHead .head {
+  margin-bottom: 0;
+}
+
+.globe {
+  width: clamp(8rem, 14vw, 12rem);
+  margin-right: clamp(0rem, 3vw, 3rem);
+}
+
+/* The placement form's route lines, circling the globe. */
+.globeStage {
+  position: relative;
+}
+
+.globeStage .globe {
+  position: relative;
+}
+
+.globeRoutes {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 180%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0.8;
+  transform: translate(-56%, -50%);
+  -webkit-mask-image: radial-gradient(closest-side, var(--ink) 45%, transparent);
+  mask-image: radial-gradient(closest-side, var(--ink) 45%, transparent);
+}
+
+.langGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  background: var(--pale);
+  border: 1px solid var(--pale);
+  border-radius: var(--radius);
+}
+
+.lang {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1.4rem 1.3rem 1.5rem;
+  background: var(--paper);
+}
+
+.hello {
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--blue);
+  overflow-wrap: anywhere;
+}
+
+.lang:nth-child(even) .hello {
+  color: var(--coral);
+}
+
+.langName {
+  margin-top: 0.4rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.langLevels,
+.langTeachers {
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+/* ----------------------------------------------------------------- courses */
+
+.courses {
+  background: var(--pale);
+}
+
+.coursesInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.courseArt {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: var(--blue);
+  border-radius: 50%;
+}
+
+/* The staircase diamonds as a ring round the edge of the disc. */
+.courseRing {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: radial-gradient(closest-side, transparent 84%, var(--ink) 85%);
+  mask-image: radial-gradient(closest-side, transparent 84%, var(--ink) 85%);
+}
+
+.book {
+  position: relative;
+  width: 78%;
+}
+
+.courseList {
+  display: grid;
+  gap: 1rem;
+}
+
+.course {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  grid-template-areas:
+    'name points'
+    'price points';
+  gap: 0.2rem 1.5rem;
+  padding: 1.4rem 1.5rem;
+  background: var(--paper);
+  border-radius: var(--radius);
+}
+
+.courseName {
+  grid-area: name;
+  font-size: 1.35rem;
+}
+
+.coursePrice {
+  grid-area: price;
+  display: grid;
+}
+
+.coursePrice strong {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--blue);
+}
+
+.coursePrice span {
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.coursePoints {
+  grid-area: points;
+  align-self: center;
+}
+
+.coursePoints li {
+  position: relative;
+  padding: 0.25rem 0 0.25rem 1.2rem;
+  font-size: 0.95rem;
+}
+
+.coursePoints li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--coral);
+  transform: rotate(45deg);
+}
+
+/* --------------------------------------------------------------- placement */
+
+.placement {
+  position: relative;
+  isolation: isolate;
+}
+
+.routes {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.7;
+}
+
+.placementInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.placementCopy {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.6rem;
+  background: var(--paper);
+  border-radius: var(--radius);
+}
+
+.howList {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+  counter-reset: how;
+}
+
+.howList li {
+  position: relative;
+  padding-left: 2.6rem;
+  counter-increment: how;
+}
+
+.howList li::before {
+  content: counter(how);
+  position: absolute;
+  left: 0;
+  top: -0.1rem;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  font-family: var(--display);
+  font-weight: 800;
+  color: var(--paper);
+  background: var(--coral);
+  border-radius: 50%;
+}
+
+.form {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 0 30px 50px -34px rgb(0 0 0 / 0.45);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field > span,
+.choice legend {
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  border-radius: 10px;
+}
+
+.choice {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choice legend {
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pills label {
+  position: relative;
+  cursor: pointer;
+}
+
+.pills input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.pills span {
+  display: inline-block;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.92rem;
+  border: 1.5px solid color-mix(in srgb, var(--ink) 25%, transparent);
+  border-radius: 999px;
+}
+
+.pills input:checked + span {
+  color: var(--paper);
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.pills input:focus-visible + span {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.form .btn {
+  justify-self: start;
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4rem) var(--gut) clamp(4rem, 8vw, 6rem);
+}
+
+.faqItem {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.faqItem:first-child {
+  border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.faqItem summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  color: var(--blue);
+  border: 1.5px solid var(--blue);
+  border-radius: 50%;
+}
+
+.faqItem[open] summary::after {
+  content: '-';
+}
+
+.faqItem p {
+  max-width: 44rem;
+  padding-bottom: 1.3rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+/* A narrow run of the staircase diamonds along the top edge. */
+.footStairs {
+  position: relative;
+  height: 28px;
+  overflow: hidden;
+}
+
+.footGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2.5rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.footTag {
+  max-width: 20rem;
+  margin-top: 0.4rem;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.footHead {
+  margin-bottom: 0.7rem;
+  font-family: 'Red Hat Text', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+
+.footText,
+.footLinks li {
+  padding: 0.2rem 0;
+  font-size: 0.95rem;
+}
+
+.footLinks a {
+  text-decoration: none;
+}
+
+.footLinks a:hover {
+  text-decoration: underline;
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.4rem var(--gut) 2rem;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .course {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'name'
+      'price'
+      'points';
+  }
+
+  .coursePoints {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Below this the stairs will not hold six cards side by side: the stair
+   outline shrinks to a band above the list, and the cards step in. */
+@media (max-width: 1000px) {
+  .ladder {
+    height: auto;
+    display: grid;
+    gap: 2rem;
+  }
+
+  .ladderHead {
+    position: static;
+    width: auto;
+    max-width: 40rem;
+  }
+
+  .stairField {
+    position: relative;
+    order: 2;
+    height: 9rem;
+  }
+
+  .steps {
+    position: static;
+    order: 3;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .step {
+    height: auto;
+  }
+
+  .card {
+    min-height: 0;
+    height: 100%;
+    border: 1px solid var(--pale);
+    border-top: 5px solid var(--ink);
+  }
+
+  .hero,
+  .coursesInner,
+  .placementInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroArt {
+    max-width: 34rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .courseArt {
+    width: min(100%, 22rem);
+    margin: 0 auto;
+  }
+
+  .langGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .bar {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .footGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .barCta {
+    display: none;
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8rem;
+  }
+
+  .step {
+    margin-left: calc(var(--i) * 0.5rem);
+  }
+
+  .langHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .globe {
+    width: 7rem;
+    margin: 0;
+  }
+
+  .globeStage {
+    justify-self: start;
+  }
+
+  .globeRoutes {
+    width: 150%;
+    transform: translate(-50%, -50%);
+  }
+
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form .btn,
+  .heroActions > a {
+    justify-self: stretch;
+    flex: 1 1 100%;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem 0.6rem;
+  }
+
+  .table thead th:first-child {
+    width: 7.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btnGhost {
+    transition: none;
+  }
+}

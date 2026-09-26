@@ -9,7 +9,12 @@
   box-sizing: border-box;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 0 48px 120px;
+  padding: 0 48px 168px;
+}
+
+/* A page of forms (Settings) sits in the design's narrower 900px column. */
+.narrow {
+  max-width: 900px;
 }
 
 /* The link back to the overview, as a quiet row under the masthead. */
@@ -32,7 +37,17 @@
   gap: 32px;
   align-items: flex-end;
   justify-content: space-between;
-  margin: 56px 0 44px;
+  margin: 56px 0 36px;
+}
+
+/* A page with no link back (the overview) opens 72px under the bar, as the
+   design does at every width; the link's own row sets the others' rhythm. */
+.head:first-child {
+  margin-top: 72px;
+}
+
+.narrow .head {
+  margin-bottom: 40px;
 }
 
 .eyebrow {
@@ -441,7 +456,7 @@
 .button {
   margin-top: 20px;
   padding: 13px 24px;
-  font: 600 14.5px / 1.2 var(--s-display);
+  font: 600 14.5px / 1.2 var(--s-sans);
   color: #fff;
   background-color: var(--s-ink);
   border: 0;
@@ -455,12 +470,30 @@
 }
 
 .button:disabled {
-  color: oklch(0.55 0.01 260);
+  color: oklch(0.6 0.01 260);
   cursor: default;
-  background-color: oklch(0 0 0 / 0.06);
+  background-color: oklch(0.94 0.002 260);
 }
 
+/* "Change password" is the larger of the design's two form buttons, and reads
+   as waiting (still pressable, to say what is missing) until all three
+   fields are filled. */
+.change {
+  margin-top: 22px;
+  padding: 14px 26px;
+}
+
+.waiting {
+  opacity: 0.45;
+}
+
+.waiting:hover:enabled {
+  background-color: var(--s-ink);
+}
+
+/* Under the paragraph, whose own margin is the gap. */
 .danger {
+  margin-top: 0;
   color: #b3261e;
   background-color: #fff;
   border: 1px solid #b3261e;
@@ -487,6 +520,7 @@
 }
 
 .destroy {
+  padding: 13px 22px;
   color: #fff;
   background-color: #b3261e;
   border: 1px solid #b3261e;
@@ -599,6 +633,20 @@
   .table th,
   .table td {
     padding: 12px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .narrow {
+    padding: 0 20px 96px;
+  }
+
+  .narrow .title {
+    font-size: 40px;
+  }
+
+  .card {
+    padding: 26px 22px;
   }
 }
 

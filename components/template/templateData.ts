@@ -82,7 +82,7 @@ export const TEMPLATE_SITES: TemplateSite[] = [
     colors: ['#2b1d3a', '#ff6b6b', '#ffd23e', '#ff3d8b', '#7048e8'],
     layout: 'split',
     fonts: {
-      href: gf('family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Karla:opsz,wght@6..12,300..700'),
+      href: gf('family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Karla:wght@300..700'),
       display: "'Fraunces', Georgia, serif",
       body: "'Karla', system-ui, sans-serif",
     },

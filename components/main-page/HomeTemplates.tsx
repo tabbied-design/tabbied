@@ -74,7 +74,7 @@ export default function HomeTemplates({
           <span className={styles.eyebrow}>Website templates</span>
           <Link href="/templates" prefetch={false} className={styles.browseAll}>
             Browse all sites
-            <ArrowRight size={14} aria-hidden="true" />
+            <ArrowRight size={15} strokeWidth={1.5} aria-hidden="true" />
           </Link>
         </div>
 
@@ -110,7 +110,7 @@ export default function HomeTemplates({
         <Link href="/templates" prefetch={false} className={styles.cta}>
           <span>Explore all {templateCount} templates</span>
           <span className={styles.ctaArrow} aria-hidden="true">
-            <ArrowRight size={18} />
+            <ArrowRight size={16} strokeWidth={1.5} />
           </span>
         </Link>
       </div>

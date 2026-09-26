@@ -1,0 +1,1168 @@
+/* ==========================================================================
+   HIVE & HONEY - honey farm and shop, Linden Hill
+   A honeycomb. The honeys are hexagonal cells laid 3, 4, 3 like a frame of
+   comb, each filled with the color of its honey; on a phone the comb folds
+   into a single zigzag column that still interlocks. Engravings of a bee, a
+   skep and a dipper are painted in one ink through masks. An old-style
+   serif for names, a plain grotesque for the facts.
+   ========================================================================== */
+
+.page {
+  --cream: #fbf5e6;
+  --ink: #2a2012;
+  --honey: #e0a21b;
+  --olive: #6e7f3a;
+  --straw: #9c9076;
+  --wax: #f1e4c2;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 78rem;
+  --air: clamp(4rem, 9vw, 7.5rem);
+  --display: 'IM Fell English', 'Iowan Old Style', Georgia, serif;
+  --hexagon: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+
+  font-family: 'Karla', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--olive);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.08;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.page :where(ul, ol, dl, dd) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.85rem var(--gut);
+  background: color-mix(in srgb, var(--cream) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--display);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.markHex {
+  width: 1.3rem;
+  height: 1.5rem;
+  background: var(--honey);
+  clip-path: var(--hexagon);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.1rem, 2.6vw, 2.4rem);
+}
+
+.nav a {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+  border-bottom: 1px solid transparent;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--honey);
+}
+
+.barCta {
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--cream);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.kicker,
+.secKick {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--olive);
+}
+
+.title {
+  margin-top: 1.1rem;
+  font-size: clamp(2.7rem, 6.2vw, 5.1rem);
+  line-height: 1;
+}
+
+.title em {
+  display: block;
+  font-style: italic;
+  color: color-mix(in srgb, var(--ink) 78%, var(--honey));
+}
+
+.lede {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  font-size: 1.1rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn {
+  background: var(--honey);
+  color: var(--ink);
+}
+
+.btn:hover {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.btnGhost {
+  border: 1.5px solid var(--ink);
+}
+
+.btnGhost:hover {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.facts {
+  display: flex;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin-top: 2.5rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.facts div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.facts dt {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.facts dd {
+  font-family: var(--display);
+  font-size: 2.3rem;
+  line-height: 1.1;
+}
+
+.heroArt {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  -webkit-mask: radial-gradient(closest-side, var(--ink) 62%, transparent 100%);
+  mask: radial-gradient(closest-side, var(--ink) 62%, transparent 100%);
+}
+
+/* The capped cell: a honey rim around a wax hexagon, the bee on top. */
+.heroCell {
+  position: relative;
+  width: 68%;
+  aspect-ratio: 1 / 1.1547;
+  display: grid;
+  place-items: center;
+  background: var(--honey);
+  clip-path: var(--hexagon);
+}
+
+.heroCell::before {
+  content: '';
+  position: absolute;
+  inset: 3.2%;
+  background: var(--cream);
+  clip-path: var(--hexagon);
+}
+
+.heroBee {
+  position: relative;
+  width: 74%;
+}
+
+/* ------------------------------------------------------------ section head */
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  margin-top: 0.7rem;
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ------------------------------------------------------------------ honeys */
+
+.honeys {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) calc(var(--air) * 0.8);
+}
+
+.honeys .secHead {
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* Phone first: one interlocking zigzag column. */
+.comb {
+  --w: min(16rem, calc((100vw - 2 * var(--gut)) / 1.5 - 0.5rem));
+  --g: 0.5rem;
+  --h: calc(var(--w) * 1.1547);
+
+  display: flex;
+  flex-direction: column;
+  width: calc(var(--w) * 1.5 + var(--g));
+  margin: 0 auto;
+}
+
+.cell {
+  width: var(--w);
+  height: var(--h);
+  align-self: flex-start;
+}
+
+.cell + .cell {
+  margin-top: calc(var(--h) * -0.25 + var(--g) * 0.866);
+}
+
+.cell:nth-child(even) {
+  align-self: flex-end;
+}
+
+.hex {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 18% 12%;
+  text-align: center;
+  clip-path: var(--hexagon);
+  background: var(--wax);
+  color: var(--ink);
+  transition: transform 200ms ease;
+}
+
+.cell[data-tone='amber'] .hex {
+  background: color-mix(in srgb, var(--honey) 48%, var(--wax));
+}
+
+.cell[data-tone='gold'] .hex {
+  background: var(--honey);
+}
+
+.cell[data-tone='dark'] .hex {
+  background: color-mix(in srgb, var(--honey) 32%, var(--ink));
+  color: var(--cream);
+}
+
+.cell[data-tone='art'] .hex {
+  background: color-mix(in srgb, var(--straw) 30%, var(--cream));
+}
+
+.cellSource {
+  font-size: 0.74rem;
+  line-height: 1.3;
+  font-style: italic;
+  max-width: 11rem;
+  opacity: 0.86;
+}
+
+.cellName {
+  font-size: 1.55rem;
+  line-height: 1.05;
+}
+
+.cellColor {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.cellJars {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.15rem 0.7rem;
+  margin-top: 0.35rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  font-size: 0.8rem;
+}
+
+.jar {
+  display: inline-flex;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.jar strong {
+  font-weight: 700;
+}
+
+.dipper {
+  width: 42%;
+}
+
+.combNote {
+  max-width: 36rem;
+  margin: 2.5rem auto 0;
+  text-align: center;
+  font-size: 0.98rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+/* From here up: the frame, three rows of 3, 4 and 3 on an 8-column grid of
+   half cells, each row a quarter cell into the one above. */
+@media (min-width: 1000px) {
+  .comb {
+    --w: clamp(12.5rem, 21vw, 15.5rem);
+    --g: 0.6rem;
+
+    display: grid;
+    width: auto;
+    grid-template-columns: repeat(8, calc((var(--w) + var(--g)) / 2));
+    grid-template-rows: repeat(10, calc((var(--h) + var(--g) * 1.1547) / 4));
+    justify-content: center;
+  }
+
+  .cell,
+  .cell + .cell {
+    margin: 0;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .cell:nth-child(1) { grid-area: 1 / 2 / span 4 / span 2; }
+  .cell:nth-child(2) { grid-area: 1 / 4 / span 4 / span 2; }
+  .cell:nth-child(3) { grid-area: 1 / 6 / span 4 / span 2; }
+  .cell:nth-child(4) { grid-area: 4 / 1 / span 4 / span 2; }
+  .cell:nth-child(5) { grid-area: 4 / 3 / span 4 / span 2; }
+  .cell:nth-child(6) { grid-area: 4 / 5 / span 4 / span 2; }
+  .cell:nth-child(7) { grid-area: 4 / 7 / span 4 / span 2; }
+  .cell:nth-child(8) { grid-area: 7 / 2 / span 4 / span 2; }
+  .cell:nth-child(9) { grid-area: 7 / 4 / span 4 / span 2; }
+  .cell:nth-child(10) { grid-area: 7 / 6 / span 4 / span 2; }
+
+  .cellName {
+    font-size: clamp(1.3rem, 1.9vw, 1.65rem);
+  }
+}
+
+/* -------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(5rem, 9vw, 7.5rem);
+  border-block: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+.bandField {
+  position: absolute;
+  inset: 0;
+}
+
+/* -------------------------------------------------------------------- year */
+
+.year {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  border-top: 2px solid var(--ink);
+}
+
+.month {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0.7rem 1.2rem;
+  border-right: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+.month:last-child {
+  border-right: 0;
+}
+
+.flow {
+  display: flex;
+  align-items: flex-end;
+  height: 7.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.flowBar {
+  width: 100%;
+  height: 4%;
+  border-radius: 3px 3px 0 0;
+  background: color-mix(in srgb, var(--straw) 55%, transparent);
+}
+
+.flowBar[data-flow='1'] { height: 20%; }
+.flowBar[data-flow='2'] { height: 38%; }
+.flowBar[data-flow='3'] { height: 58%; }
+.flowBar[data-flow='4'] { height: 78%; }
+.flowBar[data-flow='5'] { height: 100%; }
+
+.month[data-harvest='yes'] .flowBar {
+  background: var(--honey);
+}
+
+.monthName {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.monthHarvest {
+  min-height: 2.6em;
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.month[data-harvest='yes'] .monthHarvest {
+  color: var(--olive);
+}
+
+.monthNote {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+/* ------------------------------------------------------------------- tours */
+
+.tours {
+  background: var(--wax);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.toursArt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: var(--air) var(--gut);
+  background: color-mix(in srgb, var(--honey) 22%, var(--wax));
+  overflow: hidden;
+}
+
+.toursField {
+  position: absolute;
+  inset: 0;
+  opacity: 0.8;
+}
+
+.skep {
+  position: relative;
+  width: min(22rem, 78%);
+}
+
+.toursArtNote {
+  position: relative;
+  max-width: 20rem;
+  text-align: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.35;
+  padding: 0.6rem 1rem;
+  background: color-mix(in srgb, var(--wax) 88%, transparent);
+  border-radius: 6px;
+}
+
+.toursBody {
+  padding: var(--air) var(--gut);
+  max-width: 44rem;
+}
+
+.toursBody h2 {
+  margin-top: 0.7rem;
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+}
+
+.toursLede {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+.tourSteps {
+  display: grid;
+  gap: 1.1rem;
+  margin-top: 2rem;
+}
+
+.tourSteps li {
+  display: grid;
+  grid-template-columns: 2.6rem 1fr;
+  column-gap: 0.8rem;
+}
+
+.tourNo {
+  grid-row: span 2;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--olive);
+}
+
+.tourSteps h3 {
+  font-size: 1.35rem;
+}
+
+.tourSteps p {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.tourFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 2rem;
+}
+
+.tourFacts div {
+  padding: 0.55rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: 999px;
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.tourFacts dt {
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.tourFacts dd {
+  font-weight: 700;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: clamp(1.2rem, 3vw, 1.8rem);
+  background: var(--cream);
+  border-radius: 10px;
+  box-shadow: 0 18px 40px -30px rgb(0 0 0 / 0.5);
+}
+
+.dates {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.dates legend {
+  padding: 0;
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+}
+
+.date {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.92rem;
+}
+
+.date:has(input:checked) {
+  border-color: var(--ink);
+  background: color-mix(in srgb, var(--honey) 18%, var(--cream));
+}
+
+.date input {
+  accent-color: var(--olive);
+  margin: 0;
+}
+
+.dateWhen {
+  font-weight: 700;
+}
+
+.dateLeft {
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select {
+  font: inherit;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  border-radius: 6px;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.submit {
+  font: inherit;
+  font-weight: 700;
+  padding: 0.9rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--cream);
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: var(--olive);
+}
+
+.formNote {
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+/* --------------------------------------------------------------------- raw */
+
+.raw {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut) 0;
+}
+
+.rawList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  counter-reset: raw;
+}
+
+.rawList li {
+  counter-increment: raw;
+  padding-top: 1.2rem;
+  border-top: 2px solid var(--honey);
+}
+
+.rawList li::before {
+  content: counter(raw, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--olive);
+}
+
+.rawList h3 {
+  font-size: 1.45rem;
+}
+
+.rawList p {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* --------------------------------------------------------------------- buy */
+
+.buy {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.buyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  align-items: start;
+}
+
+.buyGrid h3 {
+  font-size: 1.5rem;
+}
+
+.shop {
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.shopBee {
+  width: 4.5rem;
+  margin-bottom: 1rem;
+}
+
+.shopAddr {
+  margin-top: 0.6rem;
+  font-weight: 700;
+}
+
+.shopHours {
+  margin-top: 0.4rem;
+}
+
+.shopNote {
+  margin-top: 0.9rem;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--cream) 78%, transparent);
+}
+
+.buyCol {
+  padding-top: 0.4rem;
+}
+
+.buyList {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.buyList dt {
+  font-weight: 700;
+}
+
+.buyList dd {
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.stockists {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.stockists li {
+  display: grid;
+}
+
+.stockists span {
+  font-size: 0.93rem;
+}
+
+.stockists small {
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.postNote {
+  margin-top: 0.9rem;
+  font-size: 0.93rem;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.postLink {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--honey);
+  overflow-wrap: anywhere;
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.faqAside {
+  margin-top: 1.2rem;
+  max-width: 22rem;
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.faqPhone {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--honey);
+}
+
+/* One cell of the hero's comb, beside the questions. */
+.faqCell {
+  position: relative;
+  width: 10rem;
+  aspect-ratio: 1 / 1.1547;
+  margin-top: 2.5rem;
+  overflow: hidden;
+  background: var(--wax);
+  clip-path: var(--hexagon);
+}
+
+.faqList {
+  border-top: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.faqItem {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.faqItem summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  font-family: 'Karla', sans-serif;
+  color: var(--olive);
+}
+
+.faqItem[open] summary::after {
+  content: '\2212';
+}
+
+.faqItem p {
+  padding-bottom: 1.2rem;
+  max-width: 40rem;
+  color: color-mix(in srgb, var(--ink) 84%, transparent);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  background: var(--ink);
+  color: var(--cream);
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+}
+
+/* The meadow band's petals, a strip along the footer's top edge. */
+.footMeadow {
+  position: relative;
+  height: 2.5rem;
+  margin: calc(-1 * clamp(3rem, 6vw, 4.5rem)) calc(-1 * var(--gut)) clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  opacity: 0.85;
+}
+
+.footTop,
+.footFine {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--cream) 20%, transparent);
+}
+
+.footBrand {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.footDipper {
+  width: 3.2rem;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.footTag {
+  margin-top: 0.3rem;
+  color: color-mix(in srgb, var(--cream) 78%, transparent);
+}
+
+.footAddr {
+  line-height: 1.8;
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--cream) 72%, transparent);
+}
+
+.credit a {
+  color: var(--cream);
+  border-bottom: 1px solid var(--honey);
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1100px) {
+  .months {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .month:nth-child(6) {
+    border-right: 0;
+  }
+
+  .month:nth-child(n + 7) {
+    border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+
+  .rawList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .buyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav,
+  .barCta {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .heroArt {
+    max-width: 30rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .tours {
+    grid-template-columns: 1fr;
+  }
+
+  .toursArt {
+    padding-block: 3.5rem;
+  }
+
+  .skep {
+    width: min(15rem, 60%);
+  }
+
+  .faq {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .faq .secHead {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .months {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .month:nth-child(6) {
+    border-right: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+
+  .month:nth-child(3n) {
+    border-right: 0;
+  }
+
+  .month:nth-child(n + 4) {
+    border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+
+  .flow {
+    height: 4.5rem;
+  }
+
+  .rawList,
+  .buyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .date {
+    grid-template-columns: auto 1fr;
+    row-gap: 0.1rem;
+  }
+
+  .dateTime,
+  .dateLeft {
+    grid-column: 2;
+  }
+
+  .footFine {
+    flex-direction: column;
+  }
+
+  .faqCell {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .hex {
+    transition: none;
+  }
+}

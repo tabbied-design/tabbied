@@ -1,0 +1,1014 @@
+/* ==========================================================================
+   CACAO & CO. - chocolate shop and kitchen, Linden Arcade
+   A box of twelve. The bonbons sit in a dark box four by three, each in its
+   paper cup, each top a small Tabbied pattern on its shell color the way a
+   cocoa butter transfer is printed; the lid label sits over the box edge.
+   Photographs of truffles, a bar and a pod are tinted in two of the page's
+   own colors. A high-contrast Didone for names, a geometric sans for facts.
+   ========================================================================== */
+
+.page {
+  --cream: #f6efe8;
+  --cocoa: #2a1a14;
+  --cherry: #8a3b24;
+  --caramel: #d19a5a;
+  --gray: #968a82;
+  --pale: #ebddd2;
+  --gut: clamp(1rem, 4vw, 3.5rem);
+  --max: 80rem;
+  --air: clamp(4rem, 9vw, 7.5rem);
+  --display: 'Bodoni Moda', 'Didot', Georgia, serif;
+
+  font-family: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--cream);
+  color: var(--cocoa);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 4.5rem;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--cherry);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.08;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.page :where(ul, ol, dl, dd) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gut);
+  padding: 0.85rem var(--gut);
+  background: color-mix(in srgb, var(--cream) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--cocoa) 14%, transparent);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.markAmp {
+  color: var(--cherry);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.1rem, 2.8vw, 2.6rem);
+}
+
+.nav a {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: color 160ms ease;
+}
+
+.nav a:hover {
+  color: var(--cherry);
+}
+
+.barCta {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.1rem;
+  background: var(--cocoa);
+  color: var(--cream);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--cream);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4.5rem) var(--gut) var(--air);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.kicker,
+.secKick {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cherry);
+}
+
+.title {
+  margin-top: 1.2rem;
+  font-size: clamp(2.8rem, 6vw, 5.4rem);
+  line-height: 1.02;
+}
+
+.title em {
+  display: block;
+  font-style: italic;
+  color: var(--cherry);
+}
+
+.lede {
+  margin-top: 1.5rem;
+  max-width: 32rem;
+  font-size: 1.12rem;
+  color: color-mix(in srgb, var(--cocoa) 84%, transparent);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.9rem 1.5rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.btn {
+  background: var(--cherry);
+  color: var(--cream);
+}
+
+.btn:hover {
+  background: var(--cocoa);
+}
+
+.btnLine {
+  border: 1px solid var(--cocoa);
+}
+
+.btnLine:hover {
+  background: var(--cocoa);
+  color: var(--cream);
+}
+
+.heroHours {
+  margin-top: 1.6rem;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--cocoa) 74%, transparent);
+}
+
+/* An arched shop window: molds behind, the truffles in front. */
+.heroArt {
+  position: relative;
+  aspect-ratio: 1 / 1.05;
+  display: grid;
+  place-items: center;
+  border-radius: 50% 50% 6px 6px / 34% 34% 6px 6px;
+  background: var(--pale);
+  overflow: hidden;
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+}
+
+.heroTruffles {
+  position: relative;
+  width: 84%;
+  margin-top: 12%;
+}
+
+.heroNote {
+  position: absolute;
+  left: 50%;
+  bottom: 1.4rem;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  padding: 0.45rem 1rem;
+  background: var(--cream);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------ section head */
+
+.secHead {
+  max-width: 42rem;
+  margin-bottom: clamp(2.2rem, 4vw, 3.2rem);
+}
+
+.secHead h2,
+.barsBody h2,
+.makingText h2,
+.giftsHead h2,
+.visitText h2 {
+  margin-top: 0.8rem;
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.05rem;
+  color: color-mix(in srgb, var(--cocoa) 82%, transparent);
+}
+
+/* --------------------------------------------------------------------- box */
+
+.boxSection {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+}
+
+.boxSection .secHead {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.box {
+  position: relative;
+  max-width: 68rem;
+  margin: 3.5rem auto 0;
+  padding: clamp(0.6rem, 1.4vw, 1.1rem);
+  padding-top: clamp(3rem, 5vw, 3.6rem);
+  border-radius: 14px;
+  background: var(--cocoa);
+  box-shadow: 0 40px 60px -40px rgb(0 0 0 / 0.55);
+}
+
+/* The label on the lid, laid over the box's top edge. */
+.lid {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  min-width: min(22rem, 80%);
+  padding: 0.8rem 1.8rem 0.9rem;
+  background: var(--cream);
+  border: 1px solid var(--cherry);
+  outline: 4px solid var(--cream);
+  text-align: center;
+}
+
+.lidName {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--cherry);
+}
+
+.lidTitle {
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  line-height: 1.1;
+}
+
+.lidMeta {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cocoa) 75%, transparent);
+}
+
+.tray {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.4rem, 0.9vw, 0.7rem);
+}
+
+/* A paper cup: pale, a little darker toward its edge. */
+.cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(1rem, 2vw, 1.5rem) 0.9rem 1.3rem;
+  border-radius: 8px;
+  background: radial-gradient(circle at 50% 38%, var(--pale) 0 42%, color-mix(in srgb, var(--pale) 84%, var(--cocoa)) 100%);
+}
+
+.bonbon {
+  position: relative;
+  display: block;
+  width: clamp(4.5rem, 7vw, 6rem);
+  aspect-ratio: 1;
+  border-radius: 22%;
+  overflow: hidden;
+  background: var(--cocoa);
+  box-shadow:
+    0 10px 14px -8px rgb(0 0 0 / 0.55),
+    inset 0 -5px 8px rgb(0 0 0 / 0.3);
+}
+
+.bonbon[data-shell='milk'] {
+  background: color-mix(in srgb, var(--cocoa) 58%, var(--caramel));
+}
+
+.bonbon[data-shell='ruby'] {
+  background: var(--cherry);
+}
+
+.cellNo {
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--cherry);
+}
+
+.cellName {
+  margin-top: 0.2rem;
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+}
+
+.cellFlavor {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  max-width: 13rem;
+  color: color-mix(in srgb, var(--cocoa) 80%, transparent);
+}
+
+.boxNotes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 2.2rem;
+  max-width: 68rem;
+  margin: 1.8rem auto 0;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--cocoa) 78%, transparent);
+}
+
+/* -------------------------------------------------------------------- bars */
+
+.bars {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.barsArt {
+  position: sticky;
+  top: 6rem;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: color-mix(in srgb, var(--caramel) 38%, var(--cream));
+}
+
+/* A mat of molds around the bar, the bar on a plain plate inside it. */
+.barsMat {
+  position: absolute;
+  inset: 0;
+}
+
+.barsArt::after {
+  content: '';
+  position: absolute;
+  inset: 9%;
+  background: color-mix(in srgb, var(--caramel) 38%, var(--cream));
+}
+
+.barPhoto {
+  width: 78%;
+  z-index: 1;
+}
+
+.barList {
+  margin-top: 2.2rem;
+  border-top: 1px solid var(--cocoa);
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 8.5rem 3.5rem;
+  gap: 1.2rem;
+  align-items: center;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--cocoa) 18%, transparent);
+}
+
+.barName {
+  display: grid;
+}
+
+.barName h3 {
+  font-size: 1.35rem;
+}
+
+.barName span {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--cocoa) 72%, transparent);
+}
+
+.barNotes {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+
+.barPct {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.barMeter {
+  display: block;
+  height: 6px;
+  background: var(--pale);
+}
+
+.barMeter span {
+  display: block;
+  height: 100%;
+  background: var(--cherry);
+}
+
+.barPrice {
+  justify-self: end;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+
+/* ------------------------------------------------------------------ making */
+
+.making {
+  background: var(--cocoa);
+  color: var(--cream);
+}
+
+.makingInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+/* A sheet of transfer tops along the foot of the dark room. */
+.making {
+  position: relative;
+}
+
+.makingStrip {
+  position: relative;
+  height: 44px;
+  overflow: hidden;
+  opacity: 0.85;
+}
+
+.making .secKick {
+  color: var(--caramel);
+}
+
+.pod {
+  width: 100%;
+  max-width: 32rem;
+  justify-self: center;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.8rem 1.6rem;
+  margin-top: 2.4rem;
+  counter-reset: step;
+}
+
+.steps li {
+  counter-increment: step;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--cream) 28%, transparent);
+}
+
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--caramel);
+}
+
+.steps h3 {
+  font-size: 1.35rem;
+}
+
+.steps p {
+  margin-top: 0.35rem;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--cream) 80%, transparent);
+}
+
+/* --------------------------------------------------------------- workshops */
+
+.workshops {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+}
+
+.workshopList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.workshop {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem 1.4rem;
+  border-top: 3px solid var(--cherry);
+  background: color-mix(in srgb, var(--pale) 60%, var(--cream));
+}
+
+.workshop h3 {
+  font-size: 1.7rem;
+}
+
+.workshopWhen {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cherry);
+}
+
+.workshop p {
+  margin-top: 0.9rem;
+  flex: 1;
+  color: color-mix(in srgb, var(--cocoa) 82%, transparent);
+}
+
+.workshopPrice {
+  margin-top: 1.2rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 0.6fr 1.3fr auto;
+  gap: 1rem;
+  align-items: end;
+  margin-top: 2rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--cocoa) 22%, transparent);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  font: inherit;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--cocoa) 30%, transparent);
+  border-radius: 0;
+  background: var(--cream);
+  color: var(--cocoa);
+  min-width: 0;
+  height: 2.9rem;
+  box-sizing: border-box;
+}
+
+.submit {
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.3rem;
+  border: 0;
+  background: var(--cocoa);
+  color: var(--cream);
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: var(--cherry);
+}
+
+/* ------------------------------------------------------------------- gifts */
+
+.gifts {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut) var(--air);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.boxes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.boxes li {
+  display: grid;
+  justify-items: start;
+  gap: 0.2rem;
+}
+
+.boxCup {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+  border: 6px solid var(--cocoa);
+  border-radius: 6px;
+}
+
+.boxName {
+  font-family: var(--display);
+  font-size: 1.15rem;
+}
+
+.boxes strong {
+  font-weight: 500;
+  color: var(--cherry);
+}
+
+.delivery {
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--pale);
+}
+
+.delivery h3 {
+  font-size: 1.7rem;
+}
+
+.deliveryList {
+  margin-top: 1rem;
+}
+
+.deliveryList div {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--cocoa) 18%, transparent);
+}
+
+.deliveryList dt {
+  font-weight: 500;
+}
+
+.deliveryList dd {
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--cocoa) 80%, transparent);
+}
+
+.orderLink {
+  display: inline-block;
+  margin-top: 1.2rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--cherry);
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--air) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  border-top: 1px solid color-mix(in srgb, var(--cocoa) 16%, transparent);
+}
+
+.visitAddr {
+  margin-top: 1.2rem;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.5rem;
+  color: var(--cherry);
+}
+
+.visitNote {
+  margin-top: 0.8rem;
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--cocoa) 82%, transparent);
+}
+
+.visitContact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  margin-top: 1.2rem;
+  font-weight: 500;
+}
+
+.visitContact a {
+  border-bottom: 1px solid var(--cherry);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--cocoa) 18%, transparent);
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  text-align: right;
+  color: color-mix(in srgb, var(--cocoa) 82%, transparent);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  background: var(--cocoa);
+  color: var(--cream);
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) 2rem;
+}
+
+.footTop,
+.footFine {
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.footTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem 2rem;
+  padding-bottom: 2.2rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--cream) 20%, transparent);
+}
+
+/* One bonbon beside the name, a top from the box. */
+.footBonbon {
+  position: relative;
+  flex: none;
+  width: 4.2rem;
+  aspect-ratio: 1;
+  border-radius: 22%;
+  overflow: hidden;
+  margin-right: -0.9rem;
+  background: var(--cherry);
+  align-self: center;
+}
+
+.footName {
+  margin-right: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-family: var(--display);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.footName em {
+  color: var(--caramel);
+}
+
+.footTag {
+  color: color-mix(in srgb, var(--cream) 78%, transparent);
+}
+
+.footFine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--cream) 72%, transparent);
+}
+
+.credit a {
+  color: var(--cream);
+  border-bottom: 1px solid var(--caramel);
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (max-width: 1100px) {
+  .form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .submit {
+    grid-column: 1 / -1;
+  }
+
+  .barRow {
+    grid-template-columns: minmax(0, 1fr) 8rem 3.5rem;
+  }
+
+  .barNotes {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: -0.6rem;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav,
+  .barCta {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .hero,
+  .bars,
+  .makingInner,
+  .gifts,
+  .visit {
+    grid-template-columns: 1fr;
+  }
+
+  .heroArt {
+    max-width: 30rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .barsArt {
+    position: relative;
+    top: 0;
+    max-width: 24rem;
+    width: 100%;
+  }
+
+  .pod {
+    max-width: 22rem;
+  }
+
+  .tray {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .workshopList {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A phone: the box turns to two by six, still a box of twelve. */
+@media (max-width: 600px) {
+  .tray {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cell {
+    padding-inline: 0.5rem;
+  }
+
+  .lid {
+    padding-inline: 1rem;
+  }
+
+  .boxNotes {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .barRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.6rem 1rem;
+  }
+
+  .barNotes {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    margin-top: 0;
+  }
+
+  .barPct {
+    grid-column: 1;
+  }
+
+  .barPrice {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .steps,
+  .form,
+  .boxes {
+    grid-template-columns: 1fr;
+  }
+
+  .boxes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .boxName {
+    font-size: 0.98rem;
+  }
+
+  .footFine {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine {
+    transition: none;
+  }
+}

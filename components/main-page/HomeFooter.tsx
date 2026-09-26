@@ -36,7 +36,7 @@ export default function HomeFooter() {
             </li>
             <li>
               <Link href="/account" prefetch={false}>
-                My Account
+                My account
               </Link>
             </li>
           </ul>
