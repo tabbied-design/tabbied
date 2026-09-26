@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { ivy, tulle } from 'tabbied/patterns';
 import s from './gentle-dental.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Gentle Dental Studio: Dentistry for nervous patients, Larkspur Hill',
@@ -284,15 +285,24 @@ export default function GentleDentalPage() {
               you ask. This is what the hour looks like, so there is nothing
               to imagine on the way here.
             </p>
-            <div className={s.quietRoom} aria-hidden="true">
-              <TabbiedPattern
-                pattern={tulle}
-                palette={VEIL}
-                fit="grid"
-                cellSize={40}
-                seed="gentle-quiet"
-                style={{ position: 'absolute', inset: 0 }}
+            <div className={s.quietScene}>
+              <div className={s.quietRoom} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={tulle}
+                  palette={VEIL}
+                  fit="grid"
+                  cellSize={40}
+                  seed="gentle-quiet"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <Artwork
+                slug="gentle-dental-quietroom"
+                alt="The quiet room: an armchair by a tall window, a side table with a teapot and a cup, a potted plant"
+                inks={{ red: 'var(--clay-ink)', blue: 'var(--leaf)' }}
+                className={s.quietArt}
               />
+              <p className={s.quietCaption}>The quiet room, where every first visit starts.</p>
             </div>
           </div>
           <ol className={s.minutes}>
@@ -552,6 +562,7 @@ export default function GentleDentalPage() {
         <div className={s.footInner}>
           <p className={s.footName}>Gentle Dental Studio</p>
           <p>A fictional dental practice. The team, prices and address are invented.</p>
+          <p>The quiet room is a generated image, drawn in the page's own colors.</p>
           <p>
             Patterns by{' '}
             <a href="https://tabbied.com" rel="noopener">Tabbied</a>

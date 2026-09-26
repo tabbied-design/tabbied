@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { gimbal } from 'tabbied/patterns';
 import s from './velvet-cat-grooming.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Velvet: Grooming salon for cats only, Old Quarry',
@@ -316,14 +317,24 @@ export default function VelvetPage() {
 
         {/* ---------------------------------------------------------- NO DOGS */}
         <section id="no-dogs" className={s.noDogs} aria-labelledby="no-dogs-h">
-          <p className={s.kicker}>House rule, the only one</p>
-          <h2 id="no-dogs-h" className={s.noDogsTitle}>No dogs. Ever.</h2>
-          <p className={s.noDogsBody}>
-            Not in the lobby, not in a carrier, not the very quiet one. A cat
-            can smell a dog on a floor for days, and this floor has never had
-            one on it. If you have come straight from the dog park, we will
-            ask you to wait outside while we fetch your cat.
-          </p>
+          <div className={s.noDogsInner}>
+            <Artwork
+              slug="velvet-cat-grooming-cat"
+              alt="A long-haired cat sitting upright, tail curled round its paws"
+              inks={['var(--on-cream)']}
+              className={s.cat}
+            />
+            <div className={s.noDogsText}>
+              <p className={s.kicker}>House rule, the only one</p>
+              <h2 id="no-dogs-h" className={s.noDogsTitle}>No dogs. Ever.</h2>
+              <p className={s.noDogsBody}>
+                Not in the lobby, not in a carrier, not the very quiet one. A
+                cat can smell a dog on a floor for days, and this floor has
+                never had one on it. If you have come straight from the dog
+                park, we will ask you to wait outside while we fetch your cat.
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* ----------------------------------------------------- BEFORE, TEAM */}
@@ -463,6 +474,7 @@ export default function VelvetPage() {
         <div className={s.footInner}>
           <p className={s.footName}>Velvet</p>
           <p>A fictional cat grooming salon. The groomers, prices and address are invented.</p>
+          <p>The cat is a generated image, drawn in the page's own colors.</p>
           <p>
             Patterns by{' '}
             <a href="https://tabbied.com" rel="noopener">Tabbied</a>

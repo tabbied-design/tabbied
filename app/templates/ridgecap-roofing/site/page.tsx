@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { louvre, rafter } from 'tabbied/patterns';
 import s from './ridgecap-roofing.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Ridgecap Roofing: Roofing contractor, Millrace',
@@ -38,6 +39,14 @@ const CALLOUTS = [
   'Ridge vent, shingle-over, full length',
   'Ice and water membrane, 6 ft up from the eave',
   'Drip edge, pre-finished aluminum',
+];
+
+const ASSEMBLY = [
+  'Rafters as found, sistered where they sag',
+  'Deck: 5/8 in plywood, replaced where soft, $95 a sheet',
+  'Ice and water membrane at eaves and valleys',
+  'Synthetic underlayment over the whole field',
+  'Architectural shingles, six nails each',
 ];
 
 const STATS = [
@@ -244,14 +253,30 @@ export default function RidgecapPage() {
         {/* ----------------------------------------------- A-201 JOB TYPES */}
         <section id="work" className={s.sheet} aria-labelledby="work-h">
           <p className={s.sheetNo}>Sheet A-201</p>
-          <div className={s.head}>
-            <p className={s.kicker}>Schedule of work</p>
-            <h2 id="work-h" className={s.h2}>Six jobs we do, and the spec for each</h2>
-            <p className={s.note}>
-              Prices are per square (100 sq ft of roof) installed, tear-off and
-              disposal included, for a walkable pitch up to 8:12. Steeper roofs
-              add 15 percent for the harness and the time.
-            </p>
+          <div className={s.workTop}>
+            <div className={s.head}>
+              <p className={s.kicker}>Schedule of work</p>
+              <h2 id="work-h" className={s.h2}>Six jobs we do, and the spec for each</h2>
+              <p className={s.note}>
+                Prices are per square (100 sq ft of roof) installed, tear-off and
+                disposal included, for a walkable pitch up to 8:12. Steeper roofs
+                add 15 percent for the harness and the time.
+              </p>
+              <ol className={s.assembly}>
+                {ASSEMBLY.map((a) => (
+                  <li key={a}>{a}</li>
+                ))}
+              </ol>
+            </div>
+            <figure className={s.detail}>
+              <Artwork
+                slug="ridgecap-roofing-layers"
+                alt="A cutaway of a pitched roof: rafters, deck boards, membrane, underlayment and overlapping shingles"
+                inks={['var(--text)']}
+                className={s.detailArt}
+              />
+              <figcaption className={s.detailTag}>Detail 1: R-1 assembly, bottom to top. Not to scale.</figcaption>
+            </figure>
           </div>
           <table className={s.schedule}>
             <caption className={s.srOnly}>Job types with system, time on site, crew size, starting price and warranty</caption>
@@ -533,7 +558,7 @@ export default function RidgecapPage() {
           </div>
           <div className={s.tbCell}>
             <p className={s.tbLabel}>Note</p>
-            <p>A fictional roofing contractor. Jobs, prices and license numbers are invented.</p>
+            <p>A fictional roofing contractor. Jobs, prices and license numbers are invented. The roof detail is a generated image, drawn in the page's own colors.</p>
           </div>
           <div className={s.tbCell}>
             <p className={s.tbLabel}>Drawn by</p>

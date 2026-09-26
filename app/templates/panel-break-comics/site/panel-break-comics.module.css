@@ -6,8 +6,9 @@
    set in a comic display face with an ink outline and a drop. Color is
    flat four-color print: newsprint, key black, red, yellow and blue, and
    the pattern is the printing itself: Ben-Day halftone dots in the
-   splash panel, behind the late-night starburst, under the pull-list form
-   and in the last panel.
+   splash panel, behind the late-night starburst, under the pull-list form,
+   at the foot of the "we buy" panel and in the last panel. The shopkeeper
+   in the splash is a generated picture, inked in the same four colors.
    ========================================================================== */
 
 .page {
@@ -273,15 +274,38 @@
 /* ------------------------------------------------------------- splash */
 
 .splash {
+  --pad: clamp(1rem, 3vw, 2rem);
   grid-row: 1 / 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem clamp(0.5rem, 2vw, 1.5rem);
+  min-height: clamp(26rem, 44vw, 36rem);
+  padding: var(--pad) var(--pad) 0;
+  background: var(--red);
+}
+
+.splashCaption {
+  justify-self: start;
+}
+
+/* The shopkeeper stands on the panel's bottom border and does the talking. */
+.keeperSpot {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1.5rem;
-  min-height: clamp(26rem, 44vw, 36rem);
-  padding: clamp(1rem, 3vw, 2rem);
-  background: var(--red);
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.keeper {
+  width: 100%;
+  max-width: 21rem;
 }
 
 .splashDots {
@@ -297,8 +321,10 @@
 }
 
 .splashTitle {
-  max-width: 11ch;
-  font-size: clamp(3.6rem, 8.6vw, 8.2rem);
+  grid-column: 1;
+  align-self: center;
+  padding-bottom: var(--pad);
+  font-size: clamp(3.4rem, 6.8vw, 6.6rem);
   line-height: 0.9;
   letter-spacing: 0.02em;
   color: var(--paper);
@@ -317,8 +343,8 @@
 }
 
 .splashBalloon {
-  align-self: flex-end;
-  max-width: 20rem;
+  max-width: 17rem;
+  margin-right: 1.5rem;
 }
 
 .burstPanel {
@@ -737,6 +763,19 @@
   color: var(--on-red);
 }
 
+.buyPanel > :not(.buyDots) {
+  position: relative;
+}
+
+/* Halftone rising from the foot of the panel, clear of the lettering. */
+.buyDots {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(to top, var(--line) 30%, transparent 62%);
+  mask: linear-gradient(to top, var(--line) 30%, transparent 62%);
+}
+
 .buyPanel .caption {
   justify-self: start;
 }
@@ -985,6 +1024,17 @@
 
   .splash {
     grid-row: auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .keeperSpot {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .keeper {
+    max-width: 17rem;
   }
 
   .strip,

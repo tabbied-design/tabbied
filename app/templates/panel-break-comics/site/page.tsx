@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { dotfade } from 'tabbied/patterns';
 import s from './panel-break-comics.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Panel Break Comics: Comic book shop, Linden Flats',
@@ -128,7 +129,15 @@ export default function PanelBreakPage() {
             <h1 id="splash-h" className={s.splashTitle}>
               New comics <span>every Wednesday</span>
             </h1>
-            <p className={`${s.balloon} ${s.splashBalloon}`}>Doors open at ten. Your pull list is already bagged!</p>
+            <div className={s.keeperSpot}>
+              <p className={`${s.balloon} ${s.splashBalloon}`}>Doors open at ten. Your pull list is already bagged!</p>
+              <Artwork
+                slug="panel-break-comics-keeper"
+                alt="A grinning shopkeeper in an apron holding up a fan of comic books"
+                inks={{ red: 'var(--paper)', yellow: 'var(--yellow)', blue: 'var(--blue)', black: 'var(--line)' }}
+                className={s.keeper}
+              />
+            </div>
           </div>
 
           <div className={`${s.panel} ${s.burstPanel}`}>
@@ -278,6 +287,16 @@ export default function PanelBreakPage() {
             </dl>
           </div>
           <div className={`${s.panel} ${s.buyPanel}`}>
+            <div className={s.buyDots} aria-hidden="true">
+              <TabbiedPattern
+                pattern={dotfade}
+                palette={SPLASH}
+                fit="grid"
+                cellSize={52}
+                seed="panel-buy"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <p className={s.caption}>We buy comics</p>
             <p className={s.buyText}>
               Collections of any size. Bring them in on a Thursday or Friday,
@@ -352,6 +371,7 @@ export default function PanelBreakPage() {
         </div>
         <div className={s.footText}>
           <p>A fictional comic book shop. The comics, events and people are invented.</p>
+          <p>The shopkeeper is a generated image, drawn in the page's own colors.</p>
           <p>
             Patterns by{' '}
             <a href="https://tabbied.com" rel="noopener">Tabbied</a>

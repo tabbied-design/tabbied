@@ -255,6 +255,13 @@
   justify-self: center;
 }
 
+.wingArt {
+  display: block;
+  width: min(100%, 12rem);
+  height: 7.5rem;
+  margin: 0 auto 1.1rem;
+}
+
 .wingLabel {
   font-family: var(--sc);
   font-size: 0.95rem;
@@ -566,6 +573,13 @@
   line-height: 1.25;
 }
 
+.macStack {
+  display: block;
+  width: auto;
+  height: clamp(7rem, 11vw, 9rem);
+  margin: 0 auto 1.4rem;
+}
+
 .boxes {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -641,6 +655,25 @@
 }
 
 /* ---------------------------------------------------------------- gateaux */
+
+.gateauHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.gateauHead .head {
+  margin: 0;
+}
+
+.headArt {
+  display: block;
+  justify-self: center;
+  width: min(100%, 13rem);
+  height: 10rem;
+}
 
 .pair {
   display: grid;
@@ -889,6 +922,12 @@
   border: 1px solid var(--line);
   outline: 1px solid var(--line);
   outline-offset: -7px;
+}
+
+.carteArt {
+  display: block;
+  width: min(62%, 13rem);
+  margin: -0.6rem auto 0.9rem;
 }
 
 .carteTitle {
@@ -1190,6 +1229,20 @@
 
   .boxes {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gateauHead {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gateauHead .head {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .headArt {
+    width: min(100%, 9rem);
+    height: 7rem;
   }
 
   .formGrid {

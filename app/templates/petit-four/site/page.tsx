@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { foldback, picket } from 'tabbied/patterns';
 import s from './petit-four.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Petit Four: French patisserie and salon, Linden Arcade',
@@ -234,6 +235,12 @@ export default function PetitFourPage() {
 
           <div className={s.window}>
             <div className={s.wing}>
+              <Artwork
+                slug="petit-four-eclair"
+                alt="A chocolate eclair, drawn as an engraving"
+                inks={['var(--text)']}
+                className={s.wingArt}
+              />
               <p className={s.wingLabel}>The cabinet opens</p>
               <p className={s.wingBig}>at eight</p>
               <p className={s.wingNote}>Tuesday to Saturday, and nine on Sundays. Full by ten.</p>
@@ -251,6 +258,12 @@ export default function PetitFourPage() {
               </div>
             </div>
             <div className={s.wing}>
+              <Artwork
+                slug="petit-four-millefeuille"
+                alt="A slice of mille-feuille, drawn as an engraving"
+                inks={['var(--text)']}
+                className={s.wingArt}
+              />
               <p className={s.wingLabel}>A whole gateau needs</p>
               <p className={s.wingBig}>two days</p>
               <p className={s.wingNote}>of notice. A croquembouche needs five, and a good reason.</p>
@@ -313,6 +326,12 @@ export default function PetitFourPage() {
         {/* --------------------------------------------------------- MACARONS */}
         <section id="macarons" className={`${s.sec} ${s.macSec}`} aria-labelledby="macarons-h">
           <div className={s.head}>
+            <Artwork
+              slug="petit-four-macarons"
+              alt="A stack of three macarons, drawn as an engraving"
+              inks={['var(--on-rose)']}
+              className={s.macStack}
+            />
             <p className={s.label}>By the box</p>
             <h2 id="macarons-h">Macarons</h2>
             <div className={s.orn} aria-hidden="true" />
@@ -357,10 +376,24 @@ export default function PetitFourPage() {
         </div>
 
         <section id="gateaux" className={s.sec} aria-labelledby="gateaux-h">
-          <div className={s.head}>
-            <p className={s.label}>For a table, a birthday, a Sunday</p>
-            <h2 id="gateaux-h">Order a gateau</h2>
-            <div className={s.orn} aria-hidden="true" />
+          <div className={s.gateauHead}>
+            <Artwork
+              slug="petit-four-parisbrest"
+              alt="A Paris-Brest ring with sliced almonds, drawn as an engraving"
+              inks={['var(--text)']}
+              className={s.headArt}
+            />
+            <div className={s.head}>
+              <p className={s.label}>For a table, a birthday, a Sunday</p>
+              <h2 id="gateaux-h">Order a gateau</h2>
+              <div className={s.orn} aria-hidden="true" />
+            </div>
+            <Artwork
+              slug="petit-four-tarte"
+              alt="A lemon tart with a fluted edge, drawn as an engraving"
+              inks={['var(--text)']}
+              className={s.headArt}
+            />
           </div>
 
           <div className={s.pair}>
@@ -462,6 +495,12 @@ export default function PetitFourPage() {
               </p>
             </div>
             <div className={s.carte}>
+              <Artwork
+                slug="petit-four-croissant"
+                alt="A croissant, drawn as an engraving"
+                inks={['var(--text)']}
+                className={s.carteArt}
+              />
               <h3 className={s.carteTitle}>La carte</h3>
               <ul className={s.carteList}>
                 {SALON.map(([item, price]) => (
@@ -565,6 +604,7 @@ export default function PetitFourPage() {
         <div className={s.footInner}>
           <p className={s.footName}>Petit Four</p>
           <p>A fictional French patisserie. Pastries, prices and people are invented.</p>
+          <p>The pastry engravings are generated images, drawn in the page's own colors.</p>
           <p>
             Patterns by{' '}
             <a href="https://tabbied.com" rel="noopener">Tabbied</a>

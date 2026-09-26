@@ -642,8 +642,7 @@
 
 .noDogs {
   margin-top: clamp(5rem, 10vw, 8rem);
-  padding: clamp(3.5rem, 8vw, 6rem) var(--gut);
-  text-align: center;
+  padding: clamp(3rem, 7vw, 5rem) var(--gut);
   background: var(--cream);
   color: var(--on-cream);
   border-top: 6px double var(--card-trim);
@@ -652,6 +651,21 @@
 
 .noDogs .kicker {
   color: var(--card-muted);
+}
+
+.noDogsInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 38rem);
+  justify-content: center;
+  align-items: center;
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+}
+
+.cat {
+  height: clamp(16rem, 26vw, 23rem);
+  width: auto;
 }
 
 .noDogsTitle {
@@ -663,7 +677,7 @@
 
 .noDogsBody {
   max-width: 36rem;
-  margin: 1.6rem auto 0;
+  margin: 1.6rem 0 0;
   font-size: 1.3rem;
   color: var(--card-muted);
 }
@@ -978,6 +992,20 @@
 
   .handlingHead {
     position: static;
+  }
+
+  .noDogsInner {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .cat {
+    height: 13rem;
+  }
+
+  .noDogsBody {
+    margin-inline: auto;
   }
 
   .plate {

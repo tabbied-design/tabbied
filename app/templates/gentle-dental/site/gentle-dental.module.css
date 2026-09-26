@@ -36,6 +36,7 @@
   --muted: color-mix(in oklab, var(--text) 72%, var(--linen));
   --hair: color-mix(in oklab, var(--text) 15%, transparent);
   --leaf: color-mix(in oklab, var(--fern) 60%, var(--text));
+  --clay-ink: color-mix(in oklab, var(--clay) 62%, var(--text));
 
   font-family: var(--sans);
   font-size: 1.0625rem;
@@ -337,13 +338,38 @@
   top: 2rem;
 }
 
-.quietRoom {
+/* The quiet room drawn over a veil of dots, the dome its alcove. */
+.quietScene {
   position: relative;
-  height: clamp(9rem, 16vw, 13rem);
-  margin-top: 2.2rem;
+  margin-top: 2.4rem;
+  padding: 1.6rem 0 0;
+}
+
+.quietRoom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 2.6rem;
   overflow: hidden;
   background: var(--sky);
   border-radius: 999px 999px 18px 18px;
+}
+
+.quietArt {
+  position: relative;
+  width: 72%;
+  margin: 0 auto;
+}
+
+.quietCaption {
+  position: relative;
+  margin-top: 1.1rem;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 0.98rem;
+  font-style: italic;
+  color: var(--muted);
 }
 
 .minutes {
