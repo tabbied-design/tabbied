@@ -34,6 +34,8 @@
   --on-stencil: var(--kraft);
   --on-truck: var(--kraft);
   --on-red: var(--kraft);
+  --red-art: var(--red);
+  --truck-art: var(--truck);
 
   font-family: var(--sans);
   font-size: 1rem;
@@ -58,6 +60,10 @@
     --on-stencil: color-mix(in oklab, oklch(from var(--stencil) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--kraft));
     --on-truck: color-mix(in oklab, oklch(from var(--truck) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--kraft));
     --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* The truck's paint, pulled toward the ground's contrast so the cab and
+       the box body stay clear of the kraft whatever the palette. */
+    --red-art: color-mix(in oklab, var(--contrast) 12%, var(--red));
+    --truck-art: color-mix(in oklab, var(--contrast) 12%, var(--truck));
   }
 }
 
@@ -154,7 +160,7 @@
   align-items: center;
   max-width: var(--wide);
   margin: 0 auto;
-  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) 0;
 }
 
 .kicker {
@@ -259,9 +265,22 @@
   box-shadow: 4px 4px 0 var(--text);
 }
 
+/* The right-hand column ends on the caution tape: the truck is parked on
+   it, ramp down, in front of the cartons it is about to load. */
+.heroRight {
+  align-self: end;
+  display: grid;
+}
+
 .stackWrap {
   position: relative;
-  padding-bottom: 5.5rem;
+  padding-bottom: 4.5rem;
+}
+
+.truckArt {
+  justify-self: end;
+  width: min(100%, 30rem);
+  margin: 1.2rem -0.5rem -2px 0;
 }
 
 .stack {
@@ -1228,16 +1247,24 @@
   }
 
   .stackWrap {
-    padding-bottom: 8rem;
+    padding-bottom: 0;
+  }
+
+  .label {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin: -3.5rem 0.5rem 0;
+  }
+
+  .truckArt {
+    width: 100%;
+    margin-right: 0;
   }
 
   .stack {
     height: 17rem;
-  }
-
-  .label {
-    left: 0.5rem;
-    width: calc(100% - 1rem);
   }
 
   .marks li {

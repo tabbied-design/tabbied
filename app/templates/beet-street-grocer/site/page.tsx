@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { roundstep, ivy } from 'tabbied/patterns';
 import s from './beet-street-grocer.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Beet Street Grocer: Greengrocer, Market Hill',
@@ -319,14 +320,12 @@ export default function BeetStreetGrocerPage() {
           </div>
 
           <div className={s.crateWrap}>
-            <div className={s.crate} aria-hidden="true">
-              <TabbiedPattern
-                pattern={roundstep}
-                palette={CRATE}
-                fit="grid"
-                cellSize={60}
-                seed="beet-crate"
-                style={{ position: 'absolute', inset: 0 }}
+            <div className={s.beetBoard}>
+              <Artwork
+                slug="beet-street-grocer-beets"
+                alt="A bunch of beets tied with string, round roots and long leafy tops"
+                inks={['var(--beet)', 'var(--text)']}
+                className={s.beets}
               />
             </div>
             <div className={s.priceCard}>
@@ -365,29 +364,29 @@ export default function BeetStreetGrocerPage() {
             </div>
           </div>
 
-          <ul className={s.specials}>
-            {SPECIALS.map(([name, note, price, unit]) => (
-              <li key={name} className={s.special}>
-                <p className={s.specialName}>{name}</p>
-                <p className={s.specialPrice}>{price}</p>
-                <p className={s.specialUnit}>{unit}</p>
-                <p className={s.specialNote}>{note}</p>
-              </li>
-            ))}
-          </ul>
+          <div className={s.crateRow}>
+            <div className={s.crate} aria-hidden="true">
+              <TabbiedPattern
+                pattern={roundstep}
+                palette={CRATE}
+                fit="grid"
+                cellSize={52}
+                seed="beet-crate"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
+            <ul className={s.specials}>
+              {SPECIALS.map(([name, note, price, unit]) => (
+                <li key={name} className={s.special}>
+                  <p className={s.specialName}>{name}</p>
+                  <p className={s.specialPrice}>{price}</p>
+                  <p className={s.specialUnit}>{unit}</p>
+                  <p className={s.specialNote}>{note}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
-
-        {/* ------------------------------------------------------ LEAF BAND */}
-        <div className={s.band} aria-hidden="true">
-          <TabbiedPattern
-            pattern={roundstep}
-            palette={ROW}
-            fit="grid"
-            cellSize={44}
-            seed="beet-band"
-            style={{ position: 'absolute', inset: 0 }}
-          />
-        </div>
 
         {/* ------------------------------------------------------- IN SEASON */}
         <section id="season" className={s.sec} aria-labelledby="season-h">
@@ -507,28 +506,40 @@ export default function BeetStreetGrocerPage() {
         </section>
 
         {/* ----------------------------------------------------------- FARMS */}
-        <section id="farms" className={s.sec} aria-labelledby="farms-h">
-          <div className={s.secHead}>
-            <p className={s.hand}>Nearest first</p>
-            <h2 id="farms-h">The six farms we buy from</h2>
-            <p className={s.secNote}>
-              We pay what the farm asks, on the day it delivers. Everything on the board says where it grew; if it does
-              not, ask, and we will tell you.
-            </p>
+        <section id="farms" className={s.bandSec} aria-labelledby="farms-h">
+          <div className={s.band} aria-hidden="true">
+            <TabbiedPattern
+              pattern={roundstep}
+              palette={ROW}
+              fit="grid"
+              cellSize={44}
+              seed="beet-rows"
+              style={{ position: 'absolute', inset: 0 }}
+            />
           </div>
-          <ol className={s.farms}>
-            {FARMS.map((f) => (
-              <li key={f.name} className={s.farm}>
-                <p className={s.miles}>
-                  <span className={s.milesNum}>{f.miles}</span>
-                  <span className={s.milesUnit}>miles</span>
-                </p>
-                <h3>{f.name}</h3>
-                <p className={s.grows}>{f.grows}</p>
-                <p className={s.farmNote}>{f.note}</p>
-              </li>
-            ))}
-          </ol>
+          <div className={s.sec}>
+            <div className={s.secHead}>
+              <p className={s.hand}>Nearest first</p>
+              <h2 id="farms-h">The six farms we buy from</h2>
+              <p className={s.secNote}>
+                We pay what the farm asks, on the day it delivers. Everything on the board says where it grew; if it
+                does not, ask, and we will tell you.
+              </p>
+            </div>
+            <ol className={s.farms}>
+              {FARMS.map((f) => (
+                <li key={f.name} className={s.farm}>
+                  <p className={s.miles}>
+                    <span className={s.milesNum}>{f.miles}</span>
+                    <span className={s.milesUnit}>miles</span>
+                  </p>
+                  <h3>{f.name}</h3>
+                  <p className={s.grows}>{f.grows}</p>
+                  <p className={s.farmNote}>{f.note}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
         </section>
 
         {/* ----------------------------------------------------------- VISIT */}
@@ -605,6 +616,7 @@ export default function BeetStreetGrocerPage() {
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>
+        <p>The beets are a generated picture, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

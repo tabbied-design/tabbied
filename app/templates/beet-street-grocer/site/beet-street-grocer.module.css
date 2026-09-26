@@ -219,13 +219,24 @@
   padding: 0 0 3rem 0;
 }
 
-.crate {
-  position: relative;
+/* A small board of its own, leaned against the shop front, with this
+   week's beets on it. */
+.beetBoard {
+  display: grid;
+  place-items: end center;
   aspect-ratio: 1 / 1.05;
-  overflow: hidden;
-  background: var(--board);
+  padding: 1.5rem 1.5rem 1.2rem;
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 38%, color-mix(in oklab, var(--text) 7%, transparent), transparent 70%),
+    var(--board);
   border: 12px solid var(--frame);
   box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--slate) 60%, transparent);
+}
+
+.beets {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
 }
 
 /* A white price card, pushed into the crate. */
@@ -371,12 +382,32 @@
   color: var(--muted);
 }
 
+/* The specials are pushed into a crate of greens under the board. */
+.crateRow {
+  position: relative;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.crate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 58%;
+  overflow: hidden;
+  background: var(--board);
+  border: 10px solid var(--frame);
+  border-top-width: 16px;
+}
+
 .specials {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(1.25rem, 3vw, 2.5rem);
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
-  padding: 0 clamp(0rem, 3vw, 3rem);
+  margin: 0;
+  padding: 0 clamp(1rem, 4vw, 4rem) clamp(4rem, 6vw, 5rem);
   list-style: none;
 }
 
@@ -433,10 +464,13 @@
 
 /* ------------------------------------------------------------------ band */
 
+.bandSec {
+  margin-top: clamp(4rem, 8vw, 6rem);
+}
+
 .band {
   position: relative;
   height: clamp(96px, 10vw, 132px);
-  margin-top: clamp(4rem, 8vw, 6rem);
   overflow: hidden;
   border-top: 3px dashed var(--dust);
   border-bottom: 3px dashed var(--dust);
@@ -1044,7 +1078,11 @@
 
   .specials {
     grid-template-columns: minmax(0, 1fr);
-    padding: 0 1rem;
+    padding: 0 1rem 5rem;
+  }
+
+  .crate {
+    height: 11rem;
   }
 
   .special:nth-child(2) {

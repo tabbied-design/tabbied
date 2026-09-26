@@ -536,15 +536,41 @@
   flex-direction: column;
 }
 
-/* An arched window of clay tiles. */
-.fired {
+/* An arched niche: a border of clay tiles around a white tile panel, with
+   the copita and its bottle painted on it in cobalt, the way a bar in
+   Jerez hangs its sign. */
+.arch {
   position: relative;
-  height: clamp(22rem, 52vh, 34rem);
-  overflow: hidden;
-  border: 3px solid var(--cobalt);
+  height: clamp(26rem, 58vh, 36rem);
+  margin: 0.5rem 8px 8px;
+  border: 3px solid var(--cobalt-type);
   border-radius: 50% 50% 4px 4px / 28% 28% 4px 4px;
   box-shadow: 0 0 0 6px var(--limewash), 0 0 0 8px var(--clay);
-  margin: 0.5rem 8px 8px;
+  overflow: hidden;
+}
+
+.fired {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.archPanel {
+  position: absolute;
+  inset: 13% 15% 6%;
+  display: grid;
+  place-items: end center;
+  padding: 1.4rem 1rem 1.2rem;
+  background: var(--limewash);
+  border: 2px solid var(--cobalt-type);
+  border-radius: 50% 50% 3px 3px / 24% 24% 3px 3px;
+  box-shadow: inset 0 0 0 6px var(--limewash), inset 0 0 0 7px color-mix(in oklab, var(--cobalt-type) 40%, transparent);
+}
+
+.copita {
+  height: 86%;
+  width: auto;
+  max-width: 100%;
 }
 
 .scaleHead {
@@ -1097,8 +1123,11 @@
     position: static;
   }
 
-  .fired {
-    height: 18rem;
+  .arch {
+    width: min(100% - 16px, 22rem);
+    height: 24rem;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .flamenco {
@@ -1169,6 +1198,11 @@
   .sherries li {
     grid-template-columns: minmax(0, 1fr) 4.6rem 2.6rem;
     gap: 0.8rem;
+  }
+
+  .scaleHead {
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
   }
 
   .wine h3 {

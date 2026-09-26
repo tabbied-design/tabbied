@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { bangle, dotset } from 'tabbied/patterns';
 import s from './chatterbox-speech.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Chatterbox: Speech therapy for children, Linden Avenue',
@@ -200,18 +201,26 @@ export default function ChatterboxSpeechPage() {
             </p>
           </div>
 
-          <div className={s.babble}>
-            <div className={s.babbleField} aria-hidden="true">
-              <TabbiedPattern
-                pattern={bangle}
-                palette={BABBLE}
-                fit="grid"
-                cellSize={64}
-                seed="chatterbox-babble"
-                style={{ position: 'absolute', inset: 0 }}
-              />
+          <div className={s.talk}>
+            <div className={s.babble}>
+              <div className={s.babbleField} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={bangle}
+                  palette={BABBLE}
+                  fit="grid"
+                  cellSize={56}
+                  seed="chatterbox-babble"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <p className={s.babbleSays}>Ba-ba! Mo! More!</p>
             </div>
-            <p className={s.babbleSays}>Ba-ba! Mo! More!</p>
+            <Artwork
+              slug="chatterbox-speech-talk"
+              alt="A parent and a toddler sitting on the floor with a picture book, the toddler pointing and talking"
+              inks={{ red: 'var(--tomato-art)', blue: 'var(--sky-type)', yellow: 'var(--sun-art)', black: 'var(--text)' }}
+              className={s.talkArt}
+            />
           </div>
 
           <ul className={s.chips}>
@@ -495,6 +504,7 @@ export default function ChatterboxSpeechPage() {
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>
+        <p>The parent and toddler are a generated picture, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

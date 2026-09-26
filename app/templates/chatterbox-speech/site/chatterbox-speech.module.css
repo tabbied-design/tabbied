@@ -35,6 +35,8 @@
   --on-sun: var(--ink);
   --on-sky: var(--milk);
   --on-ink: var(--milk);
+  --tomato-art: var(--tomato);
+  --sun-art: var(--sun);
 
   font-family: var(--body);
   font-size: 1.04rem;
@@ -59,6 +61,10 @@
     --on-sun: color-mix(in oklab, oklch(from var(--sun) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--sun));
     --on-sky: color-mix(in oklab, oklch(from var(--sky) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--sky));
     --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--ink));
+    /* The picture's fills, pulled a little toward the ground's contrast so
+       a shirt never sinks into a ground of the same value. */
+    --tomato-art: color-mix(in oklab, var(--contrast) 10%, var(--tomato));
+    --sun-art: color-mix(in oklab, var(--contrast) 10%, var(--sun));
   }
 }
 
@@ -273,11 +279,20 @@
   transform: translateY(-2px);
 }
 
-/* The child's side of the talk: a babble of arcs in a bubble. */
+/* The child's side of the talk: a babble of arcs in a bubble, rising
+   from the toddler in the picture below it. */
+.talk {
+  position: relative;
+  display: grid;
+  margin-bottom: 1rem;
+}
+
 .babble {
   position: relative;
-  aspect-ratio: 1 / 1.05;
-  margin-bottom: 2rem;
+  z-index: 1;
+  justify-self: end;
+  width: 60%;
+  aspect-ratio: 1 / 1.02;
 }
 
 .babbleField {
@@ -288,7 +303,7 @@
   border-radius: 46% 54% 50% 50% / 44% 46% 54% 56%;
 }
 
-/* Thought-bubble dots trailing off to the lower left. */
+/* Thought-bubble dots trailing down toward the toddler. */
 .babble::before,
 .babble::after {
   content: '';
@@ -298,17 +313,22 @@
 }
 
 .babble::before {
-  left: 4%;
-  bottom: 2%;
-  width: 3.2rem;
-  height: 3.2rem;
+  left: 30%;
+  bottom: -9%;
+  width: 2.4rem;
+  height: 2.4rem;
 }
 
 .babble::after {
-  left: -3%;
-  bottom: -8%;
-  width: 1.6rem;
-  height: 1.6rem;
+  left: 36%;
+  bottom: -18%;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.talkArt {
+  width: 86%;
+  margin-top: -2%;
 }
 
 .babbleSays {
@@ -1108,8 +1128,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .babble {
-    width: min(100%, 26rem);
+  .talk {
+    width: min(100%, 28rem);
     justify-self: center;
   }
 

@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { evolute, roundcut } from 'tabbied/patterns';
 import s from './casa-olivo.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Casa Olivo: Tapas bar, Alameda Street',
@@ -289,15 +290,25 @@ export default function CasaOlivoPage() {
                 finally sweet.
               </p>
             </div>
-            <div className={s.fired} aria-hidden="true">
-              <TabbiedPattern
-                pattern={evolute}
-                palette={FIRED}
-                fit="grid"
-                cellSize={64}
-                seed="casa-olivo-fired"
-                style={{ position: 'absolute', inset: 0 }}
-              />
+            <div className={s.arch}>
+              <div className={s.fired} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={evolute}
+                  palette={FIRED}
+                  fit="grid"
+                  cellSize={64}
+                  seed="casa-olivo-fired"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <div className={s.archPanel}>
+                <Artwork
+                  slug="casa-olivo-copita"
+                  alt="A tulip-shaped sherry copita beside a tall sherry bottle, painted like a tile"
+                  inks={['var(--cobalt-type)']}
+                  className={s.copita}
+                />
+              </div>
             </div>
           </div>
 
@@ -529,6 +540,7 @@ export default function CasaOlivoPage() {
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>
+        <p>The copita and the bottle are a generated picture, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

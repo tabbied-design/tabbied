@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { isometry, rafter } from 'tabbied/patterns';
 import s from './steady-hands-movers.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Steady Hands Movers: Local moving company, Millbrook',
@@ -182,6 +183,7 @@ export default function SteadyHandsMoversPage() {
             </p>
           </div>
 
+          <div className={s.heroRight}>
           <div className={s.stackWrap}>
             <div className={s.stack} aria-hidden="true">
               <TabbiedPattern
@@ -205,6 +207,13 @@ export default function SteadyHandsMoversPage() {
               </dl>
               <p className={s.barcode}>SHM 2009 0417 60</p>
             </div>
+          </div>
+          <Artwork
+            slug="steady-hands-movers-truck"
+            alt="A box truck in side view with its loading ramp down, a stack of boxes on a hand trolley beside it"
+            inks={{ red: 'var(--red-art)', blue: 'var(--truck-art)', black: 'var(--text)' }}
+            className={s.truckArt}
+          />
           </div>
         </section>
 
@@ -578,6 +587,7 @@ export default function SteadyHandsMoversPage() {
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>
+        <p>The truck is a generated picture, drawn in the page's own colors.</p>
       </footer>
     </div>
   );
