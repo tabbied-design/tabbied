@@ -312,7 +312,7 @@ export default function StudioSite({
 
   if (!ready || !draft || !spec) {
     return (
-      <div className={styles.stage}>
+      <div className={`${styles.stage} ${styles.stageLoading}`}>
         <div className={styles.frame}>
           <div className={styles.skeleton} aria-hidden="true" />
           <p className={styles.loading}>Loading your site...</p>

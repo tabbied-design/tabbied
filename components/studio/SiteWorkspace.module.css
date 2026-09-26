@@ -292,6 +292,13 @@
   }
 }
 
+/* While the site loads there is no bar yet, so the stage is the window. Last,
+   so it wins over the narrower widths' own heights. */
+.stageLoading {
+  height: 100vh;
+  height: 100dvh;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .skeleton,
   .veil svg {
