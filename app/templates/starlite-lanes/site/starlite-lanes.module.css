@@ -840,6 +840,26 @@
   border-radius: 6px;
 }
 
+/* The heading and the strike side by side: the ball and pins in the two
+   lit inks, pink for the pins, cyan for the ball. */
+.partyHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.partyHead .head {
+  margin-bottom: 0;
+}
+
+.strike {
+  display: block;
+  width: clamp(12rem, 20vw, 17rem);
+  margin-right: clamp(0rem, 3vw, 3rem);
+}
+
 /* A frame on the score sheet: the mark sits in the small box in its top
    right corner, the way a strike or a spare is written. */
 .frame {
@@ -1104,12 +1124,23 @@
 /* ------------------------------------------------------------------- footer */
 
 .footer {
-  padding: 2.6rem var(--gut) 3rem;
   text-align: center;
   font-size: 0.88rem;
   color: var(--muted);
   border-top: 1px solid var(--pinkLit);
   box-shadow: 0 -1px 14px color-mix(in oklab, var(--pink) 30%, transparent);
+}
+
+.footTubes {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--cyanLit);
+  box-shadow: 0 1px 14px color-mix(in oklab, var(--cyan) 30%, transparent);
+}
+
+.footText {
+  padding: 2.6rem var(--gut) 3rem;
 }
 
 .footer p {
@@ -1154,6 +1185,16 @@
 
   .frames {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .partyHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .strike {
+    order: -1;
+    width: min(62%, 15rem);
+    margin: 0 auto;
   }
 
   .frame + .frame {

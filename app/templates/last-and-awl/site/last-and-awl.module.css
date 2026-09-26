@@ -264,13 +264,31 @@
   text-shadow: 0 3px 0 color-mix(in oklab, var(--bottle) 60%, var(--text));
 }
 
+/* Under the sign: the brogue on its last, engraved in the sign's green like
+   the cut on a trade card, with the words and the three promises beside
+   it. */
 .heroBelow {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-rows: auto auto;
+  gap: 1.6rem clamp(2rem, 5vw, 4rem);
   align-items: center;
   max-width: 60rem;
   margin: clamp(2.2rem, 5vw, 3.2rem) auto 0;
+}
+
+.brogue {
+  grid-row: 1 / span 2;
+  display: block;
+  width: 100%;
+}
+
+.heroBelow .lede {
+  align-self: end;
+}
+
+.heroBelow .promises {
+  align-self: start;
 }
 
 .lede {
@@ -1031,6 +1049,12 @@
   .leatherList,
   .cannot ul {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brogue {
+    grid-row: auto;
+    width: min(100%, 26rem);
+    justify-self: center;
   }
 }
 

@@ -30,6 +30,7 @@
   --rule: color-mix(in oklab, var(--text) 20%, transparent);
   --grid: color-mix(in oklab, var(--text) 9%, transparent);
   --shadow: color-mix(in oklab, var(--text) 26%, transparent);
+  --fold: color-mix(in oklab, var(--text) 50%, var(--paper));
 
   font-family: var(--type);
   font-variation-settings: 'MONO' 1, 'CASL' 1;
@@ -246,6 +247,16 @@
 
 /* The folding sheet: square, turned a little, its top right corner folded
    back to show the plain side. */
+/* The plane, thrown from the words toward the sheet, its dotted loop
+   trailing back over the desk. */
+.plane {
+  position: absolute;
+  z-index: 3;
+  top: -1.5rem;
+  left: -3.5rem;
+  width: 15rem;
+}
+
 .heroSheet {
   position: absolute;
   top: 0;
@@ -924,12 +935,22 @@
 /* ------------------------------------------------------------------- footer */
 
 .footer {
-  padding: 2.4rem var(--gut) 3rem;
-  text-align: center;
   font-size: 0.86rem;
+  text-align: center;
   color: var(--muted);
   background: var(--paper);
-  border-top: 2px dashed var(--rule);
+}
+
+.footStrip {
+  position: relative;
+  height: 80px;
+  overflow: hidden;
+  /* The strip ends on a dashed cut line, like the one under the bar. */
+  border-bottom: 2px dashed var(--rule);
+}
+
+.footText {
+  padding: 2rem var(--gut) 3rem;
 }
 
 .footer p {
@@ -1021,6 +1042,12 @@
   .heroSheet {
     width: min(80%, 20rem);
     justify-self: end;
+  }
+
+  .plane {
+    top: -1rem;
+    left: -0.5rem;
+    width: min(42%, 11rem);
   }
 
   .heroCard {

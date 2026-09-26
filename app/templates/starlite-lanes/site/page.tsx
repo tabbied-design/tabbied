@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { comet, neon } from 'tabbied/patterns';
 import s from './starlite-lanes.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Starlite Lanes: Bowling alley and bar, Orbit Boulevard',
@@ -20,6 +21,7 @@ const VIOLET = '#8b5cf6';
 const TUBES = [NIGHT, PINK, CYAN, VIOLET, STAR];
 const COMETS = [NIGHT, CYAN, STAR, PINK, VIOLET];
 const STRIP = [NIGHT, PINK, CYAN];
+const EXIT = [NIGHT, VIOLET, PINK, STAR];
 
 const NAV = [
   ['Rates', '#rates'],
@@ -388,12 +390,20 @@ export default function StarliteLanesPage() {
         {/* --------------------------------------------------------- PARTIES */}
         <section id="parties" className={s.parties} aria-labelledby="parties-h">
           <div className={s.inner}>
-            <div className={s.head}>
-              <h2 id="parties-h" className={s.neonPink}>Party packages</h2>
-              <p className={s.headNote}>
-                Named for what you write on the score sheet. Book two weeks
-                ahead for a Saturday; a $100 deposit holds the lanes.
-              </p>
+            <div className={s.partyHead}>
+              <div className={s.head}>
+                <h2 id="parties-h" className={s.neonPink}>Party packages</h2>
+                <p className={s.headNote}>
+                  Named for what you write on the score sheet. Book two weeks
+                  ahead for a Saturday; a $100 deposit holds the lanes.
+                </p>
+              </div>
+              <Artwork
+                slug="starlite-lanes-strike"
+                alt="A bowling ball scattering a set of pins, with starbursts around them"
+                inks={{ red: 'var(--pinkLit)', blue: 'var(--cyanLit)' }}
+                className={s.strike}
+              />
             </div>
 
             <ol className={s.frames}>
@@ -508,11 +518,25 @@ export default function StarliteLanesPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Starlite Lanes</p>
-        <p>A fictional bowling alley and bar. The teams, scores, rates and hours are invented.</p>
-        <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
-        </p>
+        {/* The tubes again, over the door on the way out. */}
+        <div className={s.footTubes} aria-hidden="true">
+          <TabbiedPattern
+            pattern={neon}
+            palette={EXIT}
+            fit="grid"
+            cellSize={40}
+            seed="starlite-exit"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
+        <div className={s.footText}>
+          <p className={s.footName}>Starlite Lanes</p>
+          <p>A fictional bowling alley and bar. The teams, scores, rates and hours are invented.</p>
+          <p>
+            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          </p>
+          <p>The strike is a generated image, drawn in the page's own colors.</p>
+        </div>
       </footer>
     </div>
   );

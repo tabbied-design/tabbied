@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { crease, jibboom, waterbomb } from 'tabbied/patterns';
 import s from './paper-plane-stationers.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Paper Plane: Stationery shop, Quill Lane',
@@ -22,6 +23,7 @@ const SHEET_B = [MINT, INK, PINK, PAPER];
 const SHEET_C = [LEMON, PINK, INK, MINT];
 const HERO = [PAPER, INK, PINK, MINT, LEMON];
 const TAPE = [PINK, INK, PAPER, MINT];
+const STRIP = [MINT, INK, PINK, LEMON, PAPER];
 
 const NAV = [
   ['Pens', '#pens'],
@@ -121,6 +123,12 @@ export default function PaperPlaneStationersPage() {
           </div>
 
           <div className={s.heroDesk}>
+            <Artwork
+              slug="paper-plane-stationers-plane"
+              alt="A folded paper plane gliding, a looping dotted line behind it"
+              inks={{ red: 'var(--text)', yellow: 'var(--pinkText)', blue: 'var(--fold)' }}
+              className={s.plane}
+            />
             <div className={s.heroSheet}>
               <div className={s.heroField} aria-hidden="true">
                 <TabbiedPattern
@@ -396,11 +404,25 @@ export default function PaperPlaneStationersPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Paper Plane</p>
-        <p>A fictional stationery shop. The pens, prices and club dates are invented.</p>
-        <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
-        </p>
+        {/* A strip of the house wrapping paper, cut with pinking shears. */}
+        <div className={s.footStrip} aria-hidden="true">
+          <TabbiedPattern
+            pattern={crease}
+            palette={STRIP}
+            fit="grid"
+            cellSize={40}
+            seed="plane-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
+        <div className={s.footText}>
+          <p className={s.footName}>Paper Plane</p>
+          <p>A fictional stationery shop. The pens, prices and club dates are invented.</p>
+          <p>
+            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          </p>
+          <p>The paper plane is a generated image, drawn in the page's own colors.</p>
+        </div>
       </footer>
     </div>
   );

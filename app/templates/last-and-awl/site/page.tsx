@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { corduroy } from 'tabbied/patterns';
 import s from './last-and-awl.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Last & Awl: Shoe and leather repair, Tanner\'s Row',
@@ -183,6 +184,12 @@ export default function LastAndAwlPage() {
           </div>
 
           <div className={s.heroBelow}>
+            <Artwork
+              slug="last-and-awl-brogue"
+              alt="A leather brogue sitting on a wooden shoe last, engraved with hatched shading"
+              inks={['var(--text)']}
+              className={s.brogue}
+            />
             <p className={s.lede}>
               We resole, reheel, restitch and restore shoes, boots, bags and
               belts, at one bench behind one counter, the same way since 1987.
@@ -469,6 +476,7 @@ export default function LastAndAwlPage() {
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>
+          <p>The brogue is a generated image, drawn in the page's own colors.</p>
         </div>
       </footer>
     </div>

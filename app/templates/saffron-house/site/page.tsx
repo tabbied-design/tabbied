@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { diadem, hourglass } from 'tabbied/patterns';
 import s from './saffron-house.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Saffron House: Family-run Indian restaurant, Lantern Street',
@@ -491,6 +492,12 @@ export default function SaffronHousePage() {
               </div>
 
               <div className={s.feastSide}>
+                <Artwork
+                  slug="saffron-house-bowls"
+                  alt="Three brass bowls of curry, dal and rice on a round tray, with a folded flatbread"
+                  inks={{ black: 'var(--teal)', blue: 'var(--gild)', red: 'var(--ruby)' }}
+                  className={s.bowls}
+                />
                 <h3 className={s.sideTitle}>Catering trays</h3>
                 <p className={s.small}>
                   Collected from the side door, hot or ready to reheat. Two
@@ -615,6 +622,7 @@ export default function SaffronHousePage() {
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>
+        <p>The bowls are a generated image, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

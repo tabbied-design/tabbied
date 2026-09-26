@@ -732,6 +732,29 @@
   padding: clamp(4rem, 8vw, 6rem) 0;
 }
 
+/* The drawing of the aid: above the heading on a narrow screen, and out in
+   the margin beside it on a wide one, drawn in the reading ink. */
+.aidsHead {
+  position: relative;
+}
+
+.aidArt {
+  display: block;
+  width: min(42%, 10rem);
+  margin: 0 0 1.4rem;
+}
+
+@media (min-width: 1200px) {
+  /* Its right edge on the price sheet's right edge below it. */
+  .aidArt {
+    position: absolute;
+    top: 0;
+    right: calc((var(--col) - var(--wide)) / 2 + var(--gut));
+    width: 13rem;
+    margin: 0;
+  }
+}
+
 /* One price sheet, three columns joined by rules; the middle band, the one
    most people choose, is set in navy. */
 .aidGrid {

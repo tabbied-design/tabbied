@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { ripplering } from 'tabbied/patterns';
 import s from './clearsound-hearing.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Clearsound Hearing: Hearing clinic and audiology, Alder Avenue',
@@ -347,7 +348,13 @@ export default function ClearsoundHearingPage() {
 
         {/* ------------------------------------------------------------ AIDS */}
         <section id="aids" className={s.aids} aria-labelledby="aids-h">
-          <div className={s.col}>
+          <div className={`${s.col} ${s.aidsHead}`}>
+            <Artwork
+              slug="clearsound-hearing-aid"
+              alt="A behind-the-ear hearing aid with its thin tube and soft dome"
+              inks={['var(--text)']}
+              className={s.aidArt}
+            />
             <p className={s.kicker}>Prices for a pair, everything included</p>
             <h2 id="aids-h">Hearing aids and what they cost</h2>
             <p className={s.note}>
@@ -538,6 +545,7 @@ export default function ClearsoundHearingPage() {
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>
+          <p>The hearing aid is a generated image, drawn in the page's own colors.</p>
         </div>
       </footer>
     </div>

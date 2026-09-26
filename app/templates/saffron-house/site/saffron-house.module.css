@@ -1054,6 +1054,14 @@
   padding-top: 0.5rem;
 }
 
+/* The tray, set at the head of the column like a dish brought to the
+   table: teal tray, gilt bowls, ruby in the dal. */
+.bowls {
+  display: block;
+  width: min(100%, 24rem);
+  margin: -1.5rem auto 1.6rem;
+}
+
 .sideTitle {
   font-size: 1.8rem;
   line-height: 1.1;
@@ -1304,6 +1312,11 @@
   .archFrame {
     width: min(100%, 22rem);
     order: -1;
+  }
+
+  .bowls {
+    width: min(86%, 20rem);
+    margin: 0.5rem auto 1.4rem;
   }
 
   .regions {
