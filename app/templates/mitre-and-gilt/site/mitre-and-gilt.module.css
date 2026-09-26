@@ -202,6 +202,37 @@
   aspect-ratio: 3 / 4;
 }
 
+.artSquare {
+  aspect-ratio: 1;
+}
+
+/* The etching's sheet: the paper it was printed on, inside the mat. */
+.paper {
+  padding: 3% 4%;
+  background: color-mix(in oklab, var(--wall) 22%, var(--anti));
+  box-shadow: 0 0 0 0.22rem color-mix(in oklab, var(--anti) 85%, var(--wall));
+}
+
+.etching {
+  width: 100%;
+}
+
+.frameWalnut {
+  --tone: var(--walnut);
+  --fw: clamp(0.8rem, 1.3vw, 1.1rem);
+}
+
+/* Two mats: the white one, and a narrow green one inside it. */
+.matDouble {
+  padding: clamp(1rem, 2.2vw, 1.7rem);
+}
+
+.matInner {
+  padding: clamp(0.35rem, 0.6vw, 0.5rem);
+  background: var(--green);
+  box-shadow: 0 0 0 0.2rem color-mix(in oklab, var(--anti) 85%, var(--wall));
+}
+
 /* ------------------------------------------------------------ wall labels */
 
 .label {
@@ -330,6 +361,10 @@
 
 .hangSmall {
   margin-bottom: clamp(2rem, 6vw, 5rem);
+}
+
+.hangBig .mat {
+  padding: clamp(0.9rem, 2vw, 1.6rem);
 }
 
 .hangSmall .mat {
@@ -500,6 +535,36 @@
 }
 
 /* -------------------------------------------------------- mats and glass */
+
+.matsHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.matsHead .secHead {
+  margin-bottom: 0;
+}
+
+/* The label hangs to the left of the frame, level with its bottom edge. */
+.matDemo {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-end;
+  gap: 1.3rem;
+}
+
+.matDemo .frame {
+  flex: none;
+  width: clamp(11rem, 16vw, 14rem);
+}
+
+.matDemo .label {
+  max-width: 12rem;
+  margin-top: 0;
+}
 
 .matsGrid {
   display: grid;
@@ -958,6 +1023,19 @@
 
   .salon {
     max-width: 34rem;
+  }
+
+  .matsHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matDemo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .matDemo .label {
+    max-width: none;
   }
 }
 

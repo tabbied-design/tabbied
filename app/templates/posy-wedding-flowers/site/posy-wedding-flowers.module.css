@@ -232,14 +232,51 @@
   background: color-mix(in oklab, var(--green) 80%, var(--rose));
 }
 
-/* The cover picture, with the thin border a printed photo has. */
-.coverPlate {
+/* The cover picture: a field of petals, with an arched window cut into
+   it and the bouquet standing in the window. */
+.coverFigure {
   position: relative;
+  display: grid;
   aspect-ratio: 4 / 4.7;
-  overflow: hidden;
-  background: var(--sheet);
   outline: 1px solid var(--rule);
   outline-offset: 0.7rem;
+}
+
+.coverPlate {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--sheet);
+}
+
+.coverArch {
+  position: relative;
+  display: grid;
+  place-items: end center;
+  width: 64%;
+  height: 80%;
+  margin: auto auto 7%;
+  padding: 8% 4% 5%;
+  box-sizing: border-box;
+  background: var(--sheet);
+  border-radius: 999px 999px 0 0;
+  box-shadow: 0 0 0 0.55rem var(--blush);
+}
+
+.bouquet {
+  width: 118%;
+  max-width: none;
+}
+
+.coverCredit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2.6rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 /* ----------------------------------------------------------------- sections */
@@ -389,6 +426,54 @@
 
 /* -------------------------------------------------------------- the season */
 
+.seasonHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(2.2rem, 4.5vw, 3.4rem);
+}
+
+.seasonHead .secHead {
+  margin-bottom: 0;
+}
+
+/* Three botanical plates, stems down, captions under them. */
+.specimens {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.8rem, 2vw, 1.8rem);
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.specimen {
+  display: grid;
+  justify-items: center;
+}
+
+.specimenArt {
+  height: clamp(9rem, 15vw, 14rem);
+  width: auto;
+  margin-bottom: 0.8rem;
+}
+
+.specimenName {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.specimenWhen {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 .tableWrap {
   overflow-x: auto;
 }
@@ -811,7 +896,7 @@
 .footer {
   max-width: var(--col);
   margin: clamp(5rem, 10vw, 8rem) auto 0;
-  padding: 2.4rem var(--gut) 3rem;
+  padding: 0 var(--gut) 3rem;
   text-align: center;
   font-size: 0.85rem;
   color: var(--muted);
@@ -821,15 +906,23 @@
   margin: 0.3rem 0 0;
 }
 
+/* The back cover: a strip of petals across the top of the footer. */
+.backCover {
+  position: relative;
+  height: clamp(80px, 8vw, 110px);
+  margin: 0 0 2.4rem;
+  overflow: hidden;
+  background: var(--green);
+}
+
 .footer .footName {
   margin: 0 0 0.8rem;
-  padding-top: 2rem;
+  padding-top: 0;
   font-family: var(--serif);
   font-size: 3.4rem;
   font-style: italic;
   line-height: 1;
   color: var(--display-ink);
-  border-top: 1px solid var(--text);
 }
 
 .footer a {
@@ -853,9 +946,23 @@
     margin-top: 1.2rem;
   }
 
-  .coverPlate {
+  .coverFigure {
     order: -1;
-    aspect-ratio: 4 / 3.4;
+    aspect-ratio: 4 / 4.2;
+  }
+
+  .page .coverFigure {
+    margin-bottom: 3.8rem;
+  }
+
+  .coverCredit {
+    top: calc(100% + 1.4rem);
+    bottom: auto;
+    line-height: 1.6;
+  }
+
+  .seasonHead {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .look {

@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { casing, fustian, mitre } from 'tabbied/patterns';
 import s from './mitre-and-gilt.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Mitre & Gilt: Custom picture framing, Lantern Street',
@@ -17,7 +18,7 @@ const GILT = '#b08a3e';
 const WALNUT = '#5b3a25';
 const GREEN = '#2c4a40';
 
-const HANG = ['transparent', INK, GILT, WALNUT, GREEN];
+const DOUBLE = ['transparent', GREEN, GILT, WALNUT, INK];
 const SMALL = ['transparent', INK, GILT, WALL];
 const CLOTH = ['transparent', GREEN, WALL, GILT, INK];
 const WINDOW = ['transparent', GILT, WALL, WALNUT];
@@ -179,22 +180,20 @@ export default function MitreAndGiltPage() {
             <figure className={s.hangBig}>
               <div className={`${s.frame} ${s.frameGilt}`}>
                 <div className={s.mat}>
-                  <div className={s.art} aria-hidden="true">
-                    <TabbiedPattern
-                      pattern={casing}
-                      palette={HANG}
-                      fit="grid"
-                      cellSize={30}
-                      seed="mitre-hang"
-                      style={{ position: 'absolute', inset: 0 }}
+                  <div className={s.paper}>
+                    <Artwork
+                      slug="mitre-and-gilt-stilllife"
+                      alt="An etching of a pear, a small jug and a folded cloth on a tabletop"
+                      inks={['var(--text)']}
+                      className={s.etching}
                     />
                   </div>
                 </div>
               </div>
               <figcaption className={s.label}>
                 <strong className={s.labelName}>No. 1</strong>
-                <span className={s.labelTitle}>Gilded maple, 8-ply mat</span>
-                <span className={s.labelBody}>Museum glass, 20 x 24 in</span>
+                <span className={s.labelTitle}>Still life with pear, an etching</span>
+                <span className={s.labelBody}>Gilded maple, 8-ply mat, museum glass, 24 x 20 in</span>
                 <span className={s.labelPrice}>$386 framed</span>
               </figcaption>
             </figure>
@@ -269,13 +268,39 @@ export default function MitreAndGiltPage() {
 
         {/* ------------------------------------------------ MATS AND GLASS */}
         <section id="mats" className={s.sec} aria-labelledby="mats-h">
-          <div className={s.secHead}>
-            <p className={s.room}>Room III</p>
-            <h2 id="mats-h">Mats and glass</h2>
-            <p className={s.secNote}>
-              The mat keeps the work off the glass and gives it room. The
-              glass decides how long the colors last.
-            </p>
+          <div className={s.matsHead}>
+            <div className={s.secHead}>
+              <p className={s.room}>Room III</p>
+              <h2 id="mats-h">Mats and glass</h2>
+              <p className={s.secNote}>
+                The mat keeps the work off the glass and gives it room. The
+                glass decides how long the colors last.
+              </p>
+            </div>
+            <figure className={s.matDemo}>
+              <div className={`${s.frame} ${s.frameWalnut}`}>
+                <div className={`${s.mat} ${s.matDouble}`}>
+                  <div className={s.matInner}>
+                    <div className={`${s.art} ${s.artSquare}`} aria-hidden="true">
+                      <TabbiedPattern
+                        pattern={casing}
+                        palette={DOUBLE}
+                        fit="grid"
+                        cellSize={28}
+                        seed="mitre-mats"
+                        style={{ position: 'absolute', inset: 0 }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <figcaption className={s.label}>
+                <strong className={s.labelName}>No. 3</strong>
+                <span className={s.labelTitle}>A double mat</span>
+                <span className={s.labelBody}>Walnut, white over green lacquer, 11 x 14 in</span>
+                <span className={s.labelPrice}>$210 framed</span>
+              </figcaption>
+            </figure>
           </div>
           <div className={s.matsGrid}>
             <div>
@@ -395,7 +420,7 @@ export default function MitreAndGiltPage() {
                 </div>
               </div>
               <div className={s.label}>
-                <strong className={s.labelName}>No. 3</strong>
+                <strong className={s.labelName}>No. 4</strong>
                 <span className={s.labelTitle}>Walnut shadow box, 3 in deep</span>
                 <span className={s.labelBody}>A striped shirt stitched to linen, 24 x 30 in</span>
                 <span className={s.labelPrice}>$340 framed</span>
@@ -462,7 +487,7 @@ export default function MitreAndGiltPage() {
                 </div>
               </div>
               <div className={`${s.label} ${s.labelOnGreen}`}>
-                <strong className={s.labelName}>No. 4</strong>
+                <strong className={s.labelName}>No. 5</strong>
                 <span className={s.labelTitle}>Black ash, 4 in mat, museum glass</span>
                 <span className={s.labelBody}>30 x 40 in</span>
                 <span className={s.labelPrice}>$840 framed</span>
@@ -516,7 +541,7 @@ export default function MitreAndGiltPage() {
         <p className={s.footName}>Mitre &amp; Gilt</p>
         <p>A fictional picture framing shop. The mouldings, prices, people and address are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a href="https://tabbied.com">Tabbied</a>; the etching is a generated picture drawn in the page's own colors.
         </p>
       </footer>
     </div>

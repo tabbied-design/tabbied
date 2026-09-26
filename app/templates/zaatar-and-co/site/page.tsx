@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { caltrop, octagon } from 'tabbied/patterns';
 import s from './zaatar-and-co.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: "Za'atar & Co.: Lebanese bakery and mezze, Cedar Row",
@@ -185,6 +186,12 @@ export default function ZaatarAndCoPage() {
           <main id="top">
             {/* --------------------------------------------------------- INTRO */}
             <section className={s.intro} aria-labelledby="intro-h">
+              <Artwork
+                slug="zaatar-and-co-manoushe"
+                alt="A za'atar man'oushe rolled up in a paper sleeve, with a sprig of mint"
+                inks={{ red: 'var(--pomegranate)', yellow: 'var(--oil)', black: 'var(--text)', blue: 'var(--olive)' }}
+                className={s.manoushe}
+              />
               <p className={s.kicker}>Lebanese bakery, Cedar Row</p>
               <h1 id="intro-h" className={s.title}>
                 Man'oushe from the oven, <em>mezze by the tray.</em>
@@ -491,7 +498,7 @@ export default function ZaatarAndCoPage() {
             <p className={s.footName}>Za'atar &amp; Co.</p>
             <p>A fictional Lebanese bakery. The breads, prices, people and address are invented.</p>
             <p>
-              Patterns by <a href="https://tabbied.com">Tabbied</a>.
+              Patterns by <a href="https://tabbied.com">Tabbied</a>; the man'oushe is a generated picture drawn in the page's own colors.
             </p>
           </footer>
         </div>

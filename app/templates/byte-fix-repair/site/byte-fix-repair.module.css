@@ -626,6 +626,39 @@
 
 /* ---------------------------------------------------------- repair status */
 
+/* The ticket's device, on a well like a preview pane. */
+.statusHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.2rem;
+  align-items: start;
+}
+
+.preview {
+  margin: 0;
+}
+
+.device {
+  display: grid;
+  place-items: center;
+  width: clamp(7.5rem, 12vw, 10.5rem);
+  aspect-ratio: 3 / 4;
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.phone {
+  width: 78%;
+}
+
+.deviceName {
+  margin-top: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-align: center;
+}
+
 .ticket {
   display: flex;
   flex-wrap: wrap;
@@ -1373,6 +1406,22 @@
   .fileTable td,
   .fileTable thead th {
     padding-inline: 0.4rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .statusHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .preview {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.8rem;
+  }
+
+  .device {
+    width: 7rem;
   }
 }
 

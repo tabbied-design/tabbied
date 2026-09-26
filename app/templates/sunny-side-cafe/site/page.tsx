@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { bowl, cove, scotia } from 'tabbied/patterns';
 import s from './sunny-side-cafe.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Sunny Side: Breakfast and brunch cafe, Marigold Avenue',
@@ -213,6 +214,12 @@ export default function SunnySidePage() {
               where you point on the meter, and toast: white, wheat, rye or
               sourdough.
             </p>
+            <Artwork
+              slug="sunny-side-cafe-pancakes"
+              alt="A tall stack of pancakes with a pat of butter and syrup running down the sides"
+              inks={{ red: 'var(--orange)', yellow: 'var(--mustard)', blue: 'var(--syrup)', black: 'var(--display-ink)' }}
+              className={s.stack}
+            />
           </div>
 
           <div className={s.card}>
@@ -394,7 +401,7 @@ export default function SunnySidePage() {
         <p className={s.footName}>Sunny Side</p>
         <p>A fictional breakfast and brunch cafe. The menu, prices, people and address are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a href="https://tabbied.com">Tabbied</a>; the pancakes are a generated picture drawn in the page's own colors.
         </p>
       </footer>
     </div>

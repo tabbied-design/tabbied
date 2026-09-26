@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { dotmatrix, notch, tetro } from 'tabbied/patterns';
 import s from './byte-fix-repair.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Byte Fix: Phone and computer repair, Wren Street',
@@ -327,15 +328,29 @@ export default function ByteFixPage() {
               <span className={s.controls} aria-hidden="true"><i /><i /><i /></span>
             </div>
             <div className={s.body}>
-              <h2 id="status-h" className={s.winHeading}>Where is my phone?</h2>
-              <p className={s.winNote}>
-                Every repair gets a ticket and a text at each step. This is
-                what one looks like at ten to twelve on a Tuesday.
-              </p>
-
-              <div className={s.ticket}>
-                <p className={s.ticketNo}>Ticket BF-20417</p>
-                <p className={s.ticketWhat}>iPhone 14, screen replacement</p>
+              <div className={s.statusHead}>
+                <div>
+                  <h2 id="status-h" className={s.winHeading}>Where is my phone?</h2>
+                  <p className={s.winNote}>
+                    Every repair gets a ticket and a text at each step. This is
+                    what one looks like at ten to twelve on a Tuesday.
+                  </p>
+                  <div className={s.ticket}>
+                    <p className={s.ticketNo}>Ticket BF-20417</p>
+                    <p className={s.ticketWhat}>iPhone 14, screen replacement</p>
+                  </div>
+                </div>
+                <figure className={s.preview}>
+                  <div className={s.device}>
+                    <Artwork
+                      slug="byte-fix-repair-phone"
+                      alt="A phone with a cracked screen and a small screwdriver, drawn in pixels"
+                      inks={{ red: 'var(--text)', blue: 'var(--blue)' }}
+                      className={s.phone}
+                    />
+                  </div>
+                  <figcaption className={s.deviceName}>bf-20417.bmp</figcaption>
+                </figure>
               </div>
 
               <div className={s.progress} aria-hidden="true">
@@ -547,7 +562,7 @@ export default function ByteFixPage() {
         <p className={s.start}>Byte Fix</p>
         <p className={s.footNote}>A fictional phone and computer repair shop. The prices, tickets, people and address are invented.</p>
         <p className={s.trayNote}>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a href="https://tabbied.com">Tabbied</a>; the phone is a generated picture drawn in the page's own colors.
         </p>
       </footer>
     </div>

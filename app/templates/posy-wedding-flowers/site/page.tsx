@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { cavetto, foldback, ivy, lobeform, roundpair } from 'tabbied/patterns';
 import s from './posy-wedding-flowers.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Posy: Wedding and event florist, Larkspur Mews',
@@ -23,6 +24,7 @@ const MEADOW = ['transparent', SAGE, GREEN, PETAL];
 const BUDS = ['transparent', ROSE, PETAL, GREEN, BLUSH];
 const TABLE = ['transparent', GREEN, SAGE, ROSE, BLUSH];
 const STUDIO = ['transparent', GREEN, ROSE, SAGE, BLUSH];
+const BACK = ['transparent', ROSE, SAGE, PETAL, GREEN];
 
 const NAV = [
   ['Lookbook', '#lookbook'],
@@ -72,6 +74,13 @@ const STEPS = [
   ['Come to the studio', 'An hour at the long table. Bring your colors, a fabric swatch, pictures you love and pictures you hate. We pull flowers from the cooler as we talk.'],
   ['The proposal', 'Within a week: every piece listed and priced, with the flowers in each and what we will swap them for if a crop fails.'],
   ['Book it', 'A 30% deposit holds the date. The balance is due thirty days before, when the numbers are final.'],
+];
+
+/* Three flowers from the calendar, drawn as botanical plates. */
+const SPECIMENS = [
+  { art: 'posy-wedding-flowers-ranunculus', alt: 'An engraving of a ranunculus on a curving stem, with a bud', name: 'Ranunculus', when: 'March and April' },
+  { art: 'posy-wedding-flowers-peony', alt: 'An engraving of a peony with its bud and two leaves', name: 'Peony', when: 'June, for three weeks' },
+  { art: 'posy-wedding-flowers-dahlia', alt: 'An engraving of a single dahlia on its stem with one leaf', name: 'Dahlia', when: 'August to October' },
 ];
 
 const MONTHS = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
@@ -154,17 +163,28 @@ export default function PosyPage() {
               </ul>
               <a className={s.button} href="#enquire">Ask about your date</a>
             </div>
-            <div className={s.coverPlate} aria-hidden="true">
-              <TabbiedPattern
-                pattern={cavetto}
-                palette={COVER}
-                options={{ frequency: 0.8 }}
-                fit="grid"
-                cellSize={60}
-                seed="posy-cover"
-                style={{ position: 'absolute', inset: 0 }}
-              />
-            </div>
+            <figure className={s.coverFigure}>
+              <div className={s.coverPlate} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={cavetto}
+                  palette={COVER}
+                  options={{ frequency: 0.8 }}
+                  fit="grid"
+                  cellSize={60}
+                  seed="posy-cover"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <div className={s.coverArch}>
+                <Artwork
+                  slug="posy-wedding-flowers-bouquet"
+                  alt="A hand-tied bridal bouquet of peonies, garden roses and trailing greenery, its stems bound in ribbon"
+                  inks={['var(--display-ink)', 'var(--sheet)']}
+                  className={s.bouquet}
+                />
+              </div>
+              <figcaption className={s.coverCredit}>On the cover: peonies, garden roses and jasmine, hand-tied, $240</figcaption>
+            </figure>
           </div>
         </section>
 
@@ -260,14 +280,25 @@ export default function PosyPage() {
 
         {/* ---------------------------------------------------------- SEASON */}
         <section id="season" className={s.sec} aria-labelledby="season-h">
-          <div className={s.secHead}>
-            <p className={s.folio}>Page four</p>
-            <h2 id="season-h">What is in season when</h2>
-            <p className={s.secNote}>
-              Choose by month and the flowers are cheaper, stronger and
-              smell of something. Roses, orchids, eucalyptus and ferns are
-              good all year.
-            </p>
+          <div className={s.seasonHead}>
+            <div className={s.secHead}>
+              <p className={s.folio}>Page four</p>
+              <h2 id="season-h">What is in season when</h2>
+              <p className={s.secNote}>
+                Choose by month and the flowers are cheaper, stronger and
+                smell of something. Roses, orchids, eucalyptus and ferns are
+                good all year.
+              </p>
+            </div>
+            <ul className={s.specimens}>
+              {SPECIMENS.map((f) => (
+                <li key={f.art} className={s.specimen}>
+                  <Artwork slug={f.art} alt={f.alt} inks={['var(--rose-text)']} className={s.specimenArt} />
+                  <span className={s.specimenName}>{f.name}</span>
+                  <span className={s.specimenWhen}>{f.when}</span>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className={s.tableWrap}>
             <table className={s.calendar}>
@@ -442,10 +473,20 @@ export default function PosyPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.backCover} aria-hidden="true">
+          <TabbiedPattern
+            pattern={roundpair}
+            palette={BACK}
+            fit="grid"
+            cellSize={40}
+            seed="posy-back"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <p className={s.footName}>Posy</p>
         <p>A fictional wedding and event florist. The arrangements, prices, people and studio are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a href="https://tabbied.com">Tabbied</a>; the bouquet and the three flowers are generated pictures drawn in the page's own colors.
         </p>
       </footer>
     </div>

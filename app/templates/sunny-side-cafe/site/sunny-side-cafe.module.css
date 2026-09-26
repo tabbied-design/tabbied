@@ -55,6 +55,7 @@
   --muted: color-mix(in oklab, var(--text) 74%, var(--cream));
   --orange-text: color-mix(in oklab, var(--orange) 66%, var(--text));
   --display-ink: color-mix(in oklab, var(--text) 64%, var(--brown));
+  --syrup: color-mix(in oklab, var(--rust) 45%, var(--display-ink));
   --stripes: linear-gradient(var(--orange) 0 33.4%, var(--mustard) 0 66.7%, var(--rust) 0);
 }
 
@@ -403,10 +404,18 @@
 
 .menuHead {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 1rem 3rem;
   align-items: end;
   margin-bottom: 2.4rem;
+}
+
+/* The short stack, set down on the top edge of the menu card. */
+.stack {
+  position: relative;
+  z-index: 1;
+  width: clamp(9rem, 15vw, 13.5rem);
+  margin: -2rem 1.2rem calc(-2.4rem - clamp(2.4rem, 4vw, 3.6rem)) 0;
 }
 
 .menuHead h2 {
@@ -892,6 +901,12 @@
 
   .menuHead {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stack {
+    justify-self: end;
+    width: 9.5rem;
+    margin: 0 0.6rem -3.6rem 0;
   }
 
   .booth {
