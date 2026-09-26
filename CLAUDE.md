@@ -113,6 +113,14 @@ Three things that are explicit here and were implicit or automatic on Vercel:
   would otherwise hand it to anyone. The Worker gates `<slug>-<format>.zip` and passes everything else
   under the folder, the packaged pages the previews read, back to the binding.
 
+**tabbied.com and www.tabbied.com are Worker Custom Domains**, declared in
+`wrangler.jsonc`'s `routes` with `custom_domain: true` and enabled for
+production only (PR previews stay on `*-tabbied.<account>.workers.dev`).
+Cloudflare owns their DNS records. They replaced two zone Routes that hung
+off leftover Vercel A and CNAME records, which a Route needs and a Custom
+Domain refuses: re-creating one means deleting any record on its hostname
+first.
+
 **Redirects live in `public/_redirects`**, beside `_headers` and read the
 same way. The template sites moved from `/template/<slug>/` to
 `/templates/<slug>/site/` (one noun, one tree: the framed preview is
