@@ -61,7 +61,9 @@ export default function SiteNav({
   className,
 }: {
   tone?: NavTone;
-  /** Pin the bar to the top of the viewport (the library scrolls under it). */
+  /** Pin the bar to the top of the viewport (the library scrolls under it).
+      The dark tone is always pinned: both dark artboards (the homepage and
+      the template gallery) draw it so. */
   sticky?: boolean;
   className?: string;
 }) {
@@ -114,7 +116,7 @@ export default function SiteNav({
 
   return (
     <header
-      className={[plexMono.variable, styles.nav, sticky && styles.sticky, className]
+      className={[plexMono.variable, styles.nav, (sticky || tone === 'dark') && styles.sticky, className]
         .filter(Boolean)
         .join(' ')}
       data-tone={tone}
