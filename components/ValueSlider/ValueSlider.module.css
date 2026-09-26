@@ -18,15 +18,29 @@
 }
 
 .control {
+  position: relative;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   width: 100%;
   height: 14px;
-  /* Inset by half the thumb so it never spills past the track at the extremes. */
+  /* Inset by half the thumb so it never spills past the line at the extremes. */
   padding: 0 6px;
   cursor: pointer;
   touch-action: none;
+}
+
+/* The hairline runs the control's whole width, under the inset the thumb
+   travels in, the way a native range draws it: it starts on the label's
+   edge above it rather than half a thumb in. */
+.control::before {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 2px;
+  content: '';
+  border-radius: 2px;
+  background: oklch(0 0 0 / 0.18);
 }
 
 /* The hairline stays 2px; a finger gets a taller control to land on. With
@@ -39,12 +53,11 @@
   }
 }
 
+/* Sized for Base UI's arithmetic; the control draws the line. */
 .track {
   position: relative;
   width: 100%;
   height: 2px;
-  border-radius: 2px;
-  background: oklch(0 0 0 / 0.18);
 }
 
 /* The design draws one uninterrupted hairline and lets the thumb carry the
