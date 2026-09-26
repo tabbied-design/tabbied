@@ -709,7 +709,7 @@
 /* -- The request forms (portaled: fonts named outright) ----------------------- */
 
 .dialog {
-  max-height: calc(100dvh - 40px);
+  max-height: calc(100dvh - 96px);
   overflow-y: auto;
 }
 
