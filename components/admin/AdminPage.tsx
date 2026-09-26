@@ -137,7 +137,7 @@ export default function AdminPage({
     <div className={`${styles.shell} ${plexMono.variable} ${plexSans.variable}`}>
       <aside className={styles.sidebar}>
         <Link href="/" className={styles.logo} aria-label="Tabbied home" prefetch={false}>
-          <Logo />
+          <Logo gap={11} />
         </Link>
 
         <nav className={styles.nav} aria-label="Admin">

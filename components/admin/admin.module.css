@@ -52,7 +52,6 @@
 /* The design's wordmark sits in a 22px line box, so the row is 54px tall
    where the lockup alone would make it 52. */
 .logo {
-  --logo-gap: 11px;
   display: inline-flex;
   align-items: center;
   min-height: 54px;
@@ -545,13 +544,13 @@
   border-top: none;
 }
 
-/* Seven columns need about 1,070px, with room for "Templates chosen" on one
+/* Seven columns need about 1,080px, with room for "Templates chosen" on one
    line as the design sets it; narrower than that the panel scrolls sideways
    rather than crushing the person's name to nothing, and at 1024px and under
    the rows stack instead (below). */
 .userCols {
-  grid-template-columns: minmax(200px, 2fr) 90px 120px 130px 100px 110px minmax(170px, auto);
-  min-width: 1070px;
+  grid-template-columns: minmax(200px, 2fr) 90px 120px 140px 100px 110px minmax(170px, auto);
+  min-width: 1080px;
 }
 
 .person {
