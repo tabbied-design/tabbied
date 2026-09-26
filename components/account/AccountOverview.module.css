@@ -737,6 +737,11 @@
   color: #0e0e13;
 }
 
+/* A legend is no grid item, so the fieldset's gap never reaches it. */
+legend.questionLabel {
+  margin-bottom: 10px;
+}
+
 .chipRow {
   display: flex;
   flex-wrap: wrap;

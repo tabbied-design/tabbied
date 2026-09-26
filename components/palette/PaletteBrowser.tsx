@@ -5,7 +5,7 @@ import { Search, X } from 'lucide-react';
 import type { BrandPalette } from 'lib/brandPalettes';
 import type { LibraryPalette } from 'lib/paletteLibrary';
 import { mergePalettes } from 'lib/paletteList';
-import PaletteRow from './PaletteRow';
+import PaletteListRow from './PaletteListRow';
 import { usePaletteReveal } from './usePaletteReveal';
 import styles from './PaletteBrowser.module.css';
 
@@ -13,11 +13,11 @@ const PAGE = 16;
 
 /**
  * The "All palettes" browser: one merged, searchable, infinitely scrolling
- * list (custom palettes first, then the read-only library). On a phone it
- * takes the gallery's palette slot (variant "rail") or fills the editor's
- * fullscreen sheet (variant "panel"). No "New palette" here: the pencil on a
- * row opens the editor, and saving a library palette's edit is how a new one
- * is made.
+ * list (custom palettes first, then the read-only library), in the rows the
+ * rail and the editor's list use. On a phone it takes the gallery's palette
+ * slot (variant "rail") or fills the editor's fullscreen sheet (variant
+ * "panel"). No "New palette" here: the pencil on a row opens the editor, and
+ * saving a library palette's edit is how a new one is made.
  */
 export default function PaletteBrowser({
   variant,
@@ -63,7 +63,6 @@ export default function PaletteBrowser({
       <div className={styles.head}>
         <div className={styles.headRow}>
           <span className={styles.headTitle}>All palettes</span>
-          <span className={styles.count}>{merged.length} palettes</span>
           <button
             type="button"
             className={styles.close}
@@ -71,14 +70,15 @@ export default function PaletteBrowser({
             aria-label="Close palette browser"
             title="Close"
           >
-            <X size={15} />
+            <X size={17} strokeWidth={1.7} />
           </button>
         </div>
+        {/* The rail's ruled field: the magnifier after the words, and the
+            count in them while the field is empty. */}
         <label className={styles.search}>
-          <Search size={14} aria-hidden="true" />
           <input
             type="text"
-            placeholder="Search palettes"
+            placeholder={`Search ${merged.length} palettes`}
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
@@ -86,6 +86,7 @@ export default function PaletteBrowser({
             }}
             aria-label="Search palettes"
           />
+          <Search size={15} aria-hidden="true" />
         </label>
       </div>
 
@@ -95,16 +96,11 @@ export default function PaletteBrowser({
           const active = palette.id === activeId;
 
           return (
-            <PaletteRow
+            <PaletteListRow
               key={palette.id}
               colors={palette.colors}
-              transparentBackground={
-                kind === 'custom' ? palette.transparentBackground : false
-              }
               name={palette.name || 'Untitled'}
               active={active}
-              showEdit
-              showDelete={kind === 'custom'}
               editLabel={`Edit ${palette.name || 'palette'}${
                 kind === 'library' ? ' (saves as a copy)' : ''
               }`}
