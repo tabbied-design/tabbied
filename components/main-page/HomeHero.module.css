@@ -241,9 +241,9 @@ a.stat:hover .statArrow {
 
 /* -- Responsive ------------------------------------------------------------ */
 
-/* The display sizes step down twice. Without the middle step the 80px headline
-   runs to three lines between 768px and the desktop layout, which is where a
-   portrait tablet sits. */
+/* The display sizes step down twice. Without the middle step the 80px
+   headline's unbroken second line would run past the column between 768px
+   and the desktop layout, which is where a portrait tablet sits. */
 @media (max-width: 1023.98px) {
   .title {
     font-size: min(64px, 7.8vw);

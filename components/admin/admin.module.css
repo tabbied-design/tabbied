@@ -667,7 +667,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 0 0 22px;
+  margin: 0 0 18px;
 }
 
 .tab {
@@ -688,38 +688,81 @@
 
 .requests {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .request {
-  padding: 22px 24px;
+  padding: 22px 26px;
   background: #fff;
-  border: 1px solid oklch(0 0 0 / 0.1);
+  border: 1px solid var(--a-line);
   border-radius: 14px;
 }
 
+/* The actions keep to the top edge of the card, beside the name. */
 .requestHead {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
+  gap: 20px;
+  align-items: flex-start;
   justify-content: space-between;
 }
 
+.requestAvatar {
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+}
+
+.requestName {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+  margin: 0;
+  font: 600 16px var(--a-sans);
+  overflow-wrap: anywhere;
+}
+
+/* Three lines under the name: the address and dates, then (for a later
+   round) what they asked for in ink, then their answers. */
 .requestMeta {
-  margin: 3px 0 0;
+  margin: 4px 0 0;
   font: 400 13px var(--a-sans);
   color: var(--a-dim);
 }
 
+.requestName + .requestMeta {
+  margin-top: 0;
+}
+
+.requestAsk {
+  color: var(--a-ink);
+}
+
+.requestAnswers {
+  color: oklch(0.4 0.01 260);
+}
+
+.requestMeta a,
+.requestMeta a:hover {
+  color: inherit;
+}
+
+.requestMeta a:hover,
+.metaLink {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
 .roundBadge {
-  display: inline-block;
-  margin-left: 6px;
   padding: 3px 9px;
   font: 500 11.5px var(--a-sans);
   color: oklch(0.45 0.01 260);
   white-space: nowrap;
-  vertical-align: 2px;
   background: oklch(0 0 0 / 0.05);
   border-radius: 999px;
 }
@@ -733,9 +776,9 @@
   margin: 16px 0 0;
   padding: 14px 16px;
   font: 400 14.5px / 1.6 var(--a-sans);
-  color: var(--a-ink);
+  color: oklch(0.3 0.01 260);
   white-space: pre-wrap;
-  background: oklch(0 0 0 / 0.028);
+  background: oklch(0 0 0 / 0.03);
   border-radius: 10px;
 }
 
@@ -746,17 +789,38 @@
   align-items: center;
 }
 
+.decided {
+  gap: 14px;
+}
+
+.decline {
+  padding: 8px 16px;
+  font: 500 13.5px var(--a-sans);
+  color: oklch(0.4 0.01 260);
+  white-space: nowrap;
+  background: #fff;
+  border: 1px solid oklch(0 0 0 / 0.14);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.decline:hover:enabled {
+  background: oklch(0 0 0 / 0.035);
+}
+
 .stepper {
   display: flex;
   align-items: center;
   overflow: hidden;
+  background: #fff;
   border: 1px solid oklch(0 0 0 / 0.14);
   border-radius: 999px;
 }
 
 .stepper button {
-  width: 32px;
+  width: 34px;
   height: 34px;
+  padding: 0;
   font: 400 16px var(--a-sans);
   color: var(--a-ink);
   background: #fff;
@@ -770,19 +834,30 @@
 }
 
 .stepper span {
-  min-width: 22px;
+  min-width: 28px;
   font: 600 14px var(--a-sans);
   text-align: center;
 }
 
 .grant {
   padding: 8px 16px;
-  font: 600 13.5px var(--a-sans);
+  font: 500 13.5px var(--a-sans);
   color: #fff;
+  white-space: nowrap;
   background: var(--a-ink);
-  border: none;
+  border: 1px solid var(--a-ink);
   border-radius: 999px;
   cursor: pointer;
+}
+
+.grant:hover:enabled {
+  background: #25252e;
+}
+
+.decline:disabled,
+.grant:disabled {
+  cursor: default;
+  opacity: 0.5;
 }
 
 .outcome {
@@ -799,9 +874,11 @@
 }
 
 .undo {
+  padding: 0;
   font: 400 13px var(--a-sans);
-  color: var(--a-dim);
+  color: var(--a-muted);
   text-decoration: underline;
+  text-underline-offset: 3px;
   background: none;
   border: none;
   cursor: pointer;

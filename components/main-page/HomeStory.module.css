@@ -149,10 +149,6 @@ a.stat:hover .statLink {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
-
-  .statNumber {
-    font-size: 44px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

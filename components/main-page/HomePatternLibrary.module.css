@@ -58,11 +58,12 @@
 .body {
   margin: 0 0 28px;
   font: 400 16px / 1.6 var(--h-sans);
-  color: var(--h-ink-muted);
+  /* A step darker than the page's other body copy, as the artboard sets it. */
+  color: oklch(0.4 0.01 260);
 }
 
-/* The brand gradient in a pill with a hairline, the same button the editor's
-   Export wears. */
+/* The brand gradient in a pill, with no outline: every artboard draws this
+   button with `border: none`. */
 .cta {
   display: inline-flex;
   gap: 10px;
@@ -71,7 +72,7 @@
   font: 500 16px var(--h-display);
   color: var(--h-ink);
   background: linear-gradient(135deg, #3ff0b2, #2ee6f0);
-  border: 1px solid var(--h-ink);
+  border: none;
   border-radius: 999px;
   transition: filter 200ms ease;
 }
@@ -159,7 +160,7 @@
 
 @media (max-width: 767.98px) {
   .section {
-    padding: 100px 0 48px;
+    padding: 64px 0;
   }
 
   .rowHeader {

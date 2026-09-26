@@ -1,7 +1,7 @@
 'use client';
 
 import type { CSSProperties } from 'react';
-import { Pencil, X } from 'lucide-react';
+import { PenLine, X } from 'lucide-react';
 import styles from './PaletteListRow.module.css';
 
 /** The most inks a row shows; a palette with more is still whole in the editor. */
@@ -62,7 +62,7 @@ export default function PaletteListRow({
         title={editTitle}
         onClick={onEdit}
       >
-        <Pencil size={13} />
+        <PenLine size={13} strokeWidth={1.7} />
       </button>
       {onDelete && (
         <button

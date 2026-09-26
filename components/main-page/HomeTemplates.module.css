@@ -197,7 +197,7 @@
   font: 500 16px var(--h-display);
   color: var(--h-ink);
   background: linear-gradient(135deg, #3ff0b2, #2ee6f0);
-  border: 1px solid var(--h-ink);
+  border: none;
   border-radius: 999px;
   transition: filter 200ms ease;
 }
@@ -225,6 +225,10 @@
 }
 
 @media (max-width: 767.98px) {
+  .section {
+    padding-top: 64px;
+  }
+
   .rowHeader {
     flex-wrap: wrap;
     gap: 10px;
