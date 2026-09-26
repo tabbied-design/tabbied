@@ -25,7 +25,7 @@ export default function LocalBusinessSite({ business, pattern }: { business: Loc
   const vars = { '--paper': paper, '--ink': ink, '--accent': accent, '--soft': soft, '--line': line } as CSSProperties;
 
   return (
-    <div className={s.page} style={vars} data-edit-root="localBusiness">
+    <div className={s.page} style={vars} data-edit-root="vars" data-edit-vars="paper,ink,accent,soft,line">
       <header className={s.header}>
         <a className={s.brand} href="#" data-edit="brand.name" data-edit-max="30">{business.name}</a>
         <nav className={s.nav} aria-label="Main navigation">
@@ -44,7 +44,7 @@ export default function LocalBusinessSite({ business, pattern }: { business: Loc
             <div className={s.actions}><a className={s.primary} href="#contact">Get a free estimate</a><a className={s.secondary} href="#services">See services</a></div>
             <p className={s.area} data-edit="contact.area" data-edit-max="80">Serving {business.area}</p>
           </div>
-          <div className={s.pattern} aria-hidden="true">
+          <div className={s.pattern} aria-hidden="true" data-edit-pattern="hero.field" data-edit-roles="0,1,2,3,4">
             <TabbiedPattern pattern={pattern} palette={business.colors} fit="cover" density={0.58} height="100%" />
             <span className={s.patternLabel}>Local. Skilled. Ready.</span>
           </div>
@@ -57,7 +57,7 @@ export default function LocalBusinessSite({ business, pattern }: { business: Loc
 
         <section className={s.promise}>
           <div><p className={s.eyebrow}>Our promise</p><h2 data-edit="promise" data-edit-multiline data-edit-max="180">{business.promise}</h2></div>
-          <div className={s.miniPattern} aria-hidden="true"><TabbiedPattern pattern={pattern} palette={[soft, ink, accent, line, paper]} fit="cover" density={0.35} height="100%" /></div>
+          <div className={s.miniPattern} aria-hidden="true" data-edit-pattern="promise.field" data-edit-roles="3,1,2,4,0"><TabbiedPattern pattern={pattern} palette={[soft, ink, accent, line, paper]} fit="cover" density={0.35} height="100%" /></div>
         </section>
 
         <section className={s.process} id="process">
@@ -65,7 +65,7 @@ export default function LocalBusinessSite({ business, pattern }: { business: Loc
           <ol>{business.steps.map((step, i) => <li key={step.title}><span>{i + 1}</span><div><h3 data-edit={`steps.${i}.title`} data-edit-max="36">{step.title}</h3><p data-edit={`steps.${i}.detail`} data-edit-multiline data-edit-max="160">{step.detail}</p></div></li>)}</ol>
         </section>
 
-        <section className={s.testimonial}><blockquote data-edit="testimonial.quote" data-edit-multiline data-edit-max="240">&ldquo;{business.quote}&rdquo;</blockquote><p data-edit="testimonial.by" data-edit-max="60">{business.quoteBy}</p></section>
+        <section className={s.testimonial}><blockquote data-edit="testimonial.quote" data-edit-multiline data-edit-max="240">{business.quote}</blockquote><p data-edit="testimonial.by" data-edit-max="60">{business.quoteBy}</p></section>
 
         <section className={s.contact} id="contact">
           <div><p className={s.eyebrow}>Book a visit</p><h2>Tell us what you need.</h2><p>Call <a href={`tel:${business.phone.replace(/[^+\d]/g, '')}`}>{business.phone}</a> or send a few details. We reply by the next working day.</p></div>
