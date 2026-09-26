@@ -103,7 +103,20 @@ const PEOPLE = [
 
 export default function TackAndButtonPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--calico': '#efe8dc',
+        '--ink': '#221c1e',
+        '--oxblood': '#6e1f2b',
+        '--bottle': '#1f4a40',
+        '--midnight': '#26305a',
+        '--brass': '#b98a2e',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="calico,ink,oxblood,bottle,midnight,brass"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -114,17 +127,17 @@ export default function TackAndButtonPage() {
 
       <header className={s.bar}>
         <a className={s.mark} href="#top">
-          <span className={s.markName}>Tack & Button</span>
-          <span className={s.markSub}>Upholstery workshop</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Tack & Button</span>
+          <span data-edit="bar.markSub" data-edit-max="60" className={s.markSub}>Upholstery workshop</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -135,24 +148,24 @@ export default function TackAndButtonPage() {
             label plate, beside the headline. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>No. 9 Weaver's Row. Upholsterers since 1998.</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>No. 9 Weaver's Row. Upholsterers since 1998.</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Good chairs, <em>re-covered</em> for another fifty years.
             </h1>
-            <p className={s.heroLead}>
+            <p data-edit="hero.heroLead" data-edit-max="240" data-edit-multiline className={s.heroLead}>
               We strip old furniture to the frame, rebuild it the traditional
               way with webbing, springs and horsehair, and cover it in a fabric
               you chose from the book. Bring us the chair your grandmother sat
               in. We will not tell you to buy a new one.
             </p>
             <div className={s.heroActions}>
-              <a className={s.button} href="#quote">Send us a photo</a>
-              <a className={s.textLink} href="#pieces">What it costs</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#quote">Send us a photo</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#pieces">What it costs</a>
             </div>
           </div>
           <div className={s.coverWrap}>
           <div className={s.cover}>
-            <div className={s.tufted} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2" className={s.tufted} aria-hidden="true">
               <TabbiedPattern
                 pattern={buttonhole}
                 palette={TUFTED}
@@ -163,9 +176,9 @@ export default function TackAndButtonPage() {
               />
             </div>
             <div className={s.plate}>
-              <p className={s.plateName}>Swatch book</p>
-              <p className={s.plateNo}>Vol. 7</p>
-              <p className={s.plateNote}>Velvets, cords, tweeds and tickings, autumn</p>
+              <p data-edit="hero.plateName" data-edit-max="240" data-edit-multiline className={s.plateName}>Swatch book</p>
+              <p data-edit="hero.plateNo" data-edit-max="240" data-edit-multiline className={s.plateNo}>Vol. 7</p>
+              <p data-edit="hero.plateNote" data-edit-max="240" data-edit-multiline className={s.plateNote}>Velvets, cords, tweeds and tickings, autumn</p>
             </div>
           </div>
           <div className={s.wingback}>
@@ -183,9 +196,9 @@ export default function TackAndButtonPage() {
             The price list, set as the book's index. */}
         <section id="pieces" className={s.sec} aria-labelledby="pieces-h">
           <div className={s.secHead}>
-            <p className={s.tab}>Section A</p>
-            <h2 id="pieces-h" className={s.secTitle}>What we re-cover, and roughly what it costs</h2>
-            <p className={s.secNote}>
+            <p data-edit="pieces.tab" data-edit-max="240" data-edit-multiline className={s.tab}>Section A</p>
+            <h2 data-edit="pieces.secTitle" data-edit-max="60" id="pieces-h" className={s.secTitle}>What we re-cover, and roughly what it costs</h2>
+            <p data-edit="pieces.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Labour and materials for the rebuild, not the top fabric. Every
               quote is fixed once we have seen the piece, and it holds for three
               months.
@@ -193,25 +206,25 @@ export default function TackAndButtonPage() {
           </div>
           <div className={s.tableWrap}>
             <table className={s.pieces}>
-              <caption className={s.srOnly}>Upholstery prices by piece</caption>
+              <caption data-edit="pieces.srOnly" className={s.srOnly}>Upholstery prices by piece</caption>
               <thead>
                 <tr>
-                  <th scope="col">Piece</th>
-                  <th scope="col">From</th>
-                  <th scope="col">Fabric</th>
-                  <th scope="col">Weeks</th>
+                  <th data-edit="pieces.heading" scope="col">Piece</th>
+                  <th data-edit="pieces.heading2" scope="col">From</th>
+                  <th data-edit="pieces.heading3" scope="col">Fabric</th>
+                  <th data-edit="pieces.heading4" scope="col">Weeks</th>
                 </tr>
               </thead>
               <tbody>
-                {PIECES.map((p) => (
+                {PIECES.map((p, i) => (
                   <tr key={p.piece}>
                     <th scope="row">
-                      <span className={s.pieceName}>{p.piece}</span>
-                      <span className={s.pieceNote}>{p.note}</span>
+                      <span data-edit={`pieces.pieceName.${i}`} data-edit-max="60" className={s.pieceName}>{p.piece}</span>
+                      <span data-edit={`pieces.pieceNote.${i}`} data-edit-max="60" className={s.pieceNote}>{p.note}</span>
                     </th>
-                    <td className={s.pieceLabour}>{p.labour}</td>
-                    <td>{p.fabric}</td>
-                    <td>{p.weeks}</td>
+                    <td data-edit={`pieces.pieceLabour.${i}`} className={s.pieceLabour}>{p.labour}</td>
+                    <td data-edit={`pieces.cell.${i}`}>{p.fabric}</td>
+                    <td data-edit={`pieces.cell2.${i}`}>{p.weeks}</td>
                   </tr>
                 ))}
               </tbody>
@@ -224,9 +237,9 @@ export default function TackAndButtonPage() {
             frame, grouped into the three stages of the job. */}
         <section id="rebuild" className={s.sec} aria-labelledby="rebuild-h">
           <div className={s.secHead}>
-            <p className={s.tab}>Section B</p>
-            <h2 id="rebuild-h" className={s.secTitle}>Strip, rebuild, cover</h2>
-            <p className={s.secNote}>
+            <p data-edit="rebuild.tab" data-edit-max="240" data-edit-multiline className={s.tab}>Section B</p>
+            <h2 data-edit="rebuild.secTitle" data-edit-max="60" id="rebuild-h" className={s.secTitle}>Strip, rebuild, cover</h2>
+            <p data-edit="rebuild.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A traditional seat, cut through. A modern one swaps the springs and
               hair for webbing and foam; we do both, and tell you which the chair
               was built for.
@@ -235,7 +248,7 @@ export default function TackAndButtonPage() {
           <div className={s.rebuild}>
             <ol className={s.layers}>
               <li className={s.layer}>
-                <div className={`${s.layerBand} ${s.lTop}`} aria-hidden="true">
+                <div data-edit-pattern="rebuild.field" data-edit-roles="transparent,2" className={`${s.layerBand} ${s.lTop}`} aria-hidden="true">
                   <TabbiedPattern
                     pattern={buttonhole}
                     palette={TOPCOVER}
@@ -245,18 +258,18 @@ export default function TackAndButtonPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-                <span className={s.layerNo}>10</span>
-                <span className={s.layerName}>Top cover</span>
-                <span className={s.layerWhat}>Pattern centered, piped, buttoned if it was, finished with close-nailed tacks or a braid</span>
-                <span className={s.layerStage}>Cover</span>
+                <span data-edit="rebuild.layerNo" data-edit-max="60" className={s.layerNo}>10</span>
+                <span data-edit="rebuild.layerName" data-edit-max="60" className={s.layerName}>Top cover</span>
+                <span data-edit="rebuild.layerWhat" data-edit-max="60" className={s.layerWhat}>Pattern centered, piped, buttoned if it was, finished with close-nailed tacks or a braid</span>
+                <span data-edit="rebuild.layerStage" data-edit-max="60" className={s.layerStage}>Cover</span>
               </li>
-              {LAYERS.map((l) => (
+              {LAYERS.map((l, i) => (
                 <li key={l.no} className={s.layer}>
                   <span className={`${s.layerBand} ${s[l.kind]}`} aria-hidden="true" />
-                  <span className={s.layerNo}>{l.no}</span>
-                  <span className={s.layerName}>{l.name}</span>
-                  <span className={s.layerWhat}>{l.what}</span>
-                  <span className={s.layerStage}>{l.stage}</span>
+                  <span data-edit={`rebuild.layerNo2.${i}`} data-edit-max="60" className={s.layerNo}>{l.no}</span>
+                  <span data-edit={`rebuild.layerName2.${i}`} data-edit-max="60" className={s.layerName}>{l.name}</span>
+                  <span data-edit={`rebuild.layerWhat2.${i}`} data-edit-max="60" className={s.layerWhat}>{l.what}</span>
+                  <span data-edit={`rebuild.layerStage2.${i}`} data-edit-max="60" className={s.layerStage}>{l.stage}</span>
                 </li>
               ))}
             </ol>
@@ -265,9 +278,9 @@ export default function TackAndButtonPage() {
                 <div key={t} className={s.stage}>
                   <dt>
                     <span className={s.stageNo}>{`0${i + 1}`}</span>
-                    <span className={s.stageName}>{t}</span>
+                    <span data-edit={`rebuild.stageName.${i}`} data-edit-max="60" className={s.stageName}>{t}</span>
                   </dt>
-                  <dd>{d}</dd>
+                  <dd data-edit={`rebuild.body.${i}`} data-edit-max="200" data-edit-multiline>{d}</dd>
                 </div>
               ))}
             </dl>
@@ -278,9 +291,9 @@ export default function TackAndButtonPage() {
             The book itself: four swatches pinked and stapled to their cards. */}
         <section id="swatches" className={s.sec} aria-labelledby="swatches-h">
           <div className={s.secHead}>
-            <p className={s.tab}>Section C</p>
-            <h2 id="swatches-h" className={s.secTitle}>Fabric by the meter</h2>
-            <p className={s.secNote}>
+            <p data-edit="swatches.tab" data-edit-max="240" data-edit-multiline className={s.tab}>Section C</p>
+            <h2 data-edit="swatches.secTitle" data-edit-max="60" id="swatches-h" className={s.secTitle}>Fabric by the meter</h2>
+            <p data-edit="swatches.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               All 140 cm wide unless it says so. Borrow the book for a weekend,
               or ask for cuttings to hold against your walls: five free, then a
               dollar each.
@@ -289,7 +302,7 @@ export default function TackAndButtonPage() {
           <ul className={s.swatches}>
             <li className={s.swatch}>
               <div className={s.cloth}>
-                <div className={`${s.clothField} ${s.velvetGround}`} aria-hidden="true">
+                <div data-edit-pattern="swatches.field" data-edit-roles="transparent,5,2,0,2" className={`${s.clothField} ${s.velvetGround}`} aria-hidden="true">
                   <TabbiedPattern
                     pattern={mercerising}
                     palette={VELVET}
@@ -300,26 +313,26 @@ export default function TackAndButtonPage() {
                   />
                 </div>
               </div>
-              <p className={s.catNo}>TB-0412</p>
-              <h3 className={s.clothName}>Cotton velvet, oxblood</h3>
+              <p data-edit="swatches.catNo" data-edit-max="240" data-edit-multiline className={s.catNo}>TB-0412</p>
+              <h3 data-edit="swatches.clothName" data-edit-max="40" className={s.clothName}>Cotton velvet, oxblood</h3>
               <dl className={s.spec}>
                 <div>
-                  <dt>Fiber</dt>
-                  <dd>100% cotton pile</dd>
+                  <dt data-edit="swatches.term" data-edit-max="28">Fiber</dt>
+                  <dd data-edit="swatches.body" data-edit-max="200" data-edit-multiline>100% cotton pile</dd>
                 </div>
                 <div>
-                  <dt>Rubs</dt>
-                  <dd>45,000</dd>
+                  <dt data-edit="swatches.term2" data-edit-max="28">Rubs</dt>
+                  <dd data-edit="swatches.body2" data-edit-max="200" data-edit-multiline>45,000</dd>
                 </div>
                 <div>
-                  <dt>Per meter</dt>
-                  <dd>$68</dd>
+                  <dt data-edit="swatches.term3" data-edit-max="28">Per meter</dt>
+                  <dd data-edit="swatches.body3" data-edit-max="200" data-edit-multiline>$68</dd>
                 </div>
               </dl>
             </li>
             <li className={s.swatch}>
               <div className={s.cloth}>
-                <div className={`${s.clothField} ${s.cordGround}`} aria-hidden="true">
+                <div data-edit-pattern="swatches.field2" data-edit-roles="transparent,1,3,1" className={`${s.clothField} ${s.cordGround}`} aria-hidden="true">
                   <TabbiedPattern
                     pattern={corduroy}
                     palette={CORD}
@@ -330,26 +343,26 @@ export default function TackAndButtonPage() {
                   />
                 </div>
               </div>
-              <p className={s.catNo}>TB-0388</p>
-              <h3 className={s.clothName}>Basketweave, bottle</h3>
+              <p data-edit="swatches.catNo2" data-edit-max="240" data-edit-multiline className={s.catNo}>TB-0388</p>
+              <h3 data-edit="swatches.clothName2" data-edit-max="40" className={s.clothName}>Basketweave, bottle</h3>
               <dl className={s.spec}>
                 <div>
-                  <dt>Fiber</dt>
-                  <dd>Wool and cotton</dd>
+                  <dt data-edit="swatches.term4" data-edit-max="28">Fiber</dt>
+                  <dd data-edit="swatches.body4" data-edit-max="200" data-edit-multiline>Wool and cotton</dd>
                 </div>
                 <div>
-                  <dt>Rubs</dt>
-                  <dd>60,000</dd>
+                  <dt data-edit="swatches.term5" data-edit-max="28">Rubs</dt>
+                  <dd data-edit="swatches.body5" data-edit-max="200" data-edit-multiline>60,000</dd>
                 </div>
                 <div>
-                  <dt>Per meter</dt>
-                  <dd>$54</dd>
+                  <dt data-edit="swatches.term6" data-edit-max="28">Per meter</dt>
+                  <dd data-edit="swatches.body6" data-edit-max="200" data-edit-multiline>$54</dd>
                 </div>
               </dl>
             </li>
             <li className={s.swatch}>
               <div className={s.cloth}>
-                <div className={`${s.clothField} ${s.tweedGround}`} aria-hidden="true">
+                <div data-edit-pattern="swatches.field3" data-edit-roles="transparent,4,0,4,5" className={`${s.clothField} ${s.tweedGround}`} aria-hidden="true">
                   <TabbiedPattern
                     pattern={fustian}
                     palette={TWEED}
@@ -360,26 +373,26 @@ export default function TackAndButtonPage() {
                   />
                 </div>
               </div>
-              <p className={s.catNo}>TB-0290</p>
-              <h3 className={s.clothName}>Wool tweed, midnight</h3>
+              <p data-edit="swatches.catNo3" data-edit-max="240" data-edit-multiline className={s.catNo}>TB-0290</p>
+              <h3 data-edit="swatches.clothName3" data-edit-max="40" className={s.clothName}>Wool tweed, midnight</h3>
               <dl className={s.spec}>
                 <div>
-                  <dt>Fiber</dt>
-                  <dd>100% wool, woven in Wales</dd>
+                  <dt data-edit="swatches.term7" data-edit-max="28">Fiber</dt>
+                  <dd data-edit="swatches.body7" data-edit-max="200" data-edit-multiline>100% wool, woven in Wales</dd>
                 </div>
                 <div>
-                  <dt>Rubs</dt>
-                  <dd>40,000</dd>
+                  <dt data-edit="swatches.term8" data-edit-max="28">Rubs</dt>
+                  <dd data-edit="swatches.body8" data-edit-max="200" data-edit-multiline>40,000</dd>
                 </div>
                 <div>
-                  <dt>Per meter</dt>
-                  <dd>$89</dd>
+                  <dt data-edit="swatches.term9" data-edit-max="28">Per meter</dt>
+                  <dd data-edit="swatches.body9" data-edit-max="200" data-edit-multiline>$89</dd>
                 </div>
               </dl>
             </li>
             <li className={s.swatch}>
               <div className={s.cloth}>
-                <div className={`${s.clothField} ${s.tickGround}`} aria-hidden="true">
+                <div data-edit-pattern="swatches.field4" data-edit-roles="transparent,5,1,5" className={`${s.clothField} ${s.tickGround}`} aria-hidden="true">
                   <TabbiedPattern
                     pattern={percale}
                     palette={TICKING}
@@ -390,32 +403,32 @@ export default function TackAndButtonPage() {
                   />
                 </div>
               </div>
-              <p className={s.catNo}>TB-0175</p>
-              <h3 className={s.clothName}>Ticking stripe, brass</h3>
+              <p data-edit="swatches.catNo4" data-edit-max="240" data-edit-multiline className={s.catNo}>TB-0175</p>
+              <h3 data-edit="swatches.clothName4" data-edit-max="40" className={s.clothName}>Ticking stripe, brass</h3>
               <dl className={s.spec}>
                 <div>
-                  <dt>Fiber</dt>
-                  <dd>Linen and cotton</dd>
+                  <dt data-edit="swatches.term10" data-edit-max="28">Fiber</dt>
+                  <dd data-edit="swatches.body10" data-edit-max="200" data-edit-multiline>Linen and cotton</dd>
                 </div>
                 <div>
-                  <dt>Rubs</dt>
-                  <dd>30,000</dd>
+                  <dt data-edit="swatches.term11" data-edit-max="28">Rubs</dt>
+                  <dd data-edit="swatches.body11" data-edit-max="200" data-edit-multiline>30,000</dd>
                 </div>
                 <div>
-                  <dt>Per meter</dt>
-                  <dd>$38</dd>
+                  <dt data-edit="swatches.term12" data-edit-max="28">Per meter</dt>
+                  <dd data-edit="swatches.body12" data-edit-max="200" data-edit-multiline>$38</dd>
                 </div>
               </dl>
             </li>
           </ul>
           <div className={s.more}>
-            <h3 className={s.moreTitle}>Also in the book</h3>
+            <h3 data-edit="swatches.moreTitle" data-edit-max="40" className={s.moreTitle}>Also in the book</h3>
             <ul className={s.moreList}>
-              {MORE_FABRIC.map(([no, name, price]) => (
+              {MORE_FABRIC.map(([no, name, price], i) => (
                 <li key={no}>
-                  <span className={s.moreNo}>{no}</span>
-                  <span className={s.moreName}>{name}</span>
-                  <span className={s.morePrice}>{price}</span>
+                  <span data-edit={`swatches.moreNo.${i}`} data-edit-max="60" className={s.moreNo}>{no}</span>
+                  <span data-edit={`swatches.moreName.${i}`} data-edit-max="60" className={s.moreName}>{name}</span>
+                  <span data-edit={`swatches.morePrice.${i}`} data-edit-max="60" className={s.morePrice}>{price}</span>
                 </li>
               ))}
             </ul>
@@ -426,18 +439,18 @@ export default function TackAndButtonPage() {
         <section id="own" className={s.sec} aria-labelledby="own-h">
           <div className={s.ownGrid}>
             <div>
-              <p className={s.tab}>Section D</p>
-              <h2 id="own-h" className={s.secTitle}>Bringing your own fabric</h2>
-              <p className={s.secNote}>
+              <p data-edit="own.tab" data-edit-max="240" data-edit-multiline className={s.tab}>Section D</p>
+              <h2 data-edit="own.secTitle" data-edit-max="60" id="own-h" className={s.secTitle}>Bringing your own fabric</h2>
+              <p data-edit="own.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Welcome, and no surcharge. A few things to check before you
                 order it, because we cannot un-cut a meter.
               </p>
             </div>
             <dl className={s.own}>
-              {OWN.map(([t, d]) => (
+              {OWN.map(([t, d], i) => (
                 <div key={t}>
-                  <dt>{t}</dt>
-                  <dd>{d}</dd>
+                  <dt data-edit={`own.term.${i}`} data-edit-max="28">{t}</dt>
+                  <dd data-edit={`own.body.${i}`} data-edit-max="200" data-edit-multiline>{d}</dd>
                 </div>
               ))}
             </dl>
@@ -449,32 +462,32 @@ export default function TackAndButtonPage() {
         <section id="van" className={s.vanSec} aria-labelledby="van-h">
           <div className={s.vanGrid}>
             <div className={s.vanText}>
-              <p className={s.tabLight}>Section E</p>
-              <h2 id="van-h" className={s.vanTitle}>Pickup and delivery</h2>
-              <p className={s.vanLead}>
+              <p data-edit="van.tabLight" data-edit-max="240" data-edit-multiline className={s.tabLight}>Section E</p>
+              <h2 data-edit="van.vanTitle" data-edit-max="60" id="van-h" className={s.vanTitle}>Pickup and delivery</h2>
+              <p data-edit="van.vanLead" data-edit-max="240" data-edit-multiline className={s.vanLead}>
                 The van goes out on Tuesdays and Fridays with two of us, blankets
                 and a trolley. Stairs are fine. We wrap everything on the way back
                 so it arrives as clean as it left the bench.
               </p>
               <ul className={s.zones}>
-                {ZONES.map((z) => (
+                {ZONES.map((z, i) => (
                   <li key={z.zone}>
-                    <span className={s.zoneName}>{z.zone}</span>
-                    <span className={s.zoneReach}>{z.reach}</span>
-                    <span className={s.zonePrice}>{z.price}</span>
+                    <span data-edit={`van.zoneName.${i}`} data-edit-max="60" className={s.zoneName}>{z.zone}</span>
+                    <span data-edit={`van.zoneReach.${i}`} data-edit-max="60" className={s.zoneReach}>{z.reach}</span>
+                    <span data-edit={`van.zonePrice.${i}`} data-edit-max="60" className={s.zonePrice}>{z.price}</span>
                   </li>
                 ))}
               </ul>
-              <p className={s.vanNote}>Dining sets: we leave four folding chairs with you while yours are away.</p>
+              <p data-edit="van.vanNote" data-edit-max="240" data-edit-multiline className={s.vanNote}>Dining sets: we leave four folding chairs with you while yours are away.</p>
             </div>
             <div className={s.rings} aria-hidden="true">
               <span className={`${s.ring} ${s.ring3}`} />
               <span className={`${s.ring} ${s.ring2}`} />
               <span className={`${s.ring} ${s.ring1}`} />
               <span className={s.pin} />
-              <span className={`${s.ringLabel} ${s.rl1}`}>1</span>
-              <span className={`${s.ringLabel} ${s.rl2}`}>2</span>
-              <span className={`${s.ringLabel} ${s.rl3}`}>3</span>
+              <span data-edit="van.ringLabel" data-edit-max="60" className={`${s.ringLabel} ${s.rl1}`}>1</span>
+              <span data-edit="van.ringLabel2" data-edit-max="60" className={`${s.ringLabel} ${s.rl2}`}>2</span>
+              <span data-edit="van.ringLabel3" data-edit-max="60" className={`${s.ringLabel} ${s.rl3}`}>3</span>
             </div>
           </div>
         </section>
@@ -482,17 +495,17 @@ export default function TackAndButtonPage() {
         {/* -------------------------------------------------------- WORKSHOP */}
         <section id="workshop" className={s.sec} aria-labelledby="workshop-h">
           <div className={s.secHead}>
-            <p className={s.tab}>Section F</p>
-            <h2 id="workshop-h" className={s.secTitle}>At the bench</h2>
-            <p className={s.secNote}>Three of us, one long room, a radio and about nine thousand tacks.</p>
+            <p data-edit="workshop.tab" data-edit-max="240" data-edit-multiline className={s.tab}>Section F</p>
+            <h2 data-edit="workshop.secTitle" data-edit-max="60" id="workshop-h" className={s.secTitle}>At the bench</h2>
+            <p data-edit="workshop.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>Three of us, one long room, a radio and about nine thousand tacks.</p>
           </div>
           <ul className={s.people}>
-            {PEOPLE.map((p) => (
+            {PEOPLE.map((p, i) => (
               <li key={p.name} className={s.person}>
-                <h3 className={s.personName}>{p.name}</h3>
-                <p className={s.personRole}>{p.role}</p>
-                <p className={s.personSince}>{p.since}</p>
-                <p className={s.personNote}>{p.note}</p>
+                <h3 data-edit={`workshop.personName.${i}`} data-edit-max="40" className={s.personName}>{p.name}</h3>
+                <p data-edit={`workshop.personRole.${i}`} data-edit-max="240" data-edit-multiline className={s.personRole}>{p.role}</p>
+                <p data-edit={`workshop.personSince.${i}`} data-edit-max="240" data-edit-multiline className={s.personSince}>{p.since}</p>
+                <p data-edit={`workshop.personNote.${i}`} data-edit-max="240" data-edit-multiline className={s.personNote}>{p.note}</p>
               </li>
             ))}
           </ul>
@@ -502,35 +515,35 @@ export default function TackAndButtonPage() {
         <section id="quote" className={s.sec} aria-labelledby="quote-h">
           <div className={s.quoteGrid}>
             <div>
-              <p className={s.tab}>Section G</p>
-              <h2 id="quote-h" className={s.secTitle}>Get a quote from a photo</h2>
-              <p className={s.secNote}>
+              <p data-edit="quote.tab" data-edit-max="240" data-edit-multiline className={s.tab}>Section G</p>
+              <h2 data-edit="quote.secTitle" data-edit-max="60" id="quote-h" className={s.secTitle}>Get a quote from a photo</h2>
+              <p data-edit="quote.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Three photos do it: the front, the side, and underneath if you
                 can tip it over. We reply within two working days with a price
                 range and the meters of fabric it needs.
               </p>
               <div className={s.visit}>
-                <p className={s.visitLine}>9 Weaver's Row, Old Dye Works, unit 4</p>
-                <p className={s.visitLine}>Tuesday to Saturday, 9 to 5. Drop-ins welcome, chairs too.</p>
+                <p data-edit="quote.visitLine" data-edit-max="240" data-edit-multiline className={s.visitLine}>9 Weaver's Row, Old Dye Works, unit 4</p>
+                <p data-edit="quote.visitLine2" data-edit-max="240" data-edit-multiline className={s.visitLine}>Tuesday to Saturday, 9 to 5. Drop-ins welcome, chairs too.</p>
                 <p className={s.visitLine}>
-                  <a href="tel:+15550137740">(555) 013-7740</a>
+                  <a data-edit="quote.link" data-edit-max="28" href="tel:+15550137740">(555) 013-7740</a>
                 </p>
                 <p className={s.visitLine}>
-                  <a href="mailto:bench@tackandbutton.example">bench@tackandbutton.example</a>
+                  <a data-edit="quote.link2" data-edit-max="28" href="mailto:bench@tackandbutton.example">bench@tackandbutton.example</a>
                 </p>
               </div>
             </div>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="tb-name">Name</label>
+                <label data-edit="quote.label" htmlFor="tb-name">Name</label>
                 <input id="tb-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="tb-email">Email</label>
+                <label data-edit="quote.label2" htmlFor="tb-email">Email</label>
                 <input id="tb-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.field}>
-                <label htmlFor="tb-piece">The piece</label>
+                <label data-edit="quote.label3" htmlFor="tb-piece">The piece</label>
                 <select id="tb-piece" name="piece" defaultValue="armchair">
                   <option value="dining">Dining chairs</option>
                   <option value="armchair">Armchair</option>
@@ -541,36 +554,36 @@ export default function TackAndButtonPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="tb-how">How many</label>
+                <label data-edit="quote.label4" htmlFor="tb-how">How many</label>
                 <input id="tb-how" name="count" type="text" inputMode="numeric" />
               </div>
               <fieldset className={`${s.field} ${s.fieldWide} ${s.fieldset}`}>
-                <legend>Fabric</legend>
+                <legend data-edit="quote.legend">Fabric</legend>
                 <div className={s.picks}>
                   <input id="tb-f1" type="radio" name="fabric" value="book" defaultChecked />
-                  <label htmlFor="tb-f1">From your book</label>
+                  <label data-edit="quote.label5" htmlFor="tb-f1">From your book</label>
                   <input id="tb-f2" type="radio" name="fabric" value="own" />
-                  <label htmlFor="tb-f2">I have my own</label>
+                  <label data-edit="quote.label6" htmlFor="tb-f2">I have my own</label>
                   <input id="tb-f3" type="radio" name="fabric" value="unsure" />
-                  <label htmlFor="tb-f3">Not sure yet</label>
+                  <label data-edit="quote.label7" htmlFor="tb-f3">Not sure yet</label>
                 </div>
               </fieldset>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="tb-photos">Photos</label>
+                <label data-edit="quote.label8" htmlFor="tb-photos">Photos</label>
                 <input id="tb-photos" name="photos" type="file" accept="image/*" multiple />
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="tb-notes">What is wrong with it, if anything</label>
+                <label data-edit="quote.label9" htmlFor="tb-notes">What is wrong with it, if anything</label>
                 <textarea id="tb-notes" name="notes" rows={4} />
               </div>
-              <button className={s.submit} type="submit">Send for a quote</button>
+              <button data-edit="quote.submit" data-edit-max="24" className={s.submit} type="submit">Send for a quote</button>
             </form>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footTufted} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3" className={s.footTufted} aria-hidden="true">
           <TabbiedPattern
             pattern={buttonhole}
             palette={DEEP}
@@ -581,11 +594,11 @@ export default function TackAndButtonPage() {
           />
         </div>
         <div className={s.footInner}>
-          <p className={s.footName}>Tack & Button</p>
-          <p>A fictional upholstery workshop. The fabrics, prices, people and address are invented.</p>
-          <p>The wingback is a generated image, drawn in the page's own colors.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Tack & Button</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional upholstery workshop. The fabrics, prices, people and address are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The wingback is a generated image, drawn in the page's own colors.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
         </div>
       </footer>

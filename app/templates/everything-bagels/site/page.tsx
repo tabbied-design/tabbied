@@ -164,7 +164,19 @@ const FAQ = [
 
 export default function EverythingBagelsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fff4dc',
+        '--ink': '#15120e',
+        '--mustard': '#f2b227',
+        '--tomato': '#c93a22',
+        '--crust': '#b86a2d',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,mustard,tomato,crust"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -174,15 +186,15 @@ export default function EverythingBagelsPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Everything Bagel Co.</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Everything Bagel Co.</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -191,21 +203,21 @@ export default function EverythingBagelsPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Kettle Street, Mill District. Since 2011</p>
-            <h1 id="hero-h" className={s.title}>Boiled, baked, <em>gone by two.</em></h1>
-            <p className={s.lede}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Kettle Street, Mill District. Since 2011</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>Boiled, baked, <em>gone by two.</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Hand-rolled bagels, boiled in malt water and baked on the stone,
               from 6:30 every morning. Pick a bagel, pick a schmear, get in
               line. It moves fast.
             </p>
             <div className={s.ctas}>
-              <a className={s.btn} href="#builder">Build a bagel</a>
-              <a className={s.btnGhost} href="#catering">Order a box</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#builder">Build a bagel</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#catering">Order a box</a>
             </div>
           </div>
 
           <div className={s.heroPlate}>
-            <div className={s.tray} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="2,4,1,0,4,3" className={s.tray} aria-hidden="true">
               <TabbiedPattern
                 pattern={rimband}
                 palette={TRAY}
@@ -215,16 +227,16 @@ export default function EverythingBagelsPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <p className={s.stickerRed}>13 for the price of 12</p>
-            <p className={s.stickerRound}>Hot at 6:30</p>
+            <p data-edit="hero.stickerRed" data-edit-max="240" data-edit-multiline className={s.stickerRed}>13 for the price of 12</p>
+            <p data-edit="hero.stickerRound" data-edit-max="240" data-edit-multiline className={s.stickerRound}>Hot at 6:30</p>
           </div>
         </section>
 
         <ul className={s.facts}>
-          {FACTS.map(([big, small]) => (
+          {FACTS.map(([big, small], i) => (
             <li key={big}>
-              <strong>{big}</strong>
-              <span>{small}</span>
+              <strong data-edit={`top.emphasis.${i}`}>{big}</strong>
+              <span data-edit={`top.text.${i}`} data-edit-max="60">{small}</span>
             </li>
           ))}
         </ul>
@@ -232,9 +244,9 @@ export default function EverythingBagelsPage() {
         {/* --------------------------------------------------------- BUILDER */}
         <section id="builder" className={s.sec} aria-labelledby="builder-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>01</p>
-            <h2 id="builder-h">Build it</h2>
-            <p className={s.secNote}>
+            <p data-edit="builder.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>01</p>
+            <h2 data-edit="builder.title" data-edit-max="60" id="builder-h">Build it</h2>
+            <p data-edit="builder.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Bagel down the side, schmear across the top. Where the two meet is
               what you pay. The star is what most people order.
             </p>
@@ -243,26 +255,26 @@ export default function EverythingBagelsPage() {
           <div className={s.builder}>
             <div className={s.matrixBox}>
               <table className={s.matrix}>
-                <caption className={s.srOnly}>Price of each bagel with each schmear</caption>
+                <caption data-edit="builder.srOnly" className={s.srOnly}>Price of each bagel with each schmear</caption>
                 <thead>
                   <tr>
-                    <th scope="col" className={s.corner}>Bagel</th>
-                    {SCHMEARS.map((name) => (
+                    <th data-edit="builder.corner" scope="col" className={s.corner}>Bagel</th>
+                    {SCHMEARS.map((name, i) => (
                       <th key={name} scope="col">
-                        <span>{name}</span>
+                        <span data-edit={`builder.text.${i}`} data-edit-max="60">{name}</span>
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {BAGELS.map((b) => (
+                  {BAGELS.map((b, i) => (
                     <tr key={b.name}>
                       <th scope="row">
-                        <span className={s.bagelName}>{b.name}</span>
-                        <span className={s.bagelNote}>{b.note}</span>
+                        <span data-edit={`builder.bagelName.${i}`} data-edit-max="60" className={s.bagelName}>{b.name}</span>
+                        <span data-edit={`builder.bagelNote.${i}`} data-edit-max="60" className={s.bagelNote}>{b.note}</span>
                       </th>
                       {b.prices.map((price, j) => (
-                        <td key={SCHMEARS[j]} className={j === b.pick ? s.pick : undefined}>{price}</td>
+                        <td data-edit={`builder.pick.${i}.${j}`} key={SCHMEARS[j]} className={j === b.pick ? s.pick : undefined}>{price}</td>
                       ))}
                     </tr>
                   ))}
@@ -277,17 +289,17 @@ export default function EverythingBagelsPage() {
                 inks={{ red: 'var(--crust)', yellow: 'var(--paper)', black: 'var(--ink)', blue: 'var(--mustard)' }}
                 className={s.pileArt}
               />
-              <h3 id="pile-h" className={s.pileTitle}>Pile it on</h3>
+              <h3 data-edit="pile.pileTitle" data-edit-max="40" id="pile-h" className={s.pileTitle}>Pile it on</h3>
               <ul className={s.pileList}>
-                {PILE.map(([what, price]) => (
+                {PILE.map(([what, price], i) => (
                   <li key={what}>
-                    <span>{what}</span>
+                    <span data-edit={`pile.text.${i}`} data-edit-max="60">{what}</span>
                     <span className={s.dots} aria-hidden="true" />
-                    <span className={s.pilePrice}>{price}</span>
+                    <span data-edit={`pile.pilePrice.${i}`} data-edit-max="60" className={s.pilePrice}>{price}</span>
                   </li>
                 ))}
               </ul>
-              <p className={s.pileNote}>
+              <p data-edit="pile.pileNote" data-edit-max="240" data-edit-multiline className={s.pileNote}>
                 A bagel on its own is $1.75, or $2 for pumpernickel, cinnamon
                 raisin and egg. Toasting is free. Tofu scallion swaps in for any
                 schmear at the scallion price.
@@ -297,7 +309,7 @@ export default function EverythingBagelsPage() {
         </section>
 
         {/* The seed band: the topping on an everything, spilled on the counter. */}
-        <div className={s.seeds} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,1,4,1,2,4" className={s.seeds} aria-hidden="true">
           <TabbiedPattern
             pattern={peppering}
             palette={SEEDS}
@@ -311,24 +323,24 @@ export default function EverythingBagelsPage() {
         {/* ----------------------------------------------------------- BOARD */}
         <section id="board" className={s.sec} aria-labelledby="board-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>02</p>
-            <h2 id="board-h">The board</h2>
-            <p className={s.secNote}>
+            <p data-edit="board.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02</p>
+            <h2 data-edit="board.title" data-edit-max="60" id="board-h">The board</h2>
+            <p data-edit="board.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Six we have already built for you. Say the number at the counter,
               it is quicker for everybody.
             </p>
           </div>
 
           <ol className={s.board}>
-            {BOARD.map((b) => (
+            {BOARD.map((b, i) => (
               <li key={b.no}>
-                <span className={s.boardNo}>{b.no}</span>
+                <span data-edit={`board.boardNo.${i}`} data-edit-max="60" className={s.boardNo}>{b.no}</span>
                 <div className={s.boardBody}>
-                  <h3>{b.name}</h3>
-                  <p>{b.what}</p>
+                  <h3 data-edit={`board.title2.${i}`} data-edit-max="40">{b.name}</h3>
+                  <p data-edit={`board.body.${i}`} data-edit-max="240" data-edit-multiline>{b.what}</p>
                 </div>
-                <span className={s.boardPrice}>{b.price}</span>
-                {b.tag ? <span className={s.tag}>{b.tag}</span> : null}
+                <span data-edit={`board.boardPrice.${i}`} data-edit-max="60" className={s.boardPrice}>{b.price}</span>
+                {b.tag ? <span data-edit={`board.tag.${i}`} data-edit-max="60" className={s.tag}>{b.tag}</span> : null}
               </li>
             ))}
           </ol>
@@ -338,18 +350,18 @@ export default function EverythingBagelsPage() {
         <section id="dozen" className={`${s.sec} ${s.dozenSec}`} aria-labelledby="dozen-h">
           <div className={s.dozen}>
             <div className={s.dozenText}>
-              <p className={s.secNo}>03</p>
-              <h2 id="dozen-h">Thirteen to the <em>dozen.</em></h2>
-              <p className={s.secNote}>
+              <p data-edit="dozen.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03</p>
+              <h2 data-edit="dozen.title" data-edit-format="emphasis" data-edit-max="60" id="dozen-h">Thirteen to the <em>dozen.</em></h2>
+              <p data-edit="dozen.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Bakers used to throw in the thirteenth so nobody could say they
                 were short. We still do, every day, any mix you like.
               </p>
               <dl className={s.rules}>
-                {DOZEN_RULES.map(([what, note, price]) => (
+                {DOZEN_RULES.map(([what, note, price], i) => (
                   <div key={what}>
-                    <dt>{what}</dt>
-                    <dd className={s.ruleNote}>{note}</dd>
-                    <dd className={s.rulePrice}>{price}</dd>
+                    <dt data-edit={`dozen.term.${i}`} data-edit-max="28">{what}</dt>
+                    <dd data-edit={`dozen.ruleNote.${i}`} data-edit-max="200" data-edit-multiline className={s.ruleNote}>{note}</dd>
+                    <dd data-edit={`dozen.rulePrice.${i}`} data-edit-max="200" data-edit-multiline className={s.rulePrice}>{price}</dd>
                   </div>
                 ))}
               </dl>
@@ -362,7 +374,7 @@ export default function EverythingBagelsPage() {
                 ))}
                 <span className={`${s.ring} ${s.ringFree}`} />
               </div>
-              <p className={s.bagLabel}>Number thirteen is on us</p>
+              <p data-edit="dozen.bagLabel" data-edit-max="240" data-edit-multiline className={s.bagLabel}>Number thirteen is on us</p>
             </div>
           </div>
         </section>
@@ -370,9 +382,9 @@ export default function EverythingBagelsPage() {
         {/* -------------------------------------------------------- CATERING */}
         <section id="catering" className={s.sec} aria-labelledby="catering-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>04</p>
-            <h2 id="catering-h">Catering boxes</h2>
-            <p className={s.secNote}>
+            <p data-edit="catering.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>04</p>
+            <h2 data-edit="catering.title" data-edit-max="60" id="catering-h">Catering boxes</h2>
+            <p data-edit="catering.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Two days' notice, please. Everything comes halved and ready,
               with the knives. Delivery in the Mill District is $10, free over
               $150, from 7 am.
@@ -380,23 +392,23 @@ export default function EverythingBagelsPage() {
           </div>
 
           <div className={s.boxes}>
-            {CATERING.map((box) => (
+            {CATERING.map((box, i) => (
               <article key={box.name} className={s.box}>
-                <h3 className={s.boxName}>{box.name}</h3>
-                <p className={s.boxServes}>{box.serves}</p>
+                <h3 data-edit={`box.boxName.${i}`} data-edit-max="40" className={s.boxName}>{box.name}</h3>
+                <p data-edit={`box.boxServes.${i}`} data-edit-max="240" data-edit-multiline className={s.boxServes}>{box.serves}</p>
                 <ul className={s.boxList}>
-                  {box.holds.map((h) => (
-                    <li key={h}>{h}</li>
+                  {box.holds.map((h, i2) => (
+                    <li data-edit={`box.item.${i}.${i2}`} data-edit-max="80" key={h}>{h}</li>
                   ))}
                 </ul>
-                <p className={s.boxPrice}>{box.price}</p>
+                <p data-edit={`box.boxPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.boxPrice}>{box.price}</p>
               </article>
             ))}
           </div>
 
           <div className={s.orderRow}>
             <div className={s.orderSide}>
-              <div className={s.orderPlate} aria-hidden="true">
+              <div data-edit-pattern="catering.field" data-edit-roles="3,0,2,1,0,4" className={s.orderPlate} aria-hidden="true">
                 <TabbiedPattern
                   pattern={rimband}
                   palette={BOXES}
@@ -406,26 +418,26 @@ export default function EverythingBagelsPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.orderSticker}>The Office Box, lid off</p>
+              <p data-edit="catering.orderSticker" data-edit-max="240" data-edit-multiline className={s.orderSticker}>The Office Box, lid off</p>
             </div>
 
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Order a box</h3>
+              <h3 data-edit="catering.formTitle" data-edit-max="40" className={s.formTitle}>Order a box</h3>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="eb-name">Name</label>
+                  <label data-edit="catering.label" htmlFor="eb-name">Name</label>
                   <input id="eb-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="eb-phone">Phone</label>
+                  <label data-edit="catering.label2" htmlFor="eb-phone">Phone</label>
                   <input id="eb-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="eb-date">Day and time</label>
+                  <label data-edit="catering.label3" htmlFor="eb-date">Day and time</label>
                   <input id="eb-date" name="when" type="datetime-local" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="eb-box">Box</label>
+                  <label data-edit="catering.label4" htmlFor="eb-box">Box</label>
                   <select id="eb-box" name="box" defaultValue="office">
                     <option value="small">The Small Box, $48</option>
                     <option value="office">The Office Box, $98</option>
@@ -433,12 +445,12 @@ export default function EverythingBagelsPage() {
                   </select>
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="eb-notes">Flavors, schmears, delivery address</label>
+                  <label data-edit="catering.label5" htmlFor="eb-notes">Flavors, schmears, delivery address</label>
                   <textarea id="eb-notes" name="notes" rows={3} />
                 </div>
               </div>
-              <button className={s.btn} type="submit">Send the order</button>
-              <p className={s.formNote}>We call to confirm before anything is rolled. Pay on pickup or on delivery.</p>
+              <button data-edit="catering.btn" data-edit-max="24" className={s.btn} type="submit">Send the order</button>
+              <p data-edit="catering.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>We call to confirm before anything is rolled. Pay on pickup or on delivery.</p>
             </form>
           </div>
         </section>
@@ -446,20 +458,20 @@ export default function EverythingBagelsPage() {
         {/* ---------------------------------------------------------- KETTLE */}
         <section id="kettle" className={s.sec} aria-labelledby="kettle-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>05</p>
-            <h2 id="kettle-h">From the kettle</h2>
-            <p className={s.secNote}>
+            <p data-edit="kettle.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05</p>
+            <h2 data-edit="kettle.title" data-edit-max="60" id="kettle-h">From the kettle</h2>
+            <p data-edit="kettle.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A bagel takes about seventeen hours here. Most of that is it
               sitting in the cold, thinking.
             </p>
           </div>
 
           <ol className={s.kettle}>
-            {KETTLE.map(([time, step, what]) => (
+            {KETTLE.map(([time, step, what], i) => (
               <li key={step}>
-                <span className={s.kettleTime}>{time}</span>
-                <h3 className={s.kettleStep}>{step}</h3>
-                <p>{what}</p>
+                <span data-edit={`kettle.kettleTime.${i}`} data-edit-max="60" className={s.kettleTime}>{time}</span>
+                <h3 data-edit={`kettle.kettleStep.${i}`} data-edit-max="40" className={s.kettleStep}>{step}</h3>
+                <p data-edit={`kettle.body.${i}`} data-edit-max="240" data-edit-multiline>{what}</p>
               </li>
             ))}
           </ol>
@@ -469,19 +481,19 @@ export default function EverythingBagelsPage() {
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.visit}>
             <div className={s.visitCard}>
-              <p className={s.secNo}>06</p>
-              <h2 id="visit-h">Kettle Street</h2>
-              <p className={s.address}>
+              <p data-edit="visit.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>06</p>
+              <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Kettle Street</h2>
+              <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 88 Kettle Street, Mill District
                 <br />
                 across from the tram depot
               </p>
               <p className={s.contact}>
-                <a href="tel:+15550132211">(555) 013-2211</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550132211">(555) 013-2211</a>
                 <br />
-                <a href="mailto:hello@everythingbagel.example">hello@everythingbagel.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@everythingbagel.example">hello@everythingbagel.example</a>
               </p>
-              <p className={s.small}>
+              <p data-edit="visit.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 Cash and card. The line goes out the door at 8 on Saturdays and
                 is inside again by 8:20. One step at the door; we will bring it
                 out to you if you knock on the window.
@@ -489,22 +501,22 @@ export default function EverythingBagelsPage() {
             </div>
 
             <div className={s.hoursBox}>
-              <h3 className={s.hoursTitle}>Hours</h3>
+              <h3 data-edit="visit.hoursTitle" data-edit-max="40" className={s.hoursTitle}>Hours</h3>
               <dl className={s.hours}>
-                {HOURS.map(([day, time]) => (
+                {HOURS.map(([day, time], i) => (
                   <div key={day}>
-                    <dt>{day}</dt>
-                    <dd>{time}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{day}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.hoursNote}>Or until the everything runs out.</p>
-              <h3 className={s.lineTitle}>The line</h3>
+              <p data-edit="visit.hoursNote" data-edit-max="240" data-edit-multiline className={s.hoursNote}>Or until the everything runs out.</p>
+              <h3 data-edit="visit.lineTitle" data-edit-max="40" className={s.lineTitle}>The line</h3>
               <ul className={s.line}>
-                {LINE.map(([when, wait]) => (
+                {LINE.map(([when, wait], i) => (
                   <li key={when}>
-                    <span>{when}</span>
-                    <span className={s.lineWait}>{wait}</span>
+                    <span data-edit={`visit.text.${i}`} data-edit-max="60">{when}</span>
+                    <span data-edit={`visit.lineWait.${i}`} data-edit-max="60" className={s.lineWait}>{wait}</span>
                   </li>
                 ))}
               </ul>
@@ -513,14 +525,14 @@ export default function EverythingBagelsPage() {
 
           <div className={s.faq}>
             <div className={s.faqHead}>
-              <h3 className={s.faqTitle}>Asked at the counter</h3>
-              <p className={s.faqNote}>Five questions we hear before 8 am, most mornings.</p>
+              <h3 data-edit="visit.faqTitle" data-edit-max="40" className={s.faqTitle}>Asked at the counter</h3>
+              <p data-edit="visit.faqNote" data-edit-max="240" data-edit-multiline className={s.faqNote}>Five questions we hear before 8 am, most mornings.</p>
             </div>
             <div className={s.faqList}>
-              {FAQ.map(([q, a]) => (
+              {FAQ.map(([q, a], i) => (
                 <details key={q} className={s.q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`visit.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`visit.body2.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
@@ -529,7 +541,7 @@ export default function EverythingBagelsPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,4,0,3,2" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={rimband}
             palette={FOOT}
@@ -540,11 +552,11 @@ export default function EverythingBagelsPage() {
           />
         </div>
         <div className={s.footText}>
-          <p className={s.footName}>Everything Bagel Co.</p>
-          <p>A fictional bagel shop. The bagels, prices, people and address are invented.</p>
-          <p>The bagel on the counter is a generated image, drawn in the page's colors.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Everything Bagel Co.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional bagel shop. The bagels, prices, people and address are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The bagel on the counter is a generated image, drawn in the page's colors.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
         </div>
       </footer>

@@ -128,7 +128,18 @@ const HOURS = [
 
 export default function SecondLifeVintagePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--black': '#111111',
+        '--paper': '#f1eee4',
+        '--pink': '#ff2d8a',
+        '--lime': '#c5f12e',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="black,paper,pink,lime"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -138,15 +149,15 @@ export default function SecondLifeVintagePage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Second Life</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Second Life</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -155,24 +166,24 @@ export default function SecondLifeVintagePage() {
         {/* ----------------------------------------------------------- COVER */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.issue}>Issue 12. Fall. Free, take one.</p>
-            <h1 id="hero-h" className={s.name}>
+            <p data-edit="hero.issue" data-edit-max="240" data-edit-multiline className={s.issue}>Issue 12. Fall. Free, take one.</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.name}>
               Second <em>Life</em>
             </h1>
-            <p className={s.vintage}>Vintage, 1960 to 2005</p>
-            <p className={s.typed}>
+            <p data-edit="hero.vintage" data-edit-max="240" data-edit-multiline className={s.vintage}>Vintage, 1960 to 2005</p>
+            <p data-edit="hero.typed" data-edit-max="240" data-edit-multiline className={s.typed}>
               Used clothes from the sixties to the early two-thousands, picked
               by hand, washed, mended where they needed it and priced fair.
               Under the laundromat sign on Mercer Row since 2014.
             </p>
             <p className={s.ctas}>
-              <a className={s.btn} href="#drops">The drop calendar</a>
-              <a className={s.btnAlt} href="#buy">Sell us your clothes</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#drops">The drop calendar</a>
+              <a data-edit="hero.btnAlt" data-edit-max="28" className={s.btnAlt} href="#buy">Sell us your clothes</a>
             </p>
           </div>
 
           <div className={s.heroArt}>
-            <div className={s.cutout} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,0,2,3,0,2" className={s.cutout} aria-hidden="true">
               <TabbiedPattern
                 pattern={mixtape}
                 palette={CUTOUT}
@@ -183,15 +194,15 @@ export default function SecondLifeVintagePage() {
               />
             </div>
             <ul className={s.stickers}>
-              {STICKERS.map((t) => (
-                <li key={t}>{t}</li>
+              {STICKERS.map((t, i) => (
+                <li data-edit={`hero.item.${i}`} data-edit-max="80" key={t}>{t}</li>
               ))}
             </ul>
           </div>
         </section>
 
         {/* The tape: a strip of the cover pattern across the page. */}
-        <div className={s.tape} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,0,1,3,0,1" className={s.tape} aria-hidden="true">
           <TabbiedPattern
             pattern={mixtape}
             palette={TAPE}
@@ -205,9 +216,9 @@ export default function SecondLifeVintagePage() {
         {/* ---------------------------------------------------------- DROPS */}
         <section id="drops" className={s.sec} aria-labelledby="drops-h">
           <div className={s.secHead}>
-            <p className={s.page2}>p. 2</p>
-            <h2 id="drops-h" className={s.labelPink}>October drops</h2>
-            <p className={s.secNote}>
+            <p data-edit="drops.page2" data-edit-max="240" data-edit-multiline className={s.page2}>p. 2</p>
+            <h2 data-edit="drops.labelPink" data-edit-max="60" id="drops-h" className={s.labelPink}>October drops</h2>
+            <p data-edit="drops.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Circle the days. The Friday rack goes out at noon and the good
               stuff is gone by two, so the line starts at half eleven.
             </p>
@@ -215,19 +226,19 @@ export default function SecondLifeVintagePage() {
 
           <div className={s.calWrap}>
             <div className={s.calendar}>
-              <p className={s.month}>October</p>
+              <p data-edit="drops.month" data-edit-max="240" data-edit-multiline className={s.month}>October</p>
               <ol className={s.days}>
-                {WEEKDAYS.map((d) => (
-                  <li key={d} className={s.dow}>{d}</li>
+                {WEEKDAYS.map((d, i) => (
+                  <li data-edit={`drops.dow.${i}`} data-edit-max="80" key={d} className={s.dow}>{d}</li>
                 ))}
-                {OCTOBER.map((d) => (
+                {OCTOBER.map((d, i) => (
                   <li
                     key={d.n}
                     className={[s.day, d.first ? s.first : '', d.closed ? s.closed : '', d.kind ? s.hasDrop : ''].join(' ')}
                   >
-                    <span className={s.dayWd}>{d.wd}</span>
-                    <span className={s.dayNum}>{d.n}</span>
-                    {d.label ? <span className={`${s.drop} ${s[d.kind]}`}>{d.label}</span> : null}
+                    <span data-edit={`drops.dayWd.${i}`} data-edit-max="60" className={s.dayWd}>{d.wd}</span>
+                    <span data-edit={`drops.dayNum.${i}`} data-edit-max="60" className={s.dayNum}>{d.n}</span>
+                    {d.label ? <span data-edit={`drops.drop.${i}`} data-edit-max="60" className={`${s.drop} ${s[d.kind]}`}>{d.label}</span> : null}
                   </li>
                 ))}
               </ol>
@@ -235,14 +246,14 @@ export default function SecondLifeVintagePage() {
 
             <div className={s.calSide}>
               <dl className={s.legend}>
-                {LEGEND.map(([k, v, kind]) => (
+                {LEGEND.map(([k, v, kind], i) => (
                   <div key={k}>
-                    <dt className={`${s.drop} ${s[kind]}`}>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`drops.drop2.${i}`} data-edit-max="28" className={`${s.drop} ${s[kind]}`}>{k}</dt>
+                    <dd data-edit={`drops.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
-              <div className={s.dots} aria-hidden="true">
+              <div data-edit-pattern="drops.field" data-edit-roles="transparent,0,2" className={s.dots} aria-hidden="true">
                 <TabbiedPattern
                   pattern={halftone}
                   palette={XEROX}
@@ -252,7 +263,7 @@ export default function SecondLifeVintagePage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.typedSmall}>Mondays we are closed and out at the estate sales. That is where the Friday rack comes from.</p>
+              <p data-edit="drops.typedSmall" data-edit-max="240" data-edit-multiline className={s.typedSmall}>Mondays we are closed and out at the estate sales. That is where the Friday rack comes from.</p>
             </div>
           </div>
         </section>
@@ -260,21 +271,21 @@ export default function SecondLifeVintagePage() {
         {/* ---------------------------------------------------------- RACKS */}
         <section id="racks" className={s.sec} aria-labelledby="racks-h">
           <div className={s.secHead}>
-            <p className={s.page2}>p. 3</p>
-            <h2 id="racks-h" className={s.labelLime}>On the racks</h2>
-            <p className={s.secNote}>
+            <p data-edit="racks.page2" data-edit-max="240" data-edit-multiline className={s.page2}>p. 3</p>
+            <h2 data-edit="racks.labelLime" data-edit-max="60" id="racks-h" className={s.labelLime}>On the racks</h2>
+            <p data-edit="racks.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Price ranges as of this issue. Every piece has a paper tag with
               its decade, what it is made of and its measurements, flat.
             </p>
           </div>
 
           <ul className={s.tags}>
-            {RACKS.map((r) => (
+            {RACKS.map((r, i) => (
               <li key={r.what} className={s.tag}>
-                <p className={s.tagEra}>{r.era}</p>
-                <h3>{r.what}</h3>
-                <p className={s.tagPrice}>{r.price}</p>
-                <p className={s.tagNote}>{r.note}</p>
+                <p data-edit={`racks.tagEra.${i}`} data-edit-max="240" data-edit-multiline className={s.tagEra}>{r.era}</p>
+                <h3 data-edit={`racks.title.${i}`} data-edit-max="40">{r.what}</h3>
+                <p data-edit={`racks.tagPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.tagPrice}>{r.price}</p>
+                <p data-edit={`racks.tagNote.${i}`} data-edit-max="240" data-edit-multiline className={s.tagNote}>{r.note}</p>
               </li>
             ))}
           </ul>
@@ -283,11 +294,11 @@ export default function SecondLifeVintagePage() {
         {/* ------------------------------------------------------------ BUY */}
         <section id="buy" className={s.sec} aria-labelledby="buy-h">
           <div className={s.flyer}>
-            <p className={s.page2}>p. 4</p>
+            <p data-edit="buy.page2" data-edit-max="240" data-edit-multiline className={s.page2}>p. 4</p>
             <div className={s.flyerHead}>
               <div>
-                <h2 id="buy-h" className={s.flyerTitle}>We buy clothes</h2>
-                <p className={s.flyerLede}>Bring us what you do not wear. If we can sell it, we pay you for it today.</p>
+                <h2 data-edit="buy.flyerTitle" data-edit-max="60" id="buy-h" className={s.flyerTitle}>We buy clothes</h2>
+                <p data-edit="buy.flyerLede" data-edit-max="240" data-edit-multiline className={s.flyerLede}>Bring us what you do not wear. If we can sell it, we pay you for it today.</p>
               </div>
               <figure className={s.xerox}>
                 <Artwork
@@ -296,41 +307,41 @@ export default function SecondLifeVintagePage() {
                   inks={['var(--on-paper)', 'var(--paper)']}
                   className={s.jacket}
                 />
-                <figcaption className={s.paid}>We paid $22 for this one</figcaption>
+                <figcaption data-edit="buy.paid" data-edit-max="120" data-edit-multiline className={s.paid}>We paid $22 for this one</figcaption>
               </figure>
             </div>
 
             <dl className={s.terms}>
-              {BUY_TERMS.map(([k, v]) => (
+              {BUY_TERMS.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`buy.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`buy.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
 
             <div className={s.lists}>
               <div>
-                <h3 className={s.listTitle}>Yes please</h3>
+                <h3 data-edit="buy.listTitle" data-edit-max="40" className={s.listTitle}>Yes please</h3>
                 <ul className={s.yes}>
-                  {WANT.map((w) => (
-                    <li key={w}>{w}</li>
+                  {WANT.map((w, i) => (
+                    <li data-edit={`buy.item.${i}`} data-edit-max="80" key={w}>{w}</li>
                   ))}
                 </ul>
               </div>
               <div>
-                <h3 className={s.listTitle}>No thanks</h3>
+                <h3 data-edit="buy.listTitle2" data-edit-max="40" className={s.listTitle}>No thanks</h3>
                 <ul className={s.no}>
-                  {PASS.map((w) => (
-                    <li key={w}>{w}</li>
+                  {PASS.map((w, i) => (
+                    <li data-edit={`buy.item2.${i}`} data-edit-max="80" key={w}>{w}</li>
                   ))}
                 </ul>
               </div>
             </div>
 
             <ul className={s.tabs} aria-hidden="true">
-              {TABS.map((t) => (
-                <li key={t.key}>{t.text}</li>
+              {TABS.map((t, i) => (
+                <li data-edit={`buy.item3.${i}`} data-edit-max="80" key={t.key}>{t.text}</li>
               ))}
             </ul>
           </div>
@@ -339,9 +350,9 @@ export default function SecondLifeVintagePage() {
         {/* --------------------------------------------------------- SIZING */}
         <section id="sizing" className={s.sec} aria-labelledby="sizing-h">
           <div className={s.secHead}>
-            <p className={s.page2}>p. 5</p>
-            <h2 id="sizing-h" className={s.labelPaper}>Sizing, honestly</h2>
-            <p className={s.secNote}>
+            <p data-edit="sizing.page2" data-edit-max="240" data-edit-multiline className={s.page2}>p. 5</p>
+            <h2 data-edit="sizing.labelPaper" data-edit-max="60" id="sizing-h" className={s.labelPaper}>Sizing, honestly</h2>
+            <p data-edit="sizing.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Old size tags lie. Sizes grew as the years went on, so a dress
               that says 12 on the label can fit someone who buys a 6 today.
               Go by the tape, not the tag.
@@ -350,36 +361,36 @@ export default function SecondLifeVintagePage() {
 
           <div className={s.sizing}>
             <table className={s.sizeTable}>
-              <caption className={s.srOnly}>Women's tag sizes by decade and what they fit like today</caption>
+              <caption data-edit="sizing.srOnly" className={s.srOnly}>Women's tag sizes by decade and what they fit like today</caption>
               <thead>
                 <tr>
-                  <th scope="col">Decade</th>
-                  <th scope="col">Tag says</th>
-                  <th scope="col">Fits like</th>
+                  <th data-edit="sizing.heading" scope="col">Decade</th>
+                  <th data-edit="sizing.heading2" scope="col">Tag says</th>
+                  <th data-edit="sizing.heading3" scope="col">Fits like</th>
                 </tr>
               </thead>
               <tbody>
-                {SIZES.map(([d, tag, now]) => (
+                {SIZES.map(([d, tag, now], i) => (
                   <tr key={d}>
-                    <th scope="row">{d}</th>
-                    <td>{tag}</td>
-                    <td>{now}</td>
+                    <th data-edit={`sizing.heading4.${i}`} scope="row">{d}</th>
+                    <td data-edit={`sizing.cell.${i}`}>{tag}</td>
+                    <td data-edit={`sizing.cell2.${i}`}>{now}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
             <div className={s.measure}>
-              <h3 className={s.listTitle}>What is on every tag</h3>
+              <h3 data-edit="sizing.listTitle" data-edit-max="40" className={s.listTitle}>What is on every tag</h3>
               <dl className={s.measures}>
-                {MEASURES.map(([k, v]) => (
+                {MEASURES.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`sizing.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`sizing.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.typedSmall}>
+              <p data-edit="sizing.typedSmall" data-edit-max="240" data-edit-multiline className={s.typedSmall}>
                 Men's sizes barely moved, but jeans sat higher: a nineties
                 32 waist sits at your navel, not your hips. Lay the thing you
                 love best flat, measure it, and bring the numbers.
@@ -391,42 +402,42 @@ export default function SecondLifeVintagePage() {
         {/* ----------------------------------------------------------- FIND */}
         <section id="find" className={s.sec} aria-labelledby="find-h">
           <div className={s.secHead}>
-            <p className={s.page2}>p. 6</p>
-            <h2 id="find-h" className={s.labelPink}>Find us</h2>
+            <p data-edit="find.page2" data-edit-max="240" data-edit-multiline className={s.page2}>p. 6</p>
+            <h2 data-edit="find.labelPink" data-edit-max="60" id="find-h" className={s.labelPink}>Find us</h2>
           </div>
 
           <div className={s.findGrid}>
             <div className={s.where}>
-              <p className={s.addr}>77 Mercer Row, Lower Dellwood</p>
-              <p className={s.typedSmall}>The pink door under the laundromat sign, then down six steps. Ring if it is locked; it sticks.</p>
+              <p data-edit="find.addr" data-edit-max="240" data-edit-multiline className={s.addr}>77 Mercer Row, Lower Dellwood</p>
+              <p data-edit="find.typedSmall" data-edit-max="240" data-edit-multiline className={s.typedSmall}>The pink door under the laundromat sign, then down six steps. Ring if it is locked; it sticks.</p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`find.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`find.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
               <p className={s.contact}>
-                <a href="tel:+15550167755">(555) 016-7755</a>
-                <a href="mailto:racks@secondlife.example">racks@secondlife.example</a>
+                <a data-edit="find.link" data-edit-max="28" href="tel:+15550167755">(555) 016-7755</a>
+                <a data-edit="find.link2" data-edit-max="28" href="mailto:racks@secondlife.example">racks@secondlife.example</a>
               </p>
             </div>
 
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Get the Friday text</h3>
-              <p className={s.typedSmall}>One message a week, Thursday night, with a photo of the rack. Nothing else, ever.</p>
+              <h3 data-edit="find.formTitle" data-edit-max="40" className={s.formTitle}>Get the Friday text</h3>
+              <p data-edit="find.typedSmall2" data-edit-max="240" data-edit-multiline className={s.typedSmall}>One message a week, Thursday night, with a photo of the rack. Nothing else, ever.</p>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="sl-name">Name</label>
+                  <label data-edit="find.label" htmlFor="sl-name">Name</label>
                   <input id="sl-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="sl-phone">Mobile</label>
+                  <label data-edit="find.label2" htmlFor="sl-phone">Mobile</label>
                   <input id="sl-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={`${s.field} ${s.wide}`}>
-                  <label htmlFor="sl-hunt">Hunting for</label>
+                  <label data-edit="find.label3" htmlFor="sl-hunt">Hunting for</label>
                   <select id="sl-hunt" name="hunt" defaultValue="all">
                     <option value="all">A bit of everything</option>
                     <option value="denim">Denim</option>
@@ -437,14 +448,14 @@ export default function SecondLifeVintagePage() {
                   </select>
                 </div>
               </div>
-              <button className={s.btn} type="submit">Put me on the list</button>
+              <button data-edit="find.btn" data-edit-max="24" className={s.btn} type="submit">Put me on the list</button>
             </form>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <div className={s.confetti} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,1,2,3" className={s.confetti} aria-hidden="true">
           <TabbiedPattern
             pattern={sliver}
             palette={CONFETTI}
@@ -455,10 +466,10 @@ export default function SecondLifeVintagePage() {
           />
         </div>
         <div className={s.footBody}>
-          <p className={s.footName}>Second Life Vintage</p>
-          <p>A fictional vintage clothing store. The racks, prices, dates and address are invented.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Second Life Vintage</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional vintage clothing store. The racks, prices, dates and address are invented.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; the jacket is a generated image drawn in the page's colors.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>, drawn live; the jacket is a generated image drawn in the page's colors.
           </p>
         </div>
       </footer>

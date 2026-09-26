@@ -115,7 +115,19 @@ const QUESTIONS = [
 
 export default function PosyPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--blush': '#f4e3dc',
+        '--green': '#1f3a2c',
+        '--rose': '#c0616f',
+        '--sage': '#8fa588',
+        '--petal': '#e7b8ae',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="blush,green,rose,sage,petal"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -125,15 +137,15 @@ export default function PosyPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Posy</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Posy</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -143,28 +155,28 @@ export default function PosyPage() {
             A magazine cover: the name as a masthead, the cover lines down
             one side and the cover picture beside them. */}
         <section className={s.cover} aria-labelledby="cover-h">
-          <p className={s.issue}>The wedding book, 2027 season</p>
-          <h1 id="cover-h" className={s.masthead}>Posy</h1>
+          <p data-edit="cover.issue" data-edit-max="240" data-edit-multiline className={s.issue}>The wedding book, 2027 season</p>
+          <h1 data-edit="cover.masthead" data-edit-max="70" id="cover-h" className={s.masthead}>Posy</h1>
           <div className={s.coverBody}>
             <div className={s.coverText}>
-              <p className={s.dek}>
+              <p data-edit="cover.dek" data-edit-max="240" data-edit-multiline className={s.dek}>
                 Wedding and event flowers from a small studio on Larkspur
                 Mews. Grown near here where we can, chosen at the market at
                 four in the morning where we cannot, and arranged by two
                 people who will be there on the day.
               </p>
               <ul className={s.coverLines}>
-                {COVER_LINES.map(([line, page]) => (
+                {COVER_LINES.map(([line, page], i) => (
                   <li key={line}>
-                    <span className={s.coverLine}>{line}</span>
-                    <span className={s.coverPage}>{page}</span>
+                    <span data-edit={`cover.coverLine.${i}`} data-edit-max="60" className={s.coverLine}>{line}</span>
+                    <span data-edit={`cover.coverPage.${i}`} data-edit-max="60" className={s.coverPage}>{page}</span>
                   </li>
                 ))}
               </ul>
-              <a className={s.button} href="#enquire">Ask about your date</a>
+              <a data-edit="cover.button" data-edit-max="28" className={s.button} href="#enquire">Ask about your date</a>
             </div>
             <figure className={s.coverFigure}>
-              <div className={s.coverPlate} aria-hidden="true">
+              <div data-edit-pattern="cover.field" data-edit-roles="transparent,2,4,3,2,1" className={s.coverPlate} aria-hidden="true">
                 <TabbiedPattern
                   pattern={cavetto}
                   palette={COVER}
@@ -183,7 +195,7 @@ export default function PosyPage() {
                   className={s.bouquet}
                 />
               </div>
-              <figcaption className={s.coverCredit}>On the cover: peonies, garden roses and jasmine, hand-tied, $240</figcaption>
+              <figcaption data-edit="cover.coverCredit" data-edit-max="120" data-edit-multiline className={s.coverCredit}>On the cover: peonies, garden roses and jasmine, hand-tied, $240</figcaption>
             </figure>
           </div>
         </section>
@@ -191,9 +203,9 @@ export default function PosyPage() {
         {/* -------------------------------------------------------- LOOKBOOK */}
         <section id="lookbook" className={s.sec} aria-labelledby="lookbook-h">
           <div className={s.secHead}>
-            <p className={s.folio}>Page two</p>
-            <h2 id="lookbook-h">The lookbook</h2>
-            <p className={s.secNote}>
+            <p data-edit="lookbook.folio" data-edit-max="240" data-edit-multiline className={s.folio}>Page two</p>
+            <h2 data-edit="lookbook.title" data-edit-max="60" id="lookbook-h">The lookbook</h2>
+            <p data-edit="lookbook.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Four pieces from last season, each one priced as it was made.
               Nothing here is a set menu; every wedding starts again.
             </p>
@@ -201,7 +213,7 @@ export default function PosyPage() {
 
           <div className={s.look}>
             <figure className={`${s.lookItem} ${s.lookA}`}>
-              <div className={`${s.plate} ${s.plateTall}`} aria-hidden="true">
+              <div data-edit-pattern="lookbook.field" data-edit-roles="transparent,2,4,0,3" className={`${s.plate} ${s.plateTall}`} aria-hidden="true">
                 <TabbiedPattern
                   pattern={roundpair}
                   palette={TOSS}
@@ -212,15 +224,15 @@ export default function PosyPage() {
                 />
               </div>
               <figcaption className={s.caption}>
-                <span className={s.capNo}>No. 1</span>
-                <strong className={s.capTitle}>The garden toss</strong>
-                <span className={s.capBody}>A loose bridal bouquet: garden roses, sweet pea and trailing jasmine</span>
-                <span className={s.capPrice}>$240</span>
+                <span data-edit="lookbook.capNo" data-edit-max="60" className={s.capNo}>No. 1</span>
+                <strong data-edit="lookbook.capTitle" className={s.capTitle}>The garden toss</strong>
+                <span data-edit="lookbook.capBody" data-edit-max="60" className={s.capBody}>A loose bridal bouquet: garden roses, sweet pea and trailing jasmine</span>
+                <span data-edit="lookbook.capPrice" data-edit-max="60" className={s.capPrice}>$240</span>
               </figcaption>
             </figure>
 
             <figure className={`${s.lookItem} ${s.lookB}`}>
-              <div className={`${s.plate} ${s.plateWide}`} aria-hidden="true">
+              <div data-edit-pattern="lookbook.field2" data-edit-roles="transparent,3,1,4" className={`${s.plate} ${s.plateWide}`} aria-hidden="true">
                 <TabbiedPattern
                   pattern={ivy}
                   palette={MEADOW}
@@ -231,15 +243,15 @@ export default function PosyPage() {
                 />
               </div>
               <figcaption className={s.caption}>
-                <span className={s.capNo}>No. 2</span>
-                <strong className={s.capTitle}>Meadow aisle</strong>
-                <span className={s.capBody}>Low wooden troughs of grasses and wildflowers along the aisle, a pair</span>
-                <span className={s.capPrice}>$380</span>
+                <span data-edit="lookbook.capNo2" data-edit-max="60" className={s.capNo}>No. 2</span>
+                <strong data-edit="lookbook.capTitle2" className={s.capTitle}>Meadow aisle</strong>
+                <span data-edit="lookbook.capBody2" data-edit-max="60" className={s.capBody}>Low wooden troughs of grasses and wildflowers along the aisle, a pair</span>
+                <span data-edit="lookbook.capPrice2" data-edit-max="60" className={s.capPrice}>$380</span>
               </figcaption>
             </figure>
 
             <figure className={`${s.lookItem} ${s.lookC}`}>
-              <div className={`${s.plate} ${s.plateSquare}`} aria-hidden="true">
+              <div data-edit-pattern="lookbook.field3" data-edit-roles="transparent,2,4,1,0" className={`${s.plate} ${s.plateSquare}`} aria-hidden="true">
                 <TabbiedPattern
                   pattern={lobeform}
                   palette={BUDS}
@@ -250,15 +262,15 @@ export default function PosyPage() {
                 />
               </div>
               <figcaption className={s.caption}>
-                <span className={s.capNo}>No. 3</span>
-                <strong className={s.capTitle}>Buttonholes</strong>
-                <span className={s.capBody}>Spray rose and wax flower, bound in silk ribbon</span>
-                <span className={s.capPrice}>from $18</span>
+                <span data-edit="lookbook.capNo3" data-edit-max="60" className={s.capNo}>No. 3</span>
+                <strong data-edit="lookbook.capTitle3" className={s.capTitle}>Buttonholes</strong>
+                <span data-edit="lookbook.capBody3" data-edit-max="60" className={s.capBody}>Spray rose and wax flower, bound in silk ribbon</span>
+                <span data-edit="lookbook.capPrice3" data-edit-max="60" className={s.capPrice}>from $18</span>
               </figcaption>
             </figure>
 
             <figure className={`${s.lookItem} ${s.lookD}`}>
-              <div className={`${s.plate} ${s.plateSquare}`} aria-hidden="true">
+              <div data-edit-pattern="lookbook.field4" data-edit-roles="transparent,1,3,2,0" className={`${s.plate} ${s.plateSquare}`} aria-hidden="true">
                 <TabbiedPattern
                   pattern={foldback}
                   palette={TABLE}
@@ -269,10 +281,10 @@ export default function PosyPage() {
                 />
               </div>
               <figcaption className={s.caption}>
-                <span className={s.capNo}>No. 4</span>
-                <strong className={s.capTitle}>The long table</strong>
-                <span className={s.capBody}>A garland of olive and eucalyptus with ranunculus, by the foot</span>
-                <span className={s.capPrice}>$28 a foot</span>
+                <span data-edit="lookbook.capNo4" data-edit-max="60" className={s.capNo}>No. 4</span>
+                <strong data-edit="lookbook.capTitle4" className={s.capTitle}>The long table</strong>
+                <span data-edit="lookbook.capBody4" data-edit-max="60" className={s.capBody}>A garland of olive and eucalyptus with ranunculus, by the foot</span>
+                <span data-edit="lookbook.capPrice4" data-edit-max="60" className={s.capPrice}>$28 a foot</span>
               </figcaption>
             </figure>
           </div>
@@ -282,42 +294,42 @@ export default function PosyPage() {
         <section id="season" className={s.sec} aria-labelledby="season-h">
           <div className={s.seasonHead}>
             <div className={s.secHead}>
-              <p className={s.folio}>Page four</p>
-              <h2 id="season-h">What is in season when</h2>
-              <p className={s.secNote}>
+              <p data-edit="season.folio" data-edit-max="240" data-edit-multiline className={s.folio}>Page four</p>
+              <h2 data-edit="season.title" data-edit-max="60" id="season-h">What is in season when</h2>
+              <p data-edit="season.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Choose by month and the flowers are cheaper, stronger and
                 smell of something. Roses, orchids, eucalyptus and ferns are
                 good all year.
               </p>
             </div>
             <ul className={s.specimens}>
-              {SPECIMENS.map((f) => (
+              {SPECIMENS.map((f, i) => (
                 <li key={f.art} className={s.specimen}>
                   <Artwork slug={f.art} alt={f.alt} inks={['var(--rose-text)']} className={s.specimenArt} />
-                  <span className={s.specimenName}>{f.name}</span>
-                  <span className={s.specimenWhen}>{f.when}</span>
+                  <span data-edit={`season.specimenName.${i}`} data-edit-max="60" className={s.specimenName}>{f.name}</span>
+                  <span data-edit={`season.specimenWhen.${i}`} data-edit-max="60" className={s.specimenWhen}>{f.when}</span>
                 </li>
               ))}
             </ul>
           </div>
           <div className={s.tableWrap}>
             <table className={s.calendar}>
-              <caption className={s.srOnly}>Flowers by month, January to December</caption>
+              <caption data-edit="season.srOnly" className={s.srOnly}>Flowers by month, January to December</caption>
               <thead>
                 <tr>
-                  <th scope="col" className={s.flowerCol}>Flower</th>
+                  <th data-edit="season.flowerCol" scope="col" className={s.flowerCol}>Flower</th>
                   {MONTHS.map((m, i) => (
-                    <th key={MONTH_NAMES[i]} scope="col" abbr={MONTH_NAMES[i]}>{m}</th>
+                    <th data-edit={`season.heading.${i}`} key={MONTH_NAMES[i]} scope="col" abbr={MONTH_NAMES[i]}>{m}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {SEASON.map((f) => (
+                {SEASON.map((f, i) => (
                   <tr key={f.flower}>
-                    <th scope="row" className={s.flowerCol}>{f.flower}</th>
+                    <th data-edit={`season.flowerCol2.${i}`} scope="row" className={s.flowerCol}>{f.flower}</th>
                     {f.months.map((v, j) => (
                       <td key={MONTH_NAMES[j]} className={s[CELL[v]]}>
-                        <span className={s.srOnly}>{CELL_WORDS[v]}</span>
+                        <span data-edit={`season.srOnly2.${i}.${j}`} data-edit-max="60" className={s.srOnly}>{CELL_WORDS[v]}</span>
                       </td>
                     ))}
                   </tr>
@@ -326,17 +338,17 @@ export default function PosyPage() {
             </table>
           </div>
           <ul className={s.key}>
-            <li className={s.keyPeak}>At its best</li>
-            <li className={s.keyOn}>In season</li>
+            <li data-edit="season.keyPeak" data-edit-max="80" className={s.keyPeak}>At its best</li>
+            <li data-edit="season.keyOn" data-edit-max="80" className={s.keyOn}>In season</li>
           </ul>
         </section>
 
         {/* -------------------------------------------------------- PACKAGES */}
         <section id="packages" className={s.sec} aria-labelledby="packages-h">
           <div className={s.secHead}>
-            <p className={s.folio}>Page five</p>
-            <h2 id="packages-h">Three ways to start</h2>
-            <p className={s.secNote}>
+            <p data-edit="packages.folio" data-edit-max="240" data-edit-multiline className={s.folio}>Page five</p>
+            <h2 data-edit="packages.title" data-edit-max="60" id="packages-h">Three ways to start</h2>
+            <p data-edit="packages.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Starting points, not boxes. Most couples begin with one and
               change half of it, which is what the consultation is for.
             </p>
@@ -345,12 +357,12 @@ export default function PosyPage() {
             {PACKAGES.map((p, i) => (
               <li key={p.name} className={s.package}>
                 <span className={s.pkgNo}>{i + 1}</span>
-                <h3>{p.name}</h3>
-                <p className={s.pkgWho}>{p.who}</p>
-                <p className={s.pkgPrice}>{p.price}</p>
+                <h3 data-edit={`packages.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                <p data-edit={`packages.pkgWho.${i}`} data-edit-max="240" data-edit-multiline className={s.pkgWho}>{p.who}</p>
+                <p data-edit={`packages.pkgPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.pkgPrice}>{p.price}</p>
                 <ul className={s.pkgItems}>
-                  {p.items.map((item) => (
-                    <li key={item}>{item}</li>
+                  {p.items.map((item, i2) => (
+                    <li data-edit={`packages.item.${i}.${i2}`} data-edit-max="80" key={item}>{item}</li>
                   ))}
                 </ul>
               </li>
@@ -362,10 +374,10 @@ export default function PosyPage() {
         <section id="consultation" className={s.consult} aria-labelledby="consultation-h">
           <div className={s.consultInner}>
             <div className={s.consultSide}>
-              <p className={s.folio}>Page six</p>
-              <h2 id="consultation-h">The consultation</h2>
-              <p className={s.pull}>An hour in the studio, $75, taken off your booking.</p>
-              <div className={s.studioPlate} aria-hidden="true">
+              <p data-edit="consultation.folio" data-edit-max="240" data-edit-multiline className={s.folio}>Page six</p>
+              <h2 data-edit="consultation.title" data-edit-max="60" id="consultation-h">The consultation</h2>
+              <p data-edit="consultation.pull" data-edit-max="240" data-edit-multiline className={s.pull}>An hour in the studio, $75, taken off your booking.</p>
+              <div data-edit-pattern="consultation.field" data-edit-roles="transparent,1,2,3,0" className={s.studioPlate} aria-hidden="true">
                 <TabbiedPattern
                   pattern={cavetto}
                   palette={STUDIO}
@@ -377,10 +389,10 @@ export default function PosyPage() {
               </div>
             </div>
             <ol className={s.steps}>
-              {STEPS.map(([title, body]) => (
+              {STEPS.map(([title, body], i) => (
                 <li key={title}>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
+                  <h3 data-edit={`consultation.title2.${i}`} data-edit-max="40">{title}</h3>
+                  <p data-edit={`consultation.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                 </li>
               ))}
             </ol>
@@ -391,14 +403,14 @@ export default function PosyPage() {
         <section id="questions" className={s.sec} aria-labelledby="questions-h">
           <div className={s.qaGrid}>
             <div className={s.secHead}>
-              <p className={s.folio}>Page seven</p>
-              <h2 id="questions-h">Questions, answered</h2>
+              <p data-edit="questions.folio" data-edit-max="240" data-edit-multiline className={s.folio}>Page seven</p>
+              <h2 data-edit="questions.title" data-edit-max="60" id="questions-h">Questions, answered</h2>
             </div>
             <div className={s.qa}>
-              {QUESTIONS.map(([q, a]) => (
+              {QUESTIONS.map(([q, a], i) => (
                 <details key={q} className={s.qaItem}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`questions.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`questions.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
@@ -409,51 +421,51 @@ export default function PosyPage() {
         <section id="enquire" className={s.sec} aria-labelledby="enquire-h">
           <div className={s.enquireGrid}>
             <div>
-              <p className={s.folio}>The last page</p>
-              <h2 id="enquire-h" className={s.bigItalic}>Tell us about the day</h2>
-              <p className={s.secNote}>
+              <p data-edit="enquire.folio" data-edit-max="240" data-edit-multiline className={s.folio}>The last page</p>
+              <h2 data-edit="enquire.bigItalic" data-edit-max="60" id="enquire-h" className={s.bigItalic}>Tell us about the day</h2>
+              <p data-edit="enquire.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 We take one wedding a day and about forty a year, so write
                 early for a Saturday in June. Everything here is read by
                 Clara or Ines, not a system.
               </p>
               <div className={s.studio}>
-                <p className={s.studioName}>The studio</p>
-                <p>17 Larkspur Mews, Eastbrook</p>
-                <p>Visits by appointment, Tuesday to Saturday</p>
+                <p data-edit="enquire.studioName" data-edit-max="240" data-edit-multiline className={s.studioName}>The studio</p>
+                <p data-edit="enquire.body" data-edit-max="240" data-edit-multiline>17 Larkspur Mews, Eastbrook</p>
+                <p data-edit="enquire.body2" data-edit-max="240" data-edit-multiline>Visits by appointment, Tuesday to Saturday</p>
                 <p>
-                  <a href="tel:+15550175512">(555) 017-5512</a>
+                  <a data-edit="enquire.link" data-edit-max="28" href="tel:+15550175512">(555) 017-5512</a>
                 </p>
                 <p>
-                  <a href="mailto:clara@posyflowers.example">clara@posyflowers.example</a>
+                  <a data-edit="enquire.link2" data-edit-max="28" href="mailto:clara@posyflowers.example">clara@posyflowers.example</a>
                 </p>
               </div>
             </div>
 
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="posy-names">Your names</label>
+                <label data-edit="enquire.label" htmlFor="posy-names">Your names</label>
                 <input id="posy-names" name="names" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="posy-email">Email</label>
+                <label data-edit="enquire.label2" htmlFor="posy-email">Email</label>
                 <input id="posy-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.fieldPair}>
                 <div className={s.field}>
-                  <label htmlFor="posy-date">Date</label>
+                  <label data-edit="enquire.label3" htmlFor="posy-date">Date</label>
                   <input id="posy-date" name="date" type="date" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="posy-guests">Guests</label>
+                  <label data-edit="enquire.label4" htmlFor="posy-guests">Guests</label>
                   <input id="posy-guests" name="guests" type="number" min={2} max={400} />
                 </div>
               </div>
               <div className={s.field}>
-                <label htmlFor="posy-venue">Venue, if you have one</label>
+                <label data-edit="enquire.label5" htmlFor="posy-venue">Venue, if you have one</label>
                 <input id="posy-venue" name="venue" type="text" />
               </div>
               <div className={s.field}>
-                <label htmlFor="posy-budget">Flower budget</label>
+                <label data-edit="enquire.label6" htmlFor="posy-budget">Flower budget</label>
                 <select id="posy-budget" name="budget" defaultValue="">
                   <option value="" disabled>Choose one</option>
                   <option value="1">$650 to $1,500</option>
@@ -463,17 +475,17 @@ export default function PosyPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="posy-note">Colors, flowers, anything</label>
+                <label data-edit="enquire.label7" htmlFor="posy-note">Colors, flowers, anything</label>
                 <textarea id="posy-note" name="note" rows={4} />
               </div>
-              <button className={s.submit} type="submit">Send the enquiry</button>
+              <button data-edit="enquire.submit" data-edit-max="24" className={s.submit} type="submit">Send the enquiry</button>
             </form>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <div className={s.backCover} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,4,1" className={s.backCover} aria-hidden="true">
           <TabbiedPattern
             pattern={roundpair}
             palette={BACK}
@@ -483,10 +495,10 @@ export default function PosyPage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Posy</p>
-        <p>A fictional wedding and event florist. The arrangements, prices, people and studio are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Posy</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional wedding and event florist. The arrangements, prices, people and studio are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>; the bouquet and the three flowers are generated pictures drawn in the page's own colors.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>; the bouquet and the three flowers are generated pictures drawn in the page's own colors.
         </p>
       </footer>
     </div>

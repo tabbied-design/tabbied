@@ -146,7 +146,18 @@ const HOURS = [
 
 export default function ArcOrthodonticsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fcfbff',
+        '--ink': '#17152e',
+        '--violet': '#5b3cf5',
+        '--bubble': '#ff8fb1',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,violet,bubble"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -156,18 +167,18 @@ export default function ArcOrthodonticsPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">arc</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">arc</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#book">Book a free consult</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#book">Book a free consult</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
-          <a href="#book">Book a free consult</a>
+          <a data-edit="bar.book" data-edit-max="28" href="#book">Book a free consult</a>
         </TemplateMenu>
       </header>
 
@@ -175,21 +186,21 @@ export default function ArcOrthodonticsPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.chip}>Free consults open for October</p>
-            <h1 id="hero-h" className={s.title}>Straight teeth, on a plan <em>you can see.</em></h1>
-            <p className={s.lede}>
+            <p data-edit="hero.chip" data-edit-max="240" data-edit-multiline className={s.chip}>Free consults open for October</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>Straight teeth, on a plan <em>you can see.</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Arc Orthodontics is two orthodontists and a small team in Linden
               Park, fitting braces and clear aligners for kids and adults. Every
               step, every visit and every dollar is on this page before you
               book.
             </p>
             <div className={s.ctas}>
-              <a className={s.btn} href="#book">Book a free consult</a>
-              <a className={s.btnGhost} href="#fees">See every fee</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Book a free consult</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#fees">See every fee</a>
             </div>
           </div>
           <div className={s.product}>
-            <div className={s.productField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,0,3,0,1" className={s.productField} aria-hidden="true">
               <TabbiedPattern
                 pattern={elbow}
                 palette={PIPES}
@@ -200,18 +211,18 @@ export default function ArcOrthodonticsPage() {
               />
             </div>
             <p className={s.priceTag}>
-              <span className={s.priceFrom}>Aligners from</span>
-              <strong>$117</strong>
-              <span className={s.priceFrom}>a month, 0% interest</span>
+              <span data-edit="hero.priceFrom" data-edit-max="60" className={s.priceFrom}>Aligners from</span>
+              <strong data-edit="hero.emphasis">$117</strong>
+              <span data-edit="hero.priceFrom2" data-edit-max="60" className={s.priceFrom}>a month, 0% interest</span>
             </p>
           </div>
         </section>
 
         <dl className={s.specs}>
-          {SPECS.map(([figure, what]) => (
+          {SPECS.map(([figure, what], i) => (
             <div key={figure}>
-              <dt>{figure}</dt>
-              <dd>{what}</dd>
+              <dt data-edit={`top.term.${i}`} data-edit-max="28">{figure}</dt>
+              <dd data-edit={`top.body.${i}`} data-edit-max="200" data-edit-multiline>{what}</dd>
             </div>
           ))}
         </dl>
@@ -219,20 +230,20 @@ export default function ArcOrthodonticsPage() {
         {/* --------------------------------------------------------- JOURNEY */}
         <section id="journey" className={s.sec} aria-labelledby="journey-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>How it works</p>
-            <h2 id="journey-h">Five steps, from hello to retainer</h2>
-            <p className={s.secNote}>
+            <p data-edit="journey.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>How it works</p>
+            <h2 data-edit="journey.title" data-edit-max="60" id="journey-h">Five steps, from hello to retainer</h2>
+            <p data-edit="journey.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The same five for braces and for aligners. Most people are at
               step three within two weeks of the consult.
             </p>
           </div>
           <ol className={s.track}>
-            {STEPS.map((step) => (
+            {STEPS.map((step, i) => (
               <li key={step.n}>
-                <span className={s.node}>{step.n}</span>
-                <p className={s.when}>{step.when}</p>
-                <h3>{step.name}</h3>
-                <p className={s.stepText}>{step.text}</p>
+                <span data-edit={`journey.node.${i}`} data-edit-max="60" className={s.node}>{step.n}</span>
+                <p data-edit={`journey.when.${i}`} data-edit-max="240" data-edit-multiline className={s.when}>{step.when}</p>
+                <h3 data-edit={`journey.title2.${i}`} data-edit-max="40">{step.name}</h3>
+                <p data-edit={`journey.stepText.${i}`} data-edit-max="240" data-edit-multiline className={s.stepText}>{step.text}</p>
               </li>
             ))}
           </ol>
@@ -241,9 +252,9 @@ export default function ArcOrthodonticsPage() {
         {/* --------------------------------------------------------- COMPARE */}
         <section id="compare" className={s.sec} aria-labelledby="compare-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>Braces or aligners</p>
-            <h2 id="compare-h">Both work. They ask different things of you.</h2>
-            <p className={s.secNote}>
+            <p data-edit="compare.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Braces or aligners</p>
+            <h2 data-edit="compare.title" data-edit-max="60" id="compare-h">Both work. They ask different things of you.</h2>
+            <p data-edit="compare.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               We tell you at the consult which one your teeth can use. When
               both can, it is your call, and here is the whole trade.
             </p>
@@ -251,9 +262,9 @@ export default function ArcOrthodonticsPage() {
 
           <div className={s.compare}>
             <div className={s.compareHead}>
-              <p className={s.compareCorner}>Side by side</p>
+              <p data-edit="compare.compareCorner" data-edit-max="240" data-edit-multiline className={s.compareCorner}>Side by side</p>
               <div className={s.option}>
-                <div className={s.optionTile} aria-hidden="true">
+                <div data-edit-pattern="compare.field" data-edit-roles="transparent,2,3,1,2" className={s.optionTile} aria-hidden="true">
                   <TabbiedPattern
                     pattern={rimband}
                     palette={ELASTICS}
@@ -263,11 +274,11 @@ export default function ArcOrthodonticsPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-                <h3>Braces</h3>
-                <p>Metal or ceramic</p>
+                <h3 data-edit="compare.title2" data-edit-max="40">Braces</h3>
+                <p data-edit="compare.body" data-edit-max="240" data-edit-multiline>Metal or ceramic</p>
               </div>
               <div className={s.option}>
-                <div className={`${s.optionTile} ${s.optionTileClear}`} aria-hidden="true">
+                <div data-edit-pattern="compare.field2" data-edit-roles="transparent,2,0,2" className={`${s.optionTile} ${s.optionTileClear}`} aria-hidden="true">
                   <TabbiedPattern
                     pattern={bangle}
                     palette={TRAYS}
@@ -277,25 +288,25 @@ export default function ArcOrthodonticsPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-                <h3>Clear aligners</h3>
-                <p>A new set of trays every week or two</p>
+                <h3 data-edit="compare.title3" data-edit-max="40">Clear aligners</h3>
+                <p data-edit="compare.body2" data-edit-max="240" data-edit-multiline>A new set of trays every week or two</p>
               </div>
             </div>
             <table className={s.compareTable}>
-              <caption className={s.srOnly}>Braces and clear aligners compared, row by row</caption>
+              <caption data-edit="compare.srOnly" className={s.srOnly}>Braces and clear aligners compared, row by row</caption>
               <thead className={s.srOnly}>
                 <tr>
-                  <th scope="col">Question</th>
-                  <th scope="col">Braces</th>
-                  <th scope="col">Clear aligners</th>
+                  <th data-edit="compare.heading" scope="col">Question</th>
+                  <th data-edit="compare.heading2" scope="col">Braces</th>
+                  <th data-edit="compare.heading3" scope="col">Clear aligners</th>
                 </tr>
               </thead>
               <tbody>
-                {COMPARE.map(([q, braces, aligners]) => (
+                {COMPARE.map(([q, braces, aligners], i) => (
                   <tr key={q}>
-                    <th scope="row">{q}</th>
-                    <td>{braces}</td>
-                    <td>{aligners}</td>
+                    <th data-edit={`compare.heading4.${i}`} scope="row">{q}</th>
+                    <td data-edit={`compare.cell.${i}`}>{braces}</td>
+                    <td data-edit={`compare.cell2.${i}`}>{aligners}</td>
                   </tr>
                 ))}
               </tbody>
@@ -306,9 +317,9 @@ export default function ArcOrthodonticsPage() {
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.sec} aria-labelledby="fees-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>Fees, in writing</p>
-            <h2 id="fees-h">The fee is the fee</h2>
-            <p className={s.secNote}>
+            <p data-edit="fees.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Fees, in writing</p>
+            <h2 data-edit="fees.title" data-edit-max="60" id="fees-h">The fee is the fee</h2>
+            <p data-edit="fees.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               One price for the whole treatment, quoted at the consult and
               held for sixty days. Spread it over up to 24 months at 0%, or pay
               in full and take 5% off.
@@ -318,24 +329,24 @@ export default function ArcOrthodonticsPage() {
           <div className={s.feesGrid}>
             <div className={s.feesCard}>
               <table className={s.fees}>
-                <caption className={s.srOnly}>Treatments, typical length, full fee, down payment and monthly payment</caption>
+                <caption data-edit="fees.srOnly" className={s.srOnly}>Treatments, typical length, full fee, down payment and monthly payment</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Treatment</th>
-                    <th scope="col" className={s.colLength}>Typical length</th>
-                    <th scope="col" className={s.num}>Full fee</th>
-                    <th scope="col" className={`${s.num} ${s.colDown}`}>Down</th>
-                    <th scope="col" className={`${s.num} ${s.colMonthly}`}>Monthly, 24 mo</th>
+                    <th data-edit="fees.heading" scope="col">Treatment</th>
+                    <th data-edit="fees.colLength" scope="col" className={s.colLength}>Typical length</th>
+                    <th data-edit="fees.num" scope="col" className={s.num}>Full fee</th>
+                    <th data-edit="fees.num2" scope="col" className={`${s.num} ${s.colDown}`}>Down</th>
+                    <th data-edit="fees.num3" scope="col" className={`${s.num} ${s.colMonthly}`}>Monthly, 24 mo</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {FEES.map((f) => (
+                  {FEES.map((f, i) => (
                     <tr key={f.name}>
-                      <th scope="row">{f.name}</th>
-                      <td className={s.colLength}>{f.length}</td>
-                      <td className={s.num}>{f.fee}</td>
-                      <td className={`${s.num} ${s.colDown}`}>{f.down}</td>
-                      <td className={`${s.num} ${s.colMonthly}`}>{f.monthly}</td>
+                      <th data-edit={`fees.heading2.${i}`} scope="row">{f.name}</th>
+                      <td data-edit={`fees.colLength2.${i}`} className={s.colLength}>{f.length}</td>
+                      <td data-edit={`fees.num4.${i}`} className={s.num}>{f.fee}</td>
+                      <td data-edit={`fees.num5.${i}`} className={`${s.num} ${s.colDown}`}>{f.down}</td>
+                      <td data-edit={`fees.num6.${i}`} className={`${s.num} ${s.colMonthly}`}>{f.monthly}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -344,16 +355,16 @@ export default function ArcOrthodonticsPage() {
 
             <div className={s.feesSide}>
               <div className={s.includes}>
-                <h3>Every fee includes</h3>
+                <h3 data-edit="fees.title2" data-edit-max="40">Every fee includes</h3>
                 <ul>
-                  {INCLUDED.map((item) => (
-                    <li key={item}>{item}</li>
+                  {INCLUDED.map((item, i) => (
+                    <li data-edit={`fees.item.${i}`} data-edit-max="80" key={item}>{item}</li>
                   ))}
                 </ul>
               </div>
               <div className={s.insurance}>
-                <h3>Insurance and HSA</h3>
-                <p>
+                <h3 data-edit="fees.title3" data-edit-max="40">Insurance and HSA</h3>
+                <p data-edit="fees.body" data-edit-max="240" data-edit-multiline>
                   We bill your insurer for you. Plans with orthodontic cover
                   usually pay $1,000-$2,500 for a lifetime, and that comes off
                   the full fee before the monthly plan is worked out. HSA and
@@ -367,27 +378,27 @@ export default function ArcOrthodonticsPage() {
         {/* ------------------------------------------------------------- WHO */}
         <section id="who" className={s.sec} aria-labelledby="who-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>Kids and adults</p>
-            <h2 id="who-h">Same chairs, different afternoons</h2>
+            <p data-edit="who.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Kids and adults</p>
+            <h2 data-edit="who.title" data-edit-max="60" id="who-h">Same chairs, different afternoons</h2>
           </div>
           <div className={s.who}>
             <article className={`${s.group} ${s.groupKids}`}>
-              <p className={s.groupWho}>{KIDS.who}</p>
-              <h3>{KIDS.title}</h3>
-              <p className={s.groupText}>{KIDS.text}</p>
+              <p data-edit="group.groupWho" data-edit-max="240" data-edit-multiline className={s.groupWho}>{KIDS.who}</p>
+              <h3 data-edit="group.title" data-edit-max="40">{KIDS.title}</h3>
+              <p data-edit="group.groupText" data-edit-max="240" data-edit-multiline className={s.groupText}>{KIDS.text}</p>
               <ul className={s.groupList}>
-                {KIDS.points.map((point) => (
-                  <li key={point}>{point}</li>
+                {KIDS.points.map((point, i) => (
+                  <li data-edit={`group.item.${i}`} data-edit-max="80" key={point}>{point}</li>
                 ))}
               </ul>
             </article>
             <article className={`${s.group} ${s.groupAdults}`}>
-              <p className={s.groupWho}>{ADULTS.who}</p>
-              <h3>{ADULTS.title}</h3>
-              <p className={s.groupText}>{ADULTS.text}</p>
+              <p data-edit="group.groupWho2" data-edit-max="240" data-edit-multiline className={s.groupWho}>{ADULTS.who}</p>
+              <h3 data-edit="group.title2" data-edit-max="40">{ADULTS.title}</h3>
+              <p data-edit="group.groupText2" data-edit-max="240" data-edit-multiline className={s.groupText}>{ADULTS.text}</p>
               <ul className={s.groupList}>
-                {ADULTS.points.map((point) => (
-                  <li key={point}>{point}</li>
+                {ADULTS.points.map((point, i) => (
+                  <li data-edit={`group.item2.${i}`} data-edit-max="80" key={point}>{point}</li>
                 ))}
               </ul>
             </article>
@@ -397,16 +408,16 @@ export default function ArcOrthodonticsPage() {
         {/* ------------------------------------------------------------ TEAM */}
         <section id="team" className={s.sec} aria-labelledby="team-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>The team</p>
-            <h2 id="team-h">Four people you will get to know</h2>
+            <p data-edit="team.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The team</p>
+            <h2 data-edit="team.title" data-edit-max="60" id="team-h">Four people you will get to know</h2>
           </div>
           <ul className={s.team}>
-            {TEAM.map((t) => (
+            {TEAM.map((t, i) => (
               <li key={t.name}>
                 <span className={s.avatar} aria-hidden="true">{t.initials}</span>
-                <h3>{t.name}</h3>
-                <p className={s.teamRole}>{t.role}</p>
-                <p className={s.teamNote}>{t.note}</p>
+                <h3 data-edit={`team.title2.${i}`} data-edit-max="40">{t.name}</h3>
+                <p data-edit={`team.teamRole.${i}`} data-edit-max="240" data-edit-multiline className={s.teamRole}>{t.role}</p>
+                <p data-edit={`team.teamNote.${i}`} data-edit-max="240" data-edit-multiline className={s.teamNote}>{t.note}</p>
               </li>
             ))}
           </ul>
@@ -415,14 +426,14 @@ export default function ArcOrthodonticsPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.sec} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>Questions</p>
-            <h2 id="faq-h">What people ask on the phone</h2>
+            <p data-edit="faq.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Questions</p>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">What people ask on the phone</h2>
           </div>
           <div className={s.faq}>
-            {FAQ.map(([q, a]) => (
+            {FAQ.map(([q, a], i) => (
               <details key={q}>
-                <summary>{q}</summary>
-                <p>{a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
               </details>
             ))}
           </div>
@@ -432,28 +443,28 @@ export default function ArcOrthodonticsPage() {
         <section id="book" className={s.sec} aria-labelledby="book-h">
           <div className={s.book}>
             <form className={s.form} action="#">
-              <p className={s.eyebrow}>Free first consult</p>
-              <h2 id="book-h" className={s.formTitle}>Book a consult</h2>
-              <p className={s.formNote}>Jess calls back within one working day to find a time.</p>
+              <p data-edit="book.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Free first consult</p>
+              <h2 data-edit="book.formTitle" data-edit-max="60" id="book-h" className={s.formTitle}>Book a consult</h2>
+              <p data-edit="book.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>Jess calls back within one working day to find a time.</p>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="arc-name">Patient's name</label>
+                  <label data-edit="book.label" htmlFor="arc-name">Patient's name</label>
                   <input id="arc-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="arc-age">Patient's age</label>
+                  <label data-edit="book.label2" htmlFor="arc-age">Patient's age</label>
                   <input id="arc-age" name="age" type="number" min="5" max="99" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="arc-phone">Phone</label>
+                  <label data-edit="book.label3" htmlFor="arc-phone">Phone</label>
                   <input id="arc-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="arc-email">Email</label>
+                  <label data-edit="book.label4" htmlFor="arc-email">Email</label>
                   <input id="arc-email" name="email" type="email" autoComplete="email" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="arc-want">Interested in</label>
+                  <label data-edit="book.label5" htmlFor="arc-want">Interested in</label>
                   <select id="arc-want" name="want" defaultValue="unsure">
                     <option value="unsure">Not sure yet</option>
                     <option value="braces">Braces</option>
@@ -463,7 +474,7 @@ export default function ArcOrthodonticsPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="arc-when">Best time</label>
+                  <label data-edit="book.label6" htmlFor="arc-when">Best time</label>
                   <select id="arc-when" name="when" defaultValue="after-school">
                     <option value="morning">Weekday morning</option>
                     <option value="after-school">After school, 3-5 pm</option>
@@ -472,11 +483,11 @@ export default function ArcOrthodonticsPage() {
                   </select>
                 </div>
               </div>
-              <button className={s.submit} type="submit">Request my free consult</button>
+              <button data-edit="book.submit" data-edit-max="24" className={s.submit} type="submit">Request my free consult</button>
             </form>
 
             <aside className={s.visit} aria-labelledby="visit-h">
-              <div className={s.visitField} aria-hidden="true">
+              <div data-edit-pattern="visit.field" data-edit-roles="transparent,2,3,2,1" className={s.visitField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={elbow}
                   palette={PIPES_SOFT}
@@ -487,21 +498,21 @@ export default function ArcOrthodonticsPage() {
                 />
               </div>
               <div className={s.visitBody}>
-                <h3 id="visit-h">240 Linden Park Road, Suite 2</h3>
-                <p className={s.visitNote}>Upstairs from the pharmacy, lift at the back. Free parking behind the building.</p>
+                <h3 data-edit="visit.title" data-edit-max="40" id="visit-h">240 Linden Park Road, Suite 2</h3>
+                <p data-edit="visit.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>Upstairs from the pharmacy, lift at the back. Free parking behind the building.</p>
                 <dl className={s.hours}>
-                  {HOURS.map(([day, time]) => (
+                  {HOURS.map(([day, time], i) => (
                     <div key={day}>
-                      <dt>{day}</dt>
-                      <dd>{time}</dd>
+                      <dt data-edit={`visit.term.${i}`} data-edit-max="28">{day}</dt>
+                      <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                     </div>
                   ))}
                 </dl>
                 <p className={s.contact}>
-                  <a href="tel:+15550134470">(555) 013-4470</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550134470">(555) 013-4470</a>
                 </p>
                 <p className={s.contact}>
-                  <a href="mailto:hello@arcortho.example">hello@arcortho.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@arcortho.example">hello@arcortho.example</a>
                 </p>
               </div>
             </aside>
@@ -510,7 +521,7 @@ export default function ArcOrthodonticsPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footStrip} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,1" className={s.footStrip} aria-hidden="true">
           <TabbiedPattern
             pattern={bangle}
             palette={STRIP}
@@ -521,10 +532,10 @@ export default function ArcOrthodonticsPage() {
           />
         </div>
         <div className={s.footInner}>
-          <p className={s.footName}>Arc Orthodontics</p>
-          <p>A fictional orthodontic practice. The team, fees and hours are invented.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Arc Orthodontics</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional orthodontic practice. The team, fees and hours are invented.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
         </div>
       </footer>

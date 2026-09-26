@@ -194,7 +194,18 @@ const HOURS = [
 
 export default function TheLockedRoomPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--manila': '#e8d6a8',
+        '--ink': '#221e19',
+        '--stamp': '#b1261f',
+        '--carbon': '#2e4a7a',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="manila,ink,stamp,carbon"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -204,15 +215,15 @@ export default function TheLockedRoomPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">The Locked Room</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">The Locked Room</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -223,31 +234,31 @@ export default function TheLockedRoomPage() {
             envelope torn open, its security tint the maze. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.cover}>
-            <p className={s.coverStamp}>Confidential</p>
-            <p className={s.typed}>Escape rooms. 88 Foundry Lane, Lower Marsh.</p>
-            <h1 id="hero-h" className={s.title}>Four rooms. Sixty minutes. One way out.</h1>
+            <p data-edit="hero.coverStamp" data-edit-max="240" data-edit-multiline className={s.coverStamp}>Confidential</p>
+            <p data-edit="hero.typed" data-edit-max="240" data-edit-multiline className={s.typed}>Escape rooms. 88 Foundry Lane, Lower Marsh.</p>
+            <h1 data-edit="hero.title" data-edit-max="70" id="hero-h" className={s.title}>Four rooms. Sixty minutes. One way out.</h1>
             <dl className={s.coverFacts}>
               <div>
-                <dt>Subject</dt>
-                <dd>You, and two to seven others</dd>
+                <dt data-edit="hero.term" data-edit-max="28">Subject</dt>
+                <dd data-edit="hero.body" data-edit-max="200" data-edit-multiline>You, and two to seven others</dd>
               </div>
               <div>
-                <dt>Location</dt>
-                <dd>Unit 4, 88 Foundry Lane</dd>
+                <dt data-edit="hero.term2" data-edit-max="28">Location</dt>
+                <dd data-edit="hero.body2" data-edit-max="200" data-edit-multiline>Unit 4, 88 Foundry Lane</dd>
               </div>
               <div>
-                <dt>Status</dt>
-                <dd>Open Wednesday to Sunday</dd>
+                <dt data-edit="hero.term3" data-edit-max="28">Status</dt>
+                <dd data-edit="hero.body3" data-edit-max="200" data-edit-multiline>Open Wednesday to Sunday</dd>
               </div>
             </dl>
             <div className={s.actions}>
-              <a className={s.button} href="#book">Book a room</a>
-              <a className={s.textLink} href="#cases">Read the case files</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#book">Book a room</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#cases">Read the case files</a>
             </div>
           </div>
 
           <div className={s.envelope}>
-            <div className={s.lining} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="0,1,3,1,2" className={s.lining} aria-hidden="true">
               <TabbiedPattern
                 pattern={maze}
                 palette={LINING}
@@ -265,10 +276,10 @@ export default function TheLockedRoomPage() {
               className={s.heroKey}
             />
             <div className={s.label}>
-              <p className={s.labelHead}>Evidence</p>
-              <p className={s.labelLine}>Item: floor plan, Unit 4</p>
-              <p className={s.labelLine}>Found: 9:14 pm</p>
-              <p className={s.labelLine}>Do not bend</p>
+              <p data-edit="hero.labelHead" data-edit-max="240" data-edit-multiline className={s.labelHead}>Evidence</p>
+              <p data-edit="hero.labelLine" data-edit-max="240" data-edit-multiline className={s.labelLine}>Item: floor plan, Unit 4</p>
+              <p data-edit="hero.labelLine2" data-edit-max="240" data-edit-multiline className={s.labelLine}>Found: 9:14 pm</p>
+              <p data-edit="hero.labelLine3" data-edit-max="240" data-edit-multiline className={s.labelLine}>Do not bend</p>
             </div>
           </div>
         </section>
@@ -278,32 +289,32 @@ export default function TheLockedRoomPage() {
             to folder, the way they sit in a drawer. */}
         <section id="cases" className={s.section} aria-labelledby="cases-h">
           <div className={s.head}>
-            <h2 id="cases-h" className={s.stampHead}>Case files</h2>
-            <p className={s.headNote}>
+            <h2 data-edit="cases.stampHead" data-edit-max="60" id="cases-h" className={s.stampHead}>Case files</h2>
+            <p data-edit="cases.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Four rooms, each a case that was never closed. Every one runs for
               sixty minutes, and every one has been solved, by somebody.
             </p>
           </div>
 
           <div className={s.cases}>
-            {CASES.map((c) => (
+            {CASES.map((c, i) => (
               <article key={c.no} className={s.folder} aria-label={c.title}>
-                <p className={s.folderTab}>{c.no}</p>
+                <p data-edit={`folder.folderTab.${i}`} data-edit-max="240" data-edit-multiline className={s.folderTab}>{c.no}</p>
                 <div className={s.folderBody}>
                   <div className={s.card}>
-                    <p className={s.cardHead}>Particulars</p>
+                    <p data-edit={`folder.cardHead.${i}`} data-edit-max="240" data-edit-multiline className={s.cardHead}>Particulars</p>
                     <div className={s.cardBody}>
                       <dl className={s.stats}>
-                        {c.stats.map(([k, v]) => (
+                        {c.stats.map(([k, v], i2) => (
                           <div key={k}>
-                            <dt>{k}</dt>
-                            <dd>{v}</dd>
+                            <dt data-edit={`folder.term.${i}.${i2}`} data-edit-max="28">{k}</dt>
+                            <dd data-edit={`folder.body.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                           </div>
                         ))}
                       </dl>
                       <div className={s.exhibit}>
                         <Artwork slug={c.art} alt={c.artAlt} inks={['var(--text)']} className={s.exhibitArt} />
-                        <p className={s.exhibitNote}>{c.exhibit}</p>
+                        <p data-edit={`folder.exhibitNote.${i}`} data-edit-max="240" data-edit-multiline className={s.exhibitNote}>{c.exhibit}</p>
                       </div>
                     </div>
                     <div className={s.meter} aria-hidden="true">
@@ -311,17 +322,17 @@ export default function TheLockedRoomPage() {
                         <span key={n} className={n <= c.level ? s.on : s.off} />
                       ))}
                     </div>
-                    <p className={s.meterWord}>{c.levelWord}</p>
+                    <p data-edit={`folder.meterWord.${i}`} data-edit-max="240" data-edit-multiline className={s.meterWord}>{c.levelWord}</p>
                   </div>
                   <div className={s.report}>
-                    <h3>{c.title}</h3>
-                    <p className={s.filed}>{c.filed}</p>
+                    <h3 data-edit={`folder.title.${i}`} data-edit-max="40">{c.title}</h3>
+                    <p data-edit={`folder.filed.${i}`} data-edit-max="240" data-edit-multiline className={s.filed}>{c.filed}</p>
                     <div className={s.lines}>
                       {c.lines.map((l) => (
                         <p key={l.text} className={l.redacted ? s.redacted : undefined} aria-hidden={l.redacted ? true : undefined}>{l.text}</p>
                       ))}
                     </div>
-                    <p className={s.caseStamp}>{c.stamp}</p>
+                    <p data-edit={`folder.caseStamp.${i}`} data-edit-max="240" data-edit-multiline className={s.caseStamp}>{c.stamp}</p>
                   </div>
                 </div>
               </article>
@@ -330,7 +341,7 @@ export default function TheLockedRoomPage() {
         </section>
 
         {/* The inside of a security envelope, laid across the page. */}
-        <div className={s.tint} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,3,1,3" className={s.tint} aria-hidden="true">
           <TabbiedPattern
             pattern={maze}
             palette={TINT}
@@ -345,17 +356,17 @@ export default function TheLockedRoomPage() {
         {/* ------------------------------------------------------------ HOW */}
         <section id="how" className={s.section} aria-labelledby="how-h">
           <div className={s.head}>
-            <h2 id="how-h" className={s.stampHead}>Procedure</h2>
-            <p className={s.headNote}>
+            <h2 data-edit="how.stampHead" data-edit-max="60" id="how-h" className={s.stampHead}>Procedure</h2>
+            <p data-edit="how.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               The door is never locked. It only looks it. Anyone can step out at
               any time, and nobody will think less of them.
             </p>
           </div>
           <ol className={s.steps}>
-            {STEPS.map(([t, d]) => (
+            {STEPS.map(([t, d], i) => (
               <li key={t}>
-                <h3>{t}</h3>
-                <p>{d}</p>
+                <h3 data-edit={`how.title.${i}`} data-edit-max="40">{t}</h3>
+                <p data-edit={`how.body.${i}`} data-edit-max="240" data-edit-multiline>{d}</p>
               </li>
             ))}
           </ol>
@@ -364,36 +375,36 @@ export default function TheLockedRoomPage() {
         {/* ---------------------------------------------------------- RATES */}
         <section id="rates" className={`${s.section} ${s.ratesSection}`} aria-labelledby="rates-h">
           <div className={s.head}>
-            <h2 id="rates-h" className={s.stampHead}>Rates</h2>
-            <p className={s.headNote}>
+            <h2 data-edit="rates.stampHead" data-edit-max="60" id="rates-h" className={s.stampHead}>Rates</h2>
+            <p data-edit="rates.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Priced per player, by the size of your team. The whole room is
               yours; we never put strangers together.
             </p>
           </div>
           <div className={s.schedule}>
             <table className={s.rates}>
-              <caption className={s.caption}>Fee schedule, per player, per room</caption>
+              <caption data-edit="rates.caption" className={s.caption}>Fee schedule, per player, per room</caption>
               <thead>
                 <tr>
-                  <th scope="col">Team</th>
-                  <th scope="col">Evenings and weekends</th>
-                  <th scope="col">Weekdays before 5</th>
+                  <th data-edit="rates.heading" scope="col">Team</th>
+                  <th data-edit="rates.heading2" scope="col">Evenings and weekends</th>
+                  <th data-edit="rates.heading3" scope="col">Weekdays before 5</th>
                 </tr>
               </thead>
               <tbody>
-                {RATES.map(([team, full, early]) => (
+                {RATES.map(([team, full, early], i) => (
                   <tr key={team}>
-                    <th scope="row">{team}</th>
-                    <td className={s.rate}>{full}</td>
-                    <td className={s.rate}>{early}</td>
+                    <th data-edit={`rates.heading4.${i}`} scope="row">{team}</th>
+                    <td data-edit={`rates.rate.${i}`} className={s.rate}>{full}</td>
+                    <td data-edit={`rates.rate2.${i}`} className={s.rate}>{early}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <ul className={s.rateNotes}>
-              <li>Gift vouchers for any room, any team size, good for a year.</li>
-              <li>Students and anyone over 65, $4 off each, any time.</li>
-              <li>Pay when you book. Move your time free up to 48 hours before.</li>
+              <li data-edit="rates.item" data-edit-max="80">Gift vouchers for any room, any team size, good for a year.</li>
+              <li data-edit="rates.item2" data-edit-max="80">Students and anyone over 65, $4 off each, any time.</li>
+              <li data-edit="rates.item3" data-edit-max="80">Pay when you book. Move your time free up to 48 hours before.</li>
             </ul>
           </div>
         </section>
@@ -402,19 +413,19 @@ export default function TheLockedRoomPage() {
         <section id="parties" className={`${s.section} ${s.parties}`} aria-labelledby="parties-h">
           <div className={s.partiesText}>
             <div className={s.head}>
-              <h2 id="parties-h" className={s.stampHead}>Groups</h2>
+              <h2 data-edit="parties.stampHead" data-edit-max="60" id="parties-h" className={s.stampHead}>Groups</h2>
             </div>
-            {PARTIES.map((p) => (
+            {PARTIES.map((p, i) => (
               <div className={s.party} key={p.title}>
-                <p className={s.partyTag}>{p.tag}</p>
-                <h3>{p.title}</h3>
-                <p className={s.partyBody}>{p.body}</p>
-                <p className={s.partyPrice}>{p.price}</p>
+                <p data-edit={`parties.partyTag.${i}`} data-edit-max="240" data-edit-multiline className={s.partyTag}>{p.tag}</p>
+                <h3 data-edit={`parties.title.${i}`} data-edit-max="40">{p.title}</h3>
+                <p data-edit={`parties.partyBody.${i}`} data-edit-max="240" data-edit-multiline className={s.partyBody}>{p.body}</p>
+                <p data-edit={`parties.partyPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.partyPrice}>{p.price}</p>
               </div>
             ))}
           </div>
           <figure className={s.plan}>
-            <div className={s.planField} aria-hidden="true">
+            <div data-edit-pattern="parties.field" data-edit-roles="transparent,3,3,1" className={s.planField} aria-hidden="true">
               <TabbiedPattern
                 pattern={maze}
                 palette={PLAN}
@@ -425,14 +436,14 @@ export default function TheLockedRoomPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <figcaption className={s.planCaption}>Unit 4, all four rooms. Not to scale, on purpose.</figcaption>
+            <figcaption data-edit="parties.planCaption" data-edit-max="120" data-edit-multiline className={s.planCaption}>Unit 4, all four rooms. Not to scale, on purpose.</figcaption>
           </figure>
         </section>
 
         {/* ----------------------------------------------------------- BOOK */}
         <section id="book" className={`${s.section} ${s.book}`} aria-labelledby="book-h">
           <form className={s.form} action="#">
-            <div className={s.formTint} aria-hidden="true">
+            <div data-edit-pattern="book.field" data-edit-roles="2,0,0,1" className={s.formTint} aria-hidden="true">
               <TabbiedPattern
                 pattern={maze}
                 palette={STRIP}
@@ -443,11 +454,11 @@ export default function TheLockedRoomPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <p className={s.formNo}>Form LR-7</p>
-            <h2 id="book-h" className={s.formTitle}>Request for a room</h2>
+            <p data-edit="book.formNo" data-edit-max="240" data-edit-multiline className={s.formNo}>Form LR-7</p>
+            <h2 data-edit="book.formTitle" data-edit-max="60" id="book-h" className={s.formTitle}>Request for a room</h2>
             <div className={s.formGrid}>
               <div className={s.field}>
-                <label htmlFor="lr-room">Case</label>
+                <label data-edit="book.label" htmlFor="lr-room">Case</label>
                 <select id="lr-room" name="room" defaultValue="Room 414">
                   {CASES.map((c) => (
                     <option key={c.no} value={c.title}>{c.title}</option>
@@ -455,15 +466,15 @@ export default function TheLockedRoomPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="lr-players">Players</label>
+                <label data-edit="book.label2" htmlFor="lr-players">Players</label>
                 <input id="lr-players" name="players" type="number" min={2} max={8} defaultValue={4} />
               </div>
               <div className={s.field}>
-                <label htmlFor="lr-date">Date</label>
+                <label data-edit="book.label3" htmlFor="lr-date">Date</label>
                 <input id="lr-date" name="date" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lr-time">Start time</label>
+                <label data-edit="book.label4" htmlFor="lr-time">Start time</label>
                 <select id="lr-time" name="time" defaultValue="6:00">
                   {TIMES.map((t) => (
                     <option key={t} value={t}>{t}</option>
@@ -471,17 +482,17 @@ export default function TheLockedRoomPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="lr-name">Name</label>
+                <label data-edit="book.label5" htmlFor="lr-name">Name</label>
                 <input id="lr-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lr-email">Email</label>
+                <label data-edit="book.label6" htmlFor="lr-email">Email</label>
                 <input id="lr-email" name="email" type="email" autoComplete="email" />
               </div>
             </div>
             <div className={s.formFoot}>
-              <button className={s.button} type="submit">File the request</button>
-              <p className={s.small}>We confirm by email within the hour, noon to 11. Start times are the same every open day.</p>
+              <button data-edit="book.button" data-edit-max="24" className={s.button} type="submit">File the request</button>
+              <p data-edit="book.small" data-edit-max="240" data-edit-multiline className={s.small}>We confirm by email within the hour, noon to 11. Start times are the same every open day.</p>
             </div>
           </form>
         </section>
@@ -490,44 +501,44 @@ export default function TheLockedRoomPage() {
         <section id="questions" className={`${s.section} ${s.questions}`} aria-labelledby="questions-h">
           <div>
             <div className={s.head}>
-              <h2 id="questions-h" className={s.stampHead}>Questions</h2>
+              <h2 data-edit="questions.stampHead" data-edit-max="60" id="questions-h" className={s.stampHead}>Questions</h2>
             </div>
             <div className={s.faq}>
-              {QUESTIONS.map(([q, a]) => (
+              {QUESTIONS.map(([q, a], i) => (
                 <details key={q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`questions.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`questions.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
           </div>
           <div className={s.visit}>
-            <p className={s.visitHead}>Where to find us</p>
-            <p className={s.address}>Unit 4, 88 Foundry Lane</p>
-            <p className={s.typed}>Lower Marsh. The red door at the end of the yard, under the loading crane.</p>
+            <p data-edit="questions.visitHead" data-edit-max="240" data-edit-multiline className={s.visitHead}>Where to find us</p>
+            <p data-edit="questions.address" data-edit-max="240" data-edit-multiline className={s.address}>Unit 4, 88 Foundry Lane</p>
+            <p data-edit="questions.typed" data-edit-max="240" data-edit-multiline className={s.typed}>Lower Marsh. The red door at the end of the yard, under the loading crane.</p>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`questions.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`questions.body2.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
             <p className={s.contact}>
-              <a href="tel:+15550129144">(555) 012-9144</a>
+              <a data-edit="questions.link" data-edit-max="28" href="tel:+15550129144">(555) 012-9144</a>
             </p>
             <p className={s.contact}>
-              <a href="mailto:cases@thelockedroom.example">cases@thelockedroom.example</a>
+              <a data-edit="questions.link2" data-edit-max="28" href="mailto:cases@thelockedroom.example">cases@thelockedroom.example</a>
             </p>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>The Locked Room</p>
-        <p>A fictional escape room. The cases, records and rates are invented; the key and the evidence sketches are generated images drawn in the page's colors.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>The Locked Room</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional escape room. The cases, records and rates are invented; the key and the evidence sketches are generated images drawn in the page's colors.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

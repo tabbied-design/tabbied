@@ -196,7 +196,19 @@ const HOURS = [
 
 export default function HonorRollTutoringPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fbf9f1',
+        '--graphite': '#23262d',
+        '--ballpoint': '#2f55a4',
+        '--margin': '#d6453a',
+        '--highlight': '#f3dc3f',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,graphite,ballpoint,margin,highlight"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -206,15 +218,15 @@ export default function HonorRollTutoringPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Honor Roll</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Honor Roll</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -224,7 +236,7 @@ export default function HonorRollTutoringPage() {
             A composition book: marbled board, a cloth spine, a label. */}
         <section className={s.coverWrap} aria-labelledby="cover-h">
           <div className={s.cover}>
-            <div className={s.marble} aria-hidden="true">
+            <div data-edit-pattern="cover.field" data-edit-roles="1,0,1,0,0,1" className={s.marble} aria-hidden="true">
               <TabbiedPattern
                 pattern={scramble}
                 palette={MARBLE}
@@ -237,13 +249,13 @@ export default function HonorRollTutoringPage() {
             <div className={s.spine} aria-hidden="true" />
 
             <div className={s.label}>
-              <p className={s.labelTop}>Honor Roll Tutoring</p>
-              <h1 id="cover-h" className={s.title}>Homework that <em>finally makes sense.</em></h1>
+              <p data-edit="cover.labelTop" data-edit-max="240" data-edit-multiline className={s.labelTop}>Honor Roll Tutoring</p>
+              <h1 data-edit="cover.title" data-edit-format="emphasis" data-edit-max="70" id="cover-h" className={s.title}>Homework that <em>finally makes sense.</em></h1>
               <dl className={s.labelLines}>
-                {LABEL.map(([k, v]) => (
+                {LABEL.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`cover.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`cover.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -251,14 +263,14 @@ export default function HonorRollTutoringPage() {
           </div>
 
           <div className={s.coverFoot}>
-            <p className={s.lede}>
+            <p data-edit="cover.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Six tutors, one long table and a lot of pencils, on the second
               floor of 41 Alder Avenue. One tutor and one student, the same time
               each week, until the report card says so.
             </p>
             <div className={s.ctas}>
-              <a className={s.btn} href="#book">Book a free assessment</a>
-              <a className={s.btnLine} href="#packs">See the prices</a>
+              <a data-edit="cover.btn" data-edit-max="28" className={s.btn} href="#book">Book a free assessment</a>
+              <a data-edit="cover.btnLine" data-edit-max="28" className={s.btnLine} href="#packs">See the prices</a>
             </div>
           </div>
         </section>
@@ -266,9 +278,9 @@ export default function HonorRollTutoringPage() {
         {/* -------------------------------------------------------- SUBJECTS */}
         <section id="subjects" className={s.sec} aria-labelledby="subjects-h">
           <div className={s.secHead}>
-            <p className={s.pageNo}>p. 1</p>
-            <h2 id="subjects-h">Subjects, <em>by grade</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="subjects.pageNo" data-edit-max="240" data-edit-multiline className={s.pageNo}>p. 1</p>
+            <h2 data-edit="subjects.title" data-edit-format="emphasis" data-edit-max="60" id="subjects-h">Subjects, <em>by grade</em></h2>
+            <p data-edit="subjects.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A tick means one of us teaches it at that level, every week. If
               you do not see it, ask: we know people.
             </p>
@@ -276,19 +288,19 @@ export default function HonorRollTutoringPage() {
 
           <div className={s.gridSheet}>
             <table className={s.subjects}>
-              <caption className={s.srOnly}>Which subjects are taught in which grade bands</caption>
+              <caption data-edit="subjects.srOnly" className={s.srOnly}>Which subjects are taught in which grade bands</caption>
               <thead>
                 <tr>
-                  <th scope="col" className={s.subjectCol}>Subject</th>
-                  {BANDS.map((b) => (
-                    <th key={b} scope="col">{b}</th>
+                  <th data-edit="subjects.subjectCol" scope="col" className={s.subjectCol}>Subject</th>
+                  {BANDS.map((b, i) => (
+                    <th data-edit={`subjects.heading.${i}`} key={b} scope="col">{b}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {SUBJECTS.map((sub) => (
+                {SUBJECTS.map((sub, i) => (
                   <tr key={sub.name}>
-                    <th scope="row" className={s.subjectCol}>{sub.name}</th>
+                    <th data-edit={`subjects.subjectCol2.${i}`} scope="row" className={s.subjectCol}>{sub.name}</th>
                     {sub.bands.map((on, i) => (
                       <td key={BANDS[i]} className={on ? s.tick : s.blank}>
                         <span className={s.srOnly}>{on ? 'Taught' : 'Not taught'}</span>
@@ -304,31 +316,31 @@ export default function HonorRollTutoringPage() {
         {/* -------------------------------------------------------- SCHEDULE */}
         <section id="schedule" className={s.sec} aria-labelledby="schedule-h">
           <div className={s.secHead}>
-            <p className={s.pageNo}>p. 2</p>
-            <h2 id="schedule-h">The week, <em>by the hour</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="schedule.pageNo" data-edit-max="240" data-edit-multiline className={s.pageNo}>p. 2</p>
+            <h2 data-edit="schedule.title" data-edit-format="emphasis" data-edit-max="60" id="schedule-h">The week, <em>by the hour</em></h2>
+            <p data-edit="schedule.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Who sits at the table when. Sessions start on the hour and run 55
               minutes, so there is time to sharpen a pencil in between.
             </p>
           </div>
 
           <ul className={s.legend}>
-            {KINDS.map(([kind, label]) => (
-              <li key={kind} className={s[kind]}>{label}</li>
+            {KINDS.map(([kind, label], i) => (
+              <li data-edit={`schedule.item.${i}`} data-edit-max="80" key={kind} className={s[kind]}>{label}</li>
             ))}
           </ul>
 
           <div className={s.week}>
-            {WEEK.map((d) => (
+            {WEEK.map((d, i) => (
               <div key={d.day} className={s.day}>
-                <h3 className={s.dayName}>{d.day}</h3>
-                <p className={s.dayHours}>{d.hours}</p>
+                <h3 data-edit={`schedule.dayName.${i}`} data-edit-max="40" className={s.dayName}>{d.day}</h3>
+                <p data-edit={`schedule.dayHours.${i}`} data-edit-max="240" data-edit-multiline className={s.dayHours}>{d.hours}</p>
                 <ul className={s.slots}>
                   {d.slots.map((slot, j) => (
                     <li key={`${slot.time}-${j}`} className={s[slot.kind]}>
-                      <span className={s.slotTime}>{slot.time}</span>
-                      <span className={s.slotWhat}>{slot.what}</span>
-                      <span className={s.slotWho}>{slot.who}</span>
+                      <span data-edit={`schedule.slotTime.${i}.${j}`} data-edit-max="60" className={s.slotTime}>{slot.time}</span>
+                      <span data-edit={`schedule.slotWhat.${i}.${j}`} data-edit-max="60" className={s.slotWhat}>{slot.what}</span>
+                      <span data-edit={`schedule.slotWho.${i}.${j}`} data-edit-max="60" className={s.slotWho}>{slot.who}</span>
                     </li>
                   ))}
                 </ul>
@@ -338,7 +350,7 @@ export default function HonorRollTutoringPage() {
         </section>
 
         {/* The margin doodle: a ballpoint maze drawn down a strip of the sheet. */}
-        <div className={s.doodleBand} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,2,1,2,2" className={s.doodleBand} aria-hidden="true">
           <TabbiedPattern
             pattern={maze}
             palette={DOODLE}
@@ -353,9 +365,9 @@ export default function HonorRollTutoringPage() {
         {/* ----------------------------------------------------------- PACKS */}
         <section id="packs" className={s.sec} aria-labelledby="packs-h">
           <div className={s.secHead}>
-            <p className={s.pageNo}>p. 3</p>
-            <h2 id="packs-h">Packs and <em>prices</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="packs.pageNo" data-edit-max="240" data-edit-multiline className={s.pageNo}>p. 3</p>
+            <h2 data-edit="packs.title" data-edit-format="emphasis" data-edit-max="60" id="packs-h">Packs and <em>prices</em></h2>
+            <p data-edit="packs.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Sessions carry over for six months, and siblings can share a
               pack. The first assessment is always free.
             </p>
@@ -363,39 +375,39 @@ export default function HonorRollTutoringPage() {
 
           <div className={s.packs}>
           <div className={s.quiz}>
-            <p className={s.qNo}>Question 4</p>
-            <h3 className={s.question}>How many sessions does your student need?</h3>
-            <p className={s.qHint}>Choose one answer. Show your work.</p>
+            <p data-edit="packs.qNo" data-edit-max="240" data-edit-multiline className={s.qNo}>Question 4</p>
+            <h3 data-edit="packs.question" data-edit-max="40" className={s.question}>How many sessions does your student need?</h3>
+            <p data-edit="packs.qHint" data-edit-max="240" data-edit-multiline className={s.qHint}>Choose one answer. Show your work.</p>
             <ol className={s.choices}>
-              {PACKS.map((p) => (
+              {PACKS.map((p, i) => (
                 <li key={p.letter} className={p.note ? s.chosen : undefined}>
-                  <span className={s.bubble}>{p.letter}</span>
+                  <span data-edit={`packs.bubble.${i}`} data-edit-max="60" className={s.bubble}>{p.letter}</span>
                   <div className={s.choiceBody}>
-                    <h4 className={s.choiceName}>{p.name}</h4>
-                    <p className={s.choiceDetail}>{p.detail}</p>
+                    <h4 data-edit={`packs.choiceName.${i}`} data-edit-max="36" className={s.choiceName}>{p.name}</h4>
+                    <p data-edit={`packs.choiceDetail.${i}`} data-edit-max="240" data-edit-multiline className={s.choiceDetail}>{p.detail}</p>
                   </div>
                   <div className={s.choicePrice}>
-                    <strong>{p.price}</strong>
-                    <small>{p.each}</small>
+                    <strong data-edit={`packs.emphasis.${i}`}>{p.price}</strong>
+                    <small data-edit={`packs.note.${i}`}>{p.each}</small>
                   </div>
-                  {p.note ? <span className={s.redNote}>{p.note}</span> : null}
+                  {p.note ? <span data-edit={`packs.redNote.${i}`} data-edit-max="60" className={s.redNote}>{p.note}</span> : null}
                 </li>
               ))}
             </ol>
           </div>
 
           <aside className={s.workings} aria-labelledby="work-h">
-            <h3 id="work-h" className={s.workTitle}>Show your work</h3>
+            <h3 data-edit="work.workTitle" data-edit-max="40" id="work-h" className={s.workTitle}>Show your work</h3>
             <ol className={s.workLines}>
-              {WORKINGS.map((line) => (
-                <li key={line}>{line}</li>
+              {WORKINGS.map((line, i) => (
+                <li data-edit={`work.item.${i}`} data-edit-max="80" key={line}>{line}</li>
               ))}
             </ol>
             <p className={s.answerLine}>
-              <span>Answer:</span>
-              <span className={s.answer}>C</span>
+              <span data-edit="work.text" data-edit-max="60">Answer:</span>
+              <span data-edit="work.answer" data-edit-max="60" className={s.answer}>C</span>
             </p>
-            <p className={s.workNote}>Siblings can share one pack, so two kids at ten sessions each is two packs, not four.</p>
+            <p data-edit="work.workNote" data-edit-max="240" data-edit-multiline className={s.workNote}>Siblings can share one pack, so two kids at ten sessions each is two packs, not four.</p>
             <Artwork
               slug="honor-roll-tutoring-doodle"
               alt="A ballpoint doodle of a sharpened pencil, an apple and a protractor"
@@ -409,21 +421,21 @@ export default function HonorRollTutoringPage() {
         {/* ---------------------------------------------------------- TUTORS */}
         <section id="tutors" className={s.sec} aria-labelledby="tutors-h">
           <div className={s.secHead}>
-            <p className={s.pageNo}>p. 4</p>
-            <h2 id="tutors-h">Who is <em>at the table</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="tutors.pageNo" data-edit-max="240" data-edit-multiline className={s.pageNo}>p. 4</p>
+            <h2 data-edit="tutors.title" data-edit-format="emphasis" data-edit-max="60" id="tutors-h">Who is <em>at the table</em></h2>
+            <p data-edit="tutors.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every tutor here has taught a full class before. Your student keeps
               the same one from the first session to the last.
             </p>
           </div>
 
           <ol className={`${s.ruled} ${s.roster}`}>
-            {TUTORS.map((t) => (
+            {TUTORS.map((t, i) => (
               <li key={t.name}>
-                <h3 className={s.tutorName}>{t.name}</h3>
-                <p className={s.tutorTeaches}>{t.teaches}</p>
-                <p className={s.tutorBefore}>{t.before}</p>
-                <p className={s.tutorAsk}>{t.ask}</p>
+                <h3 data-edit={`tutors.tutorName.${i}`} data-edit-max="40" className={s.tutorName}>{t.name}</h3>
+                <p data-edit={`tutors.tutorTeaches.${i}`} data-edit-max="240" data-edit-multiline className={s.tutorTeaches}>{t.teaches}</p>
+                <p data-edit={`tutors.tutorBefore.${i}`} data-edit-max="240" data-edit-multiline className={s.tutorBefore}>{t.before}</p>
+                <p data-edit={`tutors.tutorAsk.${i}`} data-edit-max="240" data-edit-multiline className={s.tutorAsk}>{t.ask}</p>
               </li>
             ))}
           </ol>
@@ -434,29 +446,29 @@ export default function HonorRollTutoringPage() {
           <div className={s.firstGrid}>
             <div>
               <div className={s.secHead}>
-                <p className={s.pageNo}>p. 5</p>
-                <h2 id="first-h">Your <em>first week</em></h2>
-                <p className={s.secNote}>A to-do list, in the order it happens.</p>
+                <p data-edit="firstWeek.pageNo" data-edit-max="240" data-edit-multiline className={s.pageNo}>p. 5</p>
+                <h2 data-edit="firstWeek.title" data-edit-format="emphasis" data-edit-max="60" id="first-h">Your <em>first week</em></h2>
+                <p data-edit="firstWeek.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>A to-do list, in the order it happens.</p>
               </div>
               <ol className={`${s.ruled} ${s.todo}`}>
-                {FIRST_WEEK.map(([when, what]) => (
+                {FIRST_WEEK.map(([when, what], i) => (
                   <li key={when}>
-                    <span className={s.todoWhen}>{when}</span>
-                    <p>{what}</p>
+                    <span data-edit={`firstWeek.todoWhen.${i}`} data-edit-max="60" className={s.todoWhen}>{when}</span>
+                    <p data-edit={`firstWeek.body.${i}`} data-edit-max="240" data-edit-multiline>{what}</p>
                   </li>
                 ))}
               </ol>
             </div>
 
             <div className={s.faqCol}>
-              <h3 className={s.faqTitle}>Questions parents ask</h3>
-              {FAQ.map(([q, a]) => (
+              <h3 data-edit="firstWeek.faqTitle" data-edit-max="40" className={s.faqTitle}>Questions parents ask</h3>
+              {FAQ.map(([q, a], i) => (
                 <details key={q} className={s.q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`firstWeek.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`firstWeek.body2.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
-              <div className={s.cardDoodle} aria-hidden="true">
+              <div data-edit-pattern="firstWeek.field" data-edit-roles="transparent,2,2,1,2,2" className={s.cardDoodle} aria-hidden="true">
                 <TabbiedPattern
                   pattern={maze}
                   palette={DOODLE}
@@ -475,42 +487,42 @@ export default function HonorRollTutoringPage() {
         <section id="book" className={s.sec} aria-labelledby="book-h">
           <div className={s.bookGrid}>
             <div className={s.office}>
-              <p className={s.pageNo}>p. 6</p>
-              <h2 id="book-h">Room 2B, <em>Alder Avenue</em></h2>
-              <p className={s.address}>
+              <p data-edit="book.pageNo" data-edit-max="240" data-edit-multiline className={s.pageNo}>p. 6</p>
+              <h2 data-edit="book.title" data-edit-format="emphasis" data-edit-max="60" id="book-h">Room 2B, <em>Alder Avenue</em></h2>
+              <p data-edit="book.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 41 Alder Avenue, second floor
                 <br />
                 Linden Park, up the stairs past the library
               </p>
               <p className={s.contact}>
-                <a href="tel:+15550143380">(555) 014-3380</a>
+                <a data-edit="book.link" data-edit-max="28" href="tel:+15550143380">(555) 014-3380</a>
                 <br />
-                <a href="mailto:desk@honorrolltutoring.example">desk@honorrolltutoring.example</a>
+                <a data-edit="book.link2" data-edit-max="28" href="mailto:desk@honorrolltutoring.example">desk@honorrolltutoring.example</a>
               </p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`book.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`book.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.small}>
+              <p data-edit="book.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 There is a lift at the library entrance. Street parking is free
                 after 6 pm, and the 14 bus stops at the corner.
               </p>
             </div>
 
             <form className={s.slip} action="#">
-              <p className={s.cut}>Cut along the line and hand it in</p>
-              <h3 className={s.slipTitle}>Free assessment, sign-up slip</h3>
+              <p data-edit="book.cut" data-edit-max="240" data-edit-multiline className={s.cut}>Cut along the line and hand it in</p>
+              <h3 data-edit="book.slipTitle" data-edit-max="40" className={s.slipTitle}>Free assessment, sign-up slip</h3>
               <div className={s.slipGrid}>
                 <div className={s.field}>
-                  <label htmlFor="hr-student">Student's name</label>
+                  <label data-edit="book.label" htmlFor="hr-student">Student's name</label>
                   <input id="hr-student" name="student" type="text" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="hr-grade">Grade</label>
+                  <label data-edit="book.label2" htmlFor="hr-grade">Grade</label>
                   <select id="hr-grade" name="grade" defaultValue="">
                     <option value="" disabled>Pick one</option>
                     <option value="k2">K to 2</option>
@@ -521,20 +533,20 @@ export default function HonorRollTutoringPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="hr-parent">Parent or guardian</label>
+                  <label data-edit="book.label3" htmlFor="hr-parent">Parent or guardian</label>
                   <input id="hr-parent" name="parent" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="hr-phone">Phone</label>
+                  <label data-edit="book.label4" htmlFor="hr-phone">Phone</label>
                   <input id="hr-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="hr-what">What is going wrong, in a sentence or two</label>
+                  <label data-edit="book.label5" htmlFor="hr-what">What is going wrong, in a sentence or two</label>
                   <textarea id="hr-what" name="what" rows={3} />
                 </div>
               </div>
-              <button className={s.btn} type="submit">Hand it in</button>
-              <p className={s.slipNote}>We call back the same evening, before 8.</p>
+              <button data-edit="book.btn" data-edit-max="24" className={s.btn} type="submit">Hand it in</button>
+              <p data-edit="book.slipNote" data-edit-max="240" data-edit-multiline className={s.slipNote}>We call back the same evening, before 8.</p>
             </form>
           </div>
         </section>
@@ -542,7 +554,7 @@ export default function HonorRollTutoringPage() {
 
       <footer className={s.footer}>
         {/* The back cover: the same marbled board as the front. */}
-        <div className={s.backCover} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="0,1,0,1,1,0" className={s.backCover} aria-hidden="true">
           <TabbiedPattern
             pattern={scramble}
             palette={BACK}
@@ -553,11 +565,11 @@ export default function HonorRollTutoringPage() {
           />
         </div>
         <div className={s.footText}>
-          <p className={s.footName}>Honor Roll Tutoring</p>
-          <p>A fictional tutoring center. The tutors, prices, schedule and address are invented.</p>
-          <p>The doodle in the margin is a generated image, drawn in the page's colors.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Honor Roll Tutoring</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional tutoring center. The tutors, prices, schedule and address are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The doodle in the margin is a generated image, drawn in the page's colors.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
         </div>
       </footer>

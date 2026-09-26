@@ -106,7 +106,20 @@ const FAQ = [
 
 export default function FreshCoatPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--primer': '#f4f1ea',
+        '--sash': '#202427',
+        '--door': '#2d5b87',
+        '--clay': '#c4633c',
+        '--sage': '#8fa487',
+        '--ochre': '#dfae47',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="primer,sash,door,clay,sage,ochre"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -116,16 +129,16 @@ export default function FreshCoatPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Fresh Coat</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Fresh Coat</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCall} href="tel:+15550186640">(555) 018-6640</a>
+        <a data-edit="bar.barCall" data-edit-max="28" className={s.barCall} href="tel:+15550186640">(555) 018-6640</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -136,48 +149,48 @@ export default function FreshCoatPage() {
             brush-out of Front Door Blue under both. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Painters and decorators. Hollin Park and five miles round.</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Painters and decorators. Hollin Park and five miles round.</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Two coats, <em>one clean line.</em>
             </h1>
-            <p className={s.heroLead}>
+            <p data-edit="hero.heroLead" data-edit-max="240" data-edit-multiline className={s.heroLead}>
               Three of us, a van and a lot of dust sheets. We paint and paper
               houses one room at a time, prepare every wall before it sees a
               roller, and leave the place cleaner than we found it.
             </p>
             <div className={s.heroActions}>
-              <a className={s.button} href="#quote">Book a free walk-round</a>
-              <a className={s.textLink} href="#rooms">See real room prices</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#quote">Book a free walk-round</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#rooms">See real room prices</a>
             </div>
           </div>
 
           <div className={s.fan} aria-hidden="true">
             <div className={`${s.fanChip} ${s.fan1}`}>
               <span className={s.fanColor} />
-              <span className={s.fanLabel}>FC 02 Sash Black</span>
+              <span data-edit="hero.fanLabel" data-edit-max="60" className={s.fanLabel}>FC 02 Sash Black</span>
             </div>
             <div className={`${s.fanChip} ${s.fan2}`}>
               <span className={s.fanColor} />
-              <span className={s.fanLabel}>FC 05 Hallway Sage</span>
+              <span data-edit="hero.fanLabel2" data-edit-max="60" className={s.fanLabel}>FC 05 Hallway Sage</span>
             </div>
             <div className={`${s.fanChip} ${s.fan3}`}>
               <span className={s.fanColor} />
-              <span className={s.fanLabel}>FC 06 Kitchen Ochre</span>
+              <span data-edit="hero.fanLabel3" data-edit-max="60" className={s.fanLabel}>FC 06 Kitchen Ochre</span>
             </div>
             <div className={`${s.fanChip} ${s.fan4}`}>
               <span className={s.fanColor} />
-              <span className={s.fanLabel}>FC 04 Porch Clay</span>
+              <span data-edit="hero.fanLabel4" data-edit-max="60" className={s.fanLabel}>FC 04 Porch Clay</span>
             </div>
             <div className={`${s.fanChip} ${s.fan5}`}>
               <span className={s.fanColor} />
-              <span className={s.fanLabel}>FC 03 Front Door Blue</span>
+              <span data-edit="hero.fanLabel5" data-edit-max="60" className={s.fanLabel}>FC 03 Front Door Blue</span>
             </div>
             <span className={s.rivet} />
           </div>
         </section>
 
         <div className={s.brushout}>
-          <div className={s.brushField} aria-hidden="true">
+          <div data-edit-pattern="top.field" data-edit-roles="transparent,2" className={s.brushField} aria-hidden="true">
             <TabbiedPattern
               pattern={scumble}
               palette={BRUSH_DOOR}
@@ -187,29 +200,29 @@ export default function FreshCoatPage() {
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
-          <p className={s.brushLabel}>Brush-out, FC 03 Front Door Blue, first coat</p>
+          <p data-edit="top.brushLabel" data-edit-max="240" data-edit-multiline className={s.brushLabel}>Brush-out, FC 03 Front Door Blue, first coat</p>
         </div>
 
         {/* ---------------------------------------------------------- COLORS
             The chip cards: the six paints this page is painted in. */}
         <section id="colors" className={s.sec} aria-labelledby="colors-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>01</p>
-            <h2 id="colors-h" className={s.secTitle}>The colors we reach for</h2>
-            <p className={s.secNote}>
+            <p data-edit="colors.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>01</p>
+            <h2 data-edit="colors.secTitle" data-edit-max="60" id="colors-h" className={s.secTitle}>The colors we reach for</h2>
+            <p data-edit="colors.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               We will paint any color from any maker. These six are the ones
               we sell most of, and the ones this page is painted in. LRV is how
               much light a color reflects: 100 is a mirror, 0 is a cave.
             </p>
           </div>
           <ul className={s.chips}>
-            {CHIPS.map((c) => (
+            {CHIPS.map((c, i) => (
               <li key={c.code} className={s.chip}>
                 <span className={`${s.chipColor} ${s[c.tone]}`} />
-                <span className={s.chipCode}>{c.code}</span>
-                <h3 className={s.chipName}>{c.name}</h3>
-                <span className={s.chipLrv}>{c.lrv}</span>
-                <p className={s.chipUse}>{c.use}</p>
+                <span data-edit={`colors.chipCode.${i}`} data-edit-max="60" className={s.chipCode}>{c.code}</span>
+                <h3 data-edit={`colors.chipName.${i}`} data-edit-max="40" className={s.chipName}>{c.name}</h3>
+                <span data-edit={`colors.chipLrv.${i}`} data-edit-max="60" className={s.chipLrv}>{c.lrv}</span>
+                <p data-edit={`colors.chipUse.${i}`} data-edit-max="240" data-edit-multiline className={s.chipUse}>{c.use}</p>
               </li>
             ))}
           </ul>
@@ -220,27 +233,27 @@ export default function FreshCoatPage() {
         <section id="services" className={s.sec} aria-labelledby="services-h">
           <div className={s.stripLayout}>
             <div className={s.secHead}>
-              <p className={s.secNo}>02</p>
-              <h2 id="services-h" className={s.secTitle}>What we do, and what it costs</h2>
-              <p className={s.secNote}>
+              <p data-edit="services.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>02</p>
+              <h2 data-edit="services.secTitle" data-edit-max="60" id="services-h" className={s.secTitle}>What we do, and what it costs</h2>
+              <p data-edit="services.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Prices include materials, dust sheets and the tidy-up. Every job
                 is quoted in writing, per room, before we book a date, and the
                 quote is the price.
               </p>
-              <p className={s.stripNote}>Minimum job $450. Evenings and weekends by arrangement.</p>
+              <p data-edit="services.stripNote" data-edit-max="240" data-edit-multiline className={s.stripNote}>Minimum job $450. Evenings and weekends by arrangement.</p>
             </div>
             <div className={s.strip}>
               <ol className={s.shades}>
                 {SERVICES.map((sv, i) => (
                   <li key={sv.shade} className={`${s.shade} ${s[`shade${i + 1}`]}`}>
-                    <span className={s.shadeCode}>{sv.shade}</span>
-                    <h3 className={s.shadeName}>{sv.name}</h3>
-                    <p className={s.shadeWhat}>{sv.what}</p>
-                    <p className={s.shadePrice}>{sv.price}</p>
+                    <span data-edit={`services.shadeCode.${i}`} data-edit-max="60" className={s.shadeCode}>{sv.shade}</span>
+                    <h3 data-edit={`services.shadeName.${i}`} data-edit-max="40" className={s.shadeName}>{sv.name}</h3>
+                    <p data-edit={`services.shadeWhat.${i}`} data-edit-max="240" data-edit-multiline className={s.shadeWhat}>{sv.what}</p>
+                    <p data-edit={`services.shadePrice.${i}`} data-edit-max="240" data-edit-multiline className={s.shadePrice}>{sv.price}</p>
                   </li>
                 ))}
               </ol>
-              <p className={s.stripFoot}>Fresh Coat, FC 03 Front Door Blue family, six shades</p>
+              <p data-edit="services.stripFoot" data-edit-max="240" data-edit-multiline className={s.stripFoot}>Fresh Coat, FC 03 Front Door Blue family, six shades</p>
             </div>
           </div>
         </section>
@@ -249,23 +262,23 @@ export default function FreshCoatPage() {
             Two days in one room, in order, beside a warm brush-out. */}
         <section id="process" className={`${s.sec} ${s.processSec}`} aria-labelledby="process-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>03</p>
-            <h2 id="process-h" className={s.secTitle}>How a room gets painted</h2>
-            <p className={s.secNote}>An average bedroom, start to finish. Bigger rooms add days, never steps.</p>
+            <p data-edit="process.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>03</p>
+            <h2 data-edit="process.secTitle" data-edit-max="60" id="process-h" className={s.secTitle}>How a room gets painted</h2>
+            <p data-edit="process.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>An average bedroom, start to finish. Bigger rooms add days, never steps.</p>
           </div>
           <div className={s.processGrid}>
             <ol className={s.stages}>
               {PROCESS.map((st, i) => (
                 <li key={st.name} className={s.stage}>
                   <span className={s.stageNo}>{i + 1}</span>
-                  <p className={s.stageWhen}>{st.when}</p>
-                  <h3 className={s.stageName}>{st.name}</h3>
-                  <p className={s.stageText}>{st.text}</p>
+                  <p data-edit={`process.stageWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.stageWhen}>{st.when}</p>
+                  <h3 data-edit={`process.stageName.${i}`} data-edit-max="40" className={s.stageName}>{st.name}</h3>
+                  <p data-edit={`process.stageText.${i}`} data-edit-max="240" data-edit-multiline className={s.stageText}>{st.text}</p>
                 </li>
               ))}
             </ol>
             <div className={s.wallPanel}>
-              <div className={s.wallField} aria-hidden="true">
+              <div data-edit-pattern="process.field" data-edit-roles="transparent,3,5,3" className={s.wallField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={scumble}
                   palette={BRUSH_WARM}
@@ -281,7 +294,7 @@ export default function FreshCoatPage() {
                 inks={{ blue: 'var(--text)', yellow: 'var(--clay)', red: 'var(--door)', black: 'var(--text)' }}
                 className={s.tin}
               />
-              <p className={s.wallCaption}>Porch Clay over Kitchen Ochre, mid-job</p>
+              <p data-edit="process.wallCaption" data-edit-max="240" data-edit-multiline className={s.wallCaption}>Porch Clay over Kitchen Ochre, mid-job</p>
             </div>
           </div>
         </section>
@@ -290,41 +303,41 @@ export default function FreshCoatPage() {
             Real quotes, each with its floor plan drawn to scale. */}
         <section id="rooms" className={s.sec} aria-labelledby="rooms-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>04</p>
-            <h2 id="rooms-h" className={s.secTitle}>Room prices, from real quotes</h2>
-            <p className={s.secNote}>
+            <p data-edit="rooms.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>04</p>
+            <h2 data-edit="rooms.secTitle" data-edit-max="60" id="rooms-h" className={s.secTitle}>Room prices, from real quotes</h2>
+            <p data-edit="rooms.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Four jobs from this year, with the names taken off. Yours will
               differ with the ceiling height, the state of the plaster and how
               many doors there are, but not by much.
             </p>
           </div>
           <ul className={s.rooms}>
-            {ROOMS.map((r) => (
+            {ROOMS.map((r, i) => (
               <li key={r.name} className={s.room}>
                 <div className={s.planBox}>
                   <div
                     className={`${s.plan} ${r.w / r.d >= 1.25 ? s.planWide : s.planTall}`}
                     style={{ aspectRatio: `${r.w} / ${r.d}` }}
                   >
-                    <span className={s.planSize}>{r.size}</span>
+                    <span data-edit={`rooms.planSize.${i}`} data-edit-max="60" className={s.planSize}>{r.size}</span>
                   </div>
                 </div>
-                <h3 className={s.roomName}>{r.name}</h3>
+                <h3 data-edit={`rooms.roomName.${i}`} data-edit-max="40" className={s.roomName}>{r.name}</h3>
                 <ul className={s.roomLines}>
-                  {r.lines.map((line) => (
-                    <li key={line}>{line}</li>
+                  {r.lines.map((line, i2) => (
+                    <li data-edit={`rooms.item.${i}.${i2}`} data-edit-max="80" key={line}>{line}</li>
                   ))}
                 </ul>
                 <p className={s.roomTotal}>
-                  <span className={s.roomDays}>{r.days}</span>
-                  <span className={s.roomPrice}>{r.price}</span>
+                  <span data-edit={`rooms.roomDays.${i}`} data-edit-max="60" className={s.roomDays}>{r.days}</span>
+                  <span data-edit={`rooms.roomPrice.${i}`} data-edit-max="60" className={s.roomPrice}>{r.price}</span>
                 </p>
               </li>
             ))}
           </ul>
         </section>
 
-        <div className={s.sageBand} aria-hidden="true">
+        <div data-edit-pattern="top.field2" data-edit-roles="transparent,4,4,0" className={s.sageBand} aria-hidden="true">
           <TabbiedPattern
             pattern={scumble}
             palette={BRUSH_SAGE}
@@ -338,26 +351,26 @@ export default function FreshCoatPage() {
         {/* ------------------------------------------------------------ CREW */}
         <section id="crew" className={s.sec} aria-labelledby="crew-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>05</p>
-            <h2 id="crew-h" className={s.secTitle}>The crew</h2>
-            <p className={s.secNote}>The same three people from the first dust sheet to the last touch-up. We do not subcontract.</p>
+            <p data-edit="crew.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>05</p>
+            <h2 data-edit="crew.secTitle" data-edit-max="60" id="crew-h" className={s.secTitle}>The crew</h2>
+            <p data-edit="crew.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>The same three people from the first dust sheet to the last touch-up. We do not subcontract.</p>
           </div>
           <ul className={s.crew}>
-            {CREW.map((p) => (
+            {CREW.map((p, i) => (
               <li key={p.name} className={s.person}>
-                <h3 className={s.personName}>{p.name}</h3>
-                <p className={s.personRole}>{p.role}</p>
-                <p className={s.personYears}>{p.years}</p>
-                <p className={s.personNote}>{p.note}</p>
-                <p className={s.personPick}>{p.pick}</p>
+                <h3 data-edit={`crew.personName.${i}`} data-edit-max="40" className={s.personName}>{p.name}</h3>
+                <p data-edit={`crew.personRole.${i}`} data-edit-max="240" data-edit-multiline className={s.personRole}>{p.role}</p>
+                <p data-edit={`crew.personYears.${i}`} data-edit-max="240" data-edit-multiline className={s.personYears}>{p.years}</p>
+                <p data-edit={`crew.personNote.${i}`} data-edit-max="240" data-edit-multiline className={s.personNote}>{p.note}</p>
+                <p data-edit={`crew.personPick.${i}`} data-edit-max="240" data-edit-multiline className={s.personPick}>{p.pick}</p>
               </li>
             ))}
           </ul>
           <dl className={s.promises}>
-            {PROMISES.map(([t, d]) => (
+            {PROMISES.map(([t, d], i) => (
               <div key={t}>
-                <dt>{t}</dt>
-                <dd>{d}</dd>
+                <dt data-edit={`crew.term.${i}`} data-edit-max="28">{t}</dt>
+                <dd data-edit={`crew.body.${i}`} data-edit-max="200" data-edit-multiline>{d}</dd>
               </div>
             ))}
           </dl>
@@ -367,14 +380,14 @@ export default function FreshCoatPage() {
         <section id="quote" className={s.quoteSec} aria-labelledby="quote-h">
           <div className={s.quoteGrid}>
             <div className={s.quoteIntro}>
-              <p className={s.secNo}>06</p>
-              <h2 id="quote-h" className={s.quoteTitle}>Book a walk-round</h2>
-              <p className={s.quoteLead}>
+              <p data-edit="quote.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>06</p>
+              <h2 data-edit="quote.quoteTitle" data-edit-max="60" id="quote-h" className={s.quoteTitle}>Book a walk-round</h2>
+              <p data-edit="quote.quoteLead" data-edit-max="240" data-edit-multiline className={s.quoteLead}>
                 Tell us which rooms, and Nadia will call to find forty minutes
                 that suit you. The quote is written on the day and holds for
                 ninety days.
               </p>
-              <div className={s.cardField} aria-hidden="true">
+              <div data-edit-pattern="quote.field" data-edit-roles="transparent,0,4,5,3" className={s.cardField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={diminuendo}
                   palette={CARD}
@@ -385,49 +398,49 @@ export default function FreshCoatPage() {
                 />
               </div>
               <p className={s.quoteContact}>
-                <a href="tel:+15550186640">(555) 018-6640</a>
+                <a data-edit="quote.link" data-edit-max="28" href="tel:+15550186640">(555) 018-6640</a>
               </p>
               <p className={s.quoteContact}>
-                <a href="mailto:nadia@freshcoat.example">nadia@freshcoat.example</a>
+                <a data-edit="quote.link2" data-edit-max="28" href="mailto:nadia@freshcoat.example">nadia@freshcoat.example</a>
               </p>
-              <p className={s.quoteHours}>Office hours Monday to Friday, 8 to 5. We are up ladders the rest of the time.</p>
+              <p data-edit="quote.quoteHours" data-edit-max="240" data-edit-multiline className={s.quoteHours}>Office hours Monday to Friday, 8 to 5. We are up ladders the rest of the time.</p>
             </div>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="fc-name">Your name</label>
+                <label data-edit="quote.label" htmlFor="fc-name">Your name</label>
                 <input id="fc-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="fc-phone">Phone</label>
+                <label data-edit="quote.label2" htmlFor="fc-phone">Phone</label>
                 <input id="fc-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="fc-address">Street and zip code</label>
+                <label data-edit="quote.label3" htmlFor="fc-address">Street and zip code</label>
                 <input id="fc-address" name="address" type="text" autoComplete="street-address" />
               </div>
               <fieldset className={`${s.field} ${s.fieldWide} ${s.roomsPick}`}>
-                <legend>Which rooms</legend>
+                <legend data-edit="quote.legend">Which rooms</legend>
                 <div className={s.picks}>
                   <input id="fc-r1" type="checkbox" name="rooms" value="bedroom" />
-                  <label htmlFor="fc-r1">Bedrooms</label>
+                  <label data-edit="quote.label4" htmlFor="fc-r1">Bedrooms</label>
                   <input id="fc-r2" type="checkbox" name="rooms" value="living" />
-                  <label htmlFor="fc-r2">Living room</label>
+                  <label data-edit="quote.label5" htmlFor="fc-r2">Living room</label>
                   <input id="fc-r3" type="checkbox" name="rooms" value="hall" />
-                  <label htmlFor="fc-r3">Hall and stairs</label>
+                  <label data-edit="quote.label6" htmlFor="fc-r3">Hall and stairs</label>
                   <input id="fc-r4" type="checkbox" name="rooms" value="kitchen" />
-                  <label htmlFor="fc-r4">Kitchen</label>
+                  <label data-edit="quote.label7" htmlFor="fc-r4">Kitchen</label>
                   <input id="fc-r5" type="checkbox" name="rooms" value="paper" />
-                  <label htmlFor="fc-r5">Wallpaper</label>
+                  <label data-edit="quote.label8" htmlFor="fc-r5">Wallpaper</label>
                   <input id="fc-r6" type="checkbox" name="rooms" value="outside" />
-                  <label htmlFor="fc-r6">Outside</label>
+                  <label data-edit="quote.label9" htmlFor="fc-r6">Outside</label>
                 </div>
               </fieldset>
               <div className={s.field}>
-                <label htmlFor="fc-when">Ideally finished by</label>
+                <label data-edit="quote.label10" htmlFor="fc-when">Ideally finished by</label>
                 <input id="fc-when" name="when" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="fc-built">House built around</label>
+                <label data-edit="quote.label11" htmlFor="fc-built">House built around</label>
                 <select id="fc-built" name="built" defaultValue="unsure">
                   <option value="pre1978">Before 1978</option>
                   <option value="post1978">1978 or later</option>
@@ -435,10 +448,10 @@ export default function FreshCoatPage() {
                 </select>
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="fc-notes">Anything we should know</label>
+                <label data-edit="quote.label12" htmlFor="fc-notes">Anything we should know</label>
                 <textarea id="fc-notes" name="notes" rows={4} />
               </div>
-              <button className={s.submit} type="submit">Ask for a walk-round</button>
+              <button data-edit="quote.submit" data-edit-max="24" className={s.submit} type="submit">Ask for a walk-round</button>
             </form>
           </div>
         </section>
@@ -446,14 +459,14 @@ export default function FreshCoatPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.sec} aria-labelledby="faq-h">
           <div className={s.secHead}>
-            <p className={s.secNo}>07</p>
-            <h2 id="faq-h" className={s.secTitle}>Before you ask</h2>
+            <p data-edit="faq.secNo" data-edit-max="240" data-edit-multiline className={s.secNo}>07</p>
+            <h2 data-edit="faq.secTitle" data-edit-max="60" id="faq-h" className={s.secTitle}>Before you ask</h2>
           </div>
           <div className={s.faqList}>
-            {FAQ.map(([q, a]) => (
+            {FAQ.map(([q, a], i) => (
               <details key={q} className={s.faq}>
-                <summary>{q}</summary>
-                <p>{a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
               </details>
             ))}
           </div>
@@ -462,12 +475,12 @@ export default function FreshCoatPage() {
 
       <footer className={s.footer}>
         <div className={s.footInner}>
-          <p className={s.footName}>Fresh Coat</p>
-          <p className={s.footAddr}>Workshop at 7 Tanner Yard, Hollin Park. Licensed and insured, license PD-40912.</p>
-          <p>A fictional painting and decorating firm. The crew, prices, colors and address are invented.</p>
-          <p>The paint tin is a generated image, drawn in the page's own colors.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Fresh Coat</p>
+          <p data-edit="footer.footAddr" data-edit-max="240" data-edit-multiline className={s.footAddr}>Workshop at 7 Tanner Yard, Hollin Park. Licensed and insured, license PD-40912.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional painting and decorating firm. The crew, prices, colors and address are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The paint tin is a generated image, drawn in the page's own colors.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
         </div>
       </footer>

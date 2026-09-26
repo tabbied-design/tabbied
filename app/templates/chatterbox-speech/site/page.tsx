@@ -157,7 +157,19 @@ const HOURS = [
 
 export default function ChatterboxSpeechPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--milk': '#fdf8ef',
+        '--tomato': '#e8604c',
+        '--sun': '#f5c243',
+        '--sky': '#5b9bd9',
+        '--ink': '#26315c',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="milk,tomato,sun,sky,ink"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -167,15 +179,15 @@ export default function ChatterboxSpeechPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Chatterbox</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Chatterbox</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -184,26 +196,26 @@ export default function ChatterboxSpeechPage() {
         {/* ----------------------------------------------------------- HELLO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroWords}>
-            <p className={s.kicker}>Speech and language therapy for children</p>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Speech and language therapy for children</p>
             <div className={s.bigBubble}>
-              <h1 id="hero-h" className={s.title}>Every child has something <em>to say.</em></h1>
+              <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>Every child has something <em>to say.</em></h1>
             </div>
             <div className={s.replyBubble}>
-              <p className={s.lede}>
+              <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 We help children from eighteen months to twelve years with late
                 talking, unclear speech, stuttering and understanding. Sessions
                 are play, and parents stay in the room.
               </p>
             </div>
             <p className={s.actions}>
-              <a className={s.primary} href="#book">Book a free first call</a>
-              <a className={s.secondary} href="#milestones">Check the milestones</a>
+              <a data-edit="hero.primary" data-edit-max="28" className={s.primary} href="#book">Book a free first call</a>
+              <a data-edit="hero.secondary" data-edit-max="28" className={s.secondary} href="#milestones">Check the milestones</a>
             </p>
           </div>
 
           <div className={s.talk}>
             <div className={s.babble}>
-              <div className={s.babbleField} aria-hidden="true">
+              <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,4,2,0" className={s.babbleField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={bangle}
                   palette={BABBLE}
@@ -213,7 +225,7 @@ export default function ChatterboxSpeechPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.babbleSays}>Ba-ba! Mo! More!</p>
+              <p data-edit="hero.babbleSays" data-edit-max="240" data-edit-multiline className={s.babbleSays}>Ba-ba! Mo! More!</p>
             </div>
             <Artwork
               slug="chatterbox-speech-talk"
@@ -224,8 +236,8 @@ export default function ChatterboxSpeechPage() {
           </div>
 
           <ul className={s.chips}>
-            {CHIPS.map((c) => (
-              <li key={c}>{c}</li>
+            {CHIPS.map((c, i) => (
+              <li data-edit={`hero.item.${i}`} data-edit-max="80" key={c}>{c}</li>
             ))}
           </ul>
         </section>
@@ -233,29 +245,29 @@ export default function ChatterboxSpeechPage() {
         {/* ------------------------------------------------------ MILESTONES */}
         <section id="milestones" className={s.milestones} aria-labelledby="milestones-h">
           <div className={s.sideHead}>
-            <p className={s.eyebrow}>Is my child on track?</p>
-            <h2 id="milestones-h">Talking milestones, <em>by age</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="milestones.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Is my child on track?</p>
+            <h2 data-edit="milestones.title" data-edit-format="emphasis" data-edit-max="60" id="milestones-h">Talking milestones, <em>by age</em></h2>
+            <p data-edit="milestones.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Open the age closest to your child's. These are what most
               children do by then, not a test to pass. Children do not read the
               charts.
             </p>
-            <p className={s.callout}>
+            <p data-edit="milestones.callout" data-edit-max="240" data-edit-multiline className={s.callout}>
               Two or more lines your child is not doing yet, or just a feeling
               you cannot shake? Call us. The first call is free.
             </p>
           </div>
 
           <div className={s.ages}>
-            {MILESTONES.map((m) => (
+            {MILESTONES.map((m, i) => (
               <details key={m.age} className={s.age} open={m.age === '2'}>
                 <summary>
-                  <span className={s.ageNum}>{m.age}</span>
-                  <span className={s.ageLabel}>{m.label}</span>
+                  <span data-edit={`milestones.ageNum.${i}`} data-edit-max="60" className={s.ageNum}>{m.age}</span>
+                  <span data-edit={`milestones.ageLabel.${i}`} data-edit-max="60" className={s.ageLabel}>{m.label}</span>
                 </summary>
                 <ul className={s.checks}>
-                  {m.items.map((it) => (
-                    <li key={it}>{it}</li>
+                  {m.items.map((it, i2) => (
+                    <li data-edit={`milestones.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                   ))}
                 </ul>
               </details>
@@ -264,7 +276,7 @@ export default function ChatterboxSpeechPage() {
         </section>
 
         {/* ------------------------------------------------------ RIPPLE BAND */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,1" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={bangle}
             palette={RIPPLE}
@@ -278,14 +290,14 @@ export default function ChatterboxSpeechPage() {
         {/* ------------------------------------------------------------ HELP */}
         <section id="help" className={s.help} aria-labelledby="help-h">
           <div className={s.centerHead}>
-            <p className={s.eyebrow}>What we help with</p>
-            <h2 id="help-h">Six things parents <em>call about</em></h2>
+            <p data-edit="help.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>What we help with</p>
+            <h2 data-edit="help.title" data-edit-format="emphasis" data-edit-max="60" id="help-h">Six things parents <em>call about</em></h2>
           </div>
           <ul className={s.cloud}>
-            {HELP.map(([t, d]) => (
+            {HELP.map(([t, d], i) => (
               <li key={t} className={s.cloudItem}>
-                <h3>{t}</h3>
-                <p>{d}</p>
+                <h3 data-edit={`help.title.${i}`} data-edit-max="40">{t}</h3>
+                <p data-edit={`help.body.${i}`} data-edit-max="240" data-edit-multiline>{d}</p>
               </li>
             ))}
           </ul>
@@ -294,14 +306,14 @@ export default function ChatterboxSpeechPage() {
         {/* ------------------------------------------------------ FIRST VISIT */}
         <section id="first-visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitHead}>
-            <p className={s.eyebrow}>Your first assessment</p>
-            <h2 id="visit-h">An hour on the floor, <em>as it goes</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="firstVisit.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Your first assessment</p>
+            <h2 data-edit="firstVisit.title" data-edit-format="emphasis" data-edit-max="60" id="visit-h">An hour on the floor, <em>as it goes</em></h2>
+            <p data-edit="firstVisit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Assessments are on weekday mornings, when children are freshest.
               Bring a snack and a favorite toy. Siblings are welcome in the
               waiting room with a grown-up.
             </p>
-            <div className={s.visitField} aria-hidden="true">
+            <div data-edit-pattern="firstVisit.field" data-edit-roles="transparent,4,1,3" className={s.visitField} aria-hidden="true">
               <TabbiedPattern
                 pattern={dotset}
                 palette={DOTS}
@@ -314,13 +326,13 @@ export default function ChatterboxSpeechPage() {
           </div>
 
           <ol className={s.thread}>
-            {VISIT.map((l) => (
+            {VISIT.map((l, i) => (
               <li key={l.at} className={l.side === 'us' ? s.fromUs : s.fromYou}>
                 <p className={s.meta}>
-                  <span className={s.who}>{l.who}</span>
-                  <time className={s.at}>{l.at}</time>
+                  <span data-edit={`firstVisit.who.${i}`} data-edit-max="60" className={s.who}>{l.who}</span>
+                  <time data-edit={`firstVisit.at.${i}`} className={s.at}>{l.at}</time>
                 </p>
-                <p className={s.msg}>{l.text}</p>
+                <p data-edit={`firstVisit.msg.${i}`} data-edit-max="240" data-edit-multiline className={s.msg}>{l.text}</p>
               </li>
             ))}
           </ol>
@@ -329,22 +341,22 @@ export default function ChatterboxSpeechPage() {
         {/* ------------------------------------------------------------ TEAM */}
         <section id="team" className={s.team} aria-labelledby="team-h">
           <div className={s.centerHead}>
-            <p className={s.eyebrow}>The therapists</p>
-            <h2 id="team-h">Four people, <em>one playroom</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="team.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The therapists</p>
+            <h2 data-edit="team.title" data-edit-format="emphasis" data-edit-max="60" id="team-h">Four people, <em>one playroom</em></h2>
+            <p data-edit="team.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Your child sees the same therapist every week. We pair you by
               what your child needs, and by which days work for you.
             </p>
           </div>
           <ul className={s.people}>
-            {TEAM.map((t) => (
+            {TEAM.map((t, i) => (
               <li key={t.name} className={s.person}>
-                <p className={`${s.avatar} ${s[t.tone]}`}>{t.initials}</p>
+                <p data-edit={`team.avatar.${i}`} data-edit-max="240" data-edit-multiline className={`${s.avatar} ${s[t.tone]}`}>{t.initials}</p>
                 <div className={s.personBubble}>
-                  <h3>{t.name}</h3>
-                  <p className={s.role}>{t.role}</p>
-                  <p>{t.about}</p>
-                  <p className={s.days}>{t.days}</p>
+                  <h3 data-edit={`team.title.${i}`} data-edit-max="40">{t.name}</h3>
+                  <p data-edit={`team.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{t.role}</p>
+                  <p data-edit={`team.body.${i}`} data-edit-max="240" data-edit-multiline>{t.about}</p>
+                  <p data-edit={`team.days.${i}`} data-edit-max="240" data-edit-multiline className={s.days}>{t.days}</p>
                 </div>
               </li>
             ))}
@@ -354,7 +366,7 @@ export default function ChatterboxSpeechPage() {
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.fees} aria-labelledby="fees-h">
           <div className={s.feesBox}>
-            <div className={s.feesField} aria-hidden="true">
+            <div data-edit-pattern="fees.field" data-edit-roles="transparent,1,4,3,0" className={s.feesField} aria-hidden="true">
               <TabbiedPattern
                 pattern={bangle}
                 palette={COINS}
@@ -365,37 +377,37 @@ export default function ChatterboxSpeechPage() {
               />
             </div>
             <div className={s.feesBody}>
-              <p className={s.eyebrow}>Fees and insurance</p>
-              <h2 id="fees-h">What it costs, <em>up front</em></h2>
+              <p data-edit="fees.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Fees and insurance</p>
+              <h2 data-edit="fees.title" data-edit-format="emphasis" data-edit-max="60" id="fees-h">What it costs, <em>up front</em></h2>
               <table className={s.feeTable}>
-                <caption className={s.srOnly}>Fees for each service</caption>
+                <caption data-edit="fees.srOnly" className={s.srOnly}>Fees for each service</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Service</th>
-                    <th scope="col">Length</th>
-                    <th scope="col">Fee</th>
+                    <th data-edit="fees.heading" scope="col">Service</th>
+                    <th data-edit="fees.heading2" scope="col">Length</th>
+                    <th data-edit="fees.heading3" scope="col">Fee</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {FEES.map(([what, len, fee]) => (
+                  {FEES.map(([what, len, fee], i) => (
                     <tr key={what}>
-                      <th scope="row">{what}</th>
-                      <td>{len}</td>
-                      <td className={s.fee}>{fee}</td>
+                      <th data-edit={`fees.heading4.${i}`} scope="row">{what}</th>
+                      <td data-edit={`fees.cell.${i}`}>{len}</td>
+                      <td data-edit={`fees.fee.${i}`} className={s.fee}>{fee}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <div className={s.feeNotes}>
-                <p>
+                <p data-edit="fees.body" data-edit-max="240" data-edit-multiline>
                   In network with Harbor Family Health and Keystone Kids. For
                   other plans we give you a superbill to claim back yourself.
                 </p>
-                <p>
+                <p data-edit="fees.body2" data-edit-max="240" data-edit-multiline>
                   Six sliding-scale places each school term, no paperwork beyond
                   a conversation. Ask Dana.
                 </p>
-                <p>
+                <p data-edit="fees.body3" data-edit-max="240" data-edit-multiline>
                   Moving a session needs 24 hours. Later than that, we charge
                   half, unless your child is sick: then stay home, no charge.
                 </p>
@@ -407,14 +419,14 @@ export default function ChatterboxSpeechPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section className={s.faq} aria-labelledby="faq-h">
           <div className={s.centerHead}>
-            <p className={s.eyebrow}>Things parents ask</p>
-            <h2 id="faq-h">Questions, <em>answered</em></h2>
+            <p data-edit="faq.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Things parents ask</p>
+            <h2 data-edit="faq.title" data-edit-format="emphasis" data-edit-max="60" id="faq-h">Questions, <em>answered</em></h2>
           </div>
           <div className={s.faqList}>
             {QUESTIONS.map(([q, a], i) => (
               <details key={q} className={s.qa} open={i === 0}>
-                <summary>{q}</summary>
-                <p>{a}</p>
+                <summary data-edit={`faq.question.${i}`} data-edit-max="80">{q}</summary>
+                <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
               </details>
             ))}
           </div>
@@ -423,30 +435,30 @@ export default function ChatterboxSpeechPage() {
         {/* ------------------------------------------------------------ BOOK */}
         <section id="book" className={s.book} aria-labelledby="book-h">
           <form className={s.form} action="#">
-            <h2 id="book-h" className={s.formTitle}>Book a free <em>first call</em></h2>
-            <p className={s.formNote}>
+            <h2 data-edit="book.title" data-edit-format="emphasis" data-edit-max="60" id="book-h" className={s.formTitle}>Book a free <em>first call</em></h2>
+            <p data-edit="book.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>
               Tell us a little, and one of us calls you back within two working
               days. Fifteen minutes, no charge, no obligation.
             </p>
             <div className={s.formGrid}>
               <div className={s.field}>
-                <label htmlFor="cb-child">Child's first name</label>
+                <label data-edit="book.label" htmlFor="cb-child">Child's first name</label>
                 <input id="cb-child" name="child" type="text" />
               </div>
               <div className={s.field}>
-                <label htmlFor="cb-age">Age</label>
+                <label data-edit="book.label2" htmlFor="cb-age">Age</label>
                 <input id="cb-age" name="age" type="text" placeholder="e.g. 2 years 4 months" />
               </div>
               <div className={s.field}>
-                <label htmlFor="cb-name">Your name</label>
+                <label data-edit="book.label3" htmlFor="cb-name">Your name</label>
                 <input id="cb-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="cb-phone">Phone</label>
+                <label data-edit="book.label4" htmlFor="cb-phone">Phone</label>
                 <input id="cb-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <div className={s.field}>
-                <label htmlFor="cb-lang">Languages at home</label>
+                <label data-edit="book.label5" htmlFor="cb-lang">Languages at home</label>
                 <select id="cb-lang" name="lang" defaultValue="en">
                   <option value="en">English</option>
                   <option value="es">Spanish</option>
@@ -455,7 +467,7 @@ export default function ChatterboxSpeechPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="cb-when">Best time to call</label>
+                <label data-edit="book.label6" htmlFor="cb-when">Best time to call</label>
                 <select id="cb-when" name="when" defaultValue="morning">
                   <option value="morning">Morning</option>
                   <option value="midday">Nap time</option>
@@ -463,34 +475,34 @@ export default function ChatterboxSpeechPage() {
                 </select>
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="cb-worry">What made you get in touch?</label>
+                <label data-edit="book.label7" htmlFor="cb-worry">What made you get in touch?</label>
                 <textarea id="cb-worry" name="worry" rows={4} />
               </div>
             </div>
-            <button className={s.submit} type="submit">Ask for a call</button>
+            <button data-edit="book.submit" data-edit-max="24" className={s.submit} type="submit">Ask for a call</button>
           </form>
 
           <div className={s.place}>
-            <h3 className={s.placeTitle}>The playroom</h3>
-            <p className={s.address}>
+            <h3 data-edit="book.placeTitle" data-edit-max="40" className={s.placeTitle}>The playroom</h3>
+            <p data-edit="book.body" data-edit-max="240" data-edit-multiline className={s.address}>
               Suite 3, 88 Linden Avenue
               <br />
               Brookfield Heights
             </p>
             <p className={s.address}>
-              <a href="tel:+15550173364">(555) 017-3364</a>
+              <a data-edit="book.link" data-edit-max="28" href="tel:+15550173364">(555) 017-3364</a>
               <br />
-              <a href="mailto:hello@chatterbox.example">hello@chatterbox.example</a>
+              <a data-edit="book.link2" data-edit-max="28" href="mailto:hello@chatterbox.example">hello@chatterbox.example</a>
             </p>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`book.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`book.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
-            <p className={s.small}>
+            <p data-edit="book.small" data-edit-max="240" data-edit-multiline className={s.small}>
               Ground floor, step-free, stroller parking inside the door. Two
               free parking spaces behind the building, marked with a bubble.
             </p>
@@ -499,12 +511,12 @@ export default function ChatterboxSpeechPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Chatterbox</p>
-        <p>A fictional speech therapy practice for children. The therapists, fees and plans are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Chatterbox</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional speech therapy practice for children. The therapists, fees and plans are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
-        <p>The parent and toddler are a generated picture, drawn in the page's own colors.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The parent and toddler are a generated picture, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

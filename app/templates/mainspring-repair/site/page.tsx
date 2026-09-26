@@ -100,7 +100,18 @@ const HOURS = [
 
 export default function MainspringRepairPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--dial': '#0f0e0c',
+        '--lume': '#efe7d4',
+        '--gilt': '#c8a35a',
+        '--ruby': '#a3312c',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="dial,lume,gilt,ruby"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -110,15 +121,15 @@ export default function MainspringRepairPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Mainspring</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Mainspring</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -127,22 +138,22 @@ export default function MainspringRepairPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Watch and jewelry repair, 14 Arcade Row</p>
-            <h1 id="hero-h" className={s.title}>We take watches apart <em>and put them back.</em></h1>
-            <p className={s.lede}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Watch and jewelry repair, 14 Arcade Row</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>We take watches apart <em>and put them back.</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Two watchmakers and a jeweler at a bench in the shop window.
               Batteries while you wait, full services in four to six weeks, and
               every estimate free and in writing before we touch a screw.
             </p>
             <div className={s.ctas}>
-              <a className={s.btn} href="#estimate">Ask for an estimate</a>
-              <a className={s.textLink} href="#index">Read the price index</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#estimate">Ask for an estimate</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#index">Read the price index</a>
             </div>
           </div>
 
           <div className={s.dialWrap}>
             <div className={s.dial}>
-              <div className={s.track} aria-hidden="true">
+              <div data-edit-pattern="hero.field" data-edit-roles="0,2,2,1,2,2" className={s.track} aria-hidden="true">
                 <TabbiedPattern
                   pattern={flux}
                   palette={TRACK}
@@ -153,8 +164,8 @@ export default function MainspringRepairPage() {
                 />
               </div>
               <div className={s.face} aria-hidden="true" />
-              <p className={s.faceName}>Mainspring</p>
-              <p className={s.faceSub}>Repairs since 1987</p>
+              <p data-edit="hero.faceName" data-edit-max="240" data-edit-multiline className={s.faceName}>Mainspring</p>
+              <p data-edit="hero.faceSub" data-edit-max="240" data-edit-multiline className={s.faceSub}>Repairs since 1987</p>
               <span className={s.handHour} aria-hidden="true" />
               <span className={s.handMinute} aria-hidden="true" />
               <span className={s.handSecond} aria-hidden="true" />
@@ -167,7 +178,7 @@ export default function MainspringRepairPage() {
         <section id="index" className={s.indexSec} aria-labelledby="index-h">
           <div className={s.index}>
             <div className={s.indexCenter}>
-              <div className={s.guilloche} aria-hidden="true">
+              <div data-edit-pattern="index.field" data-edit-roles="0,2,2,1,2,2" className={s.guilloche} aria-hidden="true">
                 <TabbiedPattern
                   pattern={ripplering}
                   palette={GUILLOCHE}
@@ -178,9 +189,9 @@ export default function MainspringRepairPage() {
                 />
               </div>
               <div className={s.indexIntro}>
-                <p className={s.eyebrow}>The index</p>
-                <h2 id="index-h">Twelve things we do <em>at the bench</em></h2>
-                <p className={s.indexNote}>
+                <p data-edit="index.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The index</p>
+                <h2 data-edit="index.title" data-edit-format="emphasis" data-edit-max="60" id="index-h">Twelve things we do <em>at the bench</em></h2>
+                <p data-edit="index.indexNote" data-edit-max="240" data-edit-multiline className={s.indexNote}>
                   Prices include parts unless we say so, and every job carries
                   two years of guarantee.
                 </p>
@@ -188,12 +199,12 @@ export default function MainspringRepairPage() {
             </div>
 
             <ol className={s.ring}>
-              {INDEX.map((svc) => (
+              {INDEX.map((svc, i) => (
                 <li key={svc.numeral}>
-                  <span className={s.numeral}>{svc.numeral}</span>
-                  <h3 className={s.svcName}>{svc.name}</h3>
-                  <p className={s.svcPrice}>{svc.price}</p>
-                  <p className={s.svcNote}>{svc.note}</p>
+                  <span data-edit={`index.numeral.${i}`} data-edit-max="60" className={s.numeral}>{svc.numeral}</span>
+                  <h3 data-edit={`index.svcName.${i}`} data-edit-max="40" className={s.svcName}>{svc.name}</h3>
+                  <p data-edit={`index.svcPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.svcPrice}>{svc.price}</p>
+                  <p data-edit={`index.svcNote.${i}`} data-edit-max="240" data-edit-multiline className={s.svcNote}>{svc.note}</p>
                 </li>
               ))}
             </ol>
@@ -203,30 +214,30 @@ export default function MainspringRepairPage() {
         {/* ------------------------------------------------------- INTERVALS */}
         <section id="intervals" className={s.sec} aria-labelledby="intervals-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>How often</p>
-            <h2 id="intervals-h">A watch runs until it <em>quietly doesn't</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="intervals.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>How often</p>
+            <h2 data-edit="intervals.title" data-edit-format="emphasis" data-edit-max="60" id="intervals-h">A watch runs until it <em>quietly doesn't</em></h2>
+            <p data-edit="intervals.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Each subdial counts ten years; the gilt arc is how long we would
               leave it between visits. Wear, water and heat all shorten it.
             </p>
           </div>
 
           <ul className={s.subdials}>
-            {INTERVALS.map((d) => (
+            {INTERVALS.map((d, i) => (
               <li key={d.name}>
                 <div className={`${s.subdial} ${s[d.fill]}`}>
-                  <strong>{d.years}</strong>
-                  <span>{d.unit}</span>
+                  <strong data-edit={`intervals.emphasis.${i}`}>{d.years}</strong>
+                  <span data-edit={`intervals.text.${i}`} data-edit-max="60">{d.unit}</span>
                 </div>
-                <h3 className={s.subName}>{d.name}</h3>
-                <p className={s.subNote}>{d.note}</p>
+                <h3 data-edit={`intervals.subName.${i}`} data-edit-max="40" className={s.subName}>{d.name}</h3>
+                <p data-edit={`intervals.subNote.${i}`} data-edit-max="240" data-edit-multiline className={s.subNote}>{d.note}</p>
               </li>
             ))}
           </ul>
         </section>
 
         {/* The hobnail band: clous de Paris, as cut on a dial. */}
-        <div className={s.hobnail} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,0,2,1,0" className={s.hobnail} aria-hidden="true">
           <TabbiedPattern
             pattern={bothcut}
             palette={HOBNAIL}
@@ -240,24 +251,24 @@ export default function MainspringRepairPage() {
         {/* -------------------------------------------------------- ESTIMATE */}
         <section id="estimate" className={s.sec} aria-labelledby="estimate-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>Estimates</p>
-            <h2 id="estimate-h">Nothing starts <em>until you say yes</em></h2>
+            <p data-edit="estimate.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Estimates</p>
+            <h2 data-edit="estimate.title" data-edit-format="emphasis" data-edit-max="60" id="estimate-h">Nothing starts <em>until you say yes</em></h2>
           </div>
 
           <ol className={s.steps}>
-            {STEPS.map(([n, title, body]) => (
+            {STEPS.map(([n, title, body], i) => (
               <li key={n}>
-                <span className={s.stepNo}>{n}</span>
-                <h3 className={s.stepTitle}>{title}</h3>
-                <p>{body}</p>
+                <span data-edit={`estimate.stepNo.${i}`} data-edit-max="60" className={s.stepNo}>{n}</span>
+                <h3 data-edit={`estimate.stepTitle.${i}`} data-edit-max="40" className={s.stepTitle}>{title}</h3>
+                <p data-edit={`estimate.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
               </li>
             ))}
           </ol>
 
           <form className={s.form} action="#">
             <div className={s.formIntro}>
-              <h3 className={s.formTitle}>Or describe it first</h3>
-              <p className={s.formNote}>
+              <h3 data-edit="estimate.formTitle" data-edit-max="40" className={s.formTitle}>Or describe it first</h3>
+              <p data-edit="estimate.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>
                 Tell us the make and what it is doing, and we will say whether
                 it is worth the trip. A photo of the dial and the caseback helps;
                 reply to our email with it.
@@ -269,23 +280,23 @@ export default function MainspringRepairPage() {
                 mode="duotone"
                 className={s.movement}
               />
-              <p className={s.movementCap}>Caseback off: send us one like this.</p>
+              <p data-edit="estimate.movementCap" data-edit-max="240" data-edit-multiline className={s.movementCap}>Caseback off: send us one like this.</p>
             </div>
             <div className={s.formGrid}>
               <div className={s.field}>
-                <label htmlFor="ms-name">Name</label>
+                <label data-edit="estimate.label" htmlFor="ms-name">Name</label>
                 <input id="ms-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="ms-email">Email</label>
+                <label data-edit="estimate.label2" htmlFor="ms-email">Email</label>
                 <input id="ms-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.field}>
-                <label htmlFor="ms-make">Make and model</label>
+                <label data-edit="estimate.label3" htmlFor="ms-make">Make and model</label>
                 <input id="ms-make" name="make" type="text" />
               </div>
               <div className={s.field}>
-                <label htmlFor="ms-kind">It is</label>
+                <label data-edit="estimate.label4" htmlFor="ms-kind">It is</label>
                 <select id="ms-kind" name="kind" defaultValue="unsure">
                   <option value="hand">Hand-wound</option>
                   <option value="auto">Automatic</option>
@@ -296,41 +307,41 @@ export default function MainspringRepairPage() {
                 </select>
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="ms-what">What it is doing, or not doing</label>
+                <label data-edit="estimate.label5" htmlFor="ms-what">What it is doing, or not doing</label>
                 <textarea id="ms-what" name="what" rows={3} />
               </div>
             </div>
-            <button className={s.btn} type="submit">Send it to the bench</button>
+            <button data-edit="estimate.btn" data-edit-max="24" className={s.btn} type="submit">Send it to the bench</button>
           </form>
         </section>
 
         {/* ----------------------------------------------------------- BENCH */}
         <section id="bench" className={s.sec} aria-labelledby="bench-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>The bench</p>
-            <h2 id="bench-h">Three people, <em>one window</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="bench.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>The bench</p>
+            <h2 data-edit="bench.title" data-edit-format="emphasis" data-edit-max="60" id="bench-h">Three people, <em>one window</em></h2>
+            <p data-edit="bench.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               You can watch us work from the arcade. Knock if you want to ask
               something; we will put the loupe down.
             </p>
           </div>
 
           <ul className={s.people}>
-            {BENCH.map(([initials, name, role, bio]) => (
+            {BENCH.map(([initials, name, role, bio], i) => (
               <li key={name}>
                 <span className={s.monogram} aria-hidden="true">{initials}</span>
-                <h3 className={s.personName}>{name}</h3>
-                <p className={s.personRole}>{role}</p>
-                <p className={s.personBio}>{bio}</p>
+                <h3 data-edit={`bench.personName.${i}`} data-edit-max="40" className={s.personName}>{name}</h3>
+                <p data-edit={`bench.personRole.${i}`} data-edit-max="240" data-edit-multiline className={s.personRole}>{role}</p>
+                <p data-edit={`bench.personBio.${i}`} data-edit-max="240" data-edit-multiline className={s.personBio}>{bio}</p>
               </li>
             ))}
           </ul>
 
           <div className={s.faq}>
-            {FAQ.map(([q, a]) => (
+            {FAQ.map(([q, a], i) => (
               <details key={q} className={s.q}>
-                <summary>{q}</summary>
-                <p>{a}</p>
+                <summary data-edit={`bench.question.${i}`} data-edit-max="80">{q}</summary>
+                <p data-edit={`bench.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
               </details>
             ))}
           </div>
@@ -340,28 +351,28 @@ export default function MainspringRepairPage() {
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.visit}>
             <div>
-              <p className={s.eyebrow}>Visit</p>
-              <h2 id="visit-h">14 Arcade Row, <em>Exchange Quarter</em></h2>
-              <p className={s.address}>
+              <p data-edit="visit.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Visit</p>
+              <h2 data-edit="visit.title" data-edit-format="emphasis" data-edit-max="60" id="visit-h">14 Arcade Row, <em>Exchange Quarter</em></h2>
+              <p data-edit="visit.address" data-edit-max="240" data-edit-multiline className={s.address}>
                 Halfway down the covered arcade, between the stamp dealer and
                 the bookbinder. Look for the clock that is right.
               </p>
               <p className={s.contact}>
-                <a href="tel:+15550174410">(555) 017-4410</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550174410">(555) 017-4410</a>
                 <br />
-                <a href="mailto:bench@mainspring.example">bench@mainspring.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:bench@mainspring.example">bench@mainspring.example</a>
               </p>
             </div>
             <div className={s.hoursBox}>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.small}>
+              <p data-edit="visit.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 Batteries while you wait until 5:30. Collections by the ticket
                 number, or with photo ID if the ticket went through the wash.
               </p>
@@ -371,7 +382,7 @@ export default function MainspringRepairPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.caseback} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="0,2,1,2,2,3" className={s.caseback} aria-hidden="true">
           <TabbiedPattern
             pattern={flux}
             palette={CASEBACK}
@@ -382,11 +393,11 @@ export default function MainspringRepairPage() {
           />
         </div>
         <div className={s.footText}>
-          <p className={s.footName}>Mainspring</p>
-          <p>A fictional watch and jewelry repair shop. The people, prices and address are invented.</p>
-          <p>The open movement is a generated image, toned in the page's colors.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Mainspring</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional watch and jewelry repair shop. The people, prices and address are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The open movement is a generated image, toned in the page's colors.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
         </div>
       </footer>

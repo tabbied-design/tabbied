@@ -186,7 +186,18 @@ const NOTES = [
 
 export default function BluePlateDinerPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--cream': '#f7efdc',
+        '--navy': '#1b2a4a',
+        '--cherry': '#c62f36',
+        '--plate': '#2f5da8',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="cream,navy,cherry,plate"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -196,16 +207,16 @@ export default function BluePlateDinerPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">The Blue Plate</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">The Blue Plate</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href="tel:+15550142290">(555) 014-2290</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href="tel:+15550142290">(555) 014-2290</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -217,25 +228,25 @@ export default function BluePlateDinerPage() {
             well that carries the weekday special. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.sign}>
-            <p className={s.script}>Eat at</p>
-            <h1 id="hero-h" className={s.title}>The Blue Plate</h1>
-            <p className={s.since}>Mill Street at Route 9, Larkin Heights. Same counter since 1956.</p>
-            <p className={s.lede}>
+            <p data-edit="hero.script" data-edit-max="240" data-edit-multiline className={s.script}>Eat at</p>
+            <h1 data-edit="hero.title" data-edit-max="70" id="hero-h" className={s.title}>The Blue Plate</h1>
+            <p data-edit="hero.since" data-edit-max="240" data-edit-multiline className={s.since}>Mill Street at Route 9, Larkin Heights. Same counter since 1956.</p>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Eggs any way at any hour, a hot plate special every weekday
               from 11 to 3, and pie from the case until we lock the door.
             </p>
             <dl className={s.facts}>
-              {FACTS.map(([term, value]) => (
+              {FACTS.map(([term, value], i) => (
                 <div key={term}>
-                  <dt>{term}</dt>
-                  <dd>{value}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{term}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{value}</dd>
                 </div>
               ))}
             </dl>
           </div>
 
           <div className={s.plate}>
-            <div className={s.plateRim} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="0,3,1,0,3" className={s.plateRim} aria-hidden="true">
               <TabbiedPattern
                 pattern={hourglass}
                 palette={CHINA}
@@ -246,16 +257,16 @@ export default function BluePlateDinerPage() {
               />
             </div>
             <div className={s.plateWell}>
-              <p className={s.wellKicker}>Blue plate special</p>
-              <p className={s.wellPrice}>$13.50</p>
-              <p className={s.wellNote}>Weekdays 11 to 3, two sides and a roll</p>
+              <p data-edit="hero.wellKicker" data-edit-max="240" data-edit-multiline className={s.wellKicker}>Blue plate special</p>
+              <p data-edit="hero.wellPrice" data-edit-max="240" data-edit-multiline className={s.wellPrice}>$13.50</p>
+              <p data-edit="hero.wellNote" data-edit-max="240" data-edit-multiline className={s.wellNote}>Weekdays 11 to 3, two sides and a roll</p>
             </div>
           </div>
         </section>
 
         {/* The floor by the register: cherry and cream, set between two
             chrome rails. */}
-        <div className={s.floor} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="0,2,1" className={s.floor} aria-hidden="true">
           <TabbiedPattern
             pattern={damier}
             palette={FLOOR}
@@ -269,9 +280,9 @@ export default function BluePlateDinerPage() {
         {/* -------------------------------------------------------- SPECIALS */}
         <section id="specials" className={s.specials} aria-labelledby="specials-h">
           <div className={s.head}>
-            <p className={s.scriptSmall}>Monday to Friday</p>
-            <h2 id="specials-h">The blue plates</h2>
-            <p className={s.headNote}>
+            <p data-edit="specials.scriptSmall" data-edit-max="240" data-edit-multiline className={s.scriptSmall}>Monday to Friday</p>
+            <h2 data-edit="specials.title" data-edit-max="60" id="specials-h">The blue plates</h2>
+            <p data-edit="specials.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               One hot plate a day, from 11 until the pan is empty or 3
               o'clock, whichever comes first. $13.50 with two sides and a
               roll, or $9.50 for the half plate. Weekends, the griddle is the
@@ -279,14 +290,14 @@ export default function BluePlateDinerPage() {
             </p>
           </div>
           <ol className={s.week}>
-            {SPECIALS.map((d) => (
+            {SPECIALS.map((d, i) => (
               <li key={d.day}>
                 <div className={s.dish} aria-hidden="true">
-                  <span className={s.dishDay}>{d.short}</span>
+                  <span data-edit={`specials.dishDay.${i}`} data-edit-max="60" className={s.dishDay}>{d.short}</span>
                 </div>
-                <p className={s.day}>{d.day}</p>
-                <h3>{d.dish}</h3>
-                <p className={s.sides}>{d.sides}</p>
+                <p data-edit={`specials.day.${i}`} data-edit-max="240" data-edit-multiline className={s.day}>{d.day}</p>
+                <h3 data-edit={`specials.title2.${i}`} data-edit-max="40">{d.dish}</h3>
+                <p data-edit={`specials.sides.${i}`} data-edit-max="240" data-edit-multiline className={s.sides}>{d.sides}</p>
               </li>
             ))}
           </ol>
@@ -296,7 +307,7 @@ export default function BluePlateDinerPage() {
             The laminated card on the counter: a navy sleeve around a cream
             sheet, two columns, dotted leaders to the price. */}
         <section id="menu" className={s.counterTop} aria-labelledby="menu-h">
-          <div className={s.trim} aria-hidden="true">
+          <div data-edit-pattern="menu.field" data-edit-roles="1,3,0,2" className={s.trim} aria-hidden="true">
             <TabbiedPattern
               pattern={hourglass}
               palette={TRIM}
@@ -308,29 +319,29 @@ export default function BluePlateDinerPage() {
           </div>
           <div className={s.card}>
             <div className={s.cardHead}>
-              <h2 id="menu-h">Menu</h2>
-              <p className={s.cardScript}>breakfast all day</p>
-              <p className={s.cardNote}>Prices in dollars. Substitutions happily made.</p>
+              <h2 data-edit="menu.title" data-edit-max="60" id="menu-h">Menu</h2>
+              <p data-edit="menu.cardScript" data-edit-max="240" data-edit-multiline className={s.cardScript}>breakfast all day</p>
+              <p data-edit="menu.cardNote" data-edit-max="240" data-edit-multiline className={s.cardNote}>Prices in dollars. Substitutions happily made.</p>
             </div>
             <div className={s.columns}>
-              {MENU.map((g) => (
+              {MENU.map((g, i) => (
                 <div className={s.group} key={g.title}>
-                  <h3>{g.title}</h3>
-                  <p className={s.groupAside}>{g.aside}</p>
+                  <h3 data-edit={`menu.title2.${i}`} data-edit-max="40">{g.title}</h3>
+                  <p data-edit={`menu.groupAside.${i}`} data-edit-max="240" data-edit-multiline className={s.groupAside}>{g.aside}</p>
                   <ul>
-                    {g.items.map((it) => (
+                    {g.items.map((it, i2) => (
                       <li key={it.name}>
-                        <span className={s.itemName}>{it.name}</span>
+                        <span data-edit={`menu.itemName.${i}.${i2}`} data-edit-max="60" className={s.itemName}>{it.name}</span>
                         <span className={s.leader} aria-hidden="true" />
-                        <span className={s.itemPrice}>{it.price}</span>
-                        {it.note ? <small className={s.itemNote}>{it.note}</small> : null}
+                        <span data-edit={`menu.itemPrice.${i}.${i2}`} data-edit-max="60" className={s.itemPrice}>{it.price}</span>
+                        {it.note ? <small data-edit={`menu.itemNote.${i}.${i2}`} className={s.itemNote}>{it.note}</small> : null}
                       </li>
                     ))}
                   </ul>
                 </div>
               ))}
             </div>
-            <p className={s.cardFoot}>
+            <p data-edit="menu.cardFoot" data-edit-max="240" data-edit-multiline className={s.cardFoot}>
               Egg whites or turkey bacon, add $1. Gluten-free toast, add
               $1.50. Our fryer is shared, so nothing fried is gluten-free.
             </p>
@@ -340,18 +351,18 @@ export default function BluePlateDinerPage() {
         {/* -------------------------------------------------------- PIE CASE */}
         <section id="pie" className={s.pie} aria-labelledby="pie-h">
           <div className={s.pieText}>
-            <p className={s.scriptSmall}>Baked by Dot at 5 am</p>
-            <h2 id="pie-h">The pie case</h2>
-            <p className={s.headNote}>
+            <p data-edit="pie.scriptSmall" data-edit-max="240" data-edit-multiline className={s.scriptSmall}>Baked by Dot at 5 am</p>
+            <h2 data-edit="pie.title" data-edit-max="60" id="pie-h">The pie case</h2>
+            <p data-edit="pie.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Eight pies in the case by 7 every morning. When a pie is gone it
               is gone until tomorrow, so if your heart is set on coconut cream,
               come before dinner or order a whole one.
             </p>
             <dl className={s.piePrices}>
-              {PIE_PRICES.map(([what, price]) => (
+              {PIE_PRICES.map(([what, price], i) => (
                 <div key={what}>
-                  <dt>{what}</dt>
-                  <dd>{price}</dd>
+                  <dt data-edit={`pie.term.${i}`} data-edit-max="28">{what}</dt>
+                  <dd data-edit={`pie.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                 </div>
               ))}
             </dl>
@@ -359,11 +370,11 @@ export default function BluePlateDinerPage() {
 
           <div className={s.case}>
             <ul className={s.shelf}>
-              {PIES.map((p) => (
+              {PIES.map((p, i) => (
                 <li key={p.name}>
                   <span className={`${s.pieDisc} ${s[p.kind]}`} aria-hidden="true" />
-                  <strong>{p.name}</strong>
-                  <small>{p.note}</small>
+                  <strong data-edit={`pie.emphasis.${i}`}>{p.name}</strong>
+                  <small data-edit={`pie.note.${i}`}>{p.note}</small>
                 </li>
               ))}
             </ul>
@@ -376,25 +387,25 @@ export default function BluePlateDinerPage() {
               inks={{ red: 'var(--cherry)', blue: 'var(--china)' }}
               className={s.pieArtwork}
             />
-            <p className={s.pieArtNote}>A slice and a refill, $6.95 all afternoon.</p>
+            <p data-edit="pie.pieArtNote" data-edit-max="240" data-edit-multiline className={s.pieArtNote}>A slice and a refill, $6.95 all afternoon.</p>
           </div>
 
           <form className={s.order} action="#">
             <div className={s.orderHead}>
-              <h3>Order a whole pie</h3>
-              <p className={s.formNote}>A day's notice, please. We call to confirm, and you pay when you pick it up.</p>
+              <h3 data-edit="pie.title2" data-edit-max="40">Order a whole pie</h3>
+              <p data-edit="pie.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>A day's notice, please. We call to confirm, and you pay when you pick it up.</p>
             </div>
             <div className={s.formGrid}>
               <div className={s.field}>
-                <label htmlFor="bp-name">Name</label>
+                <label data-edit="pie.label" htmlFor="bp-name">Name</label>
                 <input id="bp-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="bp-phone">Phone</label>
+                <label data-edit="pie.label2" htmlFor="bp-phone">Phone</label>
                 <input id="bp-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <div className={s.field}>
-                <label htmlFor="bp-pie">Which pie</label>
+                <label data-edit="pie.label3" htmlFor="bp-pie">Which pie</label>
                 <select id="bp-pie" name="pie" defaultValue="Apple">
                   {PIES.map((p) => (
                     <option key={p.name} value={p.name}>{p.name}</option>
@@ -402,11 +413,11 @@ export default function BluePlateDinerPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="bp-date">Pick-up day</label>
+                <label data-edit="pie.label4" htmlFor="bp-date">Pick-up day</label>
                 <input id="bp-date" name="date" type="date" />
               </div>
             </div>
-            <button className={s.submit} type="submit">Hold my pie</button>
+            <button data-edit="pie.submit" data-edit-max="24" className={s.submit} type="submit">Hold my pie</button>
           </form>
         </section>
 
@@ -414,20 +425,20 @@ export default function BluePlateDinerPage() {
             The people, each on a guest check from the pad by the register. */}
         <section id="counter" className={s.counter} aria-labelledby="counter-h">
           <div className={s.head}>
-            <p className={s.scriptSmall}>Who is working</p>
-            <h2 id="counter-h">Behind the counter</h2>
+            <p data-edit="counter.scriptSmall" data-edit-max="240" data-edit-multiline className={s.scriptSmall}>Who is working</p>
+            <h2 data-edit="counter.title" data-edit-max="60" id="counter-h">Behind the counter</h2>
           </div>
           <ul className={s.checks}>
-            {COUNTER.map((c) => (
+            {COUNTER.map((c, i) => (
               <li key={c.name} className={s.check}>
                 <p className={s.checkTop}>
-                  <span>Guest check</span>
-                  <span>{c.no}</span>
+                  <span data-edit={`counter.text.${i}`} data-edit-max="60">Guest check</span>
+                  <span data-edit={`counter.text2.${i}`} data-edit-max="60">{c.no}</span>
                 </p>
-                <h3>{c.name}</h3>
-                <p className={s.checkRole}>{c.role}</p>
-                <p className={s.checkNote}>{c.note}</p>
-                <p className={s.checkSince}>{c.since}</p>
+                <h3 data-edit={`counter.title2.${i}`} data-edit-max="40">{c.name}</h3>
+                <p data-edit={`counter.checkRole.${i}`} data-edit-max="240" data-edit-multiline className={s.checkRole}>{c.role}</p>
+                <p data-edit={`counter.checkNote.${i}`} data-edit-max="240" data-edit-multiline className={s.checkNote}>{c.note}</p>
+                <p data-edit={`counter.checkSince.${i}`} data-edit-max="240" data-edit-multiline className={s.checkSince}>{c.since}</p>
               </li>
             ))}
           </ul>
@@ -436,36 +447,36 @@ export default function BluePlateDinerPage() {
         {/* ----------------------------------------------------------- HOURS */}
         <section id="hours" className={s.hours} aria-labelledby="hours-h">
           <div className={s.board}>
-            <h2 id="hours-h">Open</h2>
+            <h2 data-edit="hours.title" data-edit-max="60" id="hours-h">Open</h2>
             <dl>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`hours.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`hours.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
-            <p className={s.boardNote}>The grill stops 15 minutes before we close. Pie does not.</p>
+            <p data-edit="hours.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>The grill stops 15 minutes before we close. Pie does not.</p>
           </div>
           <div className={s.find}>
-            <p className={s.scriptSmall}>Find us</p>
-            <p className={s.address}>411 Mill Street, at Route 9</p>
-            <p className={s.town}>Larkin Heights</p>
+            <p data-edit="hours.scriptSmall" data-edit-max="240" data-edit-multiline className={s.scriptSmall}>Find us</p>
+            <p data-edit="hours.address" data-edit-max="240" data-edit-multiline className={s.address}>411 Mill Street, at Route 9</p>
+            <p data-edit="hours.town" data-edit-max="240" data-edit-multiline className={s.town}>Larkin Heights</p>
             <p className={s.contact}>
-              <a href="tel:+15550142290">(555) 014-2290</a>
+              <a data-edit="hours.link" data-edit-max="28" href="tel:+15550142290">(555) 014-2290</a>
             </p>
             <p className={s.contact}>
-              <a href="mailto:dot@theblueplate.example">dot@theblueplate.example</a>
+              <a data-edit="hours.link2" data-edit-max="28" href="mailto:dot@theblueplate.example">dot@theblueplate.example</a>
             </p>
             <ul className={s.notes}>
-              {NOTES.map((n) => (
-                <li key={n}>{n}</li>
+              {NOTES.map((n, i) => (
+                <li data-edit={`hours.item.${i}`} data-edit-max="80" key={n}>{n}</li>
               ))}
             </ul>
           </div>
         </section>
 
-        <div className={s.floor} aria-hidden="true">
+        <div data-edit-pattern="top.field2" data-edit-roles="0,2,1" className={s.floor} aria-hidden="true">
           <TabbiedPattern
             pattern={damier}
             palette={FLOOR}
@@ -478,10 +489,10 @@ export default function BluePlateDinerPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>The Blue Plate</p>
-        <p>A fictional all-day diner. The menu, the people and the prices are invented; the pie and coffee are a generated image drawn in the page's colors.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>The Blue Plate</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional all-day diner. The menu, the people and the prices are invented; the pie and coffee are a generated image drawn in the page's colors.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

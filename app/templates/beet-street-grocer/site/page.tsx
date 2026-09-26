@@ -271,7 +271,19 @@ const HOURS = [
 
 export default function BeetStreetGrocerPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--slate': '#1f2a27',
+        '--chalk': '#ece8dc',
+        '--beet': '#b0305a',
+        '--leaf': '#7aa35a',
+        '--carrot': '#e58a3a',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="slate,chalk,beet,leaf,carrot"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -281,19 +293,19 @@ export default function BeetStreetGrocerPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">
           Beet Street Grocer
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>
               {label}
             </a>
           ))}
@@ -304,18 +316,18 @@ export default function BeetStreetGrocerPage() {
         {/* ------------------------------------------------------- THE A-FRAME */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.hand}>Fruit, veg and a few good things, since 2014</p>
-            <h1 id="hero-h" className={s.name}>
+            <p data-edit="hero.hand" data-edit-max="240" data-edit-multiline className={s.hand}>Fruit, veg and a few good things, since 2014</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.name}>
               <em>Beet</em> Street Grocer
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               A corner shop on Market Hill that sells what six farms within forty miles picked this week. The board
               changes every morning at seven, when the vans have been.
             </p>
             <ul className={s.facts}>
-              <li>Open 7 to 7, Tuesday to Friday</li>
-              <li>SNAP doubled on fruit and veg</li>
-              <li>Veg boxes every Thursday</li>
+              <li data-edit="hero.item" data-edit-max="80">Open 7 to 7, Tuesday to Friday</li>
+              <li data-edit="hero.item2" data-edit-max="80">SNAP doubled on fruit and veg</li>
+              <li data-edit="hero.item3" data-edit-max="80">Veg boxes every Thursday</li>
             </ul>
           </div>
 
@@ -329,9 +341,9 @@ export default function BeetStreetGrocerPage() {
               />
             </div>
             <div className={s.priceCard}>
-              <p className={s.cardName}>Beets</p>
-              <p className={s.cardPrice}>$2.50</p>
-              <p className={s.cardUnit}>a bunch, Hollow Creek, 9 miles</p>
+              <p data-edit="hero.cardName" data-edit-max="240" data-edit-multiline className={s.cardName}>Beets</p>
+              <p data-edit="hero.cardPrice" data-edit-max="240" data-edit-multiline className={s.cardPrice}>$2.50</p>
+              <p data-edit="hero.cardUnit" data-edit-max="240" data-edit-multiline className={s.cardUnit}>a bunch, Hollow Creek, 9 miles</p>
             </div>
           </div>
         </section>
@@ -340,22 +352,22 @@ export default function BeetStreetGrocerPage() {
         <section id="board" className={s.boardSec} aria-labelledby="board-h">
           <div className={s.frame}>
             <div className={s.boardHead}>
-              <h2 id="board-h" className={s.boardTitle}>
+              <h2 data-edit="board.boardTitle" data-edit-max="60" id="board-h" className={s.boardTitle}>
                 Today's board
               </h2>
-              <p className={s.boardDate}>Friday the 26th. Chalked at 7:10</p>
+              <p data-edit="board.boardDate" data-edit-max="240" data-edit-multiline className={s.boardDate}>Friday the 26th. Chalked at 7:10</p>
             </div>
             <div className={s.groups}>
-              {BOARD.map((g) => (
+              {BOARD.map((g, i) => (
                 <div key={g.title} className={s.group}>
-                  <h3 className={s.groupTitle}>{g.title}</h3>
+                  <h3 data-edit={`board.groupTitle.${i}`} data-edit-max="40" className={s.groupTitle}>{g.title}</h3>
                   <ul className={s.items}>
-                    {g.items.map((it) => (
+                    {g.items.map((it, i2) => (
                       <li key={it.name}>
-                        <span className={s.itemName}>{it.name}</span>
-                        <span className={s.itemPrice}>{it.price}</span>
-                        <span className={s.itemFrom}>{it.from}</span>
-                        <span className={s.itemUnit}>{it.unit}</span>
+                        <span data-edit={`board.itemName.${i}.${i2}`} data-edit-max="60" className={s.itemName}>{it.name}</span>
+                        <span data-edit={`board.itemPrice.${i}.${i2}`} data-edit-max="60" className={s.itemPrice}>{it.price}</span>
+                        <span data-edit={`board.itemFrom.${i}.${i2}`} data-edit-max="60" className={s.itemFrom}>{it.from}</span>
+                        <span data-edit={`board.itemUnit.${i}.${i2}`} data-edit-max="60" className={s.itemUnit}>{it.unit}</span>
                       </li>
                     ))}
                   </ul>
@@ -365,7 +377,7 @@ export default function BeetStreetGrocerPage() {
           </div>
 
           <div className={s.crateRow}>
-            <div className={s.crate} aria-hidden="true">
+            <div data-edit-pattern="board.field" data-edit-roles="transparent,2,3,4,3,1" className={s.crate} aria-hidden="true">
               <TabbiedPattern
                 pattern={roundstep}
                 palette={CRATE}
@@ -376,12 +388,12 @@ export default function BeetStreetGrocerPage() {
               />
             </div>
             <ul className={s.specials}>
-              {SPECIALS.map(([name, note, price, unit]) => (
+              {SPECIALS.map(([name, note, price, unit], i) => (
                 <li key={name} className={s.special}>
-                  <p className={s.specialName}>{name}</p>
-                  <p className={s.specialPrice}>{price}</p>
-                  <p className={s.specialUnit}>{unit}</p>
-                  <p className={s.specialNote}>{note}</p>
+                  <p data-edit={`board.specialName.${i}`} data-edit-max="240" data-edit-multiline className={s.specialName}>{name}</p>
+                  <p data-edit={`board.specialPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.specialPrice}>{price}</p>
+                  <p data-edit={`board.specialUnit.${i}`} data-edit-max="240" data-edit-multiline className={s.specialUnit}>{unit}</p>
+                  <p data-edit={`board.specialNote.${i}`} data-edit-max="240" data-edit-multiline className={s.specialNote}>{note}</p>
                 </li>
               ))}
             </ul>
@@ -391,9 +403,9 @@ export default function BeetStreetGrocerPage() {
         {/* ------------------------------------------------------- IN SEASON */}
         <section id="season" className={s.sec} aria-labelledby="season-h">
           <div className={s.secHead}>
-            <p className={s.hand}>Month by month</p>
-            <h2 id="season-h">What is in season, and when</h2>
-            <p className={s.secNote}>
+            <p data-edit="season.hand" data-edit-max="240" data-edit-multiline className={s.hand}>Month by month</p>
+            <h2 data-edit="season.title" data-edit-max="60" id="season-h">What is in season, and when</h2>
+            <p data-edit="season.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A solid line is picked that week. A dashed one comes out of a farm's cold store, which is how we have
               carrots in February and no tomatoes in March. We are in September.
             </p>
@@ -401,24 +413,24 @@ export default function BeetStreetGrocerPage() {
 
           <div className={s.chartWrap}>
             <table className={s.chart}>
-              <caption className={s.srOnly}>Months each crop is in the shop, fresh or from store</caption>
+              <caption data-edit="season.srOnly" className={s.srOnly}>Months each crop is in the shop, fresh or from store</caption>
               <thead>
                 <tr>
-                  <th scope="col" className={s.cropHead}>
+                  <th data-edit="season.cropHead" scope="col" className={s.cropHead}>
                     Crop
                   </th>
                   {MONTHS.map((m, i) => (
                     <th key={MONTH_NAMES[i]} scope="col" className={i === NOW ? s.nowHead : undefined}>
                       <span aria-hidden="true">{m}</span>
-                      <span className={s.srOnly}>{MONTH_NAMES[i]}</span>
+                      <span data-edit={`season.srOnly2.${i}`} data-edit-max="60" className={s.srOnly}>{MONTH_NAMES[i]}</span>
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {SEASON.map((c) => (
+                {SEASON.map((c, i) => (
                   <tr key={c.name} className={s[c.kind]}>
-                    <th scope="row">{c.name}</th>
+                    <th data-edit={`season.heading.${i}`} scope="row">{c.name}</th>
                     {c.months.split('').map((m, j) => (
                       <td
                         key={MONTH_NAMES[j]}
@@ -435,19 +447,19 @@ export default function BeetStreetGrocerPage() {
             </table>
           </div>
           <ul className={s.key}>
-            <li className={s.keyRoot}>Roots and corn</li>
-            <li className={s.keyGreen}>Greens and pods</li>
-            <li className={s.keyFruit}>Fruit</li>
-            <li className={s.keyStore}>From the cold store</li>
+            <li data-edit="season.keyRoot" data-edit-max="80" className={s.keyRoot}>Roots and corn</li>
+            <li data-edit="season.keyGreen" data-edit-max="80" className={s.keyGreen}>Greens and pods</li>
+            <li data-edit="season.keyFruit" data-edit-max="80" className={s.keyFruit}>Fruit</li>
+            <li data-edit="season.keyStore" data-edit-max="80" className={s.keyStore}>From the cold store</li>
           </ul>
         </section>
 
         {/* ------------------------------------------------------- VEG BOXES */}
         <section id="boxes" className={s.sec} aria-labelledby="boxes-h">
           <div className={s.secHead}>
-            <p className={s.hand}>Every Thursday</p>
-            <h2 id="boxes-h">Veg boxes, three sizes</h2>
-            <p className={s.secNote}>
+            <p data-edit="boxes.hand" data-edit-max="240" data-edit-multiline className={s.hand}>Every Thursday</p>
+            <h2 data-edit="boxes.title" data-edit-max="60" id="boxes-h">Veg boxes, three sizes</h2>
+            <p data-edit="boxes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               We pack whatever the farms sent that week, heavier on what is at its best. Bring the crate back and we use
               it again.
             </p>
@@ -456,26 +468,26 @@ export default function BeetStreetGrocerPage() {
           <div className={s.boxGrid}>
             <div className={s.boxLeft}>
               <ul className={s.crates}>
-                {BOXES.map((b) => (
+                {BOXES.map((b, i) => (
                   <li key={b.size} className={s.crateCard}>
                     <div className={s.plate}>
-                      <h3>{b.size}</h3>
-                      <p className={s.platePrice}>{b.price}</p>
-                      <p className={s.plateWho}>{b.who}</p>
-                      <p className={s.plateWhat}>{b.what}</p>
+                      <h3 data-edit={`boxes.title2.${i}`} data-edit-max="40">{b.size}</h3>
+                      <p data-edit={`boxes.platePrice.${i}`} data-edit-max="240" data-edit-multiline className={s.platePrice}>{b.price}</p>
+                      <p data-edit={`boxes.plateWho.${i}`} data-edit-max="240" data-edit-multiline className={s.plateWho}>{b.who}</p>
+                      <p data-edit={`boxes.plateWhat.${i}`} data-edit-max="240" data-edit-multiline className={s.plateWhat}>{b.what}</p>
                     </div>
                   </li>
                 ))}
               </ul>
               <ol className={s.rules}>
-                {BOX_RULES.map((r) => (
-                  <li key={r}>{r}</li>
+                {BOX_RULES.map((r, i) => (
+                  <li data-edit={`boxes.item.${i}`} data-edit-max="80" key={r}>{r}</li>
                 ))}
               </ol>
             </div>
 
             <div className={s.thisWeek}>
-              <div className={s.weekField} aria-hidden="true">
+              <div data-edit-pattern="boxes.field" data-edit-roles="transparent,3,1,3,2" className={s.weekField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={ivy}
                   palette={GREENS}
@@ -486,17 +498,17 @@ export default function BeetStreetGrocerPage() {
                 />
               </div>
               <div className={s.weekList}>
-                <h3 className={s.weekTitle}>In this week's medium box</h3>
+                <h3 data-edit="boxes.weekTitle" data-edit-max="40" className={s.weekTitle}>In this week's medium box</h3>
                 <ul>
-                  {THIS_WEEK.map((w) => (
-                    <li key={w}>{w}</li>
+                  {THIS_WEEK.map((w, i) => (
+                    <li data-edit={`boxes.item2.${i}`} data-edit-max="80" key={w}>{w}</li>
                   ))}
                 </ul>
                 <dl className={s.addOns}>
-                  {ADD_ONS.map(([k, v]) => (
+                  {ADD_ONS.map(([k, v], i) => (
                     <div key={k}>
-                      <dt>{k}</dt>
-                      <dd>{v}</dd>
+                      <dt data-edit={`boxes.term.${i}`} data-edit-max="28">{k}</dt>
+                      <dd data-edit={`boxes.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                     </div>
                   ))}
                 </dl>
@@ -507,7 +519,7 @@ export default function BeetStreetGrocerPage() {
 
         {/* ----------------------------------------------------------- FARMS */}
         <section id="farms" className={s.bandSec} aria-labelledby="farms-h">
-          <div className={s.band} aria-hidden="true">
+          <div data-edit-pattern="farms.field" data-edit-roles="transparent,3,2,3,4" className={s.band} aria-hidden="true">
             <TabbiedPattern
               pattern={roundstep}
               palette={ROW}
@@ -519,23 +531,23 @@ export default function BeetStreetGrocerPage() {
           </div>
           <div className={s.sec}>
             <div className={s.secHead}>
-              <p className={s.hand}>Nearest first</p>
-              <h2 id="farms-h">The six farms we buy from</h2>
-              <p className={s.secNote}>
+              <p data-edit="farms.hand" data-edit-max="240" data-edit-multiline className={s.hand}>Nearest first</p>
+              <h2 data-edit="farms.title" data-edit-max="60" id="farms-h">The six farms we buy from</h2>
+              <p data-edit="farms.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 We pay what the farm asks, on the day it delivers. Everything on the board says where it grew; if it
                 does not, ask, and we will tell you.
               </p>
             </div>
             <ol className={s.farms}>
-              {FARMS.map((f) => (
+              {FARMS.map((f, i) => (
                 <li key={f.name} className={s.farm}>
                   <p className={s.miles}>
-                    <span className={s.milesNum}>{f.miles}</span>
-                    <span className={s.milesUnit}>miles</span>
+                    <span data-edit={`farms.milesNum.${i}`} data-edit-max="60" className={s.milesNum}>{f.miles}</span>
+                    <span data-edit={`farms.milesUnit.${i}`} data-edit-max="60" className={s.milesUnit}>miles</span>
                   </p>
-                  <h3>{f.name}</h3>
-                  <p className={s.grows}>{f.grows}</p>
-                  <p className={s.farmNote}>{f.note}</p>
+                  <h3 data-edit={`farms.title2.${i}`} data-edit-max="40">{f.name}</h3>
+                  <p data-edit={`farms.grows.${i}`} data-edit-max="240" data-edit-multiline className={s.grows}>{f.grows}</p>
+                  <p data-edit={`farms.farmNote.${i}`} data-edit-max="240" data-edit-multiline className={s.farmNote}>{f.note}</p>
                 </li>
               ))}
             </ol>
@@ -547,44 +559,44 @@ export default function BeetStreetGrocerPage() {
           <div className={s.visit}>
             <div>
               <div className={s.secHead}>
-                <p className={s.hand}>Corner of Beet and Vine</p>
-                <h2 id="visit-h">Come by the shop</h2>
+                <p data-edit="visit.hand" data-edit-max="240" data-edit-multiline className={s.hand}>Corner of Beet and Vine</p>
+                <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Come by the shop</h2>
               </div>
               <p className={s.address}>
                 214 Beet Street, Market Hill
                 <br />
-                <a href="tel:+15550194417">(555) 019-4417</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550194417">(555) 019-4417</a>
               </p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
               <ul className={s.notes}>
-                <li>SNAP and EBT welcome, and doubled on fruit and veg up to $20 a day.</li>
-                <li>Bring bags and jars. Veg scraps go in the bin by the door, and on to Two Crows for compost.</li>
-                <li>Restaurants and cafes: trade prices by the case, ordered by 4 pm for the next morning.</li>
+                <li data-edit="visit.item" data-edit-max="80">SNAP and EBT welcome, and doubled on fruit and veg up to $20 a day.</li>
+                <li data-edit="visit.item2" data-edit-max="80">Bring bags and jars. Veg scraps go in the bin by the door, and on to Two Crows for compost.</li>
+                <li data-edit="visit.item3" data-edit-max="80">Restaurants and cafes: trade prices by the case, ordered by 4 pm for the next morning.</li>
               </ul>
             </div>
 
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>The Thursday list</h3>
-              <p className={s.formNote}>
+              <h3 data-edit="visit.formTitle" data-edit-max="40" className={s.formTitle}>The Thursday list</h3>
+              <p data-edit="visit.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>
                 One email a week: what came in, what is ending, and what goes in the boxes. Nothing else, ever.
               </p>
               <div className={s.field}>
-                <label htmlFor="bsg-name">Name</label>
+                <label data-edit="visit.label" htmlFor="bsg-name">Name</label>
                 <input id="bsg-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="bsg-email">Email</label>
+                <label data-edit="visit.label2" htmlFor="bsg-email">Email</label>
                 <input id="bsg-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.field}>
-                <label htmlFor="bsg-box">Veg box</label>
+                <label data-edit="visit.label3" htmlFor="bsg-box">Veg box</label>
                 <select id="bsg-box" name="box" defaultValue="none">
                   <option value="none">Just the list, thanks</option>
                   <option value="small">Small box, $22</option>
@@ -592,7 +604,7 @@ export default function BeetStreetGrocerPage() {
                   <option value="large">Large box, $44</option>
                 </select>
               </div>
-              <button className={s.submit} type="submit">
+              <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">
                 Put me on the list
               </button>
             </form>
@@ -601,7 +613,7 @@ export default function BeetStreetGrocerPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,2,3,4" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={roundstep}
             palette={ROW}
@@ -611,12 +623,12 @@ export default function BeetStreetGrocerPage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Beet Street Grocer</p>
-        <p>A fictional greengrocer. The farms, prices and hours are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Beet Street Grocer</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional greengrocer. The farms, prices and hours are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
-        <p>The beets are a generated picture, drawn in the page's own colors.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The beets are a generated picture, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

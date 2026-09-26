@@ -151,7 +151,19 @@ const HOURS = [
 
 export default function LastAndAwlPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--wall': '#eee4cf',
+        '--bottle': '#173f2f',
+        '--gold': '#c8993a',
+        '--oxblood': '#6f2320',
+        '--tan': '#a8672f',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="wall,bottle,gold,oxblood,tan"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -161,15 +173,15 @@ export default function LastAndAwlPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Last & Awl</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Last & Awl</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -178,9 +190,9 @@ export default function LastAndAwlPage() {
         {/* ------------------------------------------------------------ SIGN */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.sign}>
-            <p className={s.signTop}>Shoe and leather repair</p>
-            <h1 id="hero-h" className={s.signName}>Last & Awl</h1>
-            <p className={s.signBottom}>Tanner's Row, since 1987</p>
+            <p data-edit="hero.signTop" data-edit-max="240" data-edit-multiline className={s.signTop}>Shoe and leather repair</p>
+            <h1 data-edit="hero.signName" data-edit-max="70" id="hero-h" className={s.signName}>Last & Awl</h1>
+            <p data-edit="hero.signBottom" data-edit-max="240" data-edit-multiline className={s.signBottom}>Tanner's Row, since 1987</p>
           </div>
 
           <div className={s.heroBelow}>
@@ -190,16 +202,16 @@ export default function LastAndAwlPage() {
               inks={['var(--text)']}
               className={s.brogue}
             />
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               We resole, reheel, restitch and restore shoes, boots, bags and
               belts, at one bench behind one counter, the same way since 1987.
               Bring it in, get a ticket, collect it on the day we write down.
             </p>
             <ul className={s.promises}>
-              {PROMISES.map(([big, small]) => (
+              {PROMISES.map(([big, small], i) => (
                 <li key={big}>
-                  <strong>{big}</strong>
-                  <span>{small}</span>
+                  <strong data-edit={`hero.emphasis.${i}`}>{big}</strong>
+                  <span data-edit={`hero.text.${i}`} data-edit-max="60">{small}</span>
                 </li>
               ))}
             </ul>
@@ -207,7 +219,7 @@ export default function LastAndAwlPage() {
         </section>
 
         {/* The doormat at the shop door. */}
-        <div className={s.mat} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="1,2,4,3" className={s.mat} aria-hidden="true">
           <TabbiedPattern
             pattern={corduroy}
             palette={MAT}
@@ -222,29 +234,29 @@ export default function LastAndAwlPage() {
         <section id="prices" className={s.prices} aria-labelledby="prices-h">
           <div className={s.inner}>
             <div className={s.head}>
-              <h2 id="prices-h">The price board</h2>
-              <p className={s.headNote}>
+              <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">The price board</h2>
+              <p data-edit="prices.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 As it hangs behind the counter. Prices are per pair unless it
                 says otherwise, and they include the leather.
               </p>
             </div>
 
             <div className={s.board}>
-              {PLATES.map((p) => (
+              {PLATES.map((p, i) => (
                 <article key={p.title} className={`${s.plate} ${s[p.size]}`} aria-labelledby={`plate-${p.title}`}>
-                  <h3 id={`plate-${p.title}`} className={s.plateTitle}>{p.title}</h3>
+                  <h3 data-edit={`plate.plateTitle.${i}`} data-edit-max="40" id={`plate-${p.title}`} className={s.plateTitle}>{p.title}</h3>
                   <ul className={s.plateList}>
-                    {p.items.map(([what, price]) => (
+                    {p.items.map(([what, price], i2) => (
                       <li key={what}>
-                        <span className={s.plateItem}>{what}</span>
-                        <span className={s.platePrice}>{price}</span>
+                        <span data-edit={`plate.plateItem.${i}.${i2}`} data-edit-max="60" className={s.plateItem}>{what}</span>
+                        <span data-edit={`plate.platePrice.${i}.${i2}`} data-edit-max="60" className={s.platePrice}>{price}</span>
                       </li>
                     ))}
                   </ul>
                 </article>
               ))}
             </div>
-            <p className={s.boardNote}>Keys cut while you wait, $4 to $8. Laces and insoles at the counter.</p>
+            <p data-edit="prices.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>Keys cut while you wait, $4 to $8. Laces and insoles at the counter.</p>
           </div>
         </section>
 
@@ -254,8 +266,8 @@ export default function LastAndAwlPage() {
             <div className={s.ticketGrid}>
               <div>
                 <div className={s.head}>
-                  <h2 id="tickets-h">How the ticket works</h2>
-                  <p className={s.headNote}>
+                  <h2 data-edit="tickets.title" data-edit-max="60" id="tickets-h">How the ticket works</h2>
+                  <p data-edit="tickets.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                     Forty pairs of shoes go through the shop in a normal week.
                     The ticket is how every one of them comes back to the
                     right person.
@@ -266,8 +278,8 @@ export default function LastAndAwlPage() {
                     <li key={title}>
                       <span className={s.stepNum}>{String(i + 1)}</span>
                       <div>
-                        <h3>{title}</h3>
-                        <p>{body}</p>
+                        <h3 data-edit={`tickets.title2.${i}`} data-edit-max="40">{title}</h3>
+                        <p data-edit={`tickets.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                       </div>
                     </li>
                   ))}
@@ -276,32 +288,32 @@ export default function LastAndAwlPage() {
 
               <div className={s.ticket}>
                 <div className={s.ticketMain}>
-                  <p className={s.ticketShop}>Last & Awl, 9 Tanner's Row</p>
-                  <p className={s.ticketNo}>No. 4471</p>
+                  <p data-edit="tickets.ticketShop" data-edit-max="240" data-edit-multiline className={s.ticketShop}>Last & Awl, 9 Tanner's Row</p>
+                  <p data-edit="tickets.ticketNo" data-edit-max="240" data-edit-multiline className={s.ticketNo}>No. 4471</p>
                   <dl className={s.ticketFields}>
                     <div>
-                      <dt>Name</dt>
-                      <dd>M. Okafor</dd>
+                      <dt data-edit="tickets.term" data-edit-max="28">Name</dt>
+                      <dd data-edit="tickets.body2" data-edit-max="200" data-edit-multiline>M. Okafor</dd>
                     </div>
                     <div>
-                      <dt>Item</dt>
-                      <dd>Brown brogues, one pair</dd>
+                      <dt data-edit="tickets.term2" data-edit-max="28">Item</dt>
+                      <dd data-edit="tickets.body3" data-edit-max="200" data-edit-multiline>Brown brogues, one pair</dd>
                     </div>
                     <div>
-                      <dt>Work</dt>
-                      <dd>Full leather soles, rubber heels</dd>
+                      <dt data-edit="tickets.term3" data-edit-max="28">Work</dt>
+                      <dd data-edit="tickets.body4" data-edit-max="200" data-edit-multiline>Full leather soles, rubber heels</dd>
                     </div>
                     <div>
-                      <dt>Price</dt>
-                      <dd>$109</dd>
+                      <dt data-edit="tickets.term4" data-edit-max="28">Price</dt>
+                      <dd data-edit="tickets.body5" data-edit-max="200" data-edit-multiline>$109</dd>
                     </div>
                   </dl>
-                  <p className={s.stamp}>Ready</p>
+                  <p data-edit="tickets.stamp" data-edit-max="240" data-edit-multiline className={s.stamp}>Ready</p>
                 </div>
                 <div className={s.ticketStub}>
-                  <p className={s.stubLabel}>Keep this half</p>
-                  <p className={s.stubNo}>No. 4471</p>
-                  <p className={s.stubDate}>Thursday, 4 pm</p>
+                  <p data-edit="tickets.stubLabel" data-edit-max="240" data-edit-multiline className={s.stubLabel}>Keep this half</p>
+                  <p data-edit="tickets.stubNo" data-edit-max="240" data-edit-multiline className={s.stubNo}>No. 4471</p>
+                  <p data-edit="tickets.stubDate" data-edit-max="240" data-edit-multiline className={s.stubDate}>Thursday, 4 pm</p>
                 </div>
               </div>
             </div>
@@ -312,20 +324,20 @@ export default function LastAndAwlPage() {
         <section id="turnaround" className={s.turn} aria-labelledby="turn-h">
           <div className={s.inner}>
             <div className={s.head}>
-              <h2 id="turn-h">How long it takes</h2>
-              <p className={s.headNote}>
+              <h2 data-edit="turnaround.title" data-edit-max="60" id="turn-h">How long it takes</h2>
+              <p data-edit="turnaround.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 From the day you bring it in, on a normal week. Before a
                 holiday, and in the first cold week of winter, add a day.
               </p>
             </div>
             <ol className={s.times}>
-              {TURNAROUND.map((t) => (
+              {TURNAROUND.map((t, i) => (
                 <li key={t.n}>
                   <p className={s.timeFig}>
-                    <span className={s.timeN}>{t.n}</span>
-                    <span className={s.timeUnit}>{t.unit}</span>
+                    <span data-edit={`turnaround.timeN.${i}`} data-edit-max="60" className={s.timeN}>{t.n}</span>
+                    <span data-edit={`turnaround.timeUnit.${i}`} data-edit-max="60" className={s.timeUnit}>{t.unit}</span>
                   </p>
-                  <p className={s.timeWhat}>{t.what}</p>
+                  <p data-edit={`turnaround.timeWhat.${i}`} data-edit-max="240" data-edit-multiline className={s.timeWhat}>{t.what}</p>
                 </li>
               ))}
             </ol>
@@ -336,8 +348,8 @@ export default function LastAndAwlPage() {
         <section id="leather" className={s.leather} aria-labelledby="leather-h">
           <div className={s.inner}>
             <div className={s.head}>
-              <h2 id="leather-h">Bags and belts too</h2>
-              <p className={s.headNote}>
+              <h2 data-edit="leather.title" data-edit-max="60" id="leather-h">Bags and belts too</h2>
+              <p data-edit="leather.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 Inês runs the leather side of the shop from the second bench:
                 anything with a buckle, a strap or a handle.
               </p>
@@ -345,7 +357,7 @@ export default function LastAndAwlPage() {
           </div>
 
           <div className={s.belt}>
-            <div className={s.strap} aria-hidden="true">
+            <div data-edit-pattern="leather.field" data-edit-roles="3,4,2,3" className={s.strap} aria-hidden="true">
               <TabbiedPattern
                 pattern={corduroy}
                 palette={STRAP}
@@ -360,11 +372,11 @@ export default function LastAndAwlPage() {
 
           <div className={s.inner}>
             <ul className={s.leatherList}>
-              {LEATHER.map(([what, how, price]) => (
+              {LEATHER.map(([what, how, price], i) => (
                 <li key={what}>
-                  <h3>{what}</h3>
-                  <p>{how}</p>
-                  <span className={s.leatherPrice}>{price}</span>
+                  <h3 data-edit={`leather.title2.${i}`} data-edit-max="40">{what}</h3>
+                  <p data-edit={`leather.body.${i}`} data-edit-max="240" data-edit-multiline>{how}</p>
+                  <span data-edit={`leather.leatherPrice.${i}`} data-edit-max="60" className={s.leatherPrice}>{price}</span>
                 </li>
               ))}
             </ul>
@@ -376,7 +388,7 @@ export default function LastAndAwlPage() {
           <div className={s.inner}>
             <div className={s.benchGrid}>
               <div className={s.nameNote}>
-                <div className={s.swatch} aria-hidden="true">
+                <div data-edit-pattern="bench.field" data-edit-roles="4,3,2" className={s.swatch} aria-hidden="true">
                   <TabbiedPattern
                     pattern={corduroy}
                     palette={SWATCH}
@@ -386,8 +398,8 @@ export default function LastAndAwlPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-                <h2 id="bench-h">At the bench</h2>
-                <p>
+                <h2 data-edit="bench.title" data-edit-max="60" id="bench-h">At the bench</h2>
+                <p data-edit="bench.body" data-edit-max="240" data-edit-multiline>
                   A last is the wooden foot a shoe is built on. An awl is the
                   spike that makes the holes for the stitches. Aldo has 212
                   lasts on the back wall, and one awl he has used since 1981.
@@ -395,21 +407,21 @@ export default function LastAndAwlPage() {
               </div>
 
               <ul className={s.people}>
-                {PEOPLE.map((p) => (
+                {PEOPLE.map((p, i) => (
                   <li key={p.name}>
-                    <h3>{p.name}</h3>
-                    <p className={s.role}>{p.role}</p>
-                    <p>{p.note}</p>
+                    <h3 data-edit={`bench.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                    <p data-edit={`bench.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{p.role}</p>
+                    <p data-edit={`bench.body2.${i}`} data-edit-max="240" data-edit-multiline>{p.note}</p>
                   </li>
                 ))}
               </ul>
             </div>
 
             <div className={s.cannot}>
-              <h3>What we cannot fix</h3>
+              <h3 data-edit="bench.title3" data-edit-max="40">What we cannot fix</h3>
               <ul>
-                {CANNOT.map((c) => (
-                  <li key={c}>{c}</li>
+                {CANNOT.map((c, i) => (
+                  <li data-edit={`bench.item.${i}`} data-edit-max="80" key={c}>{c}</li>
                 ))}
               </ul>
             </div>
@@ -421,38 +433,38 @@ export default function LastAndAwlPage() {
           <div className={s.inner}>
             <div className={s.visitGrid}>
               <div>
-                <h2 id="visit-h">9 Tanner's Row</h2>
-                <p className={s.visitSub}>Old Market, between the saddler and the bus stop</p>
+                <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">9 Tanner's Row</h2>
+                <p data-edit="visit.visitSub" data-edit-max="240" data-edit-multiline className={s.visitSub}>Old Market, between the saddler and the bus stop</p>
                 <dl className={s.hours}>
-                  {HOURS.map(([d, h]) => (
+                  {HOURS.map(([d, h], i) => (
                     <div key={d}>
-                      <dt>{d}</dt>
-                      <dd>{h}</dd>
+                      <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                      <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                     </div>
                   ))}
                 </dl>
                 <p className={s.contact}>
-                  <a href="tel:+15550127730">(555) 012-7730</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550127730">(555) 012-7730</a>
                 </p>
                 <p className={s.contact}>
-                  <a href="mailto:counter@lastandawl.example">counter@lastandawl.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:counter@lastandawl.example">counter@lastandawl.example</a>
                 </p>
               </div>
 
               <div className={s.dropBox}>
-                <h3>The drop box</h3>
-                <p>
+                <h3 data-edit="visit.title2" data-edit-max="40">The drop box</h3>
+                <p data-edit="visit.body2" data-edit-max="240" data-edit-multiline>
                   Closed when you pass? There is a brass slot in the door. Put
                   the shoes in a bag with your name, your phone number and what
                   they need on a piece of paper, and post them through. We call
                   with a price the next morning before we start.
                 </p>
-                <h3>By post</h3>
-                <p>
+                <h3 data-edit="visit.title3" data-edit-max="40">By post</h3>
+                <p data-edit="visit.body3" data-edit-max="240" data-edit-multiline>
                   Send boots to the shop address in any box. We email a quote
                   within two days of them arriving, and post them back for $12.
                 </p>
-                <p className={s.payNote}>Cash or card, paid when you collect.</p>
+                <p data-edit="visit.payNote" data-edit-max="240" data-edit-multiline className={s.payNote}>Cash or card, paid when you collect.</p>
               </div>
             </div>
           </div>
@@ -460,7 +472,7 @@ export default function LastAndAwlPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footMat} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="1,2,4,3" className={s.footMat} aria-hidden="true">
           <TabbiedPattern
             pattern={corduroy}
             palette={MAT}
@@ -471,12 +483,12 @@ export default function LastAndAwlPage() {
           />
         </div>
         <div className={s.footText}>
-          <p className={s.footName}>Last & Awl</p>
-          <p>A fictional shoe and leather repair shop. The people, prices and tickets are invented.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Last & Awl</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional shoe and leather repair shop. The people, prices and tickets are invented.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
-          <p>The brogue is a generated image, drawn in the page's own colors.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The brogue is a generated image, drawn in the page's own colors.</p>
         </div>
       </footer>
     </div>

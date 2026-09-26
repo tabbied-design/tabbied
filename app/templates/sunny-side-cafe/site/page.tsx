@@ -123,7 +123,19 @@ const VISIT = [
 
 export default function SunnySidePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--cream': '#f7ead0',
+        '--brown': '#4b2913',
+        '--orange': '#e2692b',
+        '--mustard': '#e7ab32',
+        '--rust': '#b5471f',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="cream,brown,orange,mustard,rust"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -133,15 +145,15 @@ export default function SunnySidePage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Sunny Side</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Sunny Side</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -151,25 +163,25 @@ export default function SunnySidePage() {
             A striped sun coming up behind the name, 1977 all over. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.sun} aria-hidden="true" />
-          <p className={s.kicker}>Breakfast and brunch on Marigold Avenue, since 1977</p>
-          <h1 id="hero-h" className={s.title}>Sunny Side</h1>
-          <p className={s.lede}>
+          <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Breakfast and brunch on Marigold Avenue, since 1977</p>
+          <h1 data-edit="hero.title" data-edit-max="70" id="hero-h" className={s.title}>Sunny Side</h1>
+          <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
             Eggs the way you like them, pancakes the size of the plate and
             coffee that keeps coming. Breakfast all day, every day, and
             brunch on the weekend if you can get a table.
           </p>
           <dl className={s.strip}>
-            {HOURS_STRIP.map(([k, v]) => (
+            {HOURS_STRIP.map(([k, v], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+                <dt data-edit={`hero.term.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
               </div>
             ))}
           </dl>
         </section>
 
         {/* The first wave band. */}
-        <div className={s.waves} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,4,1,2" className={s.waves} aria-hidden="true">
           <TabbiedPattern
             pattern={cove}
             palette={WAVES}
@@ -183,33 +195,33 @@ export default function SunnySidePage() {
         {/* ------------------------------------------------------ EGG-O-METER */}
         <section id="eggs" className={s.meterSec} aria-labelledby="eggs-h">
           <div className={s.meterHead}>
-            <h2 id="eggs-h">The egg-o-meter</h2>
-            <p className={s.meterNote}>
+            <h2 data-edit="eggs.title" data-edit-max="60" id="eggs-h">The egg-o-meter</h2>
+            <p data-edit="eggs.meterNote" data-edit-max="240" data-edit-multiline className={s.meterNote}>
               Point at it when you order. Manny cooks to the egg, not to the
               word, because nobody agrees what over easy means.
             </p>
           </div>
           <ol className={s.meter}>
-            {METER.map((e) => (
+            {METER.map((e, i) => (
               <li key={e.name}>
                 <span className={`${s.egg} ${s[e.cls]}`} aria-hidden="true" />
-                <strong className={s.eggName}>{e.name}</strong>
-                <span className={s.eggYolk}>{e.yolk}</span>
-                <span className={s.eggNote}>{e.note}</span>
+                <strong data-edit={`eggs.eggName.${i}`} className={s.eggName}>{e.name}</strong>
+                <span data-edit={`eggs.eggYolk.${i}`} data-edit-max="60" className={s.eggYolk}>{e.yolk}</span>
+                <span data-edit={`eggs.eggNote.${i}`} data-edit-max="60" className={s.eggNote}>{e.note}</span>
               </li>
             ))}
           </ol>
           <p className={s.scale}>
-            <span>Runny</span>
-            <span>Set</span>
+            <span data-edit="eggs.text" data-edit-max="60">Runny</span>
+            <span data-edit="eggs.text2" data-edit-max="60">Set</span>
           </p>
         </section>
 
         {/* ------------------------------------------------------------ MENU */}
         <section id="menu" className={s.menuSec} aria-labelledby="menu-h">
           <div className={s.menuHead}>
-            <h2 id="menu-h">The menu</h2>
-            <p className={s.menuNote}>
+            <h2 data-edit="menu.title" data-edit-max="60" id="menu-h">The menu</h2>
+            <p data-edit="menu.menuNote" data-edit-max="240" data-edit-multiline className={s.menuNote}>
               All day, every day. Every egg plate comes with two eggs cooked
               where you point on the meter, and toast: white, wheat, rye or
               sourdough.
@@ -224,54 +236,54 @@ export default function SunnySidePage() {
 
           <div className={s.card}>
             <div className={s.cardCol}>
-              <h3 className={s.cardHead}>From the eggs</h3>
+              <h3 data-edit="menu.cardHead" data-edit-max="40" className={s.cardHead}>From the eggs</h3>
               <ul className={s.dishes}>
-                {EGGS.map((d) => (
+                {EGGS.map((d, i) => (
                   <li key={d.name} className={s.dish}>
                     <p className={s.dishLine}>
-                      <span className={s.dishName}>{d.name}</span>
-                      <span className={s.dishPrice}>{d.price}</span>
+                      <span data-edit={`menu.dishName.${i}`} data-edit-max="60" className={s.dishName}>{d.name}</span>
+                      <span data-edit={`menu.dishPrice.${i}`} data-edit-max="60" className={s.dishPrice}>{d.price}</span>
                     </p>
-                    <p className={s.dishBody}>{d.body}</p>
-                    <p className={s.dishEggs}>{d.eggs}</p>
+                    <p data-edit={`menu.dishBody.${i}`} data-edit-max="240" data-edit-multiline className={s.dishBody}>{d.body}</p>
+                    <p data-edit={`menu.dishEggs.${i}`} data-edit-max="240" data-edit-multiline className={s.dishEggs}>{d.eggs}</p>
                   </li>
                 ))}
               </ul>
             </div>
 
             <div className={s.cardCol}>
-              <h3 className={s.cardHead}>Off the griddle</h3>
+              <h3 data-edit="menu.cardHead2" data-edit-max="40" className={s.cardHead}>Off the griddle</h3>
               <ul className={s.dishes}>
-                {GRIDDLE.map(([name, body, price]) => (
+                {GRIDDLE.map(([name, body, price], i) => (
                   <li key={name} className={s.dish}>
                     <p className={s.dishLine}>
-                      <span className={s.dishName}>{name}</span>
-                      <span className={s.dishPrice}>{price}</span>
+                      <span data-edit={`menu.dishName2.${i}`} data-edit-max="60" className={s.dishName}>{name}</span>
+                      <span data-edit={`menu.dishPrice2.${i}`} data-edit-max="60" className={s.dishPrice}>{price}</span>
                     </p>
-                    <p className={s.dishBody}>{body}</p>
+                    <p data-edit={`menu.dishBody2.${i}`} data-edit-max="240" data-edit-multiline className={s.dishBody}>{body}</p>
                   </li>
                 ))}
               </ul>
 
               <div className={s.twoLists}>
                 <div>
-                  <h3 className={s.cardHead}>On the side</h3>
+                  <h3 data-edit="menu.cardHead3" data-edit-max="40" className={s.cardHead}>On the side</h3>
                   <dl className={s.small}>
-                    {SIDES.map(([name, price]) => (
+                    {SIDES.map(([name, price], i) => (
                       <div key={name}>
-                        <dt>{name}</dt>
-                        <dd>{price}</dd>
+                        <dt data-edit={`menu.term.${i}`} data-edit-max="28">{name}</dt>
+                        <dd data-edit={`menu.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                       </div>
                     ))}
                   </dl>
                 </div>
                 <div>
-                  <h3 className={s.cardHead}>To drink</h3>
+                  <h3 data-edit="menu.cardHead4" data-edit-max="40" className={s.cardHead}>To drink</h3>
                   <dl className={s.small}>
-                    {DRINKS.map(([name, price]) => (
+                    {DRINKS.map(([name, price], i) => (
                       <div key={name}>
-                        <dt>{name}</dt>
-                        <dd>{price}</dd>
+                        <dt data-edit={`menu.term2.${i}`} data-edit-max="28">{name}</dt>
+                        <dd data-edit={`menu.body2.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                       </div>
                     ))}
                   </dl>
@@ -279,7 +291,7 @@ export default function SunnySidePage() {
               </div>
             </div>
           </div>
-          <p className={s.fine}>
+          <p data-edit="menu.fine" data-edit-max="240" data-edit-multiline className={s.fine}>
             Gluten-free toast and pancakes on request; the griddle is shared.
             Oat milk is free. We add 18% for tables of seven or more.
           </p>
@@ -289,22 +301,22 @@ export default function SunnySidePage() {
         <section id="brunch" className={s.brunch} aria-labelledby="brunch-h">
           <div className={s.brunchInner}>
             <div className={s.brunchText}>
-              <p className={s.brunchKicker}>Saturdays and Sundays, 8 am to 2:30 pm</p>
-              <h2 id="brunch-h">Weekend brunch rules</h2>
-              <p className={s.brunchNote}>
+              <p data-edit="brunch.brunchKicker" data-edit-max="240" data-edit-multiline className={s.brunchKicker}>Saturdays and Sundays, 8 am to 2:30 pm</p>
+              <h2 data-edit="brunch.title" data-edit-max="60" id="brunch-h">Weekend brunch rules</h2>
+              <p data-edit="brunch.brunchNote" data-edit-max="240" data-edit-multiline className={s.brunchNote}>
                 We have forty seats and on a Sunday about four hundred
                 people want one. These keep it fair.
               </p>
               <ol className={s.rules}>
-                {RULES.map(([title, body]) => (
+                {RULES.map(([title, body], i) => (
                   <li key={title}>
-                    <strong>{title}</strong>
-                    <p>{body}</p>
+                    <strong data-edit={`brunch.emphasis.${i}`}>{title}</strong>
+                    <p data-edit={`brunch.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                   </li>
                 ))}
               </ol>
             </div>
-            <div className={s.booth} aria-hidden="true">
+            <div data-edit-pattern="brunch.field" data-edit-roles="transparent,3,0,4,3" className={s.booth} aria-hidden="true">
               <TabbiedPattern
                 pattern={bowl}
                 palette={BOWLS}
@@ -321,7 +333,7 @@ export default function SunnySidePage() {
         <section id="story" className={s.sec} aria-labelledby="story-h">
           <div className={s.storyGrid}>
             <div className={s.plateWrap}>
-              <div className={s.plate} aria-hidden="true">
+              <div data-edit-pattern="story.field" data-edit-roles="transparent,1,2,3,4" className={s.plate} aria-hidden="true">
                 <TabbiedPattern
                   pattern={scotia}
                   palette={PLATE}
@@ -333,25 +345,25 @@ export default function SunnySidePage() {
               </div>
             </div>
             <div>
-              <h2 id="story-h" className={s.secTitle}>Since 1977</h2>
-              <p className={s.prose}>
+              <h2 data-edit="story.secTitle" data-edit-max="60" id="story-h" className={s.secTitle}>Since 1977</h2>
+              <p data-edit="story.prose" data-edit-max="240" data-edit-multiline className={s.prose}>
                 Same corner, same griddle, three owners, all of them called
                 Ruiz. The booths are the orange you are thinking of, and they
                 are staying that way.
               </p>
               <ol className={s.years}>
-                {YEARS.map(([year, what]) => (
+                {YEARS.map(([year, what], i) => (
                   <li key={year}>
-                    <span className={s.year}>{year}</span>
-                    <p>{what}</p>
+                    <span data-edit={`story.year.${i}`} data-edit-max="60" className={s.year}>{year}</span>
+                    <p data-edit={`story.body.${i}`} data-edit-max="240" data-edit-multiline>{what}</p>
                   </li>
                 ))}
               </ol>
               <ul className={s.crew}>
-                {CREW.map(([name, role]) => (
+                {CREW.map(([name, role], i) => (
                   <li key={name} className={s.badge}>
-                    <strong>{name}</strong>
-                    <span>{role}</span>
+                    <strong data-edit={`story.emphasis.${i}`}>{name}</strong>
+                    <span data-edit={`story.text.${i}`} data-edit-max="60">{role}</span>
                   </li>
                 ))}
               </ul>
@@ -360,7 +372,7 @@ export default function SunnySidePage() {
         </section>
 
         {/* The closing wave band. */}
-        <div className={`${s.waves} ${s.wavesLow}`} aria-hidden="true">
+        <div data-edit-pattern="top.field2" data-edit-roles="transparent,2,3,4,1,2" className={`${s.waves} ${s.wavesLow}`} aria-hidden="true">
           <TabbiedPattern
             pattern={cove}
             palette={WAVES}
@@ -375,21 +387,21 @@ export default function SunnySidePage() {
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.visitGrid}>
             <div className={s.sign}>
-              <h2 id="visit-h" className={s.secTitle}>Find us</h2>
-              <p className={s.address}>1203 Marigold Avenue</p>
-              <p className={s.prose}>Open every day, 6:30 am to 2:30 pm. Closed Thanksgiving and Christmas Day, and that is it.</p>
+              <h2 data-edit="visit.secTitle" data-edit-max="60" id="visit-h" className={s.secTitle}>Find us</h2>
+              <p data-edit="visit.address" data-edit-max="240" data-edit-multiline className={s.address}>1203 Marigold Avenue</p>
+              <p data-edit="visit.prose" data-edit-max="240" data-edit-multiline className={s.prose}>Open every day, 6:30 am to 2:30 pm. Closed Thanksgiving and Christmas Day, and that is it.</p>
               <p className={s.phone}>
-                <a href="tel:+15550163377">(555) 016-3377</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550163377">(555) 016-3377</a>
               </p>
               <p className={s.phone}>
-                <a href="mailto:eggs@sunnysidecafe.example">eggs@sunnysidecafe.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:eggs@sunnysidecafe.example">eggs@sunnysidecafe.example</a>
               </p>
             </div>
             <dl className={s.visitList}>
-              {VISIT.map(([k, v]) => (
+              {VISIT.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -398,10 +410,10 @@ export default function SunnySidePage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Sunny Side</p>
-        <p>A fictional breakfast and brunch cafe. The menu, prices, people and address are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Sunny Side</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional breakfast and brunch cafe. The menu, prices, people and address are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>; the pancakes are a generated picture drawn in the page's own colors.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>; the pancakes are a generated picture drawn in the page's own colors.
         </p>
       </footer>
     </div>

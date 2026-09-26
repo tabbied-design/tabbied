@@ -176,7 +176,18 @@ const HOURS = [
 
 export default function PostOakSmokehousePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--kraft': '#dcc6a2',
+        '--char': '#1b1612',
+        '--red': '#9e2418',
+        '--smoke': '#6f5a45',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="kraft,char,red,smoke"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -186,15 +197,15 @@ export default function PostOakSmokehousePage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Post Oak</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Post Oak</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -204,36 +215,36 @@ export default function PostOakSmokehousePage() {
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.bill}>
             <ul className={s.billTop}>
-              {BILL_TOP.map((t) => (
-                <li key={t}>{t}</li>
+              {BILL_TOP.map((t, i) => (
+                <li data-edit={`hero.item.${i}`} data-edit-max="80" key={t}>{t}</li>
               ))}
             </ul>
-            <h1 id="hero-h" className={s.name}>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.name}>
               Post Oak <em>Smokehouse</em>
             </h1>
-            <p className={s.strap}>Brisket, ribs, sausage and turkey</p>
-            <p className={s.lede}>
+            <p data-edit="hero.strap" data-edit-max="240" data-edit-multiline className={s.strap}>Brisket, ribs, sausage and turkey</p>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Smoked fourteen hours over split post oak and nothing else, cut
               to order on butcher paper and sold by the half pound. We open at
               eleven and close when the last brisket goes, which on a Saturday
               is about half past twelve.
             </p>
             <dl className={s.facts}>
-              {FACTS.map(([k, v]) => (
+              {FACTS.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
             <p className={s.ctas}>
-              <a className={s.btn} href="#board">See the board</a>
-              <a className={s.btnGhost} href="#catering">Catering by the pound</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#board">See the board</a>
+              <a data-edit="hero.btnGhost" data-edit-max="28" className={s.btnGhost} href="#catering">Catering by the pound</a>
             </p>
           </div>
 
           <div className={s.cut}>
-            <div className={s.plate} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,1,1,3,1" className={s.plate} aria-hidden="true">
               <TabbiedPattern
                 pattern={drypoint}
                 palette={WOODCUT}
@@ -250,11 +261,11 @@ export default function PostOakSmokehousePage() {
                 inks={['var(--text)']}
                 className={s.brisket}
               />
-              <figcaption className={s.printCap}>Moist, from the point</figcaption>
+              <figcaption data-edit="hero.printCap" data-edit-max="120" data-edit-multiline className={s.printCap}>Moist, from the point</figcaption>
             </figure>
             <p className={s.stamp}>
-              <span>Sold by the</span>
-              <strong>1/2 lb</strong>
+              <span data-edit="hero.text" data-edit-max="60">Sold by the</span>
+              <strong data-edit="hero.emphasis">1/2 lb</strong>
             </p>
           </div>
         </section>
@@ -263,26 +274,26 @@ export default function PostOakSmokehousePage() {
         <section id="board" className={s.board} aria-labelledby="board-h">
           <div className={s.wrap}>
             <div className={s.boardHead}>
-              <h2 id="board-h">The board</h2>
-              <p className={s.boardNote}>
+              <h2 data-edit="board.title" data-edit-max="60" id="board-h">The board</h2>
+              <p data-edit="board.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>
                 Everything is priced by weight and cut in front of you. Tell
                 the cutter fatty or lean and how much; it gets weighed on the
                 paper and that is what you pay.
               </p>
             </div>
             <ul className={s.meats}>
-              {BOARD.map((m) => (
+              {BOARD.map((m, i) => (
                 <li key={m.name} className={s.meat}>
-                  <h3>{m.name}</h3>
+                  <h3 data-edit={`board.title2.${i}`} data-edit-max="40">{m.name}</h3>
                   <span className={s.leader} aria-hidden="true" />
-                  <strong className={s.price}>{m.price}</strong>
-                  <p className={s.meatNote}>{m.note}</p>
-                  <small className={s.per}>{m.per}</small>
-                  <p className={s.days}>{m.days}</p>
+                  <strong data-edit={`board.price.${i}`} className={s.price}>{m.price}</strong>
+                  <p data-edit={`board.meatNote.${i}`} data-edit-max="240" data-edit-multiline className={s.meatNote}>{m.note}</p>
+                  <small data-edit={`board.per.${i}`} className={s.per}>{m.per}</small>
+                  <p data-edit={`board.days.${i}`} data-edit-max="240" data-edit-multiline className={s.days}>{m.days}</p>
                 </li>
               ))}
             </ul>
-            <p className={s.free}>
+            <p data-edit="board.free" data-edit-max="240" data-edit-multiline className={s.free}>
               Free on every tray: white bread, dill pickles, raw onion and
               pickled jalapenos. There are no plates and no combos, so order a
               little of a lot.
@@ -293,9 +304,9 @@ export default function PostOakSmokehousePage() {
         {/* --------------------------------------------------------- TALLY */}
         <section id="tally" className={s.sec} aria-labelledby="tally-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>On the wall by the cutting block</p>
-            <h2 id="tally-h">The sold-out tally</h2>
-            <p className={s.secNote}>
+            <p data-edit="tally.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>On the wall by the cutting block</p>
+            <h2 data-edit="tally.title" data-edit-max="60" id="tally-h">The sold-out tally</h2>
+            <p data-edit="tally.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A chalk mark for every day a meat ran out before we closed. It
               is September, we have opened fourteen days so far, and the
               brisket has made it to closing three times.
@@ -303,19 +314,19 @@ export default function PostOakSmokehousePage() {
           </div>
 
           <table className={s.tally}>
-            <caption className={s.srOnly}>Days each meat sold out in September, and the earliest it went</caption>
+            <caption data-edit="tally.srOnly" className={s.srOnly}>Days each meat sold out in September, and the earliest it went</caption>
             <thead>
               <tr>
-                <th scope="col">Meat</th>
-                <th scope="col">Marks on the wall</th>
-                <th scope="col">Days</th>
-                <th scope="col">Earliest gone</th>
+                <th data-edit="tally.heading" scope="col">Meat</th>
+                <th data-edit="tally.heading2" scope="col">Marks on the wall</th>
+                <th data-edit="tally.heading3" scope="col">Days</th>
+                <th data-edit="tally.heading4" scope="col">Earliest gone</th>
               </tr>
             </thead>
             <tbody>
-              {TALLY.map((t) => (
+              {TALLY.map((t, i) => (
                 <tr key={t.name}>
-                  <th scope="row">{t.name}</th>
+                  <th data-edit={`tally.heading5.${i}`} scope="row">{t.name}</th>
                   <td className={s.marksCell}>
                     <span className={s.marks} aria-hidden="true">
                       {t.fives.map((k) => (
@@ -324,34 +335,34 @@ export default function PostOakSmokehousePage() {
                       {t.rest > 0 ? <span className={`${s.rest} ${s[`r${t.rest}`]}`} /> : null}
                     </span>
                   </td>
-                  <td className={s.count}>{t.total}</td>
-                  <td className={s.earliest}>{t.earliest}</td>
+                  <td data-edit={`tally.count.${i}`} className={s.count}>{t.total}</td>
+                  <td data-edit={`tally.earliest.${i}`} className={s.earliest}>{t.earliest}</td>
                 </tr>
               ))}
             </tbody>
           </table>
 
           <div className={s.saturday}>
-            <h3>Last Saturday, by the clock</h3>
-            <p className={s.satNote}>Doors at 10:30, sixty-four people in line. This is when each tray came off the board.</p>
+            <h3 data-edit="tally.title2" data-edit-max="40">Last Saturday, by the clock</h3>
+            <p data-edit="tally.satNote" data-edit-max="240" data-edit-multiline className={s.satNote}>Doors at 10:30, sixty-four people in line. This is when each tray came off the board.</p>
             <ol className={s.clock}>
-              {SATURDAY.map((e) => (
+              {SATURDAY.map((e, i) => (
                 <li key={e.what} style={{ '--at': `${e.at}%` } as React.CSSProperties}>
-                  <time>{e.time}</time>
-                  <span>{e.what}</span>
+                  <time data-edit={`tally.date.${i}`}>{e.time}</time>
+                  <span data-edit={`tally.text.${i}`} data-edit-max="60">{e.what}</span>
                 </li>
               ))}
             </ol>
             <ul className={s.axis} aria-hidden="true">
-              {AXIS.map((a) => (
-                <li key={a}>{a}</li>
+              {AXIS.map((a, i) => (
+                <li data-edit={`tally.item.${i}`} data-edit-max="80" key={a}>{a}</li>
               ))}
             </ul>
           </div>
         </section>
 
         {/* The woodcut band: a strip of the block, laid across the page. */}
-        <div className={s.woodBand} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,1,3,1,3,1" className={s.woodBand} aria-hidden="true">
           <TabbiedPattern
             pattern={drypoint}
             palette={GRAIN}
@@ -365,22 +376,22 @@ export default function PostOakSmokehousePage() {
         {/* ----------------------------------------------------------- PIT */}
         <section id="pit" className={`${s.sec} ${s.pit}`} aria-labelledby="pit-h">
           <div className={s.pitSide}>
-            <p className={s.kicker}>Wednesday night to Sunday afternoon</p>
-            <h2 id="pit-h">The pit schedule</h2>
-            <p className={s.secNote}>
+            <p data-edit="pit.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Wednesday night to Sunday afternoon</p>
+            <h2 data-edit="pit.title" data-edit-max="60" id="pit-h">The pit schedule</h2>
+            <p data-edit="pit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               One thousand-gallon offset pit, welded from a propane tank in
               2015, and two people who take turns sleeping on the cot in the
               office. The fire is never left alone.
             </p>
             <ol className={s.week}>
-              {WEEK.map((d) => (
+              {WEEK.map((d, i) => (
                 <li key={d.day} className={d.open ? s.dayOpen : s.dayShut}>
-                  <span className={s.wd}>{d.day}</span>
-                  <span className={s.wdWhat}>{d.what}</span>
+                  <span data-edit={`pit.wd.${i}`} data-edit-max="60" className={s.wd}>{d.day}</span>
+                  <span data-edit={`pit.wdWhat.${i}`} data-edit-max="60" className={s.wdWhat}>{d.what}</span>
                 </li>
               ))}
             </ol>
-            <div className={s.firebox} aria-hidden="true">
+            <div data-edit-pattern="pit.field" data-edit-roles="transparent,1,1,2,1,1" className={s.firebox} aria-hidden="true">
               <TabbiedPattern
                 pattern={drypoint}
                 palette={FIREBOX}
@@ -393,12 +404,12 @@ export default function PostOakSmokehousePage() {
           </div>
 
           <ol className={s.timeline}>
-            {PIT.map((p) => (
+            {PIT.map((p, i) => (
               <li key={p.title}>
-                <time className={s.pitTime}>{p.time}</time>
+                <time data-edit={`pit.pitTime.${i}`} className={s.pitTime}>{p.time}</time>
                 <div className={s.pitBody}>
-                  <h3>{p.title}</h3>
-                  <p>{p.note}</p>
+                  <h3 data-edit={`pit.title2.${i}`} data-edit-max="40">{p.title}</h3>
+                  <p data-edit={`pit.body.${i}`} data-edit-max="240" data-edit-multiline>{p.note}</p>
                 </div>
               </li>
             ))}
@@ -408,54 +419,54 @@ export default function PostOakSmokehousePage() {
         {/* --------------------------------------------------------- SIDES */}
         <section id="sides" className={s.sec} aria-labelledby="sides-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Made in the back kitchen every morning</p>
-            <h2 id="sides-h">Sides, sweets and something cold</h2>
+            <p data-edit="sides.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Made in the back kitchen every morning</p>
+            <h2 data-edit="sides.title" data-edit-max="60" id="sides-h">Sides, sweets and something cold</h2>
           </div>
 
           <div className={s.sheet}>
             <table className={s.sides}>
-              <caption className={s.srOnly}>Sides by the half pint, pint and quart</caption>
+              <caption data-edit="sides.srOnly" className={s.srOnly}>Sides by the half pint, pint and quart</caption>
               <thead>
                 <tr>
-                  <th scope="col">Side</th>
-                  <th scope="col">Half pint</th>
-                  <th scope="col">Pint</th>
-                  <th scope="col">Quart</th>
+                  <th data-edit="sides.heading" scope="col">Side</th>
+                  <th data-edit="sides.heading2" scope="col">Half pint</th>
+                  <th data-edit="sides.heading3" scope="col">Pint</th>
+                  <th data-edit="sides.heading4" scope="col">Quart</th>
                 </tr>
               </thead>
               <tbody>
-                {SIDES.map(([name, note, a, b, c]) => (
+                {SIDES.map(([name, note, a, b, c], i) => (
                   <tr key={name}>
                     <th scope="row">
-                      <span className={s.sideName}>{name}</span>
-                      <span className={s.sideNote}>{note}</span>
+                      <span data-edit={`sides.sideName.${i}`} data-edit-max="60" className={s.sideName}>{name}</span>
+                      <span data-edit={`sides.sideNote.${i}`} data-edit-max="60" className={s.sideNote}>{note}</span>
                     </th>
-                    <td>{a}</td>
-                    <td>{b}</td>
-                    <td>{c}</td>
+                    <td data-edit={`sides.cell.${i}`}>{a}</td>
+                    <td data-edit={`sides.cell2.${i}`}>{b}</td>
+                    <td data-edit={`sides.cell3.${i}`}>{c}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
             <div className={s.extras}>
-              <h3 className={s.extrasTitle}>After</h3>
+              <h3 data-edit="sides.extrasTitle" data-edit-max="40" className={s.extrasTitle}>After</h3>
               <dl className={s.priced}>
-                {AFTER.map(([name, note, price]) => (
+                {AFTER.map(([name, note, price], i) => (
                   <div key={name}>
-                    <dt>{name}</dt>
-                    <dd className={s.pricedNote}>{note}</dd>
-                    <dd className={s.pricedPrice}>{price}</dd>
+                    <dt data-edit={`sides.term.${i}`} data-edit-max="28">{name}</dt>
+                    <dd data-edit={`sides.pricedNote.${i}`} data-edit-max="200" data-edit-multiline className={s.pricedNote}>{note}</dd>
+                    <dd data-edit={`sides.pricedPrice.${i}`} data-edit-max="200" data-edit-multiline className={s.pricedPrice}>{price}</dd>
                   </div>
                 ))}
               </dl>
-              <h3 className={s.extrasTitle}>To drink</h3>
+              <h3 data-edit="sides.extrasTitle2" data-edit-max="40" className={s.extrasTitle}>To drink</h3>
               <dl className={s.priced}>
-                {DRINKS.map(([name, note, price]) => (
+                {DRINKS.map(([name, note, price], i) => (
                   <div key={name}>
-                    <dt>{name}</dt>
-                    <dd className={s.pricedNote}>{note}</dd>
-                    <dd className={s.pricedPrice}>{price}</dd>
+                    <dt data-edit={`sides.term2.${i}`} data-edit-max="28">{name}</dt>
+                    <dd data-edit={`sides.pricedNote2.${i}`} data-edit-max="200" data-edit-multiline className={s.pricedNote}>{note}</dd>
+                    <dd data-edit={`sides.pricedPrice2.${i}`} data-edit-max="200" data-edit-multiline className={s.pricedPrice}>{price}</dd>
                   </div>
                 ))}
               </dl>
@@ -466,9 +477,9 @@ export default function PostOakSmokehousePage() {
         {/* ------------------------------------------------------ CATERING */}
         <section id="catering" className={s.sec} aria-labelledby="catering-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>For weddings, wakes and the office</p>
-            <h2 id="catering-h">Catering by the pound</h2>
-            <p className={s.secNote}>
+            <p data-edit="catering.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>For weddings, wakes and the office</p>
+            <h2 data-edit="catering.title" data-edit-max="60" id="catering-h">Catering by the pound</h2>
+            <p data-edit="catering.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Figure half a pound of meat a guest before sides, a third if
               there is plenty else on the table. Brisket and ribs is the
               order most people land on.
@@ -477,48 +488,48 @@ export default function PostOakSmokehousePage() {
 
           <div className={s.caterGrid}>
             <div className={s.caterInfo}>
-              <h3 className={s.label}>Meat and sides, per pound</h3>
+              <h3 data-edit="catering.label" data-edit-max="40" className={s.label}>Meat and sides, per pound</h3>
               <dl className={s.perLb}>
-                {PER_POUND.map(([k, v]) => (
+                {PER_POUND.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`catering.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`catering.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
 
-              <h3 className={s.label}>How much to order</h3>
+              <h3 data-edit="catering.label2" data-edit-max="40" className={s.label}>How much to order</h3>
               <table className={s.guests}>
-                <caption className={s.srOnly}>Meat and sides by guest count, with a rough total</caption>
+                <caption data-edit="catering.srOnly" className={s.srOnly}>Meat and sides by guest count, with a rough total</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Guests</th>
-                    <th scope="col">Meat</th>
-                    <th scope="col">Sides</th>
-                    <th scope="col">About</th>
+                    <th data-edit="catering.heading" scope="col">Guests</th>
+                    <th data-edit="catering.heading2" scope="col">Meat</th>
+                    <th data-edit="catering.heading3" scope="col">Sides</th>
+                    <th data-edit="catering.heading4" scope="col">About</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {GUESTS.map(([g, meat, sides, total]) => (
+                  {GUESTS.map(([g, meat, sides, total], i) => (
                     <tr key={g}>
-                      <th scope="row">{g}</th>
-                      <td>{meat}</td>
-                      <td>{sides}</td>
-                      <td>{total}</td>
+                      <th data-edit={`catering.heading5.${i}`} scope="row">{g}</th>
+                      <td data-edit={`catering.cell.${i}`}>{meat}</td>
+                      <td data-edit={`catering.cell2.${i}`}>{sides}</td>
+                      <td data-edit={`catering.cell3.${i}`}>{total}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
 
               <ul className={s.terms}>
-                {TERMS.map((t) => (
-                  <li key={t}>{t}</li>
+                {TERMS.map((t, i) => (
+                  <li data-edit={`catering.item.${i}`} data-edit-max="80" key={t}>{t}</li>
                 ))}
               </ul>
             </div>
 
             <form className={s.form} action="#">
-              <div className={s.formStrip} aria-hidden="true">
+              <div data-edit-pattern="catering.field" data-edit-roles="transparent,1,1,1,3,1" className={s.formStrip} aria-hidden="true">
                 <TabbiedPattern
                   pattern={drypoint}
                   palette={WOODCUT}
@@ -529,38 +540,38 @@ export default function PostOakSmokehousePage() {
                 />
               </div>
               <div className={s.formBody}>
-                <h3 className={s.formTitle}>Order ticket</h3>
+                <h3 data-edit="catering.formTitle" data-edit-max="40" className={s.formTitle}>Order ticket</h3>
                 <div className={s.formGrid}>
                   <div className={s.field}>
-                    <label htmlFor="po-name">Name</label>
+                    <label data-edit="catering.label3" htmlFor="po-name">Name</label>
                     <input id="po-name" name="name" type="text" autoComplete="name" />
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="po-phone">Phone</label>
+                    <label data-edit="catering.label4" htmlFor="po-phone">Phone</label>
                     <input id="po-phone" name="phone" type="tel" autoComplete="tel" />
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="po-date">Day you need it</label>
+                    <label data-edit="catering.label5" htmlFor="po-date">Day you need it</label>
                     <input id="po-date" name="date" type="date" />
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="po-guests">Guests</label>
+                    <label data-edit="catering.label6" htmlFor="po-guests">Guests</label>
                     <input id="po-guests" name="guests" type="number" min="10" inputMode="numeric" />
                   </div>
                   <div className={`${s.field} ${s.fieldWide}`}>
-                    <label htmlFor="po-how">Pick up or delivery</label>
+                    <label data-edit="catering.label7" htmlFor="po-how">Pick up or delivery</label>
                     <select id="po-how" name="how" defaultValue="pickup">
                       <option value="pickup">Pick up at the side door</option>
                       <option value="delivery">Delivery inside ten miles, $40</option>
                     </select>
                   </div>
                   <div className={`${s.field} ${s.fieldWide}`}>
-                    <label htmlFor="po-what">What and how much</label>
+                    <label data-edit="catering.label8" htmlFor="po-what">What and how much</label>
                     <textarea id="po-what" name="what" rows={3} />
                   </div>
                 </div>
-                <button className={s.submit} type="submit">Send the ticket</button>
-                <p className={s.small}>Lo calls back within a day to confirm and take the deposit. Nothing goes on the pit until she has.</p>
+                <button data-edit="catering.submit" data-edit-max="24" className={s.submit} type="submit">Send the ticket</button>
+                <p data-edit="catering.small" data-edit-max="240" data-edit-multiline className={s.small}>Lo calls back within a day to confirm and take the deposit. Nothing goes on the pit until she has.</p>
               </div>
             </form>
           </div>
@@ -569,14 +580,14 @@ export default function PostOakSmokehousePage() {
         {/* ---------------------------------------------------------- LINE */}
         <section id="line" className={s.sec} aria-labelledby="line-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Questions we answer every weekend</p>
-            <h2 id="line-h">The line</h2>
+            <p data-edit="line.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Questions we answer every weekend</p>
+            <h2 data-edit="line.title" data-edit-max="60" id="line-h">The line</h2>
           </div>
           <div className={s.faq}>
-            {FAQ.map(([q, a]) => (
+            {FAQ.map(([q, a], i) => (
               <details key={q}>
-                <summary>{q}</summary>
-                <p>{a}</p>
+                <summary data-edit={`line.question.${i}`} data-edit-max="80">{q}</summary>
+                <p data-edit={`line.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
               </details>
             ))}
           </div>
@@ -585,32 +596,32 @@ export default function PostOakSmokehousePage() {
         {/* ---------------------------------------------------------- FIND */}
         <section id="find" className={s.sec} aria-labelledby="find-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Past the rail crossing</p>
-            <h2 id="find-h">Find us</h2>
+            <p data-edit="find.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Past the rail crossing</p>
+            <h2 data-edit="find.title" data-edit-max="60" id="find-h">Find us</h2>
           </div>
           <div className={s.findGrid}>
             <div className={s.sign}>
-              <p className={s.signAddr}>2210 Ferris Road</p>
-              <p className={s.signSub}>In the old feed store, Millbrook</p>
+              <p data-edit="find.signAddr" data-edit-max="240" data-edit-multiline className={s.signAddr}>2210 Ferris Road</p>
+              <p data-edit="find.signSub" data-edit-max="240" data-edit-multiline className={s.signSub}>In the old feed store, Millbrook</p>
               <p className={s.signLinks}>
-                <a href="tel:+15550142210">(555) 014-2210</a>
-                <a href="mailto:pit@postoaksmokehouse.example">pit@postoaksmokehouse.example</a>
+                <a data-edit="find.link" data-edit-max="28" href="tel:+15550142210">(555) 014-2210</a>
+                <a data-edit="find.link2" data-edit-max="28" href="mailto:pit@postoaksmokehouse.example">pit@postoaksmokehouse.example</a>
               </p>
             </div>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`find.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`find.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.findNotes}>
-              <p>
+              <p data-edit="find.body2" data-edit-max="240" data-edit-multiline>
                 Card and cash. Gravel lot out front; on Saturdays the church
                 across the road lets us use theirs, on Sundays it does not.
               </p>
-              <p>
+              <p data-edit="find.body3" data-edit-max="240" data-edit-multiline>
                 Tables outside under the roof, fans in summer and heaters in
                 winter. We pick up the phone after two, once the rush is done.
               </p>
@@ -620,10 +631,10 @@ export default function PostOakSmokehousePage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Post Oak Smokehouse</p>
-        <p>A fictional Texas barbecue joint. The meats, prices, times and people are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Post Oak Smokehouse</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional Texas barbecue joint. The meats, prices, times and people are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; the brisket is a generated image drawn in the page's colors.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>, drawn live; the brisket is a generated image drawn in the page's colors.
         </p>
       </footer>
     </div>

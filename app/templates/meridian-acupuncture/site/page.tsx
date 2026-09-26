@@ -109,7 +109,18 @@ const HOURS = [
 
 export default function MeridianAcupuncturePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f2ede3',
+        '--ink': '#24231f',
+        '--seal': '#b8392b',
+        '--indigo': '#3f5566',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,seal,indigo"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -121,17 +132,17 @@ export default function MeridianAcupuncturePage() {
       <header className={s.bar}>
         <a className={s.brand} href="#top">
           <span className={s.brandSeal} aria-hidden="true" />
-          <span className={s.brandName}>Meridian</span>
-          <span className={s.brandSub}>Acupuncture</span>
+          <span data-edit="bar.brandName" data-edit-max="60" className={s.brandName}>Meridian</span>
+          <span data-edit="bar.brandSub" data-edit-max="60" className={s.brandSub}>Acupuncture</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -142,25 +153,25 @@ export default function MeridianAcupuncturePage() {
             and a hanging scroll of brushed strokes on the right with the
             clinic's seal pressed into its corner. */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <p className={s.heroSide}>41 Tallow Street, up one flight</p>
+          <p data-edit="hero.heroSide" data-edit-max="240" data-edit-multiline className={s.heroSide}>41 Tallow Street, up one flight</p>
           <div className={s.heroText}>
-            <p className={s.kicker}>Acupuncture clinic, Weaver's Quarter</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Acupuncture clinic, Weaver's Quarter</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Fine needles, a quiet room and <em>an hour that is yours.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Three practitioners, four treatment rooms and a shared room with
               six recliners for the sliding-scale clinic. We treat pain, sleep,
               stress, cycles and the things doctors shrug at, and we tell you
               plainly when you need a doctor instead.
             </p>
             <div className={s.actions}>
-              <a className={s.button} href="#book">Book a first visit</a>
-              <a className={s.textLink} href="#community">Community clinic, $25 to $50</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#book">Book a first visit</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#community">Community clinic, $25 to $50</a>
             </div>
           </div>
           <div className={s.scroll}>
-            <div className={s.scrollField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="0,1,0,3,0" className={s.scrollField} aria-hidden="true">
               <TabbiedPattern
                 pattern={streaking}
                 palette={SCROLL}
@@ -171,10 +182,10 @@ export default function MeridianAcupuncturePage() {
               />
             </div>
             <p className={s.stamp} aria-hidden="true">
-              <span>Me</span>
-              <span>ri</span>
-              <span>di</span>
-              <span>an</span>
+              <span data-edit="hero.text" data-edit-max="60">Me</span>
+              <span data-edit="hero.text2" data-edit-max="60">ri</span>
+              <span data-edit="hero.text3" data-edit-max="60">di</span>
+              <span data-edit="hero.text4" data-edit-max="60">an</span>
             </p>
           </div>
         </section>
@@ -186,20 +197,20 @@ export default function MeridianAcupuncturePage() {
         <div className={s.channel}>
           <section id="treatments" className={s.station} aria-labelledby="treat-h">
             <div className={s.point}>
-              <span className={s.pointCode}>LI 4</span>
-              <p className={s.pointName}>Hegu, the joining valley. In the web of the hand.</p>
+              <span data-edit="treatments.pointCode" data-edit-max="60" className={s.pointCode}>LI 4</span>
+              <p data-edit="treatments.pointName" data-edit-max="240" data-edit-multiline className={s.pointName}>Hegu, the joining valley. In the web of the hand.</p>
             </div>
             <div className={s.body}>
-              <h2 id="treat-h">What we treat, and what it costs</h2>
-              <p className={s.intro}>
+              <h2 data-edit="treatments.title" data-edit-max="60" id="treat-h">What we treat, and what it costs</h2>
+              <p data-edit="treatments.intro" data-edit-max="240" data-edit-multiline className={s.intro}>
                 People most often come to us with one of these. If yours is not
                 on the list, write and ask; if it is something we should not
                 treat, we will say so and tell you who should.
               </p>
               <div className={s.treatRow}>
                 <ul className={s.treats}>
-                  {TREATS.map((t) => (
-                    <li key={t}>{t}</li>
+                  {TREATS.map((t, i) => (
+                    <li data-edit={`treatments.item.${i}`} data-edit-max="80" key={t}>{t}</li>
                   ))}
                 </ul>
                 <figure className={s.herb}>
@@ -209,38 +220,38 @@ export default function MeridianAcupuncturePage() {
                     inks={['var(--text)']}
                     className={s.herbArt}
                   />
-                  <figcaption>Mugwort. Dried and rolled, it is the moxa we warm points with.</figcaption>
+                  <figcaption data-edit="treatments.caption" data-edit-max="120" data-edit-multiline>Mugwort. Dried and rolled, it is the moxa we warm points with.</figcaption>
                 </figure>
               </div>
               <table className={s.fees}>
-                <caption className={s.srOnly}>Treatments, their length and their fees</caption>
+                <caption data-edit="treatments.srOnly" className={s.srOnly}>Treatments, their length and their fees</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Treatment</th>
-                    <th scope="col">Length</th>
-                    <th scope="col">Fee</th>
+                    <th data-edit="treatments.heading" scope="col">Treatment</th>
+                    <th data-edit="treatments.heading2" scope="col">Length</th>
+                    <th data-edit="treatments.heading3" scope="col">Fee</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {FEES.map((f) => (
+                  {FEES.map((f, i) => (
                     <tr key={f.name}>
                       <th scope="row">
-                        <span className={s.feeName}>{f.name}</span>
-                        <span className={s.feeNote}>{f.note}</span>
+                        <span data-edit={`treatments.feeName.${i}`} data-edit-max="60" className={s.feeName}>{f.name}</span>
+                        <span data-edit={`treatments.feeNote.${i}`} data-edit-max="60" className={s.feeNote}>{f.note}</span>
                       </th>
-                      <td className={s.feeTime}>{f.time}</td>
-                      <td className={s.feePrice}>{f.price}</td>
+                      <td data-edit={`treatments.feeTime.${i}`} className={s.feeTime}>{f.time}</td>
+                      <td data-edit={`treatments.feePrice.${i}`} className={s.feePrice}>{f.price}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <p className={s.small}>
+              <p data-edit="treatments.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 Card, cash or a health savings account card. A missed visit
                 without a day's notice is charged in full, once; after that we
                 ask for the fee when you book.
               </p>
             </div>
-            <div className={s.strokes} aria-hidden="true">
+            <div data-edit-pattern="treatments.field" data-edit-roles="transparent,1,3,2,3" className={s.strokes} aria-hidden="true">
               <TabbiedPattern
                 pattern={slashbar}
                 palette={STROKES}
@@ -255,21 +266,21 @@ export default function MeridianAcupuncturePage() {
 
           <section id="first-visit" className={s.station} aria-labelledby="first-h">
             <div className={s.point}>
-              <span className={s.pointCode}>PC 6</span>
-              <p className={s.pointName}>Neiguan, the inner pass. Three fingers above the wrist.</p>
+              <span data-edit="firstVisit.pointCode" data-edit-max="60" className={s.pointCode}>PC 6</span>
+              <p data-edit="firstVisit.pointName" data-edit-max="240" data-edit-multiline className={s.pointName}>Neiguan, the inner pass. Three fingers above the wrist.</p>
             </div>
             <div className={s.body}>
-              <h2 id="first-h">Your first visit, ninety minutes</h2>
-              <p className={s.intro}>
+              <h2 data-edit="firstVisit.title" data-edit-max="60" id="first-h">Your first visit, ninety minutes</h2>
+              <p data-edit="firstVisit.intro" data-edit-max="240" data-edit-multiline className={s.intro}>
                 Come ten minutes early to fill in one page. Eat a little
                 beforehand, and bring a list of any medicines you take.
               </p>
               <ol className={s.steps}>
-                {STEPS.map((st) => (
+                {STEPS.map((st, i) => (
                   <li key={st.when}>
-                    <p className={s.stepWhen}>{st.when}</p>
-                    <h3>{st.what}</h3>
-                    <p className={s.stepDetail}>{st.detail}</p>
+                    <p data-edit={`firstVisit.stepWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.stepWhen}>{st.when}</p>
+                    <h3 data-edit={`firstVisit.title2.${i}`} data-edit-max="40">{st.what}</h3>
+                    <p data-edit={`firstVisit.stepDetail.${i}`} data-edit-max="240" data-edit-multiline className={s.stepDetail}>{st.detail}</p>
                   </li>
                 ))}
               </ol>
@@ -278,14 +289,14 @@ export default function MeridianAcupuncturePage() {
 
           <section id="community" className={s.station} aria-labelledby="community-h">
             <div className={s.point}>
-              <span className={s.pointCode}>SP 6</span>
-              <p className={s.pointName}>Sanyinjiao, where three channels meet. Above the inner ankle.</p>
+              <span data-edit="community.pointCode" data-edit-max="60" className={s.pointCode}>SP 6</span>
+              <p data-edit="community.pointName" data-edit-max="240" data-edit-multiline className={s.pointName}>Sanyinjiao, where three channels meet. Above the inner ankle.</p>
             </div>
             <div className={s.clinic}>
               <div className={s.clinicText}>
-                <p className={s.clinicSeal}>Pay what you can</p>
-                <h2 id="community-h">The community clinic</h2>
-                <p className={s.clinicLede}>
+                <p data-edit="community.clinicSeal" data-edit-max="240" data-edit-multiline className={s.clinicSeal}>Pay what you can</p>
+                <h2 data-edit="community.title" data-edit-max="60" id="community-h">The community clinic</h2>
+                <p data-edit="community.clinicLede" data-edit-max="240" data-edit-multiline className={s.clinicLede}>
                   Tuesday evenings from 5 to 8 and Saturday mornings from 9 to
                   1, in the big room at the back: six recliners, a low lamp and
                   forty minutes each. You keep your clothes on and we needle
@@ -293,24 +304,24 @@ export default function MeridianAcupuncturePage() {
                 </p>
                 <dl className={s.scale}>
                   <div>
-                    <dt>Each visit</dt>
-                    <dd>$25 to $50</dd>
+                    <dt data-edit="community.term" data-edit-max="28">Each visit</dt>
+                    <dd data-edit="community.body" data-edit-max="200" data-edit-multiline>$25 to $50</dd>
                   </div>
                   <div>
-                    <dt>First time</dt>
-                    <dd>add $10 for the intake</dd>
+                    <dt data-edit="community.term2" data-edit-max="28">First time</dt>
+                    <dd data-edit="community.body2" data-edit-max="200" data-edit-multiline>add $10 for the intake</dd>
                   </div>
                   <div>
-                    <dt>Who decides</dt>
-                    <dd>You do, and nobody asks</dd>
+                    <dt data-edit="community.term3" data-edit-max="28">Who decides</dt>
+                    <dd data-edit="community.body3" data-edit-max="200" data-edit-multiline>You do, and nobody asks</dd>
                   </div>
                 </dl>
-                <p className={s.clinicSmall}>
+                <p data-edit="community.clinicSmall" data-edit-max="240" data-edit-multiline className={s.clinicSmall}>
                   Book a chair online or walk in; walk-ins are seen in the order
                   they arrive.
                 </p>
               </div>
-              <div className={s.clinicField} aria-hidden="true">
+              <div data-edit-pattern="community.field" data-edit-roles="1,0,1,3" className={s.clinicField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={streaking}
                   palette={NIGHT}
@@ -326,20 +337,20 @@ export default function MeridianAcupuncturePage() {
 
           <section id="practitioners" className={s.station} aria-labelledby="people-h">
             <div className={s.point}>
-              <span className={s.pointCode}>HT 7</span>
-              <p className={s.pointName}>Shenmen, the spirit gate. On the crease of the wrist.</p>
+              <span data-edit="practitioners.pointCode" data-edit-max="60" className={s.pointCode}>HT 7</span>
+              <p data-edit="practitioners.pointName" data-edit-max="240" data-edit-multiline className={s.pointName}>Shenmen, the spirit gate. On the crease of the wrist.</p>
             </div>
             <div className={s.body}>
-              <h2 id="people-h">Three practitioners</h2>
+              <h2 data-edit="practitioners.title" data-edit-max="60" id="people-h">Three practitioners</h2>
               <ul className={s.people}>
-                {PEOPLE.map((p) => (
+                {PEOPLE.map((p, i) => (
                   <li key={p.name}>
-                    <span className={s.personSeal}>{p.seal}</span>
+                    <span data-edit={`practitioners.personSeal.${i}`} data-edit-max="60" className={s.personSeal}>{p.seal}</span>
                     <div>
-                      <h3>{p.name}</h3>
-                      <p className={s.personTitle}>{p.title}</p>
-                      <p className={s.personNote}>{p.note}</p>
-                      <p className={s.personYears}>{p.years}</p>
+                      <h3 data-edit={`practitioners.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                      <p data-edit={`practitioners.personTitle.${i}`} data-edit-max="240" data-edit-multiline className={s.personTitle}>{p.title}</p>
+                      <p data-edit={`practitioners.personNote.${i}`} data-edit-max="240" data-edit-multiline className={s.personNote}>{p.note}</p>
+                      <p data-edit={`practitioners.personYears.${i}`} data-edit-max="240" data-edit-multiline className={s.personYears}>{p.years}</p>
                     </div>
                   </li>
                 ))}
@@ -349,21 +360,21 @@ export default function MeridianAcupuncturePage() {
 
           <section id="questions" className={s.station} aria-labelledby="questions-h">
             <div className={s.point}>
-              <span className={s.pointCode}>GV 20</span>
-              <p className={s.pointName}>Baihui, a hundred meetings. The crown of the head.</p>
+              <span data-edit="questions.pointCode" data-edit-max="60" className={s.pointCode}>GV 20</span>
+              <p data-edit="questions.pointName" data-edit-max="240" data-edit-multiline className={s.pointName}>Baihui, a hundred meetings. The crown of the head.</p>
             </div>
             <div className={s.body}>
-              <h2 id="questions-h">What people ask before they come</h2>
+              <h2 data-edit="questions.title" data-edit-max="60" id="questions-h">What people ask before they come</h2>
               <div className={s.faq}>
-                {QUESTIONS.map(([q, a]) => (
+                {QUESTIONS.map(([q, a], i) => (
                   <details key={q}>
-                    <summary>{q}</summary>
-                    <p>{a}</p>
+                    <summary data-edit={`questions.question.${i}`} data-edit-max="80">{q}</summary>
+                    <p data-edit={`questions.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                   </details>
                 ))}
               </div>
             </div>
-            <div className={s.strokes} aria-hidden="true">
+            <div data-edit-pattern="questions.field" data-edit-roles="transparent,1,3,2,3" className={s.strokes} aria-hidden="true">
               <TabbiedPattern
                 pattern={slashbar}
                 palette={STROKES}
@@ -378,45 +389,45 @@ export default function MeridianAcupuncturePage() {
 
           <section id="book" className={s.station} aria-labelledby="book-h">
             <div className={s.point}>
-              <span className={s.pointCode}>KI 1</span>
-              <p className={s.pointName}>Yongquan, the bubbling spring. The sole of the foot.</p>
+              <span data-edit="book.pointCode" data-edit-max="60" className={s.pointCode}>KI 1</span>
+              <p data-edit="book.pointName" data-edit-max="240" data-edit-multiline className={s.pointName}>Yongquan, the bubbling spring. The sole of the foot.</p>
             </div>
             <div className={s.body}>
-              <h2 id="book-h">Hours, and how to book</h2>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Hours, and how to book</h2>
               <div className={s.visit}>
                 <div>
                   <dl className={s.hours}>
-                    {HOURS.map(([d, h]) => (
+                    {HOURS.map(([d, h], i) => (
                       <div key={d}>
-                        <dt>{d}</dt>
-                        <dd>{h}</dd>
+                        <dt data-edit={`book.term.${i}`} data-edit-max="28">{d}</dt>
+                        <dd data-edit={`book.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                       </div>
                     ))}
                   </dl>
-                  <p className={s.address}>41 Tallow Street, second floor</p>
-                  <p className={s.small}>
+                  <p data-edit="book.address" data-edit-max="240" data-edit-multiline className={s.address}>41 Tallow Street, second floor</p>
+                  <p data-edit="book.small" data-edit-max="240" data-edit-multiline className={s.small}>
                     Weaver's Quarter. The green door beside the tea shop; there
                     is a lift. Street parking is metered until 6.
                   </p>
                   <p className={s.contact}>
-                    <a href="tel:+15550193344">(555) 019-3344</a>
+                    <a data-edit="book.link" data-edit-max="28" href="tel:+15550193344">(555) 019-3344</a>
                   </p>
                   <p className={s.contact}>
-                    <a href="mailto:rooms@meridianacupuncture.example">rooms@meridianacupuncture.example</a>
+                    <a data-edit="book.link2" data-edit-max="28" href="mailto:rooms@meridianacupuncture.example">rooms@meridianacupuncture.example</a>
                   </p>
                 </div>
                 <form className={s.form} action="#">
-                  <h3>Ask for a time</h3>
+                  <h3 data-edit="book.title2" data-edit-max="40">Ask for a time</h3>
                   <div className={s.field}>
-                    <label htmlFor="mer-name">Name</label>
+                    <label data-edit="book.label" htmlFor="mer-name">Name</label>
                     <input id="mer-name" name="name" type="text" autoComplete="name" />
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="mer-contact">Phone or email</label>
+                    <label data-edit="book.label2" htmlFor="mer-contact">Phone or email</label>
                     <input id="mer-contact" name="contact" type="text" autoComplete="email" />
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="mer-kind">Visit</label>
+                    <label data-edit="book.label3" htmlFor="mer-kind">Visit</label>
                     <select id="mer-kind" name="kind" defaultValue="first">
                       <option value="first">First visit, 90 minutes</option>
                       <option value="return">Return visit, 60 minutes</option>
@@ -425,11 +436,11 @@ export default function MeridianAcupuncturePage() {
                     </select>
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="mer-note">What brings you in, and when suits you</label>
+                    <label data-edit="book.label4" htmlFor="mer-note">What brings you in, and when suits you</label>
                     <textarea id="mer-note" name="note" rows={4} />
                   </div>
-                  <button className={s.button} type="submit">Send</button>
-                  <p className={s.small}>We reply within a working day with two or three times to choose from.</p>
+                  <button data-edit="book.button" data-edit-max="24" className={s.button} type="submit">Send</button>
+                  <p data-edit="book.small2" data-edit-max="240" data-edit-multiline className={s.small}>We reply within a working day with two or three times to choose from.</p>
                 </form>
               </div>
             </div>
@@ -438,10 +449,10 @@ export default function MeridianAcupuncturePage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Meridian Acupuncture</p>
-        <p>A fictional acupuncture clinic. The practitioners, fees and hours are invented, and nothing here is medical advice. The mugwort is a generated image, drawn in the page's colors.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Meridian Acupuncture</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional acupuncture clinic. The practitioners, fees and hours are invented, and nothing here is medical advice. The mugwort is a generated image, drawn in the page's colors.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

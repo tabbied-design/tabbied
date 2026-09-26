@@ -108,7 +108,19 @@ const CREW = [
 
 export default function BrightPanePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fbfcfd',
+        '--ink': '#0c0e11',
+        '--sky': '#9cd3f4',
+        '--blue': '#1d5fd1',
+        '--hivis': '#ffd43b',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,sky,blue,hivis"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -118,16 +130,16 @@ export default function BrightPanePage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Bright Pane</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Bright Pane</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href="tel:+15550127788">(555) 012-7788</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href="tel:+15550127788">(555) 012-7788</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -137,25 +149,25 @@ export default function BrightPanePage() {
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroInner}>
             <div>
-              <p className={s.kicker}>Window and gutter cleaning, Eastgate and around, since 2014</p>
-              <h1 id="hero-h" className={s.title}>Clean windows <em>by Friday.</em></h1>
+              <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Window and gutter cleaning, Eastgate and around, since 2014</p>
+              <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>Clean windows <em>by Friday.</em></h1>
               <div className={s.priceLine}>
-                <p className={s.bigPrice}>$6</p>
-                <p className={s.per}>a window, inside and out</p>
+                <p data-edit="hero.bigPrice" data-edit-max="240" data-edit-multiline className={s.bigPrice}>$6</p>
+                <p data-edit="hero.per" data-edit-max="240" data-edit-multiline className={s.per}>a window, inside and out</p>
               </div>
-              <p className={s.lede}>
+              <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 Two of us, a van of ladders and a water-fed pole. Pure water,
                 no soap, no streaks, and we wipe the sills on the way out. Most
                 houses take under two hours.
               </p>
               <div className={s.actions}>
-                <a className={s.button} href="#quote">Get a price</a>
-                <a className={s.buttonLine} href="#round">Join the round</a>
+                <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#quote">Get a price</a>
+                <a data-edit="hero.buttonLine" data-edit-max="28" className={s.buttonLine} href="#round">Join the round</a>
               </div>
             </div>
 
             <div className={s.window}>
-              <div className={s.glass} aria-hidden="true">
+              <div data-edit-pattern="hero.field" data-edit-roles="transparent,0,3,1,0" className={s.glass} aria-hidden="true">
                 <TabbiedPattern
                   pattern={mullion}
                   palette={PANES}
@@ -167,14 +179,14 @@ export default function BrightPanePage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.sticker}>Insured to $2 million</p>
+              <p data-edit="hero.sticker" data-edit-max="240" data-edit-multiline className={s.sticker}>Insured to $2 million</p>
             </div>
           </div>
 
           {/* The bottom of the flyer: tear off a number. */}
           <ul className={s.tabs} aria-label="Our number, to tear off">
-            {TABS.map((t) => (
-              <li key={t}>Bright Pane (555) 012-7788</li>
+            {TABS.map((t, i) => (
+              <li data-edit={`hero.item.${i}`} data-edit-max="80" key={t}>Bright Pane (555) 012-7788</li>
             ))}
           </ul>
         </section>
@@ -182,8 +194,8 @@ export default function BrightPanePage() {
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.head}>
-            <h2 id="prices-h">Price per window</h2>
-            <p className={s.headNote}>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Price per window</h2>
+            <p data-edit="prices.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Counted, not guessed. Tell us how many windows and doors you
               have and the price is the sum. No call-out fee, no surprise at
               the door.
@@ -192,35 +204,35 @@ export default function BrightPanePage() {
 
           <div className={s.prices}>
             <ul className={s.priceList}>
-              {PRICES.map(([price, name, note]) => (
+              {PRICES.map(([price, name, note], i) => (
                 <li key={name}>
-                  <span className={s.price}>{price}</span>
+                  <span data-edit={`prices.price.${i}`} data-edit-max="60" className={s.price}>{price}</span>
                   <div>
-                    <h3>{name}</h3>
-                    <p>{note}</p>
+                    <h3 data-edit={`prices.title2.${i}`} data-edit-max="40">{name}</h3>
+                    <p data-edit={`prices.body.${i}`} data-edit-max="240" data-edit-multiline>{note}</p>
                   </div>
                 </li>
               ))}
             </ul>
 
             <div>
-              <h3 className={s.sideTitle}>On top</h3>
+              <h3 data-edit="prices.sideTitle" data-edit-max="40" className={s.sideTitle}>On top</h3>
               <dl className={s.extras}>
-                {EXTRAS.map(([what, cost]) => (
+                {EXTRAS.map(([what, cost], i) => (
                   <div key={what}>
-                    <dt>{what}</dt>
-                    <dd>{cost}</dd>
+                    <dt data-edit={`prices.term.${i}`} data-edit-max="28">{what}</dt>
+                    <dd data-edit={`prices.body2.${i}`} data-edit-max="200" data-edit-multiline>{cost}</dd>
                   </div>
                 ))}
               </dl>
 
               <div className={s.sum}>
-                <p className={s.sumTitle}>A worked example</p>
+                <p data-edit="prices.sumTitle" data-edit-max="240" data-edit-multiline className={s.sumTitle}>A worked example</p>
                 <dl>
-                  {SUM.map(([what, cost]) => (
+                  {SUM.map(([what, cost], i) => (
                     <div key={what}>
-                      <dt>{what}</dt>
-                      <dd>{cost}</dd>
+                      <dt data-edit={`prices.term2.${i}`} data-edit-max="28">{what}</dt>
+                      <dd data-edit={`prices.body3.${i}`} data-edit-max="200" data-edit-multiline>{cost}</dd>
                     </div>
                   ))}
                 </dl>
@@ -230,7 +242,7 @@ export default function BrightPanePage() {
         </section>
 
         {/* The shine: light across a clean pane. */}
-        <div className={s.shine} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,3,2,1" className={s.shine} aria-hidden="true">
           <TabbiedPattern
             pattern={streaking}
             palette={SHINE}
@@ -246,8 +258,8 @@ export default function BrightPanePage() {
         <section id="round" className={s.round} aria-labelledby="round-h">
           <div className={s.roundInner}>
             <div className={s.head}>
-              <h2 id="round-h">The round</h2>
-              <p className={s.headNote}>
+              <h2 data-edit="round.title" data-edit-max="60" id="round-h">The round</h2>
+              <p data-edit="round.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 Every eight weeks we are back on the same streets on the same
                 day. On the round a window is $5, not $6, you do not need to be
                 home for the outside, and you never have to call us. Leave
@@ -256,22 +268,22 @@ export default function BrightPanePage() {
             </div>
 
             <ol className={s.rounds}>
-              {ROUNDS.map((r) => (
+              {ROUNDS.map((r, i) => (
                 <li key={r.letter}>
-                  <p className={s.letter}>{r.letter}</p>
-                  <h3>{r.day}</h3>
-                  <p className={s.area}>{r.area}</p>
+                  <p data-edit={`round.letter.${i}`} data-edit-max="240" data-edit-multiline className={s.letter}>{r.letter}</p>
+                  <h3 data-edit={`round.title2.${i}`} data-edit-max="40">{r.day}</h3>
+                  <p data-edit={`round.area.${i}`} data-edit-max="240" data-edit-multiline className={s.area}>{r.area}</p>
                   <ul className={s.streets}>
-                    {r.streets.map((st) => (
-                      <li key={st}>{st}</li>
+                    {r.streets.map((st, i2) => (
+                      <li data-edit={`round.item.${i}.${i2}`} data-edit-max="80" key={st}>{st}</li>
                     ))}
                   </ul>
-                  <p className={s.next}>Next</p>
-                  <p className={s.nextDates}>{r.next}</p>
+                  <p data-edit={`round.next.${i}`} data-edit-max="240" data-edit-multiline className={s.next}>Next</p>
+                  <p data-edit={`round.nextDates.${i}`} data-edit-max="240" data-edit-multiline className={s.nextDates}>{r.next}</p>
                 </li>
               ))}
             </ol>
-            <p className={s.roundNote}>
+            <p data-edit="round.roundNote" data-edit-max="240" data-edit-multiline className={s.roundNote}>
               Your street is not here? If five houses on it sign up, it goes on
               the round that passes nearest.
             </p>
@@ -281,15 +293,15 @@ export default function BrightPanePage() {
         {/* --------------------------------------------------------- GUTTERS */}
         <section id="gutters" className={s.sec} aria-labelledby="gutters-h">
           <div className={s.head}>
-            <h2 id="gutters-h">Gutters, by the story</h2>
-            <p className={s.headNote}>
+            <h2 data-edit="gutters.title" data-edit-max="60" id="gutters-h">Gutters, by the story</h2>
+            <p data-edit="gutters.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Best done in late November, after the leaves are down, and again
               in spring. Every clear-out comes with a before and after photo of
               every run, sent to your phone before we leave.
             </p>
           </div>
 
-          <div className={s.roof} aria-hidden="true">
+          <div data-edit-pattern="gutters.field" data-edit-roles="transparent,1,4" className={s.roof} aria-hidden="true">
             <TabbiedPattern
               pattern={rafter}
               palette={RAKE}
@@ -301,25 +313,25 @@ export default function BrightPanePage() {
             />
           </div>
           <table className={s.gutters}>
-            <caption className={s.srOnly}>Gutter prices by number of stories</caption>
+            <caption data-edit="gutters.srOnly" className={s.srOnly}>Gutter prices by number of stories</caption>
             <thead>
               <tr>
-                <th scope="col">Package</th>
-                <th scope="col">One story</th>
-                <th scope="col">Two stories</th>
-                <th scope="col">Three stories</th>
+                <th data-edit="gutters.heading" scope="col">Package</th>
+                <th data-edit="gutters.heading2" scope="col">One story</th>
+                <th data-edit="gutters.heading3" scope="col">Two stories</th>
+                <th data-edit="gutters.heading4" scope="col">Three stories</th>
               </tr>
             </thead>
             <tbody>
-              {GUTTERS.map((g) => (
+              {GUTTERS.map((g, i) => (
                 <tr key={g.name}>
                   <th scope="row">
-                    <span className={s.gName}>{g.name}</span>
-                    <span className={s.gNote}>{g.note}</span>
+                    <span data-edit={`gutters.gName.${i}`} data-edit-max="60" className={s.gName}>{g.name}</span>
+                    <span data-edit={`gutters.gNote.${i}`} data-edit-max="60" className={s.gNote}>{g.note}</span>
                   </th>
-                  <td>{g.one}</td>
-                  <td>{g.two}</td>
-                  <td>{g.three}</td>
+                  <td data-edit={`gutters.cell.${i}`}>{g.one}</td>
+                  <td data-edit={`gutters.cell2.${i}`}>{g.two}</td>
+                  <td data-edit={`gutters.cell3.${i}`}>{g.three}</td>
                 </tr>
               ))}
             </tbody>
@@ -331,8 +343,8 @@ export default function BrightPanePage() {
           <div className={s.visitInner}>
             <div className={s.visitHead}>
               <div>
-                <h2 id="visit-h" className={s.visitTitle}>How a visit goes</h2>
-                <p className={s.visitLede}>
+                <h2 data-edit="visit.visitTitle" data-edit-max="60" id="visit-h" className={s.visitTitle}>How a visit goes</h2>
+                <p data-edit="visit.visitLede" data-edit-max="240" data-edit-multiline className={s.visitLede}>
                   Most houses take under two hours, from the van door opening
                   to the last sill wiped. This is what the two hours hold.
                 </p>
@@ -345,16 +357,16 @@ export default function BrightPanePage() {
               />
             </div>
             <ol className={s.steps}>
-              {STEPS.map(([title, body]) => (
+              {STEPS.map(([title, body], i) => (
                 <li key={title}>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
+                  <h3 data-edit={`visit.title.${i}`} data-edit-max="40">{title}</h3>
+                  <p data-edit={`visit.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                 </li>
               ))}
             </ol>
             <div className={s.promise}>
-              <p className={s.promiseTitle}>The rain promise</p>
-              <p className={s.promiseBody}>
+              <p data-edit="visit.promiseTitle" data-edit-max="240" data-edit-multiline className={s.promiseTitle}>The rain promise</p>
+              <p data-edit="visit.promiseBody" data-edit-max="240" data-edit-multiline className={s.promiseBody}>
                 Rain on clean glass dries clean. If it rains within two days
                 and leaves spots anyway, call, and we come back and do the
                 outside again for nothing.
@@ -366,25 +378,25 @@ export default function BrightPanePage() {
         {/* ------------------------------------------------------------ AREA */}
         <section id="area" className={s.sec} aria-labelledby="area-h">
           <div className={s.head}>
-            <h2 id="area-h">Where we work</h2>
-            <p className={s.headNote}>
+            <h2 data-edit="area.title" data-edit-max="60" id="area-h">Where we work</h2>
+            <p data-edit="area.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               The four set solid are on the round, and we are there every week. The rest
               we visit by quote, usually within ten days.
             </p>
           </div>
           <ul className={s.areas}>
-            {AREAS.map((a) => (
-              <li key={a.name} className={a.round ? s.onRound : s.byQuote}>{a.name}</li>
+            {AREAS.map((a, i) => (
+              <li data-edit={`area.onRound.${i}`} data-edit-max="80" key={a.name} className={a.round ? s.onRound : s.byQuote}>{a.name}</li>
             ))}
           </ul>
 
           <div className={s.crewWrap}>
-            <h3 className={s.sideTitle}>Who turns up</h3>
+            <h3 data-edit="area.sideTitle" data-edit-max="40" className={s.sideTitle}>Who turns up</h3>
             <ul className={s.crew}>
-              {CREW.map(([name, note]) => (
+              {CREW.map(([name, note], i) => (
                 <li key={name}>
-                  <p className={s.crewName}>{name}</p>
-                  <p>{note}</p>
+                  <p data-edit={`area.crewName.${i}`} data-edit-max="240" data-edit-multiline className={s.crewName}>{name}</p>
+                  <p data-edit={`area.body.${i}`} data-edit-max="240" data-edit-multiline>{note}</p>
                 </li>
               ))}
             </ul>
@@ -395,27 +407,27 @@ export default function BrightPanePage() {
         <section id="quote" className={s.sec} aria-labelledby="quote-h">
           <form className={s.quote} action="#">
             <div className={s.quoteHead}>
-              <h2 id="quote-h">Get a price</h2>
-              <p>
+              <h2 data-edit="quote.title" data-edit-max="60" id="quote-h">Get a price</h2>
+              <p data-edit="quote.body" data-edit-max="240" data-edit-multiline>
                 We text you a price within the working day. Most houses we can
                 count from the street map, so nobody needs to come round first.
               </p>
             </div>
             <div className={s.formGrid}>
               <div className={s.field}>
-                <label htmlFor="bp-name">Name</label>
+                <label data-edit="quote.label" htmlFor="bp-name">Name</label>
                 <input id="bp-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="bp-phone">Mobile, for the text</label>
+                <label data-edit="quote.label2" htmlFor="bp-phone">Mobile, for the text</label>
                 <input id="bp-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="bp-address">Address</label>
+                <label data-edit="quote.label3" htmlFor="bp-address">Address</label>
                 <input id="bp-address" name="address" type="text" autoComplete="street-address" />
               </div>
               <div className={s.field}>
-                <label htmlFor="bp-windows">Windows, roughly</label>
+                <label data-edit="quote.label4" htmlFor="bp-windows">Windows, roughly</label>
                 <select id="bp-windows" name="windows" defaultValue="11-20">
                   <option value="1-10">1 to 10</option>
                   <option value="11-20">11 to 20</option>
@@ -424,7 +436,7 @@ export default function BrightPanePage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="bp-stories">Stories</label>
+                <label data-edit="quote.label5" htmlFor="bp-stories">Stories</label>
                 <select id="bp-stories" name="stories" defaultValue="2">
                   <option value="1">One</option>
                   <option value="2">Two</option>
@@ -434,25 +446,25 @@ export default function BrightPanePage() {
               <div className={`${s.checks} ${s.fieldWide}`}>
                 <label className={s.check} htmlFor="bp-gutters">
                   <input id="bp-gutters" name="gutters" type="checkbox" />
-                  <span>Gutters too</span>
+                  <span data-edit="quote.text" data-edit-max="60">Gutters too</span>
                 </label>
                 <label className={s.check} htmlFor="bp-screens">
                   <input id="bp-screens" name="screens" type="checkbox" />
-                  <span>Wash the screens</span>
+                  <span data-edit="quote.text2" data-edit-max="60">Wash the screens</span>
                 </label>
                 <label className={s.check} htmlFor="bp-round">
                   <input id="bp-round" name="round" type="checkbox" />
-                  <span>Put me on the round</span>
+                  <span data-edit="quote.text3" data-edit-max="60">Put me on the round</span>
                 </label>
               </div>
             </div>
-            <button className={s.button} type="submit">Text me a price</button>
+            <button data-edit="quote.button" data-edit-max="24" className={s.button} type="submit">Text me a price</button>
           </form>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <div className={s.sill} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,0" className={s.sill} aria-hidden="true">
           <TabbiedPattern
             pattern={mullion}
             palette={SILL}
@@ -464,11 +476,11 @@ export default function BrightPanePage() {
           />
         </div>
         <div className={s.footInner}>
-          <p className={s.footName}>Bright Pane</p>
-          <p>A fictional window and gutter cleaner. The prices, streets, rounds and crew are invented.</p>
-          <p>The window cleaner is a generated picture, drawn in the page's own colors.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Bright Pane</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional window and gutter cleaner. The prices, streets, rounds and crew are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The window cleaner is a generated picture, drawn in the page's own colors.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
         </div>
       </footer>

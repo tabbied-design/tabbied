@@ -115,7 +115,18 @@ const HOURS = [
 
 export default function VelvetPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--plum': '#3a2533',
+        '--cream': '#f3e9e1',
+        '--mauve': '#b58ca2',
+        '--blush': '#e3c7c8',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="plum,cream,mauve,blush"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -125,15 +136,15 @@ export default function VelvetPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Velvet</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Velvet</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -143,23 +154,23 @@ export default function VelvetPage() {
             The front of the printed menu: rings on plum, a cream label. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Saffron Mews, Old Quarry. Since 2019.</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Saffron Mews, Old Quarry. Since 2019.</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Grooming for cats, <em>and only cats</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               One cat in the salon at a time, a dryer no louder than a
               conversation, and two groomers who have never once had to shout
               over a barking dog. Book an hour and a half; most visits need
               less.
             </p>
             <div className={s.actions}>
-              <a className={s.button} href="#book">Book an appointment</a>
-              <a className={s.textLink} href="#menu">Read the menu</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#book">Book an appointment</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#menu">Read the menu</a>
             </div>
           </div>
           <div className={s.cover}>
-            <div className={s.coverField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,1,2" className={s.coverField} aria-hidden="true">
               <TabbiedPattern
                 pattern={gimbal}
                 palette={COVER}
@@ -171,9 +182,9 @@ export default function VelvetPage() {
               />
             </div>
             <div className={s.coverLabel}>
-              <p className={s.coverName}>Velvet</p>
-              <p className={s.coverSub}>The menu</p>
-              <p className={s.coverSeason}>Autumn and winter</p>
+              <p data-edit="hero.coverName" data-edit-max="240" data-edit-multiline className={s.coverName}>Velvet</p>
+              <p data-edit="hero.coverSub" data-edit-max="240" data-edit-multiline className={s.coverSub}>The menu</p>
+              <p data-edit="hero.coverSeason" data-edit-max="240" data-edit-multiline className={s.coverSeason}>Autumn and winter</p>
             </div>
           </div>
         </section>
@@ -181,7 +192,7 @@ export default function VelvetPage() {
         {/* ------------------------------------------------------------- MENU */}
         <section id="menu" className={s.menuSec} aria-labelledby="menu-h">
           <div className={s.card}>
-            <div className={s.cardBand} aria-hidden="true">
+            <div data-edit-pattern="menu.field" data-edit-roles="transparent,2,0,3" className={s.cardBand} aria-hidden="true">
               <TabbiedPattern
                 pattern={gimbal}
                 palette={CARDBAND}
@@ -192,9 +203,9 @@ export default function VelvetPage() {
               />
             </div>
             <div className={s.cardHead}>
-              <p className={s.cardKicker}>Velvet</p>
-              <h2 id="menu-h" className={s.cardTitle}>The menu</h2>
-              <p className={s.cardNote}>
+              <p data-edit="menu.cardKicker" data-edit-max="240" data-edit-multiline className={s.cardKicker}>Velvet</p>
+              <h2 data-edit="menu.cardTitle" data-edit-max="60" id="menu-h" className={s.cardTitle}>The menu</h2>
+              <p data-edit="menu.cardNote" data-edit-max="240" data-edit-multiline className={s.cardNote}>
                 Every visit starts with ten minutes of settling in, which is
                 not on the bill. Prices include a comb-out and a bow, which
                 you may remove in the car.
@@ -202,37 +213,37 @@ export default function VelvetPage() {
             </div>
             <div className={s.columns}>
               <div className={s.column}>
-                <h3 className={s.columnTitle}>Baths and coats</h3>
+                <h3 data-edit="menu.columnTitle" data-edit-max="40" className={s.columnTitle}>Baths and coats</h3>
                 <ul className={s.services}>
-                  {BATHS.map((b) => (
+                  {BATHS.map((b, i) => (
                     <li key={b.name} className={s.service}>
                       <p className={s.line}>
-                        <span className={s.serviceName}>{b.name}</span>
+                        <span data-edit={`menu.serviceName.${i}`} data-edit-max="60" className={s.serviceName}>{b.name}</span>
                         <span className={s.leader} aria-hidden="true" />
-                        <span className={s.servicePrice}>{b.price}</span>
+                        <span data-edit={`menu.servicePrice.${i}`} data-edit-max="60" className={s.servicePrice}>{b.price}</span>
                       </p>
-                      <p className={s.serviceNote}>{b.note}</p>
-                      <p className={s.serviceTime}>{b.time}</p>
+                      <p data-edit={`menu.serviceNote.${i}`} data-edit-max="240" data-edit-multiline className={s.serviceNote}>{b.note}</p>
+                      <p data-edit={`menu.serviceTime.${i}`} data-edit-max="240" data-edit-multiline className={s.serviceTime}>{b.time}</p>
                     </li>
                   ))}
                 </ul>
               </div>
               <div className={s.column}>
-                <h3 className={s.columnTitle}>Finishing touches</h3>
+                <h3 data-edit="menu.columnTitle2" data-edit-max="40" className={s.columnTitle}>Finishing touches</h3>
                 <ul className={s.services}>
-                  {TOUCHES.map((t) => (
+                  {TOUCHES.map((t, i) => (
                     <li key={t.name} className={s.service}>
                       <p className={s.line}>
-                        <span className={s.serviceName}>{t.name}</span>
+                        <span data-edit={`menu.serviceName2.${i}`} data-edit-max="60" className={s.serviceName}>{t.name}</span>
                         <span className={s.leader} aria-hidden="true" />
-                        <span className={s.servicePrice}>{t.price}</span>
+                        <span data-edit={`menu.servicePrice2.${i}`} data-edit-max="60" className={s.servicePrice}>{t.price}</span>
                       </p>
-                      <p className={s.serviceNote}>{t.note}</p>
-                      <p className={s.serviceTime}>{t.time}</p>
+                      <p data-edit={`menu.serviceNote2.${i}`} data-edit-max="240" data-edit-multiline className={s.serviceNote}>{t.note}</p>
+                      <p data-edit={`menu.serviceTime2.${i}`} data-edit-max="240" data-edit-multiline className={s.serviceTime}>{t.time}</p>
                     </li>
                   ))}
                 </ul>
-                <p className={s.cardAside}>
+                <p data-edit="menu.cardAside" data-edit-max="240" data-edit-multiline className={s.cardAside}>
                   Touches may be added to any bath, or booked on their own in
                   a twenty-minute visit.
                 </p>
@@ -244,11 +255,11 @@ export default function VelvetPage() {
         {/* ----------------------------------------------------- APPOINTMENTS */}
         <section id="appointments" className={s.sec} aria-labelledby="appointments-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>The appointment book</p>
-            <h2 id="appointments-h" className={s.h2}>
+            <p data-edit="appointments.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The appointment book</p>
+            <h2 data-edit="appointments.title" data-edit-format="emphasis" data-edit-max="60" id="appointments-h" className={s.h2}>
               Five cats a day, <em>never two at once</em>
             </h2>
-            <p className={s.secNote}>
+            <p data-edit="appointments.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Each slot is an hour and a half, with the room aired and wiped
               down between cats so nobody walks into another cat's smell. The
               early slots on Tuesday and Thursday are quiet hours: lights low,
@@ -256,19 +267,19 @@ export default function VelvetPage() {
             </p>
           </div>
           <table className={s.book}>
-            <caption className={s.srOnly}>Appointment slots by day, Tuesday to Saturday</caption>
+            <caption data-edit="appointments.srOnly" className={s.srOnly}>Appointment slots by day, Tuesday to Saturday</caption>
             <thead>
               <tr>
-                <th scope="col" className={s.bookCorner}>Slot</th>
-                {DAYS.map((d) => (
-                  <th key={d} scope="col">{d}</th>
+                <th data-edit="appointments.bookCorner" scope="col" className={s.bookCorner}>Slot</th>
+                {DAYS.map((d, i) => (
+                  <th data-edit={`appointments.heading.${i}`} key={d} scope="col">{d}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {SLOTS.map((row) => (
+              {SLOTS.map((row, i) => (
                 <tr key={row.time}>
-                  <th scope="row" className={s.bookTime}>{row.time}</th>
+                  <th data-edit={`appointments.bookTime.${i}`} scope="row" className={s.bookTime}>{row.time}</th>
                   {row.days.map((kind, j) => (
                     <td key={DAYS[j]} className={s[kind]}>
                       <span className={s.slotLabel}>{kind === 'quiet' ? 'Quiet hour' : kind === 'open' ? 'Open' : 'Kept free'}</span>
@@ -279,9 +290,9 @@ export default function VelvetPage() {
             </tbody>
           </table>
           <ul className={s.key}>
-            <li className={s.keyQuiet}>Quiet hour: no other sounds in the building</li>
-            <li className={s.keyOpen}>Open: an ordinary appointment</li>
-            <li className={s.keyNone}>Kept free for overruns and lunch</li>
+            <li data-edit="appointments.keyQuiet" data-edit-max="80" className={s.keyQuiet}>Quiet hour: no other sounds in the building</li>
+            <li data-edit="appointments.keyOpen" data-edit-max="80" className={s.keyOpen}>Open: an ordinary appointment</li>
+            <li data-edit="appointments.keyNone" data-edit-max="80" className={s.keyNone}>Kept free for overruns and lunch</li>
           </ul>
         </section>
 
@@ -289,11 +300,11 @@ export default function VelvetPage() {
         <section id="handling" className={s.sec} aria-labelledby="handling-h">
           <div className={s.handling}>
             <div className={s.handlingHead}>
-              <p className={s.kicker}>Temperament and handling</p>
-              <h2 id="handling-h" className={s.h2}>
+              <p data-edit="handling.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Temperament and handling</p>
+              <h2 data-edit="handling.title" data-edit-format="emphasis" data-edit-max="60" id="handling-h" className={s.h2}>
                 How we hold <em>a cat who would rather not</em>
               </h2>
-              <div className={s.plate} aria-hidden="true">
+              <div data-edit-pattern="handling.field" data-edit-roles="transparent,3,2" className={s.plate} aria-hidden="true">
                 <TabbiedPattern
                   pattern={gimbal}
                   palette={PLATE}
@@ -305,10 +316,10 @@ export default function VelvetPage() {
               </div>
             </div>
             <ol className={s.notes}>
-              {HANDLING.map((h) => (
+              {HANDLING.map((h, i) => (
                 <li key={h.title} className={s.noteItem}>
-                  <h3>{h.title}</h3>
-                  <p>{h.body}</p>
+                  <h3 data-edit={`handling.title.${i}`} data-edit-max="40">{h.title}</h3>
+                  <p data-edit={`handling.body.${i}`} data-edit-max="240" data-edit-multiline>{h.body}</p>
                 </li>
               ))}
             </ol>
@@ -325,9 +336,9 @@ export default function VelvetPage() {
               className={s.cat}
             />
             <div className={s.noDogsText}>
-              <p className={s.kicker}>House rule, the only one</p>
-              <h2 id="no-dogs-h" className={s.noDogsTitle}>No dogs. Ever.</h2>
-              <p className={s.noDogsBody}>
+              <p data-edit="noDogs.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>House rule, the only one</p>
+              <h2 data-edit="noDogs.noDogsTitle" data-edit-max="60" id="no-dogs-h" className={s.noDogsTitle}>No dogs. Ever.</h2>
+              <p data-edit="noDogs.noDogsBody" data-edit-max="240" data-edit-multiline className={s.noDogsBody}>
                 Not in the lobby, not in a carrier, not the very quiet one. A
                 cat can smell a dog on a floor for days, and this floor has
                 never had one on it. If you have come straight from the dog
@@ -341,30 +352,30 @@ export default function VelvetPage() {
         <section id="groomers" className={s.sec} aria-labelledby="groomers-h">
           <div className={s.twin}>
             <div>
-              <p className={s.kicker}>Before you come</p>
-              <h2 className={s.h3}>Four things to bring or know</h2>
+              <p data-edit="groomers.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Before you come</p>
+              <h2 data-edit="groomers.h3" data-edit-max="60" className={s.h3}>Four things to bring or know</h2>
               <dl className={s.before}>
-                {BEFORE.map(([what, why]) => (
+                {BEFORE.map(([what, why], i) => (
                   <div key={what}>
-                    <dt>{what}</dt>
-                    <dd>{why}</dd>
+                    <dt data-edit={`groomers.term.${i}`} data-edit-max="28">{what}</dt>
+                    <dd data-edit={`groomers.body.${i}`} data-edit-max="200" data-edit-multiline>{why}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div>
-              <p className={s.kicker}>The groomers</p>
-              <h2 id="groomers-h" className={s.h3}>Two pairs of hands</h2>
+              <p data-edit="groomers.kicker2" data-edit-max="240" data-edit-multiline className={s.kicker}>The groomers</p>
+              <h2 data-edit="groomers.h32" data-edit-max="60" id="groomers-h" className={s.h3}>Two pairs of hands</h2>
               <ul className={s.groomers}>
-                {GROOMERS.map((g) => (
+                {GROOMERS.map((g, i) => (
                   <li key={g.name}>
-                    <h3>{g.name}</h3>
-                    <p className={s.groomerRole}>{g.role}</p>
-                    <p className={s.groomerNote}>{g.note}</p>
+                    <h3 data-edit={`groomers.title.${i}`} data-edit-max="40">{g.name}</h3>
+                    <p data-edit={`groomers.groomerRole.${i}`} data-edit-max="240" data-edit-multiline className={s.groomerRole}>{g.role}</p>
+                    <p data-edit={`groomers.groomerNote.${i}`} data-edit-max="240" data-edit-multiline className={s.groomerNote}>{g.note}</p>
                   </li>
                 ))}
               </ul>
-              <p className={s.aside}>There is no salon cat. Yours is the only cat in the room.</p>
+              <p data-edit="groomers.aside" data-edit-max="240" data-edit-multiline className={s.aside}>There is no salon cat. Yours is the only cat in the room.</p>
             </div>
           </div>
         </section>
@@ -373,27 +384,27 @@ export default function VelvetPage() {
         <section id="book" className={s.sec} aria-labelledby="book-h">
           <div className={s.bookWrap}>
             <form className={s.form} action="#">
-              <h2 id="book-h" className={s.formTitle}>Book an appointment</h2>
-              <p className={s.formNote}>Margot replies within a working day with two or three slots to choose from.</p>
+              <h2 data-edit="book.formTitle" data-edit-max="60" id="book-h" className={s.formTitle}>Book an appointment</h2>
+              <p data-edit="book.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>Margot replies within a working day with two or three slots to choose from.</p>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="vv-name">Your name</label>
+                  <label data-edit="book.label" htmlFor="vv-name">Your name</label>
                   <input id="vv-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="vv-phone">Telephone</label>
+                  <label data-edit="book.label2" htmlFor="vv-phone">Telephone</label>
                   <input id="vv-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="vv-cat">Your cat's name</label>
+                  <label data-edit="book.label3" htmlFor="vv-cat">Your cat's name</label>
                   <input id="vv-cat" name="cat" type="text" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="vv-age">Age</label>
+                  <label data-edit="book.label4" htmlFor="vv-age">Age</label>
                   <input id="vv-age" name="age" type="text" placeholder="in years" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="vv-coat">Coat</label>
+                  <label data-edit="book.label5" htmlFor="vv-coat">Coat</label>
                   <select id="vv-coat" name="coat" defaultValue="short">
                     <option value="short">Short</option>
                     <option value="medium">Medium</option>
@@ -402,7 +413,7 @@ export default function VelvetPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="vv-temper">Temperament</label>
+                  <label data-edit="book.label6" htmlFor="vv-temper">Temperament</label>
                   <select id="vv-temper" name="temper" defaultValue="easy">
                     <option value="easy">Easygoing</option>
                     <option value="nervous">Nervous</option>
@@ -411,7 +422,7 @@ export default function VelvetPage() {
                   </select>
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="vv-service">What you would like</label>
+                  <label data-edit="book.label7" htmlFor="vv-service">What you would like</label>
                   <select id="vv-service" name="service" defaultValue="short">
                     <option value="meet">A first meeting, free</option>
                     <option value="short">The short coat bath</option>
@@ -423,37 +434,37 @@ export default function VelvetPage() {
                   </select>
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="vv-notes">Anything we should know about them</label>
+                  <label data-edit="book.label8" htmlFor="vv-notes">Anything we should know about them</label>
                   <textarea id="vv-notes" name="notes" rows={3} />
                 </div>
               </div>
               <label className={s.quietTick}>
                 <input type="checkbox" name="quiet" />
-                <span>Please offer me a quiet-hours slot</span>
+                <span data-edit="book.text" data-edit-max="60">Please offer me a quiet-hours slot</span>
               </label>
-              <button className={s.button} type="submit">Send the request</button>
+              <button data-edit="book.button" data-edit-max="24" className={s.button} type="submit">Send the request</button>
             </form>
             <div className={s.visit}>
-              <p className={s.kicker}>Find us</p>
-              <p className={s.address}>
+              <p data-edit="book.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Find us</p>
+              <p data-edit="book.body" data-edit-max="240" data-edit-multiline className={s.address}>
                 2B Saffron Mews
                 <br />
                 Old Quarry
               </p>
-              <p className={s.visitNote}>The plum door at the end of the mews, past the frame shop. Parking in the mews for drop-off.</p>
+              <p data-edit="book.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>The plum door at the end of the mews, past the frame shop. Parking in the mews for drop-off.</p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`book.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`book.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
               <p className={s.contact}>
-                <a href="tel:+15550126604">(555) 012-6604</a>
+                <a data-edit="book.link" data-edit-max="28" href="tel:+15550126604">(555) 012-6604</a>
               </p>
               <p className={s.contact}>
-                <a href="mailto:margot@velvetcats.example">margot@velvetcats.example</a>
+                <a data-edit="book.link2" data-edit-max="28" href="mailto:margot@velvetcats.example">margot@velvetcats.example</a>
               </p>
             </div>
           </div>
@@ -461,7 +472,7 @@ export default function VelvetPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,1,2" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={gimbal}
             palette={COVER}
@@ -472,12 +483,12 @@ export default function VelvetPage() {
           />
         </div>
         <div className={s.footInner}>
-          <p className={s.footName}>Velvet</p>
-          <p>A fictional cat grooming salon. The groomers, prices and address are invented.</p>
-          <p>The cat is a generated image, drawn in the page's own colors.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Velvet</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional cat grooming salon. The groomers, prices and address are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The cat is a generated image, drawn in the page's own colors.</p>
           <p>
             Patterns by{' '}
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
             .
           </p>
         </div>

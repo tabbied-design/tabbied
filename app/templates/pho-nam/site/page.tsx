@@ -166,7 +166,19 @@ const FAMILY = [
 
 export default function PhoNamPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--board': '#0e3a2c',
+        '--rice': '#f2e9d4',
+        '--chili': '#cf3328',
+        '--broth': '#e6ab3a',
+        '--jade': '#2a6b50',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="board,rice,chili,broth,jade"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -176,16 +188,16 @@ export default function PhoNamPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Pho Nam</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Pho Nam</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href="tel:+15550142288">(555) 014-2288</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href="tel:+15550142288">(555) 014-2288</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -194,25 +206,25 @@ export default function PhoNamPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div>
-            <p className={s.kicker}>Noodle house, 88 Lantern Street, since 2009</p>
-            <h1 id="hero-h" className={s.name}>Pho Nam</h1>
-            <p className={s.lede}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Noodle house, 88 Lantern Street, since 2009</p>
+            <h1 data-edit="hero.name" data-edit-max="70" id="hero-h" className={s.name}>Pho Nam</h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Beef and chicken pho from one fourteen-hour pot, a short list of
               noodles and rice around it, and a counter where you order by
               number. Say it, pay, sit anywhere. Minh will call it.
             </p>
             <dl className={s.today}>
-              {TODAY.map(([label, value]) => (
+              {TODAY.map(([label, value], i) => (
                 <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{value}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{label}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{value}</dd>
                 </div>
               ))}
             </dl>
           </div>
 
           <div className={s.heroArt}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,1,3,4" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={bowl}
                 palette={STACK}
@@ -224,15 +236,15 @@ export default function PhoNamPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <p className={s.sticker}>Order by number</p>
+            <p data-edit="hero.sticker" data-edit-max="240" data-edit-multiline className={s.sticker}>Order by number</p>
           </div>
         </section>
 
         {/* ----------------------------------------------------------- BOARD */}
         <section id="board" className={s.board} aria-labelledby="board-h">
           <div className={s.head}>
-            <h2 id="board-h">The board</h2>
-            <p className={s.headNote}>
+            <h2 data-edit="board.title" data-edit-max="60" id="board-h">The board</h2>
+            <p data-edit="board.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Say the number at the counter. A small is a lunch bowl, a large
               is dinner. Every pho comes with a plate of basil, sprouts, lime
               and chili, and more if you ask.
@@ -240,22 +252,22 @@ export default function PhoNamPage() {
           </div>
 
           <ol className={s.phoList}>
-            {PHO.map((d) => (
+            {PHO.map((d, i) => (
               <li key={d.no}>
-                <span className={s.no}>{d.no}</span>
+                <span data-edit={`board.no.${i}`} data-edit-max="60" className={s.no}>{d.no}</span>
                 <div className={s.dish}>
-                  <h3>{d.vn}</h3>
-                  <p className={s.en}>{d.en}</p>
-                  <p className={s.note}>{d.note}</p>
+                  <h3 data-edit={`board.title2.${i}`} data-edit-max="40">{d.vn}</h3>
+                  <p data-edit={`board.en.${i}`} data-edit-max="240" data-edit-multiline className={s.en}>{d.en}</p>
+                  <p data-edit={`board.note.${i}`} data-edit-max="240" data-edit-multiline className={s.note}>{d.note}</p>
                 </div>
                 <dl className={s.sizes}>
                   <div>
-                    <dt>S</dt>
-                    <dd>{d.small}</dd>
+                    <dt data-edit={`board.term.${i}`} data-edit-max="28">S</dt>
+                    <dd data-edit={`board.body.${i}`} data-edit-max="200" data-edit-multiline>{d.small}</dd>
                   </div>
                   <div>
-                    <dt>L</dt>
-                    <dd>{d.large}</dd>
+                    <dt data-edit={`board.term2.${i}`} data-edit-max="28">L</dt>
+                    <dd data-edit={`board.body2.${i}`} data-edit-max="200" data-edit-multiline>{d.large}</dd>
                   </div>
                 </dl>
               </li>
@@ -264,33 +276,33 @@ export default function PhoNamPage() {
 
           <div className={s.lower}>
             <div>
-              <h3 className={s.groupTitle}>Not soup</h3>
+              <h3 data-edit="board.groupTitle" data-edit-max="40" className={s.groupTitle}>Not soup</h3>
               <ol className={s.plateList}>
-                {RICEBOWLS.map((d) => (
+                {RICEBOWLS.map((d, i) => (
                   <li key={d.no}>
-                    <span className={s.noSmall}>{d.no}</span>
+                    <span data-edit={`board.noSmall.${i}`} data-edit-max="60" className={s.noSmall}>{d.no}</span>
                     <div className={s.dish}>
-                      <h4>{d.vn}</h4>
-                      <p className={s.en}>{d.en}</p>
-                      <p className={s.note}>{d.note}</p>
+                      <h4 data-edit={`board.title3.${i}`} data-edit-max="36">{d.vn}</h4>
+                      <p data-edit={`board.en2.${i}`} data-edit-max="240" data-edit-multiline className={s.en}>{d.en}</p>
+                      <p data-edit={`board.note2.${i}`} data-edit-max="240" data-edit-multiline className={s.note}>{d.note}</p>
                     </div>
-                    <span className={s.price}>{d.price}</span>
+                    <span data-edit={`board.price.${i}`} data-edit-max="60" className={s.price}>{d.price}</span>
                   </li>
                 ))}
               </ol>
             </div>
             <div>
-              <h3 className={s.groupTitle}>Small plates</h3>
+              <h3 data-edit="board.groupTitle2" data-edit-max="40" className={s.groupTitle}>Small plates</h3>
               <ol className={s.plateList}>
-                {SMALL.map((d) => (
+                {SMALL.map((d, i) => (
                   <li key={d.no}>
-                    <span className={s.noSmall}>{d.no}</span>
+                    <span data-edit={`board.noSmall2.${i}`} data-edit-max="60" className={s.noSmall}>{d.no}</span>
                     <div className={s.dish}>
-                      <h4>{d.vn}</h4>
-                      <p className={s.en}>{d.en}</p>
-                      <p className={s.note}>{d.note}</p>
+                      <h4 data-edit={`board.title4.${i}`} data-edit-max="36">{d.vn}</h4>
+                      <p data-edit={`board.en3.${i}`} data-edit-max="240" data-edit-multiline className={s.en}>{d.en}</p>
+                      <p data-edit={`board.note3.${i}`} data-edit-max="240" data-edit-multiline className={s.note}>{d.note}</p>
                     </div>
-                    <span className={s.price}>{d.price}</span>
+                    <span data-edit={`board.price2.${i}`} data-edit-max="60" className={s.price}>{d.price}</span>
                   </li>
                 ))}
               </ol>
@@ -299,7 +311,7 @@ export default function PhoNamPage() {
         </section>
 
         {/* The shelf of bowls between the board and the kitchen. */}
-        <div className={s.shelf} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,3,1" className={s.shelf} aria-hidden="true">
           <TabbiedPattern
             pattern={bowl}
             palette={SHELF}
@@ -315,9 +327,9 @@ export default function PhoNamPage() {
         <section id="broth" className={s.broth} aria-labelledby="broth-h">
           <div className={s.brothInner}>
             <div className={s.brothHead}>
-              <p className={s.kickerDark}>The pot, every morning but Monday</p>
-              <h2 id="broth-h">The broth goes on at <em>4:30</em></h2>
-              <p className={s.brothLede}>
+              <p data-edit="broth.kickerDark" data-edit-max="240" data-edit-multiline className={s.kickerDark}>The pot, every morning but Monday</p>
+              <h2 data-edit="broth.title" data-edit-format="emphasis" data-edit-max="60" id="broth-h">The broth goes on at <em>4:30</em></h2>
+              <p data-edit="broth.brothLede" data-edit-max="240" data-edit-multiline className={s.brothLede}>
                 One stockpot the size of a barrel, on the back burner, from
                 before the street lights go off until the last bowl. This is
                 its day.
@@ -332,27 +344,27 @@ export default function PhoNamPage() {
             />
 
             <ol className={s.pot}>
-              {POT.map((p) => (
+              {POT.map((p, i) => (
                 <li key={p.what}>
                   <p className={s.potTime}>
-                    <span>{p.time}</span>
-                    <small>{p.half}</small>
+                    <span data-edit={`broth.text.${i}`} data-edit-max="60">{p.time}</span>
+                    <small data-edit={`broth.note.${i}`}>{p.half}</small>
                   </p>
                   <div>
-                    <h3>{p.what}</h3>
-                    <p>{p.note}</p>
+                    <h3 data-edit={`broth.title.${i}`} data-edit-max="40">{p.what}</h3>
+                    <p data-edit={`broth.body.${i}`} data-edit-max="240" data-edit-multiline>{p.note}</p>
                   </div>
                 </li>
               ))}
             </ol>
 
             <aside className={s.otherPots} aria-labelledby="pots-h">
-              <h3 id="pots-h" className={s.potsTitle}>The other pots</h3>
+              <h3 data-edit="pots.potsTitle" data-edit-max="40" id="pots-h" className={s.potsTitle}>The other pots</h3>
               <dl className={s.potsList}>
-                {OTHER_POTS.map(([name, note]) => (
+                {OTHER_POTS.map(([name, note], i) => (
                   <div key={name}>
-                    <dt>{name}</dt>
-                    <dd>{note}</dd>
+                    <dt data-edit={`pots.term.${i}`} data-edit-max="28">{name}</dt>
+                    <dd data-edit={`pots.body.${i}`} data-edit-max="200" data-edit-multiline>{note}</dd>
                   </div>
                 ))}
               </dl>
@@ -363,34 +375,34 @@ export default function PhoNamPage() {
         {/* ---------------------------------------------------------- EXTRAS */}
         <section id="extras" className={s.sec} aria-labelledby="extras-h">
           <div className={s.head}>
-            <h2 id="extras-h">Extras, said after the number</h2>
-            <p className={s.headNote}>
+            <h2 data-edit="extras.title" data-edit-max="60" id="extras-h">Extras, said after the number</h2>
+            <p data-edit="extras.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Tell us at the counter, the way the regulars do.
             </p>
           </div>
 
-          <p className={s.sayIt}>Four, large, extra tendon, no onion.</p>
+          <p data-edit="extras.sayIt" data-edit-max="240" data-edit-multiline className={s.sayIt}>Four, large, extra tendon, no onion.</p>
 
           <div className={s.extrasGrid}>
             <ul className={s.extras}>
-              {EXTRAS.map(([name, price]) => (
+              {EXTRAS.map(([name, price], i) => (
                 <li key={name}>
-                  <span className={s.extraPrice}>{price}</span>
-                  <span className={s.extraName}>{name}</span>
+                  <span data-edit={`extras.extraPrice.${i}`} data-edit-max="60" className={s.extraPrice}>{price}</span>
+                  <span data-edit={`extras.extraName.${i}`} data-edit-max="60" className={s.extraName}>{name}</span>
                 </li>
               ))}
             </ul>
 
             <div className={s.drinks}>
-              <h3 className={s.groupTitle}>To drink</h3>
+              <h3 data-edit="extras.groupTitle" data-edit-max="40" className={s.groupTitle}>To drink</h3>
               <ul>
-                {DRINKS.map(([vn, en, price]) => (
+                {DRINKS.map(([vn, en, price], i) => (
                   <li key={vn}>
                     <div>
-                      <strong>{vn}</strong>
-                      <span>{en}</span>
+                      <strong data-edit={`extras.emphasis.${i}`}>{vn}</strong>
+                      <span data-edit={`extras.text.${i}`} data-edit-max="60">{en}</span>
                     </div>
-                    <span className={s.price}>{price}</span>
+                    <span data-edit={`extras.price.${i}`} data-edit-max="60" className={s.price}>{price}</span>
                   </li>
                 ))}
               </ul>
@@ -402,18 +414,18 @@ export default function PhoNamPage() {
         <section id="table" className={s.table} aria-labelledby="table-h">
           <div className={s.tableInner}>
             <div>
-              <h2 id="table-h">On every table</h2>
+              <h2 data-edit="table.title" data-edit-max="60" id="table-h">On every table</h2>
               <ul className={s.chips}>
-                {ON_TABLE.map((t) => (
-                  <li key={t}>{t}</li>
+                {ON_TABLE.map((t, i) => (
+                  <li data-edit={`table.item.${i}`} data-edit-max="80" key={t}>{t}</li>
                 ))}
               </ul>
-              <p className={s.tableNote}>
+              <p data-edit="table.tableNote" data-edit-max="240" data-edit-multiline className={s.tableNote}>
                 Chopsticks and a soup spoon at every place. Forks at the
                 counter, no questions asked. Napkins are in the tin; take a
                 handful, you will need them.
               </p>
-              <div className={s.tray} aria-hidden="true">
+              <div data-edit-pattern="table.field" data-edit-roles="transparent,0,2,3,4" className={s.tray} aria-hidden="true">
                 <TabbiedPattern
                   pattern={rimband}
                   palette={RIMS}
@@ -426,10 +438,10 @@ export default function PhoNamPage() {
               </div>
             </div>
             <div>
-              <h3 className={s.groupTitle}>How we would eat it</h3>
+              <h3 data-edit="table.groupTitle" data-edit-max="40" className={s.groupTitle}>How we would eat it</h3>
               <ol className={s.how}>
-                {HOW.map((h) => (
-                  <li key={h}>{h}</li>
+                {HOW.map((h, i) => (
+                  <li data-edit={`table.item2.${i}`} data-edit-max="80" key={h}>{h}</li>
                 ))}
               </ol>
             </div>
@@ -441,8 +453,8 @@ export default function PhoNamPage() {
         <section id="hours" className={s.hoursBand} aria-labelledby="hours-h">
           <div className={s.hoursInner}>
             <div className={s.head}>
-              <h2 id="hours-h">Kitchen hours</h2>
-              <p className={s.headNote}>
+              <h2 data-edit="hours.title" data-edit-max="60" id="hours-h">Kitchen hours</h2>
+              <p data-edit="hours.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 The first column is when Lan lights the burner. The last bowl
                 is the time below or the moment the pot runs dry, whichever
                 comes first. Most nights it is the time.
@@ -450,22 +462,22 @@ export default function PhoNamPage() {
             </div>
 
             <table className={s.hours}>
-              <caption className={s.srOnly}>Opening hours and the time the broth goes on, by day</caption>
+              <caption data-edit="hours.srOnly" className={s.srOnly}>Opening hours and the time the broth goes on, by day</caption>
               <thead>
                 <tr>
-                  <th scope="col">Day</th>
-                  <th scope="col">Broth on</th>
-                  <th scope="col">Doors</th>
-                  <th scope="col">Last bowl</th>
+                  <th data-edit="hours.heading" scope="col">Day</th>
+                  <th data-edit="hours.heading2" scope="col">Broth on</th>
+                  <th data-edit="hours.heading3" scope="col">Doors</th>
+                  <th data-edit="hours.heading4" scope="col">Last bowl</th>
                 </tr>
               </thead>
               <tbody>
-                {HOURS.map((h) => (
+                {HOURS.map((h, i) => (
                   <tr key={h.day} className={h.shut ? s.shut : undefined}>
-                    <th scope="row">{h.day}</th>
-                    <td className={s.potCol}>{h.pot}</td>
-                    <td>{h.open}</td>
-                    <td>{h.last}</td>
+                    <th data-edit={`hours.heading5.${i}`} scope="row">{h.day}</th>
+                    <td data-edit={`hours.potCol.${i}`} className={s.potCol}>{h.pot}</td>
+                    <td data-edit={`hours.cell.${i}`}>{h.open}</td>
+                    <td data-edit={`hours.cell2.${i}`}>{h.last}</td>
                   </tr>
                 ))}
               </tbody>
@@ -477,8 +489,8 @@ export default function PhoNamPage() {
         <section id="pickup" className={s.sec} aria-labelledby="pickup-h">
           <div className={s.pickup}>
             <div>
-              <h2 id="pickup-h">Pick-up</h2>
-              <p className={s.prose}>
+              <h2 data-edit="pickup.title" data-edit-max="60" id="pickup-h">Pick-up</h2>
+              <p data-edit="pickup.prose" data-edit-max="240" data-edit-multiline className={s.prose}>
                 Everything on the board travels. The broth goes in its own
                 quart, the noodles, meat and herbs beside it, so nothing is
                 soggy by the time you are home. Bring the broth back to a boil
@@ -487,49 +499,49 @@ export default function PhoNamPage() {
               </p>
               <dl className={s.quarts}>
                 <div>
-                  <dt>Beef broth, frozen, by the quart</dt>
-                  <dd>9.00</dd>
+                  <dt data-edit="pickup.term" data-edit-max="28">Beef broth, frozen, by the quart</dt>
+                  <dd data-edit="pickup.body" data-edit-max="200" data-edit-multiline>9.00</dd>
                 </div>
                 <div>
-                  <dt>Chicken broth, frozen, by the quart</dt>
-                  <dd>8.00</dd>
+                  <dt data-edit="pickup.term2" data-edit-max="28">Chicken broth, frozen, by the quart</dt>
+                  <dd data-edit="pickup.body2" data-edit-max="200" data-edit-multiline>8.00</dd>
                 </div>
                 <div>
-                  <dt>Ten bowls or more</dt>
-                  <dd>Two days' notice</dd>
+                  <dt data-edit="pickup.term3" data-edit-max="28">Ten bowls or more</dt>
+                  <dd data-edit="pickup.body3" data-edit-max="200" data-edit-multiline>Two days' notice</dd>
                 </div>
               </dl>
             </div>
 
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Order ahead</h3>
+              <h3 data-edit="pickup.formTitle" data-edit-max="40" className={s.formTitle}>Order ahead</h3>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="pho-name">Name</label>
+                  <label data-edit="pickup.label" htmlFor="pho-name">Name</label>
                   <input id="pho-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pho-phone">Phone</label>
+                  <label data-edit="pickup.label2" htmlFor="pho-phone">Phone</label>
                   <input id="pho-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pho-time">Pick-up time</label>
+                  <label data-edit="pickup.label3" htmlFor="pho-time">Pick-up time</label>
                   <input id="pho-time" name="time" type="time" min="10:30" max="21:00" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pho-pack">Packing</label>
+                  <label data-edit="pickup.label4" htmlFor="pho-pack">Packing</label>
                   <select id="pho-pack" name="pack" defaultValue="apart">
                     <option value="apart">Broth packed apart</option>
                     <option value="together">Eating it in the car</option>
                   </select>
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="pho-order">Your order, by number</label>
+                  <label data-edit="pickup.label5" htmlFor="pho-order">Your order, by number</label>
                   <textarea id="pho-order" name="order" rows={3} placeholder="2 x No. 4 large, 1 x No. 11" />
                 </div>
               </div>
-              <button className={s.submit} type="submit">Send it to the pass</button>
-              <p className={s.formNote}>Ready in fifteen minutes at the counter's left end. Pay when you collect.</p>
+              <button data-edit="pickup.submit" data-edit-max="24" className={s.submit} type="submit">Send it to the pass</button>
+              <p data-edit="pickup.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>Ready in fifteen minutes at the counter's left end. Pay when you collect.</p>
             </form>
           </div>
         </section>
@@ -537,18 +549,18 @@ export default function PhoNamPage() {
         {/* ---------------------------------------------------------- FAMILY */}
         <section className={s.sec} aria-labelledby="family-h">
           <div className={s.head}>
-            <h2 id="family-h">Behind the counter</h2>
-            <p className={s.headNote}>
+            <h2 data-edit="family.title" data-edit-max="60" id="family-h">Behind the counter</h2>
+            <p data-edit="family.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Lan and Hải opened with one pot and six stools. There are
               thirty-eight seats now and still one pot.
             </p>
           </div>
           <ul className={s.family}>
-            {FAMILY.map(([name, role, note]) => (
+            {FAMILY.map(([name, role, note], i) => (
               <li key={name}>
-                <p className={s.role}>{role}</p>
-                <h3>{name}</h3>
-                <p className={s.note}>{note}</p>
+                <p data-edit={`family.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{role}</p>
+                <h3 data-edit={`family.title2.${i}`} data-edit-max="40">{name}</h3>
+                <p data-edit={`family.note.${i}`} data-edit-max="240" data-edit-multiline className={s.note}>{note}</p>
               </li>
             ))}
           </ul>
@@ -558,36 +570,36 @@ export default function PhoNamPage() {
         <section id="find" className={s.sec} aria-labelledby="find-h">
           <div className={s.find}>
             <div>
-              <h2 id="find-h">88 Lantern Street</h2>
-              <p className={s.prose}>
+              <h2 data-edit="find.title" data-edit-max="60" id="find-h">88 Lantern Street</h2>
+              <p data-edit="find.prose" data-edit-max="240" data-edit-multiline className={s.prose}>
                 On the corner of the Canal Market arcade, under the red awning.
                 The 14 bus stops outside; it is two stops from Riverside.
               </p>
             </div>
             <dl className={s.facts}>
               <div>
-                <dt>Call</dt>
+                <dt data-edit="find.term" data-edit-max="28">Call</dt>
                 <dd>
-                  <a href="tel:+15550142288">(555) 014-2288</a>
+                  <a data-edit="find.link" data-edit-max="28" href="tel:+15550142288">(555) 014-2288</a>
                 </dd>
               </div>
               <div>
-                <dt>Write</dt>
+                <dt data-edit="find.term2" data-edit-max="28">Write</dt>
                 <dd>
-                  <a href="mailto:hello@phonam.example">hello@phonam.example</a>
+                  <a data-edit="find.link2" data-edit-max="28" href="mailto:hello@phonam.example">hello@phonam.example</a>
                 </dd>
               </div>
               <div>
-                <dt>Seats</dt>
-                <dd>Thirty-eight, and eight stools at the counter. Two high chairs.</dd>
+                <dt data-edit="find.term3" data-edit-max="28">Seats</dt>
+                <dd data-edit="find.body" data-edit-max="200" data-edit-multiline>Thirty-eight, and eight stools at the counter. Two high chairs.</dd>
               </div>
               <div>
-                <dt>Getting in</dt>
-                <dd>Step-free from the arcade side. One step from the street.</dd>
+                <dt data-edit="find.term4" data-edit-max="28">Getting in</dt>
+                <dd data-edit="find.body2" data-edit-max="200" data-edit-multiline>Step-free from the arcade side. One step from the street.</dd>
               </div>
               <div>
-                <dt>Paying</dt>
-                <dd>Card and cash at the till. No tabs, no checks.</dd>
+                <dt data-edit="find.term5" data-edit-max="28">Paying</dt>
+                <dd data-edit="find.body3" data-edit-max="200" data-edit-multiline>Card and cash at the till. No tabs, no checks.</dd>
               </div>
             </dl>
           </div>
@@ -595,7 +607,7 @@ export default function PhoNamPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.sill} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,4,2,3" className={s.sill} aria-hidden="true">
           <TabbiedPattern
             pattern={bowl}
             palette={SILL}
@@ -607,11 +619,11 @@ export default function PhoNamPage() {
           />
         </div>
         <div className={s.footInner}>
-          <p className={s.footName}>Pho Nam</p>
-          <p>A fictional Vietnamese noodle house. The menu, prices, hours and family are invented.</p>
-          <p>The bowl of pho is a generated picture, drawn in the page's own colors.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Pho Nam</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional Vietnamese noodle house. The menu, prices, hours and family are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The bowl of pho is a generated picture, drawn in the page's own colors.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
         </div>
       </footer>

@@ -138,7 +138,19 @@ const QUESTIONS = [
 
 export default function SteadyHandsMoversPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--kraft': '#d7b98c',
+        '--stencil': '#1e1a15',
+        '--red': '#c3362b',
+        '--board': '#a5794a',
+        '--truck': '#2d5a4c',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="kraft,stencil,red,board,truck"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -148,15 +160,15 @@ export default function SteadyHandsMoversPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Steady Hands</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Steady Hands</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -165,27 +177,27 @@ export default function SteadyHandsMoversPage() {
         {/* ------------------------------------------------------ THE CARTON */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Local moves within 60 miles of Millbrook, since 2009</p>
-            <h1 id="hero-h" className={s.name}>Steady Hands <em>Movers</em></h1>
-            <p className={s.lede}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Local moves within 60 miles of Millbrook, since 2009</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.name}>Steady Hands <em>Movers</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Four trucks, twelve movers, and a crew lead who walks through
               your home before anything leaves it. Priced by the hour, quoted
               in writing, carried like it is ours.
             </p>
             <ul className={s.marks} aria-label="Handling marks">
-              <li className={s.upMark}>This side up</li>
-              <li className={s.fragile}>Fragile</li>
-              <li className={s.care}>Handle with care</li>
+              <li data-edit="hero.upMark" data-edit-max="80" className={s.upMark}>This side up</li>
+              <li data-edit="hero.fragile" data-edit-max="80" className={s.fragile}>Fragile</li>
+              <li data-edit="hero.care" data-edit-max="80" className={s.care}>Handle with care</li>
             </ul>
             <p className={s.actions}>
-              <a className={s.primary} href="#quote">Get a written quote</a>
-              <a className={s.secondary} href="#prices">See prices</a>
+              <a data-edit="hero.primary" data-edit-max="28" className={s.primary} href="#quote">Get a written quote</a>
+              <a data-edit="hero.secondary" data-edit-max="28" className={s.secondary} href="#prices">See prices</a>
             </p>
           </div>
 
           <div className={s.heroRight}>
           <div className={s.stackWrap}>
-            <div className={s.stack} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="1,3,0,3,0,4" className={s.stack} aria-hidden="true">
               <TabbiedPattern
                 pattern={isometry}
                 palette={STACK}
@@ -196,16 +208,16 @@ export default function SteadyHandsMoversPage() {
               />
             </div>
             <div className={s.label}>
-              <p className={s.labelHead}>Local move</p>
+              <p data-edit="hero.labelHead" data-edit-max="240" data-edit-multiline className={s.labelHead}>Local move</p>
               <dl className={s.labelRows}>
-                {LABEL.map(([k, v]) => (
+                {LABEL.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`hero.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.barcode}>SHM 2009 0417 60</p>
+              <p data-edit="hero.barcode" data-edit-max="240" data-edit-multiline className={s.barcode}>SHM 2009 0417 60</p>
             </div>
           </div>
           <Artwork
@@ -218,7 +230,7 @@ export default function SteadyHandsMoversPage() {
         </section>
 
         {/* ------------------------------------------------------ CAUTION */}
-        <div className={s.caution} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,1,2,1" className={s.caution} aria-hidden="true">
           <TabbiedPattern
             pattern={rafter}
             palette={CAUTION}
@@ -233,15 +245,15 @@ export default function SteadyHandsMoversPage() {
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.lot}>
             <p className={s.lotNo}>
-              <span className={s.lotNum}>01</span>
-              <span className={s.lotOf}>of 06</span>
+              <span data-edit="prices.lotNum" data-edit-max="60" className={s.lotNum}>01</span>
+              <span data-edit="prices.lotOf" data-edit-max="60" className={s.lotOf}>of 06</span>
             </p>
             <div>
-              <p className={s.contents}>Contents</p>
-              <h2 id="prices-h">Prices by home size</h2>
+              <p data-edit="prices.contents" data-edit-max="240" data-edit-multiline className={s.contents}>Contents</p>
+              <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Prices by home size</h2>
             </div>
           </div>
-          <p className={s.secNote}>
+          <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
             Most moves land inside the range on the right. We quote your move
             in writing after a video walk-through or a visit, and the quote is
             what you pay unless you add rooms on the day.
@@ -249,33 +261,33 @@ export default function SteadyHandsMoversPage() {
 
           <div className={s.sheet}>
             <table className={s.manifest}>
-              <caption className={s.srOnly}>Crew, truck, time and price by size of home</caption>
+              <caption data-edit="prices.srOnly" className={s.srOnly}>Crew, truck, time and price by size of home</caption>
               <thead>
                 <tr>
-                  <th scope="col">Home</th>
-                  <th scope="col">Crew</th>
-                  <th scope="col">Truck</th>
-                  <th scope="col">Usual time</th>
-                  <th scope="col">Per hour</th>
-                  <th scope="col">Usual total</th>
+                  <th data-edit="prices.heading" scope="col">Home</th>
+                  <th data-edit="prices.heading2" scope="col">Crew</th>
+                  <th data-edit="prices.heading3" scope="col">Truck</th>
+                  <th data-edit="prices.heading4" scope="col">Usual time</th>
+                  <th data-edit="prices.heading5" scope="col">Per hour</th>
+                  <th data-edit="prices.heading6" scope="col">Usual total</th>
                 </tr>
               </thead>
               <tbody>
-                {HOMES.map((h) => (
+                {HOMES.map((h, i) => (
                   <tr key={h.size}>
-                    <th scope="row">{h.size}</th>
-                    <td>{h.crew}</td>
-                    <td>{h.truck}</td>
-                    <td>{h.hours}</td>
-                    <td className={s.rate}>{h.rate}</td>
-                    <td className={s.total}>{h.total}</td>
+                    <th data-edit={`prices.heading7.${i}`} scope="row">{h.size}</th>
+                    <td data-edit={`prices.cell.${i}`}>{h.crew}</td>
+                    <td data-edit={`prices.cell2.${i}`}>{h.truck}</td>
+                    <td data-edit={`prices.cell3.${i}`}>{h.hours}</td>
+                    <td data-edit={`prices.rate.${i}`} className={s.rate}>{h.rate}</td>
+                    <td data-edit={`prices.total.${i}`} className={s.total}>{h.total}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <ul className={s.fine}>
-              {FINE.map((f) => (
-                <li key={f}>{f}</li>
+              {FINE.map((f, i) => (
+                <li data-edit={`prices.item.${i}`} data-edit-max="80" key={f}>{f}</li>
               ))}
             </ul>
           </div>
@@ -285,21 +297,21 @@ export default function SteadyHandsMoversPage() {
         <section id="checklist" className={s.sec} aria-labelledby="checklist-h">
           <div className={s.lot}>
             <p className={s.lotNo}>
-              <span className={s.lotNum}>02</span>
-              <span className={s.lotOf}>of 06</span>
+              <span data-edit="checklist.lotNum" data-edit-max="60" className={s.lotNum}>02</span>
+              <span data-edit="checklist.lotOf" data-edit-max="60" className={s.lotOf}>of 06</span>
             </p>
             <div>
-              <p className={s.contents}>Contents</p>
-              <h2 id="checklist-h">The moving-day checklist</h2>
+              <p data-edit="checklist.contents" data-edit-max="240" data-edit-multiline className={s.contents}>Contents</p>
+              <h2 data-edit="checklist.title" data-edit-max="60" id="checklist-h">The moving-day checklist</h2>
             </div>
           </div>
-          <p className={s.secNote}>
+          <p data-edit="checklist.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
             Twelve things, in the order that saves you the most grief. Tick
             them here if it helps; the page forgets when you close it.
           </p>
 
           <div className={s.checkGrid}>
-            <div className={s.checkField} aria-hidden="true">
+            <div data-edit-pattern="checklist.field" data-edit-roles="1,3,0,3,0,4" className={s.checkField} aria-hidden="true">
               <TabbiedPattern
                 pattern={isometry}
                 palette={STACK}
@@ -311,12 +323,12 @@ export default function SteadyHandsMoversPage() {
             </div>
             {CHECKLIST.map((st, i) => (
               <div key={st.when} className={s.stage}>
-                <h3 className={s.stageWhen}>{st.when}</h3>
+                <h3 data-edit={`checklist.stageWhen.${i}`} data-edit-max="40" className={s.stageWhen}>{st.when}</h3>
                 <ul className={s.ticks}>
                   {st.items.map((it, j) => (
                     <li key={it}>
                       <input id={`shm-${i}-${j}`} type="checkbox" />
-                      <label htmlFor={`shm-${i}-${j}`}>{it}</label>
+                      <label data-edit={`checklist.label.${i}.${j}`} htmlFor={`shm-${i}-${j}`}>{it}</label>
                     </li>
                   ))}
                 </ul>
@@ -327,7 +339,7 @@ export default function SteadyHandsMoversPage() {
 
         {/* -------------------------------------------------------- SUPPLIES */}
         <section id="supplies" className={s.supplies} aria-labelledby="supplies-h">
-          <div className={s.load} aria-hidden="true">
+          <div data-edit-pattern="supplies.field" data-edit-roles="4,0,3,0,1" className={s.load} aria-hidden="true">
             <TabbiedPattern
               pattern={isometry}
               palette={LOAD}
@@ -340,56 +352,56 @@ export default function SteadyHandsMoversPage() {
           <div className={s.suppliesInner}>
             <div className={s.lot}>
               <p className={s.lotNo}>
-                <span className={s.lotNum}>03</span>
-                <span className={s.lotOf}>of 06</span>
+                <span data-edit="supplies.lotNum" data-edit-max="60" className={s.lotNum}>03</span>
+                <span data-edit="supplies.lotOf" data-edit-max="60" className={s.lotOf}>of 06</span>
               </p>
               <div>
-                <p className={s.contents}>Contents</p>
-                <h2 id="supplies-h">Packing boxes, sold by the box</h2>
+                <p data-edit="supplies.contents" data-edit-max="240" data-edit-multiline className={s.contents}>Contents</p>
+                <h2 data-edit="supplies.title" data-edit-max="60" id="supplies-h">Packing boxes, sold by the box</h2>
               </div>
             </div>
-            <p className={s.secNote}>
+            <p data-edit="supplies.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               New, double-taped at the bottom, at the yard or delivered with a
               kit. Bring back any box you did not use or write on, and we pay
               you half.
             </p>
 
             <ul className={s.boxes}>
-              {BOXES.map((b) => (
+              {BOXES.map((b, i) => (
                 <li key={b.name} className={s.boxCard}>
                   <div className={s.drawing} aria-hidden="true">
                     <span className={`${s.carton} ${s[b.shape]}`} />
                   </div>
-                  <h3>{b.name}</h3>
-                  <p className={s.dims}>{b.size}</p>
-                  <p className={s.use}>{b.use}</p>
-                  <p className={s.each}>{b.price}</p>
+                  <h3 data-edit={`supplies.title2.${i}`} data-edit-max="40">{b.name}</h3>
+                  <p data-edit={`supplies.dims.${i}`} data-edit-max="240" data-edit-multiline className={s.dims}>{b.size}</p>
+                  <p data-edit={`supplies.use.${i}`} data-edit-max="240" data-edit-multiline className={s.use}>{b.use}</p>
+                  <p data-edit={`supplies.each.${i}`} data-edit-max="240" data-edit-multiline className={s.each}>{b.price}</p>
                 </li>
               ))}
             </ul>
 
             <div className={s.extras}>
               <div>
-                <h3 className={s.extrasTitle}>Loose supplies</h3>
+                <h3 data-edit="supplies.extrasTitle" data-edit-max="40" className={s.extrasTitle}>Loose supplies</h3>
                 <dl className={s.priceList}>
-                  {LOOSE.map(([k, v]) => (
+                  {LOOSE.map(([k, v], i) => (
                     <div key={k}>
-                      <dt>{k}</dt>
-                      <dd>{v}</dd>
+                      <dt data-edit={`supplies.term.${i}`} data-edit-max="28">{k}</dt>
+                      <dd data-edit={`supplies.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                     </div>
                   ))}
                 </dl>
               </div>
               <div>
-                <h3 className={s.extrasTitle}>Kits, delivered free</h3>
+                <h3 data-edit="supplies.extrasTitle2" data-edit-max="40" className={s.extrasTitle}>Kits, delivered free</h3>
                 <dl className={s.priceList}>
-                  {KITS.map(([k, d, v]) => (
+                  {KITS.map(([k, d, v], i) => (
                     <div key={k}>
                       <dt>
-                        <strong>{k}</strong>
-                        <span>{d}</span>
+                        <strong data-edit={`supplies.emphasis.${i}`}>{k}</strong>
+                        <span data-edit={`supplies.text.${i}`} data-edit-max="60">{d}</span>
                       </dt>
-                      <dd>{v}</dd>
+                      <dd data-edit={`supplies.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                     </div>
                   ))}
                 </dl>
@@ -402,29 +414,29 @@ export default function SteadyHandsMoversPage() {
         <section id="crew" className={s.sec} aria-labelledby="crew-h">
           <div className={s.lot}>
             <p className={s.lotNo}>
-              <span className={s.lotNum}>04</span>
-              <span className={s.lotOf}>of 06</span>
+              <span data-edit="crew.lotNum" data-edit-max="60" className={s.lotNum}>04</span>
+              <span data-edit="crew.lotOf" data-edit-max="60" className={s.lotOf}>of 06</span>
             </p>
             <div>
-              <p className={s.contents}>Contents</p>
-              <h2 id="crew-h">Crew leads and drivers</h2>
+              <p data-edit="crew.contents" data-edit-max="240" data-edit-multiline className={s.contents}>Contents</p>
+              <h2 data-edit="crew.title" data-edit-max="60" id="crew-h">Crew leads and drivers</h2>
             </div>
           </div>
-          <p className={s.secNote}>
+          <p data-edit="crew.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
             Everyone on the truck is on our payroll, background-checked and
             trained in the yard for two weeks before their first move. No day
             labor, ever.
           </p>
           <ul className={s.crew}>
-            {CREW.map((m) => (
+            {CREW.map((m, i) => (
               <li key={m.name} className={s.badge}>
                 <p className={s.badgeTop}>
-                  <span className={s.badgeNo}>{m.no}</span>
-                  <span className={s.badgeSince}>{m.since}</span>
+                  <span data-edit={`crew.badgeNo.${i}`} data-edit-max="60" className={s.badgeNo}>{m.no}</span>
+                  <span data-edit={`crew.badgeSince.${i}`} data-edit-max="60" className={s.badgeSince}>{m.since}</span>
                 </p>
-                <h3>{m.name}</h3>
-                <p className={s.job}>{m.job}</p>
-                <p className={s.note}>{m.note}</p>
+                <h3 data-edit={`crew.title2.${i}`} data-edit-max="40">{m.name}</h3>
+                <p data-edit={`crew.job.${i}`} data-edit-max="240" data-edit-multiline className={s.job}>{m.job}</p>
+                <p data-edit={`crew.note.${i}`} data-edit-max="240" data-edit-multiline className={s.note}>{m.note}</p>
               </li>
             ))}
           </ul>
@@ -434,31 +446,31 @@ export default function SteadyHandsMoversPage() {
         <section id="questions" className={s.sec} aria-labelledby="questions-h">
           <div className={s.lot}>
             <p className={s.lotNo}>
-              <span className={s.lotNum}>05</span>
-              <span className={s.lotOf}>of 06</span>
+              <span data-edit="questions.lotNum" data-edit-max="60" className={s.lotNum}>05</span>
+              <span data-edit="questions.lotOf" data-edit-max="60" className={s.lotOf}>of 06</span>
             </p>
             <div>
-              <p className={s.contents}>Contents</p>
-              <h2 id="questions-h">Pianos, insurance and other questions</h2>
+              <p data-edit="questions.contents" data-edit-max="240" data-edit-multiline className={s.contents}>Contents</p>
+              <h2 data-edit="questions.title" data-edit-max="60" id="questions-h">Pianos, insurance and other questions</h2>
             </div>
           </div>
           <div className={s.faqGrid}>
             <div className={s.faq}>
-              {QUESTIONS.map(([q, a]) => (
+              {QUESTIONS.map(([q, a], i) => (
                 <details key={q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`questions.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`questions.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
             <aside className={s.refuse} aria-labelledby="refuse-h">
-              <h3 id="refuse-h" className={s.refuseTitle}>Not on our truck</h3>
+              <h3 data-edit="refuse.refuseTitle" data-edit-max="40" id="refuse-h" className={s.refuseTitle}>Not on our truck</h3>
               <ul className={s.refuseList}>
-                {REFUSED.map((r) => (
-                  <li key={r}>{r}</li>
+                {REFUSED.map((r, i) => (
+                  <li data-edit={`refuse.item.${i}`} data-edit-max="80" key={r}>{r}</li>
                 ))}
               </ul>
-              <p className={s.refuseNote}>
+              <p data-edit="refuse.refuseNote" data-edit-max="240" data-edit-multiline className={s.refuseNote}>
                 The law says so for the first three, and good sense for the
                 rest. Pets and plants ride with you.
               </p>
@@ -470,12 +482,12 @@ export default function SteadyHandsMoversPage() {
         <section id="quote" className={s.sec} aria-labelledby="quote-h">
           <div className={s.lot}>
             <p className={s.lotNo}>
-              <span className={s.lotNum}>06</span>
-              <span className={s.lotOf}>of 06</span>
+              <span data-edit="quote.lotNum" data-edit-max="60" className={s.lotNum}>06</span>
+              <span data-edit="quote.lotOf" data-edit-max="60" className={s.lotOf}>of 06</span>
             </p>
             <div>
-              <p className={s.contents}>Contents</p>
-              <h2 id="quote-h">A written quote, within a day</h2>
+              <p data-edit="quote.contents" data-edit-max="240" data-edit-multiline className={s.contents}>Contents</p>
+              <h2 data-edit="quote.title" data-edit-max="60" id="quote-h">A written quote, within a day</h2>
             </div>
           </div>
 
@@ -483,15 +495,15 @@ export default function SteadyHandsMoversPage() {
             <form className={s.form} action="#">
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="shm-from">Moving from (zip)</label>
+                  <label data-edit="quote.label" htmlFor="shm-from">Moving from (zip)</label>
                   <input id="shm-from" name="from" type="text" inputMode="numeric" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="shm-to">Moving to (zip)</label>
+                  <label data-edit="quote.label2" htmlFor="shm-to">Moving to (zip)</label>
                   <input id="shm-to" name="to" type="text" inputMode="numeric" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="shm-size">Home size</label>
+                  <label data-edit="quote.label3" htmlFor="shm-size">Home size</label>
                   <select id="shm-size" name="size" defaultValue="1">
                     <option value="0">Studio</option>
                     <option value="1">One bedroom</option>
@@ -501,11 +513,11 @@ export default function SteadyHandsMoversPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="shm-date">Moving date</label>
+                  <label data-edit="quote.label4" htmlFor="shm-date">Moving date</label>
                   <input id="shm-date" name="date" type="date" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="shm-stairs">Stairs or elevator</label>
+                  <label data-edit="quote.label5" htmlFor="shm-stairs">Stairs or elevator</label>
                   <select id="shm-stairs" name="stairs" defaultValue="ground">
                     <option value="ground">Ground floor at both ends</option>
                     <option value="elevator">Elevator</option>
@@ -513,7 +525,7 @@ export default function SteadyHandsMoversPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="shm-pack">Packing</label>
+                  <label data-edit="quote.label6" htmlFor="shm-pack">Packing</label>
                   <select id="shm-pack" name="pack" defaultValue="self">
                     <option value="self">We pack ourselves</option>
                     <option value="fragile">Pack the fragile things</option>
@@ -521,48 +533,48 @@ export default function SteadyHandsMoversPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="shm-name">Name</label>
+                  <label data-edit="quote.label7" htmlFor="shm-name">Name</label>
                   <input id="shm-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="shm-phone">Phone</label>
+                  <label data-edit="quote.label8" htmlFor="shm-phone">Phone</label>
                   <input id="shm-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="shm-big">Anything big, heavy or fragile?</label>
+                  <label data-edit="quote.label9" htmlFor="shm-big">Anything big, heavy or fragile?</label>
                   <textarea id="shm-big" name="big" rows={3} />
                 </div>
               </div>
-              <button className={s.submit} type="submit">Send for a quote</button>
+              <button data-edit="quote.submit" data-edit-max="24" className={s.submit} type="submit">Send for a quote</button>
             </form>
 
             <div className={s.yard}>
-              <h3 className={s.yardTitle}>The yard</h3>
-              <p className={s.address}>
+              <h3 data-edit="quote.yardTitle" data-edit-max="40" className={s.yardTitle}>The yard</h3>
+              <p data-edit="quote.body4" data-edit-max="240" data-edit-multiline className={s.address}>
                 1400 Tannery Road, Unit 6
                 <br />
                 Millbrook
               </p>
               <p className={s.address}>
-                <a href="tel:+15550126680">(555) 012-6680</a>
+                <a data-edit="quote.link" data-edit-max="28" href="tel:+15550126680">(555) 012-6680</a>
                 <br />
-                <a href="mailto:moves@steadyhands.example">moves@steadyhands.example</a>
+                <a data-edit="quote.link2" data-edit-max="28" href="mailto:moves@steadyhands.example">moves@steadyhands.example</a>
               </p>
               <dl className={s.priceList}>
                 <div>
-                  <dt>Office</dt>
-                  <dd>Mon to Sat, 7 am to 7 pm</dd>
+                  <dt data-edit="quote.term" data-edit-max="28">Office</dt>
+                  <dd data-edit="quote.body" data-edit-max="200" data-edit-multiline>Mon to Sat, 7 am to 7 pm</dd>
                 </div>
                 <div>
-                  <dt>Moves start</dt>
-                  <dd>8 am or 1 pm</dd>
+                  <dt data-edit="quote.term2" data-edit-max="28">Moves start</dt>
+                  <dd data-edit="quote.body2" data-edit-max="200" data-edit-multiline>8 am or 1 pm</dd>
                 </div>
                 <div>
-                  <dt>Box pickup</dt>
-                  <dd>Mon to Sat, 8 am to 5 pm</dd>
+                  <dt data-edit="quote.term3" data-edit-max="28">Box pickup</dt>
+                  <dd data-edit="quote.body3" data-edit-max="200" data-edit-multiline>Mon to Sat, 8 am to 5 pm</dd>
                 </div>
               </dl>
-              <p className={s.small}>
+              <p data-edit="quote.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 State mover license M-20417. Fully insured for general liability
                 and cargo; certificates for your building on request.
               </p>
@@ -572,7 +584,7 @@ export default function SteadyHandsMoversPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,1,2,1" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={rafter}
             palette={CAUTION}
@@ -582,12 +594,12 @@ export default function SteadyHandsMoversPage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Steady Hands Movers</p>
-        <p>A fictional moving company. The crew, trucks, prices and license number are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Steady Hands Movers</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional moving company. The crew, trucks, prices and license number are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
-        <p>The truck is a generated picture, drawn in the page's own colors.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The truck is a generated picture, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

@@ -203,7 +203,19 @@ const FINE_PRINT = [
 
 export default function DelanceyDeliPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f6f2e9',
+        '--ink': '#25221e',
+        '--tile': '#1f4033',
+        '--red': '#c63b2c',
+        '--mustard': '#e0a530',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,tile,red,mustard"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -213,19 +225,19 @@ export default function DelanceyDeliPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Delancey Deli</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Delancey Deli</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <p className={s.serving}>
-          <span className={s.servingLabel}>Now serving</span>
-          <span className={s.servingNo}>47</span>
+          <span data-edit="bar.servingLabel" data-edit-max="60" className={s.servingLabel}>Now serving</span>
+          <span data-edit="bar.servingNo" data-edit-max="60" className={s.servingNo}>47</span>
         </p>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -236,33 +248,33 @@ export default function DelanceyDeliPage() {
             right, hanging on the tiled wall behind the counter. */}
         <section className={`${s.wall} ${s.hero}`} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Sandwiches, soups and smoked fish. 88 Delancey Row, since 1961.</p>
-            <h1 id="hero-h" className={s.heroTitle}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Sandwiches, soups and smoked fish. 88 Delancey Row, since 1961.</p>
+            <h1 data-edit="receipt.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
               Cut to order, <em>by hand.</em>
             </h1>
-            <p className={s.heroLead}>
+            <p data-edit="hero.heroLead" data-edit-max="240" data-edit-multiline className={s.heroLead}>
               Pastrami smoked in the basement, sliced warm at the counter, piled
               on rye from the bakery across the street. Take a number, ask for a
               taste, and sit wherever there is a pickle bowl.
             </p>
             <ul className={s.heroFacts}>
               <li>
-                <span className={s.factNo}>14 hr</span>
-                <span className={s.factLabel}>in the smoker</span>
+                <span data-edit="hero.factNo" data-edit-max="60" className={s.factNo}>14 hr</span>
+                <span data-edit="hero.factLabel" data-edit-max="60" className={s.factLabel}>in the smoker</span>
               </li>
               <li>
-                <span className={s.factNo}>1/2 lb</span>
-                <span className={s.factLabel}>on every sandwich</span>
+                <span data-edit="hero.factNo2" data-edit-max="60" className={s.factNo}>1/2 lb</span>
+                <span data-edit="hero.factLabel2" data-edit-max="60" className={s.factLabel}>on every sandwich</span>
               </li>
               <li>
-                <span className={s.factNo}>0.00</span>
-                <span className={s.factLabel}>for the pickles</span>
+                <span data-edit="hero.factNo3" data-edit-max="60" className={s.factNo}>0.00</span>
+                <span data-edit="hero.factLabel3" data-edit-max="60" className={s.factLabel}>for the pickles</span>
               </li>
             </ul>
           </div>
 
           <div className={s.heroTicket}>
-            <div className={s.heroTiles} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,0,0,0,0,4" className={s.heroTiles} aria-hidden="true">
               <TabbiedPattern
                 pattern={dotmatrix}
                 palette={WALL}
@@ -274,47 +286,47 @@ export default function DelanceyDeliPage() {
             </div>
             <div className={s.rail} aria-hidden="true" />
             <article className={`${s.receipt} ${s.receiptHero}`} aria-label="The house order">
-              <p className={s.rcptShop}>Delancey Deli</p>
-              <p className={s.rcptSmall}>88 Delancey Row, Lower Mill</p>
-              <p className={s.rcptSmall}>(555) 014-2290</p>
+              <p data-edit="receipt.rcptShop" data-edit-max="240" data-edit-multiline className={s.rcptShop}>Delancey Deli</p>
+              <p data-edit="receipt.rcptSmall" data-edit-max="240" data-edit-multiline className={s.rcptSmall}>88 Delancey Row, Lower Mill</p>
+              <p data-edit="receipt.rcptSmall2" data-edit-max="240" data-edit-multiline className={s.rcptSmall}>(555) 014-2290</p>
               <hr className={s.tear} />
               <p className={s.rcptMeta}>
-                <span>Order 0001</span>
-                <span>Counter</span>
+                <span data-edit="receipt.text" data-edit-max="60">Order 0001</span>
+                <span data-edit="receipt.text2" data-edit-max="60">Counter</span>
               </p>
               <p className={s.rcptMeta}>
-                <span>Slicer 02 Rosa</span>
-                <span>12:04 pm</span>
+                <span data-edit="receipt.text3" data-edit-max="60">Slicer 02 Rosa</span>
+                <span data-edit="receipt.text4" data-edit-max="60">12:04 pm</span>
               </p>
               <hr className={s.tear} />
               <ul className={s.lines}>
-                {HOUSE.map((l) => (
+                {HOUSE.map((l, i) => (
                   <li key={l.item}>
-                    <span className={s.qty}>{l.qty}</span>
-                    <span className={s.item}>{l.item}</span>
-                    <span className={s.price}>{l.price}</span>
-                    <span className={s.lineNote}>{l.note}</span>
+                    <span data-edit={`receipt.qty.${i}`} data-edit-max="60" className={s.qty}>{l.qty}</span>
+                    <span data-edit={`receipt.item.${i}`} data-edit-max="60" className={s.item}>{l.item}</span>
+                    <span data-edit={`receipt.price.${i}`} data-edit-max="60" className={s.price}>{l.price}</span>
+                    <span data-edit={`receipt.lineNote.${i}`} data-edit-max="60" className={s.lineNote}>{l.note}</span>
                   </li>
                 ))}
               </ul>
               <hr className={s.tear} />
               <dl className={s.totals}>
                 <div>
-                  <dt>Subtotal</dt>
-                  <dd>28.75</dd>
+                  <dt data-edit="receipt.term" data-edit-max="28">Subtotal</dt>
+                  <dd data-edit="receipt.body" data-edit-max="200" data-edit-multiline>28.75</dd>
                 </div>
                 <div>
-                  <dt>Tax 8.875%</dt>
-                  <dd>2.55</dd>
+                  <dt data-edit="receipt.term2" data-edit-max="28">Tax 8.875%</dt>
+                  <dd data-edit="receipt.body2" data-edit-max="200" data-edit-multiline>2.55</dd>
                 </div>
                 <div className={s.total}>
-                  <dt>Total</dt>
-                  <dd>31.30</dd>
+                  <dt data-edit="receipt.term3" data-edit-max="28">Total</dt>
+                  <dd data-edit="receipt.body3" data-edit-max="200" data-edit-multiline>31.30</dd>
                 </div>
               </dl>
               <hr className={s.tear} />
-              <p className={s.rcptThanks}>Thank you. Come hungry.</p>
-              <p className={s.stamp}>Paid</p>
+              <p data-edit="receipt.rcptThanks" data-edit-max="240" data-edit-multiline className={s.rcptThanks}>Thank you. Come hungry.</p>
+              <p data-edit="receipt.stamp" data-edit-max="240" data-edit-multiline className={s.stamp}>Paid</p>
             </article>
             <div className={s.sandwich}>
               <Artwork
@@ -332,8 +344,8 @@ export default function DelanceyDeliPage() {
         <section id="board" className={`${s.wall} ${s.board}`} aria-labelledby="board-h">
           <div className={s.inner}>
             <div className={s.wallHead}>
-              <h2 id="board-h" className={s.wallTitle}>The board</h2>
-              <p className={s.wallNote}>
+              <h2 data-edit="board.wallTitle" data-edit-max="60" id="board-h" className={s.wallTitle}>The board</h2>
+              <p data-edit="board.wallNote" data-edit-max="240" data-edit-multiline className={s.wallNote}>
                 Every sandwich is half a pound of meat on two slices of bread,
                 with a pickle. Order by number if you like; the slicers know them.
               </p>
@@ -342,46 +354,46 @@ export default function DelanceyDeliPage() {
           <div className={s.railWide} aria-hidden="true" />
           <div className={`${s.inner} ${s.tickets}`}>
             <article className={s.receipt} aria-labelledby="hot-h">
-              <h3 id="hot-h" className={s.rcptHead}>Hot</h3>
-              <p className={s.rcptSmall}>Sliced warm, on rye unless you say</p>
+              <h3 data-edit="hot.rcptHead" data-edit-max="40" id="hot-h" className={s.rcptHead}>Hot</h3>
+              <p data-edit="hot.rcptSmall" data-edit-max="240" data-edit-multiline className={s.rcptSmall}>Sliced warm, on rye unless you say</p>
               <hr className={s.tear} />
               <ul className={s.menu}>
-                {HOT.map((l) => (
+                {HOT.map((l, i) => (
                   <li key={l.no}>
-                    <span className={s.no}>{l.no}</span>
-                    <span className={s.item}>{l.item}</span>
-                    <span className={s.price}>{l.price}</span>
-                    <span className={s.lineNote}>{l.note}</span>
+                    <span data-edit={`hot.no.${i}`} data-edit-max="60" className={s.no}>{l.no}</span>
+                    <span data-edit={`hot.item.${i}`} data-edit-max="60" className={s.item}>{l.item}</span>
+                    <span data-edit={`hot.price.${i}`} data-edit-max="60" className={s.price}>{l.price}</span>
+                    <span data-edit={`hot.lineNote.${i}`} data-edit-max="60" className={s.lineNote}>{l.note}</span>
                   </li>
                 ))}
               </ul>
             </article>
             <article className={s.receipt} aria-labelledby="cold-h">
-              <h3 id="cold-h" className={s.rcptHead}>Cold</h3>
-              <p className={s.rcptSmall}>Fish from the case, salads made daily</p>
+              <h3 data-edit="cold.rcptHead" data-edit-max="40" id="cold-h" className={s.rcptHead}>Cold</h3>
+              <p data-edit="cold.rcptSmall" data-edit-max="240" data-edit-multiline className={s.rcptSmall}>Fish from the case, salads made daily</p>
               <hr className={s.tear} />
               <ul className={s.menu}>
-                {COLD.map((l) => (
+                {COLD.map((l, i) => (
                   <li key={l.no}>
-                    <span className={s.no}>{l.no}</span>
-                    <span className={s.item}>{l.item}</span>
-                    <span className={s.price}>{l.price}</span>
-                    <span className={s.lineNote}>{l.note}</span>
+                    <span data-edit={`cold.no.${i}`} data-edit-max="60" className={s.no}>{l.no}</span>
+                    <span data-edit={`cold.item.${i}`} data-edit-max="60" className={s.item}>{l.item}</span>
+                    <span data-edit={`cold.price.${i}`} data-edit-max="60" className={s.price}>{l.price}</span>
+                    <span data-edit={`cold.lineNote.${i}`} data-edit-max="60" className={s.lineNote}>{l.note}</span>
                   </li>
                 ))}
               </ul>
             </article>
             <article className={s.receipt} aria-labelledby="sides-h">
-              <h3 id="sides-h" className={s.rcptHead}>On the side</h3>
-              <p className={s.rcptSmall}>Soup from 10, knishes all day</p>
+              <h3 data-edit="sides.rcptHead" data-edit-max="40" id="sides-h" className={s.rcptHead}>On the side</h3>
+              <p data-edit="sides.rcptSmall" data-edit-max="240" data-edit-multiline className={s.rcptSmall}>Soup from 10, knishes all day</p>
               <hr className={s.tear} />
               <ul className={s.menu}>
-                {SIDES.map((l) => (
+                {SIDES.map((l, i) => (
                   <li key={l.no}>
-                    <span className={s.no}>{l.no}</span>
-                    <span className={s.item}>{l.item}</span>
-                    <span className={s.price}>{l.price}</span>
-                    <span className={s.lineNote}>{l.note}</span>
+                    <span data-edit={`sides.no.${i}`} data-edit-max="60" className={s.no}>{l.no}</span>
+                    <span data-edit={`sides.item.${i}`} data-edit-max="60" className={s.item}>{l.item}</span>
+                    <span data-edit={`sides.price.${i}`} data-edit-max="60" className={s.price}>{l.price}</span>
+                    <span data-edit={`sides.lineNote.${i}`} data-edit-max="60" className={s.lineNote}>{l.note}</span>
                   </li>
                 ))}
               </ul>
@@ -390,7 +402,7 @@ export default function DelanceyDeliPage() {
         </section>
 
         {/* The tiled frieze between the wall and the order pad. */}
-        <div className={s.frieze} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,4,0,4,3" className={s.frieze} aria-hidden="true">
           <TabbiedPattern
             pattern={dotmatrix}
             palette={STRIP}
@@ -407,40 +419,40 @@ export default function DelanceyDeliPage() {
         <section id="build" className={s.pad} aria-labelledby="build-h">
           <div className={`${s.inner} ${s.padGrid}`}>
             <div>
-              <p className={s.padKicker}>Order slip</p>
-              <h2 id="build-h" className={s.padTitle}>Build one yourself</h2>
-              <p className={s.padLead}>
+              <p data-edit="build.padKicker" data-edit-max="240" data-edit-multiline className={s.padKicker}>Order slip</p>
+              <h2 data-edit="build.padTitle" data-edit-max="60" id="build-h" className={s.padTitle}>Build one yourself</h2>
+              <p data-edit="build.padLead" data-edit-max="240" data-edit-multiline className={s.padLead}>
                 Tick your way down the slip and send it ahead: we slice it when
                 you walk in, so it is warm, and you skip the number.
               </p>
               <dl className={s.padRules}>
                 <div>
-                  <dt>Base</dt>
-                  <dd>$4.00 for the bread, the pickle and the slicer's time.</dd>
+                  <dt data-edit="build.term" data-edit-max="28">Base</dt>
+                  <dd data-edit="build.body" data-edit-max="200" data-edit-multiline>$4.00 for the bread, the pickle and the slicer's time.</dd>
                 </div>
                 <div>
-                  <dt>Meat</dt>
-                  <dd>By the quarter pound. Two quarters is a normal sandwich; three is a Delancey.</dd>
+                  <dt data-edit="build.term2" data-edit-max="28">Meat</dt>
+                  <dd data-edit="build.body2" data-edit-max="200" data-edit-multiline>By the quarter pound. Two quarters is a normal sandwich; three is a Delancey.</dd>
                 </div>
                 <div>
-                  <dt>Pick-up</dt>
-                  <dd>Any time we are open, at the end of the counter under the clock.</dd>
+                  <dt data-edit="build.term3" data-edit-max="28">Pick-up</dt>
+                  <dd data-edit="build.body3" data-edit-max="200" data-edit-multiline>Any time we are open, at the end of the counter under the clock.</dd>
                 </div>
               </dl>
-              <h3 className={s.regularsTitle}>What the regulars tick</h3>
+              <h3 data-edit="build.regularsTitle" data-edit-max="40" className={s.regularsTitle}>What the regulars tick</h3>
               <ul className={s.regulars}>
-                {REGULARS.map(([name, combo]) => (
+                {REGULARS.map(([name, combo], i) => (
                   <li key={name}>
-                    <span className={s.regName}>{name}</span>
-                    <span className={s.regCombo}>{combo}</span>
+                    <span data-edit={`build.regName.${i}`} data-edit-max="60" className={s.regName}>{name}</span>
+                    <span data-edit={`build.regCombo.${i}`} data-edit-max="60" className={s.regCombo}>{combo}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             <form className={`${s.receipt} ${s.slip}`} action="#">
-              <p className={s.rcptShop}>Order slip</p>
-              <p className={s.rcptSmall}>No. 0048, send ahead</p>
+              <p data-edit="build.rcptShop" data-edit-max="240" data-edit-multiline className={s.rcptShop}>Order slip</p>
+              <p data-edit="build.rcptSmall" data-edit-max="240" data-edit-multiline className={s.rcptSmall}>No. 0048, send ahead</p>
               <hr className={s.tear} />
               {BUILD.map((step, i) => (
                 <fieldset key={step.name} className={s.step}>
@@ -454,33 +466,33 @@ export default function DelanceyDeliPage() {
                           name={step.kind === 'radio' ? step.name : `${step.name}-${j}`}
                           defaultChecked={step.kind === 'radio' && j === 0}
                         />
-                        <label htmlFor={`dd-${step.name}-${j}`}>{c.label}</label>
-                        <span className={s.price}>{c.price}</span>
+                        <label data-edit={`build.label.${i}.${j}`} htmlFor={`dd-${step.name}-${j}`}>{c.label}</label>
+                        <span data-edit={`build.price.${i}.${j}`} data-edit-max="60" className={s.price}>{c.price}</span>
                       </li>
                     ))}
                   </ul>
                 </fieldset>
               ))}
               <fieldset className={s.step}>
-                <legend className={s.legend}>5. How much</legend>
+                <legend data-edit="build.legend" className={s.legend}>5. How much</legend>
                 <div className={s.amounts}>
                   <input id="dd-amt-1" type="radio" name="amount" />
-                  <label htmlFor="dd-amt-1">1/4 lb</label>
+                  <label data-edit="build.label2" htmlFor="dd-amt-1">1/4 lb</label>
                   <input id="dd-amt-2" type="radio" name="amount" defaultChecked />
-                  <label htmlFor="dd-amt-2">1/2 lb</label>
+                  <label data-edit="build.label3" htmlFor="dd-amt-2">1/2 lb</label>
                   <input id="dd-amt-3" type="radio" name="amount" />
-                  <label htmlFor="dd-amt-3">3/4 lb</label>
+                  <label data-edit="build.label4" htmlFor="dd-amt-3">3/4 lb</label>
                 </div>
               </fieldset>
               <hr className={s.tear} />
               <div className={s.slipFields}>
-                <label htmlFor="dd-name">Name for the ticket</label>
+                <label data-edit="build.label5" htmlFor="dd-name">Name for the ticket</label>
                 <input id="dd-name" name="name" type="text" autoComplete="given-name" />
-                <label htmlFor="dd-time">Picking up at</label>
+                <label data-edit="build.label6" htmlFor="dd-time">Picking up at</label>
                 <input id="dd-time" name="time" type="time" />
               </div>
-              <button className={s.send} type="submit">Send to the counter</button>
-              <p className={s.rcptThanks}>Total at the register. We hold it 30 minutes.</p>
+              <button data-edit="build.send" data-edit-max="24" className={s.send} type="submit">Send to the counter</button>
+              <p data-edit="build.rcptThanks" data-edit-max="240" data-edit-multiline className={s.rcptThanks}>Total at the register. We hold it 30 minutes.</p>
             </form>
           </div>
         </section>
@@ -490,31 +502,31 @@ export default function DelanceyDeliPage() {
         <section id="counter" className={`${s.wall} ${s.counter}`} aria-labelledby="counter-h">
           <div className={`${s.inner} ${s.counterGrid}`}>
             <div className={s.numberTicket} aria-hidden="true">
-              <span className={s.ntLabel}>Take a number</span>
-              <span className={s.ntNo}>48</span>
-              <span className={s.ntFoot}>Delancey Deli</span>
+              <span data-edit="counter.ntLabel" data-edit-max="60" className={s.ntLabel}>Take a number</span>
+              <span data-edit="counter.ntNo" data-edit-max="60" className={s.ntNo}>48</span>
+              <span data-edit="counter.ntFoot" data-edit-max="60" className={s.ntFoot}>Delancey Deli</span>
             </div>
             <div className={s.counterText}>
-              <h2 id="counter-h" className={s.wallTitle}>How the counter works</h2>
+              <h2 data-edit="counter.wallTitle" data-edit-max="60" id="counter-h" className={s.wallTitle}>How the counter works</h2>
               <ol className={s.steps}>
                 {STEPS.map(([t, d], i) => (
                   <li key={t}>
                     <span className={s.stepNo}>{`0${i + 1}`}</span>
-                    <h3 className={s.stepTitle}>{t}</h3>
-                    <p className={s.stepText}>{d}</p>
+                    <h3 data-edit={`counter.stepTitle.${i}`} data-edit-max="40" className={s.stepTitle}>{t}</h3>
+                    <p data-edit={`counter.stepText.${i}`} data-edit-max="240" data-edit-multiline className={s.stepText}>{d}</p>
                   </li>
                 ))}
               </ol>
             </div>
             <div className={`${s.receipt} ${s.waits}`}>
-              <h3 className={s.rcptHead}>The wait</h3>
-              <p className={s.rcptSmall}>From pulling a number to ordering</p>
+              <h3 data-edit="counter.rcptHead" data-edit-max="40" className={s.rcptHead}>The wait</h3>
+              <p data-edit="counter.rcptSmall" data-edit-max="240" data-edit-multiline className={s.rcptSmall}>From pulling a number to ordering</p>
               <hr className={s.tear} />
               <dl className={s.waitList}>
-                {WAITS.map(([when, wait]) => (
+                {WAITS.map(([when, wait], i) => (
                   <div key={when}>
-                    <dt>{when}</dt>
-                    <dd>{wait}</dd>
+                    <dt data-edit={`counter.term.${i}`} data-edit-max="28">{when}</dt>
+                    <dd data-edit={`counter.body.${i}`} data-edit-max="200" data-edit-multiline>{wait}</dd>
                   </div>
                 ))}
               </dl>
@@ -527,15 +539,15 @@ export default function DelanceyDeliPage() {
         <section id="catering" className={s.catering} aria-labelledby="catering-h">
           <div className={s.inner}>
             <div className={s.padHeadRow}>
-              <h2 id="catering-h" className={s.padTitle}>Trays for the office, the shiva, the game</h2>
-              <p className={s.padLead}>
+              <h2 data-edit="catering.padTitle" data-edit-max="60" id="catering-h" className={s.padTitle}>Trays for the office, the shiva, the game</h2>
+              <p data-edit="catering.padLead" data-edit-max="240" data-edit-multiline className={s.padLead}>
                 Order by phone or at the register. Miriam writes it in the book,
                 reads it back to you, and it is on the tray at the hour you said.
               </p>
             </div>
           </div>
           <div className={s.liner}>
-            <div className={s.linerField} aria-hidden="true">
+            <div data-edit-pattern="catering.field" data-edit-roles="transparent,0" className={s.linerField} aria-hidden="true">
               <TabbiedPattern
                 pattern={dotmatrix}
                 palette={LINER}
@@ -546,21 +558,21 @@ export default function DelanceyDeliPage() {
               />
             </div>
             <div className={`${s.inner} ${s.trays}`}>
-              {TRAYS.map((t) => (
+              {TRAYS.map((t, i) => (
                 <article key={t.code} className={s.receipt} aria-labelledby={`tray-${t.code}`}>
                   <p className={s.trayCode}>{`Tray ${t.code}`}</p>
-                  <h3 id={`tray-${t.code}`} className={s.rcptHead}>{t.name}</h3>
-                  <p className={s.rcptSmall}>{t.serves}</p>
+                  <h3 data-edit={`receipt.rcptHead.${i}`} data-edit-max="40" id={`tray-${t.code}`} className={s.rcptHead}>{t.name}</h3>
+                  <p data-edit={`receipt.rcptSmall3.${i}`} data-edit-max="240" data-edit-multiline className={s.rcptSmall}>{t.serves}</p>
                   <hr className={s.tear} />
                   <ul className={s.trayLines}>
-                    {t.lines.map((line) => (
-                      <li key={line}>{line}</li>
+                    {t.lines.map((line, i2) => (
+                      <li data-edit={`receipt.item2.${i}.${i2}`} data-edit-max="80" key={line}>{line}</li>
                     ))}
                   </ul>
                   <hr className={s.tear} />
                   <p className={s.trayPrice}>
-                    <span>Tray total</span>
-                    <span>{t.price}</span>
+                    <span data-edit={`receipt.text5.${i}`} data-edit-max="60">Tray total</span>
+                    <span data-edit={`receipt.text6.${i}`} data-edit-max="60">{t.price}</span>
                   </p>
                 </article>
               ))}
@@ -568,15 +580,15 @@ export default function DelanceyDeliPage() {
           </div>
           <div className={s.inner}>
             <dl className={s.terms}>
-              {TRAY_TERMS.map(([t, d]) => (
+              {TRAY_TERMS.map(([t, d], i) => (
                 <div key={t}>
-                  <dt>{t}</dt>
-                  <dd>{d}</dd>
+                  <dt data-edit={`catering.term.${i}`} data-edit-max="28">{t}</dt>
+                  <dd data-edit={`catering.body.${i}`} data-edit-max="200" data-edit-multiline>{d}</dd>
                 </div>
               ))}
             </dl>
             <p className={s.callLine}>
-              <a href="tel:+15550142291">Catering line (555) 014-2291</a>
+              <a data-edit="catering.link" data-edit-max="28" href="tel:+15550142291">Catering line (555) 014-2291</a>
             </p>
           </div>
         </section>
@@ -585,20 +597,20 @@ export default function DelanceyDeliPage() {
         <section id="slicers" className={`${s.wall} ${s.slicers}`} aria-labelledby="slicers-h">
           <div className={s.inner}>
             <div className={s.wallHead}>
-              <h2 id="slicers-h" className={s.wallTitle}>Behind the counter</h2>
-              <p className={s.wallNote}>
+              <h2 data-edit="slicers.wallTitle" data-edit-max="60" id="slicers-h" className={s.wallTitle}>Behind the counter</h2>
+              <p data-edit="slicers.wallNote" data-edit-max="240" data-edit-multiline className={s.wallNote}>
                 Their number is on your ticket. If you liked the way it was cut,
                 ask for the same slicer next time.
               </p>
             </div>
             <ul className={s.badges}>
-              {SLICERS.map((p) => (
+              {SLICERS.map((p, i) => (
                 <li key={p.id} className={s.badge}>
-                  <span className={s.badgeId}>{p.id}</span>
-                  <h3 className={s.badgeName}>{p.name}</h3>
-                  <p className={s.badgeRole}>{p.role}</p>
-                  <p className={s.badgeSince}>{p.since}</p>
-                  <p className={s.badgeNote}>{p.note}</p>
+                  <span data-edit={`slicers.badgeId.${i}`} data-edit-max="60" className={s.badgeId}>{p.id}</span>
+                  <h3 data-edit={`slicers.badgeName.${i}`} data-edit-max="40" className={s.badgeName}>{p.name}</h3>
+                  <p data-edit={`slicers.badgeRole.${i}`} data-edit-max="240" data-edit-multiline className={s.badgeRole}>{p.role}</p>
+                  <p data-edit={`slicers.badgeSince.${i}`} data-edit-max="240" data-edit-multiline className={s.badgeSince}>{p.since}</p>
+                  <p data-edit={`slicers.badgeNote.${i}`} data-edit-max="240" data-edit-multiline className={s.badgeNote}>{p.note}</p>
                 </li>
               ))}
             </ul>
@@ -610,34 +622,34 @@ export default function DelanceyDeliPage() {
         <section id="hours" className={s.visit} aria-labelledby="hours-h">
           <div className={`${s.inner} ${s.visitGrid}`}>
             <div className={`${s.receipt} ${s.hoursTicket}`}>
-              <h2 id="hours-h" className={s.rcptHead}>Hours and where</h2>
+              <h2 data-edit="hours.rcptHead" data-edit-max="60" id="hours-h" className={s.rcptHead}>Hours and where</h2>
               <hr className={s.tear} />
               <dl className={s.hoursList}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`hours.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`hours.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
               <hr className={s.tear} />
-              <p className={s.address}>88 Delancey Row</p>
-              <p className={s.address}>Lower Mill, corner of Grand</p>
-              <p className={s.rcptSmall}>Counter seats 14, tables for 30. No reservations.</p>
+              <p data-edit="hours.address" data-edit-max="240" data-edit-multiline className={s.address}>88 Delancey Row</p>
+              <p data-edit="hours.address2" data-edit-max="240" data-edit-multiline className={s.address}>Lower Mill, corner of Grand</p>
+              <p data-edit="hours.rcptSmall" data-edit-max="240" data-edit-multiline className={s.rcptSmall}>Counter seats 14, tables for 30. No reservations.</p>
               <hr className={s.tear} />
               <p className={s.contact}>
-                <a href="tel:+15550142290">(555) 014-2290</a>
+                <a data-edit="hours.link" data-edit-max="28" href="tel:+15550142290">(555) 014-2290</a>
               </p>
               <p className={s.contact}>
-                <a href="mailto:counter@delanceydeli.example">counter@delanceydeli.example</a>
+                <a data-edit="hours.link2" data-edit-max="28" href="mailto:counter@delanceydeli.example">counter@delanceydeli.example</a>
               </p>
             </div>
             <div className={s.fine}>
-              <h2 className={s.padTitle}>The fine print</h2>
-              {FINE_PRINT.map(([q, a]) => (
+              <h2 data-edit="hours.padTitle" data-edit-max="60" className={s.padTitle}>The fine print</h2>
+              {FINE_PRINT.map(([q, a], i) => (
                 <details key={q} className={s.faq}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`hours.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`hours.body2.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
@@ -646,7 +658,7 @@ export default function DelanceyDeliPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footTiles} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,0,0,0,0,4" className={s.footTiles} aria-hidden="true">
           <TabbiedPattern
             pattern={dotmatrix}
             palette={WALL}
@@ -657,13 +669,13 @@ export default function DelanceyDeliPage() {
           />
         </div>
         <div className={s.footInner}>
-          <p className={s.footName}>Delancey Deli</p>
-          <p className={s.footAddr}>88 Delancey Row, Lower Mill. (555) 014-2290.</p>
-          <p>A fictional sandwich deli. The menu, prices, people and address are invented.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Delancey Deli</p>
+          <p data-edit="footer.footAddr" data-edit-max="240" data-edit-multiline className={s.footAddr}>88 Delancey Row, Lower Mill. (555) 014-2290.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional sandwich deli. The menu, prices, people and address are invented.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
-          <p>The sandwich is a generated image, drawn in the page's own colors.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The sandwich is a generated image, drawn in the page's own colors.</p>
         </div>
       </footer>
     </div>

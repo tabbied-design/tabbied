@@ -85,7 +85,19 @@ const HOURS = [
 
 export default function PanelBreakPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fbf3dc',
+        '--ink': '#16130f',
+        '--red': '#e33b2e',
+        '--yellow': '#ffd23a',
+        '--blue': '#2b6fd8',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,red,yellow,blue"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -96,17 +108,17 @@ export default function PanelBreakPage() {
 
       <header className={s.bar}>
         <a className={s.logo} href="#top">
-          <span className={s.logoTop}>Panel Break</span>
-          <span className={s.logoSub}>Comics</span>
+          <span data-edit="bar.logoTop" data-edit-max="60" className={s.logoTop}>Panel Break</span>
+          <span data-edit="bar.logoSub" data-edit-max="60" className={s.logoSub}>Comics</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -115,7 +127,7 @@ export default function PanelBreakPage() {
         {/* ------------------------------------------------ TIER 1: SPLASH */}
         <section className={s.tierSplash} aria-labelledby="splash-h">
           <div className={`${s.panel} ${s.splash}`}>
-            <div className={s.splashDots} aria-hidden="true">
+            <div data-edit-pattern="splash.field" data-edit-roles="transparent,3" className={s.splashDots} aria-hidden="true">
               <TabbiedPattern
                 pattern={dotfade}
                 palette={SPLASH}
@@ -125,12 +137,12 @@ export default function PanelBreakPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <p className={`${s.caption} ${s.splashCaption}`}>Meanwhile, at 311 Grove Street...</p>
-            <h1 id="splash-h" className={s.splashTitle}>
+            <p data-edit="splash.caption" data-edit-max="240" data-edit-multiline className={`${s.caption} ${s.splashCaption}`}>Meanwhile, at 311 Grove Street...</p>
+            <h1 data-edit="splash.text" data-edit-format="emphasis" data-edit-max="70" id="splash-h" className={s.splashTitle}>
               New comics <span>every Wednesday</span>
             </h1>
             <div className={s.keeperSpot}>
-              <p className={`${s.balloon} ${s.splashBalloon}`}>Doors open at ten. Your pull list is already bagged!</p>
+              <p data-edit="splash.balloon" data-edit-max="240" data-edit-multiline className={`${s.balloon} ${s.splashBalloon}`}>Doors open at ten. Your pull list is already bagged!</p>
               <Artwork
                 slug="panel-break-comics-keeper"
                 alt="A grinning shopkeeper in an apron holding up a fan of comic books"
@@ -141,7 +153,7 @@ export default function PanelBreakPage() {
           </div>
 
           <div className={`${s.panel} ${s.burstPanel}`}>
-            <div className={s.burstLines} aria-hidden="true">
+            <div data-edit-pattern="splash.field2" data-edit-roles="transparent,3" className={s.burstLines} aria-hidden="true">
               <TabbiedPattern
                 pattern={dotfade}
                 palette={BURST}
@@ -152,18 +164,18 @@ export default function PanelBreakPage() {
               />
             </div>
             <div className={s.burst}>
-              <p className={s.burstText}>Open till 9 on Wednesdays!</p>
+              <p data-edit="splash.burstText" data-edit-max="240" data-edit-multiline className={s.burstText}>Open till 9 on Wednesdays!</p>
             </div>
           </div>
 
           <div className={`${s.panel} ${s.introPanel}`}>
-            <p className={s.caption}>Since 2009</p>
-            <p className={s.introText}>
+            <p data-edit="splash.caption2" data-edit-max="240" data-edit-multiline className={s.caption}>Since 2009</p>
+            <p data-edit="splash.introText" data-edit-max="240" data-edit-multiline className={s.introText}>
               A neighborhood comic shop with 11,000 back issues, a kids' corner,
               a back room for drawing, and four people who will talk your ear
               off about what to read next.
             </p>
-            <p className={s.introSfx} aria-hidden="true">Fwip!</p>
+            <p data-edit="splash.body" data-edit-max="240" data-edit-multiline className={s.introSfx} aria-hidden="true">Fwip!</p>
           </div>
         </section>
 
@@ -171,52 +183,52 @@ export default function PanelBreakPage() {
         <section id="this-week" className={`${s.tier} ${s.weekTier}`} aria-labelledby="week-h">
           <div className={`${s.panel} ${s.weekPanel}`}>
             <div className={s.panelHead}>
-              <h2 id="week-h" className={s.h2}>New Comic Wednesday</h2>
-              <p className={s.caption}>Arriving Wednesday, September 30</p>
+              <h2 data-edit="thisWeek.h2" data-edit-max="60" id="week-h" className={s.h2}>New Comic Wednesday</h2>
+              <p data-edit="thisWeek.caption" data-edit-max="240" data-edit-multiline className={s.caption}>Arriving Wednesday, September 30</p>
             </div>
             <ul className={s.week}>
-              {WEEK.map((b) => (
+              {WEEK.map((b, i) => (
                 <li key={b.title} className={s.book}>
-                  <span className={s.bookIssue}>{b.issue}</span>
-                  <span className={s.bookTitle}>{b.title}</span>
-                  <span className={s.bookPub}>{b.publisher}</span>
-                  <span className={s.bookPrice}>{b.price}</span>
-                  {b.flag ? <span className={s.flag}>{b.flag}</span> : null}
+                  <span data-edit={`thisWeek.bookIssue.${i}`} data-edit-max="60" className={s.bookIssue}>{b.issue}</span>
+                  <span data-edit={`thisWeek.bookTitle.${i}`} data-edit-max="60" className={s.bookTitle}>{b.title}</span>
+                  <span data-edit={`thisWeek.bookPub.${i}`} data-edit-max="60" className={s.bookPub}>{b.publisher}</span>
+                  <span data-edit={`thisWeek.bookPrice.${i}`} data-edit-max="60" className={s.bookPrice}>{b.price}</span>
+                  {b.flag ? <span data-edit={`thisWeek.flag.${i}`} data-edit-max="60" className={s.flag}>{b.flag}</span> : null}
                 </li>
               ))}
             </ul>
           </div>
           <div className={`${s.panel} ${s.shelfPanel}`}>
-            <h3 className={s.h3}>Also on the new shelf</h3>
+            <h3 data-edit="thisWeek.h3" data-edit-max="40" className={s.h3}>Also on the new shelf</h3>
             <ul className={s.shelf}>
-              {SHELF.map(([t, what, price]) => (
+              {SHELF.map(([t, what, price], i) => (
                 <li key={t}>
-                  <span className={s.shelfTitle}>{t}</span>
-                  <span className={s.shelfWhat}>{what}</span>
-                  <span className={s.shelfPrice}>{price}</span>
+                  <span data-edit={`thisWeek.shelfTitle.${i}`} data-edit-max="60" className={s.shelfTitle}>{t}</span>
+                  <span data-edit={`thisWeek.shelfWhat.${i}`} data-edit-max="60" className={s.shelfWhat}>{what}</span>
+                  <span data-edit={`thisWeek.shelfPrice.${i}`} data-edit-max="60" className={s.shelfPrice}>{price}</span>
                 </li>
               ))}
             </ul>
-            <p className={`${s.balloon} ${s.balloonUp}`}>Missed a week? Last month's books stay on the rack till Tuesday.</p>
-            <p className={`${s.sfx} ${s.shelfSfx}`} aria-hidden="true">Thwump!</p>
+            <p data-edit="thisWeek.balloon" data-edit-max="240" data-edit-multiline className={`${s.balloon} ${s.balloonUp}`}>Missed a week? Last month's books stay on the rack till Tuesday.</p>
+            <p data-edit="thisWeek.body" data-edit-max="240" data-edit-multiline className={`${s.sfx} ${s.shelfSfx}`} aria-hidden="true">Thwump!</p>
           </div>
         </section>
 
         {/* ---------------------------------------------- TIER 3: PULL LIST */}
         <section id="pull-list" className={s.tier} aria-labelledby="pull-h">
           <div className={s.tierHead}>
-            <h2 id="pull-h" className={s.h2}>The pull list, in three panels</h2>
+            <h2 data-edit="pullList.h2" data-edit-max="60" id="pull-h" className={s.h2}>The pull list, in three panels</h2>
           </div>
           <ol className={s.strip}>
-            {PULL_STEPS.map((p) => (
+            {PULL_STEPS.map((p, i) => (
               <li key={p.caption} className={`${s.panel} ${s.stripPanel}`}>
-                <span className={`${s.caption} ${s.stripCaption}`}>{p.caption}</span>
-                <p className={s.balloon}>{p.text}</p>
+                <span data-edit={`pullList.caption.${i}`} data-edit-max="60" className={`${s.caption} ${s.stripCaption}`}>{p.caption}</span>
+                <p data-edit={`pullList.balloon.${i}`} data-edit-max="240" data-edit-multiline className={s.balloon}>{p.text}</p>
               </li>
             ))}
           </ol>
           <div className={`${s.panel} ${s.bluePanel}`}>
-            <div className={s.blueDots} aria-hidden="true">
+            <div data-edit-pattern="pullList.field" data-edit-roles="transparent,0" className={s.blueDots} aria-hidden="true">
               <TabbiedPattern
                 pattern={dotfade}
                 palette={BLUEDOTS}
@@ -227,22 +239,22 @@ export default function PanelBreakPage() {
               />
             </div>
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Start a pull list</h3>
+              <h3 data-edit="pullList.formTitle" data-edit-max="40" className={s.formTitle}>Start a pull list</h3>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="pb-name">Name</label>
+                  <label data-edit="pullList.label" htmlFor="pb-name">Name</label>
                   <input id="pb-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pb-email">Email</label>
+                  <label data-edit="pullList.label2" htmlFor="pb-email">Email</label>
                   <input id="pb-email" name="email" type="email" autoComplete="email" />
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="pb-titles">Series to pull, one per line</label>
+                  <label data-edit="pullList.label3" htmlFor="pb-titles">Series to pull, one per line</label>
                   <textarea id="pb-titles" name="titles" rows={4} />
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="pb-variants">Variant covers</label>
+                  <label data-edit="pullList.label4" htmlFor="pb-variants">Variant covers</label>
                   <select id="pb-variants" name="variants" defaultValue="none">
                     <option value="none">Main cover only</option>
                     <option value="one">One variant when there is one</option>
@@ -250,8 +262,8 @@ export default function PanelBreakPage() {
                   </select>
                 </div>
               </div>
-              <button className={s.button} type="submit">Pull my books!</button>
-              <p className={s.formNote}>No deposit, no minimum. Three unpicked weeks in a row and we will call.</p>
+              <button data-edit="pullList.button" data-edit-max="24" className={s.button} type="submit">Pull my books!</button>
+              <p data-edit="pullList.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>No deposit, no minimum. Three unpicked weeks in a row and we will call.</p>
             </form>
           </div>
         </section>
@@ -259,15 +271,15 @@ export default function PanelBreakPage() {
         {/* ------------------------------------------------- TIER 4: EVENTS */}
         <section id="events" className={s.tier} aria-labelledby="events-h">
           <div className={s.tierHead}>
-            <h2 id="events-h" className={s.h2}>Coming up at the shop</h2>
+            <h2 data-edit="events.h2" data-edit-max="60" id="events-h" className={s.h2}>Coming up at the shop</h2>
           </div>
           <ul className={s.events}>
-            {EVENTS.map((e) => (
+            {EVENTS.map((e, i) => (
               <li key={e.title} className={`${s.panel} ${s.event}`}>
-                <span className={s.eventDate}>{e.date}</span>
-                <h3 className={s.eventTitle}>{e.title}</h3>
-                <p className={s.eventTime}>{e.time}</p>
-                <p className={s.eventNote}>{e.note}</p>
+                <span data-edit={`events.eventDate.${i}`} data-edit-max="60" className={s.eventDate}>{e.date}</span>
+                <h3 data-edit={`events.eventTitle.${i}`} data-edit-max="40" className={s.eventTitle}>{e.title}</h3>
+                <p data-edit={`events.eventTime.${i}`} data-edit-max="240" data-edit-multiline className={s.eventTime}>{e.time}</p>
+                <p data-edit={`events.eventNote.${i}`} data-edit-max="240" data-edit-multiline className={s.eventNote}>{e.note}</p>
               </li>
             ))}
           </ul>
@@ -276,18 +288,18 @@ export default function PanelBreakPage() {
         {/* ------------------------------------- TIER 5: BACK ISSUES, STAFF */}
         <section id="back-issues" className={`${s.tier} ${s.backTier}`} aria-labelledby="back-h">
           <div className={`${s.panel} ${s.backPanel}`}>
-            <h2 id="back-h" className={s.h2}>Back issues</h2>
+            <h2 data-edit="backIssues.h2" data-edit-max="60" id="back-h" className={s.h2}>Back issues</h2>
             <dl className={s.back}>
-              {BACK.map(([price, what]) => (
+              {BACK.map(([price, what], i) => (
                 <div key={price}>
-                  <dt>{price}</dt>
-                  <dd>{what}</dd>
+                  <dt data-edit={`backIssues.term.${i}`} data-edit-max="28">{price}</dt>
+                  <dd data-edit={`backIssues.body.${i}`} data-edit-max="200" data-edit-multiline>{what}</dd>
                 </div>
               ))}
             </dl>
           </div>
           <div className={`${s.panel} ${s.buyPanel}`}>
-            <div className={s.buyDots} aria-hidden="true">
+            <div data-edit-pattern="backIssues.field" data-edit-roles="transparent,3" className={s.buyDots} aria-hidden="true">
               <TabbiedPattern
                 pattern={dotfade}
                 palette={SPLASH}
@@ -297,26 +309,26 @@ export default function PanelBreakPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <p className={s.caption}>We buy comics</p>
-            <p className={s.buyText}>
+            <p data-edit="backIssues.caption" data-edit-max="240" data-edit-multiline className={s.caption}>We buy comics</p>
+            <p data-edit="backIssues.buyText" data-edit-max="240" data-edit-multiline className={s.buyText}>
               Collections of any size. Bring them in on a Thursday or Friday,
               or send photos and we will come to you. Cash, or 20 percent more
               in store credit.
             </p>
-            <p className={s.sfx} aria-hidden="true">Ka-ching!</p>
+            <p data-edit="backIssues.body" data-edit-max="240" data-edit-multiline className={s.sfx} aria-hidden="true">Ka-ching!</p>
           </div>
         </section>
 
         <section id="staff" className={s.tier} aria-labelledby="staff-h">
           <div className={s.tierHead}>
-            <h2 id="staff-h" className={s.h2}>Staff picks, in their own words</h2>
+            <h2 data-edit="staff.h2" data-edit-max="60" id="staff-h" className={s.h2}>Staff picks, in their own words</h2>
           </div>
           <ul className={s.staff}>
-            {STAFF.map((p) => (
+            {STAFF.map((p, i) => (
               <li key={p.name} className={`${s.panel} ${s.staffPanel}`}>
-                <p className={`${s.balloon} ${s.staffBalloon}`}>{p.says}</p>
-                <p className={s.staffName}>{p.name}</p>
-                <p className={s.staffRole}>{p.role}</p>
+                <p data-edit={`staff.balloon.${i}`} data-edit-max="240" data-edit-multiline className={`${s.balloon} ${s.staffBalloon}`}>{p.says}</p>
+                <p data-edit={`staff.staffName.${i}`} data-edit-max="240" data-edit-multiline className={s.staffName}>{p.name}</p>
+                <p data-edit={`staff.staffRole.${i}`} data-edit-max="240" data-edit-multiline className={s.staffRole}>{p.role}</p>
               </li>
             ))}
           </ul>
@@ -325,28 +337,28 @@ export default function PanelBreakPage() {
         {/* -------------------------------------------------- TIER 6: VISIT */}
         <section id="visit" className={`${s.tier} ${s.visitTier}`} aria-labelledby="visit-h">
           <div className={`${s.panel} ${s.visitPanel}`}>
-            <h2 id="visit-h" className={s.h2}>Find the shop</h2>
-            <p className={s.address}>
+            <h2 data-edit="visit.h2" data-edit-max="60" id="visit-h" className={s.h2}>Find the shop</h2>
+            <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.address}>
               311 Grove Street
               <br />
               Linden Flats
             </p>
-            <p className={s.visitNote}>Next to the laundromat, under the red awning. Bike rack out front, step-free door.</p>
+            <p data-edit="visit.visitNote" data-edit-max="240" data-edit-multiline className={s.visitNote}>Next to the laundromat, under the red awning. Bike rack out front, step-free door.</p>
             <p className={s.contact}>
-              <a href="tel:+15550157781">(555) 015-7781</a>
+              <a data-edit="visit.link" data-edit-max="28" href="tel:+15550157781">(555) 015-7781</a>
             </p>
             <p className={s.contact}>
-              <a href="mailto:dee@panelbreak.example">dee@panelbreak.example</a>
+              <a data-edit="visit.link2" data-edit-max="28" href="mailto:dee@panelbreak.example">dee@panelbreak.example</a>
             </p>
           </div>
           <div className={`${s.panel} ${s.hoursPanel}`}>
-            <p className={s.caption}>Hours</p>
+            <p data-edit="visit.caption" data-edit-max="240" data-edit-multiline className={s.caption}>Hours</p>
             <dl className={s.hours}>
-              {HOURS.map(([d, h, note]) => (
+              {HOURS.map(([d, h, note], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd className={s.hoursTime}>{h}</dd>
-                  <dd className={s.hoursNote}>{note}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`visit.hoursTime.${i}`} data-edit-max="200" data-edit-multiline className={s.hoursTime}>{h}</dd>
+                  <dd data-edit={`visit.hoursNote.${i}`} data-edit-max="200" data-edit-multiline className={s.hoursNote}>{note}</dd>
                 </div>
               ))}
             </dl>
@@ -356,7 +368,7 @@ export default function PanelBreakPage() {
 
       <footer className={s.footer}>
         <div className={`${s.panel} ${s.endPanel}`}>
-          <div className={s.endDots} aria-hidden="true">
+          <div data-edit-pattern="footer.field" data-edit-roles="transparent,2" className={s.endDots} aria-hidden="true">
             <TabbiedPattern
               pattern={dotfade}
               palette={THEEND}
@@ -366,15 +378,15 @@ export default function PanelBreakPage() {
               style={{ position: 'absolute', inset: 0 }}
             />
           </div>
-          <p className={s.theEnd}>The End</p>
-          <p className={`${s.caption} ${s.endCaption}`}>Panel Break Comics</p>
+          <p data-edit="footer.theEnd" data-edit-max="240" data-edit-multiline className={s.theEnd}>The End</p>
+          <p data-edit="footer.caption" data-edit-max="240" data-edit-multiline className={`${s.caption} ${s.endCaption}`}>Panel Break Comics</p>
         </div>
         <div className={s.footText}>
-          <p>A fictional comic book shop. The comics, events and people are invented.</p>
-          <p>The shopkeeper is a generated image, drawn in the page's own colors.</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional comic book shop. The comics, events and people are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The shopkeeper is a generated image, drawn in the page's own colors.</p>
           <p>
             Patterns by{' '}
-            <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+            <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
             .
           </p>
         </div>

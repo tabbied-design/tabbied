@@ -150,7 +150,18 @@ const HOURS = [
 
 export default function SouthpawBoxingPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--bone': '#efe6d2',
+        '--black': '#151311',
+        '--red': '#c8231b',
+        '--canvas': '#bfa57a',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="bone,black,red,canvas"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -160,16 +171,16 @@ export default function SouthpawBoxingPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Southpaw</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Southpaw</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barCta} href="#first">First session free</a>
+        <a data-edit="bar.barCta" data-edit-max="28" className={s.barCta} href="#first">First session free</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -177,7 +188,7 @@ export default function SouthpawBoxingPage() {
       <main id="top">
         {/* ---------------------------------------------------------- POSTER */}
         <section className={s.poster} aria-labelledby="hero-h">
-          <div className={s.band} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,2" className={s.band} aria-hidden="true">
             <TabbiedPattern
               pattern={parity}
               palette={ZIGZAG}
@@ -190,15 +201,15 @@ export default function SouthpawBoxingPage() {
 
           <div className={s.posterInner}>
             <p className={s.billing}>
-              <span>Foundry Street, Arch 9</span>
-              <span>Since 1987</span>
-              <span>Six nights a week</span>
+              <span data-edit="hero.text" data-edit-max="60">Foundry Street, Arch 9</span>
+              <span data-edit="hero.text2" data-edit-max="60">Since 1987</span>
+              <span data-edit="hero.text3" data-edit-max="60">Six nights a week</span>
             </p>
             <div className={s.posterMain}>
               <div className={s.posterType}>
-                <h1 id="hero-h" className={s.name}>Southpaw <em>Boxing Club</em></h1>
-                <p className={s.tagline}>Learn to box</p>
-                <p className={s.sub}>
+                <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.name}>Southpaw <em>Boxing Club</em></h1>
+                <p data-edit="hero.tagline" data-edit-max="240" data-edit-multiline className={s.tagline}>Learn to box</p>
+                <p data-edit="hero.sub" data-edit-max="240" data-edit-multiline className={s.sub}>
                   From your first jab to your first bout, taught by coaches who
                   have been hit for a living. All levels, no attitude.
                 </p>
@@ -210,20 +221,20 @@ export default function SouthpawBoxingPage() {
                   inks={['var(--text)', 'var(--bone)']}
                   className={s.boxer}
                 />
-                <p className={s.sticker}>First session free</p>
+                <p data-edit="hero.sticker" data-edit-max="240" data-edit-multiline className={s.sticker}>First session free</p>
               </div>
             </div>
             <dl className={s.billboard}>
-              {BILLBOARD.map(([label, value]) => (
+              {BILLBOARD.map(([label, value], i) => (
                 <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{value}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{label}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{value}</dd>
                 </div>
               ))}
             </dl>
           </div>
 
-          <div className={s.band} aria-hidden="true">
+          <div data-edit-pattern="hero.field2" data-edit-roles="transparent,1,2" className={s.band} aria-hidden="true">
             <TabbiedPattern
               pattern={parity}
               palette={ZIGZAG}
@@ -238,15 +249,15 @@ export default function SouthpawBoxingPage() {
         {/* ------------------------------------------------------- FIGHT CARD */}
         <section id="card" className={s.sec} aria-labelledby="card-h">
           <div className={s.secHead}>
-            <h2 id="card-h" className={s.h2}>This week's card</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="card.h2" data-edit-max="60" id="card-h" className={s.h2}>This week's card</h2>
+            <p data-edit="card.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every class is a bout. Pick your fight, turn up ten minutes
               before the bell, and we will find you a pair of gloves.
             </p>
           </div>
 
           <article className={s.main}>
-            <div className={s.apron} aria-hidden="true">
+            <div data-edit-pattern="main.field" data-edit-roles="transparent,2,1,2,3" className={s.apron} aria-hidden="true">
               <TabbiedPattern
                 pattern={parity}
                 palette={APRON}
@@ -257,55 +268,55 @@ export default function SouthpawBoxingPage() {
               />
             </div>
             <div className={s.mainBody}>
-              <p className={s.billingLabel}>{MAIN.billing}</p>
+              <p data-edit="main.billingLabel" data-edit-max="240" data-edit-multiline className={s.billingLabel}>{MAIN.billing}</p>
               <div className={s.matchup}>
-                <h3 className={s.mainCls}>{MAIN.cls}</h3>
-                <span className={s.vsBig}>vs</span>
-                <p className={s.mainFoe}>{MAIN.foe}</p>
+                <h3 data-edit="main.mainCls" data-edit-max="40" className={s.mainCls}>{MAIN.cls}</h3>
+                <span data-edit="main.vsBig" data-edit-max="60" className={s.vsBig}>vs</span>
+                <p data-edit="main.mainFoe" data-edit-max="240" data-edit-multiline className={s.mainFoe}>{MAIN.foe}</p>
               </div>
-              <p className={s.mainWhen}>{MAIN.when}</p>
-              <p className={s.mainRounds}>{MAIN.rounds}</p>
-              <p className={s.mainCoach}>{MAIN.coach}</p>
+              <p data-edit="main.mainWhen" data-edit-max="240" data-edit-multiline className={s.mainWhen}>{MAIN.when}</p>
+              <p data-edit="main.mainRounds" data-edit-max="240" data-edit-multiline className={s.mainRounds}>{MAIN.rounds}</p>
+              <p data-edit="main.mainCoach" data-edit-max="240" data-edit-multiline className={s.mainCoach}>{MAIN.coach}</p>
             </div>
           </article>
 
           <ol className={s.bouts}>
-            {UNDERCARD.map((b) => (
+            {UNDERCARD.map((b, i) => (
               <li key={b.cls}>
-                <p className={s.boutBilling}>{b.billing}</p>
-                <h3 className={s.boutCls}>{b.cls}</h3>
-                <span className={s.vs}>vs</span>
-                <p className={s.boutFoe}>{b.foe}</p>
-                <p className={s.boutWhen}>{b.when}</p>
-                <p className={s.boutRounds}>{b.rounds}</p>
-                <p className={s.boutCoach}>{b.coach}</p>
+                <p data-edit={`card.boutBilling.${i}`} data-edit-max="240" data-edit-multiline className={s.boutBilling}>{b.billing}</p>
+                <h3 data-edit={`card.boutCls.${i}`} data-edit-max="40" className={s.boutCls}>{b.cls}</h3>
+                <span data-edit={`card.vs.${i}`} data-edit-max="60" className={s.vs}>vs</span>
+                <p data-edit={`card.boutFoe.${i}`} data-edit-max="240" data-edit-multiline className={s.boutFoe}>{b.foe}</p>
+                <p data-edit={`card.boutWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.boutWhen}>{b.when}</p>
+                <p data-edit={`card.boutRounds.${i}`} data-edit-max="240" data-edit-multiline className={s.boutRounds}>{b.rounds}</p>
+                <p data-edit={`card.boutCoach.${i}`} data-edit-max="240" data-edit-multiline className={s.boutCoach}>{b.coach}</p>
               </li>
             ))}
           </ol>
-          <p className={s.cardFoot}>No classes on Sunday. Card subject to change; the desk has the final word.</p>
+          <p data-edit="card.cardFoot" data-edit-max="240" data-edit-multiline className={s.cardFoot}>No classes on Sunday. Card subject to change; the desk has the final word.</p>
         </section>
 
         {/* ---------------------------------------------------------- CORNERS */}
         <section id="corners" className={s.sec} aria-labelledby="corners-h">
           <div className={s.secHead}>
-            <h2 id="corners-h" className={s.h2}>The corners</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="corners.h2" data-edit-max="60" id="corners-h" className={s.h2}>The corners</h2>
+            <p data-edit="corners.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Three coaches, sixty-seven fights between them, and the
               patience to show you the same jab forty times.
             </p>
           </div>
           <ul className={s.corners}>
-            {COACHES.map((c) => (
+            {COACHES.map((c, i) => (
               <li key={c.name} className={s[c.kind]}>
-                <p className={s.cornerLabel}>{c.corner}</p>
-                <h3 className={s.coachName}>{c.name}</h3>
-                <p className={s.coachNick}>{c.nick}</p>
-                <p className={s.coachRole}>{c.role}</p>
+                <p data-edit={`corners.cornerLabel.${i}`} data-edit-max="240" data-edit-multiline className={s.cornerLabel}>{c.corner}</p>
+                <h3 data-edit={`corners.coachName.${i}`} data-edit-max="40" className={s.coachName}>{c.name}</h3>
+                <p data-edit={`corners.coachNick.${i}`} data-edit-max="240" data-edit-multiline className={s.coachNick}>{c.nick}</p>
+                <p data-edit={`corners.coachRole.${i}`} data-edit-max="240" data-edit-multiline className={s.coachRole}>{c.role}</p>
                 <dl className={s.tape}>
-                  {c.tape.map(([label, value]) => (
+                  {c.tape.map(([label, value], i2) => (
                     <div key={label}>
-                      <dt>{label}</dt>
-                      <dd>{value}</dd>
+                      <dt data-edit={`corners.term.${i}.${i2}`} data-edit-max="28">{label}</dt>
+                      <dd data-edit={`corners.body.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -317,23 +328,23 @@ export default function SouthpawBoxingPage() {
         {/* ------------------------------------------------------------- DUES */}
         <section id="dues" className={s.sec} aria-labelledby="dues-h">
           <div className={s.secHead}>
-            <h2 id="dues-h" className={s.h2}>Ringside prices</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="dues.h2" data-edit-max="60" id="dues-h" className={s.h2}>Ringside prices</h2>
+            <p data-edit="dues.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               No contract and no joining fee. Thirty days' notice to cancel,
               and you can freeze for up to two months a year.
             </p>
           </div>
           <ul className={s.dues}>
-            {DUES.map(([name, price, per, what]) => (
+            {DUES.map(([name, price, per, what], i) => (
               <li key={name}>
-                <p className={s.duesName}>{name}</p>
-                <p className={s.duesPrice}>{price}</p>
-                <p className={s.duesPer}>{per}</p>
-                <p className={s.duesWhat}>{what}</p>
+                <p data-edit={`dues.duesName.${i}`} data-edit-max="240" data-edit-multiline className={s.duesName}>{name}</p>
+                <p data-edit={`dues.duesPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.duesPrice}>{price}</p>
+                <p data-edit={`dues.duesPer.${i}`} data-edit-max="240" data-edit-multiline className={s.duesPer}>{per}</p>
+                <p data-edit={`dues.duesWhat.${i}`} data-edit-max="240" data-edit-multiline className={s.duesWhat}>{what}</p>
               </li>
             ))}
           </ul>
-          <p className={s.duesFoot}>
+          <p data-edit="dues.duesFoot" data-edit-max="240" data-edit-multiline className={s.duesFoot}>
             Gloves and wraps are lent free for your first month. After that,
             bring your own, or buy both at the desk for $45.
           </p>
@@ -343,7 +354,7 @@ export default function SouthpawBoxingPage() {
         <section id="first" className={s.sec} aria-labelledby="first-h">
           <div className={s.ticket}>
             <div className={s.stub}>
-              <div className={s.stubField} aria-hidden="true">
+              <div data-edit-pattern="first.field" data-edit-roles="transparent,1,2,1" className={s.stubField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={stipplefade}
                   palette={HALFTONE}
@@ -353,34 +364,34 @@ export default function SouthpawBoxingPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.admit}>Admit one</p>
+              <p data-edit="first.admit" data-edit-max="240" data-edit-multiline className={s.admit}>Admit one</p>
             </div>
             <div className={s.ticketBody}>
-              <p className={s.ticketKicker}>The first session is on us</p>
-              <h2 id="first-h" className={s.ticketTitle}>Your first round is free</h2>
-              <p className={s.ticketText}>
+              <p data-edit="first.ticketKicker" data-edit-max="240" data-edit-multiline className={s.ticketKicker}>The first session is on us</p>
+              <h2 data-edit="first.ticketTitle" data-edit-max="60" id="first-h" className={s.ticketTitle}>Your first round is free</h2>
+              <p data-edit="first.ticketText" data-edit-max="240" data-edit-multiline className={s.ticketText}>
                 Any Fundamentals class: Monday or Wednesday at 5:30 PM, or
                 Saturday at 10 AM. Coach Dee will wrap your hands, show you a
                 stance and a jab, and you will hit a bag before the hour is
                 out.
               </p>
               <ul className={s.bring}>
-                {BRING.map((item) => (
-                  <li key={item}>{item}</li>
+                {BRING.map((item, i) => (
+                  <li data-edit={`first.item.${i}`} data-edit-max="80" key={item}>{item}</li>
                 ))}
               </ul>
               <form className={s.form} action="#">
                 <div className={s.formGrid}>
                   <div className={s.field}>
-                    <label htmlFor="sp-name">Name</label>
+                    <label data-edit="first.label" htmlFor="sp-name">Name</label>
                     <input id="sp-name" name="name" type="text" autoComplete="name" />
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="sp-phone">Phone</label>
+                    <label data-edit="first.label2" htmlFor="sp-phone">Phone</label>
                     <input id="sp-phone" name="phone" type="tel" autoComplete="tel" />
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="sp-class">Class</label>
+                    <label data-edit="first.label3" htmlFor="sp-class">Class</label>
                     <select id="sp-class" name="class" defaultValue="mon">
                       <option value="mon">Monday, 5:30 PM</option>
                       <option value="wed">Wednesday, 5:30 PM</option>
@@ -388,7 +399,7 @@ export default function SouthpawBoxingPage() {
                     </select>
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="sp-exp">Boxed before?</label>
+                    <label data-edit="first.label4" htmlFor="sp-exp">Boxed before?</label>
                     <select id="sp-exp" name="experience" defaultValue="never">
                       <option value="never">Never</option>
                       <option value="some">A little</option>
@@ -396,7 +407,7 @@ export default function SouthpawBoxingPage() {
                     </select>
                   </div>
                 </div>
-                <button className={s.submit} type="submit">Claim my ticket</button>
+                <button data-edit="first.submit" data-edit-max="24" className={s.submit} type="submit">Claim my ticket</button>
               </form>
             </div>
           </div>
@@ -405,18 +416,18 @@ export default function SouthpawBoxingPage() {
         {/* ------------------------------------------------------------ RULES */}
         <section id="rules" className={s.sec} aria-labelledby="rules-h">
           <div className={s.secHead}>
-            <h2 id="rules-h" className={s.h2}>Rules of the ring</h2>
+            <h2 data-edit="rules.h2" data-edit-max="60" id="rules-h" className={s.h2}>Rules of the ring</h2>
           </div>
           <ol className={s.rules}>
-            {RULES.map((rule) => (
-              <li key={rule}>{rule}</li>
+            {RULES.map((rule, i) => (
+              <li data-edit={`rules.item.${i}`} data-edit-max="80" key={rule}>{rule}</li>
             ))}
           </ol>
         </section>
 
         {/* ------------------------------------------------------------ VENUE */}
         <section id="venue" className={s.venue} aria-labelledby="venue-h">
-          <div className={s.hatch} aria-hidden="true">
+          <div data-edit-pattern="venue.field" data-edit-roles="transparent,1,2,3" className={s.hatch} aria-hidden="true">
             <TabbiedPattern
               pattern={shearpair}
               palette={HATCH}
@@ -428,9 +439,9 @@ export default function SouthpawBoxingPage() {
           </div>
           <div className={s.venueInner}>
             <div>
-              <p className={s.billingLabel}>The venue</p>
-              <h2 id="venue-h" className={s.venueTitle}>Arch 9, Foundry Street</h2>
-              <p className={s.venueText}>
+              <p data-edit="venue.billingLabel" data-edit-max="240" data-edit-multiline className={s.billingLabel}>The venue</p>
+              <h2 data-edit="venue.venueTitle" data-edit-max="60" id="venue-h" className={s.venueTitle}>Arch 9, Foundry Street</h2>
+              <p data-edit="venue.venueText" data-edit-max="240" data-edit-multiline className={s.venueText}>
                 Under the railway, between the tire shop and the bakery. The
                 trains go over every eleven minutes; after a week you stop
                 hearing them. Showers, lockers and bike racks inside.
@@ -438,18 +449,18 @@ export default function SouthpawBoxingPage() {
             </div>
             <div>
               <dl className={s.hours}>
-                {HOURS.map(([day, time]) => (
+                {HOURS.map(([day, time], i) => (
                   <div key={day}>
-                    <dt>{day}</dt>
-                    <dd>{time}</dd>
+                    <dt data-edit={`venue.term.${i}`} data-edit-max="28">{day}</dt>
+                    <dd data-edit={`venue.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                   </div>
                 ))}
               </dl>
               <p className={s.contact}>
-                <a href="tel:+15550193380">(555) 019-3380</a>
+                <a data-edit="venue.link" data-edit-max="28" href="tel:+15550193380">(555) 019-3380</a>
               </p>
               <p className={s.contact}>
-                <a href="mailto:desk@southpawboxing.example">desk@southpawboxing.example</a>
+                <a data-edit="venue.link2" data-edit-max="28" href="mailto:desk@southpawboxing.example">desk@southpawboxing.example</a>
               </p>
             </div>
           </div>
@@ -457,12 +468,12 @@ export default function SouthpawBoxingPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Southpaw Boxing Club</p>
-        <p>A fictional boxing gym. The coaches, records, classes and prices are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Southpaw Boxing Club</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional boxing gym. The coaches, records, classes and prices are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
-        <p>The boxer is a generated image, printed in the page's own colors.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The boxer is a generated image, printed in the page's own colors.</p>
       </footer>
     </div>
   );

@@ -107,7 +107,19 @@ const HOURS = [
 
 export default function KettleAndLeafPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--rice': '#f3efe4',
+        '--sumi': '#2c2e28',
+        '--moss': '#6f7d5c',
+        '--matcha': '#a3ad7e',
+        '--clay': '#b07a55',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="rice,sumi,moss,matcha,clay"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -117,15 +129,15 @@ export default function KettleAndLeafPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Kettle & Leaf</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Kettle & Leaf</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -134,18 +146,18 @@ export default function KettleAndLeafPage() {
         {/* ------------------------------------------------------------ HERO
             A round window onto the brushed field, and a lot of paper. */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <p className={s.side}>Tea room and tea shop, Moss Lane</p>
+          <p data-edit="hero.side" data-edit-max="240" data-edit-multiline className={s.side}>Tea room and tea shop, Moss Lane</p>
           <div className={s.heroText}>
-            <h1 id="hero-h" className={s.title}>Water, leaves, <em>and time.</em></h1>
-            <p className={s.lede}>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>Water, leaves, <em>and time.</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               A room of twelve seats and a counter of tins. We pour nine teas
               at a time, each at its own heat, and sell every one of them by the
               50 grams to take home.
             </p>
-            <a className={s.quiet} href="#teas">Unroll the tea list</a>
+            <a data-edit="hero.quiet" data-edit-max="28" className={s.quiet} href="#teas">Unroll the tea list</a>
           </div>
           <div className={s.windowWrap}>
-            <div className={s.window} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,2,3,4" className={s.window} aria-hidden="true">
               <TabbiedPattern
                 pattern={drybrush}
                 palette={WINDOW}
@@ -164,7 +176,7 @@ export default function KettleAndLeafPage() {
         <section id="teas" className={s.teasSec} aria-labelledby="teas-h">
           <div className={s.scroll}>
             <span className={s.roller} aria-hidden="true" />
-            <div className={s.brocade} aria-hidden="true">
+            <div data-edit-pattern="teas.field" data-edit-roles="transparent,2,4,3,2,1" className={s.brocade} aria-hidden="true">
               <TabbiedPattern
                 pattern={drybrush}
                 palette={BROCADE}
@@ -183,38 +195,38 @@ export default function KettleAndLeafPage() {
                   inks={['var(--text)']}
                   className={s.kyusu}
                 />
-                <h2 id="teas-h">The tea list</h2>
-                <p className={s.scrollNote}>
+                <h2 data-edit="teas.title" data-edit-max="60" id="teas-h">The tea list</h2>
+                <p data-edit="teas.scrollNote" data-edit-max="240" data-edit-multiline className={s.scrollNote}>
                   Water temperature, steep time and how many times the leaf will
                   take more water. We bring the kettle to your table and top it
                   up until you say stop.
                 </p>
               </div>
 
-              {GROUPS.map((g) => (
+              {GROUPS.map((g, i) => (
                 <div key={g.name} className={s.group}>
-                  <p className={s.groupName}>{g.name}</p>
+                  <p data-edit={`teas.groupName.${i}`} data-edit-max="240" data-edit-multiline className={s.groupName}>{g.name}</p>
                   <ul className={s.teas}>
-                    {g.teas.map((t) => (
+                    {g.teas.map((t, i2) => (
                       <li key={t.name}>
-                        <h3 className={s.teaName}>{t.name}</h3>
-                        <p className={s.origin}>{t.origin}</p>
-                        <p className={s.teaNote}>{t.note}</p>
+                        <h3 data-edit={`teas.teaName.${i}.${i2}`} data-edit-max="40" className={s.teaName}>{t.name}</h3>
+                        <p data-edit={`teas.origin.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.origin}>{t.origin}</p>
+                        <p data-edit={`teas.teaNote.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.teaNote}>{t.note}</p>
                         <dl className={s.brewing}>
                           <div>
-                            <dt>Water</dt>
-                            <dd>{t.temp}</dd>
+                            <dt data-edit={`teas.term.${i}.${i2}`} data-edit-max="28">Water</dt>
+                            <dd data-edit={`teas.body.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{t.temp}</dd>
                           </div>
                           <div>
-                            <dt>Steep</dt>
-                            <dd>{t.time}</dd>
+                            <dt data-edit={`teas.term2.${i}.${i2}`} data-edit-max="28">Steep</dt>
+                            <dd data-edit={`teas.body2.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{t.time}</dd>
                           </div>
                           <div>
-                            <dt>Infusions</dt>
-                            <dd>{t.infusions}</dd>
+                            <dt data-edit={`teas.term3.${i}.${i2}`} data-edit-max="28">Infusions</dt>
+                            <dd data-edit={`teas.body3.${i}.${i2}`} data-edit-max="200" data-edit-multiline>{t.infusions}</dd>
                           </div>
                         </dl>
-                        <p className={s.teaPrice}>{t.price}</p>
+                        <p data-edit={`teas.teaPrice.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.teaPrice}>{t.price}</p>
                       </li>
                     ))}
                   </ul>
@@ -222,7 +234,7 @@ export default function KettleAndLeafPage() {
               ))}
             </div>
 
-            <div className={`${s.brocade} ${s.brocadeFoot}`} aria-hidden="true">
+            <div data-edit-pattern="teas.field2" data-edit-roles="transparent,2,4,3,2,1" className={`${s.brocade} ${s.brocadeFoot}`} aria-hidden="true">
               <TabbiedPattern
                 pattern={drybrush}
                 palette={BROCADE}
@@ -239,26 +251,26 @@ export default function KettleAndLeafPage() {
         {/* ------------------------------------------------------ AFTERNOON */}
         <section id="afternoon" className={s.sec} aria-labelledby="afternoon-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Two to five, Wednesday to Sunday</p>
-            <h2 id="afternoon-h">Afternoon tea</h2>
-            <p className={s.secNote}>
+            <p data-edit="afternoon.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Two to five, Wednesday to Sunday</p>
+            <h2 data-edit="afternoon.title" data-edit-max="60" id="afternoon-h">Afternoon tea</h2>
+            <p data-edit="afternoon.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Three trays. Book the afternoon a day ahead and the long table
               three days ahead; the sweets are made for the seats we have.
             </p>
           </div>
 
           <ol className={s.sets}>
-            {SETS.map((set) => (
+            {SETS.map((set, i) => (
               <li key={set.name}>
-                <h3 className={s.setName}>{set.name}</h3>
+                <h3 data-edit={`afternoon.setName.${i}`} data-edit-max="40" className={s.setName}>{set.name}</h3>
                 <div className={s.setBody}>
-                  <p className={s.setFor}>{set.who}</p>
+                  <p data-edit={`afternoon.setFor.${i}`} data-edit-max="240" data-edit-multiline className={s.setFor}>{set.who}</p>
                   <ul className={s.setList}>
-                    {set.holds.map((h) => (
-                      <li key={h}>{h}</li>
+                    {set.holds.map((h, i2) => (
+                      <li data-edit={`afternoon.item.${i}.${i2}`} data-edit-max="80" key={h}>{h}</li>
                     ))}
                   </ul>
-                  <p className={s.setPrice}>{set.price}</p>
+                  <p data-edit={`afternoon.setPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.setPrice}>{set.price}</p>
                 </div>
               </li>
             ))}
@@ -268,7 +280,7 @@ export default function KettleAndLeafPage() {
         {/* ----------------------------------------------------------- ROOM */}
         <section id="room" className={s.sec} aria-labelledby="room-h">
           <div className={s.room}>
-            <div className={s.grain} aria-hidden="true">
+            <div data-edit-pattern="room.field" data-edit-roles="transparent,3,2,3,3,2" className={s.grain} aria-hidden="true">
               <TabbiedPattern
                 pattern={roundstep}
                 palette={LEAVES}
@@ -280,9 +292,9 @@ export default function KettleAndLeafPage() {
               />
             </div>
             <div className={s.roomText}>
-              <p className={s.kicker}>The room</p>
-              <h2 id="room-h">Twelve seats, <em>one kettle at a time</em></h2>
-              <p className={s.roomLede}>
+              <p data-edit="room.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The room</p>
+              <h2 data-edit="room.title" data-edit-format="emphasis" data-edit-max="60" id="room-h">Twelve seats, <em>one kettle at a time</em></h2>
+              <p data-edit="room.roomLede" data-edit-max="240" data-edit-multiline className={s.roomLede}>
                 Hana Mori opened the room in 2019 after ten years buying tea for
                 other people. The tables are old elm, the cups are from a potter
                 in the hills, and nothing is rushed, including you.
@@ -292,27 +304,27 @@ export default function KettleAndLeafPage() {
 
           <div className={s.twoCol}>
             <div>
-              <h3 className={s.colTitle}>House rules</h3>
+              <h3 data-edit="room.colTitle" data-edit-max="40" className={s.colTitle}>House rules</h3>
               <dl className={s.rules}>
-                {RULES.map(([rule, why]) => (
+                {RULES.map(([rule, why], i) => (
                   <div key={rule}>
-                    <dt>{rule}</dt>
-                    <dd>{why}</dd>
+                    <dt data-edit={`room.term.${i}`} data-edit-max="28">{rule}</dt>
+                    <dd data-edit={`room.body.${i}`} data-edit-max="200" data-edit-multiline>{why}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div>
-              <h3 className={s.colTitle}>Brewing at home</h3>
+              <h3 data-edit="room.colTitle2" data-edit-max="40" className={s.colTitle}>Brewing at home</h3>
               <ol className={s.brew}>
-                {BREW.map(([step, how]) => (
+                {BREW.map(([step, how], i) => (
                   <li key={step}>
-                    <span className={s.brewStep}>{step}</span>
-                    <p>{how}</p>
+                    <span data-edit={`room.brewStep.${i}`} data-edit-max="60" className={s.brewStep}>{step}</span>
+                    <p data-edit={`room.body2.${i}`} data-edit-max="240" data-edit-multiline>{how}</p>
                   </li>
                 ))}
               </ol>
-              <p className={s.small}>
+              <p data-edit="room.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 A class on the first Sunday of the month, 10 to 11:30, $25 with a
                 pot of whatever you like after.
               </p>
@@ -324,22 +336,22 @@ export default function KettleAndLeafPage() {
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.visit}>
             <div>
-              <p className={s.kicker}>Visit</p>
-              <h2 id="visit-h">9 Moss Lane</h2>
-              <p className={s.address}>
+              <p data-edit="visit.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Visit</p>
+              <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">9 Moss Lane</h2>
+              <p data-edit="visit.address" data-edit-max="240" data-edit-multiline className={s.address}>
                 Hillcrest, behind the persimmon tree. Take your shoes off if you
                 like; there are slippers by the door.
               </p>
               <p className={s.contact}>
-                <a href="tel:+15550196630">(555) 019-6630</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550196630">(555) 019-6630</a>
                 <br />
-                <a href="mailto:pot@kettleandleaf.example">pot@kettleandleaf.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:pot@kettleandleaf.example">pot@kettleandleaf.example</a>
               </p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
@@ -348,7 +360,7 @@ export default function KettleAndLeafPage() {
             <form className={s.form} action="#">
               {/* A noren over the booking panel: the brushed cloth, slit in
                   three, the way it hangs in a tea house doorway. */}
-              <div className={s.noren} aria-hidden="true">
+              <div data-edit-pattern="visit.field" data-edit-roles="transparent,2,2,1,3,2" className={s.noren} aria-hidden="true">
                 <TabbiedPattern
                   pattern={drybrush}
                   palette={NOREN}
@@ -359,22 +371,22 @@ export default function KettleAndLeafPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <h3 className={s.formTitle}>Book a table</h3>
+              <h3 data-edit="visit.formTitle" data-edit-max="40" className={s.formTitle}>Book a table</h3>
               <div className={s.field}>
-                <label htmlFor="kl-name">Name</label>
+                <label data-edit="visit.label" htmlFor="kl-name">Name</label>
                 <input id="kl-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="kl-email">Email</label>
+                <label data-edit="visit.label2" htmlFor="kl-email">Email</label>
                 <input id="kl-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.fieldRow}>
                 <div className={s.field}>
-                  <label htmlFor="kl-date">Day</label>
+                  <label data-edit="visit.label3" htmlFor="kl-date">Day</label>
                   <input id="kl-date" name="date" type="date" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="kl-set">Tray</label>
+                  <label data-edit="visit.label4" htmlFor="kl-set">Tray</label>
                   <select id="kl-set" name="set" defaultValue="afternoon">
                     <option value="moment">A moment</option>
                     <option value="afternoon">The afternoon</option>
@@ -382,7 +394,7 @@ export default function KettleAndLeafPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="kl-seats">Seats</label>
+                  <label data-edit="visit.label5" htmlFor="kl-seats">Seats</label>
                   <select id="kl-seats" name="seats" defaultValue="2">
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -392,19 +404,19 @@ export default function KettleAndLeafPage() {
                   </select>
                 </div>
               </div>
-              <button className={s.btn} type="submit">Ask for the table</button>
-              <p className={s.small}>We write back within the day. Walk-ins are welcome when there is a seat.</p>
+              <button data-edit="visit.btn" data-edit-max="24" className={s.btn} type="submit">Ask for the table</button>
+              <p data-edit="visit.small" data-edit-max="240" data-edit-multiline className={s.small}>We write back within the day. Walk-ins are welcome when there is a seat.</p>
             </form>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Kettle & Leaf</p>
-        <p>A fictional tea room and tea shop. The teas, prices and people are invented.</p>
-        <p>The teapot on the scroll is a generated image, drawn in the page's colors.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Kettle & Leaf</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional tea room and tea shop. The teas, prices and people are invented.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The teapot on the scroll is a generated image, drawn in the page's colors.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

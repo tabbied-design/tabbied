@@ -125,7 +125,18 @@ const PEOPLE = [
 
 export default function LongTablePage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--char': '#171614',
+        '--bone': '#ece3d0',
+        '--gold': '#c29a52',
+        '--claret': '#6d2430',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="char,bone,gold,claret"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -135,15 +146,15 @@ export default function LongTablePage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Long Table</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Long Table</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -153,11 +164,11 @@ export default function LongTablePage() {
             The headline, then the table itself, seen from above: a runner
             down the middle and ten places a side. */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <p className={s.kicker}>Catering from a kitchen on Carver Street, since 2012</p>
-          <h1 id="hero-h" className={s.heroTitle}>
+          <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Catering from a kitchen on Carver Street, since 2012</p>
+          <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.heroTitle}>
             Dinner for forty, <em>at one table.</em>
           </h1>
-          <p className={s.heroLead}>
+          <p data-edit="hero.heroLead" data-edit-max="240" data-edit-multiline className={s.heroLead}>
             We cook for twelve to two hundred and forty, and we would rather
             everyone sat together. Five courses, set down in the middle and
             passed hand to hand, the way a family eats when it is celebrating.
@@ -165,7 +176,7 @@ export default function LongTablePage() {
 
           <div className={s.table} aria-hidden="true">
             <div className={s.tableTop} />
-            <div className={s.runner}>
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,3,2" className={s.runner}>
               <TabbiedPattern
                 pattern={bothcut}
                 palette={RUNNER}
@@ -186,16 +197,16 @@ export default function LongTablePage() {
               ))}
             </div>
           </div>
-          <p className={s.tableCaption}>A table for twenty, from the rafters of the old printworks.</p>
+          <p data-edit="hero.tableCaption" data-edit-max="240" data-edit-multiline className={s.tableCaption}>A table for twenty, from the rafters of the old printworks.</p>
         </section>
 
         {/* ----------------------------------------------------------- MENUS
             Three menus, written the way they are printed for the table. */}
         <section id="menus" className={s.sec} aria-labelledby="menus-h">
           <div className={s.secHead}>
-            <p className={s.label}>This season</p>
-            <h2 id="menus-h" className={s.secTitle}>Menus, course by course</h2>
-            <p className={s.secNote}>
+            <p data-edit="menus.label" data-edit-max="240" data-edit-multiline className={s.label}>This season</p>
+            <h2 data-edit="menus.secTitle" data-edit-max="60" id="menus-h" className={s.secTitle}>Menus, course by course</h2>
+            <p data-edit="menus.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every course is brought to the table on shared plates. Change any
               dish you like; the prices below hold for any five courses.
             </p>
@@ -209,21 +220,21 @@ export default function LongTablePage() {
           <div className={s.menus}>
             {MENUS.map((m, i) => (
               <article key={m.name} className={s.menu} aria-labelledby={`menu-${i}`}>
-                <p className={s.menuSeason}>{m.season}</p>
-                <h3 id={`menu-${i}`} className={s.menuName}>{m.name}</h3>
+                <p data-edit={`menu.menuSeason.${i}`} data-edit-max="240" data-edit-multiline className={s.menuSeason}>{m.season}</p>
+                <h3 data-edit={`menu.menuName.${i}`} data-edit-max="40" id={`menu-${i}`} className={s.menuName}>{m.name}</h3>
                 <ol className={s.courses}>
-                  {m.courses.map((c) => (
+                  {m.courses.map((c, i2) => (
                     <li key={c.no} className={s.course}>
-                      <span className={s.courseNo}>{c.no}</span>
-                      <span className={s.courseLabel}>{c.label}</span>
-                      <span className={s.courseDish}>{c.dish}</span>
-                      <span className={s.courseNote}>{c.note}</span>
+                      <span data-edit={`menu.courseNo.${i}.${i2}`} data-edit-max="60" className={s.courseNo}>{c.no}</span>
+                      <span data-edit={`menu.courseLabel.${i}.${i2}`} data-edit-max="60" className={s.courseLabel}>{c.label}</span>
+                      <span data-edit={`menu.courseDish.${i}.${i2}`} data-edit-max="60" className={s.courseDish}>{c.dish}</span>
+                      <span data-edit={`menu.courseNote.${i}.${i2}`} data-edit-max="60" className={s.courseNote}>{c.note}</span>
                     </li>
                   ))}
                 </ol>
                 <p className={s.menuPrice}>
-                  <span className={s.menuPriceNo}>{m.price}</span>
-                  <span className={s.menuPricePer}>per guest, from</span>
+                  <span data-edit={`menu.menuPriceNo.${i}`} data-edit-max="60" className={s.menuPriceNo}>{m.price}</span>
+                  <span data-edit={`menu.menuPricePer.${i}`} data-edit-max="60" className={s.menuPricePer}>per guest, from</span>
                 </p>
               </article>
             ))}
@@ -234,19 +245,19 @@ export default function LongTablePage() {
         <section id="occasions" className={s.sec} aria-labelledby="occasions-h">
           <div className={s.occasionsGrid}>
             <div className={s.secHeadSide}>
-              <p className={s.label}>What we cater</p>
-              <h2 id="occasions-h" className={s.secTitle}>Occasions</h2>
-              <p className={s.secNote}>
+              <p data-edit="occasions.label" data-edit-max="240" data-edit-multiline className={s.label}>What we cater</p>
+              <h2 data-edit="occasions.secTitle" data-edit-max="60" id="occasions-h" className={s.secTitle}>Occasions</h2>
+              <p data-edit="occasions.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 The numbers are guests. Below twelve we are too many people in
                 your kitchen; above the top of a range we bring in a second team.
               </p>
             </div>
             <ul className={s.occasions}>
-              {OCCASIONS.map(([name, text, range]) => (
+              {OCCASIONS.map(([name, text, range], i) => (
                 <li key={name} className={s.occasion}>
-                  <h3 className={s.occName}>{name}</h3>
-                  <p className={s.occText}>{text}</p>
-                  <span className={s.occRange}>{range}</span>
+                  <h3 data-edit={`occasions.occName.${i}`} data-edit-max="40" className={s.occName}>{name}</h3>
+                  <p data-edit={`occasions.occText.${i}`} data-edit-max="240" data-edit-multiline className={s.occText}>{text}</p>
+                  <span data-edit={`occasions.occRange.${i}`} data-edit-max="60" className={s.occRange}>{range}</span>
                 </li>
               ))}
             </ul>
@@ -256,7 +267,7 @@ export default function LongTablePage() {
         {/* ---------------------------------------------------------- PRICES
             The damask panel behind the price table. */}
         <section id="prices" className={s.pricesSec} aria-labelledby="prices-h">
-          <div className={s.damask} aria-hidden="true">
+          <div data-edit-pattern="prices.field" data-edit-roles="transparent,2,3,3,2" className={s.damask} aria-hidden="true">
             <TabbiedPattern
               pattern={bothcut}
               palette={DAMASK}
@@ -268,72 +279,72 @@ export default function LongTablePage() {
           </div>
           <div className={s.pricesCard}>
             <div className={s.secHead}>
-              <p className={s.label}>Per guest</p>
-              <h2 id="prices-h" className={s.secTitle}>What it costs</h2>
-              <p className={s.secNote}>
+              <p data-edit="prices.label" data-edit-max="240" data-edit-multiline className={s.label}>Per guest</p>
+              <h2 data-edit="prices.secTitle" data-edit-max="60" id="prices-h" className={s.secTitle}>What it costs</h2>
+              <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Five courses, cooks, servers and everything on the table. The
                 more guests, the less each one costs.
               </p>
             </div>
             <table className={s.prices}>
-              <caption className={s.srOnly}>Price per guest by menu and number of guests</caption>
+              <caption data-edit="prices.srOnly" className={s.srOnly}>Price per guest by menu and number of guests</caption>
               <thead>
                 <tr>
-                  <th scope="col">Menu</th>
-                  <th scope="col">12-49</th>
-                  <th scope="col">50-99</th>
-                  <th scope="col">100 and over</th>
+                  <th data-edit="prices.heading" scope="col">Menu</th>
+                  <th data-edit="prices.heading2" scope="col">12-49</th>
+                  <th data-edit="prices.heading3" scope="col">50-99</th>
+                  <th data-edit="prices.heading4" scope="col">100 and over</th>
                 </tr>
               </thead>
               <tbody>
-                {PRICES.map((p) => (
+                {PRICES.map((p, i) => (
                   <tr key={p.menu}>
-                    <th scope="row">{p.menu}</th>
-                    <td>{p.a}</td>
-                    <td>{p.b}</td>
-                    <td>{p.c}</td>
+                    <th data-edit={`prices.heading5.${i}`} scope="row">{p.menu}</th>
+                    <td data-edit={`prices.cell.${i}`}>{p.a}</td>
+                    <td data-edit={`prices.cell2.${i}`}>{p.b}</td>
+                    <td data-edit={`prices.cell3.${i}`}>{p.c}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <div className={s.priceNotes}>
               <div>
-                <h3 className={s.noteTitle}>Always included</h3>
+                <h3 data-edit="prices.noteTitle" data-edit-max="40" className={s.noteTitle}>Always included</h3>
                 <ul className={s.included}>
-                  {INCLUDED.map((item) => (
-                    <li key={item}>{item}</li>
+                  {INCLUDED.map((item, i) => (
+                    <li data-edit={`prices.item.${i}`} data-edit-max="80" key={item}>{item}</li>
                   ))}
                 </ul>
               </div>
               <div>
-                <h3 className={s.noteTitle}>If you want them</h3>
+                <h3 data-edit="prices.noteTitle2" data-edit-max="40" className={s.noteTitle}>If you want them</h3>
                 <dl className={s.extras}>
-                  {EXTRAS.map(([what, price]) => (
+                  {EXTRAS.map(([what, price], i) => (
                     <div key={what}>
-                      <dt>{what}</dt>
-                      <dd>{price}</dd>
+                      <dt data-edit={`prices.term.${i}`} data-edit-max="28">{what}</dt>
+                      <dd data-edit={`prices.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                     </div>
                   ))}
                 </dl>
               </div>
             </div>
-            <p className={s.minimum}>Minimum spend $1,800 before tax and a 20 percent service charge, which goes to the staff.</p>
+            <p data-edit="prices.minimum" data-edit-max="240" data-edit-multiline className={s.minimum}>Minimum spend $1,800 before tax and a 20 percent service charge, which goes to the staff.</p>
           </div>
         </section>
 
         {/* --------------------------------------------------------- BOOKING */}
         <section id="booking" className={s.sec} aria-labelledby="booking-h">
           <div className={s.secHead}>
-            <p className={s.label}>How it goes</p>
-            <h2 id="booking-h" className={s.secTitle}>From the first call to the last plate</h2>
-            <p className={s.secNote}>Most dinners book three months ahead. Weddings, a year. Call anyway: sometimes a date is free.</p>
+            <p data-edit="booking.label" data-edit-max="240" data-edit-multiline className={s.label}>How it goes</p>
+            <h2 data-edit="booking.secTitle" data-edit-max="60" id="booking-h" className={s.secTitle}>From the first call to the last plate</h2>
+            <p data-edit="booking.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>Most dinners book three months ahead. Weddings, a year. Call anyway: sometimes a date is free.</p>
           </div>
           <ol className={s.steps}>
-            {STEPS.map((st) => (
+            {STEPS.map((st, i) => (
               <li key={st.what} className={s.step}>
-                <span className={s.stepWhen}>{st.when}</span>
-                <h3 className={s.stepWhat}>{st.what}</h3>
-                <p className={s.stepText}>{st.text}</p>
+                <span data-edit={`booking.stepWhen.${i}`} data-edit-max="60" className={s.stepWhen}>{st.when}</span>
+                <h3 data-edit={`booking.stepWhat.${i}`} data-edit-max="40" className={s.stepWhat}>{st.what}</h3>
+                <p data-edit={`booking.stepText.${i}`} data-edit-max="240" data-edit-multiline className={s.stepText}>{st.text}</p>
               </li>
             ))}
           </ol>
@@ -343,24 +354,24 @@ export default function LongTablePage() {
         <section id="kitchen" className={s.sec} aria-labelledby="kitchen-h">
           <div className={s.kitchen}>
             <div className={s.kitchenHead}>
-              <p className={s.label}>The kitchen</p>
-              <h2 id="kitchen-h" className={s.secTitle}>Nine cooks, one printworks</h2>
+              <p data-edit="kitchen.label" data-edit-max="240" data-edit-multiline className={s.label}>The kitchen</p>
+              <h2 data-edit="kitchen.secTitle" data-edit-max="60" id="kitchen-h" className={s.secTitle}>Nine cooks, one printworks</h2>
               <blockquote className={s.quote}>
-                <p>A dinner at one table is the only kind where the food has to wait for the conversation.</p>
-                <cite>Ines Carvalho, chef</cite>
+                <p data-edit="kitchen.body" data-edit-max="240" data-edit-multiline>A dinner at one table is the only kind where the food has to wait for the conversation.</p>
+                <cite data-edit="kitchen.attribution" data-edit-max="48">Ines Carvalho, chef</cite>
               </blockquote>
             </div>
             <ul className={s.people}>
-              {PEOPLE.map((p) => (
+              {PEOPLE.map((p, i) => (
                 <li key={p.name} className={s.person}>
-                  <h3 className={s.personName}>{p.name}</h3>
-                  <p className={s.personRole}>{p.role}</p>
-                  <p className={s.personText}>{p.text}</p>
+                  <h3 data-edit={`kitchen.personName.${i}`} data-edit-max="40" className={s.personName}>{p.name}</h3>
+                  <p data-edit={`kitchen.personRole.${i}`} data-edit-max="240" data-edit-multiline className={s.personRole}>{p.role}</p>
+                  <p data-edit={`kitchen.personText.${i}`} data-edit-max="240" data-edit-multiline className={s.personText}>{p.text}</p>
                 </li>
               ))}
             </ul>
           </div>
-          <div className={s.linen} aria-hidden="true">
+          <div data-edit-pattern="kitchen.field" data-edit-roles="transparent,3,2,3" className={s.linen} aria-hidden="true">
             <TabbiedPattern
               pattern={bothcut}
               palette={LINEN}
@@ -376,39 +387,39 @@ export default function LongTablePage() {
         <section id="enquire" className={s.sec} aria-labelledby="enquire-h">
           <div className={s.enquire}>
             <div>
-              <p className={s.label}>Enquire</p>
-              <h2 id="enquire-h" className={s.secTitle}>Tell us about the evening</h2>
-              <p className={s.secNote}>
+              <p data-edit="enquire.label" data-edit-max="240" data-edit-multiline className={s.label}>Enquire</p>
+              <h2 data-edit="enquire.secTitle" data-edit-max="60" id="enquire-h" className={s.secTitle}>Tell us about the evening</h2>
+              <p data-edit="enquire.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Sam answers every enquiry within two working days, with a first
                 idea of the menu and a price.
               </p>
               <p className={s.contact}>
-                <a href="tel:+15550197720">(555) 019-7720</a>
+                <a data-edit="enquire.link" data-edit-max="28" href="tel:+15550197720">(555) 019-7720</a>
               </p>
               <p className={s.contact}>
-                <a href="mailto:sam@longtable.example">sam@longtable.example</a>
+                <a data-edit="enquire.link2" data-edit-max="28" href="mailto:sam@longtable.example">sam@longtable.example</a>
               </p>
-              <p className={s.address}>The Printworks, 41 Carver Street. Tastings by appointment.</p>
+              <p data-edit="enquire.address" data-edit-max="240" data-edit-multiline className={s.address}>The Printworks, 41 Carver Street. Tastings by appointment.</p>
             </div>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="lt-name">Your name</label>
+                <label data-edit="enquire.label2" htmlFor="lt-name">Your name</label>
                 <input id="lt-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lt-email">Email</label>
+                <label data-edit="enquire.label3" htmlFor="lt-email">Email</label>
                 <input id="lt-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lt-date">Date, or a few that would do</label>
+                <label data-edit="enquire.label4" htmlFor="lt-date">Date, or a few that would do</label>
                 <input id="lt-date" name="date" type="text" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lt-guests">Guests</label>
+                <label data-edit="enquire.label5" htmlFor="lt-guests">Guests</label>
                 <input id="lt-guests" name="guests" type="text" inputMode="numeric" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lt-occasion">Occasion</label>
+                <label data-edit="enquire.label6" htmlFor="lt-occasion">Occasion</label>
                 <select id="lt-occasion" name="occasion" defaultValue="dinner">
                   <option value="dinner">Long table dinner</option>
                   <option value="wedding">Wedding</option>
@@ -419,21 +430,21 @@ export default function LongTablePage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="lt-venue">Venue, if you have one</label>
+                <label data-edit="enquire.label7" htmlFor="lt-venue">Venue, if you have one</label>
                 <input id="lt-venue" name="venue" type="text" />
               </div>
               <div className={`${s.field} ${s.fieldWide}`}>
-                <label htmlFor="lt-notes">The evening, in a few lines</label>
+                <label data-edit="enquire.label8" htmlFor="lt-notes">The evening, in a few lines</label>
                 <textarea id="lt-notes" name="notes" rows={4} />
               </div>
-              <button className={s.submit} type="submit">Send the enquiry</button>
+              <button data-edit="enquire.submit" data-edit-max="24" className={s.submit} type="submit">Send the enquiry</button>
             </form>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footRunner} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,3,2" className={s.footRunner} aria-hidden="true">
           <TabbiedPattern
             pattern={bothcut}
             palette={RUNNER}
@@ -443,11 +454,11 @@ export default function LongTablePage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Long Table</p>
-        <p>A fictional catering company. The menus, prices, people and address are invented.</p>
-        <p>The roast is a generated image, drawn in the page's own colors.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Long Table</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional catering company. The menus, prices, people and address are invented.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The roast is a generated image, drawn in the page's own colors.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

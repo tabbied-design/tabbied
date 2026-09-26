@@ -85,7 +85,19 @@ const HOURS = [
 
 export default function PaperPlaneStationersPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fbfaf4',
+        '--ink': '#23409a',
+        '--mint': '#a8e0c8',
+        '--pink': '#f5bccb',
+        '--lemon': '#f3df85',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,mint,pink,lemon"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -95,15 +107,15 @@ export default function PaperPlaneStationersPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Paper Plane</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Paper Plane</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -112,14 +124,14 @@ export default function PaperPlaneStationersPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Stationery shop, 27 Quill Lane</p>
-            <h1 id="hero-h" className={s.title}>Paper <em>Plane</em></h1>
-            <p className={s.lede}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Stationery shop, 27 Quill Lane</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>Paper <em>Plane</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Pens you can try before you buy, notebooks sorted by how heavy
               the paper is, paper by the single sheet, and a long table at the
               back for writing letters on.
             </p>
-            <p className={s.scrawl}>Open every day but Monday. Come and scribble.</p>
+            <p data-edit="hero.scrawl" data-edit-max="240" data-edit-multiline className={s.scrawl}>Open every day but Monday. Come and scribble.</p>
           </div>
 
           <div className={s.heroDesk}>
@@ -130,7 +142,7 @@ export default function PaperPlaneStationersPage() {
               className={s.plane}
             />
             <div className={s.heroSheet}>
-              <div className={s.heroField} aria-hidden="true">
+              <div data-edit-pattern="hero.field" data-edit-roles="0,1,3,2,4" className={s.heroField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={waterbomb}
                   palette={HERO}
@@ -142,11 +154,11 @@ export default function PaperPlaneStationersPage() {
               </div>
             </div>
             <div className={s.heroCard}>
-              <p className={s.cardHead}>New at the counter</p>
+              <p data-edit="hero.cardHead" data-edit-max="240" data-edit-multiline className={s.cardHead}>New at the counter</p>
               <ul className={s.cardList}>
-                <li>Folding paper, 15 cm, 100 sheets</li>
-                <li>Mint ink, the one everyone asked about</li>
-                <li>Dot grid notebooks, back in A5</li>
+                <li data-edit="hero.item" data-edit-max="80">Folding paper, 15 cm, 100 sheets</li>
+                <li data-edit="hero.item2" data-edit-max="80">Mint ink, the one everyone asked about</li>
+                <li data-edit="hero.item3" data-edit-max="80">Dot grid notebooks, back in A5</li>
               </ul>
             </div>
           </div>
@@ -156,9 +168,9 @@ export default function PaperPlaneStationersPage() {
         <section id="pens" className={s.pens} aria-labelledby="pens-h">
           <div className={s.inner}>
             <div className={s.head}>
-              <p className={s.kicker}>The test pad</p>
-              <h2 id="pens-h">Try every pen first</h2>
-              <p className={s.headNote}>
+              <p data-edit="pens.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The test pad</p>
+              <h2 data-edit="pens.title" data-edit-max="60" id="pens-h">Try every pen first</h2>
+              <p data-edit="pens.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 Every pen we sell has a tester on the desk by the window, and a
                 pad beside it. We put out a fresh pad every morning. This is
                 what yesterday's looked like.
@@ -170,19 +182,19 @@ export default function PaperPlaneStationersPage() {
             <span className={s.tapeL} aria-hidden="true" />
             <span className={s.tapeR} aria-hidden="true" />
             <ol className={s.samples}>
-              {PENS.map((p) => (
+              {PENS.map((p, i) => (
                 <li key={p.kind}>
-                  <p className={s.sample}>{p.sample}</p>
-                  <p className={s.penKind}>{p.kind}</p>
-                  <p className={s.penDetail}>{p.detail}</p>
-                  <span className={s.penPrice}>{p.price}</span>
+                  <p data-edit={`pens.sample.${i}`} data-edit-max="240" data-edit-multiline className={s.sample}>{p.sample}</p>
+                  <p data-edit={`pens.penKind.${i}`} data-edit-max="240" data-edit-multiline className={s.penKind}>{p.kind}</p>
+                  <p data-edit={`pens.penDetail.${i}`} data-edit-max="240" data-edit-multiline className={s.penDetail}>{p.detail}</p>
+                  <span data-edit={`pens.penPrice.${i}`} data-edit-max="60" className={s.penPrice}>{p.price}</span>
                 </li>
               ))}
             </ol>
           </div>
 
           <div className={s.inner}>
-            <p className={s.inkBar}>
+            <p data-edit="pens.inkBar" data-edit-max="240" data-edit-multiline className={s.inkBar}>
               The ink bar: 24 bottled inks with a dip pen to try each. Sample
               vials $2, bottles from $12. Converters fitted for free.
             </p>
@@ -193,9 +205,9 @@ export default function PaperPlaneStationersPage() {
         <section id="notebooks" className={s.books} aria-labelledby="books-h">
           <div className={s.inner}>
             <div className={s.head}>
-              <p className={s.kicker}>Sorted by weight</p>
-              <h2 id="books-h">Notebooks, by the paper inside</h2>
-              <p className={s.headNote}>
+              <p data-edit="notebooks.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Sorted by weight</p>
+              <h2 data-edit="notebooks.title" data-edit-max="60" id="books-h">Notebooks, by the paper inside</h2>
+              <p data-edit="notebooks.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 The number that matters is grams per square meter. Lighter
                 paper means more pages in the same thickness; heavier paper
                 means your pen stays on its own side.
@@ -204,33 +216,33 @@ export default function PaperPlaneStationersPage() {
 
             <div className={s.weights}>
               <div className={s.weightsHead} aria-hidden="true">
-                <span>Weight</span>
-                <span>What it feels like</span>
-                <span>With a pen</span>
-                <span>Our notebook</span>
+                <span data-edit="notebooks.text" data-edit-max="60">Weight</span>
+                <span data-edit="notebooks.text2" data-edit-max="60">What it feels like</span>
+                <span data-edit="notebooks.text3" data-edit-max="60">With a pen</span>
+                <span data-edit="notebooks.text4" data-edit-max="60">Our notebook</span>
               </div>
               <ol className={s.weightList}>
-                {WEIGHTS.map((w) => (
+                {WEIGHTS.map((w, i) => (
                   <li key={w.gsm} style={{ '--gsm': w.gsm } as React.CSSProperties}>
                     <p className={s.gsm}>
                       <strong>{String(w.gsm)}</strong>
-                      <span>gsm</span>
+                      <span data-edit={`notebooks.text5.${i}`} data-edit-max="60">gsm</span>
                     </p>
                     <span className={s.thick} aria-hidden="true" />
-                    <p className={s.feels}>{w.feels}</p>
-                    <p className={s.withPen}>{w.pen}</p>
-                    <p className={s.book}>{w.book}</p>
-                    <span className={s.bookPrice}>{w.price}</span>
+                    <p data-edit={`notebooks.feels.${i}`} data-edit-max="240" data-edit-multiline className={s.feels}>{w.feels}</p>
+                    <p data-edit={`notebooks.withPen.${i}`} data-edit-max="240" data-edit-multiline className={s.withPen}>{w.pen}</p>
+                    <p data-edit={`notebooks.book.${i}`} data-edit-max="240" data-edit-multiline className={s.book}>{w.book}</p>
+                    <span data-edit={`notebooks.bookPrice.${i}`} data-edit-max="60" className={s.bookPrice}>{w.price}</span>
                   </li>
                 ))}
               </ol>
             </div>
 
             <div className={s.rulings}>
-              <p className={s.rulingsLabel}>Every notebook comes in</p>
+              <p data-edit="notebooks.rulingsLabel" data-edit-max="240" data-edit-multiline className={s.rulingsLabel}>Every notebook comes in</p>
               <ul>
-                {RULINGS.map((r) => (
-                  <li key={r}>{r}</li>
+                {RULINGS.map((r, i) => (
+                  <li data-edit={`notebooks.item.${i}`} data-edit-max="80" key={r}>{r}</li>
                 ))}
               </ul>
             </div>
@@ -241,9 +253,9 @@ export default function PaperPlaneStationersPage() {
         <section id="paper" className={s.paper} aria-labelledby="paper-h">
           <div className={s.inner}>
             <div className={s.head}>
-              <p className={s.kicker}>From the plan chest</p>
-              <h2 id="paper-h">Paper by the sheet</h2>
-              <p className={s.headNote}>
+              <p data-edit="paper.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>From the plan chest</p>
+              <h2 data-edit="paper.title" data-edit-max="60" id="paper-h">Paper by the sheet</h2>
+              <p data-edit="paper.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 Forty drawers of it, printed in small runs. Buy one sheet for a
                 present or a hundred for a wedding; we roll it, never fold it.
               </p>
@@ -251,7 +263,7 @@ export default function PaperPlaneStationersPage() {
 
             <div className={s.sheets}>
               <figure className={s.sheet}>
-                <div className={s.sheetField} aria-hidden="true">
+                <div data-edit-pattern="paper.field" data-edit-roles="3,1,2,0,4" className={s.sheetField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={waterbomb}
                     palette={SHEET_A}
@@ -262,13 +274,13 @@ export default function PaperPlaneStationersPage() {
                   />
                 </div>
                 <figcaption className={s.tag}>
-                  <strong>Waterbomb</strong>
-                  <span>Wrapping sheet, 50 x 70 cm, $4.50</span>
+                  <strong data-edit="paper.emphasis">Waterbomb</strong>
+                  <span data-edit="paper.text" data-edit-max="60">Wrapping sheet, 50 x 70 cm, $4.50</span>
                 </figcaption>
               </figure>
 
               <figure className={s.sheet}>
-                <div className={s.sheetField} aria-hidden="true">
+                <div data-edit-pattern="paper.field2" data-edit-roles="2,1,3,0" className={s.sheetField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={crease}
                     palette={SHEET_B}
@@ -279,13 +291,13 @@ export default function PaperPlaneStationersPage() {
                   />
                 </div>
                 <figcaption className={s.tag}>
-                  <strong>Crease</strong>
-                  <span>Folding paper, 15 cm, 100 sheets, $9</span>
+                  <strong data-edit="paper.emphasis2">Crease</strong>
+                  <span data-edit="paper.text2" data-edit-max="60">Folding paper, 15 cm, 100 sheets, $9</span>
                 </figcaption>
               </figure>
 
               <figure className={s.sheet}>
-                <div className={s.sheetField} aria-hidden="true">
+                <div data-edit-pattern="paper.field3" data-edit-roles="4,3,1,2" className={s.sheetField} aria-hidden="true">
                   <TabbiedPattern
                     pattern={waterbomb}
                     palette={SHEET_C}
@@ -296,8 +308,8 @@ export default function PaperPlaneStationersPage() {
                   />
                 </div>
                 <figcaption className={s.tag}>
-                  <strong>Lemon fold</strong>
-                  <span>Endpapers, A3, pack of 5, $7</span>
+                  <strong data-edit="paper.emphasis3">Lemon fold</strong>
+                  <span data-edit="paper.text3" data-edit-max="60">Endpapers, A3, pack of 5, $7</span>
                 </figcaption>
               </figure>
             </div>
@@ -309,7 +321,7 @@ export default function PaperPlaneStationersPage() {
           <div className={s.inner}>
             <div className={s.clubGrid}>
               <div className={s.letter}>
-                <div className={s.washi} aria-hidden="true">
+                <div data-edit-pattern="club.field" data-edit-roles="3,1,0,2" className={s.washi} aria-hidden="true">
                   <TabbiedPattern
                     pattern={jibboom}
                     palette={TAPE}
@@ -319,33 +331,33 @@ export default function PaperPlaneStationersPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-                <h2 id="club-h" className={s.letterHead}>The letter-writing club</h2>
-                <p className={s.letterDate}>First Sunday of the month, 2 to 4 pm</p>
-                <p className={s.letterBody}>Dear letter writers,</p>
-                <p className={s.letterBody}>
+                <h2 data-edit="club.letterHead" data-edit-max="60" id="club-h" className={s.letterHead}>The letter-writing club</h2>
+                <p data-edit="club.letterDate" data-edit-max="240" data-edit-multiline className={s.letterDate}>First Sunday of the month, 2 to 4 pm</p>
+                <p data-edit="club.letterBody" data-edit-max="240" data-edit-multiline className={s.letterBody}>Dear letter writers,</p>
+                <p data-edit="club.letterBody2" data-edit-max="240" data-edit-multiline className={s.letterBody}>
                   Bring a letter you have been meaning to write. We put out the
                   long table, the good pens and a pot of tea, and nobody talks
                   for the first half hour.
                 </p>
-                <p className={s.letterBody}>
+                <p data-edit="club.letterBody3" data-edit-max="240" data-edit-multiline className={s.letterBody}>
                   Five dollars covers a sheet of letter paper, an envelope and
                   a stamp. If you have nobody to write to, the pen pal box has
                   about sixty people in it who would like a letter.
                 </p>
-                <p className={s.letterSign}>Hana, at the counter</p>
+                <p data-edit="club.letterSign" data-edit-max="240" data-edit-multiline className={s.letterSign}>Hana, at the counter</p>
               </div>
 
               <div className={s.clubSide}>
-                <h3 className={s.sideTitle}>Coming up</h3>
+                <h3 data-edit="club.sideTitle" data-edit-max="40" className={s.sideTitle}>Coming up</h3>
                 <ol className={s.dates}>
-                  {CLUB_DATES.map(([d, theme]) => (
+                  {CLUB_DATES.map(([d, theme], i) => (
                     <li key={d}>
-                      <strong>{d}</strong>
-                      <span>{theme}</span>
+                      <strong data-edit={`club.emphasis.${i}`}>{d}</strong>
+                      <span data-edit={`club.text.${i}`} data-edit-max="60">{theme}</span>
                     </li>
                   ))}
                 </ol>
-                <p className={s.sideNote}>Twelve seats. Put your name on the sheet by the till, or ask below.</p>
+                <p data-edit="club.sideNote" data-edit-max="240" data-edit-multiline className={s.sideNote}>Twelve seats. Put your name on the sheet by the till, or ask below.</p>
               </div>
             </div>
           </div>
@@ -356,36 +368,36 @@ export default function PaperPlaneStationersPage() {
           <div className={s.inner}>
             <div className={s.visitGrid}>
               <div className={s.card}>
-                <h2 id="visit-h">27 Quill Lane</h2>
-                <p className={s.visitSub}>Harbor Hill, across from the post office, which is not a coincidence.</p>
+                <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">27 Quill Lane</h2>
+                <p data-edit="visit.visitSub" data-edit-max="240" data-edit-multiline className={s.visitSub}>Harbor Hill, across from the post office, which is not a coincidence.</p>
                 <dl className={s.hours}>
-                  {HOURS.map(([d, h]) => (
+                  {HOURS.map(([d, h], i) => (
                     <div key={d}>
-                      <dt>{d}</dt>
-                      <dd>{h}</dd>
+                      <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                      <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                     </div>
                   ))}
                 </dl>
                 <p className={s.contact}>
-                  <a href="tel:+15550183321">(555) 018-3321</a>
+                  <a data-edit="visit.link" data-edit-max="28" href="tel:+15550183321">(555) 018-3321</a>
                 </p>
                 <p className={s.contact}>
-                  <a href="mailto:hello@paperplane.example">hello@paperplane.example</a>
+                  <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@paperplane.example">hello@paperplane.example</a>
                 </p>
               </div>
 
               <form className={s.card} action="#">
-                <h3 className={s.formTitle}>Save me a seat, or a notebook</h3>
+                <h3 data-edit="visit.formTitle" data-edit-max="40" className={s.formTitle}>Save me a seat, or a notebook</h3>
                 <div className={s.field}>
-                  <label htmlFor="pp-name">Name</label>
+                  <label data-edit="visit.label" htmlFor="pp-name">Name</label>
                   <input id="pp-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pp-email">Email</label>
+                  <label data-edit="visit.label2" htmlFor="pp-email">Email</label>
                   <input id="pp-email" name="email" type="email" autoComplete="email" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pp-what">What for</label>
+                  <label data-edit="visit.label3" htmlFor="pp-what">What for</label>
                   <select id="pp-what" name="what" defaultValue="club">
                     <option value="club">A seat at the next letter club</option>
                     <option value="penpal">A pen pal from the box</option>
@@ -393,10 +405,10 @@ export default function PaperPlaneStationersPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="pp-note">Anything else</label>
+                  <label data-edit="visit.label4" htmlFor="pp-note">Anything else</label>
                   <textarea id="pp-note" name="note" rows={3} />
                 </div>
-                <button className={s.submit} type="submit">Send it</button>
+                <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">Send it</button>
               </form>
             </div>
           </div>
@@ -405,7 +417,7 @@ export default function PaperPlaneStationersPage() {
 
       <footer className={s.footer}>
         {/* A strip of the house wrapping paper, cut with pinking shears. */}
-        <div className={s.footStrip} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="2,1,3,4,0" className={s.footStrip} aria-hidden="true">
           <TabbiedPattern
             pattern={crease}
             palette={STRIP}
@@ -416,12 +428,12 @@ export default function PaperPlaneStationersPage() {
           />
         </div>
         <div className={s.footText}>
-          <p className={s.footName}>Paper Plane</p>
-          <p>A fictional stationery shop. The pens, prices and club dates are invented.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Paper Plane</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional stationery shop. The pens, prices and club dates are invented.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
-          <p>The paper plane is a generated image, drawn in the page's own colors.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The paper plane is a generated image, drawn in the page's own colors.</p>
         </div>
       </footer>
     </div>

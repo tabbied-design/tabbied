@@ -144,7 +144,19 @@ const QUESTIONS = [
 
 export default function StitchLaneTailorsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--navy': '#1d2438',
+        '--thread': '#f3ede1',
+        '--chalk': '#f0a3b4',
+        '--tape': '#e8c15a',
+        '--cloth': '#4a5a86',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="navy,thread,chalk,tape,cloth"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -154,15 +166,15 @@ export default function StitchLaneTailorsPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Stitch Lane</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Stitch Lane</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -173,23 +185,23 @@ export default function StitchLaneTailorsPage() {
             pinked edges and a swing tag tied to its corner. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Tailor and alterations, 22 Mercer Row</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Tailor and alterations, 22 Mercer Row</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Take it in, let it out, <em>take it up.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Hems while you work, most alterations in a week, and suits cut
               and sewn in the back room since 1987. Walk in to drop off.
               Fittings are by appointment.
             </p>
             <div className={s.actions}>
-              <a className={s.button} href="#visit">Book a fitting</a>
-              <a className={s.ghost} href="#prices">Read the price tags</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#visit">Book a fitting</a>
+              <a data-edit="hero.ghost" data-edit-max="28" className={s.ghost} href="#prices">Read the price tags</a>
             </div>
           </div>
 
           <div className={s.swatch}>
-            <div className={s.swatchCloth} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="0,1,4,2,1,4" className={s.swatchCloth} aria-hidden="true">
               <TabbiedPattern
                 pattern={percale}
                 palette={SHIRTING}
@@ -201,10 +213,10 @@ export default function StitchLaneTailorsPage() {
             </div>
             <div className={s.heroTag}>
               <div className={s.tagCard}>
-                <p className={s.tagKind}>No. 0417</p>
-                <p className={s.tagName}>Trouser hem</p>
-                <p className={s.tagPrice}>$18</p>
-                <p className={s.tagKind}>Ready in 2 days</p>
+                <p data-edit="hero.tagKind" data-edit-max="240" data-edit-multiline className={s.tagKind}>No. 0417</p>
+                <p data-edit="hero.tagName" data-edit-max="240" data-edit-multiline className={s.tagName}>Trouser hem</p>
+                <p data-edit="hero.tagPrice" data-edit-max="240" data-edit-multiline className={s.tagPrice}>$18</p>
+                <p data-edit="hero.tagKind2" data-edit-max="240" data-edit-multiline className={s.tagKind}>Ready in 2 days</p>
               </div>
             </div>
           </div>
@@ -223,27 +235,27 @@ export default function StitchLaneTailorsPage() {
             Every price on a swing tag, hung from its rail by garment. */}
         <section id="prices" className={s.section} aria-labelledby="prices-h">
           <div className={s.head}>
-            <p className={s.label}>The price list</p>
-            <h2 id="prices-h">Every price is on a tag</h2>
-            <p className={s.headNote}>
+            <p data-edit="prices.label" data-edit-max="240" data-edit-multiline className={s.label}>The price list</p>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Every price is on a tag</h2>
+            <p data-edit="prices.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               These are the prices for straightforward work. Anything unusual
               we quote when we see it on you, before we start, and the quote
               is the price.
             </p>
           </div>
-          {RAILS.map((r) => (
+          {RAILS.map((r, i) => (
             <div className={s.rail} key={r.title}>
               <div className={s.railHead}>
-                <h3>{r.title}</h3>
-                <p>{r.note}</p>
+                <h3 data-edit={`prices.title2.${i}`} data-edit-max="40">{r.title}</h3>
+                <p data-edit={`prices.body.${i}`} data-edit-max="240" data-edit-multiline>{r.note}</p>
               </div>
               <ul className={s.tags}>
-                {r.tags.map((t) => (
+                {r.tags.map((t, i2) => (
                   <li key={t.name} className={s.tag}>
                     <div className={s.tagCard}>
-                      <p className={s.tagName}>{t.name}</p>
-                      <p className={s.tagPrice}>{t.price}</p>
-                      <p className={s.tagKind}>{t.days}</p>
+                      <p data-edit={`prices.tagName.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.tagName}>{t.name}</p>
+                      <p data-edit={`prices.tagPrice.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.tagPrice}>{t.price}</p>
+                      <p data-edit={`prices.tagKind.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.tagKind}>{t.days}</p>
                     </div>
                   </li>
                 ))}
@@ -256,20 +268,20 @@ export default function StitchLaneTailorsPage() {
             How long things take, measured off along a tape. */}
         <section id="turnaround" className={s.section} aria-labelledby="turn-h">
           <div className={s.head}>
-            <p className={s.label}>Turnaround</p>
-            <h2 id="turn-h">How long it takes, measured in days</h2>
-            <p className={s.headNote}>
+            <p data-edit="turnaround.label" data-edit-max="240" data-edit-multiline className={s.label}>Turnaround</p>
+            <h2 data-edit="turnaround.title" data-edit-max="60" id="turn-h">How long it takes, measured in days</h2>
+            <p data-edit="turnaround.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               In a hurry for a wedding or an interview? Say so when you drop
               it off. Express is half as long again on the price, when the
               bench has room.
             </p>
           </div>
           <ol className={s.measure}>
-            {TURNAROUND.map((m) => (
+            {TURNAROUND.map((m, i) => (
               <li key={m.when}>
-                <p className={s.measureWhen}>{m.when}</p>
-                <h3>{m.what}</h3>
-                <p className={s.measureNote}>{m.note}</p>
+                <p data-edit={`turnaround.measureWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.measureWhen}>{m.when}</p>
+                <h3 data-edit={`turnaround.title2.${i}`} data-edit-max="40">{m.what}</h3>
+                <p data-edit={`turnaround.measureNote.${i}`} data-edit-max="240" data-edit-multiline className={s.measureNote}>{m.note}</p>
               </li>
             ))}
           </ol>
@@ -284,7 +296,7 @@ export default function StitchLaneTailorsPage() {
               inks={{ black: 'var(--text)', red: 'var(--chalk)', blue: 'var(--navy)' }}
               className={s.dummy}
             />
-            <div className={s.box} aria-hidden="true">
+            <div data-edit-pattern="fittings.field" data-edit-roles="4,1,2,3,1" className={s.box} aria-hidden="true">
               <TabbiedPattern
                 pattern={percale}
                 palette={BOX}
@@ -297,14 +309,14 @@ export default function StitchLaneTailorsPage() {
           </div>
           <div className={s.fittingText}>
             <div className={s.head}>
-              <p className={s.label}>Fittings</p>
-              <h2 id="fit-h">A fitting takes about fifteen minutes</h2>
+              <p data-edit="fittings.label" data-edit-max="240" data-edit-multiline className={s.label}>Fittings</p>
+              <h2 data-edit="fittings.title" data-edit-max="60" id="fit-h">A fitting takes about fifteen minutes</h2>
             </div>
             <ol className={s.steps}>
-              {FITTING.map(([t, d]) => (
+              {FITTING.map(([t, d], i) => (
                 <li key={t}>
-                  <h3>{t}</h3>
-                  <p>{d}</p>
+                  <h3 data-edit={`fittings.title2.${i}`} data-edit-max="40">{t}</h3>
+                  <p data-edit={`fittings.body.${i}`} data-edit-max="240" data-edit-multiline>{d}</p>
                 </li>
               ))}
             </ol>
@@ -315,7 +327,7 @@ export default function StitchLaneTailorsPage() {
             The back room: a bolt of suiting with a chalk line across it. */}
         <section id="bespoke" className={s.bespoke} aria-labelledby="bespoke-h">
           <div className={s.bolt}>
-            <div className={s.boltCloth} aria-hidden="true">
+            <div data-edit-pattern="bespoke.field" data-edit-roles="0,4,1,0,4,3" className={s.boltCloth} aria-hidden="true">
               <TabbiedPattern
                 pattern={percale}
                 palette={SUITING}
@@ -325,41 +337,41 @@ export default function StitchLaneTailorsPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <p className={s.boltLabel}>Cloth 114. Navy chalk stripe, 11 oz wool</p>
+            <p data-edit="bespoke.boltLabel" data-edit-max="240" data-edit-multiline className={s.boltLabel}>Cloth 114. Navy chalk stripe, 11 oz wool</p>
           </div>
           <div className={s.bespokeText}>
-            <p className={s.label}>Made to measure</p>
-            <h2 id="bespoke-h">Cut for you, in the back room</h2>
-            <p className={s.headNote}>
+            <p data-edit="bespoke.label" data-edit-max="240" data-edit-multiline className={s.label}>Made to measure</p>
+            <h2 data-edit="bespoke.title" data-edit-max="60" id="bespoke-h">Cut for you, in the back room</h2>
+            <p data-edit="bespoke.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Twenty-two measurements, a paper pattern cut by Rosa, and three
               fittings over about six weeks. Choose from four hundred cloths in
               the books, or bring your own length.
             </p>
             <dl className={s.bespokePrices}>
-              {BESPOKE.map(([what, price]) => (
+              {BESPOKE.map(([what, price], i) => (
                 <div key={what}>
-                  <dt>{what}</dt>
-                  <dd>{price}</dd>
+                  <dt data-edit={`bespoke.term.${i}`} data-edit-max="28">{what}</dt>
+                  <dd data-edit={`bespoke.body.${i}`} data-edit-max="200" data-edit-multiline>{price}</dd>
                 </div>
               ))}
             </dl>
-            <p className={s.small}>Half at the first measure, half at the last fitting. Alterations to our own suits are free for life.</p>
+            <p data-edit="bespoke.small" data-edit-max="240" data-edit-multiline className={s.small}>Half at the first measure, half at the last fitting. Alterations to our own suits are free for life.</p>
           </div>
         </section>
 
         {/* --------------------------------------------------------- TAILORS */}
         <section id="tailors" className={s.section} aria-labelledby="tailors-h">
           <div className={s.head}>
-            <p className={s.label}>The bench</p>
-            <h2 id="tailors-h">Three tailors, one long table</h2>
+            <p data-edit="tailors.label" data-edit-max="240" data-edit-multiline className={s.label}>The bench</p>
+            <h2 data-edit="tailors.title" data-edit-max="60" id="tailors-h">Three tailors, one long table</h2>
           </div>
           <ul className={s.tailors}>
-            {TAILORS.map((t) => (
+            {TAILORS.map((t, i) => (
               <li key={t.name}>
-                <p className={s.tailorSince}>{t.since}</p>
-                <h3>{t.name}</h3>
-                <p className={s.tailorRole}>{t.role}</p>
-                <p className={s.tailorNote}>{t.note}</p>
+                <p data-edit={`tailors.tailorSince.${i}`} data-edit-max="240" data-edit-multiline className={s.tailorSince}>{t.since}</p>
+                <h3 data-edit={`tailors.title2.${i}`} data-edit-max="40">{t.name}</h3>
+                <p data-edit={`tailors.tailorRole.${i}`} data-edit-max="240" data-edit-multiline className={s.tailorRole}>{t.role}</p>
+                <p data-edit={`tailors.tailorNote.${i}`} data-edit-max="240" data-edit-multiline className={s.tailorNote}>{t.note}</p>
               </li>
             ))}
           </ul>
@@ -368,49 +380,49 @@ export default function StitchLaneTailorsPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={`${s.section} ${s.visit}`} aria-labelledby="visit-h">
           <div className={s.visitInfo}>
-            <p className={s.label}>Visit</p>
-            <h2 id="visit-h">22 Mercer Row</h2>
-            <p className={s.headNote}>
+            <p data-edit="visit.label" data-edit-max="240" data-edit-multiline className={s.label}>Visit</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">22 Mercer Row</h2>
+            <p data-edit="visit.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Garment Quarter, between the button shop and the dry cleaner.
               Look for the tape measure painted round the door.
             </p>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
             <p className={s.contact}>
-              <a href="tel:+15550186610">(555) 018-6610</a>
+              <a data-edit="visit.link" data-edit-max="28" href="tel:+15550186610">(555) 018-6610</a>
             </p>
             <p className={s.contact}>
-              <a href="mailto:bench@stitchlane.example">bench@stitchlane.example</a>
+              <a data-edit="visit.link2" data-edit-max="28" href="mailto:bench@stitchlane.example">bench@stitchlane.example</a>
             </p>
             <div className={s.faq}>
-              {QUESTIONS.map(([q, a]) => (
+              {QUESTIONS.map(([q, a], i) => (
                 <details key={q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`visit.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`visit.body2.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
           </div>
 
           <form className={s.form} action="#">
-            <p className={s.formTicket}>Fitting ticket</p>
-            <h3>Book a fitting</h3>
+            <p data-edit="visit.formTicket" data-edit-max="240" data-edit-multiline className={s.formTicket}>Fitting ticket</p>
+            <h3 data-edit="visit.title2" data-edit-max="40">Book a fitting</h3>
             <div className={s.field}>
-              <label htmlFor="sl-name">Name</label>
+              <label data-edit="visit.label2" htmlFor="sl-name">Name</label>
               <input id="sl-name" name="name" type="text" autoComplete="name" />
             </div>
             <div className={s.field}>
-              <label htmlFor="sl-phone">Phone</label>
+              <label data-edit="visit.label3" htmlFor="sl-phone">Phone</label>
               <input id="sl-phone" name="phone" type="tel" autoComplete="tel" />
             </div>
             <div className={s.field}>
-              <label htmlFor="sl-kind">What for</label>
+              <label data-edit="visit.label4" htmlFor="sl-kind">What for</label>
               <select id="sl-kind" name="kind" defaultValue="alteration">
                 <option value="alteration">Alteration fitting, 15 minutes</option>
                 <option value="bridal">Bridal or formal, 45 minutes</option>
@@ -418,19 +430,19 @@ export default function StitchLaneTailorsPage() {
               </select>
             </div>
             <div className={s.field}>
-              <label htmlFor="sl-date">Day you would like</label>
+              <label data-edit="visit.label5" htmlFor="sl-date">Day you would like</label>
               <input id="sl-date" name="date" type="date" />
             </div>
             <div className={s.field}>
-              <label htmlFor="sl-note">The garment, and what it needs</label>
+              <label data-edit="visit.label6" htmlFor="sl-note">The garment, and what it needs</label>
               <textarea id="sl-note" name="note" rows={3} />
             </div>
-            <button className={s.button} type="submit">Ask for the time</button>
-            <p className={s.small}>We confirm by text within the day.</p>
+            <button data-edit="visit.button" data-edit-max="24" className={s.button} type="submit">Ask for the time</button>
+            <p data-edit="visit.small" data-edit-max="240" data-edit-multiline className={s.small}>We confirm by text within the day.</p>
           </form>
         </section>
 
-        <div className={s.selvedge} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="0,2,1,4,3" className={s.selvedge} aria-hidden="true">
           <TabbiedPattern
             pattern={percale}
             palette={SELVEDGE}
@@ -443,10 +455,10 @@ export default function StitchLaneTailorsPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Stitch Lane</p>
-        <p>A fictional tailor and alterations shop. The tailors, prices and turnaround times are invented; the dummy is a generated image drawn in the page's colors.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Stitch Lane</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional tailor and alterations shop. The tailors, prices and turnaround times are invented; the dummy is a generated image drawn in the page's colors.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

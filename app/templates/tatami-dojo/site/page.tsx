@@ -133,7 +133,20 @@ const HOURS = [
 
 export default function TatamiDojoPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--mat': '#f6f4ef',
+        '--ink': '#121212',
+        '--yellow': '#f2b705',
+        '--green': '#2b8a57',
+        '--blue': '#1f4fa3',
+        '--red': '#d33a22',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="mat,ink,yellow,green,blue,red"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -143,15 +156,15 @@ export default function TatamiDojoPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Tatami</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Tatami</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -160,21 +173,21 @@ export default function TatamiDojoPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div>
-            <p className={s.kicker}>Karate school, 220 Foundry Street. Ages 4 and up</p>
-            <h1 id="hero-h" className={s.title}>Everyone starts on a <em>white belt.</em></h1>
-            <p className={s.lede}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Karate school, 220 Foundry Street. Ages 4 and up</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>Everyone starts on a <em>white belt.</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Tatami teaches traditional karate to children from four and to
               adults of any age, on one long mat above the bike shop. Six
               belts, four sensei, and a first class that costs nothing.
             </p>
             <div className={s.actions}>
-              <a className={s.button} href="#first">Book a free first class</a>
-              <a className={s.buttonLine} href="#timetable">See the timetable</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#first">Book a free first class</a>
+              <a data-edit="hero.buttonLine" data-edit-max="28" className={s.buttonLine} href="#timetable">See the timetable</a>
             </div>
           </div>
 
           <div className={s.heroArt}>
-            <div className={s.heroField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,5,4,1,3" className={s.heroField} aria-hidden="true">
               <TabbiedPattern
                 pattern={radius}
                 palette={BAUHAUS}
@@ -186,35 +199,35 @@ export default function TatamiDojoPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <p className={s.since}>Since 2008</p>
+            <p data-edit="hero.since" data-edit-max="240" data-edit-multiline className={s.since}>Since 2008</p>
           </div>
         </section>
 
         {/* The belt rack: six grades, top to bottom of the page. */}
         <ol className={s.rack} aria-label="The six belts">
-          {RACK.map((b) => (
-            <li key={b.name} className={s[b.tone]}>{b.name}</li>
+          {RACK.map((b, i) => (
+            <li data-edit={`top.item.${i}`} data-edit-max="80" key={b.name} className={s[b.tone]}>{b.name}</li>
           ))}
         </ol>
 
         {/* --------------------------------------------------------- CLASSES */}
         <section id="classes" className={s.sec} aria-labelledby="classes-h">
           <div className={s.head}>
-            <p className={s.num}>01</p>
-            <h2 id="classes-h">Classes by age</h2>
-            <p className={s.headNote}>
+            <p data-edit="classes.num" data-edit-max="240" data-edit-multiline className={s.num}>01</p>
+            <h2 data-edit="classes.title" data-edit-max="60" id="classes-h">Classes by age</h2>
+            <p data-edit="classes.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Grouped by age, not by belt, so a nervous eight-year-old is never
               on the mat with teenagers. Adults train together whatever their
               grade.
             </p>
           </div>
           <ul className={s.groups}>
-            {GROUPS.map((g) => (
+            {GROUPS.map((g, i) => (
               <li key={g.name}>
                 <span className={`${s.shape} ${s[g.shape]}`} aria-hidden="true" />
-                <h3>{g.name}</h3>
-                <p className={s.ages}>{g.ages}</p>
-                <p>{g.note}</p>
+                <h3 data-edit={`classes.title2.${i}`} data-edit-max="40">{g.name}</h3>
+                <p data-edit={`classes.ages.${i}`} data-edit-max="240" data-edit-multiline className={s.ages}>{g.ages}</p>
+                <p data-edit={`classes.body.${i}`} data-edit-max="240" data-edit-multiline>{g.note}</p>
               </li>
             ))}
           </ul>
@@ -223,35 +236,35 @@ export default function TatamiDojoPage() {
         {/* ------------------------------------------------------- TIMETABLE */}
         <section id="timetable" className={s.sec} aria-labelledby="timetable-h">
           <div className={s.head}>
-            <p className={s.num}>02</p>
-            <h2 id="timetable-h">The week on the mat</h2>
-            <p className={s.headNote}>
+            <p data-edit="timetable.num" data-edit-max="240" data-edit-multiline className={s.num}>02</p>
+            <h2 data-edit="timetable.title" data-edit-max="60" id="timetable-h">The week on the mat</h2>
+            <p data-edit="timetable.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Times are pm on weekdays and am on weekend mornings until noon.
               Arrive ten minutes early; the door to the mat closes at the bow.
             </p>
           </div>
 
           <table className={s.timetable}>
-            <caption className={s.srOnly}>Class times by age group and day</caption>
+            <caption data-edit="timetable.srOnly" className={s.srOnly}>Class times by age group and day</caption>
             <thead>
               <tr>
-                <th scope="col">Group</th>
-                {DAYS.map((d) => (
-                  <th key={d} scope="col">{d}</th>
+                <th data-edit="timetable.heading" scope="col">Group</th>
+                {DAYS.map((d, i) => (
+                  <th data-edit={`timetable.heading2.${i}`} key={d} scope="col">{d}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {TIMETABLE.map((r) => (
+              {TIMETABLE.map((r, i) => (
                 <tr key={r.group}>
                   <th scope="row">
-                    <span className={s.groupName}>{r.group}</span>
-                    <span className={s.groupAges}>{r.ages}</span>
+                    <span data-edit={`timetable.groupName.${i}`} data-edit-max="60" className={s.groupName}>{r.group}</span>
+                    <span data-edit={`timetable.groupAges.${i}`} data-edit-max="60" className={s.groupAges}>{r.ages}</span>
                   </th>
                   {r.slots.map((slot, j) => (
                     <td key={DAYS[j]} className={slot ? s.on : s.off}>
-                      <span className={s.slotDay}>{DAYS[j]}</span>
-                      <span className={`${s.slot} ${s[r.tone]}`}>{slot}</span>
+                      <span data-edit={`timetable.slotDay.${i}.${j}`} data-edit-max="60" className={s.slotDay}>{DAYS[j]}</span>
+                      <span data-edit={`timetable.slot.${i}.${j}`} data-edit-max="60" className={`${s.slot} ${s[r.tone]}`}>{slot}</span>
                     </td>
                   ))}
                 </tr>
@@ -262,7 +275,7 @@ export default function TatamiDojoPage() {
 
         {/* -------------------------------------------------------- THE PATH */}
         <section id="belts" className={s.pathSec} aria-labelledby="belts-h">
-          <div className={s.folded} aria-hidden="true">
+          <div data-edit-pattern="belts.field" data-edit-roles="transparent,1,2,3,4,5" className={s.folded} aria-hidden="true">
             <TabbiedPattern
               pattern={thirdstop}
               palette={BELTS}
@@ -275,9 +288,9 @@ export default function TatamiDojoPage() {
           </div>
           <div className={s.pathInner}>
             <div className={s.head}>
-              <p className={s.num}>03</p>
-              <h2 id="belts-h">From white to black</h2>
-              <p className={s.headNote}>
+              <p data-edit="belts.num" data-edit-max="240" data-edit-multiline className={s.num}>03</p>
+              <h2 data-edit="belts.title" data-edit-max="60" id="belts-h">From white to black</h2>
+              <p data-edit="belts.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 Gradings are on the last Saturday of March, June, September and
                 December. Your sensei tells you when you are ready; nobody
                 grades by asking.
@@ -285,19 +298,19 @@ export default function TatamiDojoPage() {
             </div>
 
             <ol className={s.path}>
-              {PATH.map((b) => (
+              {PATH.map((b, i) => (
                 <li key={b.belt}>
-                  <p className={`${s.belt} ${s[b.tone]}`}>{b.belt}</p>
+                  <p data-edit={`belts.belt.${i}`} data-edit-max="240" data-edit-multiline className={`${s.belt} ${s[b.tone]}`}>{b.belt}</p>
                   <div className={s.pathBody}>
-                    <p className={s.grade}>{b.grade}</p>
-                    <h3>{b.time}</h3>
-                    <p>{b.learn}</p>
+                    <p data-edit={`belts.grade.${i}`} data-edit-max="240" data-edit-multiline className={s.grade}>{b.grade}</p>
+                    <h3 data-edit={`belts.title2.${i}`} data-edit-max="40">{b.time}</h3>
+                    <p data-edit={`belts.body.${i}`} data-edit-max="240" data-edit-multiline>{b.learn}</p>
                   </div>
-                  <p className={s.fee}>{b.fee}</p>
+                  <p data-edit={`belts.fee.${i}`} data-edit-max="240" data-edit-multiline className={s.fee}>{b.fee}</p>
                 </li>
               ))}
             </ol>
-            <p className={s.pathNote}>
+            <p data-edit="belts.pathNote" data-edit-max="240" data-edit-multiline className={s.pathNote}>
               Under sixteen, the last step is a junior black belt, with a white
               stripe through it. It becomes a full 1st dan without a second test.
             </p>
@@ -308,7 +321,7 @@ export default function TatamiDojoPage() {
         <section id="first" className={s.sec} aria-labelledby="first-h">
           <div className={s.first}>
             <div className={s.firstArt}>
-              <div className={s.firstField} aria-hidden="true">
+              <div data-edit-pattern="first.field" data-edit-roles="transparent,5,2,1,4" className={s.firstField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={radius}
                   palette={FREE}
@@ -319,19 +332,19 @@ export default function TatamiDojoPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.freeDisc}>Free</p>
+              <p data-edit="first.freeDisc" data-edit-max="240" data-edit-multiline className={s.freeDisc}>Free</p>
             </div>
 
             <div>
               <div className={s.firstHead}>
-                <p className={s.num}>04</p>
-                <h2 id="first-h">Your first class, <em>on us</em></h2>
+                <p data-edit="first.num" data-edit-max="240" data-edit-multiline className={s.num}>04</p>
+                <h2 data-edit="first.title" data-edit-format="emphasis" data-edit-max="60" id="first-h">Your first class, <em>on us</em></h2>
               </div>
               <ol className={s.steps}>
-                {FIRST.map(([title, body]) => (
+                {FIRST.map(([title, body], i) => (
                   <li key={title}>
-                    <h3>{title}</h3>
-                    <p>{body}</p>
+                    <h3 data-edit={`first.title.${i}`} data-edit-max="40">{title}</h3>
+                    <p data-edit={`first.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
                   </li>
                 ))}
               </ol>
@@ -340,18 +353,18 @@ export default function TatamiDojoPage() {
 
           <form className={s.form} action="#">
             <div className={s.formBody}>
-              <h3 className={s.formTitle}>Book it</h3>
-              <p className={s.formNote}>
+              <h3 data-edit="first.formTitle" data-edit-max="40" className={s.formTitle}>Book it</h3>
+              <p data-edit="first.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>
                 Tell us who is coming and when. We reply the same day with a
                 place on the mat and a gi in the right size.
               </p>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="tt-name">Name of the student</label>
+                  <label data-edit="first.label" htmlFor="tt-name">Name of the student</label>
                   <input id="tt-name" name="name" type="text" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="tt-group">Group</label>
+                  <label data-edit="first.label2" htmlFor="tt-group">Group</label>
                   <select id="tt-group" name="group" defaultValue="juniors">
                     <option value="dragons">Little dragons, 4 to 6</option>
                     <option value="juniors">Juniors, 7 to 11</option>
@@ -361,7 +374,7 @@ export default function TatamiDojoPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="tt-day">Day you would like</label>
+                  <label data-edit="first.label3" htmlFor="tt-day">Day you would like</label>
                   <select id="tt-day" name="day" defaultValue="sat">
                     <option value="mon">Monday</option>
                     <option value="tue">Tuesday</option>
@@ -373,11 +386,11 @@ export default function TatamiDojoPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="tt-contact">Your phone or email</label>
+                  <label data-edit="first.label4" htmlFor="tt-contact">Your phone or email</label>
                   <input id="tt-contact" name="contact" type="text" autoComplete="email" />
                 </div>
               </div>
-              <button className={s.button} type="submit">Hold a place on the mat</button>
+              <button data-edit="first.button" data-edit-max="24" className={s.button} type="submit">Hold a place on the mat</button>
             </div>
             <Artwork
               slug="tatami-dojo-bow"
@@ -391,22 +404,22 @@ export default function TatamiDojoPage() {
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.sec} aria-labelledby="fees-h">
           <div className={s.head}>
-            <p className={s.num}>05</p>
-            <h2 id="fees-h">Fees</h2>
-            <p className={s.headNote}>
+            <p data-edit="fees.num" data-edit-max="240" data-edit-multiline className={s.num}>05</p>
+            <h2 data-edit="fees.title" data-edit-max="60" id="fees-h">Fees</h2>
+            <p data-edit="fees.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               No joining fee and no contract; thirty days' notice to stop. A
               second person from the same family pays 15 percent less, a third
               25 percent less.
             </p>
           </div>
           <table className={s.fees}>
-            <caption className={s.srOnly}>Monthly fees</caption>
+            <caption data-edit="fees.srOnly" className={s.srOnly}>Monthly fees</caption>
             <tbody>
-              {FEES.map(([plan, what, price]) => (
+              {FEES.map(([plan, what, price], i) => (
                 <tr key={plan}>
-                  <th scope="row">{plan}</th>
-                  <td>{what}</td>
-                  <td className={s.price}>{price}</td>
+                  <th data-edit={`fees.heading.${i}`} scope="row">{plan}</th>
+                  <td data-edit={`fees.cell.${i}`}>{what}</td>
+                  <td data-edit={`fees.price.${i}`} className={s.price}>{price}</td>
                 </tr>
               ))}
             </tbody>
@@ -416,20 +429,20 @@ export default function TatamiDojoPage() {
         {/* ---------------------------------------------------------- SENSEI */}
         <section id="sensei" className={s.sec} aria-labelledby="sensei-h">
           <div className={s.head}>
-            <p className={s.num}>06</p>
-            <h2 id="sensei-h">Sensei</h2>
-            <p className={s.headNote}>
+            <p data-edit="sensei.num" data-edit-max="240" data-edit-multiline className={s.num}>06</p>
+            <h2 data-edit="sensei.title" data-edit-max="60" id="sensei-h">Sensei</h2>
+            <p data-edit="sensei.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Every class has two black belts on the mat, one teaching and one
               walking the lines.
             </p>
           </div>
           <ul className={s.sensei}>
-            {SENSEI.map((p) => (
+            {SENSEI.map((p, i) => (
               <li key={p.name}>
                 <span className={`${s.blackBelt} ${s[p.dan]}`} aria-hidden="true" />
-                <h3>{p.name}</h3>
-                <p className={s.role}>{p.role}</p>
-                <p>{p.note}</p>
+                <h3 data-edit={`sensei.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                <p data-edit={`sensei.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{p.role}</p>
+                <p data-edit={`sensei.body.${i}`} data-edit-max="240" data-edit-multiline>{p.note}</p>
               </li>
             ))}
           </ul>
@@ -438,14 +451,14 @@ export default function TatamiDojoPage() {
         {/* ------------------------------------------------------------- ASK */}
         <section className={s.sec} aria-labelledby="ask-h">
           <div className={s.head}>
-            <p className={s.num}>07</p>
-            <h2 id="ask-h">Parents ask</h2>
+            <p data-edit="ask.num" data-edit-max="240" data-edit-multiline className={s.num}>07</p>
+            <h2 data-edit="ask.title" data-edit-max="60" id="ask-h">Parents ask</h2>
           </div>
           <dl className={s.ask}>
-            {ASK.map(([q, a]) => (
+            {ASK.map(([q, a], i) => (
               <div key={q}>
-                <dt>{q}</dt>
-                <dd>{a}</dd>
+                <dt data-edit={`ask.term.${i}`} data-edit-max="28">{q}</dt>
+                <dd data-edit={`ask.body.${i}`} data-edit-max="200" data-edit-multiline>{a}</dd>
               </div>
             ))}
           </dl>
@@ -455,23 +468,23 @@ export default function TatamiDojoPage() {
         <section id="find" className={s.sec} aria-labelledby="find-h">
           <div className={s.find}>
             <div>
-              <p className={s.num}>08</p>
-              <h2 id="find-h" className={s.findTitle}>220 Foundry Street</h2>
-              <p className={s.findText}>
+              <p data-edit="find.num" data-edit-max="240" data-edit-multiline className={s.num}>08</p>
+              <h2 data-edit="find.findTitle" data-edit-max="60" id="find-h" className={s.findTitle}>220 Foundry Street</h2>
+              <p data-edit="find.findText" data-edit-max="240" data-edit-multiline className={s.findText}>
                 Second floor, above Spoke and Chain bicycles. Stairs, and a
                 lift at the back. Street parking on Foundry is free after six.
               </p>
               <p className={s.findText}>
-                <a href="tel:+15550153390">(555) 015-3390</a>
+                <a data-edit="find.link" data-edit-max="28" href="tel:+15550153390">(555) 015-3390</a>
                 <br />
-                <a href="mailto:osu@tatamidojo.example">osu@tatamidojo.example</a>
+                <a data-edit="find.link2" data-edit-max="28" href="mailto:osu@tatamidojo.example">osu@tatamidojo.example</a>
               </p>
             </div>
             <dl className={s.hours}>
-              {HOURS.map(([day, time]) => (
+              {HOURS.map(([day, time], i) => (
                 <div key={day}>
-                  <dt>{day}</dt>
-                  <dd>{time}</dd>
+                  <dt data-edit={`find.term.${i}`} data-edit-max="28">{day}</dt>
+                  <dd data-edit={`find.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                 </div>
               ))}
             </dl>
@@ -480,7 +493,7 @@ export default function TatamiDojoPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.floor} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,5,4,3" className={s.floor} aria-hidden="true">
           <TabbiedPattern
             pattern={radius}
             palette={FLOOR}
@@ -492,11 +505,11 @@ export default function TatamiDojoPage() {
           />
         </div>
         <div className={s.footInner}>
-          <p className={s.footName}>Tatami</p>
-          <p>A fictional karate school. The sensei, times, grades and fees are invented.</p>
-          <p>The two bowing figures are a generated picture, drawn in the page's own colors.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Tatami</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional karate school. The sensei, times, grades and fees are invented.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The two bowing figures are a generated picture, drawn in the page's own colors.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
         </div>
       </footer>

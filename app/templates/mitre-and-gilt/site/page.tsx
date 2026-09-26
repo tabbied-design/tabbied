@@ -131,7 +131,19 @@ const FAQ = [
 
 export default function MitreAndGiltPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--wall': '#e9e4da',
+        '--ink': '#1c1a17',
+        '--gilt': '#b08a3e',
+        '--walnut': '#5b3a25',
+        '--green': '#2c4a40',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="wall,ink,gilt,walnut,green"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -141,15 +153,15 @@ export default function MitreAndGiltPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Mitre &amp; Gilt</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Mitre &amp; Gilt</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -160,19 +172,19 @@ export default function MitreAndGiltPage() {
             label beside each frame saying what it is and what it costs. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.wallText}>
-            <p className={s.kicker}>Picture framers, 44 Lantern Street</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Picture framers, 44 Lantern Street</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Frames made by hand, <em>for the things worth keeping.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Prints, paintings, photographs, a child's first drawing, a
               shirt with a signature on it. We have cut and joined every
               frame in the back room since 1998, and we will tell you when
               a simple one is the right one.
             </p>
             <p className={s.heroLinks}>
-              <a className={s.button} href="#prices">Prices by size</a>
-              <a className={s.textLink} href="#visit">Bring a piece in</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#prices">Prices by size</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#visit">Bring a piece in</a>
             </p>
           </div>
 
@@ -191,17 +203,17 @@ export default function MitreAndGiltPage() {
                 </div>
               </div>
               <figcaption className={s.label}>
-                <strong className={s.labelName}>No. 1</strong>
-                <span className={s.labelTitle}>Still life with pear, an etching</span>
-                <span className={s.labelBody}>Gilded maple, 8-ply mat, museum glass, 24 x 20 in</span>
-                <span className={s.labelPrice}>$386 framed</span>
+                <strong data-edit="hero.labelName" className={s.labelName}>No. 1</strong>
+                <span data-edit="hero.labelTitle" data-edit-max="60" className={s.labelTitle}>Still life with pear, an etching</span>
+                <span data-edit="hero.labelBody" data-edit-max="60" className={s.labelBody}>Gilded maple, 8-ply mat, museum glass, 24 x 20 in</span>
+                <span data-edit="hero.labelPrice" data-edit-max="60" className={s.labelPrice}>$386 framed</span>
               </figcaption>
             </figure>
 
             <figure className={s.hangSmall}>
               <div className={`${s.frame} ${s.frameBlack}`}>
                 <div className={s.mat}>
-                  <div className={s.art} aria-hidden="true">
+                  <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,2,0" className={s.art} aria-hidden="true">
                     <TabbiedPattern
                       pattern={mitre}
                       palette={SMALL}
@@ -214,10 +226,10 @@ export default function MitreAndGiltPage() {
                 </div>
               </div>
               <figcaption className={s.label}>
-                <strong className={s.labelName}>No. 2</strong>
-                <span className={s.labelTitle}>Black ash, 4-ply mat</span>
-                <span className={s.labelBody}>Clear glass, 8 x 10 in</span>
-                <span className={s.labelPrice}>$95 framed</span>
+                <strong data-edit="hero.labelName2" className={s.labelName}>No. 2</strong>
+                <span data-edit="hero.labelTitle2" data-edit-max="60" className={s.labelTitle}>Black ash, 4-ply mat</span>
+                <span data-edit="hero.labelBody2" data-edit-max="60" className={s.labelBody}>Clear glass, 8 x 10 in</span>
+                <span data-edit="hero.labelPrice2" data-edit-max="60" className={s.labelPrice}>$95 framed</span>
               </figcaption>
             </figure>
           </div>
@@ -226,16 +238,16 @@ export default function MitreAndGiltPage() {
         {/* --------------------------------------------------------- PROCESS */}
         <section id="process" className={s.sec} aria-labelledby="process-h">
           <div className={s.secHead}>
-            <p className={s.room}>Room I</p>
-            <h2 id="process-h">How a frame is made</h2>
-            <p className={s.secNote}>From the counter to your wall in five steps and about ten days.</p>
+            <p data-edit="process.room" data-edit-max="240" data-edit-multiline className={s.room}>Room I</p>
+            <h2 data-edit="process.title" data-edit-max="60" id="process-h">How a frame is made</h2>
+            <p data-edit="process.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>From the counter to your wall in five steps and about ten days.</p>
           </div>
           <ol className={s.process}>
-            {PROCESS.map(([n, title, body]) => (
+            {PROCESS.map(([n, title, body], i) => (
               <li key={n}>
-                <span className={s.numeral}>{n}</span>
-                <h3>{title}</h3>
-                <p>{body}</p>
+                <span data-edit={`process.numeral.${i}`} data-edit-max="60" className={s.numeral}>{n}</span>
+                <h3 data-edit={`process.title2.${i}`} data-edit-max="40">{title}</h3>
+                <p data-edit={`process.body.${i}`} data-edit-max="240" data-edit-multiline>{body}</p>
               </li>
             ))}
           </ol>
@@ -244,22 +256,22 @@ export default function MitreAndGiltPage() {
         {/* ------------------------------------------------------ MOULDINGS */}
         <section id="mouldings" className={s.sec} aria-labelledby="mouldings-h">
           <div className={s.secHead}>
-            <p className={s.room}>Room II</p>
-            <h2 id="mouldings-h">Mouldings</h2>
-            <p className={s.secNote}>
+            <p data-edit="mouldings.room" data-edit-max="240" data-edit-multiline className={s.room}>Room II</p>
+            <h2 data-edit="mouldings.title" data-edit-max="60" id="mouldings-h">Mouldings</h2>
+            <p data-edit="mouldings.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Over four hundred lengths on the rack; these six are the ones
               we reach for first. Priced by the running foot of frame, so a
               16 x 20 in piece takes six feet.
             </p>
           </div>
           <ul className={s.corners}>
-            {MOULDINGS.map((m) => (
+            {MOULDINGS.map((m, i) => (
               <li key={m.name} className={s.cornerItem}>
                 <div className={`${s.corner} ${s[m.tone]}`} aria-hidden="true" />
                 <div className={s.label}>
-                  <strong className={s.labelName}>{m.name}</strong>
-                  <span className={s.labelBody}>{m.detail}</span>
-                  <span className={s.labelPrice}>{m.price}</span>
+                  <strong data-edit={`mouldings.labelName.${i}`} className={s.labelName}>{m.name}</strong>
+                  <span data-edit={`mouldings.labelBody.${i}`} data-edit-max="60" className={s.labelBody}>{m.detail}</span>
+                  <span data-edit={`mouldings.labelPrice.${i}`} data-edit-max="60" className={s.labelPrice}>{m.price}</span>
                 </div>
               </li>
             ))}
@@ -270,9 +282,9 @@ export default function MitreAndGiltPage() {
         <section id="mats" className={s.sec} aria-labelledby="mats-h">
           <div className={s.matsHead}>
             <div className={s.secHead}>
-              <p className={s.room}>Room III</p>
-              <h2 id="mats-h">Mats and glass</h2>
-              <p className={s.secNote}>
+              <p data-edit="mats.room" data-edit-max="240" data-edit-multiline className={s.room}>Room III</p>
+              <h2 data-edit="mats.title" data-edit-max="60" id="mats-h">Mats and glass</h2>
+              <p data-edit="mats.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 The mat keeps the work off the glass and gives it room. The
                 glass decides how long the colors last.
               </p>
@@ -281,7 +293,7 @@ export default function MitreAndGiltPage() {
               <div className={`${s.frame} ${s.frameWalnut}`}>
                 <div className={`${s.mat} ${s.matDouble}`}>
                   <div className={s.matInner}>
-                    <div className={`${s.art} ${s.artSquare}`} aria-hidden="true">
+                    <div data-edit-pattern="mats.field" data-edit-roles="transparent,4,2,3,1" className={`${s.art} ${s.artSquare}`} aria-hidden="true">
                       <TabbiedPattern
                         pattern={casing}
                         palette={DOUBLE}
@@ -295,49 +307,49 @@ export default function MitreAndGiltPage() {
                 </div>
               </div>
               <figcaption className={s.label}>
-                <strong className={s.labelName}>No. 3</strong>
-                <span className={s.labelTitle}>A double mat</span>
-                <span className={s.labelBody}>Walnut, white over green lacquer, 11 x 14 in</span>
-                <span className={s.labelPrice}>$210 framed</span>
+                <strong data-edit="mats.labelName" className={s.labelName}>No. 3</strong>
+                <span data-edit="mats.labelTitle" data-edit-max="60" className={s.labelTitle}>A double mat</span>
+                <span data-edit="mats.labelBody" data-edit-max="60" className={s.labelBody}>Walnut, white over green lacquer, 11 x 14 in</span>
+                <span data-edit="mats.labelPrice" data-edit-max="60" className={s.labelPrice}>$210 framed</span>
               </figcaption>
             </figure>
           </div>
           <div className={s.matsGrid}>
             <div>
-              <h3 className={s.subHead}>Mats and mounts</h3>
+              <h3 data-edit="mats.subHead" data-edit-max="40" className={s.subHead}>Mats and mounts</h3>
               <dl className={s.list}>
-                {MATS.map(([name, what, price]) => (
+                {MATS.map(([name, what, price], i) => (
                   <div key={name}>
-                    <dt>{name}</dt>
-                    <dd className={s.listWhat}>{what}</dd>
-                    <dd className={s.listPrice}>{price}</dd>
+                    <dt data-edit={`mats.term.${i}`} data-edit-max="28">{name}</dt>
+                    <dd data-edit={`mats.listWhat.${i}`} data-edit-max="200" data-edit-multiline className={s.listWhat}>{what}</dd>
+                    <dd data-edit={`mats.listPrice.${i}`} data-edit-max="200" data-edit-multiline className={s.listPrice}>{price}</dd>
                   </div>
                 ))}
               </dl>
             </div>
             <div>
-              <h3 className={s.subHead}>Glazing, per square foot</h3>
+              <h3 data-edit="mats.subHead2" data-edit-max="40" className={s.subHead}>Glazing, per square foot</h3>
               <div className={s.tableWrap}>
                 <table className={s.table}>
-                  <caption className={s.srOnly}>Glass types, UV protection, glare and price per square foot</caption>
+                  <caption data-edit="mats.srOnly" className={s.srOnly}>Glass types, UV protection, glare and price per square foot</caption>
                   <thead>
                     <tr>
-                      <th scope="col">Glass</th>
-                      <th scope="col">UV blocked</th>
-                      <th scope="col">Glare</th>
-                      <th scope="col" className={s.right}>Price</th>
+                      <th data-edit="mats.heading" scope="col">Glass</th>
+                      <th data-edit="mats.heading2" scope="col">UV blocked</th>
+                      <th data-edit="mats.heading3" scope="col">Glare</th>
+                      <th data-edit="mats.right" scope="col" className={s.right}>Price</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {GLASS.map((g) => (
+                    {GLASS.map((g, i) => (
                       <tr key={g.name}>
                         <th scope="row">
-                          <span className={s.glassName}>{g.name}</span>
-                          <small className={s.glassGood}>{g.good}</small>
+                          <span data-edit={`mats.glassName.${i}`} data-edit-max="60" className={s.glassName}>{g.name}</span>
+                          <small data-edit={`mats.glassGood.${i}`} className={s.glassGood}>{g.good}</small>
                         </th>
-                        <td>{g.uv}</td>
-                        <td>{g.glare}</td>
-                        <td className={s.right}>{g.price}</td>
+                        <td data-edit={`mats.cell.${i}`}>{g.uv}</td>
+                        <td data-edit={`mats.cell2.${i}`}>{g.glare}</td>
+                        <td data-edit={`mats.right2.${i}`} className={s.right}>{g.price}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -350,9 +362,9 @@ export default function MitreAndGiltPage() {
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.secHead}>
-            <p className={s.room}>Room IV</p>
-            <h2 id="prices-h">What it costs, by size</h2>
-            <p className={s.secNote}>
+            <p data-edit="prices.room" data-edit-max="240" data-edit-multiline className={s.room}>Room IV</p>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">What it costs, by size</h2>
+            <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Five common sizes drawn to scale and hung the museum way, with
               their centers on one line at 57 inches. Prices include the
               mat, the glass, fitting and a hanging wire.
@@ -361,43 +373,43 @@ export default function MitreAndGiltPage() {
 
           <div className={s.sizeWrap}>
             <ul className={s.sizeWall} aria-hidden="true">
-              {SIZES.map((z) => (
+              {SIZES.map((z, i) => (
                 <li key={z.size} className={`${s.scaled} ${s[z.hang]}`}>
-                  <span>{z.size}</span>
+                  <span data-edit={`prices.text.${i}`} data-edit-max="60">{z.size}</span>
                 </li>
               ))}
             </ul>
           </div>
-          <p className={s.centerLine}>Center line, 57 in from the floor</p>
+          <p data-edit="prices.centerLine" data-edit-max="240" data-edit-multiline className={s.centerLine}>Center line, 57 in from the floor</p>
 
           <div className={s.tableWrap}>
             <table className={`${s.table} ${s.priceTable}`}>
-              <caption className={s.srOnly}>Framing prices by size for three builds</caption>
+              <caption data-edit="prices.srOnly" className={s.srOnly}>Framing prices by size for three builds</caption>
               <thead>
                 <tr>
-                  <th scope="col">Size</th>
-                  {BUILDS.map(([name]) => (
-                    <th key={name} scope="col" className={s.right}>{name}</th>
+                  <th data-edit="prices.heading" scope="col">Size</th>
+                  {BUILDS.map(([name], i) => (
+                    <th data-edit={`prices.right.${i}`} key={name} scope="col" className={s.right}>{name}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {SIZES.map((z) => (
+                {SIZES.map((z, i) => (
                   <tr key={z.size}>
-                    <th scope="row">{z.size}</th>
-                    <td className={s.right}>{z.simple}</td>
-                    <td className={s.right}>{z.gallery}</td>
-                    <td className={s.right}>{z.museum}</td>
+                    <th data-edit={`prices.heading2.${i}`} scope="row">{z.size}</th>
+                    <td data-edit={`prices.right2.${i}`} className={s.right}>{z.simple}</td>
+                    <td data-edit={`prices.right3.${i}`} className={s.right}>{z.gallery}</td>
+                    <td data-edit={`prices.right4.${i}`} className={s.right}>{z.museum}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <dl className={s.builds}>
-            {BUILDS.map(([name, what]) => (
+            {BUILDS.map(([name, what], i) => (
               <div key={name}>
-                <dt>{name}</dt>
-                <dd>{what}</dd>
+                <dt data-edit={`prices.term.${i}`} data-edit-max="28">{name}</dt>
+                <dd data-edit={`prices.body.${i}`} data-edit-max="200" data-edit-multiline>{what}</dd>
               </div>
             ))}
           </dl>
@@ -408,7 +420,7 @@ export default function MitreAndGiltPage() {
           <div className={s.objectsGrid}>
             <div className={s.boxHang}>
               <div className={s.box}>
-                <div className={s.boxInner} aria-hidden="true">
+                <div data-edit-pattern="objects.field" data-edit-roles="transparent,4,0,2,1" className={s.boxInner} aria-hidden="true">
                   <TabbiedPattern
                     pattern={fustian}
                     palette={CLOTH}
@@ -420,28 +432,28 @@ export default function MitreAndGiltPage() {
                 </div>
               </div>
               <div className={s.label}>
-                <strong className={s.labelName}>No. 4</strong>
-                <span className={s.labelTitle}>Walnut shadow box, 3 in deep</span>
-                <span className={s.labelBody}>A striped shirt stitched to linen, 24 x 30 in</span>
-                <span className={s.labelPrice}>$340 framed</span>
+                <strong data-edit="objects.labelName" className={s.labelName}>No. 4</strong>
+                <span data-edit="objects.labelTitle" data-edit-max="60" className={s.labelTitle}>Walnut shadow box, 3 in deep</span>
+                <span data-edit="objects.labelBody" data-edit-max="60" className={s.labelBody}>A striped shirt stitched to linen, 24 x 30 in</span>
+                <span data-edit="objects.labelPrice" data-edit-max="60" className={s.labelPrice}>$340 framed</span>
               </div>
             </div>
             <div>
               <div className={s.secHead}>
-                <p className={s.room}>Room V</p>
-                <h2 id="objects-h">Objects, shirts and shadow boxes</h2>
-                <p className={s.secNote}>
+                <p data-edit="objects.room" data-edit-max="240" data-edit-multiline className={s.room}>Room V</p>
+                <h2 data-edit="objects.title" data-edit-max="60" id="objects-h">Objects, shirts and shadow boxes</h2>
+                <p data-edit="objects.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                   If it fits through the door, we have probably framed
                   something like it. Nothing is glued that can be sewn,
                   pinned or strapped instead.
                 </p>
               </div>
               <dl className={s.list}>
-                {OBJECTS.map(([name, what, price]) => (
+                {OBJECTS.map(([name, what, price], i) => (
                   <div key={name}>
-                    <dt>{name}</dt>
-                    <dd className={s.listWhat}>{what}</dd>
-                    <dd className={s.listPrice}>{price}</dd>
+                    <dt data-edit={`objects.term.${i}`} data-edit-max="28">{name}</dt>
+                    <dd data-edit={`objects.listWhat.${i}`} data-edit-max="200" data-edit-multiline className={s.listWhat}>{what}</dd>
+                    <dd data-edit={`objects.listPrice.${i}`} data-edit-max="200" data-edit-multiline className={s.listPrice}>{price}</dd>
                   </div>
                 ))}
               </dl>
@@ -454,19 +466,19 @@ export default function MitreAndGiltPage() {
         <section id="window" className={s.feature} aria-labelledby="window-h">
           <div className={s.featureInner}>
             <div className={s.featureText}>
-              <p className={s.room}>In the window this month</p>
-              <h2 id="window-h">A large frame, and the rest of the bench</h2>
-              <p className={s.featureNote}>
+              <p data-edit="window.room" data-edit-max="240" data-edit-multiline className={s.room}>In the window this month</p>
+              <h2 data-edit="window.title" data-edit-max="60" id="window-h">A large frame, and the rest of the bench</h2>
+              <p data-edit="window.featureNote" data-edit-max="240" data-edit-multiline className={s.featureNote}>
                 This one is in our window until the end of the month: a
                 30 x 40 in print in black ash with a four-inch mat, the
                 size people ask about most and hesitate over longest.
               </p>
               <dl className={s.services}>
-                {SERVICES.map(([name, what, price]) => (
+                {SERVICES.map(([name, what, price], i) => (
                   <div key={name}>
-                    <dt>{name}</dt>
-                    <dd className={s.listWhat}>{what}</dd>
-                    <dd className={s.listPrice}>{price}</dd>
+                    <dt data-edit={`window.term.${i}`} data-edit-max="28">{name}</dt>
+                    <dd data-edit={`window.listWhat.${i}`} data-edit-max="200" data-edit-multiline className={s.listWhat}>{what}</dd>
+                    <dd data-edit={`window.listPrice.${i}`} data-edit-max="200" data-edit-multiline className={s.listPrice}>{price}</dd>
                   </div>
                 ))}
               </dl>
@@ -474,7 +486,7 @@ export default function MitreAndGiltPage() {
             <div className={s.featureHang}>
               <div className={`${s.frame} ${s.frameBlack} ${s.frameWide}`}>
                 <div className={`${s.mat} ${s.matDeep}`}>
-                  <div className={`${s.art} ${s.artTall}`} aria-hidden="true">
+                  <div data-edit-pattern="window.field" data-edit-roles="transparent,2,0,3" className={`${s.art} ${s.artTall}`} aria-hidden="true">
                     <TabbiedPattern
                       pattern={casing}
                       palette={WINDOW}
@@ -487,10 +499,10 @@ export default function MitreAndGiltPage() {
                 </div>
               </div>
               <div className={`${s.label} ${s.labelOnGreen}`}>
-                <strong className={s.labelName}>No. 5</strong>
-                <span className={s.labelTitle}>Black ash, 4 in mat, museum glass</span>
-                <span className={s.labelBody}>30 x 40 in</span>
-                <span className={s.labelPrice}>$840 framed</span>
+                <strong data-edit="window.labelName" className={s.labelName}>No. 5</strong>
+                <span data-edit="window.labelTitle" data-edit-max="60" className={s.labelTitle}>Black ash, 4 in mat, museum glass</span>
+                <span data-edit="window.labelBody" data-edit-max="60" className={s.labelBody}>30 x 40 in</span>
+                <span data-edit="window.labelPrice" data-edit-max="60" className={s.labelPrice}>$840 framed</span>
               </div>
             </div>
           </div>
@@ -499,38 +511,38 @@ export default function MitreAndGiltPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <p className={s.room}>The front desk</p>
-            <h2 id="visit-h">Visit the shop</h2>
+            <p data-edit="visit.room" data-edit-max="240" data-edit-multiline className={s.room}>The front desk</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Visit the shop</h2>
           </div>
           <div className={s.visit}>
             <div>
-              <p className={s.address}>44 Lantern Street, Old Mill Quarter</p>
-              <p className={s.secNote}>
+              <p data-edit="visit.address" data-edit-max="240" data-edit-multiline className={s.address}>44 Lantern Street, Old Mill Quarter</p>
+              <p data-edit="visit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Load at the curb, we will carry it in. Big pieces are easier
                 on a weekday morning, when the table is clear.
               </p>
               <p className={s.contact}>
-                <a href="tel:+15550194470">(555) 019-4470</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550194470">(555) 019-4470</a>
               </p>
               <p className={s.contact}>
-                <a href="mailto:bench@mitreandgilt.example">bench@mitreandgilt.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:bench@mitreandgilt.example">bench@mitreandgilt.example</a>
               </p>
             </div>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
           </div>
 
           <div className={s.faq}>
-            {FAQ.map(([q, a]) => (
+            {FAQ.map(([q, a], i) => (
               <details key={q} className={s.faqItem}>
-                <summary>{q}</summary>
-                <p>{a}</p>
+                <summary data-edit={`visit.question.${i}`} data-edit-max="80">{q}</summary>
+                <p data-edit={`visit.body2.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
               </details>
             ))}
           </div>
@@ -538,10 +550,10 @@ export default function MitreAndGiltPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Mitre &amp; Gilt</p>
-        <p>A fictional picture framing shop. The mouldings, prices, people and address are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Mitre &amp; Gilt</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional picture framing shop. The mouldings, prices, people and address are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>; the etching is a generated picture drawn in the page's own colors.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>; the etching is a generated picture drawn in the page's own colors.
         </p>
       </footer>
     </div>

@@ -144,7 +144,18 @@ const HOURS = [
 
 export default function ClearsoundHearingPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#fbf6ea',
+        '--navy': '#14254a',
+        '--yellow': '#ffcf33',
+        '--sky': '#9cc3e6',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,navy,yellow,sky"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -154,16 +165,16 @@ export default function ClearsoundHearingPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Clearsound Hearing</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Clearsound Hearing</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.call} href="tel:+15550142290">(555) 014-2290</a>
+        <a data-edit="bar.call" data-edit-max="28" className={s.call} href="tel:+15550142290">(555) 014-2290</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -178,26 +189,26 @@ export default function ClearsoundHearingPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Hearing tests and hearing aids, 212 Alder Avenue</p>
-            <h1 id="hero-h" className={s.title}>A hearing test takes an hour. <em>It is free.</em></h1>
-            <p className={s.lede}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Hearing tests and hearing aids, 212 Alder Avenue</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>A hearing test takes an hour. <em>It is free.</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               We test adults of every age, fit and repair hearing aids of every
               make, and come to your home if getting here is hard. We face you
               when we speak, and we write everything down.
             </p>
             <div className={s.actions}>
-              <a className={s.btnBig} href="tel:+15550142290">Call (555) 014-2290</a>
-              <a className={s.btnLine} href="#book">Book online</a>
+              <a data-edit="hero.btnBig" data-edit-max="28" className={s.btnBig} href="tel:+15550142290">Call (555) 014-2290</a>
+              <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#book">Book online</a>
             </div>
             <div className={s.sizer}>
-              <span className={s.sizerLabel}>Text size</span>
-              <a className={s.sizeA} href="#text-standard">Standard</a>
-              <a className={s.sizeB} href="#text-larger">Larger</a>
-              <a className={s.sizeC} href="#text-largest">Largest</a>
+              <span data-edit="hero.sizerLabel" data-edit-max="60" className={s.sizerLabel}>Text size</span>
+              <a data-edit="hero.sizeA" data-edit-max="28" className={s.sizeA} href="#text-standard">Standard</a>
+              <a data-edit="hero.sizeB" data-edit-max="28" className={s.sizeB} href="#text-larger">Larger</a>
+              <a data-edit="hero.sizeC" data-edit-max="28" className={s.sizeC} href="#text-largest">Largest</a>
             </div>
           </div>
           <div className={s.dish}>
-            <div className={s.dishField} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="1,3,0,2" className={s.dishField} aria-hidden="true">
               <TabbiedPattern
                 pattern={ripplering}
                 palette={RINGS}
@@ -213,11 +224,11 @@ export default function ClearsoundHearingPage() {
         {/* ----------------------------------------------------------- SIGNS */}
         <section id="signs" className={s.signs} aria-labelledby="signs-h">
           <div className={s.col}>
-            <h2 id="signs-h">Is it time for a test?</h2>
-            <p className={s.note}>If two or more of these sound like you, it is worth an hour.</p>
+            <h2 data-edit="signs.title" data-edit-max="60" id="signs-h">Is it time for a test?</h2>
+            <p data-edit="signs.note" data-edit-max="240" data-edit-multiline className={s.note}>If two or more of these sound like you, it is worth an hour.</p>
             <ul className={s.checks}>
-              {SIGNS.map((sign) => (
-                <li key={sign}>{sign}</li>
+              {SIGNS.map((sign, i) => (
+                <li data-edit={`signs.item.${i}`} data-edit-max="80" key={sign}>{sign}</li>
               ))}
             </ul>
           </div>
@@ -226,9 +237,9 @@ export default function ClearsoundHearingPage() {
         {/* ------------------------------------------------------------ TEST */}
         <section id="test" className={s.test} aria-labelledby="test-h">
           <div className={s.col}>
-            <p className={s.kicker}>Your first visit</p>
-            <h2 id="test-h">The test, step by step</h2>
-            <p className={s.note}>
+            <p data-edit="test.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Your first visit</p>
+            <h2 data-edit="test.title" data-edit-max="60" id="test-h">The test, step by step</h2>
+            <p data-edit="test.note" data-edit-max="240" data-edit-multiline className={s.note}>
               One hour in all. Nothing hurts, nothing goes inside your ear, and
               you can stop and ask a question at any point.
             </p>
@@ -236,28 +247,28 @@ export default function ClearsoundHearingPage() {
 
           <div className={s.wide}>
             <ol className={s.hour} aria-label="How the hour is spent">
-              {STEPS.map((st) => (
+              {STEPS.map((st, i) => (
                 <li key={st.n} style={{ flexGrow: st.min }}>
-                  <span className={s.hourNum}>{st.n}</span>
-                  <span className={s.hourMin}>{st.time}</span>
+                  <span data-edit={`test.hourNum.${i}`} data-edit-max="60" className={s.hourNum}>{st.n}</span>
+                  <span data-edit={`test.hourMin.${i}`} data-edit-max="60" className={s.hourMin}>{st.time}</span>
                 </li>
               ))}
             </ol>
             <p className={s.hourScale}>
-              <span>0</span>
-              <span>30 minutes</span>
-              <span>60</span>
+              <span data-edit="test.text" data-edit-max="60">0</span>
+              <span data-edit="test.text2" data-edit-max="60">30 minutes</span>
+              <span data-edit="test.text3" data-edit-max="60">60</span>
             </p>
           </div>
 
           <ol className={s.steps}>
-            {STEPS.map((st) => (
+            {STEPS.map((st, i) => (
               <li key={st.n}>
-                <span className={s.stepNum}>{st.n}</span>
+                <span data-edit={`test.stepNum.${i}`} data-edit-max="60" className={s.stepNum}>{st.n}</span>
                 <div>
-                  <h3>{st.title}</h3>
-                  <p className={s.stepTime}>{st.time}</p>
-                  <p>{st.body}</p>
+                  <h3 data-edit={`test.title2.${i}`} data-edit-max="40">{st.title}</h3>
+                  <p data-edit={`test.stepTime.${i}`} data-edit-max="240" data-edit-multiline className={s.stepTime}>{st.time}</p>
+                  <p data-edit={`test.body.${i}`} data-edit-max="240" data-edit-multiline>{st.body}</p>
                 </div>
               </li>
             ))}
@@ -267,9 +278,9 @@ export default function ClearsoundHearingPage() {
         {/* --------------------------------------------------------- RESULTS */}
         <section id="results" className={s.results} aria-labelledby="results-h">
           <div className={s.col}>
-            <p className={s.kicker}>The chart you take home</p>
-            <h2 id="results-h">Reading your results</h2>
-            <p className={s.note}>
+            <p data-edit="results.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The chart you take home</p>
+            <h2 data-edit="results.title" data-edit-max="60" id="results-h">Reading your results</h2>
+            <p data-edit="results.note" data-edit-max="240" data-edit-multiline className={s.note}>
               Your results are drawn on a chart called an audiogram. Low notes
               are on the left, high notes on the right. The lower a mark sits,
               the louder that note had to be before you heard it.
@@ -280,18 +291,18 @@ export default function ClearsoundHearingPage() {
             <figure className={s.chart}>
               <div className={s.chartGrid}>
                 <ol className={s.levels} aria-hidden="true">
-                  {LEVELS.map((l) => (
-                    <li key={l}>{l}</li>
+                  {LEVELS.map((l, i) => (
+                    <li data-edit={`results.item.${i}`} data-edit-max="80" key={l}>{l}</li>
                   ))}
                 </ol>
                 <ol className={s.freqs}>
-                  {POINTS.map((p) => (
+                  {POINTS.map((p, i) => (
                     <li
                       key={p.f}
                       className={s.freq}
                       style={{ '--right': p.right, '--left': p.left, '--lo': p.lo, '--hi': p.hi } as React.CSSProperties}>
-                      <span className={s.freqLabel}>{p.f}</span>
-                      <span className={s.speech}>{p.sounds}</span>
+                      <span data-edit={`results.freqLabel.${i}`} data-edit-max="60" className={s.freqLabel}>{p.f}</span>
+                      <span data-edit={`results.speech.${i}`} data-edit-max="60" className={s.speech}>{p.sounds}</span>
                       <span className={s.markRight}>
                         <span className={s.srOnly}>{`Right ear ${p.right} dB`}</span>
                       </span>
@@ -302,7 +313,7 @@ export default function ClearsoundHearingPage() {
                   ))}
                 </ol>
               </div>
-              <figcaption className={s.chartCaption}>
+              <figcaption data-edit="results.chartCaption" data-edit-max="120" data-edit-multiline className={s.chartCaption}>
                 A sample chart: pitch in hertz across the top, loudness in
                 decibels down the side. Circles are the right ear, crosses the
                 left. The shaded band is where speech sounds sit.
@@ -310,23 +321,23 @@ export default function ClearsoundHearingPage() {
             </figure>
 
             <div className={s.chartSide}>
-              <h3>What this one says</h3>
-              <p>
+              <h3 data-edit="results.title2" data-edit-max="40">What this one says</h3>
+              <p data-edit="results.body" data-edit-max="240" data-edit-multiline>
                 Low notes are heard at normal levels. From 2,000 hertz up, the
                 marks fall below the speech band: the sounds s, f and th are
                 too quiet to hear. Vowels come through, so speech sounds loud
                 enough but unclear.
               </p>
-              <p>
+              <p data-edit="results.body2" data-edit-max="240" data-edit-multiline>
                 This is the most common pattern we see after sixty, and the one
                 hearing aids help most.
               </p>
               <dl className={s.bands}>
-                {BANDS.map(([range, name, what]) => (
+                {BANDS.map(([range, name, what], i) => (
                   <div key={range}>
-                    <dt>{name}</dt>
-                    <dd className={s.bandRange}>{range}</dd>
-                    <dd>{what}</dd>
+                    <dt data-edit={`results.term.${i}`} data-edit-max="28">{name}</dt>
+                    <dd data-edit={`results.bandRange.${i}`} data-edit-max="200" data-edit-multiline className={s.bandRange}>{range}</dd>
+                    <dd data-edit={`results.body3.${i}`} data-edit-max="200" data-edit-multiline>{what}</dd>
                   </div>
                 ))}
               </dl>
@@ -335,7 +346,7 @@ export default function ClearsoundHearingPage() {
         </section>
 
         {/* The quiet room: a band of rings between the chart and the prices. */}
-        <div className={s.band} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,3,1" className={s.band} aria-hidden="true">
           <TabbiedPattern
             pattern={ripplering}
             palette={QUIET}
@@ -355,9 +366,9 @@ export default function ClearsoundHearingPage() {
               inks={['var(--text)']}
               className={s.aidArt}
             />
-            <p className={s.kicker}>Prices for a pair, everything included</p>
-            <h2 id="aids-h">Hearing aids and what they cost</h2>
-            <p className={s.note}>
+            <p data-edit="aids.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Prices for a pair, everything included</p>
+            <h2 data-edit="aids.title" data-edit-max="60" id="aids-h">Hearing aids and what they cost</h2>
+            <p data-edit="aids.note" data-edit-max="240" data-edit-multiline className={s.note}>
               Three price bands, not thirty models. Every band includes the
               fitting, all the follow-up visits you need, cleaning for life and
               a 60-day trial.
@@ -365,15 +376,15 @@ export default function ClearsoundHearingPage() {
           </div>
 
           <div className={s.aidGrid}>
-            {AIDS.map((a) => (
+            {AIDS.map((a, i) => (
               <article key={a.band} className={s.aid} aria-labelledby={`aid-${a.band}`}>
-                <h3 id={`aid-${a.band}`}>{a.band}</h3>
-                <p className={s.aidPrice}>{a.price}</p>
-                <p className={s.aidPer}>for a pair</p>
-                <p className={s.aidSuits}>{a.suits}</p>
+                <h3 data-edit={`aid.title.${i}`} data-edit-max="40" id={`aid-${a.band}`}>{a.band}</h3>
+                <p data-edit={`aid.aidPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.aidPrice}>{a.price}</p>
+                <p data-edit={`aid.aidPer.${i}`} data-edit-max="240" data-edit-multiline className={s.aidPer}>for a pair</p>
+                <p data-edit={`aid.aidSuits.${i}`} data-edit-max="240" data-edit-multiline className={s.aidSuits}>{a.suits}</p>
                 <ul>
-                  {a.rows.map((r) => (
-                    <li key={r}>{r}</li>
+                  {a.rows.map((r, i2) => (
+                    <li data-edit={`aid.item.${i}.${i2}`} data-edit-max="80" key={r}>{r}</li>
                   ))}
                 </ul>
               </article>
@@ -381,12 +392,12 @@ export default function ClearsoundHearingPage() {
           </div>
 
           <div className={s.col}>
-            <h3 className={s.extrasTitle}>Everything else</h3>
+            <h3 data-edit="aids.extrasTitle" data-edit-max="40" className={s.extrasTitle}>Everything else</h3>
             <dl className={s.extras}>
-              {EXTRAS.map(([what, cost]) => (
+              {EXTRAS.map(([what, cost], i) => (
                 <div key={what}>
-                  <dt>{what}</dt>
-                  <dd>{cost}</dd>
+                  <dt data-edit={`aids.term.${i}`} data-edit-max="28">{what}</dt>
+                  <dd data-edit={`aids.body.${i}`} data-edit-max="200" data-edit-multiline>{cost}</dd>
                 </div>
               ))}
             </dl>
@@ -396,7 +407,7 @@ export default function ClearsoundHearingPage() {
         {/* ------------------------------------------------------------ HOME */}
         <section id="home" className={s.home} aria-labelledby="home-h">
           <div className={s.homeGrid}>
-            <div className={s.homeField} aria-hidden="true">
+            <div data-edit-pattern="home.field" data-edit-roles="2,1,0" className={s.homeField} aria-hidden="true">
               <TabbiedPattern
                 pattern={ripplering}
                 palette={WARM}
@@ -407,25 +418,25 @@ export default function ClearsoundHearingPage() {
               />
             </div>
             <div className={s.homeText}>
-              <p className={s.kicker}>Tuesdays and Thursdays</p>
-              <h2 id="home-h">We come to you</h2>
-              <p>
+              <p data-edit="home.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Tuesdays and Thursdays</p>
+              <h2 data-edit="home.title" data-edit-max="60" id="home-h">We come to you</h2>
+              <p data-edit="home.body" data-edit-max="240" data-edit-multiline>
                 If getting to Alder Avenue is hard, we bring the clinic to your
                 kitchen table: the same test with a portable audiometer and
                 sound-proof headphones, and the same price, which is nothing.
                 Anywhere within ten miles.
               </p>
-              <p>
+              <p data-edit="home.body2" data-edit-max="240" data-edit-multiline>
                 We also visit six care homes each month. Staff can book a round
                 of checks and repairs for residents with one call.
               </p>
-              <h3>Please have ready</h3>
+              <h3 data-edit="home.title2" data-edit-max="40">Please have ready</h3>
               <ul className={s.ready}>
-                {HOME_READY.map((r) => (
-                  <li key={r}>{r}</li>
+                {HOME_READY.map((r, i) => (
+                  <li data-edit={`home.item.${i}`} data-edit-max="80" key={r}>{r}</li>
                 ))}
               </ul>
-              <a className={s.btnBig} href="#book">Ask for a home visit</a>
+              <a data-edit="home.btnBig" data-edit-max="28" className={s.btnBig} href="#book">Ask for a home visit</a>
             </div>
           </div>
         </section>
@@ -433,14 +444,14 @@ export default function ClearsoundHearingPage() {
         {/* ------------------------------------------------------------ TEAM */}
         <section id="team" className={s.team} aria-labelledby="team-h">
           <div className={s.col}>
-            <h2 id="team-h">Who you will see</h2>
+            <h2 data-edit="team.title" data-edit-max="60" id="team-h">Who you will see</h2>
           </div>
           <ul className={s.people}>
-            {TEAM.map((p) => (
+            {TEAM.map((p, i) => (
               <li key={p.name}>
-                <h3>{p.name}</h3>
-                <p className={s.role}>{p.role}</p>
-                <p>{p.note}</p>
+                <h3 data-edit={`team.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                <p data-edit={`team.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{p.role}</p>
+                <p data-edit={`team.body.${i}`} data-edit-max="240" data-edit-multiline>{p.note}</p>
               </li>
             ))}
           </ul>
@@ -449,12 +460,12 @@ export default function ClearsoundHearingPage() {
         {/* ------------------------------------------------------------- FAQ */}
         <section id="faq" className={s.faq} aria-labelledby="faq-h">
           <div className={s.col}>
-            <h2 id="faq-h">Questions people ask us</h2>
+            <h2 data-edit="faq.title" data-edit-max="60" id="faq-h">Questions people ask us</h2>
             <div className={s.qs}>
-              {FAQ.map(([q, a]) => (
+              {FAQ.map(([q, a], i) => (
                 <details key={q} className={s.q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`faq.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`faq.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
@@ -465,20 +476,20 @@ export default function ClearsoundHearingPage() {
         <section id="book" className={s.book} aria-labelledby="book-h">
           <div className={s.bookGrid}>
             <div>
-              <h2 id="book-h">Book a test</h2>
-              <p className={s.bookLede}>The quickest way is to call. Maria answers.</p>
-              <a className={s.btnBig} href="tel:+15550142290">Call (555) 014-2290</a>
+              <h2 data-edit="book.title" data-edit-max="60" id="book-h">Book a test</h2>
+              <p data-edit="book.bookLede" data-edit-max="240" data-edit-multiline className={s.bookLede}>The quickest way is to call. Maria answers.</p>
+              <a data-edit="book.btnBig" data-edit-max="28" className={s.btnBig} href="tel:+15550142290">Call (555) 014-2290</a>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`book.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`book.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.address}>212 Alder Avenue, Suite 3</p>
-              <p className={s.address}>Riverside Park, ground floor</p>
-              <p className={s.getting}>
+              <p data-edit="book.address" data-edit-max="240" data-edit-multiline className={s.address}>212 Alder Avenue, Suite 3</p>
+              <p data-edit="book.address2" data-edit-max="240" data-edit-multiline className={s.address}>Riverside Park, ground floor</p>
+              <p data-edit="book.getting" data-edit-max="240" data-edit-multiline className={s.getting}>
                 Buses 14 and 22 stop outside. Four parking spaces at the back,
                 two of them wide. Step-free from the pavement, with a hearing
                 loop at the desk.
@@ -486,50 +497,50 @@ export default function ClearsoundHearingPage() {
             </div>
 
             <form className={s.form} action="#">
-              <h3>Or ask us to call you</h3>
+              <h3 data-edit="book.title2" data-edit-max="40">Or ask us to call you</h3>
               <div className={s.field}>
-                <label htmlFor="cs-name">Your name</label>
+                <label data-edit="book.label" htmlFor="cs-name">Your name</label>
                 <input id="cs-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="cs-phone">Phone number</label>
+                <label data-edit="book.label2" htmlFor="cs-phone">Phone number</label>
                 <input id="cs-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <fieldset className={s.choice}>
-                <legend>What would you like?</legend>
+                <legend data-edit="book.legend">What would you like?</legend>
                 <label className={s.option}>
                   <input type="radio" name="want" value="test" defaultChecked />
-                  <span>A hearing test</span>
+                  <span data-edit="book.text" data-edit-max="60">A hearing test</span>
                 </label>
                 <label className={s.option}>
                   <input type="radio" name="want" value="home" />
-                  <span>A home visit</span>
+                  <span data-edit="book.text2" data-edit-max="60">A home visit</span>
                 </label>
                 <label className={s.option}>
                   <input type="radio" name="want" value="repair" />
-                  <span>A repair or retune</span>
+                  <span data-edit="book.text3" data-edit-max="60">A repair or retune</span>
                 </label>
               </fieldset>
               <fieldset className={s.choice}>
-                <legend>Best time to call</legend>
+                <legend data-edit="book.legend2">Best time to call</legend>
                 <label className={s.option}>
                   <input type="radio" name="when" value="morning" defaultChecked />
-                  <span>Morning</span>
+                  <span data-edit="book.text4" data-edit-max="60">Morning</span>
                 </label>
                 <label className={s.option}>
                   <input type="radio" name="when" value="afternoon" />
-                  <span>Afternoon</span>
+                  <span data-edit="book.text5" data-edit-max="60">Afternoon</span>
                 </label>
               </fieldset>
-              <button className={s.submit} type="submit">Please call me</button>
-              <p className={s.formNote}>We call back the same working day. If you prefer a text message, say so when we ring.</p>
+              <button data-edit="book.submit" data-edit-max="24" className={s.submit} type="submit">Please call me</button>
+              <p data-edit="book.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>We call back the same working day. If you prefer a text message, say so when we ring.</p>
             </form>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="1,3,0,2" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={ripplering}
             palette={RINGS}
@@ -540,12 +551,12 @@ export default function ClearsoundHearingPage() {
           />
         </div>
         <div className={s.footText}>
-          <p className={s.footName}>Clearsound Hearing</p>
-          <p>A fictional hearing clinic. The people, prices and results are invented.</p>
+          <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Clearsound Hearing</p>
+          <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional hearing clinic. The people, prices and results are invented.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
           </p>
-          <p>The hearing aid is a generated image, drawn in the page's own colors.</p>
+          <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The hearing aid is a generated image, drawn in the page's own colors.</p>
         </div>
       </footer>
     </div>

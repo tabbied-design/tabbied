@@ -181,7 +181,17 @@ const GETTING = [
 
 export default function SolefitPodiatryPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f5f4f0',
+        '--ink': '#141414',
+        '--red': '#e2231a',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,red"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -191,16 +201,16 @@ export default function SolefitPodiatryPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Solefit Podiatry</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Solefit Podiatry</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBook} href="#book">Book</a>
+        <a data-edit="bar.barBook" data-edit-max="28" className={s.barBook} href="#book">Book</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -215,17 +225,17 @@ export default function SolefitPodiatryPage() {
           </div>
 
           <dl className={s.meta}>
-            {META.map(([k, v]) => (
+            {META.map(([k, v], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+                <dt data-edit={`hero.term.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
               </div>
             ))}
           </dl>
 
-          <h1 id="hero-h" className={s.name}>Solefit Podiatry</h1>
+          <h1 data-edit="hero.name" data-edit-max="70" id="hero-h" className={s.name}>Solefit Podiatry</h1>
 
-          <div className={s.heroField} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,1,2,1,1" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={ortho}
               palette={SQUARES}
@@ -237,22 +247,22 @@ export default function SolefitPodiatryPage() {
           </div>
 
           <div className={s.heroText}>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Heel pain, ingrown toenails, bunions, running injuries and
               diabetic foot care, seen by four podiatrists in one clinic above
               the pharmacy on Harwood Square.
             </p>
             <p className={s.ctas}>
-              <a className={s.btn} href="#book">Book an assessment</a>
-              <a className={s.textLink} href="#conditions">Conditions A to Z</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#book">Book an assessment</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#conditions">Conditions A to Z</a>
             </p>
           </div>
 
           <ul className={s.stats}>
-            {STATS.map(([n, t]) => (
+            {STATS.map(([n, t], i) => (
               <li key={n}>
-                <strong>{n}</strong>
-                <span>{t}</span>
+                <strong data-edit={`hero.emphasis.${i}`}>{n}</strong>
+                <span data-edit={`hero.text.${i}`} data-edit-max="60">{t}</span>
               </li>
             ))}
           </ul>
@@ -261,9 +271,9 @@ export default function SolefitPodiatryPage() {
         {/* ------------------------------------------------ 01 CONDITIONS */}
         <section id="conditions" className={s.sec} aria-labelledby="conditions-h">
           <div className={s.secHead}>
-            <p className={s.num}>01</p>
-            <h2 id="conditions-h">Conditions, A to Z</h2>
-            <p className={s.secNote}>
+            <p data-edit="conditions.num" data-edit-max="240" data-edit-multiline className={s.num}>01</p>
+            <h2 data-edit="conditions.title" data-edit-max="60" id="conditions-h">Conditions, A to Z</h2>
+            <p data-edit="conditions.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               What we see most, with the treatments we usually start with.
               The numbers point to section 02. If your problem is not here,
               call: it is still very likely a foot.
@@ -280,21 +290,21 @@ export default function SolefitPodiatryPage() {
                   className={s.foot}
                 />
                 <div className={s.pins} aria-hidden="true">
-                  {REGIONS.map((r) => (
-                    <span key={r.n} className={s.pin} style={r.pos}>{r.n}</span>
+                  {REGIONS.map((r, i) => (
+                    <span data-edit={`conditions.pin.${i}`} data-edit-max="60" key={r.n} className={s.pin} style={r.pos}>{r.n}</span>
                   ))}
                 </div>
               </div>
-              <figcaption className={s.figCap}>Fig. 1. The right foot from the inside: 26 bones, 33 joints and more than 100 tendons and ligaments.</figcaption>
+              <figcaption data-edit="conditions.figCap" data-edit-max="120" data-edit-multiline className={s.figCap}>Fig. 1. The right foot from the inside: 26 bones, 33 joints and more than 100 tendons and ligaments.</figcaption>
             </figure>
             <div className={s.key}>
-              <h3 className={s.keyTitle}>Where it hurts</h3>
+              <h3 data-edit="conditions.keyTitle" data-edit-max="40" className={s.keyTitle}>Where it hurts</h3>
               <ol className={s.keyList}>
-                {REGIONS.map((r) => (
+                {REGIONS.map((r, i) => (
                   <li key={r.n}>
-                    <span className={s.keyNum}>{r.n}</span>
-                    <strong>{r.region}</strong>
-                    <span className={s.keyWhat}>{r.what}</span>
+                    <span data-edit={`conditions.keyNum.${i}`} data-edit-max="60" className={s.keyNum}>{r.n}</span>
+                    <strong data-edit={`conditions.emphasis.${i}`}>{r.region}</strong>
+                    <span data-edit={`conditions.keyWhat.${i}`} data-edit-max="60" className={s.keyWhat}>{r.what}</span>
                   </li>
                 ))}
               </ol>
@@ -302,25 +312,25 @@ export default function SolefitPodiatryPage() {
           </div>
 
           <nav className={s.letters} aria-label="Conditions by letter">
-            {STRIP_LETTERS.map((x) => (x.on ? (
-              <a key={x.l} href={x.href}>{x.l}</a>
+            {STRIP_LETTERS.map((x, i) => (x.on ? (
+              <a data-edit={`conditions.link.${i}`} data-edit-max="28" key={x.l} href={x.href}>{x.l}</a>
             ) : (
               <span key={x.l} aria-hidden="true">{x.l}</span>
             )))}
           </nav>
 
           <div className={s.index}>
-            {INDEX.map((g) => (
+            {INDEX.map((g, i) => (
               <div key={g.letter} id={`idx-${g.letter.toLowerCase()}`} className={s.group}>
-                <h3 className={s.groupLetter}>{g.letter}</h3>
+                <h3 data-edit={`conditions.groupLetter.${i}`} data-edit-max="40" className={s.groupLetter}>{g.letter}</h3>
                 <ul className={s.groupList}>
-                  {g.items.map((c) => (
+                  {g.items.map((c, i2) => (
                     <li key={c.name}>
-                      <h4>{c.name}</h4>
-                      <p>{c.note}</p>
+                      <h4 data-edit={`conditions.title2.${i}.${i2}`} data-edit-max="36">{c.name}</h4>
+                      <p data-edit={`conditions.body.${i}.${i2}`} data-edit-max="240" data-edit-multiline>{c.note}</p>
                       <p className={s.see}>
-                        {c.see.map((ref) => (
-                          <span key={ref}>{ref}</span>
+                        {c.see.map((ref, i3) => (
+                          <span data-edit={`conditions.text.${i}.${i2}.${i3}`} data-edit-max="60" key={ref}>{ref}</span>
                         ))}
                       </p>
                     </li>
@@ -334,24 +344,24 @@ export default function SolefitPodiatryPage() {
         {/* ------------------------------------------------- 02 TREATMENT */}
         <section id="treatment" className={s.sec} aria-labelledby="treatment-h">
           <div className={s.secHead}>
-            <p className={s.num}>02</p>
-            <h2 id="treatment-h">Treatment, in five steps</h2>
-            <p className={s.secNote}>
+            <p data-edit="treatment.num" data-edit-max="240" data-edit-multiline className={s.num}>02</p>
+            <h2 data-edit="treatment.title" data-edit-max="60" id="treatment-h">Treatment, in five steps</h2>
+            <p data-edit="treatment.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The same order for every problem, from a stubborn nail to a
               stress fracture.
             </p>
           </div>
 
           <ol className={s.steps}>
-            {STEPS.map(([t, d]) => (
+            {STEPS.map(([t, d], i) => (
               <li key={t}>
-                <h3>{t}</h3>
-                <p>{d}</p>
+                <h3 data-edit={`treatment.title2.${i}`} data-edit-max="40">{t}</h3>
+                <p data-edit={`treatment.body.${i}`} data-edit-max="240" data-edit-multiline>{d}</p>
               </li>
             ))}
           </ol>
 
-          <div className={s.strip} aria-hidden="true">
+          <div data-edit-pattern="treatment.field" data-edit-roles="transparent,2,1,1,2,1" className={s.strip} aria-hidden="true">
             <TabbiedPattern
               pattern={ortho}
               palette={STRIP}
@@ -364,22 +374,22 @@ export default function SolefitPodiatryPage() {
           </div>
 
           <table className={s.treatments}>
-            <caption className={s.srOnly}>Treatments, what happens and how long they take</caption>
+            <caption data-edit="treatment.srOnly" className={s.srOnly}>Treatments, what happens and how long they take</caption>
             <thead>
               <tr>
-                <th scope="col">No.</th>
-                <th scope="col">Treatment</th>
-                <th scope="col">What happens</th>
-                <th scope="col">Time</th>
+                <th data-edit="treatment.heading" scope="col">No.</th>
+                <th data-edit="treatment.heading2" scope="col">Treatment</th>
+                <th data-edit="treatment.heading3" scope="col">What happens</th>
+                <th data-edit="treatment.heading4" scope="col">Time</th>
               </tr>
             </thead>
             <tbody>
-              {TREATMENTS.map(([no, name, what, time]) => (
+              {TREATMENTS.map(([no, name, what, time], i) => (
                 <tr key={no}>
-                  <td className={s.tNo}>{no}</td>
-                  <th scope="row">{name}</th>
-                  <td>{what}</td>
-                  <td className={s.tTime}>{time}</td>
+                  <td data-edit={`treatment.tNo.${i}`} className={s.tNo}>{no}</td>
+                  <th data-edit={`treatment.heading5.${i}`} scope="row">{name}</th>
+                  <td data-edit={`treatment.cell.${i}`}>{what}</td>
+                  <td data-edit={`treatment.tTime.${i}`} className={s.tTime}>{time}</td>
                 </tr>
               ))}
             </tbody>
@@ -389,21 +399,21 @@ export default function SolefitPodiatryPage() {
         {/* ------------------------------------------------ 03 FIRST VISIT */}
         <section id="first-visit" className={s.sec} aria-labelledby="first-h">
           <div className={s.secHead}>
-            <p className={s.num}>03</p>
-            <h2 id="first-h">Your first visit</h2>
-            <p className={s.secNote}>
+            <p data-edit="firstVisit.num" data-edit-max="240" data-edit-multiline className={s.num}>03</p>
+            <h2 data-edit="firstVisit.title" data-edit-max="60" id="first-h">Your first visit</h2>
+            <p data-edit="firstVisit.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Forty-five minutes with one podiatrist, in a room with a
               treatment chair, a walkway and a scanner.
             </p>
           </div>
 
           <div className={s.visit}>
-            {VISIT.map((v) => (
+            {VISIT.map((v, i) => (
               <div key={v.title} className={s.visitCol}>
-                <h3>{v.title}</h3>
+                <h3 data-edit={`firstVisit.title2.${i}`} data-edit-max="40">{v.title}</h3>
                 <ul>
-                  {v.items.map((it) => (
-                    <li key={it}>{it}</li>
+                  {v.items.map((it, i2) => (
+                    <li data-edit={`firstVisit.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                   ))}
                 </ul>
               </div>
@@ -414,9 +424,9 @@ export default function SolefitPodiatryPage() {
         {/* ------------------------------------------------------- 04 FEES */}
         <section id="fees" className={s.sec} aria-labelledby="fees-h">
           <div className={s.secHead}>
-            <p className={s.num}>04</p>
-            <h2 id="fees-h">Fees</h2>
-            <p className={s.secNote}>
+            <p data-edit="fees.num" data-edit-max="240" data-edit-multiline className={s.num}>04</p>
+            <h2 data-edit="fees.title" data-edit-max="60" id="fees-h">Fees</h2>
+            <p data-edit="fees.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every fee we charge, as of September. They change once a year,
               in January, and never mid-treatment.
             </p>
@@ -424,30 +434,30 @@ export default function SolefitPodiatryPage() {
 
           <div className={s.feesGrid}>
             <table className={s.fees}>
-              <caption className={s.srOnly}>Fees by appointment type</caption>
+              <caption data-edit="fees.srOnly" className={s.srOnly}>Fees by appointment type</caption>
               <thead>
                 <tr>
-                  <th scope="col">Appointment</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Fee</th>
+                  <th data-edit="fees.heading" scope="col">Appointment</th>
+                  <th data-edit="fees.heading2" scope="col">Time</th>
+                  <th data-edit="fees.heading3" scope="col">Fee</th>
                 </tr>
               </thead>
               <tbody>
-                {FEES.map(([what, time, fee]) => (
+                {FEES.map(([what, time, fee], i) => (
                   <tr key={what}>
-                    <th scope="row">{what}</th>
-                    <td className={s.feeTime}>{time}</td>
-                    <td className={s.fee}>{fee}</td>
+                    <th data-edit={`fees.heading4.${i}`} scope="row">{what}</th>
+                    <td data-edit={`fees.feeTime.${i}`} className={s.feeTime}>{time}</td>
+                    <td data-edit={`fees.fee.${i}`} className={s.fee}>{fee}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
             <dl className={s.feeNotes}>
-              {FEE_NOTES.map(([k, v]) => (
+              {FEE_NOTES.map(([k, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`fees.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`fees.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -457,24 +467,24 @@ export default function SolefitPodiatryPage() {
         {/* ------------------------------------------------ 05 PODIATRISTS */}
         <section id="podiatrists" className={s.sec} aria-labelledby="people-h">
           <div className={s.secHead}>
-            <p className={s.num}>05</p>
-            <h2 id="people-h">Podiatrists</h2>
-            <p className={s.secNote}>
+            <p data-edit="podiatrists.num" data-edit-max="240" data-edit-multiline className={s.num}>05</p>
+            <h2 data-edit="podiatrists.title" data-edit-max="60" id="people-h">Podiatrists</h2>
+            <p data-edit="podiatrists.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               You can ask for someone by name. Squares show the days each of
               us is in, Monday to Saturday.
             </p>
           </div>
 
           <ul className={s.people}>
-            {PEOPLE.map((p) => (
+            {PEOPLE.map((p, i) => (
               <li key={p.name}>
-                <h3>{p.name}</h3>
-                <p className={s.role}>{p.role}</p>
-                <p className={s.focus}>{p.focus}</p>
+                <h3 data-edit={`podiatrists.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                <p data-edit={`podiatrists.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{p.role}</p>
+                <p data-edit={`podiatrists.focus.${i}`} data-edit-max="240" data-edit-multiline className={s.focus}>{p.focus}</p>
                 <ol className={s.days} aria-label={`Days in clinic for ${p.name}`}>
                   {p.on.map((on, j) => (
                     <li key={`${p.name}-${j}`} className={on ? s.dayOn : s.dayOff}>
-                      <span>{DAYS[j]}</span>
+                      <span data-edit={`podiatrists.text.${i}.${j}`} data-edit-max="60">{DAYS[j]}</span>
                       <span className={s.srOnly}>{on ? 'in clinic' : 'not in'}</span>
                     </li>
                   ))}
@@ -487,38 +497,38 @@ export default function SolefitPodiatryPage() {
         {/* ----------------------------------------------------- 06 CLINIC */}
         <section id="clinic" className={s.sec} aria-labelledby="clinic-h">
           <div className={s.secHead}>
-            <p className={s.num}>06</p>
-            <h2 id="clinic-h">The clinic</h2>
+            <p data-edit="clinic.num" data-edit-max="240" data-edit-multiline className={s.num}>06</p>
+            <h2 data-edit="clinic.title" data-edit-max="60" id="clinic-h">The clinic</h2>
           </div>
 
           <div className={s.clinic}>
             <div className={s.where}>
-              <p className={s.addr}>14 Linden Street, second floor</p>
-              <p className={s.addrSub}>Harwood Square, above the pharmacy</p>
+              <p data-edit="clinic.addr" data-edit-max="240" data-edit-multiline className={s.addr}>14 Linden Street, second floor</p>
+              <p data-edit="clinic.addrSub" data-edit-max="240" data-edit-multiline className={s.addrSub}>Harwood Square, above the pharmacy</p>
               <p className={s.contact}>
-                <a href="tel:+15550134400">(555) 013-4400</a>
-                <a href="mailto:desk@solefit.example">desk@solefit.example</a>
+                <a data-edit="clinic.link" data-edit-max="28" href="tel:+15550134400">(555) 013-4400</a>
+                <a data-edit="clinic.link2" data-edit-max="28" href="mailto:desk@solefit.example">desk@solefit.example</a>
               </p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`clinic.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`clinic.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
               <dl className={s.getting}>
-                {GETTING.map(([k, v]) => (
+                {GETTING.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`clinic.term2.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`clinic.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
             </div>
 
             <form id="book" className={s.form} action="#">
-              <div className={s.formField} aria-hidden="true">
+              <div data-edit-pattern="clinic.field" data-edit-roles="transparent,1,2" className={s.formField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={halftone}
                   palette={DOTS}
@@ -529,22 +539,22 @@ export default function SolefitPodiatryPage() {
                 />
               </div>
               <div className={s.formBody}>
-                <h3 className={s.formTitle}>Request an appointment</h3>
+                <h3 data-edit="clinic.formTitle" data-edit-max="40" className={s.formTitle}>Request an appointment</h3>
                 <div className={s.formGrid}>
                   <div className={s.field}>
-                    <label htmlFor="sf-name">Name</label>
+                    <label data-edit="clinic.label" htmlFor="sf-name">Name</label>
                     <input id="sf-name" name="name" type="text" autoComplete="name" />
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="sf-phone">Phone</label>
+                    <label data-edit="clinic.label2" htmlFor="sf-phone">Phone</label>
                     <input id="sf-phone" name="phone" type="tel" autoComplete="tel" />
                   </div>
                   <div className={`${s.field} ${s.wide}`}>
-                    <label htmlFor="sf-email">Email</label>
+                    <label data-edit="clinic.label3" htmlFor="sf-email">Email</label>
                     <input id="sf-email" name="email" type="email" autoComplete="email" />
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="sf-what">The problem</label>
+                    <label data-edit="clinic.label4" htmlFor="sf-what">The problem</label>
                     <select id="sf-what" name="what" defaultValue="heel">
                       <option value="heel">Heel or arch pain</option>
                       <option value="nail">A nail</option>
@@ -555,7 +565,7 @@ export default function SolefitPodiatryPage() {
                     </select>
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="sf-when">Best time</label>
+                    <label data-edit="clinic.label5" htmlFor="sf-when">Best time</label>
                     <select id="sf-when" name="when" defaultValue="any">
                       <option value="any">Any time</option>
                       <option value="morning">Weekday morning</option>
@@ -565,12 +575,12 @@ export default function SolefitPodiatryPage() {
                     </select>
                   </div>
                   <div className={`${s.field} ${s.wide}`}>
-                    <label htmlFor="sf-note">Anything we should know</label>
+                    <label data-edit="clinic.label6" htmlFor="sf-note">Anything we should know</label>
                     <textarea id="sf-note" name="note" rows={3} />
                   </div>
                 </div>
-                <button className={s.submit} type="submit">Send the request</button>
-                <p className={s.formNote}>We call back within one working day with two times to choose from.</p>
+                <button data-edit="clinic.submit" data-edit-max="24" className={s.submit} type="submit">Send the request</button>
+                <p data-edit="clinic.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>We call back within one working day with two times to choose from.</p>
               </div>
             </form>
           </div>
@@ -578,7 +588,7 @@ export default function SolefitPodiatryPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footField} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,0,2,0,0,2" className={s.footField} aria-hidden="true">
           <TabbiedPattern
             pattern={ortho}
             palette={FOOT}
@@ -589,10 +599,10 @@ export default function SolefitPodiatryPage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Solefit Podiatry</p>
-        <p>A fictional podiatry clinic. The clinicians, fees, address and notes on conditions are invented, and none of it is medical advice.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Solefit Podiatry</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional podiatry clinic. The clinicians, fees, address and notes on conditions are invented, and none of it is medical advice.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; the foot is a generated image drawn in the page's colors.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>, drawn live; the foot is a generated image drawn in the page's colors.
         </p>
       </footer>
     </div>

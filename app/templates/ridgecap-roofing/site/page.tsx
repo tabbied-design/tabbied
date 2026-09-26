@@ -141,7 +141,18 @@ const CREWS = [
 
 export default function RidgecapPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--sheet': '#f3f5f7',
+        '--navy': '#14284a',
+        '--orange': '#f26419',
+        '--sky': '#8fb3dc',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="sheet,navy,orange,sky"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -153,17 +164,17 @@ export default function RidgecapPage() {
       <header className={s.bar}>
         <a className={s.mark} href="#top">
           <span className={s.markRidge} aria-hidden="true" />
-          <span className={s.markName}>Ridgecap</span>
+          <span data-edit="bar.markName" data-edit-max="60" className={s.markName}>Ridgecap</span>
         </a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barPhone} href="tel:+15550192750">(555) 019-2750</a>
+        <a data-edit="bar.barPhone" data-edit-max="28" className={s.barPhone} href="tel:+15550192750">(555) 019-2750</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -173,27 +184,27 @@ export default function RidgecapPage() {
             The gable drawn as an elevation: the stripes are the rafters,
             with a span dimension, a pitch triangle and numbered callouts. */}
         <section className={`${s.sheet} ${s.grid}`} aria-labelledby="cover-h">
-          <p className={s.sheetNo}>Sheet A-001</p>
+          <p data-edit="cover.sheetNo" data-edit-max="240" data-edit-multiline className={s.sheetNo}>Sheet A-001</p>
           <div className={s.cover}>
             <div className={s.coverText}>
-              <p className={s.kicker}>Roofing contractor, Millrace. Est. 1998.</p>
-              <h1 id="cover-h" className={s.title}>
+              <p data-edit="cover.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Roofing contractor, Millrace. Est. 1998.</p>
+              <h1 data-edit="cover.title" data-edit-format="emphasis" data-edit-max="70" id="cover-h" className={s.title}>
                 Roofs specified <em>before they are sold</em>
               </h1>
-              <p className={s.lede}>
+              <p data-edit="cover.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 Every Ridgecap quote is a spec sheet: what comes off, what goes
                 on, by the square, with the product names and the days on site.
                 You can hand it to any other roofer and get a fair comparison.
               </p>
               <div className={s.actions}>
-                <a className={s.button} href="#request">Book a free inspection</a>
-                <a className={s.ghost} href="#work">See the job specs</a>
+                <a data-edit="cover.button" data-edit-max="28" className={s.button} href="#request">Book a free inspection</a>
+                <a data-edit="cover.ghost" data-edit-max="28" className={s.ghost} href="#work">See the job specs</a>
               </div>
             </div>
 
             <div className={s.drawing}>
               <div className={s.elevation}>
-                <div className={s.gable} aria-hidden="true">
+                <div data-edit-pattern="cover.field" data-edit-roles="0,1,3,1" className={s.gable} aria-hidden="true">
                   <TabbiedPattern
                     pattern={rafter}
                     palette={GABLE}
@@ -208,38 +219,38 @@ export default function RidgecapPage() {
                   <span className={s.door} />
                   <span className={s.win} />
                 </div>
-                <span className={`${s.bubble} ${s.b1}`}>1</span>
-                <span className={`${s.bubble} ${s.b2}`}>2</span>
-                <span className={`${s.bubble} ${s.b3}`}>3</span>
-                <span className={`${s.bubble} ${s.b4}`}>4</span>
+                <span data-edit="cover.bubble" data-edit-max="60" className={`${s.bubble} ${s.b1}`}>1</span>
+                <span data-edit="cover.bubble2" data-edit-max="60" className={`${s.bubble} ${s.b2}`}>2</span>
+                <span data-edit="cover.bubble3" data-edit-max="60" className={`${s.bubble} ${s.b3}`}>3</span>
+                <span data-edit="cover.bubble4" data-edit-max="60" className={`${s.bubble} ${s.b4}`}>4</span>
                 <div className={s.pitch}>
-                  <span className={s.pitchRise}>6</span>
-                  <span className={s.pitchRun}>12</span>
+                  <span data-edit="cover.pitchRise" data-edit-max="60" className={s.pitchRise}>6</span>
+                  <span data-edit="cover.pitchRun" data-edit-max="60" className={s.pitchRun}>12</span>
                 </div>
               </div>
               <div className={s.dim}>
-                <span className={s.dimText}>{SPAN}</span>
+                <span data-edit="cover.dimText" data-edit-max="60" className={s.dimText}>{SPAN}</span>
               </div>
-              <p className={s.dimNote}>{DIM_NOTE}</p>
+              <p data-edit="cover.dimNote" data-edit-max="240" data-edit-multiline className={s.dimNote}>{DIM_NOTE}</p>
               <ol className={s.legend}>
-                {CALLOUTS.map((c) => (
-                  <li key={c}>{c}</li>
+                {CALLOUTS.map((c, i) => (
+                  <li data-edit={`cover.item.${i}`} data-edit-max="80" key={c}>{c}</li>
                 ))}
               </ol>
             </div>
           </div>
 
           <dl className={s.stats}>
-            {STATS.map(([k, v]) => (
+            {STATS.map(([k, v], i) => (
               <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
+                <dt data-edit={`cover.term.${i}`} data-edit-max="28">{k}</dt>
+                <dd data-edit={`cover.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
               </div>
             ))}
           </dl>
         </section>
 
-        <div className={s.tape} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="1,2" className={s.tape} aria-hidden="true">
           <TabbiedPattern
             pattern={rafter}
             palette={TAPE}
@@ -252,19 +263,19 @@ export default function RidgecapPage() {
 
         {/* ----------------------------------------------- A-201 JOB TYPES */}
         <section id="work" className={s.sheet} aria-labelledby="work-h">
-          <p className={s.sheetNo}>Sheet A-201</p>
+          <p data-edit="work.sheetNo" data-edit-max="240" data-edit-multiline className={s.sheetNo}>Sheet A-201</p>
           <div className={s.workTop}>
             <div className={s.head}>
-              <p className={s.kicker}>Schedule of work</p>
-              <h2 id="work-h" className={s.h2}>Six jobs we do, and the spec for each</h2>
-              <p className={s.note}>
+              <p data-edit="work.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Schedule of work</p>
+              <h2 data-edit="work.h2" data-edit-max="60" id="work-h" className={s.h2}>Six jobs we do, and the spec for each</h2>
+              <p data-edit="work.note" data-edit-max="240" data-edit-multiline className={s.note}>
                 Prices are per square (100 sq ft of roof) installed, tear-off and
                 disposal included, for a walkable pitch up to 8:12. Steeper roofs
                 add 15 percent for the harness and the time.
               </p>
               <ol className={s.assembly}>
-                {ASSEMBLY.map((a) => (
-                  <li key={a}>{a}</li>
+                {ASSEMBLY.map((a, i) => (
+                  <li data-edit={`work.item.${i}`} data-edit-max="80" key={a}>{a}</li>
                 ))}
               </ol>
             </div>
@@ -275,34 +286,34 @@ export default function RidgecapPage() {
                 inks={['var(--text)']}
                 className={s.detailArt}
               />
-              <figcaption className={s.detailTag}>Detail 1: R-1 assembly, bottom to top. Not to scale.</figcaption>
+              <figcaption data-edit="work.detailTag" data-edit-max="120" data-edit-multiline className={s.detailTag}>Detail 1: R-1 assembly, bottom to top. Not to scale.</figcaption>
             </figure>
           </div>
           <table className={s.schedule}>
-            <caption className={s.srOnly}>Job types with system, time on site, crew size, starting price and warranty</caption>
+            <caption data-edit="work.srOnly" className={s.srOnly}>Job types with system, time on site, crew size, starting price and warranty</caption>
             <thead>
               <tr>
-                <th scope="col">Tag</th>
-                <th scope="col">Job</th>
-                <th scope="col">System</th>
-                <th scope="col">On site</th>
-                <th scope="col">Crew</th>
-                <th scope="col">From</th>
-                <th scope="col">Warranty</th>
+                <th data-edit="work.heading" scope="col">Tag</th>
+                <th data-edit="work.heading2" scope="col">Job</th>
+                <th data-edit="work.heading3" scope="col">System</th>
+                <th data-edit="work.heading4" scope="col">On site</th>
+                <th data-edit="work.heading5" scope="col">Crew</th>
+                <th data-edit="work.heading6" scope="col">From</th>
+                <th data-edit="work.heading7" scope="col">Warranty</th>
               </tr>
             </thead>
             <tbody>
-              {JOBS.map((j) => (
+              {JOBS.map((j, i) => (
                 <tr key={j.tag}>
                   <td className={s.tagCell}>
-                    <span className={s.tag}>{j.tag}</span>
+                    <span data-edit={`work.tag.${i}`} data-edit-max="60" className={s.tag}>{j.tag}</span>
                   </td>
-                  <th scope="row" className={s.jobName}>{j.type}</th>
-                  <td className={s.system}>{j.system}</td>
-                  <td data-label="On site">{j.onSite}</td>
-                  <td data-label="Crew">{j.crew}</td>
-                  <td data-label="From" className={s.from}>{j.from}</td>
-                  <td data-label="Warranty">{j.warranty}</td>
+                  <th data-edit={`work.jobName.${i}`} scope="row" className={s.jobName}>{j.type}</th>
+                  <td data-edit={`work.system.${i}`} className={s.system}>{j.system}</td>
+                  <td data-edit={`work.cell.${i}`} data-label="On site">{j.onSite}</td>
+                  <td data-edit={`work.cell2.${i}`} data-label="Crew">{j.crew}</td>
+                  <td data-edit={`work.from.${i}`} data-label="From" className={s.from}>{j.from}</td>
+                  <td data-edit={`work.cell3.${i}`} data-label="Warranty">{j.warranty}</td>
                 </tr>
               ))}
             </tbody>
@@ -311,10 +322,10 @@ export default function RidgecapPage() {
 
         {/* ----------------------------------------------- A-301 MATERIALS */}
         <section id="materials" className={s.sheet} aria-labelledby="materials-h">
-          <p className={s.sheetNo}>Sheet A-301</p>
+          <p data-edit="materials.sheetNo" data-edit-max="240" data-edit-multiline className={s.sheetNo}>Sheet A-301</p>
           <div className={s.materials}>
             <div className={s.sample}>
-              <div className={s.sampleField} aria-hidden="true">
+              <div data-edit-pattern="materials.field" data-edit-roles="1,3,0,3" className={s.sampleField} aria-hidden="true">
                 <TabbiedPattern
                   pattern={louvre}
                   palette={SHINGLE}
@@ -324,39 +335,39 @@ export default function RidgecapPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.sampleTag}>Sample board 04: architectural shingle, harbor slate</p>
+              <p data-edit="materials.sampleTag" data-edit-max="240" data-edit-multiline className={s.sampleTag}>Sample board 04: architectural shingle, harbor slate</p>
             </div>
             <div className={s.materialsBody}>
               <div className={s.head}>
-                <p className={s.kicker}>Materials</p>
-                <h2 id="materials-h" className={s.h2}>What goes on the roof, by the numbers</h2>
-                <p className={s.note}>
+                <p data-edit="materials.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Materials</p>
+                <h2 data-edit="materials.h2" data-edit-max="60" id="materials-h" className={s.h2}>What goes on the roof, by the numbers</h2>
+                <p data-edit="materials.note" data-edit-max="240" data-edit-multiline className={s.note}>
                   Weight is per square, which matters for old framing. Wind is
                   the rating with our nailing pattern. We stopped installing
                   3-tab shingle in 2019 and will tell you why on the roof.
                 </p>
               </div>
               <table className={s.matTable}>
-                <caption className={s.srOnly}>Roofing materials compared</caption>
+                <caption data-edit="materials.srOnly" className={s.srOnly}>Roofing materials compared</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Material</th>
-                    <th scope="col">Weight / sq</th>
-                    <th scope="col">Wind</th>
-                    <th scope="col">Impact</th>
-                    <th scope="col">Life</th>
-                    <th scope="col">Installed / sq</th>
+                    <th data-edit="materials.heading" scope="col">Material</th>
+                    <th data-edit="materials.heading2" scope="col">Weight / sq</th>
+                    <th data-edit="materials.heading3" scope="col">Wind</th>
+                    <th data-edit="materials.heading4" scope="col">Impact</th>
+                    <th data-edit="materials.heading5" scope="col">Life</th>
+                    <th data-edit="materials.heading6" scope="col">Installed / sq</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {MATERIALS.map((m) => (
+                  {MATERIALS.map((m, i) => (
                     <tr key={m.name}>
-                      <th scope="row">{m.name}</th>
-                      <td data-label="Weight / sq">{m.weight}</td>
-                      <td data-label="Wind">{m.wind}</td>
-                      <td data-label="Impact">{m.impact}</td>
-                      <td data-label="Life">{m.life}</td>
-                      <td data-label="Installed / sq" className={s.from}>{m.cost}</td>
+                      <th data-edit={`materials.heading7.${i}`} scope="row">{m.name}</th>
+                      <td data-edit={`materials.cell.${i}`} data-label="Weight / sq">{m.weight}</td>
+                      <td data-edit={`materials.cell2.${i}`} data-label="Wind">{m.wind}</td>
+                      <td data-edit={`materials.cell3.${i}`} data-label="Impact">{m.impact}</td>
+                      <td data-edit={`materials.cell4.${i}`} data-label="Life">{m.life}</td>
+                      <td data-edit={`materials.from.${i}`} data-label="Installed / sq" className={s.from}>{m.cost}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -368,11 +379,11 @@ export default function RidgecapPage() {
         {/* ---------------------------------------------- A-401 INSPECTION */}
         <section id="inspection" className={s.blueprint} aria-labelledby="inspection-h">
           <div className={s.blueInner}>
-            <p className={s.sheetNoBlue}>Sheet A-401</p>
+            <p data-edit="inspection.sheetNoBlue" data-edit-max="240" data-edit-multiline className={s.sheetNoBlue}>Sheet A-401</p>
             <div className={s.blueHead}>
-              <p className={s.kicker}>Free inspection checklist</p>
-              <h2 id="inspection-h" className={s.h2}>Twenty points, forty-five minutes, no charge</h2>
-              <p className={s.note}>
+              <p data-edit="inspection.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Free inspection checklist</p>
+              <h2 data-edit="inspection.h2" data-edit-max="60" id="inspection-h" className={s.h2}>Twenty points, forty-five minutes, no charge</h2>
+              <p data-edit="inspection.note" data-edit-max="240" data-edit-multiline className={s.note}>
                 One of our foremen, not a salesperson. We go up if it is safe
                 and fly a small drone if it is not. You get the checklist back
                 within 48 hours with a photo against every line, whether you
@@ -380,8 +391,8 @@ export default function RidgecapPage() {
               </p>
             </div>
             <ol className={s.checks}>
-              {CHECKS.map((c) => (
-                <li key={c}>{c}</li>
+              {CHECKS.map((c, i) => (
+                <li data-edit={`inspection.item.${i}`} data-edit-max="80" key={c}>{c}</li>
               ))}
             </ol>
           </div>
@@ -389,22 +400,22 @@ export default function RidgecapPage() {
 
         {/* ------------------------------------------------ A-402 SCHEDULE */}
         <section id="schedule" className={s.sheet} aria-labelledby="schedule-h">
-          <p className={s.sheetNo}>Sheet A-402</p>
+          <p data-edit="schedule.sheetNo" data-edit-max="240" data-edit-multiline className={s.sheetNo}>Sheet A-402</p>
           <div className={s.head}>
-            <p className={s.kicker}>How a replacement runs</p>
-            <h2 id="schedule-h" className={s.h2}>Eighteen days, dimensioned</h2>
-            <p className={s.note}>
+            <p data-edit="schedule.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>How a replacement runs</p>
+            <h2 data-edit="schedule.h2" data-edit-max="60" id="schedule-h" className={s.h2}>Eighteen days, dimensioned</h2>
+            <p data-edit="schedule.note" data-edit-max="240" data-edit-multiline className={s.note}>
               A typical asphalt replacement from the first visit to the signed
               certificate. The house is never left open overnight: if rain is
               due, we only strip what we can dry in by dusk.
             </p>
           </div>
           <ol className={s.run}>
-            {DAYS.map((d) => (
+            {DAYS.map((d, i) => (
               <li key={d.day} className={s.runStep}>
-                <span className={s.runDay}>{d.day}</span>
-                <span className={s.runWhat}>{d.what}</span>
-                <span className={s.runNote}>{d.note}</span>
+                <span data-edit={`schedule.runDay.${i}`} data-edit-max="60" className={s.runDay}>{d.day}</span>
+                <span data-edit={`schedule.runWhat.${i}`} data-edit-max="60" className={s.runWhat}>{d.what}</span>
+                <span data-edit={`schedule.runNote.${i}`} data-edit-max="60" className={s.runNote}>{d.note}</span>
               </li>
             ))}
           </ol>
@@ -412,39 +423,39 @@ export default function RidgecapPage() {
 
         {/* ------------------------------------------------ A-501 WARRANTY */}
         <section id="warranty" className={s.sheet} aria-labelledby="warranty-h">
-          <p className={s.sheetNo}>Sheet A-501</p>
+          <p data-edit="warranty.sheetNo" data-edit-max="240" data-edit-multiline className={s.sheetNo}>Sheet A-501</p>
           <div className={s.head}>
-            <p className={s.kicker}>General notes: warranty</p>
-            <h2 id="warranty-h" className={s.h2}>Twenty years on our work, in plain terms</h2>
+            <p data-edit="warranty.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>General notes: warranty</p>
+            <h2 data-edit="warranty.h2" data-edit-max="60" id="warranty-h" className={s.h2}>Twenty years on our work, in plain terms</h2>
           </div>
           <div className={s.terms}>
             <div className={s.termsCol}>
-              <h3 className={s.termsTitle}>Covered</h3>
+              <h3 data-edit="warranty.termsTitle" data-edit-max="40" className={s.termsTitle}>Covered</h3>
               <ol className={s.termsList}>
-                {COVERED.map((c) => (
-                  <li key={c}>{c}</li>
+                {COVERED.map((c, i) => (
+                  <li data-edit={`warranty.item.${i}`} data-edit-max="80" key={c}>{c}</li>
                 ))}
               </ol>
             </div>
             <div className={s.termsCol}>
-              <h3 className={s.termsTitle}>Not covered</h3>
+              <h3 data-edit="warranty.termsTitle2" data-edit-max="40" className={s.termsTitle}>Not covered</h3>
               <ol className={s.termsList}>
-                {NOT_COVERED.map((c) => (
-                  <li key={c}>{c}</li>
+                {NOT_COVERED.map((c, i) => (
+                  <li data-edit={`warranty.item2.${i}`} data-edit-max="80" key={c}>{c}</li>
                 ))}
               </ol>
             </div>
           </div>
-          <p className={s.claim}>
+          <p data-edit="warranty.claim" data-edit-max="240" data-edit-multiline className={s.claim}>
             To claim: call or email with a photo if you can. We inspect within
             72 hours, and a leak we caused is tarped the same day.
           </p>
           <dl className={s.crews}>
-            {CREWS.map(([crew, name, what]) => (
+            {CREWS.map(([crew, name, what], i) => (
               <div key={crew}>
-                <dt>{crew}</dt>
-                <dd className={s.crewName}>{name}</dd>
-                <dd className={s.crewWhat}>{what}</dd>
+                <dt data-edit={`warranty.term.${i}`} data-edit-max="28">{crew}</dt>
+                <dd data-edit={`warranty.crewName.${i}`} data-edit-max="200" data-edit-multiline className={s.crewName}>{name}</dd>
+                <dd data-edit={`warranty.crewWhat.${i}`} data-edit-max="200" data-edit-multiline className={s.crewWhat}>{what}</dd>
               </div>
             ))}
           </dl>
@@ -452,26 +463,26 @@ export default function RidgecapPage() {
 
         {/* ------------------------------------------------- A-601 REQUEST */}
         <section id="request" className={`${s.sheet} ${s.grid}`} aria-labelledby="request-h">
-          <p className={s.sheetNo}>Sheet A-601</p>
+          <p data-edit="request.sheetNo" data-edit-max="240" data-edit-multiline className={s.sheetNo}>Sheet A-601</p>
           <div className={s.request}>
             <form className={s.form} action="#">
-              <h2 id="request-h" className={s.h2}>Request an inspection</h2>
-              <p className={s.note}>We call back within one working day to set a time.</p>
+              <h2 data-edit="request.h2" data-edit-max="60" id="request-h" className={s.h2}>Request an inspection</h2>
+              <p data-edit="request.note" data-edit-max="240" data-edit-multiline className={s.note}>We call back within one working day to set a time.</p>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="rc-name">Name</label>
+                  <label data-edit="request.label" htmlFor="rc-name">Name</label>
                   <input id="rc-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="rc-phone">Phone</label>
+                  <label data-edit="request.label2" htmlFor="rc-phone">Phone</label>
                   <input id="rc-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="rc-address">Property address</label>
+                  <label data-edit="request.label3" htmlFor="rc-address">Property address</label>
                   <input id="rc-address" name="address" type="text" autoComplete="street-address" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="rc-roof">Roof type</label>
+                  <label data-edit="request.label4" htmlFor="rc-roof">Roof type</label>
                   <select id="rc-roof" name="roof" defaultValue="asphalt">
                     <option value="asphalt">Asphalt shingle</option>
                     <option value="metal">Metal</option>
@@ -482,7 +493,7 @@ export default function RidgecapPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="rc-age">Roof age, roughly</label>
+                  <label data-edit="request.label5" htmlFor="rc-age">Roof age, roughly</label>
                   <select id="rc-age" name="age" defaultValue="15">
                     <option value="5">Under 10 years</option>
                     <option value="15">10 to 20 years</option>
@@ -491,7 +502,7 @@ export default function RidgecapPage() {
                   </select>
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="rc-reason">Reason</label>
+                  <label data-edit="request.label6" htmlFor="rc-reason">Reason</label>
                   <select id="rc-reason" name="reason" defaultValue="check">
                     <option value="check">A check-up, nothing wrong yet</option>
                     <option value="leak">A leak</option>
@@ -501,39 +512,39 @@ export default function RidgecapPage() {
                   </select>
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="rc-notes">Notes (where the stain is, a gate code)</label>
+                  <label data-edit="request.label7" htmlFor="rc-notes">Notes (where the stain is, a gate code)</label>
                   <textarea id="rc-notes" name="notes" rows={3} />
                 </div>
               </div>
-              <button className={s.button} type="submit">Send request</button>
+              <button data-edit="request.button" data-edit-max="24" className={s.button} type="submit">Send request</button>
             </form>
 
             <div className={s.yard}>
-              <p className={s.kicker}>The yard</p>
-              <p className={s.address}>
+              <p data-edit="request.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The yard</p>
+              <p data-edit="request.body4" data-edit-max="240" data-edit-multiline className={s.address}>
                 1180 Tannery Road
                 <br />
                 Millrace
               </p>
               <dl className={s.hours}>
                 <div>
-                  <dt>Office</dt>
-                  <dd>Mon-Fri, 7:00-17:00</dd>
+                  <dt data-edit="request.term" data-edit-max="28">Office</dt>
+                  <dd data-edit="request.body" data-edit-max="200" data-edit-multiline>Mon-Fri, 7:00-17:00</dd>
                 </div>
                 <div>
-                  <dt>Saturday</dt>
-                  <dd>8:00-12:00, repairs only</dd>
+                  <dt data-edit="request.term2" data-edit-max="28">Saturday</dt>
+                  <dd data-edit="request.body2" data-edit-max="200" data-edit-multiline>8:00-12:00, repairs only</dd>
                 </div>
                 <div>
-                  <dt>Storm line</dt>
-                  <dd>24 hours, tarping same day</dd>
+                  <dt data-edit="request.term3" data-edit-max="28">Storm line</dt>
+                  <dd data-edit="request.body3" data-edit-max="200" data-edit-multiline>24 hours, tarping same day</dd>
                 </div>
               </dl>
               <p className={s.contact}>
-                <a href="tel:+15550192750">(555) 019-2750</a>
+                <a data-edit="request.link" data-edit-max="28" href="tel:+15550192750">(555) 019-2750</a>
               </p>
               <p className={s.contact}>
-                <a href="mailto:office@ridgecap.example">office@ridgecap.example</a>
+                <a data-edit="request.link2" data-edit-max="28" href="mailto:office@ridgecap.example">office@ridgecap.example</a>
               </p>
             </div>
           </div>
@@ -541,7 +552,7 @@ export default function RidgecapPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footTape} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="1,2" className={s.footTape} aria-hidden="true">
           <TabbiedPattern
             pattern={rafter}
             palette={TAPE}
@@ -553,18 +564,18 @@ export default function RidgecapPage() {
         </div>
         <div className={s.titleBlock}>
           <div className={s.tbCell}>
-            <p className={s.tbLabel}>Project</p>
-            <p className={s.tbName}>Ridgecap Roofing</p>
+            <p data-edit="footer.tbLabel" data-edit-max="240" data-edit-multiline className={s.tbLabel}>Project</p>
+            <p data-edit="footer.tbName" data-edit-max="240" data-edit-multiline className={s.tbName}>Ridgecap Roofing</p>
           </div>
           <div className={s.tbCell}>
-            <p className={s.tbLabel}>Note</p>
-            <p>A fictional roofing contractor. Jobs, prices and license numbers are invented. The roof detail is a generated image, drawn in the page's own colors.</p>
+            <p data-edit="footer.tbLabel2" data-edit-max="240" data-edit-multiline className={s.tbLabel}>Note</p>
+            <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional roofing contractor. Jobs, prices and license numbers are invented. The roof detail is a generated image, drawn in the page's own colors.</p>
           </div>
           <div className={s.tbCell}>
-            <p className={s.tbLabel}>Drawn by</p>
+            <p data-edit="footer.tbLabel3" data-edit-max="240" data-edit-multiline className={s.tbLabel}>Drawn by</p>
             <p>
               Patterns by{' '}
-              <a href="https://tabbied.com" rel="noopener">Tabbied</a>
+              <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com" rel="noopener">Tabbied</a>
               .
             </p>
           </div>

@@ -121,7 +121,18 @@ const BRING = [
 
 export default function BirchwoodSaunaPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--char': '#1b1917',
+        '--birch': '#ece5d8',
+        '--ember': '#e0652e',
+        '--ice': '#8db6c4',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="char,birch,ember,ice"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -131,15 +142,15 @@ export default function BirchwoodSaunaPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Birchwood</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Birchwood</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -148,30 +159,30 @@ export default function BirchwoodSaunaPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Public sauna and cold plunge, Larch Point</p>
-            <h1 id="hero-h" className={s.name}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Public sauna and cold plunge, Larch Point</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.name}>
               Birchwood <em>Sauna House</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Two wood-fired saunas, a smoke sauna on Saturdays, and the lake
               off the end of the pier for the cold. Come for two hours, go
               round three times, and leave slower than you arrived.
             </p>
             <ul className={s.readouts}>
-              {READOUTS.map((r) => (
+              {READOUTS.map((r, i) => (
                 <li key={r.label}>
-                  <strong className={r.unit === 'deg' ? s.deg : s.times}>{r.n}</strong>
-                  <span>{r.label}</span>
+                  <strong data-edit={`hero.deg.${i}`} className={r.unit === 'deg' ? s.deg : s.times}>{r.n}</strong>
+                  <span data-edit={`hero.text.${i}`} data-edit-max="60">{r.label}</span>
                 </li>
               ))}
             </ul>
             <p className={s.ctas}>
-              <a className={s.btn} href="#visit">Book a session</a>
-              <a className={s.textLink} href="#ritual">How it works</a>
+              <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#visit">Book a session</a>
+              <a data-edit="hero.textLink" data-edit-max="28" className={s.textLink} href="#ritual">How it works</a>
             </p>
           </div>
 
-          <div className={s.cladding} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,1,1,2,1" className={s.cladding} aria-hidden="true">
             <TabbiedPattern
               pattern={fluting}
               palette={CLADDING}
@@ -184,7 +195,7 @@ export default function BirchwoodSaunaPage() {
         </section>
 
         {/* ---------------------------------------------------------- RITUAL */}
-        <div className={s.steam} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,1,3,1,1,3" className={s.steam} aria-hidden="true">
           <TabbiedPattern
             pattern={grainfall}
             palette={STEAM}
@@ -197,36 +208,36 @@ export default function BirchwoodSaunaPage() {
 
         <section id="ritual" className={s.sec} aria-labelledby="ritual-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>The ritual</p>
-            <h2 id="ritual-h">Heat, cold, rest. <em>Three times.</em></h2>
+            <p data-edit="ritual.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The ritual</p>
+            <h2 data-edit="ritual.title" data-edit-format="emphasis" data-edit-max="60" id="ritual-h">Heat, cold, rest. <em>Three times.</em></h2>
           </div>
           <ol className={s.ritual}>
-            {RITUAL.map((r) => (
+            {RITUAL.map((r, i) => (
               <li key={r.step} className={s[r.kind]}>
-                <h3>{r.step}</h3>
+                <h3 data-edit={`ritual.title.${i}`} data-edit-max="40">{r.step}</h3>
                 <dl className={s.ritualFacts}>
                   <div>
-                    <dt>How long</dt>
-                    <dd>{r.time}</dd>
+                    <dt data-edit={`ritual.term.${i}`} data-edit-max="28">How long</dt>
+                    <dd data-edit={`ritual.body.${i}`} data-edit-max="200" data-edit-multiline>{r.time}</dd>
                   </div>
                   <div>
-                    <dt>How hot</dt>
-                    <dd>{r.temp}</dd>
+                    <dt data-edit={`ritual.term2.${i}`} data-edit-max="28">How hot</dt>
+                    <dd data-edit={`ritual.body2.${i}`} data-edit-max="200" data-edit-multiline>{r.temp}</dd>
                   </div>
                 </dl>
-                <p>{r.note}</p>
+                <p data-edit={`ritual.body3.${i}`} data-edit-max="240" data-edit-multiline>{r.note}</p>
               </li>
             ))}
           </ol>
-          <p className={s.ritualFoot}>About ninety minutes, with a shower either side. Then sit a while longer; nobody will hurry you.</p>
+          <p data-edit="ritual.ritualFoot" data-edit-max="240" data-edit-multiline className={s.ritualFoot}>About ninety minutes, with a shower either side. Then sit a while longer; nobody will hurry you.</p>
         </section>
 
         {/* ---------------------------------------------------- TEMPERATURES */}
         <section id="temperatures" className={s.sec} aria-labelledby="temps-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Every temperature in the house</p>
-            <h2 id="temps-h">From the top bench <em>to the lake</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="temperatures.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Every temperature in the house</p>
+            <h2 data-edit="temperatures.title" data-edit-format="emphasis" data-edit-max="60" id="temps-h">From the top bench <em>to the lake</em></h2>
+            <p data-edit="temperatures.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               In degrees Celsius, as the thermometers read them on a winter
               afternoon. The stove is lit at half past six every morning and
               the big sauna is up to heat by seven.
@@ -235,21 +246,21 @@ export default function BirchwoodSaunaPage() {
 
           <div className={s.scaleWrap}>
             <ol className={s.ticks} aria-hidden="true">
-              {TICKS.map((t) => (
-                <li key={t}>{t}</li>
+              {TICKS.map((t, i) => (
+                <li data-edit={`temperatures.item.${i}`} data-edit-max="80" key={t}>{t}</li>
               ))}
             </ol>
             <div className={s.column} aria-hidden="true" />
             <ul className={s.rooms}>
-              {ROOMS.map((r) => (
+              {ROOMS.map((r, i) => (
                 <li
                   key={r.name}
                   className={r.side === 'left' ? s.roomLeft : s.roomRight}
                   style={{ '--at': r.at } as React.CSSProperties}
                 >
-                  <strong className={s.deg}>{r.deg}</strong>
-                  <h3>{r.name}</h3>
-                  <p>{r.note}</p>
+                  <strong data-edit={`temperatures.deg.${i}`} className={s.deg}>{r.deg}</strong>
+                  <h3 data-edit={`temperatures.title.${i}`} data-edit-max="40">{r.name}</h3>
+                  <p data-edit={`temperatures.body.${i}`} data-edit-max="240" data-edit-multiline>{r.note}</p>
                 </li>
               ))}
             </ul>
@@ -262,10 +273,10 @@ export default function BirchwoodSaunaPage() {
               inks={['var(--text)']}
               className={s.cabin}
             />
-            <figcaption className={s.shoreCap}>The big sauna, Pier 4. The ladder into the lake is at the end of the boards.</figcaption>
+            <figcaption data-edit="temperatures.shoreCap" data-edit-max="120" data-edit-multiline className={s.shoreCap}>The big sauna, Pier 4. The ladder into the lake is at the end of the boards.</figcaption>
           </figure>
 
-          <div className={s.lake} aria-hidden="true">
+          <div data-edit-pattern="temperatures.field" data-edit-roles="transparent,3,3,1,3,3" className={s.lake} aria-hidden="true">
             <TabbiedPattern
               pattern={ripplering}
               palette={LAKE}
@@ -280,24 +291,24 @@ export default function BirchwoodSaunaPage() {
         {/* -------------------------------------------------------- SESSIONS */}
         <section id="sessions" className={s.sec} aria-labelledby="sessions-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Session tickets</p>
-            <h2 id="sessions-h">Two hours, <em>or longer</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="sessions.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Session tickets</p>
+            <h2 data-edit="sessions.title" data-edit-format="emphasis" data-edit-max="60" id="sessions-h">Two hours, <em>or longer</em></h2>
+            <p data-edit="sessions.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A towel and a robe come with every ticket. Tear off the stub at
               the desk; keep the rest for the locker number.
             </p>
           </div>
           <ul className={s.tickets}>
-            {TICKETS.map((t) => (
+            {TICKETS.map((t, i) => (
               <li key={t.no} className={s.ticket}>
                 <div className={s.ticketMain}>
                   <p className={s.ticketNo}>{`No. ${t.no}`}</p>
-                  <h3>{t.name}</h3>
-                  <p className={s.ticketWhen}>{t.when}</p>
+                  <h3 data-edit={`sessions.title.${i}`} data-edit-max="40">{t.name}</h3>
+                  <p data-edit={`sessions.ticketWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.ticketWhen}>{t.when}</p>
                 </div>
                 <div className={s.stub}>
-                  <strong>{t.price}</strong>
-                  <span>{t.admit}</span>
+                  <strong data-edit={`sessions.emphasis.${i}`}>{t.price}</strong>
+                  <span data-edit={`sessions.text.${i}`} data-edit-max="60">{t.admit}</span>
                 </div>
               </li>
             ))}
@@ -307,27 +318,27 @@ export default function BirchwoodSaunaPage() {
         {/* ------------------------------------------------------- TIMETABLE */}
         <section id="timetable" className={s.sec} aria-labelledby="timetable-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>The week</p>
-            <h2 id="timetable-h">Timetable</h2>
+            <p data-edit="timetable.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The week</p>
+            <h2 data-edit="timetable.title" data-edit-max="60" id="timetable-h">Timetable</h2>
           </div>
           <div className={s.weekWrap}>
             <table className={s.week}>
-              <caption className={s.srOnly}>Sessions by day and time of day</caption>
+              <caption data-edit="timetable.srOnly" className={s.srOnly}>Sessions by day and time of day</caption>
               <thead>
                 <tr>
-                  <th scope="col">Day</th>
-                  {SLOTS.map((t) => (
-                    <th key={t} scope="col">{t}</th>
+                  <th data-edit="timetable.heading" scope="col">Day</th>
+                  {SLOTS.map((t, i) => (
+                    <th data-edit={`timetable.heading2.${i}`} key={t} scope="col">{t}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {WEEK.map((d) => (
+                {WEEK.map((d, i) => (
                   <tr key={d.day}>
-                    <th scope="row">{d.day}</th>
+                    <th data-edit={`timetable.heading3.${i}`} scope="row">{d.day}</th>
                     {d.cells.map(([label, kind], j) => (
                       <td key={`${d.day}-${SLOTS[j]}`}>
-                        <span className={`${s.chip} ${s[kind]}`}>{label}</span>
+                        <span data-edit={`timetable.chip.${i}.${j}`} data-edit-max="60" className={`${s.chip} ${s[kind]}`}>{label}</span>
                       </td>
                     ))}
                   </tr>
@@ -335,10 +346,10 @@ export default function BirchwoodSaunaPage() {
               </tbody>
             </table>
             <dl className={s.key}>
-              {KEY.map(([k, v, kind]) => (
+              {KEY.map(([k, v, kind], i) => (
                 <div key={k}>
-                  <dt className={`${s.chip} ${s[kind]}`}>{k}</dt>
-                  <dd>{v}</dd>
+                  <dt data-edit={`timetable.chip2.${i}`} data-edit-max="28" className={`${s.chip} ${s[kind]}`}>{k}</dt>
+                  <dd data-edit={`timetable.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                 </div>
               ))}
             </dl>
@@ -348,20 +359,20 @@ export default function BirchwoodSaunaPage() {
         {/* ------------------------------------------------------- ETIQUETTE */}
         <section id="etiquette" className={s.sec} aria-labelledby="etiquette-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>House rules</p>
-            <h2 id="etiquette-h">Etiquette</h2>
-            <p className={s.secNote}>Eight of them, painted on the board by the changing rooms. Most people only need telling once.</p>
+            <p data-edit="etiquette.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>House rules</p>
+            <h2 data-edit="etiquette.title" data-edit-max="60" id="etiquette-h">Etiquette</h2>
+            <p data-edit="etiquette.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>Eight of them, painted on the board by the changing rooms. Most people only need telling once.</p>
           </div>
           <ol className={s.rules}>
-            {ETIQUETTE.map((r) => (
-              <li key={r}>{r}</li>
+            {ETIQUETTE.map((r, i) => (
+              <li data-edit={`etiquette.item.${i}`} data-edit-max="80" key={r}>{r}</li>
             ))}
           </ol>
           <div className={s.faq}>
-            {FAQ.map(([q, a]) => (
+            {FAQ.map(([q, a], i) => (
               <details key={q}>
-                <summary>{q}</summary>
-                <p>{a}</p>
+                <summary data-edit={`etiquette.question.${i}`} data-edit-max="80">{q}</summary>
+                <p data-edit={`etiquette.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
               </details>
             ))}
           </div>
@@ -370,48 +381,48 @@ export default function BirchwoodSaunaPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <p className={s.kicker}>Pier 4, Larch Point</p>
-            <h2 id="visit-h">Visit</h2>
+            <p data-edit="visit.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Pier 4, Larch Point</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Visit</h2>
           </div>
           <div className={s.visit}>
             <div>
-              <p className={s.addr}>At the end of Shore Road, past the boat club</p>
-              <p className={s.small}>Park in the gravel lot and walk the last two minutes along the shore. The chimney smoke is the sign.</p>
+              <p data-edit="visit.addr" data-edit-max="240" data-edit-multiline className={s.addr}>At the end of Shore Road, past the boat club</p>
+              <p data-edit="visit.small" data-edit-max="240" data-edit-multiline className={s.small}>Park in the gravel lot and walk the last two minutes along the shore. The chimney smoke is the sign.</p>
               <dl className={s.hours}>
-                {HOURS.map(([d, h]) => (
+                {HOURS.map(([d, h], i) => (
                   <div key={d}>
-                    <dt>{d}</dt>
-                    <dd>{h}</dd>
+                    <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                    <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                   </div>
                 ))}
               </dl>
               <dl className={s.bring}>
-                {BRING.map(([k, v]) => (
+                {BRING.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`visit.term2.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`visit.body2.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
               <p className={s.contact}>
-                <a href="tel:+15550182290">(555) 018-2290</a>
-                <a href="mailto:desk@birchwoodsauna.example">desk@birchwoodsauna.example</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550182290">(555) 018-2290</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:desk@birchwoodsauna.example">desk@birchwoodsauna.example</a>
               </p>
             </div>
 
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Book a session</h3>
+              <h3 data-edit="visit.formTitle" data-edit-max="40" className={s.formTitle}>Book a session</h3>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="bw-name">Name</label>
+                  <label data-edit="visit.label" htmlFor="bw-name">Name</label>
                   <input id="bw-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="bw-email">Email</label>
+                  <label data-edit="visit.label2" htmlFor="bw-email">Email</label>
                   <input id="bw-email" name="email" type="email" autoComplete="email" />
                 </div>
                 <div className={`${s.field} ${s.wide}`}>
-                  <label htmlFor="bw-session">Session</label>
+                  <label data-edit="visit.label3" htmlFor="bw-session">Session</label>
                   <select id="bw-session" name="session" defaultValue="two">
                     <option value="two">Two hours, $32</option>
                     <option value="quiet">Quiet morning, $26</option>
@@ -421,23 +432,23 @@ export default function BirchwoodSaunaPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="bw-date">Day</label>
+                  <label data-edit="visit.label4" htmlFor="bw-date">Day</label>
                   <input id="bw-date" name="date" type="date" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="bw-people">People</label>
+                  <label data-edit="visit.label5" htmlFor="bw-people">People</label>
                   <input id="bw-people" name="people" type="number" min="1" max="8" inputMode="numeric" />
                 </div>
               </div>
-              <button className={s.btn} type="submit">Reserve</button>
-              <p className={s.small}>We hold booked places for fifteen minutes past the start. Cancel up to a day before for a full refund.</p>
+              <button data-edit="visit.btn" data-edit-max="24" className={s.btn} type="submit">Reserve</button>
+              <p data-edit="visit.small2" data-edit-max="240" data-edit-multiline className={s.small}>We hold booked places for fifteen minutes past the start. Cancel up to a day before for a full refund.</p>
             </form>
           </div>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,2,1,2,1,1" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={fluting}
             palette={EMBERS}
@@ -447,10 +458,10 @@ export default function BirchwoodSaunaPage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Birchwood Sauna House</p>
-        <p>A fictional public sauna. The rooms, temperatures, prices and timetable are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Birchwood Sauna House</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional public sauna. The rooms, temperatures, prices and timetable are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; the cabin is a generated image drawn in the page's colors.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>, drawn live; the cabin is a generated image drawn in the page's colors.
         </p>
       </footer>
     </div>

@@ -95,7 +95,20 @@ const QUESTIONS = [
 
 export default function EaselEveningsPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--wall': '#f5f0e6',
+        '--ink': '#1c1b2b',
+        '--cadmium': '#e2432a',
+        '--ultra': '#2d3fbf',
+        '--yellow': '#f3b11b',
+        '--viridian': '#178a6a',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="wall,ink,cadmium,ultra,yellow,viridian"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -105,15 +118,15 @@ export default function EaselEveningsPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Easel Evenings</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Easel Evenings</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -122,22 +135,22 @@ export default function EaselEveningsPage() {
         {/* ------------------------------------------------------ THE EASEL */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Paint-and-sip studio, Tanner's Yard</p>
-            <h1 id="hero-h" className={s.title}>Paint a picture <em>tonight.</em></h1>
-            <p className={s.lede}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Paint-and-sip studio, Tanner's Yard</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>Paint a picture <em>tonight.</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Two hours, one canvas, a glass of something, and an artist at the
               front showing you every stroke. Nobody here can paint when they
               arrive. Everybody leaves with a painting.
             </p>
             <p className={s.actions}>
-              <a className={s.primary} href="#calendar">See this month's canvases</a>
-              <a className={s.secondary} href="#parties">Book a party</a>
+              <a data-edit="hero.primary" data-edit-max="28" className={s.primary} href="#calendar">See this month's canvases</a>
+              <a data-edit="hero.secondary" data-edit-max="28" className={s.secondary} href="#parties">Book a party</a>
             </p>
           </div>
 
           <div className={s.easel}>
             <div className={s.legs}>
-              <div className={s.canvas} aria-hidden="true">
+              <div data-edit-pattern="hero.field" data-edit-roles="1,3,2,4,5,0" className={s.canvas} aria-hidden="true">
                 <TabbiedPattern
                   pattern={dimmer}
                   palette={CANVAS}
@@ -149,8 +162,8 @@ export default function EaselEveningsPage() {
               </div>
             </div>
             <p className={s.wallLabel}>
-              <strong>Untitled, Thursday</strong>
-              <span>Acrylic on canvas, 16 x 20 in. Painted by 22 people at once.</span>
+              <strong data-edit="hero.emphasis">Untitled, Thursday</strong>
+              <span data-edit="hero.text" data-edit-max="60">Acrylic on canvas, 16 x 20 in. Painted by 22 people at once.</span>
             </p>
           </div>
         </section>
@@ -159,9 +172,9 @@ export default function EaselEveningsPage() {
         <section id="calendar" className={s.calendar} aria-labelledby="calendar-h">
           <div className={s.inner}>
             <div className={s.blockHead}>
-              <p className={s.kicker}>October</p>
-              <h2 id="calendar-h">This month's canvases</h2>
-              <p className={s.blockNote}>
+              <p data-edit="calendar.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>October</p>
+              <h2 data-edit="calendar.title" data-edit-max="60" id="calendar-h">This month's canvases</h2>
+              <p data-edit="calendar.blockNote" data-edit-max="240" data-edit-multiline className={s.blockNote}>
                 Each night is one painting, the same for everyone in the room.
                 The dots are the paints you will use. Tickets are per easel and
                 include everything below.
@@ -169,24 +182,24 @@ export default function EaselEveningsPage() {
             </div>
 
             <ol className={s.tickets}>
-              {NIGHTS.map((n) => (
+              {NIGHTS.map((n, i) => (
                 <li key={`${n.date}-${n.time}`} className={`${s.ticket} ${s[n.status]}`}>
                   <div className={s.stub}>
-                    <span className={s.stubDay}>{n.day}</span>
-                    <span className={s.stubDate}>{n.date}</span>
-                    <span className={s.stubTime}>{n.time}</span>
+                    <span data-edit={`calendar.stubDay.${i}`} data-edit-max="60" className={s.stubDay}>{n.day}</span>
+                    <span data-edit={`calendar.stubDate.${i}`} data-edit-max="60" className={s.stubDate}>{n.date}</span>
+                    <span data-edit={`calendar.stubTime.${i}`} data-edit-max="60" className={s.stubTime}>{n.time}</span>
                   </div>
                   <div className={s.ticketBody}>
-                    <h3>{n.title}</h3>
-                    <p className={s.level}>{n.level}</p>
+                    <h3 data-edit={`calendar.title2.${i}`} data-edit-max="40">{n.title}</h3>
+                    <p data-edit={`calendar.level.${i}`} data-edit-max="240" data-edit-multiline className={s.level}>{n.level}</p>
                     <p className={s.paints} aria-hidden="true">
                       {n.paints.map((p, j) => (
                         <span key={`${p}-${j}`} className={s[p]} />
                       ))}
                     </p>
                     <p className={s.ticketFoot}>
-                      <span className={s.price}>{n.price}</span>
-                      <span className={s.seats}>{n.seats}</span>
+                      <span data-edit={`calendar.price.${i}`} data-edit-max="60" className={s.price}>{n.price}</span>
+                      <span data-edit={`calendar.seats.${i}`} data-edit-max="60" className={s.seats}>{n.seats}</span>
                     </p>
                   </div>
                 </li>
@@ -200,13 +213,13 @@ export default function EaselEveningsPage() {
           <div className={s.inner}>
             <div className={s.includedGrid}>
               <div className={s.blockHead}>
-                <p className={s.kicker}>Every ticket</p>
-                <h2 id="included-h">What your seat <em>comes with</em></h2>
-                <p className={s.blockNote}>
+                <p data-edit="included.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Every ticket</p>
+                <h2 data-edit="included.title" data-edit-format="emphasis" data-edit-max="60" id="included-h">What your seat <em>comes with</em></h2>
+                <p data-edit="included.blockNote" data-edit-max="240" data-edit-multiline className={s.blockNote}>
                   Wear something you do not mind. The aprons are good; acrylic
                   on a sleeve is forever.
                 </p>
-                <div className={s.swatch} aria-hidden="true">
+                <div data-edit-pattern="included.field" data-edit-roles="2,4,0,3,2,5" className={s.swatch} aria-hidden="true">
                   <TabbiedPattern
                     pattern={dimmer}
                     palette={WARM}
@@ -218,10 +231,10 @@ export default function EaselEveningsPage() {
                 </div>
               </div>
               <ol className={s.includedList}>
-                {INCLUDED.map(([t, d]) => (
+                {INCLUDED.map(([t, d], i) => (
                   <li key={t}>
-                    <h3>{t}</h3>
-                    <p>{d}</p>
+                    <h3 data-edit={`included.title.${i}`} data-edit-max="40">{t}</h3>
+                    <p data-edit={`included.body.${i}`} data-edit-max="240" data-edit-multiline>{d}</p>
                   </li>
                 ))}
               </ol>
@@ -233,20 +246,20 @@ export default function EaselEveningsPage() {
         <section id="evening" className={s.evening} aria-labelledby="evening-h">
           <div className={s.inner}>
             <div className={s.blockHead}>
-              <p className={s.kicker}>6:40 to 9 pm</p>
-              <h2 id="evening-h">How an evening goes</h2>
+              <p data-edit="evening.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>6:40 to 9 pm</p>
+              <h2 data-edit="evening.title" data-edit-max="60" id="evening-h">How an evening goes</h2>
             </div>
             <ol className={s.steps}>
-              {EVENING.map(([at, what, how]) => (
+              {EVENING.map(([at, what, how], i) => (
                 <li key={at}>
-                  <time className={s.at}>{at}</time>
-                  <h3>{what}</h3>
-                  <p>{how}</p>
+                  <time data-edit={`evening.at.${i}`} className={s.at}>{at}</time>
+                  <h3 data-edit={`evening.title2.${i}`} data-edit-max="40">{what}</h3>
+                  <p data-edit={`evening.body.${i}`} data-edit-max="240" data-edit-multiline>{how}</p>
                 </li>
               ))}
             </ol>
           </div>
-          <div className={s.strokes} aria-hidden="true">
+          <div data-edit-pattern="evening.field" data-edit-roles="transparent,1,3,2,5,4" className={s.strokes} aria-hidden="true">
             <TabbiedPattern
               pattern={drybrush}
               palette={STROKES}
@@ -262,16 +275,16 @@ export default function EaselEveningsPage() {
         <section id="artists" className={s.artists} aria-labelledby="artists-h">
           <div className={s.inner}>
             <div className={s.blockHead}>
-              <p className={s.kicker}>At the front of the room</p>
-              <h2 id="artists-h">The artists</h2>
+              <p data-edit="artists.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>At the front of the room</p>
+              <h2 data-edit="artists.title" data-edit-max="60" id="artists-h">The artists</h2>
             </div>
             <ul className={s.artistList}>
-              {ARTISTS.map((a) => (
+              {ARTISTS.map((a, i) => (
                 <li key={a.name} className={s.artist}>
                   <span className={`${s.artistBlock} ${s[a.block]}`} aria-hidden="true" />
-                  <h3>{a.name}</h3>
-                  <p className={s.artistRole}>{a.role}</p>
-                  <p>{a.note}</p>
+                  <h3 data-edit={`artists.title2.${i}`} data-edit-max="40">{a.name}</h3>
+                  <p data-edit={`artists.artistRole.${i}`} data-edit-max="240" data-edit-multiline className={s.artistRole}>{a.role}</p>
+                  <p data-edit={`artists.body.${i}`} data-edit-max="240" data-edit-multiline>{a.note}</p>
                 </li>
               ))}
             </ul>
@@ -283,24 +296,24 @@ export default function EaselEveningsPage() {
           <div className={s.inner}>
             <div className={s.partiesGrid}>
               <div className={s.blockHead}>
-                <p className={s.kicker}>Private parties</p>
-                <h2 id="parties-h">The room is <em>yours</em></h2>
-                <p className={s.blockNote}>
+                <p data-edit="parties.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Private parties</p>
+                <h2 data-edit="parties.title" data-edit-format="emphasis" data-edit-max="60" id="parties-h">The room is <em>yours</em></h2>
+                <p data-edit="parties.blockNote" data-edit-max="240" data-edit-multiline className={s.blockNote}>
                   Any day of the week, with your own artist and your choice of
                   painting. Send us a date and a head count and we will hold it
                   for three days while you decide.
                 </p>
               </div>
               <ul className={s.partyList}>
-                {PARTIES.map((p) => (
+                {PARTIES.map((p, i) => (
                   <li key={p.name} className={s.party}>
-                    <h3>{p.name}</h3>
-                    <p className={s.partySize}>{p.size}</p>
+                    <h3 data-edit={`parties.title.${i}`} data-edit-max="40">{p.name}</h3>
+                    <p data-edit={`parties.partySize.${i}`} data-edit-max="240" data-edit-multiline className={s.partySize}>{p.size}</p>
                     <p className={s.partyPrice}>
-                      <strong>{p.price}</strong>
-                      <span>{p.per}</span>
+                      <strong data-edit={`parties.emphasis.${i}`}>{p.price}</strong>
+                      <span data-edit={`parties.text.${i}`} data-edit-max="60">{p.per}</span>
                     </p>
-                    <p className={s.partyNote}>{p.note}</p>
+                    <p data-edit={`parties.partyNote.${i}`} data-edit-max="240" data-edit-multiline className={s.partyNote}>{p.note}</p>
                   </li>
                 ))}
               </ul>
@@ -314,25 +327,25 @@ export default function EaselEveningsPage() {
             <div className={s.bookGrid}>
               <div>
                 <div className={s.blockHead}>
-                  <p className={s.kicker}>Seats and questions</p>
-                  <h2 id="book-h">Save an easel</h2>
+                  <p data-edit="book.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Seats and questions</p>
+                  <h2 data-edit="book.title" data-edit-max="60" id="book-h">Save an easel</h2>
                 </div>
                 <div className={s.faq}>
-                  {QUESTIONS.map(([q, a]) => (
+                  {QUESTIONS.map(([q, a], i) => (
                     <details key={q}>
-                      <summary>{q}</summary>
-                      <p>{a}</p>
+                      <summary data-edit={`book.question.${i}`} data-edit-max="80">{q}</summary>
+                      <p data-edit={`book.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                     </details>
                   ))}
                 </div>
                 <p className={s.address}>
                   Second floor, 58 Tanner's Yard
                   <br />
-                  <a href="tel:+15550182290">(555) 018-2290</a>
+                  <a data-edit="book.link" data-edit-max="28" href="tel:+15550182290">(555) 018-2290</a>
                   <br />
-                  <a href="mailto:paint@easelevenings.example">paint@easelevenings.example</a>
+                  <a data-edit="book.link2" data-edit-max="28" href="mailto:paint@easelevenings.example">paint@easelevenings.example</a>
                 </p>
-                <p className={s.small}>
+                <p data-edit="book.small" data-edit-max="240" data-edit-multiline className={s.small}>
                   Studio open Wednesday to Sunday. Classes as listed; the front
                   desk answers the phone from noon. Lift to the second floor.
                 </p>
@@ -341,7 +354,7 @@ export default function EaselEveningsPage() {
               <form className={s.form} action="#">
                 <div className={s.formGrid}>
                   <div className={`${s.field} ${s.fieldWide}`}>
-                    <label htmlFor="ee-night">Night</label>
+                    <label data-edit="book.label" htmlFor="ee-night">Night</label>
                     <select id="ee-night" name="night" defaultValue="lemon">
                       <option value="lemon">Thu 1 Oct, Lemon grove at dusk</option>
                       <option value="kids">Sat 3 Oct, Sunflower cat (kids)</option>
@@ -353,7 +366,7 @@ export default function EaselEveningsPage() {
                     </select>
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="ee-seats">Easels</label>
+                    <label data-edit="book.label2" htmlFor="ee-seats">Easels</label>
                     <select id="ee-seats" name="seats" defaultValue="2">
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -364,20 +377,20 @@ export default function EaselEveningsPage() {
                     </select>
                   </div>
                   <div className={s.field}>
-                    <label htmlFor="ee-name">Name</label>
+                    <label data-edit="book.label3" htmlFor="ee-name">Name</label>
                     <input id="ee-name" name="name" type="text" autoComplete="name" />
                   </div>
                   <div className={`${s.field} ${s.fieldWide}`}>
-                    <label htmlFor="ee-email">Email</label>
+                    <label data-edit="book.label4" htmlFor="ee-email">Email</label>
                     <input id="ee-email" name="email" type="email" autoComplete="email" />
                   </div>
                   <div className={`${s.field} ${s.fieldWide}`}>
-                    <label htmlFor="ee-note">Anything we should know?</label>
+                    <label data-edit="book.label5" htmlFor="ee-note">Anything we should know?</label>
                     <textarea id="ee-note" name="note" rows={3} />
                   </div>
                 </div>
-                <button className={s.submit} type="submit">Hold my easel</button>
-                <p className={s.formNote}>We email a ticket within the hour. Pay at the door or ahead, either way.</p>
+                <button data-edit="book.submit" data-edit-max="24" className={s.submit} type="submit">Hold my easel</button>
+                <p data-edit="book.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>We email a ticket within the hour. Pay at the door or ahead, either way.</p>
               </form>
             </div>
           </div>
@@ -385,7 +398,7 @@ export default function EaselEveningsPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="1,3,2,4,5,0" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={dimmer}
             palette={CANVAS}
@@ -395,10 +408,10 @@ export default function EaselEveningsPage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Easel Evenings</p>
-        <p>A fictional paint-and-sip studio. The classes, artists and prices are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Easel Evenings</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional paint-and-sip studio. The classes, artists and prices are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

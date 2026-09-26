@@ -144,7 +144,19 @@ const HOURS = [
 
 export default function PurlAndPlyPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--oat': '#efe5d3',
+        '--peat': '#34281f',
+        '--rust': '#b4532e',
+        '--moss': '#5d6a38',
+        '--honey': '#d8a445',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="oat,peat,rust,moss,honey"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -154,15 +166,15 @@ export default function PurlAndPlyPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Purl & Ply</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Purl & Ply</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -171,19 +183,19 @@ export default function PurlAndPlyPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div>
-            <p className={s.row}>Cast on</p>
-            <h1 id="hero-h" className={s.title}>Good wool and a <em>long table</em></h1>
-            <p className={s.lede}>
+            <p data-edit="hero.row" data-edit-max="240" data-edit-multiline className={s.row}>Cast on</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>Good wool and a <em>long table</em></h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               About four hundred yarns, most of them from small mills within a
               day's drive, and a table at the back where we teach, fix and
               gossip. Bring in a dropped stitch and we will pick it up for
               nothing.
             </p>
-            <p className={s.address}>31 Wool Market Lane, in the old corn exchange</p>
+            <p data-edit="hero.address" data-edit-max="240" data-edit-multiline className={s.address}>31 Wool Market Lane, in the old corn exchange</p>
           </div>
 
           <div className={s.ballWrap}>
-            <div className={s.ball} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,2,0,4,3" className={s.ball} aria-hidden="true">
               <TabbiedPattern
                 pattern={guernsey}
                 palette={BALL}
@@ -196,17 +208,17 @@ export default function PurlAndPlyPage() {
               />
             </div>
             <div className={s.label}>
-              <p className={s.labelBrand}>Purl & Ply house yarn</p>
-              <p className={s.labelName}>Worsted, shade 04 Oatmeal</p>
+              <p data-edit="hero.labelBrand" data-edit-max="240" data-edit-multiline className={s.labelBrand}>Purl & Ply house yarn</p>
+              <p data-edit="hero.labelName" data-edit-max="240" data-edit-multiline className={s.labelName}>Worsted, shade 04 Oatmeal</p>
               <dl className={s.labelFacts}>
-                {BAND.map(([term, value]) => (
+                {BAND.map(([term, value], i) => (
                   <div key={term}>
-                    <dt>{term}</dt>
-                    <dd>{value}</dd>
+                    <dt data-edit={`hero.term.${i}`} data-edit-max="28">{term}</dt>
+                    <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{value}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.labelPrice}>$14 a skein</p>
+              <p data-edit="hero.labelPrice" data-edit-max="240" data-edit-multiline className={s.labelPrice}>$14 a skein</p>
             </div>
           </div>
         </section>
@@ -215,9 +227,9 @@ export default function PurlAndPlyPage() {
         <section id="weights" className={s.sec} aria-labelledby="weights-h">
           <div className={s.weightsTop}>
             <div className={s.head}>
-              <p className={s.row}>Row 1</p>
-              <h2 id="weights-h">Yarn, <em>by weight</em></h2>
-              <p className={s.headNote}>
+              <p data-edit="weights.row" data-edit-max="240" data-edit-multiline className={s.row}>Row 1</p>
+              <h2 data-edit="weights.title" data-edit-format="emphasis" data-edit-max="60" id="weights-h">Yarn, <em>by weight</em></h2>
+              <p data-edit="weights.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 The wall runs thinnest on the left to thickest on the right,
                 the way this table does. Gauge is stitches to 10 cm in
                 stockinette, on the needles in the middle of the range.
@@ -232,35 +244,35 @@ export default function PurlAndPlyPage() {
           </div>
 
           <div className={s.weightHead} aria-hidden="true">
-            <span>Weight</span>
-            <span>Needles</span>
-            <span>Stitches</span>
-            <span>Good for</span>
-            <span>Ours to try</span>
+            <span data-edit="weights.text" data-edit-max="60">Weight</span>
+            <span data-edit="weights.text2" data-edit-max="60">Needles</span>
+            <span data-edit="weights.text3" data-edit-max="60">Stitches</span>
+            <span data-edit="weights.text4" data-edit-max="60">Good for</span>
+            <span data-edit="weights.text5" data-edit-max="60">Ours to try</span>
           </div>
           <ol className={s.weights}>
-            {WEIGHTS.map((w) => (
+            {WEIGHTS.map((w, i) => (
               <li key={w.name}>
                 <div className={s.weightName}>
                   <span className={`${s.strand} ${s[w.strand]}`} aria-hidden="true" />
-                  <h3>{w.name}</h3>
+                  <h3 data-edit={`weights.title.${i}`} data-edit-max="40">{w.name}</h3>
                 </div>
                 <dl className={s.weightFacts}>
                   <div>
-                    <dt>Needles</dt>
-                    <dd>{w.needles}</dd>
+                    <dt data-edit={`weights.term.${i}`} data-edit-max="28">Needles</dt>
+                    <dd data-edit={`weights.body.${i}`} data-edit-max="200" data-edit-multiline>{w.needles}</dd>
                   </div>
                   <div>
-                    <dt>Stitches to 10 cm</dt>
-                    <dd>{w.gauge}</dd>
+                    <dt data-edit={`weights.term2.${i}`} data-edit-max="28">Stitches to 10 cm</dt>
+                    <dd data-edit={`weights.body2.${i}`} data-edit-max="200" data-edit-multiline>{w.gauge}</dd>
                   </div>
                   <div>
-                    <dt>Good for</dt>
-                    <dd>{w.good}</dd>
+                    <dt data-edit={`weights.term3.${i}`} data-edit-max="28">Good for</dt>
+                    <dd data-edit={`weights.body3.${i}`} data-edit-max="200" data-edit-multiline>{w.good}</dd>
                   </div>
                   <div>
-                    <dt>Ours to try</dt>
-                    <dd>{w.ours}</dd>
+                    <dt data-edit={`weights.term4.${i}`} data-edit-max="28">Ours to try</dt>
+                    <dd data-edit={`weights.body4.${i}`} data-edit-max="200" data-edit-multiline>{w.ours}</dd>
                   </div>
                 </dl>
               </li>
@@ -269,7 +281,7 @@ export default function PurlAndPlyPage() {
         </section>
 
         {/* A knitted yoke across the page. */}
-        <div className={s.yoke} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,4,0" className={s.yoke} aria-hidden="true">
           <TabbiedPattern
             pattern={guernsey}
             palette={YOKE}
@@ -284,9 +296,9 @@ export default function PurlAndPlyPage() {
         {/* --------------------------------------------------------- CLASSES */}
         <section id="classes" className={s.sec} aria-labelledby="classes-h">
           <div className={s.head}>
-            <p className={s.row}>Row 2</p>
-            <h2 id="classes-h">October at <em>the long table</em></h2>
-            <p className={s.headNote}>
+            <p data-edit="classes.row" data-edit-max="240" data-edit-multiline className={s.row}>Row 2</p>
+            <h2 data-edit="classes.title" data-edit-format="emphasis" data-edit-max="60" id="classes-h">October at <em>the long table</em></h2>
+            <p data-edit="classes.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Classes are six people at most, so everyone gets their stitches
               looked at. Book below, or at the till; we hold a place for two
               days while you decide.
@@ -294,7 +306,7 @@ export default function PurlAndPlyPage() {
           </div>
 
           <div className={s.calendar}>
-            <p className={s.month}>October 2026</p>
+            <p data-edit="classes.month" data-edit-max="240" data-edit-multiline className={s.month}>October 2026</p>
             <ol className={s.days}>
               {WEEKDAYS.map((w) => (
                 <li key={w} className={s.weekday} aria-hidden="true">{w}</li>
@@ -302,12 +314,12 @@ export default function PurlAndPlyPage() {
               {BLANKS.map((b) => (
                 <li key={b} className={s.blank} aria-hidden="true" />
               ))}
-              {OCTOBER.map((d) => (
+              {OCTOBER.map((d, i) => (
                 <li key={d.day} className={d.events.length ? s.busy : s.quiet}>
-                  <span className={s.date}>{d.day}</span>
-                  <span className={s.wd}>{d.wd}</span>
-                  {d.events.map((e) => (
-                    <span key={e.label} className={`${s.event} ${s[e.kind]}`}>{e.label}</span>
+                  <span data-edit={`classes.date.${i}`} data-edit-max="60" className={s.date}>{d.day}</span>
+                  <span data-edit={`classes.wd.${i}`} data-edit-max="60" className={s.wd}>{d.wd}</span>
+                  {d.events.map((e, i2) => (
+                    <span data-edit={`classes.event.${i}.${i2}`} data-edit-max="60" key={e.label} className={`${s.event} ${s[e.kind]}`}>{e.label}</span>
                   ))}
                 </li>
               ))}
@@ -316,31 +328,31 @@ export default function PurlAndPlyPage() {
 
           <div className={s.classWrap}>
             <ul className={s.classes}>
-              {CLASSES.map((c) => (
+              {CLASSES.map((c, i) => (
                 <li key={c.name}>
                   <div className={s.classTop}>
-                    <h3>{c.name}</h3>
-                    <p className={s.classPrice}>{c.price}</p>
+                    <h3 data-edit={`classes.title.${i}`} data-edit-max="40">{c.name}</h3>
+                    <p data-edit={`classes.classPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.classPrice}>{c.price}</p>
                   </div>
-                  <p className={s.classWhen}>{c.when}</p>
-                  <p className={s.classNote}>{c.note}</p>
-                  <p className={s.places}>{c.places}</p>
+                  <p data-edit={`classes.classWhen.${i}`} data-edit-max="240" data-edit-multiline className={s.classWhen}>{c.when}</p>
+                  <p data-edit={`classes.classNote.${i}`} data-edit-max="240" data-edit-multiline className={s.classNote}>{c.note}</p>
+                  <p data-edit={`classes.places.${i}`} data-edit-max="240" data-edit-multiline className={s.places}>{c.places}</p>
                 </li>
               ))}
             </ul>
 
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Save me a place</h3>
+              <h3 data-edit="classes.formTitle" data-edit-max="40" className={s.formTitle}>Save me a place</h3>
               <div className={s.field}>
-                <label htmlFor="pp-name">Name</label>
+                <label data-edit="classes.label" htmlFor="pp-name">Name</label>
                 <input id="pp-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="pp-email">Email</label>
+                <label data-edit="classes.label2" htmlFor="pp-email">Email</label>
                 <input id="pp-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.field}>
-                <label htmlFor="pp-class">Class</label>
+                <label data-edit="classes.label3" htmlFor="pp-class">Class</label>
                 <select id="pp-class" name="class" defaultValue="learn">
                   <option value="learn">Learn to knit</option>
                   <option value="sweater">Your first sweater</option>
@@ -351,7 +363,7 @@ export default function PurlAndPlyPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="pp-so-far">What you have made so far</label>
+                <label data-edit="classes.label4" htmlFor="pp-so-far">What you have made so far</label>
                 <select id="pp-so-far" name="experience" defaultValue="none">
                   <option value="none">Nothing yet</option>
                   <option value="scarf">A scarf, more or less</option>
@@ -359,15 +371,15 @@ export default function PurlAndPlyPage() {
                   <option value="plenty">Plenty, I just want this one</option>
                 </select>
               </div>
-              <button className={s.button} type="submit">Hold my place</button>
-              <p className={s.formNote}>We hold it two days. Pay at the till or by the link we send.</p>
+              <button data-edit="classes.button" data-edit-max="24" className={s.button} type="submit">Hold my place</button>
+              <p data-edit="classes.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>We hold it two days. Pay at the till or by the link we send.</p>
             </form>
           </div>
         </section>
 
         {/* ------------------------------------------------------------ CLUB */}
         <section id="club" className={s.club} aria-labelledby="club-h">
-          <div className={s.placket} aria-hidden="true">
+          <div data-edit-pattern="club.field" data-edit-roles="transparent,3,2,4" className={s.placket} aria-hidden="true">
             <TabbiedPattern
               pattern={buttonhole}
               palette={PLACKET}
@@ -379,31 +391,31 @@ export default function PurlAndPlyPage() {
             />
           </div>
           <div className={s.clubBody}>
-            <p className={s.row}>Row 3</p>
-            <h2 id="club-h">Tuesday <em>stitch club</em></h2>
-            <p className={s.clubLede}>
+            <p data-edit="club.row" data-edit-max="240" data-edit-multiline className={s.row}>Row 3</p>
+            <h2 data-edit="club.title" data-edit-format="emphasis" data-edit-max="60" id="club-h">Tuesday <em>stitch club</em></h2>
+            <p data-edit="club.clubLede" data-edit-max="240" data-edit-multiline className={s.clubLede}>
               Every Tuesday, 6 to 9, free, at the long table. Bring what you
               are making, or bring nothing and we will teach you to cast on.
               Tea is on the shop; cake goes by rota.
             </p>
             <div className={s.clubGrid}>
               <table className={s.cakes}>
-                <caption>The cake rota</caption>
+                <caption data-edit="club.caption">The cake rota</caption>
                 <tbody>
-                  {CAKES.map(([date, who, cake]) => (
+                  {CAKES.map(([date, who, cake], i) => (
                     <tr key={date}>
-                      <th scope="row">{date}</th>
-                      <td>{who}</td>
-                      <td>{cake}</td>
+                      <th data-edit={`club.heading.${i}`} scope="row">{date}</th>
+                      <td data-edit={`club.cell.${i}`}>{who}</td>
+                      <td data-edit={`club.cell2.${i}`}>{cake}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <ul className={s.clubRules}>
-                <li>Sit anywhere. The good lamp is first come.</li>
-                <li>Knitting, crochet, spinning, darning and embroidery all count.</li>
-                <li>Nobody asks what you are making until you have had your tea.</li>
-                <li>Frogging is allowed, and so is a little crying.</li>
+                <li data-edit="club.item" data-edit-max="80">Sit anywhere. The good lamp is first come.</li>
+                <li data-edit="club.item2" data-edit-max="80">Knitting, crochet, spinning, darning and embroidery all count.</li>
+                <li data-edit="club.item3" data-edit-max="80">Nobody asks what you are making until you have had your tea.</li>
+                <li data-edit="club.item4" data-edit-max="80">Frogging is allowed, and so is a little crying.</li>
               </ul>
             </div>
           </div>
@@ -412,18 +424,18 @@ export default function PurlAndPlyPage() {
         {/* ------------------------------------------------------------ HELP */}
         <section id="help" className={s.sec} aria-labelledby="help-h">
           <div className={s.head}>
-            <p className={s.row}>Row 4</p>
-            <h2 id="help-h">The <em>help desk</em></h2>
-            <p className={s.headNote}>
+            <p data-edit="help.row" data-edit-max="240" data-edit-multiline className={s.row}>Row 4</p>
+            <h2 data-edit="help.title" data-edit-format="emphasis" data-edit-max="60" id="help-h">The <em>help desk</em></h2>
+            <p data-edit="help.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               The counter by the window. Whoever is at the till will stop and
               look, and if it needs longer we will book you a slot.
             </p>
           </div>
           <dl className={s.help}>
-            {HELP.map(([term, body]) => (
+            {HELP.map(([term, body], i) => (
               <div key={term}>
-                <dt>{term}</dt>
-                <dd>{body}</dd>
+                <dt data-edit={`help.term.${i}`} data-edit-max="28">{term}</dt>
+                <dd data-edit={`help.body.${i}`} data-edit-max="200" data-edit-multiline>{body}</dd>
               </div>
             ))}
           </dl>
@@ -432,15 +444,15 @@ export default function PurlAndPlyPage() {
         {/* ---------------------------------------------------------- PEOPLE */}
         <section id="people" className={s.sec} aria-labelledby="people-h">
           <div className={s.head}>
-            <p className={s.row}>Row 5</p>
-            <h2 id="people-h">Who is <em>behind the till</em></h2>
+            <p data-edit="people.row" data-edit-max="240" data-edit-multiline className={s.row}>Row 5</p>
+            <h2 data-edit="people.title" data-edit-format="emphasis" data-edit-max="60" id="people-h">Who is <em>behind the till</em></h2>
           </div>
           <ul className={s.people}>
-            {PEOPLE.map(([name, role, note]) => (
+            {PEOPLE.map(([name, role, note], i) => (
               <li key={name}>
-                <p className={s.role}>{role}</p>
-                <h3>{name}</h3>
-                <p>{note}</p>
+                <p data-edit={`people.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{role}</p>
+                <h3 data-edit={`people.title.${i}`} data-edit-max="40">{name}</h3>
+                <p data-edit={`people.body.${i}`} data-edit-max="240" data-edit-multiline>{note}</p>
               </li>
             ))}
           </ul>
@@ -450,25 +462,25 @@ export default function PurlAndPlyPage() {
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.visit}>
             <div>
-              <p className={s.row}>Bind off</p>
-              <h2 id="visit-h" className={s.visitTitle}>Come and <em>squeeze the yarn</em></h2>
-              <p className={s.visitText}>
+              <p data-edit="visit.row" data-edit-max="240" data-edit-multiline className={s.row}>Bind off</p>
+              <h2 data-edit="visit.title" data-edit-format="emphasis" data-edit-max="60" id="visit-h" className={s.visitTitle}>Come and <em>squeeze the yarn</em></h2>
+              <p data-edit="visit.visitText" data-edit-max="240" data-edit-multiline className={s.visitText}>
                 31 Wool Market Lane, in the old corn exchange, two doors down
                 from the cheese shop. Park in the Wool Market lot; the first
                 hour is free. Step-free, with a sofa by the door for anyone
                 who came along to be patient.
               </p>
               <p className={s.visitText}>
-                <a href="tel:+15550184466">(555) 018-4466</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550184466">(555) 018-4466</a>
                 <br />
-                <a href="mailto:hello@purlandply.example">hello@purlandply.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@purlandply.example">hello@purlandply.example</a>
               </p>
             </div>
             <dl className={s.hours}>
-              {HOURS.map(([day, time]) => (
+              {HOURS.map(([day, time], i) => (
                 <div key={day}>
-                  <dt>{day}</dt>
-                  <dd>{time}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{day}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                 </div>
               ))}
             </dl>
@@ -477,7 +489,7 @@ export default function PurlAndPlyPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.hem} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,3,4,2" className={s.hem} aria-hidden="true">
           <TabbiedPattern
             pattern={guernsey}
             palette={HEM}
@@ -488,11 +500,11 @@ export default function PurlAndPlyPage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Purl & Ply</p>
-        <p>A fictional yarn shop and knitting school. The yarns, classes, prices and people are invented.</p>
-        <p>The shelf of yarn is a generated picture, drawn in the page's own colors.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Purl & Ply</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional yarn shop and knitting school. The yarns, classes, prices and people are invented.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The shelf of yarn is a generated picture, drawn in the page's own colors.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

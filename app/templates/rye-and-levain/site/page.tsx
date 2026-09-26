@@ -157,7 +157,18 @@ const HOURS = [
 
 export default function RyeAndLevainPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--flour': '#f5f3ee',
+        '--ink': '#1c1b19',
+        '--rye': '#7a5230',
+        '--signal': '#f0b43c',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="flour,ink,rye,signal"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -167,16 +178,16 @@ export default function RyeAndLevainPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Rye &amp; Levain</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Rye &amp; Levain</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <p className={s.barNote}>Open today 07:00-16:00</p>
+        <p data-edit="bar.barNote" data-edit-max="240" data-edit-multiline className={s.barNote}>Open today 07:00-16:00</p>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -185,24 +196,24 @@ export default function RyeAndLevainPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Sourdough bakery and stone mill, Weirside</p>
-            <h1 id="hero-h" className={s.name}>Rye &amp; Levain</h1>
-            <p className={s.lede}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Sourdough bakery and stone mill, Weirside</p>
+            <h1 data-edit="hero.name" data-edit-max="70" id="hero-h" className={s.name}>Rye &amp; Levain</h1>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               We grind rye and wheat on a granite mill in the back room and
               bake it into sourdough the next morning. What is out of the
               oven, and what is already gone, is on the board below.
             </p>
             <dl className={s.facts}>
-              {FACTS.map(([label, value]) => (
+              {FACTS.map(([label, value], i) => (
                 <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{value}</dd>
+                  <dt data-edit={`hero.term.${i}`} data-edit-max="28">{label}</dt>
+                  <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{value}</dd>
                 </div>
               ))}
             </dl>
           </div>
           <div className={s.stoneWrap}>
-            <div className={s.stone} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,1,2,0,1" className={s.stone} aria-hidden="true">
               <TabbiedPattern
                 pattern={nutation}
                 palette={STONE}
@@ -212,7 +223,7 @@ export default function RyeAndLevainPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <p className={s.stoneCaption}>The runner stone, 1.2 m across, turning at 110 revolutions a minute.</p>
+            <p data-edit="hero.stoneCaption" data-edit-max="240" data-edit-multiline className={s.stoneCaption}>The runner stone, 1.2 m across, turning at 110 revolutions a minute.</p>
           </div>
         </section>
 
@@ -221,17 +232,17 @@ export default function RyeAndLevainPage() {
           <div className={s.board}>
             <div className={s.boardHead}>
               <div>
-                <h2 id="board-h" className={s.boardTitle}>Departures</h2>
-                <p className={s.boardSub}>Out of the oven today, Thursday</p>
+                <h2 data-edit="board.boardTitle" data-edit-max="60" id="board-h" className={s.boardTitle}>Departures</h2>
+                <p data-edit="board.boardSub" data-edit-max="240" data-edit-multiline className={s.boardSub}>Out of the oven today, Thursday</p>
               </div>
               <p className={s.clock}>
-                <span className={s.clockLabel}>Board at</span>
-                <span className={s.flapBig}>08</span>
-                <span className={s.flapBig}>20</span>
+                <span data-edit="board.clockLabel" data-edit-max="60" className={s.clockLabel}>Board at</span>
+                <span data-edit="board.flapBig" data-edit-max="60" className={s.flapBig}>08</span>
+                <span data-edit="board.flapBig2" data-edit-max="60" className={s.flapBig}>20</span>
               </p>
             </div>
 
-            <div className={s.slats} aria-hidden="true">
+            <div data-edit-pattern="board.field" data-edit-roles="transparent,0,3,0,0,2" className={s.slats} aria-hidden="true">
               <TabbiedPattern
                 pattern={louvre}
                 palette={SLATS}
@@ -243,33 +254,33 @@ export default function RyeAndLevainPage() {
             </div>
 
             <table className={s.rows}>
-              <caption className={s.srOnly}>Today's bakes: when each leaves the oven, where it goes and whether it is still there</caption>
+              <caption data-edit="board.srOnly" className={s.srOnly}>Today's bakes: when each leaves the oven, where it goes and whether it is still there</caption>
               <thead>
                 <tr>
-                  <th scope="col">Time</th>
-                  <th scope="col">Bake</th>
-                  <th scope="col" className={s.colShelf}>Shelf</th>
-                  <th scope="col" className={s.colStatus}>Status</th>
+                  <th data-edit="board.heading" scope="col">Time</th>
+                  <th data-edit="board.heading2" scope="col">Bake</th>
+                  <th data-edit="board.colShelf" scope="col" className={s.colShelf}>Shelf</th>
+                  <th data-edit="board.colStatus" scope="col" className={s.colStatus}>Status</th>
                 </tr>
               </thead>
               <tbody>
-                {BOARD.map((b) => (
+                {BOARD.map((b, i) => (
                   <tr key={`${b.h}${b.m}-${b.bake}`} className={b.kind === 'sold' ? s.gone : undefined}>
                     <td className={s.cellTime}>
-                      <span className={s.flap}>{b.h}</span>
-                      <span className={s.flap}>{b.m}</span>
+                      <span data-edit={`board.flap.${i}`} data-edit-max="60" className={s.flap}>{b.h}</span>
+                      <span data-edit={`board.flap2.${i}`} data-edit-max="60" className={s.flap}>{b.m}</span>
                     </td>
-                    <td className={s.cellBake}>{b.bake}</td>
-                    <td className={s.cellShelf}>{b.shelf}</td>
+                    <td data-edit={`board.cellBake.${i}`} className={s.cellBake}>{b.bake}</td>
+                    <td data-edit={`board.cellShelf.${i}`} className={s.cellShelf}>{b.shelf}</td>
                     <td className={s.cellStatus}>
-                      <span className={`${s.status} ${s[b.kind]}`}>{b.status}</span>
+                      <span data-edit={`board.status.${i}`} data-edit-max="60" className={`${s.status} ${s[b.kind]}`}>{b.status}</span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
-            <p className={s.boardFoot}>
+            <p data-edit="board.boardFoot" data-edit-max="240" data-edit-multiline className={s.boardFoot}>
               Times are when a bake leaves the oven. The status is changed by
               hand at the counter, whenever somebody remembers. From 15:00,
               whatever is left is half price.
@@ -280,23 +291,23 @@ export default function RyeAndLevainPage() {
         {/* ----------------------------------------------------------- ROUTE */}
         <section id="route" className={`${s.sec} ${s.routeSec}`} aria-labelledby="route-h">
           <div className={s.secHead}>
-            <p className={s.secNum}>02</p>
-            <h2 id="route-h">Every loaf calls at eight stops</h2>
-            <p className={s.secNote}>
+            <p data-edit="route.secNum" data-edit-max="240" data-edit-multiline className={s.secNum}>02</p>
+            <h2 data-edit="route.title" data-edit-max="60" id="route-h">Every loaf calls at eight stops</h2>
+            <p data-edit="route.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Thirty-six hours from the stone to the shelf. This is the
               country levain's route; the all-rye takes a day longer and
               skips the folds.
             </p>
           </div>
           <ol className={s.route}>
-            {STOPS.map((stop) => (
+            {STOPS.map((stop, i) => (
               <li key={`${stop.day}-${stop.time}`}>
                 <p className={s.stopWhen}>
-                  <span className={s.stopDay}>{stop.day}</span>
-                  <span className={s.stopTime}>{stop.time}</span>
+                  <span data-edit={`route.stopDay.${i}`} data-edit-max="60" className={s.stopDay}>{stop.day}</span>
+                  <span data-edit={`route.stopTime.${i}`} data-edit-max="60" className={s.stopTime}>{stop.time}</span>
                 </p>
-                <h3 className={s.stopName}>{stop.name}</h3>
-                <p className={s.stopNote}>{stop.note}</p>
+                <h3 data-edit={`route.stopName.${i}`} data-edit-max="40" className={s.stopName}>{stop.name}</h3>
+                <p data-edit={`route.stopNote.${i}`} data-edit-max="240" data-edit-multiline className={s.stopNote}>{stop.note}</p>
               </li>
             ))}
           </ol>
@@ -308,16 +319,16 @@ export default function RyeAndLevainPage() {
               inks={['var(--text)']}
               className={s.loaf}
             />
-            <p className={s.arrivalNote}>Arrived: the country levain, shelf 1, 06:30.</p>
+            <p data-edit="route.arrivalNote" data-edit-max="240" data-edit-multiline className={s.arrivalNote}>Arrived: the country levain, shelf 1, 06:30.</p>
           </div>
         </section>
 
         {/* ------------------------------------------------------------ MILL */}
         <section id="mill" className={s.sec} aria-labelledby="mill-h">
           <div className={s.secHead}>
-            <p className={s.secNum}>03</p>
-            <h2 id="mill-h">The mill, and flour by the kilo</h2>
-            <p className={s.secNote}>
+            <p data-edit="mill.secNum" data-edit-max="240" data-edit-multiline className={s.secNum}>03</p>
+            <h2 data-edit="mill.title" data-edit-max="60" id="mill-h">The mill, and flour by the kilo</h2>
+            <p data-edit="mill.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               We mill on Tuesdays and Fridays, cold and slow, and date every
               bag. Fresh flour is at its best for three weeks, or a year in
               the freezer.
@@ -326,39 +337,39 @@ export default function RyeAndLevainPage() {
 
           <div className={s.millGrid}>
             <dl className={s.millStats}>
-              {MILL_STATS.map(([figure, what]) => (
+              {MILL_STATS.map(([figure, what], i) => (
                 <div key={figure}>
-                  <dt>{figure}</dt>
-                  <dd>{what}</dd>
+                  <dt data-edit={`mill.term.${i}`} data-edit-max="28">{figure}</dt>
+                  <dd data-edit={`mill.body.${i}`} data-edit-max="200" data-edit-multiline>{what}</dd>
                 </div>
               ))}
             </dl>
 
             <div className={s.grainsWrap}>
               <table className={s.grains}>
-                <caption className={s.srOnly}>Grains we stone-grind, where they grow and the price by weight</caption>
+                <caption data-edit="mill.srOnly" className={s.srOnly}>Grains we stone-grind, where they grow and the price by weight</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Grain</th>
-                    <th scope="col" className={s.colFarm}>Grown at</th>
-                    <th scope="col" className={s.colGrind}>Grind</th>
-                    <th scope="col" className={s.num}>1 kg</th>
-                    <th scope="col" className={s.num}>5 kg</th>
+                    <th data-edit="mill.heading" scope="col">Grain</th>
+                    <th data-edit="mill.colFarm" scope="col" className={s.colFarm}>Grown at</th>
+                    <th data-edit="mill.colGrind" scope="col" className={s.colGrind}>Grind</th>
+                    <th data-edit="mill.num" scope="col" className={s.num}>1 kg</th>
+                    <th data-edit="mill.num2" scope="col" className={s.num}>5 kg</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {GRAINS.map((g) => (
+                  {GRAINS.map((g, i) => (
                     <tr key={g.grain}>
-                      <th scope="row">{g.grain}</th>
-                      <td className={s.colFarm}>{g.farm}</td>
-                      <td className={s.colGrind}>{g.grind}</td>
-                      <td className={s.num}>{g.kilo}</td>
-                      <td className={s.num}>{g.sack}</td>
+                      <th data-edit={`mill.heading2.${i}`} scope="row">{g.grain}</th>
+                      <td data-edit={`mill.colFarm2.${i}`} className={s.colFarm}>{g.farm}</td>
+                      <td data-edit={`mill.colGrind2.${i}`} className={s.colGrind}>{g.grind}</td>
+                      <td data-edit={`mill.num3.${i}`} className={s.num}>{g.kilo}</td>
+                      <td data-edit={`mill.num4.${i}`} className={s.num}>{g.sack}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <p className={s.small}>
+              <p data-edit="mill.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 Bring your own bag or jar and we take 50 cents off each kilo.
                 Sacks of 25 kg for bakers and schools, with a week's notice.
               </p>
@@ -367,7 +378,7 @@ export default function RyeAndLevainPage() {
         </section>
 
         {/* The flour dust: what settles on every surface of the mill room. */}
-        <div className={s.dust} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="transparent,2,1,2" className={s.dust} aria-hidden="true">
           <TabbiedPattern
             pattern={grainfall}
             palette={DUST}
@@ -381,53 +392,53 @@ export default function RyeAndLevainPage() {
         {/* ------------------------------------------------------------ LINE */}
         <section id="line" className={s.sec} aria-labelledby="line-h">
           <div className={s.secHead}>
-            <p className={s.secNum}>04</p>
-            <h2 id="line-h">The bread line</h2>
-            <p className={s.secNote}>
+            <p data-edit="line.secNum" data-edit-max="240" data-edit-multiline className={s.secNum}>04</p>
+            <h2 data-edit="line.title" data-edit-max="60" id="line-h">The bread line</h2>
+            <p data-edit="line.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A season pass for bread: the same loaves kept back for you every
               week, so you never arrive to a sold-out board.
             </p>
           </div>
 
           <ul className={s.passes}>
-            {PASSES.map((p) => (
+            {PASSES.map((p, i) => (
               <li key={p.line} className={s.pass}>
                 <p className={s.passLine}>
-                  <span className={s.bullet}>{p.line}</span>
-                  <span className={s.passName}>{p.name}</span>
+                  <span data-edit={`line.bullet.${i}`} data-edit-max="60" className={s.bullet}>{p.line}</span>
+                  <span data-edit={`line.passName.${i}`} data-edit-max="60" className={s.passName}>{p.name}</span>
                 </p>
                 <p className={s.passPrice}>
-                  <strong>{p.price}</strong>
-                  <span>{p.per}</span>
+                  <strong data-edit={`line.emphasis.${i}`}>{p.price}</strong>
+                  <span data-edit={`line.text.${i}`} data-edit-max="60">{p.per}</span>
                 </p>
-                <p className={s.passGets}>{p.gets}</p>
-                <p className={s.passPickup}>{p.pickup}</p>
+                <p data-edit={`line.passGets.${i}`} data-edit-max="240" data-edit-multiline className={s.passGets}>{p.gets}</p>
+                <p data-edit={`line.passPickup.${i}`} data-edit-max="240" data-edit-multiline className={s.passPickup}>{p.pickup}</p>
               </li>
             ))}
           </ul>
 
           <dl className={s.rules}>
-            {LINE_RULES.map(([term, text]) => (
+            {LINE_RULES.map(([term, text], i) => (
               <div key={term}>
-                <dt>{term}</dt>
-                <dd>{text}</dd>
+                <dt data-edit={`line.term.${i}`} data-edit-max="28">{term}</dt>
+                <dd data-edit={`line.body.${i}`} data-edit-max="200" data-edit-multiline>{text}</dd>
               </div>
             ))}
           </dl>
 
           <form className={s.form} action="#">
-            <h3 className={s.formTitle}>Join the line</h3>
+            <h3 data-edit="line.formTitle" data-edit-max="40" className={s.formTitle}>Join the line</h3>
             <div className={s.formGrid}>
               <div className={s.field}>
-                <label htmlFor="rye-name">Name</label>
+                <label data-edit="line.label" htmlFor="rye-name">Name</label>
                 <input id="rye-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="rye-email">Email</label>
+                <label data-edit="line.label2" htmlFor="rye-email">Email</label>
                 <input id="rye-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.field}>
-                <label htmlFor="rye-pass">Pass</label>
+                <label data-edit="line.label3" htmlFor="rye-pass">Pass</label>
                 <select id="rye-pass" name="pass" defaultValue="1">
                   <option value="1">Line 1, one loaf</option>
                   <option value="2">Line 2, two loaves</option>
@@ -435,7 +446,7 @@ export default function RyeAndLevainPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="rye-day">Pick-up day</label>
+                <label data-edit="line.label4" htmlFor="rye-day">Pick-up day</label>
                 <select id="rye-day" name="day" defaultValue="thu">
                   <option value="thu">Thursday</option>
                   <option value="sat">Saturday</option>
@@ -443,17 +454,17 @@ export default function RyeAndLevainPage() {
                 </select>
               </div>
             </div>
-            <button className={s.submit} type="submit">Hold my bread</button>
-            <p className={s.small}>We write back within two days with a start date. Nothing is charged until then.</p>
+            <button data-edit="line.submit" data-edit-max="24" className={s.submit} type="submit">Hold my bread</button>
+            <p data-edit="line.small" data-edit-max="240" data-edit-multiline className={s.small}>We write back within two days with a start date. Nothing is charged until then.</p>
           </form>
         </section>
 
         {/* --------------------------------------------------------- CLASSES */}
         <section id="classes" className={s.sec} aria-labelledby="classes-h">
           <div className={s.secHead}>
-            <p className={s.secNum}>05</p>
-            <h2 id="classes-h">Baking classes in the mill room</h2>
-            <p className={s.secNote}>
+            <p data-edit="classes.secNum" data-edit-max="240" data-edit-multiline className={s.secNum}>05</p>
+            <h2 data-edit="classes.title" data-edit-max="60" id="classes-h">Baking classes in the mill room</h2>
+            <p data-edit="classes.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Six people round the big table, with Ingrid or Tomas. Aprons,
               flour and coffee are ours; bring a bag to carry it all home.
             </p>
@@ -461,24 +472,24 @@ export default function RyeAndLevainPage() {
 
           <div className={s.classGrid}>
             <ol className={s.classes}>
-              {CLASSES.map((c) => (
+              {CLASSES.map((c, i) => (
                 <li key={`${c.date}-${c.mon}`} className={c.full ? s.classFull : undefined}>
                   <p className={s.classDate}>
-                    <span className={s.classDay}>{c.date}</span>
-                    <span className={s.classMon}>{c.mon}</span>
+                    <span data-edit={`classes.classDay.${i}`} data-edit-max="60" className={s.classDay}>{c.date}</span>
+                    <span data-edit={`classes.classMon.${i}`} data-edit-max="60" className={s.classMon}>{c.mon}</span>
                   </p>
                   <div className={s.classBody}>
-                    <h3>{c.name}</h3>
-                    <p className={s.classTime}>{c.time}</p>
+                    <h3 data-edit={`classes.title2.${i}`} data-edit-max="40">{c.name}</h3>
+                    <p data-edit={`classes.classTime.${i}`} data-edit-max="240" data-edit-multiline className={s.classTime}>{c.time}</p>
                   </div>
-                  <p className={s.classPrice}>{c.price}</p>
-                  <p className={s.classSeats}>{c.seats}</p>
+                  <p data-edit={`classes.classPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.classPrice}>{c.price}</p>
+                  <p data-edit={`classes.classSeats.${i}`} data-edit-max="240" data-edit-multiline className={s.classSeats}>{c.seats}</p>
                 </li>
               ))}
             </ol>
 
             <aside className={s.takeHome} aria-labelledby="take-h">
-              <div className={s.sift} aria-hidden="true">
+              <div data-edit-pattern="take.field" data-edit-roles="transparent,2,1" className={s.sift} aria-hidden="true">
                 <TabbiedPattern
                   pattern={nutation}
                   palette={SIFT}
@@ -489,13 +500,13 @@ export default function RyeAndLevainPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <h3 id="take-h" className={s.takeTitle}>You go home with</h3>
+              <h3 data-edit="take.takeTitle" data-edit-max="40" id="take-h" className={s.takeTitle}>You go home with</h3>
               <ul className={s.takeList}>
-                {TAKE_HOME.map((item) => (
-                  <li key={item}>{item}</li>
+                {TAKE_HOME.map((item, i) => (
+                  <li data-edit={`take.item.${i}`} data-edit-max="80" key={item}>{item}</li>
                 ))}
               </ul>
-              <p className={s.small}>
+              <p data-edit="take.small" data-edit-max="240" data-edit-multiline className={s.small}>
                 Book by email or at the counter. Cancel up to a week before for
                 a full refund; after that we will move you to another date.
               </p>
@@ -506,18 +517,18 @@ export default function RyeAndLevainPage() {
         {/* ---------------------------------------------------------- FLOURS */}
         <section id="flours" className={s.sec} aria-labelledby="flours-h">
           <div className={s.secHead}>
-            <p className={s.secNum}>06</p>
-            <h2 id="flours-h">What is in it</h2>
-            <p className={s.secNote}>
+            <p data-edit="flours.secNum" data-edit-max="240" data-edit-multiline className={s.secNum}>06</p>
+            <h2 data-edit="flours.title" data-edit-max="60" id="flours-h">What is in it</h2>
+            <p data-edit="flours.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               One mill, one room, flour in the air. Ask at the counter about a
               particular loaf and we will read you the recipe.
             </p>
           </div>
           <dl className={s.flours}>
-            {FLOURS.map(([term, text]) => (
+            {FLOURS.map(([term, text], i) => (
               <div key={term}>
-                <dt>{term}</dt>
-                <dd>{text}</dd>
+                <dt data-edit={`flours.term.${i}`} data-edit-max="28">{term}</dt>
+                <dd data-edit={`flours.body.${i}`} data-edit-max="200" data-edit-multiline>{text}</dd>
               </div>
             ))}
           </dl>
@@ -526,30 +537,30 @@ export default function RyeAndLevainPage() {
         {/* ----------------------------------------------------------- VISIT */}
         <section id="visit" className={s.sec} aria-labelledby="visit-h">
           <div className={s.secHead}>
-            <p className={s.secNum}>07</p>
-            <h2 id="visit-h">Visit the counter</h2>
+            <p data-edit="visit.secNum" data-edit-max="240" data-edit-multiline className={s.secNum}>07</p>
+            <h2 data-edit="visit.title" data-edit-max="60" id="visit-h">Visit the counter</h2>
           </div>
           <div className={s.visit}>
             <dl className={s.hours}>
-              {HOURS.map(([day, time]) => (
+              {HOURS.map(([day, time], i) => (
                 <div key={day}>
-                  <dt>{day}</dt>
-                  <dd>{time}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{day}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{time}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.where}>
-              <p className={s.address}>8 Millrace Lane, Weirside</p>
-              <p className={s.whereNote}>
+              <p data-edit="visit.address" data-edit-max="240" data-edit-multiline className={s.address}>8 Millrace Lane, Weirside</p>
+              <p data-edit="visit.whereNote" data-edit-max="240" data-edit-multiline className={s.whereNote}>
                 By the weir, in the brick building with the old wheel on the
                 gable. Bicycle racks at the door, and the number 14 bus stops
                 at Weir Bridge, two minutes away.
               </p>
               <p className={s.contact}>
-                <a href="tel:+15550142290">(555) 014-2290</a>
+                <a data-edit="visit.link" data-edit-max="28" href="tel:+15550142290">(555) 014-2290</a>
               </p>
               <p className={s.contact}>
-                <a href="mailto:hello@ryeandlevain.example">hello@ryeandlevain.example</a>
+                <a data-edit="visit.link2" data-edit-max="28" href="mailto:hello@ryeandlevain.example">hello@ryeandlevain.example</a>
               </p>
             </div>
           </div>
@@ -557,12 +568,12 @@ export default function RyeAndLevainPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Rye &amp; Levain</p>
-        <p>A fictional sourdough bakery and stone mill. The loaves, farms, prices and times are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Rye &amp; Levain</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional sourdough bakery and stone mill. The loaves, farms, prices and times are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
-        <p>The loaf is a generated image, drawn in the page's own colors.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The loaf is a generated image, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

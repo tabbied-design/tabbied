@@ -157,7 +157,19 @@ const QUESTIONS = [
 
 export default function CasaOlivoPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--limewash': '#f4ecdc',
+        '--cobalt': '#1f3c88',
+        '--clay': '#a9442a',
+        '--glaze': '#c7d3ea',
+        '--ink': '#1c2233',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="limewash,cobalt,clay,glaze,ink"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -167,15 +179,15 @@ export default function CasaOlivoPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Casa Olivo</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Casa Olivo</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -183,7 +195,7 @@ export default function CasaOlivoPage() {
       <main id="top">
         {/* ------------------------------------------------------ THE PLAQUE */}
         <section className={s.hero} aria-labelledby="hero-h">
-          <div className={s.heroField} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="1,0,3,0" className={s.heroField} aria-hidden="true">
             <TabbiedPattern
               pattern={evolute}
               palette={PLAQUE}
@@ -194,10 +206,10 @@ export default function CasaOlivoPage() {
             />
           </div>
           <div className={s.plaque}>
-            <p className={s.street}>No. 412, Alameda Street</p>
-            <h1 id="hero-h" className={s.name}>Casa Olivo</h1>
-            <p className={s.kind}>Bar de tapas</p>
-            <p className={s.lede}>
+            <p data-edit="hero.street" data-edit-max="240" data-edit-multiline className={s.street}>No. 412, Alameda Street</p>
+            <h1 data-edit="hero.name" data-edit-max="70" id="hero-h" className={s.name}>Casa Olivo</h1>
+            <p data-edit="hero.kind" data-edit-max="240" data-edit-multiline className={s.kind}>Bar de tapas</p>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Small plates from the stove and the counter, sherry poured cold,
               vermouth from the tap and a guitar on Thursdays. Come in, stand
               at the bar, order a little at a time.
@@ -206,22 +218,22 @@ export default function CasaOlivoPage() {
         </section>
 
         <ul className={s.facts}>
-          {FACTS.map(([k, v]) => (
+          {FACTS.map(([k, v], i) => (
             <li key={k}>
-              <strong>{k}</strong>
-              <span>{v}</span>
+              <strong data-edit={`top.emphasis.${i}`}>{k}</strong>
+              <span data-edit={`top.text.${i}`} data-edit-max="60">{v}</span>
             </li>
           ))}
         </ul>
 
         {/* ------------------------------------------------------- HOW TO EAT */}
         <section className={s.how} aria-labelledby="how-h">
-          <h2 id="how-h" className={s.howTitle}>How tapas work here</h2>
+          <h2 data-edit="how.howTitle" data-edit-max="60" id="how-h" className={s.howTitle}>How tapas work here</h2>
           <ol className={s.howList}>
-            {HOW.map(([t, d]) => (
+            {HOW.map(([t, d], i) => (
               <li key={t}>
-                <h3>{t}</h3>
-                <p>{d}</p>
+                <h3 data-edit={`how.title.${i}`} data-edit-max="40">{t}</h3>
+                <p data-edit={`how.body.${i}`} data-edit-max="240" data-edit-multiline>{d}</p>
               </li>
             ))}
           </ol>
@@ -229,7 +241,7 @@ export default function CasaOlivoPage() {
 
         {/* ------------------------------------------------------- THE WALL */}
         <section id="tapas" className={s.tapas} aria-labelledby="tapas-h">
-          <div className={s.frieze} aria-hidden="true">
+          <div data-edit-pattern="tapas.field" data-edit-roles="0,1,1,3" className={s.frieze} aria-hidden="true">
             <TabbiedPattern
               pattern={evolute}
               palette={FRIEZE}
@@ -240,9 +252,9 @@ export default function CasaOlivoPage() {
             />
           </div>
           <div className={s.secHead}>
-            <p className={s.eyebrow}>La pared</p>
-            <h2 id="tapas-h">Sixteen plates <em>on the wall</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="tapas.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>La pared</p>
+            <h2 data-edit="tapas.title" data-edit-format="emphasis" data-edit-max="60" id="tapas-h">Sixteen plates <em>on the wall</em></h2>
+            <p data-edit="tapas.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Each tile is a plate, numbered the way they are painted behind
               the bar, so you can point. V is vegetarian. The wall changes with
               the market; these are the plates for autumn.
@@ -250,21 +262,21 @@ export default function CasaOlivoPage() {
           </div>
 
           <div className={s.wall}>
-            {MENU.map((g) => (
+            {MENU.map((g, i) => (
               <div className={s.course} key={g.title}>
                 <div className={s.titleTile}>
-                  <h3>{g.title}</h3>
-                  <p>{g.english}</p>
+                  <h3 data-edit={`tapas.title.${i}`} data-edit-max="40">{g.title}</h3>
+                  <p data-edit={`tapas.body.${i}`} data-edit-max="240" data-edit-multiline>{g.english}</p>
                 </div>
                 <ul className={s.plates} role="list">
-                  {g.dishes.map((d) => (
+                  {g.dishes.map((d, i2) => (
                     <li key={d.no} className={s.tile}>
-                      <span className={s.no}>{d.no}</span>
-                      <h4 className={s.dish}>{d.name}</h4>
-                      <p className={s.dishNote}>{d.note}</p>
+                      <span data-edit={`tapas.no.${i}.${i2}`} data-edit-max="60" className={s.no}>{d.no}</span>
+                      <h4 data-edit={`tapas.dish.${i}.${i2}`} data-edit-max="36" className={s.dish}>{d.name}</h4>
+                      <p data-edit={`tapas.dishNote.${i}.${i2}`} data-edit-max="240" data-edit-multiline className={s.dishNote}>{d.note}</p>
                       <p className={s.dishFoot}>
-                        <span className={s.price}>{d.price}</span>
-                        <span className={s.veg}>{d.mark}</span>
+                        <span data-edit={`tapas.price.${i}.${i2}`} data-edit-max="60" className={s.price}>{d.price}</span>
+                        <span data-edit={`tapas.veg.${i}.${i2}`} data-edit-max="60" className={s.veg}>{d.mark}</span>
                       </p>
                     </li>
                   ))}
@@ -272,7 +284,7 @@ export default function CasaOlivoPage() {
               </div>
             ))}
           </div>
-          <p className={s.wallNote}>
+          <p data-edit="tapas.wallNote" data-edit-max="240" data-edit-multiline className={s.wallNote}>
             Bread for the sauces comes free with any hot plate. Ask for the
             day's paella at the bar: when it is gone, it is gone.
           </p>
@@ -282,16 +294,16 @@ export default function CasaOlivoPage() {
         <section id="copa" className={s.copa} aria-labelledby="copa-h">
           <div className={s.copaSide}>
             <div className={s.secHead}>
-              <p className={s.eyebrow}>Por copa</p>
-              <h2 id="copa-h">Sherry, <em>driest first</em></h2>
-              <p className={s.secNote}>
+              <p data-edit="copa.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Por copa</p>
+              <h2 data-edit="copa.title" data-edit-format="emphasis" data-edit-max="60" id="copa-h">Sherry, <em>driest first</em></h2>
+              <p data-edit="copa.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                 Seven sherries by the glass, poured cold into a copita to the
                 line. Read down the list and the wine gets older, darker and
                 finally sweet.
               </p>
             </div>
             <div className={s.arch}>
-              <div className={s.fired} aria-hidden="true">
+              <div data-edit-pattern="copa.field" data-edit-roles="2,0,3,0" className={s.fired} aria-hidden="true">
                 <TabbiedPattern
                   pattern={evolute}
                   palette={FIRED}
@@ -314,15 +326,15 @@ export default function CasaOlivoPage() {
 
           <div className={s.copaList}>
             <div className={s.scaleHead} aria-hidden="true">
-              <span>Dry</span>
-              <span>Sweet</span>
+              <span data-edit="copa.text" data-edit-max="60">Dry</span>
+              <span data-edit="copa.text2" data-edit-max="60">Sweet</span>
             </div>
             <ol className={s.sherries}>
-              {SHERRY.map((w) => (
+              {SHERRY.map((w, i) => (
                 <li key={w.name}>
                   <div className={s.wine}>
-                    <h3>{w.name}</h3>
-                    <p>{w.note}</p>
+                    <h3 data-edit={`copa.title.${i}`} data-edit-max="40">{w.name}</h3>
+                    <p data-edit={`copa.body.${i}`} data-edit-max="240" data-edit-multiline>{w.note}</p>
                   </div>
                   <div className={s.scale}>
                     {LEVELS.map((l, j) => (
@@ -330,23 +342,23 @@ export default function CasaOlivoPage() {
                     ))}
                     <span className={s.srOnly}>{`Sweetness ${w.sweet} of 5`}</span>
                   </div>
-                  <span className={s.glass}>{w.glass}</span>
+                  <span data-edit={`copa.glass.${i}`} data-edit-max="60" className={s.glass}>{w.glass}</span>
                 </li>
               ))}
             </ol>
 
             <div className={s.vermut}>
-              <h3 className={s.vermutTitle}>Vermut, from the tap</h3>
+              <h3 data-edit="copa.vermutTitle" data-edit-max="40" className={s.vermutTitle}>Vermut, from the tap</h3>
               <ul className={s.vermutList}>
-                {VERMUT.map(([n, d, p]) => (
+                {VERMUT.map(([n, d, p], i) => (
                   <li key={n}>
-                    <strong>{n}</strong>
-                    <span>{d}</span>
-                    <span className={s.glass}>{p}</span>
+                    <strong data-edit={`copa.emphasis.${i}`}>{n}</strong>
+                    <span data-edit={`copa.text3.${i}`} data-edit-max="60">{d}</span>
+                    <span data-edit={`copa.glass2.${i}`} data-edit-max="60" className={s.glass}>{p}</span>
                   </li>
                 ))}
               </ul>
-              <p className={s.vermutHour}>
+              <p data-edit="copa.vermutHour" data-edit-max="240" data-edit-multiline className={s.vermutHour}>
                 La hora del vermut: Sundays from noon to 3, every vermouth comes
                 with a free saucer of olives and potato chips.
               </p>
@@ -356,7 +368,7 @@ export default function CasaOlivoPage() {
 
         {/* ------------------------------------------------------- FLAMENCO */}
         <section id="flamenco" className={s.flamenco} aria-labelledby="flamenco-h">
-          <div className={s.fans} aria-hidden="true">
+          <div data-edit-pattern="flamenco.field" data-edit-roles="transparent,0,1,3,0" className={s.fans} aria-hidden="true">
             <TabbiedPattern
               pattern={roundcut}
               palette={FANS}
@@ -367,39 +379,39 @@ export default function CasaOlivoPage() {
             />
           </div>
           <div className={s.cartel}>
-            <p className={s.cartelKicker}>Jueves flamenco, 9 pm</p>
-            <h2 id="flamenco-h" className={s.cartelTitle}>Every Thursday, a guitar, a voice and the floor</h2>
-            <p className={s.cartelNote}>
+            <p data-edit="flamenco.cartelKicker" data-edit-max="240" data-edit-multiline className={s.cartelKicker}>Jueves flamenco, 9 pm</p>
+            <h2 data-edit="flamenco.cartelTitle" data-edit-max="60" id="flamenco-h" className={s.cartelTitle}>Every Thursday, a guitar, a voice and the floor</h2>
+            <p data-edit="flamenco.cartelNote" data-edit-max="240" data-edit-multiline className={s.cartelNote}>
               The back of the room is cleared at half past eight. The same small
               company has played here since we opened, with a guest now and then.
             </p>
             <ol className={s.nights}>
-              {NIGHTS.map((n) => (
+              {NIGHTS.map((n, i) => (
                 <li key={n.day}>
                   <p className={s.date}>
-                    <span className={s.dateDay}>{n.day}</span>
-                    <span className={s.dateMonth}>{n.month}</span>
+                    <span data-edit={`flamenco.dateDay.${i}`} data-edit-max="60" className={s.dateDay}>{n.day}</span>
+                    <span data-edit={`flamenco.dateMonth.${i}`} data-edit-max="60" className={s.dateMonth}>{n.month}</span>
                   </p>
                   <dl className={s.lineup}>
                     <div>
-                      <dt>Toque</dt>
-                      <dd>{n.toque}</dd>
+                      <dt data-edit={`flamenco.term.${i}`} data-edit-max="28">Toque</dt>
+                      <dd data-edit={`flamenco.body.${i}`} data-edit-max="200" data-edit-multiline>{n.toque}</dd>
                     </div>
                     <div>
-                      <dt>Cante</dt>
-                      <dd>{n.cante}</dd>
+                      <dt data-edit={`flamenco.term2.${i}`} data-edit-max="28">Cante</dt>
+                      <dd data-edit={`flamenco.body2.${i}`} data-edit-max="200" data-edit-multiline>{n.cante}</dd>
                     </div>
                     <div>
-                      <dt>Baile</dt>
-                      <dd>{n.baile}</dd>
+                      <dt data-edit={`flamenco.term3.${i}`} data-edit-max="28">Baile</dt>
+                      <dd data-edit={`flamenco.body3.${i}`} data-edit-max="200" data-edit-multiline>{n.baile}</dd>
                     </div>
                   </dl>
                 </li>
               ))}
             </ol>
             <ul className={s.rules}>
-              {FLAMENCO_RULES.map((r) => (
-                <li key={r}>{r}</li>
+              {FLAMENCO_RULES.map((r, i) => (
+                <li data-edit={`flamenco.item.${i}`} data-edit-max="80" key={r}>{r}</li>
               ))}
             </ul>
           </div>
@@ -408,31 +420,31 @@ export default function CasaOlivoPage() {
         {/* --------------------------------------------------------- GROUPS */}
         <section id="groups" className={s.groups} aria-labelledby="groups-h">
           <div className={s.secHead}>
-            <p className={s.eyebrow}>La mesa larga</p>
-            <h2 id="groups-h">Groups at <em>the long table</em></h2>
-            <p className={s.secNote}>
+            <p data-edit="groups.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>La mesa larga</p>
+            <h2 data-edit="groups.title" data-edit-format="emphasis" data-edit-max="60" id="groups-h">Groups at <em>the long table</em></h2>
+            <p data-edit="groups.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The back room seats twenty at one table, Sunday to Wednesday. For
               six or more we cook a set run of plates so nobody has to order for
               everyone. Tell us about allergies when you book.
             </p>
           </div>
           <div className={s.menus}>
-            {GROUP_MENUS.map((m) => (
+            {GROUP_MENUS.map((m, i) => (
               <article key={m.name} className={s.menuCard}>
-                <h3>{m.name}</h3>
+                <h3 data-edit={`menuCard.title.${i}`} data-edit-max="40">{m.name}</h3>
                 <p className={s.menuPrice}>
-                  <strong>{m.price}</strong>
-                  <span>{m.per}</span>
+                  <strong data-edit={`menuCard.emphasis.${i}`}>{m.price}</strong>
+                  <span data-edit={`menuCard.text.${i}`} data-edit-max="60">{m.per}</span>
                 </p>
                 <ul>
-                  {m.items.map((it) => (
-                    <li key={it}>{it}</li>
+                  {m.items.map((it, i2) => (
+                    <li data-edit={`menuCard.item.${i}.${i2}`} data-edit-max="80" key={it}>{it}</li>
                   ))}
                 </ul>
               </article>
             ))}
           </div>
-          <p className={s.small}>
+          <p data-edit="groups.small" data-edit-max="240" data-edit-multiline className={s.small}>
             A deposit of $10 a head holds the room. Paella for the table needs a
             day's notice and at least four people.
           </p>
@@ -442,55 +454,55 @@ export default function CasaOlivoPage() {
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInfo}>
             <div className={s.secHead}>
-              <p className={s.eyebrow}>Dónde estamos</p>
-              <h2 id="visit-h">Find us on <em>Alameda Street</em></h2>
+              <p data-edit="visit.eyebrow" data-edit-max="240" data-edit-multiline className={s.eyebrow}>Dónde estamos</p>
+              <h2 data-edit="visit.title" data-edit-format="emphasis" data-edit-max="60" id="visit-h">Find us on <em>Alameda Street</em></h2>
             </div>
-            <p className={s.address}>
+            <p data-edit="visit.body" data-edit-max="240" data-edit-multiline className={s.address}>
               412 Alameda Street, Old Mill
               <br />
               across from the laundry with the blue door
             </p>
             <p className={s.address}>
-              <a href="tel:+15550148832">(555) 014-8832</a>
+              <a data-edit="visit.link" data-edit-max="28" href="tel:+15550148832">(555) 014-8832</a>
               <br />
-              <a href="mailto:mesa@casaolivo.example">mesa@casaolivo.example</a>
+              <a data-edit="visit.link2" data-edit-max="28" href="mailto:mesa@casaolivo.example">mesa@casaolivo.example</a>
             </p>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`visit.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`visit.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.faq}>
-              {QUESTIONS.map(([q, a]) => (
+              {QUESTIONS.map(([q, a], i) => (
                 <details key={q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`visit.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`visit.body2.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
           </div>
 
           <form className={s.form} action="#">
-            <h3 className={s.formTitle}>Book a table</h3>
-            <p className={s.formNote}>Two to six people. For more, see the long table above.</p>
+            <h3 data-edit="visit.formTitle" data-edit-max="40" className={s.formTitle}>Book a table</h3>
+            <p data-edit="visit.formNote" data-edit-max="240" data-edit-multiline className={s.formNote}>Two to six people. For more, see the long table above.</p>
             <div className={s.formGrid}>
               <div className={s.field}>
-                <label htmlFor="olivo-name">Name</label>
+                <label data-edit="visit.label" htmlFor="olivo-name">Name</label>
                 <input id="olivo-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="olivo-phone">Phone</label>
+                <label data-edit="visit.label2" htmlFor="olivo-phone">Phone</label>
                 <input id="olivo-phone" name="phone" type="tel" autoComplete="tel" />
               </div>
               <div className={s.field}>
-                <label htmlFor="olivo-date">Day</label>
+                <label data-edit="visit.label3" htmlFor="olivo-date">Day</label>
                 <input id="olivo-date" name="date" type="date" />
               </div>
               <div className={s.field}>
-                <label htmlFor="olivo-time">Time</label>
+                <label data-edit="visit.label4" htmlFor="olivo-time">Time</label>
                 <select id="olivo-time" name="time" defaultValue="19:30">
                   <option value="17:00">5:00 pm</option>
                   <option value="18:30">6:30 pm</option>
@@ -500,7 +512,7 @@ export default function CasaOlivoPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="olivo-size">People</label>
+                <label data-edit="visit.label5" htmlFor="olivo-size">People</label>
                 <select id="olivo-size" name="size" defaultValue="2">
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -510,7 +522,7 @@ export default function CasaOlivoPage() {
                 </select>
               </div>
               <div className={s.field}>
-                <label htmlFor="olivo-seat">Where</label>
+                <label data-edit="visit.label6" htmlFor="olivo-seat">Where</label>
                 <select id="olivo-seat" name="seat" defaultValue="any">
                   <option value="any">Anywhere</option>
                   <option value="floor">Near the floor (Thursdays)</option>
@@ -518,14 +530,14 @@ export default function CasaOlivoPage() {
                 </select>
               </div>
             </div>
-            <button className={s.submit} type="submit">Ask for the table</button>
-            <p className={s.small}>We confirm by text within the hour. Tables are held fifteen minutes.</p>
+            <button data-edit="visit.submit" data-edit-max="24" className={s.submit} type="submit">Ask for the table</button>
+            <p data-edit="visit.small" data-edit-max="240" data-edit-multiline className={s.small}>We confirm by text within the hour. Tables are held fifteen minutes.</p>
           </form>
         </section>
       </main>
 
       <footer className={s.footer}>
-        <div className={s.footBand} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="1,0,3,0" className={s.footBand} aria-hidden="true">
           <TabbiedPattern
             pattern={evolute}
             palette={PLAQUE}
@@ -535,12 +547,12 @@ export default function CasaOlivoPage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Casa Olivo</p>
-        <p>A fictional tapas bar. The dishes, prices, musicians and hours are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Casa Olivo</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional tapas bar. The dishes, prices, musicians and hours are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
-        <p>The copita and the bottle are a generated picture, drawn in the page's own colors.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The copita and the bottle are a generated picture, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

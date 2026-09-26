@@ -178,7 +178,19 @@ const FAQ = [
 
 export default function WillowMidwiferyPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--linen': '#f5ede3',
+        '--bark': '#3a2a22',
+        '--terra': '#b35a3a',
+        '--blush': '#e9b8a5',
+        '--olive': '#66703f',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="linen,bark,terra,blush,olive"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -188,15 +200,15 @@ export default function WillowMidwiferyPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Willow Midwifery</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Willow Midwifery</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -205,25 +217,25 @@ export default function WillowMidwiferyPage() {
         {/* ------------------------------------------------------------ HERO */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Midwives and doulas on Alder Hill, since 2011</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Midwives and doulas on Alder Hill, since 2011</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Midwives for the nine months, <em>and the six weeks after.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               We are two midwives, a doula and a student. We see you at our
               house on Fern Street or at yours, we are with you when you give
               birth at home or at the Birth House, and afterward we come to
               you on day one, three and five.
             </p>
             <div className={s.actions}>
-              <a className={s.button} href="#contact">Book a first talk</a>
-              <a className={s.buttonQuiet} href="#fees">Fees and insurance</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#contact">Book a first talk</a>
+              <a data-edit="hero.buttonQuiet" data-edit-max="28" className={s.buttonQuiet} href="#fees">Fees and insurance</a>
             </div>
-            <p className={s.small}>The first talk is free and takes an hour. Partners, mothers and long lists of questions are welcome.</p>
+            <p data-edit="hero.small" data-edit-max="240" data-edit-multiline className={s.small}>The first talk is free and takes an hour. Partners, mothers and long lists of questions are welcome.</p>
           </div>
 
           <div className={s.heroArch}>
-            <div className={s.arch} aria-hidden="true">
+            <div data-edit-pattern="hero.field" data-edit-roles="transparent,3,2,0,4" className={s.arch} aria-hidden="true">
               <TabbiedPattern
                 pattern={roundpair}
                 palette={WILLOW}
@@ -235,15 +247,15 @@ export default function WillowMidwiferyPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
-            <p className={s.archNote}>Now booking due dates from March 2027</p>
+            <p data-edit="hero.archNote" data-edit-max="240" data-edit-multiline className={s.archNote}>Now booking due dates from March 2027</p>
           </div>
         </section>
 
         {/* ------------------------------------------------------------ CARE */}
         <section id="care" className={s.sec} aria-labelledby="care-h">
           <div className={s.head}>
-            <h2 id="care-h">Care by <em>trimester</em></h2>
-            <p className={s.headNote}>
+            <h2 data-edit="care.title" data-edit-format="emphasis" data-edit-max="60" id="care-h">Care by <em>trimester</em></h2>
+            <p data-edit="care.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               The same two midwives from the first talk to the last visit.
               Every appointment is forty-five minutes or longer, and there is
               always time for the question you forgot.
@@ -251,14 +263,14 @@ export default function WillowMidwiferyPage() {
           </div>
 
           <ol className={s.trimesters}>
-            {TRIMESTERS.map((t) => (
+            {TRIMESTERS.map((t, i) => (
               <li key={t.numeral}>
-                <p className={s.numeral}>{t.numeral}</p>
-                <h3>{t.name}</h3>
-                <p className={s.weeks}>{t.weeks}</p>
+                <p data-edit={`care.numeral.${i}`} data-edit-max="240" data-edit-multiline className={s.numeral}>{t.numeral}</p>
+                <h3 data-edit={`care.title.${i}`} data-edit-max="40">{t.name}</h3>
+                <p data-edit={`care.weeks.${i}`} data-edit-max="240" data-edit-multiline className={s.weeks}>{t.weeks}</p>
                 <ul>
-                  {t.items.map((item) => (
-                    <li key={item}>{item}</li>
+                  {t.items.map((item, i2) => (
+                    <li data-edit={`care.item.${i}.${i2}`} data-edit-max="80" key={item}>{item}</li>
                   ))}
                 </ul>
               </li>
@@ -270,8 +282,8 @@ export default function WillowMidwiferyPage() {
         <section id="where" className={s.whereSec} aria-labelledby="where-h">
           <div className={s.whereInner}>
             <div className={s.head}>
-              <h2 id="where-h">At home, or at <em>the Birth House</em></h2>
-              <p className={s.headNote}>
+              <h2 data-edit="where.title" data-edit-format="emphasis" data-edit-max="60" id="where-h">At home, or at <em>the Birth House</em></h2>
+              <p data-edit="where.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
                 You do not have to decide until 36 weeks, and you can change
                 your mind in labor. About one first-time parent in six moves to
                 the hospital during labor, most often for a long labor and an
@@ -281,7 +293,7 @@ export default function WillowMidwiferyPage() {
 
             <div className={s.where}>
               <article className={s.place} aria-labelledby="home-h">
-                <div className={s.window} aria-hidden="true">
+                <div data-edit-pattern="home.field" data-edit-roles="transparent,2,3,4,1" className={s.window} aria-hidden="true">
                   <TabbiedPattern
                     pattern={cavetto}
                     palette={HOME}
@@ -292,12 +304,12 @@ export default function WillowMidwiferyPage() {
                     style={{ position: 'absolute', inset: 0 }}
                   />
                 </div>
-                <h3 id="home-h">At home</h3>
+                <h3 data-edit="home.title" data-edit-max="40" id="home-h">At home</h3>
                 <dl className={s.placeList}>
-                  {PLACES.map((p) => (
+                  {PLACES.map((p, i) => (
                     <div key={p.label}>
-                      <dt>{p.label}</dt>
-                      <dd>{p.home}</dd>
+                      <dt data-edit={`home.term.${i}`} data-edit-max="28">{p.label}</dt>
+                      <dd data-edit={`home.body.${i}`} data-edit-max="200" data-edit-multiline>{p.home}</dd>
                     </div>
                   ))}
                 </dl>
@@ -312,12 +324,12 @@ export default function WillowMidwiferyPage() {
                     className={s.roomArt}
                   />
                 </div>
-                <h3 id="house-h">At the Birth House</h3>
+                <h3 data-edit="house.title" data-edit-max="40" id="house-h">At the Birth House</h3>
                 <dl className={s.placeList}>
-                  {PLACES.map((p) => (
+                  {PLACES.map((p, i) => (
                     <div key={p.label}>
-                      <dt>{p.label}</dt>
-                      <dd>{p.house}</dd>
+                      <dt data-edit={`house.term.${i}`} data-edit-max="28">{p.label}</dt>
+                      <dd data-edit={`house.body.${i}`} data-edit-max="200" data-edit-multiline>{p.house}</dd>
                     </div>
                   ))}
                 </dl>
@@ -329,8 +341,8 @@ export default function WillowMidwiferyPage() {
         {/* ---------------------------------------------------------- VISITS */}
         <section id="visits" className={s.sec} aria-labelledby="visits-h">
           <div className={s.head}>
-            <h2 id="visits-h">Your visits, <em>week by week</em></h2>
-            <p className={s.headNote}>
+            <h2 data-edit="visits.title" data-edit-format="emphasis" data-edit-max="60" id="visits-h">Your visits, <em>week by week</em></h2>
+            <p data-edit="visits.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Twenty visits for a pregnancy that runs to 41 weeks, fewer if the
               baby is early. The numbers are weeks of pregnancy; after the
               birth they are days and weeks of the baby.
@@ -338,17 +350,17 @@ export default function WillowMidwiferyPage() {
           </div>
 
           <ol className={s.path}>
-            {VISITS.map((v) => (
+            {VISITS.map((v, i) => (
               <li key={v.when} className={s[v.phase]}>
-                <span className={s.when}>{v.when}</span>
-                <span className={s.what}>{v.what}</span>
+                <span data-edit={`visits.when.${i}`} data-edit-max="60" className={s.when}>{v.when}</span>
+                <span data-edit={`visits.what.${i}`} data-edit-max="60" className={s.what}>{v.what}</span>
               </li>
             ))}
           </ol>
 
           <ul className={s.legend}>
-            {LEGEND.map(([phase, label]) => (
-              <li key={phase} className={s[phase]}>{label}</li>
+            {LEGEND.map(([phase, label], i) => (
+              <li data-edit={`visits.item.${i}`} data-edit-max="80" key={phase} className={s[phase]}>{label}</li>
             ))}
           </ul>
         </section>
@@ -356,18 +368,18 @@ export default function WillowMidwiferyPage() {
         {/* ---------------------------------------------------------- DOULAS */}
         <section className={s.sec} aria-labelledby="doula-h">
           <div className={s.head}>
-            <h2 id="doula-h">Doula care, <em>with us or without</em></h2>
-            <p className={s.headNote}>
+            <h2 data-edit="doula.title" data-edit-format="emphasis" data-edit-max="60" id="doula-h">Doula care, <em>with us or without</em></h2>
+            <p data-edit="doula.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               A doula does not do anything medical. She stays, from the first
               hour of labor to the last, and she remembers what you asked for.
             </p>
           </div>
           <ul className={s.doulas}>
-            {DOULA.map(([name, price, note]) => (
+            {DOULA.map(([name, price, note], i) => (
               <li key={name}>
-                <h3>{name}</h3>
-                <p className={s.doulaPrice}>{price}</p>
-                <p>{note}</p>
+                <h3 data-edit={`doula.title.${i}`} data-edit-max="40">{name}</h3>
+                <p data-edit={`doula.doulaPrice.${i}`} data-edit-max="240" data-edit-multiline className={s.doulaPrice}>{price}</p>
+                <p data-edit={`doula.body.${i}`} data-edit-max="240" data-edit-multiline>{note}</p>
               </li>
             ))}
           </ul>
@@ -376,7 +388,7 @@ export default function WillowMidwiferyPage() {
         {/* ------------------------------------------------------------ FEES */}
         <section id="fees" className={s.sec} aria-labelledby="fees-h">
           <div className={s.fees}>
-            <div className={s.feesArch} aria-hidden="true">
+            <div data-edit-pattern="fees.field" data-edit-roles="transparent,4,2,3,0" className={s.feesArch} aria-hidden="true">
               <TabbiedPattern
                 pattern={cavetto}
                 palette={FEES}
@@ -389,26 +401,26 @@ export default function WillowMidwiferyPage() {
             </div>
 
             <div>
-              <h2 id="fees-h" className={s.feesTitle}>Fees and <em>insurance</em></h2>
+              <h2 data-edit="fees.title" data-edit-format="emphasis" data-edit-max="60" id="fees-h" className={s.feesTitle}>Fees and <em>insurance</em></h2>
               <table className={s.feeTable}>
-                <caption className={s.srOnly}>What our care costs</caption>
+                <caption data-edit="fees.srOnly" className={s.srOnly}>What our care costs</caption>
                 <tbody>
-                  {FEE_LIST.map(([what, note, price]) => (
+                  {FEE_LIST.map(([what, note, price], i) => (
                     <tr key={what}>
                       <th scope="row">
-                        <span className={s.feeWhat}>{what}</span>
-                        <span className={s.feeNote}>{note}</span>
+                        <span data-edit={`fees.feeWhat.${i}`} data-edit-max="60" className={s.feeWhat}>{what}</span>
+                        <span data-edit={`fees.feeNote.${i}`} data-edit-max="60" className={s.feeNote}>{note}</span>
                       </th>
-                      <td>{price}</td>
+                      <td data-edit={`fees.cell.${i}`}>{price}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <dl className={s.money}>
-                {MONEY.map(([term, body]) => (
+                {MONEY.map(([term, body], i) => (
                   <div key={term}>
-                    <dt>{term}</dt>
-                    <dd>{body}</dd>
+                    <dt data-edit={`fees.term.${i}`} data-edit-max="28">{term}</dt>
+                    <dd data-edit={`fees.body.${i}`} data-edit-max="200" data-edit-multiline>{body}</dd>
                   </div>
                 ))}
               </dl>
@@ -419,19 +431,19 @@ export default function WillowMidwiferyPage() {
         {/* ------------------------------------------------------------ TEAM */}
         <section id="team" className={s.sec} aria-labelledby="team-h">
           <div className={s.head}>
-            <h2 id="team-h">The <em>midwives</em></h2>
-            <p className={s.headNote}>
+            <h2 data-edit="team.title" data-edit-format="emphasis" data-edit-max="60" id="team-h">The <em>midwives</em></h2>
+            <p data-edit="team.headNote" data-edit-max="240" data-edit-multiline className={s.headNote}>
               Two of us are on call at any time, and you will have met both by
               36 weeks. Nobody new walks in when you are in labor.
             </p>
           </div>
           <ul className={s.team}>
-            {TEAM.map((p) => (
+            {TEAM.map((p, i) => (
               <li key={p.name}>
                 <p className={s.portrait} aria-hidden="true">{p.initials}</p>
-                <h3>{p.name}</h3>
-                <p className={s.role}>{p.role}</p>
-                <p className={s.bio}>{p.note}</p>
+                <h3 data-edit={`team.title.${i}`} data-edit-max="40">{p.name}</h3>
+                <p data-edit={`team.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{p.role}</p>
+                <p data-edit={`team.bio.${i}`} data-edit-max="240" data-edit-multiline className={s.bio}>{p.note}</p>
               </li>
             ))}
           </ul>
@@ -441,17 +453,17 @@ export default function WillowMidwiferyPage() {
         <section id="questions" className={s.sec} aria-labelledby="faq-h">
           <div className={s.faqWrap}>
             <div>
-              <h2 id="faq-h" className={s.faqTitle}>What people <em>ask us first</em></h2>
-              <p className={s.faqNote}>
+              <h2 data-edit="questions.title" data-edit-format="emphasis" data-edit-max="60" id="faq-h" className={s.faqTitle}>What people <em>ask us first</em></h2>
+              <p data-edit="questions.faqNote" data-edit-max="240" data-edit-multiline className={s.faqNote}>
                 Anything else, ring the office. A midwife answers, and no
                 question is too small to ask twice.
               </p>
             </div>
             <div className={s.faq}>
-              {FAQ.map(([q, a]) => (
+              {FAQ.map(([q, a], i) => (
                 <details key={q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`questions.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`questions.body.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
@@ -461,8 +473,8 @@ export default function WillowMidwiferyPage() {
         {/* --------------------------------------------------------- CONTACT */}
         <section id="contact" className={s.sec} aria-labelledby="contact-h">
           <div className={s.door}>
-            <h2 id="contact-h" className={s.doorTitle}>Come and <em>meet us</em></h2>
-            <p className={s.doorLede}>
+            <h2 data-edit="contact.title" data-edit-format="emphasis" data-edit-max="60" id="contact-h" className={s.doorTitle}>Come and <em>meet us</em></h2>
+            <p data-edit="contact.doorLede" data-edit-max="240" data-edit-multiline className={s.doorLede}>
               Tell us a little and we will ring you within two working days to
               find an hour for the first talk.
             </p>
@@ -470,19 +482,19 @@ export default function WillowMidwiferyPage() {
             <div className={s.doorGrid}>
               <form className={s.form} action="#">
                 <div className={s.field}>
-                  <label htmlFor="willow-name">Your name</label>
+                  <label data-edit="contact.label" htmlFor="willow-name">Your name</label>
                   <input id="willow-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="willow-email">Email</label>
+                  <label data-edit="contact.label2" htmlFor="willow-email">Email</label>
                   <input id="willow-email" name="email" type="email" autoComplete="email" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="willow-due">Due date, if you know it</label>
+                  <label data-edit="contact.label3" htmlFor="willow-due">Due date, if you know it</label>
                   <input id="willow-due" name="due" type="date" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="willow-where">Where you are thinking of giving birth</label>
+                  <label data-edit="contact.label4" htmlFor="willow-where">Where you are thinking of giving birth</label>
                   <select id="willow-where" name="where" defaultValue="unsure">
                     <option value="home">At home</option>
                     <option value="house">At the Birth House</option>
@@ -491,35 +503,35 @@ export default function WillowMidwiferyPage() {
                   </select>
                 </div>
                 <div className={`${s.field} ${s.fieldWide}`}>
-                  <label htmlFor="willow-note">Anything you would like us to know</label>
+                  <label data-edit="contact.label5" htmlFor="willow-note">Anything you would like us to know</label>
                   <textarea id="willow-note" name="note" rows={4} />
                 </div>
-                <button className={s.button} type="submit">Ask for a first talk</button>
+                <button data-edit="contact.button" data-edit-max="24" className={s.button} type="submit">Ask for a first talk</button>
               </form>
 
               <dl className={s.visit}>
                 <div>
-                  <dt>The Birth House</dt>
-                  <dd>14 Fern Street, Alder Hill. Two parking spaces behind the house and a ramp to the side door.</dd>
+                  <dt data-edit="contact.term" data-edit-max="28">The Birth House</dt>
+                  <dd data-edit="contact.body" data-edit-max="200" data-edit-multiline>14 Fern Street, Alder Hill. Two parking spaces behind the house and a ramp to the side door.</dd>
                 </div>
                 <div>
-                  <dt>The office</dt>
-                  <dd>Monday to Thursday 9 to 5, Friday 9 to 1.</dd>
+                  <dt data-edit="contact.term2" data-edit-max="28">The office</dt>
+                  <dd data-edit="contact.body2" data-edit-max="200" data-edit-multiline>Monday to Thursday 9 to 5, Friday 9 to 1.</dd>
                 </div>
                 <div>
-                  <dt>For our families</dt>
-                  <dd>A midwife on the phone day and night, from 37 weeks and for six weeks after.</dd>
+                  <dt data-edit="contact.term3" data-edit-max="28">For our families</dt>
+                  <dd data-edit="contact.body3" data-edit-max="200" data-edit-multiline>A midwife on the phone day and night, from 37 weeks and for six weeks after.</dd>
                 </div>
                 <div>
-                  <dt>Call</dt>
+                  <dt data-edit="contact.term4" data-edit-max="28">Call</dt>
                   <dd>
-                    <a href="tel:+15550173344">(555) 017-3344</a>
+                    <a data-edit="contact.link" data-edit-max="28" href="tel:+15550173344">(555) 017-3344</a>
                   </dd>
                 </div>
                 <div>
-                  <dt>Write</dt>
+                  <dt data-edit="contact.term5" data-edit-max="28">Write</dt>
                   <dd>
-                    <a href="mailto:hello@willowmidwifery.example">hello@willowmidwifery.example</a>
+                    <a data-edit="contact.link2" data-edit-max="28" href="mailto:hello@willowmidwifery.example">hello@willowmidwifery.example</a>
                   </dd>
                 </div>
               </dl>
@@ -529,7 +541,7 @@ export default function WillowMidwiferyPage() {
       </main>
 
       <footer className={s.footer}>
-        <div className={s.hedge} aria-hidden="true">
+        <div data-edit-pattern="footer.field" data-edit-roles="transparent,4,3,2" className={s.hedge} aria-hidden="true">
           <TabbiedPattern
             pattern={roundpair}
             palette={HEDGE}
@@ -540,11 +552,11 @@ export default function WillowMidwiferyPage() {
             style={{ position: 'absolute', inset: 0 }}
           />
         </div>
-        <p className={s.footName}>Willow Midwifery</p>
-        <p>A fictional midwifery and doula practice. The people, fees, insurers and address are invented.</p>
-        <p>The birth room is a generated picture, drawn in the page's own colors.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Willow Midwifery</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional midwifery and doula practice. The people, fees, insurers and address are invented.</p>
+        <p data-edit="footer.body2" data-edit-max="240" data-edit-multiline>The birth room is a generated picture, drawn in the page's own colors.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

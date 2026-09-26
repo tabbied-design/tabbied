@@ -198,7 +198,18 @@ const QUESTIONS = [
 
 export default function LongformPilatesPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--stone': '#ebe6de',
+        '--espresso': '#2a2521',
+        '--oat': '#d8cab3',
+        '--clay': '#8c6450',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="stone,espresso,oat,clay"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -208,16 +219,16 @@ export default function LongformPilatesPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Longform</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Longform</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
-        <a className={s.barBook} href="#intro">Book</a>
+        <a data-edit="bar.barBook" data-edit-max="28" className={s.barBook} href="#intro">Book</a>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -228,21 +239,21 @@ export default function LongformPilatesPage() {
             capsule of soft shade, the shape of a reformer's strap loop. */}
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroText}>
-            <p className={s.kicker}>Reformer Pilates, 210 Kiln Street, Eastmoor</p>
-            <h1 id="hero-h" className={s.title}>
+            <p data-edit="hero.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Reformer Pilates, 210 Kiln Street, Eastmoor</p>
+            <h1 data-edit="hero.title" data-edit-format="emphasis" data-edit-max="70" id="hero-h" className={s.title}>
               Long, slow and <em>strong.</em>
             </h1>
-            <p className={s.lede}>
+            <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
               Eight reformers in a long white room on the third floor. Classes
               of fifty minutes, never more than eight people, taught by four
               instructors who will learn your name and your left hip.
             </p>
             <div className={s.actions}>
-              <a className={s.button} href="#intro">Three classes, $75</a>
-              <a className={s.link} href="#week">See the week</a>
+              <a data-edit="hero.button" data-edit-max="28" className={s.button} href="#intro">Three classes, $75</a>
+              <a data-edit="hero.link" data-edit-max="28" className={s.link} href="#week">See the week</a>
             </div>
           </div>
-          <div className={s.capsule} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="0,2,3,0,2" className={s.capsule} aria-hidden="true">
             <TabbiedPattern
               pattern={shading}
               palette={WINDOW}
@@ -255,10 +266,10 @@ export default function LongformPilatesPage() {
         </section>
 
         <dl className={s.facts}>
-          {FACTS.map(([n, what]) => (
+          {FACTS.map(([n, what], i) => (
             <div key={what}>
-              <dt>{n}</dt>
-              <dd>{what}</dd>
+              <dt data-edit={`top.term.${i}`} data-edit-max="28">{n}</dt>
+              <dd data-edit={`top.body.${i}`} data-edit-max="200" data-edit-multiline>{what}</dd>
             </div>
           ))}
         </dl>
@@ -269,12 +280,12 @@ export default function LongformPilatesPage() {
         <section id="week" className={s.section} aria-labelledby="week-h">
           <div className={s.weekHead}>
             <div className={s.head}>
-              <p className={s.kicker}>The week</p>
-              <h2 id="week-h">Monday to Sunday, on one line</h2>
+              <p data-edit="week.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The week</p>
+              <h2 data-edit="week.title" data-edit-max="60" id="week-h">Monday to Sunday, on one line</h2>
               <ul className={s.legend}>
-                <li className={s.l1}>Level 1</li>
-                <li className={s.l2}>Level 2</li>
-                <li className={s.l3}>Level 3</li>
+                <li data-edit="week.l1" data-edit-max="80" className={s.l1}>Level 1</li>
+                <li data-edit="week.l2" data-edit-max="80" className={s.l2}>Level 2</li>
+                <li data-edit="week.l3" data-edit-max="80" className={s.l3}>Level 3</li>
               </ul>
             </div>
             <figure className={s.machine}>
@@ -285,7 +296,7 @@ export default function LongformPilatesPage() {
                 mode="duotone"
                 className={s.reformer}
               />
-              <div className={s.mat} aria-hidden="true">
+              <div data-edit-pattern="week.field" data-edit-roles="2,0,3,2" className={s.mat} aria-hidden="true">
                 <TabbiedPattern
                   pattern={shading}
                   palette={MAT}
@@ -295,35 +306,35 @@ export default function LongformPilatesPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <figcaption>One of the eight, set four feet apart and facing the long east window.</figcaption>
+              <figcaption data-edit="week.caption" data-edit-max="120" data-edit-multiline>One of the eight, set four feet apart and facing the long east window.</figcaption>
             </figure>
           </div>
 
           <div className={s.timeline}>
             <ol className={s.axis} aria-hidden="true">
               {HOURS_AXIS.map((h, i) => (
-                <li key={`${h}-${i}`}>{h}</li>
+                <li data-edit={`week.item.${i}`} data-edit-max="80" key={`${h}-${i}`}>{h}</li>
               ))}
             </ol>
-            {WEEK.map((d) => (
+            {WEEK.map((d, i) => (
               <div className={s.day} key={d.day}>
-                <h3 className={s.dayName}>{d.day}</h3>
+                <h3 data-edit={`week.dayName.${i}`} data-edit-max="40" className={s.dayName}>{d.day}</h3>
                 <ol className={s.track}>
-                  {d.classes.map((c) => (
+                  {d.classes.map((c, i2) => (
                     <li
                       key={`${d.short}-${c.time}`}
                       className={s[`l${c.level}`]}
                       style={{ '--start': c.start, '--length': c.length } as React.CSSProperties}
                     >
-                      <span className={s.classTime}>{c.time}</span>
-                      <span className={s.className}>{c.name}</span>
+                      <span data-edit={`week.classTime.${i}.${i2}`} data-edit-max="60" className={s.classTime}>{c.time}</span>
+                      <span data-edit={`week.className.${i}.${i2}`} data-edit-max="60" className={s.className}>{c.name}</span>
                     </li>
                   ))}
                 </ol>
               </div>
             ))}
           </div>
-          <p className={s.note}>
+          <p data-edit="week.note" data-edit-max="240" data-edit-multiline className={s.note}>
             Times from 5 pm are evening classes. Book up to fourteen days ahead;
             a waitlist opens when a class is full and moves by text.
           </p>
@@ -332,16 +343,16 @@ export default function LongformPilatesPage() {
         {/* ---------------------------------------------------------- LEVELS */}
         <section id="levels" className={s.section} aria-labelledby="levels-h">
           <div className={s.head}>
-            <p className={s.kicker}>Levels</p>
-            <h2 id="levels-h">Three levels, and how to know you are ready</h2>
+            <p data-edit="levels.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Levels</p>
+            <h2 data-edit="levels.title" data-edit-max="60" id="levels-h">Three levels, and how to know you are ready</h2>
           </div>
           <ol className={s.levels}>
             {LEVELS.map((l, i) => (
               <li key={l.level} className={s[`l${i + 1}`]}>
-                <p className={s.levelNo}>{l.level}</p>
-                <h3>{l.name}</h3>
-                <p className={s.levelBody}>{l.body}</p>
-                <p className={s.ready}>{l.ready}</p>
+                <p data-edit={`levels.levelNo.${i}`} data-edit-max="240" data-edit-multiline className={s.levelNo}>{l.level}</p>
+                <h3 data-edit={`levels.title2.${i}`} data-edit-max="40">{l.name}</h3>
+                <p data-edit={`levels.levelBody.${i}`} data-edit-max="240" data-edit-multiline className={s.levelBody}>{l.body}</p>
+                <p data-edit={`levels.ready.${i}`} data-edit-max="240" data-edit-multiline className={s.ready}>{l.ready}</p>
               </li>
             ))}
           </ol>
@@ -350,7 +361,7 @@ export default function LongformPilatesPage() {
         {/* ----------------------------------------------------------- INTRO
             The offer on a stone card, over a wide field of window light. */}
         <section id="intro" className={s.intro} aria-labelledby="intro-h">
-          <div className={s.introField} aria-hidden="true">
+          <div data-edit-pattern="intro.field" data-edit-roles="0,2,0,3,2" className={s.introField} aria-hidden="true">
             <TabbiedPattern
               pattern={shading}
               palette={LIGHT}
@@ -361,24 +372,24 @@ export default function LongformPilatesPage() {
             />
           </div>
           <div className={s.introCard}>
-            <p className={s.kicker}>New here</p>
-            <h2 id="intro-h">Three classes in fourteen days, <em>$75.</em></h2>
-            <p className={s.introBody}>
+            <p data-edit="intro.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>New here</p>
+            <h2 data-edit="intro.title" data-edit-format="emphasis" data-edit-max="60" id="intro-h">Three classes in fourteen days, <em>$75.</em></h2>
+            <p data-edit="intro.introBody" data-edit-max="240" data-edit-multiline className={s.introBody}>
               It starts with twenty minutes on your own with an instructor,
               learning the springs and the straps, then two Foundations
               classes. After that you will know which level to book.
             </p>
             <form className={s.form} action="#">
               <div className={s.field}>
-                <label htmlFor="lf-name">Name</label>
+                <label data-edit="intro.label" htmlFor="lf-name">Name</label>
                 <input id="lf-name" name="name" type="text" autoComplete="name" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lf-email">Email</label>
+                <label data-edit="intro.label2" htmlFor="lf-email">Email</label>
                 <input id="lf-email" name="email" type="email" autoComplete="email" />
               </div>
               <div className={s.field}>
-                <label htmlFor="lf-when">Best time for you</label>
+                <label data-edit="intro.label3" htmlFor="lf-when">Best time for you</label>
                 <select id="lf-when" name="when" defaultValue="morning">
                   <option value="early">Before 8 am</option>
                   <option value="morning">Weekday mornings</option>
@@ -387,24 +398,24 @@ export default function LongformPilatesPage() {
                   <option value="weekend">Weekends</option>
                 </select>
               </div>
-              <button className={s.button} type="submit">Start with the set-up</button>
+              <button data-edit="intro.button" data-edit-max="24" className={s.button} type="submit">Start with the set-up</button>
             </form>
-            <p className={s.small}>Once per person. We reply within a day with times for your set-up.</p>
+            <p data-edit="intro.small" data-edit-max="240" data-edit-multiline className={s.small}>Once per person. We reply within a day with times for your set-up.</p>
           </div>
         </section>
 
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.section} aria-labelledby="prices-h">
           <div className={s.head}>
-            <p className={s.kicker}>Prices</p>
-            <h2 id="prices-h">Packs, a monthly, and privates</h2>
+            <p data-edit="prices.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Prices</p>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Packs, a monthly, and privates</h2>
           </div>
           <ul className={s.prices}>
-            {PRICES.map(([name, price, note]) => (
+            {PRICES.map(([name, price, note], i) => (
               <li key={name}>
-                <p className={s.priceName}>{name}</p>
-                <p className={s.priceNote}>{note}</p>
-                <p className={s.priceFigure}>{price}</p>
+                <p data-edit={`prices.priceName.${i}`} data-edit-max="240" data-edit-multiline className={s.priceName}>{name}</p>
+                <p data-edit={`prices.priceNote.${i}`} data-edit-max="240" data-edit-multiline className={s.priceNote}>{note}</p>
+                <p data-edit={`prices.priceFigure.${i}`} data-edit-max="240" data-edit-multiline className={s.priceFigure}>{price}</p>
               </li>
             ))}
           </ul>
@@ -413,17 +424,17 @@ export default function LongformPilatesPage() {
         {/* ----------------------------------------------------- INSTRUCTORS */}
         <section id="instructors" className={s.section} aria-labelledby="team-h">
           <div className={s.head}>
-            <p className={s.kicker}>Instructors</p>
-            <h2 id="team-h">Four instructors, all fully certified</h2>
+            <p data-edit="instructors.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>Instructors</p>
+            <h2 data-edit="instructors.title" data-edit-max="60" id="team-h">Four instructors, all fully certified</h2>
           </div>
           <ul className={s.team}>
-            {TEACHERS.map((t) => (
+            {TEACHERS.map((t, i) => (
               <li key={t.name}>
                 <span className={s.initials} aria-hidden="true">{t.initials}</span>
-                <h3>{t.name}</h3>
-                <p className={s.trained}>{t.trained}</p>
-                <p className={s.teaches}>{t.teaches}</p>
-                <p className={s.teacherNote}>{t.note}</p>
+                <h3 data-edit={`instructors.title2.${i}`} data-edit-max="40">{t.name}</h3>
+                <p data-edit={`instructors.trained.${i}`} data-edit-max="240" data-edit-multiline className={s.trained}>{t.trained}</p>
+                <p data-edit={`instructors.teaches.${i}`} data-edit-max="240" data-edit-multiline className={s.teaches}>{t.teaches}</p>
+                <p data-edit={`instructors.teacherNote.${i}`} data-edit-max="240" data-edit-multiline className={s.teacherNote}>{t.note}</p>
               </li>
             ))}
           </ul>
@@ -432,41 +443,41 @@ export default function LongformPilatesPage() {
         {/* ---------------------------------------------------------- STUDIO */}
         <section id="studio" className={`${s.section} ${s.studio}`} aria-labelledby="studio-h">
           <div className={s.studioInfo}>
-            <p className={s.kicker}>The studio</p>
-            <h2 id="studio-h">Third floor, 210 Kiln Street</h2>
-            <p className={s.studioAddress}>
+            <p data-edit="studio.kicker" data-edit-max="240" data-edit-multiline className={s.kicker}>The studio</p>
+            <h2 data-edit="studio.title" data-edit-max="60" id="studio-h">Third floor, 210 Kiln Street</h2>
+            <p data-edit="studio.studioAddress" data-edit-max="240" data-edit-multiline className={s.studioAddress}>
               Eastmoor, above the frame shop. Lift from the courtyard entrance.
               Bike racks in the courtyard; the 14 bus stops at Kiln and Vale.
             </p>
             <p className={s.contact}>
-              <a href="tel:+15550157730">(555) 015-7730</a>
+              <a data-edit="studio.link" data-edit-max="28" href="tel:+15550157730">(555) 015-7730</a>
             </p>
             <p className={s.contact}>
-              <a href="mailto:desk@longformpilates.example">desk@longformpilates.example</a>
+              <a data-edit="studio.link2" data-edit-max="28" href="mailto:desk@longformpilates.example">desk@longformpilates.example</a>
             </p>
-            <p className={s.small}>The desk is staffed from 6 am to 8 pm on weekdays, 7:30 to 1 on weekends.</p>
+            <p data-edit="studio.small" data-edit-max="240" data-edit-multiline className={s.small}>The desk is staffed from 6 am to 8 pm on weekdays, 7:30 to 1 on weekends.</p>
           </div>
           <div className={s.studioRules}>
             <dl className={s.rules}>
-              {STUDIO.map(([t, d]) => (
+              {STUDIO.map(([t, d], i) => (
                 <div key={t}>
-                  <dt>{t}</dt>
-                  <dd>{d}</dd>
+                  <dt data-edit={`studio.term.${i}`} data-edit-max="28">{t}</dt>
+                  <dd data-edit={`studio.body.${i}`} data-edit-max="200" data-edit-multiline>{d}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.faq}>
-              {QUESTIONS.map(([q, a]) => (
+              {QUESTIONS.map(([q, a], i) => (
                 <details key={q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
+                  <summary data-edit={`studio.question.${i}`} data-edit-max="80">{q}</summary>
+                  <p data-edit={`studio.body2.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                 </details>
               ))}
             </div>
           </div>
         </section>
 
-        <div className={s.floor} aria-hidden="true">
+        <div data-edit-pattern="top.field" data-edit-roles="2,0,3,2,0,1" className={s.floor} aria-hidden="true">
           <TabbiedPattern
             pattern={shading}
             palette={FLOOR}
@@ -479,10 +490,10 @@ export default function LongformPilatesPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Longform Pilates</p>
-        <p>A fictional reformer Pilates studio. The classes, instructors and prices are invented; the reformer is a generated image drawn in the page's colors.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Longform Pilates</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional reformer Pilates studio. The classes, instructors and prices are invented; the reformer is a generated image drawn in the page's colors.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>.
         </p>
       </footer>
     </div>

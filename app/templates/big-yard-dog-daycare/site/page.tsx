@@ -143,7 +143,18 @@ const HOURS = [
 
 export default function BigYardPage() {
   return (
-    <div className={s.page}>
+    <div
+      // Color, declared inline so an edit can override it. The authored
+      // defaults stay in the stylesheet as the fallback.
+      style={{
+        '--paper': '#f3eddc',
+        '--ink': '#1f2b1e',
+        '--grass': '#3e8a3a',
+        '--orange': '#f07f22',
+      } as React.CSSProperties}
+      data-edit-root="vars"
+      data-edit-vars="paper,ink,grass,orange"
+      className={s.page}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link
@@ -153,15 +164,15 @@ export default function BigYardPage() {
       />
 
       <header className={s.bar}>
-        <a className={s.mark} href="#top">Big Yard</a>
+        <a data-edit="bar.mark" data-edit-max="28" className={s.mark} href="#top">Big Yard</a>
         <nav className={s.nav} aria-label="Sections">
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </nav>
         <TemplateMenu className={s.siteMenu}>
-          {NAV.map(([label, href]) => (
-            <a key={href} href={href}>{label}</a>
+          {NAV.map(([label, href], i) => (
+            <a data-edit={`bar.link2.${i}`} data-edit-max="28" key={href} href={href}>{label}</a>
           ))}
         </TemplateMenu>
       </header>
@@ -171,35 +182,35 @@ export default function BigYardPage() {
         <section className={s.hero} aria-labelledby="hero-h">
           <div className={s.heroInner}>
             <div className={s.heroText}>
-              <p className={s.hand}>Dog daycare and boarding since 2017</p>
-              <h1 id="hero-h" className={s.name}>Big Yard</h1>
-              <p className={s.lede}>
+              <p data-edit="hero.hand" data-edit-max="240" data-edit-multiline className={s.hand}>Dog daycare and boarding since 2017</p>
+              <h1 data-edit="hero.name" data-edit-max="70" id="hero-h" className={s.name}>Big Yard</h1>
+              <p data-edit="hero.lede" data-edit-max="240" data-edit-multiline className={s.lede}>
                 An acre of fenced grass on Tanner Lane, dogs sorted into
                 small groups by size and by how fast they like to go, and a
                 report card at every pickup.
               </p>
               <p className={s.ctas}>
-                <a className={s.btn} href="#meet">Book a meet and sniff</a>
-                <a className={s.btnLine} href="#prices">Day packs and prices</a>
+                <a data-edit="hero.btn" data-edit-max="28" className={s.btn} href="#meet">Book a meet and sniff</a>
+                <a data-edit="hero.btnLine" data-edit-max="28" className={s.btnLine} href="#prices">Day packs and prices</a>
               </p>
             </div>
 
             <div className={`${s.card} ${s.todayCard}`}>
-              <h2 className={s.cardTitle}>Today at the yard</h2>
-              <p className={s.cardDate}>Friday, September 26</p>
+              <h2 data-edit="hero.cardTitle" data-edit-max="60" className={s.cardTitle}>Today at the yard</h2>
+              <p data-edit="hero.cardDate" data-edit-max="240" data-edit-multiline className={s.cardDate}>Friday, September 26</p>
               <dl className={s.today}>
-                {TODAY.map(([k, v]) => (
+                {TODAY.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`hero.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`hero.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.handNote}>Full on Monday, two spots left Tuesday.</p>
+              <p data-edit="hero.handNote" data-edit-max="240" data-edit-multiline className={s.handNote}>Full on Monday, two spots left Tuesday.</p>
             </div>
           </div>
 
-          <div className={s.fence} aria-hidden="true">
+          <div data-edit-pattern="hero.field" data-edit-roles="transparent,0,0,3,0,0" className={s.fence} aria-hidden="true">
             <TabbiedPattern
               pattern={picket}
               palette={FENCE}
@@ -214,18 +225,18 @@ export default function BigYardPage() {
         {/* ------------------------------------------------------------- DAY */}
         <section id="day" className={s.sec} aria-labelledby="day-h">
           <div className={s.secHead}>
-            <h2 id="day-h">A day here</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="day.title" data-edit-max="60" id="day-h">A day here</h2>
+            <p data-edit="day.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               The same shape every weekday, because dogs like to know what
               comes next as much as we do.
             </p>
           </div>
           <ol className={s.dayCards}>
-            {DAY.map((d) => (
+            {DAY.map((d, i) => (
               <li key={d.time} className={s.card}>
-                <time className={s.dayTime}>{d.time}</time>
-                <h3>{d.title}</h3>
-                <p>{d.note}</p>
+                <time data-edit={`day.dayTime.${i}`} className={s.dayTime}>{d.time}</time>
+                <h3 data-edit={`day.title2.${i}`} data-edit-max="40">{d.title}</h3>
+                <p data-edit={`day.body.${i}`} data-edit-max="240" data-edit-multiline>{d.note}</p>
               </li>
             ))}
           </ol>
@@ -234,8 +245,8 @@ export default function BigYardPage() {
         {/* ---------------------------------------------------------- REPORT */}
         <section id="report" className={s.sec} aria-labelledby="report-h">
           <div className={s.secHead}>
-            <h2 id="report-h">The report card</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="report.title" data-edit-max="60" id="report-h">The report card</h2>
+            <p data-edit="report.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Filled in by hand by your dog's handler before four, and
               handed over with the lead. This is a real one, with permission
               from Biscuit.
@@ -245,50 +256,50 @@ export default function BigYardPage() {
           <div className={s.reportWrap}>
             <article className={s.report} aria-label="A sample report card">
               <div className={s.reportTop}>
-                <p className={s.reportName}>Big Yard daily report</p>
+                <p data-edit="report.reportName" data-edit-max="240" data-edit-multiline className={s.reportName}>Big Yard daily report</p>
                 <dl className={s.reportWho}>
                   <div>
-                    <dt>Name</dt>
-                    <dd>Biscuit</dd>
+                    <dt data-edit="report.term" data-edit-max="28">Name</dt>
+                    <dd data-edit="report.body" data-edit-max="200" data-edit-multiline>Biscuit</dd>
                   </div>
                   <div>
-                    <dt>Group</dt>
-                    <dd>The Big Field</dd>
+                    <dt data-edit="report.term2" data-edit-max="28">Group</dt>
+                    <dd data-edit="report.body2" data-edit-max="200" data-edit-multiline>The Big Field</dd>
                   </div>
                   <div>
-                    <dt>Date</dt>
-                    <dd>Thu 9/25</dd>
+                    <dt data-edit="report.term3" data-edit-max="28">Date</dt>
+                    <dd data-edit="report.body3" data-edit-max="200" data-edit-multiline>Thu 9/25</dd>
                   </div>
                 </dl>
               </div>
               <table className={s.grades}>
-                <caption className={s.srOnly}>Biscuit's grades for the day, with the handler's notes</caption>
+                <caption data-edit="report.srOnly" className={s.srOnly}>Biscuit's grades for the day, with the handler's notes</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Subject</th>
-                    <th scope="col">Grade</th>
-                    <th scope="col">Handler's note</th>
+                    <th data-edit="report.heading" scope="col">Subject</th>
+                    <th data-edit="report.heading2" scope="col">Grade</th>
+                    <th data-edit="report.heading3" scope="col">Handler's note</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {GRADES.map((g) => (
+                  {GRADES.map((g, i) => (
                     <tr key={g.subject}>
-                      <th scope="row">{g.subject}</th>
-                      <td className={s.grade}>{g.grade}</td>
-                      <td className={s.gradeNote}>{g.note}</td>
+                      <th data-edit={`report.heading4.${i}`} scope="row">{g.subject}</th>
+                      <td data-edit={`report.grade.${i}`} className={s.grade}>{g.grade}</td>
+                      <td data-edit={`report.gradeNote.${i}`} className={s.gradeNote}>{g.note}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <dl className={s.reportFoot}>
-                {CARD_EXTRA.map(([k, v]) => (
+                {CARD_EXTRA.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`report.term4.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`report.body4.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.stamp}>Good dog</p>
+              <p data-edit="report.stamp" data-edit-max="240" data-edit-multiline className={s.stamp}>Good dog</p>
             </article>
 
             <div className={s.reportSide}>
@@ -301,15 +312,15 @@ export default function BigYardPage() {
                     className={s.dog}
                   />
                 </div>
-                <figcaption className={s.snapCap}>Biscuit at pickup. Worn out, happy.</figcaption>
+                <figcaption data-edit="report.snapCap" data-edit-max="120" data-edit-multiline className={s.snapCap}>Biscuit at pickup. Worn out, happy.</figcaption>
               </figure>
               <div className={`${s.card} ${s.sideCard}`}>
-                <h3>What the grades mean</h3>
-                <p>A is a great day. B is a normal dog day. C means we saw something you should know about, and we will have said it at the gate as well as on the card.</p>
+                <h3 data-edit="report.title2" data-edit-max="40">What the grades mean</h3>
+                <p data-edit="report.body5" data-edit-max="240" data-edit-multiline>A is a great day. B is a normal dog day. C means we saw something you should know about, and we will have said it at the gate as well as on the card.</p>
               </div>
               <div className={`${s.card} ${s.sideCard}`}>
-                <h3>Keep them</h3>
-                <p>Some people bring back a year of cards in a shoebox. We also send a photo of the card by text at four, in case the real one ends up chewed.</p>
+                <h3 data-edit="report.title3" data-edit-max="40">Keep them</h3>
+                <p data-edit="report.body6" data-edit-max="240" data-edit-multiline>Some people bring back a year of cards in a shoebox. We also send a photo of the card by text at four, in case the real one ends up chewed.</p>
               </div>
             </div>
           </div>
@@ -318,8 +329,8 @@ export default function BigYardPage() {
         {/* ------------------------------------------------------ PLAYGROUPS */}
         <section id="playgroups" className={s.sec} aria-labelledby="groups-h">
           <div className={s.secHead}>
-            <h2 id="groups-h">Playgroups, by size and energy</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="playgroups.title" data-edit-max="60" id="groups-h">Playgroups, by size and energy</h2>
+            <p data-edit="playgroups.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Five groups, each in its own fenced yard. Size keeps small dogs
               safe; energy keeps everyone having the same kind of fun. Theo
               places each dog at the meet and sniff, and moves them if they
@@ -328,43 +339,43 @@ export default function BigYardPage() {
           </div>
 
           <div className={s.board}>
-            <p className={s.axisCorner}>Energy, then size</p>
+            <p data-edit="playgroups.axisCorner" data-edit-max="240" data-edit-multiline className={s.axisCorner}>Energy, then size</p>
             {SIZES.map((z, i) => (
-              <p key={z} className={`${s.axisTop} ${s[`col${i + 2}`]}`}>{z}</p>
+              <p data-edit={`playgroups.axisTop.${i}`} data-edit-max="240" data-edit-multiline key={z} className={`${s.axisTop} ${s[`col${i + 2}`]}`}>{z}</p>
             ))}
             {ENERGY.map((e, i) => (
-              <p key={e} className={`${s.axisSide} ${s[`row${i + 2}`]}`}>{e}</p>
+              <p data-edit={`playgroups.axisSide.${i}`} data-edit-max="240" data-edit-multiline key={e} className={`${s.axisSide} ${s[`row${i + 2}`]}`}>{e}</p>
             ))}
-            {GROUPS.map((g) => (
+            {GROUPS.map((g, i) => (
               <div key={g.name} className={`${s.group} ${g.area}`}>
-                <p className={s.groupFit}>{g.fit}</p>
-                <h3>{g.name}</h3>
-                <p>{g.who}</p>
-                <p className={s.groupYard}>{g.yard}</p>
+                <p data-edit={`playgroups.groupFit.${i}`} data-edit-max="240" data-edit-multiline className={s.groupFit}>{g.fit}</p>
+                <h3 data-edit={`playgroups.title2.${i}`} data-edit-max="40">{g.name}</h3>
+                <p data-edit={`playgroups.body.${i}`} data-edit-max="240" data-edit-multiline>{g.who}</p>
+                <p data-edit={`playgroups.groupYard.${i}`} data-edit-max="240" data-edit-multiline className={s.groupYard}>{g.yard}</p>
               </div>
             ))}
           </div>
-          <p className={s.boardNote}>Puppies under six months start in puppy mornings with Dee before they join a group.</p>
+          <p data-edit="playgroups.boardNote" data-edit-max="240" data-edit-multiline className={s.boardNote}>Puppies under six months start in puppy mornings with Dee before they join a group.</p>
         </section>
 
         {/* ---------------------------------------------------------- PRICES */}
         <section id="prices" className={s.sec} aria-labelledby="prices-h">
           <div className={s.secHead}>
-            <h2 id="prices-h">Day packs and prices</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="prices.title" data-edit-max="60" id="prices-h">Day packs and prices</h2>
+            <p data-edit="prices.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               A pack is a punch card: one hole a day, good for six months,
               shared between dogs in the same family.
             </p>
           </div>
 
           <ul className={s.packs}>
-            {PACKS.map((p) => (
+            {PACKS.map((p, i) => (
               <li key={p.name} className={s.pack}>
                 <div className={s.packHead}>
-                  <h3>{p.name}</h3>
-                  <strong className={s.packPrice}>{p.price}</strong>
+                  <h3 data-edit={`prices.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                  <strong data-edit={`prices.packPrice.${i}`} className={s.packPrice}>{p.price}</strong>
                 </div>
-                <p className={s.packPer}>{p.per}</p>
+                <p data-edit={`prices.packPer.${i}`} data-edit-max="240" data-edit-multiline className={s.packPer}>{p.per}</p>
                 <ol className={s.holes} aria-hidden="true">
                   {p.dots.map((d) => (
                     <li key={d.key} className={d.punched ? s.punched : s.hole} />
@@ -376,28 +387,28 @@ export default function BigYardPage() {
 
           <div className={s.priceLists}>
             <dl className={s.priceList}>
-              {SINGLE.map(([k, note, v]) => (
+              {SINGLE.map(([k, note, v], i) => (
                 <div key={k}>
-                  <dt>{k}</dt>
-                  <dd className={s.plNote}>{note}</dd>
-                  <dd className={s.plPrice}>{v}</dd>
+                  <dt data-edit={`prices.term.${i}`} data-edit-max="28">{k}</dt>
+                  <dd data-edit={`prices.plNote.${i}`} data-edit-max="200" data-edit-multiline className={s.plNote}>{note}</dd>
+                  <dd data-edit={`prices.plPrice.${i}`} data-edit-max="200" data-edit-multiline className={s.plPrice}>{v}</dd>
                 </div>
               ))}
             </dl>
             <div className={s.extras}>
-              <h3 className={s.hand}>Add-ons</h3>
+              <h3 data-edit="prices.hand" data-edit-max="40" className={s.hand}>Add-ons</h3>
               <dl className={s.extraList}>
-                {EXTRAS.map(([k, v]) => (
+                {EXTRAS.map(([k, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
+                    <dt data-edit={`prices.term2.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`prices.body.${i}`} data-edit-max="200" data-edit-multiline>{v}</dd>
                   </div>
                 ))}
               </dl>
             </div>
           </div>
 
-          <div className={s.rails} aria-hidden="true">
+          <div data-edit-pattern="prices.field" data-edit-roles="transparent,2,1,2,3,2" className={s.rails} aria-hidden="true">
             <TabbiedPattern
               pattern={picket}
               palette={RAILS}
@@ -414,27 +425,27 @@ export default function BigYardPage() {
           <div className={s.boardingGrid}>
             <div>
               <div className={s.secHead}>
-                <h2 id="boarding-h">Boarding</h2>
-                <p className={s.secNote}>
+                <h2 data-edit="boarding.title" data-edit-max="60" id="boarding-h">Boarding</h2>
+                <p data-edit="boarding.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
                   Sleepovers for dogs who already come to daycare, so the
                   place and the people are old friends. Twelve rooms, each
                   with a raised cot and a door that closes.
                 </p>
               </div>
               <dl className={s.priceList}>
-                {BOARDING.map(([k, note, v]) => (
+                {BOARDING.map(([k, note, v], i) => (
                   <div key={k}>
-                    <dt>{k}</dt>
-                    <dd className={s.plNote}>{note}</dd>
-                    <dd className={s.plPrice}>{v}</dd>
+                    <dt data-edit={`boarding.term.${i}`} data-edit-max="28">{k}</dt>
+                    <dd data-edit={`boarding.plNote.${i}`} data-edit-max="200" data-edit-multiline className={s.plNote}>{note}</dd>
+                    <dd data-edit={`boarding.plPrice.${i}`} data-edit-max="200" data-edit-multiline className={s.plPrice}>{v}</dd>
                   </div>
                 ))}
               </dl>
-              <p className={s.small}>Drop-off and pickup during daycare hours, or Sunday between 4 and 6. Sam sends a text and a photo at bedtime.</p>
+              <p data-edit="boarding.small" data-edit-max="240" data-edit-multiline className={s.small}>Drop-off and pickup during daycare hours, or Sunday between 4 and 6. Sam sends a text and a photo at bedtime.</p>
             </div>
 
             <div className={`${s.card} ${s.bringCard}`}>
-              <div className={s.bowls} aria-hidden="true">
+              <div data-edit-pattern="boarding.field" data-edit-roles="transparent,3,2,1,2,3" className={s.bowls} aria-hidden="true">
                 <TabbiedPattern
                   pattern={bowl}
                   palette={BOWLS}
@@ -444,10 +455,10 @@ export default function BigYardPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <h3 className={s.cardTitle}>Pack for a sleepover</h3>
+              <h3 data-edit="boarding.cardTitle" data-edit-max="40" className={s.cardTitle}>Pack for a sleepover</h3>
               <ul className={s.checks}>
-                {BRING.map((b) => (
-                  <li key={b}>{b}</li>
+                {BRING.map((b, i) => (
+                  <li data-edit={`boarding.item.${i}`} data-edit-max="80" key={b}>{b}</li>
                 ))}
               </ul>
             </div>
@@ -457,61 +468,61 @@ export default function BigYardPage() {
         {/* ------------------------------------------------------------ MEET */}
         <section id="meet" className={s.sec} aria-labelledby="meet-h">
           <div className={s.secHead}>
-            <h2 id="meet-h">The meet and sniff</h2>
-            <p className={s.secNote}>
+            <h2 data-edit="meet.title" data-edit-max="60" id="meet-h">The meet and sniff</h2>
+            <p data-edit="meet.secNote" data-edit-max="240" data-edit-multiline className={s.secNote}>
               Every new dog starts here, however friendly. It is free, and it
               is how we choose a group.
             </p>
           </div>
 
           <ol className={s.meetSteps}>
-            {MEET.map((m) => (
+            {MEET.map((m, i) => (
               <li key={m.step}>
-                <h3>{m.step}</h3>
-                <p>{m.note}</p>
+                <h3 data-edit={`meet.title2.${i}`} data-edit-max="40">{m.step}</h3>
+                <p data-edit={`meet.body.${i}`} data-edit-max="240" data-edit-multiline>{m.note}</p>
               </li>
             ))}
           </ol>
 
           <div className={s.meetGrid}>
             <div className={`${s.card} ${s.rulesCard}`}>
-              <h3 className={s.cardTitle}>Before the first day</h3>
+              <h3 data-edit="meet.cardTitle" data-edit-max="40" className={s.cardTitle}>Before the first day</h3>
               <ul className={s.checks}>
-                {RULES.map((r) => (
-                  <li key={r}>{r}</li>
+                {RULES.map((r, i) => (
+                  <li data-edit={`meet.item.${i}`} data-edit-max="80" key={r}>{r}</li>
                 ))}
               </ul>
               <div className={s.faq}>
-                {FAQ.map(([q, a]) => (
+                {FAQ.map(([q, a], i) => (
                   <details key={q}>
-                    <summary>{q}</summary>
-                    <p>{a}</p>
+                    <summary data-edit={`meet.question.${i}`} data-edit-max="80">{q}</summary>
+                    <p data-edit={`meet.body2.${i}`} data-edit-max="240" data-edit-multiline>{a}</p>
                   </details>
                 ))}
               </div>
             </div>
 
             <form className={s.form} action="#">
-              <h3 className={s.formTitle}>Book a meet and sniff</h3>
+              <h3 data-edit="meet.formTitle" data-edit-max="40" className={s.formTitle}>Book a meet and sniff</h3>
               <div className={s.formGrid}>
                 <div className={s.field}>
-                  <label htmlFor="by-name">Your name</label>
+                  <label data-edit="meet.label" htmlFor="by-name">Your name</label>
                   <input id="by-name" name="name" type="text" autoComplete="name" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="by-phone">Phone</label>
+                  <label data-edit="meet.label2" htmlFor="by-phone">Phone</label>
                   <input id="by-phone" name="phone" type="tel" autoComplete="tel" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="by-dog">Dog's name</label>
+                  <label data-edit="meet.label3" htmlFor="by-dog">Dog's name</label>
                   <input id="by-dog" name="dog" type="text" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="by-breed">Breed and age</label>
+                  <label data-edit="meet.label4" htmlFor="by-breed">Breed and age</label>
                   <input id="by-breed" name="breed" type="text" />
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="by-size">Weight</label>
+                  <label data-edit="meet.label5" htmlFor="by-size">Weight</label>
                   <select id="by-size" name="size" defaultValue="mid">
                     <option value="small">Under 25 lb</option>
                     <option value="mid">25 to 60 lb</option>
@@ -519,15 +530,15 @@ export default function BigYardPage() {
                   </select>
                 </div>
                 <div className={s.field}>
-                  <label htmlFor="by-day">A weekday morning that suits</label>
+                  <label data-edit="meet.label6" htmlFor="by-day">A weekday morning that suits</label>
                   <input id="by-day" name="day" type="date" />
                 </div>
                 <div className={`${s.field} ${s.wide}`}>
-                  <label htmlFor="by-notes">Anything we should know</label>
+                  <label data-edit="meet.label7" htmlFor="by-notes">Anything we should know</label>
                   <textarea id="by-notes" name="notes" rows={3} />
                 </div>
               </div>
-              <button className={s.btn} type="submit">Send it to Theo</button>
+              <button data-edit="meet.btn" data-edit-max="24" className={s.btn} type="submit">Send it to Theo</button>
             </form>
           </div>
         </section>
@@ -535,15 +546,15 @@ export default function BigYardPage() {
         {/* ---------------------------------------------------------- PEOPLE */}
         <section className={s.sec} aria-labelledby="people-h">
           <div className={s.secHead}>
-            <h2 id="people-h">Who is in the yard</h2>
+            <h2 data-edit="people.title" data-edit-max="60" id="people-h">Who is in the yard</h2>
           </div>
           <ul className={s.people}>
-            {PEOPLE.map((p) => (
+            {PEOPLE.map((p, i) => (
               <li key={p.name} className={s.card}>
-                <h3>{p.name}</h3>
-                <p className={s.role}>{p.role}</p>
-                <p>{p.note}</p>
-                <p className={s.handNote}>{p.dog}</p>
+                <h3 data-edit={`people.title2.${i}`} data-edit-max="40">{p.name}</h3>
+                <p data-edit={`people.role.${i}`} data-edit-max="240" data-edit-multiline className={s.role}>{p.role}</p>
+                <p data-edit={`people.body.${i}`} data-edit-max="240" data-edit-multiline>{p.note}</p>
+                <p data-edit={`people.handNote.${i}`} data-edit-max="240" data-edit-multiline className={s.handNote}>{p.dog}</p>
               </li>
             ))}
           </ul>
@@ -553,24 +564,24 @@ export default function BigYardPage() {
         <section id="find" className={s.find} aria-labelledby="find-h">
           <div className={s.findInner}>
             <div>
-              <h2 id="find-h">Find us</h2>
-              <p className={s.addr}>480 Tanner Lane, Greenhill</p>
-              <p className={s.findNote}>The green gate past the feed store. Park on the gravel and walk up; the dogs will announce you.</p>
+              <h2 data-edit="find.title" data-edit-max="60" id="find-h">Find us</h2>
+              <p data-edit="find.addr" data-edit-max="240" data-edit-multiline className={s.addr}>480 Tanner Lane, Greenhill</p>
+              <p data-edit="find.findNote" data-edit-max="240" data-edit-multiline className={s.findNote}>The green gate past the feed store. Park on the gravel and walk up; the dogs will announce you.</p>
               <p className={s.findLinks}>
-                <a href="tel:+15550174480">(555) 017-4480</a>
-                <a href="mailto:hello@bigyard.example">hello@bigyard.example</a>
+                <a data-edit="find.link" data-edit-max="28" href="tel:+15550174480">(555) 017-4480</a>
+                <a data-edit="find.link2" data-edit-max="28" href="mailto:hello@bigyard.example">hello@bigyard.example</a>
               </p>
             </div>
             <dl className={s.hours}>
-              {HOURS.map(([d, h]) => (
+              {HOURS.map(([d, h], i) => (
                 <div key={d}>
-                  <dt>{d}</dt>
-                  <dd>{h}</dd>
+                  <dt data-edit={`find.term.${i}`} data-edit-max="28">{d}</dt>
+                  <dd data-edit={`find.body.${i}`} data-edit-max="200" data-edit-multiline>{h}</dd>
                 </div>
               ))}
             </dl>
           </div>
-          <div className={s.gate} aria-hidden="true">
+          <div data-edit-pattern="find.field" data-edit-roles="transparent,0,0,3,0,0" className={s.gate} aria-hidden="true">
             <TabbiedPattern
               pattern={picket}
               palette={FENCE}
@@ -584,10 +595,10 @@ export default function BigYardPage() {
       </main>
 
       <footer className={s.footer}>
-        <p className={s.footName}>Big Yard</p>
-        <p>A fictional dog daycare. The dogs, people, prices and report cards are invented.</p>
+        <p data-edit="footer.footName" data-edit-max="240" data-edit-multiline className={s.footName}>Big Yard</p>
+        <p data-edit="footer.body" data-edit-max="240" data-edit-multiline>A fictional dog daycare. The dogs, people, prices and report cards are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; Biscuit is a generated image drawn in the page's colors.
+          Patterns by <a data-edit="footer.link" data-edit-max="28" href="https://tabbied.com">Tabbied</a>, drawn live; Biscuit is a generated image drawn in the page's colors.
         </p>
       </footer>
     </div>
