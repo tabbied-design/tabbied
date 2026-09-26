@@ -545,7 +545,54 @@
   color: var(--muted);
 }
 
-/* -------------------------------------------------------------------- route */
+/* -------------------------------------------------------------------- route
+   The section is a grid: the heading and the loaf share the top rule, and
+   the route runs underneath, ending below the loaf that it delivers. */
+
+.routeSec {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(14rem, 21vw, 19rem);
+  grid-template-areas:
+    'head arrival'
+    'route route';
+  align-items: start;
+}
+
+.routeSec .secHead {
+  grid-area: head;
+  grid-template-columns: 5rem minmax(0, 1.2fr) minmax(0, 1fr);
+  margin-bottom: 0;
+  padding-right: 2rem;
+}
+
+.arrival {
+  grid-area: arrival;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 2px solid var(--text);
+}
+
+.loaf {
+  display: block;
+  width: 100%;
+}
+
+.arrivalNote {
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: var(--muted);
+}
+
+.routeSec .route {
+  grid-area: route;
+  margin-top: clamp(1.8rem, 3.5vw, 2.6rem);
+}
 
 .route {
   position: relative;
@@ -1185,8 +1232,31 @@
     width: min(100%, 24rem);
   }
 
-  .secHead {
+  .secHead,
+  .routeSec .secHead {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .routeSec {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'head'
+      'route'
+      'arrival';
+  }
+
+  .routeSec .secHead {
+    padding-right: 0;
+  }
+
+  .arrival {
+    margin-top: 1.2rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .loaf {
+    width: min(100%, 17rem);
   }
 
   .millGrid,

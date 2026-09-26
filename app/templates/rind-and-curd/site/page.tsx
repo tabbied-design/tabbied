@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { kern, lobeform, dotfade } from 'tabbied/patterns';
 import s from './rind-and-curd.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Rind & Curd: Cheese shop and tasting counter, Old Market',
@@ -170,7 +171,13 @@ export default function RindAndCurdPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
-              <p className={s.plateCaption}>Plate 1. The counter at eleven on a Saturday, every wheel cut.</p>
+              <Artwork
+                slug="rind-and-curd-wheel"
+                alt="A whole wheel of aged cheese with a wedge cut out, the wedge lying in front of it"
+                inks={['var(--text)', 'var(--paper)']}
+                className={s.wheel}
+              />
+              <p className={s.plateCaption}>Plate 1. Old Hollow Cheddar, fourteen months in its cloth, the first wedge out.</p>
             </div>
           </div>
         </section>
@@ -507,6 +514,7 @@ export default function RindAndCurdPage() {
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>
+        <p>The cheese on the cover is a generated image, printed in the page's own colors.</p>
       </footer>
     </div>
   );

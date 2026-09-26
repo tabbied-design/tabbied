@@ -169,7 +169,6 @@
 }
 
 .posterInner {
-  container-type: inline-size;
   max-width: var(--max);
   margin: 0 auto;
   padding: clamp(1.5rem, 3vw, 2.4rem) var(--gut) clamp(1.8rem, 3.5vw, 2.8rem);
@@ -184,8 +183,22 @@
   border-bottom: 3px solid var(--text);
 }
 
-/* The name fills the column: its size is a share of the column's width,
-   measured against the face, so each line runs edge to edge. */
+/* The poster's two columns: the type stacked edge to edge on the left,
+   the fighter standing on the billboard's rule on the right. */
+.posterMain {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(15rem, 26vw, 23rem);
+  gap: clamp(1.2rem, 3vw, 2.8rem);
+  align-items: end;
+}
+
+/* The name fills its column: each line's size is a share of the column's
+   width, measured against the face, so every line runs edge to edge. */
+.posterType {
+  container-type: inline-size;
+  padding-bottom: clamp(1.5rem, 3vw, 2.4rem);
+}
+
 .name {
   margin-top: 0.5rem;
   font-size: 25.2cqi;
@@ -205,31 +218,47 @@
   background: var(--red);
 }
 
-.posterRow {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: clamp(1rem, 3vw, 2.6rem);
-  align-items: center;
-  margin-top: clamp(1.2rem, 2.5vw, 2rem);
-}
-
 .tagline {
+  margin-top: 0.12em;
   font-family: var(--poster);
-  font-size: clamp(2.8rem, 8.2vw, 7.6rem);
+  font-size: 19.2cqi;
   line-height: 0.88;
+  text-align: center;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .sub {
-  max-width: 26rem;
+  max-width: 34rem;
+  margin: clamp(1rem, 2vw, 1.5rem) auto 0;
+  text-align: center;
   font-size: clamp(1rem, 1.35vw, 1.2rem);
   font-weight: 600;
   line-height: 1.4;
 }
 
+/* The fighter: a toned photograph printed in the page's ink on its paper,
+   boots on the rule. */
+.fighter {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+.boxer {
+  display: block;
+  width: 100%;
+}
+
 /* The sticker: slapped on at an angle, black with a bone ring. */
 .sticker {
+  position: absolute;
+  top: 1.2rem;
+  left: -1rem;
+  z-index: 1;
   display: grid;
   place-items: center;
   width: clamp(7rem, 11vw, 9.5rem);
@@ -251,7 +280,6 @@
 .billboard {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: clamp(1.5rem, 3vw, 2.4rem);
   border-top: var(--heavy);
 }
 
@@ -874,20 +902,6 @@
 /* --------------------------------------------------------------- responsive */
 
 @media (max-width: 1100px) {
-  .posterRow {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .sub {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .sticker {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
-
   .corners {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -926,6 +940,30 @@
 }
 
 @media (max-width: 900px) {
+  .posterMain {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .posterType {
+    padding-bottom: 0.5rem;
+  }
+
+  .fighter {
+    justify-content: flex-start;
+    padding: 0 0 0 4%;
+  }
+
+  .boxer {
+    width: min(62%, 17rem);
+  }
+
+  .sticker {
+    top: 26%;
+    left: auto;
+    right: 0;
+  }
+
   .bar {
     grid-template-columns: minmax(0, 1fr) auto auto;
     gap: 0.8rem;
@@ -986,25 +1024,10 @@
     display: none;
   }
 
-  .posterRow {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
-  }
-
-  .tagline {
-    font-size: clamp(2.4rem, 13vw, 3.4rem);
-    white-space: normal;
-  }
-
   .sticker {
     width: 6.4rem;
     padding: 0.7rem;
     font-size: 1.05rem;
-  }
-
-  .sub {
-    grid-column: 1 / -1;
-    grid-row: 2;
   }
 
   .billboard div + div {

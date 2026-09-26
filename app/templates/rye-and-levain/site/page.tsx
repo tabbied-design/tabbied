@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { nutation, grainfall, louvre } from 'tabbied/patterns';
 import s from './rye-and-levain.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Rye & Levain: Sourdough bakery and stone mill, Weirside',
@@ -277,7 +278,7 @@ export default function RyeAndLevainPage() {
         </section>
 
         {/* ----------------------------------------------------------- ROUTE */}
-        <section id="route" className={s.sec} aria-labelledby="route-h">
+        <section id="route" className={`${s.sec} ${s.routeSec}`} aria-labelledby="route-h">
           <div className={s.secHead}>
             <p className={s.secNum}>02</p>
             <h2 id="route-h">Every loaf calls at eight stops</h2>
@@ -299,6 +300,16 @@ export default function RyeAndLevainPage() {
               </li>
             ))}
           </ol>
+          {/* Where the route ends: the loaf itself, drawn in the page's ink. */}
+          <div className={s.arrival}>
+            <Artwork
+              slug="rye-and-levain-loaf"
+              alt="A round country sourdough loaf with one deep curling score and a floured crust"
+              inks={['var(--text)']}
+              className={s.loaf}
+            />
+            <p className={s.arrivalNote}>Arrived: the country levain, shelf 1, 06:30.</p>
+          </div>
         </section>
 
         {/* ------------------------------------------------------------ MILL */}
@@ -551,6 +562,7 @@ export default function RyeAndLevainPage() {
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>
+        <p>The loaf is a generated image, drawn in the page's own colors.</p>
       </footer>
     </div>
   );

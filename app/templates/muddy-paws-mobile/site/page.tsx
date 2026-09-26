@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { chain, bobbin, odessa } from 'tabbied/patterns';
 import s from './muddy-paws-mobile.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Muddy Paws: Mobile dog grooming van, Alder Heights to Northgate',
@@ -211,6 +212,12 @@ export default function MuddyPawsPage() {
             <span className={`${s.wheel} ${s.wheelBack}`} aria-hidden="true" />
             <span className={`${s.wheel} ${s.wheelFront}`} aria-hidden="true" />
             <p className={s.plate}>BIG DOT</p>
+            <Artwork
+              slug="muddy-paws-mobile-dog"
+              alt="A scruffy terrier fresh from the bath, head tilted and tongue out, with soap bubbles around it"
+              inks={{ yellow: 'var(--suds)', red: 'var(--coral)', blue: 'var(--teal)', black: 'var(--text)' }}
+              className={s.dog}
+            />
           </div>
         </section>
 
@@ -486,6 +493,7 @@ export default function MuddyPawsPage() {
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>
+          <p>The dog is a generated image, drawn in the page's own colors.</p>
         </div>
       </footer>
     </div>

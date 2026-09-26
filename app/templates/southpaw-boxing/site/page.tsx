@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { parity, stipplefade, shearpair } from 'tabbied/patterns';
 import s from './southpaw-boxing.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Southpaw Boxing Club: Boxing gym, Foundry Street',
@@ -193,14 +194,24 @@ export default function SouthpawBoxingPage() {
               <span>Since 1987</span>
               <span>Six nights a week</span>
             </p>
-            <h1 id="hero-h" className={s.name}>Southpaw <em>Boxing Club</em></h1>
-            <div className={s.posterRow}>
-              <p className={s.tagline}>Learn to box</p>
-              <p className={s.sub}>
-                From your first jab to your first bout, taught by coaches who
-                have been hit for a living. All levels, no attitude.
-              </p>
-              <p className={s.sticker}>First session free</p>
+            <div className={s.posterMain}>
+              <div className={s.posterType}>
+                <h1 id="hero-h" className={s.name}>Southpaw <em>Boxing Club</em></h1>
+                <p className={s.tagline}>Learn to box</p>
+                <p className={s.sub}>
+                  From your first jab to your first bout, taught by coaches who
+                  have been hit for a living. All levels, no attitude.
+                </p>
+              </div>
+              <div className={s.fighter}>
+                <Artwork
+                  slug="southpaw-boxing-boxer"
+                  alt="A boxer in a southpaw stance, gloves up guarding his chin, in shorts and boxing boots"
+                  inks={['var(--text)', 'var(--bone)']}
+                  className={s.boxer}
+                />
+                <p className={s.sticker}>First session free</p>
+              </div>
             </div>
             <dl className={s.billboard}>
               {BILLBOARD.map(([label, value]) => (
@@ -451,6 +462,7 @@ export default function SouthpawBoxingPage() {
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>
+        <p>The boxer is a generated image, printed in the page's own colors.</p>
       </footer>
     </div>
   );

@@ -277,15 +277,16 @@
 }
 
 /* The van: a teal body with a rounded nose, a window, two wheels and a
-   plate. The livery pattern lives inside the body and is clipped by it. */
+   plate. The livery pattern lives inside the body and is clipped by it.
+   The dog sits on the curb by the back doors, just out of the bath. */
 .van {
   position: relative;
-  aspect-ratio: 16 / 10.5;
+  aspect-ratio: 16 / 8.6;
 }
 
 .vanBody {
   position: absolute;
-  inset: 0 0 13% 0;
+  inset: 0 0 13% 33%;
   overflow: hidden;
   background: var(--teal);
   border: 5px solid currentColor;
@@ -294,9 +295,9 @@
 
 .vanWindow {
   position: absolute;
-  right: 7%;
+  right: 6%;
   top: 11%;
-  width: 21%;
+  width: 16%;
   height: 30%;
   background: var(--suds);
   border: 5px solid currentColor;
@@ -306,7 +307,7 @@
 .wheel {
   position: absolute;
   bottom: 0;
-  width: 19%;
+  width: 15%;
   aspect-ratio: 1;
   background: radial-gradient(circle, var(--suds) 0 26%, var(--mud) 27%);
   border: 5px solid currentColor;
@@ -315,16 +316,16 @@
 }
 
 .wheelBack {
-  left: 11%;
+  left: 41%;
 }
 
 .wheelFront {
-  right: 13%;
+  right: 10%;
 }
 
 .plate {
   position: absolute;
-  left: 50%;
+  left: 66%;
   bottom: 3.5%;
   padding: 0.15rem 0.6rem;
   font-family: var(--display);
@@ -336,6 +337,15 @@
   border: 3px solid currentColor;
   border-radius: 6px;
   transform: translateX(-50%);
+}
+
+.dog {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  display: block;
+  width: 31%;
 }
 
 /* ------------------------------------------------------------------- route */

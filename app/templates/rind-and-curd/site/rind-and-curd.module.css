@@ -233,6 +233,16 @@
   height: clamp(300px, 36vw, 520px);
 }
 
+.wheel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: 62%;
+  transform: translate(-50%, -56%);
+  filter: drop-shadow(0 22px 26px color-mix(in oklab, var(--text) 38%, transparent));
+}
+
 .plateCaption {
   margin-top: 0.7rem;
   font-size: 0.88rem;
