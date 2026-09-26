@@ -14,8 +14,9 @@ import styles from './SiteNav.module.css';
 // dark shell (`dark`, the homepage and the template gallery). See CLAUDE.md,
 // "The masthead - one bar, two tones".
 //
-// Signed out: Home / Patterns / Websites and "Sign in". Signed in: My account
-// first, and the person's initials opening the account menu. Below 768px the
+// Patterns / Websites / React Component in the middle; the lockup is the way
+// home. Signed out, "Sign in" on the right; signed in, the person's initials
+// opening the account menu, which is where My account lives. Below 768px the
 // destinations fold into that menu (signed out, into one behind a hamburger).
 //
 // A prerendered page cannot know who is looking, so the signed-out chrome
@@ -36,6 +37,7 @@ type NavTone = 'dark' | 'light';
 const DESTINATIONS = [
   ['/patterns', 'Patterns'],
   ['/templates', 'Websites'],
+  ['/docs/react', 'React Component'],
 ] as const;
 
 /** Two letters for the circle: first and last name, or the start of the email. */
@@ -84,19 +86,14 @@ export default function SiteNav({
     pathname === '/' ? '/account' : rawPathname
   )}`;
 
-  const home = user ? (['/account', 'My account'] as const) : (['/', 'Home'] as const);
-  const links = [home, ...DESTINATIONS] as const;
-
   // Both dark artboards (the homepage and the template gallery) pin the bar.
   const pinned = sticky || tone === 'dark';
 
-  const isCurrent = (href: string) =>
-    href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
+  const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   // The menu marks one item as the page you are on: the longest href that
   // matches, so Settings wins over My account on /account/settings.
   const menuHrefs = [
-    '/',
     '/account',
     '/account/settings',
     '/admin',
@@ -141,7 +138,7 @@ export default function SiteNav({
       </Link>
 
       <nav className={styles.links} aria-label="Main">
-        {links.map(([href, label]) => (
+        {DESTINATIONS.map(([href, label]) => (
           <Link
             key={href}
             href={href}
@@ -176,8 +173,7 @@ export default function SiteNav({
                   <div className={styles.menuEmail}>{user.email}</div>
                   <Menu.Separator className={styles.menuRule} />
                   {item('/account', 'My account')}
-                  {narrow && item('/patterns', 'Patterns')}
-                  {narrow && item('/templates', 'Websites')}
+                  {narrow && DESTINATIONS.map(([href, label]) => item(href, label))}
                   {item('/account/settings', 'Settings')}
                   {/* This decides only whether the way in is drawn: every
                       /api/admin route checks the role again for itself. */}
@@ -222,9 +218,7 @@ export default function SiteNav({
                   sideOffset={10}
                 >
                   <Menu.Popup className={styles.menu}>
-                    {item('/', 'Home')}
-                    {item('/patterns', 'Patterns')}
-                    {item('/templates', 'Websites')}
+                    {DESTINATIONS.map(([href, label]) => item(href, label))}
                     <Menu.Separator className={styles.menuRule} />
                     {item(signInHref, 'Sign in')}
                   </Menu.Popup>
