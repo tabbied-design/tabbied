@@ -17,7 +17,7 @@ type Mode = 'sign-in' | 'sign-up';
 const COPY = {
   'sign-in': {
     title: 'Sign in',
-    lede: 'An account keeps your customized sites and patterns, so they are still here when you come back.',
+    lede: 'Create an account to customize websites and manage your projects.',
     submit: 'Sign in',
     swapText: 'No account yet?',
     swapLabel: 'Create one',
@@ -25,7 +25,7 @@ const COPY = {
   },
   'sign-up': {
     title: 'Create an account',
-    lede: 'Create an account to customize websites and manage your projects.',
+    lede: 'An account keeps your customized sites and patterns, so they are still here when you come back.',
     submit: 'Create account',
     swapText: 'Already have an account?',
     swapLabel: 'Sign in',
@@ -233,7 +233,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
           <input
             type="password"
             autoComplete={mode === 'sign-up' ? 'new-password' : 'current-password'}
-            placeholder="At least 8 characters"
+            placeholder={'\u2022'.repeat(8)}
             required
             minLength={8}
             value={password}
