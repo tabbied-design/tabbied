@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { buttonhole, mercerising, corduroy, fustian, percale } from 'tabbied/patterns';
 import s from './tack-and-button.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Tack & Button: Upholstery workshop, Weaver\'s Row',
@@ -22,6 +23,7 @@ const MIDNIGHT = '#26305a';
 const BRASS = '#b98a2e';
 
 const TUFTED = ['transparent', OXBLOOD];
+const TOPCOVER = ['transparent', OXBLOOD];
 const VELVET = ['transparent', BRASS, OXBLOOD, CALICO, OXBLOOD];
 const CORD = ['transparent', INK, BOTTLE, INK];
 const TWEED = ['transparent', MIDNIGHT, CALICO, MIDNIGHT, BRASS];
@@ -55,7 +57,6 @@ type Layer = { no: string; name: string; what: string; stage: string; kind: stri
 /* A traditional seat, from the frame up. The stack is drawn top cover
    first, the way you see it, but numbered from the frame, the way we build. */
 const LAYERS: Layer[] = [
-  { no: '10', name: 'Top cover', what: 'Pattern centered, piped, finished with close-nailed tacks or a braid', stage: 'Cover', kind: 'lTop' },
   { no: '09', name: 'Wadding', what: 'Cotton skin wadding, so no stuffing works through the weave', stage: 'Cover', kind: 'lWad' },
   { no: '08', name: 'Calico', what: 'Pulled tight and tacked off: the shape is fixed at this stage', stage: 'Rebuild', kind: 'lCalico' },
   { no: '07', name: 'Second stuffing', what: 'Horsehair, teased by hand and laid in a dome', stage: 'Rebuild', kind: 'lHair' },
@@ -149,6 +150,7 @@ export default function TackAndButtonPage() {
               <a className={s.textLink} href="#pieces">What it costs</a>
             </div>
           </div>
+          <div className={s.coverWrap}>
           <div className={s.cover}>
             <div className={s.tufted} aria-hidden="true">
               <TabbiedPattern
@@ -165,6 +167,15 @@ export default function TackAndButtonPage() {
               <p className={s.plateNo}>Vol. 7</p>
               <p className={s.plateNote}>Velvets, cords, tweeds and tickings, autumn</p>
             </div>
+          </div>
+          <div className={s.wingback}>
+            <Artwork
+              slug="tack-and-button-wingback"
+              alt="A deep-buttoned velvet wingback armchair, seen at a three-quarter angle"
+              inks={['var(--text)', 'var(--brass-light)']}
+              className={s.wingbackArt}
+            />
+          </div>
           </div>
         </section>
 
@@ -223,6 +234,22 @@ export default function TackAndButtonPage() {
           </div>
           <div className={s.rebuild}>
             <ol className={s.layers}>
+              <li className={s.layer}>
+                <div className={`${s.layerBand} ${s.lTop}`} aria-hidden="true">
+                  <TabbiedPattern
+                    pattern={buttonhole}
+                    palette={TOPCOVER}
+                    fit="grid"
+                    cellSize={24}
+                    seed="tack-topcover"
+                    style={{ position: 'absolute', inset: 0 }}
+                  />
+                </div>
+                <span className={s.layerNo}>10</span>
+                <span className={s.layerName}>Top cover</span>
+                <span className={s.layerWhat}>Pattern centered, piped, buttoned if it was, finished with close-nailed tacks or a braid</span>
+                <span className={s.layerStage}>Cover</span>
+              </li>
               {LAYERS.map((l) => (
                 <li key={l.no} className={s.layer}>
                   <span className={`${s.layerBand} ${s[l.kind]}`} aria-hidden="true" />
@@ -556,6 +583,7 @@ export default function TackAndButtonPage() {
         <div className={s.footInner}>
           <p className={s.footName}>Tack & Button</p>
           <p>A fictional upholstery workshop. The fabrics, prices, people and address are invented.</p>
+          <p>The wingback is a generated image, drawn in the page's own colors.</p>
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>

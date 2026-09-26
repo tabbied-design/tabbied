@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { dotmatrix } from 'tabbied/patterns';
 import s from './delancey-deli.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Delancey Deli: Sandwich deli, Delancey Row',
@@ -315,6 +316,14 @@ export default function DelanceyDeliPage() {
               <p className={s.rcptThanks}>Thank you. Come hungry.</p>
               <p className={s.stamp}>Paid</p>
             </article>
+            <div className={s.sandwich}>
+              <Artwork
+                slug="delancey-deli-pastrami"
+                alt="A pastrami on rye cut in half and stacked high, with a pickle spear beside it"
+                inks={['var(--text)', 'var(--paper)']}
+                className={s.sandwichArt}
+              />
+            </div>
           </div>
         </section>
 
@@ -654,6 +663,7 @@ export default function DelanceyDeliPage() {
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>
+          <p>The sandwich is a generated image, drawn in the page's own colors.</p>
         </div>
       </footer>
     </div>

@@ -707,6 +707,14 @@
   color: var(--muted);
 }
 
+/* The main course of the Harvest Table, set down in the middle of the page
+   the way it is set down in the middle of the table, lit like the room. */
+.roast {
+  display: block;
+  width: min(100%, 27rem);
+  margin: -1rem auto 1.4rem;
+}
+
 .people {
   list-style: none;
   margin: 0;

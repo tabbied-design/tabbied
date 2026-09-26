@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { bothcut } from 'tabbied/patterns';
 import s from './long-table-catering.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Long Table: Catering for dinners and weddings, Carver Street',
@@ -199,6 +200,12 @@ export default function LongTablePage() {
               dish you like; the prices below hold for any five courses.
             </p>
           </div>
+          <Artwork
+            slug="long-table-catering-roast"
+            alt="A carved roast on a wooden board with a carving knife and fork and sprigs of rosemary"
+            inks={['var(--char)', 'var(--gold-text)']}
+            className={s.roast}
+          />
           <div className={s.menus}>
             {MENUS.map((m, i) => (
               <article key={m.name} className={s.menu} aria-labelledby={`menu-${i}`}>
@@ -438,6 +445,7 @@ export default function LongTablePage() {
         </div>
         <p className={s.footName}>Long Table</p>
         <p>A fictional catering company. The menus, prices, people and address are invented.</p>
+        <p>The roast is a generated image, drawn in the page's own colors.</p>
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>

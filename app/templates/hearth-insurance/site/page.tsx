@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { quilt } from 'tabbied/patterns';
 import s from './hearth-insurance.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Hearth Insurance Agency: Independent insurance broker, Linden Street',
@@ -396,6 +397,12 @@ export default function HearthInsurancePage() {
                 to the kitchen-table review: once a year, forty minutes, every
                 policy you hold, at our table or yours.
               </p>
+              <Artwork
+                slug="hearth-insurance-table"
+                alt="A round kitchen table under a pendant lamp, with two mugs, an open folder of papers and a pen"
+                inks={{ red: 'var(--brick-deep)', blue: 'var(--forest-deep)' }}
+                className={s.tableArt}
+              />
               <h3 className={s.readyTitle}>Have these to hand</h3>
               <ul className={s.ready}>
                 <li>Your current policy, or its declarations page</li>
@@ -490,6 +497,7 @@ export default function HearthInsurancePage() {
         <div className={s.footInner}>
           <p className={s.footName}>Hearth Insurance Agency</p>
           <p>A fictional independent insurance agency. The agents, insurers, prices and address are invented, and nothing here is advice.</p>
+          <p>The kitchen table is a generated image, drawn in the page's own colors.</p>
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>

@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { scumble, diminuendo } from 'tabbied/patterns';
 import s from './fresh-coat-decorators.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Fresh Coat: Painters and decorators, Hollin Park',
@@ -274,6 +275,12 @@ export default function FreshCoatPage() {
                   style={{ position: 'absolute', inset: 0 }}
                 />
               </div>
+              <Artwork
+                slug="fresh-coat-decorators-tin"
+                alt="An open tin of paint with a brush resting across the top and a drip down the side"
+                inks={{ blue: 'var(--text)', yellow: 'var(--clay)', red: 'var(--door)', black: 'var(--text)' }}
+                className={s.tin}
+              />
               <p className={s.wallCaption}>Porch Clay over Kitchen Ochre, mid-job</p>
             </div>
           </div>
@@ -458,6 +465,7 @@ export default function FreshCoatPage() {
           <p className={s.footName}>Fresh Coat</p>
           <p className={s.footAddr}>Workshop at 7 Tanner Yard, Hollin Park. Licensed and insured, license PD-40912.</p>
           <p>A fictional painting and decorating firm. The crew, prices, colors and address are invented.</p>
+          <p>The paint tin is a generated image, drawn in the page's own colors.</p>
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>

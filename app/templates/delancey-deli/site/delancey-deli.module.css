@@ -455,8 +455,34 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 3.5rem clamp(1rem, 4vw, 3rem) 5rem;
+  align-items: flex-end;
+  padding: 3.5rem clamp(1.5rem, 4vw, 3.5rem) 9rem;
+}
+
+/* The house order on the counter, at the foot of the wall, in front of the
+   ticket that rang it up. A soft shadow on the counter underneath. */
+.sandwich {
+  position: absolute;
+  z-index: 3;
+  left: clamp(0.5rem, 2vw, 2rem);
+  bottom: 2rem;
+  width: clamp(15rem, 23vw, 21rem);
+}
+
+.sandwich::before {
+  content: '';
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -0.6rem;
+  height: 2.2rem;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--ink) 55%, transparent), transparent);
+}
+
+.sandwichArt {
+  position: relative;
+  display: block;
+  width: 100%;
 }
 
 .heroTiles {
@@ -468,6 +494,7 @@
 
 .heroTicket .rail {
   width: min(100%, 27rem);
+  margin-right: -2.25rem;
 }
 
 .receiptHero {
@@ -1287,6 +1314,23 @@
     justify-self: stretch;
     max-width: none;
     padding-right: var(--gut);
+  }
+
+  .heroTicket {
+    align-items: center;
+    padding-bottom: 3rem;
+  }
+
+  .heroTicket .rail {
+    margin-right: 0;
+  }
+
+  .sandwich {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: min(78%, 20rem);
+    margin: -1.5rem 0 0 -20%;
   }
 
   .tickets,

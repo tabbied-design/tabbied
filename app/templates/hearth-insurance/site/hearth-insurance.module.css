@@ -31,6 +31,8 @@
   --rule-strong: color-mix(in oklab, var(--text) 45%, transparent);
   --panel: color-mix(in oklab, var(--cream) 88%, var(--sage));
   --room: color-mix(in oklab, var(--cream) 94%, var(--ochre));
+  --brick-deep: color-mix(in oklab, var(--brick) 74%, var(--text));
+  --forest-deep: color-mix(in oklab, var(--forest) 70%, var(--text));
   --shadow: color-mix(in oklab, var(--text) 24%, transparent);
 
   font-family: var(--sans);
@@ -889,8 +891,15 @@
   margin-top: 1rem;
 }
 
+/* The kitchen-table review, drawn: the table, two mugs, the folder. */
+.tableArt {
+  display: block;
+  width: min(100%, 21rem);
+  margin: 2rem 0 0 -0.6rem;
+}
+
 .readyTitle {
-  margin-top: 2rem;
+  margin-top: 1.6rem;
   font-size: 1.2rem;
 }
 

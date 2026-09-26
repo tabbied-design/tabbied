@@ -33,6 +33,7 @@
   --rule-strong: color-mix(in oklab, var(--text) 42%, transparent);
   --card: color-mix(in oklab, var(--calico) 92%, var(--text));
   --oxblood-text: color-mix(in oklab, var(--oxblood) 70%, var(--text));
+  --brass-light: color-mix(in oklab, var(--brass) 72%, var(--calico));
   --shadow: color-mix(in oklab, var(--text) 24%, transparent);
 
   font-family: var(--serif);
@@ -227,11 +228,44 @@
 
 /* The cover: deep-buttoned oxblood over brass, a stitched spine down the
    left edge, and a screwed-on label plate. */
+/* The book stands on the counter; the chair it was chosen for stands in
+   front of it, over its lower corner. */
+.coverWrap {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 26rem);
+  margin-bottom: 2rem;
+}
+
+.wingback {
+  position: absolute;
+  z-index: 4;
+  left: -30%;
+  bottom: -2.5rem;
+  width: 66%;
+}
+
+/* Its shadow on the workshop floor. */
+.wingback::before {
+  content: '';
+  position: absolute;
+  left: 6%;
+  right: 2%;
+  bottom: -0.4rem;
+  height: 1.6rem;
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--text) 30%, transparent), transparent);
+}
+
+.wingbackArt {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
 .cover {
   position: relative;
   aspect-ratio: 4 / 5;
-  width: min(100%, 26rem);
-  justify-self: center;
+  width: 100%;
   overflow: hidden;
   background: var(--brass);
   border-radius: 4px 12px 12px 4px;
@@ -266,7 +300,7 @@
   z-index: 3;
   left: 22%;
   right: 12%;
-  bottom: 12%;
+  top: 11%;
   padding: 1rem 1.2rem 1.1rem;
   text-align: center;
   background: var(--brass);
@@ -511,10 +545,10 @@
 }
 
 .lTop {
+  position: relative;
+  overflow: hidden;
   border-radius: 40% 40% 0 0 / 28px 28px 0 0;
-  background:
-    linear-gradient(100deg, transparent 20%, color-mix(in oklab, var(--calico) 22%, transparent) 42%, transparent 64%),
-    var(--oxblood);
+  background: var(--brass);
 }
 
 .lWad {
@@ -1196,6 +1230,17 @@
 
   .siteMenu {
     display: block;
+  }
+
+  .coverWrap {
+    width: min(78%, 22rem);
+    justify-self: end;
+    margin: 1rem 0 2.5rem;
+  }
+
+  .wingback {
+    left: -34%;
+    width: 64%;
   }
 
   .hero,

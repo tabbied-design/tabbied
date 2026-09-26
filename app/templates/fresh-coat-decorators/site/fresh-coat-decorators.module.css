@@ -673,6 +673,16 @@
   top: 6rem;
 }
 
+/* The tin on the floor in front of the sample, its drip toward us. */
+.tin {
+  position: absolute;
+  z-index: 3;
+  left: -1.5rem;
+  bottom: -0.5rem;
+  width: 44%;
+  max-width: 15rem;
+}
+
 .wallField {
   position: relative;
   height: clamp(320px, 42vw, 560px);
@@ -705,7 +715,7 @@
 }
 
 .wallCaption {
-  margin: 0.8rem 0 0;
+  margin: 0.8rem 0 0 48%;
   font-size: 0.84rem;
   font-weight: 500;
   color: var(--muted);
@@ -1229,7 +1239,13 @@
 
   .stripLayout .secHead,
   .wallPanel {
-    position: static;
+    position: relative;
+    top: auto;
+  }
+
+  .tin {
+    left: -0.4rem;
+    width: 40%;
   }
 
   .secHead {
