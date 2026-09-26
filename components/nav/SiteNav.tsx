@@ -62,8 +62,7 @@ export default function SiteNav({
 }: {
   tone?: NavTone;
   /** Pin the bar to the top of the viewport (the library scrolls under it).
-      The dark tone is always pinned: both dark artboards (the homepage and
-      the template gallery) draw it so. */
+      The dark tone is always pinned. */
   sticky?: boolean;
   className?: string;
 }) {
@@ -88,12 +87,21 @@ export default function SiteNav({
   const home = user ? (['/account', 'My account'] as const) : (['/', 'Home'] as const);
   const links = [home, ...DESTINATIONS] as const;
 
+  // Both dark artboards (the homepage and the template gallery) pin the bar.
+  const pinned = sticky || tone === 'dark';
+
   const isCurrent = (href: string) =>
     href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
 
   // The menu marks one item as the page you are on: the longest href that
   // matches, so Settings wins over My account on /account/settings.
-  const menuHrefs = ['/', '/account', '/account/settings', '/admin', ...DESTINATIONS.map(([href]) => href)];
+  const menuHrefs = [
+    '/',
+    '/account',
+    '/account/settings',
+    '/admin',
+    ...DESTINATIONS.map(([href]) => href),
+  ];
   const menuCurrent = menuHrefs
     .filter(isCurrent)
     .reduce<string | null>((best, href) => (!best || href.length > best.length ? href : best), null);
@@ -116,7 +124,7 @@ export default function SiteNav({
 
   return (
     <header
-      className={[plexMono.variable, styles.nav, (sticky || tone === 'dark') && styles.sticky, className]
+      className={[plexMono.variable, styles.nav, pinned && styles.sticky, className]
         .filter(Boolean)
         .join(' ')}
       data-tone={tone}
@@ -205,8 +213,8 @@ export default function SiteNav({
                 <span />
               </Menu.Trigger>
               <Menu.Portal>
-                {/* Hangs 6px into the bar, as the artboards' phone menu does:
-                    the hamburger's box ends 16.5px above the bar's foot. */}
+                {/* Opens 6px above the bar's hairline, where the artboards
+                    hang the phone menu. */}
                 <Menu.Positioner
                   className={styles.positioner}
                   side="bottom"
