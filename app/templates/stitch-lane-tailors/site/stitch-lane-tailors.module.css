@@ -1,0 +1,996 @@
+/* ==========================================================================
+   STITCH LANE - tailor and alterations, Garment Quarter
+   The cutting table at night: a navy cloth for the ground, everything laid
+   on it the way it lies on the bench. A yellow tape measure runs across the
+   page, a ruler edge of tick marks opens every section, and the price list
+   is what you see in the shop: paper swing tags tied to a rail, one rail
+   per kind of garment. The turnaround is measured off along the tape, the
+   made-to-measure section is a bolt of suiting with a chalk line across
+   it, and the booking form is a fitting ticket. Newsreader for the words,
+   a typewriter mono for tags, tickets and anything a tailor would write
+   on a docket; tailor's chalk pink for marks.
+
+   Color: five roles, navy ground, thread ivory, chalk pink, tape yellow
+   and cloth blue. The tag paper and every text color are derived, so the
+   page keeps its contrast on any ground a palette brings.
+   ========================================================================== */
+
+.page {
+  --navy: #1d2438;
+  --thread: #f3ede1;
+  --chalk: #f0a3b4;
+  --tape: #e8c15a;
+  --cloth: #4a5a86;
+
+  --gut: clamp(1rem, 5vw, 3.5rem);
+  --wide: 76rem;
+  --serif: 'Newsreader', 'Georgia', serif;
+  --mono: 'Courier Prime', 'Courier New', monospace;
+
+  --text: var(--thread);
+  --on-tape: var(--navy);
+  --on-chalk: var(--navy);
+  --on-tag: var(--navy);
+
+  /* Derived. */
+  --muted: color-mix(in oklab, var(--text) 74%, var(--navy));
+  --rule: color-mix(in oklab, var(--text) 22%, transparent);
+  --tick: color-mix(in oklab, var(--text) 45%, transparent);
+  --tag: color-mix(in oklab, var(--text) 91%, var(--tape));
+  --tag-muted: color-mix(in oklab, var(--on-tag) 70%, var(--tag));
+  --chalk-ink: color-mix(in oklab, var(--chalk) 72%, var(--text));
+  --shadow: color-mix(in oklab, var(--navy) 55%, var(--on-tag));
+
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  font-optical-sizing: auto;
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--navy);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the thread:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--thread));
+    --on-tape: oklch(from var(--tape) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-chalk: oklch(from var(--chalk) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-tag: color-mix(in oklab, oklch(from var(--tag) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--navy));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(p, h1, h2, h3, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :focus-visible {
+  outline: 2px dashed var(--chalk-ink);
+  outline-offset: 4px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+/* A ruler edge: fine ticks every eighth, taller ones every half and every
+   inch, drawn along the bottom of whatever carries it. */
+.bar::after,
+.section::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background:
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 64px) left bottom / 100% 16px no-repeat,
+    repeating-linear-gradient(90deg, var(--tick) 0 1px, transparent 1px 32px) left bottom / 100% 10px no-repeat,
+    repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px 8px) left bottom / 100% 5px no-repeat;
+  border-bottom: 1px solid var(--tick);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ the bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut) 1.4rem;
+  background: var(--navy);
+}
+
+.bar::after {
+  bottom: 0;
+}
+
+.mark {
+  font-size: 1.75rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav a:hover {
+  color: var(--text);
+  text-decoration: underline dashed;
+  text-decoration-color: var(--chalk);
+  text-underline-offset: 6px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--navy);
+}
+
+.siteMenu a {
+  font-family: var(--mono);
+}
+
+/* ----------------------------------------------------------------- opening */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6rem) var(--gut) clamp(3.5rem, 7vw, 5rem);
+}
+
+.heroText {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.kicker,
+.label {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-size: clamp(3.2rem, 7.4vw, 6.6rem);
+  font-weight: 350;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+
+.title em {
+  display: inline-block;
+  font-style: italic;
+  color: var(--chalk-ink);
+  border-bottom: 3px dashed var(--chalk);
+  padding-bottom: 0.08em;
+}
+
+.lede {
+  max-width: 32rem;
+  font-size: 1.2rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem 1.2rem;
+  margin-top: 0.3rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-chalk);
+  background: var(--chalk);
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.button:hover {
+  color: var(--on-tape);
+  background: var(--tape);
+}
+
+.ghost {
+  display: inline-block;
+  padding: 0.8rem 1.3rem;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1.5px dashed var(--tick);
+  border-radius: 2px;
+}
+
+.ghost:hover {
+  border-color: var(--chalk);
+}
+
+/* The swatch: a square of shirting with pinked top and bottom edges. */
+.swatch {
+  position: relative;
+  width: min(100%, 27rem);
+  aspect-ratio: 4 / 5;
+  justify-self: center;
+}
+
+.swatchCloth {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -webkit-mask:
+    conic-gradient(from -45deg at bottom, transparent, var(--text) 1deg 89deg, transparent 90deg) bottom / 18px 51% repeat-x,
+    conic-gradient(from 135deg at top, transparent, var(--text) 1deg 89deg, transparent 90deg) top / 18px 51% repeat-x;
+  mask:
+    conic-gradient(from -45deg at bottom, transparent, var(--text) 1deg 89deg, transparent 90deg) bottom / 18px 51% repeat-x,
+    conic-gradient(from 135deg at top, transparent, var(--text) 1deg 89deg, transparent 90deg) top / 18px 51% repeat-x;
+}
+
+.heroTag {
+  position: absolute;
+  left: -2.2rem;
+  bottom: 2.6rem;
+  width: 10.5rem;
+  padding-top: 2.6rem;
+  transform: rotate(-7deg);
+  transform-origin: 50% 0;
+  filter: drop-shadow(0 14px 18px color-mix(in oklab, var(--shadow) 70%, transparent));
+}
+
+.heroTag::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(50% - 1px);
+  width: 2px;
+  height: calc(2.6rem + 18px);
+  background: var(--chalk);
+  transform: rotate(10deg);
+  transform-origin: 50% 100%;
+}
+
+.heroTag .tagPrice {
+  font-size: 2.6rem;
+}
+
+/* ------------------------------------------------------------------ tape
+   Tape yellow, ticks in its own ink, the numbers from a counter. */
+
+.tapeWrap {
+  overflow: hidden;
+  padding: 1.5rem 0;
+}
+
+.tape {
+  display: flex;
+  width: 110%;
+  height: 46px;
+  margin: 0 0 0 -5%;
+  overflow: hidden;
+  color: var(--on-tape);
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--on-tape) 80%, transparent) 0 1.5px, transparent 1.5px 64px) left top / 100% 20px no-repeat,
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--on-tape) 70%, transparent) 0 1px, transparent 1px 32px) left top / 100% 12px no-repeat,
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--on-tape) 55%, transparent) 0 1px, transparent 1px 8px) left top / 100% 6px no-repeat,
+    var(--tape);
+  box-shadow: 0 12px 24px -12px color-mix(in oklab, var(--shadow) 80%, transparent);
+  transform: rotate(-1.4deg);
+  counter-reset: inch;
+}
+
+.tape span {
+  flex: 0 0 64px;
+  position: relative;
+  counter-increment: inch;
+}
+
+.tape span::after {
+  content: counter(inch);
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.section {
+  position: relative;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.section::before {
+  top: clamp(1.5rem, 3vw, 2.5rem);
+  left: var(--gut);
+  right: var(--gut);
+}
+
+.head {
+  display: grid;
+  gap: 0.8rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2.2rem, 4vw, 3.2rem);
+}
+
+.head h2,
+.bespokeText h2,
+.visitInfo h2 {
+  font-size: clamp(2.3rem, 4.6vw, 3.8rem);
+  font-weight: 350;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.headNote {
+  max-width: 36rem;
+  color: var(--muted);
+}
+
+.small {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- the rails */
+
+.rail {
+  margin-top: clamp(2.2rem, 4vw, 3rem);
+}
+
+.railHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 1.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.railHead h3 {
+  font-size: 1.7rem;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.railHead p {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.tags {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0 clamp(0.7rem, 1.5vw, 1.2rem);
+  padding: 0 0.6rem;
+  list-style: none;
+  border-top: 5px solid var(--tick);
+  border-radius: 3px;
+}
+
+.tag {
+  position: relative;
+  padding-top: 1.7rem;
+  transform: rotate(-2.5deg);
+  transform-origin: 50% 0;
+  filter: drop-shadow(0 12px 14px color-mix(in oklab, var(--shadow) 60%, transparent));
+}
+
+.tag:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.tag:nth-child(3n) {
+  transform: rotate(-0.8deg);
+}
+
+.tag::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: calc(50% - 0.75px);
+  width: 1.5px;
+  height: calc(1.7rem + 23px);
+  background: var(--muted);
+}
+
+/* The tag itself: cut top corners, a punched hole, a stitched edge. */
+.tagCard {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  padding: 2.4rem 0.6rem 1.1rem;
+  text-align: center;
+  color: var(--on-tag);
+  background: var(--tag);
+  clip-path: polygon(24% 0, 76% 0, 100% 14%, 100% 100%, 0 100%, 0 14%);
+  -webkit-mask: radial-gradient(circle at 50% 18px, transparent 0 5px, var(--text) 5.5px);
+  mask: radial-gradient(circle at 50% 18px, transparent 0 5px, var(--text) 5.5px);
+  outline: 1px dashed color-mix(in oklab, var(--on-tag) 30%, transparent);
+  outline-offset: -7px;
+}
+
+.tagName {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.tagPrice {
+  font-size: 1.85rem;
+  font-weight: 600;
+  line-height: 1.05;
+  font-variant-numeric: lining-nums;
+}
+
+.tagKind {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tag-muted);
+}
+
+/* ------------------------------------------------------------- turnaround
+   Five marks along a tape: each column's chalk line runs down to it. */
+
+.measure {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 0 0 46px;
+  list-style: none;
+}
+
+.measure::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46px;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--on-tape) 80%, transparent) 0 1.5px, transparent 1.5px 64px) left top / 100% 20px no-repeat,
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--on-tape) 55%, transparent) 0 1px, transparent 1px 8px) left top / 100% 6px no-repeat,
+    var(--tape);
+}
+
+.measure li {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 0 1.2rem 2rem 1rem;
+  border-left: 2px dashed var(--chalk);
+}
+
+.measureWhen {
+  font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+  font-weight: 350;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.measure h3 {
+  margin-top: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.measureNote {
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- fittings */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  padding-top: 1rem;
+  border-top: 2px dashed var(--chalk);
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  font-size: 4.2rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 0.9;
+  color: var(--chalk-ink);
+}
+
+.steps h3 {
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.steps p {
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- bespoke
+   A bolt of suiting, a chalk line across it and its cloth label. */
+
+.bespoke {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 5.5rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(5rem, 10vw, 8rem) var(--gut) 0;
+}
+
+.bolt {
+  position: relative;
+  min-height: 34rem;
+  height: 100%;
+}
+
+.boltCloth {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 2px 26px 26px 2px;
+  box-shadow: inset -18px 0 26px -14px color-mix(in oklab, var(--shadow) 90%, transparent);
+}
+
+.bolt::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 12%;
+  top: 46%;
+  border-top: 3px dashed var(--chalk);
+  transform: rotate(-9deg);
+  pointer-events: none;
+}
+
+.boltLabel {
+  position: absolute;
+  right: 1.4rem;
+  bottom: 1.4rem;
+  max-width: 14rem;
+  padding: 0.7rem 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--on-tag);
+  background: var(--tag);
+  box-shadow: 0 10px 18px -8px color-mix(in oklab, var(--shadow) 90%, transparent);
+  transform: rotate(2deg);
+}
+
+.bespokeText {
+  display: grid;
+  gap: 1rem;
+}
+
+.bespokePrices {
+  margin-top: 0.8rem;
+  border-top: 1px solid var(--tick);
+}
+
+.bespokePrices div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.bespokePrices dt {
+  font-size: 1.25rem;
+}
+
+.bespokePrices dd {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------- tailors */
+
+.tailors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: 0;
+  list-style: none;
+}
+
+.tailors li {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  padding: 1.4rem 1.4rem 1.6rem;
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--chalk);
+}
+
+.tailorSince {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.tailors h3 {
+  font-size: 1.9rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.tailorRole {
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tailorNote {
+  margin-top: 0.4rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.visitInfo {
+  display: grid;
+  gap: 1rem;
+}
+
+.hours {
+  margin-top: 0.6rem;
+  border-top: 1px solid var(--tick);
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.contact {
+  font-size: 1.2rem;
+}
+
+.contact a {
+  border-bottom: 1.5px dashed var(--chalk);
+  overflow-wrap: anywhere;
+}
+
+.faq {
+  margin-top: 1rem;
+  border-top: 1px solid var(--tick);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faq summary {
+  padding: 0.85rem 0;
+  font-size: 1.12rem;
+  cursor: pointer;
+}
+
+.faq summary::marker {
+  color: var(--chalk);
+}
+
+.faq details p {
+  padding: 0 0 1rem 1.1rem;
+  color: var(--muted);
+}
+
+/* The fitting ticket: tag paper, a perforated top edge, underlined
+   fields like the docket pad on the counter. */
+.form {
+  position: relative;
+  display: grid;
+  gap: 1.1rem;
+  padding: 2.2rem clamp(1.25rem, 3vw, 2rem) 1.8rem;
+  color: var(--on-tag);
+  background: var(--tag);
+  box-shadow: 0 30px 40px -24px color-mix(in oklab, var(--shadow) 90%, transparent);
+  -webkit-mask: radial-gradient(circle at 50% 0, transparent 0 5px, var(--text) 5.5px) top / 18px 100% repeat-x;
+  mask: radial-gradient(circle at 50% 0, transparent 0 5px, var(--text) 5.5px) top / 18px 100% repeat-x;
+}
+
+.formTicket {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tag-muted);
+}
+
+.form h3 {
+  margin-top: -0.6rem;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.5rem 0.1rem;
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--on-tag);
+  background: transparent;
+  border: 0;
+  border-bottom: 1.5px solid color-mix(in oklab, var(--on-tag) 45%, transparent);
+  border-radius: 0;
+}
+
+.field select option {
+  color: var(--on-tag);
+  background: var(--tag);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px dashed color-mix(in oklab, var(--on-tag) 60%, transparent);
+  outline-offset: 2px;
+}
+
+.form .button {
+  justify-self: start;
+  margin-top: 0.4rem;
+  color: var(--text);
+  background: var(--navy);
+}
+
+.form .button:hover {
+  color: var(--on-chalk);
+  background: var(--chalk);
+}
+
+.form .small {
+  color: var(--tag-muted);
+}
+
+/* ---------------------------------------------------------------- selvedge */
+
+.selvedge {
+  position: relative;
+  height: 80px;
+  overflow: hidden;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  display: grid;
+  gap: 0.3rem;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-style: italic;
+  color: var(--text);
+}
+
+.footer a {
+  text-decoration: underline dashed;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .tags {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 1.6rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .tags {
+    border-top: 0;
+    background: linear-gradient(var(--tick), var(--tick)) top / 100% 5px no-repeat;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .bespoke,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .swatch {
+    width: min(calc(100% - 2.5rem), 22rem);
+    margin-left: 2rem;
+    justify-self: start;
+  }
+
+  .bolt {
+    min-height: 20rem;
+  }
+
+  .tailors {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The tape stands upright on the left and the marks hang off it. */
+  .measure {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 0 0 64px;
+  }
+
+  .measure::after {
+    top: 0;
+    right: auto;
+    width: 40px;
+    height: auto;
+    background:
+      repeating-linear-gradient(180deg, color-mix(in oklab, var(--on-tape) 80%, transparent) 0 1.5px, transparent 1.5px 64px) left top / 18px 100% no-repeat,
+      repeating-linear-gradient(180deg, color-mix(in oklab, var(--on-tape) 55%, transparent) 0 1px, transparent 1px 8px) left top / 6px 100% no-repeat,
+      var(--tape);
+  }
+
+  .measure li {
+    position: relative;
+    padding: 0 0 1.8rem;
+    border-left: 0;
+  }
+
+  .measure li::before {
+    content: '';
+    position: absolute;
+    top: 0.9rem;
+    left: -24px;
+    width: 16px;
+    border-top: 2px dashed var(--chalk);
+  }
+}
+
+@media (max-width: 640px) {
+  .tags {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hours div {
+    grid-template-columns: 8rem minmax(0, 1fr);
+  }
+
+  .heroTag {
+    left: -1.8rem;
+    width: 9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page * {
+    transition: none;
+  }
+}

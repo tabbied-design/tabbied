@@ -1,0 +1,1290 @@
+/* ==========================================================================
+   RIDGECAP ROOFING - roofing contractor, Millrace
+   The page is a drawing set. Every section is a numbered sheet in a ruled
+   frame, the cover and the request form sit on graph paper, and the
+   inspection checklist is a blueprint: navy ground, gridlines, empty tick
+   boxes. The hero is an elevation of a gable with a span dimension, a
+   pitch triangle and numbered callouts; the stripes inside the gable are
+   the rafters, drawn by the pattern. Condensed caps for anything a sign
+   would say, a monospace for everything a spec sheet would. Navy on white
+   drafting paper, safety orange for tags, tape and the one thing to press.
+   ========================================================================== */
+
+.page {
+  --sheet: #f3f5f7;
+  --navy: #14284a;
+  --orange: #f26419;
+  --sky: #8fb3dc;
+  --gut: clamp(0.75rem, 3vw, 2.5rem);
+  --pad: clamp(1.1rem, 4vw, 3.5rem);
+  --wide: 82rem;
+  --cond: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
+  --mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --text: var(--navy);
+  --on-navy: var(--sheet);
+  --on-orange: var(--navy);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--sheet));
+  --hair: color-mix(in oklab, var(--text) 18%, transparent);
+  --gridline: color-mix(in oklab, var(--text) 6%, transparent);
+  --gridmajor: color-mix(in oklab, var(--text) 11%, transparent);
+  --dimline: color-mix(in oklab, var(--orange) 78%, var(--text));
+  --blue-grid: color-mix(in oklab, var(--on-navy) 8%, transparent);
+  --blue-major: color-mix(in oklab, var(--on-navy) 12%, transparent);
+
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  background: var(--sheet);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--sheet) clamp(0, (0.62 - l) * 1000, 1) 0 0) 78%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--sky));
+    --on-orange: oklch(from var(--orange) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--dimline);
+  outline-offset: 2px;
+}
+
+.page :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--cond);
+  font-weight: 700;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------- bar */
+
+.bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem var(--gut);
+  border-bottom: 2px solid var(--text);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* A ridge: two slopes meeting at a point. */
+.markRidge {
+  width: 1.9rem;
+  height: 1rem;
+  background: linear-gradient(
+      to top right,
+      transparent calc(50% - 1.5px),
+      var(--text) calc(50% - 1.5px) calc(50% + 1.5px),
+      transparent calc(50% + 1.5px)
+    ) left / 50% 100% no-repeat,
+    linear-gradient(
+      to top left,
+      transparent calc(50% - 1.5px),
+      var(--text) calc(50% - 1.5px) calc(50% + 1.5px),
+      transparent calc(50% + 1.5px)
+    ) right / 50% 100% no-repeat;
+}
+
+.markName {
+  font-family: var(--cond);
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 2vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 150ms ease;
+}
+
+.nav a:hover {
+  color: var(--text);
+}
+
+.barPhone {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--on-orange);
+  background: var(--orange);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-family: var(--mono);
+  --template-menu-bg: var(--sheet);
+}
+
+/* ---------------------------------------------------------------- sheets */
+
+.sheet {
+  position: relative;
+  width: min(var(--wide), calc(100% - 2 * var(--gut)));
+  box-sizing: border-box;
+  margin: clamp(2.5rem, 6vw, 4.5rem) auto 0;
+  padding: clamp(2.5rem, 5vw, 4rem) var(--pad) clamp(2rem, 5vw, 3.5rem);
+  border: 1.5px solid var(--text);
+}
+
+.grid {
+  background-color: var(--sheet);
+  background-image:
+    linear-gradient(var(--gridmajor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--gridmajor) 1px, transparent 1px),
+    linear-gradient(var(--gridline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--gridline) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: -1px -1px;
+}
+
+.sheetNo,
+.sheetNoBlue {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sheet);
+  background: var(--text);
+}
+
+.kicker {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.head {
+  max-width: 46rem;
+  margin-bottom: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.h2 {
+  margin-top: 0.5rem;
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+}
+
+.note {
+  max-width: 44rem;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.button {
+  display: inline-block;
+  padding: 0.95rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--on-orange);
+  background: var(--orange);
+  border: 1.5px solid var(--text);
+  border-radius: 0;
+  box-shadow: 4px 4px 0 var(--text);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--text);
+}
+
+.ghost {
+  padding: 0.95rem 0.2rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--text);
+}
+
+/* ----------------------------------------------------------------- cover */
+
+.cover {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.title {
+  margin-top: 1rem;
+  font-size: clamp(3rem, 6.4vw, 5.8rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: 0;
+}
+
+.title em {
+  font-style: normal;
+  padding: 0 0.08em;
+  color: var(--on-orange);
+  background: linear-gradient(var(--orange), var(--orange)) 0 70% / 100% 84% no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.lede {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2rem;
+}
+
+/* The elevation drawing. */
+.drawing {
+  min-width: 0;
+}
+
+.elevation {
+  position: relative;
+  aspect-ratio: 10 / 8;
+}
+
+.gable {
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  top: 4%;
+  height: 50%;
+  overflow: hidden;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.walls {
+  position: absolute;
+  left: 11%;
+  right: 11%;
+  top: 54%;
+  bottom: 6%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 0 8%;
+  border: 1.5px solid var(--text);
+  border-top-width: 3px;
+  background: var(--sheet);
+}
+
+.win {
+  align-self: center;
+  width: 16%;
+  height: 42%;
+  border: 1.5px solid var(--text);
+  background: linear-gradient(var(--text), var(--text)) center / 1.5px 100% no-repeat;
+}
+
+.door {
+  width: 14%;
+  height: 70%;
+  border: 1.5px solid var(--text);
+  border-bottom: 0;
+}
+
+/* The ground line, hatched under. */
+.elevation::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6%;
+  border-top: 2px solid var(--text);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--hair) 0 1px,
+    transparent 1px 7px
+  );
+}
+
+.bubble {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--sheet);
+  border: 1.5px solid var(--text);
+  border-radius: 50%;
+}
+
+.b1 {
+  left: 24%;
+  top: 30%;
+}
+
+.b2 {
+  left: calc(50% - 0.95rem);
+  top: -1%;
+}
+
+.b3 {
+  left: 1%;
+  top: 44%;
+}
+
+.b4 {
+  right: 1%;
+  top: 44%;
+}
+
+/* Pitch: a run of 12 and a rise of 6, drawn off the right-hand slope. */
+.pitch {
+  position: absolute;
+  right: 14%;
+  top: 16%;
+  width: 4.2rem;
+  height: 2.1rem;
+  border-bottom: 1.5px solid var(--dimline);
+  border-right: 1.5px solid var(--dimline);
+  background: linear-gradient(
+    to top right,
+    transparent calc(50% - 1px),
+    var(--dimline) calc(50% - 1px) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+
+.pitchRise,
+.pitchRun {
+  position: absolute;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.1rem 0.2rem;
+  background: var(--sheet);
+}
+
+.pitchRise {
+  right: -1.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.pitchRun {
+  left: 50%;
+  bottom: -1.35rem;
+  transform: translateX(-50%);
+}
+
+/* The span dimension: extension ticks, a line, arrowheads, the figure. */
+.dim {
+  position: relative;
+  height: 1.6rem;
+  margin: 0.8rem 3% 0;
+  border-left: 1.5px solid var(--dimline);
+  border-right: 1.5px solid var(--dimline);
+  background: linear-gradient(var(--dimline), var(--dimline)) center / 100% 1.5px no-repeat;
+}
+
+.dim::before,
+.dim::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  transform: translateY(-50%);
+}
+
+.dim::before {
+  left: 0;
+  border-right: 10px solid var(--dimline);
+}
+
+.dim::after {
+  right: 0;
+  border-left: 10px solid var(--dimline);
+}
+
+.dimText {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 0 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: var(--sheet);
+  transform: translate(-50%, -50%);
+}
+
+.dimNote {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.legend {
+  list-style: none;
+  counter-reset: callout;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 1.4rem;
+  margin: 1.4rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--hair);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.legend li {
+  counter-increment: callout;
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: start;
+}
+
+.legend li::before {
+  content: counter(callout);
+  display: grid;
+  place-items: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 1.5px solid var(--text);
+  border-radius: 50%;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.stats div {
+  padding: 1rem 1rem 0 0;
+}
+
+.stats div + div {
+  padding-left: 1rem;
+  border-left: 1px solid var(--hair);
+}
+
+.stats dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stats dd {
+  margin: 0.2rem 0 0;
+  font-family: var(--cond);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------ tape */
+
+.tape,
+.footTape {
+  position: relative;
+  height: 28px;
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  overflow: hidden;
+  border-block: 1.5px solid var(--text);
+}
+
+/* -------------------------------------------------------------- schedule */
+
+.schedule,
+.matTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.schedule thead th,
+.matTable thead th {
+  padding: 0 0.8rem 0.7rem 0;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.schedule tbody th,
+.schedule td,
+.matTable tbody th,
+.matTable td {
+  padding: 1rem 0.8rem 1rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--hair);
+}
+
+.tagCell {
+  width: 4.2rem;
+}
+
+/* A hexagon tag, the way a door or window is tagged on a plan. */
+.tag {
+  display: inline-grid;
+  place-items: center;
+  width: 3.1rem;
+  height: 1.9rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--on-orange);
+  background: var(--orange);
+  clip-path: polygon(22% 0, 78% 0, 100% 50%, 78% 100%, 22% 100%, 0 50%);
+}
+
+.jobName {
+  width: 16%;
+  font-family: var(--cond);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.system {
+  width: 30%;
+  color: var(--muted);
+}
+
+.from {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------- materials */
+
+.materials {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.sample {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.sampleField {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1.5px solid var(--text);
+  box-shadow: 8px 8px 0 var(--hair);
+}
+
+.sampleTag {
+  margin-top: 1rem;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--text);
+}
+
+.matTable tbody th {
+  font-family: var(--cond);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.matTable td {
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------- blueprint checklist */
+
+.blueprint {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  padding: clamp(3rem, 6vw, 5rem) var(--gut);
+  color: var(--on-navy);
+  background-color: var(--navy);
+  background-image:
+    linear-gradient(var(--blue-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blue-major) 1px, transparent 1px),
+    linear-gradient(var(--blue-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blue-grid) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+}
+
+.blueInner {
+  position: relative;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 3.5rem) var(--pad);
+  border: 1.5px solid var(--on-navy);
+}
+
+.sheetNoBlue {
+  color: var(--navy);
+  background: var(--on-navy);
+}
+
+.blueprint .kicker,
+.blueprint .note {
+  color: color-mix(in oklab, var(--on-navy) 76%, var(--navy));
+}
+
+.blueHead {
+  max-width: 46rem;
+  margin-bottom: 2.2rem;
+}
+
+.checks {
+  list-style: none;
+  counter-reset: check;
+  columns: 2;
+  column-gap: clamp(2rem, 5vw, 4rem);
+  margin: 0;
+  padding: 0;
+}
+
+.checks li {
+  counter-increment: check;
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: 0.4rem;
+  padding: 0.6rem 2.2rem 0.6rem 0;
+  break-inside: avoid;
+  border-bottom: 1px dashed color-mix(in oklab, var(--on-navy) 30%, transparent);
+}
+
+.checks li::before {
+  content: counter(check, decimal-leading-zero);
+  font-weight: 700;
+  color: color-mix(in oklab, var(--on-navy) 70%, var(--navy));
+}
+
+/* The empty box a foreman ticks on the roof. */
+.checks li::after {
+  content: '';
+  position: absolute;
+  right: 0.2rem;
+  top: 0.8rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 1.5px solid var(--on-navy);
+}
+
+/* ------------------------------------------------------------ the run */
+
+.run {
+  position: relative;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+}
+
+/* The dimension string the days hang off. */
+.run::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2.2rem;
+  height: 1.5px;
+  background: var(--dimline);
+}
+
+.runStep {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+  padding-right: 1rem;
+}
+
+.runStep::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.65rem;
+  width: 1.5px;
+  height: 1.2rem;
+  background: var(--dimline);
+}
+
+.runStep:last-child::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 1.65rem;
+  width: 1.5px;
+  height: 1.2rem;
+  background: var(--dimline);
+}
+
+.runDay {
+  padding-left: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.runWhat {
+  margin-top: 1.4rem;
+  padding-left: 0.5rem;
+  font-family: var(--cond);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.runNote {
+  padding-left: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- warranty */
+
+.terms {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.termsTitle {
+  padding-bottom: 0.5rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.termsList {
+  list-style: none;
+  counter-reset: term;
+  margin: 0;
+  padding: 0;
+}
+
+.termsList li {
+  counter-increment: term;
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.termsList li::before {
+  content: counter(term) '.';
+  font-weight: 700;
+}
+
+.claim {
+  max-width: 48rem;
+  margin-top: 2rem;
+  padding: 1rem 1.2rem;
+  font-weight: 500;
+  border: 1.5px solid var(--text);
+  border-left: 8px solid var(--orange);
+}
+
+.crews {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 2.5rem 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.crews div {
+  padding: 1rem 1rem 0 0;
+}
+
+.crews div + div {
+  padding-left: 1rem;
+  border-left: 1px solid var(--hair);
+}
+
+.crews dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.crews dd {
+  margin: 0;
+}
+
+.crewName {
+  margin-top: 0.2rem;
+  font-family: var(--cond);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.crewWhat {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- request */
+
+.request {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.form {
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--sheet);
+  border: 1.5px solid var(--text);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.2rem;
+  margin: 1.6rem 0 1.8rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.7rem 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--sheet);
+  border: 1.5px solid var(--text);
+  border-radius: 0;
+}
+
+.field select option {
+  color: var(--text);
+  background: var(--sheet);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.yard {
+  padding-top: 0.5rem;
+}
+
+.address {
+  margin-top: 0.8rem;
+  font-family: var(--cond);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.hours {
+  margin: 1.6rem 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.hours dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.1rem;
+}
+
+.hours dd {
+  margin: 0;
+}
+
+.contact {
+  margin-top: 1rem;
+  font-weight: 700;
+}
+
+.contact + .contact {
+  margin-top: 0.3rem;
+}
+
+.contact a {
+  border-bottom: 1.5px solid var(--dimline);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.footTape {
+  margin-top: 0;
+}
+
+.titleBlock {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1fr);
+  width: min(var(--wide), calc(100% - 2 * var(--gut)));
+  margin: 2rem auto 2.5rem;
+  font-size: 0.82rem;
+  border: 1.5px solid var(--text);
+}
+
+.tbCell {
+  padding: 0.9rem 1rem;
+}
+
+.tbCell + .tbCell {
+  border-left: 1.5px solid var(--text);
+}
+
+.tbLabel {
+  margin-bottom: 0.3rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tbName {
+  font-family: var(--cond);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footer a {
+  border-bottom: 1.5px solid var(--dimline);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1100px) {
+  .schedule thead,
+  .matTable thead {
+    display: none;
+  }
+
+  .schedule,
+  .schedule tbody,
+  .schedule tr,
+  .schedule th,
+  .schedule td,
+  .matTable,
+  .matTable tbody,
+  .matTable tr,
+  .matTable th,
+  .matTable td {
+    display: block;
+    width: auto;
+  }
+
+  .schedule tr,
+  .matTable tr {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.6rem 1rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .schedule tr {
+    grid-template-columns: 4rem repeat(4, minmax(0, 1fr));
+  }
+
+  .schedule tbody th,
+  .schedule td,
+  .matTable tbody th,
+  .matTable td {
+    padding: 0;
+    border: 0;
+  }
+
+  .schedule .tagCell {
+    grid-row: 1 / 4;
+  }
+
+  .schedule .jobName,
+  .schedule .system {
+    grid-column: 2 / -1;
+  }
+
+  .matTable tbody th {
+    grid-column: 1 / -1;
+  }
+
+  .schedule td[data-label]::before,
+  .matTable td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .matTable td {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 1000px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav,
+  .barPhone {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .cover,
+  .materials,
+  .request {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sample {
+    position: static;
+    max-width: 22rem;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stats div:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .run {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4rem;
+    padding-left: 1.5rem;
+  }
+
+  .run::before {
+    left: 0;
+    right: auto;
+    top: 0;
+    bottom: 0;
+    width: 1.5px;
+    height: auto;
+  }
+
+  .runStep::before {
+    left: -1.5rem;
+    top: 0.7rem;
+    width: 1rem;
+    height: 1.5px;
+  }
+
+  .runStep:last-child::after {
+    display: none;
+  }
+
+  .runDay,
+  .runWhat,
+  .runNote {
+    padding-left: 0;
+  }
+
+  .runWhat {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .checks {
+    columns: 1;
+  }
+
+  .terms,
+  .crews,
+  .titleBlock {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .crews div + div,
+  .tbCell + .tbCell {
+    padding-left: 1rem;
+    border-left: 0;
+    border-top: 1px solid var(--hair);
+  }
+
+  .crews div,
+  .crews div + div {
+    padding: 0.8rem 0;
+  }
+
+  .tbCell + .tbCell {
+    border-top: 1.5px solid var(--text);
+  }
+
+  .formGrid,
+  .legend {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .schedule tr {
+    grid-template-columns: 3.6rem repeat(2, minmax(0, 1fr));
+  }
+
+  .schedule .tagCell {
+    grid-row: 1 / 5;
+  }
+
+  .matTable tr {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pitch {
+    width: 3rem;
+    height: 1.5rem;
+  }
+
+  .bubble {
+    width: 1.6rem;
+    height: 1.6rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 440px) {
+  .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stats div,
+  .stats div + div {
+    padding: 0.8rem 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--hair);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .button {
+    transition: none;
+  }
+}

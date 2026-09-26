@@ -1,0 +1,955 @@
+/* ==========================================================================
+   LONGFORM PILATES - reformer studio, Eastmoor
+   Quiet luxury: stone and oat, a great deal of air, and type that is very
+   large and very light. The one idea is the reformer's long rail. The week
+   is laid out as it, one line per day from 6 am to 9 pm, each class a bar
+   where it starts and as long as it lasts, colored by level; everything
+   else on the page is kept low and horizontal to match. Jost at 200 for
+   the display, Instrument Serif italic for the single warm word, and the
+   soft fields of shade are the light from the studio's east window: a
+   tall capsule by the name, a wide band under the offer, a strip of floor
+   at the end.
+
+   Color: four roles, stone ground, espresso ink, oat and clay. The levels
+   are oat, clay and espresso; text on each is derived from its fill.
+   ========================================================================== */
+
+.page {
+  --stone: #ebe6de;
+  --espresso: #2a2521;
+  --oat: #d8cab3;
+  --clay: #8c6450;
+
+  --gut: clamp(1.25rem, 6vw, 5rem);
+  --wide: 80rem;
+  --sans: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+  --serif: 'Instrument Serif', 'Georgia', serif;
+
+  --text: var(--espresso);
+  --on-espresso: var(--stone);
+  --on-clay: var(--stone);
+  --on-oat: var(--espresso);
+
+  /* Derived. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--stone));
+  --hair: color-mix(in oklab, var(--text) 16%, transparent);
+  --line: color-mix(in oklab, var(--text) 32%, transparent);
+  --panel: color-mix(in oklab, var(--stone) 93%, var(--text));
+  --clay-ink: color-mix(in oklab, var(--clay) 76%, var(--text));
+
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--stone);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--stone) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--espresso));
+    --on-espresso: color-mix(in oklab, oklch(from var(--espresso) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--stone));
+    --on-clay: oklch(from var(--clay) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-oat: oklch(from var(--oat) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(p, h1, h2, h3, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :focus-visible {
+  outline: 1.5px solid var(--text);
+  outline-offset: 4px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  font-weight: 200;
+  text-wrap: balance;
+}
+
+.page em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--clay-ink);
+}
+
+/* ------------------------------------------------------------------ the bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.1rem var(--gut);
+  background: color-mix(in oklab, var(--stone) 92%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.mark {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1.2rem, 2.4vw, 2.4rem);
+}
+
+.nav a {
+  font-size: 0.86rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.nav a:hover {
+  color: var(--text);
+}
+
+.barBook {
+  padding: 0.45rem 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.barBook:hover {
+  color: var(--on-espresso);
+  background: var(--espresso);
+  border-color: var(--espresso);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--stone);
+}
+
+/* ----------------------------------------------------------------- opening */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
+  align-items: end;
+  gap: clamp(2.5rem, 7vw, 7rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4rem, 10vw, 8rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.heroText {
+  display: grid;
+  gap: 1.8rem;
+  padding-bottom: 1rem;
+}
+
+.kicker {
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-size: clamp(3.8rem, 10.5vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+
+.lede {
+  max-width: 33rem;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.95rem 1.9rem;
+  font-family: var(--sans);
+  font-size: 0.84rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--on-espresso);
+  background: var(--espresso);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--line);
+  cursor: pointer;
+}
+
+.button:hover {
+  color: var(--on-clay);
+  background: var(--clay);
+}
+
+.link {
+  font-size: 0.95rem;
+  font-weight: 400;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.2rem;
+}
+
+.capsule {
+  position: relative;
+  height: clamp(28rem, 44vw, 40rem);
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+/* A row of three figures, set like the hero: very large, very light. */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.facts div {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1.6rem 1.5rem 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.facts div + div {
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--hair);
+}
+
+.facts dt {
+  font-size: clamp(2.8rem, 5.5vw, 4.6rem);
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.facts dd {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.section {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(5.5rem, 12vw, 9rem) var(--gut) 0;
+}
+
+.head {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.head h2,
+.studioInfo h2 {
+  max-width: 52rem;
+  font-size: clamp(2.4rem, 5.4vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.note,
+.small {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.note {
+  max-width: 40rem;
+  margin-top: 2rem;
+}
+
+/* Level colors, used by the legend, the bars and the level cards. */
+.l1 {
+  --fill: var(--oat);
+  --on-fill: var(--on-oat);
+}
+
+.l2 {
+  --fill: var(--clay);
+  --on-fill: var(--on-clay);
+}
+
+.l3 {
+  --fill: var(--espresso);
+  --on-fill: var(--on-espresso);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.8rem;
+  padding: 0;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.legend li::before {
+  content: '';
+  width: 2.2rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--fill);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* ------------------------------------------------------------- the week
+   A day label, then its rail. The rail has an hour line every hour; each
+   class sits on it at (start - 6) / 15 of the way along. */
+
+.timeline {
+  --label: 8.5rem;
+  display: grid;
+}
+
+.axis {
+  display: flex;
+  margin: 0 0 0.4rem var(--label);
+  padding: 0;
+  list-style: none;
+}
+
+.axis li {
+  flex: 0 0 calc(200% / 15);
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.axis li:last-child {
+  flex: 0 0 auto;
+}
+
+.day {
+  display: grid;
+  grid-template-columns: var(--label) minmax(0, 1fr);
+  align-items: start;
+  border-top: 1px solid var(--hair);
+}
+
+.day:last-child {
+  border-bottom: 1px solid var(--hair);
+}
+
+.dayName {
+  padding-top: 1.1rem;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.track {
+  position: relative;
+  height: 5.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: repeating-linear-gradient(90deg, var(--hair) 0 1px, transparent 1px calc(100% / 15));
+}
+
+.track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 1.55rem;
+  height: 1px;
+  background: var(--line);
+}
+
+.track li {
+  position: absolute;
+  top: 1.2rem;
+  left: calc((var(--start) - 6) / 15 * 100%);
+  width: calc(var(--length) / 900 * 100%);
+  display: grid;
+  gap: 0.05rem;
+  padding-top: 1.05rem;
+  white-space: nowrap;
+}
+
+.track li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: var(--fill);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.classTime {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.className {
+  font-size: 0.82rem;
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- levels */
+
+.levels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: 0;
+  list-style: none;
+}
+
+.levels li {
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+}
+
+.levels li::before {
+  content: '';
+  height: 0.9rem;
+  margin-bottom: 0.6rem;
+  border-radius: 999px;
+  background: var(--fill);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.levelNo {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.levels h3 {
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.levelBody {
+  color: var(--muted);
+}
+
+.ready {
+  padding-top: 0.9rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  line-height: 1.4;
+  border-top: 1px solid var(--hair);
+}
+
+/* ----------------------------------------------------------------- intro
+   A wide band of window light with the offer on a stone card. */
+
+.intro {
+  position: relative;
+  display: grid;
+  justify-items: end;
+  max-width: calc(var(--wide) + 8rem);
+  margin: clamp(6rem, 12vw, 9rem) auto 0;
+  padding: clamp(3rem, 8vw, 6rem) var(--gut);
+}
+
+.introField {
+  position: absolute;
+  inset: 0 var(--gut);
+  overflow: hidden;
+  border-radius: 999px 999px 0 0;
+}
+
+.introCard {
+  position: relative;
+  display: grid;
+  gap: 1.2rem;
+  width: min(100%, 34rem);
+  margin-right: clamp(0rem, 5vw, 4rem);
+  padding: clamp(1.75rem, 4vw, 3rem);
+  background: var(--stone);
+  border-radius: 28px;
+}
+
+.introCard h2 {
+  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.introBody {
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.76rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.75rem 1rem;
+  font: inherit;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+}
+
+.form .button {
+  justify-self: start;
+  margin-top: 0.4rem;
+}
+
+/* ---------------------------------------------------------------- prices */
+
+.prices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(2rem, 6vw, 5rem);
+  padding: 0;
+  list-style: none;
+}
+
+.prices li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: end;
+  column-gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--hair);
+}
+
+.priceName {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.priceNote {
+  grid-row: 2;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.priceFigure {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  font-size: clamp(2.6rem, 4.6vw, 3.8rem);
+  font-weight: 200;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: lining-nums;
+}
+
+/* ------------------------------------------------------------ instructors */
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: 0;
+  list-style: none;
+}
+
+.team li {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+}
+
+.initials {
+  display: grid;
+  place-items: center;
+  width: 5.2rem;
+  height: 8.4rem;
+  margin-bottom: 1.2rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-style: italic;
+  color: var(--on-oat);
+  background: var(--oat);
+  border-radius: 999px;
+}
+
+.team li:nth-child(2) .initials {
+  color: var(--on-clay);
+  background: var(--clay);
+}
+
+.team li:nth-child(3) .initials {
+  color: var(--on-espresso);
+  background: var(--espresso);
+}
+
+.team h3 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.trained {
+  font-size: 0.76rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.teaches {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+}
+
+.teacherNote {
+  margin-top: 0.5rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- studio */
+
+.studio {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 7vw, 6rem);
+  padding-bottom: clamp(5rem, 10vw, 8rem);
+}
+
+.studioInfo {
+  display: grid;
+  align-content: start;
+  gap: 1.2rem;
+}
+
+.studioAddress {
+  max-width: 28rem;
+  color: var(--muted);
+}
+
+.contact {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.contact a {
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.rules {
+  border-top: 1px solid var(--line);
+}
+
+.rules div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 1.5rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.rules dt {
+  font-weight: 400;
+}
+
+.rules dd {
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.faq {
+  margin-top: 2.5rem;
+}
+
+.faq details {
+  border-bottom: 1px solid var(--hair);
+}
+
+.faq summary {
+  position: relative;
+  padding: 1rem 2rem 1rem 0;
+  font-weight: 400;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '';
+  position: absolute;
+  right: 0.2rem;
+  top: calc(50% - 0.3rem);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 1px solid var(--text);
+  border-bottom: 1px solid var(--text);
+  transform: rotate(45deg);
+}
+
+.faq details[open] summary::after {
+  top: calc(50% - 0.05rem);
+  transform: rotate(-135deg);
+}
+
+.faq details p {
+  max-width: 36rem;
+  padding: 0 0 1.2rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ the floor */
+
+.floor {
+  position: relative;
+  height: clamp(96px, 12vw, 160px);
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  padding: 3rem var(--gut) 3.4rem;
+  font-size: 0.86rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.footName {
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.footer a {
+  border-bottom: 1px solid var(--line);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1100px) {
+  .team {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 3rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 0.8rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .capsule {
+    width: min(100%, 26rem);
+    height: 15rem;
+    order: -1;
+  }
+
+  .levels,
+  .studio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .intro {
+    justify-items: stretch;
+  }
+
+  .introField {
+    border-radius: 999px 999px 0 0;
+  }
+
+  .introCard {
+    margin: 0 auto;
+  }
+
+  /* The week becomes a list: each day, then its classes in order. */
+  .axis {
+    display: none;
+  }
+
+  .day {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1rem 0 1.2rem;
+  }
+
+  .dayName {
+    padding: 0 0 0.7rem;
+  }
+
+  .track {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem 1.2rem;
+    height: auto;
+    background: none;
+  }
+
+  .track::before {
+    display: none;
+  }
+
+  .track li {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 6.2rem;
+    padding-top: 0.95rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .barBook {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .mark {
+    letter-spacing: 0.32em;
+  }
+
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts div,
+  .facts div + div {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-left: 0;
+  }
+
+  .facts dt {
+    min-width: 5.5rem;
+  }
+
+  .prices,
+  .team {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .team li {
+    grid-template-columns: 4rem minmax(0, 1fr);
+    column-gap: 1.2rem;
+  }
+
+  .initials {
+    grid-row: span 5;
+    width: 4rem;
+    height: 6.4rem;
+    font-size: 1.5rem;
+  }
+
+  .rules div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+
+  .introField {
+    inset: 0;
+    border-radius: 0;
+  }
+}

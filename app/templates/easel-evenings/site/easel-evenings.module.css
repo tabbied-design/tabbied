@@ -1,0 +1,1066 @@
+/* ==========================================================================
+   EASEL EVENINGS - paint-and-sip classes, Tanner's Yard
+   A painter's studio on gallery walls. The page is laid out in slabs of
+   saturated color, the way a color-field painting is: an ultramarine wall
+   for the calendar, a cadmium yellow one for what is included, cadmium red
+   for parties, ink for booking. Type is big and loud where it can be (a
+   grotesque with an optical axis, set heavy and tight) and a bookish serif
+   where people read, like a wall label. The hero is a canvas on an easel;
+   the calendar is a row of tear-off tickets; each night lists the paints
+   it uses as dots of color. The canvases are the patterns.
+   ========================================================================== */
+
+.page {
+  --wall: #f5f0e6;
+  --ink: #1c1b2b;
+  --cadmium: #e2432a;
+  --ultra: #2d3fbf;
+  --yellow: #f3b11b;
+  --viridian: #178a6a;
+  --gut: clamp(1rem, 4.5vw, 3rem);
+  --wide: 78rem;
+  --loud: 'Bricolage Grotesque', 'Arial Black', 'Helvetica Neue', sans-serif;
+  --read: 'Newsreader', 'Georgia', serif;
+
+  /* Derived text and surfaces. Fallbacks here, the relative color recipes
+     in the block below. */
+  --text: var(--ink);
+  --muted: color-mix(in oklab, var(--text) 74%, var(--wall));
+  --rule: color-mix(in oklab, var(--text) 20%, transparent);
+  --leg: color-mix(in oklab, var(--text) 70%, var(--yellow));
+  --cadmium-type: var(--cadmium);
+  --on-ink: var(--wall);
+  --on-ultra: var(--wall);
+  --on-yellow: var(--ink);
+  --on-cadmium: var(--wall);
+
+  font-family: var(--read);
+  font-size: 1.1rem;
+  line-height: 1.5;
+  background: var(--wall);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --contrast: oklch(from var(--wall) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --text: color-mix(in oklab, var(--contrast) 80%, var(--ink));
+    /* The red as lettering keeps its hue and takes its lightness from
+       the wall. */
+    --cadmium-type: color-mix(in oklab, var(--contrast) 26%, oklch(from var(--cadmium) 0.58 calc(c * 1.3) h));
+    /* Each color block gets black or white type by its own lightness. */
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--ink));
+    --on-ultra: color-mix(in oklab, oklch(from var(--ultra) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--ultra));
+    --on-yellow: color-mix(in oklab, oklch(from var(--yellow) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--yellow));
+    --on-cadmium: color-mix(in oklab, oklch(from var(--cadmium) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--cadmium));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--loud);
+  font-weight: 800;
+  font-optical-sizing: auto;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.inner {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--wall);
+  border-bottom: 3px solid var(--text);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--loud);
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+/* Three dabs of paint. */
+.mark::before {
+  content: '';
+  width: 2.1rem;
+  height: 0.9rem;
+  background: linear-gradient(90deg, var(--cadmium) 0 33%, var(--yellow) 33% 66%, var(--ultra) 66%);
+  border-radius: 999px 999px 999px 0.2rem;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.4rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-family: var(--loud);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-bottom: 3px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--cadmium);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--wall);
+}
+
+/* ------------------------------------------------------------ the easel */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) var(--gut) clamp(4rem, 8vw, 6.5rem);
+}
+
+.kicker {
+  margin: 0 0 1rem;
+  font-family: var(--read);
+  font-size: 1.2rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.title {
+  font-size: clamp(4rem, 9.4vw, 8.8rem);
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+}
+
+.title em {
+  display: block;
+  font-style: normal;
+  color: var(--cadmium-type);
+}
+
+.lede {
+  max-width: 32rem;
+  margin: 1.8rem 0 0;
+  font-size: clamp(1.15rem, 1.6vw, 1.35rem);
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 2.2rem 0 0;
+}
+
+.primary,
+.secondary {
+  display: inline-block;
+  padding: 0.95rem 1.5rem;
+  font-family: var(--loud);
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border: 3px solid var(--text);
+  transition: transform 160ms ease;
+}
+
+.primary {
+  background: var(--ink);
+  color: var(--on-ink);
+  border-color: var(--ink);
+}
+
+.primary:hover,
+.secondary:hover {
+  transform: translateY(-3px);
+}
+
+.easel {
+  position: relative;
+}
+
+.legs {
+  position: relative;
+  padding-bottom: 6rem;
+}
+
+/* The two front legs and the back one, behind the canvas. */
+.legs::before,
+.legs::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 12px;
+  height: 96%;
+  background: var(--leg);
+  border-radius: 3px;
+}
+
+.legs::before {
+  left: 24%;
+  transform: rotate(9deg);
+  transform-origin: top center;
+}
+
+.legs::after {
+  right: 24%;
+  transform: rotate(-9deg);
+  transform-origin: top center;
+}
+
+.canvas {
+  position: relative;
+  z-index: 1;
+  width: 86%;
+  margin: 0 auto;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 6px solid var(--wall);
+  outline: 2px solid color-mix(in oklab, var(--text) 30%, transparent);
+  box-shadow:
+    0 26px 0 -8px var(--leg),
+    18px 26px 40px color-mix(in oklab, var(--text) 26%, transparent);
+}
+
+.wallLabel {
+  display: grid;
+  gap: 0.1rem;
+  width: min(100%, 15rem);
+  margin: 1.4rem 0 0 auto;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  background: var(--wall);
+  border: 1px solid var(--rule);
+}
+
+.wallLabel strong {
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------- color blocks */
+
+.blockHead {
+  max-width: 40rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.blockHead h2 {
+  font-size: clamp(2.8rem, 6.6vw, 5.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.blockHead h2 em {
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.1em;
+}
+
+.blockNote {
+  margin: 1.1rem 0 0;
+  font-size: 1.15rem;
+}
+
+.small {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ calendar */
+
+.calendar {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+  background: var(--ultra);
+  color: var(--on-ultra);
+}
+
+.tickets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A tear-off ticket: a yellow stub, a perforation, the body. */
+.ticket {
+  position: relative;
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  background: var(--wall);
+  color: var(--text);
+}
+
+.ticket::before,
+.ticket::after {
+  content: '';
+  position: absolute;
+  left: calc(7.5rem - 0.7rem);
+  width: 1.4rem;
+  height: 1.4rem;
+  background: var(--ultra);
+  border-radius: 50%;
+}
+
+.ticket::before {
+  top: -0.7rem;
+}
+
+.ticket::after {
+  bottom: -0.7rem;
+}
+
+.stub {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.15rem;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  border-right: 3px dashed color-mix(in oklab, var(--on-yellow) 45%, transparent);
+}
+
+.stubDay {
+  font-family: var(--loud);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stubDate {
+  font-family: var(--loud);
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.stubTime {
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.ticketBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.2rem 1rem;
+  padding: 1.15rem 1.3rem 1.1rem 1.5rem;
+}
+
+.ticketBody h3 {
+  grid-column: 1;
+  font-size: 1.55rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.level {
+  grid-column: 1;
+  margin: 0.25rem 0 0;
+  font-size: 0.98rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.paints {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  gap: 0.3rem;
+  margin: 0.2rem 0 0;
+}
+
+.paints span {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--text) 35%, transparent);
+}
+
+.cadmium {
+  --c: var(--cadmium);
+  background: var(--c);
+}
+
+.ultra {
+  --c: var(--ultra);
+  background: var(--c);
+}
+
+.yellow {
+  --c: var(--yellow);
+  background: var(--c);
+}
+
+.viridian {
+  --c: var(--viridian);
+  background: var(--c);
+}
+
+.ink {
+  --c: var(--ink);
+  background: var(--c);
+}
+
+.wall {
+  --c: var(--wall);
+  background: var(--c);
+}
+
+.ticketFoot {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0.9rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule);
+}
+
+.price {
+  font-family: var(--loud);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.seats {
+  font-family: var(--loud);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.low .seats {
+  color: var(--cadmium-type);
+}
+
+.full .ticketBody {
+  color: var(--muted);
+}
+
+.full .price {
+  text-decoration: line-through;
+}
+
+.full .stub {
+  background: color-mix(in oklab, var(--yellow) 45%, var(--wall));
+}
+
+/* ------------------------------------------------------------ included */
+
+.included {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+  background: var(--yellow);
+  color: var(--on-yellow);
+}
+
+.includedGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+/* A painter's palette, thumb hole and all. */
+.swatch {
+  position: relative;
+  width: min(100%, 24rem);
+  aspect-ratio: 1.25;
+  margin-top: 2.4rem;
+  overflow: hidden;
+  border: 4px solid var(--on-yellow);
+  border-radius: 58% 42% 50% 50% / 55% 48% 52% 45%;
+}
+
+.swatch::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 16%;
+  bottom: 22%;
+  width: 16%;
+  aspect-ratio: 1;
+  background: var(--yellow);
+  border: 4px solid var(--on-yellow);
+  border-radius: 50%;
+}
+
+.includedList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 2.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: inc;
+}
+
+.includedList li {
+  padding-top: 1rem;
+  border-top: 3px solid var(--on-yellow);
+  counter-increment: inc;
+}
+
+.includedList li::before {
+  content: counter(inc, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: var(--loud);
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.includedList h3 {
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.includedList p {
+  margin: 0.4rem 0 0;
+}
+
+/* ------------------------------------------------------------- evening */
+
+.evening {
+  padding-top: clamp(4rem, 8vw, 6.5rem);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  padding-top: 0.9rem;
+  border-top: 3px solid var(--text);
+}
+
+.at {
+  display: block;
+  font-family: var(--loud);
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--cadmium-type);
+}
+
+.steps h3 {
+  margin-top: 0.5rem !important;
+  font-size: 1.35rem;
+}
+
+.steps p {
+  margin: 0.4rem 0 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.strokes {
+  position: relative;
+  height: clamp(120px, 14vw, 190px);
+  margin-top: clamp(3.5rem, 7vw, 5rem);
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------- artists */
+
+.artists {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+}
+
+.artistList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* In place of a portrait, a color-field painting in each artist's color:
+   two soft slabs floating on a ground of the same paint. */
+.artistBlock {
+  position: relative;
+  display: block;
+  aspect-ratio: 5 / 4;
+  margin-bottom: 1.2rem;
+  overflow: hidden;
+}
+
+.artistBlock::before,
+.artistBlock::after {
+  content: '';
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  border-radius: 3px;
+  filter: blur(1.5px);
+}
+
+.artistBlock::before {
+  top: 8%;
+  height: 50%;
+  background: color-mix(in oklab, var(--c) 72%, var(--wall));
+}
+
+.artistBlock::after {
+  top: 64%;
+  bottom: 9%;
+  background: color-mix(in oklab, var(--c) 66%, var(--ink));
+}
+
+.artist h3 {
+  font-size: 1.8rem;
+  letter-spacing: -0.035em;
+}
+
+.artistRole {
+  margin: 0.3rem 0 0.6rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.artist p:last-child {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------- parties */
+
+.parties {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+  background: var(--cadmium);
+  color: var(--on-cadmium);
+}
+
+.partiesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.partyList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.party {
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.4rem 1.5rem;
+  background: var(--wall);
+  color: var(--text);
+}
+
+.party h3 {
+  font-size: 1.8rem;
+  letter-spacing: -0.035em;
+}
+
+.partySize {
+  margin: 0.3rem 0 0;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.partyPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 1rem 0 0.6rem;
+}
+
+.partyPrice strong {
+  font-family: var(--loud);
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.partyNote {
+  margin: 0;
+  padding-top: 0.7rem;
+  font-size: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* ---------------------------------------------------------------- book */
+
+.book {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.faq {
+  border-top: 2px solid color-mix(in oklab, var(--on-ink) 60%, transparent);
+}
+
+.faq details {
+  border-bottom: 1px solid color-mix(in oklab, var(--on-ink) 26%, transparent);
+}
+
+.faq summary {
+  position: relative;
+  padding: 0.95rem 2.4rem 0.95rem 0;
+  font-family: var(--loud);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.2rem;
+  top: 0.55rem;
+  font-family: var(--loud);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.faq details[open] summary::after {
+  content: '\2212';
+}
+
+.faq details p {
+  margin: 0 0 1.1rem;
+  opacity: 0.92;
+}
+
+.address {
+  margin: 2rem 0 0;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.address a {
+  border-bottom: 2px solid currentColor;
+}
+
+.book .small {
+  color: color-mix(in oklab, var(--on-ink) 80%, var(--ink));
+}
+
+.form {
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--wall);
+  color: var(--text);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--loud);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--read);
+  font-size: 1.05rem;
+  color: var(--text);
+  background: transparent;
+  border: 2px solid var(--text);
+  border-radius: 0;
+}
+
+.field select option {
+  color: initial;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--cadmium);
+  outline-offset: 0;
+}
+
+.submit {
+  margin-top: 1.3rem;
+  padding: 0.95rem 1.6rem;
+  font-family: var(--loud);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--on-cadmium);
+  background: var(--cadmium);
+  border: 0;
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+
+.submit:hover {
+  transform: translateY(-3px);
+}
+
+.formNote {
+  margin: 0.9rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- footer */
+
+.footer {
+  padding: 0 var(--gut) 2.8rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.footBand {
+  position: relative;
+  height: 72px;
+  margin: 0 calc(-1 * var(--gut)) 2.4rem;
+  overflow: hidden;
+}
+
+.footer p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.5rem;
+  font-family: var(--loud);
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text);
+}
+
+.footer a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem 1.4rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .includedGrid,
+  .partiesGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .easel {
+    width: min(100%, 26rem);
+    justify-self: center;
+  }
+
+  .tickets {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .artistList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .artist {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    column-gap: 1.2rem;
+  }
+
+  .artistBlock {
+    grid-row: 1 / span 3;
+    aspect-ratio: 1;
+    margin: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .includedList,
+  .partyList,
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ticket {
+    grid-template-columns: 5.4rem minmax(0, 1fr);
+  }
+
+  .ticket::before,
+  .ticket::after {
+    left: calc(5.4rem - 0.7rem);
+  }
+
+  .stubDate {
+    font-size: 2.5rem;
+  }
+
+  .ticketBody {
+    padding: 1rem 1rem 0.9rem 1.2rem;
+  }
+
+  .ticketBody h3 {
+    font-size: 1.3rem;
+  }
+
+  .paints {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 0.5rem;
+  }
+
+  .artist {
+    grid-template-columns: 5rem minmax(0, 1fr);
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .primary,
+  .secondary,
+  .submit {
+    transition: none;
+  }
+
+  .primary:hover,
+  .secondary:hover,
+  .submit:hover {
+    transform: none;
+  }
+}

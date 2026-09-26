@@ -1,0 +1,1033 @@
+/* ==========================================================================
+   GENTLE DENTAL STUDIO - dentistry for nervous patients, Larkspur Hill
+   A calm page for frightened readers: wide margins, one light serif at a
+   quiet weight, no alarms. The page opens on the window every treatment
+   chair faces (the courtyard's ivy, behind a sash's glazing bars), and is
+   built around one long answer to "what will actually happen": the first
+   visit laid out minute by minute beside a sticky intro. The comfort card
+   is a real form of checkboxes, the stop signal gets a band of its own,
+   and sedation is a plain comparison table with prices in it. Sage and
+   linen, moss for ink, a little clay for warmth. The pattern is garden
+   and hedge only: the window, the stop band, the footer, and a veil of
+   dots for the quiet room.
+   ========================================================================== */
+
+.page {
+  --linen: #f4f1e8;
+  --moss: #26352c;
+  --sage: #a7bba1;
+  --fern: #5a7a62;
+  --clay: #d9b7a0;
+  --gut: clamp(1rem, 5vw, 3.5rem);
+  --wide: 76rem;
+  --serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+  --sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Surfaces, derived from the roles so a re-color keeps them related. */
+  --sage-wash: color-mix(in oklab, var(--sage) 30%, var(--linen));
+  --clay-wash: color-mix(in oklab, var(--clay) 22%, var(--linen));
+  --sky: color-mix(in oklab, var(--sage) 16%, var(--linen));
+
+  --text: var(--moss);
+  --on-fern: var(--linen);
+  --on-sage: var(--moss);
+  --on-clay: var(--moss);
+
+  --muted: color-mix(in oklab, var(--text) 72%, var(--linen));
+  --hair: color-mix(in oklab, var(--text) 15%, transparent);
+  --leaf: color-mix(in oklab, var(--fern) 60%, var(--text));
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  background: var(--linen);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--linen) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--moss));
+    --on-fern: oklch(from var(--fern) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sage: color-mix(in oklab, oklch(from var(--sage-wash) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--moss));
+    --on-clay: color-mix(in oklab, oklch(from var(--clay-wash) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--moss));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--leaf);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 300;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------- bar */
+
+.bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 2rem;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 1.4rem var(--gut);
+}
+
+.mark {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.4rem clamp(1rem, 2vw, 1.9rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  color: var(--muted);
+  transition: color 200ms ease;
+}
+
+.nav a:hover {
+  color: var(--text);
+}
+
+.nav a:last-child {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--linen);
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 7vw, 6rem) var(--gut) clamp(3rem, 7vw, 5.5rem);
+}
+
+.eyebrow,
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  margin-top: 1.2rem;
+  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--leaf);
+}
+
+.lede {
+  max-width: 33rem;
+  margin-top: 1.6rem;
+  font-size: clamp(1.08rem, 1.5vw, 1.2rem);
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2.2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.9rem 1.6rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--on-fern);
+  background: var(--fern);
+  border: 1px solid color-mix(in oklab, var(--text) 22%, var(--fern));
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 200ms ease;
+}
+
+.button:hover {
+  opacity: 0.88;
+}
+
+.quiet {
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--leaf);
+  padding-bottom: 2px;
+}
+
+/* The sash window: sky, the courtyard's ivy, and the glazing bars over it. */
+.window {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  justify-self: end;
+  aspect-ratio: 4 / 5;
+  background: var(--sky);
+  border: 12px solid color-mix(in oklab, var(--linen) 88%, var(--text));
+  border-radius: 20px;
+  box-shadow:
+    0 0 0 1px var(--hair),
+    0 30px 60px -40px color-mix(in oklab, var(--text) 50%, transparent);
+}
+
+.garden {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.mullions {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background:
+    linear-gradient(color-mix(in oklab, var(--linen) 88%, var(--text)), color-mix(in oklab, var(--linen) 88%, var(--text))) center / 10px 100% no-repeat,
+    linear-gradient(color-mix(in oklab, var(--linen) 88%, var(--text)), color-mix(in oklab, var(--linen) 88%, var(--text))) center 42% / 100% 10px no-repeat;
+  box-shadow: inset 0 0 0 1px var(--hair);
+}
+
+.windowNote {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3.2rem;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 0.98rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- promises */
+
+.promises {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: var(--wide);
+  margin: clamp(1.5rem, 4vw, 3rem) auto 0;
+  padding: 0 var(--gut);
+}
+
+.promises li {
+  padding: 1.8rem clamp(1rem, 2.5vw, 2rem);
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2vw, 1.65rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.25;
+  text-align: center;
+  text-wrap: balance;
+  border-top: 1px solid var(--hair);
+  border-bottom: 1px solid var(--hair);
+}
+
+.promises li + li {
+  border-left: 1px solid var(--hair);
+}
+
+/* ------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7.5rem) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 40rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.h2 {
+  margin-top: 0.9rem;
+  font-size: clamp(2.1rem, 3.8vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.body {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.splitHead {
+  position: sticky;
+  top: 2rem;
+}
+
+/* ------------------------------------------------ first visit, by minute */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(5rem, 10vw, 8rem) var(--gut) 0;
+}
+
+.visitIntro {
+  position: sticky;
+  top: 2rem;
+}
+
+.quietRoom {
+  position: relative;
+  height: clamp(9rem, 16vw, 13rem);
+  margin-top: 2.2rem;
+  overflow: hidden;
+  background: var(--sky);
+  border-radius: 999px 999px 18px 18px;
+}
+
+.minutes {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The thread the minutes hang on. */
+.minutes::before {
+  content: '';
+  position: absolute;
+  left: 6.2rem;
+  top: 1.2rem;
+  bottom: 1.2rem;
+  width: 1px;
+  background: color-mix(in oklab, var(--leaf) 50%, transparent);
+}
+
+.minute {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5.2rem minmax(0, 1fr);
+  gap: 2rem;
+  padding: 0 0 2.6rem;
+}
+
+.minute:last-child {
+  padding-bottom: 0;
+}
+
+.minute::before {
+  content: '';
+  position: absolute;
+  left: calc(6.2rem - 5px);
+  top: 1.05rem;
+  width: 11px;
+  height: 11px;
+  background: var(--linen);
+  border: 1px solid var(--leaf);
+  border-radius: 50%;
+}
+
+.at {
+  font-family: var(--serif);
+  font-size: 2.3rem;
+  font-weight: 300;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--leaf);
+  text-align: right;
+}
+
+.minuteText h3 {
+  font-size: 1.55rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.minuteText p {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------- stop signal */
+
+.stop {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  align-items: stretch;
+  margin-top: clamp(5rem, 10vw, 8rem);
+  background: var(--sage-wash);
+  color: var(--on-sage);
+}
+
+.stopHedge {
+  position: relative;
+  min-height: 22rem;
+  overflow: hidden;
+}
+
+.stopText {
+  align-self: center;
+  max-width: 36rem;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut);
+}
+
+.stop .label,
+.stop .body {
+  color: color-mix(in oklab, var(--on-sage) 76%, var(--sage-wash));
+}
+
+.stopTitle {
+  margin-top: 0.9rem;
+  font-size: clamp(2.3rem, 4.4vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.stopTitle em {
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------- comfort card */
+
+.card {
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--clay-wash);
+  color: var(--on-clay);
+  border-radius: 22px;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.8rem clamp(1.2rem, 3vw, 2.4rem);
+}
+
+.group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.group legend {
+  margin-bottom: 0.7rem;
+  padding: 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+}
+
+.tick {
+  display: grid;
+  grid-template-columns: 1.3rem minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: start;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  border-top: 1px solid color-mix(in oklab, var(--on-clay) 14%, transparent);
+  cursor: pointer;
+}
+
+.tick input,
+.choice input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0.15rem 0 0;
+  accent-color: var(--fern);
+}
+
+.cardFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem 1.4rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-clay) 22%, transparent);
+}
+
+.cardName {
+  display: grid;
+  flex: 1 1 14rem;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.cardName input,
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.75rem 0.9rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--linen);
+  border: 1px solid color-mix(in oklab, var(--text) 22%, transparent);
+  border-radius: 12px;
+}
+
+.field select option {
+  color: var(--text);
+  background: var(--linen);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+/* -------------------------------------------------------------- sedation */
+
+.sedation {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.98rem;
+}
+
+.sedation thead th {
+  padding: 0 1rem 0.9rem 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 1px solid var(--text);
+}
+
+.sedation tbody th,
+.sedation td {
+  padding: 1.3rem 1.2rem 1.3rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--hair);
+}
+
+.sedation tbody th {
+  width: 17%;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.sedation td {
+  color: var(--muted);
+}
+
+.sedation td:nth-child(2) {
+  width: 32%;
+  color: var(--text);
+}
+
+.sedation .price {
+  padding-right: 0;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ---------------------------------------------------------------- prices */
+
+.prices {
+  margin: 0;
+  border-top: 1px solid var(--text);
+}
+
+.prices div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem 6.5rem;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.prices dt {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.prices dd {
+  margin: 0;
+}
+
+.time {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.cost {
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ team */
+
+.team {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+}
+
+.team li {
+  padding-top: 1.2rem;
+  border-top: 2px solid var(--leaf);
+}
+
+.team h3 {
+  font-size: 1.55rem;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.role {
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------- questions */
+
+.faq {
+  border-top: 1px solid var(--text);
+}
+
+.qa {
+  border-bottom: 1px solid var(--hair);
+}
+
+.qa summary {
+  position: relative;
+  padding: 1.2rem 2.5rem 1.2rem 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.3;
+  cursor: pointer;
+  list-style: none;
+}
+
+.qa summary::-webkit-details-marker {
+  display: none;
+}
+
+.qa summary::after {
+  content: '';
+  position: absolute;
+  right: 0.4rem;
+  top: 1.65rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 1.5px solid var(--leaf);
+  border-bottom: 1.5px solid var(--leaf);
+  transform: rotate(45deg);
+}
+
+.qa[open] summary::after {
+  top: 1.9rem;
+  transform: rotate(225deg);
+}
+
+.qa p {
+  max-width: 38rem;
+  padding-bottom: 1.4rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ book */
+
+.book {
+  max-width: none;
+  margin-top: clamp(5rem, 10vw, 8rem);
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+  background: var(--sage-wash);
+  color: var(--on-sage);
+}
+
+.book .label {
+  color: color-mix(in oklab, var(--on-sage) 76%, var(--sage-wash));
+}
+
+.bookInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: calc(var(--wide) - 2 * var(--gut));
+  margin: 0 auto;
+}
+
+.address {
+  margin-top: 1.8rem;
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  line-height: 1.35;
+}
+
+.hours {
+  margin: 1.8rem 0 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid color-mix(in oklab, var(--on-sage) 16%, transparent);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+}
+
+.contact {
+  margin-top: 0.9rem;
+  font-size: 1.05rem;
+}
+
+.contact + .contact {
+  margin-top: 0.3rem;
+}
+
+.contact a {
+  border-bottom: 1px solid currentColor;
+}
+
+.form {
+  display: grid;
+  gap: 1.2rem;
+  align-content: start;
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--linen);
+  color: var(--text);
+  border-radius: 22px;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.field label,
+.choice legend {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choice legend {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
+.choice label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.98rem;
+  cursor: pointer;
+}
+
+.choice input {
+  margin: 0;
+}
+
+.form .button {
+  justify-self: start;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.footHedge {
+  position: relative;
+  height: clamp(5rem, 9vw, 7.5rem);
+  overflow: hidden;
+  background: var(--sage-wash);
+}
+
+.footInner {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+}
+
+.footInner p + p {
+  margin-top: 0.3rem;
+}
+
+.footName {
+  margin-bottom: 0.6rem;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-style: italic;
+  color: var(--text);
+}
+
+.footer a {
+  border-bottom: 1px solid currentColor;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1100px) {
+  .team {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sedation thead {
+    display: none;
+  }
+
+  .sedation,
+  .sedation tbody,
+  .sedation tr,
+  .sedation th,
+  .sedation td {
+    display: block;
+    width: auto;
+  }
+
+  .sedation tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem 1.5rem;
+    padding: 1.4rem 0;
+    border-top: 1px solid var(--hair);
+  }
+
+  .sedation tr:last-child {
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .sedation tbody th,
+  .sedation td {
+    padding: 0;
+    border: 0;
+  }
+
+  .sedation tbody th {
+    grid-column: 1 / -1;
+    width: auto;
+  }
+
+  .sedation td:nth-child(2) {
+    width: auto;
+    grid-column: 1 / -1;
+  }
+
+  .sedation td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+
+@media (max-width: 960px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .window {
+    justify-self: center;
+    max-width: 24rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .visit,
+  .split,
+  .bookInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .visitIntro,
+  .splitHead {
+    position: static;
+  }
+
+  .stop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stopHedge {
+    min-height: 9rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .promises {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .promises li {
+    padding: 1.1rem 0.5rem;
+    border-bottom: 0;
+  }
+
+  .promises li + li {
+    border-left: 0;
+  }
+
+  .promises li:last-child {
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .minutes::before {
+    left: 3.9rem;
+  }
+
+  .minute {
+    grid-template-columns: 3.2rem minmax(0, 1fr);
+    gap: 1.6rem;
+  }
+
+  .minute::before {
+    left: calc(3.9rem - 5px);
+    top: 0.75rem;
+  }
+
+  .at {
+    font-size: 1.6rem;
+  }
+
+  .minuteText h3 {
+    font-size: 1.35rem;
+  }
+
+  .cardGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .prices div {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.2rem 1rem;
+  }
+
+  .time {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .cost {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .team {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sedation tr {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .button {
+    transition: none;
+  }
+}

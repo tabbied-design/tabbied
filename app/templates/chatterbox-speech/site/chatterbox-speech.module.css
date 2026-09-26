@@ -1,0 +1,1224 @@
+/* ==========================================================================
+   CHATTERBOX - speech and language therapy for children, Linden Avenue
+   The page is a conversation. Parents arrive with questions and the practice
+   answers, so everything that talks is a speech bubble drawn in CSS: the
+   headline, the milestones, the first visit (a chat log with timestamps,
+   us on the left, you and your child on the right), the therapists and the
+   questions parents ask. The child's side of the talk is the pattern: a
+   babble of arcs in a bubble of its own. Soft primaries on warm milk, a
+   rounded display face and a rounded text face, corners that never go sharp.
+   ========================================================================== */
+
+.page {
+  --milk: #fdf8ef;
+  --tomato: #e8604c;
+  --sun: #f5c243;
+  --sky: #5b9bd9;
+  --ink: #26315c;
+  --gut: clamp(1rem, 4.5vw, 3rem);
+  --wide: 76rem;
+  --round: 'Fredoka', 'Nunito', 'Arial Rounded MT Bold', sans-serif;
+  --body: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Derived surfaces and text. Fallbacks first; the recipes below replace
+     them wherever relative color works. */
+  --text: var(--ink);
+  --muted: color-mix(in oklab, var(--text) 74%, var(--milk));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --card: color-mix(in oklab, var(--milk) 90%, var(--sun));
+  --tint-sky: color-mix(in oklab, var(--milk) 80%, var(--sky));
+  --tint-sun: color-mix(in oklab, var(--milk) 72%, var(--sun));
+  --tint-tomato: color-mix(in oklab, var(--milk) 82%, var(--tomato));
+  --tomato-type: var(--tomato);
+  --sky-type: var(--sky);
+  --on-tomato: var(--milk);
+  --on-sun: var(--ink);
+  --on-sky: var(--milk);
+  --on-ink: var(--milk);
+
+  font-family: var(--body);
+  font-size: 1.04rem;
+  line-height: 1.6;
+  background: var(--milk);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --contrast: oklch(from var(--milk) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --text: color-mix(in oklab, var(--contrast) 80%, var(--ink));
+    /* An accent as lettering keeps its hue and takes its lightness from
+       the ground: deep on a light page, pale on a dark one. */
+    --tomato-type: color-mix(in oklab, var(--contrast) 28%, oklch(from var(--tomato) 0.6 calc(c * 1.5) h));
+    --sky-type: color-mix(in oklab, var(--contrast) 34%, oklch(from var(--sky) 0.6 calc(c * 1.6) h));
+    --on-tomato: color-mix(in oklab, oklch(from var(--tomato) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--tomato));
+    --on-sun: color-mix(in oklab, oklch(from var(--sun) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--sun));
+    --on-sky: color-mix(in oklab, oklch(from var(--sky) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--sky));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--ink));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--sky-type);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--round);
+  font-weight: 600;
+  font-variation-settings: 'wdth' 100;
+  text-wrap: balance;
+}
+
+.page h2 em {
+  font-style: normal;
+  color: var(--tomato-type);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: color-mix(in oklab, var(--milk) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--rule);
+}
+
+.mark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--round);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* The mark: a small bubble with its tail. */
+.mark::before {
+  content: '';
+  width: 1.5rem;
+  height: 1.15rem;
+  background: var(--tomato);
+  border-radius: 50% 50% 50% 8% / 60% 60% 40% 20%;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.4rem;
+}
+
+.nav a {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 999px;
+  transition: background-color 160ms ease;
+}
+
+.nav a:hover {
+  background: var(--tint-sun);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--milk);
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) 0;
+}
+
+.kicker,
+.eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sky-type);
+}
+
+.bigBubble {
+  position: relative;
+  padding: clamp(1.6rem, 4vw, 2.8rem) clamp(1.5rem, 4vw, 3rem);
+  background: var(--sun);
+  color: var(--on-sun);
+  border-radius: 2.6rem;
+}
+
+.bigBubble::after {
+  content: '';
+  position: absolute;
+  left: 3.2rem;
+  bottom: -1.6rem;
+  width: 2.8rem;
+  height: 1.8rem;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 8% 100%);
+}
+
+.title {
+  font-size: clamp(2.4rem, 5.2vw, 4.4rem);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.title em {
+  font-style: normal;
+  text-decoration: underline wavy var(--tomato);
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.16em;
+}
+
+.replyBubble {
+  position: relative;
+  width: min(100%, 32rem);
+  margin: 2.6rem 0 0 auto;
+  padding: 1.2rem 1.5rem;
+  background: var(--tint-sky);
+  border-radius: 1.6rem;
+}
+
+.replyBubble::after {
+  content: '';
+  position: absolute;
+  right: 2.4rem;
+  bottom: -1.1rem;
+  width: 1.8rem;
+  height: 1.2rem;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 92% 100%);
+}
+
+.lede {
+  margin: 0;
+  font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 2.4rem 0 0;
+}
+
+.primary,
+.secondary {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--round);
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: transform 160ms ease;
+}
+
+.primary {
+  background: var(--tomato);
+  color: var(--on-tomato);
+}
+
+.secondary {
+  border: 2px solid var(--text);
+}
+
+.primary:hover,
+.secondary:hover {
+  transform: translateY(-2px);
+}
+
+/* The child's side of the talk: a babble of arcs in a bubble. */
+.babble {
+  position: relative;
+  aspect-ratio: 1 / 1.05;
+  margin-bottom: 2rem;
+}
+
+.babbleField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--sky);
+  border-radius: 46% 54% 50% 50% / 44% 46% 54% 56%;
+}
+
+/* Thought-bubble dots trailing off to the lower left. */
+.babble::before,
+.babble::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: var(--sky);
+}
+
+.babble::before {
+  left: 4%;
+  bottom: 2%;
+  width: 3.2rem;
+  height: 3.2rem;
+}
+
+.babble::after {
+  left: -3%;
+  bottom: -8%;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.babbleSays {
+  position: absolute;
+  right: -0.5rem;
+  bottom: 6%;
+  margin: 0;
+  padding: 0.6rem 1.1rem;
+  font-family: var(--round);
+  font-size: 1.3rem;
+  font-weight: 600;
+  background: var(--milk);
+  border: 2px solid var(--text);
+  border-radius: 1.2rem 1.2rem 0.3rem 1.2rem;
+  transform: rotate(-4deg);
+}
+
+.chips {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: 2px solid var(--rule);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------- milestones */
+
+.milestones {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut);
+}
+
+.sideHead {
+  position: sticky;
+  top: 6rem;
+  align-self: start;
+}
+
+.sideHead h2,
+.centerHead h2,
+.visitHead h2,
+.feesBody h2 {
+  font-size: clamp(2.1rem, 4.2vw, 3.3rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+
+.secNote {
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  color: var(--muted);
+}
+
+.callout {
+  position: relative;
+  margin: 1.8rem 0 0;
+  padding: 1rem 1.3rem;
+  font-weight: 700;
+  background: var(--tint-tomato);
+  border-radius: 1.3rem 1.3rem 1.3rem 0.3rem;
+}
+
+.ages {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.age {
+  background: var(--card);
+  border: 2px solid var(--rule);
+  border-radius: 1.8rem;
+}
+
+.age summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1.2rem 0.8rem 0.8rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.age summary::-webkit-details-marker {
+  display: none;
+}
+
+.age summary::after {
+  content: '+';
+  font-family: var(--round);
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.age[open] summary::after {
+  content: '\2212';
+}
+
+.ageNum {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-family: var(--round);
+  font-size: 1.6rem;
+  font-weight: 700;
+  border-radius: 50%;
+  background: var(--tomato);
+  color: var(--on-tomato);
+}
+
+.age:nth-child(3n + 2) .ageNum {
+  background: var(--sun);
+  color: var(--on-sun);
+}
+
+.age:nth-child(3n) .ageNum {
+  background: var(--sky);
+  color: var(--on-sky);
+}
+
+.ageLabel {
+  font-family: var(--round);
+  font-size: 1.45rem;
+  font-weight: 600;
+}
+
+.checks {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0.2rem 1.4rem 1.4rem 5.2rem;
+  list-style: none;
+}
+
+.checks li {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.checks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--text);
+  border-radius: 0.4rem;
+}
+
+/* ----------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(120px, 14vw, 180px);
+  overflow: hidden;
+  background: var(--sky);
+}
+
+/* ------------------------------------------------------------------ help */
+
+.help,
+.team,
+.faq {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.centerHead {
+  max-width: 40rem;
+  margin: 0 auto clamp(2rem, 5vw, 3rem);
+  text-align: center;
+}
+
+.centerHead .secNote {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cloud {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.6rem 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cloudItem {
+  position: relative;
+  padding: 1.5rem 1.6rem 1.6rem;
+  background: var(--tint-sky);
+  border-radius: 1.8rem;
+}
+
+.cloudItem:nth-child(3n + 2) {
+  background: var(--tint-sun);
+}
+
+.cloudItem:nth-child(3n) {
+  background: var(--tint-tomato);
+}
+
+.cloudItem::after {
+  content: '';
+  position: absolute;
+  left: 2.2rem;
+  bottom: -1.1rem;
+  width: 1.8rem;
+  height: 1.2rem;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 10% 100%);
+}
+
+.cloudItem:nth-child(even)::after {
+  left: auto;
+  right: 2.2rem;
+  clip-path: polygon(0 0, 100% 0, 90% 100%);
+}
+
+.cloudItem h3 {
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.cloudItem p {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- the visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.visitHead {
+  position: sticky;
+  top: 6rem;
+  align-self: start;
+}
+
+.visitField {
+  position: relative;
+  height: 15rem;
+  margin-top: 2rem;
+  overflow: hidden;
+  background: var(--tint-sun);
+  border-radius: 2rem 2rem 2rem 0.4rem;
+}
+
+.thread {
+  display: grid;
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fromUs,
+.fromYou {
+  display: grid;
+  gap: 0.35rem;
+  width: min(100%, 34rem);
+}
+
+.fromYou {
+  justify-self: end;
+  text-align: right;
+}
+
+.meta {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  margin: 0 1rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.fromYou .meta {
+  justify-content: flex-end;
+}
+
+.at {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--muted);
+}
+
+.msg {
+  margin: 0;
+  padding: 1rem 1.3rem;
+  text-align: left;
+  background: var(--card);
+  border: 2px solid var(--rule);
+  border-radius: 1.5rem 1.5rem 1.5rem 0.35rem;
+}
+
+.fromYou .msg {
+  background: var(--tint-sky);
+  border-color: transparent;
+  border-radius: 1.5rem 1.5rem 0.35rem 1.5rem;
+}
+
+/* ------------------------------------------------------------------ team */
+
+.people {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.person {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  align-content: start;
+  justify-items: center;
+  gap: 1.4rem;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 6.5rem;
+  height: 6.5rem;
+  margin: 0;
+  font-family: var(--round);
+  font-size: 2.1rem;
+  font-weight: 600;
+  border-radius: 50%;
+}
+
+.tomato {
+  background: var(--tomato);
+  color: var(--on-tomato);
+}
+
+.sun {
+  background: var(--sun);
+  color: var(--on-sun);
+}
+
+.sky {
+  background: var(--sky);
+  color: var(--on-sky);
+}
+
+.ink {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.personBubble {
+  position: relative;
+  align-self: stretch;
+  padding: 1.3rem 1.3rem 1.4rem;
+  text-align: center;
+  background: var(--card);
+  border: 2px solid var(--rule);
+  border-radius: 1.6rem;
+}
+
+.personBubble::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -0.95rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  background: var(--card);
+  border-left: 2px solid var(--rule);
+  border-top: 2px solid var(--rule);
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 0.3rem 0 0 0;
+}
+
+.personBubble h3 {
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.personBubble p {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+}
+
+.role {
+  font-size: 0.82rem !important;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--sky-type);
+}
+
+.days {
+  display: inline-block;
+  margin-top: 0.9rem !important;
+  padding: 0.25rem 0.8rem;
+  font-weight: 700;
+  font-size: 0.85rem !important;
+  background: var(--tint-sun);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ fees */
+
+.fees {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.feesBox {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  overflow: hidden;
+  background: var(--card);
+  border: 2px solid var(--rule);
+  border-radius: 2.4rem;
+}
+
+.feesField {
+  position: relative;
+  min-height: 16rem;
+  overflow: hidden;
+  background: var(--sun);
+}
+
+.feesBody {
+  padding: clamp(1.75rem, 4vw, 3rem);
+}
+
+.feeTable {
+  width: 100%;
+  margin-top: 1.6rem;
+  border-collapse: collapse;
+}
+
+.feeTable th,
+.feeTable td {
+  padding: 0.7rem 0.4rem;
+  text-align: left;
+  border-bottom: 2px dotted var(--rule);
+}
+
+.feeTable thead th {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.feeTable tbody th {
+  font-weight: 700;
+}
+
+.feeTable td {
+  color: var(--muted);
+}
+
+.feeTable .fee,
+.feeTable thead th:last-child {
+  text-align: right;
+}
+
+.feeTable .fee {
+  font-family: var(--round);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.feeNotes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.6rem;
+  font-size: 0.93rem;
+}
+
+.feeNotes p {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  background: var(--tint-sky);
+  border-radius: 1rem 1rem 1rem 0.25rem;
+}
+
+/* ------------------------------------------------------------------- faq */
+
+.faqList {
+  display: grid;
+  gap: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.qa summary {
+  position: relative;
+  width: fit-content;
+  max-width: 88%;
+  margin-left: auto;
+  padding: 0.9rem 3rem 0.9rem 1.3rem;
+  font-family: var(--round);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.3;
+  background: var(--sky);
+  color: var(--on-sky);
+  border-radius: 1.4rem 1.4rem 0.3rem 1.4rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.qa summary::-webkit-details-marker {
+  display: none;
+}
+
+.qa summary::after {
+  content: '+';
+  position: absolute;
+  right: 1.1rem;
+  top: 50%;
+  font-size: 1.5rem;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.qa[open] summary::after {
+  content: '\2212';
+}
+
+.qa p {
+  width: fit-content;
+  max-width: 88%;
+  margin: 0.7rem 0 0.4rem;
+  padding: 0.9rem 1.3rem;
+  background: var(--card);
+  border: 2px solid var(--rule);
+  border-radius: 1.4rem 1.4rem 1.4rem 0.3rem;
+}
+
+/* ------------------------------------------------------------------ book */
+
+.book {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.form {
+  position: relative;
+  padding: clamp(1.6rem, 4vw, 2.8rem);
+  background: var(--tint-sun);
+  border-radius: 2.4rem;
+}
+
+.form::after {
+  content: '';
+  position: absolute;
+  left: 4rem;
+  bottom: -1.7rem;
+  width: 3rem;
+  height: 1.8rem;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 6% 100%);
+}
+
+.formTitle {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.02;
+}
+
+.formTitle em {
+  font-style: normal;
+  color: var(--tomato-type);
+}
+
+.formNote {
+  margin: 0.6rem 0 1.5rem;
+  color: var(--muted);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.7rem 0.95rem;
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--milk);
+  border: 2px solid var(--rule);
+  border-radius: 0.9rem;
+}
+
+.field input::placeholder {
+  color: var(--muted);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--sky-type);
+  outline-offset: 0;
+}
+
+.submit {
+  margin-top: 1.4rem;
+  padding: 0.9rem 1.7rem;
+  font-family: var(--round);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--on-tomato);
+  background: var(--tomato);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+
+.submit:hover {
+  transform: translateY(-2px);
+}
+
+.place {
+  align-self: start;
+  padding-top: 0.5rem;
+}
+
+.placeTitle {
+  font-size: 1.8rem;
+  line-height: 1.1;
+  margin-bottom: 1rem !important;
+}
+
+.address {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.address a {
+  border-bottom: 2px solid var(--sky-type);
+}
+
+.hours {
+  margin: 1.4rem 0 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-top: 2px dotted var(--rule);
+}
+
+.hours div:last-child {
+  border-bottom: 2px dotted var(--rule);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+}
+
+.small {
+  margin: 1.2rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(5rem, 10vw, 8rem);
+  padding: 2.8rem var(--gut) 3rem;
+  text-align: center;
+  font-size: 0.9rem;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 2.6rem 2.6rem 0 0;
+}
+
+.footer p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.5rem;
+  font-family: var(--round);
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1080px) {
+  .people {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.4rem 1.6rem;
+  }
+
+  .feeNotes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .milestones,
+  .visit,
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .babble {
+    width: min(100%, 26rem);
+    justify-self: center;
+  }
+
+  .sideHead,
+  .visitHead {
+    position: static;
+  }
+
+  .cloud {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .feesBox {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .feesField {
+    min-height: 9rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .cloud {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cloudItem:nth-child(even)::after {
+    left: auto;
+  }
+
+  .people {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.2rem;
+  }
+
+  .person {
+    grid-template-columns: 4.2rem minmax(0, 1fr);
+    grid-template-rows: auto;
+    align-items: start;
+    justify-items: stretch;
+    gap: 1.1rem;
+  }
+
+  .avatar {
+    width: 4.2rem;
+    height: 4.2rem;
+    font-size: 1.4rem;
+  }
+
+  .personBubble {
+    text-align: left;
+  }
+
+  .personBubble::before {
+    left: -0.8rem;
+    top: 1.4rem;
+    transform: rotate(-45deg);
+  }
+
+  .checks {
+    padding-left: 1.2rem;
+  }
+
+  .ageLabel {
+    font-size: 1.25rem;
+  }
+
+  .babbleSays {
+    right: 0;
+    font-size: 1.1rem;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .book {
+    row-gap: 3.2rem;
+  }
+
+  .feeTable td:nth-child(2) {
+    display: none;
+  }
+
+  .feeTable thead th:nth-child(2) {
+    display: none;
+  }
+
+  .qa summary,
+  .qa p {
+    max-width: 94%;
+  }
+
+  .visitField {
+    height: 9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .primary,
+  .secondary,
+  .submit {
+    transition: none;
+  }
+
+  .primary:hover,
+  .secondary:hover,
+  .submit:hover {
+    transform: none;
+  }
+}

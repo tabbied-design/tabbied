@@ -1,0 +1,1028 @@
+/* ==========================================================================
+   PANEL BREAK COMICS - comic book shop, Grove Street
+   The page is a comic page. Sections are tiers of panels with heavy ink
+   borders and paper gutters between them; the copy is lettered into
+   yellow caption boxes and speech balloons drawn in CSS, and headings are
+   set in a comic display face with an ink outline and a drop. Color is
+   flat four-color print: newsprint, key black, red, yellow and blue, and
+   the pattern is the printing itself: Ben-Day halftone dots in the
+   splash panel, behind the late-night starburst, under the pull-list form
+   and in the last panel.
+   ========================================================================== */
+
+.page {
+  --paper: #fbf3dc;
+  --ink: #16130f;
+  --red: #e33b2e;
+  --yellow: #ffd23a;
+  --blue: #2b6fd8;
+  --gutter: clamp(10px, 1.4vw, 16px);
+  --edge: 3px;
+  --wide: 80rem;
+  --display: 'Bangers', 'Impact', 'Arial Black', sans-serif;
+  --letter: 'Comic Neue', 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+
+  --text: var(--ink);
+  --on-red: var(--paper);
+  --on-yellow: var(--ink);
+  --on-blue: var(--paper);
+
+  --line: var(--text);
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --hair: color-mix(in oklab, var(--text) 30%, transparent);
+
+  font-family: var(--letter);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--ink));
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-yellow: oklch(from var(--yellow) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-blue: oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.page :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------ masthead */
+
+.bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 1rem var(--gutter) 0.6rem;
+}
+
+.logo {
+  display: inline-grid;
+  justify-items: start;
+  padding: 0.35rem 0.9rem 0.45rem;
+  background: var(--red);
+  color: var(--on-red);
+  border: var(--edge) solid var(--line);
+  box-shadow: 4px 4px 0 var(--line);
+  transform: rotate(-2deg);
+}
+
+.logoTop {
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  text-shadow: 2px 2px 0 var(--line);
+}
+
+.logoSub {
+  font-family: var(--letter);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.3rem;
+}
+
+.nav a {
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 3px solid transparent;
+  transition: border-color 120ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--red);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-weight: 700;
+  text-transform: uppercase;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------- the page */
+
+.comic {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: var(--gutter);
+}
+
+.panel {
+  position: relative;
+  min-width: 0;
+  box-sizing: border-box;
+  border: var(--edge) solid var(--line);
+  background: var(--paper);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.tier,
+.tierSplash {
+  display: grid;
+  gap: var(--gutter);
+  margin-top: var(--gutter);
+}
+
+.tierSplash {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  margin-top: 0;
+}
+
+.tierHead {
+  grid-column: 1 / -1;
+  padding: 0.5rem 1rem 0.4rem;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  border: var(--edge) solid var(--line);
+}
+
+.h2 {
+  font-size: clamp(2.1rem, 4.2vw, 3.2rem);
+  line-height: 1;
+}
+
+.h3 {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+/* ------------------------------------------- captions and balloons */
+
+.caption {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  border: 2.5px solid var(--line);
+}
+
+.balloon {
+  position: relative;
+  display: inline-block;
+  max-width: 24rem;
+  padding: 0.95rem 1.3rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+  text-align: center;
+  background: var(--paper);
+  color: var(--text);
+  border: 2.5px solid var(--line);
+  border-radius: 1.8rem;
+}
+
+/* The tail: an ink wedge, and a paper wedge laid inside it. */
+.balloon::before,
+.balloon::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.balloon::before {
+  left: 2.2rem;
+  bottom: -20px;
+  border-width: 20px 16px 0 0;
+  border-color: var(--line) transparent transparent transparent;
+}
+
+.balloon::after {
+  left: calc(2.2rem + 3px);
+  bottom: -13px;
+  border-width: 14px 11px 0 0;
+  border-color: var(--paper) transparent transparent transparent;
+}
+
+.balloonUp::before {
+  top: -20px;
+  bottom: auto;
+  border-width: 0 16px 20px 0;
+  border-color: transparent transparent var(--line) transparent;
+}
+
+.balloonUp::after {
+  top: -13px;
+  bottom: auto;
+  border-width: 0 11px 14px 0;
+  border-color: transparent transparent var(--paper) transparent;
+}
+
+.sfx,
+.introSfx {
+  font-family: var(--display);
+  font-size: 3rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--yellow);
+  -webkit-text-stroke: 2px var(--on-yellow);
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 var(--on-yellow);
+  transform: rotate(-8deg);
+}
+
+/* ------------------------------------------------------------- splash */
+
+.splash {
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  min-height: clamp(26rem, 44vw, 36rem);
+  padding: clamp(1rem, 3vw, 2rem);
+  background: var(--red);
+}
+
+.splashDots {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.splashCaption,
+.splashTitle,
+.splashBalloon {
+  position: relative;
+}
+
+.splashTitle {
+  max-width: 11ch;
+  font-size: clamp(3.6rem, 8.6vw, 8.2rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--paper);
+  -webkit-text-stroke: 4px var(--line);
+  paint-order: stroke fill;
+  text-shadow: 7px 7px 0 var(--line);
+}
+
+.splashTitle span {
+  display: block;
+  color: var(--yellow);
+  /* Outlined in the ink that reads on yellow, so the second line holds
+     even when a palette makes the yellow and the page ink both light. */
+  -webkit-text-stroke-color: var(--on-yellow);
+  text-shadow: 7px 7px 0 var(--on-yellow);
+}
+
+.splashBalloon {
+  align-self: flex-end;
+  max-width: 20rem;
+}
+
+.burstPanel {
+  display: grid;
+  place-items: center;
+  min-height: 15rem;
+  background: var(--blue);
+}
+
+.burstLines {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* A starburst: an ink star with a yellow star laid inside it. */
+.burst {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(88%, 18rem);
+  aspect-ratio: 1.25;
+  background: var(--line);
+  clip-path: polygon(50% 0, 58% 18%, 76% 4%, 74% 25%, 97% 20%, 84% 38%, 100% 50%, 84% 62%, 97% 80%, 74% 75%, 76% 96%, 58% 82%, 50% 100%, 42% 82%, 24% 96%, 26% 75%, 3% 80%, 16% 62%, 0 50%, 16% 38%, 3% 20%, 26% 25%, 24% 4%, 42% 18%);
+  transform: rotate(-6deg);
+}
+
+.burst::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  background: var(--yellow);
+  clip-path: inherit;
+}
+
+.burstText {
+  position: relative;
+  max-width: 9ch;
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 0.95;
+  text-align: center;
+  color: var(--on-yellow);
+}
+
+.introPanel {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1.3rem;
+}
+
+.introPanel .caption {
+  justify-self: start;
+}
+
+.introText {
+  font-size: 1.05rem;
+}
+
+.introSfx {
+  justify-self: end;
+  font-size: 2.6rem;
+  color: var(--red);
+  -webkit-text-stroke-color: var(--line);
+  text-shadow: 3px 3px 0 var(--line);
+}
+
+/* ---------------------------------------------------------- this week */
+
+
+.weekTier {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+
+.weekPanel {
+  padding: clamp(1rem, 2.5vw, 1.8rem);
+}
+
+.panelHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.week {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.book {
+  display: grid;
+  grid-template-columns: 3.6rem minmax(0, 1fr) 9.5rem 4.5rem 7.5rem;
+  gap: 0.2rem 1rem;
+  align-items: center;
+  padding: 0.7rem 0;
+  border-top: 2px dashed var(--hair);
+}
+
+.bookIssue {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.bookTitle {
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.bookPub {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.bookPrice {
+  font-weight: 700;
+  text-align: right;
+}
+
+.flag {
+  justify-self: end;
+  padding: 0.15rem 0.5rem 0.05rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: var(--red);
+  color: var(--on-red);
+  border: 2px solid var(--line);
+  transform: rotate(-3deg);
+}
+
+.shelfPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1rem, 2.5vw, 1.6rem);
+}
+
+.shelf {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.shelf li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 1rem;
+  padding: 0.7rem 0;
+  border-top: 2px dashed var(--hair);
+}
+
+.shelfTitle {
+  font-weight: 700;
+}
+
+.shelfWhat {
+  grid-column: 1;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.shelfPrice {
+  grid-column: 2;
+  grid-row: 1;
+  font-weight: 700;
+}
+
+.shelfPanel .balloon {
+  align-self: flex-start;
+  margin-top: 1.2rem;
+}
+
+.shelfSfx {
+  margin-top: auto;
+  align-self: flex-end;
+  color: var(--blue);
+  -webkit-text-stroke-color: var(--line);
+  text-shadow: 3px 3px 0 var(--line);
+}
+
+/* ---------------------------------------------------------- pull list */
+
+.strip {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gutter);
+  margin: 0;
+  padding: 0;
+}
+
+.stripPanel {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  min-height: 15rem;
+  padding: 3.5rem 1.2rem 2.2rem;
+}
+
+.stripPanel:nth-child(2) {
+  background: color-mix(in oklab, var(--yellow) 35%, var(--paper));
+}
+
+.stripPanel .balloon {
+  max-width: 18rem;
+}
+
+.stripCaption {
+  position: absolute;
+  top: -2.5px;
+  left: -2.5px;
+}
+
+.bluePanel {
+  padding: clamp(1.5rem, 5vw, 3.5rem) var(--gutter);
+  background: var(--blue);
+}
+
+.blueDots {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.form {
+  position: relative;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: var(--paper);
+  color: var(--text);
+  border: var(--edge) solid var(--line);
+  box-shadow: 6px 6px 0 var(--line);
+}
+
+.formTitle {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.2rem 0 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.65rem 0.75rem;
+  font-family: var(--letter);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--paper);
+  border: 2.5px solid var(--line);
+  border-radius: 0;
+}
+
+.field select option {
+  color: var(--text);
+  background: var(--paper);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.button {
+  padding: 0.7rem 1.4rem 0.55rem;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--on-red);
+  background: var(--red);
+  border: var(--edge) solid var(--line);
+  border-radius: 0;
+  box-shadow: 4px 4px 0 var(--line);
+  cursor: pointer;
+  transition: transform 100ms ease, box-shadow 100ms ease;
+}
+
+.button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--line);
+}
+
+.formNote {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- events */
+
+.events {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gutter);
+  margin: 0;
+  padding: 0;
+}
+
+.event {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.2rem 1.1rem 1.3rem;
+}
+
+.event:nth-child(3) {
+  background: var(--red);
+  color: var(--on-red);
+}
+
+.eventDate {
+  align-self: flex-start;
+  margin-bottom: 0.4rem;
+  padding: 0.2rem 0.6rem 0.05rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  background: var(--yellow);
+  color: var(--on-yellow);
+  border: 2.5px solid var(--line);
+}
+
+.eventTitle {
+  font-size: 1.9rem;
+  line-height: 0.95;
+}
+
+.eventTime {
+  font-weight: 700;
+}
+
+.eventNote {
+  font-size: 0.95rem;
+}
+
+.event:not(:nth-child(3)) .eventNote {
+  color: var(--muted);
+}
+
+/* ------------------------------------------------- back issues, buying */
+
+.backTier {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+}
+
+.backPanel {
+  padding: clamp(1.2rem, 3vw, 2rem);
+}
+
+.back {
+  margin: 1.2rem 0 0;
+}
+
+.back div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.7rem 0;
+  border-top: 2px dashed var(--hair);
+}
+
+.back dt {
+  font-family: var(--display);
+  font-size: 2.3rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.back dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.buyPanel {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: var(--red);
+  color: var(--on-red);
+}
+
+.buyPanel .caption {
+  justify-self: start;
+}
+
+.buyText {
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.buyPanel .sfx {
+  justify-self: end;
+}
+
+/* -------------------------------------------------------------- staff */
+
+.staff {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gutter);
+  margin: 0;
+  padding: 0;
+}
+
+.staffPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.3rem 1.2rem 1.4rem;
+}
+
+.staffPanel:nth-child(2) {
+  background: color-mix(in oklab, var(--blue) 22%, var(--paper));
+}
+
+.staffBalloon {
+  align-self: stretch;
+  max-width: none;
+  margin-bottom: 1.8rem;
+  text-transform: none;
+  font-size: 1.05rem;
+}
+
+.staffName {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+.staffRole {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- visit */
+
+.visitTier {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.visitPanel {
+  padding: clamp(1.2rem, 3vw, 2rem);
+}
+
+.address {
+  margin-top: 1rem;
+  font-family: var(--display);
+  font-size: clamp(2rem, 3.4vw, 2.8rem);
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+.visitNote {
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+.contact {
+  margin-top: 0.7rem;
+  font-weight: 700;
+}
+
+.contact + .contact {
+  margin-top: 0.2rem;
+}
+
+.contact a {
+  border-bottom: 3px solid var(--red);
+}
+
+.hoursPanel {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: var(--blue);
+  color: var(--on-blue);
+}
+
+.hoursPanel .caption {
+  justify-self: start;
+}
+
+.hours {
+  margin: 0;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 1rem;
+  padding: 0.6rem 0;
+  border-top: 2px dashed color-mix(in oklab, var(--on-blue) 35%, transparent);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+}
+
+.hoursTime {
+  grid-column: 2;
+  grid-row: 1;
+  font-weight: 700;
+}
+
+.hoursNote {
+  grid-column: 1;
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+.hoursNote:empty {
+  display: none;
+}
+
+/* ------------------------------------------------------------- footer */
+
+.footer {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gutter) 2.5rem;
+}
+
+.endPanel {
+  display: grid;
+  place-items: center;
+  gap: 0.8rem;
+  min-height: 14rem;
+  padding: 2rem 1rem;
+  background: var(--yellow);
+}
+
+.endDots {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.theEnd {
+  position: relative;
+  font-family: var(--display);
+  font-size: clamp(4rem, 10vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+  -webkit-text-stroke: 4px var(--line);
+  paint-order: stroke fill;
+  text-shadow: 6px 6px 0 var(--line);
+}
+
+.endCaption {
+  position: relative;
+}
+
+.footText {
+  margin-top: 1.2rem;
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footText p + p {
+  margin-top: 0.2rem;
+}
+
+.footText a {
+  font-weight: 700;
+  border-bottom: 2px solid var(--red);
+}
+
+/* --------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .events {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .book {
+    grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+  }
+
+  .bookPub {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .bookPrice {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .flag {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .tierSplash,
+  .weekTier,
+  .backTier,
+  .visitTier {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tierSplash {
+    grid-template-rows: auto;
+  }
+
+  .splash {
+    grid-row: auto;
+  }
+
+  .strip,
+  .staff {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stripPanel {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .events {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .splashTitle {
+    -webkit-text-stroke-width: 3px;
+    text-shadow: 4px 4px 0 var(--line);
+  }
+
+  .back div {
+    grid-template-columns: 5rem minmax(0, 1fr);
+  }
+
+  .back dt {
+    font-size: 1.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .button {
+    transition: none;
+  }
+}
