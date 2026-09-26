@@ -350,7 +350,7 @@ test.describe('the /templates gallery', () => {
     }
   });
 
-  test('the category and the page are in the URL, and the order mixes the batches', async ({ page }) => {
+  test('the category and the page are in the URL, and the order is fixed and mixed', async ({ page }) => {
     await page.route('**/api/auth/get-session', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
     );
@@ -403,6 +403,12 @@ test.describe('the /templates gallery', () => {
     const firstPage = await cards.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
       [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
     );
+    // And the order is the committed one, which only grows at the end: a
+    // page keeps its cards when templates are added.
+    const committed = fs.readFileSync(path.join(REPO_ROOT, 'lib', 'templateOrder.ts'), 'utf-8');
+    const galleryOrder = [...committed.slice(committed.indexOf('GALLERY_ORDER: readonly')).matchAll(/^  '([^']+)',$/gm)].map((m) => m[1]);
+    expect(firstPage).toEqual(galleryOrder.slice(0, 24));
+
     const batches = firstPage.map((slug) => batchOf.get(slug) ?? 'first');
     expect(new Set(batches).size).toBeGreaterThanOrEqual(4);
     batches.slice(1).forEach((batch, i) => expect(batch, `${firstPage[i]} then ${firstPage[i + 1]}`).not.toBe(batches[i]));

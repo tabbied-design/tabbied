@@ -548,9 +548,10 @@ eye.
 
 ## The template gallery - a mixed order, pages, and the URL
 
-`/templates` shows 24 cards a page, in an order `lib/templateOrder.ts`
-computes at build time, with the category and the page in the query string
-(`?category=food-and-drink&page=2`). Four things worth not re-litigating:
+`/templates` shows 24 cards a page, in the order `GALLERY_ORDER` in
+`lib/templateOrder.ts` commits, with the category and the page in the query
+string (`?category=food-and-drink&page=2`). Four things worth not
+re-litigating:
 
 - **The order spreads the batches, and a batch is a seed prefix.** The
   registries list templates in the batches they were made in, and a batch
@@ -562,9 +563,16 @@ computes at build time, with the category and the page in the query string
   artwork batch (40% of the catalog) slowest, leaving the last page all
   artwork. A new batch of templates should get its own seed prefix, or it
   is spread as part of whichever batch its prefix names.
-- **It is seeded and fixed per build**, so `?page=2` is the same cards for
-  everyone and the prerendered page agrees with the browser. Adding a
-  template reshuffles the order, which is the cost of it staying spread.
+- **The order is committed and append-only**, so a page keeps its cards,
+  and each category's pages keep theirs, when templates are added: a link to
+  `?page=3` means the same cards next month. A template missing from
+  `GALLERY_ORDER` fails the export, as one missing from the category table
+  does, and the error prints the lines to append, already spread among
+  themselves; a name no template has fails too, because removing one shifts
+  every card after it. The cost is that an addition is spread only through
+  itself, so a large batch of one look sits together on the last pages.
+  The first 177 were laid out by `spreadTemplates` and frozen as they were
+  first published.
 - **The URL is read after mount, not with `useSearchParams`**, the same as
   the pattern library's `?page=`: `useSearchParams` in a static export
   renders the whole route on the client. The first paint is All, page 1,

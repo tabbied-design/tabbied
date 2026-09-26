@@ -10,7 +10,7 @@ import TemplatesGrid, { type TemplateCard } from 'components/template/TemplatesG
 import { TEMPLATE_SITES } from 'components/template/templateData';
 import { NEW_TEMPLATE_SITES } from 'lib/templateSites';
 import { categoryOf } from 'lib/templateCategories';
-import { spreadTemplates } from 'lib/templateOrder';
+import { orderTemplates } from 'lib/templateOrder';
 import { templateShot } from 'lib/templateShots';
 import { plexMono, plexSans } from 'lib/fonts';
 import { pageMetadata } from 'lib/seo';
@@ -34,8 +34,9 @@ const ART: Record<string, PatternDefinition> = {
 };
 
 export default function TemplatesGallery() {
-  // One list, in the spread order (lib/templateOrder.ts) rather than the
-  // order the batches were made in, numbered straight through as shown.
+  // One list, in the gallery's committed order (lib/templateOrder.ts) rather
+  // than the order the batches were made in, numbered straight through as
+  // shown. The order only grows at the end, so a page keeps its cards.
   const sites = [
     ...TEMPLATE_SITES.map((x, i) => ({
       slug: x.slug,
@@ -67,7 +68,7 @@ export default function TemplatesGallery() {
     category: categoryOf(c.slug),
   }));
 
-  const cards: TemplateCard[] = spreadTemplates(sites).map((c, i) => ({
+  const cards: TemplateCard[] = orderTemplates(sites).map((c, i) => ({
     ...c,
     n: i + 1,
     shot: templateShot(c.slug),
