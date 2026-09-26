@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { cavetto, roundpair } from 'tabbied/patterns';
 import s from './willow-midwifery.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Willow Midwifery: Midwives and doulas, Alder Hill',
@@ -20,7 +21,6 @@ const OLIVE = '#66703f';
 
 const WILLOW = ['transparent', BLUSH, TERRA, LINEN, OLIVE];
 const HOME = ['transparent', TERRA, BLUSH, OLIVE, BARK];
-const HOUSE = ['transparent', LINEN, BLUSH, TERRA];
 const FEES = ['transparent', OLIVE, TERRA, BLUSH, LINEN];
 const HEDGE = ['transparent', OLIVE, BLUSH, TERRA];
 
@@ -304,15 +304,12 @@ export default function WillowMidwiferyPage() {
               </article>
 
               <article className={s.place} aria-labelledby="house-h">
-                <div className={`${s.window} ${s.windowHouse}`} aria-hidden="true">
-                  <TabbiedPattern
-                    pattern={roundpair}
-                    palette={HOUSE}
-                    fit="grid"
-                    cellSize={40}
-                    seed="willow-house"
-                    options={{ frequency: 0.8 }}
-                    style={{ position: 'absolute', inset: 0 }}
+                <div className={`${s.window} ${s.windowHouse}`}>
+                  <Artwork
+                    slug="willow-midwifery-birthroom"
+                    alt="A birth room: a low wide bed with pillows, a round birth pool, a tall arched window and a hanging plant"
+                    inks={{ red: 'var(--clay-ink)', blue: 'var(--leaf-ink)', black: 'var(--text)' }}
+                    className={s.roomArt}
                   />
                 </div>
                 <h3 id="house-h">At the Birth House</h3>
@@ -545,6 +542,7 @@ export default function WillowMidwiferyPage() {
         </div>
         <p className={s.footName}>Willow Midwifery</p>
         <p>A fictional midwifery and doula practice. The people, fees, insurers and address are invented.</p>
+        <p>The birth room is a generated picture, drawn in the page's own colors.</p>
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>

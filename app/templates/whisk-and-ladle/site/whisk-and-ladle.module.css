@@ -338,6 +338,60 @@
   color: var(--muted);
 }
 
+/* The featured item: the pot printed in two enamels with an offset
+   charcoal shadow, the way a cheap catalog missed its registration, and a
+   tag with its number. */
+.catHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.catHead .secHead {
+  margin-bottom: 0;
+}
+
+.feature {
+  position: relative;
+  justify-self: end;
+  width: min(100%, 22rem);
+  margin-bottom: -2.2rem;
+}
+
+.featureArt {
+  width: 100%;
+  filter: drop-shadow(6px 6px 0 var(--text));
+}
+
+.featureTag {
+  position: absolute;
+  left: -3.4rem;
+  top: -1.4rem;
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.55rem 0.8rem 0.45rem;
+  line-height: 1.15;
+  background: var(--cream);
+  border: 2px solid var(--text);
+  box-shadow: 4px 4px 0 var(--drop);
+  transform: rotate(-4deg);
+}
+
+.featureNo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.featureText {
+  font-family: var(--script);
+  font-size: 1.3rem;
+  color: var(--orange-ink);
+}
+
 /* ------------------------------------------------------------------ catalog
    Two leaves and a gutter shadow down the middle. */
 
@@ -935,21 +989,23 @@
 
 /* ------------------------------------------------------------------- footer */
 
-.footBand {
-  position: relative;
-  height: clamp(130px, 13vw, 190px);
-  margin-top: clamp(5rem, 10vw, 8rem);
-  overflow: hidden;
-  background: var(--char);
-  border-top: 5px double var(--text);
-}
-
 .footer {
-  padding: 1.6rem var(--gut) 2.6rem;
+  margin-top: clamp(5rem, 10vw, 8rem);
   text-align: center;
   font-size: 0.86rem;
   color: var(--on-char);
   background: var(--char);
+  border-top: 5px double var(--text);
+}
+
+.footBand {
+  position: relative;
+  height: clamp(130px, 13vw, 190px);
+  overflow: hidden;
+}
+
+.footText {
+  padding: 1.6rem var(--gut) 2.6rem;
 }
 
 .footer p + p {
@@ -1006,8 +1062,20 @@
   }
 
   .coverGrid,
-  .sharpGrid {
+  .sharpGrid,
+  .catHead {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .feature {
+    justify-self: center;
+    width: min(76%, 17rem);
+    margin: 2.6rem 0 -0.8rem;
+  }
+
+  .featureTag {
+    left: -1.4rem;
+    top: -2.2rem;
   }
 
   .kidney {

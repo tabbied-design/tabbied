@@ -7,7 +7,8 @@
    thick black rules: the price per window counted out, the round by street
    on a black board, gutters by the height of the house, and the quote form
    on a yellow sheet. The patterns are panes, the shine across clean glass,
-   and the rake of a roof over the gutter prices.
+   and the rake of a roof over the gutter prices; the one picture, a
+   cleaner at an upstairs window, is drawn in the page's inks.
    ========================================================================== */
 
 .page {
@@ -720,10 +721,29 @@
   padding: var(--pad) var(--gut);
 }
 
+/* The title, and the cleaner at work over the steps: his feet stand on
+   the first rule of the list. */
+.visitHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem clamp(1.5rem, 4vw, 3rem);
+  align-items: end;
+}
+
 .visitTitle {
-  margin-bottom: clamp(2rem, 4vw, 3rem);
   font-size: clamp(2.1rem, 5vw, 4.4rem);
   line-height: 0.95;
+}
+
+.visitLede {
+  max-width: 34rem;
+  margin: 1.2rem 0 clamp(2rem, 4vw, 3rem);
+  font-size: 1.1rem;
+}
+
+.cleaner {
+  width: clamp(8rem, 17vw, 15.5rem);
+  margin-right: clamp(0rem, 3vw, 3rem);
 }
 
 .steps {

@@ -7,7 +7,8 @@
    contact form. Warm linen ground, a soft serif set mostly in italic for
    the voice, and a plain rounded sans for everything you need to read
    twice. The patterns are willow leaves and quarter-rounds, shown only
-   through arches.
+   through arches; the Birth House window shows the room itself, a picture
+   drawn in the page's inks.
    ========================================================================== */
 
 .page {
@@ -46,6 +47,8 @@
   --voice: color-mix(in oklab, var(--terra) 62%, var(--text));
   --shell: color-mix(in oklab, var(--linen) 78%, var(--blush));
   --leaf: color-mix(in oklab, var(--linen) 84%, var(--olive));
+  --leaf-ink: color-mix(in oklab, var(--olive) 78%, var(--text));
+  --clay-ink: color-mix(in oklab, var(--terra) 80%, var(--text));
 
   font-family: var(--sans);
   font-size: 1rem;
@@ -404,8 +407,8 @@
 
 .window {
   position: relative;
-  width: min(100%, 17rem);
-  aspect-ratio: 5 / 4;
+  width: min(100%, 22rem);
+  aspect-ratio: 1;
   margin: 0 auto 1.4rem;
   overflow: hidden;
   background: var(--linen);
@@ -413,8 +416,16 @@
   box-shadow: 0 0 0 10px var(--linen);
 }
 
+/* The Birth House window looks into the room itself, drawn in the page's
+   inks on the linen. */
 .windowHouse {
-  background: var(--olive);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.roomArt {
+  width: 84%;
 }
 
 .place h3 {

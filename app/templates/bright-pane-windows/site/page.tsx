@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { mullion, rafter, streaking } from 'tabbied/patterns';
 import s from './bright-pane-windows.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Bright Pane: Window and gutter cleaning, Eastgate',
@@ -328,7 +329,21 @@ export default function BrightPanePage() {
         {/* ------------------------------------------------------- THE VISIT */}
         <section id="visit" className={s.visit} aria-labelledby="visit-h">
           <div className={s.visitInner}>
-            <h2 id="visit-h" className={s.visitTitle}>How a visit goes</h2>
+            <div className={s.visitHead}>
+              <div>
+                <h2 id="visit-h" className={s.visitTitle}>How a visit goes</h2>
+                <p className={s.visitLede}>
+                  Most houses take under two hours, from the van door opening
+                  to the last sill wiped. This is what the two hours hold.
+                </p>
+              </div>
+              <Artwork
+                slug="bright-pane-windows-cleaner"
+                alt="A window cleaner on the ground reaching an upstairs window of a house with a long water-fed pole"
+                inks={{ blue: 'var(--on-blue)', yellow: 'var(--blue)', red: 'var(--hivis)', black: 'var(--ink)' }}
+                className={s.cleaner}
+              />
+            </div>
             <ol className={s.steps}>
               {STEPS.map(([title, body]) => (
                 <li key={title}>
@@ -451,6 +466,7 @@ export default function BrightPanePage() {
         <div className={s.footInner}>
           <p className={s.footName}>Bright Pane</p>
           <p>A fictional window and gutter cleaner. The prices, streets, rounds and crew are invented.</p>
+          <p>The window cleaner is a generated picture, drawn in the page's own colors.</p>
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>

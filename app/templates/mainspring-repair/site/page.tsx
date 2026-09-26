@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { flux, bothcut, ripplering } from 'tabbied/patterns';
 import s from './mainspring-repair.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Mainspring: Watch and jewelry repair, Arcade Row',
@@ -261,6 +262,14 @@ export default function MainspringRepairPage() {
                 it is worth the trip. A photo of the dial and the caseback helps;
                 reply to our email with it.
               </p>
+              <Artwork
+                slug="mainspring-repair-movement"
+                alt="An open pocket watch movement seen from above, its gears, jewels and balance wheel showing"
+                inks={['var(--dial)', 'var(--gold)']}
+                mode="duotone"
+                className={s.movement}
+              />
+              <p className={s.movementCap}>Caseback off: send us one like this.</p>
             </div>
             <div className={s.formGrid}>
               <div className={s.field}>
@@ -361,23 +370,25 @@ export default function MainspringRepairPage() {
         </section>
       </main>
 
-      <div className={s.caseback} aria-hidden="true">
-        <TabbiedPattern
-          pattern={flux}
-          palette={CASEBACK}
-          fit="grid"
-          cellSize={30}
-          seed="mainspring-caseback"
-          style={{ position: 'absolute', inset: 0 }}
-        />
-      </div>
-
       <footer className={s.footer}>
-        <p className={s.footName}>Mainspring</p>
-        <p>A fictional watch and jewelry repair shop. The people, prices and address are invented.</p>
-        <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
-        </p>
+        <div className={s.caseback} aria-hidden="true">
+          <TabbiedPattern
+            pattern={flux}
+            palette={CASEBACK}
+            fit="grid"
+            cellSize={30}
+            seed="mainspring-caseback"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
+        <div className={s.footText}>
+          <p className={s.footName}>Mainspring</p>
+          <p>A fictional watch and jewelry repair shop. The people, prices and address are invented.</p>
+          <p>The open movement is a generated image, toned in the page's colors.</p>
+          <p>
+            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          </p>
+        </div>
       </footer>
     </div>
   );

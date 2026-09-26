@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { drybrush, roundstep } from 'tabbied/patterns';
 import s from './kettle-and-leaf.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Kettle & Leaf: Tea room and tea shop, Moss Lane',
@@ -21,6 +22,7 @@ const CLAY = '#b07a55';
 const WINDOW = ['transparent', MOSS, MATCHA, MOSS, MATCHA, CLAY];
 const BROCADE = ['transparent', MOSS, CLAY, MATCHA, MOSS, SUMI];
 const LEAVES = ['transparent', MATCHA, MOSS, MATCHA, MATCHA, MOSS];
+const NOREN = ['transparent', MOSS, MOSS, SUMI, MATCHA, MOSS];
 
 const NAV = [
   ['The teas', '#teas'],
@@ -175,6 +177,12 @@ export default function KettleAndLeafPage() {
 
             <div className={s.paper}>
               <div className={s.scrollHead}>
+                <Artwork
+                  slug="kettle-and-leaf-kyusu"
+                  alt="A side-handled kyusu teapot beside a small cup, in a few brush strokes"
+                  inks={['var(--text)']}
+                  className={s.kyusu}
+                />
                 <h2 id="teas-h">The tea list</h2>
                 <p className={s.scrollNote}>
                   Water temperature, steep time and how many times the leaf will
@@ -338,6 +346,19 @@ export default function KettleAndLeafPage() {
             </div>
 
             <form className={s.form} action="#">
+              {/* A noren over the booking panel: the brushed cloth, slit in
+                  three, the way it hangs in a tea house doorway. */}
+              <div className={s.noren} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={drybrush}
+                  palette={NOREN}
+                  options={{ frequency: 0.8 }}
+                  fit="grid"
+                  cellSize={30}
+                  seed="kettle-noren"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
               <h3 className={s.formTitle}>Book a table</h3>
               <div className={s.field}>
                 <label htmlFor="kl-name">Name</label>
@@ -381,6 +402,7 @@ export default function KettleAndLeafPage() {
       <footer className={s.footer}>
         <p className={s.footName}>Kettle & Leaf</p>
         <p>A fictional tea room and tea shop. The teas, prices and people are invented.</p>
+        <p>The teapot on the scroll is a generated image, drawn in the page's colors.</p>
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>

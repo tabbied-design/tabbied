@@ -365,6 +365,108 @@
 
 /* ---------------------------------------------------------- 01 the index */
 
+/* Fig. 1 and its key: the foot across seven columns, numbered points on it,
+   and what each point usually is in the last five. */
+.where2 {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  align-items: start;
+  margin-bottom: clamp(3rem, 6vw, 4.5rem);
+}
+
+.plate {
+  grid-column: 1 / span 7;
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 2px solid var(--text);
+}
+
+.diagram {
+  position: relative;
+}
+
+.foot {
+  display: block;
+  width: 100%;
+}
+
+.pins {
+  position: absolute;
+  inset: 0;
+}
+
+.pin {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin: -0.95rem 0 0 -0.95rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--paper);
+  background: var(--text);
+  box-shadow: 0 0 0 3px var(--paper);
+}
+
+.figCap {
+  margin-top: 1rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.key {
+  grid-column: 9 / -1;
+  padding-top: 1rem;
+  border-top: 2px solid var(--text);
+}
+
+.keyTitle {
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+}
+
+.keyList {
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.keyList li {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: 0.1rem 0.6rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.keyNum {
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--text);
+}
+
+.keyList strong {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.keyWhat {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
 .letters {
   grid-column: 1 / -1;
   display: grid;
@@ -905,6 +1007,15 @@
   background: var(--ink);
 }
 
+.footField {
+  position: relative;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  height: clamp(96px, 10vw, 144px);
+  margin-bottom: 2.2rem;
+  overflow: hidden;
+}
+
 .footer p {
   grid-column: 4 / span 7;
   margin: 0.2rem 0 0;
@@ -912,7 +1023,7 @@
 
 .footer .footName {
   grid-column: 1 / span 3;
-  grid-row: 1 / span 2;
+  grid-row: 2 / span 2;
   margin: 0;
   font-size: 1.3rem;
   font-weight: 700;
@@ -950,6 +1061,7 @@
   .secHead,
   .feesGrid,
   .clinic,
+  .where2,
   .footer {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -964,6 +1076,15 @@
   .footer .footName {
     grid-column: 1 / -1;
     grid-row: auto;
+  }
+
+  .where2 .plate,
+  .where2 .key {
+    grid-column: 1 / -1;
+  }
+
+  .where2 .key {
+    margin-top: 2rem;
   }
 
   .secHead .num,

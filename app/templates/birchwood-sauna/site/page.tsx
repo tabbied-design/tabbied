@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { fluting, grainfall, ripplering } from 'tabbied/patterns';
 import s from './birchwood-sauna.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Birchwood Sauna House: Public sauna and cold plunge, Larch Point',
@@ -254,6 +255,16 @@ export default function BirchwoodSaunaPage() {
             </ul>
           </div>
 
+          <figure className={s.shore}>
+            <Artwork
+              slug="birchwood-sauna-cabin"
+              alt="The sauna cabin at the end of the pier, smoke rising from its chimney, two birches beside it"
+              inks={['var(--text)']}
+              className={s.cabin}
+            />
+            <figcaption className={s.shoreCap}>The big sauna, Pier 4. The ladder into the lake is at the end of the boards.</figcaption>
+          </figure>
+
           <div className={s.lake} aria-hidden="true">
             <TabbiedPattern
               pattern={ripplering}
@@ -439,7 +450,7 @@ export default function BirchwoodSaunaPage() {
         <p className={s.footName}>Birchwood Sauna House</p>
         <p>A fictional public sauna. The rooms, temperatures, prices and timetable are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; the cabin is a generated image drawn in the page's colors.
         </p>
       </footer>
     </div>

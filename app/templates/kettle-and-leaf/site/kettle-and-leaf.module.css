@@ -308,6 +308,13 @@
   text-align: center;
 }
 
+/* The painting on the scroll: a few sumi strokes above the title, the
+   way a hanging scroll carries its picture over the words. */
+.kyusu {
+  width: min(52%, 13rem);
+  margin: 0 auto clamp(1.8rem, 4vw, 2.6rem);
+}
+
 .scrollHead h2 {
   font-size: clamp(2rem, 3.6vw, 2.7rem);
   line-height: 1.3;
@@ -664,8 +671,19 @@
 .form {
   display: grid;
   gap: 1.3rem;
-  padding: clamp(1.6rem, 4vw, 2.8rem);
+  padding: 0 clamp(1.6rem, 4vw, 2.8rem) clamp(1.6rem, 4vw, 2.8rem);
   background: var(--scroll);
+}
+
+.noren {
+  position: relative;
+  height: clamp(5rem, 8vw, 6.5rem);
+  margin: 0 calc(-1 * clamp(1.6rem, 4vw, 2.8rem)) 0.6rem;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--moss) 16%, var(--rice));
+  border-top: 5px solid color-mix(in oklab, var(--clay) 80%, var(--sumi));
+  -webkit-mask-image: linear-gradient(to right, var(--text) 0 calc(33.333% - 3px), transparent calc(33.333% - 3px) calc(33.333% + 3px), var(--text) calc(33.333% + 3px) calc(66.666% - 3px), transparent calc(66.666% - 3px) calc(66.666% + 3px), var(--text) calc(66.666% + 3px));
+  mask-image: linear-gradient(to right, var(--text) 0 calc(33.333% - 3px), transparent calc(33.333% - 3px) calc(33.333% + 3px), var(--text) calc(33.333% + 3px) calc(66.666% - 3px), transparent calc(66.666% - 3px) calc(66.666% + 3px), var(--text) calc(66.666% + 3px));
 }
 
 .formTitle {

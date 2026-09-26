@@ -490,11 +490,24 @@
 }
 
 .pile {
-  padding: 1.5rem 1.4rem 1.4rem;
+  position: relative;
+  margin-top: 6.2rem;
+  padding: 8.6rem 1.4rem 1.4rem;
   color: var(--on-mustard);
   background: var(--mustard);
   border: var(--slab);
   box-shadow: 10px 10px 0 var(--line);
+}
+
+/* The bagel sits on the panel like a sticker slapped half over its top
+   edge, with the same hard shadow as every slab. */
+.pileArt {
+  position: absolute;
+  top: -6rem;
+  left: 50%;
+  width: 12rem;
+  transform: translateX(-50%) rotate(-9deg);
+  filter: drop-shadow(5px 5px 0 var(--line));
 }
 
 .pileTitle {
@@ -1183,22 +1196,24 @@
 
 /* ------------------------------------------------------------------- footer */
 
-.footBand {
-  position: relative;
-  height: clamp(110px, 12vw, 170px);
-  margin-top: clamp(5rem, 10vw, 8rem);
-  overflow: hidden;
-  background: var(--ink);
-  border-top: var(--slab);
-  border-bottom: var(--slab);
-}
-
 .footer {
-  padding: 2.2rem var(--gut) 2.8rem;
+  margin-top: clamp(5rem, 10vw, 8rem);
   font-family: var(--mono);
   font-size: 0.82rem;
   color: var(--on-ink);
   background: var(--ink);
+}
+
+.footBand {
+  position: relative;
+  height: clamp(110px, 12vw, 170px);
+  overflow: hidden;
+  border-top: var(--slab);
+  border-bottom: var(--slab);
+}
+
+.footText {
+  padding: 2.2rem var(--gut) 2.8rem;
 }
 
 .footer p + p {

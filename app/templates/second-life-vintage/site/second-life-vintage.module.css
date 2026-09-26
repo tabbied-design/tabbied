@@ -641,6 +641,41 @@
   text-transform: uppercase;
 }
 
+/* The head of the flyer: the title, and a photocopy of a jacket we bought,
+   stuck on at an angle with a sticker saying what it cost us. */
+.flyerHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 1.5rem clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.xerox {
+  position: relative;
+  margin: 0;
+  transform: rotate(4deg);
+}
+
+.jacket {
+  display: block;
+  width: 100%;
+}
+
+.paid {
+  position: absolute;
+  left: -0.8rem;
+  bottom: 6%;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-stretch: 100%;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--on-pink);
+  background: var(--pink);
+  transform: rotate(-10deg);
+}
+
 .flyerLede {
   max-width: 34rem;
   margin: 1rem 0 0;
@@ -1044,8 +1079,14 @@
   }
 
   .terms,
-  .lists {
+  .lists,
+  .flyerHead {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .xerox {
+    width: min(100%, 22rem);
+    margin: 0.4rem auto 0;
   }
 
   .form {

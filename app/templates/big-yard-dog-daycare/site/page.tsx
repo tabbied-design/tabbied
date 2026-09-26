@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { picket, bowl } from 'tabbied/patterns';
 import s from './big-yard-dog-daycare.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Big Yard: Dog daycare and boarding, Tanner Lane',
@@ -291,6 +292,17 @@ export default function BigYardPage() {
             </article>
 
             <div className={s.reportSide}>
+              <figure className={s.polaroid}>
+                <div className={s.snap}>
+                  <Artwork
+                    slug="big-yard-dog-daycare-dog"
+                    alt="Biscuit, a black and white mixed-breed dog with big ears, sitting and looking up"
+                    inks={['var(--text)', 'var(--card)']}
+                    className={s.dog}
+                  />
+                </div>
+                <figcaption className={s.snapCap}>Biscuit at pickup. Worn out, happy.</figcaption>
+              </figure>
               <div className={`${s.card} ${s.sideCard}`}>
                 <h3>What the grades mean</h3>
                 <p>A is a great day. B is a normal dog day. C means we saw something you should know about, and we will have said it at the gate as well as on the card.</p>
@@ -558,6 +570,16 @@ export default function BigYardPage() {
               ))}
             </dl>
           </div>
+          <div className={s.gate} aria-hidden="true">
+            <TabbiedPattern
+              pattern={picket}
+              palette={FENCE}
+              fit="grid"
+              cellSize={64}
+              seed="big-yard-gate"
+              style={{ position: 'absolute', inset: 0 }}
+            />
+          </div>
         </section>
       </main>
 
@@ -565,7 +587,7 @@ export default function BigYardPage() {
         <p className={s.footName}>Big Yard</p>
         <p>A fictional dog daycare. The dogs, people, prices and report cards are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; Biscuit is a generated image drawn in the page's colors.
         </p>
       </footer>
     </div>

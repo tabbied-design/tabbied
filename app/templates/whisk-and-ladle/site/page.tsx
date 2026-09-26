@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { roundcut, elbow } from 'tabbied/patterns';
 import s from './whisk-and-ladle.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Whisk & Ladle: Kitchenware shop and cooking school, Mercer Avenue',
@@ -205,13 +206,27 @@ export default function WhiskAndLadlePage() {
         {/* --------------------------------------------------------- CATALOG
             A spread: two pages, a gutter, departments and numbered items. */}
         <section id="catalog" className={s.sec} aria-labelledby="catalog-h">
-          <div className={s.secHead}>
-            <p className={s.script}>From the shelves</p>
-            <h2 id="catalog-h">The catalog</h2>
-            <p className={s.secNote}>
-              A few of the 600 things in the shop. Quote the number when you
-              call and we will set it aside for a week.
-            </p>
+          <div className={s.catHead}>
+            <div className={s.secHead}>
+              <p className={s.script}>From the shelves</p>
+              <h2 id="catalog-h">The catalog</h2>
+              <p className={s.secNote}>
+                A few of the 600 things in the shop. Quote the number when you
+                call and we will set it aside for a week.
+              </p>
+            </div>
+            <div className={s.feature}>
+              <Artwork
+                slug="whisk-and-ladle-dutchoven"
+                alt="An enameled Dutch oven with its lid on and a wooden spoon resting against it"
+                inks={{ red: 'var(--orange)', yellow: 'var(--teal)' }}
+                className={s.featureArt}
+              />
+              <p className={s.featureTag}>
+                <span className={s.featureNo}>No. 4-110</span>
+                <span className={s.featureText}>In three enamels, $129</span>
+              </p>
+            </div>
           </div>
 
           <div className={s.spread}>
@@ -438,23 +453,25 @@ export default function WhiskAndLadlePage() {
         </section>
       </main>
 
-      <div className={s.footBand} aria-hidden="true">
-        <TabbiedPattern
-          pattern={elbow}
-          palette={ARCS}
-          fit="grid"
-          cellSize={48}
-          seed="whisk-foot"
-          style={{ position: 'absolute', inset: 0 }}
-        />
-      </div>
-
       <footer className={s.footer}>
-        <p className={s.footName}>Whisk & Ladle</p>
-        <p>A fictional kitchenware shop and cooking school. The items, classes, prices and people are invented.</p>
-        <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
-        </p>
+        <div className={s.footBand} aria-hidden="true">
+          <TabbiedPattern
+            pattern={elbow}
+            palette={ARCS}
+            fit="grid"
+            cellSize={48}
+            seed="whisk-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
+        <div className={s.footText}>
+          <p className={s.footName}>Whisk & Ladle</p>
+          <p>A fictional kitchenware shop and cooking school. The items, classes, prices and people are invented.</p>
+          <p>The Dutch oven is a generated image, printed in the page's colors.</p>
+          <p>
+            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          </p>
+        </div>
       </footer>
     </div>
   );

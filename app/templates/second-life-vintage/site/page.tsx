@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { mixtape, halftone, sliver } from 'tabbied/patterns';
 import s from './second-life-vintage.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Second Life Vintage: Vintage clothing, Lower Dellwood',
@@ -283,8 +284,21 @@ export default function SecondLifeVintagePage() {
         <section id="buy" className={s.sec} aria-labelledby="buy-h">
           <div className={s.flyer}>
             <p className={s.page2}>p. 4</p>
-            <h2 id="buy-h" className={s.flyerTitle}>We buy clothes</h2>
-            <p className={s.flyerLede}>Bring us what you do not wear. If we can sell it, we pay you for it today.</p>
+            <div className={s.flyerHead}>
+              <div>
+                <h2 id="buy-h" className={s.flyerTitle}>We buy clothes</h2>
+                <p className={s.flyerLede}>Bring us what you do not wear. If we can sell it, we pay you for it today.</p>
+              </div>
+              <figure className={s.xerox}>
+                <Artwork
+                  slug="second-life-vintage-jacket"
+                  alt="A worn, faded denim trucker jacket laid flat with its sleeves spread"
+                  inks={['var(--on-paper)', 'var(--paper)']}
+                  className={s.jacket}
+                />
+                <figcaption className={s.paid}>We paid $22 for this one</figcaption>
+              </figure>
+            </div>
 
             <dl className={s.terms}>
               {BUY_TERMS.map(([k, v]) => (
@@ -444,7 +458,7 @@ export default function SecondLifeVintagePage() {
           <p className={s.footName}>Second Life Vintage</p>
           <p>A fictional vintage clothing store. The racks, prices, dates and address are invented.</p>
           <p>
-            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+            Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; the jacket is a generated image drawn in the page's colors.
           </p>
         </div>
       </footer>

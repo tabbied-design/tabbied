@@ -553,10 +553,37 @@
   color: var(--muted);
 }
 
+/* Where the scale ends: the cabin on its pier, standing on the lake. */
+.shore {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: 2rem;
+  margin: 3.2rem 0 0;
+}
+
+.cabin {
+  grid-column: 2;
+  display: block;
+  width: clamp(12rem, 20vw, 17rem);
+  margin-bottom: -1.4rem;
+}
+
+.shoreCap {
+  grid-column: 3;
+  max-width: 16rem;
+  padding-bottom: 2.4rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
 .lake {
   position: relative;
   height: clamp(120px, 13vw, 180px);
-  margin-top: 2.6rem;
+  margin-top: 0;
   overflow: hidden;
   border-radius: 4px;
   box-shadow: inset 0 0 0 1px var(--rule);
@@ -1090,6 +1117,23 @@
 
   .rooms strong {
     font-size: 2.2rem;
+  }
+
+  .shore {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 1rem;
+  }
+
+  .cabin,
+  .shoreCap {
+    grid-column: 1;
+  }
+
+  .shoreCap {
+    order: -1;
+    padding: 0;
+    text-align: center;
   }
 }
 

@@ -574,11 +574,63 @@
   padding-top: 1rem;
 }
 
-.sideCard:nth-child(1) {
-  transform: rotate(1.4deg);
+/* Biscuit's photo, taped in beside his card: a print with a white border,
+   the cut-out standing on a square of grass. */
+.polaroid {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 20rem);
+  margin: 0;
+  padding: 0.75rem 0.75rem 0;
+  background: var(--card);
+  border-radius: 2px;
+  box-shadow: 0 1px 0 var(--rule), 0 18px 30px -20px var(--shadow);
+  transform: rotate(-2.5deg);
+}
+
+.polaroid::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: -0.8rem;
+  left: 50%;
+  width: 6.5rem;
+  height: 1.6rem;
+  margin-left: -3.25rem;
+  background: var(--tape);
+  transform: rotate(3deg);
+}
+
+.snap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--grass);
+}
+
+.dog {
+  display: block;
+  width: auto;
+  height: 94%;
+}
+
+.snapCap {
+  padding: 0.55rem 0.2rem 0.75rem;
+  font-family: var(--hand);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--pen);
 }
 
 .sideCard:nth-child(2) {
+  transform: rotate(1.4deg);
+}
+
+.sideCard:nth-child(3) {
   transform: rotate(-1deg);
 }
 
@@ -1152,6 +1204,14 @@
   max-width: var(--wrap);
   margin: 0 auto;
   padding: clamp(3rem, 6vw, 4.5rem) var(--gut);
+}
+
+/* The fence again, along the bottom of the yard, with its strip of ground. */
+.gate {
+  position: relative;
+  height: clamp(96px, 11vw, 150px);
+  overflow: hidden;
+  border-bottom: 16px solid color-mix(in oklab, var(--grass) 72%, var(--ink));
 }
 
 .find h2 {

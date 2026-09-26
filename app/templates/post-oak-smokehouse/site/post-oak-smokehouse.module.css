@@ -323,6 +323,37 @@
   border: 2px solid var(--text);
 }
 
+/* The print: a paper panel set into the hatching, the brisket cut on it. */
+.print {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 1.4rem 1.2rem 1.1rem;
+  background: var(--sheet);
+  border: 2px solid var(--text);
+  box-shadow: 0 0 0 8px var(--sheet);
+  transform: translateY(-50%);
+}
+
+.brisket {
+  width: 100%;
+}
+
+.printCap {
+  padding-top: 0.55rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  border-top: 1px solid var(--text);
+}
+
 .stamp {
   position: absolute;
   left: -2.6rem;
@@ -1318,7 +1349,7 @@
   }
 
   .cut {
-    min-height: 15rem;
+    min-height: 26rem;
     margin: 0 0 0 1.4rem;
   }
 

@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { bowl, rimband } from 'tabbied/patterns';
 import s from './pho-nam.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Pho Nam: Vietnamese noodle house, Lantern Street',
@@ -11,7 +12,7 @@ export const metadata = {
 
 /* Site colors, the same values as the roles on .page. Every pattern draws
    on a transparent ground, so the bowls sit on whatever the counter behind
-   them is: the green board, or the cream of the broth card. */
+   them is: the green board, the cream tray, the dark counter front. */
 const BOARD = '#0e3a2c';
 const RICE = '#f2e9d4';
 const CHILI = '#cf3328';
@@ -323,6 +324,13 @@ export default function PhoNamPage() {
               </p>
             </div>
 
+            <Artwork
+              slug="pho-nam-bowl"
+              alt="A bowl of pho seen from above: noodles, sliced beef, herbs, a lime wedge and chopsticks across the rim"
+              inks={{ red: 'var(--chili-ink)', blue: 'var(--jade-ink)' }}
+              className={s.bowlArt}
+            />
+
             <ol className={s.pot}>
               {POT.map((p) => (
                 <li key={p.what}>
@@ -339,17 +347,6 @@ export default function PhoNamPage() {
             </ol>
 
             <aside className={s.otherPots} aria-labelledby="pots-h">
-              <div className={s.bowlTop} aria-hidden="true">
-                <TabbiedPattern
-                  pattern={rimband}
-                  palette={RIMS}
-                  fit="grid"
-                  cellSize={36}
-                  seed="pho-nam-rims"
-                  options={{ frequency: 0.85 }}
-                  style={{ position: 'absolute', inset: 0 }}
-                />
-              </div>
               <h3 id="pots-h" className={s.potsTitle}>The other pots</h3>
               <dl className={s.potsList}>
                 {OTHER_POTS.map(([name, note]) => (
@@ -416,6 +413,17 @@ export default function PhoNamPage() {
                 counter, no questions asked. Napkins are in the tin; take a
                 handful, you will need them.
               </p>
+              <div className={s.tray} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={rimband}
+                  palette={RIMS}
+                  fit="grid"
+                  cellSize={40}
+                  seed="pho-nam-rims"
+                  options={{ frequency: 0.85 }}
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </div>
             <div>
               <h3 className={s.groupTitle}>How we would eat it</h3>
@@ -601,6 +609,7 @@ export default function PhoNamPage() {
         <div className={s.footInner}>
           <p className={s.footName}>Pho Nam</p>
           <p>A fictional Vietnamese noodle house. The menu, prices, hours and family are invented.</p>
+          <p>The bowl of pho is a generated picture, drawn in the page's own colors.</p>
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>

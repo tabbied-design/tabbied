@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { buttonhole, guernsey } from 'tabbied/patterns';
 import s from './purl-and-ply.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Purl & Ply: Yarn shop and knitting classes, Wool Market Lane',
@@ -212,14 +213,22 @@ export default function PurlAndPlyPage() {
 
         {/* --------------------------------------------------------- WEIGHTS */}
         <section id="weights" className={s.sec} aria-labelledby="weights-h">
-          <div className={s.head}>
-            <p className={s.row}>Row 1</p>
-            <h2 id="weights-h">Yarn, <em>by weight</em></h2>
-            <p className={s.headNote}>
-              The wall runs thinnest on the left to thickest on the right, the
-              way this table does. Gauge is stitches to 10 cm in stockinette,
-              on the needles in the middle of the range.
-            </p>
+          <div className={s.weightsTop}>
+            <div className={s.head}>
+              <p className={s.row}>Row 1</p>
+              <h2 id="weights-h">Yarn, <em>by weight</em></h2>
+              <p className={s.headNote}>
+                The wall runs thinnest on the left to thickest on the right,
+                the way this table does. Gauge is stitches to 10 cm in
+                stockinette, on the needles in the middle of the range.
+              </p>
+            </div>
+            <Artwork
+              slug="purl-and-ply-skeins"
+              alt="Twisted skeins and wound cakes of yarn stacked on a wooden shelf, with a pair of knitting needles"
+              inks={{ red: 'var(--yarn-rust)', blue: 'var(--yarn-moss)', yellow: 'var(--yarn-honey)', black: 'var(--text)' }}
+              className={s.skeins}
+            />
           </div>
 
           <div className={s.weightHead} aria-hidden="true">
@@ -481,6 +490,7 @@ export default function PurlAndPlyPage() {
         </div>
         <p className={s.footName}>Purl & Ply</p>
         <p>A fictional yarn shop and knitting school. The yarns, classes, prices and people are invented.</p>
+        <p>The shelf of yarn is a generated picture, drawn in the page's own colors.</p>
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>

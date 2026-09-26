@@ -5,9 +5,10 @@
    red tiles, set big enough to read from the back of the queue, in a tall
    condensed face; the rest is a plain Vietnamese-drawn sans. One band turns
    cream, the laminated card by the kitchen door that tells the broth's day
-   from 4:30 in the morning. The patterns are bowls: a stack on the counter
-   front beside the name, a shelf of them under the board, one seen from
-   above on the broth card, and a short row at the foot.
+   from 4:30 in the morning, with a bowl drawn from above in the page's
+   inks. The patterns are bowls: a stack on the counter front beside the
+   name, a shelf of them under the board, a tray of them on the table, and
+   a short row at the foot.
    ========================================================================== */
 
 .page {
@@ -432,6 +433,11 @@
    The one cream band: its text is derived from the band, not the board. */
 
 .broth {
+  /* The bowl's inks, pulled toward the band's text so the drawing keeps
+     its contrast whatever the palette makes of the cream. */
+  --chili-ink: color-mix(in oklab, var(--chili) 82%, var(--on-rice));
+  --jade-ink: color-mix(in oklab, var(--jade) 70%, var(--on-rice));
+
   margin-top: 0;
   color: var(--on-rice);
   background: var(--rice);
@@ -447,7 +453,7 @@
 }
 
 .brothHead {
-  grid-column: 1 / -1;
+  grid-column: 1;
   max-width: 50rem;
 }
 
@@ -535,16 +541,13 @@
   align-self: start;
 }
 
-.bowlTop {
-  position: relative;
-  width: min(100%, 22rem);
-  aspect-ratio: 1;
-  margin: 0.6rem auto 2.4rem;
-  overflow: hidden;
-  border: 14px solid var(--board);
-  border-radius: 50%;
-  outline: 4px solid var(--chili);
-  outline-offset: 7px;
+/* The bowl, drawn from above, beside the headline. */
+.bowlArt {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+  width: min(100%, 24rem);
 }
 
 .potsTitle {
@@ -693,6 +696,16 @@
   margin: 1.6rem 0 0;
   font-size: 0.98rem;
   color: var(--muted);
+}
+
+.tray {
+  position: relative;
+  height: clamp(8rem, 12vw, 10.5rem);
+  margin-top: 2rem;
+  overflow: hidden;
+  background: var(--rice);
+  border: 8px solid var(--board);
+  border-radius: 20px;
 }
 
 .chips li {
@@ -1080,6 +1093,12 @@
 
   .heroArt {
     max-width: 30rem;
+  }
+
+  .bowlArt {
+    grid-column: 1;
+    grid-row: auto;
+    width: min(80%, 20rem);
   }
 
   .heroField {

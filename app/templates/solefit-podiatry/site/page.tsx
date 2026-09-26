@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { ortho, halftone } from 'tabbied/patterns';
 import s from './solefit-podiatry.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Solefit Podiatry: Foot and ankle clinic, Harwood Square',
@@ -12,12 +13,14 @@ export const metadata = {
 /* Site colors. The squares are ortho, drawn in ink and signal red on a
    transparent ground, their frames thickening row by row down the field.
    The booking panel's halftone is ink only. */
+const PAPER = '#f5f4f0';
 const INK = '#141414';
 const RED = '#e2231a';
 
 const SQUARES = ['transparent', INK, INK, RED, INK, INK];
 const STRIP = ['transparent', RED, INK, INK, RED, INK];
 const DOTS = ['transparent', INK, RED];
+const FOOT = ['transparent', PAPER, RED, PAPER, PAPER, RED];
 
 const NAV = [
   ['Conditions', '#conditions'],
@@ -96,6 +99,17 @@ const INDEX: { letter: string; items: Condition[] }[] = [
 ];
 
 const HAS = new Set(INDEX.map((g) => g.letter));
+/* Where it hurts: the numbered points on the diagram, placed as a share of
+   the picture's width and height, and what each usually turns out to be. */
+const REGIONS = [
+  { n: '1', region: 'Back of the heel and ankle', what: 'Achilles tendinopathy, Sever\'s disease in children', x: '9%', y: '33%' },
+  { n: '2', region: 'Under the heel', what: 'Heel pain and plantar fasciitis', x: '11%', y: '84%' },
+  { n: '3', region: 'Inside of the ankle', what: 'Tarsal tunnel syndrome, sprains that keep happening', x: '32%', y: '42%' },
+  { n: '4', region: 'The arch', what: 'Flat feet, high arches, the rolled ankles that come with them', x: '46%', y: '88%' },
+  { n: '5', region: 'Ball of the foot', what: 'Metatarsalgia, Morton\'s neuroma, calluses and corns', x: '70%', y: '90%' },
+  { n: '6', region: 'Toes and nails', what: 'Bunions, ingrown toenails, fungal nails, hammer toes', x: '91%', y: '71%' },
+].map((r) => ({ ...r, pos: { '--x': r.x, '--y': r.y } as React.CSSProperties }));
+
 const STRIP_LETTERS = LETTERS.map((l) => ({ l, on: HAS.has(l), href: `#idx-${l.toLowerCase()}` }));
 
 const STEPS = [
@@ -254,6 +268,37 @@ export default function SolefitPodiatryPage() {
               The numbers point to section 02. If your problem is not here,
               call: it is still very likely a foot.
             </p>
+          </div>
+
+          <div className={s.where2}>
+            <figure className={s.plate}>
+              <div className={s.diagram}>
+                <Artwork
+                  slug="solefit-podiatry-foot"
+                  alt="A diagram of a right foot seen from the inside, the bones drawn within its outline"
+                  inks={{ blue: 'var(--red)', black: 'var(--text)' }}
+                  className={s.foot}
+                />
+                <div className={s.pins} aria-hidden="true">
+                  {REGIONS.map((r) => (
+                    <span key={r.n} className={s.pin} style={r.pos}>{r.n}</span>
+                  ))}
+                </div>
+              </div>
+              <figcaption className={s.figCap}>Fig. 1. The right foot from the inside: 26 bones, 33 joints and more than 100 tendons and ligaments.</figcaption>
+            </figure>
+            <div className={s.key}>
+              <h3 className={s.keyTitle}>Where it hurts</h3>
+              <ol className={s.keyList}>
+                {REGIONS.map((r) => (
+                  <li key={r.n}>
+                    <span className={s.keyNum}>{r.n}</span>
+                    <strong>{r.region}</strong>
+                    <span className={s.keyWhat}>{r.what}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
 
           <nav className={s.letters} aria-label="Conditions by letter">
@@ -533,10 +578,21 @@ export default function SolefitPodiatryPage() {
       </main>
 
       <footer className={s.footer}>
+        <div className={s.footField} aria-hidden="true">
+          <TabbiedPattern
+            pattern={ortho}
+            palette={FOOT}
+            options={{ frequency: 0.7 }}
+            fit="grid"
+            cellSize={48}
+            seed="solefit-footer"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
         <p className={s.footName}>Solefit Podiatry</p>
         <p>A fictional podiatry clinic. The clinicians, fees, address and notes on conditions are invented, and none of it is medical advice.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; the foot is a generated image drawn in the page's colors.
         </p>
       </footer>
     </div>

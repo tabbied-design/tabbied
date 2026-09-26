@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { rimband, peppering } from 'tabbied/patterns';
 import s from './everything-bagels.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Everything Bagel Co.: Bagel shop, Kettle Street',
@@ -270,6 +271,12 @@ export default function EverythingBagelsPage() {
             </div>
 
             <aside className={s.pile} aria-labelledby="pile-h">
+              <Artwork
+                slug="everything-bagels-bagel"
+                alt="An everything bagel, sliced and spread thick with cream cheese"
+                inks={{ red: 'var(--crust)', yellow: 'var(--paper)', black: 'var(--ink)', blue: 'var(--mustard)' }}
+                className={s.pileArt}
+              />
               <h3 id="pile-h" className={s.pileTitle}>Pile it on</h3>
               <ul className={s.pileList}>
                 {PILE.map(([what, price]) => (
@@ -521,23 +528,25 @@ export default function EverythingBagelsPage() {
         </section>
       </main>
 
-      <div className={s.footBand} aria-hidden="true">
-        <TabbiedPattern
-          pattern={rimband}
-          palette={FOOT}
-          fit="grid"
-          cellSize={44}
-          seed="everything-foot"
-          style={{ position: 'absolute', inset: 0 }}
-        />
-      </div>
-
       <footer className={s.footer}>
-        <p className={s.footName}>Everything Bagel Co.</p>
-        <p>A fictional bagel shop. The bagels, prices, people and address are invented.</p>
-        <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
-        </p>
+        <div className={s.footBand} aria-hidden="true">
+          <TabbiedPattern
+            pattern={rimband}
+            palette={FOOT}
+            fit="grid"
+            cellSize={44}
+            seed="everything-foot"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
+        <div className={s.footText}>
+          <p className={s.footName}>Everything Bagel Co.</p>
+          <p>A fictional bagel shop. The bagels, prices, people and address are invented.</p>
+          <p>The bagel on the counter is a generated image, drawn in the page's colors.</p>
+          <p>
+            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          </p>
+        </div>
       </footer>
     </div>
   );

@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { scramble, maze } from 'tabbied/patterns';
 import s from './honor-roll-tutoring.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Honor Roll Tutoring: Tutoring center, Linden Park',
@@ -395,6 +396,12 @@ export default function HonorRollTutoringPage() {
               <span className={s.answer}>C</span>
             </p>
             <p className={s.workNote}>Siblings can share one pack, so two kids at ten sessions each is two packs, not four.</p>
+            <Artwork
+              slug="honor-roll-tutoring-doodle"
+              alt="A ballpoint doodle of a sharpened pencil, an apple and a protractor"
+              inks={['var(--pen)']}
+              className={s.doodle}
+            />
           </aside>
           </div>
         </section>
@@ -449,6 +456,17 @@ export default function HonorRollTutoringPage() {
                   <p>{a}</p>
                 </details>
               ))}
+              <div className={s.cardDoodle} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={maze}
+                  palette={DOODLE}
+                  options={{ thickness: 4 }}
+                  fit="grid"
+                  cellSize={26}
+                  seed="honor-roll-card"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -522,24 +540,26 @@ export default function HonorRollTutoringPage() {
         </section>
       </main>
 
-      {/* The back cover: the same marbled board as the front. */}
-      <div className={s.backCover} aria-hidden="true">
-        <TabbiedPattern
-          pattern={scramble}
-          palette={BACK}
-          fit="grid"
-          cellSize={24}
-          seed="honor-roll-back"
-          style={{ position: 'absolute', inset: 0 }}
-        />
-      </div>
-
       <footer className={s.footer}>
-        <p className={s.footName}>Honor Roll Tutoring</p>
-        <p>A fictional tutoring center. The tutors, prices, schedule and address are invented.</p>
-        <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
-        </p>
+        {/* The back cover: the same marbled board as the front. */}
+        <div className={s.backCover} aria-hidden="true">
+          <TabbiedPattern
+            pattern={scramble}
+            palette={BACK}
+            fit="grid"
+            cellSize={24}
+            seed="honor-roll-back"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        </div>
+        <div className={s.footText}>
+          <p className={s.footName}>Honor Roll Tutoring</p>
+          <p>A fictional tutoring center. The tutors, prices, schedule and address are invented.</p>
+          <p>The doodle in the margin is a generated image, drawn in the page's colors.</p>
+          <p>
+            Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          </p>
+        </div>
       </footer>
     </div>
   );

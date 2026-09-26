@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { drypoint } from 'tabbied/patterns';
 import s from './post-oak-smokehouse.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Post Oak Smokehouse: Texas barbecue, Ferris Road',
@@ -242,6 +243,15 @@ export default function PostOakSmokehousePage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
+            <figure className={s.print}>
+              <Artwork
+                slug="post-oak-smokehouse-brisket"
+                alt="Slices of smoked brisket with a dark peppery bark, fanned out on butcher paper"
+                inks={['var(--text)']}
+                className={s.brisket}
+              />
+              <figcaption className={s.printCap}>Moist, from the point</figcaption>
+            </figure>
             <p className={s.stamp}>
               <span>Sold by the</span>
               <strong>1/2 lb</strong>
@@ -613,7 +623,7 @@ export default function PostOakSmokehousePage() {
         <p className={s.footName}>Post Oak Smokehouse</p>
         <p>A fictional Texas barbecue joint. The meats, prices, times and people are invented.</p>
         <p>
-          Patterns by <a href="https://tabbied.com">Tabbied</a>.
+          Patterns by <a href="https://tabbied.com">Tabbied</a>, drawn live; the brisket is a generated image drawn in the page's colors.
         </p>
       </footer>
     </div>

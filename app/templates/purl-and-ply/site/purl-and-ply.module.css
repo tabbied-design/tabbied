@@ -5,6 +5,7 @@
    the people) and binds off at the door. The hero is a ball of the house
    yarn with its paper band wrapped round it; a knitted yoke runs across
    the page, a button band edges the stitch club, and the footer is a hem.
+   A shelf of skeins, drawn in the page's inks, stands over the weights.
    Oatmeal ground, rust and moss and a little honey, a round soft display
    serif and a friendly sans. Borders are running stitches: dashed.
    ========================================================================== */
@@ -45,6 +46,9 @@
   --rule: color-mix(in oklab, var(--text) 18%, transparent);
   --voice: color-mix(in oklab, var(--rust) 70%, var(--text));
   --knit: color-mix(in oklab, var(--oat) 88%, var(--peat));
+  --yarn-rust: color-mix(in oklab, var(--rust) 85%, var(--text));
+  --yarn-moss: color-mix(in oklab, var(--moss) 85%, var(--text));
+  --yarn-honey: color-mix(in oklab, var(--honey) 82%, var(--text));
   --stitch: 2px dashed color-mix(in oklab, var(--rust) 75%, transparent);
 
   font-family: var(--sans);
@@ -306,7 +310,29 @@
   color: var(--muted);
 }
 
-/* ------------------------------------------------------------ yarn weights */
+/* ------------------------------------------------------------ yarn weights
+   The shelf of skeins stands on the table's first rule, beside the head. */
+
+.weightsTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: 1.5rem clamp(2rem, 5vw, 4.5rem);
+  align-items: end;
+}
+
+.weightsTop .head {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.weightsTop .headNote {
+  margin-top: 1rem;
+}
+
+.skeins {
+  width: min(100%, 27rem);
+  justify-self: end;
+  margin-bottom: 0.4rem;
+}
 
 .weightHead,
 .weights > li {
@@ -961,6 +987,20 @@
 
   .head .headNote {
     margin-top: 0.9rem;
+  }
+
+  .weightsTop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .weightsTop .head {
+    margin-bottom: 0;
+  }
+
+  .skeins {
+    width: min(86%, 22rem);
+    justify-self: center;
+    margin-bottom: 1rem;
   }
 
   .ballWrap {

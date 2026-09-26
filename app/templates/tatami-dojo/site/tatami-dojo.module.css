@@ -7,7 +7,8 @@
    ladder of belts from white at the top to black at the bottom, where the
    footer is the black belt. Primary shapes (circle, square, triangle,
    half-disc) mark the age groups; the patterns are circles and quarter
-   discs, and a heap of folded belts over the grading path.
+   discs, and a heap of folded belts over the grading path. One picture, a
+   child and a sensei bowing, stands on the booking form in the ink.
    ========================================================================== */
 
 .page {
@@ -722,23 +723,42 @@
   color: var(--muted);
 }
 
+/* The booking form, with the bow standing on its bottom rule: a child and
+   a sensei, the first thing and the last thing in every class. */
 .form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(11rem, 20vw, 17rem);
+  gap: 1.5rem clamp(1.5rem, 4vw, 3.5rem);
   margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  padding: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 3vw, 2rem) 0;
   border: 3px solid var(--text);
   box-shadow: 10px 10px 0 var(--yellow);
 }
 
+.formBody {
+  padding-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
 .formTitle {
-  margin-bottom: 1.1rem;
   font-size: 1.8rem;
   line-height: 1;
 }
 
+.formNote {
+  max-width: 34rem;
+  margin: 0.6rem 0 1.3rem;
+  color: var(--muted);
+}
+
 .formGrid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.bow {
+  align-self: end;
+  width: 100%;
 }
 
 .field {
@@ -1005,9 +1025,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .formGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 860px) {
@@ -1110,8 +1127,18 @@
   .sensei,
   .ask,
   .steps,
-  .formGrid {
+  .formGrid,
+  .form {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formBody {
+    padding-bottom: 0;
+  }
+
+  .bow {
+    justify-self: center;
+    width: min(70%, 15rem);
   }
 
   .fees th {

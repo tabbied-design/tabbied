@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { radius, thirdstop } from 'tabbied/patterns';
 import s from './tatami-dojo.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Tatami: Karate school for kids and adults, Foundry Street',
@@ -338,40 +339,52 @@ export default function TatamiDojoPage() {
           </div>
 
           <form className={s.form} action="#">
-            <h3 className={s.formTitle}>Book it</h3>
-            <div className={s.formGrid}>
-              <div className={s.field}>
-                <label htmlFor="tt-name">Name of the student</label>
-                <input id="tt-name" name="name" type="text" />
+            <div className={s.formBody}>
+              <h3 className={s.formTitle}>Book it</h3>
+              <p className={s.formNote}>
+                Tell us who is coming and when. We reply the same day with a
+                place on the mat and a gi in the right size.
+              </p>
+              <div className={s.formGrid}>
+                <div className={s.field}>
+                  <label htmlFor="tt-name">Name of the student</label>
+                  <input id="tt-name" name="name" type="text" />
+                </div>
+                <div className={s.field}>
+                  <label htmlFor="tt-group">Group</label>
+                  <select id="tt-group" name="group" defaultValue="juniors">
+                    <option value="dragons">Little dragons, 4 to 6</option>
+                    <option value="juniors">Juniors, 7 to 11</option>
+                    <option value="teens">Teens, 12 to 16</option>
+                    <option value="adults">Adults, 16 and up</option>
+                    <option value="family">Family class</option>
+                  </select>
+                </div>
+                <div className={s.field}>
+                  <label htmlFor="tt-day">Day you would like</label>
+                  <select id="tt-day" name="day" defaultValue="sat">
+                    <option value="mon">Monday</option>
+                    <option value="tue">Tuesday</option>
+                    <option value="wed">Wednesday</option>
+                    <option value="thu">Thursday</option>
+                    <option value="fri">Friday</option>
+                    <option value="sat">Saturday</option>
+                    <option value="sun">Sunday</option>
+                  </select>
+                </div>
+                <div className={s.field}>
+                  <label htmlFor="tt-contact">Your phone or email</label>
+                  <input id="tt-contact" name="contact" type="text" autoComplete="email" />
+                </div>
               </div>
-              <div className={s.field}>
-                <label htmlFor="tt-group">Group</label>
-                <select id="tt-group" name="group" defaultValue="juniors">
-                  <option value="dragons">Little dragons, 4 to 6</option>
-                  <option value="juniors">Juniors, 7 to 11</option>
-                  <option value="teens">Teens, 12 to 16</option>
-                  <option value="adults">Adults, 16 and up</option>
-                  <option value="family">Family class</option>
-                </select>
-              </div>
-              <div className={s.field}>
-                <label htmlFor="tt-day">Day you would like</label>
-                <select id="tt-day" name="day" defaultValue="sat">
-                  <option value="mon">Monday</option>
-                  <option value="tue">Tuesday</option>
-                  <option value="wed">Wednesday</option>
-                  <option value="thu">Thursday</option>
-                  <option value="fri">Friday</option>
-                  <option value="sat">Saturday</option>
-                  <option value="sun">Sunday</option>
-                </select>
-              </div>
-              <div className={s.field}>
-                <label htmlFor="tt-contact">Your phone or email</label>
-                <input id="tt-contact" name="contact" type="text" autoComplete="email" />
-              </div>
+              <button className={s.button} type="submit">Hold a place on the mat</button>
             </div>
-            <button className={s.button} type="submit">Hold a place on the mat</button>
+            <Artwork
+              slug="tatami-dojo-bow"
+              alt="A child and an adult in karate uniforms and belts, bowing to each other"
+              inks={['var(--text)']}
+              className={s.bow}
+            />
           </form>
         </section>
 
@@ -481,6 +494,7 @@ export default function TatamiDojoPage() {
         <div className={s.footInner}>
           <p className={s.footName}>Tatami</p>
           <p>A fictional karate school. The sensei, times, grades and fees are invented.</p>
+          <p>The two bowing figures are a generated picture, drawn in the page's own colors.</p>
           <p>
             Patterns by <a href="https://tabbied.com">Tabbied</a>.
           </p>

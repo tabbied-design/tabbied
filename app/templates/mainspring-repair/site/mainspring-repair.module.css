@@ -761,6 +761,7 @@
 .form {
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  grid-template-rows: auto 1fr;
   gap: 2rem clamp(2rem, 5vw, 4.5rem);
   margin-top: clamp(3.5rem, 7vw, 5rem);
   padding: clamp(1.6rem, 4vw, 3rem);
@@ -781,15 +782,37 @@
   color: var(--muted);
 }
 
+/* The movement: a photograph toned from dial black to gilt, under the
+   note that asks for one. */
+.movement {
+  width: min(100%, 15rem);
+  margin: 2.2rem 0 0;
+}
+
+.movementCap {
+  max-width: 15rem;
+  margin-top: 0.8rem;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--muted);
+}
+
+.formIntro {
+  grid-row: 1 / span 2;
+}
+
 .formGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
   gap: 1.4rem 1.6rem;
-  margin-bottom: 2rem;
 }
 
 .form .btn {
   grid-column: 2;
+  align-self: start;
   justify-self: start;
 }
 
@@ -1013,20 +1036,23 @@
 
 /* ------------------------------------------------------------------- footer */
 
-.caseback {
-  position: relative;
-  height: clamp(130px, 14vw, 200px);
-  margin-top: clamp(5.5rem, 11vw, 8.5rem);
-  overflow: hidden;
-  border-top: 1px solid var(--hair);
-}
-
 .footer {
-  padding: 2.4rem var(--gut) 3rem;
+  margin-top: clamp(5.5rem, 11vw, 8.5rem);
   text-align: center;
   font-size: 0.82rem;
   color: var(--muted);
+}
+
+.caseback {
+  position: relative;
+  height: clamp(130px, 14vw, 200px);
+  overflow: hidden;
   border-top: 1px solid var(--hair);
+  border-bottom: 1px solid var(--hair);
+}
+
+.footText {
+  padding: 2.4rem var(--gut) 3rem;
 }
 
 .footer p + p {
@@ -1150,9 +1176,18 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .form {
+    grid-template-rows: none;
+  }
+
   .form .btn {
     grid-column: 1;
   }
+
+  .formIntro {
+    grid-row: auto;
+  }
+
 
   .people {
     grid-template-columns: minmax(0, 1fr);

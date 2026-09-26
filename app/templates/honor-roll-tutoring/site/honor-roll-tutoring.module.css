@@ -788,6 +788,14 @@
   line-height: 1.5;
 }
 
+/* The doodle, drawn in the same ballpoint as the sums, tilted the way a
+   hand leaves it. */
+.doodle {
+  width: min(100%, 12.5rem);
+  margin: 1.6rem 0 0 0.6rem;
+  transform: rotate(-6deg);
+}
+
 /* ------------------------------------------------------------------- roster */
 
 .roster {
@@ -914,6 +922,16 @@
   font-weight: 700;
   line-height: 1.1;
   color: var(--pen);
+}
+
+/* A ballpoint maze doodled along the foot of the card, fading at both ends. */
+.cardDoodle {
+  position: relative;
+  height: 4.6rem;
+  margin: 1.4rem calc(-1 * var(--cardpad)) -1.6rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, var(--paper) 18%, var(--paper) 82%, transparent);
+  mask-image: linear-gradient(to right, transparent, var(--paper) 18%, var(--paper) 82%, transparent);
 }
 
 .q {
@@ -1120,20 +1138,23 @@
 
 /* ------------------------------------------------------------------- footer */
 
-.backCover {
-  position: relative;
-  height: clamp(120px, 14vw, 190px);
-  margin-top: clamp(5rem, 10vw, 8rem);
-  overflow: hidden;
-  border-top: 12px solid var(--graphite);
-}
-
 .footer {
-  padding: 2rem var(--gut) 2.6rem;
+  margin-top: clamp(5rem, 10vw, 8rem);
   text-align: center;
   font-size: 0.86rem;
   color: var(--on-graphite);
   background: var(--graphite);
+}
+
+.backCover {
+  position: relative;
+  height: clamp(120px, 14vw, 190px);
+  overflow: hidden;
+  border-top: 12px solid var(--graphite);
+}
+
+.footText {
+  padding: 2rem var(--gut) 2.6rem;
 }
 
 .footer p + p {
