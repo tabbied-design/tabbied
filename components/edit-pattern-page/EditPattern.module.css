@@ -755,7 +755,7 @@
     min-height: 0;
     width: auto;
     border-left: none;
-    border-top: 1px solid #eceef1;
+    border-top: 1px solid oklch(0 0 0 / 0.1);
   }
 
   .group {
