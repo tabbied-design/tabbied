@@ -144,12 +144,12 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is comfortably inside the platform limits - roughly 9,500 files
-against a 20,000 free-plan ceiling, largest file 3.0 MB against 25 MiB - but
+The export is comfortably inside the platform limits - roughly 11,100 files
+against a 20,000 free-plan ceiling, largest file 2.8 MB against 25 MiB - but
 both are counted per Worker *version*. Don't treat that file count as stable:
 most of it is per-route RSC payloads, and a Next minor can move it a lot (16.3
 cut ~1,400 files off 16.2's output without changing a page). What is stable is
-`public/downloads/`, a flat 4,256 files for 177 sites (the artwork ones ship
+`public/downloads/`, a flat 5,228 files for 227 sites (the artwork ones ship
 their pictures in both packages), so a batch of new template sites is the
 thing most likely to actually threaten the ceiling. `wrangler deploy` prints
 the count it uploaded.
@@ -244,7 +244,7 @@ and *not* `zip` - so CI stayed green while the first Workers deploy died with
 fflate (zero dependencies), so the only thing the packaging step needs is the
 Node that is already running it. Don't reintroduce a PATH lookup here. Two
 details it depends on: every directory gets its own zero-length `<name>/`
-entry, because 74 of the 177 sites reference no images and their empty
+entry, because 98 of the 227 sites reference no images and their empty
 `images/` (and the React package's `public/`) would otherwise vanish from
 the download;
 and entries carry the source file's real mtime, which `zip -r` did and fflate
@@ -270,7 +270,7 @@ The two formats are built in opposite directions, and that is the point:
   source to copy - hand-porting is the trap the derive-don't-port strategy
   above exists to avoid.
 - **React is a copy of the page**, because a template page already *is* a plain
-  React component. The only Next.js API any of the 177 uses is `export const
+  React component. The only Next.js API any of the 227 uses is `export const
   metadata`; there is no next/image, next/link, `'use client'` or
   `generateStaticParams` anywhere. So `page.tsx` ships as authored and only the
   frame changes: metadata lifted into `index.html`, workspace imports pointed
@@ -302,7 +302,7 @@ code: the placeholders already carry their config as `data-*` attributes
 `hydratePatterns()` call revives the whole page.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
-page, or two hashed names collapsing onto one plain name. All 177 sites
+page, or two hashed names collapsing onto one plain name. All 227 sites
 package, so `KNOWN_UNSUPPORTED` is empty - anything that throws is a new
 problem and exits non-zero.
 
@@ -374,7 +374,7 @@ Four things worth not re-litigating:
   footer) and an edit reaches all of them; the generator fails the build if
   they don't currently agree.
 
-All 177 sites are annotated. The 172 bespoke pages were done by
+All 227 sites are annotated. The 222 bespoke pages were done by
 `scripts/annotate-templates.mjs`, a one-time codemod (`npm run
 annotate:templates`) - run it after adding a new bespoke template, and note it
 skips any page already carrying `data-edit-root`, so a hand-annotated page is
@@ -446,9 +446,9 @@ nothing in its place, so a phone visitor, on the site or on a site shipped
 from the download, had the footer and nothing else. Each of them now renders
 `components/template/TemplateMenu` in its header: a copy of the nav's links
 (same `data-edit` ids, which is allowed, and the editable gate checks they
-agree) behind a "Menu" toggle. The 30 minimal templates and the 70 artwork
-ones were built with it, so 157 of the 177 carry one. Four things it
-depends on:
+agree) behind a "Menu" toggle. The 30 minimal templates, the 70 artwork
+ones and the 50 small-business ones were built with it, so 207 of the 227
+carry one. Four things it depends on:
 
 - **It is a `<details>`, because the HTML package has no React left.** Open
   and shut are the browser's own there. Closing on a followed link, an
@@ -542,6 +542,60 @@ the hero, measured at 1440px. The first cut had most of its patterns in the
 hero; a field added after a page was annotated gets its slot and role map
 from `annotate-templates.mjs --patterns`, which touches nothing else.
 
+## The small-business set - fifty pages that take any palette
+
+The last 50 entries in `lib/templateSites.ts` (2026-09-26, seed prefix
+`sb-`) are single-page sites for small businesses: bakeries, a diner, a
+tapas bar, a dentist for nervous patients, an orthodontist, groomers, a
+roofer, a cobbler, a florist and so on. They replaced ten pages that shared
+one generic `LocalBusinessSite` layout. Each takes its layout from the
+trade (a sourdough bakery's bakes on a split-flap departures board, a comic
+shop laid out as a comic page, a repair shop as a 1998 desktop, a framer's
+museum wall), each leads with a design no earlier template leads with, and
+48 carry recolorable pictures (60 in all; the Artwork rules above). Arc
+Orthodontics and Easel Evenings have none: the aligner never generated
+cleanly, and Easel's pattern canvas on the easel is the point.
+
+**They are built to take any palette, which the earlier sets are not.** The
+customizer puts a library palette's color0 on role 0 and cycles its other
+colors through the remaining roles, so role 1 is not guaranteed to contrast
+with the ground (Midnight Oil puts #1b263b on #0d1b2a) and the ground may
+be dark, pastel or saturated. Crumb Bakehouse under Midnight Oil is dark
+text on a dark ground. These fifty follow three rules, and a new template
+should too:
+
+- **Roles are real palette colors only**: the ground plus two to five inks.
+  Cards, panels, rules and muted text are `color-mix` of those, never a
+  role of their own; under a library palette a "card white" role becomes a
+  saturated accent.
+- **Text is derived from the surface it sits on**, not taken raw from a
+  role. The root rule declares `--text: var(--ink)` as the fallback, and
+
+      @supports (color: oklch(from red l c h)) {
+        .page {
+          --text: color-mix(in oklab,
+            oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%,
+            var(--ink));
+        }
+      }
+
+  picks black or white by the ground's lightness and tints it toward the
+  ink. A surface filled with a role derives its own the same way
+  (`--on-accent`, `--on-ink`). Small text never sits in a raw accent on the
+  ground; accents are for display type, fills, marks and patterns.
+- **Pictures take their inks from the same tokens**: a one-ink drawing on
+  the ground uses `var(--text)`, and a layered picture maps each layer name
+  to a different role so its shapes stay apart whatever the palette.
+
+A page is checked by re-coloring its root properties with stress palettes
+the way the customizer does (Midnight Oil, dark with a near-invisible role
+1; Sorbet, pastel with every ink light; Ember, dark with hot inks) and
+looking at every section. Clearsound Hearing's text-size switch is CSS
+only: three empty target ids read by `.page:has(:global(#text-larger:target))`
+(`:global()` because CSS Modules renames ids; the HTML packager unwraps
+it). The Studio preview turns fragment links into scrolls, so the switch
+does nothing there.
+
 ## Template screenshots on the cards
 
 Every template has a screenshot in `public/template-shots/<slug>.webp`: the
@@ -609,7 +663,8 @@ re-litigating:
   every card after it. The cost is that an addition is spread only through
   itself, so a large batch of one look sits together on the last pages.
   The first 177 were laid out by `spreadTemplates` and frozen as they were
-  first published.
+  first published; the fifty small-business sites were appended after them
+  (2026-09-26), spread among themselves.
 - **The URL is read after mount, not with `useSearchParams`**, the same as
   the pattern library's `?page=`: `useSearchParams` in a static export
   renders the whole route on the client. The first paint is All, page 1,
@@ -689,7 +744,7 @@ it hairline at the ~20px the navs draw it at. Scale the box, never the stroke.
 
 **The wordmark's font is declared by `Logo` itself**, not by a route and not
 by the root layout. `plexMono` and `ebGaramond` are applied by the routes that
-use them; the lockup is in a dozen mastheads and in none of the 177 template
+use them; the lockup is in a dozen mastheads and in none of the 227 template
 pages, so the component that draws the word is the only place that knows
 where the font is actually read.
 
@@ -1024,7 +1079,7 @@ another). Five things worth not re-litigating:
   (`components/template/ChooseTemplate.tsx`): how many are chosen, what this
   one costs, and at the limit the chosen ones and "Request more". The page
   learns what is chosen from `GET /api/account/templates`, read once per
-  page into a small store (`lib/myTemplates.ts`) the 177 gallery cards
+  page into a small store (`lib/myTemplates.ts`) the 227 gallery cards
   share. Someone who opens a zip's URL directly is held to the same five.
 - **A click and a fetch are answered differently.** A navigation (a download
   link, told by `Sec-Fetch-Mode`) is sent where the answer is: to
@@ -1094,14 +1149,14 @@ they stay reachable from the framed template preview and from the account.
 The rest of this section describes the flow as built, for when it comes back.
 
 `/studio` takes a description of a business and `/studio/results` answers with
-three template sites. Studio answers with what the repo actually has: 177
+three template sites. Studio answers with what the repo actually has: 227
 finished template sites, each on one of the 338 patterns and one of the 437
 palettes, each with a real page and a real zip. (The AI tier this was designed
 against - `agent-outputs/20260827-studio-ai-plan.md` - has since landed; see
 below. The matcher was not replaced by it.)
 
 - **`lib/studioMatch.ts` is pure and isomorphic; `lib/studioDirections.ts` is
-  server-only.** The index - 177 entries of names, palettes and vocabulary - is
+  server-only.** The index - 227 entries of names, palettes and vocabulary - is
   built at build time and passed to the client as plain data. Importing the
   catalog (384 KB) or the template data into the browser to match against it is
   the thing this split exists to prevent.
@@ -1246,7 +1301,7 @@ the template and shows the result.
   `planEdits`, which is pure and so runs in the Worker with no DOM; one repair
   retry; a second failure writes the three-string `directionToEdits` floor as
   revision 1 with `source: 'fallback'`, and the workspace says so. Because the
-  document is keyed by slot id, **this reaches all 177 templates today** -
+  document is keyed by slot id, **this reaches all 227 templates today** -
   `data-edit-copy` roles matter only for the cheap card-stage preview.
 - **Sites are pinned and versioned.** `site` records `specVersion` and a
   SHA-256 of the packaged `index.html` it was authored against; `GET
