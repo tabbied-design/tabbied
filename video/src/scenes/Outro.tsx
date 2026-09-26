@@ -1,37 +1,57 @@
 import { AbsoluteFill } from 'remotion';
 import { patterns } from 'tabbied/patterns';
 import { PatternField } from '../PatternField';
-import { C, F, LogoMark, Wordmark, body, rise, useRise } from '../brand';
-import { palette } from '../data';
+import { C, F, LogoMark, Wordmark, rise, useRise } from '../brand';
+import { data } from '../data';
 
-// The lockup and the address, over a field that keeps moving.
+// The lockup and the address on a plate of the page's own ground, over a field
+// in a quiet palette that keeps rearranging behind it.
 export function Outro() {
-  const field = useRise(0, 30);
-  const lockup = useRise(10);
-  const line = useRise(22);
+  const field = useRise(0, 16);
+  const plate = useRise(4);
+  const address = useRise(12);
   return (
     <AbsoluteFill style={{ background: C.bg }}>
-      <AbsoluteFill style={{ opacity: field * 0.5 }}>
+      <AbsoluteFill style={{ opacity: field }}>
         <PatternField
           pattern={patterns.veil}
-          steps={['o1', 'o2', 'o3'].map((seed) => ({ seed, palette: palette('lib-neon') }))}
-          hold={34}
-          morph={18}
+          steps={['o1', 'o2', 'o3'].map((seed) => ({ seed, palette: data.outro.colors }))}
+          hold={22}
+          morph={14}
           density={0.35}
         />
       </AbsoluteFill>
-      <AbsoluteFill
-        style={{ background: `radial-gradient(ellipse at center, ${C.bg} 0%, ${C.bg}f2 34%, ${C.bg}66 100%)` }}
-      />
-      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', color: C.fg }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 30, ...rise(lockup) }}>
-          <LogoMark size={130} />
-          <Wordmark size={120} />
+      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '64px 96px 56px',
+            borderRadius: 32,
+            background: C.bg,
+            boxShadow: `0 0 0 1px ${C.rule}`,
+            color: C.fg,
+            ...rise(plate, 24),
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 30 }}>
+            <LogoMark size={130} />
+            <Wordmark size={120} />
+          </div>
+          <p
+            style={{
+              margin: '34px 0 0',
+              fontFamily: F.mono,
+              fontSize: 30,
+              letterSpacing: '0.08em',
+              color: C.cyan,
+              ...rise(address, 12),
+            }}
+          >
+            tabbied.com
+          </p>
         </div>
-        <p style={{ ...body, color: C.fg, marginTop: 40, ...rise(line) }}>Free patterns and websites, yours to shape.</p>
-        <p style={{ fontFamily: F.mono, fontSize: 30, color: C.cyan, letterSpacing: '0.08em', marginTop: 22, ...rise(line) }}>
-          tabbied.com
-        </p>
       </AbsoluteFill>
     </AbsoluteFill>
   );

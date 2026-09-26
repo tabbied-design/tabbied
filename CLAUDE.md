@@ -1684,12 +1684,17 @@ worth not re-litigating:
 
 - **A live pattern is driven by the frame, not the clock.** `PatternField`
   pauses every Animation a reseed or recolor starts and sets `currentTime`
-  from the frame number. Remotion renders frames out of order in parallel
-  tabs, so a transition left running is caught at a random point; the
-  component also brings the field to each frame's state from whatever it
-  shows, which is why `--concurrency=4` matches `--concurrency=1` frame for
-  frame. Pick designs whose transition covers the whole change: some cut
-  their colors on a reseed, which reads as a flicker on video.
+  from the frame number, brings the field to each frame's state from
+  whatever it shows, and keeps it muted outside its own morphs. Remotion
+  renders frames out of order in parallel tabs, and it moves the composition
+  into its canvas after rendering it, which reconnects every `<css-doodle>`:
+  css-doodle then reloads on a timer that fires late under load, and the
+  rebuilt cells animated in on the first frames of a tab. With the mute (and
+  a MutationObserver that puts it back after a rebuild) the video renders
+  byte-identical with `--concurrency=4` and `--concurrency=1`; check that
+  again after touching the component. Pick designs whose transition covers
+  the whole change: some cut their colors on a reseed, which reads as a
+  flicker on video.
 - **Figures and pictures are derived.** `scripts/prepare.mjs` reads the
   counts, palettes and template order from the same modules
   `lib/siteCounts.ts` does, before every render. The UI screenshots in

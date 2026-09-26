@@ -1,6 +1,6 @@
 # The Tabbied showcase video
 
-A ~49 second, 1080p30 product video, authored in [Remotion](https://www.remotion.dev)
+A ~22 second, 1080p30 product video, authored in [Remotion](https://www.remotion.dev)
 (React). The patterns in it are live Tabbied designs rendered by the package,
 not recordings; the product scenes are screenshots of the real site.
 
@@ -16,7 +16,7 @@ npm run render                 # out/tabbied-showcase.mp4
 
 Rendering needs a Chromium. Remotion downloads its own headless shell unless
 `TABBIED_CHROMIUM` points at one already installed (the variable the
-`tabbied` CLI reads too). A render of the whole video takes a few minutes on
+`tabbied` CLI reads too). A render of the whole video takes about a minute on
 four cores; `--concurrency=N` sets how many browser tabs share it.
 
 ## Why it is its own package
@@ -56,10 +56,13 @@ starts and sets `currentTime` from the frame number, which keeps the
 design's easing and stretches it to the morph length a scene asks for.
 
 Each frame is rendered from the frame number alone. Whatever the field shows,
-it is brought to that frame's state first; that is what lets a parallel
-render match a sequential one. Rendered both ways, the wall scene's nine
-fields came out identical in 99 frames of 100; the other differed by 49
-anti-aliased pixels on a tile that was mid-scale, not in any field's state.
+it is brought to that frame's state first, and outside a morph it is muted,
+so nothing it does on its own clock can reach a frame. The trap that made the
+mute necessary: Remotion moves the composition into its canvas after
+rendering it, every `<css-doodle>` reconnects, and css-doodle reloads on a
+timer that, under load, fires after the field is ready; the rebuilt cells
+then animated in. `PatternField.tsx` has the details. With it, the whole
+video renders byte-identical with `--concurrency=1` and `--concurrency=4`.
 
 Not every design's transition covers its whole change: some animate only a
 size or an angle and cut the colors, and some paint with gradients, which CSS

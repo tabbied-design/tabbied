@@ -12,16 +12,16 @@ import { radius } from 'tabbied/patterns';
 export function Banner() {
   return <TabbiedPattern pattern={radius} seed="k9Pz" />;
 }`;
-const TYPE_FROM = 16;
-const PER_FRAME = 2.4;
+const TYPE_FROM = 8;
+const PER_FRAME = 4;
 
 export function Code() {
   const frame = useCurrentFrame();
   const text = useRise(0);
-  const panel = useRise(6, 22);
+  const panel = useRise(2, 14);
   const chars = Math.max(0, Math.floor((frame - TYPE_FROM) * PER_FRAME));
   const done = TYPE_FROM + CODE.length / PER_FRAME;
-  const art = interpolate(frame, [done, done + 20], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const art = interpolate(frame, [done, done + 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
   return (
     <AbsoluteFill style={{ background: C.bg }}>
       <div style={{ position: 'absolute', left: 110, top: 110, ...rise(text) }}>
@@ -32,7 +32,7 @@ export function Code() {
         title="Banner.tsx"
         code={CODE}
         chars={chars}
-        caret={frame < done + 30 && Math.floor(frame / 15) % 2 === 0}
+        caret={frame < done + 24 && Math.floor(frame / 12) % 2 === 0}
         style={{ left: 110, top: 360, width: 1080, ...rise(panel) }}
       />
       <div

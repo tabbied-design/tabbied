@@ -11,8 +11,8 @@ import { data } from '../data';
 // many designs paint with gradients, which CSS cannot interpolate, so their
 // own recolor is a cut. The field underneath is keyed by palette, so it stays
 // mounted when the one fading in becomes the base.
-const HOLD = 22;
-const MORPH = 12;
+const HOLD = 10;
+const MORPH = 8;
 const SEED = 'recolor';
 
 function Layer({ index, opacity }: { index: number; opacity: number }) {
@@ -33,7 +33,7 @@ function Layer({ index, opacity }: { index: number; opacity: number }) {
 export function Recolor() {
   const frame = useCurrentFrame();
   const text = useRise(0);
-  const list = useRise(14);
+  const list = useRise(8);
   const cycle = HOLD + MORPH;
   const last = data.recolor.length - 1;
   const from = Math.min(Math.floor(frame / cycle), last);

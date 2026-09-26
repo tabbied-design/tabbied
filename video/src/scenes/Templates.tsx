@@ -7,7 +7,7 @@ import { data } from '../data';
 const CARD_W = 400;
 const CARD_H = 300;
 const GAP = 26;
-const SPEED = 2.4;
+const SPEED = 3.6;
 
 function Rail({ slugs, top, direction }: { slugs: string[]; top: number; direction: 1 | -1 }) {
   const frame = useCurrentFrame();
@@ -36,7 +36,7 @@ function Rail({ slugs, top, direction }: { slugs: string[]; top: number; directi
 
 export function Templates() {
   const text = useRise(0);
-  const rails = useRise(10, 26);
+  const rails = useRise(4, 16);
   const half = Math.ceil(data.templates.length / 2);
   return (
     <AbsoluteFill style={{ background: C.bg }}>

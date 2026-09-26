@@ -14,7 +14,6 @@ export const C = {
   fg: '#eef0f6',
   mint: '#3fffb2',
   cyan: '#3eecff',
-  violet: '#b98aff',
   dim: '#7c808c',
   card: '#15151b',
   rule: 'rgba(255, 255, 255, 0.08)',
@@ -36,16 +35,15 @@ export const FONT_FACES = [
   `300 16px "Cormorant Garamond"`,
 ];
 
-// The hero's two gradients: "Free patterns" and "websites".
+// The homepage hero's gradient on "websites".
 export const GRADIENT = {
-  patterns: `linear-gradient(90deg, ${C.violet}, ${C.cyan})`,
   sites: `linear-gradient(90deg, ${C.cyan}, ${C.mint})`,
 };
 
 export const ease = Easing.bezier(0.22, 1, 0.36, 1);
 
 // 0 -> 1 over [start, start + length] frames, eased.
-export function useRise(start: number, length = 18) {
+export function useRise(start: number, length = 12) {
   const frame = useCurrentFrame();
   return interpolate(frame, [start, start + length], [0, 1], {
     easing: ease,
@@ -54,17 +52,16 @@ export function useRise(start: number, length = 18) {
   });
 }
 
-// The Tabbied mark (components/logo/LogoMark.tsx), with an optional draw-on:
-// `draw` runs 0 -> 1 as the two strokes are traced.
+// The Tabbied mark (components/logo/LogoMark.tsx).
 const LEFT = 'M191 261 H277 C277 172.6 205.4 101 116 101 V311 C116 401.1 188.7 474 277 474 V312 H221';
 const RIGHT = 'M414 261 H328 C328 172.6 399.6 101 489 101 V311 C489 401.1 416.3 474 328 474 V312 H391';
 
-export function LogoMark({ size, draw = 1, style }: { size: number; draw?: number; style?: CSSProperties }) {
+export function LogoMark({ size, style }: { size: number; style?: CSSProperties }) {
   return (
     <svg viewBox="107 92 391 391" width={size} height={size} style={{ display: 'block', ...style }}>
       <g fill="none" stroke="currentColor" strokeWidth="17">
         {[LEFT, RIGHT].map((d) => (
-          <path key={d} d={d} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - draw} />
+          <path key={d} d={d} />
         ))}
       </g>
     </svg>

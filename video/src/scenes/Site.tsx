@@ -12,8 +12,8 @@ const SHOT_H = site.height * (WIDTH / site.width);
 export function Site() {
   const frame = useCurrentFrame();
   const text = useRise(0);
-  const win = useRise(4, 26);
-  const scroll = interpolate(frame, [30, 170], [0, Math.max(0, SHOT_H - HEIGHT - 400)], {
+  const win = useRise(2, 16);
+  const scroll = interpolate(frame, [12, 96], [0, Math.max(0, SHOT_H - HEIGHT - 400)], {
     easing: ease,
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
