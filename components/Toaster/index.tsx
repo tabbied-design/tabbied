@@ -2,6 +2,7 @@
 
 import { Toast } from '@base-ui-components/react/toast';
 import { X } from 'lucide-react';
+import { plexSans } from 'lib/fonts';
 import styles from './Toaster.module.css';
 
 // A standalone toast manager: `toaster.add({ title })` can be called from
@@ -32,7 +33,9 @@ export default function Toaster() {
   return (
     <Toast.Provider toastManager={toaster}>
       <Toast.Portal>
-        <Toast.Viewport className={styles.viewport}>
+        {/* Portaled to <body>, outside the page wrapper that declares the
+            Plex Sans variable, so the viewport declares it again. */}
+        <Toast.Viewport className={`${plexSans.variable} ${styles.viewport}`}>
           <ToastList />
         </Toast.Viewport>
       </Toast.Portal>

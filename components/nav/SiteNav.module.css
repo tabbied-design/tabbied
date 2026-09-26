@@ -264,7 +264,9 @@
   --n-sans: var(--font-plex-sans, 'IBM Plex Sans'), 'proxima-nova',
     'Helvetica Neue', Helvetica, Arial, sans-serif;
 
-  min-width: 230px;
+  /* The artboards' 230px is a content-box width; this box counts its
+     padding, so the menu is the 242px they draw. */
+  min-width: 242px;
   padding: 6px;
   font-family: var(--n-sans);
   color: #0e0e13;

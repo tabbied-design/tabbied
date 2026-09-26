@@ -2,7 +2,7 @@
    whatever page asked for it. */
 .viewport {
   position: fixed;
-  bottom: 2rem;
+  bottom: 34px;
   left: 50%;
   z-index: 2000;
   display: flex;
@@ -14,18 +14,37 @@
   transform: translateX(-50%);
 }
 
+/* The artboards' toast: an ink pill with white type on a light page. The
+   close button is the site's own, so the right-hand padding is its. */
 .toast {
+  --toast-muted: rgba(255, 255, 255, 0.75);
+  --toast-close: rgba(255, 255, 255, 0.6);
+  --toast-close-hover: rgba(255, 255, 255, 0.12);
+
   display: flex;
   align-items: center;
   gap: 0.75rem;
   max-width: 22rem;
-  padding: 0.8rem 0.9rem 0.8rem 1.2rem;
+  padding: 13px 14px 13px 22px;
   border-radius: 999px;
-  background: #232529;
+  background: #0e0e13;
   color: #ffffff;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 12px 34px oklch(0 0 0 / 0.28);
   /* Base UI drives enter/leave via the data attributes below. */
   transition: transform 260ms ease, opacity 260ms ease;
+}
+
+/* On the dark shell (the template gallery) it inverts, as that artboard
+   draws it: paper with ink type. The dark masthead is how the page says so,
+   since the toast is portaled out of the page's own tree. */
+:global(body:has(header[data-tone='dark'])) .toast {
+  --toast-muted: oklch(0 0 0 / 0.6);
+  --toast-close: oklch(0 0 0 / 0.5);
+  --toast-close-hover: oklch(0 0 0 / 0.08);
+
+  color: #0e0e13;
+  background: #eef0f6;
+  box-shadow: 0 12px 34px oklch(0 0 0 / 0.4);
 }
 
 .toast[data-starting-style],
@@ -40,16 +59,15 @@
 }
 
 .title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  line-height: 1.35;
+  font: 400 14px / 1.35 var(--font-plex-sans, 'IBM Plex Sans'), 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
 }
 
 .description {
   margin-top: 0.15rem;
-  font-size: 0.82rem;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.75);
+  font: 400 13px / 1.4 var(--font-plex-sans, 'IBM Plex Sans'), 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
+  color: var(--toast-muted);
 }
 
 .close {
@@ -63,14 +81,14 @@
   border: none;
   border-radius: 5px;
   background: transparent;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--toast-close);
   cursor: pointer;
   transition: color 120ms ease, background-color 120ms ease;
 }
 
 .close:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.12);
+  color: inherit;
+  background: var(--toast-close-hover);
 }
 
 .close:focus-visible {

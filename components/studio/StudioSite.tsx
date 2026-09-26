@@ -347,8 +347,8 @@ export default function StudioSite({
     applyDocument(document);
 
     shuffleTimer.current = window.setTimeout(() => {
-      setShuffling(false);
       toaster.add({ title: `New patterns: ${drawnNames(patternSlots, patterns, designs)}.` });
+      setShuffling(false);
     }, SHUFFLE_BEAT_MS);
   };
 

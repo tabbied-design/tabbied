@@ -82,6 +82,7 @@
 }
 
 .stageMeta {
+  margin-top: 3px;
   font: italic 400 14px var(--font-garamond), 'EB Garamond', Georgia, serif;
   color: oklch(0.5 0.01 260);
   letter-spacing: 0.02em;
@@ -171,6 +172,7 @@
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 700;
+  line-height: normal;
   color: #0e0e13;
   letter-spacing: 0.01em;
 }
@@ -235,17 +237,6 @@
 .bgInput::-moz-color-swatch {
   border: none;
   border-radius: 2px;
-}
-
-/* Dark strip along the bottom edge marking this swatch as the background. */
-.bgStrip {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 5px;
-  background: rgba(35, 37, 41, 0.35);
-  pointer-events: none;
 }
 
 .transButton {
@@ -355,7 +346,7 @@
 .groupCaption {
   font-size: 13px;
   color: oklch(0.42 0.01 260);
-  line-height: 1;
+  line-height: normal;
 }
 
 .inksGroup {
@@ -414,26 +405,28 @@
 
 /* ---- Palette chip sections ---- */
 
+/* 34px under the swatches' captions: their row's 26px and 8px more, where
+   the search starts. */
 .chipsSection {
-  margin-top: 18px;
+  margin-top: 34px;
 }
 
-/* Borderless search with only a bottom hairline; the magnifier sits after
-   the field so the placeholder starts at the rail's left edge, in line with
-   the rows below it. */
+/* Borderless search with only a bottom hairline, the gallery rail's; the
+   magnifier sits after the field so the placeholder starts at the rail's
+   left edge, in line with the palette names below it. */
 .paletteSearch {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 2px 10px;
-  color: oklch(0.7 0.01 260);
-  border-bottom: 1px solid #e3e6ea;
+  gap: 10px;
+  padding: 6px 0 9px;
+  color: oklch(0.55 0.01 260);
+  border-bottom: 1px solid oklch(0 0 0 / 0.16);
   transition: border-color 120ms ease;
 }
 
 .paletteSearch:hover,
 .paletteSearch:focus-within {
-  border-color: #98a0af;
+  border-color: oklch(0 0 0 / 0.4);
 }
 
 .paletteSearch input {
@@ -447,11 +440,20 @@
   outline: none;
 }
 
-/* A bounded list of PaletteListRow, scrolling inside its box. */
+/* Holds the list and the fade over its last rows. */
+.paletteListWrap {
+  position: relative;
+  margin-top: 12px;
+}
+
+/* A bounded list of PaletteListRow, scrolling inside its box. Its pills
+   reach 12px past the tile's edges, so the names below sit on the line the
+   title and the search start on. The bottom padding lets the last row
+   scroll clear of the fade. */
 .paletteList {
   max-height: 296px;
-  margin: 12px -6px 0;
-  padding: 2px 6px;
+  margin: 0 -18px;
+  padding: 2px 6px 28px;
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -466,8 +468,8 @@
   flex-direction: row;
   gap: 8px;
   max-height: none;
-  margin: 10px -22px 0;
-  padding: 2px 22px 4px;
+  margin: 0 -18px;
+  padding: 2px 18px 4px;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
@@ -500,6 +502,16 @@
   overflow: visible;
 }
 
+.paletteFade {
+  position: absolute;
+  right: -12px;
+  bottom: 0;
+  left: -12px;
+  height: 38px;
+  background: linear-gradient(to bottom, transparent, #ffffff 86%);
+  pointer-events: none;
+}
+
 /* Over the strip: what it is, and the way to the rest of the list. */
 .stripHead {
   display: flex;
@@ -507,6 +519,7 @@
   justify-content: space-between;
   gap: 12px;
   font-size: 13px;
+  line-height: normal;
   color: oklch(0.42 0.01 260);
 }
 
@@ -544,13 +557,13 @@
   color: oklch(0.7 0.01 260);
 }
 
-/* "+ New Palette" under the list. */
+/* "+ New palette" under the list, its words 16px below it. */
 .chipsActions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 10px;
 }
 
 .chipsAction {
@@ -561,8 +574,9 @@
   border: none;
   background: transparent;
   font-family: var(--font-sans-serif);
-  font-size: 13px;
-  color: oklch(0.55 0.01 260);
+  font-size: 12px;
+  line-height: normal;
+  color: oklch(0.42 0.01 260);
   cursor: pointer;
   white-space: nowrap;
   transition: color 120ms ease;
@@ -588,6 +602,7 @@
   display: block;
   margin-bottom: 10px;
   font-size: 13px;
+  line-height: normal;
   color: oklch(0.42 0.01 260);
 }
 
@@ -742,6 +757,31 @@
     width: auto;
     border-left: none;
     border-top: 1px solid #eceef1;
+  }
+
+  .group {
+    padding: 18px 18px 20px;
+  }
+
+  /* The strip's head takes the place of the search here, 26px under the
+     captions. */
+  .chipsSection {
+    margin-top: 26px;
+  }
+
+  .paletteListWrap {
+    margin-top: 10px;
+  }
+
+  /* On the strip the fade stands at the right end of the row, where it runs
+     on out of view. */
+  .paletteFade {
+    top: 0;
+    right: -18px;
+    left: auto;
+    width: 40px;
+    height: auto;
+    background: linear-gradient(to right, transparent, #ffffff 88%);
   }
 }
 
