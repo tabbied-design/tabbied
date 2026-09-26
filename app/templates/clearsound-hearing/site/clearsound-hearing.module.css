@@ -1,0 +1,1335 @@
+/* ==========================================================================
+   CLEARSOUND HEARING - hearing clinic and audiology, Alder Avenue
+   A large-print leaflet for people who are tired of small print. Body text
+   is 22px and set in Atkinson Hyperlegible, a face drawn for readers with
+   low vision; its mono sibling sets the numbers, so a price or a minute
+   never looks like anything else. One reading column, navy on warm paper,
+   yellow only where you are meant to press. Three page-level text sizes
+   are a :target and a :has() away, with no script. The fields are rings:
+   the hero is a speaker's dish, a band of them sits between the chart and
+   the prices like the quiet room's foam, and the home-visit panel is warm.
+   The results section draws the chart patients take home, in CSS.
+   ========================================================================== */
+
+.page {
+  --paper: #fbf6ea;
+  --navy: #14254a;
+  --yellow: #ffcf33;
+  --sky: #9cc3e6;
+  --sans: 'Atkinson Hyperlegible Next', 'Verdana', sans-serif;
+  --mono: 'Atkinson Hyperlegible Mono', 'Consolas', monospace;
+  --gut: clamp(1.25rem, 5vw, 4rem);
+  --col: 44rem;
+  --wide: 76rem;
+  --text: var(--navy);
+  --on-navy: var(--paper);
+  --on-yellow: var(--navy);
+  --on-sky: var(--navy);
+
+  --panel: color-mix(in oklab, var(--paper) 93%, var(--navy));
+  --muted: color-mix(in oklab, var(--text) 80%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.375rem;
+  line-height: 1.6;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the lightness of each surface, tinted toward the
+       navy ink: readable on any ground a palette can bring. */
+    --flip: oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 none);
+    /* Reading text is the navy itself, pushed to a fixed dark lightness on
+       a light ground and a fixed pale one on a dark ground. The 60/40 mix
+       with black or white is only there to tell the two cases apart: its
+       lightness is under 0.4 on a light ground and over 0.6 on a dark one,
+       whatever the navy has been re-colored to. */
+    --text: oklch(from color-mix(in oklch, var(--flip) 60%, var(--navy)) calc(0.24 + clamp(0, (l - 0.5) * 1000, 1) * 0.72) min(calc(c * 2.5), 0.08) h);
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--paper));
+    --on-yellow: color-mix(in oklab, oklch(from var(--yellow) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--navy));
+    --on-sky: color-mix(in oklab, oklch(from var(--sky) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--navy));
+  }
+}
+
+/* Three text sizes, chosen by which of the three empty targets at the top
+   of the page is the current :target. Everything below is set in em. The
+   ids are :global so CSS Modules leaves them as the markup writes them. */
+.page:has(:global(#text-larger:target)) {
+  font-size: 1.6rem;
+}
+
+.page:has(:global(#text-largest:target)) {
+  font-size: 1.85rem;
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 4px solid var(--text);
+  outline-offset: 4px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 800;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 5.5em;
+}
+
+.srOnly,
+.sizeTarget {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sizeTarget {
+  top: 0;
+}
+
+.col {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.wide {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.kicker {
+  margin: 0 0 0.6em;
+  font-family: var(--mono);
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.note {
+  margin: 0.8em 0 0;
+  max-width: 36em;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--paper);
+  color: var(--text);
+  border-bottom: 4px solid var(--text);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-size: 1.05em;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Three arcs of sound, drawn with borders. */
+.mark::before {
+  content: '';
+  flex: none;
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--text) 0 18%, transparent 19% 36%, var(--text) 37% 47%, transparent 48% 64%, var(--text) 65% 75%, transparent 76%);
+  clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+  transform: scale(1.5) translateX(-12%);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.4rem;
+}
+
+.nav a {
+  font-size: 0.8em;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--text);
+}
+
+.call {
+  padding: 0.45em 0.9em;
+  font-family: var(--mono);
+  font-size: 0.8em;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--on-yellow);
+  background: var(--yellow);
+  border: 3px solid var(--text);
+  border-radius: 0.5em;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-size: 0.85em;
+  font-weight: 700;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------------ buttons */
+
+.btnBig,
+.btnLine,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9em;
+  padding: 0.5em 1.1em;
+  font-family: var(--sans);
+  font-size: 1em;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  border: 3px solid var(--text);
+  border-radius: 0.55em;
+  cursor: pointer;
+}
+
+.btnBig,
+.submit {
+  color: var(--on-yellow);
+  background: var(--yellow);
+  box-shadow: 0 5px 0 var(--text);
+}
+
+.btnLine {
+  color: var(--text);
+  background: transparent;
+}
+
+.btnBig:hover,
+.submit:hover {
+  box-shadow: 0 2px 0 var(--text);
+  transform: translateY(3px);
+}
+
+.btnLine:hover {
+  background: var(--panel);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 5.5rem) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.title {
+  font-size: clamp(2.2em, 4.6vw, 3.4em);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+
+/* The accent is a highlighter stroke, the way a leaflet marks what
+   matters, with its text taken from the yellow it sits on. */
+.title em {
+  font-style: normal;
+  padding: 0 0.12em;
+  color: var(--on-yellow);
+  background: linear-gradient(transparent 12%, var(--yellow) 12% 92%, transparent 92%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.lede {
+  max-width: 30em;
+  margin: 1em 0 0;
+  font-size: 1.05em;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1rem;
+  margin-top: 1.6em;
+}
+
+.sizer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.6em;
+  padding-top: 1em;
+  border-top: 2px solid var(--rule);
+}
+
+.sizerLabel {
+  margin-right: 0.4em;
+  font-family: var(--mono);
+  font-size: 0.75em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.sizeA,
+.sizeB,
+.sizeC {
+  padding: 0.25em 0.7em;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--rule);
+  border-radius: 0.4em;
+}
+
+.sizeA {
+  font-size: 0.75em;
+}
+
+.sizeB {
+  font-size: 0.9em;
+}
+
+.sizeC {
+  font-size: 1.05em;
+}
+
+.sizeA:hover,
+.sizeB:hover,
+.sizeC:hover {
+  border-color: var(--text);
+}
+
+/* The size in use is outlined in full. With no target, standard is. */
+.page:not(:has(:global(#text-larger:target), :global(#text-largest:target))) .sizeA,
+.page:has(:global(#text-larger:target)) .sizeB,
+.page:has(:global(#text-largest:target)) .sizeC {
+  color: var(--on-navy);
+  background: var(--navy);
+  border-color: var(--text);
+}
+
+/* A speaker's dish: the rings in a circle with a heavy rim. */
+.dish {
+  position: relative;
+  width: min(100%, 26rem);
+  justify-self: center;
+  aspect-ratio: 1;
+  padding: 12px;
+  border: 6px solid var(--text);
+  border-radius: 50%;
+}
+
+.dishField {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+/* -------------------------------------------------------------------- signs */
+
+.signs {
+  padding: clamp(3.5rem, 7vw, 5rem) 0;
+  background: var(--panel);
+  border-top: 2px solid var(--rule);
+  border-bottom: 2px solid var(--rule);
+}
+
+.signs h2,
+.test h2,
+.results h2,
+.aids h2,
+.team h2,
+.faq h2,
+.book h2,
+.home h2 {
+  font-size: clamp(1.7em, 3.6vw, 2.3em);
+}
+
+.checks {
+  margin: 1.4em 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checks li {
+  position: relative;
+  padding: 0.7em 0 0.7em 2.2em;
+  border-top: 2px solid var(--rule);
+}
+
+.checks li:last-child {
+  border-bottom: 2px solid var(--rule);
+}
+
+/* An empty tick box, for the reader to fill in their head. */
+.checks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.8em;
+  width: 1.2em;
+  height: 1.2em;
+  box-sizing: border-box;
+  border: 3px solid var(--text);
+  border-radius: 0.2em;
+  background: var(--paper);
+}
+
+/* --------------------------------------------------------------------- test */
+
+.test {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+}
+
+/* The hour, to scale: one block per step, as wide as its minutes. */
+.hour {
+  display: flex;
+  gap: 4px;
+  margin: 2em 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hour li {
+  flex-basis: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 5.2em;
+  padding: 0.5em 0.6em;
+  color: var(--on-sky);
+  background: var(--sky);
+  border-radius: 0.3em;
+}
+
+.hour li:nth-child(even) {
+  color: var(--on-navy);
+  background: var(--navy);
+}
+
+.hourNum {
+  font-family: var(--mono);
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.hourMin {
+  font-family: var(--mono);
+  font-size: 0.7em;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hourScale {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.4em 0 0;
+  font-family: var(--mono);
+  font-size: 0.7em;
+  color: var(--muted);
+}
+
+.steps {
+  max-width: var(--col);
+  margin: 2.4em auto 0;
+  padding: 0 var(--gut);
+  list-style: none;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 2.2em minmax(0, 1fr);
+  gap: 0.8em;
+  padding: 1.1em 0;
+  border-top: 2px solid var(--rule);
+}
+
+.steps li:last-child {
+  border-bottom: 2px solid var(--rule);
+}
+
+.stepNum {
+  display: grid;
+  place-items: center;
+  width: 1.9em;
+  height: 1.9em;
+  font-family: var(--mono);
+  font-size: 1em;
+  font-weight: 700;
+  color: var(--on-navy);
+  background: var(--navy);
+  border: 3px solid var(--text);
+  border-radius: 50%;
+}
+
+.steps h3 {
+  font-size: 1.25em;
+}
+
+.steps p {
+  margin: 0.3em 0 0;
+}
+
+.steps .stepTime {
+  margin: 0.1em 0 0;
+  font-family: var(--mono);
+  font-size: 0.75em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ results */
+
+.results {
+  padding: clamp(4rem, 8vw, 6rem) 0 clamp(4.5rem, 9vw, 6.5rem);
+  background: var(--panel);
+  border-top: 2px solid var(--rule);
+}
+
+.chartWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  max-width: var(--wide);
+  margin: 2.2em auto 0;
+  padding: 0 var(--gut);
+}
+
+.chart {
+  margin: 0;
+}
+
+/* The chart: 0 dB at the top, 120 at the bottom, six pitches across.
+   Each column places its marks at var(--db) / 120 of the plot's height. */
+.chartGrid {
+  display: grid;
+  grid-template-columns: 2.4em minmax(0, 1fr);
+  gap: 0.5em;
+  font-family: var(--mono);
+}
+
+.levels {
+  position: relative;
+  height: 20em;
+  margin: 1.9em 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.levels li {
+  position: absolute;
+  right: 0;
+  font-size: 0.62em;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.levels li:nth-child(1) { top: 0; }
+.levels li:nth-child(2) { top: 16.667%; }
+.levels li:nth-child(3) { top: 33.333%; }
+.levels li:nth-child(4) { top: 50%; }
+.levels li:nth-child(5) { top: 66.667%; }
+.levels li:nth-child(6) { top: 83.333%; }
+.levels li:nth-child(7) { top: 100%; }
+
+.freqs {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The plot, drawn once behind the six columns: a box with a line every
+   20 dB. */
+.freqs::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 1.9em;
+  height: 20em;
+  box-sizing: border-box;
+  border: 2px solid var(--text);
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 calc(16.667% - 1px), var(--rule) calc(16.667% - 1px) 16.667%),
+    var(--paper);
+}
+
+.freq {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1.9em 20em auto;
+  justify-items: center;
+}
+
+.freq + .freq::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.9em;
+  height: 20em;
+  border-left: 1px solid var(--rule);
+}
+
+.freqLabel {
+  align-self: center;
+  font-size: 0.7em;
+  font-weight: 700;
+}
+
+/* Where speech sits at this pitch: a band from --lo to --hi dB. */
+.speech {
+  grid-row: 3;
+  padding-top: 0.5em;
+  font-size: 0.62em;
+  font-weight: 700;
+  text-align: center;
+  color: var(--muted);
+}
+
+.freq::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 10%;
+  right: 10%;
+  top: calc(1.9em + var(--lo) / 120 * 20em);
+  height: calc((var(--hi) - var(--lo)) / 120 * 20em);
+  background: color-mix(in oklab, var(--yellow) 72%, transparent);
+  border-radius: 999px;
+}
+
+.markRight,
+.markLeft {
+  position: absolute;
+  z-index: 2;
+  width: 1.05em;
+  height: 1.05em;
+  margin: -0.525em 0 0 -0.525em;
+  box-sizing: border-box;
+}
+
+.markRight {
+  left: 34%;
+  top: calc(1.9em + var(--right) / 120 * 20em);
+  border: 4px solid var(--text);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.markLeft {
+  left: 66%;
+  top: calc(1.9em + var(--left) / 120 * 20em);
+  background:
+    linear-gradient(45deg, transparent calc(50% - 2px), var(--text) calc(50% - 2px) calc(50% + 2px), transparent calc(50% + 2px)),
+    linear-gradient(-45deg, transparent calc(50% - 2px), var(--text) calc(50% - 2px) calc(50% + 2px), transparent calc(50% + 2px));
+}
+
+.chartCaption {
+  margin: 1em 0 0;
+  font-size: 0.8em;
+  color: var(--muted);
+}
+
+.chartSide h3 {
+  font-size: 1.3em;
+}
+
+.chartSide p {
+  margin: 0.6em 0 0;
+}
+
+.bands {
+  margin: 1.4em 0 0;
+}
+
+.bands div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 1em;
+  padding: 0.6em 0;
+  border-top: 2px solid var(--rule);
+}
+
+.bands dt {
+  font-weight: 700;
+}
+
+.bands dd {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.85em;
+}
+
+.bands .bandRange {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--mono);
+  font-size: 0.72em;
+  font-weight: 700;
+  align-self: center;
+}
+
+/* --------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(72px, 9vw, 120px);
+  overflow: hidden;
+  border-top: 4px solid var(--text);
+  border-bottom: 4px solid var(--text);
+}
+
+/* --------------------------------------------------------------------- aids */
+
+.aids {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+}
+
+/* One price sheet, three columns joined by rules; the middle band, the one
+   most people choose, is set in navy. */
+.aidGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: var(--wide);
+  margin: 2.2em auto 2.8em;
+  padding: 0 var(--gut);
+}
+
+.aid {
+  display: flex;
+  flex-direction: column;
+  padding: 1.3em 1.2em 1.5em;
+  border: 3px solid var(--text);
+}
+
+.aid + .aid {
+  border-left: 0;
+}
+
+.aid:nth-child(2) {
+  color: var(--on-navy);
+  background: var(--navy);
+}
+
+.aid h3 {
+  font-size: 1.25em;
+}
+
+.aidPrice {
+  margin: 0.4em 0 0;
+  font-family: var(--mono);
+  font-size: 2.1em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.aidPer {
+  margin: 0.2em 0 0;
+  font-family: var(--mono);
+  font-size: 0.72em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.aidSuits {
+  margin: 0.9em 0 0;
+  padding-bottom: 0.9em;
+  font-weight: 700;
+  border-bottom: 2px solid color-mix(in oklab, currentColor 30%, transparent);
+}
+
+.aid ul {
+  margin: 0.8em 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aid li {
+  position: relative;
+  padding: 0.3em 0 0.3em 1.3em;
+  font-size: 0.88em;
+  line-height: 1.4;
+}
+
+.aid li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 0.55em;
+  height: 0.3em;
+  border-left: 3px solid currentColor;
+  border-bottom: 3px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+.extrasTitle {
+  font-size: 1.3em;
+}
+
+.extras {
+  margin: 0.6em 0 0;
+}
+
+.extras div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em 0.6em;
+  padding: 0.6em 0;
+  border-top: 2px solid var(--rule);
+}
+
+.extras div:last-child {
+  border-bottom: 2px solid var(--rule);
+}
+
+.extras dt {
+  font-weight: 700;
+}
+
+.extras dd {
+  margin: 0 0 0 auto;
+  font-family: var(--mono);
+  font-size: 0.85em;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------- home */
+
+.home {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+  color: var(--on-yellow);
+  background: var(--yellow);
+  border-top: 4px solid var(--text);
+  border-bottom: 4px solid var(--text);
+}
+
+.homeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: stretch;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.homeField {
+  position: relative;
+  min-height: 22rem;
+  overflow: hidden;
+  border: 6px solid var(--on-yellow);
+  border-radius: 999px 999px 1.2rem 1.2rem;
+}
+
+.homeText p {
+  margin: 0.7em 0 0;
+  max-width: 32em;
+}
+
+.homeText h3 {
+  margin-top: 1.3em;
+  font-size: 1.1em;
+}
+
+.ready {
+  margin: 0.5em 0 1.6em;
+  padding: 0 0 0 1.2em;
+}
+
+.ready li {
+  padding: 0.15em 0;
+}
+
+.home .btnBig {
+  color: var(--on-navy);
+  background: var(--navy);
+  border-color: var(--on-yellow);
+  box-shadow: 0 5px 0 var(--on-yellow);
+}
+
+/* --------------------------------------------------------------------- team */
+
+.team {
+  padding: clamp(4rem, 8vw, 6rem) 0 clamp(2rem, 4vw, 3rem);
+}
+
+.people {
+  max-width: var(--col);
+  margin: 1.4em auto 0;
+  padding: 0 var(--gut);
+  list-style: none;
+}
+
+.people li {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  grid-template-rows: auto 1fr;
+  gap: 0.2em 1.5em;
+  padding: 1em 0;
+  border-top: 4px solid var(--text);
+}
+
+.people li:last-child {
+  border-bottom: 2px solid var(--rule);
+}
+
+.people h3 {
+  font-size: 1.1em;
+}
+
+.people p {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.people .role {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.72em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------- faq */
+
+.faq {
+  padding: clamp(3rem, 6vw, 4.5rem) 0 clamp(4rem, 8vw, 6rem);
+}
+
+.qs {
+  margin-top: 1.4em;
+}
+
+.q {
+  border-top: 2px solid var(--rule);
+}
+
+.q:last-child {
+  border-bottom: 2px solid var(--rule);
+}
+
+.q summary {
+  position: relative;
+  padding: 0.8em 2.2em 0.8em 0;
+  font-weight: 700;
+  line-height: 1.35;
+  list-style: none;
+  cursor: pointer;
+}
+
+.q summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A plus that becomes a minus: two bars, one of them hidden when open. */
+.q summary::before,
+.q summary::after {
+  content: '';
+  position: absolute;
+  right: 0.3em;
+  top: 50%;
+  width: 1em;
+  height: 4px;
+  margin-top: -2px;
+  background: var(--text);
+}
+
+.q summary::after {
+  transform: rotate(90deg);
+}
+
+.q[open] summary::after {
+  display: none;
+}
+
+.q p {
+  margin: 0 0 1em;
+  max-width: 36em;
+}
+
+/* --------------------------------------------------------------------- book */
+
+.book {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+  color: var(--on-navy);
+  background: var(--navy);
+}
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.bookLede {
+  margin: 0.5em 0 1em;
+}
+
+.book .btnBig {
+  border-color: var(--on-navy);
+  box-shadow: 0 5px 0 var(--on-navy);
+}
+
+.hours {
+  margin: 1.8em 0 1.2em;
+}
+
+.hours div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 1em;
+  padding: 0.5em 0;
+  border-top: 2px solid color-mix(in oklab, var(--on-navy) 30%, transparent);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+}
+
+.address {
+  margin: 0;
+  font-weight: 700;
+}
+
+.getting {
+  margin: 0.8em 0 0;
+  font-size: 0.9em;
+}
+
+.form {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  color: var(--text);
+  background: var(--paper);
+  border: 4px solid var(--on-navy);
+  border-radius: 0.6em;
+}
+
+.form h3 {
+  font-size: 1.25em;
+  margin-bottom: 0.6em;
+}
+
+.field {
+  display: grid;
+  gap: 0.25em;
+  margin-bottom: 1em;
+}
+
+.field label,
+.choice legend {
+  font-weight: 700;
+}
+
+.field input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 2.5em;
+  padding: 0.35em 0.6em;
+  font-family: var(--sans);
+  font-size: 1em;
+  color: var(--text);
+  background: var(--paper);
+  border: 3px solid var(--text);
+  border-radius: 0.4em;
+}
+
+.choice {
+  margin: 0 0 1em;
+  padding: 0;
+  border: 0;
+}
+
+.choice legend {
+  margin-bottom: 0.3em;
+  padding: 0;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.3em 0;
+  cursor: pointer;
+}
+
+.option input {
+  flex: none;
+  width: 1.3em;
+  height: 1.3em;
+  margin: 0;
+  accent-color: var(--navy);
+}
+
+.submit {
+  width: 100%;
+  margin-top: 0.4em;
+}
+
+.formNote {
+  margin: 0.9em 0 0;
+  font-size: 0.8em;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 4px solid var(--text);
+}
+
+.footBand {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+  border-bottom: 4px solid var(--text);
+}
+
+.footText {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 2em var(--gut) 2.6em;
+  font-size: 0.8em;
+  text-align: center;
+}
+
+.footText p {
+  margin: 0.3em 0 0;
+}
+
+.footText .footName {
+  margin: 0 0 0.4em;
+  font-size: 1.5em;
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1240px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .chartWrap,
+  .homeGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dish {
+    width: min(70%, 20rem);
+    order: -1;
+  }
+
+  .homeField {
+    min-height: 12rem;
+    border-radius: 999px;
+  }
+
+  .aidGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aid + .aid {
+    border-left: 3px solid var(--text);
+    border-top: 0;
+  }
+
+  .people li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .people p,
+  .people .role {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .people p {
+    margin-top: 0.3em;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    font-size: 1.25rem;
+  }
+
+  .page:has(:global(#text-larger:target)) {
+    font-size: 1.45rem;
+  }
+
+  .page:has(:global(#text-largest:target)) {
+    font-size: 1.65rem;
+  }
+
+  /* The name keeps one size on a phone, so the largest text setting
+     cannot push it into the menu button. */
+  .mark {
+    min-width: 0;
+    font-size: 1.05rem;
+    white-space: normal;
+  }
+
+  .call {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.8rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* On a phone the hour keeps its scale and drops the minutes; each step
+     below says how long it takes. */
+  .hour {
+    gap: 3px;
+  }
+
+  .hour li {
+    min-height: 2.8em;
+    padding: 0.4em 0.35em;
+  }
+
+  .hourNum {
+    font-size: 1.1em;
+  }
+
+  .hourMin {
+    display: none;
+  }
+
+  .chartGrid {
+    grid-template-columns: 1.8em minmax(0, 1fr);
+    gap: 0.3em;
+  }
+
+  .levels,
+  .freqs::before,
+  .freq + .freq::after {
+    height: 16em;
+  }
+
+  .freq {
+    grid-template-rows: 1.9em 16em auto;
+  }
+
+  .freq::before {
+    top: calc(1.9em + var(--lo) / 120 * 16em);
+    height: calc((var(--hi) - var(--lo)) / 120 * 16em);
+    left: 6%;
+    right: 6%;
+  }
+
+  .markRight {
+    top: calc(1.9em + var(--right) / 120 * 16em);
+    left: 38%;
+  }
+
+  .markLeft {
+    top: calc(1.9em + var(--left) / 120 * 16em);
+    left: 62%;
+  }
+
+  .markRight,
+  .markLeft {
+    width: 0.85em;
+    height: 0.85em;
+    margin: -0.425em 0 0 -0.425em;
+  }
+
+  .markRight {
+    border-width: 3px;
+  }
+
+  .speech {
+    font-size: 0.55em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btnBig:hover,
+  .submit:hover {
+    transform: none;
+  }
+}

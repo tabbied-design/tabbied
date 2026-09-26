@@ -89,6 +89,15 @@ const MENU: Group[] = [
     ],
   },
   {
+    title: 'For kids',
+    aside: 'under ten, with milk or juice',
+    items: [
+      { name: 'Silver dollar pancakes', price: '6.50' },
+      { name: 'Grilled cheese and fries', price: '6.50' },
+      { name: 'Chicken fingers and fries', price: '6.50' },
+    ],
+  },
+  {
     title: 'Burgers',
     aside: 'five ounces, smashed, with fries',
     items: [
@@ -118,15 +127,6 @@ const MENU: Group[] = [
       { name: 'Root beer float', price: '5.75' },
       { name: 'Egg cream', note: 'chocolate syrup, milk, seltzer', price: '4.25' },
       { name: 'Cherry cola', note: 'syrup and soda, the fountain way', price: '3.00' },
-    ],
-  },
-  {
-    title: 'For kids',
-    aside: 'under ten, with milk or juice',
-    items: [
-      { name: 'Silver dollar pancakes', price: '6.50' },
-      { name: 'Grilled cheese and fries', price: '6.50' },
-      { name: 'Chicken fingers and fries', price: '6.50' },
     ],
   },
 ];

@@ -1,0 +1,1424 @@
+/* ==========================================================================
+   EVERYTHING BAGEL CO. - bagel shop, Kettle Street
+   A neo-brutalist deli counter. Every block is a slab with a thick outline
+   and a hard, unblurred shadow, as if cut from card and stood on the
+   counter; labels are stickers slapped on at an angle. The one big idea is
+   the builder: a price table with bagels down the side and schmears across
+   the top, read like a timetable. Type is a chunky condensed grotesk for
+   anything you would shout across the counter and a typewriter mono for
+   anything you would write on a ticket. The rings of the pattern are the
+   bagels themselves, laid out on trays.
+
+   Color. Five roles: the paper ground and four inks. Outlines, shadows and
+   body text are all --text, which is derived from the ground, so the slabs
+   keep their edges under any palette; a slab filled with an ink takes its
+   text from that ink (--on-ink, --on-mustard, --on-tomato).
+   ========================================================================== */
+
+.page {
+  --paper: #fff4dc;
+  --ink: #15120e;
+  --mustard: #f2b227;
+  --tomato: #c93a22;
+  --crust: #b86a2d;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 84rem;
+  --edge: 3px;
+  --lift: 6px;
+  --display: 'Bricolage Grotesque', 'Arial Narrow', Arial, sans-serif;
+  --mono: 'Space Mono', 'Courier New', monospace;
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-mustard: var(--ink);
+  --on-tomato: var(--paper);
+  --on-crust: var(--paper);
+
+  font-family: var(--display);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  font-optical-sizing: auto;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. Each filled slab takes
+       its text the same way from its own fill. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--ink));
+    --on-ink: oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-mustard: oklch(from var(--mustard) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-tomato: oklch(from var(--tomato) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-crust: oklch(from var(--crust) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --line: var(--text);
+  --panel: color-mix(in oklab, var(--paper) 93%, var(--text));
+  --slab: var(--edge) solid var(--line);
+  --shadow: var(--lift) var(--lift) 0 var(--line);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--tomato);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-stretch: 78%;
+  line-height: 0.92;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--paper);
+  border-bottom: var(--slab);
+}
+
+.mark {
+  display: inline-block;
+  padding: 0.45rem 0.7rem 0.4rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--on-mustard);
+  background: var(--mustard);
+  border: var(--slab);
+  box-shadow: 3px 3px 0 var(--line);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.4rem;
+}
+
+.nav a {
+  padding: 0.35rem 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-color: var(--line);
+  background: var(--mustard);
+  color: var(--on-mustard);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-family: var(--mono);
+  font-weight: 700;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+}
+
+.kicker {
+  display: inline-block;
+  margin-bottom: 1.6rem;
+  padding: 0.4rem 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--on-ink);
+  background: var(--ink);
+  border: var(--slab);
+  border-radius: 999px;
+  transform: rotate(-2deg);
+}
+
+.title {
+  font-size: clamp(3.4rem, 9.2vw, 8.6rem);
+  line-height: 0.86;
+}
+
+.title em {
+  display: inline-block;
+  margin-top: 0.12em;
+  padding: 0.04em 0.12em 0.02em;
+  font-style: normal;
+  color: var(--on-tomato);
+  background: var(--tomato);
+  border: var(--slab);
+  box-shadow: var(--shadow);
+  transform: rotate(-1.5deg);
+}
+
+.lede {
+  max-width: 33rem;
+  margin-top: 2rem;
+  font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+  line-height: 1.45;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.9rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: var(--slab);
+  box-shadow: 4px 4px 0 var(--line);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.btn {
+  color: var(--on-tomato);
+  background: var(--tomato);
+}
+
+.btnGhost {
+  color: var(--text);
+  background: var(--paper);
+}
+
+.btn:hover,
+.btnGhost:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--line);
+}
+
+.heroPlate {
+  position: relative;
+  aspect-ratio: 1;
+  margin: 0 1.5rem 1.5rem 0;
+  background: var(--mustard);
+  border: 4px solid var(--line);
+  box-shadow: 14px 14px 0 var(--line);
+}
+
+.tray {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.stickerRed,
+.stickerRound {
+  position: absolute;
+  z-index: 2;
+  font-weight: 800;
+  font-stretch: 78%;
+  text-transform: uppercase;
+  line-height: 0.95;
+  border: var(--slab);
+}
+
+.stickerRed {
+  top: -1.2rem;
+  left: -1.4rem;
+  padding: 0.55rem 0.8rem 0.5rem;
+  font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+  color: var(--on-tomato);
+  background: var(--tomato);
+  box-shadow: 4px 4px 0 var(--line);
+  transform: rotate(-7deg);
+}
+
+.stickerRound {
+  right: -1.6rem;
+  bottom: -1.8rem;
+  display: grid;
+  place-items: center;
+  width: clamp(6.5rem, 10vw, 8.5rem);
+  aspect-ratio: 1;
+  padding: 0.8rem;
+  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  text-align: center;
+  color: var(--text);
+  background: var(--paper);
+  border-radius: 50%;
+  transform: rotate(10deg);
+}
+
+/* -------------------------------------------------------------------- facts */
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--on-ink);
+  background: var(--ink);
+  border-top: var(--slab);
+  border-bottom: var(--slab);
+}
+
+.facts li {
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+  padding: clamp(1.2rem, 2.5vw, 1.8rem) var(--gut);
+}
+
+.facts li + li {
+  border-left: var(--edge) solid color-mix(in oklab, var(--on-ink) 30%, var(--ink));
+}
+
+.facts strong {
+  font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: 0.9;
+}
+
+.facts span {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: color-mix(in oklab, var(--on-ink) 80%, var(--ink));
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 26rem);
+  gap: 1rem 1.5rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  font-size: clamp(2.8rem, 6.4vw, 5.6rem);
+}
+
+.secNo {
+  display: inline-grid;
+  place-items: center;
+  align-self: start;
+  width: 3.2rem;
+  height: 3.2rem;
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--on-mustard);
+  background: var(--mustard);
+  border: var(--slab);
+  border-radius: 50%;
+  transform: rotate(-8deg);
+}
+
+.secNote {
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.92rem;
+}
+
+/* ------------------------------------------------------------------ builder
+   The table is the page's centerpiece. Headers are the counter's black
+   strip; the starred cell is a mustard sticker on the grid. */
+
+.builder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.matrixBox {
+  background: var(--paper);
+  border: var(--slab);
+  box-shadow: 10px 10px 0 var(--line);
+}
+
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.matrix thead th {
+  padding: 0.9rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: center;
+  vertical-align: bottom;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.matrix thead .corner {
+  padding-left: 1.1rem;
+  text-align: left;
+}
+
+.matrix tbody tr + tr {
+  border-top: 2px solid var(--line);
+}
+
+.matrix tbody th {
+  padding: 0.7rem 1rem 0.7rem 1.1rem;
+  text-align: left;
+  font-weight: 400;
+}
+
+.bagelName {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.bagelNote {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.84rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+.matrix td {
+  position: relative;
+  padding: 0.7rem 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.98rem;
+  text-align: center;
+  border-left: 2px solid color-mix(in oklab, var(--line) 22%, transparent);
+}
+
+.matrix tbody tr:hover {
+  background: color-mix(in oklab, var(--mustard) 26%, var(--paper));
+}
+
+.matrix td.pick {
+  font-weight: 700;
+  color: var(--on-mustard);
+  background: var(--mustard);
+  outline: var(--edge) solid var(--line);
+  outline-offset: -3px;
+}
+
+.matrix td.pick::after {
+  content: '\2605';
+  position: absolute;
+  top: 0.2rem;
+  right: 0.3rem;
+  font-family: var(--display);
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.pile {
+  padding: 1.5rem 1.4rem 1.4rem;
+  color: var(--on-mustard);
+  background: var(--mustard);
+  border: var(--slab);
+  box-shadow: 10px 10px 0 var(--line);
+}
+
+.pileTitle {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+.pileList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pileList li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.42rem 0;
+  font-size: 1.02rem;
+  font-weight: 600;
+}
+
+.dots {
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 2px dotted currentColor;
+  transform: translateY(-0.25em);
+}
+
+.pilePrice {
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.pileNote {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+  border-top: 2px solid currentColor;
+}
+
+/* ---------------------------------------------------------------- seed band */
+
+.seeds {
+  position: relative;
+  height: clamp(96px, 11vw, 150px);
+  margin-top: clamp(4.5rem, 9vw, 7.5rem);
+  overflow: hidden;
+  background: var(--panel);
+  border-top: var(--slab);
+  border-bottom: var(--slab);
+}
+
+/* -------------------------------------------------------------------- board */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.board li {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1.2rem;
+  align-items: start;
+  padding: 1.3rem 1.4rem;
+  background: var(--paper);
+  border: var(--slab);
+  box-shadow: var(--shadow);
+}
+
+.boardNo {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-size: 1.9rem;
+  font-weight: 800;
+  font-stretch: 75%;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.boardBody h3 {
+  font-size: 1.65rem;
+}
+
+.boardBody p {
+  margin-top: 0.45rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.boardPrice {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.tag {
+  position: absolute;
+  top: -0.95rem;
+  right: 1.2rem;
+  padding: 0.2rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--on-tomato);
+  background: var(--tomato);
+  border: 2px solid var(--line);
+  transform: rotate(3deg);
+}
+
+.board li:nth-child(even) .tag {
+  color: var(--on-mustard);
+  background: var(--mustard);
+  transform: rotate(-3deg);
+}
+
+/* -------------------------------------------------------------------- dozen */
+
+.dozen {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  padding: clamp(1.75rem, 4vw, 3.5rem);
+  color: var(--on-mustard);
+  background: var(--mustard);
+  border: var(--slab);
+  box-shadow: 12px 12px 0 var(--line);
+}
+
+.dozenText h2 {
+  margin-top: 1.2rem;
+  font-size: clamp(2.8rem, 6vw, 5.4rem);
+}
+
+.dozenText h2 em {
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.08em;
+}
+
+.dozenText .secNote {
+  max-width: 30rem;
+  margin-top: 1.2rem;
+  color: inherit;
+}
+
+.dozenText .secNo {
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.rules {
+  margin: 1.8rem 0 0;
+}
+
+.rules div {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) auto;
+  gap: 0.2rem 1rem;
+  align-items: baseline;
+  padding: 0.6rem 0;
+  border-top: 2px solid currentColor;
+}
+
+.rules div:last-child {
+  border-bottom: 2px solid currentColor;
+}
+
+.rules dt {
+  font-weight: 800;
+  font-stretch: 85%;
+  text-transform: uppercase;
+}
+
+.rules dd {
+  margin: 0;
+}
+
+.ruleNote {
+  font-size: 0.92rem;
+}
+
+.rulePrice {
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+/* The bag: twelve rings in a paper bag with a zigzag top, and the
+   thirteenth sticking out. Drawn in CSS from the roles. */
+.bag {
+  position: relative;
+  padding: 2.6rem 1.6rem 1.6rem;
+  background: var(--paper);
+  border: var(--slab);
+  box-shadow: 8px 8px 0 var(--line);
+  clip-path: polygon(0 1.1rem, 4% 0, 8% 1.1rem, 12% 0, 16% 1.1rem, 20% 0, 24% 1.1rem, 28% 0, 32% 1.1rem, 36% 0, 40% 1.1rem, 44% 0, 48% 1.1rem, 52% 0, 56% 1.1rem, 60% 0, 64% 1.1rem, 68% 0, 72% 1.1rem, 76% 0, 80% 1.1rem, 84% 0, 88% 1.1rem, 92% 0, 96% 1.1rem, 100% 0, 100% 100%, 0 100%);
+}
+
+.rings {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.ring {
+  aspect-ratio: 1;
+  background: var(--paper);
+  border: clamp(12px, 1.9vw, 20px) solid var(--crust);
+  border-radius: 50%;
+  box-shadow: 0 0 0 var(--edge) var(--line), inset 0 0 0 var(--edge) var(--line);
+}
+
+.ringFree {
+  grid-column: 2 / span 2;
+  width: 50%;
+  justify-self: center;
+  border-color: var(--tomato);
+  transform: rotate(-12deg);
+}
+
+.bagLabel {
+  margin-top: 1.2rem;
+  padding: 0.5rem 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--on-tomato);
+  background: var(--tomato);
+  border: 2px solid var(--line);
+}
+
+/* ----------------------------------------------------------------- catering */
+
+.boxes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.box {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  background: var(--paper);
+  border: var(--slab);
+  box-shadow: var(--shadow);
+}
+
+.boxName {
+  padding: 1.1rem 1.2rem 1rem;
+  font-size: 1.9rem;
+  color: var(--on-ink);
+  background: var(--ink);
+  border-bottom: var(--slab);
+}
+
+.box:nth-child(2) .boxName {
+  color: var(--on-tomato);
+  background: var(--tomato);
+}
+
+.boxServes {
+  padding: 0.9rem 1.2rem 0;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.boxList {
+  margin: 0;
+  padding: 0.6rem 1.2rem 1.2rem;
+  list-style: none;
+}
+
+.boxList li {
+  position: relative;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-bottom: 2px dotted color-mix(in oklab, var(--line) 40%, transparent);
+}
+
+.boxList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.78em;
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+}
+
+.boxPrice {
+  padding: 0.8rem 1.2rem;
+  font-size: 2.4rem;
+  font-weight: 800;
+  font-stretch: 78%;
+  line-height: 1;
+  text-align: right;
+  border-top: var(--slab);
+}
+
+.orderRow {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.orderSide {
+  position: relative;
+  display: grid;
+}
+
+.orderSticker {
+  position: absolute;
+  z-index: 2;
+  left: -0.9rem;
+  bottom: 1.6rem;
+  padding: 0.5rem 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--on-mustard);
+  background: var(--mustard);
+  border: var(--slab);
+  box-shadow: 3px 3px 0 var(--line);
+  transform: rotate(-4deg);
+}
+
+.orderPlate {
+  position: relative;
+  min-height: 18rem;
+  overflow: hidden;
+  background: var(--tomato);
+  border: var(--slab);
+  box-shadow: var(--shadow);
+}
+
+.form {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--panel);
+  border: var(--slab);
+  box-shadow: var(--shadow);
+}
+
+.formTitle {
+  font-size: 2.2rem;
+  margin-bottom: 1.3rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: var(--slab);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--mustard);
+  outline-offset: 0;
+}
+
+.formNote {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- kettle */
+
+.kettle {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--paper);
+  border: var(--slab);
+  box-shadow: 10px 10px 0 var(--line);
+}
+
+.kettle li {
+  padding: 1.3rem 1.1rem 1.5rem;
+}
+
+.kettle li + li {
+  border-left: var(--slab);
+}
+
+.kettle li:nth-child(4) {
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.kettleTime {
+  display: block;
+  font-size: clamp(1.5rem, 2.2vw, 2.2rem);
+  overflow-wrap: anywhere;
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.kettleStep {
+  margin: 0.8rem 0 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-stretch: 100%;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.kettle li p {
+  font-size: 0.94rem;
+  line-height: 1.4;
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: stretch;
+}
+
+.visitCard {
+  padding: clamp(1.5rem, 3.5vw, 2.6rem);
+  color: var(--on-tomato);
+  background: var(--tomato);
+  border: var(--slab);
+  box-shadow: 10px 10px 0 var(--line);
+}
+
+.visitCard h2 {
+  margin-top: 1.2rem;
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+}
+
+.visitCard .secNo {
+  color: var(--on-mustard);
+}
+
+.address {
+  margin-top: 1.4rem;
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.contact {
+  margin: 1.2rem 0;
+  font-family: var(--mono);
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 2px solid currentColor;
+}
+
+.visitCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.visitCard .small {
+  max-width: 32rem;
+  margin-top: auto;
+  padding-top: 1.2rem;
+  border-top: 2px solid currentColor;
+}
+
+.hoursBox {
+  display: grid;
+  align-content: start;
+  padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: var(--paper);
+  border: var(--slab);
+  box-shadow: 10px 10px 0 var(--line);
+}
+
+.hoursTitle {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+.hours {
+  margin: 0;
+}
+
+.hours div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.2rem 1rem;
+  padding: 0.7rem 0;
+  border-top: 2px solid var(--line);
+}
+
+.hours div:last-child {
+  border-bottom: 2px solid var(--line);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+}
+
+.lineTitle {
+  margin: 1.8rem 0 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-stretch: 100%;
+  letter-spacing: 0.05em;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.line li {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.86rem;
+  line-height: 1.25;
+  border: 2px solid var(--line);
+}
+
+.lineWait {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-stretch: 80%;
+  text-transform: uppercase;
+}
+
+.line li:first-child {
+  color: var(--on-mustard);
+  background: var(--mustard);
+}
+
+.hoursNote {
+  margin-top: 1.2rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+  gap: 1.5rem clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  margin-top: clamp(4rem, 8vw, 6rem);
+}
+
+.faqTitle {
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+}
+
+.faqNote {
+  max-width: 20rem;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.faqList {
+  box-shadow: var(--shadow);
+}
+
+.q {
+  background: var(--paper);
+  border: var(--slab);
+}
+
+.q + .q {
+  margin-top: calc(-1 * var(--edge));
+}
+
+.q summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.q summary::-webkit-details-marker {
+  display: none;
+}
+
+.q summary::after {
+  content: '+';
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.q[open] summary {
+  color: var(--on-mustard);
+  background: var(--mustard);
+  border-bottom: var(--slab);
+}
+
+.q[open] summary::after {
+  content: '-';
+}
+
+.q p {
+  padding: 1rem 1.2rem 1.2rem;
+  max-width: 44rem;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footBand {
+  position: relative;
+  height: clamp(110px, 12vw, 170px);
+  margin-top: clamp(5rem, 10vw, 8rem);
+  overflow: hidden;
+  background: var(--ink);
+  border-top: var(--slab);
+  border-bottom: var(--slab);
+}
+
+.footer {
+  padding: 2.2rem var(--gut) 2.8rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.footer p + p {
+  margin-top: 0.35rem;
+}
+
+.footer .footName {
+  margin-bottom: 0.8rem;
+  font-family: var(--display);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .kettle {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .kettle li:nth-child(4) {
+    border-left: 0;
+  }
+
+  .kettle li:nth-child(n + 4) {
+    border-top: var(--slab);
+  }
+
+  .secHead {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .secHead .secNote {
+    grid-column: 1 / -1;
+    max-width: 36rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .builder,
+  .dozen,
+  .orderRow,
+  .visit,
+  .faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroPlate {
+    width: min(100%, 30rem);
+  }
+
+  .board,
+  .boxes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .facts li:nth-child(3) {
+    border-left: 0;
+  }
+
+  .facts li:nth-child(n + 3) {
+    border-top: var(--edge) solid color-mix(in oklab, var(--on-ink) 30%, var(--ink));
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    --lift: 4px;
+  }
+
+  .mark {
+    font-size: 1rem;
+  }
+
+  .heroPlate {
+    margin-right: 0.8rem;
+    box-shadow: 8px 8px 0 var(--line);
+  }
+
+  .stickerRed {
+    left: -0.4rem;
+  }
+
+  .stickerRound {
+    right: -0.6rem;
+  }
+
+  .matrixBox {
+    box-shadow: 6px 6px 0 var(--line);
+  }
+
+  .matrix {
+    table-layout: fixed;
+  }
+
+  .matrix thead th {
+    padding: 0.7rem 0.15rem;
+    font-size: 0.7rem;
+  }
+
+  .matrix thead .corner {
+    width: 31%;
+  }
+
+  .matrix thead th:not(.corner) span {
+    display: inline-block;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-align: left;
+  }
+
+  .matrix thead .corner {
+    padding-left: 0.6rem;
+  }
+
+  .matrix tbody th {
+    padding: 0.55rem 0.4rem 0.55rem 0.6rem;
+  }
+
+  .bagelName {
+    font-size: 0.9rem;
+  }
+
+  .bagelNote {
+    display: none;
+  }
+
+  .matrix td {
+    padding: 0.55rem 0;
+    font-size: 0.72rem;
+    letter-spacing: -0.03em;
+  }
+
+  .matrix td.pick::after {
+    top: 0.05rem;
+    right: 0.1rem;
+    font-size: 0.6rem;
+  }
+
+  .board li {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .boardPrice {
+    grid-column: 2;
+  }
+
+  .rules div {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ruleNote {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .rulePrice {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+
+  .kettle {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kettle li,
+  .kettle li + li {
+    border-left: 0;
+  }
+
+  .kettle li + li {
+    border-top: var(--slab);
+  }
+
+  .kettleStep {
+    margin-top: 0.5rem;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .orderSticker {
+    left: -0.4rem;
+  }
+
+  .facts li {
+    padding: 1.1rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btnGhost {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btnGhost:hover {
+    transform: none;
+  }
+}

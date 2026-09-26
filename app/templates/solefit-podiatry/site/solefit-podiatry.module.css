@@ -1,0 +1,1115 @@
+/* ==========================================================================
+   SOLEFIT PODIATRY - foot and ankle clinic, Harwood Square
+   International Typographic Style, taken literally: one grotesk, flush left,
+   a twelve-column grid you can see in the hero, numbered sections that
+   start on the fourth column, and red used the way a Zurich poster uses it,
+   as a square, a period, a filled box. The conditions are a real index, A
+   to Z with a letter strip, because that is how people look a foot problem
+   up. The ortho squares thicken row by row down the field: a grid carrying
+   weight, which is the clinic's whole subject.
+   ========================================================================== */
+
+.page {
+  --paper: #f5f4f0;   /* role 0: the page ground */
+  --ink: #141414;     /* type, rules, the squares */
+  --red: #e2231a;     /* signal red: squares, marks, the booking button */
+  --gut: clamp(1rem, 4vw, 3rem);
+  --gap: clamp(0.75rem, 1.7vw, 1.5rem);
+  --wrap: 90rem;
+  --sans: 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-red: var(--paper);
+
+  /* Derived, never roles. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 20%, transparent);
+  --well: color-mix(in oklab, var(--paper) 93%, var(--text));
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 450;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--paper));
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-weight: 700;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.8rem var(--gut);
+  background: var(--paper);
+  border-bottom: 2px solid var(--text);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-right: auto;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.mark::before {
+  content: '';
+  width: 0.95rem;
+  height: 0.95rem;
+  background: var(--red);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.6rem;
+  counter-reset: nav;
+}
+
+.nav a {
+  font-size: 0.9rem;
+  font-weight: 600;
+  counter-increment: nav;
+}
+
+.nav a::before {
+  content: counter(nav, decimal-leading-zero);
+  margin-right: 0.45em;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.nav a:hover {
+  color: var(--red);
+}
+
+.barBook {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--on-red);
+  background: var(--red);
+}
+
+.barBook:hover {
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------------- hero
+   Twelve columns, drawn as hairlines behind everything in it. */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 1.6rem var(--gut) 0;
+}
+
+.cols {
+  position: absolute;
+  inset: 0 var(--gut);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  pointer-events: none;
+}
+
+.cols span {
+  border-left: 1px solid var(--rule);
+  border-right: 1px solid var(--rule);
+}
+
+.hero > :not(.cols) {
+  position: relative;
+}
+
+.meta {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gap);
+  margin: 0;
+}
+
+.meta div {
+  padding: 0.6rem 0.75rem 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.meta dt {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.meta dd {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.name {
+  grid-column: 1 / span 8;
+  grid-row: 2;
+  align-self: end;
+  margin-top: clamp(3rem, 8vw, 7rem);
+  font-size: clamp(3.4rem, 10.6vw, 10.4rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.058em;
+}
+
+.heroField {
+  grid-column: 9 / -1;
+  grid-row: 2 / span 2;
+  align-self: end;
+  aspect-ratio: 1;
+  margin-top: clamp(3rem, 8vw, 7rem);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.heroText {
+  grid-column: 1 / span 6;
+  grid-row: 3;
+  padding-top: 2.2rem;
+}
+
+.lede {
+  margin: 0;
+  font-size: clamp(1.15rem, 1.7vw, 1.45rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.8rem;
+  margin: 1.8rem 0 0;
+}
+
+.btn,
+.submit {
+  display: inline-block;
+  padding: 0.95rem 1.4rem;
+  font-family: var(--sans);
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--on-red);
+  background: var(--red);
+  border: 0;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.btn:hover,
+.submit:hover {
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.textLink {
+  font-weight: 700;
+  border-bottom: 2px solid var(--text);
+}
+
+.textLink:hover {
+  border-bottom-color: var(--red);
+}
+
+.stats {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gap);
+  margin: clamp(3rem, 7vw, 5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stats li {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 0.9rem 0.75rem 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.stats strong {
+  font-size: clamp(2.6rem, 5vw, 4.6rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats span {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections
+   Each opens on a full rule: the number in columns 1-3, the heading from
+   column 4. */
+
+.sec {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7.5rem) var(--gut) 0;
+}
+
+.secHead {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  margin-bottom: clamp(2rem, 4vw, 3.2rem);
+  padding-top: 1rem;
+  border-top: 2px solid var(--text);
+}
+
+.num {
+  grid-column: 1 / span 3;
+  grid-row: 1 / span 2;
+  margin: 0;
+  font-size: clamp(3rem, 6.4vw, 5.8rem);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.num::after {
+  content: '';
+  display: inline-block;
+  width: 0.17em;
+  height: 0.17em;
+  margin-left: 0.06em;
+  background: var(--red);
+}
+
+.secHead h2 {
+  grid-column: 4 / span 8;
+  font-size: clamp(2rem, 4.2vw, 3.7rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.secNote {
+  grid-column: 4 / span 6;
+  margin: 1rem 0 0;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------- 01 the index */
+
+.letters {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(26, minmax(0, 1fr));
+  margin-bottom: 2.6rem;
+  border-top: 1px solid var(--text);
+  border-bottom: 1px solid var(--text);
+}
+
+.letters a,
+.letters span {
+  padding: 0.55rem 0;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.letters span {
+  color: color-mix(in oklab, var(--text) 30%, var(--paper));
+  font-weight: 500;
+}
+
+.letters a {
+  transition: background-color 120ms ease;
+}
+
+.letters a:hover {
+  color: var(--on-red);
+  background: var(--red);
+}
+
+.index {
+  grid-column: 1 / -1;
+  columns: 4;
+  column-gap: var(--gap);
+}
+
+.group {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  break-inside: avoid;
+  margin-bottom: 1.8rem;
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--text);
+  scroll-margin-top: 5rem;
+}
+
+.groupLetter {
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.groupList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.groupList li + li {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+.groupList h4 {
+  font-size: 1.02rem;
+  line-height: 1.25;
+}
+
+.groupList p {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.groupList .see {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.45rem;
+}
+
+.see span {
+  padding: 0.05rem 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  border: 1px solid var(--text);
+}
+
+/* -------------------------------------------------------- 02 treatment */
+
+.steps {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  padding-top: 0.8rem;
+  border-top: 6px solid var(--text);
+  counter-increment: step;
+}
+
+.steps li:first-child {
+  border-top-color: var(--red);
+}
+
+.steps li::before {
+  content: counter(step);
+  display: block;
+  margin-bottom: 1.4rem;
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.steps h3 {
+  font-size: 1.2rem;
+  letter-spacing: -0.015em;
+}
+
+.steps p {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.strip {
+  grid-column: 1 / -1;
+  position: relative;
+  height: clamp(96px, 10vw, 144px);
+  margin: clamp(3rem, 6vw, 4.5rem) 0;
+  overflow: hidden;
+}
+
+.treatments {
+  grid-column: 1 / -1;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.treatments thead th {
+  padding: 0 1rem 0.6rem 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.treatments tbody th,
+.treatments td {
+  padding: 1rem 1rem 1rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.tNo {
+  width: 5.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.treatments tbody th {
+  width: 24%;
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tTime {
+  width: 15rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------ 03 first visit */
+
+.visit {
+  grid-column: 4 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: var(--gap);
+}
+
+.visitCol h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0 0.8rem;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  border-top: 6px solid var(--text);
+}
+
+.visitCol h3::before {
+  content: '';
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--red);
+}
+
+.visitCol ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.visitCol li {
+  padding: 0.65rem 0;
+  font-size: 0.98rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* ------------------------------------------------------------- 04 fees */
+
+.feesGrid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  align-items: start;
+}
+
+.fees {
+  grid-column: 4 / span 6;
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.fees thead th {
+  padding: 0 0 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.fees thead th:last-child {
+  text-align: right;
+}
+
+.fees tbody th,
+.fees td {
+  padding: 0.75rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.fees tbody th {
+  padding-right: 1rem;
+  font-weight: 500;
+}
+
+.feeTime {
+  width: 7.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.fee {
+  width: 4.5rem;
+  font-size: 1.12rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.feeNotes {
+  grid-column: 10 / -1;
+  margin: 0;
+}
+
+.feeNotes div {
+  padding: 0.7rem 0 0.9rem;
+  border-top: 2px solid var(--text);
+}
+
+.feeNotes dt {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.feeNotes dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------ 05 podiatrists */
+
+.people {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2.4rem var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.people > li {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.8rem;
+  border-top: 6px solid var(--text);
+}
+
+.people h3 {
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.role {
+  margin: 0.35rem 0 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.focus {
+  flex: 1;
+  margin: 0.9rem 0 1.2rem;
+  font-size: 0.98rem;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.days li {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.dayOn {
+  color: var(--on-red);
+  background: var(--red);
+}
+
+.dayOff {
+  color: color-mix(in oklab, var(--text) 58%, var(--paper));
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+/* ---------------------------------------------------------- 06 clinic */
+
+.clinic {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  align-items: start;
+}
+
+.where {
+  grid-column: 4 / span 4;
+}
+
+.addr {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.addrSub {
+  margin: 0.4rem 0 0;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+.contact {
+  display: grid;
+  justify-items: start;
+  gap: 0.35rem;
+  margin: 1.4rem 0 0;
+  font-weight: 700;
+}
+
+.contact a {
+  border-bottom: 2px solid var(--text);
+}
+
+.contact a:hover {
+  border-bottom-color: var(--red);
+}
+
+.hours,
+.getting {
+  margin: 2rem 0 0;
+  border-top: 2px solid var(--text);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.getting div {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.getting dt {
+  font-weight: 700;
+}
+
+.getting dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.form {
+  grid-column: 8 / -1;
+  border: 2px solid var(--text);
+}
+
+.formField {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  border-bottom: 2px solid var(--text);
+}
+
+.formBody {
+  padding: clamp(1.2rem, 3vw, 2rem);
+}
+
+.formTitle {
+  margin-bottom: 1.3rem;
+  font-size: 1.6rem;
+  letter-spacing: -0.03em;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem var(--gap);
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.7rem 0.75rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--well);
+  border: 0;
+  border-bottom: 2px solid var(--text);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 0;
+}
+
+.submit {
+  margin-top: 1.4rem;
+}
+
+.formNote {
+  margin: 0.9rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  margin-top: clamp(5rem, 10vw, 8rem);
+  padding: 2.4rem max(var(--gut), calc((100% - var(--wrap)) / 2 + var(--gut))) 3rem;
+  font-size: 0.9rem;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.footer p {
+  grid-column: 4 / span 7;
+  margin: 0.2rem 0 0;
+}
+
+.footer .footName {
+  grid-column: 1 / span 3;
+  grid-row: 1 / span 2;
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .index {
+    columns: 3;
+  }
+
+  .people {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .sec,
+  .secHead,
+  .feesGrid,
+  .clinic,
+  .footer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero > *,
+  .sec > *,
+  .secHead > *,
+  .feesGrid > *,
+  .clinic > *,
+  .footer > *,
+  .footer p,
+  .footer .footName {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .secHead .num,
+  .secHead h2,
+  .secHead .secNote,
+  .feesGrid .fees,
+  .feesGrid .feeNotes,
+  .clinic .where,
+  .clinic .form {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .cols {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .cols span:nth-child(n + 5) {
+    display: none;
+  }
+
+  .meta,
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 1.2rem;
+  }
+
+  .name {
+    margin-top: 2.6rem;
+  }
+
+  .heroField {
+    aspect-ratio: auto;
+    height: 12rem;
+    margin-top: 1.8rem;
+  }
+
+  .heroText {
+    padding-top: 1.6rem;
+  }
+
+  .num {
+    margin-bottom: 0.9rem;
+  }
+
+  .secNote {
+    max-width: 38rem;
+  }
+
+  .letters {
+    grid-template-columns: repeat(13, minmax(0, 1fr));
+  }
+
+  .letters a,
+  .letters span {
+    padding: 0.45rem 0;
+  }
+
+  .index {
+    columns: 2;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.6rem;
+  }
+
+  .feeNotes {
+    margin-top: 2rem;
+  }
+
+  .form {
+    margin-top: 2.4rem;
+  }
+
+  .footer .footName {
+    margin-bottom: 0.6rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .bar {
+    gap: 0.8rem;
+  }
+
+  .barBook {
+    padding: 0.45rem 0.8rem;
+  }
+
+  .mark {
+    font-size: 0.98rem;
+  }
+
+  .index {
+    columns: 1;
+  }
+
+  .steps,
+  .people,
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stats strong {
+    font-size: 2.5rem;
+  }
+
+  /* The treatments as stacked entries. */
+  .treatments thead {
+    display: none;
+  }
+
+  .treatments tbody tr {
+    display: grid;
+    grid-template-columns: 3.6rem minmax(0, 1fr);
+    gap: 0.25rem 0.6rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .treatments tbody th,
+  .treatments td {
+    width: auto;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .treatments td:nth-child(3),
+  .treatments .tTime {
+    grid-column: 2;
+  }
+
+  .feeTime {
+    width: 5.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .submit,
+  .letters a {
+    transition: none;
+  }
+}

@@ -1,0 +1,1364 @@
+/* ==========================================================================
+   DELANCEY DELI - sandwich deli, Delancey Row
+   The order rail. Everything the counter prints is a ticket: thermal paper,
+   a condensed monospace, dashed tear lines, a torn bottom edge, order
+   numbers. The tickets hang from steel rails on the deli's tiled wall, and
+   the tiles are the pattern: a dotmatrix lattice of small glazed squares
+   whose own ground is transparent, so the wall color is the grout. The
+   sign lettering is a tall extra-condensed sans, the way the name is
+   painted over the door; everything else is the printer's mono.
+   ========================================================================== */
+
+.page {
+  --paper: #f6f2e9; /* role 0: the page ground, and the tickets */
+  --ink: #25221e;
+  --tile: #1f4033;
+  --red: #c63b2c;
+  --mustard: #e0a530;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --mono: 'Martian Mono', ui-monospace, 'Courier New', monospace;
+  --sign: 'Sofia Sans Extra Condensed', 'Arial Narrow', sans-serif;
+
+  --text: var(--ink);
+  --on-tile: var(--paper);
+  --on-red: var(--paper);
+
+  /* Derived surfaces and inks: nothing below is a role of its own. */
+  --muted: color-mix(in oklab, var(--text) 72%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 28%, transparent);
+  --counter: color-mix(in oklab, var(--paper) 84%, var(--mustard));
+  --tile-muted: color-mix(in oklab, var(--on-tile) 78%, var(--tile));
+  --tile-rule: color-mix(in oklab, var(--on-tile) 30%, transparent);
+  --stamp: color-mix(in oklab, var(--red) 62%, var(--text));
+  --shadow: color-mix(in oklab, var(--text) 30%, transparent);
+
+  font-family: var(--mono);
+  font-stretch: 87.5%;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the surface's lightness, tinted toward an ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --on-tile: color-mix(in oklab, oklch(from var(--tile) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--tile));
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* A shadow is the wall it falls on, darker, whatever the wall is. */
+    --shadow: oklch(from var(--tile) calc(l * 0.45) c h / 0.6);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px dashed currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+}
+
+.inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+/* ------------------------------------------------------------------ top bar
+   The printer head: paper, a heavy double rule, and the red number sign. */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--gut);
+  background: var(--paper);
+  color: var(--text);
+  border-bottom: 4px double var(--text);
+}
+
+.mark {
+  font-family: var(--sign);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 2vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.3rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--red);
+}
+
+.serving {
+  display: flex;
+  align-items: stretch;
+  margin: 0;
+  border: 2px solid var(--text);
+}
+
+.servingLabel {
+  display: grid;
+  place-items: center;
+  padding: 0 0.6rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  max-width: 5.5rem;
+  text-align: center;
+}
+
+.servingNo {
+  display: grid;
+  place-items: center;
+  min-width: 3rem;
+  padding: 0.1rem 0.5rem;
+  font-family: var(--sign);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  background: var(--red);
+  color: var(--on-red);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------- the wall */
+
+.wall {
+  background: var(--tile);
+  color: var(--on-tile);
+}
+
+.wallHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  gap: 1rem 3rem;
+  align-items: end;
+}
+
+.wallTitle {
+  font-family: var(--sign);
+  font-size: clamp(3rem, 7vw, 5.6rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+}
+
+.wallNote {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--tile-muted);
+}
+
+/* The steel rail tickets hang from: a lit top edge and a dark lip. */
+.rail,
+.railWide {
+  position: relative;
+  z-index: 2;
+  height: 16px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--on-tile) 82%, var(--tile)) 0 22%,
+    color-mix(in oklab, var(--on-tile) 50%, var(--tile)) 22% 70%,
+    color-mix(in oklab, var(--on-tile) 22%, var(--tile)) 70%
+  );
+  box-shadow: 0 6px 10px -4px var(--shadow);
+}
+
+/* ------------------------------------------------------------------ tickets */
+
+.receipt {
+  position: relative;
+  box-sizing: border-box;
+  padding: 1.5rem 1.35rem 1.6rem;
+  background: var(--paper);
+  color: var(--text);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  filter: drop-shadow(0 12px 14px var(--shadow));
+}
+
+/* The torn bottom edge: two rows of paper triangles under the ticket. */
+.receipt::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% - 1px);
+  height: 10px;
+  background:
+    linear-gradient(135deg, var(--paper) 6px, transparent 0) 0 0 / 12px 10px repeat-x,
+    linear-gradient(225deg, var(--paper) 6px, transparent 0) 0 0 / 12px 10px repeat-x;
+}
+
+.rcptShop,
+.rcptHead {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-stretch: 112.5%;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.rcptSmall {
+  margin: 0.2rem 0 0;
+  font-size: 0.72rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.tear {
+  height: 0;
+  margin: 0.95rem 0;
+  border: 0;
+  border-top: 2px dashed var(--rule);
+}
+
+.rcptMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.1rem 0 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.lines,
+.menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lines li,
+.menu li {
+  display: grid;
+  grid-template-columns: 2.4ch minmax(0, 1fr) auto;
+  column-gap: 0.7rem;
+  padding: 0.3rem 0;
+}
+
+.menu li + li {
+  border-top: 1px dotted var(--rule);
+}
+
+.qty,
+.no {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.no {
+  color: var(--stamp);
+}
+
+.item {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.price {
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.lineNote {
+  grid-column: 2 / 4;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.totals {
+  margin: 0;
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.1rem 0;
+  text-transform: uppercase;
+}
+
+.totals dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.totals .total {
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  font-stretch: 112.5%;
+  font-weight: 800;
+}
+
+.rcptThanks {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.stamp {
+  display: table;
+  margin: 1.1rem auto 0.2rem;
+  padding: 0.15rem 0.7rem;
+  font-family: var(--sign);
+  font-size: 2.3rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stamp);
+  border: 3px solid var(--stamp);
+  border-radius: 6px;
+  transform: rotate(-7deg);
+  opacity: 0.85;
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  min-height: 44rem;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 44rem;
+  justify-self: end;
+  box-sizing: border-box;
+  padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 4vw, 4rem) clamp(3rem, 6vw, 5rem) var(--gut);
+}
+
+.kicker {
+  margin: 0 0 1.6rem;
+  max-width: 30rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tile-muted);
+}
+
+.heroTitle {
+  font-family: var(--sign);
+  font-size: clamp(4.2rem, 10vw, 9rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.heroTitle em {
+  display: inline-block;
+  font-style: italic;
+  font-weight: 800;
+  padding: 0 0.12em 0 0.04em;
+  background: linear-gradient(transparent 62%, color-mix(in oklab, var(--mustard) 80%, transparent) 62% 90%, transparent 90%);
+}
+
+.heroLead {
+  max-width: 32rem;
+  margin: 1.8rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  list-style: none;
+  max-width: 32rem;
+  margin: 2.4rem 0 0;
+  padding: 0;
+}
+
+.heroFacts li {
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.7rem;
+  border-top: 2px solid var(--tile-rule);
+}
+
+.factNo {
+  font-family: var(--sign);
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.factLabel {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tile-muted);
+}
+
+.heroTicket {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3.5rem clamp(1rem, 4vw, 3rem) 5rem;
+}
+
+.heroTiles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.42;
+}
+
+.heroTicket .rail {
+  width: min(100%, 27rem);
+}
+
+.receiptHero {
+  width: min(100% - 2rem, 22.5rem);
+  margin-top: -6px;
+  transform: rotate(-1.4deg);
+  transform-origin: top center;
+}
+
+/* -------------------------------------------------------------------- board */
+
+.board {
+  padding: clamp(4rem, 8vw, 6.5rem) 0 clamp(4.5rem, 8vw, 6.5rem);
+}
+
+.board .railWide {
+  max-width: calc(var(--max) - 2 * var(--gut) + 2rem);
+  margin: 2.8rem auto 0;
+  width: calc(100% - 2 * var(--gut) + 2rem);
+}
+
+.tickets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+  align-items: start;
+}
+
+.tickets .receipt {
+  margin-top: -6px;
+  transform-origin: top center;
+}
+
+/* The steel clip that holds each ticket to the rail. */
+.tickets .receipt::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 3.2rem;
+  height: 18px;
+  margin-left: -1.6rem;
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--on-tile) 55%, var(--tile));
+  box-shadow: inset 0 -5px 0 color-mix(in oklab, var(--on-tile) 30%, var(--tile));
+}
+
+.tickets .receipt:nth-child(1) {
+  transform: rotate(-0.8deg);
+}
+
+.tickets .receipt:nth-child(2) {
+  transform: rotate(0.6deg);
+}
+
+.tickets .receipt:nth-child(3) {
+  transform: rotate(-0.3deg);
+}
+
+/* ------------------------------------------------------------------ frieze */
+
+.frieze {
+  position: relative;
+  height: clamp(64px, 7vw, 88px);
+  overflow: hidden;
+  background: var(--tile);
+}
+
+/* ---------------------------------------------------------------- order pad */
+
+.pad {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+  background: var(--counter);
+}
+
+.padGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 27rem);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.regularsTitle {
+  margin-top: 2.6rem;
+  font-family: var(--sign);
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.regulars {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.regulars li {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.9rem 1rem 1rem;
+  border: 2px solid var(--text);
+}
+
+.regName {
+  font-size: 0.8rem;
+  font-weight: 800;
+  font-stretch: 112.5%;
+  text-transform: uppercase;
+}
+
+.regCombo {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.padKicker {
+  display: inline-block;
+  margin: 0 0 1.2rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--red);
+  color: var(--on-red);
+}
+
+.padTitle {
+  font-family: var(--sign);
+  font-size: clamp(2.8rem, 6vw, 4.8rem);
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.padLead {
+  max-width: 34rem;
+  margin: 1.2rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.padRules {
+  max-width: 34rem;
+  margin: 2rem 0 0;
+}
+
+.padRules div {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.padRules div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.padRules dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.padRules dd {
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+.slip {
+  margin: 0;
+}
+
+.step {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: 0.45rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  font-stretch: 100%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.choices li {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.18rem 0;
+}
+
+.choices label {
+  cursor: pointer;
+}
+
+.choices input {
+  appearance: none;
+  display: block;
+  width: 0.95rem;
+  height: 0.95rem;
+  margin: 0;
+  background: var(--paper);
+  border: 1.5px solid var(--text);
+  cursor: pointer;
+}
+
+.choices input[type='radio'] {
+  border-radius: 50%;
+}
+
+.choices input:checked {
+  background: var(--text);
+  box-shadow: inset 0 0 0 2.5px var(--paper);
+}
+
+.amounts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.amounts input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.amounts label {
+  padding: 0.55rem 0.4rem;
+  text-align: center;
+  font-weight: 700;
+  border: 1.5px solid var(--text);
+  cursor: pointer;
+}
+
+.amounts input:checked + label {
+  background: var(--text);
+  color: var(--paper);
+}
+
+.amounts input:focus-visible + label {
+  outline: 2px dashed var(--text);
+  outline-offset: 3px;
+}
+
+.slipFields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.3rem;
+}
+
+.slipFields label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.slipFields input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 0.7rem;
+  padding: 0.45rem 0;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1.5px dashed var(--text);
+  border-radius: 0;
+}
+
+.send {
+  display: block;
+  width: 100%;
+  margin: 0.8rem 0 1rem;
+  padding: 0.75rem 1rem;
+  font-family: var(--sign);
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--on-red);
+  background: var(--red);
+  border: 0;
+  cursor: pointer;
+}
+
+.send:hover {
+  background: color-mix(in oklab, var(--red) 82%, var(--text));
+}
+
+/* ------------------------------------------------------------------ counter */
+
+.counter {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+}
+
+.counterGrid {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 17rem);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+/* The red paper number from the wheel by the door, punched both sides. */
+.numberTicket {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  width: 12rem;
+  padding: 1.5rem 1rem 1.3rem;
+  background: var(--red);
+  color: var(--on-red);
+  transform: rotate(-4deg);
+  -webkit-mask:
+    radial-gradient(circle at 0 50%, transparent 13px, var(--ink) 13.5px) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 50%, transparent 13px, var(--ink) 13.5px) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle at 0 50%, transparent 13px, var(--ink) 13.5px) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 50%, transparent 13px, var(--ink) 13.5px) right / 51% 100% no-repeat;
+}
+
+.ntLabel,
+.ntFoot {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ntNo {
+  font-family: var(--sign);
+  font-size: 8.5rem;
+  font-weight: 900;
+  line-height: 0.85;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.8rem 2rem;
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+}
+
+.steps li {
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--tile-rule);
+}
+
+.stepNo {
+  font-family: var(--sign);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: 0 0.2rem;
+  background: linear-gradient(transparent 58%, color-mix(in oklab, var(--mustard) 80%, transparent) 58%);
+}
+
+.stepTitle {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.stepText {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: var(--tile-muted);
+}
+
+.waits {
+  transform: rotate(1.2deg);
+}
+
+.waitList {
+  margin: 0;
+}
+
+.waitList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.3rem 0;
+}
+
+.waitList div + div {
+  border-top: 1px dotted var(--rule);
+}
+
+.waitList dt {
+  text-transform: uppercase;
+}
+
+.waitList dd {
+  margin: 0;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------- catering */
+
+.catering {
+  padding: clamp(4rem, 8vw, 6.5rem) 0 clamp(4rem, 8vw, 6rem);
+  background: var(--paper);
+}
+
+.padHeadRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+}
+
+.padHeadRow .padLead {
+  margin: 0;
+}
+
+/* The checked liner the trays sit on, full width. */
+.liner {
+  position: relative;
+  margin: 2.8rem 0;
+  padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(3rem, 5vw, 4.5rem);
+  background: var(--red);
+}
+
+.linerField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.trays {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2.2rem);
+  align-items: start;
+}
+
+.trays .receipt:nth-child(2) {
+  transform: rotate(0.8deg);
+}
+
+.trays .receipt:nth-child(1) {
+  transform: rotate(-0.6deg);
+}
+
+.trayCode {
+  display: table;
+  margin: 0 auto 0.6rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--red);
+  color: var(--on-red);
+}
+
+.trayLines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.trayLines li {
+  position: relative;
+  padding: 0.2rem 0 0.2rem 1.4rem;
+}
+
+.trayLines li::before {
+  content: '1x';
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+}
+
+.trayPrice {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  font-size: 1rem;
+  font-stretch: 112.5%;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.terms {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 0;
+}
+
+.terms div {
+  padding-top: 0.7rem;
+  border-top: 2px solid var(--text);
+}
+
+.terms dt {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.terms dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.callLine {
+  margin: 2.2rem 0 0;
+}
+
+.callLine a {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  font-family: var(--sign);
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 2px solid var(--text);
+}
+
+.callLine a:hover {
+  background: var(--text);
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------------ slicers */
+
+.slicers {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+}
+
+.badges {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  list-style: none;
+  margin: 3rem 0 0;
+  padding: 0;
+}
+
+/* A clip-on badge: paper, a punched slot at the top for the clip. */
+.badge {
+  position: relative;
+  padding: 2.4rem 1.2rem 1.4rem;
+  background: var(--paper);
+  color: var(--text);
+  border-radius: 10px;
+  -webkit-mask:
+    radial-gradient(ellipse 1.6rem 0.4rem at 50% 1.05rem, transparent 98%, var(--ink)) ;
+  mask:
+    radial-gradient(ellipse 1.6rem 0.4rem at 50% 1.05rem, transparent 98%, var(--ink));
+}
+
+.badgeId {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.6rem;
+  padding: 0.15rem 0.4rem;
+  font-family: var(--sign);
+  font-size: 1.7rem;
+  font-weight: 900;
+  line-height: 1.1;
+  background: var(--red);
+  color: var(--on-red);
+}
+
+.badgeName {
+  margin-top: 0.9rem;
+  font-family: var(--sign);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.badgeRole {
+  margin: 0.4rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badgeSince {
+  margin: 0.1rem 0 0;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.badgeNote {
+  margin: 0.9rem 0 0;
+  padding-top: 0.8rem;
+  font-size: 0.78rem;
+  border-top: 2px dashed var(--rule);
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visit {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+  background: var(--counter);
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+  gap: clamp(3.2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.hoursTicket {
+  transform: rotate(-0.8deg);
+}
+
+.hoursList {
+  margin: 0;
+}
+
+.hoursList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0;
+  text-transform: uppercase;
+}
+
+.hoursList dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.address {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.contact {
+  margin: 0.15rem 0 0;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 1px solid var(--rule);
+}
+
+.fine .padTitle {
+  margin-bottom: 1.6rem;
+}
+
+.faq {
+  border-top: 2px dashed var(--rule);
+}
+
+.faq:last-child {
+  border-bottom: 2px dashed var(--rule);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.faq[open] summary::after {
+  content: '-';
+}
+
+.faq p {
+  max-width: 40rem;
+  margin: 0 0 1.2rem;
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--tile);
+  color: var(--on-tile);
+}
+
+.footTiles {
+  position: relative;
+  height: clamp(110px, 12vw, 160px);
+  overflow: hidden;
+  opacity: 0.42;
+}
+
+.footer .footAddr {
+  margin-bottom: 0.9rem;
+  color: var(--on-tile);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.78rem;
+  color: var(--tile-muted);
+}
+
+.footInner p {
+  margin: 0.25rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.6rem;
+  font-family: var(--sign);
+  font-size: 2.6rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--on-tile);
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .counterGrid {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .waits {
+    grid-column: 2;
+    max-width: 22rem;
+  }
+
+  .badges {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .terms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .heroText {
+    justify-self: stretch;
+    max-width: none;
+    padding-right: var(--gut);
+  }
+
+  .tickets,
+  .trays {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 26rem;
+  }
+
+  .tickets .receipt + .receipt,
+  .trays .receipt + .receipt {
+    margin-top: 1.6rem;
+  }
+
+  .tickets .receipt + .receipt::before {
+    content: '';
+  }
+
+  .padGrid,
+  .visitGrid,
+  .wallHead,
+  .padHeadRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+}
+
+@media (max-width: 640px) {
+  .serving {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .mark {
+    font-size: 1.7rem;
+  }
+
+  .heroFacts {
+    gap: 0.7rem;
+  }
+
+  .factNo {
+    font-size: 1.8rem;
+  }
+
+  .counterGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .waits {
+    grid-column: auto;
+  }
+
+  .numberTicket {
+    width: 10rem;
+    justify-self: center;
+  }
+
+  .ntNo {
+    font-size: 6.5rem;
+  }
+
+  .steps,
+  .badges,
+  .terms,
+  .regulars {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .receipt {
+    font-size: 0.78rem;
+  }
+}

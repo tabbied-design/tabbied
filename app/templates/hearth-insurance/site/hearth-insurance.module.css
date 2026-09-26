@@ -1,0 +1,1253 @@
+/* ==========================================================================
+   HEARTH INSURANCE AGENCY - independent broker, Linden Street
+   Warm corporate: forest green on cream, a bookish serif for the headings
+   and a sturdy newspaper sans for everything you have to read closely. The
+   layout idea is the house. The hero is a house cut out of a quilt; the
+   covers are explained as a cross-section, one room per policy, with the
+   dwelling as the roof and flood where it belongs, below ground; the
+   claims desk is the one dark room, lit all night. The quilt is the only
+   ornament, and it stays inside shapes: the house, a band, a panel.
+   ========================================================================== */
+
+.page {
+  --cream: #f5efe2; /* role 0: the page ground */
+  --forest: #1f3b2d;
+  --brick: #a8482f;
+  --ochre: #d4a246;
+  --sage: #8ea58c;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --serif: 'Newsreader', 'Georgia', serif;
+  --sans: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--forest);
+  --on-forest: var(--cream);
+  --on-brick: var(--cream);
+
+  /* Derived surfaces and inks. */
+  --muted: color-mix(in oklab, var(--text) 74%, var(--cream));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 45%, transparent);
+  --panel: color-mix(in oklab, var(--cream) 88%, var(--sage));
+  --room: color-mix(in oklab, var(--cream) 94%, var(--ochre));
+  --shadow: color-mix(in oklab, var(--text) 24%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 78%, var(--forest));
+    --on-forest: color-mix(in oklab, oklch(from var(--forest) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--forest));
+    --on-brick: oklch(from var(--brick) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.8rem var(--gut);
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: grid;
+  line-height: 1;
+}
+
+.markName {
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.markSub {
+  margin-top: 0.2rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.7rem);
+}
+
+.nav a {
+  font-size: 0.86rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  border-bottom: 1.5px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: currentColor;
+}
+
+.barClaim {
+  padding: 0.55rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--forest);
+  color: var(--on-forest);
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--text) 28%, transparent);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--cream);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6.5rem) var(--gut) clamp(1rem, 3vw, 2.5rem);
+}
+
+.kicker {
+  margin: 0 0 1.3rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 6vw, 5.3rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.heroTitle em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin: 1.6rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.button,
+.ghost {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.button {
+  background: var(--forest);
+  color: var(--on-forest);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--text) 28%, transparent);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--forest) 82%, var(--text));
+}
+
+.ghost {
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.ghost:hover {
+  background: var(--panel);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 34rem;
+  margin: 2.6rem 0 0;
+}
+
+.heroFacts div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroFacts dt {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+/* The house: a gable with a chimney, cut out of the quilt, with a door and
+   two lit windows set into it in the ground color. */
+.heroHouse {
+  position: relative;
+  width: min(100%, 30rem);
+  justify-self: center;
+}
+
+.houseQuilt {
+  position: relative;
+  aspect-ratio: 1 / 1.02;
+  overflow: hidden;
+  clip-path: polygon(0% 40%, 50% 0%, 67% 13.6%, 67% 5%, 79% 5%, 79% 23.2%, 100% 40%, 100% 100%, 0% 100%);
+}
+
+/* The door, standing on the ground line. */
+.heroHouse::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 42%;
+  bottom: 2.8rem;
+  width: 16%;
+  height: 26%;
+  background: var(--cream);
+  border-radius: 999px 999px 0 0;
+  box-shadow: inset 0 0 0 3px var(--forest);
+}
+
+/* Two lit windows, set into the quilt with a cross of glazing bars. */
+.houseQuilt::before,
+.houseQuilt::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 47%;
+  width: 20%;
+  height: 15%;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1.5px), var(--forest) calc(50% - 1.5px) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(transparent calc(50% - 1.5px), var(--forest) calc(50% - 1.5px) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    color-mix(in oklab, var(--ochre) 45%, var(--cream));
+  box-shadow: inset 0 0 0 3px var(--forest);
+}
+
+.houseQuilt::before {
+  left: 16%;
+}
+
+.houseQuilt::after {
+  right: 16%;
+}
+
+.houseCaption {
+  height: 2.8rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+  border-top: 4px solid var(--text);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem 4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ cross-section
+   Two storeys under the roof, a single-storey garage to the right, and the
+   basement below the ground line. The walls are the ink, drawn heavy. */
+
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.85fr);
+  grid-template-areas:
+    'roof roof .'
+    'bedroom office .'
+    'living kitchen garage'
+    'basement basement .';
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.floors {
+  display: contents;
+}
+
+.roof {
+  grid-area: roof;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 15rem;
+  padding: 0 22% 1.4rem;
+  text-align: center;
+  background: var(--brick);
+  color: var(--on-brick);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  margin: 0 -1.5rem;
+}
+
+.roofCover {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.roofPays {
+  max-width: 20rem;
+  margin: 0.4rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.roofFrom {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.room,
+.basement {
+  display: flex;
+  flex-direction: column;
+  padding: 1.3rem 1.3rem 1.2rem;
+  background: var(--room);
+  border: 3px solid var(--text);
+  margin: -1.5px;
+}
+
+.bedroom {
+  grid-area: bedroom;
+}
+
+.office {
+  grid-area: office;
+}
+
+.living {
+  grid-area: living;
+}
+
+.kitchen {
+  grid-area: kitchen;
+}
+
+.garage {
+  grid-area: garage;
+  margin-top: 2.2rem;
+  background: var(--panel);
+  box-shadow: 0 5.5px 0 0 var(--text);
+}
+
+/* The ground line runs under the ground floor and on past the garage. */
+.basement {
+  grid-area: basement;
+  position: relative;
+  padding-bottom: 2.6rem;
+  background: color-mix(in oklab, var(--cream) 80%, var(--sage));
+  border-top-width: 0;
+  box-shadow: 0 -7px 0 0 var(--text);
+}
+
+.basement::after {
+  content: '';
+  position: absolute;
+  left: 1.3rem;
+  right: 1.3rem;
+  bottom: 0.9rem;
+  height: 10px;
+  opacity: 0.55;
+  background:
+    radial-gradient(circle at 50% 100%, transparent 5px, var(--text) 5.5px 7px, transparent 7.5px) 0 0 / 16px 10px repeat-x;
+}
+
+.roomCover {
+  font-size: 1.3rem;
+  line-height: 1.15;
+}
+
+.roomPays {
+  flex: 1;
+  margin: 0.45rem 0 0.8rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.basement .roomPays {
+  max-width: 34rem;
+}
+
+.roomFrom {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.umbrella {
+  max-width: 44rem;
+  margin: 2rem auto 0;
+  padding: 1rem 1.3rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.5;
+  text-align: center;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+/* ---------------------------------------------------------------- compare */
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.compare {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.compare th,
+.compare td {
+  padding: 0.8rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--rule);
+}
+
+.compare .rowHead {
+  width: 34%;
+  text-align: left;
+  font-weight: 500;
+}
+
+.compare thead th {
+  vertical-align: bottom;
+  padding-top: 1.4rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.compare thead .rowHead {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.levelName,
+.levelForm,
+.levelPrice,
+.levelPer {
+  display: block;
+}
+
+.levelName {
+  hyphens: auto;
+  overflow-wrap: anywhere;
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.levelForm {
+  margin-top: 0.2rem;
+  font-size: 0.76rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.levelPrice {
+  margin-top: 0.8rem;
+  font-family: var(--serif);
+  font-size: 2.3rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.levelPer {
+  font-size: 0.74rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* The recommended column is a forest strip from head to foot. */
+.compare .pick {
+  background: var(--forest);
+  color: var(--on-forest);
+  border-radius: 6px 6px 0 0;
+}
+
+.compare .pick .levelForm,
+.compare .pick .levelPer {
+  color: inherit;
+  opacity: 0.82;
+}
+
+.compare .pickCell {
+  background: var(--panel);
+}
+
+.my,
+.mn,
+.ma,
+.ms {
+  font-size: 0;
+}
+
+.my::before,
+.mn::before,
+.ma::before,
+.ms::before {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* A filled disc: covered. */
+.my::before {
+  content: '';
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+/* A short rule: not covered. */
+.mn::before {
+  content: '';
+  width: 0.8rem;
+  height: 2px;
+  vertical-align: middle;
+  background: var(--rule-strong);
+}
+
+/* Words for the two that need them. */
+.ma::before {
+  content: 'Add-on';
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.ms::before {
+  content: 'Separate';
+  color: var(--muted);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.liabilityRow td {
+  font-weight: 600;
+  font-size: 0.86rem;
+}
+
+.tableNote {
+  max-width: 46rem;
+  margin: 1.4rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- band */
+
+.band {
+  position: relative;
+  height: clamp(96px, 11vw, 150px);
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+}
+
+/* ----------------------------------------------------------------- claims */
+
+.claims {
+  background: var(--forest);
+  color: var(--on-forest);
+}
+
+.claimsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.claimsTitle {
+  font-size: clamp(2.3rem, 4.6vw, 3.8rem);
+  font-weight: 400;
+  line-height: 1.04;
+}
+
+.claimsLead {
+  max-width: 28rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.05rem;
+  opacity: 0.86;
+}
+
+.claimLine {
+  margin: 2rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 4.4vw, 3.3rem);
+  line-height: 1;
+}
+
+.claimLine a {
+  border-bottom: 2px solid color-mix(in oklab, currentColor 40%, transparent);
+}
+
+.claimSmall {
+  margin: 0.8rem 0 0;
+  font-size: 0.88rem;
+  opacity: 0.82;
+}
+
+.nightQuilt {
+  position: relative;
+  height: 160px;
+  max-width: 28rem;
+  margin-top: 2.4rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.claimSteps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.claimSteps li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  column-gap: 1.2rem;
+  padding: 1.4rem 0;
+  border-top: 1px solid color-mix(in oklab, currentColor 24%, transparent);
+}
+
+.claimSteps li:last-child {
+  border-bottom: 1px solid color-mix(in oklab, currentColor 24%, transparent);
+}
+
+.claimNo {
+  grid-row: span 2;
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.claimStep {
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.claimText {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  opacity: 0.86;
+}
+
+/* ----------------------------------------------------------------- agents */
+
+.agents {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.agent {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.4rem 1.4rem;
+  background: var(--panel);
+  border-radius: 6px;
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  margin-bottom: 1.1rem;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  border: 1.5px solid var(--text);
+  border-radius: 50%;
+}
+
+.agentName {
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.agentRole {
+  margin: 0.3rem 0 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.agentKnows {
+  flex: 1;
+  margin: 0.8rem 0 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.agentFacts {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+}
+
+.agentFacts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.35rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.agentFacts dt {
+  color: var(--muted);
+}
+
+.agentFacts dd {
+  margin: 0;
+  text-align: right;
+}
+
+.agentLine {
+  align-self: flex-start;
+  font-weight: 600;
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+/* --------------------------------------------------------------- insurers */
+
+.insurersGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  padding-top: 2.4rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.insurersGrid .secNote {
+  margin-top: 1rem;
+}
+
+.insurers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.insurers li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.insName {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+}
+
+.insNote {
+  font-size: 0.8rem;
+  text-align: right;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ quote */
+
+.quoteGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+  padding-top: 2.4rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.quoteIntro .secNote {
+  margin-top: 1rem;
+}
+
+.readyTitle {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
+
+.ready {
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ready li {
+  position: relative;
+  padding: 0.55rem 0 0.55rem 1.7rem;
+  font-size: 0.92rem;
+  border-top: 1px solid var(--rule);
+}
+
+.ready li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 1.5px solid var(--text);
+  border-radius: 2px;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--panel);
+  border-radius: 6px;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.field input,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--cream);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.45rem 0.9rem;
+  font-weight: 500;
+  background: var(--cream);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--forest);
+  color: var(--on-forest);
+  border-color: var(--forest);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--on-forest);
+  background: var(--forest);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--forest) 82%, var(--text));
+}
+
+.formNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: 2rem;
+  align-items: start;
+  padding-top: 2.4rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.visitTitle {
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.address {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.addressNote {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.hours {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.hours div {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0 0 0.6rem;
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.contact {
+  margin: 0 0 0.4rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--forest);
+  color: var(--on-forest);
+}
+
+.footQuilt {
+  position: relative;
+  height: 72px;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.6rem var(--gut) 3rem;
+  font-size: 0.86rem;
+}
+
+.footInner p {
+  margin: 0.3rem 0 0;
+  opacity: 0.86;
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  line-height: 1.1;
+  opacity: 1;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .agents {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .visit {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1060px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .claimsGrid,
+  .insurersGrid,
+  .quoteGrid,
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .barClaim {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .section {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'roof'
+      'bedroom'
+      'office'
+      'living'
+      'kitchen'
+      'garage'
+      'basement';
+  }
+
+  .roof {
+    margin: 0 -0.6rem;
+    min-height: 15rem;
+    padding: 0 8% 1.3rem;
+    clip-path: polygon(50% 0%, 100% 46%, 100% 100%, 0% 100%, 0% 46%);
+  }
+
+  .compare {
+    min-width: 0;
+    font-size: 0.84rem;
+  }
+
+  .compare th,
+  .compare td {
+    padding: 0.7rem 0.35rem;
+  }
+
+  .compare .rowHead {
+    width: 38%;
+    padding-left: 0;
+  }
+
+  .levelForm,
+  .levelPer {
+    display: none;
+  }
+
+  .levelName {
+    font-size: 0.98rem;
+  }
+
+  .levelPrice {
+    margin-top: 0.4rem;
+    font-size: 1.5rem;
+  }
+
+  .ma::before {
+    padding: 0.2rem 0.35rem;
+    font-size: 0.72rem;
+  }
+
+  .ms::before {
+    font-size: 0.74rem;
+  }
+
+  .garage {
+    margin-top: -1.5px;
+  }
+
+  .insurers,
+  .form,
+  .agents,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroFacts dd {
+    font-size: 1.7rem;
+  }
+
+  .umbrella {
+    border-radius: 12px;
+  }
+}
