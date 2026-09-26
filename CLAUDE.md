@@ -628,9 +628,10 @@ step is exactly the work this component removes.
 `components/nav/SiteNav` is the site's masthead: the lockup on the left,
 Home / Patterns / Websites in the middle, and on the right either "Sign in" or
 the person as a pill - the initials in a circle beside two rules - opening a
-menu (email, My Account, Settings, and Admin for a person whose row says
-`role = 'admin'`, then Sign out). Signed in, the first destination reads My
-Account. Below 768px the destinations fold into that menu, or behind
+menu (email, My account, Settings, and Admin for a person whose row says
+`role = 'admin'`, then Sign out; the item for the current page is ink and
+600, the rest grey). Signed in, the first destination reads My account,
+in sentence case as every design writes it. Below 768px the destinations fold into that menu, or behind
 a hamburger when signed out. It takes a `tone` (`dark` for the homepage and
 the template gallery, `light` for everything else) and a `sticky` flag the
 pattern library uses because its rail starts where the bar ends. `HomeNav`,
@@ -651,15 +652,18 @@ Four things worth not re-litigating:
 - **Below 768px it is pinned**, on every route and in both tones, which is
   why `--n-bg` exists - the bar is otherwise transparent and takes whatever
   the page is. At those widths the destinations live *behind* this bar, so a
-  bar that scrolled away would take the site's navigation with it. The
-  `sticky` flag stays a page's own choice; the narrow rule is the width's.
+  bar that scrolled away would take the site's navigation with it. **The
+  dark tone is pinned at every width**, on the designs' translucent ground
+  (`oklch(0.17 0.012 285 / 0.82)` under a 14px blur), since the homepage and
+  gallery artboards both draw it that way; for the light tone the `sticky`
+  flag stays a page's own choice.
 - **GitHub and Docs are in the footer, not the bar.** The 2026 artboards put
   three destinations and the account up top and everything else in
   `HomeFooter`; the bar used to carry a different set of links on every
   page, which is what one component ends. Studio is in neither now: the
   generation flow is held back from the first launch (see below), and the
   footer's Product list is the artboard's own - Patterns, Websites, My
-  Account.
+  account.
 - **It renders the signed-out chrome until a session says otherwise, unless
   this browser was signed in last time.** The export cannot know who is
   looking, and most visitors are nobody; a ghost in the right-hand slot for
@@ -715,7 +719,7 @@ not obvious from the diff:
   span, which is exactly how the first version of it did nothing.
 - **No "New palette" button anywhere.** The pencil on any row opens the
   editor, and saving a library palette's edit is how a new one is made; the
-  editor's desktop rail keeps its "+ New Palette" text, the only place the
+  editor's desktop rail keeps its "+ New palette" text, the only place the
   design still draws one.
 - **Shuffle shuffles the layout.** The three scopes (layout, colors, both)
   and the remembered default are gone with `shuffleActions.ts`; the colors
@@ -757,6 +761,18 @@ not obvious from the diff:
   the gallery, or, at the limit, "Request more". There is no account
   sub-navigation: pages beyond the overview (settings, sites) carry one
   "Account overview" link back, and the downloads history page is gone.
+
+## Comparing against a Claude Design export
+
+The designs arrive as `*.dc.html` pages with inline styles, and the inline
+values are the spec: read a size, weight or color from the source, and
+compare it with `getComputedStyle` on the site, not by eye. Two things make
+their pixels lie. The 24 September export bundles a
+`fonts/ProximaNova-Regular.otf` that is in fact the Bold cut, so every
+Proxima Nova weight in those artboards draws bold whatever the source says;
+the site follows the source's weight (400, 500), not the render. And the
+pages load React and Babel from unpkg at runtime, so they render blank
+wherever that host is unreachable; serve those scripts locally to see them.
 
 ## The editor's density - one number, the cell's size
 
