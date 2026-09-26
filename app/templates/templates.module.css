@@ -95,13 +95,10 @@
     padding-left: 24px;
   }
 
+  /* The intro keeps its 17px on a phone; only the headline steps down. */
   .hero h1 {
     font-size: 52px;
     line-height: 1.05;
-  }
-
-  .hero p {
-    font-size: 16px;
   }
 
   .wrap {

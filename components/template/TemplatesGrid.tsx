@@ -122,9 +122,19 @@ function Footer({ c, templates, guard, here }: { c: TemplateCard; templates: MyT
   return (
     <div className={s.dl}>
       <span className={s.quiet}>All {templates.total} chosen</span>
-      {/* The account page says where a request stands, so the card always
-          leads there, open request or not. */}
-      <Link href="/account/?request=1" prefetch={false} className={s.pill}>
+      {/* A click opens the at-limit dialog, as the artboard has it: the
+          chosen templates, where a request stands, and the way to ask. The
+          href is the account's request form, for a new tab. */}
+      <Link
+        href="/account/?request=1"
+        prefetch={false}
+        className={s.pill}
+        onClick={(event) => {
+          if (!plainClick(event)) return;
+          event.preventDefault();
+          guard(c.slug, c.name, 'choose', () => {});
+        }}
+      >
         Request more
       </Link>
     </div>

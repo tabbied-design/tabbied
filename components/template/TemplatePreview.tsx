@@ -81,21 +81,25 @@ export default function TemplatePreview({
                       <TemplateUsage templates={templates} tone="menu" />
                       <p className={styles.usageNote}>{choiceNote(templates, slug, name)}</p>
                     </div>
+                    {/* The header closes with a rule of its own, so the one
+                        under Customize goes with it on a phone. */}
                     {narrow ? null : (
-                      <Menu.Item
-                        className={styles.option}
-                        render={<Link href={customizeHref} prefetch={false} />}
-                        onClick={(event) => {
-                          if (chosen) return;
-                          event.preventDefault();
-                          guard(slug, name, 'customize', () => router.push(customizeHref));
-                        }}
-                      >
-                        <span className={styles.optionTitle}>Customize</span>
-                        <span className={styles.optionNote}>Change colors and patterns</span>
-                      </Menu.Item>
+                      <>
+                        <Menu.Item
+                          className={styles.option}
+                          render={<Link href={customizeHref} prefetch={false} />}
+                          onClick={(event) => {
+                            if (chosen) return;
+                            event.preventDefault();
+                            guard(slug, name, 'customize', () => router.push(customizeHref));
+                          }}
+                        >
+                          <span className={styles.optionTitle}>Customize</span>
+                          <span className={styles.optionNote}>Change colors and patterns</span>
+                        </Menu.Item>
+                        <Menu.Separator className={styles.menuRule} />
+                      </>
                     )}
-                    <Menu.Separator className={styles.menuRule} />
                     <div className={styles.menuLabel}>Download original</div>
                     {(
                       [

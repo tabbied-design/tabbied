@@ -215,9 +215,11 @@
   min-width: 0;
 }
 
+/* The name is display type, Proxima Nova, as the artboard sets it; the
+   topic under it is body copy. */
 .main h3 {
   margin: 0 0 5px;
-  font: 600 16px var(--h-sans);
+  font: 600 16px var(--h-display);
   color: var(--h-fg);
 }
 
@@ -346,12 +348,14 @@
   background: oklch(1 0 0 / 0.1);
 }
 
-/* "Choose template": the one filled pill, the card's first step. */
+/* "Choose template": the one filled pill, the card's first step. The
+   artboard draws it with no ring, so it stands 2px shorter than the
+   outlined pills. */
 .pillSolid {
   font-weight: 500;
   color: #0e0e13;
   background: #eef0f6;
-  border-color: #eef0f6;
+  border: none;
 }
 
 .pillSolid:hover,
