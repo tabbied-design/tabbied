@@ -108,5 +108,15 @@
   "routes": [
     { "pattern": "tabbied.com", "custom_domain": true },
     { "pattern": "www.tabbied.com", "custom_domain": true }
-  ]
+  ],
+
+  // Both spelled out, because `routes` changes their defaults. With routes
+  // and no `workers_dev`, `wrangler deploy` turns the workers.dev route off,
+  // and preview URLs left unset follow it: the first production deploy with
+  // the Custom Domains took PR previews down with it. Production is served
+  // on tabbied.com only; PR builds (`wrangler versions upload`) get their
+  // Commit and Branch Preview URLs on workers.dev. Only a production deploy
+  // applies these two, so a change here reaches previews after it is on main.
+  "workers_dev": false,
+  "preview_urls": true
 }
