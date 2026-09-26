@@ -17,16 +17,23 @@
    short capped list scrolling inside a rail that also scrolls. */
 .rail {
   position: sticky;
-  top: 63px;
+  top: 71px;
   box-sizing: border-box;
-  height: calc(100vh - 63px);
+  height: calc(100vh - 71px);
   overflow: hidden;
   border-right: 1px solid oklch(0 0 0 / 0.1);
 }
 
+/* The stage is what the bar leaves of the window, on the design's warm paper,
+   and the frame runs off its foot, open at the bottom: the page scrolls
+   inside its own frame, never the stage. */
 .stage {
+  display: flex;
   box-sizing: border-box;
-  padding: 32px 40px 60px;
+  height: calc(100vh - 71px);
+  padding: 32px 40px 0;
+  overflow: hidden;
+  background-color: #fbfaf8;
 }
 
 /* The phone's notice, in place of the rail. Hidden until the rail is. */
@@ -54,10 +61,16 @@
 }
 
 .frame {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
   overflow: hidden;
   background-color: #fff;
   border: 1px solid var(--s-line);
-  border-radius: 16px;
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
   box-shadow: 0 18px 50px oklch(0 0 0 / 0.07);
 }
 
@@ -112,20 +125,16 @@
 
 .canvas {
   position: relative;
+  flex: 1;
+  min-height: 0;
 }
 
 .iframe {
   display: block;
   width: 100%;
-  /* Tall enough to read as a page rather than a thumbnail, and capped so it
-     does not push its own chrome off a short screen. */
-  height: min(78vh, 900px);
+  height: 100%;
   background-color: #fff;
   border: 0;
-}
-
-.shellWide .iframe {
-  height: calc(100vh - 200px);
 }
 
 /* Over the canvas while a new set of patterns is drawn: the rail's list
@@ -145,8 +154,20 @@
   pointer-events: none;
 }
 
+.veil svg {
+  flex: none;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .skeleton {
-  height: min(78vh, 900px);
+  flex: 1;
+  min-height: 0;
   background: linear-gradient(100deg, #f6f6f6 30%, #efefef 50%, #f6f6f6 70%);
   background-size: 220% 100%;
   animation: shimmer 1.4s linear infinite;
@@ -190,8 +211,25 @@
     border-bottom: 1px solid oklch(0 0 0 / 0.1);
   }
 
+  /* The frame is a card in the page again, and the page in it is given a
+     height: tall enough to read as a page rather than a thumbnail, capped so
+     it does not push its own chrome off a short screen. */
   .stage {
+    display: block;
+    height: auto;
     padding: 20px;
+    overflow: visible;
+  }
+
+  .frame {
+    display: block;
+    border-bottom: 1px solid var(--s-line);
+    border-radius: 14px;
+  }
+
+  .iframe,
+  .skeleton {
+    height: min(78vh, 900px);
   }
 }
 
@@ -207,8 +245,8 @@
        to its content, which for an iframe is 300px; the column has to
        stretch it. */
     align-items: stretch;
-    height: calc(100vh - 63px);
-    height: calc(100dvh - 63px);
+    height: calc(100vh - 75px);
+    height: calc(100dvh - 75px);
   }
 
   .rail {
@@ -222,8 +260,10 @@
   .stage {
     display: flex;
     flex: 1;
+    height: auto;
     min-height: 0;
     padding: 0;
+    overflow: hidden;
   }
 
   .frame {
@@ -253,7 +293,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeleton {
+  .skeleton,
+  .veil svg {
     animation: none;
   }
 }

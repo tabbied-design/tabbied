@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import { revealPressed } from 'components/palette/revealPressed';
-import { ChevronRight, Pencil, Shuffle, X } from 'lucide-react';
+import { ChevronRight, PenLine, Shuffle, X } from 'lucide-react';
 import MixedSwatches from 'components/palette/MixedSwatches';
 import { RANDOM_PALETTE_ID, type BrandPalette } from 'lib/brandPalettes';
 import type { LibraryPalette } from 'lib/paletteLibrary';
@@ -81,8 +81,11 @@ export default function GalleryChipShelf({
     if (shelf.current) revealPressed(shelf.current);
   }, [selectedId]);
 
+  // The bar is pinned and ruled; the row inside it scrolls, and stops short of
+  // the right edge under a fade, which is what says it continues.
   return (
-    <div ref={shelf} className={className ? `${styles.shelf} ${className}` : styles.shelf}>
+    <div className={className ? `${styles.shelf} ${className}` : styles.shelf}>
+      <div ref={shelf} className={styles.row}>
       <button
         type="button"
         className={
@@ -151,7 +154,7 @@ export default function GalleryChipShelf({
                 title="Edit palette (saves as a copy)"
                 onClick={() => onEditLibrary(palette)}
               >
-                <Pencil size={12} />
+                <PenLine size={13} strokeWidth={1.7} />
               </button>
             )}
           </span>
@@ -161,6 +164,8 @@ export default function GalleryChipShelf({
       <button type="button" className={styles.allPill} onClick={onBrowse}>
         All <ChevronRight size={13} />
       </button>
+      </div>
+      <span className={styles.fade} aria-hidden="true" />
     </div>
   );
 }

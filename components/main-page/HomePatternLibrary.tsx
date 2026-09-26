@@ -134,7 +134,7 @@ export default function HomePatternLibrary({
           <span className={styles.eyebrow}>Pattern library</span>
           <Link href="/patterns" prefetch={false} className={styles.viewAll}>
             View all {patternCount}
-            <ArrowRight size={14} aria-hidden="true" />
+            <ArrowRight size={15} strokeWidth={1.5} aria-hidden="true" />
           </Link>
         </div>
 
@@ -148,7 +148,7 @@ export default function HomePatternLibrary({
             <Link href="/patterns" prefetch={false} className={styles.cta}>
               <span>Make your pattern</span>
               <span className={styles.ctaArrow} aria-hidden="true">
-                <ArrowRight size={18} />
+                <ArrowRight size={16} strokeWidth={1.5} />
               </span>
             </Link>
           </div>

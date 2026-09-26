@@ -911,12 +911,13 @@
   align-items: center;
 }
 
+/* 56 by 36: the design's 34px box with its padding and border outside it. */
 .page {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 34px;
-  height: 34px;
+  min-width: 56px;
+  height: 36px;
   padding: 0 10px;
   font: 500 14px var(--a-sans);
   color: var(--a-ink);
@@ -1054,7 +1055,7 @@
 
 /* -- Narrow screens -------------------------------------------------------- */
 
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
   .shell {
     grid-template-columns: 1fr;
   }
@@ -1072,11 +1073,11 @@
   }
 
   .sideFoot {
-    margin-top: 20px;
+    margin-top: 24px;
   }
 
   .topbar {
-    padding: 16px 24px;
+    padding: 16px 20px;
   }
 
   .main {
@@ -1116,16 +1117,6 @@
 
   .barLabel:nth-child(even) {
     visibility: hidden;
-  }
-}
-
-@media (max-width: 560px) {
-  .stats {
-    grid-template-columns: 1fr;
-  }
-
-  .title {
-    font-size: 32px;
   }
 }
 
