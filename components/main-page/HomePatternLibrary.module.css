@@ -173,6 +173,11 @@
     gap: 32px;
   }
 
+  /* The artboard adds 24px under the copy when the demo stacks below it. */
+  .columns > :first-child {
+    margin-bottom: 24px;
+  }
+
   .title {
     font-size: 36px;
     line-height: 1.15;
