@@ -121,6 +121,15 @@ off leftover Vercel A and CNAME records, which a Route needs and a Custom
 Domain refuses: re-creating one means deleting any record on its hostname
 first.
 
+**`workers_dev: false` and `preview_urls: true` are both explicit, and must
+stay so.** Declaring `routes` changes their defaults: with routes and no
+`workers_dev`, `wrangler deploy` turns the workers.dev route off, and preview
+URLs left unset follow it. That is how the first production deploy with the
+Custom Domains took PR previews down, and the next PR's Cloudflare comment
+simply had no Preview URL column. Only `wrangler deploy` applies either
+setting; a PR build's `wrangler versions upload` never does, so a change
+here reaches previews once it is deployed from main.
+
 **Redirects live in `public/_redirects`**, beside `_headers` and read the
 same way. The template sites moved from `/template/<slug>/` to
 `/templates/<slug>/site/` (one noun, one tree: the framed preview is
