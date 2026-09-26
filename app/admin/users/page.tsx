@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'Users - Admin', robots: { index: fal
 
 export default function Page() {
   return (
-    <AdminPage eyebrow="Directory" title="Users" lede="Every account, with what each has made and whether it may still sign in.">
+    <AdminPage eyebrow="Directory" title="Users" lede="Every account, with templates chosen and whether it may still sign in." ledeSpace={30}>
       {/* ?id= selects one; the export cannot enumerate ids, so it is a query. */}
       <Suspense>
         <UsersRoute />

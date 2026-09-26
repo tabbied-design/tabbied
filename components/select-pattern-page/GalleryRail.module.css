@@ -71,7 +71,7 @@
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  margin: 14px 0 2px;
+  margin: 14px 0 0;
   padding: 7px 7px 7px 12px;
   font-family: var(--font-sans-serif);
   font-size: 13px;

@@ -4,14 +4,14 @@
 /* A column that fills the sticky wrapper, so the name and the tabs hold their
    place and the open panel takes the rest. Below 1024px the wrapper is static
    and grows with its content, so the rail goes back to being an ordinary
-   block. */
+   block. No padding at the foot: the save dock carries its own. */
 .rail {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  padding: 28px 26px 32px;
+  padding: 28px 26px 0;
   overflow: hidden;
   background-color: #fff;
 }
@@ -20,31 +20,6 @@
 .tabs,
 .saveDock {
   flex: none;
-}
-
-/* Below the two-column breakpoint the wrapper is static and grows with its
-   content, so the rail is an ordinary block again and the list goes back to a
-   capped window rather than trying to fill a height nothing sets. */
-@media (max-width: 1024px) {
-  .rail {
-    display: block;
-    height: auto;
-    overflow: visible;
-  }
-
-  .panel {
-    display: block;
-    overflow: visible;
-  }
-
-  .paletteScroll {
-    min-height: 0;
-  }
-
-  .palettes {
-    height: auto;
-    max-height: 320px;
-  }
 }
 
 /* The gutters come in where the rail is the width of the phone. Set here and
@@ -75,7 +50,7 @@
   display: block;
   margin-bottom: 6px;
   font: 400 13px var(--s-sans);
-  color: var(--s-muted);
+  color: oklch(0.42 0.01 260);
 }
 
 .nameField {
@@ -87,7 +62,7 @@
   box-sizing: border-box;
   width: 100%;
   padding: 5px 34px 5px 9px;
-  font: 400 22px var(--s-sans);
+  font: 400 22px var(--s-display);
   color: var(--s-ink);
   letter-spacing: 0.01em;
   background: transparent;
@@ -145,15 +120,15 @@
 
 /* ---- Panels -------------------------------------------------------------- */
 
-/* The open tab takes what the name and the tabs leave, and scrolls - the rail
-   itself does not, so a panel taller than it would otherwise be clipped with no
-   way to reach the rest. */
+/* The open tab is as tall as what it holds, with the save dock right under
+   it, and scrolls when that is more than the name and the tabs leave - the
+   rail itself does not, so a panel taller than it would otherwise be clipped
+   with no way to reach the rest. */
 .panel {
   display: flex;
-  flex: 1;
+  flex: 0 1 auto;
   flex-direction: column;
   min-height: 0;
-  margin-bottom: 16px;
   overflow-y: auto;
 }
 
@@ -164,6 +139,7 @@
    Nothing can actually overflow here (the list is `flex: 1; min-height: 0`
    over a scroller), and .rail's own `hidden` is the backstop. */
 .panelColors {
+  flex: 1;
   overflow: visible;
 }
 
@@ -176,7 +152,7 @@
 .hint {
   margin: 0 0 14px;
   font: 400 13px / 1.6 var(--s-sans);
-  color: var(--s-muted);
+  color: oklch(0.42 0.01 260);
 }
 
 /* ---- Palettes ------------------------------------------------------------ */
@@ -189,7 +165,7 @@
   position: relative;
   flex: 1;
   min-height: 0;
-  margin: 0 -26px;
+  margin: 0 -26px 30px;
 }
 
 .palettes {
@@ -198,7 +174,7 @@
   gap: 2px;
   height: 100%;
   margin: 0;
-  padding: 0 12px 40px;
+  padding: 0 14px 40px;
   overflow-x: hidden;
   overflow-y: auto;
   list-style: none;
@@ -231,12 +207,14 @@
   position: relative;
 }
 
+/* As tall as the design's row, whose pencil sits inside it (the 22px square
+   and 7px either side), and the chips end 10px short of that pencil. */
 .paletteRow {
   display: flex;
   gap: 10px;
   align-items: center;
   width: 100%;
-  padding: 7px 36px 7px 14px;
+  padding: 9px 44px 9px 12px;
   font: 400 13px var(--s-sans);
   color: var(--s-ink);
   text-align: left;
@@ -348,7 +326,6 @@
 .fields {
   display: flex;
   flex-direction: column;
-  gap: 9px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -374,18 +351,16 @@
   display: flex;
   gap: 13px;
   align-items: center;
-  padding: 9px;
-  border: 1px solid oklch(0 0 0 / 0.1);
-  border-radius: 12px;
+  padding: 6px 0;
 }
 
 .fieldThumb {
   position: relative;
   flex: none;
-  width: 56px;
-  height: 44px;
+  width: 44px;
+  height: 34px;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
 }
 
@@ -457,13 +432,14 @@
   display: flex;
   gap: 16px;
   align-items: center;
-  margin-top: 20px;
+  margin: 30px 0;
 }
 
 .patternActions .textAction {
   flex: none;
   margin: 0;
   padding: 12px 0;
+  font-size: 13.5px;
   color: oklch(0.45 0.01 260);
 }
 
@@ -518,12 +494,19 @@
 
 /* ---- Save ---------------------------------------------------------------- */
 
-/* Pinned to the foot of the rail under a rule, at the rail's full width. */
+/* Under the open tab, at the rail's full width, with its rule inset to the
+   rail's content like the design's. */
 .saveDock {
   margin: 0 -26px;
-  padding: 15px 26px 18px;
+  padding: 0 26px 18px;
   background-color: #fff;
+}
+
+.saveDock::before {
+  display: block;
+  margin-bottom: 15px;
   border-top: 1px solid oklch(0 0 0 / 0.1);
+  content: '';
 }
 
 .save {
@@ -590,6 +573,40 @@
   color: oklch(0.48 0.01 260);
   background-color: oklch(0 0 0 / 0.06);
   border-radius: 999px;
+}
+
+/* Below the two-column breakpoint the wrapper is static and grows with its
+   content, so the rail is an ordinary block again and the list goes back to a
+   capped window rather than trying to fill a height nothing sets. Last in the
+   file, so it wins over the rules it narrows. */
+@media (max-width: 1024px) {
+  .rail {
+    display: block;
+    height: auto;
+    padding: 24px 22px 0;
+    overflow: visible;
+  }
+
+  .panel {
+    display: block;
+    overflow: visible;
+  }
+
+  .paletteScroll {
+    min-height: 0;
+    margin: 0 -22px 30px;
+  }
+
+  .palettes {
+    height: auto;
+    max-height: 196px;
+    padding: 0 10px 26px;
+  }
+
+  .saveDock {
+    margin: 0 -22px;
+    padding: 0 22px calc(16px + env(safe-area-inset-bottom));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

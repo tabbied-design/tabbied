@@ -25,13 +25,15 @@
   background-color: #0e0e13;
 }
 
-/* The apply button: name and inks, the height of the pill. */
+/* The apply button: name and inks, the height of the pill, which is the
+   22px mark's with 7px above and below it. */
 .main {
   display: flex;
   flex: 1;
   gap: 8px;
   align-items: center;
   min-width: 0;
+  min-height: 36px;
   padding: 7px 0;
   font: inherit;
   color: inherit;

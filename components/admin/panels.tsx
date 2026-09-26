@@ -19,6 +19,10 @@ const Load = ({ error }: { error: string | null }) => (
 const day = (value: string | Date) =>
   new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 
+/** A request's dates: a queue of recent weeks, so month and day, as the design has them. */
+const shortDay = (value: string | Date) =>
+  new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+
 // ---- overview ---------------------------------------------------------------
 
 type Overview = {
@@ -103,6 +107,9 @@ export function OverviewPanel() {
 
   if (!data) return <Load error={error} />;
 
+  // The design's four, all about templates. The endpoint's other figures
+  // (generations, sites, fallbacks, AI calls and cost) are Studio's, and the
+  // AI usage and Generations pages carry them.
   const stats: { label: string; value: string; note: string; dark?: boolean }[] = [
     { label: 'Total users', value: data.users.toLocaleString(), note: `+${data.newUsersThisWeek} this week` },
     { label: 'New users', value: data.newUsersThisWeek.toLocaleString(), note: 'In the last 7 days' },
@@ -110,15 +117,9 @@ export function OverviewPanel() {
     {
       label: 'Average chosen',
       value: data.averageChosen.toLocaleString(undefined, { maximumFractionDigits: 1 }),
-      note: `Of ${data.freeTemplates} templates per user`,
+      note: `of ${data.freeTemplates} templates per user`,
+      dark: true,
     },
-    { label: 'Requests', value: data.pendingRequests.toLocaleString(), note: 'Waiting for an answer' },
-    { label: 'Generations', value: data.generationsThisWeek.toLocaleString(), note: 'Direction sets this week' },
-    { label: 'Sites made', value: data.sitesThisWeek.toLocaleString(), note: 'Full documents this week' },
-    { label: 'Fallback rate', value: `${Math.round(data.fallbackRate * 100)}%`, note: 'Of this week\'s generations' },
-    { label: 'AI calls today', value: data.aiCallsToday.toLocaleString(), note: 'Since 00:00 UTC' },
-    { label: 'Images', value: data.imagesThisWeek.toLocaleString(), note: 'Generated this week' },
-    { label: 'AI cost today', value: money(data.aiCostToday), note: 'Estimated from the ledger', dark: true },
   ];
 
   return (
@@ -391,7 +392,7 @@ function UsersDirectory({ pageSize = 10, compact = false }: { pageSize?: number;
 }
 
 export function UsersPanel() {
-  return <UsersDirectory />;
+  return <UsersDirectory pageSize={8} />;
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -923,7 +924,9 @@ export function RequestsPanel() {
       {!data ? (
         <Load error={error} />
       ) : data.requests.length === 0 ? (
-        <p className={styles.quiet}>Nothing here.</p>
+        <div className={styles.panel}>
+          <p className={styles.empty}>Nothing here.</p>
+        </div>
       ) : (
         <div className={styles.requests}>
           {data.requests.map((row) => {
@@ -936,32 +939,41 @@ export function RequestsPanel() {
               <div key={row.id} className={styles.request}>
                 <div className={styles.requestHead}>
                   <div className={styles.person}>
-                    <span className={styles.avatar} aria-hidden="true">
+                    <span className={`${styles.avatar} ${styles.requestAvatar}`} aria-hidden="true">
                       {initials(row.name, row.email)}
                     </span>
                     <div className={styles.personText}>
-                      <p className={styles.personName}>
-                        {row.name || row.email}{' '}
+                      <p className={styles.requestName}>
+                        <span>{row.name || row.email}</span>
                         <span className={`${styles.roundBadge} ${reviewed ? styles.roundSecond : ''}`}>
                           {reviewed ? `${ordinal(row.round)} request` : '1st request'}
                         </span>
                       </p>
                       <p className={styles.requestMeta}>
-                        <a href={`mailto:${row.email}`}>{row.email}</a> &#xB7; Sent {day(row.createdAt)} &#xB7; Using{' '}
-                        {row.chosen} of {row.allowance} &#xB7;{' '}
-                        <Link href={`/admin/users/?id=${row.userId}`} prefetch={false}>
+                        <a href={`mailto:${row.email}`}>{row.email}</a> &#xB7;{' '}
+                        <span className={styles.nowrap}>Sent {shortDay(row.createdAt)}</span> &#xB7;{' '}
+                        <span className={styles.nowrap}>
+                          Using {row.chosen} of {row.allowance}
+                        </span>{' '}
+                        &#xB7;{' '}
+                        <Link href={`/admin/users/?id=${row.userId}`} prefetch={false} className={styles.metaLink}>
                           Profile
                         </Link>
                       </p>
                       {reviewed ? (
-                        <p className={styles.requestMeta}>
+                        <p className={`${styles.requestMeta} ${styles.requestAsk}`}>
                           Needs {row.need ?? '?'} more &#xB7; Would pay: {row.pay ?? '?'}
                           {row.fairPrice ? ` (${row.fairPrice})` : ''}
                           {row.link ? (
                             <>
                               {' '}
                               &#xB7;{' '}
-                              <a href={hrefFor(row.link)} target="_blank" rel="noopener noreferrer nofollow">
+                              <a
+                                href={hrefFor(row.link)}
+                                target="_blank"
+                                rel="noopener noreferrer nofollow"
+                                className={styles.metaLink}
+                              >
                                 {row.link}
                               </a>
                             </>
@@ -969,9 +981,15 @@ export function RequestsPanel() {
                         </p>
                       ) : null}
                       {answers ? (
-                        <p className={styles.requestMeta}>
+                        <p className={`${styles.requestMeta} ${styles.requestAnswers}`}>
                           {answers}
-                          {reviewed && row.firstActivatedAt ? ` \u00B7 +5 via email link on ${day(row.firstActivatedAt)}` : ''}
+                          {reviewed && row.firstActivatedAt ? (
+                            <>
+                              {' '}
+                              &#xB7;{' '}
+                              <span className={styles.nowrap}>+5 via email link on {shortDay(row.firstActivatedAt)}</span>
+                            </>
+                          ) : null}
                         </p>
                       ) : null}
                     </div>
@@ -981,7 +999,7 @@ export function RequestsPanel() {
                     <div className={styles.decide}>
                       <button
                         type="button"
-                        className={styles.small}
+                        className={styles.decline}
                         disabled={busy !== null}
                         onClick={() => void decide(row, { status: 'declined' })}
                       >
@@ -1006,14 +1024,10 @@ export function RequestsPanel() {
                       </button>
                     </div>
                   ) : (
-                    <div className={styles.decide}>
-                      <span
-                        className={`${styles.outcome} ${
-                          row.status === 'declined' || (row.status === 'sent' && !row.decidedAt) ? '' : styles.outcomeGranted
-                        }`}
-                      >
+                    <div className={`${styles.decide} ${styles.decided}`}>
+                      <span className={`${styles.outcome} ${row.status === 'declined' ? '' : styles.outcomeGranted}`}>
                         {row.status === 'activated'
-                          ? `Link clicked \u00B7 +${row.granted} on ${day(row.decidedAt!)}`
+                          ? `Link clicked \u00B7 +${row.granted} on ${shortDay(row.decidedAt!)}`
                           : row.status === 'sent'
                             ? row.sendAt && new Date(row.sendAt).getTime() > Date.now()
                               ? 'Email scheduled'
@@ -1035,7 +1049,7 @@ export function RequestsPanel() {
                     </div>
                   )}
                 </div>
-                {row.note ? <p className={styles.requestNote}>{row.note}</p> : null}
+                {row.note ? <p className={styles.requestNote}>&quot;{row.note}&quot;</p> : null}
               </div>
             );
           })}

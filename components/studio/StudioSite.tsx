@@ -67,6 +67,22 @@ type Frame = HTMLIFrameElement & {
 /** How long the canvas dims while a shuffle draws, so the change reads as one. */
 const SHUFFLE_BEAT_MS = 700;
 
+/** "Raku and Soft Bubbles": the designs a shuffle drew, three named at most. */
+function drawnNames(
+  slots: readonly PatternSlot[],
+  patterns: Record<string, PatternEdit> | undefined,
+  designs: readonly DesignChoice[]
+): string {
+  const names = slots.map((slot) => {
+    const slug = designOn(slot, patterns?.[slot.id]);
+
+    return designs.find((design) => design.slug === slug)?.name ?? slug;
+  });
+  const shown = names.length > 3 ? [...names.slice(0, 2), `${names.length - 2} more`] : names;
+
+  return shown.length > 1 ? `${shown.slice(0, -1).join(', ')} and ${shown[shown.length - 1]}` : shown.join('');
+}
+
 /**
  * A site that does not exist yet: the template as it ships, owned by the
  * person looking at it, with no id until the first Save gives it one.
@@ -330,7 +346,10 @@ export default function StudioSite({
     touch(document);
     applyDocument(document);
 
-    shuffleTimer.current = window.setTimeout(() => setShuffling(false), SHUFFLE_BEAT_MS);
+    shuffleTimer.current = window.setTimeout(() => {
+      setShuffling(false);
+      toaster.add({ title: `New patterns: ${drawnNames(patternSlots, patterns, designs)}.` });
+    }, SHUFFLE_BEAT_MS);
   };
 
   const resetPatterns = () => {
@@ -341,7 +360,7 @@ export default function StudioSite({
     // A swap removed the field's authored options and seed, which a plan
     // cannot put back, so the canvas is rebuilt from the package.
     rebuild(next);
-    toaster.add({ title: `Back to ${site.templateName}'s own patterns` });
+    toaster.add({ title: `Back to ${site.templateName}'s own patterns.` });
   };
 
   // One field at a time: a pick applies live, and putting the field back to
@@ -409,6 +428,7 @@ export default function StudioSite({
                   edits: saving,
                   source: 'manual',
                   instruction: null,
+                  createdAt: new Date().toISOString(),
                 },
               },
             }
@@ -416,7 +436,7 @@ export default function StudioSite({
       // "Saved" only if nothing changed while the request was out; a change
       // in flight has already marked the draft dirty.
       setSaveState((current) => (current === 'saving' ? 'saved' : current));
-      toaster.add({ title: 'Saved. It is under Your templates in your account.' });
+      toaster.add({ title: `Saved. Your customized ${site.templateName} now uses these edits.` });
     } catch (cause) {
       setSaveState('dirty');
       toaster.add({ title: cause instanceof ApiError ? cause.message : 'Could not save.' });
@@ -438,7 +458,7 @@ export default function StudioSite({
         body: JSON.stringify({ title }),
       });
       setState((prev) => (prev.status === 'ready' ? { ...prev, site: { ...prev.site, title } } : prev));
-      toaster.add({ title: 'Site name saved' });
+      toaster.add({ title: 'Site name saved.' });
     } catch (cause) {
       toaster.add({ title: cause instanceof ApiError ? cause.message : 'Could not rename the site.' });
     }
@@ -473,7 +493,11 @@ export default function StudioSite({
         template={unsaved ? site.slug : undefined}
         downloading={downloading}
         onDownloadHtml={() => void downloadHtml()}
-        reactHref={`/downloads/${site.slug}-react.zip`}
+        slug={site.slug}
+        templateName={site.templateName}
+        colors={palette}
+        unsaved={saveState === 'dirty' || saveState === 'saving'}
+        editedAt={unsaved ? null : site.latest.createdAt}
       />
 
       {/* Two notices this page owns, distinct from the engine's: a fallback
@@ -616,7 +640,19 @@ export default function StudioSite({
               />
               {shuffling ? (
                 <div className={styles.veil} role="status">
-                  Drawing new patterns...
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 3a9 9 0 1 0 9 9" />
+                  </svg>
+                  Generating patterns...
                 </div>
               ) : null}
             </div>

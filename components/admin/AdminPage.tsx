@@ -100,11 +100,14 @@ export default function AdminPage({
   eyebrow = 'Admin',
   title,
   lede,
+  ledeSpace,
   children,
 }: {
   eyebrow?: string;
   title: string;
   lede?: ReactNode;
+  /** The gap under the lede, where a page's design sets its own (34px by default). */
+  ledeSpace?: number;
   children: ReactNode;
 }) {
   const pathname = usePathname();
@@ -190,7 +193,11 @@ export default function AdminPage({
         <main className={styles.main}>
           <p className={styles.eyebrow}>{eyebrow}</p>
           <h1 className={styles.title}>{title}</h1>
-          {lede ? <p className={styles.lede}>{lede}</p> : null}
+          {lede ? (
+            <p className={styles.lede} style={ledeSpace === undefined ? undefined : { marginBottom: ledeSpace }}>
+              {lede}
+            </p>
+          ) : null}
           {children}
         </main>
       </div>

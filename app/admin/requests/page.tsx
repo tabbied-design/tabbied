@@ -10,6 +10,7 @@ export default function Page() {
       eyebrow="Beta access"
       title="Template requests"
       lede="First requests get an email after about 5 minutes, and the 5 templates are added when the person follows its link. Later requests, from people who have used those too, wait here for review. Reply by email and choose how many to grant."
+      ledeSpace={28}
     >
       <RequestsPanel />
     </AdminPage>
