@@ -1,5 +1,64 @@
 # tabbied
 
+## 0.7.0
+
+### Minor Changes
+
+- [#87](https://github.com/tabbied-design/tabbied/pull/87) [`c0c10d1`](https://github.com/tabbied-design/tabbied/commit/c0c10d1582f5b05d18a0cb1b9821389abd48e74a) Thanks [@subwaymatch](https://github.com/subwaymatch)! - Fourteen designs generate a fraction of the CSS they did, and the densest ones draw what they were designed to.
+
+  **Additions**
+
+  - `sizing.maxCells` on a definition caps the grid `fit: "grid"` (and a density or cell size under `cover`) derives from the box. It is for the designs whose cells are a count of things rather than a tiling: radiantswirl, driftspiral, turbulentsunburst, marbledarcs, warpribbon, spiralrosette, confettidotfield and tidewashbands now carry the largest count their grid option offers. At the finest density a 2:3 box drew 187 rings of radiantswirl where it is designed for 12 to 28.
+
+  **Designs**
+
+  - A value that was the same in every cell is generated once on the doodle and read with `@var`: evolute (3.4 MB of CSS at an 11x17 grid, now 40 KB), blossom and sparkle (1.7 MB each, now about 100 KB), fractal, drypoint, charcoal, linocut, reedpen, crosslattice and sunsetrings (1.6 MB, now 81 KB). They render pixel for pixel as before.
+  - matryoshka and subdivide mask each cell with gradient layers instead of a nested `@doodle`: no images to generate (matryoshka took a second at an 11x17 grid, now under 100 ms), and no hairline seams on screen. The same seed draws a different arrangement than before.
+  - midnightblossoms plots its petals at 120 points instead of 240; the difference is anti-aliasing.
+
+  **Fixes**
+
+  - The SVG exporter paints a `no-repeat` background or mask layer smaller than its box once, in its own area, instead of padding its edge color across the whole box. matryoshka and subdivide now export exactly.
+
+- [#84](https://github.com/tabbied-design/tabbied/pull/84) [`8be10c1`](https://github.com/tabbied-design/tabbied/commit/8be10c12c4d4fb883ff95df3000632b056804588) Thanks [@subwaymatch](https://github.com/subwaymatch)! - `density` is now one number from 0 (coarse) to 1 (fine) instead of an integer level 0..4, in the `density` prop, the `createPattern` config and `data-density`. It maps onto the cell sizes the editor's original 360px plate drew at its five stops, `cellPx = 360 / (2 + 8 * density)`, so the former levels sit at round values and nothing authored moves:
+
+  | Former level | Density | Cell (px) |
+  | ------------ | ------- | --------- |
+  | 0            | 0       | 180       |
+  | 1            | 0.25    | 90        |
+  | 2            | 0.5     | 60        |
+  | 3            | 0.75    | 45        |
+  | 4            | 1       | 36        |
+
+  **Breaking changes**
+
+  - A `density` above 1 clamps to 1 and draws 36px cells, and `density={1}` draws 36px cells where it drew 90px. Nothing warns: migrate level n to n / 4.
+  - `DENSITY_CELL_PX` is removed.
+  - The level-based grid helpers are removed: `LONG_EDGE_COUNTS`, `GRID_LEVEL_COUNT`, `getCanvasSize`, `deriveGrid`, `getGridOptions` and `gridToLevel`. A grid is derived from a box at a density with `deriveGridForBox`. `DEFAULT_CELL_PX` keeps its value (36px, now `densityToCellPx(1)`), so a consumer that passes neither `cellSize` nor `density` sees no change.
+
+  **Additions**
+
+  - `densityToCellPx(density)`: the target cell size for a density, clamped to the range.
+  - `densityFromGrid("colsxrows")`: the density whose cell that grid had on the original 360x540 plate (6x9 is 0.5, 10x15 is 1), or null for anything that is not a grid. The editor uses it to open a design at the density of its authored grid default.
+  - `DENSITY_REFERENCE_PX`, the 360px the mapping is defined against.
+
+  The Tabbied editor's grid control is now this density: a slider from 0 to 1, read out as that number, with the grid the plate resolves to at that cell size named in the plate's caption and the aspect ratio picker unchanged. Share links carry `density=` in place of the grid; a `grid=` parameter is ignored.
+
+- [#86](https://github.com/tabbied-design/tabbied/pull/86) [`c79af0a`](https://github.com/tabbied-design/tabbied/commit/c79af0a493c8b75fe0a18d64bd9a74f245937809) Thanks [@subwaymatch](https://github.com/subwaymatch)! - `snapCellToBox(width, height, cols, rows, cellMultiple?)` is exported from the core: the whole, divisible, square cell that lets a `cols x rows` grid cover a box, which is the arithmetic the `grid` fit already ran on its host and the `cover` fit on its render box, now in one place. It is what the site's editor sizes its plate with, so a 3:2 plate no longer draws 58.2px tracks with a hairline seam down every column.
+
+  `exportSvg()` and `doodleToSvg()` take a `clip: { width, height }` option: the viewBox becomes that top-left box and the drawing is clipped to it. A `grid` fit's canvas is oversized to whole tracks and clipped by its host, so this is what makes an exported file show what the page showed.
+
+### Patch Changes
+
+- [#84](https://github.com/tabbied-design/tabbied/pull/84) [`8be10c1`](https://github.com/tabbied-design/tabbied/commit/8be10c12c4d4fb883ff95df3000632b056804588) Thanks [@subwaymatch](https://github.com/subwaymatch)! - Twelve of the September designs were the reason the pattern gallery's pages 13 and 14 crashed on iOS and dragged on desktop, and they are fixed at the source:
+
+  - `diamondconfetti`, `teardropleaves`, `diamondember`, `confettitriangles` and `scatteredgems` nested a `@doodle` on a 10,000px canvas (100,000px for the first), the rotated-tile trick that covers any host. css-doodle renders a sized nested doodle as an SVG image, and on WebKit it rasterizes that to a PNG canvas of the declared size first: 400 MB each, and beyond any canvas limit at 100,000px. The tile only has to cover its own square, which the designs' `scale(1.5)` and `scale(2)` already do, so the canvases are 3,000px now, larger than any host a page draws. The render is unchanged.
+  - `turbulentsunburst`, `randomrings`, `horizonbands`, `tidewashbands`, `spinningrings`, `concentricrings` and `scattershrink` declared `@keyframes` animations, four of them authored paused. An animated cell is a compositing layer whether it moves or not, so those seven put 131 to 517 layers behind one gallery card, and page 14 as a whole asked for 317 layers of textures. The animations are removed; the four paused designs look exactly as before, and the three that moved now rest on their first frame (`tidewashbands` keeps each band at the offset its animation delay gave it).
+
+  Under `prefers-reduced-motion: reduce` the controller now also pauses any keyframe animation a design declares, beside the redraw timer and the cell transitions it already stops.
+
+- [#90](https://github.com/tabbied-design/tabbied/pull/90) [`3421294`](https://github.com/tabbied-design/tabbied/commit/342129407ac2076c9cfa1fab5189ec9860bd9c26) Thanks [@subwaymatch](https://github.com/subwaymatch)! - `tabbied render --format` is listed in `--help` and accepts only `svg` or `png`. Any other value used to fall through to the SVG exporter (for a design that cannot export SVG too) and write an SVG under whatever name `--out` gave; it now fails with a message. The llms reference and the `search_designs` tool's `svgExport` description no longer say every unsupported design is a conic sweep: the 32 cover double and dashed borders, 3D transforms, `color-mix()` and exports that miss pixel parity too.
+
 ## 0.6.0
 
 ### Minor Changes

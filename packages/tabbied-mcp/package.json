@@ -1,6 +1,6 @@
 {
   "name": "tabbied-mcp",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "MCP server for Tabbied: search, look at, and render its generative pattern designs from any MCP client.",
   "type": "module",
   "sideEffects": false,
@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",
-    "tabbied": "^0.6.0"
+    "tabbied": "^0.7.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",

@@ -1,6 +1,6 @@
 {
   "name": "tabbied-templates",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The editable-section spec for Tabbied template sites: what a person or an agent may change about a template, and the engine that applies it.",
   "type": "module",
   "sideEffects": false,
