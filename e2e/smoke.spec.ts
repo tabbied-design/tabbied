@@ -573,8 +573,8 @@ test.describe('Tabbied site (mobile viewport)', () => {
     await page.goto('/');
 
     // Below 768px the inline nav is display:none and the hamburger opens a
-    // menu of the four destinations and Sign in. GitHub is in the footer, not
-    // up here.
+    // menu of the three destinations and Sign in. The lockup is the way home,
+    // and GitHub is in the footer, not up here.
     const trigger = page.getByRole('button', { name: 'Menu' });
     await expect(trigger).toBeVisible();
     await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeHidden();
@@ -582,7 +582,7 @@ test.describe('Tabbied site (mobile viewport)', () => {
     await trigger.click();
 
     const menu = page.getByRole('menu');
-    await expect(menu.getByRole('menuitem', { name: 'Home' })).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: 'Home' })).toHaveCount(0);
     await expect(menu.getByRole('menuitem', { name: 'Patterns' })).toBeVisible();
     await expect(menu.getByRole('menuitem', { name: 'React Component' })).toHaveAttribute(
       'href',
@@ -735,15 +735,16 @@ test.describe('Template preview and customize', () => {
 });
 
 test.describe('Shared site header', () => {
-  test('carries the four destinations and marks the current one', async ({
+  test('carries the three destinations and marks the current one', async ({
     page,
   }) => {
     await page.goto('/templates');
 
-    // Home / Patterns / Websites / React Component in the middle, Sign in on
-    // the right. GitHub is in the footer, not the bar.
+    // Patterns / Websites / React Component in the middle, Sign in on the
+    // right. The lockup is the way home, and GitHub is in the footer.
     const nav = page.getByRole('navigation', { name: 'Main' });
-    await expect(nav.getByRole('link', { name: 'Home' })).toBeVisible();
+    await expect(nav.getByRole('link')).toHaveCount(3);
+    await expect(page.getByRole('link', { name: 'Tabbied home' })).toHaveAttribute('href', '/');
     await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'React Component' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeVisible();

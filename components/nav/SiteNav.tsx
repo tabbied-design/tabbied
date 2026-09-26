@@ -14,10 +14,10 @@ import styles from './SiteNav.module.css';
 // dark shell (`dark`, the homepage and the template gallery). See CLAUDE.md,
 // "The masthead - one bar, two tones".
 //
-// Signed out: Home / Patterns / Websites / React Component and "Sign in".
-// Signed in: the same without Home, and the person's initials opening the
-// account menu, which is where My account lives. Below 768px the destinations
-// fold into that menu (signed out, into one behind a hamburger).
+// Patterns / Websites / React Component in the middle; the lockup is the way
+// home. Signed out, "Sign in" on the right; signed in, the person's initials
+// opening the account menu, which is where My account lives. Below 768px the
+// destinations fold into that menu (signed out, into one behind a hamburger).
 //
 // A prerendered page cannot know who is looking, so the signed-out chrome
 // draws until the session answers. A browser signed in last time
@@ -86,18 +86,14 @@ export default function SiteNav({
     pathname === '/' ? '/account' : rawPathname
   )}`;
 
-  const links = user ? DESTINATIONS : ([['/', 'Home'], ...DESTINATIONS] as const);
-
   // Both dark artboards (the homepage and the template gallery) pin the bar.
   const pinned = sticky || tone === 'dark';
 
-  const isCurrent = (href: string) =>
-    href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
+  const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   // The menu marks one item as the page you are on: the longest href that
   // matches, so Settings wins over My account on /account/settings.
   const menuHrefs = [
-    '/',
     '/account',
     '/account/settings',
     '/admin',
@@ -142,7 +138,7 @@ export default function SiteNav({
       </Link>
 
       <nav className={styles.links} aria-label="Main">
-        {links.map(([href, label]) => (
+        {DESTINATIONS.map(([href, label]) => (
           <Link
             key={href}
             href={href}
@@ -222,7 +218,6 @@ export default function SiteNav({
                   sideOffset={10}
                 >
                   <Menu.Popup className={styles.menu}>
-                    {item('/', 'Home')}
                     {DESTINATIONS.map(([href, label]) => item(href, label))}
                     <Menu.Separator className={styles.menuRule} />
                     {item(signInHref, 'Sign in')}
