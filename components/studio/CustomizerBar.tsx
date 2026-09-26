@@ -23,8 +23,8 @@ const BACK = {
 };
 
 /** "Edited Today" or "Edited Sep 22", as the design writes the last save. */
-function editedLabel(iso: string): string {
-  const date = new Date(iso);
+function editedLabel(when: string | Date): string {
+  const date = new Date(when);
 
   if (Number.isNaN(date.getTime())) return '';
   if (date.toDateString() === new Date().toDateString()) return 'Edited Today';
@@ -60,7 +60,7 @@ export default function CustomizerBar({
   /** Changes on the canvas that no revision holds yet. */
   unsaved: boolean;
   /** When the latest revision was saved, or null for a site not saved yet. */
-  editedAt: string | null;
+  editedAt: string | Date | null;
 }) {
   const { user, isPending } = useSessionUser();
   const router = useRouter();

@@ -211,9 +211,10 @@ a.stat:hover .statArrow {
   transform: translateX(3px);
 }
 
-/* Bold, though the artboard's inline style says 200: its Proxima Nova ships
-   400 and 700 only, so the design renders the figure bold (as the story
-   section's stats are). Typekit's proxima-nova does have a 200. */
+/* Bold, though the artboard's inline style says 200: the design's bundled
+   ProximaNova-Regular.otf is in fact the Bold face, so it renders every
+   Proxima weight bold (as the story section's stats are). Typekit's
+   proxima-nova does have a 200. */
 .statNumber {
   display: block;
   font: 700 64px var(--h-display);
