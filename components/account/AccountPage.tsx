@@ -23,6 +23,7 @@ export default function AccountPage({
   lede,
   action,
   back = true,
+  narrow = false,
   children,
 }: {
   eyebrow?: string;
@@ -34,6 +35,8 @@ export default function AccountPage({
   action?: { href: string; label: string };
   /** The link back to the overview; the overview itself has none. */
   back?: boolean;
+  /** The design's 900px column, for a page of forms. */
+  narrow?: boolean;
   children: ReactNode;
 }) {
   const { user, isPending } = useSessionUser();
@@ -41,7 +44,7 @@ export default function AccountPage({
   return (
     <>
       <AccountHeader />
-      <div className={styles.shell}>
+      <div className={narrow ? `${styles.shell} ${styles.narrow}` : styles.shell}>
         {isPending ? (
           <div className={styles.gate}>
             <p className={styles.quiet}>Checking your session...</p>

@@ -14,6 +14,7 @@ export default function Page() {
     <div className={`${styles.page} ${plexMono.variable} ${plexSans.variable}`}>
       <AccountPage
         title="Settings"
+        narrow
         lede="Your name, your password, and the one thing that cannot be undone."
       >
         <SettingsPanel />
