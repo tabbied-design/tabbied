@@ -573,8 +573,8 @@ test.describe('Tabbied site (mobile viewport)', () => {
     await page.goto('/');
 
     // Below 768px the inline nav is display:none and the hamburger opens a
-    // menu of the three destinations and Sign in. GitHub and Docs are in the
-    // footer, not up here.
+    // menu of the four destinations and Sign in. GitHub is in the footer, not
+    // up here.
     const trigger = page.getByRole('button', { name: 'Menu' });
     await expect(trigger).toBeVisible();
     await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeHidden();
@@ -584,6 +584,10 @@ test.describe('Tabbied site (mobile viewport)', () => {
     const menu = page.getByRole('menu');
     await expect(menu.getByRole('menuitem', { name: 'Home' })).toBeVisible();
     await expect(menu.getByRole('menuitem', { name: 'Patterns' })).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: 'React Component' })).toHaveAttribute(
+      'href',
+      /\/docs\/react/
+    );
     await expect(menu.getByRole('menuitem', { name: 'Sign in' })).toHaveAttribute(
       'href',
       /\/sign-in/
@@ -731,16 +735,17 @@ test.describe('Template preview and customize', () => {
 });
 
 test.describe('Shared site header', () => {
-  test('carries the three destinations and marks the current one', async ({
+  test('carries the four destinations and marks the current one', async ({
     page,
   }) => {
     await page.goto('/templates');
 
-    // Home / Patterns / Websites in the middle, Sign in on the right. GitHub
-    // and Docs are in the footer, not the bar.
+    // Home / Patterns / Websites / React Component in the middle, Sign in on
+    // the right. GitHub is in the footer, not the bar.
     const nav = page.getByRole('navigation', { name: 'Main' });
     await expect(nav.getByRole('link', { name: 'Home' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'React Component' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Tabbied on GitHub' })).toHaveCount(0);
 
@@ -757,10 +762,17 @@ test.describe('Shared site header', () => {
       'page'
     );
 
-    // The content pages draw the same bar in ink, and a page with no matching
-    // destination highlights nothing.
+    // The content pages draw the same bar in ink; the docs page is the last
+    // destination and marks itself.
     await page.goto('/docs/react');
     await expect(nav.getByRole('link', { name: 'Patterns' })).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'React Component' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+
+    // A page with no matching destination highlights nothing.
+    await page.goto('/privacy-policy');
     await expect(page.locator('header a[aria-current="page"]')).toHaveCount(0);
   });
 
