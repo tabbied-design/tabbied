@@ -137,13 +137,22 @@ function markFontSamples() {
 }
 
 /**
- * The web fonts the viewport shows in a fallback: for each sample, the fonts
- * the browser actually used (CDP's platform fonts), and a failure where none
- * of them came from a web font.
+ * The web fonts the viewport shows in a fallback, two ways. A face the page
+ * asked for and could not load is an error in document.fonts: when one
+ * weight or style of a family fails and the others load, the browser fakes
+ * it from them (an upright slanted for an italic, a regular smeared for a
+ * bold), so a web font still drew the text and only this catches it. And for
+ * each sample, the fonts the browser actually used (CDP's platform fonts),
+ * with a failure where none of them came from a web font.
  */
 async function fallbackFonts(page) {
+  const broken = await page.evaluate(() =>
+    [...document.fonts]
+      .filter((face) => face.status === 'error')
+      .map((face) => `"${face.family.replace(/^["']|["']$/g, '')}" ${face.weight}${face.style === 'normal' ? '' : ` ${face.style}`} failed to load`)
+  );
   const samples = await page.evaluate(markFontSamples);
-  if (samples.length === 0) return [];
+  if (samples.length === 0) return broken;
 
   const cdp = await page.context().newCDPSession(page);
   try {
@@ -152,7 +161,7 @@ async function fallbackFonts(page) {
     const { root } = await cdp.send('DOM.getDocument', { depth: 0 });
     // Document order, the order the samples were marked in.
     const { nodeIds } = await cdp.send('DOM.querySelectorAll', { nodeId: root.nodeId, selector: '[data-shot-font]' });
-    const failed = [];
+    const failed = [...broken];
 
     for (const [i, nodeId] of nodeIds.entries()) {
       const { fonts } = await cdp.send('CSS.getPlatformFontsForNode', { nodeId });

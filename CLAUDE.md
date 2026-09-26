@@ -554,9 +554,12 @@ DejaVu Sans that way, and so did others, with nothing to say so. So before
 each shot the script marks one visible element per family, weight and style
 the page loads from Google Fonts (read off the stylesheet links, since
 `document.fonts` is empty for exactly the stylesheet that failed) and asks
-the browser, through CDP's `CSS.getPlatformFontsForNode`, what drew it. A
-web font drawn by a system font gets one reload, then the slug is reported
-and its shot left as it was.
+the browser, through CDP's `CSS.getPlatformFontsForNode`, what drew it. That
+alone misses half the failures: when one weight or style of a family fails
+and the others load, the browser fakes it from them (Cerulean's italic was
+its upright, slanted), so a web font still drew the text. Any face
+`document.fonts` reports as `error` fails the shot too. A failure gets one
+reload, then the slug is reported and its shot left as it was.
 
 ## The template gallery - a mixed order, pages, and the URL
 
