@@ -49,10 +49,13 @@
   border-right: 1px solid var(--a-rule);
 }
 
+/* The design's wordmark sits in a 22px line box, so the row is 54px tall
+   where the lockup alone would make it 52. */
 .logo {
+  --logo-gap: 11px;
   display: inline-flex;
   align-items: center;
-  gap: 11px;
+  min-height: 54px;
   padding: 4px 8px 28px;
   color: var(--a-ink);
   line-height: 0;
@@ -180,21 +183,20 @@
 
 .title {
   margin: 0 0 10px;
-  font: 700 40px / 1.1 var(--a-display);
+  font: 700 40px var(--a-display);
   letter-spacing: -0.02em;
 }
 
 .lede {
   max-width: 640px;
   margin: 0 0 34px;
-  font: 400 16px / 1.5 var(--a-sans);
+  font: 400 16px var(--a-sans);
   color: var(--a-muted);
 }
 
 .h2 {
   margin: 0;
   font: 700 24px var(--a-display);
-  letter-spacing: -0.01em;
 }
 
 .h3 {
@@ -353,7 +355,7 @@
 }
 
 .search input {
-  width: 150px;
+  width: 130px;
   font: 400 14px var(--a-sans);
   color: var(--a-ink);
   background: none;
@@ -389,8 +391,6 @@
 .statValue {
   margin: 16px 0 14px;
   font: 700 38px / 1 var(--a-display);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
 }
 
 .statNote {

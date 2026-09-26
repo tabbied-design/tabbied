@@ -365,7 +365,6 @@
   }
 
   .menu {
-    min-width: 230px;
     border-radius: 14px;
     box-shadow: 0 14px 38px oklch(0 0 0 / 0.22);
   }

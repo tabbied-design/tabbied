@@ -14,7 +14,7 @@ import styles from './SiteNav.module.css';
 // dark shell (`dark`, the homepage and the template gallery). See CLAUDE.md,
 // "The masthead - one bar, two tones".
 //
-// Signed out: Home / Patterns / Websites and "Sign in". Signed in: My Account
+// Signed out: Home / Patterns / Websites and "Sign in". Signed in: My account
 // first, and the person's initials opening the account menu. Below 768px the
 // destinations fold into that menu (signed out, into one behind a hamburger).
 //
@@ -83,14 +83,31 @@ export default function SiteNav({
     pathname === '/' ? '/account' : rawPathname
   )}`;
 
-  const home = user ? (['/account', 'My Account'] as const) : (['/', 'Home'] as const);
+  const home = user ? (['/account', 'My account'] as const) : (['/', 'Home'] as const);
   const links = [home, ...DESTINATIONS] as const;
 
   const isCurrent = (href: string) =>
     href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
 
+  // The menu marks one item as the page you are on: the longest href that
+  // matches, so Settings wins over My account on /account/settings.
+  const menuHrefs = ['/', '/account', '/account/settings', '/admin', ...DESTINATIONS.map(([href]) => href)];
+  const menuCurrent = menuHrefs
+    .filter(isCurrent)
+    .reduce<string | null>((best, href) => (!best || href.length > best.length ? href : best), null);
+
   const item = (href: string, label: string) => (
-    <Menu.Item key={href} className={styles.menuItem} render={<Link href={href} prefetch={false} />}>
+    <Menu.Item
+      key={href}
+      className={styles.menuItem}
+      render={
+        <Link
+          href={href}
+          prefetch={false}
+          aria-current={href === menuCurrent ? 'page' : undefined}
+        />
+      }
+    >
       {label}
     </Menu.Item>
   );
@@ -148,7 +165,7 @@ export default function SiteNav({
                 <Menu.Popup className={styles.menu}>
                   <div className={styles.menuEmail}>{user.email}</div>
                   <Menu.Separator className={styles.menuRule} />
-                  {item('/account', 'My Account')}
+                  {item('/account', 'My account')}
                   {narrow && item('/patterns', 'Patterns')}
                   {narrow && item('/templates', 'Websites')}
                   {item('/account/settings', 'Settings')}
@@ -186,11 +203,13 @@ export default function SiteNav({
                 <span />
               </Menu.Trigger>
               <Menu.Portal>
+                {/* Hangs 6px into the bar, as the artboards' phone menu does:
+                    the hamburger's box ends 16.5px above the bar's foot. */}
                 <Menu.Positioner
                   className={styles.positioner}
                   side="bottom"
                   align="end"
-                  sideOffset={2}
+                  sideOffset={10}
                 >
                   <Menu.Popup className={styles.menu}>
                     {item('/', 'Home')}
