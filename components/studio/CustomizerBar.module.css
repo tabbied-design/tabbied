@@ -261,8 +261,9 @@
 
 /* -- The person's menu ---------------------------------------------------- */
 
+/* The design's 230px, which it measures inside its padding. */
 .accountMenu {
-  min-width: 230px;
+  min-width: 242px;
   padding: 6px;
   border-radius: 12px;
   box-shadow: 0 12px 32px oklch(0 0 0 / 0.16);

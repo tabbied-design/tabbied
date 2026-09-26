@@ -909,8 +909,11 @@
   margin-top: 20px;
 }
 
+/* One pill per page, so a long directory wraps them rather than running
+   off the edge. */
 .pages {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
 }
@@ -1107,6 +1110,12 @@
 
   .actions {
     justify-content: flex-start;
+  }
+
+  /* The design's 56px pills put four pages and the arrows past a phone's
+     edge; narrower ones fit them. */
+  .page {
+    min-width: 40px;
   }
 
   /* With the header row gone, each value says what it is. */
