@@ -540,12 +540,18 @@
   border-top: 1px solid oklch(0 0 0 / 0.07);
 }
 
-/* Seven columns need about 960px; narrower than that the panel scrolls
-   sideways rather than crushing the person's name to nothing, and under
-   1000px the rows stack instead (below). */
+/* The rules run between rows, not under the header. */
+.tableHead + .row {
+  border-top: none;
+}
+
+/* Seven columns need about 1,070px, with room for "Templates chosen" on one
+   line as the design sets it; narrower than that the panel scrolls sideways
+   rather than crushing the person's name to nothing, and at 1024px and under
+   the rows stack instead (below). */
 .userCols {
-  grid-template-columns: minmax(200px, 2fr) 90px 120px 70px 100px 110px minmax(170px, auto);
-  min-width: 960px;
+  grid-template-columns: minmax(200px, 2fr) 90px 120px 130px 100px 110px minmax(170px, auto);
+  min-width: 1070px;
 }
 
 .person {
@@ -637,9 +643,15 @@
   color: var(--a-dim);
 }
 
-/* Every template the person may choose is chosen: the people who write in. */
+/* Every template the person may choose is chosen: the people who write in.
+   The dot stays, transparent, so the words line up with "Active". */
+.statusFull {
+  font-weight: 600;
+  color: oklch(0.55 0.19 25);
+}
+
 .statusFull::before {
-  background-color: oklch(0.78 0.14 75);
+  background-color: transparent;
 }
 
 .plainList {
