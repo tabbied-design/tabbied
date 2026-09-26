@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { damier, hourglass } from 'tabbied/patterns';
 import s from './blue-plate-diner.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'The Blue Plate: All-day diner, Larkin Heights',
@@ -368,6 +369,16 @@ export default function BluePlateDinerPage() {
             </ul>
           </div>
 
+          <div className={s.pieArt}>
+            <Artwork
+              slug="blue-plate-diner-pie"
+              alt="A slice of cherry lattice pie on a plate, beside a cup of coffee on its saucer"
+              inks={{ red: 'var(--cherry)', blue: 'var(--china)' }}
+              className={s.pieArtwork}
+            />
+            <p className={s.pieArtNote}>A slice and a refill, $6.95 all afternoon.</p>
+          </div>
+
           <form className={s.order} action="#">
             <div className={s.orderHead}>
               <h3>Order a whole pie</h3>
@@ -468,7 +479,7 @@ export default function BluePlateDinerPage() {
 
       <footer className={s.footer}>
         <p className={s.footName}>The Blue Plate</p>
-        <p>A fictional all-day diner. The menu, the people and the prices are invented.</p>
+        <p>A fictional all-day diner. The menu, the people and the prices are invented; the pie and coffee are a generated image drawn in the page's colors.</p>
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>

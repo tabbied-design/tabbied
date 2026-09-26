@@ -410,7 +410,6 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 2.5rem;
-  margin-top: 2rem;
   padding: 0;
   list-style: none;
   border-top: 1px solid var(--hair);
@@ -498,12 +497,43 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* The scatter of single strokes across the channel. */
+/* The scatter of single strokes that closes a station, set in the body
+   column so the channel line runs on past it. */
 .strokes {
+  grid-column: 2;
   position: relative;
   height: 150px;
-  margin-left: calc(var(--rail) + var(--col-gap));
+  margin-top: clamp(3.5rem, 7vw, 5rem);
   overflow: hidden;
+}
+
+/* The list of what we treat, with the herb standing beside it. */
+.treatRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 13rem);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+  margin-top: 2rem;
+}
+
+.herb {
+  display: grid;
+  justify-items: center;
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.herbArt {
+  width: 100%;
+  max-width: 11.5rem;
+}
+
+.herb figcaption {
+  font-family: var(--serif);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--muted);
 }
 
 /* ----------------------------------------------------------------- steps */
@@ -977,5 +1007,21 @@
 
   .strokes {
     height: 110px;
+  }
+
+  .treatRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .herb {
+    order: -1;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    gap: 1rem;
+  }
+
+  .herb figcaption {
+    text-align: left;
   }
 }

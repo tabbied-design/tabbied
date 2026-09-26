@@ -39,6 +39,7 @@
   --chrome-lo: color-mix(in oklab, var(--cream) 45%, var(--navy));
   --crust: color-mix(in oklab, var(--cream) 70%, var(--cherry));
   --cherry-ink: color-mix(in oklab, var(--cherry) 72%, var(--text));
+  --china: color-mix(in oklab, var(--plate) 72%, var(--text));
   --chrome: linear-gradient(180deg, var(--chrome-hi) 0%, var(--chrome-lo) 45%, var(--chrome-hi) 70%, var(--chrome-lo) 100%);
 
   font-family: var(--body);
@@ -553,7 +554,7 @@
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   grid-template-areas:
     'text case'
-    'order order';
+    'art order';
   align-items: center;
   gap: clamp(2rem, 5vw, 4rem);
   max-width: var(--wide);
@@ -702,12 +703,30 @@
 }
 
 /* The order form, under the prices. */
+/* The slice on the counter, beside the order card. */
+.pieArt {
+  grid-area: art;
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+}
+
+.pieArtwork {
+  width: min(100%, 27rem);
+}
+
+.pieArtNote {
+  font-family: var(--script);
+  font-size: 1.6rem;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--cherry-ink);
+}
+
 .order {
   grid-area: order;
   display: grid;
-  grid-template-columns: minmax(0, 0.7fr) minmax(0, 2fr) auto;
-  align-items: end;
-  gap: 1rem clamp(1.5rem, 3vw, 2.5rem);
+  gap: 1rem;
   padding: clamp(1.25rem, 3vw, 1.8rem);
   background: var(--sheet);
   border: 2px solid var(--text);
@@ -726,7 +745,7 @@
 
 .formGrid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.9rem;
 }
 
@@ -764,6 +783,7 @@
 }
 
 .submit {
+  justify-self: start;
   padding: 0.75rem 1.6rem;
   font-family: var(--cond);
   font-size: 1.15rem;
@@ -1047,20 +1067,12 @@
     grid-template-areas:
       'text'
       'case'
+      'art'
       'order';
   }
 
-  .order {
-    grid-template-columns: minmax(0, 1fr);
-    align-items: start;
-  }
-
-  .formGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .submit {
-    justify-self: start;
+  .pieArtwork {
+    width: min(100%, 22rem);
   }
 
   .hours {
@@ -1146,6 +1158,10 @@
 
   .check:nth-child(even) {
     transform: rotate(1deg);
+  }
+
+  .pieArtwork {
+    width: min(100%, 18rem);
   }
 }
 

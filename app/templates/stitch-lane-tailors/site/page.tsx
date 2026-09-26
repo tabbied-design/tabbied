@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { percale } from 'tabbied/patterns';
 import s from './stitch-lane-tailors.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Stitch Lane: Tailor and alterations, Garment Quarter',
@@ -21,6 +22,7 @@ const CLOTH = '#4a5a86';
 const SHIRTING = [NAVY, THREAD, CLOTH, CHALK, THREAD, CLOTH];
 const SUITING = [NAVY, CLOTH, THREAD, NAVY, CLOTH, TAPE];
 const SELVEDGE = [NAVY, CHALK, THREAD, CLOTH, TAPE];
+const BOX = [CLOTH, THREAD, CHALK, TAPE, THREAD];
 
 const NAV = [
   ['Prices', '#prices'],
@@ -275,18 +277,38 @@ export default function StitchLaneTailorsPage() {
 
         {/* -------------------------------------------------------- FITTINGS */}
         <section id="fittings" className={`${s.section} ${s.fittings}`} aria-labelledby="fit-h">
-          <div className={s.head}>
-            <p className={s.label}>Fittings</p>
-            <h2 id="fit-h">A fitting takes about fifteen minutes</h2>
+          <div className={s.stand}>
+            <Artwork
+              slug="stitch-lane-tailors-dummy"
+              alt="A tailor's dummy in a half-finished jacket, chalk lines basted down the front and pins in the lapel"
+              inks={{ black: 'var(--text)', red: 'var(--chalk)', blue: 'var(--navy)' }}
+              className={s.dummy}
+            />
+            <div className={s.box} aria-hidden="true">
+              <TabbiedPattern
+                pattern={percale}
+                palette={BOX}
+                fit="grid"
+                cellSize={32}
+                seed="stitch-box"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </div>
-          <ol className={s.steps}>
-            {FITTING.map(([t, d]) => (
-              <li key={t}>
-                <h3>{t}</h3>
-                <p>{d}</p>
-              </li>
-            ))}
-          </ol>
+          <div className={s.fittingText}>
+            <div className={s.head}>
+              <p className={s.label}>Fittings</p>
+              <h2 id="fit-h">A fitting takes about fifteen minutes</h2>
+            </div>
+            <ol className={s.steps}>
+              {FITTING.map(([t, d]) => (
+                <li key={t}>
+                  <h3>{t}</h3>
+                  <p>{d}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
         </section>
 
         {/* --------------------------------------------------------- BESPOKE
@@ -422,7 +444,7 @@ export default function StitchLaneTailorsPage() {
 
       <footer className={s.footer}>
         <p className={s.footName}>Stitch Lane</p>
-        <p>A fictional tailor and alterations shop. The tailors, prices and turnaround times are invented.</p>
+        <p>A fictional tailor and alterations shop. The tailors, prices and turnaround times are invented; the dummy is a generated image drawn in the page's colors.</p>
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>

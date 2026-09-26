@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { slashbar, streaking } from 'tabbied/patterns';
 import s from './meridian-acupuncture.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Meridian Acupuncture: Acupuncture clinic, Weaver\'s Quarter',
@@ -195,11 +196,22 @@ export default function MeridianAcupuncturePage() {
                 on the list, write and ask; if it is something we should not
                 treat, we will say so and tell you who should.
               </p>
-              <ul className={s.treats}>
-                {TREATS.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
+              <div className={s.treatRow}>
+                <ul className={s.treats}>
+                  {TREATS.map((t) => (
+                    <li key={t}>{t}</li>
+                  ))}
+                </ul>
+                <figure className={s.herb}>
+                  <Artwork
+                    slug="meridian-acupuncture-mugwort"
+                    alt="A sprig of mugwort, its leaves deeply lobed, brushed in ink"
+                    inks={['var(--text)']}
+                    className={s.herbArt}
+                  />
+                  <figcaption>Mugwort. Dried and rolled, it is the moxa we warm points with.</figcaption>
+                </figure>
+              </div>
               <table className={s.fees}>
                 <caption className={s.srOnly}>Treatments, their length and their fees</caption>
                 <thead>
@@ -228,19 +240,18 @@ export default function MeridianAcupuncturePage() {
                 ask for the fee when you book.
               </p>
             </div>
+            <div className={s.strokes} aria-hidden="true">
+              <TabbiedPattern
+                pattern={slashbar}
+                palette={STROKES}
+                options={{ frequency: 0.6 }}
+                fit="grid"
+                cellSize={30}
+                seed="meridian-strokes"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </section>
-
-          <div className={s.strokes} aria-hidden="true">
-            <TabbiedPattern
-              pattern={slashbar}
-              palette={STROKES}
-              options={{ frequency: 0.6 }}
-              fit="grid"
-              cellSize={30}
-              seed="meridian-strokes"
-              style={{ position: 'absolute', inset: 0 }}
-            />
-          </div>
 
           <section id="first-visit" className={s.station} aria-labelledby="first-h">
             <div className={s.point}>
@@ -352,19 +363,18 @@ export default function MeridianAcupuncturePage() {
                 ))}
               </div>
             </div>
+            <div className={s.strokes} aria-hidden="true">
+              <TabbiedPattern
+                pattern={slashbar}
+                palette={STROKES}
+                options={{ frequency: 0.6 }}
+                fit="grid"
+                cellSize={30}
+                seed="meridian-rain"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
           </section>
-
-          <div className={s.strokes} aria-hidden="true">
-            <TabbiedPattern
-              pattern={slashbar}
-              palette={STROKES}
-              options={{ frequency: 0.6 }}
-              fit="grid"
-              cellSize={30}
-              seed="meridian-rain"
-              style={{ position: 'absolute', inset: 0 }}
-            />
-          </div>
 
           <section id="book" className={s.station} aria-labelledby="book-h">
             <div className={s.point}>
@@ -429,7 +439,7 @@ export default function MeridianAcupuncturePage() {
 
       <footer className={s.footer}>
         <p className={s.footName}>Meridian Acupuncture</p>
-        <p>A fictional acupuncture clinic. The practitioners, fees and hours are invented, and nothing here is medical advice.</p>
+        <p>A fictional acupuncture clinic. The practitioners, fees and hours are invented, and nothing here is medical advice. The mugwort is a generated image, drawn in the page's colors.</p>
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>

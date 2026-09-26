@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { maze } from 'tabbied/patterns';
 import s from './the-locked-room.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'The Locked Room: Escape rooms, Lower Marsh',
@@ -19,6 +20,7 @@ const CARBON = '#2e4a7a';
 const LINING = [MANILA, INK, CARBON, INK, STAMP];
 const TINT = ['transparent', CARBON, INK, CARBON];
 const PLAN = ['transparent', CARBON, CARBON, INK];
+const STRIP = [STAMP, MANILA, MANILA, INK];
 
 const NAV = [
   ['Case files', '#cases'],
@@ -43,6 +45,9 @@ type Case = {
   levelWord: string;
   stats: [string, string][];
   lines: Line[];
+  art: string;
+  artAlt: string;
+  exhibit: string;
 };
 
 const CASES: Case[] = [
@@ -51,6 +56,9 @@ const CASES: Case[] = [
     title: 'The Hollow Mill',
     filed: 'Filed 1931. Hollow Mill, on the river road.',
     stamp: 'Start here',
+    art: 'the-locked-room-sack',
+    artAlt: 'A tied flour sack stamped with a windmill',
+    exhibit: 'Exhibit A. The flour sack',
     level: 2,
     levelWord: 'Difficulty 2 of 5',
     stats: [
@@ -71,6 +79,9 @@ const CASES: Case[] = [
     title: 'Room 414',
     filed: 'Filed 1968. The Carlton Hotel, fourth floor.',
     stamp: 'Most booked',
+    art: 'the-locked-room-hotelkey',
+    artAlt: 'A hotel key on a tag numbered 414',
+    exhibit: 'Exhibit A. The key to 414',
     level: 3,
     levelWord: 'Difficulty 3 of 5',
     stats: [
@@ -91,6 +102,9 @@ const CASES: Case[] = [
     title: 'The Cartographer',
     filed: 'Filed 1894. A study above a chart shop.',
     stamp: 'New this year',
+    art: 'the-locked-room-map',
+    artAlt: 'A half-unrolled map with a compass rose',
+    exhibit: 'Exhibit A. The chart',
     level: 4,
     levelWord: 'Difficulty 4 of 5',
     stats: [
@@ -111,6 +125,9 @@ const CASES: Case[] = [
     title: 'Blackout at the Exchange',
     filed: 'Filed 1977. Central Telephone Exchange.',
     stamp: 'Experts only',
+    art: 'the-locked-room-plug',
+    artAlt: 'A switchboard jack plug on a coiled cord',
+    exhibit: 'Exhibit A. A switchboard plug',
     level: 5,
     levelWord: 'Difficulty 5 of 5',
     stats: [
@@ -241,6 +258,12 @@ export default function TheLockedRoomPage() {
                 style={{ position: 'absolute', inset: 0 }}
               />
             </div>
+            <Artwork
+              slug="the-locked-room-key"
+              alt="A large iron key with an ornate bow, lying across the envelope"
+              inks={['var(--text)']}
+              className={s.heroKey}
+            />
             <div className={s.label}>
               <p className={s.labelHead}>Evidence</p>
               <p className={s.labelLine}>Item: floor plan, Unit 4</p>
@@ -269,14 +292,20 @@ export default function TheLockedRoomPage() {
                 <div className={s.folderBody}>
                   <div className={s.card}>
                     <p className={s.cardHead}>Particulars</p>
-                    <dl className={s.stats}>
-                      {c.stats.map(([k, v]) => (
-                        <div key={k}>
-                          <dt>{k}</dt>
-                          <dd>{v}</dd>
-                        </div>
-                      ))}
-                    </dl>
+                    <div className={s.cardBody}>
+                      <dl className={s.stats}>
+                        {c.stats.map(([k, v]) => (
+                          <div key={k}>
+                            <dt>{k}</dt>
+                            <dd>{v}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                      <div className={s.exhibit}>
+                        <Artwork slug={c.art} alt={c.artAlt} inks={['var(--text)']} className={s.exhibitArt} />
+                        <p className={s.exhibitNote}>{c.exhibit}</p>
+                      </div>
+                    </div>
                     <div className={s.meter} aria-hidden="true">
                       {SCALE.map((n) => (
                         <span key={n} className={n <= c.level ? s.on : s.off} />
@@ -403,6 +432,17 @@ export default function TheLockedRoomPage() {
         {/* ----------------------------------------------------------- BOOK */}
         <section id="book" className={`${s.section} ${s.book}`} aria-labelledby="book-h">
           <form className={s.form} action="#">
+            <div className={s.formTint} aria-hidden="true">
+              <TabbiedPattern
+                pattern={maze}
+                palette={STRIP}
+                options={{ thickness: 5 }}
+                fit="grid"
+                cellSize={24}
+                seed="locked-strip"
+                style={{ position: 'absolute', inset: 0 }}
+              />
+            </div>
             <p className={s.formNo}>Form LR-7</p>
             <h2 id="book-h" className={s.formTitle}>Request for a room</h2>
             <div className={s.formGrid}>
@@ -485,7 +525,7 @@ export default function TheLockedRoomPage() {
 
       <footer className={s.footer}>
         <p className={s.footName}>The Locked Room</p>
-        <p>A fictional escape room. The cases, records and rates are invented.</p>
+        <p>A fictional escape room. The cases, records and rates are invented; the key and the evidence sketches are generated images drawn in the page's colors.</p>
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>

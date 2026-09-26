@@ -2,6 +2,7 @@ import { TabbiedPattern } from 'tabbied/react';
 import { shading } from 'tabbied/patterns';
 import s from './longform-pilates.module.css';
 import { TemplateMenu } from 'components/template/TemplateMenu';
+import { Artwork } from 'components/Artwork';
 
 export const metadata = {
   title: 'Longform Pilates: Reformer Pilates studio, Eastmoor',
@@ -20,6 +21,7 @@ const CLAY = '#8c6450';
 const WINDOW = [STONE, OAT, CLAY, STONE, OAT];
 const LIGHT = [STONE, OAT, STONE, CLAY, OAT];
 const FLOOR = [OAT, STONE, CLAY, OAT, STONE, ESPRESSO];
+const MAT = [OAT, STONE, CLAY, OAT];
 
 const NAV = [
   ['The week', '#week'],
@@ -265,14 +267,36 @@ export default function LongformPilatesPage() {
             One line per day, 6 am on the left, 9 pm on the right, each class
             laid on it where it starts and as long as it lasts. */}
         <section id="week" className={s.section} aria-labelledby="week-h">
-          <div className={s.head}>
-            <p className={s.kicker}>The week</p>
-            <h2 id="week-h">Monday to Sunday, on one line</h2>
-            <ul className={s.legend}>
-              <li className={s.l1}>Level 1</li>
-              <li className={s.l2}>Level 2</li>
-              <li className={s.l3}>Level 3</li>
-            </ul>
+          <div className={s.weekHead}>
+            <div className={s.head}>
+              <p className={s.kicker}>The week</p>
+              <h2 id="week-h">Monday to Sunday, on one line</h2>
+              <ul className={s.legend}>
+                <li className={s.l1}>Level 1</li>
+                <li className={s.l2}>Level 2</li>
+                <li className={s.l3}>Level 3</li>
+              </ul>
+            </div>
+            <figure className={s.machine}>
+              <Artwork
+                slug="longform-pilates-reformer"
+                alt="A Pilates reformer in side view: the frame, the padded carriage, the foot bar and the straps"
+                inks={['var(--text)', 'var(--clay)']}
+                mode="duotone"
+                className={s.reformer}
+              />
+              <div className={s.mat} aria-hidden="true">
+                <TabbiedPattern
+                  pattern={shading}
+                  palette={MAT}
+                  fit="grid"
+                  cellSize={24}
+                  seed="longform-mat"
+                  style={{ position: 'absolute', inset: 0 }}
+                />
+              </div>
+              <figcaption>One of the eight, set four feet apart and facing the long east window.</figcaption>
+            </figure>
           </div>
 
           <div className={s.timeline}>
@@ -456,7 +480,7 @@ export default function LongformPilatesPage() {
 
       <footer className={s.footer}>
         <p className={s.footName}>Longform Pilates</p>
-        <p>A fictional reformer Pilates studio. The classes, instructors and prices are invented.</p>
+        <p>A fictional reformer Pilates studio. The classes, instructors and prices are invented; the reformer is a generated image drawn in the page's colors.</p>
         <p>
           Patterns by <a href="https://tabbied.com">Tabbied</a>.
         </p>
