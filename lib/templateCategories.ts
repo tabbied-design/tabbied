@@ -207,6 +207,23 @@ const BY_SLUG: Record<string, TemplateCategory> = {
   'heron-point-golf': 'Wellness & sport',
 };
 
+/**
+ * A category as the gallery's URL spells it: `?category=food-and-drink`.
+ * Lowercase, "&" read as "and", anything else not a letter or digit a hyphen.
+ */
+export function categorySlug(category: TemplateCategory): string {
+  return category
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/** The category a URL slug names, or null for one that names none. */
+export function categoryFromSlug(slug: string): TemplateCategory | null {
+  return TEMPLATE_CATEGORIES.find((category) => categorySlug(category) === slug) ?? null;
+}
+
 /** The category a site is filed under; throws for a site the table has not met. */
 export function categoryOf(slug: string): TemplateCategory {
   const category = BY_SLUG[slug];

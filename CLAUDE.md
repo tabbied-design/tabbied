@@ -546,6 +546,36 @@ Committed like the previews, because the deploy build has no browser; reshoot
 a template after its hero or header changes, and check a new one's crop by
 eye.
 
+## The template gallery - a mixed order, pages, and the URL
+
+`/templates` shows 24 cards a page, in an order `lib/templateOrder.ts`
+computes at build time, with the category and the page in the query string
+(`?category=food-and-drink&page=2`). Four things worth not re-litigating:
+
+- **The order spreads the batches, and a batch is a seed prefix.** The
+  registries list templates in the batches they were made in, and a batch
+  shares a look, so registry order made a page one style repeated. Each
+  batch (`art-`, `min-`, `dir-`, `set-`, `bold-`, `img-`, and the first
+  five) is shuffled and laid at even, jittered steps along the whole list,
+  then neighbors that share a batch, or a category or pattern within two
+  cards, are pulled apart. A card at a time was tried first and spent the
+  artwork batch (40% of the catalog) slowest, leaving the last page all
+  artwork. A new batch of templates should get its own seed prefix, or it
+  is spread as part of whichever batch its prefix names.
+- **It is seeded and fixed per build**, so `?page=2` is the same cards for
+  everyone and the prerendered page agrees with the browser. Adding a
+  template reshuffles the order, which is the cost of it staying spread.
+- **The URL is read after mount, not with `useSearchParams`**, the same as
+  the pattern library's `?page=`: `useSearchParams` in a static export
+  renders the whole route on the client. The first paint is All, page 1,
+  and a deep link moves to its view when the script runs. Defaults are left
+  out, so All on page 1 is plain `/templates/`. A chip or a page pushes a
+  history entry, and the page numbers are real links. A page past the end
+  shows the last page, an unknown category shows All, and so does
+  `?category=yours` for a visitor who is signed out.
+- **A card's "Sign in to use" carries the view** as `?next=`, so signing in
+  comes back to the category and page it left from.
+
 ## The mark, and the font that travels with it
 
 `components/logo/` is the whole of the brand mark: `LogoMark` is the glyph,
