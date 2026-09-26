@@ -12,6 +12,14 @@
 // Committed rather than built per deploy, like public/previews: the deploy
 // build has no browser. Reshoot after a template's hero changes.
 //
+// A shot is only written once every web font it shows has drawn. The pages
+// load their faces from Google Fonts, and a stylesheet that fails to load
+// leaves nothing to wait for: document.fonts.ready resolves at once and the
+// fallback is photographed. That is how Bogen Papier's card came to set its
+// Inter headline in DejaVu Sans, and nothing noticed. `fallbackFonts` asks
+// the browser which font drew each visible style; a page that still falls
+// back after one reload is reported and its shot left as it was.
+//
 //   npm run build                                   # needs out/
 //   node scripts/generate-template-shots.mjs [slug ...]   (no args = all)
 import { createServer } from 'node:http';
@@ -86,6 +94,82 @@ function contentTop() {
   return Math.round(y);
 }
 
+/**
+ * Runs in the page. Marks one visible text element per font the viewport
+ * shows (family, weight and style) with data-shot-font, and returns what
+ * each asks for. Only a family the page loads from Google Fonts is checked,
+ * read off the stylesheet links rather than document.fonts, which is empty
+ * for exactly the stylesheet that failed. A system stack is the page's own
+ * choice and is left alone.
+ */
+function markFontSamples() {
+  const webFamilies = new Set();
+  for (const link of document.querySelectorAll('link[href*="fonts.googleapis.com/css"]')) {
+    for (const family of new URL(link.href).searchParams.getAll('family')) {
+      webFamilies.add(family.split(':')[0].replace(/\+/g, ' ').toLowerCase());
+    }
+  }
+
+  const seen = new Set();
+  const samples = [];
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const el = node.parentElement;
+    if (!el || !node.textContent.trim() || el.closest('[data-shot-chrome], [aria-hidden="true"]')) continue;
+
+    const box = el.getBoundingClientRect();
+    if (box.bottom <= 0 || box.top >= innerHeight || box.width === 0) continue;
+
+    const style = getComputedStyle(el);
+    if (style.visibility === 'hidden') continue;
+
+    const family = style.fontFamily.split(',')[0].trim().replace(/^["']|["']$/g, '');
+    const key = `${family}|${style.fontWeight}|${style.fontStyle}`;
+    if (!webFamilies.has(family.toLowerCase()) || seen.has(key)) continue;
+
+    seen.add(key);
+    el.setAttribute('data-shot-font', '');
+    samples.push({ family, weight: style.fontWeight, style: style.fontStyle });
+  }
+
+  return samples;
+}
+
+/**
+ * The web fonts the viewport shows in a fallback: for each sample, the fonts
+ * the browser actually used (CDP's platform fonts), and a failure where none
+ * of them came from a web font.
+ */
+async function fallbackFonts(page) {
+  const samples = await page.evaluate(markFontSamples);
+  if (samples.length === 0) return [];
+
+  const cdp = await page.context().newCDPSession(page);
+  try {
+    await cdp.send('DOM.enable');
+    await cdp.send('CSS.enable');
+    const { root } = await cdp.send('DOM.getDocument', { depth: 0 });
+    // Document order, the order the samples were marked in.
+    const { nodeIds } = await cdp.send('DOM.querySelectorAll', { nodeId: root.nodeId, selector: '[data-shot-font]' });
+    const failed = [];
+
+    for (const [i, nodeId] of nodeIds.entries()) {
+      const { fonts } = await cdp.send('CSS.getPlatformFontsForNode', { nodeId });
+      if (!fonts.some((font) => font.isCustomFont)) {
+        const { family, weight, style } = samples[i];
+        const drawn = fonts.map((font) => font.familyName).join(', ') || 'nothing';
+        failed.push(`"${family}" ${weight}${style === 'normal' ? '' : ` ${style}`} drew as ${drawn}`);
+      }
+    }
+
+    return failed;
+  } finally {
+    await page.evaluate(() => document.querySelectorAll('[data-shot-font]').forEach((el) => el.removeAttribute('data-shot-font')));
+    await cdp.detach();
+  }
+}
+
 // The export, served the way the host serves it: a directory is its index.
 const server = createServer((req, res) => {
   let file = join(OUT, decodeURIComponent(req.url.split('?')[0]));
@@ -117,24 +201,46 @@ try {
 
   for (const slug of slugs) {
     const url = `http://127.0.0.1:${port}/templates/${slug}/site/`;
-    const response = await page.goto(url, { waitUntil: 'load', timeout: 60_000 }).catch(() => null);
+    let failed = [];
+    let top = 0;
+    let loaded = true;
 
-    if (!response || !response.ok()) {
+    // A second load, since a font request can fail once and succeed again.
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const response = await page.goto(url, { waitUntil: 'load', timeout: 60_000 }).catch(() => null);
+
+      if (!response || !response.ok()) {
+        loaded = false;
+        break;
+      }
+
+      await page.evaluate(() => document.fonts.ready);
+      top = await page.evaluate(contentTop);
+
+      // Scrolled rather than clipped, so lazy images and patterns below the
+      // first screen mount. A sticky or fixed bar would follow the scroll into
+      // the shot, so the bars found are hidden; their space stays in the flow.
+      await page.addStyleTag({ content: '[data-shot-chrome] { visibility: hidden !important; }' });
+      await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top);
+      // Fonts, images and the first draw of every pattern in view.
+      await page.waitForTimeout(1500);
+      await page.evaluate(() => document.fonts.ready);
+
+      failed = await fallbackFonts(page);
+      if (failed.length === 0) break;
+    }
+
+    if (!loaded) {
       console.error(`template-shots: ${slug}: no page at /templates/${slug}/site/`);
       process.exitCode = 1;
       continue;
     }
 
-    await page.evaluate(() => document.fonts.ready);
-    const top = await page.evaluate(contentTop);
-
-    // Scrolled rather than clipped, so lazy images and patterns below the
-    // first screen mount. A sticky or fixed bar would follow the scroll into
-    // the shot, so the bars found are hidden; their space stays in the flow.
-    await page.addStyleTag({ content: '[data-shot-chrome] { visibility: hidden !important; }' });
-    await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top);
-    // Fonts, images and the first draw of every pattern in view.
-    await page.waitForTimeout(1500);
+    if (failed.length > 0) {
+      console.error(`template-shots: ${slug}: not written, a web font fell back: ${failed.join('; ')}`);
+      process.exitCode = 1;
+      continue;
+    }
 
     const shot = await page.screenshot({ type: 'png' });
     await sharp(shot)

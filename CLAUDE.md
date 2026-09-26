@@ -546,6 +546,18 @@ Committed like the previews, because the deploy build has no browser; reshoot
 a template after its hero or header changes, and check a new one's crop by
 eye.
 
+**A shot is written only once its web fonts have drawn.** The pages load
+their faces from Google Fonts, and a stylesheet that fails to load leaves
+nothing to wait for: `document.fonts.ready` resolves at once and the
+fallback is photographed. Bogen Papier's card set its Inter headline in
+DejaVu Sans that way, and so did others, with nothing to say so. So before
+each shot the script marks one visible element per family, weight and style
+the page loads from Google Fonts (read off the stylesheet links, since
+`document.fonts` is empty for exactly the stylesheet that failed) and asks
+the browser, through CDP's `CSS.getPlatformFontsForNode`, what drew it. A
+web font drawn by a system font gets one reload, then the slug is reported
+and its shot left as it was.
+
 ## The template gallery - a mixed order, pages, and the URL
 
 `/templates` shows 50 cards a page, in the order `GALLERY_ORDER` in
