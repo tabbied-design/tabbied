@@ -336,7 +336,7 @@ test.describe('the /templates gallery', () => {
       const onPage = await cards.locator('a[href^="/templates/"][href$="/"]').evaluateAll((links) =>
         [...new Set(links.map((link) => link.getAttribute('href')!.split('/')[2]).filter(Boolean))]
       );
-      expect(onPage.length).toBeLessThanOrEqual(24);
+      expect(onPage.length).toBeLessThanOrEqual(50);
       expect(await asks.count()).toBe(onPage.length);
       onPage.forEach((slug) => slugs.add(slug));
     }
@@ -358,12 +358,19 @@ test.describe('the /templates gallery', () => {
     const cards = page.getByRole('region', { name: /^Templates/ });
 
     // A deep link opens on its view, and a card's sign-in comes back to it.
-    await page.goto('/templates/?category=shop&page=2');
+    // (No category runs past one page, so the category and the page are
+    // opened separately.)
+    await page.goto('/templates/?category=shop');
     await expect(page.getByRole('button', { name: 'Shop', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await expect(cards.getByRole('link', { name: 'Sign in to use' }).first()).toHaveAttribute(
+      'href',
+      /next=%2Ftemplates%2F%3Fcategory%3Dshop$/
+    );
+    await page.goto('/templates/?page=2');
     await expect(pager.getByRole('link', { name: 'Page 2' })).toHaveAttribute('aria-current', 'page');
     await expect(cards.getByRole('link', { name: 'Sign in to use' }).first()).toHaveAttribute(
       'href',
-      /next=%2Ftemplates%2F%3Fcategory%3Dshop%26page%3D2$/
+      /next=%2Ftemplates%2F%3Fpage%3D2$/
     );
 
     // A chip starts its category on page 1; a page number keeps the category.
@@ -407,7 +414,7 @@ test.describe('the /templates gallery', () => {
     // page keeps its cards when templates are added.
     const committed = fs.readFileSync(path.join(REPO_ROOT, 'lib', 'templateOrder.ts'), 'utf-8');
     const galleryOrder = [...committed.slice(committed.indexOf('GALLERY_ORDER: readonly')).matchAll(/^  '([^']+)',$/gm)].map((m) => m[1]);
-    expect(firstPage).toEqual(galleryOrder.slice(0, 24));
+    expect(firstPage).toEqual(galleryOrder.slice(0, 50));
 
     const batches = firstPage.map((slug) => batchOf.get(slug) ?? 'first');
     expect(new Set(batches).size).toBeGreaterThanOrEqual(4);

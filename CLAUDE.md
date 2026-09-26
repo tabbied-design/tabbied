@@ -548,7 +548,7 @@ eye.
 
 ## The template gallery - a mixed order, pages, and the URL
 
-`/templates` shows 24 cards a page, in the order `GALLERY_ORDER` in
+`/templates` shows 50 cards a page, in the order `GALLERY_ORDER` in
 `lib/templateOrder.ts` commits, with the category and the page in the query
 string (`?category=food-and-drink&page=2`). Four things worth not
 re-litigating:
