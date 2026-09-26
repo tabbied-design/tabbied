@@ -1,0 +1,1249 @@
+/* ==========================================================================
+   CASA OLIVO - tapas bar, Alameda Street
+   The tiled wall. The hero is a street plaque set into a panel of cobalt
+   azulejos, the way a name is fired onto tiles by a doorway in Seville.
+   The menu is the wall behind the bar: every plate is one square tile,
+   numbered so a guest can point, with four clay tiles naming the courses
+   among them. Where four tiles meet, their painted corners close into a
+   circle across the grout. A high-contrast display serif does the
+   lettering; a plain sans does the reading. Sherry sits beside an arched
+   window of clay tiles, and Thursday's flamenco gets a wall of fans.
+   ========================================================================== */
+
+.page {
+  --limewash: #f4ecdc;
+  --cobalt: #1f3c88;
+  --clay: #a9442a;
+  --glaze: #c7d3ea;
+  --ink: #1c2233;
+  --gut: clamp(1rem, 4.5vw, 3rem);
+  --wide: 76rem;
+  --grout: 4px;
+  --serif: 'Gloock', 'Georgia', serif;
+  --sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Derived from the roles, never roles of their own. The fallbacks here
+     are for browsers without relative color; the recipes follow. */
+  --text: var(--ink);
+  --muted: color-mix(in oklab, var(--text) 74%, var(--limewash));
+  --rule: color-mix(in oklab, var(--text) 20%, transparent);
+  --panel: color-mix(in oklab, var(--limewash) 84%, var(--glaze));
+  --cobalt-type: var(--cobalt);
+  --clay-type: var(--clay);
+  --on-cobalt: var(--limewash);
+  --on-clay: var(--limewash);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--limewash);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --contrast: oklch(from var(--limewash) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --text: color-mix(in oklab, var(--contrast) 80%, var(--ink));
+    /* The accents as lettering: each keeps its own hue, and takes its
+       lightness from the ground, dark on a light wall and light on a dark
+       one, so a heading never sinks into the tiles behind it. */
+    --cobalt-type: color-mix(in oklab, var(--contrast) 36%, oklch(from var(--cobalt) 0.6 calc(c * 1.7) h));
+    --clay-type: color-mix(in oklab, var(--contrast) 36%, oklch(from var(--clay) 0.6 calc(c * 1.7) h));
+    --on-cobalt: oklch(from var(--cobalt) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-clay: oklch(from var(--clay) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--clay-type);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3,
+.page h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page h2 em,
+.page h1 em {
+  font-style: normal;
+  color: var(--clay-type);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--cobalt);
+  color: var(--on-cobalt);
+  box-shadow: 0 3px 0 var(--limewash), 0 5px 0 var(--cobalt);
+}
+
+.mark {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.4rem clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: color-mix(in oklab, var(--on-cobalt) 84%, var(--cobalt));
+  border-bottom: 1px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--on-cobalt);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--cobalt);
+}
+
+/* ---------------------------------------------------------------- the plaque */
+
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(34rem, 74vh, 46rem);
+  padding: clamp(3rem, 8vw, 6rem) var(--gut);
+  margin-top: 5px;
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.plaque {
+  position: relative;
+  width: min(100%, 42rem);
+  padding: clamp(2rem, 5vw, 3.4rem) clamp(1.4rem, 5vw, 3.6rem);
+  text-align: center;
+  background: var(--limewash);
+  border: 2px solid var(--cobalt-type);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 8px var(--limewash),
+    0 0 0 11px var(--cobalt-type),
+    0 24px 48px color-mix(in oklab, var(--text) 30%, transparent);
+}
+
+/* Painted corners, as on a fired name plaque. */
+.plaque::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  border: 1px solid color-mix(in oklab, var(--cobalt-type) 45%, transparent);
+  background:
+    radial-gradient(circle at 0 0, var(--glaze) 0 1.6rem, var(--cobalt) 1.6rem calc(1.6rem + 2px), transparent calc(1.6rem + 2px)),
+    radial-gradient(circle at 100% 0, var(--glaze) 0 1.6rem, var(--cobalt) 1.6rem calc(1.6rem + 2px), transparent calc(1.6rem + 2px)),
+    radial-gradient(circle at 0 100%, var(--glaze) 0 1.6rem, var(--cobalt) 1.6rem calc(1.6rem + 2px), transparent calc(1.6rem + 2px)),
+    radial-gradient(circle at 100% 100%, var(--glaze) 0 1.6rem, var(--cobalt) 1.6rem calc(1.6rem + 2px), transparent calc(1.6rem + 2px));
+}
+
+.plaque > * {
+  position: relative;
+}
+
+.street {
+  margin: 0 0 1rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cobalt-type);
+}
+
+.name {
+  font-size: clamp(3.4rem, 10vw, 7.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.015em;
+  color: var(--cobalt-type);
+}
+
+.kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 1.1rem 0 0;
+  font-size: 1.05rem;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--clay-type);
+}
+
+.kind::before,
+.kind::after {
+  content: '';
+  width: 2.2rem;
+  height: 2px;
+  background: var(--clay);
+}
+
+.lede {
+  max-width: 30rem;
+  margin: 1.2rem auto 0;
+  font-size: clamp(1rem, 1.4vw, 1.1rem);
+  color: var(--text);
+}
+
+/* ----------------------------------------------------------------- the facts */
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+  list-style: none;
+}
+
+.facts li {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1.3rem 1.4rem;
+  border-left: 1px solid color-mix(in oklab, var(--cobalt-type) 30%, transparent);
+}
+
+.facts li:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.facts strong {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--clay-type);
+}
+
+.facts span {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.3;
+  color: var(--cobalt-type);
+}
+
+/* ------------------------------------------------------------------- how */
+
+.how {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 2.2fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  max-width: var(--wide);
+  margin: clamp(2rem, 5vw, 3.5rem) auto 0;
+  padding: clamp(2rem, 4vw, 2.75rem) var(--gut);
+  border-top: 2px solid var(--cobalt-type);
+  border-bottom: 2px solid var(--cobalt-type);
+}
+
+.howTitle {
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  line-height: 1.05;
+  color: var(--cobalt-type);
+}
+
+.howList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: how;
+}
+
+.howList li {
+  counter-increment: how;
+}
+
+.howList li::before {
+  content: counter(how, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--clay-type);
+}
+
+.howList h3 {
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.howList p {
+  margin: 0.4rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------- section heads */
+
+.secHead {
+  max-width: 40rem;
+  margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--clay-type);
+}
+
+.secHead h2 {
+  font-size: clamp(2.2rem, 4.8vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--cobalt-type);
+}
+
+.secNote {
+  margin: 0.9rem 0 0;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+.small {
+  margin: 1rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- the wall */
+
+.tapas {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut) 0;
+}
+
+.frieze {
+  position: relative;
+  height: 88px;
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  border-top: 3px solid var(--cobalt-type);
+  border-bottom: 3px solid var(--cobalt-type);
+}
+
+.wall {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--grout);
+  padding: var(--grout);
+  background: var(--cobalt);
+  border-radius: 3px;
+}
+
+.course,
+.plates {
+  display: contents;
+}
+
+.plates {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.titleTile,
+.tile {
+  position: relative;
+  aspect-ratio: 1;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.titleTile {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(1.1rem, 2vw, 1.6rem);
+  background: var(--clay);
+  color: var(--on-clay);
+}
+
+.titleTile::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px solid color-mix(in oklab, var(--on-clay) 50%, transparent);
+  pointer-events: none;
+}
+
+.titleTile h3 {
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1;
+}
+
+.titleTile p {
+  margin: 0.5rem 0 0;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(1.1rem, 2vw, 1.7rem);
+  background:
+    radial-gradient(circle at 0 0, var(--glaze) 0 1.5rem, var(--cobalt) 1.5rem calc(1.5rem + 2px), transparent calc(1.5rem + 2px)),
+    radial-gradient(circle at 100% 0, var(--glaze) 0 1.5rem, var(--cobalt) 1.5rem calc(1.5rem + 2px), transparent calc(1.5rem + 2px)),
+    radial-gradient(circle at 0 100%, var(--glaze) 0 1.5rem, var(--cobalt) 1.5rem calc(1.5rem + 2px), transparent calc(1.5rem + 2px)),
+    radial-gradient(circle at 100% 100%, var(--glaze) 0 1.5rem, var(--cobalt) 1.5rem calc(1.5rem + 2px), transparent calc(1.5rem + 2px)),
+    var(--limewash);
+}
+
+.no {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--clay-type);
+}
+
+.dish {
+  margin-top: auto !important;
+  padding-top: 0.8rem;
+  font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+  line-height: 1.08;
+  text-align: center;
+  color: var(--cobalt-type);
+}
+
+.dishNote {
+  margin: 0.55rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--muted);
+}
+
+.dishFoot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  margin: auto 0 0;
+  padding-top: 0.8rem;
+}
+
+.price {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.veg {
+  display: inline-grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--cobalt-type);
+  border: 1.5px solid var(--cobalt-type);
+  border-radius: 50%;
+}
+
+.veg:empty {
+  display: none;
+}
+
+.wallNote {
+  margin: 1.2rem 0 0;
+  font-size: 0.92rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- por copa */
+
+.copa {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.copaSide {
+  position: sticky;
+  top: 5rem;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+}
+
+/* An arched niche: a border of clay tiles around a white tile panel, with
+   the copita and its bottle painted on it in cobalt, the way a bar in
+   Jerez hangs its sign. */
+.arch {
+  position: relative;
+  height: clamp(26rem, 58vh, 36rem);
+  margin: 0.5rem 8px 8px;
+  border: 3px solid var(--cobalt-type);
+  border-radius: 50% 50% 4px 4px / 28% 28% 4px 4px;
+  box-shadow: 0 0 0 6px var(--limewash), 0 0 0 8px var(--clay);
+  overflow: hidden;
+}
+
+.fired {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.archPanel {
+  position: absolute;
+  inset: 13% 15% 6%;
+  display: grid;
+  place-items: end center;
+  padding: 1.4rem 1rem 1.2rem;
+  background: var(--limewash);
+  border: 2px solid var(--cobalt-type);
+  border-radius: 50% 50% 3px 3px / 24% 24% 3px 3px;
+  box-shadow: inset 0 0 0 6px var(--limewash), inset 0 0 0 7px color-mix(in oklab, var(--cobalt-type) 40%, transparent);
+}
+
+.copita {
+  height: 86%;
+  width: auto;
+  max-width: 100%;
+}
+
+.scaleHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7.5rem 3.5rem;
+  gap: 1.25rem;
+  padding-bottom: 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--cobalt-type);
+}
+
+.scaleHead span {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.scaleHead span:last-child {
+  justify-self: end;
+}
+
+.sherries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sherries li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7.5rem 3.5rem;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--cobalt-type) 25%, transparent);
+}
+
+.wine h3 {
+  font-size: 1.45rem;
+  line-height: 1.1;
+  color: var(--cobalt-type);
+}
+
+.wine p {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.scale {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.full,
+.empty {
+  aspect-ratio: 1;
+  border-radius: 2px;
+}
+
+.full {
+  background: var(--clay);
+}
+
+.empty {
+  border: 1px solid color-mix(in oklab, var(--clay-type) 50%, transparent);
+}
+
+.glass {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  text-align: right;
+  color: var(--text);
+}
+
+.vermut {
+  margin-top: 2.5rem;
+  padding: clamp(1.3rem, 3vw, 2rem);
+  background: var(--cobalt);
+  color: var(--on-cobalt);
+  border-radius: 4px;
+}
+
+.vermutTitle {
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.vermutList {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vermutList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.7rem 0;
+  border-top: 1px solid color-mix(in oklab, var(--on-cobalt) 28%, transparent);
+}
+
+.vermutList strong {
+  font-weight: 600;
+}
+
+.vermutList span {
+  font-size: 0.92rem;
+  color: color-mix(in oklab, var(--on-cobalt) 86%, var(--cobalt));
+}
+
+.vermutList .glass {
+  color: var(--on-cobalt);
+}
+
+.vermutHour {
+  margin: 1rem 0 0;
+  padding-top: 1rem;
+  font-size: 0.95rem;
+  font-style: italic;
+  border-top: 1px solid color-mix(in oklab, var(--on-cobalt) 28%, transparent);
+}
+
+/* --------------------------------------------------------------- flamenco */
+
+.flamenco {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  background: var(--clay);
+  color: var(--on-clay);
+}
+
+.fans {
+  position: relative;
+  min-height: 20rem;
+  overflow: hidden;
+  border-right: 6px solid var(--cobalt);
+}
+
+.cartel {
+  padding: clamp(3rem, 7vw, 5.5rem) clamp(1.25rem, 5vw, 4.5rem);
+  max-width: 50rem;
+}
+
+.cartelKicker {
+  margin: 0 0 0.8rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.cartelTitle {
+  font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+  line-height: 1;
+}
+
+.cartelNote {
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  color: color-mix(in oklab, var(--on-clay) 92%, var(--clay));
+}
+
+.nights {
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--on-clay);
+}
+
+.nights li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-clay) 36%, transparent);
+}
+
+.date {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.dateDay {
+  font-family: var(--serif);
+  font-size: 2.3rem;
+  line-height: 1;
+}
+
+.dateMonth {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.lineup {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem 1rem;
+  margin: 0;
+}
+
+.lineup dt {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--on-clay) 84%, var(--clay));
+}
+
+.lineup dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.3;
+}
+
+.rules {
+  display: grid;
+  gap: 0.4rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.94rem;
+}
+
+.rules li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.rules li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--on-clay);
+  transform: rotate(45deg);
+}
+
+/* ------------------------------------------------------------------ groups */
+
+.groups {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.menus {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.menuCard {
+  position: relative;
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  text-align: center;
+  background: var(--limewash);
+  border: 2px solid var(--cobalt-type);
+  box-shadow: inset 0 0 0 6px var(--limewash), inset 0 0 0 7px var(--cobalt-type);
+}
+
+.menuCard h3 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1.05;
+  color: var(--cobalt-type);
+}
+
+.menuPrice {
+  display: grid;
+  gap: 0.1rem;
+  margin: 0.8rem 0 1.2rem;
+}
+
+.menuPrice strong {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--clay-type);
+}
+
+.menuPrice span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.menuCard ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menuCard li {
+  padding: 0.55rem 0;
+  border-top: 1px dotted color-mix(in oklab, var(--cobalt-type) 50%, transparent);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.address {
+  margin: 0 0 1rem;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  line-height: 1.35;
+  color: var(--cobalt-type);
+}
+
+.address a {
+  border-bottom: 1px solid var(--clay-type);
+}
+
+.address a:hover {
+  color: var(--clay-type);
+}
+
+.hours {
+  margin: 1.5rem 0 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid color-mix(in oklab, var(--cobalt-type) 25%, transparent);
+}
+
+.hours div:last-child {
+  border-bottom: 1px solid color-mix(in oklab, var(--cobalt-type) 25%, transparent);
+}
+
+.hours dt {
+  font-weight: 500;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+}
+
+.faq {
+  margin-top: 2rem;
+}
+
+.faq details {
+  border-bottom: 1px solid color-mix(in oklab, var(--cobalt-type) 25%, transparent);
+}
+
+.faq summary {
+  position: relative;
+  padding: 0.85rem 2rem 0.85rem 0;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.2rem;
+  top: 0.6rem;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--clay-type);
+}
+
+.faq details[open] summary::after {
+  content: '\2212';
+}
+
+.faq details p {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.form {
+  align-self: start;
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+  background: var(--panel);
+  border-top: 6px solid var(--cobalt-type);
+}
+
+.formTitle {
+  font-size: 2rem;
+  line-height: 1.05;
+  color: var(--cobalt-type);
+}
+
+.formNote {
+  margin: 0.4rem 0 1.4rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.65rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 0.98rem;
+  color: var(--text);
+  background: var(--limewash);
+  border: 1px solid color-mix(in oklab, var(--cobalt-type) 40%, transparent);
+  border-radius: 2px;
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: 2px solid var(--clay-type);
+  outline-offset: 0;
+}
+
+.submit {
+  margin-top: 1.4rem;
+  padding: 0.9rem 1.6rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--on-clay);
+  background: var(--clay);
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.submit:hover {
+  background: var(--cobalt);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(5rem, 10vw, 8rem);
+  padding: 0 var(--gut) 2.6rem;
+  text-align: center;
+  font-size: 0.84rem;
+  background: var(--cobalt);
+  color: color-mix(in oklab, var(--on-cobalt) 86%, var(--cobalt));
+}
+
+.footBand {
+  position: relative;
+  height: 72px;
+  margin: 0 calc(-1 * var(--gut)) 2.2rem;
+  overflow: hidden;
+  border-bottom: 3px solid var(--limewash);
+}
+
+.footer p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.6rem;
+  font-family: var(--serif);
+  font-size: 2rem;
+  color: var(--on-cobalt);
+}
+
+.footer a {
+  color: var(--on-cobalt);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .wall {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .how {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .copa,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .copaSide {
+    position: static;
+  }
+
+  .arch {
+    width: min(100% - 16px, 22rem);
+    height: 24rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .flamenco {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fans {
+    min-height: 0;
+    height: 9rem;
+    border-right: 0;
+    border-bottom: 6px solid var(--cobalt);
+  }
+
+  .menus {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts li {
+    padding: 0.9rem 0;
+    border-left: 0;
+    border-top: 1px solid color-mix(in oklab, var(--cobalt-type) 30%, transparent);
+  }
+
+  .facts li:first-child {
+    border-top: 0;
+  }
+
+  .howList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wall {
+    --grout: 3px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .titleTile,
+  .tile {
+    aspect-ratio: auto;
+    min-height: 13.5rem;
+  }
+
+  .tile {
+    padding: 1.1rem 0.8rem;
+    background:
+      radial-gradient(circle at 0 0, var(--glaze) 0 1rem, var(--cobalt) 1rem calc(1rem + 2px), transparent calc(1rem + 2px)),
+      radial-gradient(circle at 100% 0, var(--glaze) 0 1rem, var(--cobalt) 1rem calc(1rem + 2px), transparent calc(1rem + 2px)),
+      radial-gradient(circle at 0 100%, var(--glaze) 0 1rem, var(--cobalt) 1rem calc(1rem + 2px), transparent calc(1rem + 2px)),
+      radial-gradient(circle at 100% 100%, var(--glaze) 0 1rem, var(--cobalt) 1rem calc(1rem + 2px), transparent calc(1rem + 2px)),
+      var(--limewash);
+  }
+
+  .dish {
+    font-size: 1.15rem;
+  }
+
+  .dishNote {
+    font-size: 0.8rem;
+  }
+
+  .scaleHead,
+  .sherries li {
+    grid-template-columns: minmax(0, 1fr) 4.6rem 2.6rem;
+    gap: 0.8rem;
+  }
+
+  .scaleHead {
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+  }
+
+  .wine h3 {
+    font-size: 1.2rem;
+  }
+
+  .vermutList li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .vermutList li span:not(.glass) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .vermutList .glass {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+
+  .nights li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .lineup {
+    gap: 0.25rem 0.6rem;
+  }
+
+  .lineup dd {
+    font-size: 0.88rem;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .submit {
+    transition: none;
+  }
+}

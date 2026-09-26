@@ -1,0 +1,1226 @@
+/* ==========================================================================
+   MUDDY PAWS - mobile dog grooming van
+   A bus company's timetable for a van full of warm water. The hero is a
+   yellow stop sign with the van parked in it (its livery is the chain
+   pattern, painted over teal), and the page's main object is the route:
+   five strip maps, one per working day, each a fat teal line with its
+   stops, the time window over each stop and the slots left under it.
+   Everything else is set in a round, heavy face and boxed in thick
+   rounded outlines, like stickers on the van's side: the size-priced
+   table, what is on board, a text thread for how a groom goes, and a
+   booking form painted in the van's own teal.
+   ========================================================================== */
+
+.page {
+  --suds: #fff6e5;
+  --mud: #2e1f16;
+  --teal: #0f8a80;
+  --sun: #ffc83d;
+  --coral: #f2735a;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+  --display: 'Fredoka', 'Arial Rounded MT Bold', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+  --text: var(--mud);
+  --on-mud: var(--suds);
+  --on-teal: var(--suds);
+  --on-sun: var(--mud);
+  --on-coral: var(--mud);
+
+  /* Derived surfaces, mixed from the roles. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--suds));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --line: 3px solid var(--text);
+  --sun-tint: color-mix(in oklab, var(--suds) 72%, var(--sun));
+  --teal-tint: color-mix(in oklab, var(--suds) 88%, var(--teal));
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  background: var(--suds);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--suds) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--mud));
+    --on-mud: color-mix(in oklab, oklch(from var(--mud) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--suds));
+    --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sun: color-mix(in oklab, oklch(from var(--sun) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--mud));
+    --on-coral: oklch(from var(--coral) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul) {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.h2 {
+  font-size: clamp(2.1rem, 4.6vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.headNote {
+  max-width: 34rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.8rem var(--gut);
+  background: var(--suds);
+  border-bottom: var(--line);
+}
+
+/* The paw: a pad and four toes, drawn with gradients in the mark's color. */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  justify-self: start;
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.mark::before {
+  content: '';
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--teal);
+  background:
+    radial-gradient(ellipse 34% 28% at 50% 72%, currentColor 96%, transparent 100%),
+    radial-gradient(circle at 16% 44%, currentColor 11%, transparent 12%),
+    radial-gradient(circle at 37% 20%, currentColor 11%, transparent 12%),
+    radial-gradient(circle at 63% 20%, currentColor 11%, transparent 12%),
+    radial-gradient(circle at 84% 44%, currentColor 11%, transparent 12%);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--coral);
+  text-underline-offset: 6px;
+}
+
+.barPhone {
+  padding: 0.5rem 1rem;
+  font-family: var(--display);
+  font-weight: 600;
+  color: var(--on-sun);
+  background: var(--sun);
+  border: var(--line);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--suds);
+}
+
+/* --------------------------------------------------------------------- hero
+   The stop sign: a yellow field, a route roundel, and the van parked at
+   the curb along its bottom edge. */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  padding: clamp(3rem, 7vw, 5.5rem) max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut))) clamp(2.5rem, 5vw, 4rem);
+  color: var(--on-sun);
+  background: var(--sun);
+  border-bottom: 10px solid var(--mud);
+}
+
+.sign {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.signNum {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--on-teal);
+  background: var(--teal);
+  border: 3px solid currentColor;
+  border-radius: 50%;
+}
+
+.signText {
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 1.5rem;
+  font-size: clamp(3rem, 5.9vw, 5.4rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+}
+
+.title em {
+  padding: 0 0.16em 0.04em;
+  font-style: normal;
+  color: var(--on-teal);
+  background: var(--teal);
+  border-radius: 0.22em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.lede {
+  max-width: 32rem;
+  margin-top: 1.6rem;
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  font-weight: 600;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnAlt {
+  padding: 0.85rem 1.4rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  border: 3px solid currentColor;
+  border-radius: 999px;
+}
+
+.btn {
+  color: var(--on-mud);
+  background: var(--mud);
+  border-color: var(--mud);
+}
+
+.btn:hover {
+  background: color-mix(in oklab, var(--mud) 80%, var(--sun));
+}
+
+.btnAlt:hover {
+  background: color-mix(in oklab, var(--sun) 80%, var(--suds));
+}
+
+/* The van: a teal body with a rounded nose, a window, two wheels and a
+   plate. The livery pattern lives inside the body and is clipped by it.
+   The dog sits on the curb by the back doors, just out of the bath. */
+.van {
+  position: relative;
+  aspect-ratio: 16 / 8.6;
+}
+
+.vanBody {
+  position: absolute;
+  inset: 0 0 13% 33%;
+  overflow: hidden;
+  background: var(--teal);
+  border: 5px solid currentColor;
+  border-radius: 28px 42% 22px 22px / 28px 58% 22px 22px;
+}
+
+.vanWindow {
+  position: absolute;
+  right: 6%;
+  top: 11%;
+  width: 16%;
+  height: 30%;
+  background: var(--suds);
+  border: 5px solid currentColor;
+  border-radius: 12px 62% 12px 12px / 12px 72% 12px 12px;
+}
+
+.wheel {
+  position: absolute;
+  bottom: 0;
+  width: 15%;
+  aspect-ratio: 1;
+  background: radial-gradient(circle, var(--suds) 0 26%, var(--mud) 27%);
+  border: 5px solid currentColor;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.wheelBack {
+  left: 41%;
+}
+
+.wheelFront {
+  right: 10%;
+}
+
+.plate {
+  position: absolute;
+  left: 66%;
+  bottom: 3.5%;
+  padding: 0.15rem 0.6rem;
+  font-family: var(--display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--text);
+  background: var(--suds);
+  border: 3px solid currentColor;
+  border-radius: 6px;
+  transform: translateX(-50%);
+}
+
+.dog {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  display: block;
+  width: 31%;
+}
+
+/* ------------------------------------------------------------------- route */
+
+.route,
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.routeHead,
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.lines {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.4rem 1.8rem 1.3rem 1.4rem;
+  border: var(--line);
+  border-radius: 30px;
+}
+
+.lineToday {
+  background: var(--sun-tint);
+  box-shadow: 0 0 0 5px var(--sun);
+}
+
+.lineHead {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.roundel {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--on-teal);
+  background: var(--teal);
+  border-radius: 50%;
+}
+
+.lineDay {
+  font-size: 1.55rem;
+  line-height: 1.05;
+}
+
+.lineNote {
+  margin-top: 0.15rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* The strip map: a fat line with the stops strung along it. */
+.stops {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.stops::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(1.5rem + 0.4rem + 13px - 5px);
+  height: 10px;
+  background: var(--teal);
+  border-radius: 10px;
+}
+
+.stops li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.stops li::before {
+  content: '';
+  position: relative;
+  z-index: 1;
+  order: 1;
+  width: 26px;
+  height: 26px;
+  margin: 0.4rem 0 0.55rem;
+  box-sizing: border-box;
+  background: var(--suds);
+  border: 6px solid var(--teal);
+  border-radius: 50%;
+}
+
+.stopTime {
+  display: flex;
+  align-items: flex-end;
+  height: 1.5rem;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.stopName {
+  order: 2;
+  font-family: var(--display);
+  font-size: 1.28rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.stopSlots {
+  order: 3;
+  margin-top: 0.4rem;
+  padding: 0.12rem 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+}
+
+.stopFull .stopSlots {
+  color: var(--on-coral);
+  background: var(--coral);
+  border-color: var(--coral);
+}
+
+.stopFull::before {
+  background: var(--teal);
+}
+
+.routeFoot {
+  max-width: 40rem;
+  margin-top: 1.5rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* The leash: a band of links the width of the screen. */
+.leash {
+  position: relative;
+  height: 96px;
+  margin-top: clamp(4rem, 8vw, 6rem);
+  overflow: hidden;
+  border-top: var(--line);
+  border-bottom: var(--line);
+}
+
+/* ------------------------------------------------------------------- prices */
+
+.priceWrap {
+  overflow: hidden;
+  border: var(--line);
+  border-radius: 30px;
+}
+
+.prices {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.prices th,
+.prices td {
+  padding: 1.1rem 1.2rem;
+  vertical-align: middle;
+}
+
+.prices thead th {
+  vertical-align: bottom;
+  background: var(--sun-tint);
+  border-bottom: var(--line);
+}
+
+.priceCorner {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.sizeHead {
+  text-align: center;
+}
+
+.sizeDot {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0 auto 0.6rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--on-sun);
+  background: var(--sun);
+  border: 3px solid var(--text);
+  border-radius: 50%;
+}
+
+.sizeHead:nth-child(3) .sizeDot {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.25rem;
+}
+
+.sizeHead:nth-child(4) .sizeDot {
+  width: 3.6rem;
+  height: 3.6rem;
+  font-size: 1.4rem;
+}
+
+.sizeHead:nth-child(5) .sizeDot {
+  width: 4.2rem;
+  height: 4.2rem;
+  font-size: 1.5rem;
+}
+
+.sizeWeight {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.sizeLike {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.prices tbody tr + tr th,
+.prices tbody tr + tr td {
+  border-top: 2px dashed var(--rule);
+}
+
+.prices tbody th {
+  text-align: left;
+}
+
+.serviceName {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.serviceWhat {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.prices td {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.extrasRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: center;
+  margin-top: 1.3rem;
+}
+
+.extras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.extras div {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.45rem 0.95rem;
+  border: 2px solid var(--text);
+  border-radius: 999px;
+}
+
+.extras dt {
+  font-weight: 700;
+}
+
+.extras dd {
+  font-family: var(--display);
+  font-weight: 600;
+}
+
+.tripFee {
+  padding: 0.9rem 1.2rem;
+  font-weight: 700;
+  background: var(--teal-tint);
+  border-radius: 20px;
+}
+
+/* ------------------------------------------------------------------ on board */
+
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  overflow: hidden;
+  border: var(--line);
+  border-radius: 36px;
+}
+
+.foam {
+  position: relative;
+  min-height: 320px;
+  overflow: hidden;
+  background: var(--sun);
+  border-right: var(--line);
+}
+
+.boardText {
+  padding: clamp(1.6rem, 4vw, 3rem);
+}
+
+.boardText .headNote {
+  margin-top: 1rem;
+}
+
+.kit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem 1.8rem;
+  margin-top: 2rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: kit;
+}
+
+.kit li {
+  position: relative;
+  padding-left: 3.2rem;
+  counter-increment: kit;
+}
+
+.kit li::before {
+  content: counter(kit);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--on-teal);
+  background: var(--teal);
+  border-radius: 50%;
+}
+
+.kit h3 {
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.kit p {
+  margin-top: 0.25rem;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------- how
+   How a groom goes, told as the text messages you get that day. */
+
+.steps {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 40rem;
+  padding: 1.6rem clamp(1rem, 3vw, 1.8rem) 1.8rem;
+  list-style: none;
+  background: var(--teal-tint);
+  border: var(--line);
+  border-radius: 36px;
+}
+
+.steps li {
+  display: grid;
+  justify-items: start;
+  gap: 0.3rem;
+}
+
+.steps h3 {
+  padding-left: 0.9rem;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.steps p {
+  position: relative;
+  max-width: 30rem;
+  padding: 0.8rem 1.1rem;
+  font-weight: 600;
+  color: var(--on-teal);
+  background: var(--teal);
+  border-radius: 22px 22px 22px 6px;
+}
+
+.steps li:nth-child(even) {
+  justify-items: end;
+}
+
+.steps li:nth-child(even) h3 {
+  padding: 0 0.9rem 0 0;
+}
+
+.steps li:nth-child(even) p {
+  color: var(--text);
+  background: var(--suds);
+  border: 2px solid var(--text);
+  border-radius: 22px 22px 6px 22px;
+}
+
+.crew {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  border: var(--line);
+  border-radius: 36px;
+}
+
+.bones {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: var(--sun-tint);
+  border-bottom: var(--line);
+}
+
+.crewPeople {
+  display: grid;
+  gap: 1.2rem;
+  padding: 1.6rem 1.8rem 1.9rem;
+}
+
+.person h3 {
+  font-size: 1.45rem;
+}
+
+.personRole {
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.person p + p {
+  margin-top: 0.35rem;
+  color: var(--muted);
+}
+
+/* The how section is two columns: the text thread and the crew beside it. */
+.howSec {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  column-gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.howSec .secHead {
+  grid-column: 1 / -1;
+}
+
+/* -------------------------------------------------------------------- rules */
+
+.rules {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.rules div {
+  padding: 1.3rem 1.3rem 1.4rem;
+  border: var(--line);
+  border-radius: 26px;
+}
+
+.rules dt {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.rules dd {
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- book */
+
+.form {
+  padding: clamp(1.5rem, 4vw, 3rem);
+  color: var(--on-teal);
+  background: var(--teal);
+  border: var(--line);
+  border-radius: 40px;
+}
+
+.formHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  margin-bottom: 2rem;
+}
+
+.form .headNote {
+  color: inherit;
+  font-weight: 600;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: span 2;
+}
+
+.field label,
+.sizePick legend {
+  font-family: var(--display);
+  font-size: 1.02rem;
+  font-weight: 500;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.75rem 0.95rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--suds);
+  border: 3px solid var(--mud);
+  border-radius: 16px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.sizePick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sizePick legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+
+.sizeOption {
+  position: relative;
+}
+
+.sizeOption input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.sizeOption span {
+  display: grid;
+  place-items: center;
+  min-width: 3.1rem;
+  height: 3.1rem;
+  padding: 0 0.4rem;
+  box-sizing: border-box;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: 3px solid currentColor;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.sizeOption input:checked + span {
+  color: var(--on-sun);
+  background: var(--sun);
+  border-color: var(--mud);
+}
+
+.sizeOption input:focus-visible + span {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.submit {
+  margin-top: 1.8rem;
+  padding: 0.9rem 1.8rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--on-sun);
+  background: var(--sun);
+  border: 3px solid var(--mud);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--sun) 80%, var(--suds));
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  color: color-mix(in oklab, var(--on-mud) 76%, var(--mud));
+  background: var(--mud);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.6rem var(--gut) 3rem;
+  font-size: 0.92rem;
+}
+
+.footInner p + p {
+  margin-top: 0.3rem;
+}
+
+.footName {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--on-mud);
+}
+
+.footInner a {
+  color: var(--on-mud);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .line {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.2rem;
+  }
+
+  .rules {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .howSec {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.2rem;
+  }
+
+  .steps {
+    max-width: none;
+  }
+
+  .formGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 880px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 0.8rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .routeHead,
+  .secHead,
+  .formHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .foam {
+    min-height: 200px;
+    border-right: 0;
+    border-bottom: var(--line);
+  }
+
+  .extrasRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The strip maps turn to run down the screen. */
+  .stops {
+    grid-auto-flow: row;
+    gap: 0;
+    padding-left: 2.6rem;
+  }
+
+  .stops::before {
+    left: 8px;
+    right: auto;
+    top: 0.4rem;
+    bottom: 0.9rem;
+    width: 10px;
+    height: auto;
+  }
+
+  .stops li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name slots'
+      'time slots';
+    column-gap: 0.8rem;
+    align-items: center;
+    padding-bottom: 1rem;
+  }
+
+  .stops li::before {
+    position: absolute;
+    left: -2.6rem;
+    top: 0.2rem;
+    margin: 0;
+  }
+
+  .stopTime {
+    grid-area: time;
+    height: auto;
+  }
+
+  .stopName {
+    grid-area: name;
+  }
+
+  .stopSlots {
+    grid-area: slots;
+    margin: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .barPhone {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .line {
+    padding: 1.2rem 1.1rem 0.4rem;
+  }
+
+  .prices th,
+  .prices td {
+    padding: 0.8rem 0.35rem;
+  }
+
+  .prices thead th:first-child,
+  .prices tbody th {
+    padding-left: 0.9rem;
+  }
+
+  .priceCorner {
+    font-size: 1rem;
+  }
+
+  .sizeDot,
+  .sizeHead:nth-child(3) .sizeDot,
+  .sizeHead:nth-child(4) .sizeDot,
+  .sizeHead:nth-child(5) .sizeDot {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1rem;
+  }
+
+  .sizeWeight {
+    font-size: 0.66rem;
+  }
+
+  .sizeLike,
+  .serviceWhat {
+    display: none;
+  }
+
+  .serviceName {
+    font-size: 1.02rem;
+  }
+
+  .prices td {
+    font-size: 1.05rem;
+  }
+
+  .kit,
+  .rules,
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fieldWide {
+    grid-column: auto;
+  }
+}

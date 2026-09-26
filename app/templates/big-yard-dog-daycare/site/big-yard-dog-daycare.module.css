@@ -1,0 +1,1453 @@
+/* ==========================================================================
+   BIG YARD - dog daycare and boarding, Tanner Lane
+   A scrapbook of the place. The top of the page is the yard itself: a
+   field of grass green with the name painted big and the day's index card
+   taped to it, and the picket fence along its bottom edge. Below, the page
+   is the scrapbook: index cards taped down at small angles, the report card
+   every dog goes home with (grades circled in orange, notes in the
+   handler's hand), the playgroups as a map of the yards by size and
+   energy, and the day packs as punch cards with the used days punched
+   through. Bricolage for the painted signs, Caveat for anything written.
+   ========================================================================== */
+
+.page {
+  --paper: #f3eddc;   /* role 0: the scrapbook page */
+  --ink: #1f2b1e;     /* type, the Racetrack's card */
+  --grass: #3e8a3a;   /* the yard, the fence's ground, the Big Field */
+  --orange: #f07f22;  /* tennis-ball orange: tape, circles, stamp, buttons */
+  --gut: clamp(1rem, 4vw, 2.75rem);
+  --wrap: 76rem;
+  --display: 'Bricolage Grotesque', 'Arial Rounded MT Bold', 'Helvetica Neue', Arial, sans-serif;
+  --hand: 'Caveat', 'Bradley Hand', 'Segoe Print', cursive;
+  --text: var(--ink);
+  --on-grass: var(--paper);
+  --on-orange: var(--ink);
+  --on-ink: var(--paper);
+  --lift: var(--paper);
+
+  /* Derived surfaces and inks: never roles of their own. */
+  --card: color-mix(in oklab, var(--paper) 30%, var(--lift));
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --lines: color-mix(in oklab, var(--grass) 32%, transparent);
+  --tape: color-mix(in oklab, var(--orange) 42%, transparent);
+  --pen: color-mix(in oklab, var(--grass) 42%, var(--text));
+  --shadow: color-mix(in oklab, var(--text) 24%, transparent);
+
+  font-family: var(--display);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  font-variation-settings: 'wdth' 100;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--ink));
+    --on-grass: color-mix(in oklab, oklch(from var(--grass) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--grass));
+    --on-orange: oklch(from var(--orange) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--ink));
+    /* The opposite pole: a card whiter than a light page, deeper than a dark one. */
+    --lift: oklch(from var(--paper) clamp(0, (l - 0.62) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 700;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hand {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.handNote {
+  margin: 0.8rem 0 0;
+  font-family: var(--hand);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--pen);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--paper);
+  border-bottom: 2px dashed var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1.55rem;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 80;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* A tennis ball. */
+.mark::before {
+  content: '';
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 0 50%, transparent 0.55rem, var(--paper) 0.55rem 0.65rem, transparent 0.65rem),
+    var(--orange);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.3rem 1.3rem;
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.15rem 0;
+  border-bottom: 3px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--orange);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--paper);
+}
+
+/* --------------------------------------------------------------- the yard */
+
+.hero {
+  position: relative;
+  color: var(--on-grass);
+  background: var(--grass);
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 5.5rem) var(--gut) clamp(2rem, 4vw, 3rem);
+}
+
+.heroText .hand {
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+}
+
+.name {
+  margin-top: 0.3rem;
+  font-size: clamp(4.2rem, 12.5vw, 11rem);
+  font-weight: 800;
+  font-variation-settings: 'wdth' 75;
+  line-height: 0.84;
+  letter-spacing: -0.035em;
+}
+
+.lede {
+  max-width: 36rem;
+  margin: 1.4rem 0 0;
+  font-size: clamp(1.12rem, 1.6vw, 1.35rem);
+  line-height: 1.45;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 1.9rem 0 0;
+}
+
+.btn,
+.btnLine {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 150ms ease;
+}
+
+.btn {
+  color: var(--on-orange);
+  background: var(--orange);
+  border: 2px solid var(--orange);
+  box-shadow: 0 3px 0 var(--shadow);
+}
+
+.btnLine {
+  color: inherit;
+  border: 2px solid currentColor;
+}
+
+.btn:hover,
+.btnLine:hover {
+  transform: translateY(-2px);
+}
+
+/* The index card, with its tape and its one red line. */
+
+.card {
+  position: relative;
+  padding: 1.5rem 1.4rem 1.4rem;
+  color: var(--text);
+  background: var(--card);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 var(--rule), 0 14px 26px -18px var(--shadow);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: -0.8rem;
+  left: 50%;
+  width: 6.5rem;
+  height: 1.6rem;
+  margin-left: -3.25rem;
+  background: var(--tape);
+  transform: rotate(-4deg);
+}
+
+.cardTitle {
+  padding-bottom: 0.5rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.15;
+  border-bottom: 2px solid color-mix(in oklab, var(--orange) 70%, transparent);
+}
+
+.todayCard {
+  transform: rotate(2deg);
+}
+
+.cardDate {
+  margin: 0.5rem 0 0;
+  font-family: var(--hand);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--pen);
+}
+
+.today {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1rem;
+  margin: 1rem 0 0;
+}
+
+.today div {
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--lines);
+}
+
+.today dt {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.today dd {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--pen);
+}
+
+/* The fence along the bottom of the yard, and the strip of ground under it. */
+
+.fence {
+  position: relative;
+  height: clamp(110px, 13vw, 170px);
+  overflow: hidden;
+  border-bottom: 16px solid color-mix(in oklab, var(--grass) 72%, var(--ink));
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 42rem;
+  margin-bottom: 2.4rem;
+}
+
+.secHead h2 {
+  font-size: clamp(2.3rem, 5vw, 3.8rem);
+  font-weight: 800;
+  font-variation-settings: 'wdth' 80;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+
+.secNote {
+  margin: 0.9rem 0 0;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.small {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- the day */
+
+.dayCards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.6rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dayCards li:nth-child(3n + 1) {
+  transform: rotate(-1.2deg);
+}
+
+.dayCards li:nth-child(3n + 2) {
+  transform: rotate(0.9deg);
+}
+
+.dayCards li:nth-child(3n) {
+  transform: rotate(-0.4deg);
+}
+
+.dayTime {
+  display: block;
+  font-family: var(--hand);
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--pen);
+}
+
+.dayCards h3 {
+  margin-top: 0.3rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.dayCards p {
+  margin: 0.35rem 0 0;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------- the report card */
+
+.reportWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.report {
+  position: relative;
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--card);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 var(--rule), 0 22px 40px -26px var(--shadow);
+  transform: rotate(-0.6deg);
+}
+
+.report::before,
+.report::after {
+  content: '';
+  position: absolute;
+  top: -0.9rem;
+  width: 7rem;
+  height: 1.7rem;
+  background: var(--tape);
+}
+
+.report::before {
+  left: 1.6rem;
+  transform: rotate(-6deg);
+}
+
+.report::after {
+  right: 1.6rem;
+  transform: rotate(5deg);
+}
+
+.reportTop {
+  padding-bottom: 1rem;
+  border-bottom: 3px double color-mix(in oklab, var(--orange) 75%, transparent);
+}
+
+.reportName {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.reportWho,
+.reportFoot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+  margin: 0.9rem 0 0;
+}
+
+.reportWho div,
+.reportFoot div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.reportWho dt,
+.reportFoot dt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.reportWho dd,
+.reportFoot dd {
+  margin: 0;
+  padding: 0 0.3rem;
+  font-family: var(--hand);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--pen);
+  border-bottom: 1.5px dotted var(--muted);
+}
+
+.grades {
+  width: 100%;
+  margin-top: 0.4rem;
+  border-collapse: collapse;
+}
+
+.grades thead th {
+  padding: 1rem 0.8rem 0.5rem 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 1px solid var(--lines);
+}
+
+.grades tbody th,
+.grades td {
+  padding: 0.75rem 0.8rem 0.75rem 0;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--lines);
+}
+
+.grades tbody th {
+  width: 32%;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.grade {
+  width: 5rem;
+}
+
+/* The grade, circled by hand. */
+.grades .grade {
+  font-family: var(--hand);
+  font-size: 2.3rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  color: var(--pen);
+  background:
+    radial-gradient(ellipse 1.7rem 1.45rem at 50% 52%, transparent 94%, var(--orange) 95% 100%, transparent 101%) no-repeat;
+}
+
+.gradeNote {
+  font-family: var(--hand);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--pen);
+}
+
+.reportFoot {
+  margin-top: 1.2rem;
+  padding-right: 7.5rem;
+}
+
+.stamp {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2.2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 6.6rem;
+  height: 6.6rem;
+  margin: 0;
+  padding: 0 1.3rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--on-orange);
+  background: var(--orange);
+  border-radius: 50%;
+  outline: 2px dashed var(--on-orange);
+  outline-offset: -7px;
+  transform: rotate(-14deg);
+}
+
+.reportSide {
+  display: grid;
+  gap: 2.6rem;
+  padding-top: 1rem;
+}
+
+/* Biscuit's photo, taped in beside his card: a print with a white border,
+   the cut-out standing on a square of grass. */
+.polaroid {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 20rem);
+  margin: 0;
+  padding: 0.75rem 0.75rem 0;
+  background: var(--card);
+  border-radius: 2px;
+  box-shadow: 0 1px 0 var(--rule), 0 18px 30px -20px var(--shadow);
+  transform: rotate(-2.5deg);
+}
+
+.polaroid::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: -0.8rem;
+  left: 50%;
+  width: 6.5rem;
+  height: 1.6rem;
+  margin-left: -3.25rem;
+  background: var(--tape);
+  transform: rotate(3deg);
+}
+
+.snap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--grass);
+}
+
+.dog {
+  display: block;
+  width: auto;
+  height: 94%;
+}
+
+.snapCap {
+  padding: 0.55rem 0.2rem 0.75rem;
+  font-family: var(--hand);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--pen);
+}
+
+.sideCard:nth-child(2) {
+  transform: rotate(1.4deg);
+}
+
+.sideCard:nth-child(3) {
+  transform: rotate(-1deg);
+}
+
+.sideCard h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.sideCard p {
+  margin: 0.5rem 0 0;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------- playgroups map */
+
+.board {
+  display: grid;
+  grid-template-columns: 9rem repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto repeat(3, minmax(8.5rem, auto));
+  gap: 0.8rem;
+}
+
+.axisCorner,
+.axisTop,
+.axisSide {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.axisCorner {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+  font-family: var(--hand);
+  font-size: 1.3rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--pen);
+}
+
+.axisTop {
+  grid-row: 1;
+  padding: 0 0 0.4rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.axisSide {
+  grid-column: 1;
+  align-self: stretch;
+  padding: 0.8rem 0.4rem 0 0;
+  border-right: 2px solid var(--text);
+}
+
+.col2 { grid-column: 2; }
+.col3 { grid-column: 3; }
+.col4 { grid-column: 4; }
+.row2 { grid-row: 2; }
+.row3 { grid-row: 3; }
+.row4 { grid-row: 4; }
+
+.group {
+  display: flex;
+  flex-direction: column;
+  padding: 1.1rem 1.2rem 1rem;
+  border-radius: 14px;
+}
+
+.group h3 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 85;
+  line-height: 1.05;
+}
+
+.group p {
+  margin: 0.4rem 0 0;
+  font-size: 0.96rem;
+}
+
+.group .groupYard {
+  margin-top: auto;
+  padding-top: 0.7rem;
+  font-family: var(--hand);
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.groupFit {
+  display: none;
+}
+
+.gPorch {
+  grid-column: 2;
+  grid-row: 2;
+  background: var(--card);
+  box-shadow: inset 0 0 0 2px var(--rule);
+}
+
+.gSandbox {
+  grid-column: 2;
+  grid-row: 3 / span 2;
+  color: var(--on-orange);
+  background: var(--orange);
+}
+
+.gMeadow {
+  grid-column: 3 / span 2;
+  grid-row: 2;
+  background: color-mix(in oklab, var(--grass) 22%, var(--card));
+}
+
+.gField {
+  grid-column: 3 / span 2;
+  grid-row: 3;
+  color: var(--on-grass);
+  background: var(--grass);
+}
+
+.gTrack {
+  grid-column: 3 / span 2;
+  grid-row: 4;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.boardNote {
+  margin: 1.4rem 0 0;
+  font-family: var(--hand);
+  font-size: 1.5rem;
+  color: var(--pen);
+}
+
+/* -------------------------------------------------------------- prices */
+
+.packs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.4rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pack {
+  position: relative;
+  padding: 1.4rem 1.4rem 1.5rem;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 1px 0 var(--rule), 0 14px 26px -18px var(--shadow);
+  border-top: 10px solid var(--orange);
+}
+
+.pack:nth-child(2) {
+  transform: rotate(-1deg);
+  border-top-color: var(--grass);
+}
+
+.pack:nth-child(3) {
+  transform: rotate(0.8deg);
+  border-top-color: var(--ink);
+}
+
+.packHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.packHead h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.packPrice {
+  font-size: 2.3rem;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 80;
+  line-height: 1;
+}
+
+.packPer {
+  margin: 0.2rem 0 0;
+  font-family: var(--hand);
+  font-size: 1.4rem;
+  color: var(--pen);
+}
+
+.holes {
+  display: grid;
+  grid-template-columns: repeat(5, 1.6rem);
+  gap: 0.6rem;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pack:nth-child(n + 2) .holes {
+  grid-template-columns: repeat(10, 1.6rem);
+  gap: 0.35rem;
+}
+
+.pack:nth-child(3) .holes {
+  grid-template-columns: repeat(10, minmax(0, 1.6rem));
+}
+
+.hole,
+.punched {
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.hole {
+  border: 2px solid color-mix(in oklab, var(--orange) 80%, transparent);
+}
+
+/* Punched right through: the page shows in the hole. */
+.punched {
+  background: var(--paper);
+  box-shadow: inset 0 2px 3px var(--shadow);
+}
+
+.priceLists {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  margin-top: 3rem;
+}
+
+.priceList {
+  margin: 0;
+  border-top: 2px solid var(--text);
+}
+
+.priceList div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.priceList dt {
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.plNote {
+  grid-column: 1;
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.plPrice {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 80;
+}
+
+.extras .hand {
+  color: var(--pen);
+}
+
+.extraList {
+  margin: 0.5rem 0 0;
+}
+
+.extraList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.extraList dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.rails {
+  position: relative;
+  height: 84px;
+  margin-top: 3.5rem;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+/* ------------------------------------------------------------ boarding */
+
+.boardingGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.bringCard {
+  margin-top: 1rem;
+  padding-top: 0;
+  overflow: visible;
+  transform: rotate(1.2deg);
+}
+
+.bowls {
+  position: relative;
+  height: 128px;
+  margin: 0 -1.4rem 1.2rem;
+  overflow: hidden;
+  border-radius: 3px 3px 0 0;
+}
+
+.checks {
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checks li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 2.1rem;
+  border-bottom: 1px solid var(--lines);
+}
+
+.checks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--text);
+  border-radius: 3px;
+}
+
+.checks li::after {
+  content: '\2713';
+  position: absolute;
+  left: 0.15rem;
+  top: 0.05rem;
+  font-family: var(--hand);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--pen);
+}
+
+/* ---------------------------------------------------------------- meet */
+
+.meetSteps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.8rem;
+  margin: 0 0 3rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: meet;
+}
+
+.meetSteps li {
+  counter-increment: meet;
+}
+
+.meetSteps li::before {
+  content: counter(meet);
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.7rem;
+  font-family: var(--hand);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--pen);
+  border: 2.5px solid var(--orange);
+  border-radius: 52% 48% 55% 45%;
+}
+
+.meetSteps h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.meetSteps p {
+  margin: 0.3rem 0 0;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.meetGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.rulesCard {
+  transform: rotate(-0.8deg);
+}
+
+.faq {
+  margin-top: 1.4rem;
+}
+
+.faq details {
+  border-bottom: 1px solid var(--lines);
+}
+
+.faq summary {
+  position: relative;
+  padding: 0.75rem 2rem 0.75rem 0;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.2rem;
+  top: 0.35rem;
+  font-family: var(--hand);
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--pen);
+}
+
+.faq details[open] summary::after {
+  content: '\2212';
+}
+
+.faq details p {
+  margin: 0;
+  padding: 0 0 0.9rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.form {
+  padding: clamp(1.3rem, 3vw, 2rem);
+  background: var(--card);
+  border: 2px solid var(--text);
+  border-radius: 18px;
+}
+
+.formTitle {
+  margin-bottom: 1.2rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 85;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.65rem 0.8rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1.5px solid color-mix(in oklab, var(--text) 45%, transparent);
+  border-radius: 10px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 0;
+}
+
+/* -------------------------------------------------------------- people */
+
+.people {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2.4rem 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.people li:nth-child(odd) {
+  transform: rotate(-1deg);
+}
+
+.people li:nth-child(even) {
+  transform: rotate(1.1deg);
+}
+
+.people h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.role {
+  margin: 0.15rem 0 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.people p {
+  margin-bottom: 0;
+  font-size: 0.98rem;
+}
+
+.people .handNote {
+  margin-top: 0.6rem;
+}
+
+/* ---------------------------------------------------------------- find */
+
+.find {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  color: var(--on-grass);
+  background: var(--grass);
+}
+
+.findInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut);
+}
+
+/* The fence again, along the bottom of the yard, with its strip of ground. */
+.gate {
+  position: relative;
+  height: clamp(96px, 11vw, 150px);
+  overflow: hidden;
+  border-bottom: 16px solid color-mix(in oklab, var(--grass) 72%, var(--ink));
+}
+
+.find h2 {
+  font-size: clamp(2.3rem, 5vw, 3.8rem);
+  font-weight: 800;
+  font-variation-settings: 'wdth' 80;
+  line-height: 1;
+}
+
+.addr {
+  margin: 0.9rem 0 0;
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  font-weight: 700;
+}
+
+.findNote {
+  max-width: 32rem;
+  margin: 0.5rem 0 0;
+  font-size: 1.05rem;
+}
+
+.findLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 1.2rem 0 0;
+  font-weight: 700;
+}
+
+.findLinks a {
+  border-bottom: 2px solid currentColor;
+}
+
+.hours {
+  margin: 0;
+  padding: 1.2rem 1.4rem;
+  border: 2px dashed color-mix(in oklab, var(--on-grass) 55%, transparent);
+  border-radius: 14px;
+}
+
+.hours div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.2rem 1rem;
+  padding: 0.55rem 0;
+}
+
+.hours div + div {
+  border-top: 1px solid color-mix(in oklab, var(--on-grass) 30%, transparent);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+}
+
+/* -------------------------------------------------------------- footer */
+
+.footer {
+  padding: 2.4rem var(--gut) 2.8rem;
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footer p {
+  margin: 0.25rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.5rem;
+  font-size: 1.8rem;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 80;
+  color: var(--text);
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .people {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .heroInner,
+  .reportWrap,
+  .boardingGrid,
+  .meetGrid,
+  .findInner,
+  .priceLists {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .todayCard {
+    max-width: 24rem;
+    margin-top: 0.6rem;
+  }
+
+  .dayCards,
+  .meetSteps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .packs {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 30rem;
+  }
+
+  /* The map becomes a stack of yards, each saying who it is for. */
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+
+  .axisCorner,
+  .axisTop,
+  .axisSide {
+    display: none;
+  }
+
+  .group,
+  .gPorch,
+  .gSandbox,
+  .gMeadow,
+  .gField,
+  .gTrack {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .groupFit {
+    display: block;
+    order: -1;
+    margin: 0 0 0.3rem !important;
+    font-size: 0.78rem !important;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .reportFoot {
+    padding-right: 0;
+  }
+
+  .stamp {
+    width: 5.4rem;
+    height: 5.4rem;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    top: -1.4rem;
+    right: -0.4rem;
+    bottom: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .dayCards,
+  .meetSteps,
+  .people,
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reportWho,
+  .reportFoot {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  /* Each grade as subject and circle, then the note under it. */
+  .grades thead {
+    display: none;
+  }
+
+  .grades tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 4.2rem;
+    gap: 0 0.6rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--lines);
+  }
+
+  .grades tbody th,
+  .grades td {
+    width: auto;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .grades tbody th {
+    align-self: center;
+  }
+
+  .gradeNote {
+    grid-column: 1 / -1;
+  }
+
+  .pack:nth-child(n + 2) .holes,
+  .pack:nth-child(3) .holes {
+    grid-template-columns: repeat(10, minmax(0, 1.6rem));
+    gap: 0.3rem;
+  }
+
+  .hours div {
+    display: grid;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnLine {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btnLine:hover {
+    transform: none;
+  }
+}

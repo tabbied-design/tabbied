@@ -1,0 +1,1065 @@
+/* ==========================================================================
+   POSY - wedding and event florist, Larkspur Mews
+   A lookbook, laid out like the spring issue of a magazine: the name set
+   as a masthead so big its tail drops onto the cover picture, cover lines
+   down the side, folios on every section and an asymmetric spread where
+   the pictures are pattern plates standing in for arrangements, each with
+   its caption and its price. Playfair Display in italic for everything
+   that should feel like a headline, Tenor Sans for the captions and the
+   small print. Blush paper, deep green ink, rose for the flowers.
+   ========================================================================== */
+
+.page {
+  --blush: #f4e3dc;
+  --green: #1f3a2c;
+  --rose: #c0616f;
+  --sage: #8fa588;
+  --petal: #e7b8ae;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --col: 78rem;
+  --serif: 'Playfair Display', 'Georgia', serif;
+  --sans: 'Tenor Sans', 'Helvetica Neue', Arial, sans-serif;
+  --text: var(--green);
+  --anti: var(--blush);
+  --on-green: var(--blush);
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--blush);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--blush) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--green));
+    --anti: oklch(from var(--blush) clamp(0, (l - 0.62) * 1000, 1) 0 0);
+    --on-green: oklch(from var(--green) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+/* Derived: a lighter sheet, rules, muted text, and the two display inks. */
+.page {
+  --sheet: color-mix(in oklab, var(--blush) 50%, var(--anti));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --muted: color-mix(in oklab, var(--text) 72%, var(--blush));
+  --display-ink: color-mix(in oklab, var(--text) 76%, var(--green));
+  --rose-text: color-mix(in oklab, var(--rose) 68%, var(--text));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  text-wrap: balance;
+  color: var(--display-ink);
+}
+
+.page figure {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: color-mix(in oklab, var(--blush) 93%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-style: italic;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.nav a:hover {
+  color: var(--rose-text);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--blush);
+}
+
+/* -------------------------------------------------------------------- cover */
+
+.cover {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: clamp(1.6rem, 3vw, 2.4rem) var(--gut) 0;
+}
+
+.issue {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding-bottom: 0.7rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--text);
+}
+
+.masthead {
+  position: relative;
+  z-index: 1;
+  margin: clamp(0.5rem, 2vw, 1.5rem) 0 0 -0.04em;
+  font-size: clamp(8.5rem, 31vw, 27rem);
+  font-style: italic;
+  line-height: 0.78;
+  letter-spacing: -0.045em;
+  pointer-events: none;
+}
+
+.coverBody {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: end;
+  margin-top: clamp(-7rem, -9vw, -2rem);
+}
+
+.coverText {
+  padding-bottom: 0.4rem;
+}
+
+.dek {
+  max-width: 30rem;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 1.7vw, 1.38rem);
+  line-height: 1.5;
+}
+
+.coverLines {
+  margin: 2rem 0 2.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.coverLines li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.coverLines li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.coverLine {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.coverPage {
+  flex: none;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.button {
+  display: inline-block;
+  padding: 1rem 1.7rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--on-green);
+  background: var(--green);
+  border-radius: 999px;
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--green) 80%, var(--rose));
+}
+
+/* The cover picture: a field of petals, with an arched window cut into
+   it and the bouquet standing in the window. */
+.coverFigure {
+  position: relative;
+  display: grid;
+  aspect-ratio: 4 / 4.7;
+  outline: 1px solid var(--rule);
+  outline-offset: 0.7rem;
+}
+
+.coverPlate {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--sheet);
+}
+
+.coverArch {
+  position: relative;
+  display: grid;
+  place-items: end center;
+  width: 64%;
+  height: 80%;
+  margin: auto auto 7%;
+  padding: 8% 4% 5%;
+  box-sizing: border-box;
+  background: var(--sheet);
+  border-radius: 999px 999px 0 0;
+  box-shadow: 0 0 0 0.55rem var(--blush);
+}
+
+.bouquet {
+  width: 118%;
+  max-width: none;
+}
+
+.coverCredit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2.6rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: clamp(5rem, 10vw, 8rem) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 46rem;
+  margin-bottom: clamp(2.2rem, 4.5vw, 3.4rem);
+}
+
+.secHead h2,
+.consultSide h2 {
+  font-size: clamp(2.7rem, 5.8vw, 5rem);
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.folio {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.folio::after {
+  content: '';
+  width: 2.8rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.secNote {
+  max-width: 36rem;
+  margin: 1.1rem 0 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ lookbook
+   An uneven spread: one tall picture, one wide, two small, set on a
+   twelve-column grid and nudged off each other's lines. */
+
+.look {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3rem) clamp(1rem, 2.4vw, 2rem);
+  align-items: start;
+}
+
+.lookA {
+  grid-column: 1 / span 5;
+  grid-row: 1 / span 2;
+}
+
+.lookB {
+  grid-column: 7 / span 6;
+  grid-row: 1;
+  margin-top: clamp(1rem, 6vw, 5rem);
+}
+
+.lookC {
+  grid-column: 6 / span 3;
+  grid-row: 2;
+  margin-left: clamp(0.5rem, 2vw, 2rem);
+}
+
+.lookD {
+  grid-column: 10 / span 3;
+  grid-row: 2;
+  margin-top: clamp(1rem, 5vw, 4rem);
+}
+
+.plate {
+  position: relative;
+  overflow: hidden;
+}
+
+.plateTall {
+  aspect-ratio: 3 / 4.3;
+}
+
+.plateWide {
+  aspect-ratio: 16 / 10;
+}
+
+.plateSquare {
+  aspect-ratio: 1;
+}
+
+.lookA .plate {
+  background: var(--green);
+}
+
+.lookB .plate {
+  background: color-mix(in oklab, var(--blush) 70%, var(--sage));
+}
+
+.lookC .plate {
+  background: color-mix(in oklab, var(--sage) 45%, var(--blush));
+}
+
+.lookD .plate {
+  background: var(--petal);
+}
+
+.caption {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 1rem;
+}
+
+.capNo {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--rose-text);
+}
+
+.capTitle {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.capBody {
+  max-width: 26rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.capPrice {
+  margin-top: 0.35rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------- the season */
+
+.seasonHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(2.2rem, 4.5vw, 3.4rem);
+}
+
+.seasonHead .secHead {
+  margin-bottom: 0;
+}
+
+/* Three botanical plates, stems down, captions under them. */
+.specimens {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.8rem, 2vw, 1.8rem);
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.specimen {
+  display: grid;
+  justify-items: center;
+}
+
+.specimenArt {
+  height: clamp(9rem, 15vw, 14rem);
+  width: auto;
+  margin-bottom: 0.8rem;
+}
+
+.specimenName {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.specimenWhen {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tableWrap {
+  overflow-x: auto;
+}
+
+.calendar {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 3px 5px;
+  table-layout: fixed;
+}
+
+.calendar th {
+  font-weight: 400;
+}
+
+.calendar thead th {
+  padding-bottom: 0.5rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+  border-bottom: 1px solid var(--text);
+}
+
+.calendar .flowerCol {
+  width: 11rem;
+  padding-right: 1rem;
+  text-align: left;
+}
+
+.calendar tbody .flowerCol {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.calendar td {
+  height: 1.5rem;
+  padding: 0;
+  border-radius: 999px;
+}
+
+.off {
+  background: color-mix(in oklab, var(--text) 5%, transparent);
+}
+
+.on {
+  background: color-mix(in oklab, var(--rose) 38%, var(--blush));
+}
+
+.peak {
+  background: var(--rose);
+}
+
+.key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  font-size: 0.85rem;
+  list-style: none;
+}
+
+.key li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.key li::before {
+  content: '';
+  width: 1.6rem;
+  height: 0.8rem;
+  border-radius: 999px;
+}
+
+.keyPeak::before {
+  background: var(--rose);
+}
+
+.keyOn::before {
+  background: color-mix(in oklab, var(--rose) 38%, var(--blush));
+}
+
+/* ----------------------------------------------------------------- packages */
+
+.packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--text);
+}
+
+.package {
+  padding: 1.8rem clamp(1rem, 2.6vw, 2.2rem) 0.5rem;
+}
+
+.package:first-child {
+  padding-left: 0;
+}
+
+.package:last-child {
+  padding-right: 0;
+}
+
+.package + .package {
+  border-left: 1px solid var(--rule);
+}
+
+.pkgNo {
+  display: block;
+  font-family: var(--serif);
+  font-size: 3.6rem;
+  font-style: italic;
+  line-height: 1;
+  color: var(--rose-text);
+}
+
+.package h3 {
+  margin-top: 1.2rem;
+  font-size: clamp(1.8rem, 2.8vw, 2.3rem);
+  line-height: 1.1;
+}
+
+.pkgWho {
+  margin: 0.4rem 0 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pkgPrice {
+  margin: 1rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-style: italic;
+}
+
+.pkgItems {
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pkgItems li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  font-size: 0.95rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* A leaf for a bullet. */
+.pkgItems li::before {
+  content: '';
+  position: absolute;
+  left: 0.1rem;
+  top: 0.95rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 0 60% 0 60%;
+  background: var(--sage);
+}
+
+/* ------------------------------------------------------------- consultation */
+
+.consult {
+  margin-top: clamp(5rem, 10vw, 8rem);
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.consultInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut);
+}
+
+.consult .folio {
+  color: var(--on-green);
+}
+
+.consultSide h2 {
+  color: var(--on-green);
+}
+
+.pull {
+  max-width: 24rem;
+  margin: 1.4rem 0 2.2rem;
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.studioPlate {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--blush);
+  outline: 1px solid color-mix(in oklab, var(--on-green) 35%, transparent);
+  outline-offset: 0.6rem;
+}
+
+.steps {
+  counter-reset: step;
+  align-self: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid color-mix(in oklab, var(--on-green) 22%, transparent);
+}
+
+.steps li:last-child {
+  border-bottom: 1px solid color-mix(in oklab, var(--on-green) 22%, transparent);
+}
+
+.steps li::before {
+  content: counter(step);
+  grid-row: 1 / span 2;
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-style: italic;
+  line-height: 1;
+  color: color-mix(in oklab, var(--on-green) 70%, var(--petal));
+}
+
+.steps h3 {
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: var(--on-green);
+}
+
+.steps p {
+  margin: 0.4rem 0 0;
+  font-size: 0.97rem;
+  color: color-mix(in oklab, var(--on-green) 80%, transparent);
+}
+
+/* ---------------------------------------------------------------- questions */
+
+.qaGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.qa {
+  border-bottom: 1px solid var(--rule);
+}
+
+.qaItem {
+  border-top: 1px solid var(--rule);
+}
+
+.qaItem summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.3;
+  cursor: pointer;
+  list-style: none;
+}
+
+.qaItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.qaItem summary::after {
+  content: '+';
+  flex: none;
+  font-family: var(--sans);
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.qaItem[open] summary::after {
+  content: '-';
+}
+
+.qaItem p {
+  max-width: 38rem;
+  margin: 0 0 1.3rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ enquire */
+
+.enquireGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.bigItalic {
+  font-size: clamp(2.7rem, 5.8vw, 5rem);
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.studio {
+  margin-top: 2.4rem;
+  padding: 1.4rem 1.6rem;
+  background: var(--sheet);
+}
+
+.studio p {
+  margin: 0.15rem 0 0;
+  font-size: 0.95rem;
+}
+
+.studio .studioName {
+  margin: 0 0 0.5rem;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-style: italic;
+}
+
+.studio a {
+  border-bottom: 1px solid var(--rose);
+}
+
+.form {
+  display: grid;
+  gap: 1.3rem;
+}
+
+.fieldPair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.3rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.55rem 0;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--text);
+  border-radius: 0;
+}
+
+.field select option {
+  background: var(--blush);
+  color: var(--text);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: none;
+  border-bottom: 2px solid var(--rose);
+}
+
+.submit {
+  justify-self: start;
+  margin-top: 0.6rem;
+  padding: 1rem 1.8rem;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--on-green);
+  background: var(--green);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--green) 80%, var(--rose));
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  max-width: var(--col);
+  margin: clamp(5rem, 10vw, 8rem) auto 0;
+  padding: 0 var(--gut) 3rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.footer p {
+  margin: 0.3rem 0 0;
+}
+
+/* The back cover: a strip of petals across the top of the footer. */
+.backCover {
+  position: relative;
+  height: clamp(80px, 8vw, 110px);
+  margin: 0 0 2.4rem;
+  overflow: hidden;
+  background: var(--green);
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  padding-top: 0;
+  font-family: var(--serif);
+  font-size: 3.4rem;
+  font-style: italic;
+  line-height: 1;
+  color: var(--display-ink);
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .coverBody {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 1.2rem;
+  }
+
+  .coverFigure {
+    order: -1;
+    aspect-ratio: 4 / 4.2;
+  }
+
+  .page .coverFigure {
+    margin-bottom: 3.8rem;
+  }
+
+  .coverCredit {
+    top: calc(100% + 1.4rem);
+    bottom: auto;
+    line-height: 1.6;
+  }
+
+  .seasonHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .look {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lookA,
+  .lookB {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    margin: 0;
+  }
+
+  .lookC,
+  .lookD {
+    grid-column: auto;
+    grid-row: auto;
+    margin: 0;
+  }
+
+  .plateTall {
+    aspect-ratio: 4 / 4.4;
+  }
+
+  .packages {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .package,
+  .package:first-child,
+  .package:last-child {
+    padding: 1.6rem 0 1rem;
+  }
+
+  .package + .package {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .consultInner,
+  .qaGrid,
+  .enquireGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .issue {
+    font-size: 0.64rem;
+    letter-spacing: 0.14em;
+  }
+
+  .coverPage {
+    display: none;
+  }
+
+  .capTitle {
+    font-size: 1.2rem;
+  }
+
+  .calendar {
+    border-spacing: 2px 5px;
+  }
+
+  .calendar .flowerCol {
+    width: 6.9rem;
+    padding-right: 0.3rem;
+  }
+
+  .calendar tbody .flowerCol {
+    font-size: 0.86rem;
+  }
+
+  .calendar thead th {
+    font-size: 0.66rem;
+    letter-spacing: 0;
+  }
+
+  .calendar td {
+    height: 1.2rem;
+  }
+
+  .fieldPair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps li {
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+  }
+
+  .steps li::before {
+    font-size: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    backdrop-filter: none;
+  }
+}

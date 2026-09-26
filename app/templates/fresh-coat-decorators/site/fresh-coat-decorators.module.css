@@ -1,0 +1,1347 @@
+/* ==========================================================================
+   FRESH COAT - painters and decorators, Hollin Park
+   The fan deck. Every color on the page is a paint with a name and a chip
+   number, and the page shows them the way a decorator does: a fan deck
+   opened in the hero, a row of chip cards, the price list as a paint strip
+   running from the palest shade to the full color, room quotes drawn as
+   floor plans. The type is a wide, heavy grotesk, like the lettering on a
+   van, with a plain sans for reading. The patterns are brush-outs: scumble
+   strokes dragged over a transparent ground so the wall shows through,
+   laid as a band, a panel and a stripe, never behind the words.
+   ========================================================================== */
+
+.page {
+  --primer: #f4f1ea; /* role 0: the page ground, FC 01 Primer White */
+  --sash: #202427;
+  --door: #2d5b87;
+  --clay: #c4633c;
+  --sage: #8fa487;
+  --ochre: #dfae47;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--sash);
+  --on-door: var(--primer);
+  --on-sash: var(--primer);
+
+  /* Derived, never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 72%, var(--primer));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --card: color-mix(in oklab, var(--primer) 94%, var(--text));
+  --shadow: color-mix(in oklab, var(--text) 22%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--primer);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--primer) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--sash));
+    --on-door: oklch(from var(--door) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sash: oklch(from var(--sash) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-stretch: 125%;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--primer);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.01em;
+}
+
+/* The mark is a chip: a square of Front Door Blue on a card. */
+.mark::before {
+  content: '';
+  width: 1.1rem;
+  height: 1.4rem;
+  background: linear-gradient(var(--door) 0 70%, transparent 70%);
+  box-shadow: inset 0 0 0 1.5px var(--text);
+  border-radius: 2px;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2vw, 1.9rem);
+}
+
+.nav a {
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  border-bottom: 3px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--door);
+}
+
+.barCall {
+  padding: 0.5rem 1rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  border: 1.5px solid var(--text);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--primer);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6.5rem) var(--gut) clamp(2.5rem, 5vw, 4rem);
+}
+
+.kicker {
+  margin: 0 0 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.heroTitle {
+  font-size: clamp(2.6rem, 5.1vw, 4.7rem);
+  font-stretch: 112%;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.heroTitle em {
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-color: var(--door);
+  text-decoration-thickness: 0.14em;
+  text-underline-offset: 0.12em;
+  text-decoration-skip-ink: none;
+}
+
+@media (min-width: 700px) {
+  .heroTitle em {
+    white-space: nowrap;
+  }
+}
+
+.heroLead {
+  max-width: 34rem;
+  margin: 1.8rem 0 0;
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-top: 2.2rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.95rem 1.5rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-stretch: 112%;
+  color: var(--on-door);
+  background: var(--door);
+  border-radius: 4px;
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--door) 84%, var(--text));
+}
+
+.textLink {
+  font-weight: 600;
+  border-bottom: 2px solid var(--rule-strong);
+}
+
+.textLink:hover {
+  border-bottom-color: var(--text);
+}
+
+/* The fan deck: five chips pinned at one corner by a rivet, fanned open.
+   Each chip is card stock with its paint in the top two thirds. */
+.fan {
+  position: relative;
+  width: min(100%, 30rem);
+  aspect-ratio: 1 / 0.92;
+  justify-self: center;
+}
+
+.fanChip {
+  position: absolute;
+  left: 28%;
+  bottom: 4%;
+  width: 34%;
+  height: 86%;
+  display: flex;
+  flex-direction: column;
+  background: var(--primer);
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px var(--rule),
+    0 14px 24px -12px var(--shadow);
+  transform-origin: 50% 90%;
+  overflow: hidden;
+}
+
+.fanColor {
+  flex: 0 0 74%;
+  margin: 7% 7% 0;
+  border-radius: 2px;
+}
+
+.fanLabel {
+  padding: 0.6rem 0.7rem;
+  font-size: clamp(0.62rem, 0.9vw, 0.74rem);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.fan1 {
+  transform: rotate(-52deg);
+}
+
+.fan1 .fanColor {
+  background: var(--sash);
+}
+
+.fan2 {
+  transform: rotate(-30deg);
+}
+
+.fan2 .fanColor {
+  background: var(--sage);
+}
+
+.fan3 {
+  transform: rotate(-8deg);
+}
+
+.fan3 .fanColor {
+  background: var(--ochre);
+}
+
+.fan4 {
+  transform: rotate(14deg);
+}
+
+.fan4 .fanColor {
+  background: var(--clay);
+}
+
+.fan5 {
+  transform: rotate(36deg);
+}
+
+.fan5 .fanColor {
+  background: var(--door);
+}
+
+.rivet {
+  position: absolute;
+  left: calc(28% + 17% - 0.7rem);
+  bottom: calc(4% + 8.6% - 0.7rem);
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow:
+    inset 0 0 0 2px var(--rule-strong),
+    0 2px 4px var(--shadow);
+}
+
+/* The brush-out band: first coat of Front Door Blue on primer, labeled
+   like the sample card it is. */
+.brushout {
+  position: relative;
+  height: clamp(140px, 16vw, 230px);
+  margin: 0 var(--gut);
+  max-width: calc(var(--max) - 2 * var(--gut));
+  margin-inline: auto;
+  width: calc(100% - 2 * var(--gut));
+}
+
+.brushField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.brushLabel {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  margin: 0;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--primer);
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) minmax(0, 24rem);
+  gap: 0.6rem 2.5rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secNo {
+  align-self: start;
+  margin: 0.4rem 0 0;
+  font-family: var(--display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-stretch: 125%;
+  padding-top: 0.5rem;
+  border-top: 3px solid var(--text);
+}
+
+.secTitle {
+  font-size: clamp(2.1rem, 4.6vw, 3.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.secNote {
+  margin: 0;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- chips */
+
+.chips {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  padding: 0.7rem 0.7rem 1.1rem;
+  background: var(--primer);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px var(--rule),
+    0 10px 20px -14px var(--shadow);
+}
+
+.chipColor {
+  display: block;
+  aspect-ratio: 4 / 4.6;
+  margin-bottom: 0.9rem;
+  border-radius: 2px;
+}
+
+.primer {
+  background: var(--primer);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.sash {
+  background: var(--sash);
+}
+
+.door {
+  background: var(--door);
+}
+
+.clay {
+  background: var(--clay);
+}
+
+.sage {
+  background: var(--sage);
+}
+
+.ochre {
+  background: var(--ochre);
+}
+
+.chipCode {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.chipName {
+  margin-top: 0.15rem;
+  font-size: 1.02rem;
+  font-stretch: 112%;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.chipLrv {
+  margin-top: 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.chipUse {
+  margin: 0.6rem 0 0;
+  padding-top: 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+/* --------------------------------------------------------------- the strip
+   One card, six shades mixed from Front Door Blue into primer. Each shade
+   works out its own type color from how light it is. */
+
+.stripLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.stripLayout .secHead {
+  grid-template-columns: minmax(0, 1fr);
+  position: sticky;
+  top: 6rem;
+}
+
+.stripNote {
+  margin: 0.6rem 0 0;
+  padding: 0.9rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1.5px dashed var(--rule-strong);
+  border-radius: 4px;
+}
+
+.strip {
+  padding: 0.8rem 0.8rem 1rem;
+  background: var(--primer);
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px var(--rule),
+    0 24px 40px -26px var(--shadow);
+}
+
+.shades {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.stripFoot {
+  margin: 0.9rem 0.3rem 0;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.shade {
+  --band: var(--door);
+  --band-text: var(--text);
+  display: grid;
+  grid-template-columns: 5.2rem minmax(0, 1fr) auto;
+  gap: 0.25rem 1.2rem;
+  align-items: baseline;
+  padding: 1.25rem 1.3rem;
+  background: var(--band);
+  color: var(--band-text);
+}
+
+.shade1 {
+  --band: color-mix(in oklab, var(--door) 12%, var(--primer));
+}
+
+.shade2 {
+  --band: color-mix(in oklab, var(--door) 26%, var(--primer));
+}
+
+.shade3 {
+  --band: color-mix(in oklab, var(--door) 42%, var(--primer));
+}
+
+.shade4 {
+  --band: color-mix(in oklab, var(--door) 60%, var(--primer));
+  --band-text: var(--on-door);
+}
+
+.shade5 {
+  --band: color-mix(in oklab, var(--door) 80%, var(--primer));
+  --band-text: var(--on-door);
+}
+
+.shade6 {
+  --band: var(--door);
+  --band-text: var(--on-door);
+}
+
+@supports (color: oklch(from red l c h)) {
+  .shade {
+    --band-text: oklch(from var(--band) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.shadeCode {
+  grid-row: span 2;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+}
+
+.shadeName {
+  font-size: 1.2rem;
+  font-stretch: 112%;
+  line-height: 1.15;
+}
+
+.shadePrice {
+  grid-row: span 2;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-stretch: 100%;
+  text-align: right;
+  max-width: 11rem;
+}
+
+.shadeWhat {
+  grid-column: 2;
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  opacity: 0.86;
+}
+
+/* ------------------------------------------------------------------ process */
+
+.processGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: stage;
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+  column-gap: 1.3rem;
+  padding: 0 0 2rem;
+}
+
+/* The line between the stages is a cut-in edge: one steady stroke. */
+.stage::before {
+  content: '';
+  position: absolute;
+  left: 1.6rem;
+  top: 3.2rem;
+  bottom: 0.3rem;
+  width: 2px;
+  background: var(--rule-strong);
+}
+
+.stage:last-child::before {
+  display: none;
+}
+
+.stageNo {
+  grid-row: span 3;
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-stretch: 125%;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+}
+
+.stageWhen {
+  margin: 0.15rem 0 0;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stageName {
+  margin-top: 0.1rem;
+  font-size: 1.35rem;
+  font-stretch: 112%;
+  letter-spacing: -0.01em;
+}
+
+.stageText {
+  margin: 0.4rem 0 0;
+  max-width: 34rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.wallPanel {
+  position: sticky;
+  top: 6rem;
+}
+
+/* The tin on the floor in front of the sample, its drip toward us. */
+.tin {
+  position: absolute;
+  z-index: 3;
+  left: -1.5rem;
+  bottom: -0.5rem;
+  width: 44%;
+  max-width: 15rem;
+}
+
+.wallField {
+  position: relative;
+  height: clamp(320px, 42vw, 560px);
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+/* Masking tape across two corners, holding the sample to the wall. */
+.wallField::before,
+.wallField::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 1.1rem;
+  width: 7.5rem;
+  height: 1.7rem;
+  background: color-mix(in oklab, var(--ochre) 30%, var(--primer));
+  opacity: 0.94;
+  box-shadow: 0 1px 3px var(--shadow);
+}
+
+.wallField::before {
+  left: -1.6rem;
+  transform: rotate(-38deg);
+}
+
+.wallField::after {
+  right: -1.6rem;
+  transform: rotate(38deg);
+}
+
+.wallCaption {
+  margin: 0.8rem 0 0 48%;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- rooms */
+
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.room {
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+/* The plan: walls as a heavy line, the floor tinted, a door swing in the
+   corner. Proportions come from the room's own measurements. */
+.planBox {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 0.8;
+  margin-bottom: 1.1rem;
+  padding: 0.6rem;
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.plan {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  background: color-mix(in oklab, var(--sage) 26%, var(--primer));
+  border: 4px solid var(--text);
+}
+
+.planWide {
+  width: 100%;
+}
+
+.planTall {
+  height: 100%;
+}
+
+/* The door: a gap in the wall, the leaf standing open, the swing arc. */
+.plan::before {
+  content: '';
+  position: absolute;
+  right: 12%;
+  bottom: -4px;
+  width: min(24%, 2.4rem);
+  height: 4px;
+  background: color-mix(in oklab, var(--sage) 26%, var(--primer));
+}
+
+.plan::after {
+  content: '';
+  position: absolute;
+  right: 12%;
+  bottom: 0;
+  width: min(24%, 2.4rem);
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  border-top: 1px solid var(--text);
+  border-right: 2px solid var(--text);
+  border-top-left-radius: 100%;
+}
+
+.planSize {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: var(--primer);
+}
+
+.roomName {
+  font-size: 1.2rem;
+  font-stretch: 112%;
+  letter-spacing: -0.01em;
+}
+
+.roomLines {
+  flex: 1;
+  list-style: none;
+  margin: 0.7rem 0 1rem;
+  padding: 0;
+}
+
+.roomLines li {
+  position: relative;
+  padding: 0.2rem 0 0.2rem 1rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.roomLines li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.85em;
+  width: 0.5rem;
+  height: 2px;
+  background: var(--text);
+}
+
+.roomTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--text);
+}
+
+.roomDays {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.roomPrice {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.02em;
+}
+
+.sageBand {
+  position: relative;
+  height: clamp(110px, 12vw, 170px);
+  margin-top: clamp(4.5rem, 9vw, 7.5rem);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--sage) 22%, var(--primer));
+}
+
+/* --------------------------------------------------------------------- crew */
+
+.crew {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.person {
+  padding: 1.5rem 0 0;
+  border-top: 3px solid var(--text);
+}
+
+.personName {
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+}
+
+.personRole {
+  margin: 0.3rem 0 0;
+  font-weight: 600;
+}
+
+.personYears {
+  margin: 0.1rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.personNote {
+  margin: 0.9rem 0 0;
+  font-size: 0.95rem;
+}
+
+.personPick {
+  display: inline-block;
+  margin: 1rem 0 0;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 999px;
+}
+
+.promises {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+  padding: 1.6rem;
+  background: var(--card);
+  border-radius: 4px;
+}
+
+.promises dt {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  font-stretch: 112%;
+}
+
+.promises dd {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- quote
+   The one full-color section: a wall of Front Door Blue. */
+
+.quoteSec {
+  margin-top: clamp(4.5rem, 9vw, 7.5rem);
+  background: var(--door);
+  color: var(--on-door);
+}
+
+.quoteGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.quoteIntro .secNo {
+  display: inline-block;
+  min-width: 4.5rem;
+  margin: 0 0 1.2rem;
+  border-top-color: currentColor;
+}
+
+.quoteTitle {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.quoteLead {
+  max-width: 30rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.05rem;
+}
+
+.cardField {
+  position: relative;
+  height: 150px;
+  margin: 2rem 0;
+  max-width: 30rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.quoteContact {
+  margin: 0.2rem 0 0;
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+  font-weight: 700;
+  font-stretch: 112%;
+  overflow-wrap: anywhere;
+}
+
+.quoteContact a {
+  border-bottom: 2px solid color-mix(in oklab, currentColor 45%, transparent);
+}
+
+.quoteHours {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  align-content: start;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--primer);
+  color: var(--text);
+  border-radius: 6px;
+  box-shadow: 0 30px 50px -30px var(--shadow);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.field legend {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--primer);
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 4px;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--door);
+  outline-offset: 0;
+  border-color: var(--text);
+}
+
+.roomsPick {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.picks input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.picks label {
+  padding: 0.5rem 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.picks input:checked + label {
+  background: var(--text);
+  color: var(--primer);
+  border-color: var(--text);
+}
+
+.picks input:focus-visible + label {
+  outline: 2px solid var(--door);
+  outline-offset: 2px;
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.95rem 1.6rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  font-stretch: 112%;
+  color: var(--on-door);
+  background: var(--door);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--door) 84%, var(--text));
+}
+
+/* ---------------------------------------------------------------------- faq */
+
+.faqList {
+  max-width: 52rem;
+  margin-left: calc(4.5rem + 2.5rem);
+}
+
+.faq {
+  border-top: 1.5px solid var(--rule-strong);
+}
+
+.faq:last-child {
+  border-bottom: 1.5px solid var(--rule-strong);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  font-family: var(--display);
+  font-size: 1.12rem;
+  font-weight: 700;
+  font-stretch: 112%;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.faq[open] summary::after {
+  content: '-';
+}
+
+.faq p {
+  max-width: 44rem;
+  margin: 0 0 1.3rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4.5rem, 9vw, 7.5rem);
+  background: var(--sash);
+  color: var(--on-sash);
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 3rem var(--gut) 3.4rem;
+  font-size: 0.86rem;
+}
+
+.footInner p {
+  margin: 0.3rem 0 0;
+  opacity: 0.86;
+}
+
+.footer .footName {
+  margin: 0 0 0.8rem;
+  font-family: var(--display);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  opacity: 1;
+}
+
+.footer .footAddr {
+  margin-bottom: 1rem;
+  opacity: 1;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .chips {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .rooms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .promises {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1020px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .stripLayout,
+  .processGrid,
+  .quoteGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stripLayout .secHead,
+  .wallPanel {
+    position: relative;
+    top: auto;
+  }
+
+  .tin {
+    left: -0.4rem;
+    width: 40%;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .secNo {
+    justify-self: start;
+    min-width: 3.5rem;
+  }
+
+  .faqList {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .barCall {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .fan {
+    width: min(100%, 21rem);
+  }
+
+  .fanChip {
+    left: 36%;
+  }
+
+  .rivet {
+    left: calc(36% + 17% - 0.7rem);
+  }
+
+  .fan1 {
+    transform: rotate(-44deg);
+  }
+
+  .fan2 {
+    transform: rotate(-26deg);
+  }
+
+  .fan3 {
+    transform: rotate(-8deg);
+  }
+
+  .fan4 {
+    transform: rotate(10deg);
+  }
+
+  .fan5 {
+    transform: rotate(28deg);
+  }
+
+  .chips,
+  .rooms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chipUse {
+    display: none;
+  }
+
+  .shade {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.1rem 1rem;
+  }
+
+  .shadeCode,
+  .shadePrice {
+    grid-row: auto;
+  }
+
+  .shadeWhat {
+    grid-column: auto;
+  }
+
+  .shadePrice {
+    text-align: left;
+    max-width: none;
+  }
+
+  .rooms,
+  .crew,
+  .promises,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brushLabel {
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: 0.6rem;
+  }
+}

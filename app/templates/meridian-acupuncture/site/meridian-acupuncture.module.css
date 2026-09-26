@@ -1,0 +1,1027 @@
+/* ==========================================================================
+   MERIDIAN ACUPUNCTURE - acupuncture clinic, Weaver's Quarter
+   Ink on rice paper. The page is laid out as a channel on a chart: past the
+   opening, one thin line runs down the left margin and every section is a
+   point on it, its code in a ring and its name set upright on the line the
+   way a label runs down a hanging scroll. A mincho serif for the words, a
+   quiet gothic sans for the small print, wide margins, and square seal
+   stamps in vermilion as the only other mark. The patterns are brushwork:
+   a hanging scroll of leaning strokes, a scatter of single marks across
+   the channel, and a night panel for the sliding-scale clinic.
+
+   Color: four roles, rice paper, charcoal, seal red and indigo. Text,
+   rules, tints and the text on the ink panel are all derived.
+   ========================================================================== */
+
+.page {
+  --paper: #f2ede3;
+  --ink: #24231f;
+  --seal: #b8392b;
+  --indigo: #3f5566;
+
+  --gut: clamp(1rem, 5vw, 4rem);
+  --rail: 3.4rem;
+  --col-gap: clamp(1.25rem, 4vw, 4.5rem);
+  --serif: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Georgia', serif;
+  --sans: 'Zen Kaku Gothic New', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-seal: var(--paper);
+
+  /* Derived. */
+  --muted: color-mix(in oklab, var(--text) 72%, var(--paper));
+  --line: color-mix(in oklab, var(--text) 30%, transparent);
+  --hair: color-mix(in oklab, var(--text) 16%, transparent);
+  --tint: color-mix(in oklab, var(--paper) 93%, var(--text));
+  --seal-ink: color-mix(in oklab, var(--seal) 68%, var(--text));
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--paper);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--paper));
+    --on-seal: oklch(from var(--seal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :where(p, h1, h2, h3, ul, ol, dl, dd) {
+  margin: 0;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--seal-ink);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ the bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: color-mix(in oklab, var(--paper) 94%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--hair);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.brandSeal {
+  width: 1.7rem;
+  height: 1.7rem;
+  flex: none;
+  background: var(--seal);
+  box-shadow:
+    inset 0 0 0 3px var(--seal),
+    inset 0 0 0 4px var(--on-seal);
+  transform: rotate(-3deg);
+}
+
+.brandName {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.brandSub {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.1rem);
+}
+
+.nav a {
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.nav a:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--seal);
+  text-underline-offset: 6px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--paper);
+}
+
+/* ------------------------------------------------------------------ opening */
+
+.hero {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr) minmax(0, 19rem);
+  gap: var(--col-gap);
+  align-items: center;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 7rem) var(--gut) clamp(3rem, 7vw, 5rem);
+}
+
+.heroSide {
+  justify-self: center;
+  align-self: stretch;
+  writing-mode: vertical-rl;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  border-left: 1px solid var(--line);
+  padding-left: 0.6rem;
+}
+
+.heroText {
+  display: grid;
+  gap: 1.4rem;
+  max-width: 40rem;
+}
+
+.kicker {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-size: clamp(2.5rem, 5.2vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: -0.005em;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--seal-ink);
+}
+
+.lede {
+  max-width: 34rem;
+  font-size: 1.06rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.8rem;
+  margin-top: 0.4rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--on-seal);
+  background: var(--seal);
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.button:hover {
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.textLink {
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.15rem;
+}
+
+.textLink:hover {
+  border-color: var(--seal);
+}
+
+/* The hanging scroll: a narrow field between two dark rods, the seal
+   pressed into its lower corner. */
+.scroll {
+  position: relative;
+  height: clamp(24rem, 40vw, 34rem);
+  padding: 14px 0;
+}
+
+.scroll::before,
+.scroll::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  height: 14px;
+  background: var(--ink);
+  border-radius: 3px;
+}
+
+.scroll::before {
+  top: 0;
+}
+
+.scroll::after {
+  bottom: 0;
+}
+
+.scrollField {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--hair);
+}
+
+.stamp {
+  position: absolute;
+  left: -1.8rem;
+  bottom: 3rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  place-items: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  padding: 0.35rem;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--on-seal);
+  background: var(--seal);
+  box-shadow:
+    inset 0 0 0 4px var(--seal),
+    inset 0 0 0 5.5px var(--on-seal);
+  transform: rotate(-5deg);
+}
+
+/* --------------------------------------------------------------- the channel
+   One line down the page, drawn once behind every section. */
+
+.channel {
+  position: relative;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.channel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--gut) + var(--rail) / 2);
+  width: 1px;
+  background: var(--line);
+}
+
+.station {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  gap: 0 var(--col-gap);
+  padding: clamp(3.5rem, 7vw, 5.5rem) 0;
+}
+
+.point {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.pointCode {
+  display: grid;
+  place-items: center;
+  width: var(--rail);
+  height: var(--rail);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  background: var(--paper);
+  border: 1px solid var(--text);
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px var(--paper);
+}
+
+.pointName {
+  position: sticky;
+  top: 6rem;
+  writing-mode: vertical-rl;
+  padding: 0.8rem 0;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  background: var(--paper);
+}
+
+.body {
+  min-width: 0;
+  max-width: 54rem;
+}
+
+.body > h2,
+.clinicText h2 {
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  line-height: 1.18;
+}
+
+.intro {
+  max-width: 38rem;
+  margin-top: 1rem;
+  font-size: 1.04rem;
+  color: var(--muted);
+}
+
+.small {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- treats */
+
+.treats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--hair);
+}
+
+.treats li {
+  position: relative;
+  padding: 0.65rem 0 0.65rem 1.4rem;
+  font-family: var(--serif);
+  font-size: 1.04rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.treats li::before {
+  content: '';
+  position: absolute;
+  left: 0.1rem;
+  top: 1.3rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--seal);
+}
+
+.fees {
+  width: 100%;
+  margin-top: 3rem;
+  border-collapse: collapse;
+}
+
+.fees thead th {
+  padding: 0 0 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 1px solid var(--text);
+}
+
+.fees thead th:last-child {
+  text-align: right;
+}
+
+.fees tbody th,
+.fees td {
+  padding: 1rem 0;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--hair);
+}
+
+.fees tbody th {
+  padding-right: 1.5rem;
+  text-align: left;
+  font-weight: 400;
+}
+
+.feeName {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.feeNote {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.fees .feeTime {
+  padding-right: 1.5rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.fees .feePrice {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The scatter of single strokes that closes a station, set in the body
+   column so the channel line runs on past it. */
+.strokes {
+  grid-column: 2;
+  position: relative;
+  height: 150px;
+  margin-top: clamp(3.5rem, 7vw, 5rem);
+  overflow: hidden;
+}
+
+/* The list of what we treat, with the herb standing beside it. */
+.treatRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 13rem);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+  margin-top: 2rem;
+}
+
+.herb {
+  display: grid;
+  justify-items: center;
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.herbArt {
+  width: 100%;
+  max-width: 11.5rem;
+}
+
+.herb figcaption {
+  font-family: var(--serif);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- steps */
+
+.steps {
+  margin-top: 2.4rem;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--text);
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  column-gap: 2rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.stepWhen {
+  grid-row: span 2;
+  align-self: start;
+  padding-top: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  border-top: 3px solid var(--seal);
+}
+
+.steps h3 {
+  font-size: 1.45rem;
+  line-height: 1.3;
+}
+
+.stepDetail {
+  max-width: 38rem;
+  margin-top: 0.4rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------- community clinic
+   The one dark panel on the page: the text on the left, a tall field of
+   pale strokes on the right, like the back room with the lamp down. */
+
+.clinic {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  min-width: 0;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.clinicText {
+  display: grid;
+  align-content: start;
+  gap: 1.1rem;
+  padding: clamp(1.75rem, 4vw, 3.25rem);
+}
+
+.clinicSeal {
+  justify-self: start;
+  padding: 0.35rem 0.7rem;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--on-seal);
+  background: var(--seal);
+  box-shadow:
+    inset 0 0 0 3px var(--seal),
+    inset 0 0 0 4px var(--on-seal);
+  transform: rotate(-2deg);
+}
+
+.clinicLede {
+  max-width: 34rem;
+  font-size: 1.04rem;
+  color: color-mix(in oklab, var(--on-ink) 86%, var(--ink));
+}
+
+.scale {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.8rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-ink) 40%, transparent);
+}
+
+.scale div {
+  padding: 0.9rem 1rem 0 0;
+}
+
+.scale div + div {
+  padding-left: 1rem;
+  border-left: 1px solid color-mix(in oklab, var(--on-ink) 22%, transparent);
+}
+
+.scale dt {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--on-ink) 74%, var(--ink));
+}
+
+.scale dd {
+  margin-top: 0.2rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.clinicSmall {
+  font-size: 0.88rem;
+  color: color-mix(in oklab, var(--on-ink) 74%, var(--ink));
+}
+
+.clinicField {
+  position: relative;
+  min-height: 18rem;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------- people */
+
+.people {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: 2.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+.people li {
+  display: grid;
+  align-content: start;
+  gap: 1.2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--text);
+}
+
+.personSeal {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--on-seal);
+  background: var(--seal);
+  box-shadow:
+    inset 0 0 0 3px var(--seal),
+    inset 0 0 0 4px var(--on-seal);
+}
+
+.people li:nth-child(2) .personSeal {
+  transform: rotate(3deg);
+}
+
+.people li:nth-child(3) .personSeal {
+  transform: rotate(-2deg);
+}
+
+.people h3 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.personTitle {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.personNote {
+  margin-top: 0.7rem;
+  font-size: 0.98rem;
+}
+
+.personYears {
+  margin-top: 0.7rem;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ faq */
+
+.faq {
+  margin-top: 2rem;
+  border-top: 1px solid var(--text);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--hair);
+}
+
+.faq summary {
+  position: relative;
+  padding: 1.1rem 2.5rem 1.1rem 0;
+  font-family: var(--serif);
+  font-size: 1.22rem;
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.3rem;
+  top: 50%;
+  font-family: var(--sans);
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--seal-ink);
+  transform: translateY(-50%);
+}
+
+.faq details[open] summary::after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.faq details p {
+  max-width: 40rem;
+  padding: 0 0 1.3rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  margin-top: 2.2rem;
+}
+
+.hours {
+  border-top: 1px solid var(--text);
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.hours dt {
+  font-family: var(--serif);
+  font-weight: 500;
+}
+
+.hours dd {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.address {
+  margin-top: 1.8rem;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  line-height: 1.35;
+}
+
+.contact {
+  margin-top: 0.4rem;
+  font-size: 1rem;
+}
+
+.contact a {
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.form {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--tint);
+  border-top: 3px solid var(--seal);
+}
+
+.form h3 {
+  font-size: 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+  font-size: 0.98rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 1px solid color-mix(in oklab, var(--text) 30%, transparent);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.form .button {
+  justify-self: start;
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 3rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  border-top: 1px solid var(--hair);
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1080px) {
+  .hero {
+    grid-template-columns: var(--rail) minmax(0, 1fr) minmax(0, 15rem);
+  }
+
+  .people {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .people li {
+    grid-template-columns: 3.4rem minmax(0, 1fr);
+    column-gap: 1.4rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+  }
+
+  .scroll {
+    grid-column: 2;
+    width: min(calc(100% - 2.5rem), 16rem);
+    height: 20rem;
+    margin: 1rem 0 0 1.4rem;
+  }
+
+  .clinic {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .clinicField {
+    min-height: 9rem;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    --rail: 2.6rem;
+    --col-gap: 1rem;
+  }
+
+  .brandSub {
+    display: none;
+  }
+
+  .heroSide {
+    font-size: 0.82rem;
+  }
+
+  .pointCode {
+    font-size: 0.62rem;
+    letter-spacing: 0.02em;
+  }
+
+  .pointName {
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+  }
+
+  .treats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fees thead th:nth-child(2),
+  .feeTime {
+    display: none;
+  }
+
+  .steps li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stepWhen {
+    grid-row: auto;
+    padding: 0 0 0.3rem;
+  }
+
+  .scale {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scale div + div {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid color-mix(in oklab, var(--on-ink) 22%, transparent);
+  }
+
+  .scale div {
+    padding-bottom: 0.7rem;
+  }
+
+  .hours div {
+    grid-template-columns: 6rem minmax(0, 1fr);
+  }
+
+  .strokes {
+    height: 110px;
+  }
+
+  .treatRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .herb {
+    order: -1;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    gap: 1rem;
+  }
+
+  .herb figcaption {
+    text-align: left;
+  }
+}

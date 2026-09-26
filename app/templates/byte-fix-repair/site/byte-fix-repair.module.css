@@ -1,0 +1,1446 @@
+/* ==========================================================================
+   BYTE FIX - phone and computer repair, Wren Street
+   The page is a desktop from about 1998, because that is when most of the
+   people at this counter learned to take a computer apart. Every section
+   is a window with its chrome: a title bar, beveled edges, a status bar.
+   The price list is a file manager, the repair tracker is a progress
+   dialog, data recovery is a surface scan and how it works is a setup
+   wizard. Pixelify Sans does the titles, Geist the reading and Geist Mono
+   the numbers. The patterns are what the windows show: a screen test, a
+   disk map, the wizard's side banner and the screen saver in the window.
+   ========================================================================== */
+
+.page {
+  --desk: #d4d6d1;
+  --ink: #16181c;
+  --blue: #1f47a8;
+  --red: #d9432b;
+  --green: #2e8b57;
+  --gut: clamp(0.85rem, 3.5vw, 2.5rem);
+  --pixel: 'Pixelify Sans', 'Courier New', monospace;
+  --sans: 'Geist', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Geist Mono', 'Courier New', monospace;
+  --text: var(--ink);
+  --anti: var(--desk);
+  --on-blue: var(--desk);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  background: var(--desk);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. --anti is the other
+       one, the direction a window's face moves away from the text. */
+    --text: color-mix(in oklab, oklch(from var(--desk) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --anti: oklch(from var(--desk) clamp(0, (l - 0.62) * 1000, 1) 0 0);
+    --on-blue: oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+/* Window chrome, all derived: the face, the wells inside it, and the two
+   edges of a bevel. */
+.page {
+  --face: color-mix(in oklab, var(--desk) 45%, var(--anti));
+  --well: color-mix(in oklab, var(--desk) 12%, var(--anti));
+  --hi: color-mix(in oklab, var(--anti) 80%, var(--desk));
+  --lo: color-mix(in oklab, var(--text) 42%, var(--desk));
+  --rule: color-mix(in oklab, var(--text) 15%, transparent);
+  --muted: color-mix(in oklab, var(--text) 74%, transparent);
+  --blue-text: color-mix(in oklab, var(--blue) 72%, var(--text));
+  --raised: var(--hi) var(--lo) var(--lo) var(--hi);
+  --sunken: var(--lo) var(--hi) var(--hi) var(--lo);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px dotted var(--text);
+  outline-offset: 2px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--pixel);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ----------------------------------------------------------------- menu bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1.4rem);
+  padding: 0.35rem var(--gut);
+  background: var(--face);
+  border-bottom: 2px solid var(--lo);
+  box-shadow: inset 0 -1px 0 var(--hi), 0 1px 0 var(--text);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0.3rem;
+}
+
+.logo {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: conic-gradient(var(--green) 0 25%, var(--blue) 0 50%, var(--text) 0 75%, var(--red) 0);
+  border: 1px solid var(--text);
+}
+
+.brandName {
+  font-family: var(--pixel);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem;
+}
+
+.nav a {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  background: var(--blue);
+  color: var(--on-blue);
+}
+
+.clock {
+  margin: 0 0 0 auto;
+  padding: 0.25rem 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  border: 1px solid;
+  border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--face);
+}
+
+/* ------------------------------------------------------------------ desktop */
+
+.desktop {
+  display: grid;
+  gap: clamp(2.2rem, 4.5vw, 3.8rem);
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: clamp(1.4rem, 3.5vw, 3rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+/* ------------------------------------------------------------------ windows */
+
+.win {
+  position: relative;
+  min-width: 0;
+  background: var(--face);
+  border: 2px solid;
+  border-color: var(--raised);
+  box-shadow:
+    1px 1px 0 var(--text),
+    0.7rem 0.7rem 0 color-mix(in oklab, var(--text) 13%, transparent);
+}
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin: 2px;
+  padding: 0.28rem 0.3rem 0.28rem 0.55rem;
+  background: linear-gradient(90deg, var(--blue), color-mix(in oklab, var(--blue) 55%, var(--anti)));
+  color: var(--on-blue);
+}
+
+.titleIdle {
+  background: linear-gradient(90deg, color-mix(in oklab, var(--text) 52%, var(--face)), color-mix(in oklab, var(--text) 26%, var(--face)));
+  color: var(--well);
+}
+
+.titleText {
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--pixel);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Minimize, maximize, close: three raised boxes with their marks. */
+.controls {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+
+.controls i {
+  position: relative;
+  width: 1.05rem;
+  height: 0.9rem;
+  background: var(--face);
+  border: 1.5px solid;
+  border-color: var(--raised);
+}
+
+.controls i::before,
+.controls i::after {
+  content: '';
+  position: absolute;
+  background: var(--text);
+}
+
+.controls i:nth-child(1)::before {
+  left: 25%;
+  right: 35%;
+  bottom: 18%;
+  height: 2px;
+}
+
+.controls i:nth-child(2)::before {
+  inset: 16% 22%;
+  background: transparent;
+  border: 1.5px solid var(--text);
+  border-top-width: 3px;
+}
+
+.controls i:nth-child(3)::before,
+.controls i:nth-child(3)::after {
+  left: 18%;
+  right: 18%;
+  top: calc(50% - 1px);
+  height: 2px;
+  transform: rotate(45deg);
+}
+
+.controls i:nth-child(3)::after {
+  transform: rotate(-45deg);
+}
+
+.body {
+  padding: clamp(1.1rem, 2.6vw, 1.8rem);
+}
+
+.statusBar {
+  margin: 0 2px 2px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  border: 1px solid;
+  border-color: var(--sunken);
+}
+
+.winHeading {
+  font-size: clamp(1.7rem, 2.8vw, 2.3rem);
+  line-height: 1.05;
+}
+
+.winNote {
+  max-width: 36rem;
+  margin: 0.6rem 0 1.3rem;
+  color: var(--muted);
+}
+
+.small {
+  margin: 1rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.page .subHead {
+  margin: 1.6rem 0 0.6rem;
+  font-size: 1.15rem;
+}
+
+/* ---------------------------------------------------------------- the hero */
+
+.heroRow {
+  display: grid;
+  grid-template-columns: 5.8rem minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2.4vw, 2rem);
+  align-items: start;
+}
+
+.icons {
+  display: grid;
+  gap: 1.3rem;
+  margin: 0;
+  padding: 0.6rem 0 0;
+  list-style: none;
+}
+
+.icon {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.icon::before {
+  content: '';
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 2px solid var(--text);
+  box-sizing: border-box;
+}
+
+.icon:hover {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+/* A page with its corner folded and three lines on it. */
+.iconDoc::before {
+  width: 2.1rem;
+  background:
+    linear-gradient(var(--text) 0 0) 50% 42% / 60% 2px no-repeat,
+    linear-gradient(var(--text) 0 0) 50% 60% / 60% 2px no-repeat,
+    linear-gradient(var(--text) 0 0) 50% 78% / 40% 2px no-repeat,
+    var(--well);
+  clip-path: polygon(0 0, 68% 0, 100% 28%, 100% 100%, 0 100%);
+}
+
+/* A little window: title bar over a white well. */
+.iconApp::before {
+  background: linear-gradient(var(--blue) 0 30%, var(--well) 30%);
+}
+
+/* A floppy: shutter, label and body. */
+.iconDisk::before {
+  background:
+    linear-gradient(var(--face) 0 0) 50% 0 / 48% 36% no-repeat,
+    linear-gradient(var(--well) 0 0) 50% 100% / 72% 42% no-repeat,
+    var(--blue);
+  border-radius: 2px;
+}
+
+.heroWin {
+  z-index: 1;
+}
+
+.kicker {
+  margin: 0 0 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: clamp(2.6rem, 5vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--blue-text);
+}
+
+.lede {
+  max-width: 34rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.08rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.15rem;
+  font-family: var(--sans);
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--face);
+  border: 2px solid;
+  border-color: var(--raised);
+  box-shadow: 1px 1px 0 var(--text);
+  cursor: pointer;
+}
+
+.btn:active {
+  border-color: var(--sunken);
+  box-shadow: none;
+}
+
+.btnDefault {
+  outline: 1px solid var(--text);
+  outline-offset: 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 1.8rem 0 0;
+}
+
+.stats div {
+  padding: 0.6rem 0.75rem;
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.stats dt {
+  font-family: var(--pixel);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.stats dd {
+  margin: 0.1rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+/* The screen test, overlapping the hero like a second window. */
+.testWin {
+  margin-top: clamp(1.5rem, 5vw, 4.5rem);
+  margin-left: clamp(-3.5rem, -3vw, -1rem);
+  z-index: 2;
+}
+
+.screen {
+  position: relative;
+  aspect-ratio: 4 / 3.3;
+  margin: 0.45rem;
+  overflow: hidden;
+  background: var(--ink);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+/* ----------------------------------------------------------- file manager */
+
+.address {
+  margin: 0.3rem 0.45rem 0;
+  padding: 0.25rem 0.55rem;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.explorer {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  gap: 0.35rem;
+  margin: 0.35rem 0.45rem 0.45rem;
+}
+
+.side {
+  padding: 0.8rem 0.5rem;
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.tree {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sideInfo {
+  margin: 1.2rem 0.4rem 0;
+  padding-top: 0.9rem;
+  font-size: 0.84rem;
+  border-top: 1px solid var(--rule);
+}
+
+.sideInfo div + div {
+  margin-top: 0.7rem;
+}
+
+.sideInfo dt {
+  font-weight: 600;
+}
+
+.sideInfo dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.treeLink {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.4rem;
+  font-size: 0.92rem;
+}
+
+.treeLink::before,
+.folderRow th::before {
+  content: '';
+  flex: none;
+  width: 1.1rem;
+  height: 0.85rem;
+  background: color-mix(in oklab, var(--red) 55%, var(--well));
+  border: 1.5px solid var(--text);
+  clip-path: polygon(0 0, 42% 0, 52% 18%, 100% 18%, 100% 100%, 0 100%);
+}
+
+.treeLink:hover {
+  background: var(--blue);
+  color: var(--on-blue);
+}
+
+.files {
+  min-width: 0;
+  padding: clamp(1rem, 2.2vw, 1.5rem);
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.fileTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fileTable thead th {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+  background: var(--face);
+  border: 1.5px solid;
+  border-color: var(--raised);
+}
+
+.fileTable .num {
+  text-align: right;
+}
+
+.folderRow th {
+  padding: 1.1rem 0.6rem 0.4rem;
+  font-family: var(--pixel);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.folderRow th::before {
+  display: inline-block;
+  margin-right: 0.55rem;
+  vertical-align: -0.05rem;
+}
+
+.fileTable td {
+  padding: 0.45rem 0.6rem;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.fileTable tbody tr:not(.folderRow):hover td {
+  background: var(--blue);
+  color: var(--on-blue);
+}
+
+.fileName strong {
+  font-weight: 600;
+}
+
+.fileName small {
+  display: block;
+  font-size: 0.84rem;
+  opacity: 0.78;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------- the pair rows */
+
+.pairRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.6rem, 3.5vw, 3rem);
+  align-items: start;
+}
+
+.recoveryWin {
+  margin-top: clamp(0rem, 4vw, 3.5rem);
+}
+
+/* ---------------------------------------------------------- repair status */
+
+/* The ticket's device, on a well like a preview pane. */
+.statusHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.2rem;
+  align-items: start;
+}
+
+.preview {
+  margin: 0;
+}
+
+.device {
+  display: grid;
+  place-items: center;
+  width: clamp(7.5rem, 12vw, 10.5rem);
+  aspect-ratio: 3 / 4;
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.phone {
+  width: 78%;
+}
+
+.deviceName {
+  margin-top: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  text-align: center;
+}
+
+.ticket {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.2rem 1rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--well);
+  border: 1.5px dashed var(--lo);
+}
+
+.ticketNo,
+.ticketWhat {
+  margin: 0;
+}
+
+.ticketNo {
+  font-family: var(--mono);
+  font-weight: 500;
+}
+
+.progress {
+  height: 1.5rem;
+  margin-top: 1.1rem;
+  padding: 2px;
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.progressFill {
+  width: 80%;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--blue) 0 0.75rem, transparent 0.75rem 0.95rem);
+}
+
+.progressText {
+  margin: 0.4rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.stages {
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stages li {
+  display: grid;
+  grid-template-columns: 0.9rem 3.3rem minmax(0, 1fr);
+  column-gap: 0.7rem;
+  align-items: baseline;
+  padding: 0.5rem 0.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.stages li::before {
+  content: '';
+  grid-column: 1;
+  grid-row: 1;
+  width: 0.8rem;
+  height: 0.8rem;
+  box-sizing: border-box;
+  align-self: center;
+  border: 2px solid var(--text);
+}
+
+.stageTime {
+  grid-column: 2;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.stageName {
+  grid-column: 3;
+  font-weight: 600;
+}
+
+.stageNote {
+  grid-column: 3;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.done::before {
+  background: var(--green);
+}
+
+.now {
+  background: color-mix(in oklab, var(--blue) 14%, transparent);
+}
+
+.now::before {
+  background: var(--blue);
+  outline: 2px solid color-mix(in oklab, var(--blue) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.next {
+  opacity: 0.7;
+}
+
+.lookup {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  align-items: end;
+  margin-top: 1.6rem;
+  padding-top: 1.2rem;
+  border-top: 2px groove var(--hi);
+}
+
+.lookup .btn {
+  justify-self: start;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+.field input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.45rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+  border-radius: 0;
+}
+
+.field input::placeholder {
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------- data recovery */
+
+.diskMap {
+  position: relative;
+  height: clamp(160px, 17vw, 220px);
+  overflow: hidden;
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin: 0.7rem 0 1.4rem;
+  padding: 0;
+  font-size: 0.84rem;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.legend li::before {
+  content: '';
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 1px solid var(--text);
+}
+
+.keyGreen::before {
+  background: var(--green);
+}
+
+.keyBlue::before {
+  background: var(--blue);
+}
+
+.keyRed::before {
+  background: var(--red);
+}
+
+.tiers {
+  margin: 0;
+}
+
+.tiers div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.15rem 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.tiers div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.tiers dt {
+  font-weight: 600;
+}
+
+.tiers dd {
+  margin: 0;
+}
+
+.tierWhat {
+  grid-column: 1;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.tierPrice {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--mono);
+  font-weight: 500;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tierTime {
+  grid-column: 2;
+  grid-row: 2;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-align: right;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ wizard */
+
+.wizardWin {
+  width: min(100%, 60rem);
+  justify-self: center;
+}
+
+.wizard {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.42fr) minmax(0, 1fr);
+  margin: 0.35rem 0.45rem 0.45rem;
+  background: var(--face);
+}
+
+.banner {
+  position: relative;
+  min-height: 22rem;
+  overflow: hidden;
+  background: var(--blue);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.wizardBody {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.1rem, 2.6vw, 1.8rem) clamp(1.1rem, 2.8vw, 2rem) 1rem;
+}
+
+.steps {
+  counter-reset: step;
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  column-gap: 0.8rem;
+}
+
+.steps li::before {
+  content: counter(step);
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-family: var(--pixel);
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.steps strong {
+  font-weight: 600;
+}
+
+.steps p {
+  margin: 0.1rem 0 0;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+.wizardFoot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  margin-top: auto;
+  padding-top: 1.3rem;
+  border-top: 2px groove var(--hi);
+  translate: 0 0.3rem;
+}
+
+/* ---------------------------------------------------------- about dialog */
+
+.version {
+  margin: 0 0 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.terms {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.terms li {
+  position: relative;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  font-size: 0.95rem;
+}
+
+.terms li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.82rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--green);
+  border: 1px solid var(--text);
+}
+
+.bench {
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  background: var(--well);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.bench div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 0.2rem 0.8rem;
+  padding: 0.45rem 0;
+}
+
+.bench div + div {
+  border-top: 1px solid var(--rule);
+}
+
+.bench dt {
+  font-weight: 600;
+}
+
+.bench dd {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------- FAQ dialogs
+   Four small alert boxes, cascaded the way a desktop stacks them. */
+
+.faqStack {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: clamp(0rem, 3vw, 2.5rem);
+}
+
+.dialog {
+  background: var(--face);
+  border: 2px solid;
+  border-color: var(--raised);
+  box-shadow:
+    1px 1px 0 var(--text),
+    0.45rem 0.45rem 0 color-mix(in oklab, var(--text) 12%, transparent);
+}
+
+.dialog:nth-child(3) {
+  margin-left: 1.2rem;
+}
+
+.dialog:nth-child(4) {
+  margin-left: 2.4rem;
+}
+
+.dialog:nth-child(5) {
+  margin-left: 3.6rem;
+}
+
+.dialog summary {
+  display: grid;
+  grid-template-columns: 1.9rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.dialog summary::-webkit-details-marker {
+  display: none;
+}
+
+.dialog summary::before {
+  content: '?';
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  font-family: var(--pixel);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--on-blue);
+  background: var(--blue);
+  border: 1.5px solid var(--text);
+  border-radius: 50%;
+}
+
+/* A drop-down arrow, turned up when the answer is open. */
+.dialog summary::after {
+  content: '';
+  width: 0.75rem;
+  height: 0.5rem;
+  margin-right: 0.3rem;
+  background: var(--text);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.dialog[open] summary::after {
+  rotate: 180deg;
+}
+
+.dialog p {
+  margin: 0;
+  padding: 0 1rem 1rem 3.6rem;
+  font-size: 0.94rem;
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  padding: clamp(1.1rem, 2.6vw, 1.8rem);
+}
+
+.hours {
+  margin: 0 0 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+}
+
+.contact {
+  margin: 0.3rem 0 0;
+  font-weight: 500;
+}
+
+.contact a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.monitorWrap {
+  display: grid;
+  justify-items: center;
+}
+
+.monitor {
+  position: relative;
+  width: min(100%, 24rem);
+  margin-bottom: 2.4rem;
+  padding: 0.9rem 0.9rem 1.5rem;
+  background: var(--face);
+  border: 2px solid;
+  border-color: var(--raised);
+  border-radius: 0.5rem;
+  box-shadow: 1px 1px 0 var(--text);
+}
+
+/* The neck and the foot. */
+.monitor::before,
+.monitor::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  background: var(--face);
+  border: 2px solid;
+  border-color: var(--raised);
+  box-shadow: 1px 1px 0 var(--text);
+  translate: -50% 0;
+}
+
+.monitor::before {
+  bottom: -1.5rem;
+  width: 22%;
+  height: 1.3rem;
+}
+
+.monitor::after {
+  bottom: -2.2rem;
+  width: 52%;
+  height: 0.7rem;
+}
+
+.saver {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--ink);
+  border: 2px solid;
+  border-color: var(--sunken);
+}
+
+.monitorCaption {
+  max-width: 22rem;
+  margin: 0;
+  font-size: 0.88rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- taskbar */
+
+.taskbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+  padding: 0.45rem var(--gut);
+  font-size: 0.82rem;
+  background: var(--face);
+  border-top: 2px solid var(--hi);
+  box-shadow: 0 -1px 0 var(--lo);
+}
+
+.taskbar p {
+  margin: 0;
+}
+
+.start {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0.7rem;
+  font-family: var(--pixel);
+  font-size: 1rem;
+  font-weight: 700;
+  border: 2px solid;
+  border-color: var(--raised);
+  box-shadow: 1px 1px 0 var(--text);
+}
+
+.start::before {
+  content: '';
+  width: 0.9rem;
+  height: 0.9rem;
+  background: conic-gradient(var(--green) 0 25%, var(--blue) 0 50%, var(--text) 0 75%, var(--red) 0);
+}
+
+.footNote {
+  flex: 1;
+  min-width: 14rem;
+}
+
+.trayNote {
+  padding: 0.25rem 0.7rem;
+  border: 1px solid;
+  border-color: var(--sunken);
+}
+
+.trayNote a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .heroRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.4rem;
+    padding: 0;
+  }
+
+  .icon {
+    width: 4.6rem;
+  }
+
+  .testWin {
+    margin: 0;
+  }
+
+  .screen {
+    aspect-ratio: 16 / 7;
+  }
+
+  .pairRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .recoveryWin,
+  .faqStack {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .clock {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .clock {
+    display: none;
+  }
+
+  .siteMenu {
+    margin-left: auto;
+  }
+
+  .explorer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .tree {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.8rem;
+  }
+
+  .sideInfo {
+    display: none;
+  }
+
+  .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stats div {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+  }
+
+  .stats dt {
+    min-width: 4.6rem;
+  }
+
+  .lookup {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wizard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .banner {
+    min-height: 7.5rem;
+  }
+
+  .dialog:nth-child(n) {
+    margin-left: 0;
+  }
+
+  .dialog summary {
+    grid-template-columns: 1.9rem minmax(0, 1fr);
+  }
+
+  .dialog summary::after {
+    display: none;
+  }
+
+  .dialog p {
+    padding-left: 1rem;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bench div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fileTable td,
+  .fileTable thead th {
+    padding-inline: 0.4rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .statusHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .preview {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.8rem;
+  }
+
+  .device {
+    width: 7rem;
+  }
+}
+
+@media (max-width: 440px) {
+  .files {
+    padding: 0.7rem 0.5rem;
+  }
+
+  .mono {
+    font-size: 0.78rem;
+  }
+
+  .stages li {
+    grid-template-columns: 0.9rem minmax(0, 1fr);
+  }
+
+  .stageTime,
+  .stageName,
+  .stageNote {
+    grid-column: 2;
+  }
+}

@@ -1,0 +1,1279 @@
+/* ==========================================================================
+   STARLITE LANES - bowling alley and bar, Orbit Boulevard
+   Googie at night. A 1959 roadside pylon for a hero, lettered in a neon
+   script with LANES in lit tiles and a starburst on top; after that the
+   page is the inside of the alley after dark: the rate board as a lit grid
+   (day, evening and cosmic by the hour), the league table on an overhead
+   scoring monitor, the party packages as frames on a score sheet (spare,
+   strike, turkey), the lounge as a lit menu board. Tilt Neon, a face drawn
+   from bent glass tube, sets anything that glows; Yellowtail is the script
+   on the sign; Jost, a Futura of the period, sets everything else. The
+   fields are tubes and shooting stars: the neon wall beside the sign, the
+   cosmic-night sky and a strip of tubes over the party lanes.
+   ========================================================================== */
+
+.page {
+  --night: #0d1233;
+  --pink: #ff4fa3;
+  --cyan: #3de0f0;
+  --star: #ffcf4a;
+  --violet: #8b5cf6;
+  --tube: 'Tilt Neon', 'Arial Rounded MT Bold', sans-serif;
+  --script: 'Yellowtail', 'Brush Script MT', cursive;
+  --sans: 'Jost', 'Futura', 'Century Gothic', sans-serif;
+  --gut: clamp(1rem, 5vw, 3.5rem);
+  --wide: 76rem;
+  --text: var(--cyan);
+  --pinkLit: var(--pink);
+  --cyanLit: var(--cyan);
+  --starLit: var(--star);
+  --on-pink: var(--night);
+  --on-cyan: var(--night);
+  --on-star: var(--night);
+
+  --muted: color-mix(in oklab, var(--text) 74%, var(--night));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --panel: color-mix(in oklab, var(--night) 90%, var(--violet));
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--night);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --flip: oklch(from var(--night) clamp(0, (0.62 - l) * 1000, 1) 0 none);
+    /* Text is white or black by the night's lightness, a touch of cyan in
+       it; the lit colors are each ink moved toward white on a dark night
+       and toward black on a light one, with their color given back. */
+    --text: color-mix(in oklab, oklch(from var(--night) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--cyan));
+    --pinkLit: oklch(from color-mix(in oklch, var(--pink) 62%, var(--flip)) l calc(c * 1.3) h);
+    --cyanLit: oklch(from color-mix(in oklch, var(--cyan) 62%, var(--flip)) l calc(c * 1.3) h);
+    --starLit: oklch(from color-mix(in oklch, var(--star) 62%, var(--flip)) l calc(c * 1.3) h);
+    --on-pink: oklch(from var(--pink) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-cyan: oklch(from var(--cyan) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-star: oklch(from var(--star) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--cyanLit);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 80px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.inner {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+/* Lit type: the glass is the pale color, the glow is the raw ink. */
+.neonPink,
+.neonCyan {
+  font-family: var(--tube);
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  line-height: 1.05;
+}
+
+.neonPink {
+  color: var(--pinkLit);
+  text-shadow:
+    0 0 0.06em var(--pink),
+    0 0 0.3em color-mix(in oklab, var(--pink) 70%, transparent),
+    0 0 0.8em color-mix(in oklab, var(--pink) 45%, transparent);
+}
+
+.neonCyan {
+  color: var(--cyanLit);
+  text-shadow:
+    0 0 0.06em var(--cyan),
+    0 0 0.3em color-mix(in oklab, var(--cyan) 70%, transparent),
+    0 0 0.8em color-mix(in oklab, var(--cyan) 45%, transparent);
+}
+
+.head {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.headNote {
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.small {
+  margin: 1rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* A Googie starburst: long thin rays, short ones between, a bright hub,
+   fading out at the tips. */
+.burst,
+.burstSmall {
+  position: absolute;
+  z-index: 2;
+  aspect-ratio: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, var(--starLit) 0 6%, transparent 7%),
+    repeating-conic-gradient(from -0.8deg, var(--star) 0 1.6deg, transparent 1.6deg 30deg),
+    repeating-conic-gradient(from 14.5deg, color-mix(in oklab, var(--star) 75%, transparent) 0 1deg, transparent 1deg 30deg);
+  -webkit-mask: radial-gradient(circle, var(--star) 0 18%, color-mix(in oklab, var(--star) 60%, transparent) 40%, transparent 70%);
+  mask: radial-gradient(circle, var(--star) 0 18%, color-mix(in oklab, var(--star) 60%, transparent) 40%, transparent 70%);
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--star) 60%, transparent));
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--gut);
+  color: var(--text);
+  background: var(--night);
+  border-bottom: 1px solid var(--pinkLit);
+  box-shadow: 0 1px 14px color-mix(in oklab, var(--pink) 45%, transparent);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.markScript {
+  font-family: var(--script);
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--pinkLit);
+  text-shadow: 0 0 0.3em color-mix(in oklab, var(--pink) 70%, transparent);
+}
+
+.markCaps {
+  padding: 0.15rem 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cyanLit);
+  border: 1px solid var(--cyanLit);
+  border-radius: 4px;
+  box-shadow: 0 0 10px color-mix(in oklab, var(--cyan) 45%, transparent);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  color: var(--cyanLit);
+  text-shadow: 0 0 10px var(--cyan);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--night);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: center;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(5rem, 10vw, 7.5rem) var(--gut) clamp(4rem, 8vw, 6rem);
+}
+
+/* The pylon: a canted panel, edged in tube, with the burst breaking out
+   of its top corner. */
+.pylon {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem) clamp(2.2rem, 4vw, 3rem);
+  text-align: center;
+  background: var(--panel);
+  border: 2px solid var(--cyanLit);
+  border-radius: 28px 28px 28px 90px;
+  box-shadow:
+    0 0 14px color-mix(in oklab, var(--cyan) 50%, transparent),
+    inset 0 0 18px color-mix(in oklab, var(--cyan) 22%, transparent);
+  transform: rotate(-2.5deg);
+}
+
+.burst {
+  top: -5.5rem;
+  right: -4rem;
+  width: 12rem;
+}
+
+.signScript {
+  font-family: var(--script);
+  font-size: clamp(4rem, 9vw, 7rem);
+  line-height: 1;
+  color: var(--pinkLit);
+  text-shadow:
+    0 0 0.04em var(--pink),
+    0 0 0.2em color-mix(in oklab, var(--pink) 75%, transparent),
+    0 0 0.6em color-mix(in oklab, var(--pink) 45%, transparent);
+  transform: rotate(-4deg);
+}
+
+.letters {
+  display: flex;
+  gap: clamp(0.35rem, 1vw, 0.6rem);
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.letters li {
+  display: grid;
+  place-items: center;
+  width: clamp(2.6rem, 5vw, 3.6rem);
+  aspect-ratio: 1;
+  font-family: var(--tube);
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  line-height: 1;
+  color: var(--cyanLit);
+  text-shadow: 0 0 0.3em color-mix(in oklab, var(--cyan) 70%, transparent);
+  border: 2px solid var(--cyanLit);
+  border-radius: 10px;
+  box-shadow: 0 0 10px color-mix(in oklab, var(--cyan) 40%, transparent), inset 0 0 10px color-mix(in oklab, var(--cyan) 25%, transparent);
+}
+
+.letters li:nth-child(even) {
+  transform: translateY(0.35rem);
+}
+
+.signSub {
+  margin: 1.6rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* The arrow: a lit pill with a point, aimed at the door. */
+.arrow {
+  margin: 1.3rem 0 0;
+  padding: 0.55rem 2.4rem 0.55rem 1.3rem;
+  font-family: var(--tube);
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--on-star);
+  background: var(--star);
+  clip-path: polygon(0 0, calc(100% - 1.3rem) 0, 100% 50%, calc(100% - 1.3rem) 100%, 0 100%);
+  filter: drop-shadow(0 0 8px color-mix(in oklab, var(--star) 60%, transparent));
+}
+
+.heroSide {
+  min-width: 0;
+}
+
+.wall {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 2px solid var(--pinkLit);
+  border-radius: 18px;
+  box-shadow: 0 0 18px color-mix(in oklab, var(--pink) 40%, transparent);
+}
+
+.lede {
+  max-width: 38rem;
+  margin: 1.8rem 0 0;
+  font-size: clamp(1.1rem, 1.5vw, 1.22rem);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+}
+
+.btn,
+.btnGhost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.btn,
+.submit {
+  color: var(--on-pink);
+  background: var(--pink);
+  border: 2px solid var(--pinkLit);
+  box-shadow: 0 0 16px color-mix(in oklab, var(--pink) 55%, transparent);
+}
+
+.btnGhost {
+  color: var(--cyanLit);
+  border: 2px solid var(--cyanLit);
+  box-shadow: 0 0 12px color-mix(in oklab, var(--cyan) 35%, transparent);
+}
+
+.btn:hover,
+.submit:hover {
+  box-shadow: 0 0 26px color-mix(in oklab, var(--pink) 80%, transparent);
+}
+
+.btnGhost:hover {
+  box-shadow: 0 0 22px color-mix(in oklab, var(--cyan) 70%, transparent);
+}
+
+/* -------------------------------------------------------------------- rates */
+
+.rates {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem clamp(1.5rem, 4vw, 3.5rem);
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.tiers li {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  gap: 0 0.8rem;
+  align-items: baseline;
+  padding-left: 1.6rem;
+  position: relative;
+}
+
+.tiers li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 4px;
+}
+
+.tiers li:nth-child(1)::before {
+  background: color-mix(in oklab, var(--cyan) 42%, var(--night));
+}
+
+.tiers li:nth-child(2)::before {
+  background: color-mix(in oklab, var(--pink) 60%, var(--night));
+}
+
+.tiers li:nth-child(3)::before {
+  background: var(--star);
+  box-shadow: 0 0 10px color-mix(in oklab, var(--star) 70%, transparent);
+}
+
+.tierName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tierPrice {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  font-family: var(--tube);
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--starLit);
+}
+
+.tierPer {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.gridWrap {
+  padding: clamp(1rem, 2.5vw, 1.8rem);
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+}
+
+.rateGrid {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.rateGrid th {
+  padding: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rateGrid .dayHead,
+.rateGrid tbody th {
+  width: 3.4rem;
+}
+
+.rateGrid tbody th {
+  padding: 0 0.6rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.rateGrid td {
+  position: relative;
+  height: 2.3rem;
+  padding: 0;
+}
+
+/* Each hour is an inset lit cell, so the gaps are the grid. */
+.rateGrid td::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 5px;
+}
+
+.tD::before {
+  background: color-mix(in oklab, var(--cyan) 42%, var(--night));
+}
+
+.tE::before {
+  background: color-mix(in oklab, var(--pink) 60%, var(--night));
+}
+
+.tC::before {
+  background: var(--star);
+  box-shadow: 0 0 8px color-mix(in oklab, var(--star) 60%, transparent);
+}
+
+.tX::before {
+  border: 1px dashed var(--rule);
+}
+
+/* A mark in each lit cell as well as a color, so the three prices stay
+   apart when a palette brings three similar inks: evening has a dot,
+   cosmic a four-point star. */
+.tE::after,
+.tC::after,
+.tiers li:nth-child(2)::after,
+.tiers li:nth-child(3)::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin: -0.35rem 0 0 -0.35rem;
+}
+
+.tE::after,
+.tiers li:nth-child(2)::after {
+  background: radial-gradient(circle, color-mix(in oklab, var(--text) 75%, transparent) 0 28%, transparent 32%);
+}
+
+.tC::after,
+.tiers li:nth-child(3)::after {
+  background: var(--on-star);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
+.tiers li:nth-child(2)::after,
+.tiers li:nth-child(3)::after {
+  left: 0.5rem;
+  top: 0.85rem;
+}
+
+.gridFoot {
+  display: grid;
+  grid-template-columns: 3.4rem repeat(14, minmax(0, 1fr));
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.gridFoot span:nth-child(1) {
+  grid-column: 2;
+}
+
+.gridFoot span:nth-child(2) {
+  grid-column: 8;
+}
+
+.gridFoot span:nth-child(3) {
+  grid-column: 12;
+}
+
+.gridFoot span:nth-child(4) {
+  grid-column: 15;
+  justify-self: end;
+}
+
+.gridFoot span {
+  grid-row: 1;
+  white-space: nowrap;
+}
+
+.extras {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem clamp(1.5rem, 4vw, 3rem);
+  margin: 2.4rem 0 0;
+}
+
+.extras div {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.extras dt {
+  font-weight: 600;
+}
+
+.extras dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- cosmic */
+
+.cosmic {
+  position: relative;
+  padding: clamp(5rem, 10vw, 8rem) 0;
+  border-top: 1px solid var(--pinkLit);
+  border-bottom: 1px solid var(--pinkLit);
+  box-shadow: 0 0 20px color-mix(in oklab, var(--pink) 30%, transparent);
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.cosmicCard {
+  position: relative;
+  max-width: 34rem;
+  margin-left: auto;
+  padding: clamp(2rem, 4vw, 3rem);
+  background: var(--night);
+  border: 2px solid var(--pinkLit);
+  border-radius: 24px 24px 80px 24px;
+  box-shadow:
+    0 0 20px color-mix(in oklab, var(--pink) 45%, transparent),
+    inset 0 0 18px color-mix(in oklab, var(--pink) 18%, transparent);
+}
+
+.burstSmall {
+  top: -3.6rem;
+  left: -3.2rem;
+  width: 8rem;
+}
+
+.cosmicLede {
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+}
+
+.cosmicFacts {
+  margin: 1.4rem 0 0;
+}
+
+.cosmicFacts div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.cosmicFacts dt {
+  font-weight: 600;
+}
+
+.cosmicFacts dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.cosmicNote {
+  margin: 1.2rem 0 0;
+  font-family: var(--script);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--cyanLit);
+  text-shadow: 0 0 0.3em color-mix(in oklab, var(--cyan) 60%, transparent);
+}
+
+/* ------------------------------------------------------------------ leagues */
+
+.leagues {
+  padding: clamp(4.5rem, 9vw, 6.5rem) 0;
+}
+
+.leagueGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+/* The overhead monitor: a lit bezel, a header strip, striped rows. */
+.monitor {
+  overflow: hidden;
+  background: var(--panel);
+  border: 2px solid var(--cyanLit);
+  border-radius: 14px;
+  box-shadow: 0 0 18px color-mix(in oklab, var(--cyan) 35%, transparent);
+}
+
+.monitorHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.2rem 1rem;
+  margin: 0;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-cyan);
+  background: var(--cyan);
+}
+
+.standings {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.standings th,
+.standings td {
+  padding: 0.6rem 0.9rem;
+  text-align: right;
+}
+
+.standings thead th {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+}
+
+.standings tbody tr:nth-child(odd) {
+  background: color-mix(in oklab, var(--text) 5%, transparent);
+}
+
+.standings .teamCol {
+  text-align: left;
+}
+
+.standings tbody th {
+  font-weight: 600;
+}
+
+.standings td {
+  font-family: var(--tube);
+  font-size: 1.1rem;
+}
+
+.standings .rank {
+  width: 2.5rem;
+  text-align: left;
+  color: var(--starLit);
+}
+
+.standings tbody tr:first-child .rank,
+.standings tbody tr:first-child th {
+  color: var(--starLit);
+  text-shadow: 0 0 10px color-mix(in oklab, var(--star) 55%, transparent);
+}
+
+.monitorFoot {
+  margin: 0;
+  padding: 0.7rem 1.2rem 0.9rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+
+.leagueList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leagueList li {
+  padding: 1rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.leagueList li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.leagueWhen {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyanLit);
+}
+
+.leagueList h3 {
+  margin-top: 0.2rem;
+  font-family: var(--tube);
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+.leagueList p {
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------- the tube strip */
+
+.tubeStrip {
+  position: relative;
+  height: clamp(80px, 10vw, 120px);
+  overflow: hidden;
+  border-top: 1px solid var(--cyanLit);
+  border-bottom: 1px solid var(--cyanLit);
+  box-shadow: 0 0 16px color-mix(in oklab, var(--cyan) 30%, transparent);
+}
+
+/* ------------------------------------------------------------------ parties */
+
+.parties {
+  padding: clamp(4.5rem, 9vw, 6.5rem) 0;
+}
+
+.frames {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 2px solid var(--text);
+  border-radius: 6px;
+}
+
+/* The heading and the strike side by side: the ball and pins in the two
+   lit inks, pink for the pins, cyan for the ball. */
+.partyHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.partyHead .head {
+  margin-bottom: 0;
+}
+
+.strike {
+  display: block;
+  width: clamp(12rem, 20vw, 17rem);
+  margin-right: clamp(0rem, 3vw, 3rem);
+}
+
+/* A frame on the score sheet: the mark sits in the small box in its top
+   right corner, the way a strike or a spare is written. */
+.frame {
+  position: relative;
+  padding: 1.6rem 1.6rem 1.8rem;
+}
+
+.frame + .frame {
+  border-left: 2px solid var(--text);
+}
+
+.frameMark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  min-width: 4.2rem;
+  height: 3.4rem;
+  padding: 0 0.6rem;
+  box-sizing: border-box;
+  font-family: var(--tube);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--pinkLit);
+  text-shadow: 0 0 0.3em color-mix(in oklab, var(--pink) 70%, transparent);
+  border-left: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+}
+
+.frame h3 {
+  padding-right: 4.5rem;
+  font-family: var(--tube);
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.framePrice {
+  margin: 0.8rem 0 0;
+  font-family: var(--tube);
+  font-size: 1.5rem;
+  color: var(--starLit);
+}
+
+.frameWho {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.frame ul {
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.frame ul li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1.2rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.97rem;
+}
+
+.frame ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.95em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--cyanLit);
+  box-shadow: 0 0 6px var(--cyan);
+}
+
+/* ------------------------------------------------------------------- lounge */
+
+.lounge {
+  padding: clamp(4.5rem, 9vw, 6.5rem) 0;
+  background: var(--panel);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.loungeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.loungeLede {
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+}
+
+.happy {
+  display: inline-block;
+  margin: 1.4rem 0 0;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: var(--on-star);
+  background: var(--star);
+  border-radius: 999px;
+  box-shadow: 0 0 14px color-mix(in oklab, var(--star) 50%, transparent);
+}
+
+/* The lit menu board over the bar. */
+.board {
+  columns: 2;
+  column-gap: 2.5rem;
+  margin: 0;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  list-style: none;
+  border: 2px solid var(--pinkLit);
+  border-radius: 14px;
+  box-shadow: 0 0 16px color-mix(in oklab, var(--pink) 35%, transparent), inset 0 0 16px color-mix(in oklab, var(--pink) 12%, transparent);
+}
+
+.board li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.45rem 0;
+  break-inside: avoid;
+}
+
+.board li::after {
+  content: '';
+  order: 2;
+  flex: 1 1 1rem;
+  border-bottom: 1px dotted var(--rule);
+}
+
+.boardItem {
+  order: 1;
+}
+
+.boardPrice {
+  order: 3;
+  font-family: var(--tube);
+  font-size: 1.15rem;
+  color: var(--starLit);
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visit {
+  padding: clamp(4.5rem, 9vw, 6.5rem) 0;
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.visitSub {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+}
+
+.open {
+  margin: 1.6rem 0 1.4rem;
+}
+
+.open div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.open div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.open dt {
+  font-weight: 600;
+}
+
+.open dd {
+  margin: 0;
+  text-align: right;
+  color: var(--muted);
+}
+
+.contact {
+  margin: 0 0 0.3rem;
+  font-family: var(--tube);
+  font-size: 1.3rem;
+}
+
+.contact a {
+  text-decoration-color: var(--pinkLit);
+  text-underline-offset: 4px;
+}
+
+.form {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--panel);
+  border: 2px solid var(--cyanLit);
+  border-radius: 18px;
+  box-shadow: 0 0 18px color-mix(in oklab, var(--cyan) 30%, transparent);
+}
+
+.formTitle {
+  margin-bottom: 1.2rem;
+  font-family: var(--tube);
+  font-size: 1.8rem;
+  line-height: 1.1;
+  color: var(--cyanLit);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--night);
+  border: 1px solid color-mix(in oklab, var(--text) 35%, transparent);
+  border-radius: 8px;
+  color-scheme: dark light;
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: 2px solid var(--cyanLit);
+  outline-offset: 0;
+}
+
+.submit {
+  margin-top: 1.4rem;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--muted);
+  border-top: 1px solid var(--pinkLit);
+  box-shadow: 0 -1px 14px color-mix(in oklab, var(--pink) 30%, transparent);
+}
+
+.footTubes {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--cyanLit);
+  box-shadow: 0 1px 14px color-mix(in oklab, var(--cyan) 30%, transparent);
+}
+
+.footText {
+  padding: 2.6rem var(--gut) 3rem;
+}
+
+.footer p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.4rem;
+  font-family: var(--script);
+  font-size: 2.4rem;
+  line-height: 1.1;
+  color: var(--pinkLit);
+  text-shadow: 0 0 0.3em color-mix(in oklab, var(--pink) 60%, transparent);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .leagueGrid,
+  .loungeGrid,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pylon {
+    width: min(100%, 28rem);
+    justify-self: center;
+  }
+
+  .frames {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .partyHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .strike {
+    order: -1;
+    width: min(62%, 15rem);
+    margin: 0 auto;
+  }
+
+  .frame + .frame {
+    border-left: 0;
+    border-top: 2px solid var(--text);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 5.5rem;
+  }
+
+  .burst {
+    top: -4.5rem;
+    right: -1.5rem;
+    width: 9rem;
+  }
+
+  .burstSmall {
+    left: auto;
+    right: -1rem;
+  }
+
+  .rateGrid th {
+    font-size: 0.62rem;
+  }
+
+  .rateGrid .dayHead,
+  .rateGrid tbody th {
+    width: 2.6rem;
+  }
+
+  .rateGrid tbody th {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+
+  .rateGrid td {
+    height: 1.9rem;
+  }
+
+  .rateGrid td::before {
+    inset: 1px;
+    border-radius: 3px;
+  }
+
+  .gridFoot {
+    grid-template-columns: 2.6rem repeat(14, minmax(0, 1fr));
+    font-size: 0.68rem;
+  }
+
+  .gridWrap {
+    padding: 0.8rem 0.6rem;
+  }
+
+  .extras {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .standings th,
+  .standings td {
+    padding: 0.55rem 0.45rem;
+  }
+
+  .standings td {
+    font-size: 0.98rem;
+  }
+
+  .board {
+    columns: 1;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cosmicFacts div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

@@ -1,0 +1,1176 @@
+/* ==========================================================================
+   THE BLUE PLATE - all-day diner, Larkin Heights
+   The diner as you meet it from a stool. A navy bar with a chrome edge, the
+   sign over the door set in a tall condensed sans with a script "Eat at"
+   leaning into it, and beside it the blue plate the place is named for: a
+   china rim of bowties around a cream well. Then the floor by the register
+   as a checkerboard band between chrome rails, the week of specials as a
+   row of plates, the laminated menu lying on the navy counter, the pie case
+   with its glass shelves, the staff on guest checks and the hours on the
+   board behind the till.
+
+   Color: four roles, cream ground, navy, cherry and plate blue. Chrome,
+   crust, the check paper and every text color are derived from them, so a
+   re-colored page keeps its contrast whatever the palette brings.
+   ========================================================================== */
+
+.page {
+  --cream: #f7efdc;
+  --navy: #1b2a4a;
+  --cherry: #c62f36;
+  --plate: #2f5da8;
+
+  --gut: clamp(1rem, 5vw, 3.5rem);
+  --wide: 76rem;
+  --script: 'Yellowtail', 'Brush Script MT', cursive;
+  --cond: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --body: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--navy);
+  --on-navy: var(--cream);
+  --on-cherry: var(--cream);
+
+  /* Derived surfaces. */
+  --muted: color-mix(in oklab, var(--text) 74%, var(--cream));
+  --rule: color-mix(in oklab, var(--text) 22%, transparent);
+  --sheet: color-mix(in oklab, var(--cream) 94%, var(--text));
+  --check: color-mix(in oklab, var(--cream) 86%, var(--plate));
+  --chrome-hi: color-mix(in oklab, var(--cream) 82%, var(--navy));
+  --chrome-lo: color-mix(in oklab, var(--cream) 45%, var(--navy));
+  --crust: color-mix(in oklab, var(--cream) 70%, var(--cherry));
+  --cherry-ink: color-mix(in oklab, var(--cherry) 72%, var(--text));
+  --china: color-mix(in oklab, var(--plate) 72%, var(--text));
+  --chrome: linear-gradient(180deg, var(--chrome-hi) 0%, var(--chrome-lo) 45%, var(--chrome-hi) 70%, var(--chrome-lo) 100%);
+
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--cream);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--cream));
+    --on-cherry: oklch(from var(--cherry) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--cherry-ink);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--cond);
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.page :where(p) {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ the bar
+   Navy, with a chrome strip under it like the edge of the counter. */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--gut);
+  color: var(--on-navy);
+  background: var(--navy);
+  border-bottom: 5px solid transparent;
+  border-image: var(--chrome) 1;
+}
+
+.mark {
+  font-family: var(--script);
+  font-size: 1.85rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-family: var(--cond);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.86;
+}
+
+.nav a:hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+.barPhone {
+  padding: 0.45rem 1rem;
+  font-family: var(--cond);
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--on-cherry);
+  background: var(--cherry);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--navy);
+}
+
+/* --------------------------------------------------------------- the sign */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 5rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 5.5rem) var(--gut) clamp(3rem, 6vw, 4.5rem);
+}
+
+.script {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 -0.35em 0.15em;
+  font-family: var(--script);
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  line-height: 1;
+  color: var(--cherry-ink);
+  transform: rotate(-6deg);
+  transform-origin: left bottom;
+}
+
+.title {
+  font-size: clamp(4.2rem, 11vw, 9.6rem);
+  line-height: 0.84;
+  letter-spacing: -0.005em;
+  text-shadow: 0.045em 0.045em 0 color-mix(in oklab, var(--cherry) 85%, transparent);
+}
+
+.since {
+  margin-top: 1.6rem;
+  font-family: var(--cond);
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lede {
+  max-width: 31rem;
+  margin-top: 0.9rem;
+  font-size: clamp(1.08rem, 1.5vw, 1.22rem);
+  line-height: 1.5;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 34rem;
+  margin: 2rem 0 0;
+  border-top: 3px solid var(--text);
+  border-bottom: 1px solid var(--rule);
+}
+
+.facts div {
+  padding: 0.75rem 0.9rem 0.8rem 0;
+}
+
+.facts div + div {
+  padding-left: 0.9rem;
+  border-left: 1px solid var(--rule);
+}
+
+.facts dt {
+  font-family: var(--cond);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--cond);
+  font-size: 1.28rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* The china plate: the pattern is the rim, the well is plain cream with a
+   blue line round it, and the whole plate sits on a soft shadow. */
+
+.plate {
+  position: relative;
+  width: min(100%, 31rem);
+  aspect-ratio: 1;
+  justify-self: center;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 10px var(--cream),
+    0 0 0 13px var(--plate),
+    0 34px 50px -26px color-mix(in oklab, var(--text) 55%, transparent);
+}
+
+.plateRim {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.plateWell {
+  position: absolute;
+  inset: 20%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.3rem;
+  padding: 1rem;
+  text-align: center;
+  background: var(--cream);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 7px var(--cream),
+    0 0 0 9px var(--plate),
+    inset 0 6px 18px color-mix(in oklab, var(--text) 12%, transparent);
+}
+
+.wellKicker {
+  font-family: var(--script);
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  line-height: 1;
+  color: var(--cherry-ink);
+}
+
+.wellPrice {
+  font-family: var(--cond);
+  font-size: clamp(3.4rem, 6.4vw, 5.2rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+.wellNote {
+  max-width: 12rem;
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ the floor */
+
+.floor {
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  border-block: 6px solid transparent;
+  border-image: var(--chrome) 1;
+}
+
+/* ------------------------------------------------------------ headings */
+
+.head {
+  display: grid;
+  gap: 0.2rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.scriptSmall {
+  font-family: var(--script);
+  font-size: clamp(1.7rem, 2.8vw, 2.2rem);
+  line-height: 1.1;
+  color: var(--cherry-ink);
+}
+
+.head h2,
+.pieText h2 {
+  font-size: clamp(2.9rem, 6.4vw, 5rem);
+  line-height: 0.9;
+}
+
+.headNote {
+  max-width: 36rem;
+  margin-top: 0.9rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------- the specials */
+
+.specials,
+.counter {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.week li {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+}
+
+/* A china plate in CSS: a scalloped two-tone rim and a cream well. */
+.dish {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 11rem;
+  aspect-ratio: 1;
+  margin-bottom: 0.6rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, var(--cream) 0 60%, var(--plate) 61% 63%, var(--cream) 64% 71%, transparent 72%),
+    repeating-conic-gradient(var(--plate) 0deg 7.5deg, var(--navy) 7.5deg 15deg);
+  box-shadow: 0 16px 26px -18px color-mix(in oklab, var(--text) 60%, transparent);
+}
+
+.dishDay {
+  font-family: var(--script);
+  font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+  line-height: 1;
+  color: var(--cherry-ink);
+  transform: rotate(-8deg);
+}
+
+.day {
+  font-family: var(--cond);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.week h3 {
+  font-size: clamp(1.45rem, 2vw, 1.75rem);
+  line-height: 0.98;
+}
+
+.sides {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------- the menu
+   The laminated card lying on the navy counter, with the counter's
+   bowtie trim along its front edge. */
+
+.counterTop {
+  position: relative;
+  padding: 0 var(--gut) clamp(4rem, 8vw, 6rem);
+  background: var(--navy);
+}
+
+.trim {
+  position: relative;
+  height: 28px;
+  margin: 0 calc(-1 * var(--gut)) clamp(3rem, 6vw, 4.5rem);
+  overflow: hidden;
+  border-bottom: 5px solid transparent;
+  border-image: var(--chrome) 1;
+}
+
+.card {
+  position: relative;
+  max-width: 70rem;
+  margin: 0 auto;
+  overflow: hidden;
+  color: var(--text);
+  background:
+    linear-gradient(118deg, transparent 0 34%, color-mix(in oklab, var(--cream) 45%, transparent) 42%, transparent 52%),
+    var(--sheet);
+  border-radius: 22px;
+  box-shadow:
+    0 0 0 4px var(--chrome-hi),
+    0 0 0 6px var(--chrome-lo),
+    0 40px 60px -30px color-mix(in oklab, var(--text) 70%, transparent);
+}
+
+.cardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 1.2rem;
+  padding: 1.4rem clamp(1.25rem, 4vw, 3rem) 1.2rem;
+  color: var(--on-cherry);
+  background: var(--cherry);
+}
+
+.cardHead h2 {
+  font-size: clamp(2.8rem, 5vw, 3.8rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+}
+
+.cardScript {
+  font-family: var(--script);
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  line-height: 1;
+}
+
+.cardNote {
+  margin-left: auto;
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.columns {
+  columns: 2;
+  column-gap: clamp(2rem, 5vw, 4rem);
+  column-rule: 2px dotted var(--rule);
+  padding: clamp(1.5rem, 4vw, 2.75rem) clamp(1.25rem, 4vw, 3rem) 0.5rem;
+}
+
+.group {
+  break-inside: avoid;
+  margin-bottom: 2.2rem;
+}
+
+.group h3 {
+  display: inline-block;
+  padding-bottom: 0.2rem;
+  font-size: 1.65rem;
+  letter-spacing: 0.02em;
+  border-bottom: 4px solid var(--cherry);
+}
+
+.groupAside {
+  margin: 0.35rem 0 0.6rem;
+  font-family: var(--script);
+  font-size: 1.3rem;
+  line-height: 1.1;
+  color: var(--muted);
+}
+
+.group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.group li {
+  display: grid;
+  grid-template-columns: auto minmax(1.5rem, 1fr) auto;
+  align-items: baseline;
+  column-gap: 0.5rem;
+  padding: 0.42rem 0;
+}
+
+.itemName {
+  font-weight: 600;
+  font-size: 1.04rem;
+}
+
+.leader {
+  align-self: end;
+  margin-bottom: 0.42em;
+  border-bottom: 2px dotted color-mix(in oklab, var(--text) 42%, transparent);
+}
+
+.itemPrice {
+  font-family: var(--cond);
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.itemNote {
+  grid-column: 1 / -1;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.cardFoot {
+  margin: 0 clamp(1.25rem, 4vw, 3rem);
+  padding: 1rem 0 1.6rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+  border-top: 2px dotted var(--rule);
+}
+
+/* ---------------------------------------------------------- the pie case */
+
+.pie {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  grid-template-areas:
+    'text case'
+    'art order';
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut) 0;
+}
+
+.pieText {
+  grid-area: text;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.piePrices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 1.6rem 0 0;
+  border-top: 3px solid var(--text);
+}
+
+.piePrices div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.piePrices div:nth-child(odd) {
+  padding-right: 1rem;
+}
+
+.piePrices div:nth-child(even) {
+  padding-left: 1rem;
+  border-left: 1px solid var(--rule);
+}
+
+.piePrices dt {
+  font-weight: 500;
+}
+
+.piePrices dd {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+/* The case: a navy frame, glass shelves with chrome lips, and a sheen
+   across the front. */
+.case {
+  grid-area: case;
+  position: relative;
+  padding: 14px;
+  background: var(--navy);
+  border-radius: 18px 18px 8px 8px;
+  box-shadow: 0 30px 50px -30px color-mix(in oklab, var(--text) 70%, transparent);
+}
+
+.case::after {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border-radius: 8px;
+  background: linear-gradient(115deg, transparent 0 20%, color-mix(in oklab, var(--cream) 30%, transparent) 26%, transparent 34%, transparent 62%, color-mix(in oklab, var(--cream) 18%, transparent) 66%, transparent 70%);
+  pointer-events: none;
+}
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0 1rem;
+  list-style: none;
+  background: color-mix(in oklab, var(--cream) 90%, var(--plate));
+  border-radius: 8px;
+}
+
+.shelf li {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.15rem;
+  padding: 1.6rem 0.4rem 0.9rem;
+  text-align: center;
+  border-bottom: 7px solid transparent;
+  border-image: var(--chrome) 1;
+}
+
+.shelf li:nth-last-child(-n + 4) {
+  border-bottom: 0;
+}
+
+.pieDisc {
+  width: min(100%, 7.5rem);
+  aspect-ratio: 1;
+  margin-bottom: 0.7rem;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 6px var(--crust),
+    0 0 0 8px color-mix(in oklab, var(--crust) 70%, var(--text)),
+    0 14px 16px -8px color-mix(in oklab, var(--text) 45%, transparent);
+}
+
+.fruit,
+.berry {
+  background:
+    repeating-linear-gradient(45deg, var(--crust) 0 5px, transparent 5px 17px),
+    repeating-linear-gradient(-45deg, var(--crust) 0 5px, transparent 5px 17px),
+    var(--cherry);
+}
+
+.berry {
+  background:
+    repeating-linear-gradient(45deg, var(--crust) 0 5px, transparent 5px 17px),
+    repeating-linear-gradient(-45deg, var(--crust) 0 5px, transparent 5px 17px),
+    var(--plate);
+}
+
+.cream {
+  background:
+    radial-gradient(circle, color-mix(in oklab, var(--cream) 80%, var(--text)) 0 18%, transparent 20%) 0 0 / 15px 15px,
+    var(--cream);
+}
+
+.nut {
+  background:
+    radial-gradient(circle, var(--crust) 0 26%, transparent 28%) 0 0 / 14px 14px,
+    var(--navy);
+}
+
+.shelf strong {
+  font-family: var(--cond);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.shelf small {
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+/* The order form, under the prices. */
+/* The slice on the counter, beside the order card. */
+.pieArt {
+  grid-area: art;
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+}
+
+.pieArtwork {
+  width: min(100%, 27rem);
+}
+
+.pieArtNote {
+  font-family: var(--script);
+  font-size: 1.6rem;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--cherry-ink);
+}
+
+.order {
+  grid-area: order;
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 1.8rem);
+  background: var(--sheet);
+  border: 2px solid var(--text);
+  border-radius: 14px;
+}
+
+.order h3 {
+  font-size: 1.7rem;
+}
+
+.formNote {
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.field label {
+  font-family: var(--cond);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--cream);
+  border: 2px solid color-mix(in oklab, var(--text) 35%, transparent);
+  border-radius: 8px;
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: 3px solid var(--cherry-ink);
+  outline-offset: 1px;
+}
+
+.submit {
+  justify-self: start;
+  padding: 0.75rem 1.6rem;
+  font-family: var(--cond);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-cherry);
+  background: var(--cherry);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.submit:hover {
+  color: var(--on-navy);
+  background: var(--navy);
+}
+
+/* ------------------------------------------------------ guest checks */
+
+.checks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.check {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  padding: 0 1.15rem 1.2rem;
+  background: var(--check);
+  border-radius: 4px;
+  box-shadow: 0 18px 28px -20px color-mix(in oklab, var(--text) 60%, transparent);
+  transform: rotate(-1.2deg);
+}
+
+.check:nth-child(even) {
+  transform: rotate(1deg) translateY(0.6rem);
+}
+
+.checkTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0 -1.15rem 0.6rem;
+  padding: 0.55rem 1.15rem;
+  font-family: var(--cond);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-cherry);
+  background: var(--cherry);
+  border-radius: 4px 4px 0 0;
+}
+
+.check h3 {
+  font-family: var(--script);
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1.05;
+  text-transform: none;
+}
+
+.checkRole {
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.checkNote {
+  font-size: 0.97rem;
+  line-height: 1.6rem;
+  background: repeating-linear-gradient(180deg, transparent 0 calc(1.6rem - 1px), color-mix(in oklab, var(--plate) 32%, transparent) calc(1.6rem - 1px) 1.6rem);
+}
+
+.checkSince {
+  margin-top: 0.3rem;
+  font-family: var(--cond);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------- the hours */
+
+.hours {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3rem) var(--gut) clamp(4rem, 8vw, 6rem);
+}
+
+.board {
+  padding: clamp(1.5rem, 4vw, 2.6rem);
+  color: var(--on-navy);
+  background: var(--navy);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 0 5px var(--navy),
+    inset 0 0 0 7px color-mix(in oklab, var(--on-navy) 30%, transparent);
+}
+
+.board h2 {
+  font-size: clamp(3.6rem, 8vw, 6rem);
+  letter-spacing: 0.06em;
+  line-height: 0.85;
+}
+
+.board dl {
+  margin: 1.4rem 0 0;
+}
+
+.board dl div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.2rem 1rem;
+  padding: 0.7rem 0;
+  border-top: 2px dotted color-mix(in oklab, var(--on-navy) 35%, transparent);
+}
+
+.board dt {
+  font-family: var(--cond);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.board dd {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.boardNote {
+  margin-top: 1rem;
+  font-family: var(--script);
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.find {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.address {
+  text-wrap: balance;
+  font-family: var(--cond);
+  font-size: clamp(2.2rem, 4.4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.town {
+  margin-bottom: 1rem;
+  font-family: var(--cond);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contact {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.contact a {
+  border-bottom: 2px solid var(--cherry);
+}
+
+.notes {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1.4rem 0 0;
+  padding: 1.1rem 0 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.notes li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.notes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--cherry);
+  transform: rotate(45deg);
+}
+
+/* ------------------------------------------------------------ footer */
+
+.footer {
+  display: grid;
+  gap: 0.35rem;
+  padding: 2.6rem var(--gut) 3rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--on-navy);
+  background: var(--navy);
+}
+
+.footName {
+  font-family: var(--script);
+  font-size: 2.4rem;
+  line-height: 1.1;
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------- responsive */
+
+@media (max-width: 1060px) {
+  .week {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2.5rem;
+  }
+
+  .checks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 0.8rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plate {
+    width: min(calc(100% - 2rem), 24rem);
+  }
+
+  .columns {
+    columns: 1;
+  }
+
+  .pie {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'text'
+      'case'
+      'art'
+      'order';
+  }
+
+  .pieArtwork {
+    width: min(100%, 22rem);
+  }
+
+  .hours {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .mark {
+    font-size: 1.55rem;
+  }
+
+  .barPhone {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.92rem;
+  }
+
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts div + div {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .facts div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .week {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 1.4rem;
+  }
+
+  .week li {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    column-gap: 1.1rem;
+    align-items: center;
+  }
+
+  .dish {
+    grid-row: span 3;
+    margin: 0;
+  }
+
+  .dishDay {
+    font-size: 1.5rem;
+  }
+
+  .cardNote {
+    margin-left: 0;
+  }
+
+  .shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0 0.5rem;
+  }
+
+  .shelf li:nth-last-child(-n + 4) {
+    border-bottom: 7px solid transparent;
+    border-image: var(--chrome) 1;
+  }
+
+  .shelf li:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .formGrid,
+  .checks,
+  .piePrices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .piePrices div:nth-child(even) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .check:nth-child(even) {
+    transform: rotate(1deg);
+  }
+
+  .pieArtwork {
+    width: min(100%, 18rem);
+  }
+}
+
+@media (max-width: 420px) {
+  .barPhone {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}

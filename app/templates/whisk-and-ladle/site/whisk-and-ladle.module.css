@@ -1,0 +1,1220 @@
+/* ==========================================================================
+   WHISK & LADLE - kitchenware shop and cooking school, Mercer Avenue
+   A mid-century mail-order catalog. The hero is the catalog's cover: a
+   masthead line with the season and the issue number, a heavy geometric
+   headline with a script flourish, and the print pattern cut into a
+   kidney-shaped panel with atomic sparkles and a starburst. Inside, the
+   shop is a two-page spread with a gutter, departments in reversed bars,
+   numbered items and prices with raised cents. The classes are a
+   schedule with seats you can count, knife sharpening is priced along a
+   ruler, and the form is an order blank of ruled boxes.
+
+   Color. Five roles: the cream ground, charcoal and three enamels (teal,
+   orange, mustard). Text is derived from the cream; anything filled with
+   an enamel takes its text from that enamel, and script accents are the
+   enamel mixed toward the text.
+   ========================================================================== */
+
+.page {
+  --cream: #f6ecd6;
+  --char: #2b2622;
+  --teal: #1f8a84;
+  --orange: #e0662a;
+  --mustard: #e8b33a;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --sans: 'League Spartan', 'Futura', 'Century Gothic', sans-serif;
+  --script: 'Yellowtail', 'Brush Script MT', cursive;
+  --text: var(--char);
+  --on-char: var(--cream);
+  --on-teal: var(--cream);
+  --on-orange: var(--char);
+  --on-mustard: var(--char);
+
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.5;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the cream's lightness, tinted toward the charcoal:
+       readable on any ground a palette can bring. Each enamel fill takes
+       its text the same way. */
+    --text: color-mix(in oklab, oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--char));
+    --on-char: oklch(from var(--char) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-orange: oklch(from var(--orange) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-mustard: oklch(from var(--mustard) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 72%, var(--cream));
+  --sheet: color-mix(in oklab, var(--cream) 90%, var(--mustard));
+  --rule: color-mix(in oklab, var(--text) 22%, var(--cream));
+  --teal-ink: color-mix(in oklab, var(--teal) 66%, var(--text));
+  --orange-ink: color-mix(in oklab, var(--orange) 66%, var(--text));
+  --drop: color-mix(in oklab, var(--text) 16%, transparent);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4, p) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3, h4) {
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.55rem var(--gut) 0.5rem;
+  background: var(--cream);
+  border-bottom: 5px double var(--text);
+}
+
+.mark {
+  font-family: var(--script);
+  font-size: 2.1rem;
+  line-height: 1.1;
+  color: var(--orange-ink);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.35rem 0 0.2rem;
+  border-bottom: 3px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--mustard);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-weight: 600;
+  --template-menu-bg: var(--cream);
+}
+
+/* -------------------------------------------------------------------- cover */
+
+.cover {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(1.2rem, 3vw, 2rem) var(--gut) clamp(3rem, 7vw, 6rem);
+}
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.3rem 1.5rem;
+  padding: 0.55rem 0 0.45rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-top: 3px solid var(--text);
+  border-bottom: 1px solid var(--text);
+}
+
+.coverGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+  padding-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.title {
+  font-size: clamp(3rem, 6.6vw, 6.2rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+.title em {
+  display: block;
+  margin-top: 0.35em;
+  font-family: var(--script);
+  font-size: 0.56em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--orange-ink);
+  transform: rotate(-3deg);
+  transform-origin: left center;
+}
+
+.lede {
+  max-width: 32rem;
+  margin-top: 2rem;
+  font-size: clamp(1.08rem, 1.5vw, 1.22rem);
+  line-height: 1.55;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 2.2rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.95rem 1.5rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+
+.btn {
+  color: var(--on-teal);
+  background: var(--teal);
+  border: 2px solid var(--teal);
+}
+
+.btnGhost {
+  color: var(--text);
+  border: 2px solid var(--text);
+}
+
+.btn:hover,
+.btnGhost:hover {
+  transform: translateY(-2px);
+}
+
+/* The kidney: the print cut into a 1950s table-top shape, with a
+   starburst and three sparkles pinned to it. */
+.kidney {
+  position: relative;
+  aspect-ratio: 1.05;
+}
+
+.kidneyField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--mustard) 20%, var(--cream));
+  border: 3px solid var(--text);
+  border-radius: 62% 38% 46% 54% / 48% 60% 40% 52%;
+}
+
+.burst {
+  position: absolute;
+  left: -6%;
+  bottom: 2%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(7.5rem, 11vw, 10rem);
+  aspect-ratio: 1;
+  padding: 1.6rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--on-orange);
+  background: var(--orange);
+  clip-path: polygon(50.0% 0.0%, 59.1% 10.0%, 71.7% 5.0%, 75.6% 17.9%, 89.1% 18.8%, 86.9% 32.2%, 98.7% 38.9%, 91.0% 50.0%, 98.7% 61.1%, 86.9% 67.8%, 89.1% 81.2%, 75.6% 82.1%, 71.7% 95.0%, 59.1% 90.0%, 50.0% 100.0%, 40.9% 90.0%, 28.3% 95.0%, 24.4% 82.1%, 10.9% 81.2%, 13.1% 67.8%, 1.3% 61.1%, 9.0% 50.0%, 1.3% 38.9%, 13.1% 32.2%, 10.9% 18.8%, 24.4% 17.9%, 28.3% 5.0%, 40.9% 10.0%);
+  transform: rotate(-12deg);
+}
+
+.spark {
+  position: absolute;
+  z-index: 2;
+  aspect-ratio: 1;
+  clip-path: polygon(50% 0, 57% 43%, 100% 50%, 57% 57%, 50% 100%, 43% 57%, 0 50%, 43% 43%);
+}
+
+.sparkA {
+  top: -4%;
+  right: 12%;
+  width: clamp(2.4rem, 4vw, 3.4rem);
+  background: var(--teal);
+}
+
+.sparkB {
+  top: 34%;
+  right: -5%;
+  width: clamp(1.4rem, 2.4vw, 2rem);
+  background: var(--text);
+}
+
+.sparkC {
+  bottom: -3%;
+  right: 30%;
+  width: clamp(1.8rem, 3vw, 2.6rem);
+  background: var(--mustard);
+  transform: rotate(20deg);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.script {
+  font-family: var(--script);
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  line-height: 1.1;
+  color: var(--teal-ink);
+  transform: rotate(-3deg);
+  transform-origin: left center;
+}
+
+.secHead h2 {
+  margin-top: 0.3rem;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.secNote {
+  max-width: 36rem;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.small {
+  margin-top: 1.4rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* The featured item: the pot printed in two enamels with an offset
+   charcoal shadow, the way a cheap catalog missed its registration, and a
+   tag with its number. */
+.catHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.catHead .secHead {
+  margin-bottom: 0;
+}
+
+.feature {
+  position: relative;
+  justify-self: end;
+  width: min(100%, 22rem);
+  margin-bottom: -2.2rem;
+}
+
+.featureArt {
+  width: 100%;
+  filter: drop-shadow(6px 6px 0 var(--text));
+}
+
+.featureTag {
+  position: absolute;
+  left: -3.4rem;
+  top: -1.4rem;
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.55rem 0.8rem 0.45rem;
+  line-height: 1.15;
+  background: var(--cream);
+  border: 2px solid var(--text);
+  box-shadow: 4px 4px 0 var(--drop);
+  transform: rotate(-4deg);
+}
+
+.featureNo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.featureText {
+  font-family: var(--script);
+  font-size: 1.3rem;
+  color: var(--orange-ink);
+}
+
+/* ------------------------------------------------------------------ catalog
+   Two leaves and a gutter shadow down the middle. */
+
+.spread {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  background: var(--sheet);
+  border: 2px solid var(--text);
+  box-shadow: 12px 12px 0 var(--drop);
+}
+
+.spread::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 1.6rem);
+  width: 3.2rem;
+  background: linear-gradient(to right, transparent, color-mix(in oklab, var(--text) 12%, transparent) 50%, transparent);
+  pointer-events: none;
+}
+
+.leaf {
+  padding: clamp(1.4rem, 3vw, 2.6rem) clamp(1.2rem, 3vw, 2.8rem);
+}
+
+.leaf + .leaf {
+  border-left: 1px solid var(--rule);
+}
+
+.dept + .dept {
+  margin-top: 2.6rem;
+}
+
+.deptName {
+  padding: 0.55rem 0.8rem 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-teal);
+  background: var(--teal);
+}
+
+.leaf + .leaf .deptName {
+  color: var(--on-orange);
+  background: var(--orange);
+}
+
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.items li {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  gap: 0.2rem 1rem;
+  align-items: start;
+  padding: 1rem 0;
+  border-bottom: 1px dotted var(--rule);
+}
+
+.itemNo {
+  justify-self: start;
+  margin-top: 0.15rem;
+  padding: 0.25rem 0.4rem 0.12rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  border: 1.5px solid var(--text);
+  border-radius: 3px;
+}
+
+.itemName {
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.itemNote {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.colors {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.colors span {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.5rem;
+  border: 1.5px solid var(--text);
+  border-radius: 50%;
+}
+
+.teal {
+  background: var(--teal);
+}
+
+.orange {
+  background: var(--orange);
+}
+
+.mustard {
+  background: var(--mustard);
+}
+
+.price {
+  display: flex;
+  align-items: flex-start;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.cents {
+  margin: 0.08em 0 0 0.08em;
+  font-size: 0.52em;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.folio {
+  margin-top: 1.2rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.leaf + .leaf .folio {
+  text-align: right;
+}
+
+/* ------------------------------------------------------------ pattern band */
+
+.band {
+  position: relative;
+  height: clamp(110px, 12vw, 170px);
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  overflow: hidden;
+  border-top: 5px double var(--text);
+  border-bottom: 5px double var(--text);
+}
+
+/* ------------------------------------------------------------------ classes */
+
+.schedule {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 3px solid var(--text);
+}
+
+.schedule li {
+  display: grid;
+  grid-template-columns: 4.2rem 5.6rem minmax(0, 1fr) auto 9.5rem 4.5rem;
+  gap: 0.4rem 1.4rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.classNo {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--teal-ink);
+}
+
+.when {
+  display: grid;
+  line-height: 1.05;
+}
+
+.day {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.date {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.className {
+  font-size: 1.22rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.classMeta {
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.seats {
+  display: grid;
+  grid-template-columns: repeat(10, 0.72rem);
+  gap: 3px;
+}
+
+.seats span {
+  aspect-ratio: 1;
+  border: 1.5px solid var(--text);
+  border-radius: 2px;
+}
+
+.seats .taken {
+  background: var(--orange);
+}
+
+.left {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.classPrice {
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.full .className,
+.full .classPrice {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.full .left {
+  font-weight: 700;
+  color: var(--orange-ink);
+}
+
+/* --------------------------------------------------------------- sharpening */
+
+.sharpGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.7fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+}
+
+/* A shop rule, 0 to 12 inches: an inch tick every twelfth, a quarter tick
+   every forty-eighth, and a bar for each blade length. */
+.ruler {
+  padding: 0 1.4rem 1.4rem;
+  background: var(--sheet);
+  border: 2px solid var(--text);
+  box-shadow: 8px 8px 0 var(--drop);
+}
+
+.inches {
+  display: flex;
+  justify-content: space-between;
+  height: 2.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background:
+    linear-gradient(var(--text), var(--text)) top right / 2px 1.1rem no-repeat,
+    repeating-linear-gradient(to right, var(--text) 0 2px, transparent 2px calc(100% / 12)) top left / 100% 1.1rem no-repeat,
+    repeating-linear-gradient(to right, var(--text) 0 1px, transparent 1px calc(100% / 48)) top left / 100% 0.55rem no-repeat;
+}
+
+.inches li {
+  display: flex;
+  justify-content: center;
+  width: 0;
+  padding-top: 1.3rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.blades {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.blades li {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 0.2rem 1rem;
+  align-items: baseline;
+  padding-top: 1.7rem;
+}
+
+.blades li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(var(--from) / 12 * 100%);
+  width: calc((var(--to) - var(--from)) / 12 * 100%);
+  height: 1.1rem;
+  background: var(--bar);
+  border: 2px solid var(--text);
+  border-radius: 0 999px 999px 0;
+}
+
+.blades .r1 {
+  --from: 0;
+  --to: 5;
+  --bar: var(--teal);
+}
+
+.blades .r2 {
+  --from: 6;
+  --to: 9;
+  --bar: var(--mustard);
+}
+
+.blades .r3 {
+  --from: 10;
+  --to: 12;
+  --bar: var(--orange);
+}
+
+.bladeName {
+  font-weight: 700;
+}
+
+.bladeRange {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.bladePrice {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.extras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.extras li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px dotted var(--rule);
+}
+
+.extraPrice {
+  font-weight: 800;
+}
+
+/* The potholder: the print on a square with rounded corners and a loop. */
+.swatchCol {
+  padding-top: 2.4rem;
+  text-align: center;
+}
+
+.swatch {
+  position: relative;
+  width: min(100%, 17rem);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 3px solid var(--text);
+  border-radius: 22px;
+  box-shadow: inset 0 0 0 6px var(--cream), inset 0 0 0 8px var(--text);
+}
+
+.deal {
+  margin-top: 1.4rem;
+  font-family: var(--script);
+  font-size: clamp(1.8rem, 2.6vw, 2.3rem);
+  line-height: 1.1;
+  color: var(--orange-ink);
+  transform: rotate(-3deg);
+}
+
+.dealNote {
+  max-width: 17rem;
+  margin: 0.6rem auto 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- order blank */
+
+.blank {
+  background: var(--sheet);
+  border: 2px solid var(--text);
+  box-shadow: 12px 12px 0 var(--drop);
+}
+
+.blankHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem 2rem;
+  padding: 1rem clamp(1.2rem, 3vw, 2rem) 0.8rem;
+  color: var(--on-teal);
+  background: var(--teal);
+  border-bottom: 2px solid var(--text);
+}
+
+.blankTitle {
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.blankNote {
+  font-size: 0.92rem;
+}
+
+.blankGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: clamp(1.2rem, 3vw, 2rem);
+}
+
+.box {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+  padding: 0.5rem 0.7rem 0.35rem;
+  margin: 0 -1.5px -1.5px 0;
+  border: 1.5px solid var(--text);
+}
+
+.boxWide {
+  grid-column: span 2;
+}
+
+.box label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.box input,
+.box select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.25rem 0;
+  font-family: var(--sans);
+  font-size: 1.08rem;
+  font-weight: 500;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.box select option {
+  color: var(--text);
+  background: var(--cream);
+}
+
+.box input::placeholder {
+  color: color-mix(in oklab, var(--text) 45%, var(--cream));
+}
+
+.box:focus-within {
+  outline: 3px solid var(--mustard);
+  outline-offset: -3px;
+}
+
+.box input:focus-visible,
+.box select:focus-visible {
+  outline: none;
+}
+
+.blankFoot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem 2rem;
+  padding: 0 clamp(1.2rem, 3vw, 2rem) clamp(1.2rem, 3vw, 2rem);
+}
+
+.blankFine {
+  max-width: 34rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 0.9fr);
+  gap: 2.5rem clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.visit h2 {
+  margin-top: 0.3rem;
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.address {
+  max-width: 28rem;
+  margin-top: 1.2rem;
+}
+
+.contact {
+  margin-top: 1.2rem;
+  font-weight: 700;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 3px solid var(--mustard);
+}
+
+.hours {
+  margin: 0;
+  padding-top: 3.2rem;
+}
+
+.hours div {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours div:first-child {
+  border-top: 3px solid var(--text);
+}
+
+.hours dt {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hours dd {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.owners {
+  display: grid;
+  place-items: center;
+  min-height: 15rem;
+  margin-top: 2.2rem;
+  padding: 2.2rem 2rem;
+  color: var(--on-mustard);
+  background: var(--mustard);
+  border-radius: 48% 52% 38% 62% / 55% 42% 58% 45%;
+}
+
+.ownersText {
+  max-width: 17rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(5rem, 10vw, 8rem);
+  text-align: center;
+  font-size: 0.86rem;
+  color: var(--on-char);
+  background: var(--char);
+  border-top: 5px double var(--text);
+}
+
+.footBand {
+  position: relative;
+  height: clamp(130px, 13vw, 190px);
+  overflow: hidden;
+}
+
+.footText {
+  padding: 1.6rem var(--gut) 2.6rem;
+}
+
+.footer p + p {
+  margin-top: 0.3rem;
+}
+
+.footer .footName {
+  margin-bottom: 0.6rem;
+  font-family: var(--script);
+  font-size: 2.4rem;
+  line-height: 1.1;
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .schedule li {
+    grid-template-columns: 4rem 5rem minmax(0, 1fr) auto 4rem;
+  }
+
+  .left {
+    grid-column: 3 / span 2;
+    grid-row: 2;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .owners {
+    grid-column: 1 / -1;
+    min-height: 0;
+    margin-top: 0;
+    border-radius: 999px;
+  }
+
+  .ownersText {
+    max-width: 36rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .coverGrid,
+  .sharpGrid,
+  .catHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .feature {
+    justify-self: center;
+    width: min(76%, 17rem);
+    margin: 2.6rem 0 -0.8rem;
+  }
+
+  .featureTag {
+    left: -1.4rem;
+    top: -2.2rem;
+  }
+
+  .kidney {
+    width: min(100%, 30rem);
+    margin: 0 auto;
+  }
+
+  .spread {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .spread::before {
+    display: none;
+  }
+
+  .leaf + .leaf {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .swatchCol {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .masthead span:nth-child(3) {
+    display: none;
+  }
+
+  .burst {
+    left: -2%;
+  }
+
+  .sparkB {
+    right: -1%;
+  }
+
+  .items li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .itemNo {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .schedule li {
+    grid-template-columns: 4.6rem minmax(0, 1fr) auto;
+    gap: 0.35rem 1rem;
+    align-items: start;
+  }
+
+  .classNo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .when {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+  }
+
+  .classBody {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .classPrice {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .seats {
+    grid-column: 2 / span 2;
+    grid-row: 3;
+    grid-template-columns: repeat(10, 0.62rem);
+  }
+
+  .left {
+    grid-column: 2 / span 2;
+    grid-row: 4;
+  }
+
+  .blades li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .bladeRange {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .bladePrice {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .ruler {
+    padding: 0 0.9rem 1.1rem;
+  }
+
+  .inches li:nth-child(even) {
+    visibility: hidden;
+  }
+
+  .extras {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .blankGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .boxWide {
+    grid-column: auto;
+  }
+
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hours {
+    padding-top: 0;
+  }
+
+  .owners {
+    border-radius: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btnGhost {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btnGhost:hover {
+    transform: none;
+  }
+}

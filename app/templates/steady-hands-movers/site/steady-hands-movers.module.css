@@ -1,0 +1,1297 @@
+/* ==========================================================================
+   STEADY HANDS MOVERS - local moving company, Millbrook
+   The page is a carton. Kraft board for the ground, stencil capitals for
+   the lettering, and every section marked the way a good crew marks a box:
+   a lot number ("03 of 06"), the word CONTENTS, and what is inside. The
+   hero carries the handling marks and a white shipping label taped onto a
+   stack of cartons seen from the corner; the price table is the manifest
+   taped to the side; packing boxes are drawn to scale; the crew wear
+   luggage tags. A strip of red and black caution tape seals the top and
+   the bottom. Nothing is rounded: cardboard folds, it does not curve.
+   ========================================================================== */
+
+.page {
+  --kraft: #d7b98c;
+  --stencil: #1e1a15;
+  --red: #c3362b;
+  --board: #a5794a;
+  --truck: #2d5a4c;
+  --gut: clamp(1rem, 4.5vw, 3rem);
+  --wide: 78rem;
+  --mark: 'Big Shoulders Stencil', 'Impact', 'Arial Narrow', sans-serif;
+  --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Derived surfaces and text; the fallbacks come first and the relative
+     color recipes below replace them. */
+  --text: var(--stencil);
+  --muted: color-mix(in oklab, var(--text) 76%, var(--kraft));
+  --rule: color-mix(in oklab, var(--text) 26%, transparent);
+  --label: color-mix(in oklab, var(--kraft) 22%, var(--kraft));
+  --label-ink: var(--stencil);
+  --label-muted: color-mix(in oklab, var(--label-ink) 74%, var(--label));
+  --tape: color-mix(in oklab, var(--board) 45%, transparent);
+  --red-type: var(--red);
+  --on-stencil: var(--kraft);
+  --on-truck: var(--kraft);
+  --on-red: var(--kraft);
+  --red-art: var(--red);
+  --truck-art: var(--truck);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--kraft);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --contrast: oklch(from var(--kraft) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --text: color-mix(in oklab, var(--contrast) 80%, var(--stencil));
+    /* Shipping labels are white paper whatever the carton, faintly warmed
+       by it, and printed in a dark ink. */
+    --label: oklch(from var(--kraft) 0.965 0.014 h);
+    --label-ink: oklch(from var(--stencil) min(l, 0.24) min(c, 0.04) h);
+    --red-type: color-mix(in oklab, var(--contrast) 22%, oklch(from var(--red) 0.58 calc(c * 1.3) h));
+    --on-stencil: color-mix(in oklab, oklch(from var(--stencil) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--kraft));
+    --on-truck: color-mix(in oklab, oklch(from var(--truck) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--kraft));
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* The truck's paint, pulled toward the ground's contrast so the cab and
+       the box body stay clear of the kraft whatever the palette. */
+    --red-art: color-mix(in oklab, var(--contrast) 12%, var(--red));
+    --truck-art: color-mix(in oklab, var(--contrast) 12%, var(--truck));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--red-type);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--mark);
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--stencil);
+  color: var(--on-stencil);
+}
+
+.mark {
+  font-family: var(--mark);
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.4rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-stretch: 85%;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--red);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--stencil);
+}
+
+/* --------------------------------------------------------------- the carton */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) 0;
+}
+
+.kicker {
+  margin: 0 0 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.name {
+  font-size: clamp(3.8rem, 9.6vw, 9rem);
+  font-weight: 900;
+  line-height: 0.84;
+  letter-spacing: 0.01em;
+}
+
+.name em {
+  display: block;
+  font-style: normal;
+  color: var(--red-type);
+}
+
+.lede {
+  max-width: 34rem;
+  margin: 1.6rem 0 0;
+  font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+}
+
+.marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.marks li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.8rem;
+  font-family: var(--mark);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 3px solid var(--text);
+}
+
+/* The two arrows over a bar: this way up. */
+.upMark::before {
+  content: '\2191\2191';
+  padding-bottom: 0.1rem;
+  font-family: var(--sans);
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  border-bottom: 3px solid currentColor;
+}
+
+.fragile {
+  color: var(--red-type);
+  border-color: var(--red-type) !important;
+  transform: rotate(-3deg);
+}
+
+.care {
+  border-style: dashed !important;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 2rem 0 0;
+}
+
+.primary,
+.secondary {
+  display: inline-block;
+  padding: 0.85rem 1.3rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 3px solid var(--text);
+  transition: transform 160ms ease;
+}
+
+.primary {
+  background: var(--red);
+  color: var(--on-red);
+  border-color: var(--red);
+}
+
+.primary:hover,
+.secondary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--text);
+}
+
+/* The right-hand column ends on the caution tape: the truck is parked on
+   it, ramp down, in front of the cartons it is about to load. */
+.heroRight {
+  align-self: end;
+  display: grid;
+}
+
+.stackWrap {
+  position: relative;
+  padding-bottom: 4.5rem;
+}
+
+.truckArt {
+  justify-self: end;
+  width: min(100%, 30rem);
+  margin: 1.2rem -0.5rem -2px 0;
+}
+
+.stack {
+  position: relative;
+  height: clamp(22rem, 36vw, 32rem);
+  overflow: hidden;
+  border: 3px solid var(--text);
+}
+
+/* The shipping label, taped over the corner of the stack. */
+.label {
+  position: absolute;
+  left: -2.5rem;
+  bottom: 0;
+  width: min(21rem, 92%);
+  padding: 1rem 1.1rem 0.9rem;
+  background: var(--label);
+  color: var(--label-ink);
+  border: 2px solid var(--label-ink);
+  box-shadow: 6px 6px 0 color-mix(in oklab, var(--text) 30%, transparent);
+  transform: rotate(-2deg);
+}
+
+.label::before,
+.label::after {
+  content: '';
+  position: absolute;
+  top: -0.9rem;
+  width: 5rem;
+  height: 1.7rem;
+  background: var(--tape);
+}
+
+.label::before {
+  left: -1.2rem;
+  transform: rotate(-32deg);
+}
+
+.label::after {
+  right: -1.2rem;
+  transform: rotate(28deg);
+}
+
+.labelHead {
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.4rem;
+  font-family: var(--mark);
+  font-size: 1.9rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  border-bottom: 4px solid var(--label-ink);
+}
+
+.labelRows {
+  margin: 0;
+}
+
+.labelRows div {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--label-ink) 30%, transparent);
+}
+
+.labelRows dt {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding-top: 0.2rem;
+}
+
+.labelRows dd {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.barcode {
+  margin: 0.7rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-stretch: 75%;
+  letter-spacing: 0.3em;
+  text-align: center;
+}
+
+.barcode::before {
+  content: '';
+  display: block;
+  height: 2.4rem;
+  margin-bottom: 0.3rem;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--label-ink) 0 2px,
+    transparent 2px 4px,
+    var(--label-ink) 4px 7px,
+    transparent 7px 8px,
+    var(--label-ink) 8px 9px,
+    transparent 9px 12px,
+    var(--label-ink) 12px 13px,
+    transparent 13px 15px
+  );
+}
+
+/* ------------------------------------------------------------ caution tape */
+
+.caution {
+  position: relative;
+  height: 44px;
+  overflow: hidden;
+  border-top: 3px solid var(--text);
+  border-bottom: 3px solid var(--text);
+}
+
+/* ---------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.lot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.6rem 1.8rem;
+  padding-top: 1rem;
+  border-top: 6px solid var(--text);
+}
+
+.lotNo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.lotNum {
+  font-family: var(--mark);
+  font-size: clamp(4rem, 8vw, 6.5rem);
+  font-weight: 900;
+  line-height: 0.8;
+  color: var(--red-type);
+}
+
+.lotOf {
+  font-family: var(--mark);
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.contents {
+  margin: 0 0 0.3rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.lot h2 {
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+}
+
+.secNote {
+  max-width: 40rem;
+  margin: 1.3rem 0 2rem;
+  font-size: 1.04rem;
+}
+
+.small {
+  margin: 1rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ the manifest */
+
+.sheet {
+  position: relative;
+  padding: clamp(1.25rem, 3vw, 2.2rem);
+  background: var(--label);
+  color: var(--label-ink);
+  border: 2px solid var(--label-ink);
+}
+
+.sheet::before,
+.sheet::after {
+  content: '';
+  position: absolute;
+  top: -1rem;
+  width: 7rem;
+  height: 1.9rem;
+  background: var(--tape);
+}
+
+.sheet::before {
+  left: 8%;
+  transform: rotate(-4deg);
+}
+
+.sheet::after {
+  right: 8%;
+  transform: rotate(3deg);
+}
+
+.manifest {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.manifest th,
+.manifest td {
+  padding: 0.85rem 0.6rem;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid color-mix(in oklab, var(--label-ink) 25%, transparent);
+}
+
+.manifest thead th {
+  padding-top: 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--label-muted);
+  border-bottom: 3px solid var(--label-ink);
+}
+
+.manifest tbody th {
+  font-family: var(--mark);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.manifest td {
+  font-size: 0.98rem;
+}
+
+.manifest .rate {
+  font-weight: 700;
+}
+
+.manifest .total {
+  font-family: var(--mark);
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.manifest thead th:last-child {
+  text-align: right;
+}
+
+.fine {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 2rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+}
+
+.fine li {
+  position: relative;
+  padding-left: 1.3rem;
+}
+
+.fine li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--red);
+}
+
+/* ----------------------------------------------------------- the checklist */
+
+.checkGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.checkField {
+  position: relative;
+  min-height: 20rem;
+  overflow: hidden;
+  border: 3px solid var(--text);
+}
+
+.stage {
+  padding: 1.2rem 1.1rem 1.3rem;
+  background: var(--label);
+  color: var(--label-ink);
+  border: 2px solid var(--label-ink);
+  border-top-width: 8px;
+}
+
+.stageWhen {
+  font-size: 1.7rem;
+  margin-bottom: 1rem !important;
+}
+
+.ticks {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ticks li {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: start;
+}
+
+.ticks input {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0.1rem 0 0;
+  background: transparent;
+  border: 2px solid var(--label-ink);
+  cursor: pointer;
+}
+
+.ticks input:checked {
+  background:
+    linear-gradient(45deg, transparent 43%, var(--label) 43% 57%, transparent 57%),
+    linear-gradient(-45deg, transparent 43%, var(--label) 43% 57%, transparent 57%),
+    var(--label-ink);
+}
+
+.ticks label {
+  font-size: 0.93rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.ticks input:checked + label {
+  text-decoration: line-through;
+  color: var(--label-muted);
+}
+
+/* ------------------------------------------------------------- the supplies */
+
+.supplies {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  background: var(--truck);
+  color: var(--on-truck);
+}
+
+.load {
+  position: relative;
+  height: clamp(110px, 12vw, 170px);
+  overflow: hidden;
+  border-bottom: 3px solid var(--stencil);
+}
+
+.suppliesInner {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) clamp(3.5rem, 7vw, 5rem);
+}
+
+.supplies .lot {
+  border-top-color: var(--on-truck);
+}
+
+.supplies .lotNum {
+  color: var(--on-truck);
+}
+
+.boxes {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.boxCard {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1rem 1.1rem;
+  background: var(--kraft);
+  color: var(--text);
+  border: 2px solid var(--stencil);
+}
+
+.drawing {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 7.4rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 2px solid var(--text);
+}
+
+/* Cartons at 2.4 px to the inch, face on: the tape runs down the middle. */
+.carton {
+  display: block;
+  background:
+    linear-gradient(90deg, transparent 40%, color-mix(in oklab, var(--kraft) 55%, var(--board)) 40% 60%, transparent 60%),
+    linear-gradient(180deg, transparent 16%, color-mix(in oklab, var(--text) 45%, transparent) 16% calc(16% + 2px), transparent calc(16% + 2px)),
+    var(--board);
+  border: 2px solid var(--text);
+  border-bottom: 0;
+}
+
+.boxSmall {
+  width: 38px;
+  height: 29px;
+}
+
+.boxMedium {
+  width: 43px;
+  height: 38px;
+}
+
+.boxLarge {
+  width: 58px;
+  height: 43px;
+}
+
+.boxWardrobe {
+  width: 58px;
+  height: 110px;
+}
+
+.boxDish {
+  width: 43px;
+  height: 67px;
+}
+
+.boxPicture {
+  width: 96px;
+  height: 72px;
+}
+
+.boxCard h3 {
+  font-size: 1.6rem;
+}
+
+.dims {
+  margin: 0.3rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.use {
+  margin: 0.5rem 0 0.8rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.each {
+  margin: auto 0 0;
+  font-family: var(--mark);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.extras {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: clamp(1.5rem, 5vw, 4rem);
+  margin-top: 2.6rem;
+}
+
+.extrasTitle {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem !important;
+}
+
+.priceList {
+  margin: 0;
+}
+
+.priceList div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid color-mix(in oklab, currentColor 30%, transparent);
+}
+
+.priceList div:last-child {
+  border-bottom: 1px solid color-mix(in oklab, currentColor 30%, transparent);
+}
+
+.priceList dt {
+  display: grid;
+  gap: 0.1rem;
+  font-weight: 600;
+}
+
+.priceList dt span {
+  font-size: 0.86rem;
+  font-weight: 400;
+  opacity: 0.86;
+}
+
+.priceList dd {
+  margin: 0;
+  font-weight: 800;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- the crew */
+
+.crew {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A luggage tag: punched, with its number stencilled on. */
+.badge {
+  padding: 2.4rem 1.3rem 1.4rem;
+  background:
+    radial-gradient(circle at 50% 1.2rem, var(--kraft) 0 0.45rem, var(--label-ink) 0.45rem 0.6rem, transparent 0.6rem),
+    var(--label);
+  color: var(--label-ink);
+  border: 2px solid var(--label-ink);
+  clip-path: polygon(14% 0, 86% 0, 100% 9%, 100% 100%, 0 100%, 0 9%);
+}
+
+.badgeTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--label-ink);
+}
+
+.badgeNo {
+  font-family: var(--mark);
+  font-size: 2.6rem;
+  font-weight: 900;
+  line-height: 0.8;
+}
+
+.badgeSince {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.badge h3 {
+  font-size: 1.75rem;
+}
+
+.job {
+  margin: 0.3rem 0 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--label-muted);
+}
+
+.note {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.45;
+}
+
+/* ----------------------------------------------------------------- the faq */
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+  margin-top: 1.8rem;
+}
+
+.faq {
+  border-top: 3px solid var(--text);
+}
+
+/* The hazmat panel: stencilled in red on the side of the box. */
+.refuse {
+  padding: 1.3rem 1.4rem 1.4rem;
+  border: 4px solid var(--red-type);
+  outline: 2px solid var(--red-type);
+  outline-offset: 4px;
+  transform: rotate(1.5deg);
+}
+
+.refuseTitle {
+  font-size: 2.1rem;
+  color: var(--red-type);
+}
+
+.refuseList {
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.refuseList li {
+  position: relative;
+  padding: 0.45rem 0 0.45rem 1.8rem;
+  font-weight: 700;
+  border-top: 1px solid var(--rule);
+}
+
+.refuseList li::before {
+  content: '\2715';
+  position: absolute;
+  left: 0.1rem;
+  top: 0.45rem;
+  font-weight: 800;
+  color: var(--red-type);
+}
+
+.refuseNote {
+  margin: 0.9rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faq summary {
+  position: relative;
+  padding: 1rem 3rem 1rem 0;
+  font-size: 1.12rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.3rem;
+  top: 0.55rem;
+  font-family: var(--mark);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.faq details[open] summary::after {
+  content: '\2212';
+}
+
+.faq details p {
+  max-width: 44rem;
+  margin: 0 0 1.2rem;
+}
+
+/* --------------------------------------------------------------- the quote */
+
+.quoteGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  margin-top: 2rem;
+}
+
+.form {
+  position: relative;
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--label);
+  color: var(--label-ink);
+  border: 2px solid var(--label-ink);
+}
+
+.form::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -1rem;
+  width: 8rem;
+  height: 1.9rem;
+  background: var(--tape);
+  transform: translateX(-50%) rotate(-2deg);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.65rem 0.75rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--label-ink);
+  background: transparent;
+  border: 2px solid var(--label-ink);
+  border-radius: 0;
+}
+
+.field select option {
+  color: initial;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 0;
+}
+
+.submit {
+  margin-top: 1.4rem;
+  padding: 0.95rem 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-red);
+  background: var(--red);
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+
+.submit:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--label-ink);
+}
+
+.yard {
+  align-self: start;
+}
+
+.yardTitle {
+  font-size: 2rem;
+  margin-bottom: 1rem !important;
+}
+
+.address {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.address a {
+  border-bottom: 2px solid var(--red-type);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(5rem, 10vw, 8rem);
+  padding: 0 var(--gut) 2.8rem;
+  text-align: center;
+  font-size: 0.88rem;
+  background: var(--stencil);
+  color: var(--on-stencil);
+}
+
+.footBand {
+  position: relative;
+  height: 44px;
+  margin: 0 calc(-1 * var(--gut)) 2.4rem;
+  overflow: hidden;
+  background: var(--kraft);
+  border-top: 3px solid var(--stencil);
+  border-bottom: 3px solid var(--stencil);
+}
+
+.footer p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.6rem;
+  font-family: var(--mark);
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .boxes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .checkGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .checkField {
+    grid-column: 1 / -1;
+    min-height: 8rem;
+  }
+
+  .crew {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .quoteGrid,
+  .faqGrid,
+  .extras {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .label {
+    left: 1rem;
+  }
+
+  .manifest thead {
+    display: none;
+  }
+
+  .manifest,
+  .manifest tbody,
+  .manifest tr,
+  .manifest th,
+  .manifest td {
+    display: block;
+  }
+
+  .manifest tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.9rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--label-ink) 25%, transparent);
+  }
+
+  .manifest th,
+  .manifest td {
+    padding: 0;
+    border: 0;
+  }
+
+  .manifest tr::after {
+    content: '';
+    order: 3;
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .manifest tbody th {
+    flex: 1 0 auto;
+    order: 1;
+  }
+
+  .manifest .total {
+    order: 2;
+  }
+
+  .manifest td:not(.total) {
+    order: 4;
+    font-size: 0.88rem;
+    color: var(--label-muted);
+  }
+
+  .manifest .rate::after {
+    content: ' an hour';
+  }
+
+  .fine {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .checkGrid,
+  .crew {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .boxes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stackWrap {
+    padding-bottom: 0;
+  }
+
+  .label {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin: -3.5rem 0.5rem 0;
+  }
+
+  .truckArt {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .stack {
+    height: 17rem;
+  }
+
+  .marks li {
+    font-size: 1rem;
+  }
+
+  .boxCard h3 {
+    font-size: 1.35rem;
+    overflow-wrap: anywhere;
+  }
+
+  .refuse {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .primary,
+  .secondary,
+  .submit {
+    transition: none;
+  }
+
+  .primary:hover,
+  .secondary:hover,
+  .submit:hover {
+    transform: none;
+  }
+}

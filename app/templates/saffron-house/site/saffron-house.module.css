@@ -1,0 +1,1436 @@
+/* ==========================================================================
+   SAFFRON HOUSE - family-run Indian restaurant, Lantern Street
+   Jewel box. A deep plum ground with saffron, teal and ruby laid on it the
+   way inlay is laid in a lacquered tray: the hero looks out through an arched
+   window filled with a jewelled lattice, lunch is drawn as the steel thali
+   seen from above (the rim is the jewelled field, the bowls sit where they
+   sit on the real plate), the family's story is a ruby band with a small
+   family tree, and the Sunday feast is a card whose border is the pattern.
+   Rozha One, a high-contrast display face with a hand-cut feel, is set
+   against Hind for the reading text; both come from the same foundry.
+   Frames are double rules drawn in CSS, with a diamond at each apex.
+   ========================================================================== */
+
+.page {
+  --plum: #2b1030;
+  --saffron: #f2a31b;
+  --teal: #0f6d68;
+  --ruby: #c7304e;
+  --cream: #f7ead3;
+  --display: 'Rozha One', 'Georgia', serif;
+  --sans: 'Hind', 'Helvetica Neue', Arial, sans-serif;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --wide: 78rem;
+  --text: var(--cream);
+  --on-saffron: var(--plum);
+  --on-teal: var(--cream);
+  --on-ruby: var(--cream);
+  --on-cream: var(--plum);
+
+  /* Every section reads its ground and its text from these two, so a band
+     filled with an ink only has to say which ink. */
+  --bg: var(--plum);
+  --fg: var(--text);
+  --panel: color-mix(in oklab, var(--plum) 90%, var(--text));
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--fg);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the lightness of each surface, tinted toward the
+       cream ink: readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--plum) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--cream));
+    --on-saffron: oklch(from var(--saffron) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-teal: color-mix(in oklab, oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--cream));
+    --on-ruby: color-mix(in oklab, oklch(from var(--ruby) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--cream));
+    --on-cream: oklch(from var(--cream) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+/* Derived from whichever ground and text the element sits on; declared on
+   each band that changes them, so they resolve against that band. */
+.page,
+.thali,
+.family,
+.visit {
+  --muted: color-mix(in oklab, var(--fg) 76%, var(--bg));
+  --gild: color-mix(in oklch, var(--saffron) 72%, var(--fg));
+  --rule: color-mix(in oklab, var(--fg) 20%, transparent);
+  --frame: color-mix(in oklab, var(--saffron) 78%, var(--fg));
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page,
+  .thali,
+  .family,
+  .visit {
+    /* The saffron, moved toward white on a dark band and toward black on a
+       light one, then given its chroma back: the gold stays gold, and it
+       keeps its distance from whatever ground a palette brings. */
+    --flip: oklch(from var(--bg) clamp(0, (0.62 - l) * 1000, 1) 0 none);
+    --gild: oklch(from color-mix(in oklch, var(--saffron) 60%, var(--flip)) l calc(c * 1.25) h);
+    --frame: oklch(from color-mix(in oklch, var(--saffron) 72%, var(--flip)) l calc(c * 1.15) h);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--frame);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.inner {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--plum);
+  color: var(--text);
+  border-bottom: 4px double var(--frame);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.4rem clamp(1rem, 2.4vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--text) 84%, var(--plum));
+  border-bottom: 1px solid transparent;
+  transition: border-color 160ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--frame);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--plum);
+}
+
+/* --------------------------------------------------------------- shared type */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow::before {
+  content: '';
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--frame);
+  transform: rotate(45deg);
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2,
+.family h2,
+.visit h2 {
+  font-size: clamp(2.3rem, 5vw, 3.8rem);
+  line-height: 1.02;
+}
+
+.secNote {
+  margin: 1rem 0 0;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.small {
+  margin: 1rem 0 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: end;
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6.5rem) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.kicker {
+  margin: 0 0 1.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-size: clamp(3.6rem, 10vw, 8.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+.title em {
+  display: block;
+  font-style: normal;
+  color: var(--gild);
+}
+
+.lede {
+  max-width: 34rem;
+  margin: 1.8rem 0 0;
+  font-size: clamp(1.1rem, 1.6vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.sign {
+  margin: 0.8rem 0 0;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 2.2rem 0 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.facts div {
+  padding: 0.9rem 1rem 0.9rem 0;
+}
+
+.facts div + div {
+  padding-left: 1rem;
+  border-left: 1px solid var(--rule);
+}
+
+.facts dt {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  line-height: 1.1;
+  color: var(--gild);
+}
+
+.facts dd {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnGhost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.95rem 1.6rem;
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 160ms ease;
+}
+
+.btn,
+.submit {
+  color: var(--on-saffron);
+  background: var(--saffron);
+  border: 1px solid var(--frame);
+}
+
+.btnGhost {
+  color: var(--fg);
+  border: 1px solid var(--frame);
+}
+
+.btn:hover,
+.btnGhost:hover,
+.submit:hover {
+  transform: translateY(-2px);
+}
+
+/* The arched window. The outer arch is a line with a diamond at its apex;
+   the inner one holds the lattice. A round arch is a border radius of half
+   the width, which at this height is 37% of it vertically. */
+
+.archFrame {
+  position: relative;
+  width: min(100%, 27rem);
+  justify-self: center;
+  aspect-ratio: 1 / 1.34;
+  padding: 14px;
+  border: 2px solid var(--frame);
+  border-bottom-width: 8px;
+  border-radius: 50% 50% 0 0 / 37% 37% 0 0;
+}
+
+.archFrame::before {
+  content: '';
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  background: var(--frame);
+  transform: rotate(45deg);
+}
+
+.arch {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50% 50% 0 0 / 37% 37% 0 0;
+}
+
+/* --------------------------------------------------------------------- thali */
+
+.thali {
+  --bg: var(--teal);
+  --fg: var(--on-teal);
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+  background: var(--bg);
+  color: var(--fg);
+  border-top: 4px double var(--frame);
+  border-bottom: 4px double var(--frame);
+}
+
+.thaliGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2.5rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.plateWrap {
+  min-width: 0;
+}
+
+/* The plate is its own container, so the bowls are placed in units of the
+   plate's width and it scales down to a phone without a second layout. */
+.plate {
+  position: relative;
+  width: min(100%, 36rem);
+  margin: 0 auto;
+  aspect-ratio: 1;
+  container-type: inline-size;
+  border-radius: 50%;
+  box-shadow: 0 30px 60px -30px color-mix(in oklab, var(--text) 10%, var(--plum));
+}
+
+.rim {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--plum);
+}
+
+.surface {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: var(--cream);
+  box-shadow:
+    0 0 0 3px var(--frame),
+    inset 0 0 0 10px color-mix(in oklab, var(--cream) 88%, var(--on-cream)),
+    inset 0 0 0 11px color-mix(in oklab, var(--cream) 70%, var(--on-cream));
+}
+
+.katoris {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.katori {
+  --a: 0deg;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  width: 21cqw;
+  height: 21cqw;
+  margin: -10.5cqw 0 0 -10.5cqw;
+  border-radius: 50%;
+  color: var(--on-cream);
+  background: color-mix(in oklab, var(--cream) 82%, var(--saffron));
+  box-shadow:
+    inset 0 0 0 1.2cqw color-mix(in oklab, var(--cream) 94%, var(--on-cream)),
+    inset 0 0 0 calc(1.2cqw + 1px) color-mix(in oklab, var(--cream) 60%, var(--on-cream)),
+    0 0.8cqw 1.6cqw color-mix(in oklab, var(--on-cream) 22%, transparent);
+  transform: rotate(var(--a)) translateY(-30.5cqw) rotate(calc(-1 * var(--a)));
+}
+
+.katori:nth-child(2) { --a: 51.43deg; }
+.katori:nth-child(3) { --a: 102.86deg; }
+.katori:nth-child(4) { --a: 154.29deg; }
+.katori:nth-child(5) { --a: 205.71deg; }
+.katori:nth-child(6) { --a: 257.14deg; }
+.katori:nth-child(7) { --a: 308.57deg; }
+
+.kNum {
+  font-family: var(--display);
+  font-size: 5.4cqw;
+  line-height: 1;
+}
+
+.kRole {
+  margin-top: 0.4cqw;
+  font-size: max(0.66rem, 2.3cqw);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 26cqw;
+  margin: 0;
+  font-family: var(--display);
+  font-size: max(0.9rem, 3.6cqw);
+  line-height: 1.1;
+  text-align: center;
+  color: var(--on-cream);
+  transform: translate(-50%, -50%);
+}
+
+.plateCaption {
+  margin: 1.4rem 0 0;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.plateKey {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plateKey li {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.plateKey li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.keyNum {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  line-height: 1;
+  border-radius: 50%;
+  color: var(--on-cream);
+  background: var(--cream);
+}
+
+.plateKey h3 {
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.plateKey p {
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.weekTitle {
+  margin: clamp(3.5rem, 7vw, 5rem) 0 1.4rem;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 4px double var(--frame);
+}
+
+.week li {
+  display: flex;
+  flex-direction: column;
+  padding: 1.1rem 1.1rem 1.2rem;
+}
+
+.week li + li {
+  border-left: 1px solid var(--rule);
+}
+
+.wDay {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.wRegion {
+  margin-top: 0.3rem;
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.wCook {
+  margin-top: 0.2rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.wDishes {
+  margin: 0.8rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* ---------------------------------------------------------------------- menu */
+
+.menu {
+  padding: clamp(4.5rem, 9vw, 7rem) 0;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.8rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.legVeg::before,
+.legMeat::before,
+.veg,
+.meat {
+  content: '';
+  display: inline-block;
+  position: relative;
+  flex: none;
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 1.5px solid var(--fg);
+  border-radius: 2px;
+  background:
+    radial-gradient(circle, var(--fg) 0 28%, transparent 31%);
+}
+
+.legMeat::before,
+.meat {
+  background:
+    conic-gradient(from 150deg at 50% 8%, var(--fg) 0 60deg, transparent 60deg);
+  background-size: 64% 64%;
+  background-position: 50% 62%;
+  background-repeat: no-repeat;
+}
+
+.legHeat::before {
+  content: '';
+  flex: none;
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background: var(--frame);
+}
+
+.regions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+/* A framed panel: a line, a gap the color of the panel, and a second line,
+   with a diamond at the top and the bottom. */
+.region {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  background: var(--panel);
+  border: 1px solid var(--frame);
+  box-shadow:
+    inset 0 0 0 6px var(--panel),
+    inset 0 0 0 7px color-mix(in oklab, var(--frame) 55%, transparent);
+}
+
+.region::before,
+.region::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  background: var(--frame);
+  transform: rotate(45deg);
+}
+
+.region::before {
+  top: -7px;
+}
+
+.region::after {
+  bottom: -7px;
+}
+
+.regionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.3rem 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.regionHead h3 {
+  font-size: clamp(2rem, 3.4vw, 2.6rem);
+  line-height: 1;
+  color: var(--gild);
+}
+
+.regionHead p {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dishes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dishes li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.25rem 1rem;
+  padding: 0.95rem 0;
+}
+
+.dishes li + li {
+  border-top: 1px solid var(--rule);
+}
+
+.dishLine {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.dishLine h4 {
+  font-size: 1.3rem;
+  line-height: 1.15;
+}
+
+.price {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-variant-numeric: lining-nums;
+}
+
+.dishNote {
+  margin: 0;
+  padding-left: 1.65rem;
+  font-size: 0.93rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.heat {
+  display: inline-flex;
+  gap: 4px;
+  align-self: start;
+  padding-top: 0.35rem;
+}
+
+.hot,
+.cool {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+}
+
+.hot {
+  background: var(--frame);
+}
+
+.cool {
+  border: 1px solid var(--rule);
+}
+
+/* ---------------------------------------------------------------------- hem
+   A sari border across the page between the menu and the spice scale. */
+
+.hem {
+  position: relative;
+  height: clamp(56px, 7vw, 84px);
+  overflow: hidden;
+  border-top: 4px double var(--frame);
+  border-bottom: 4px double var(--frame);
+}
+
+/* --------------------------------------------------------------------- spice */
+
+.spice {
+  padding: clamp(4.5rem, 9vw, 7rem) 0;
+}
+
+.scale {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scale li {
+  position: relative;
+  padding: 1.6rem 1.1rem 0 0;
+}
+
+/* The heat itself: a bar that runs from cream to ruby across the six. */
+.scale li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: color-mix(in oklab, var(--ruby) var(--heat, 0%), var(--cream));
+}
+
+.scale li:first-child::before {
+  border-radius: 999px 0 0 999px;
+}
+
+.scale li:last-child::before {
+  border-radius: 0 999px 999px 0;
+}
+
+.scale li:nth-child(2) { --heat: 20%; }
+.scale li:nth-child(3) { --heat: 40%; }
+.scale li:nth-child(4) { --heat: 60%; }
+.scale li:nth-child(5) { --heat: 80%; }
+.scale li:nth-child(6) { --heat: 100%; }
+
+.scaleNum {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(3rem, 5.5vw, 4.6rem);
+  line-height: 1;
+  color: var(--gild);
+}
+
+.scaleName {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.scaleNote {
+  margin: 0.5rem 0 0;
+  font-size: 0.93rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- family */
+
+.family {
+  --bg: var(--ruby);
+  --fg: var(--on-ruby);
+  --gild: var(--fg);
+  padding: clamp(4.5rem, 9vw, 7rem) 0;
+  background: var(--bg);
+  color: var(--fg);
+  border-top: 4px double var(--frame);
+  border-bottom: 4px double var(--frame);
+}
+
+.family .eyebrow::before {
+  background: var(--fg);
+}
+
+.familyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.story {
+  max-width: 34rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.65;
+}
+
+.family h2 + .story::first-letter {
+  float: left;
+  margin: 0.08em 0.1em 0 0;
+  font-family: var(--display);
+  font-size: 4.2em;
+  line-height: 0.8;
+}
+
+/* The family tree: three rows joined by thin lines, the middle row a pair. */
+.tree {
+  display: grid;
+  gap: 2.2rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border: 1px solid color-mix(in oklab, var(--fg) 45%, transparent);
+  box-shadow: inset 0 0 0 6px var(--bg), inset 0 0 0 7px color-mix(in oklab, var(--fg) 30%, transparent);
+}
+
+.treeRow {
+  position: relative;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+.treeRow + .treeRow::before {
+  content: '';
+  position: absolute;
+  top: -2.2rem;
+  left: 50%;
+  height: 2.2rem;
+  border-left: 1px solid color-mix(in oklab, var(--fg) 55%, transparent);
+}
+
+.treePair::after {
+  content: '';
+  position: absolute;
+  bottom: -1.1rem;
+  left: 25%;
+  right: 25%;
+  border-top: 1px solid color-mix(in oklab, var(--fg) 55%, transparent);
+}
+
+.person {
+  display: grid;
+  gap: 0.2rem;
+  max-width: 15rem;
+  margin: 0;
+  text-align: center;
+}
+
+.person strong {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.person span {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.treeNote {
+  margin: 0;
+  padding-top: 1.2rem;
+  font-size: 0.92rem;
+  text-align: center;
+  color: var(--muted);
+  border-top: 1px solid color-mix(in oklab, var(--fg) 25%, transparent);
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0 clamp(1rem, 2vw, 1.8rem);
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in oklab, var(--fg) 45%, transparent);
+}
+
+.year {
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.timeline p {
+  margin: 0.6rem 0 0;
+  font-size: 0.93rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- feasts */
+
+.feasts {
+  padding: clamp(4.5rem, 9vw, 7rem) 0;
+}
+
+.feastGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+/* The pattern fills the card; the inner panel covers all of it but a
+   border, so the lattice reads as the card's frame. */
+.feastCard {
+  position: relative;
+  padding: 26px;
+}
+
+.feastBorder {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.feastInner {
+  position: relative;
+  padding: clamp(1.5rem, 4vw, 2.6rem);
+  background: var(--plum);
+  box-shadow: 0 0 0 2px var(--frame), inset 0 0 0 6px var(--plum), inset 0 0 0 7px var(--rule);
+}
+
+.feastTitle {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.05;
+}
+
+.feastPrice {
+  margin: 0.5rem 0 0;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  color: var(--gild);
+}
+
+.feastList {
+  columns: 2;
+  column-gap: 1.8rem;
+  margin: 1.4rem 0 0;
+  padding: 1.1rem 0 0 1.4rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.97rem;
+  line-height: 1.4;
+}
+
+.feastList li {
+  break-inside: avoid;
+  padding: 0 0 0.6rem 0.2rem;
+}
+
+.feastList li::marker {
+  font-family: var(--display);
+  color: var(--muted);
+}
+
+.feastSide {
+  padding-top: 0.5rem;
+}
+
+/* The tray, set at the head of the column like a dish brought to the
+   table: teal tray, gilt bowls, ruby in the dal. */
+.bowls {
+  display: block;
+  width: min(100%, 24rem);
+  margin: -1.5rem auto 1.6rem;
+}
+
+.sideTitle {
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.sideTitle + .small {
+  margin-top: 0.5rem;
+}
+
+.trays {
+  width: 100%;
+  margin: 1.4rem 0 2.8rem;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.trays th,
+.trays td {
+  padding: 0.65rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.trays thead th {
+  padding-top: 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--frame);
+}
+
+.trays tbody th {
+  padding-right: 1rem;
+  font-weight: 500;
+}
+
+.trays td {
+  width: 6.5rem;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  text-align: right;
+}
+
+.trays thead th:not(:first-child) {
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------- visit */
+
+.visit {
+  --bg: var(--panel);
+  padding: clamp(4.5rem, 9vw, 7rem) 0;
+  background: var(--bg);
+  border-top: 4px double var(--frame);
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: start;
+}
+
+.hours {
+  margin: 1.8rem 0 1.6rem;
+}
+
+.hours div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 600;
+}
+
+.hours dd {
+  margin: 0;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.address {
+  margin: 0 0 0.35rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  line-height: 1.35;
+}
+
+.address a {
+  border-bottom: 1px solid var(--frame);
+}
+
+.form {
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+  background: var(--plum);
+  border: 1px solid var(--frame);
+  box-shadow: inset 0 0 0 6px var(--plum), inset 0 0 0 7px var(--rule);
+}
+
+.formTitle {
+  margin-bottom: 1.3rem;
+  font-size: 2rem;
+  line-height: 1.05;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid color-mix(in oklab, var(--text) 30%, transparent);
+  border-radius: 4px;
+  color-scheme: light dark;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--frame);
+  outline-offset: 0;
+}
+
+.submit {
+  margin-top: 1.4rem;
+}
+
+/* -------------------------------------------------------------------- footer */
+
+.footer {
+  padding: 2.6rem var(--gut) 3rem;
+  text-align: center;
+  font-size: 0.86rem;
+  color: var(--muted);
+  border-top: 4px double var(--frame);
+}
+
+.footer p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.6rem;
+  font-family: var(--display);
+  font-size: 2rem;
+  color: var(--fg);
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .week {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .week li:nth-child(4) {
+    border-left: 0;
+  }
+
+  .week li:nth-child(n + 4) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .scale {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2.2rem;
+  }
+
+  .scale li::before {
+    border-radius: 0;
+  }
+
+  .timeline {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .thaliGrid,
+  .familyGrid,
+  .feastGrid,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .archFrame {
+    width: min(100%, 22rem);
+    order: -1;
+  }
+
+  .bowls {
+    width: min(86%, 20rem);
+    margin: 0.5rem auto 1.4rem;
+  }
+
+  .regions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts div + div {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .archFrame {
+    width: min(78%, 18rem);
+  }
+
+  .week {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .week li,
+  .week li + li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 1rem;
+    padding: 1rem 0;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .week li:first-child {
+    border-top: 0;
+  }
+
+  .wDay {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .wRegion {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+  }
+
+  .wCook,
+  .wDishes {
+    grid-column: 1 / -1;
+  }
+
+  .scale {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .timeline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .treePair {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  .treePair::after {
+    display: none;
+  }
+
+  /* Stacked on a phone, the couple are joined by an ampersand. */
+  .treePair .person + .person::before {
+    content: '&';
+    display: block;
+    margin-bottom: 0.9rem;
+    font-family: var(--display);
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--muted);
+  }
+
+  .feastCard {
+    padding: 16px;
+  }
+
+  .feastList {
+    columns: 1;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dishNote {
+    padding-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .submit {
+    transition: none;
+  }
+
+  .btn:hover,
+  .btnGhost:hover,
+  .submit:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,1134 @@
+/* ==========================================================================
+   BRIGHT PANE - window and gutter cleaning, Eastgate
+   A flyer on a lamppost. The top of the page is the poster itself: sky
+   blue, one enormous price, a window drawn with a black frame and glazing
+   bars, and a fringe of tear-off tabs with the number on them. Below it the
+   page keeps talking like a poster, in a wide, heavy, expanded sans with
+   thick black rules: the price per window counted out, the round by street
+   on a black board, gutters by the height of the house, and the quote form
+   on a yellow sheet. The patterns are panes, the shine across clean glass,
+   and the rake of a roof over the gutter prices; the one picture, a
+   cleaner at an upstairs window, is drawn in the page's inks.
+   ========================================================================== */
+
+.page {
+  --paper: #fbfcfd;
+  --ink: #0c0e11;
+  --sky: #9cd3f4;
+  --blue: #1d5fd1;
+  --hivis: #ffd43b;
+  --gut: clamp(1rem, 4.5vw, 3.25rem);
+  --max: 84rem;
+  --pad: clamp(4rem, 8vw, 6.5rem);
+  --display: 'Anybody', 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Chivo', 'Helvetica Neue', Arial, sans-serif;
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-sky: var(--ink);
+  --on-blue: var(--paper);
+  --on-hivis: var(--ink);
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the lightness of the surface, tinted toward the
+       ink: readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 85%, var(--ink));
+    --on-ink: oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sky: oklch(from var(--sky) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-blue: oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-hivis: oklch(from var(--hivis) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --ground-text: var(--text);
+  --muted: color-mix(in oklab, var(--text) 74%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 150%;
+  text-transform: uppercase;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  padding: 0.7rem var(--gut);
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 900;
+  font-stretch: 150%;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35rem clamp(0.9rem, 1.8vw, 1.7rem);
+}
+
+.nav a {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--on-ink) 80%, var(--ink));
+}
+
+.nav a:hover {
+  color: var(--on-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+.barPhone {
+  padding: 0.5rem 0.8rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-stretch: 120%;
+  white-space: nowrap;
+  color: var(--on-hivis);
+  background: var(--hivis);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--ink);
+}
+
+/* ------------------------------------------------------------- the poster */
+
+.hero {
+  --text: var(--on-sky);
+  --muted: color-mix(in oklab, var(--on-sky) 80%, var(--sky));
+  --voice: color-mix(in oklab, var(--blue) 70%, var(--on-sky));
+
+  color: var(--text);
+  background: var(--sky);
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.75rem, 6vw, 5rem) var(--gut) clamp(3rem, 6vw, 4.5rem);
+}
+
+.kicker {
+  margin: 0 0 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: clamp(2.3rem, 5.6vw, 5.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--voice);
+}
+
+.priceLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem 1.4rem;
+  margin: clamp(1.25rem, 3vw, 2rem) 0 0;
+}
+
+.bigPrice {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(7rem, 18vw, 15rem);
+  font-weight: 900;
+  font-stretch: 150%;
+  line-height: 0.78;
+  letter-spacing: -0.04em;
+}
+
+.per {
+  max-width: 11rem;
+  margin: 0 0 0.6rem;
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  font-weight: 800;
+  font-stretch: 115%;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.lede {
+  max-width: 34rem;
+  margin: clamp(1.5rem, 3vw, 2.2rem) 0 0;
+  font-size: clamp(1.02rem, 1.4vw, 1.12rem);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.button,
+.buttonLine {
+  display: inline-block;
+  padding: 0.95rem 1.4rem 0.85rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-stretch: 125%;
+  line-height: 1.1;
+  text-transform: uppercase;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.button {
+  color: var(--on-ink);
+  background: var(--ink);
+  border: 3px solid var(--ink);
+}
+
+.button:hover {
+  color: var(--on-blue);
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.buttonLine {
+  color: var(--text);
+  border: 3px solid var(--text);
+}
+
+.buttonLine:hover {
+  color: var(--on-ink);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+/* The window: a black frame, the glass, and two glazing bars drawn over
+   the panes so the field reads as four lights. */
+.window {
+  position: relative;
+  width: min(100%, 26rem);
+  justify-self: center;
+  aspect-ratio: 4 / 5;
+  border: clamp(12px, 1.4vw, 18px) solid var(--ink);
+  box-shadow: 12px 12px 0 color-mix(in oklab, var(--ink) 85%, transparent);
+}
+
+.glass {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--sky) 45%, var(--paper));
+}
+
+.window::before,
+.window::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  background: var(--ink);
+}
+
+.window::before {
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 6px);
+  width: 12px;
+}
+
+.window::after {
+  left: 0;
+  right: 0;
+  top: calc(50% - 6px);
+  height: 12px;
+}
+
+.sticker {
+  position: absolute;
+  z-index: 2;
+  right: -2.2rem;
+  bottom: -2.2rem;
+  display: grid;
+  place-items: center;
+  width: 8.2rem;
+  aspect-ratio: 1;
+  margin: 0;
+  padding: 1rem;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 900;
+  font-stretch: 120%;
+  line-height: 1.05;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--on-hivis);
+  background: var(--hivis);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  transform: rotate(12deg);
+}
+
+/* Tear-off tabs along the bottom of the flyer. */
+.tabs {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  color: var(--ground-text);
+  background: var(--paper);
+  border-top: 2px dashed color-mix(in oklab, var(--ground-text) 55%, transparent);
+}
+
+.tabs li {
+  flex: 1 0 3.3rem;
+  display: grid;
+  place-items: center;
+  height: clamp(10rem, 14vw, 12rem);
+  padding: 0.6rem 0;
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  font-stretch: 70%;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  border-left: 2px dashed color-mix(in oklab, var(--ground-text) 40%, transparent);
+}
+
+.tabs li:nth-child(3n + 2) {
+  transform: rotate(180deg) translateX(-2px);
+}
+
+/* ----------------------------------------------------------- section heads */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--pad) var(--gut) 0;
+}
+
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1rem clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+  padding-bottom: 1.2rem;
+  border-bottom: 4px solid var(--text);
+}
+
+.head h2 {
+  font-size: clamp(2.1rem, 5vw, 4.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+
+.headNote {
+  max-width: 32rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+.sideTitle {
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+
+/* ------------------------------------------------------------------- prices */
+
+.prices {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.priceList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.priceList li {
+  display: grid;
+  grid-template-columns: clamp(7rem, 17vw, 15rem) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.15rem 0;
+  border-bottom: 2px solid var(--text);
+}
+
+.price {
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 5.2vw, 4.6rem);
+  font-weight: 900;
+  font-stretch: 150%;
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+}
+
+.priceList h3 {
+  font-size: clamp(1rem, 1.7vw, 1.3rem);
+  font-stretch: 115%;
+  line-height: 1.15;
+}
+
+.priceList p {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.extras {
+  margin: 0;
+  border-top: 4px solid var(--text);
+}
+
+.extras div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.extras dd {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-stretch: 110%;
+  white-space: nowrap;
+}
+
+.sum {
+  --text: var(--on-hivis);
+
+  margin-top: 2.2rem;
+  padding: 1.3rem 1.4rem 1.2rem;
+  color: var(--text);
+  background: var(--hivis);
+  border: 3px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+  transform: rotate(-1.5deg);
+}
+
+.sumTitle {
+  margin: 0 0 0.6rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 900;
+  font-stretch: 125%;
+  text-transform: uppercase;
+}
+
+.sum dl {
+  margin: 0;
+}
+
+.sum dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+}
+
+.sum dd {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+}
+
+.sum dl div:last-child {
+  margin-top: 0.3rem;
+  padding-top: 0.6rem;
+  font-weight: 700;
+  border-top: 3px solid var(--text);
+}
+
+.sum dl div:last-child dd {
+  font-size: 1.6rem;
+  font-weight: 900;
+  font-stretch: 150%;
+  line-height: 1;
+}
+
+/* ----------------------------------------------------------- shine band */
+
+.shine {
+  position: relative;
+  height: clamp(90px, 10vw, 140px);
+  margin-top: var(--pad);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--sky) 30%, var(--paper));
+  border-block: 4px solid var(--ink);
+}
+
+/* ------------------------------------------------------------ the round
+   A black board, so its tokens are re-derived from the ink. */
+
+.round {
+  --text: var(--on-ink);
+  --muted: color-mix(in oklab, var(--on-ink) 76%, var(--ink));
+  --rule: color-mix(in oklab, var(--on-ink) 22%, transparent);
+
+  color: var(--text);
+  background: var(--ink);
+}
+
+.roundInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--pad) var(--gut);
+}
+
+.rounds {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2.5rem clamp(1.25rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.letter {
+  display: grid;
+  place-items: center;
+  width: 5rem;
+  aspect-ratio: 1;
+  margin: 0 0 1.1rem;
+  font-family: var(--display);
+  font-size: 2.8rem;
+  font-weight: 900;
+  font-stretch: 150%;
+  line-height: 1;
+  color: var(--on-sky);
+  background: var(--sky);
+  border-radius: 50%;
+}
+
+.rounds > li:nth-child(even) .letter {
+  color: var(--on-hivis);
+  background: var(--hivis);
+}
+
+.rounds h3 {
+  font-size: 1.15rem;
+  font-stretch: 120%;
+  line-height: 1.15;
+}
+
+.area {
+  margin: 0.3rem 0 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.streets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--text);
+}
+
+.streets li {
+  padding: 0.45rem 0;
+  font-size: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.next {
+  margin: 1rem 0 0.1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nextDates {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 800;
+  font-stretch: 110%;
+  line-height: 1.25;
+}
+
+.roundNote {
+  max-width: 40rem;
+  margin: 2.8rem 0 0;
+  padding-top: 1.2rem;
+  font-size: 1.05rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* ------------------------------------------------------------------ gutters */
+
+.roof {
+  position: relative;
+  height: 48px;
+  overflow: hidden;
+  border-bottom: 4px solid var(--ink);
+}
+
+.gutters {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.gutters th,
+.gutters td {
+  padding: 1.1rem 0.75rem 1.1rem 0;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 2px solid var(--text);
+}
+
+.gutters thead th {
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  font-stretch: 100%;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.gutters tbody th {
+  width: 38%;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-stretch: 100%;
+  text-transform: none;
+}
+
+.gName {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 2vw, 1.55rem);
+  font-weight: 900;
+  font-stretch: 130%;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.gNote {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+.gutters td {
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 2.9vw, 2.6rem);
+  font-weight: 900;
+  font-stretch: 135%;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------ the visit
+   A blue band; tokens re-derived from the blue. */
+
+.visit {
+  --text: var(--on-blue);
+  --muted: color-mix(in oklab, var(--on-blue) 82%, var(--blue));
+
+  margin-top: var(--pad);
+  color: var(--text);
+  background: var(--blue);
+}
+
+.visitInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--pad) var(--gut);
+}
+
+/* The title, and the cleaner at work over the steps: his feet stand on
+   the first rule of the list. */
+.visitHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem clamp(1.5rem, 4vw, 3rem);
+  align-items: end;
+}
+
+.visitTitle {
+  font-size: clamp(2.1rem, 5vw, 4.4rem);
+  line-height: 0.95;
+}
+
+.visitLede {
+  max-width: 34rem;
+  margin: 1.2rem 0 clamp(2rem, 4vw, 3rem);
+  font-size: 1.1rem;
+}
+
+.cleaner {
+  width: clamp(8rem, 17vw, 15.5rem);
+  margin-right: clamp(0rem, 3vw, 3rem);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 2rem clamp(1rem, 2.4vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  padding-top: 0.9rem;
+  border-top: 4px solid var(--text);
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  display: block;
+  margin-bottom: 0.7rem;
+  font-family: var(--display);
+  font-size: clamp(3rem, 5vw, 4.4rem);
+  font-weight: 900;
+  font-stretch: 150%;
+  line-height: 0.85;
+}
+
+.steps h3 {
+  font-size: 1rem;
+  font-stretch: 115%;
+  line-height: 1.15;
+}
+
+.steps p {
+  margin: 0.45rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.promise {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
+  gap: 1rem 2.5rem;
+  align-items: center;
+  margin-top: clamp(2.75rem, 5vw, 4rem);
+  padding: clamp(1.25rem, 3vw, 1.8rem) clamp(1.25rem, 3vw, 2.2rem);
+  border: 4px solid var(--text);
+}
+
+.promiseTitle {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  font-weight: 900;
+  font-stretch: 150%;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.promiseBody {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* --------------------------------------------------------------------- area */
+
+.areas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem clamp(1rem, 2.4vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.areas li {
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 4.2vw, 3.5rem);
+  font-weight: 900;
+  font-stretch: 150%;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.onRound {
+  color: var(--text);
+}
+
+.byQuote {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--text);
+}
+
+.crewWrap {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+}
+
+.crew {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crew li {
+  padding-top: 0.9rem;
+  border-top: 3px solid var(--text);
+}
+
+.crewName {
+  margin: 0 0 0.3rem;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 900;
+  font-stretch: 125%;
+  text-transform: uppercase;
+}
+
+.crew li p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- quote
+   The yellow sheet. Its own text is derived from the yellow; the fields
+   keep the page ground, and the ground's text. */
+
+.quote {
+  --text: var(--on-hivis);
+  --muted: color-mix(in oklab, var(--on-hivis) 80%, var(--hivis));
+
+  padding: clamp(1.5rem, 4vw, 3rem);
+  color: var(--text);
+  background: var(--hivis);
+  border: 4px solid var(--ink);
+  box-shadow: 12px 12px 0 var(--ink);
+}
+
+.quoteHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  margin-bottom: 1.8rem;
+}
+
+.quoteHead h2 {
+  font-size: clamp(2.2rem, 5.4vw, 4.6rem);
+  line-height: 0.92;
+}
+
+.quoteHead p {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.75rem 0.85rem;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--ground-text);
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.8rem;
+  padding-top: 0.4rem;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.check input {
+  width: 1.3rem;
+  height: 1.3rem;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+.quote .button {
+  margin-top: 1.6rem;
+  border-color: var(--text);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  --text: var(--on-ink);
+
+  margin-top: var(--pad);
+  color: color-mix(in oklab, var(--on-ink) 78%, var(--ink));
+  background: var(--ink);
+}
+
+.sill {
+  position: relative;
+  height: 72px;
+  overflow: hidden;
+}
+
+.footInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 1.6rem var(--gut) 2.6rem;
+  font-size: 0.86rem;
+}
+
+.footInner p {
+  margin: 0.25rem 0 0;
+}
+
+.footInner .footName {
+  margin: 0 0 0.6rem;
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 900;
+  font-stretch: 150%;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--on-ink);
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1060px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .rounds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .heroInner,
+  .head,
+  .prices,
+  .quoteHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .window {
+    width: min(82%, 22rem);
+    margin: 1rem 0 2rem;
+    justify-self: start;
+  }
+
+  .promise {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .crew {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .barPhone {
+    display: none;
+  }
+
+  .tabs li:nth-child(n + 8) {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .sticker {
+    right: -1.6rem;
+    width: 6.8rem;
+    font-size: 0.8rem;
+  }
+
+  .priceList li {
+    grid-template-columns: 5.6rem minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .price {
+    font-size: 2.5rem;
+    font-stretch: 110%;
+  }
+
+  .rounds,
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .areas li {
+    font-size: 1.35rem;
+    font-stretch: 125%;
+    white-space: nowrap;
+  }
+
+  .byQuote {
+    -webkit-text-stroke-width: 1px;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The gutter table folds: the package name takes a row of its own, and
+     the three prices sit under the three story headings. */
+  .gutters thead tr,
+  .gutters tbody tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .gutters thead th:first-child {
+    display: none;
+  }
+
+  .gutters tbody th {
+    grid-column: 1 / -1;
+    width: auto;
+    padding-bottom: 0.5rem;
+    border-bottom: 0;
+  }
+
+  .gutters td {
+    padding-top: 0.2rem;
+    font-size: 1.45rem;
+    font-stretch: 110%;
+  }
+}

@@ -1,0 +1,1131 @@
+/* ==========================================================================
+   LAST & AWL - shoe and leather repair, Tanner's Row
+   The shop wall. Everything a customer reads in the shop is enamel: the
+   fascia over the door, the price plates behind the counter, the drop-box
+   plate on the door. So the page is a plaster wall with bottle-green enamel
+   plates screwed to it, each with a gilt double pinstripe and four brass
+   screws, lettered in Holtwood One SC, the wide sign-painter's slab. Zilla
+   Slab sets everything written by hand or by the till: the ticket, the
+   notes. The ribbed fields are leather and coir: the doormat at the door
+   and at the foot of the page, a belt strap across the leather section,
+   and a stitched swatch at the bench.
+   ========================================================================== */
+
+.page {
+  --wall: #eee4cf;
+  --bottle: #173f2f;
+  --gold: #c8993a;
+  --oxblood: #6f2320;
+  --tan: #a8672f;
+  --sign: 'Holtwood One SC', 'Rockwell', serif;
+  --slab: 'Zilla Slab', 'Rockwell', Georgia, serif;
+  --gut: clamp(1rem, 5vw, 3.5rem);
+  --wide: 76rem;
+  --text: var(--bottle);
+  --on-bottle: var(--wall);
+
+  --bg: var(--wall);
+  --fg: var(--text);
+  --panel: color-mix(in oklab, var(--wall) 90%, var(--bottle));
+  --paper: color-mix(in oklab, var(--gold) 16%, var(--wall));
+
+  font-family: var(--slab);
+  font-size: 1.125rem;
+  line-height: 1.55;
+  background: var(--bg);
+  color: var(--fg);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Reading text is the bottle green held at a reading lightness: dark on
+       a light wall, pale on a dark one. The 60/40 mix with black or white
+       only tells the two cases apart, whatever the green becomes. */
+    --wallflip: oklch(from var(--wall) clamp(0, (0.62 - l) * 1000, 1) 0 none);
+    --text: oklch(from color-mix(in oklch, var(--wallflip) 60%, var(--bottle)) calc(0.24 + clamp(0, (l - 0.5) * 1000, 1) * 0.72) min(calc(c * 2.5), 0.07) h);
+    --on-bottle: color-mix(in oklab, oklch(from var(--bottle) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--gold));
+  }
+}
+
+/* Derived from whichever ground and text the element sits on; declared on
+   every surface that changes them, so they resolve against that surface. */
+.page,
+.bar,
+.plate,
+.sign,
+.turn,
+.dropBox {
+  --muted: color-mix(in oklab, var(--fg) 76%, var(--bg));
+  --rule: color-mix(in oklab, var(--fg) 22%, transparent);
+  --gilt: color-mix(in oklab, var(--gold) 70%, var(--fg));
+  --stamp: color-mix(in oklab, var(--oxblood) 70%, var(--fg));
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page,
+  .bar,
+  .plate,
+  .sign,
+  .turn,
+  .dropBox {
+    /* The gold and the oxblood, moved toward white on a dark surface and
+       toward black on a light one, so they keep their distance from it. */
+    --flip: oklch(from var(--bg) clamp(0, (0.62 - l) * 1000, 1) 0 none);
+    --gilt: oklch(from color-mix(in oklch, var(--gold) 62%, var(--flip)) l calc(c * 1.25) h);
+    --stamp: oklch(from color-mix(in oklch, var(--oxblood) 62%, var(--flip)) l calc(c * 1.3) h);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--gilt);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(section[id]) {
+  scroll-margin-top: 80px;
+}
+
+.inner {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+.head {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.head h2,
+.bench h2,
+.visit h2 {
+  font-family: var(--sign);
+  font-size: clamp(1.7rem, 3.8vw, 2.7rem);
+  line-height: 1.1;
+}
+
+.headNote {
+  margin: 0.8rem 0 0;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ enamel plate
+   One recipe for every plate: a gloss across the top of the green, a gilt
+   pinstripe inside the edge and a finer one inside that, and a brass screw
+   in each corner. */
+
+.plate,
+.sign,
+.dropBox {
+  --bg: var(--bottle);
+  --fg: var(--on-bottle);
+  position: relative;
+  color: var(--fg);
+  background:
+    radial-gradient(circle at 16px 16px, var(--gilt) 0 3.5px, color-mix(in oklab, var(--gilt) 40%, var(--bottle)) 4.5px, transparent 5.5px),
+    radial-gradient(circle at calc(100% - 16px) 16px, var(--gilt) 0 3.5px, color-mix(in oklab, var(--gilt) 40%, var(--bottle)) 4.5px, transparent 5.5px),
+    radial-gradient(circle at 16px calc(100% - 16px), var(--gilt) 0 3.5px, color-mix(in oklab, var(--gilt) 40%, var(--bottle)) 4.5px, transparent 5.5px),
+    radial-gradient(circle at calc(100% - 16px) calc(100% - 16px), var(--gilt) 0 3.5px, color-mix(in oklab, var(--gilt) 40%, var(--bottle)) 4.5px, transparent 5.5px),
+    linear-gradient(172deg, color-mix(in oklab, var(--bottle) 82%, var(--on-bottle)) 0%, var(--bottle) 34%, var(--bottle) 100%);
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 1px color-mix(in oklab, var(--bottle) 70%, var(--text)),
+    0 14px 24px -14px color-mix(in oklab, var(--text) 55%, transparent);
+}
+
+/* The pinstripes: a gilt border and a finer line inside it. */
+.plate::before,
+.sign::before,
+.dropBox::before {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 2px solid var(--gilt);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 4px transparent, inset 0 0 0 5px color-mix(in oklab, var(--gilt) 60%, transparent);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  --bg: var(--bottle);
+  --fg: var(--on-bottle);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  color: var(--fg);
+  background: var(--bg);
+  border-bottom: 3px solid var(--gilt);
+  box-shadow: 0 3px 0 var(--bottle);
+}
+
+.mark {
+  font-family: var(--sign);
+  font-size: 1.3rem;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--gilt);
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2rem);
+}
+
+.nav a {
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--gilt);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--bottle);
+}
+
+/* --------------------------------------------------------------------- sign */
+
+.hero {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 5rem) var(--gut) clamp(3rem, 6vw, 4.5rem);
+}
+
+.sign {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: clamp(3.2rem, 6vw, 4.6rem) clamp(2.6rem, 6vw, 5rem);
+  text-align: center;
+  border-radius: 22px;
+}
+
+.sign::before {
+  border-radius: 10px;
+}
+
+.signTop,
+.signBottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0;
+  font-family: var(--sign);
+  font-size: clamp(0.72rem, 1.6vw, 1.05rem);
+  letter-spacing: 0.08em;
+}
+
+.signTop::before,
+.signTop::after,
+.signBottom::before,
+.signBottom::after {
+  content: '';
+  flex: 0 1 4rem;
+  height: 2px;
+  background: var(--gilt);
+}
+
+.signName {
+  margin: 0.2em 0 0.25em;
+  font-family: var(--sign);
+  font-size: clamp(2.1rem, 8.4vw, 7rem);
+  line-height: 1.05;
+  color: var(--gilt);
+  text-shadow: 0 3px 0 color-mix(in oklab, var(--bottle) 60%, var(--text));
+}
+
+/* Under the sign: the brogue on its last, engraved in the sign's green like
+   the cut on a trade card, with the words and the three promises beside
+   it. */
+.heroBelow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-rows: auto auto;
+  gap: 1.6rem clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  max-width: 60rem;
+  margin: clamp(2.2rem, 5vw, 3.2rem) auto 0;
+}
+
+.brogue {
+  grid-row: 1 / span 2;
+  display: block;
+  width: 100%;
+}
+
+.heroBelow .lede {
+  align-self: end;
+}
+
+.heroBelow .promises {
+  align-self: start;
+}
+
+.lede {
+  margin: 0;
+  font-size: clamp(1.15rem, 1.7vw, 1.3rem);
+  line-height: 1.5;
+}
+
+.promises {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.promises li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.7rem;
+  padding: 0.55rem 0;
+  border-top: 2px solid var(--rule);
+}
+
+.promises li:last-child {
+  border-bottom: 2px solid var(--rule);
+}
+
+.promises strong {
+  font-family: var(--sign);
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.promises span {
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- doormats */
+
+.mat,
+.footMat {
+  position: relative;
+  height: clamp(64px, 8vw, 96px);
+  overflow: hidden;
+  border-top: 4px solid var(--bottle);
+  border-bottom: 4px solid var(--bottle);
+}
+
+/* ------------------------------------------------------------ price board */
+
+.prices {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+}
+
+.plate {
+  padding: 2.7rem 2.4rem 2.5rem;
+}
+
+.big {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: 3.4rem 3.2rem 3.2rem;
+}
+
+.plateTitle {
+  margin-bottom: 1.1rem;
+  font-family: var(--sign);
+  font-size: 1.35rem;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--gilt);
+}
+
+.big .plateTitle {
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  margin-bottom: 1.6rem;
+}
+
+.plateList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Item, a dotted leader, the price: the leader is the row's own ::after,
+   put between the two by flex order. */
+.plateList li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.32rem 0;
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+.plateList li::after {
+  content: '';
+  order: 2;
+  flex: 1 1 1rem;
+  min-width: 1rem;
+  border-bottom: 2px dotted color-mix(in oklab, var(--fg) 45%, transparent);
+  transform: translateY(-0.3em);
+}
+
+.plateItem {
+  order: 1;
+  min-width: 0;
+}
+
+.platePrice {
+  order: 3;
+  font-weight: 700;
+  white-space: nowrap;
+  font-variant-numeric: lining-nums;
+}
+
+.big .plateList li {
+  padding: 0.55rem 0;
+  font-size: 1.2rem;
+}
+
+.boardNote {
+  margin: 1.8rem 0 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ tickets */
+
+.tickets {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+  background: var(--panel);
+  border-top: 2px solid var(--rule);
+  border-bottom: 2px solid var(--rule);
+}
+
+.ticketGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: center;
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 2px solid var(--rule);
+}
+
+.steps li:last-child {
+  border-bottom: 2px solid var(--rule);
+}
+
+.stepNum {
+  font-family: var(--sign);
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--gilt);
+}
+
+.steps h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.steps p {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+}
+
+/* The ticket: manila card, the number stamped twice, a perforated line
+   with a notch at each end between the tag and the stub you keep. */
+.ticket {
+  --bg: var(--paper);
+  width: min(100%, 22rem);
+  justify-self: center;
+  background: var(--paper);
+  border-radius: 6px;
+  box-shadow: 0 18px 30px -18px color-mix(in oklab, var(--text) 60%, transparent);
+  transform: rotate(-2.5deg);
+}
+
+.ticketMain {
+  position: relative;
+  padding: 1.6rem 1.6rem 1.4rem;
+}
+
+/* The string hole. */
+.ticketMain::before {
+  content: '';
+  position: absolute;
+  top: 1.1rem;
+  right: 1.2rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--panel);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--gold) 60%, var(--paper));
+}
+
+.ticketShop {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ticketNo,
+.stubNo {
+  margin: 0.3rem 0 0;
+  font-family: var(--sign);
+  font-size: 2.1rem;
+  line-height: 1.1;
+  color: var(--stamp);
+}
+
+.ticketFields {
+  margin: 1rem 0 0;
+}
+
+.ticketFields div {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ticketFields dt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  align-self: center;
+}
+
+.ticketFields dd {
+  margin: 0;
+  font-style: italic;
+  font-size: 1.12rem;
+  line-height: 1.3;
+}
+
+.stamp {
+  position: absolute;
+  right: 1.3rem;
+  bottom: 1.3rem;
+  margin: 0;
+  padding: 0.2rem 0.7rem;
+  font-family: var(--sign);
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  color: var(--stamp);
+  border: 3px double var(--stamp);
+  border-radius: 4px;
+  opacity: 0.85;
+  transform: rotate(-12deg);
+}
+
+.ticketStub {
+  position: relative;
+  padding: 1.2rem 1.6rem 1.4rem;
+  text-align: center;
+  border-top: 3px dashed color-mix(in oklab, var(--text) 35%, transparent);
+}
+
+.ticketStub::before,
+.ticketStub::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--panel);
+}
+
+.ticketStub::before {
+  left: -11px;
+}
+
+.ticketStub::after {
+  right: -11px;
+}
+
+.stubLabel {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stubNo {
+  font-size: 1.6rem;
+}
+
+.stubDate {
+  margin: 0.3rem 0 0;
+  font-style: italic;
+  font-size: 1.25rem;
+}
+
+/* --------------------------------------------------------------- turnaround */
+
+.turn {
+  --bg: var(--bottle);
+  --fg: var(--on-bottle);
+  padding: clamp(4rem, 8vw, 6rem) 0;
+  color: var(--fg);
+  background: var(--bg);
+  border-top: 4px solid var(--gilt);
+  border-bottom: 4px solid var(--gilt);
+}
+
+.times {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.times li {
+  padding: 0.4rem clamp(0.9rem, 1.6vw, 1.5rem) 0.6rem;
+}
+
+.times li + li {
+  border-left: 2px solid color-mix(in oklab, var(--gilt) 55%, transparent);
+}
+
+.times li:first-child {
+  padding-left: 0;
+}
+
+.timeFig {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.timeN {
+  font-family: var(--sign);
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1;
+  color: var(--gilt);
+}
+
+.timeUnit {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.timeWhat {
+  margin: 0.8rem 0 0;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ leather */
+
+.leather {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+}
+
+/* The belt: a woven strap with a pointed tip, five holes and a stitched
+   edge, and a gilt buckle drawn over its far end. */
+.belt {
+  position: relative;
+  max-width: calc(var(--wide) - 2 * var(--gut));
+  margin: 0 auto clamp(2.5rem, 5vw, 3.5rem);
+  padding: 0 var(--gut);
+}
+
+.strap {
+  position: relative;
+  height: clamp(64px, 7vw, 84px);
+  overflow: hidden;
+  clip-path: polygon(0 50%, 5% 0, 100% 0, 100% 100%, 5% 100%);
+  filter: drop-shadow(0 6px 6px color-mix(in oklab, var(--text) 30%, transparent));
+}
+
+.strap::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 7px 7px 7px 0;
+  border-top: 2px dashed color-mix(in oklab, var(--gilt) 85%, var(--wall));
+  border-bottom: 2px dashed color-mix(in oklab, var(--gilt) 85%, var(--wall));
+  --hole: radial-gradient(circle, var(--wall) 0 5px, color-mix(in oklab, var(--text) 50%, transparent) 6px, transparent 7px);
+  background:
+    var(--hole) 64px 50% / 16px 100% no-repeat,
+    var(--hole) 94px 50% / 16px 100% no-repeat,
+    var(--hole) 124px 50% / 16px 100% no-repeat,
+    var(--hole) 154px 50% / 16px 100% no-repeat,
+    var(--hole) 184px 50% / 16px 100% no-repeat;
+}
+
+.buckle {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--gut) + 2%);
+  width: clamp(64px, 7vw, 88px);
+  height: clamp(96px, 10vw, 120px);
+  box-sizing: border-box;
+  border: clamp(8px, 0.9vw, 11px) solid var(--gold);
+  border-radius: 14px;
+  box-shadow: 0 6px 10px -4px color-mix(in oklab, var(--text) 50%, transparent), inset 0 0 0 2px color-mix(in oklab, var(--gold) 70%, var(--text));
+  transform: translateY(-50%);
+}
+
+/* The prong. */
+.buckle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -40%;
+  width: 90%;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 4px;
+  background: var(--gold);
+}
+
+.leatherList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(2rem, 5vw, 4rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leatherList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.15rem 1rem;
+  padding: 1rem 0;
+  border-top: 2px solid var(--rule);
+}
+
+.leatherList h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.leatherList p {
+  grid-column: 1;
+  margin: 0;
+  color: var(--muted);
+}
+
+.leatherPrice {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--sign);
+  font-size: 1.1rem;
+  color: var(--stamp);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------- bench */
+
+.bench {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+  background: var(--panel);
+  border-top: 2px solid var(--rule);
+}
+
+.benchGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: start;
+}
+
+.nameNote p {
+  margin: 1rem 0 0;
+  font-size: 1.15rem;
+}
+
+/* A leather sample: rounded, stitched round its edge, punched for its
+   ring. */
+.swatch {
+  position: relative;
+  width: 11rem;
+  height: 8rem;
+  margin-bottom: 1.6rem;
+  overflow: hidden;
+  border-radius: 14px;
+  transform: rotate(-3deg);
+  box-shadow: 0 12px 20px -12px color-mix(in oklab, var(--text) 60%, transparent);
+}
+
+.swatch::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 8px;
+  border: 2px dashed color-mix(in oklab, var(--gilt) 80%, var(--wall));
+  border-radius: 8px;
+  background: radial-gradient(circle at 16px 16px, var(--panel) 0 6px, color-mix(in oklab, var(--text) 45%, transparent) 7px, transparent 8px);
+}
+
+.people {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.people li {
+  padding: 1.1rem 0;
+  border-top: 2px solid var(--rule);
+}
+
+.people li:last-child {
+  border-bottom: 2px solid var(--rule);
+}
+
+.people h3 {
+  font-family: var(--sign);
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.people p {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+.people .role {
+  margin-top: 0.15rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.cannot {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding: clamp(1.4rem, 3vw, 2rem) clamp(1.4rem, 3vw, 2.2rem);
+  border: 2px solid var(--stamp);
+  border-left-width: 10px;
+}
+
+.cannot h3 {
+  font-family: var(--sign);
+  font-size: 1.3rem;
+  color: var(--stamp);
+}
+
+.cannot ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 2.5rem;
+  margin: 1rem 0 0;
+  padding: 0 0 0 1.2rem;
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visit {
+  padding: clamp(4rem, 8vw, 6rem) 0;
+  border-top: 2px solid var(--rule);
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.visitSub {
+  margin: 0.5rem 0 0;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.hours {
+  margin: 1.6rem 0 1.4rem;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 2px solid var(--rule);
+}
+
+.hours div:last-child {
+  border-bottom: 2px solid var(--rule);
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+}
+
+.contact {
+  margin: 0 0 0.3rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.contact a {
+  text-decoration-color: var(--gilt);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* The drop box is a plate too, with the brass letter slot above its
+   words. */
+.dropBox {
+  padding: 3.2rem 3rem 3rem;
+}
+
+.dropBox::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 3.2rem;
+  left: 50%;
+  width: min(60%, 16rem);
+  height: 1.4rem;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--bottle), var(--bottle)) 50% 50% / calc(100% - 14px) 5px no-repeat,
+    var(--gilt);
+  transform: translateX(-50%);
+}
+
+.dropBox h3 {
+  margin-top: 1.6rem;
+  font-family: var(--sign);
+  font-size: 1.3rem;
+  line-height: 1.15;
+  color: var(--gilt);
+}
+
+.dropBox h3:first-child {
+  margin-top: 2.6rem;
+}
+
+.dropBox p {
+  margin: 0.5rem 0 0;
+}
+
+.dropBox .payNote {
+  margin-top: 1.4rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: 0;
+}
+
+.footText {
+  padding: 2.2rem var(--gut) 2.8rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.footText p {
+  margin: 0.3rem 0 0;
+}
+
+.footText .footName {
+  margin: 0 0 0.5rem;
+  font-family: var(--sign);
+  font-size: 1.6rem;
+  color: var(--fg);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1100px) {
+  .board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .times {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+
+  .times li:nth-child(4) {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .heroBelow,
+  .ticketGrid,
+  .benchGrid,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .leatherList,
+  .cannot ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .brogue {
+    grid-row: auto;
+    width: min(100%, 26rem);
+    justify-self: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .sign {
+    padding: 2.8rem 2.2rem;
+  }
+
+  .sign::before,
+  .plate::before,
+  .dropBox::before {
+    inset: 18px;
+  }
+
+  .signTop::before,
+  .signTop::after,
+  .signBottom::before,
+  .signBottom::after {
+    flex-basis: 1rem;
+  }
+
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .big {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .plate,
+  .big {
+    padding: 2.4rem 2rem 2.2rem;
+  }
+
+  .big .plateList li {
+    font-size: 1.05rem;
+    padding: 0.35rem 0;
+  }
+
+  .times {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .times li,
+  .times li + li {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1rem 0;
+    border-left: 0;
+    border-top: 2px solid color-mix(in oklab, var(--gilt) 55%, transparent);
+  }
+
+  .timeWhat {
+    margin: 0;
+  }
+
+  .timeN {
+    font-size: 2.6rem;
+  }
+
+  .dropBox {
+    padding: 2.6rem 2rem 2.4rem;
+  }
+
+  .dropBox::after {
+    top: 2.6rem;
+  }
+
+  .strap {
+    clip-path: polygon(0 50%, 9% 0, 100% 0, 100% 100%, 9% 100%);
+  }
+}

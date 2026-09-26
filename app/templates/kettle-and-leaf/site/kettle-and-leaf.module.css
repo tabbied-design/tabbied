@@ -1,0 +1,882 @@
+/* ==========================================================================
+   KETTLE & LEAF - tea room and tea shop, Moss Lane
+   Wabi-sabi: most of the page is empty paper, and what is on it is small
+   and deliberate. The hero is a round window onto a brushed field with an
+   open brush circle around it. The tea list is a hanging scroll, rolled at
+   head and foot, its mounting brocade the brushed pattern again, a narrow
+   column of paper in the middle of the page. Labels run vertically, the
+   way they would be written; the room is a paper screen with the shadow
+   of leaves behind its lattice. A thin mincho for the words that matter and
+   a light gothic for everything else.
+
+   Color. Five roles: rice paper, sumi and three muted inks (moss, matcha,
+   clay). Text is derived from the paper; the greens only color large type,
+   rules and the patterns.
+   ========================================================================== */
+
+.page {
+  --rice: #f3efe4;
+  --sumi: #2c2e28;
+  --moss: #6f7d5c;
+  --matcha: #a3ad7e;
+  --clay: #b07a55;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --max: 76rem;
+  --space: clamp(6rem, 13vw, 11rem);
+  --serif: 'Shippori Mincho', 'Hiragino Mincho ProN', Georgia, serif;
+  --sans: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Helvetica Neue', sans-serif;
+  --text: var(--sumi);
+  --on-sumi: var(--rice);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  background: var(--rice);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the paper's lightness, tinted toward the sumi:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--rice) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--sumi));
+    --on-sumi: oklch(from var(--sumi) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page {
+  --muted: color-mix(in oklab, var(--text) 74%, var(--rice));
+  --moss-ink: color-mix(in oklab, var(--moss) 68%, var(--text));
+  --hair: color-mix(in oklab, var(--text) 16%, var(--rice));
+  --scroll: color-mix(in oklab, var(--rice) 88%, var(--matcha));
+  --tint: color-mix(in oklab, var(--matcha) 18%, var(--rice));
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 1px solid var(--moss-ink);
+  outline-offset: 4px;
+}
+
+.page :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+
+.page :where(h1, h2) em {
+  font-style: normal;
+  color: var(--moss-ink);
+}
+
+.kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.small {
+  margin-top: 1.2rem;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.1rem var(--gut);
+  background: color-mix(in oklab, var(--rice) 94%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.mark {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1.4rem, 3vw, 3rem);
+}
+
+.nav a {
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  transition: color 200ms ease;
+}
+
+.nav a:hover {
+  color: var(--text);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--rice);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--max);
+  min-height: min(52rem, calc(100vh - 4rem));
+  margin: 0 auto;
+  padding: clamp(3rem, 8vw, 6rem) var(--gut) var(--space);
+}
+
+.side {
+  align-self: start;
+  writing-mode: vertical-rl;
+  font-size: 0.72rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-left: 1px solid var(--hair);
+  padding-left: 0.8rem;
+}
+
+.title {
+  font-size: clamp(2.6rem, 5vw, 4.6rem);
+  line-height: 1.25;
+}
+
+.title em {
+  display: block;
+}
+
+.lede {
+  max-width: 25rem;
+  margin-top: 2.2rem;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+.quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.6rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+}
+
+.quiet::after {
+  content: '';
+  width: 4rem;
+  height: 1px;
+  background: var(--text);
+  transition: width 240ms ease;
+}
+
+.quiet:hover::after {
+  width: 6rem;
+}
+
+/* The window, and the brush circle round it: two rings, each faded out at
+   its ends by a conic mask, so the stroke starts and lifts. */
+.windowWrap {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 29rem);
+  aspect-ratio: 1;
+}
+
+.window {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--tint);
+  border-radius: 50%;
+}
+
+.windowWrap::before,
+.windowWrap::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.windowWrap::before {
+  inset: -6%;
+  border: clamp(3px, 0.45vw, 5px) solid color-mix(in oklab, var(--text) 82%, var(--rice));
+  -webkit-mask-image: conic-gradient(from 210deg, transparent 0deg, var(--text) 50deg, var(--text) 300deg, transparent 338deg);
+  mask-image: conic-gradient(from 210deg, transparent 0deg, var(--text) 50deg, var(--text) 300deg, transparent 338deg);
+  transform: rotate(-4deg);
+}
+
+.windowWrap::after {
+  inset: -3.5%;
+  border: 1.5px solid var(--text);
+  -webkit-mask-image: conic-gradient(from 240deg, transparent 0deg, var(--text) 30deg, var(--text) 200deg, transparent 250deg);
+  mask-image: conic-gradient(from 240deg, transparent 0deg, var(--text) 30deg, var(--text) 200deg, transparent 250deg);
+  opacity: 0.5;
+}
+
+/* ---------------------------------------------------------------- the scroll */
+
+.teasSec {
+  padding: 0 var(--gut);
+}
+
+.scroll {
+  position: relative;
+  width: min(100%, 40rem);
+  margin: 0 auto;
+  filter: drop-shadow(0 24px 30px color-mix(in oklab, var(--text) 14%, transparent));
+}
+
+.roller {
+  position: relative;
+  z-index: 2;
+  display: block;
+  height: 18px;
+  margin: 0 calc(-1 * min(2.4rem, var(--gut)));
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--clay) 70%, var(--rice)), var(--clay) 45%, color-mix(in oklab, var(--clay) 65%, var(--sumi)));
+  border-radius: 9px;
+}
+
+.roller::before,
+.roller::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  width: 12px;
+  height: 24px;
+  background: var(--sumi);
+  border-radius: 4px;
+}
+
+.roller::before {
+  left: 0;
+}
+
+.roller::after {
+  right: 0;
+}
+
+.brocade {
+  position: relative;
+  height: clamp(4rem, 8vw, 5.5rem);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--moss) 22%, var(--rice));
+  border-bottom: 2px solid var(--clay);
+}
+
+.brocadeFoot {
+  border-top: 2px solid var(--clay);
+  border-bottom: 0;
+}
+
+.paper {
+  padding: clamp(3rem, 7vw, 5rem) clamp(1.2rem, 5vw, 3.6rem);
+  background: var(--scroll);
+}
+
+.scrollHead {
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  text-align: center;
+}
+
+/* The painting on the scroll: a few sumi strokes above the title, the
+   way a hanging scroll carries its picture over the words. */
+.kyusu {
+  width: min(52%, 13rem);
+  margin: 0 auto clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.scrollHead h2 {
+  font-size: clamp(2rem, 3.6vw, 2.7rem);
+  line-height: 1.3;
+}
+
+.scrollNote {
+  max-width: 26rem;
+  margin: 1rem auto 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.group {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0 clamp(1rem, 3vw, 1.8rem);
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--hair);
+}
+
+.group + .group {
+  margin-top: 2.4rem;
+}
+
+.groupName {
+  align-self: start;
+  writing-mode: vertical-rl;
+  padding-top: 0.4rem;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.3em;
+  color: var(--moss-ink);
+}
+
+.teas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.teas li {
+  padding: 0.6rem 0 1.8rem;
+}
+
+.teas li + li {
+  padding-top: 1.8rem;
+  border-top: 1px dashed var(--hair);
+}
+
+.teaName {
+  font-size: 1.45rem;
+  line-height: 1.35;
+}
+
+.origin {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.teaNote {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.brewing {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2.2rem;
+  margin: 0.9rem 0 0;
+}
+
+.brewing div {
+  display: grid;
+}
+
+.brewing dt {
+  font-size: 0.64rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.brewing dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.4;
+}
+
+.teaPrice {
+  margin-top: 0.7rem;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--space) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 34rem;
+  margin: 0 auto clamp(3rem, 6vw, 5rem);
+  text-align: center;
+}
+
+.secHead h2 {
+  margin-top: 1rem;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1.3;
+}
+
+.secNote {
+  margin-top: 1.2rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- afternoon */
+
+.sets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sets > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.4rem;
+  padding: 0 clamp(1.2rem, 3vw, 2.6rem);
+}
+
+.sets > li + li {
+  border-left: 1px solid var(--hair);
+}
+
+.setName {
+  grid-column: 2;
+  grid-row: 1;
+  writing-mode: vertical-rl;
+  font-size: clamp(1.4rem, 2vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+}
+
+.setBody {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.setFor {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.setList {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.setList li {
+  padding: 0.45rem 0;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  border-bottom: 1px solid var(--hair);
+}
+
+.setPrice {
+  margin-top: 1.2rem;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+}
+
+/* --------------------------------------------------------------------- room
+   A paper screen: the leaves behind it are the pattern, the lattice is
+   drawn over them in the frame's wood. */
+
+.room {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2.5rem, 7vw, 7rem);
+  align-items: center;
+}
+
+.grain {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--tint);
+  --frame: color-mix(in oklab, var(--clay) 80%, var(--sumi));
+  border: 6px solid var(--frame);
+}
+
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    repeating-linear-gradient(to right, transparent 0 calc(33.333% - 2px), var(--frame) calc(33.333% - 2px) 33.333%),
+    repeating-linear-gradient(to bottom, transparent 0 calc(20% - 2px), var(--frame) calc(20% - 2px) 20%);
+  pointer-events: none;
+}
+
+.roomText h2 {
+  margin-top: 1rem;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1.3;
+}
+
+.roomText h2 em {
+  display: block;
+}
+
+.roomLede {
+  max-width: 30rem;
+  margin-top: 1.6rem;
+  color: var(--muted);
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3rem clamp(3rem, 8vw, 7rem);
+  margin-top: clamp(4rem, 9vw, 7rem);
+}
+
+.colTitle {
+  margin-bottom: 1.2rem;
+  font-size: 1.4rem;
+}
+
+.rules {
+  margin: 0;
+}
+
+.rules div {
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--hair);
+}
+
+.rules dt {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+}
+
+.rules dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.brew {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: brew;
+}
+
+.brew li {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--hair);
+  counter-increment: brew;
+}
+
+.brewStep {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+}
+
+.brewStep::before {
+  content: counter(brew) '.';
+  display: inline-block;
+  width: 1.4rem;
+  color: var(--moss-ink);
+}
+
+.brew p {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem clamp(3rem, 8vw, 7rem);
+  align-items: start;
+  padding-top: clamp(3rem, 6vw, 4.5rem);
+  border-top: 1px solid var(--hair);
+}
+
+.visit h2 {
+  margin-top: 1rem;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1.3;
+}
+
+.address {
+  max-width: 24rem;
+  margin-top: 1.2rem;
+  color: var(--muted);
+}
+
+.contact {
+  margin-top: 1.4rem;
+  font-size: 0.95rem;
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 1px solid var(--hair);
+}
+
+.hours {
+  max-width: 24rem;
+  margin: 2rem 0 0;
+}
+
+.hours div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.2rem 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--hair);
+}
+
+.hours dt {
+  font-size: 0.9rem;
+}
+
+.hours dd {
+  margin: 0;
+  font-family: var(--serif);
+}
+
+.form {
+  display: grid;
+  gap: 1.3rem;
+  padding: 0 clamp(1.6rem, 4vw, 2.8rem) clamp(1.6rem, 4vw, 2.8rem);
+  background: var(--scroll);
+}
+
+.noren {
+  position: relative;
+  height: clamp(5rem, 8vw, 6.5rem);
+  margin: 0 calc(-1 * clamp(1.6rem, 4vw, 2.8rem)) 0.6rem;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--moss) 16%, var(--rice));
+  border-top: 5px solid color-mix(in oklab, var(--clay) 80%, var(--sumi));
+  -webkit-mask-image: linear-gradient(to right, var(--text) 0 calc(33.333% - 3px), transparent calc(33.333% - 3px) calc(33.333% + 3px), var(--text) calc(33.333% + 3px) calc(66.666% - 3px), transparent calc(66.666% - 3px) calc(66.666% + 3px), var(--text) calc(66.666% + 3px));
+  mask-image: linear-gradient(to right, var(--text) 0 calc(33.333% - 3px), transparent calc(33.333% - 3px) calc(33.333% + 3px), var(--text) calc(33.333% + 3px) calc(66.666% - 3px), transparent calc(66.666% - 3px) calc(66.666% + 3px), var(--text) calc(66.666% + 3px));
+}
+
+.formTitle {
+  font-size: 1.6rem;
+  margin-bottom: 0.2rem;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(0, 0.7fr);
+  gap: 1.2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.45rem 0;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--text) 40%, var(--rice));
+  border-radius: 0;
+}
+
+.field select option {
+  color: var(--text);
+  background: var(--rice);
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: none;
+  border-bottom-color: var(--text);
+}
+
+.btn {
+  justify-self: start;
+  margin-top: 0.4rem;
+  padding: 0.8rem 1.8rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  color: var(--on-sumi);
+  background: var(--sumi);
+  border: 1px solid color-mix(in oklab, var(--text) 50%, var(--sumi));
+  border-radius: 0;
+  cursor: pointer;
+  transition: opacity 200ms ease;
+}
+
+.btn:hover {
+  opacity: 0.86;
+}
+
+.form .small {
+  margin-top: 0;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  max-width: var(--max);
+  margin: var(--space) auto 0;
+  padding: 2.4rem var(--gut) 3rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.footer::before {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 1px;
+  margin: 0 auto 2.4rem;
+  background: var(--moss);
+}
+
+.footer p + p {
+  margin-top: 0.3rem;
+}
+
+.footer .footName {
+  margin-bottom: 0.6rem;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+.footer a {
+  border-bottom: 1px solid var(--hair);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 960px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .windowWrap {
+    grid-column: 1 / -1;
+    width: min(78%, 24rem);
+    margin-top: 1rem;
+  }
+
+  .sets {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3rem;
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+
+  .sets > li + li {
+    border-left: 0;
+    border-top: 1px solid var(--hair);
+    padding-top: 3rem;
+  }
+
+  .room,
+  .twoCol,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grain {
+    width: min(100%, 22rem);
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    gap: 1.2rem;
+  }
+
+  .side {
+    font-size: 0.64rem;
+  }
+
+  .group {
+    grid-template-columns: 1.4rem minmax(0, 1fr);
+  }
+
+  .brewing {
+    gap: 0.6rem 1.5rem;
+  }
+
+  .fieldRow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .fieldRow .field:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .brew li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .quiet::after,
+  .btn {
+    transition: none;
+  }
+}

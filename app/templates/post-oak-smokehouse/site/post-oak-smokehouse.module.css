@@ -1,0 +1,1538 @@
+/* ==========================================================================
+   POST OAK SMOKEHOUSE - Texas barbecue, Ferris Road
+   Butcher paper and a woodcut handbill. The page is the kraft paper the meat
+   is served on; the top is the handbill tacked by the door, set in wood type
+   with a woodcut plate beside it (drypoint hatching, char ink on paper). The
+   board below it is the painted menu board over the cutting block, priced by
+   the half pound. Then the tally the pitmaster keeps in chalk, the pit's
+   clock, and catering by the pound. Two inks and the paper, as a two-color
+   job printer would have run it: char for everything, red for the price
+   boxes, the stamp and the slash through five.
+   ========================================================================== */
+
+.page {
+  --kraft: #dcc6a2;   /* role 0: the butcher paper, the page ground */
+  --char: #1b1612;    /* the ink: the board, the woodcut hatching */
+  --red: #9e2418;     /* the second ink: price boxes, stamp, tally slash */
+  --smoke: #6f5a45;   /* the grain in the woodcut band */
+  --gut: clamp(1rem, 4vw, 2.5rem);
+  --wrap: 76rem;
+  --wood: 'Ultra', 'Rockwell Extra Bold', 'Zilla Slab', Georgia, serif;
+  --slab: 'Zilla Slab', Rockwell, Georgia, serif;
+  --text: var(--char);
+  --on-char: var(--kraft);
+  --on-red: var(--kraft);
+  --lift: var(--kraft);
+
+  /* Derived surfaces: never roles of their own. */
+  --sheet: color-mix(in oklab, var(--kraft) 52%, var(--lift));
+  --muted: color-mix(in oklab, var(--text) 76%, var(--kraft));
+  --rule: color-mix(in oklab, var(--text) 24%, transparent);
+  --shadow: color-mix(in oklab, var(--text) 30%, transparent);
+
+  font-family: var(--slab);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  background: var(--kraft);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--kraft) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--char));
+    --on-char: color-mix(in oklab, oklch(from var(--char) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--kraft));
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* The opposite pole: lighter paper on a light ground, deeper on a dark one. */
+    --lift: oklch(from var(--kraft) clamp(0, (l - 0.62) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+}
+
+.page :where(h2) {
+  font-family: var(--wood);
+  font-size: clamp(2.2rem, 5vw, 3.9rem);
+  line-height: 0.98;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+/* ------------------------------------------------------------------ top bar
+   A job printer's double rule under the name. */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.85rem var(--gut);
+  background: var(--kraft);
+  border-bottom: 6px double var(--text);
+}
+
+.mark {
+  font-family: var(--wood);
+  font-size: 1.35rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.3rem 1.4rem;
+}
+
+.nav a {
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: border-color 150ms ease;
+}
+
+.nav a:hover {
+  border-bottom-color: var(--red);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--kraft);
+}
+
+/* ------------------------------------------------------------ the handbill */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: stretch;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.bill {
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 3.5vw, 3rem);
+  text-align: center;
+  background: var(--sheet);
+  border: 3px solid var(--text);
+  box-shadow: 8px 8px 0 var(--shadow);
+}
+
+.billTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem 0;
+  margin: 0 0 1.4rem;
+  padding: 0 0 0.9rem;
+  list-style: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--text);
+}
+
+.billTop li + li::before {
+  content: '\2605';
+  margin: 0 0.8em;
+  color: var(--red);
+}
+
+.name {
+  font-family: var(--wood);
+  font-size: clamp(2.6rem, 6.2vw, 5.6rem);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.name em {
+  display: block;
+  width: fit-content;
+  margin: 0.14em auto 0;
+  padding: 0.12em 0.28em 0.16em;
+  font-size: 0.56em;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  color: var(--on-red);
+  background: var(--red);
+}
+
+.strap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.4rem 0 0;
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.strap::before,
+.strap::after {
+  content: '';
+  flex: 1;
+  height: 0;
+  border-top: 4px double var(--text);
+}
+
+.lede {
+  max-width: 34rem;
+  margin: 1.1rem auto 0;
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 1.8rem 0 0;
+  border-top: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+}
+
+.facts div {
+  padding: 0.7rem 0.5rem;
+}
+
+.facts div + div {
+  border-left: 1px solid var(--text);
+}
+
+.facts dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 1.8rem 0 0;
+}
+
+.btn,
+.btnGhost,
+.submit {
+  display: inline-block;
+  padding: 0.8rem 1.3rem;
+  font-family: var(--slab);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  border: 2px solid var(--text);
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.btn,
+.submit {
+  color: var(--on-red);
+  background: var(--red);
+  box-shadow: 4px 4px 0 var(--text);
+}
+
+.btnGhost {
+  color: var(--text);
+  background: transparent;
+}
+
+.btn:hover,
+.submit:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--text);
+}
+
+.btnGhost:hover {
+  background: var(--rule);
+}
+
+/* The woodcut plate: a heavy frame, a hairline inside it, and the block. */
+
+.cut {
+  position: relative;
+  min-height: 24rem;
+  padding: 10px;
+  background: var(--sheet);
+  border: 6px solid var(--text);
+}
+
+.plate {
+  position: absolute;
+  inset: 10px;
+  overflow: hidden;
+  border: 2px solid var(--text);
+}
+
+/* The print: a paper panel set into the hatching, the brisket cut on it. */
+.print {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 1.4rem 1.2rem 1.1rem;
+  background: var(--sheet);
+  border: 2px solid var(--text);
+  box-shadow: 0 0 0 8px var(--sheet);
+  transform: translateY(-50%);
+}
+
+.brisket {
+  width: 100%;
+}
+
+.printCap {
+  padding-top: 0.55rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+  border-top: 1px solid var(--text);
+}
+
+.stamp {
+  position: absolute;
+  left: -2.6rem;
+  bottom: 2.4rem;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  width: 9.5rem;
+  height: 9.5rem;
+  margin: 0;
+  text-align: center;
+  color: var(--on-red);
+  background: var(--red);
+  border-radius: 50%;
+  outline: 2px dashed var(--on-red);
+  outline-offset: -9px;
+  transform: rotate(-12deg);
+  box-shadow: 5px 5px 0 var(--shadow);
+}
+
+.stamp span {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.stamp strong {
+  font-family: var(--wood);
+  font-size: 2.3rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* --------------------------------------------------------------- the board
+   The painted board over the block: the one inverted band on the page. */
+
+.board {
+  padding: clamp(3.5rem, 7vw, 5.5rem) 0;
+  color: var(--on-char);
+  background: var(--char);
+}
+
+.boardHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  padding-bottom: 1.6rem;
+  border-bottom: 6px double var(--on-char);
+}
+
+.boardHead h2 {
+  font-size: clamp(2.8rem, 7vw, 5.6rem);
+}
+
+.boardNote {
+  max-width: 30rem;
+  margin: 0;
+  justify-self: end;
+  font-size: 1.05rem;
+  color: color-mix(in oklab, var(--on-char) 84%, var(--char));
+}
+
+.meats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(2rem, 5vw, 4.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.meat {
+  display: grid;
+  grid-template-columns: auto minmax(1.5rem, 1fr) auto;
+  gap: 0.25rem 0.8rem;
+  align-items: end;
+  padding: 1.5rem 0 1.3rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--on-char) 26%, transparent);
+}
+
+.meat h3 {
+  font-family: var(--wood);
+  font-size: clamp(1.35rem, 2.3vw, 1.75rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.leader {
+  align-self: end;
+  margin-bottom: 0.45rem;
+  border-bottom: 3px dotted color-mix(in oklab, var(--on-char) 48%, transparent);
+}
+
+.price {
+  grid-row: span 1;
+  padding: 0.12em 0.4em 0.1em;
+  font-family: var(--wood);
+  font-size: clamp(1.5rem, 2.6vw, 1.95rem);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--on-red);
+  background: var(--red);
+}
+
+.meatNote {
+  grid-column: 1 / 3;
+  margin: 0.2rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: color-mix(in oklab, var(--on-char) 84%, var(--char));
+}
+
+.per {
+  align-self: start;
+  justify-self: center;
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.days {
+  grid-column: 1 / -1;
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--on-char) 72%, var(--char));
+}
+
+.free {
+  margin: 2.4rem 0 0;
+  padding: 1.1rem 1.4rem;
+  text-align: center;
+  font-size: 1.15rem;
+  font-style: italic;
+  border: 2px dashed color-mix(in oklab, var(--on-char) 50%, transparent);
+}
+
+/* ------------------------------------------------------------------ sections */
+
+.sec {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: clamp(3.75rem, 8vw, 6rem) var(--gut) 0;
+}
+
+.secHead {
+  margin-bottom: 2.2rem;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.kicker::before {
+  content: '\2605';
+  color: var(--red);
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.secNote {
+  max-width: 38rem;
+  margin: 0.9rem 0 0;
+  font-size: 1.08rem;
+  color: var(--muted);
+}
+
+.label {
+  margin: 0 0 0.8rem;
+  font-family: var(--slab);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.small {
+  margin: 0.9rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------- the tally */
+
+.tally {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 3px solid var(--text);
+  border-bottom: 3px solid var(--text);
+}
+
+.tally thead th {
+  padding: 0.7rem 0.6rem 0.6rem 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 1px solid var(--text);
+}
+
+.tally tbody th,
+.tally td {
+  padding: 0.85rem 0.6rem 0.85rem 0;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--rule);
+}
+
+.tally tbody tr:last-child th,
+.tally tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.tally tbody th {
+  width: 26%;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.marksCell {
+  width: 40%;
+}
+
+.marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.1rem;
+  min-height: 30px;
+}
+
+/* A five: four strokes and a slash through them. */
+.five,
+.rest {
+  position: relative;
+  display: block;
+  height: 30px;
+  background: repeating-linear-gradient(90deg, var(--text) 0 3px, transparent 3px 9px);
+}
+
+.five {
+  width: 30px;
+}
+
+.five::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  top: 50%;
+  height: 3px;
+  margin-top: -1.5px;
+  background: var(--red);
+  transform: rotate(-24deg);
+}
+
+.r1 {
+  width: 3px;
+}
+
+.r2 {
+  width: 12px;
+}
+
+.r3 {
+  width: 21px;
+}
+
+.r4 {
+  width: 30px;
+}
+
+.count {
+  font-family: var(--wood);
+  font-size: 1.25rem;
+  white-space: nowrap;
+}
+
+.earliest {
+  font-size: 1.05rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Last Saturday: when each tray ran out, on a four-hour line. */
+
+.saturday {
+  margin-top: 2.6rem;
+  padding: clamp(1.3rem, 3vw, 2rem) clamp(1.2rem, 3vw, 2.2rem) 1.4rem;
+  background: var(--sheet);
+  border: 3px solid var(--text);
+  box-shadow: 8px 8px 0 var(--shadow);
+}
+
+.saturday h3 {
+  font-family: var(--wood);
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  text-transform: uppercase;
+}
+
+.satNote {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+}
+
+.clock {
+  position: relative;
+  height: 9.5rem;
+  margin: 1.4rem 1rem 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 3px solid var(--text);
+}
+
+.clock li {
+  position: absolute;
+  left: var(--at);
+  bottom: 0;
+  display: grid;
+  width: 8.5rem;
+  margin-left: -4.25rem;
+  padding-bottom: 1rem;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.clock li:nth-child(odd) {
+  padding-bottom: 4.6rem;
+}
+
+/* The stem down to the line, and the dot where it lands. */
+.clock li::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 2px;
+  height: 0.7rem;
+  margin-left: -1px;
+  background: var(--text);
+}
+
+.clock li:nth-child(odd)::before {
+  height: 4.3rem;
+}
+
+.clock li::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -7.5px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 0 2px var(--sheet);
+}
+
+.clock li:last-child {
+  margin-left: -8.5rem;
+  text-align: right;
+}
+
+.clock li:last-child::before,
+.clock li:last-child::after {
+  left: 100%;
+}
+
+.clock time {
+  font-family: var(--wood);
+  font-size: 1.15rem;
+}
+
+.clock span {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.axis {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.8rem 1rem 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.axis li {
+  width: 0;
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------ woodcut band */
+
+.woodBand {
+  position: relative;
+  height: clamp(110px, 12vw, 170px);
+  margin-top: clamp(4rem, 8vw, 6rem);
+  overflow: hidden;
+  background: var(--sheet);
+  border-top: 6px solid var(--text);
+  border-bottom: 6px solid var(--text);
+}
+
+/* ------------------------------------------------------------------- the pit */
+
+.pit {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: start;
+}
+
+.pitSide {
+  position: sticky;
+  top: 6rem;
+}
+
+.week {
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--text);
+}
+
+.week li {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.wd {
+  padding: 0.2rem 0;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 2px solid var(--text);
+}
+
+.dayOpen .wd {
+  color: var(--on-red);
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.wdWhat {
+  font-size: 0.98rem;
+}
+
+.dayOpen .wdWhat {
+  font-weight: 600;
+}
+
+.dayShut .wdWhat {
+  color: var(--muted);
+}
+
+.firebox {
+  position: relative;
+  height: 9rem;
+  margin-top: 1.8rem;
+  overflow: hidden;
+  background: var(--sheet);
+  border: 3px solid var(--text);
+}
+
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 3px solid var(--text);
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 1.3rem;
+  padding: 1.35rem 0;
+  border-top: 3px solid var(--text);
+}
+
+.timeline li + li {
+  border-top-width: 1px;
+  border-top-color: var(--rule);
+}
+
+.pitTime {
+  font-family: var(--wood);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.pitBody h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.pitBody p {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ sides */
+
+.sheet {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: clamp(1.75rem, 5vw, 4rem);
+  padding: clamp(1.3rem, 3.5vw, 2.6rem);
+  background: var(--sheet);
+  border: 3px solid var(--text);
+  box-shadow: 8px 8px 0 var(--shadow);
+}
+
+.sides {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.sides thead th {
+  padding: 0 0 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.sides thead th + th {
+  padding-left: 0.5rem;
+}
+
+.sides thead th:first-child {
+  text-align: left;
+}
+
+.sides tbody th,
+.sides td {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.sides tbody th {
+  text-align: left;
+  font-weight: 400;
+}
+
+.sides td {
+  width: 4.6rem;
+  text-align: right;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.sideName {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.sideNote {
+  display: block;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.extrasTitle {
+  margin: 0 0 0.5rem;
+  font-family: var(--wood);
+  font-size: 1.35rem;
+  text-transform: uppercase;
+}
+
+.priced {
+  margin: 0 0 1.8rem;
+}
+
+.priced:last-child {
+  margin-bottom: 0;
+}
+
+.priced div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.priced dt {
+  font-weight: 700;
+}
+
+.pricedNote {
+  grid-column: 1;
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.pricedPrice {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- catering */
+
+.caterGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.perLb {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin: 0 0 2.2rem;
+  border-top: 2px solid var(--text);
+}
+
+.perLb div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.perLb dt {
+  font-weight: 500;
+}
+
+.perLb dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.guests {
+  width: 100%;
+  margin-bottom: 2rem;
+  border-collapse: collapse;
+  border-top: 2px solid var(--text);
+}
+
+.guests thead th {
+  padding: 0.6rem 0.8rem 0.5rem 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+  border-bottom: 1px solid var(--text);
+}
+
+.guests tbody th,
+.guests td {
+  padding: 0.65rem 0.8rem 0.65rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.guests tbody th {
+  font-family: var(--wood);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.guests td:last-child {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.terms {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.terms li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1.6rem;
+}
+
+.terms li::before {
+  content: '\2605';
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  color: var(--red);
+}
+
+.form {
+  background: var(--sheet);
+  border: 3px solid var(--text);
+  box-shadow: 8px 8px 0 var(--shadow);
+}
+
+.formStrip {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+  border-bottom: 3px solid var(--text);
+}
+
+.formBody {
+  padding: clamp(1.2rem, 3vw, 1.9rem);
+}
+
+.formTitle {
+  margin-bottom: 1.1rem;
+  font-family: var(--wood);
+  font-size: 1.7rem;
+  text-transform: uppercase;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.65rem 0.75rem;
+  font-family: var(--slab);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--kraft);
+  border: 2px solid var(--text);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 0;
+}
+
+.submit {
+  margin-top: 1.3rem;
+}
+
+/* --------------------------------------------------------------------- faq */
+
+.faq {
+  border-top: 3px solid var(--text);
+  border-bottom: 3px solid var(--text);
+}
+
+.faq details + details {
+  border-top: 1px solid var(--rule);
+}
+
+.faq summary {
+  position: relative;
+  padding: 1.1rem 2.5rem 1.1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 0.2rem;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin-top: -0.9rem;
+  font-family: var(--slab);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+  border: 2px solid var(--text);
+  border-radius: 50%;
+}
+
+.faq details[open] summary::after {
+  color: var(--on-red);
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.faq details[open] summary::after {
+  content: '\2212';
+}
+
+.faq details p {
+  max-width: 44rem;
+  margin: 0;
+  padding: 0 0 1.3rem;
+  font-size: 1.05rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- find */
+
+.findGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.sign {
+  padding: 1.6rem 1.6rem 1.4rem;
+  color: var(--on-char);
+  background: var(--char);
+  border: 3px solid var(--text);
+  outline: 2px solid var(--on-char);
+  outline-offset: -10px;
+}
+
+.signAddr {
+  margin: 0;
+  font-family: var(--wood);
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+.signSub {
+  margin: 0.5rem 0 0;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.signLinks {
+  display: grid;
+  gap: 0.3rem;
+  margin: 1.2rem 0 0;
+  padding-top: 1rem;
+  font-weight: 600;
+  border-top: 1px solid color-mix(in oklab, var(--on-char) 35%, transparent);
+  overflow-wrap: anywhere;
+}
+
+.signLinks a:hover {
+  text-decoration: underline;
+}
+
+.hours {
+  margin: 0;
+  border-top: 3px solid var(--text);
+}
+
+.hours div {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dt {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hours dd {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.findNotes p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  padding: 2.4rem var(--gut) 2.8rem;
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--on-char);
+  background: var(--char);
+  border-top: 6px double var(--text);
+}
+
+.footer p {
+  margin: 0.3rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.6rem;
+  font-family: var(--wood);
+  font-size: 1.7rem;
+  text-transform: uppercase;
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1060px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .pit,
+  .caterGrid,
+  .sheet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cut {
+    min-height: 26rem;
+    margin: 0 0 0 1.4rem;
+  }
+
+  .stamp {
+    left: -1.4rem;
+    bottom: auto;
+    top: -1.4rem;
+    width: 7.4rem;
+    height: 7.4rem;
+  }
+
+  .stamp strong {
+    font-size: 1.8rem;
+  }
+
+  .pitSide {
+    position: static;
+  }
+
+  .findGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .sign {
+    grid-column: 1 / -1;
+  }
+
+  /* The clock turns into a list: time, then what ran out. */
+  .clock {
+    height: auto;
+    margin: 1.2rem 0 0;
+    border-bottom: 0;
+    border-left: 3px solid var(--text);
+  }
+
+  .clock li,
+  .clock li:nth-child(odd),
+  .clock li:last-child {
+    position: relative;
+    left: auto;
+    display: grid;
+    grid-template-columns: 4.2rem minmax(0, 1fr);
+    gap: 0.8rem;
+    align-items: baseline;
+    width: auto;
+    margin: 0;
+    padding: 0.45rem 0 0.45rem 1.1rem;
+    text-align: left;
+  }
+
+  .clock li::before,
+  .clock li:nth-child(odd)::before,
+  .clock li:last-child::before {
+    display: none;
+  }
+
+  .clock li::after,
+  .clock li:last-child::after {
+    left: -7.5px;
+    top: 50%;
+    bottom: auto;
+    margin: -6px 0 0;
+  }
+
+  .axis {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .boardHead,
+  .meats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .boardNote {
+    justify-self: start;
+  }
+
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts div + div {
+    border-left: 0;
+    border-top: 1px solid var(--text);
+  }
+
+  /* The tally as stacked rows: name and count, then the marks. */
+  .tally thead {
+    display: none;
+  }
+
+  .tally tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.4rem 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .tally tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .tally tbody th,
+  .tally td {
+    width: auto;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .tally tbody th {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .count {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    font-size: 1.1rem;
+  }
+
+  .marksCell {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .earliest {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+    justify-self: end;
+    font-size: 0.92rem;
+  }
+
+  .sheet {
+    padding: 1.1rem 1rem 1.3rem;
+  }
+
+  .sides td {
+    width: 3.1rem;
+    font-size: 0.95rem;
+  }
+
+  .sideName {
+    font-size: 1.05rem;
+  }
+
+  .sideNote {
+    font-size: 0.86rem;
+  }
+
+  .perLb {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formGrid,
+  .findGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .timeline li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+
+  .guests {
+    font-size: 0.92rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav a,
+  .btn,
+  .btnGhost,
+  .submit {
+    transition: none;
+  }
+
+  .btn:hover,
+  .submit:hover {
+    transform: none;
+  }
+}

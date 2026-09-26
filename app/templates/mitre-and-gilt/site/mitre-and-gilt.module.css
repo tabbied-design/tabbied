@@ -1,0 +1,1116 @@
+/* ==========================================================================
+   MITRE & GILT - picture framers, Lantern Street
+   The page is a gallery: a warm wall, work hung on it and a printed label
+   beside each piece. The frames are drawn in CSS the way a framer builds
+   them, four lengths of moulding meeting at mitred corners, each side lit
+   a little differently so the joins show. The patterns are the pictures
+   inside them. Each section is a room with its number; the fifth room is
+   painted green, the way museums paint the room for the one big piece.
+   Spectral, light and italic, for the wall text; Familjen Grotesk for the
+   labels, set small like the ones in a museum.
+   ========================================================================== */
+
+.page {
+  --wall: #e9e4da;
+  --ink: #1c1a17;
+  --gilt: #b08a3e;
+  --walnut: #5b3a25;
+  --green: #2c4a40;
+  --gut: clamp(1rem, 5vw, 4rem);
+  --col: 76rem;
+  --serif: 'Spectral', 'Georgia', serif;
+  --sans: 'Familjen Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --text: var(--ink);
+  --anti: var(--wall);
+  --on-ink: var(--wall);
+  --on-green: var(--wall);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--wall);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink:
+       readable on any ground a palette can bring. --anti is the other
+       one: the direction a label or a mat moves away from the text. */
+    --text: color-mix(in oklab, oklch(from var(--wall) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--ink));
+    --anti: oklch(from var(--wall) clamp(0, (l - 0.62) * 1000, 1) 0 0);
+    --on-ink: oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-green: oklch(from var(--green) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+/* Derived surfaces: the label card, the mat board, rules and muted text. */
+.page {
+  --card: color-mix(in oklab, var(--wall) 40%, var(--anti));
+  --board: color-mix(in oklab, var(--wall) 25%, var(--anti));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --muted: color-mix(in oklab, var(--text) 72%, var(--wall));
+  --gilt-text: color-mix(in oklab, var(--gilt) 62%, var(--text));
+  --hang-shadow: 0 1.6rem 2.2rem -1.3rem color-mix(in oklab, var(--text) 55%, transparent);
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--gilt);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  text-wrap: balance;
+}
+
+.page figure {
+  margin: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.95rem var(--gut);
+  background: color-mix(in oklab, var(--wall) 93%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4rem clamp(1rem, 2vw, 1.9rem);
+}
+
+.nav a {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.nav a:hover {
+  color: var(--gilt-text);
+}
+
+.siteMenu {
+  display: none;
+  --template-menu-bg: var(--wall);
+}
+
+/* --------------------------------------------------------------- the frame
+   Four sides of one moulding, each lit differently so the mitres show:
+   the top catches the light, the bottom sits in shadow. */
+
+.frame {
+  --tone: var(--gilt);
+  --fw: 1.4rem;
+  position: relative;
+  border: var(--fw) solid;
+  border-color:
+    color-mix(in oklab, var(--tone) 72%, var(--anti))
+    color-mix(in oklab, var(--tone) 82%, var(--ink))
+    color-mix(in oklab, var(--tone) 60%, var(--ink))
+    color-mix(in oklab, var(--tone) 88%, var(--anti));
+  box-shadow:
+    var(--hang-shadow),
+    0 0 0 1px color-mix(in oklab, var(--tone) 45%, var(--ink));
+}
+
+.frameGilt {
+  --tone: var(--gilt);
+  --fw: clamp(1rem, 1.9vw, 1.6rem);
+}
+
+.frameBlack {
+  --tone: var(--ink);
+  --fw: clamp(0.6rem, 1vw, 0.85rem);
+}
+
+.frameWide {
+  --fw: clamp(0.8rem, 1.3vw, 1.1rem);
+}
+
+.mat {
+  padding: clamp(1.1rem, 2.8vw, 2.3rem);
+  background: var(--board);
+  box-shadow:
+    inset 0 0.4rem 0.6rem -0.35rem color-mix(in oklab, var(--text) 45%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--text) 12%, transparent);
+}
+
+.frameGilt .mat {
+  box-shadow:
+    inset 0 0 0 0.3rem color-mix(in oklab, var(--gilt) 70%, var(--anti)),
+    inset 0 0.7rem 0.8rem -0.4rem color-mix(in oklab, var(--text) 45%, transparent);
+}
+
+.matDeep {
+  padding: clamp(1.6rem, 4vw, 3.2rem);
+}
+
+/* The picture, with the white core of the mat's bevel around it. */
+.art {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--wall);
+  box-shadow: 0 0 0 0.22rem color-mix(in oklab, var(--anti) 85%, var(--wall));
+}
+
+.artTall {
+  aspect-ratio: 3 / 4;
+}
+
+.artSquare {
+  aspect-ratio: 1;
+}
+
+/* The etching's sheet: the paper it was printed on, inside the mat. */
+.paper {
+  padding: 3% 4%;
+  background: color-mix(in oklab, var(--wall) 22%, var(--anti));
+  box-shadow: 0 0 0 0.22rem color-mix(in oklab, var(--anti) 85%, var(--wall));
+}
+
+.etching {
+  width: 100%;
+}
+
+.frameWalnut {
+  --tone: var(--walnut);
+  --fw: clamp(0.8rem, 1.3vw, 1.1rem);
+}
+
+/* Two mats: the white one, and a narrow green one inside it. */
+.matDouble {
+  padding: clamp(1rem, 2.2vw, 1.7rem);
+}
+
+.matInner {
+  padding: clamp(0.35rem, 0.6vw, 0.5rem);
+  background: var(--green);
+  box-shadow: 0 0 0 0.2rem color-mix(in oklab, var(--anti) 85%, var(--wall));
+}
+
+/* ------------------------------------------------------------ wall labels */
+
+.label {
+  display: grid;
+  gap: 0.05rem;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 1.3rem;
+  padding: 0.7rem 0.95rem 0.8rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--text) 22%, transparent);
+}
+
+.labelName {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.labelTitle {
+  font-family: var(--serif);
+  font-size: 0.98rem;
+  font-style: italic;
+}
+
+.labelBody {
+  color: var(--muted);
+}
+
+.labelPrice {
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.kicker,
+.room {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0 0 1.1rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.kicker::before,
+.room::before {
+  content: '';
+  flex: none;
+  width: 2.2rem;
+  height: 1px;
+  background: var(--gilt);
+}
+
+.title {
+  font-size: clamp(2.6rem, 4.5vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--gilt-text);
+}
+
+.lede {
+  max-width: 32rem;
+  margin: 1.6rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 1.5vw, 1.28rem);
+  line-height: 1.55;
+}
+
+.heroLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.8rem;
+  margin: 2.2rem 0 0;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.9rem 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--ink) 80%, var(--gilt));
+}
+
+.textLink {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  border-bottom: 1px solid var(--gilt);
+}
+
+/* A salon hang: a big gilt frame and a small black one below its line. */
+.salon {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+  align-items: end;
+}
+
+.hangSmall {
+  margin-bottom: clamp(2rem, 6vw, 5rem);
+}
+
+.hangBig .mat {
+  padding: clamp(0.9rem, 2vw, 1.6rem);
+}
+
+.hangSmall .mat {
+  padding: clamp(0.8rem, 1.8vw, 1.4rem);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.secHead h2 {
+  font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.secNote {
+  max-width: 38rem;
+  margin: 0.9rem 0 0;
+  color: var(--muted);
+}
+
+.page .subHead {
+  margin: 0 0 1rem;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------------- the process */
+
+.process {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.process li {
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--text);
+}
+
+.numeral {
+  display: block;
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--gilt-text);
+}
+
+.process h3 {
+  margin: 0.9rem 0 0.4rem;
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.process p {
+  margin: 0;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ corner samples
+   An L of moulding: the top length and the left length, each cut at 45
+   degrees where they meet. The width of the moulding is --w. */
+
+.corners {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.corner {
+  --t: var(--gilt);
+  --w: 2rem;
+  position: relative;
+  aspect-ratio: 1.9;
+  background:
+    linear-gradient(var(--wall) 0 0) calc(var(--w) + 1.7rem) calc(var(--w) + 1.7rem) / 100% 100% no-repeat,
+    linear-gradient(color-mix(in oklab, var(--anti) 85%, var(--wall)) 0 0) calc(var(--w) + 1.45rem) calc(var(--w) + 1.45rem) / 100% 100% no-repeat,
+    var(--board);
+  filter: drop-shadow(0 0.9rem 0.9rem color-mix(in oklab, var(--text) 30%, transparent));
+}
+
+.corner::before,
+.corner::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.corner::before {
+  right: 0;
+  height: var(--w);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--t) 62%, var(--anti)) 0,
+    var(--t) 38%,
+    color-mix(in oklab, var(--t) 72%, var(--ink)) 100%
+  );
+  clip-path: polygon(0 0, 100% 0, 100% 100%, var(--w) 100%);
+}
+
+.corner::after {
+  bottom: 0;
+  width: var(--w);
+  background: linear-gradient(
+    to right,
+    color-mix(in oklab, var(--t) 70%, var(--anti)) 0,
+    var(--t) 38%,
+    color-mix(in oklab, var(--t) 78%, var(--ink)) 100%
+  );
+  clip-path: polygon(0 0, 100% var(--w), 100% 100%, 0 100%);
+}
+
+.toneGilt {
+  --t: var(--gilt);
+  --w: 2.7rem;
+}
+
+.toneBlack {
+  --t: var(--ink);
+  --w: 1.7rem;
+}
+
+.toneWalnut {
+  --t: var(--walnut);
+  --w: 2.1rem;
+}
+
+.toneOak {
+  --t: color-mix(in oklab, var(--gilt) 45%, var(--wall));
+  --w: 1.4rem;
+}
+
+.toneWhite {
+  --t: color-mix(in oklab, var(--wall) 35%, var(--anti));
+  --w: 1.1rem;
+}
+
+.toneGreen {
+  --t: var(--green);
+  --w: 1.4rem;
+}
+
+.cornerItem .label {
+  margin-top: 1.1rem;
+}
+
+/* -------------------------------------------------------- mats and glass */
+
+.matsHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.matsHead .secHead {
+  margin-bottom: 0;
+}
+
+/* The label hangs to the left of the frame, level with its bottom edge. */
+.matDemo {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-end;
+  gap: 1.3rem;
+}
+
+.matDemo .frame {
+  flex: none;
+  width: clamp(11rem, 16vw, 14rem);
+}
+
+.matDemo .label {
+  max-width: 12rem;
+  margin-top: 0;
+}
+
+.matsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.list {
+  margin: 0;
+}
+
+.list div,
+.services div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 1.2rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.list div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.list dt,
+.services dt {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.list dd,
+.services dd {
+  margin: 0;
+}
+
+.listWhat {
+  grid-column: 1;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.listPrice {
+  grid-column: 2;
+  grid-row: 1;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem 0.6rem;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.table th:first-child {
+  padding-left: 0;
+}
+
+.table th:last-child,
+.table td:last-child {
+  padding-right: 0;
+}
+
+.table thead th {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--text);
+}
+
+.table tbody th {
+  font-weight: 400;
+}
+
+.glassName {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+}
+
+.glassGood {
+  display: block;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.table .right {
+  text-align: right;
+}
+
+/* -------------------------------------------------------------- the prices
+   Five sizes to scale, hung on one center line. */
+
+.sizeWrap {
+  overflow-x: auto;
+}
+
+.sizeWall {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-width: 34rem;
+  margin: 0;
+  padding: 1rem 0;
+  list-style: none;
+}
+
+.sizeWall::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: -1;
+  border-top: 1px dashed var(--gilt);
+}
+
+.scaled {
+  --tone: var(--ink);
+  display: grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  font-size: clamp(0.62rem, 0.9vw, 0.8rem);
+  font-weight: 600;
+  text-align: center;
+  background: var(--board);
+  border: clamp(0.25rem, 0.5vw, 0.45rem) solid;
+  border-color:
+    color-mix(in oklab, var(--tone) 72%, var(--anti))
+    color-mix(in oklab, var(--tone) 82%, var(--ink))
+    color-mix(in oklab, var(--tone) 60%, var(--ink))
+    color-mix(in oklab, var(--tone) 88%, var(--anti));
+  box-shadow: 0 0.8rem 1.2rem -0.8rem color-mix(in oklab, var(--text) 55%, transparent);
+}
+
+.hang1 {
+  width: 7.6%;
+  aspect-ratio: 8 / 10;
+}
+
+.hang2 {
+  --tone: var(--walnut);
+  width: 10.5%;
+  aspect-ratio: 11 / 14;
+}
+
+.hang3 {
+  --tone: var(--gilt);
+  width: 15.2%;
+  aspect-ratio: 16 / 20;
+}
+
+.hang4 {
+  width: 22.8%;
+  aspect-ratio: 24 / 36;
+}
+
+.hang5 {
+  --tone: color-mix(in oklab, var(--gilt) 45%, var(--wall));
+  width: 28.5%;
+  aspect-ratio: 30 / 40;
+}
+
+.centerLine {
+  margin: 0.5rem 0 2.5rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.priceTable td {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+}
+
+.priceTable tbody th {
+  font-weight: 600;
+}
+
+.builds {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 1.6rem 0 0;
+}
+
+.builds dt {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.builds dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- objects */
+
+.objectsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: center;
+}
+
+/* A deep box: walnut sides, and the shadow they throw onto the cloth. */
+.box {
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  background: color-mix(in oklab, var(--wall) 55%, var(--gilt));
+  border: clamp(0.9rem, 1.6vw, 1.3rem) solid;
+  border-color:
+    color-mix(in oklab, var(--walnut) 72%, var(--anti))
+    color-mix(in oklab, var(--walnut) 82%, var(--ink))
+    color-mix(in oklab, var(--walnut) 60%, var(--ink))
+    color-mix(in oklab, var(--walnut) 88%, var(--anti));
+  box-shadow:
+    var(--hang-shadow),
+    inset 0 1.2rem 1.4rem -0.6rem color-mix(in oklab, var(--text) 55%, transparent),
+    inset 0.9rem 0 1.2rem -0.8rem color-mix(in oklab, var(--text) 40%, transparent);
+}
+
+.boxInner {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  box-shadow: 0 0.6rem 0.8rem -0.3rem color-mix(in oklab, var(--text) 45%, transparent);
+}
+
+/* ------------------------------------------------------- the green room */
+
+.feature {
+  margin-top: clamp(5rem, 10vw, 8rem);
+  background: var(--green);
+  color: var(--on-green);
+}
+
+.featureInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.feature .room::before {
+  background: color-mix(in oklab, var(--on-green) 60%, var(--gilt));
+}
+
+.featureText h2 {
+  font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.featureNote {
+  max-width: 34rem;
+  margin: 1rem 0 2rem;
+  color: color-mix(in oklab, var(--on-green) 78%, transparent);
+}
+
+.services {
+  margin: 0;
+}
+
+.services div {
+  border-top-color: color-mix(in oklab, var(--on-green) 22%, transparent);
+}
+
+.services div:last-child {
+  border-bottom: 1px solid color-mix(in oklab, var(--on-green) 22%, transparent);
+}
+
+.services .listWhat {
+  color: color-mix(in oklab, var(--on-green) 75%, transparent);
+}
+
+.featureHang {
+  width: min(100%, 27rem);
+  justify-self: center;
+}
+
+.labelOnGreen {
+  box-shadow: 0 1px 3px color-mix(in oklab, var(--ink) 50%, transparent);
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.address {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.contact {
+  margin: 0.5rem 0 0;
+  font-weight: 600;
+}
+
+.contact a {
+  border-bottom: 1px solid var(--gilt);
+}
+
+.hours {
+  margin: 0;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.hours div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.hours dd {
+  margin: 0;
+  text-align: right;
+}
+
+.faq {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  border-bottom: 1px solid var(--rule);
+}
+
+.faqItem {
+  border-top: 1px solid var(--rule);
+}
+
+.faqItem summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: '+';
+  flex: none;
+  font-family: var(--sans);
+  color: var(--muted);
+}
+
+.faqItem[open] summary::after {
+  content: '-';
+}
+
+.faqItem p {
+  max-width: 42rem;
+  margin: 0 0 1.2rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  max-width: var(--col);
+  margin: clamp(5rem, 10vw, 7.5rem) auto 0;
+  padding: 2rem var(--gut) 2.8rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.footer p {
+  margin: 0.2rem 0 0;
+}
+
+.footer .footName {
+  margin: 0 0 0.6rem;
+  padding-top: 1.8rem;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  color: var(--text);
+  border-top: 1px solid var(--text);
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .process {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1.6rem;
+  }
+
+  .corners {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero,
+  .matsGrid,
+  .objectsGrid,
+  .featureInner,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .salon {
+    max-width: 34rem;
+  }
+
+  .matsHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .matDemo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .matDemo .label {
+    max-width: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .process {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .process li {
+    display: grid;
+    grid-template-columns: 3.2rem minmax(0, 1fr);
+    column-gap: 0.8rem;
+    padding: 1rem 0 1.2rem;
+    border-top-color: var(--rule);
+  }
+
+  .numeral {
+    grid-row: 1 / span 2;
+    font-size: 2rem;
+  }
+
+  .process h3 {
+    margin-top: 0;
+  }
+
+  .corners {
+    gap: 2rem 1rem;
+  }
+
+  .corner {
+    --w: 1.4rem;
+  }
+
+  .toneGilt {
+    --w: 1.9rem;
+  }
+
+  .label {
+    padding: 0.55rem 0.7rem 0.65rem;
+    font-size: 0.76rem;
+  }
+
+  .builds {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .sizeWall {
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .scaled span {
+    display: none;
+  }
+
+  .boxHang {
+    width: min(86%, 20rem);
+    justify-self: center;
+  }
+
+  .salon {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .hangSmall .label,
+  .hangBig .label {
+    font-size: 0.72rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    backdrop-filter: none;
+  }
+}
