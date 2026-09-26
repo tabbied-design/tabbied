@@ -597,9 +597,10 @@
     margin: 0 -22px 30px;
   }
 
+  /* The design's 196px window, which it measures inside the padding. */
   .palettes {
     height: auto;
-    max-height: 196px;
+    max-height: 222px;
     padding: 0 10px 26px;
   }
 
