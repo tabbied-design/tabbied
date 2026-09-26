@@ -113,10 +113,13 @@
   gap: 12px;
 }
 
+/* A hairline edge rather than a drop shadow, so a near-white ink still has
+   one. */
 .dialogSwatch {
   --swatch-size: 44px;
   flex: none;
   border-radius: 9px;
+  box-shadow: 0 0 0 1px oklch(0 0 0 / 0.12);
 }
 
 /* Hex field: a fixed "#" fused to the left of a borderless digits input,
