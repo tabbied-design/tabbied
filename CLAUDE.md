@@ -144,12 +144,12 @@ and it changed no behavior: same MCP handler, same statelessness, same
 JSON 404); auth, generations, media, and the AI gateway land with the bindings
 they need. See `agent-outputs/20260827-studio-ai-plan.md`.
 
-The export is comfortably inside the platform limits - roughly 11,100 files
-against a 20,000 free-plan ceiling, largest file 2.8 MB against 25 MiB - but
+The export is comfortably inside the platform limits - roughly 13,100 files
+against a 20,000 free-plan ceiling, largest file 3.0 MB against 25 MiB - but
 both are counted per Worker *version*. Don't treat that file count as stable:
 most of it is per-route RSC payloads, and a Next minor can move it a lot (16.3
 cut ~1,400 files off 16.2's output without changing a page). What is stable is
-`public/downloads/`, a flat 5,228 files for 227 sites (the artwork ones ship
+`public/downloads/`, a flat 6,450 files for 277 sites (the artwork ones ship
 their pictures in both packages), so a batch of new template sites is the
 thing most likely to actually threaten the ceiling. `wrangler deploy` prints
 the count it uploaded.
@@ -244,7 +244,7 @@ and *not* `zip` - so CI stayed green while the first Workers deploy died with
 fflate (zero dependencies), so the only thing the packaging step needs is the
 Node that is already running it. Don't reintroduce a PATH lookup here. Two
 details it depends on: every directory gets its own zero-length `<name>/`
-entry, because 98 of the 227 sites reference no images and their empty
+entry, because 106 of the 277 sites reference no image files and their empty
 `images/` (and the React package's `public/`) would otherwise vanish from
 the download;
 and entries carry the source file's real mtime, which `zip -r` did and fflate
@@ -302,7 +302,7 @@ code: the placeholders already carry their config as `data-*` attributes
 `hydratePatterns()` call revives the whole page.
 
 A site fails loudly rather than shipping broken: more than one CSS module on a
-page, or two hashed names collapsing onto one plain name. All 227 sites
+page, or two hashed names collapsing onto one plain name. All 277 sites
 package, so `KNOWN_UNSUPPORTED` is empty - anything that throws is a new
 problem and exits non-zero.
 
@@ -527,6 +527,10 @@ Five things worth not re-litigating:
 - **The HTML package inlines every `--artwork-mask`** as a data URI
   (`inlineArtworkMasks` in the packager). A CSS mask is a CORS fetch, and
   a page opened from disk, as its README says to, is refused every one.
+  Each file is inlined once, as a `--artwork-src-N` property on `:root` in
+  the head, and every use reads it with `var()`: inlined at each use, a
+  drawing repeated as twenty list bullets put twenty copies in the page,
+  and Longmeadow's HTML came to 4.2 MB (246 KB once per file).
 - **A pattern fill's pattern is the Artwork's only child**, and the
   annotator treats the Artwork as the pattern's wrapper, so the
   `data-edit-pattern` and `data-edit-roles` it writes land on `<Artwork>`,

@@ -264,24 +264,37 @@ function rewriteImagePaths(html) {
 /**
  * A CSS mask is fetched in CORS mode, and a page opened from disk (which is
  * how this package's README says to open it) is refused every one: Artwork's
- * masked kinds would render as blank boxes. So each `--artwork-mask` rides
- * inline as a data URI. The file still ships in images/ beside it.
+ * masked kinds would render as blank boxes. So each mask rides in the page as
+ * a data URI. The file still ships in images/ beside it.
+ *
+ * Once per file, not once per use: a data URI is written as a `:root` custom
+ * property in the head and every `--artwork-mask` reads it with `var()`. Inlined
+ * at each use, a drawing repeated as list bullets or a garland was copied
+ * whole into every one of them, and one page's HTML ran to 4 MB.
  */
 function inlineArtworkMasks(html, used) {
   const byBasename = new Map(used.map((relativePath) => [path.basename(relativePath), relativePath]));
-  const cache = new Map();
+  const properties = new Map();
+  const declarations = [];
 
-  return html.replace(/--artwork-mask:url\(\.\/images\/([^)]+)\)/g, (_match, basename) => {
+  const rewritten = html.replace(/--artwork-mask:url\(\.\/images\/([^)]+)\)/g, (_match, basename) => {
     const relativePath = byBasename.get(basename);
 
     if (!relativePath) throw new Error(`artwork mask ${basename} was not among the page's images`);
-    if (!cache.has(basename)) {
+    if (!properties.has(basename)) {
       const bytes = fsSync.readFileSync(path.join(publicDir, 'images', relativePath));
-      cache.set(basename, `data:image/webp;base64,${bytes.toString('base64')}`);
+      const property = `--artwork-src-${properties.size + 1}`;
+      properties.set(basename, property);
+      declarations.push(`${property}:url(data:image/webp;base64,${bytes.toString('base64')})`);
     }
 
-    return `--artwork-mask:url(${cache.get(basename)})`;
+    return `--artwork-mask:var(${properties.get(basename)})`;
   });
+
+  if (declarations.length === 0) return rewritten;
+  if (!rewritten.includes('</head>')) throw new Error('a page with artwork masks has no </head> to carry them');
+
+  return rewritten.replace('</head>', `<style>:root{${declarations.join(';')}}</style></head>`);
 }
 
 /** The pattern slugs the page mounts, in first-appearance order. */

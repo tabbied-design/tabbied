@@ -185,7 +185,11 @@ test.describe('pictures that follow the palette', () => {
 
       expect(html, `${slug}: a mask left as a file URL`).not.toMatch(/--artwork-mask:url\(\.\//);
       if (/artwork--(mask|masks|tint|fill)\b/.test(html)) {
-        expect(html, `${slug}: a masked picture with no inline mask`).toContain('--artwork-mask:url(data:image/webp;base64,');
+        // Each file is inlined once, as a :root property, and every use reads it.
+        const defined = new Set([...html.matchAll(/(--artwork-src-\d+):url\(data:image\/webp;base64,/g)].map((m) => m[1]));
+        const read = [...html.matchAll(/--artwork-mask:var\((--artwork-src-\d+)\)/g)].map((m) => m[1]);
+        expect(read.length, `${slug}: a masked picture with no inline mask`).toBeGreaterThan(0);
+        for (const property of read) expect(defined.has(property), `${slug}: ${property} is read but never defined`).toBe(true);
       }
     }
   });
