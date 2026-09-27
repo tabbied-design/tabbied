@@ -1,0 +1,2185 @@
+/* ==========================================================================
+   MAPLE STREET BRANCH LIBRARY - public library branch, Eastfield
+   The card catalog. Every section opens with a drawer front (a wood band
+   with a nickel label frame and a round pull) and its contents lie in the
+   drawer's tray below it: index cards with a colored top rule, faint ruled
+   lines and a punched hole, typed in a typewriter face. Section numbers
+   are Dewey numbers. Stamps are rotated boxes with a double border. The
+   hero is a wall of drawers with the library's own catalog card pulled
+   out in front; the staff photographs are paper-clipped to their cards.
+   ========================================================================== */
+
+.page {
+  --card: #f4efe2;
+  --ink: #22211f;
+  --green: #2f5e4d;
+  --stamp: #6a42a0;
+  --text: var(--ink);
+  --on-green: var(--card);
+  --on-ink: var(--card);
+  --on-stamp: var(--card);
+  --on-wood: var(--card);
+  --serif: 'Brygada 1918', 'Iowan Old Style', Georgia, serif;
+  --type: 'Courier Prime', 'Courier New', ui-monospace, monospace;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 74rem;
+  --pitch: 1.6rem;
+
+  /* Derived surfaces: never roles of their own, always mixed from them. */
+  --muted: color-mix(in oklab, var(--text) 72%, var(--card));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --index: color-mix(in oklab, var(--card) 97%, var(--green));
+  --tray: color-mix(in oklab, var(--card) 84%, var(--wood));
+  --manila: color-mix(in oklab, var(--card) 78%, var(--wood));
+  --line: color-mix(in oklab, var(--green) 17%, transparent);
+  --redline: color-mix(in oklab, var(--stamp) 78%, var(--card));
+  --stamp-ink: color-mix(in oklab, var(--stamp) 60%, var(--text));
+  --deep-green: color-mix(in oklab, var(--green) 70%, var(--text));
+  /* Oak, mixed the long way round the hue wheel from green to violet,
+     which passes through the browns, then darkened with the ink. */
+  --wood: color-mix(in oklab, color-mix(in oklch longer hue, var(--green), var(--stamp)) 62%, var(--ink));
+  --wood-dark: color-mix(in oklab, var(--wood) 72%, var(--ink));
+  --wood-light: color-mix(in oklab, var(--wood) 84%, var(--card));
+  --grain: color-mix(in oklab, var(--wood-dark) 55%, transparent);
+  --metal: color-mix(in oklab, var(--on-wood) 58%, var(--wood));
+  --metal-light: color-mix(in oklab, var(--on-wood) 86%, var(--wood));
+  --metal-dark: color-mix(in oklab, var(--on-wood) 26%, var(--wood));
+  --shadow: color-mix(in oklab, var(--ink) 30%, transparent);
+  --hole: var(--tray);
+
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--card);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the surface's lightness, tinted toward an ink:
+       readable on any ground a palette can bring. */
+    --text: color-mix(in oklab, oklch(from var(--card) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--ink));
+    --on-green: color-mix(in oklab, oklch(from var(--green) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--card));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--card));
+    --on-stamp: oklch(from var(--stamp) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-wood: color-mix(in oklab, oklch(from var(--wood) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--card));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.8rem var(--gut);
+  background: color-mix(in srgb, var(--card) 95%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* A drawer in miniature: the label slot and the pull. */
+.markDrawer {
+  position: relative;
+  flex: none;
+  width: 2.4rem;
+  height: 1.7rem;
+  border-radius: 3px;
+  background: var(--wood);
+  box-shadow: inset 0 0 0 2px var(--wood-dark);
+}
+
+.markDrawer::before {
+  content: '';
+  position: absolute;
+  top: 0.32rem;
+  left: 50%;
+  width: 1.25rem;
+  height: 0.42rem;
+  translate: -50% 0;
+  background: var(--index);
+  box-shadow: 0 0 0 2px var(--metal);
+}
+
+.markDrawer::after {
+  content: '';
+  position: absolute;
+  bottom: 0.2rem;
+  left: 50%;
+  width: 0.42rem;
+  height: 0.42rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--metal-light);
+}
+
+.markText {
+  display: grid;
+  line-height: 1.05;
+}
+
+.markName {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.markSub {
+  font-family: var(--type);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.7rem);
+  font-family: var(--type);
+  font-size: 0.88rem;
+}
+
+.nav a {
+  color: var(--muted);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--redline);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+}
+
+.barNote {
+  padding: 0.3rem 0.65rem;
+  border: 3px double var(--stamp-ink);
+  font-family: var(--type);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--stamp-ink);
+  rotate: -2deg;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-family: var(--type);
+  --template-menu-bg: var(--card);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(3rem, 7vw, 5.5rem) var(--gut) clamp(3.5rem, 7vw, 6rem);
+  background: var(--wood);
+  --hole: var(--wood);
+}
+
+/* The cabinet: drawers in rows, their pulls let into one edge. */
+.cabinet {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3.5vw, 3rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+/* The index card: a colored rule, faint lines on a fixed pitch and
+   rounded corners. Everything typed on a card takes the pitch as its line
+   height and spaces itself in whole lines, so the words sit on the rules.
+   --pad-top is the blank head of the card; --rule-at counts lines down
+   from it to the colored rule. */
+.catalog,
+.lookup,
+.guideCard,
+.person,
+.apply,
+.shelflist,
+.talker {
+  --pad-top: var(--pitch);
+  --rule-at: 1;
+  position: relative;
+  padding-top: var(--pad-top);
+  line-height: var(--pitch);
+  background-color: var(--index);
+  background-image:
+    linear-gradient(var(--redline), var(--redline)),
+    repeating-linear-gradient(to bottom, transparent 0 calc(var(--pitch) - 1px), var(--line) calc(var(--pitch) - 1px) var(--pitch));
+  background-size: 100% 2px, 100% 100%;
+  background-position: 0 calc(var(--pad-top) + var(--rule-at) * var(--pitch) - 2px), 0 var(--pad-top);
+  background-repeat: no-repeat;
+  border-radius: 6px;
+  color: var(--text);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--ink) 10%, transparent),
+    0 14px 24px -16px var(--shadow);
+}
+
+.hole {
+  position: absolute;
+  bottom: 0.7rem;
+  left: 50%;
+  width: 1.05rem;
+  height: 1.05rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--hole);
+  box-shadow: inset 0 1px 2px var(--shadow);
+}
+
+.catalog {
+  display: grid;
+  grid-template-columns: 5.6rem minmax(0, 1fr);
+  column-gap: 1.4rem;
+  min-height: calc(var(--pitch) * 17);
+  padding: var(--pad-top) 2.6rem calc(var(--pitch) * 2) 2rem;
+  font-family: var(--type);
+  rotate: -1.2deg;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ink) 14%, transparent),
+    0 34px 54px -22px color-mix(in oklab, var(--ink) 70%, transparent);
+}
+
+.catalog::before {
+  /* the vertical margin rule of a catalog card */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 7.1rem;
+  width: 1px;
+  background: color-mix(in oklab, var(--redline) 55%, transparent);
+}
+
+.callNo {
+  display: grid;
+  align-content: start;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.catalogBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.entry {
+  font-size: 1rem;
+}
+
+.title {
+  margin: var(--pitch) 0;
+  font-family: var(--serif);
+  font-size: 4.5rem;
+  font-weight: 700;
+  line-height: calc(var(--pitch) * 3);
+  letter-spacing: -0.02em;
+}
+
+/* The lower lines stop short of the stamp in the corner. */
+.imprint,
+.collation,
+.tracings {
+  max-width: calc(100% - 9.5rem);
+}
+
+.imprint {
+  font-size: 1rem;
+}
+
+.collation {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.tracings {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1.2rem;
+  margin-top: var(--pitch);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* A rubber stamp: rotated, double border, stamp ink. */
+.heroStamp,
+.stamp,
+.applyStamp {
+  display: inline-grid;
+  justify-items: center;
+  padding: 0.35rem 0.8rem 0.4rem;
+  border: 4px double var(--stamp-ink);
+  border-radius: 3px;
+  font-family: var(--type);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stamp-ink);
+}
+
+.heroStamp {
+  position: absolute;
+  right: 2.2rem;
+  bottom: 2.4rem;
+  font-size: 0.8rem;
+  rotate: -9deg;
+}
+
+.heroStamp strong {
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+}
+
+.heroSide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.2rem;
+  align-items: start;
+  padding-top: 1.5rem;
+}
+
+.lookup {
+  --pad-top: 0.8rem;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad-top) 1.6rem calc(var(--pitch) * 1.5);
+  font-family: var(--type);
+  rotate: 1.4deg;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ink) 14%, transparent),
+    0 26px 40px -22px color-mix(in oklab, var(--ink) 65%, transparent);
+}
+
+.lookupHead {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.lookupRow {
+  display: grid;
+  margin-top: var(--pitch);
+}
+
+.lookupRow + .lookupRow {
+  margin-top: 0;
+}
+
+.lookupRow label,
+.field label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* A field is one ruled line: its underline lands on the card's rule. */
+.lookupRow input,
+.lookupRow select,
+.field input,
+.field select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: var(--pitch);
+  padding: 0 0.1rem;
+  border: 0;
+  border-bottom: 2px solid color-mix(in oklab, var(--text) 60%, transparent);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  line-height: calc(var(--pitch) - 2px);
+}
+
+.lookupRow input::placeholder {
+  color: color-mix(in oklab, var(--text) 45%, transparent);
+}
+
+.lookupRow select option,
+.field select option {
+  background: var(--card);
+  color: var(--text);
+}
+
+.lookupGo,
+.applyGo {
+  align-self: flex-start;
+  box-sizing: border-box;
+  height: calc(var(--pitch) * 2 - 0.5rem);
+  margin: calc(var(--pitch) + 0.25rem) 0 0.25rem;
+  padding: 0 1.2rem;
+  border: 0;
+  border-radius: 4px;
+  background: var(--green);
+  color: var(--on-green);
+  font-family: var(--type);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .lookupGo:hover,
+  .applyGo:hover {
+    background: var(--deep-green);
+  }
+}
+
+.lookupNote {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* The date-due slip glued in the back of a book, here with the hours. */
+.slip {
+  grid-column: 2;
+  justify-self: end;
+  width: 12.5rem;
+  margin-top: -1rem;
+  padding: 0.9rem 1rem 1rem;
+  background: var(--manila);
+  color: var(--text);
+  font-family: var(--type);
+  border-radius: 2px;
+  rotate: -3deg;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ink) 12%, transparent),
+    0 22px 34px -20px color-mix(in oklab, var(--ink) 70%, transparent);
+}
+
+.slipHead {
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.slipList li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  align-items: center;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.18rem 0;
+}
+
+.slipDay {
+  font-size: 0.8rem;
+  color: var(--muted);
+  border-right: 1px solid var(--rule);
+}
+
+.slipTime {
+  justify-self: center;
+  padding: 0 0.3rem;
+  border: 2px solid var(--stamp-ink);
+  border-radius: 2px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--stamp-ink);
+  letter-spacing: 0.04em;
+}
+
+.slipList li:nth-child(odd) .slipTime {
+  rotate: -3deg;
+}
+
+.slipList li:nth-child(3n) .slipTime {
+  rotate: 2deg;
+  translate: 0.3rem 0;
+}
+
+.slipFoot {
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---------------------------------------------------- drawers and trays */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 5.5rem) var(--gut) 0;
+}
+
+.drawer {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: clamp(1.1rem, 2.2vw, 1.6rem) 1.2rem clamp(1rem, 2vw, 1.4rem);
+  border-radius: 6px;
+  color: var(--on-wood);
+  background:
+    repeating-linear-gradient(178.6deg, transparent 0 13px, var(--grain) 13px 14px, transparent 14px 29px),
+    repeating-linear-gradient(181.2deg, transparent 0 21px, color-mix(in oklab, var(--wood-light) 45%, transparent) 21px 22px, transparent 22px 47px),
+    linear-gradient(180deg, var(--wood-light), var(--wood) 35%, var(--wood-dark));
+  box-shadow:
+    inset 0 0 0 1px var(--wood-dark),
+    inset 0 0 0 7px color-mix(in oklab, var(--wood-light) 45%, transparent),
+    inset 0 0 0 8px var(--wood-dark),
+    0 14px 22px -14px color-mix(in oklab, var(--ink) 60%, transparent);
+}
+
+/* The label frame: a nickel holder with an ear and a screw each side. */
+.plate {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  min-width: min(27rem, 100%);
+  max-width: 100%;
+  padding: 0.5rem 2rem 0.6rem;
+  background: var(--index);
+  color: var(--text);
+  text-align: center;
+  border: 6px solid var(--metal);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px var(--metal-dark),
+    inset 0 2px 5px var(--shadow),
+    0 0 0 1px var(--metal-dark),
+    0 2px 3px var(--shadow);
+}
+
+.plate::before,
+.plate::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 1.1rem;
+  height: 1.6rem;
+  translate: 0 -50%;
+  border-radius: 3px;
+  background:
+    radial-gradient(circle at 50% 50%, var(--metal-dark) 0 0.16rem, transparent 0.19rem),
+    linear-gradient(180deg, var(--metal-light), var(--metal) 60%, var(--metal-dark));
+  box-shadow: 0 0 0 1px var(--metal-dark);
+}
+
+.plate::before {
+  left: -1.55rem;
+}
+
+.plate::after {
+  right: -1.55rem;
+}
+
+.dewey {
+  font-family: var(--type);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.plate h2 {
+  font-size: clamp(1.45rem, 2.6vw, 2.05rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.range {
+  font-family: var(--type);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.pull {
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, var(--metal-light), var(--metal) 46%, var(--metal-dark) 100%);
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--metal-dark) 70%, transparent),
+    0 6px 8px -3px color-mix(in oklab, var(--ink) 60%, transparent);
+}
+
+/* The drawer's tray, pulled out below its front. */
+.secNote {
+  position: relative;
+  margin: 0 clamp(0.6rem, 2vw, 1.4rem);
+  padding: 1.7rem clamp(1.1rem, 3vw, 2.6rem) 0;
+  background: var(--tray);
+  font-family: var(--type);
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--text);
+  box-shadow: inset 0 14px 14px -12px var(--shadow);
+}
+
+.week,
+.pockets,
+.shelfWrap,
+.staff,
+.cardGrid,
+.roomsGrid,
+.visit {
+  margin: 0 clamp(0.6rem, 2vw, 1.4rem);
+  padding: 2rem clamp(1.1rem, 3vw, 2.6rem);
+  background: var(--tray);
+}
+
+.drawer + .cardGrid,
+.drawer + .roomsGrid,
+.drawer + .visit {
+  box-shadow: inset 0 14px 14px -12px var(--shadow);
+}
+
+.week,
+.pockets,
+.talkers,
+.askWays,
+.cardGrid,
+.roomsGrid,
+.visit {
+  border-radius: 0 0 8px 8px;
+}
+
+/* ----------------------------------------------------------- what's on */
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding-top: 2.4rem;
+  padding-bottom: 2.6rem;
+}
+
+.guide {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+/* A guide card's tab, staggered along the drawer like a real set. */
+.tab {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 64%;
+  padding: 0.4rem 0.7rem 0.3rem;
+  background: var(--green);
+  color: var(--on-green);
+  border-radius: 7px 7px 0 0;
+  font-family: var(--type);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tabDate {
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.guide:nth-child(2) .tab {
+  margin-left: 12%;
+}
+
+.guide:nth-child(3) .tab {
+  margin-left: 24%;
+}
+
+.guide:nth-child(4) .tab {
+  margin-left: 36%;
+}
+
+.guide:nth-child(5) .tab {
+  margin-left: 36%;
+}
+
+.guideCard {
+  --pitch: 1.45rem;
+  --rule-at: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad-top) 1.1rem calc(var(--pitch) * 2);
+  border-radius: 0 6px 6px 6px;
+  border-top: 4px solid var(--green);
+  font-family: var(--type);
+  background-size: 0 0, 100% 100%;
+}
+
+.guide:nth-child(n + 2) .guideCard {
+  border-radius: 6px;
+}
+
+.guideCard h3 {
+  font-family: var(--serif);
+  font-size: 1.32rem;
+}
+
+.guideTime {
+  margin-top: var(--pitch);
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+.guidePlace,
+.guideWho {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.guideNote {
+  margin-top: var(--pitch);
+  font-size: 0.88rem;
+}
+
+.stamp {
+  align-self: flex-start;
+  margin-top: auto;
+  font-size: 0.78rem;
+  rotate: -6deg;
+  translate: 0 0.9rem;
+}
+
+.guide:nth-child(even) .stamp {
+  rotate: 4deg;
+  align-self: flex-end;
+}
+
+/* --------------------------------------------------------------- borrow */
+
+.pockets {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.4rem;
+  padding-top: 2.4rem;
+}
+
+.pocketItem {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+/* The card standing in the pocket, its lower half hidden. */
+.loanCard {
+  position: relative;
+  z-index: 0;
+  width: 78%;
+  justify-self: center;
+  margin-bottom: -2.2rem;
+  padding: 0.7rem 0.9rem 2.8rem;
+  background: var(--index);
+  border-radius: 4px 4px 0 0;
+  font-family: var(--type);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent);
+  rotate: -2deg;
+}
+
+.pocketItem:nth-child(even) .loanCard {
+  rotate: 1.6deg;
+}
+
+.loanHead {
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid var(--redline);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.loanDates {
+  display: grid;
+  gap: 0.2rem;
+  padding-top: 0.4rem;
+}
+
+.loanDates li {
+  justify-self: center;
+  padding: 0 0.35rem;
+  border: 2px solid var(--stamp-ink);
+  border-radius: 2px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--stamp-ink);
+}
+
+.loanDates li:nth-child(2) {
+  rotate: 3deg;
+  translate: -0.4rem 0;
+}
+
+.loanDates li:nth-child(3) {
+  rotate: -2deg;
+  translate: 0.5rem 0;
+}
+
+/* The manila pocket, with its thumb cut at the top. */
+.pocket {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 2.1rem 1.2rem 1.3rem;
+  background:
+    radial-gradient(circle at 50% 0, var(--tray) 0 1.5rem, color-mix(in oklab, var(--ink) 18%, transparent) 1.5rem 1.58rem, transparent 1.62rem),
+    var(--manila);
+  border-radius: 2px 2px 5px 5px;
+  box-shadow:
+    inset 0 -3px 0 color-mix(in oklab, var(--ink) 8%, transparent),
+    0 14px 22px -16px var(--shadow);
+}
+
+.pocket h3 {
+  font-size: 1.35rem;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.pocketDetail {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pocketTerms {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: auto;
+  padding-top: 0.7rem;
+  border-top: 1px dashed color-mix(in oklab, var(--text) 35%, transparent);
+  font-family: var(--type);
+}
+
+.pocketTerms dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pocketTerms dd {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- picks */
+
+.shelfWrap {
+  position: relative;
+  padding-top: 2.8rem;
+  padding-bottom: 0;
+}
+
+.shelf {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 6px;
+  height: 24rem;
+  padding: 0 1rem;
+}
+
+.spine {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+  overflow: hidden;
+  padding: 1.1rem 0 0.7rem;
+  border-radius: 3px 3px 1px 1px;
+  box-shadow:
+    inset 3px 0 0 color-mix(in oklab, var(--ink) 16%, transparent),
+    inset -4px 0 0 color-mix(in oklab, var(--ink) 24%, transparent),
+    0 -1px 0 color-mix(in oklab, var(--ink) 20%, transparent);
+}
+
+.cloth {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.spineA {
+  width: 4.6rem;
+  height: 21rem;
+  background: var(--green);
+}
+
+.spineB {
+  width: 3.9rem;
+  height: 17.6rem;
+  background: var(--ink);
+}
+
+.spineC {
+  width: 5.2rem;
+  height: 22.4rem;
+  background: var(--stamp);
+}
+
+.spineD {
+  width: 5.8rem;
+  height: 16rem;
+  background: var(--card);
+}
+
+.spineE {
+  width: 4.4rem;
+  height: 20rem;
+  background: var(--deep-green);
+}
+
+.spineF {
+  width: 4.1rem;
+  height: 18.6rem;
+  background: var(--ink);
+  transform-origin: 100% 100%;
+  rotate: 7deg;
+  margin-left: 1.1rem;
+}
+
+/* The title on its paper label, reading up the spine. */
+.spineTitle {
+  position: relative;
+  max-height: 72%;
+  padding: 0.7rem 0.22rem;
+  background: var(--index);
+  color: var(--text);
+  border-radius: 1px;
+  writing-mode: vertical-rl;
+  rotate: 180deg;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--ink) 25%, transparent);
+}
+
+.spineCall {
+  position: relative;
+  width: 82%;
+  padding: 0.25rem 0.1rem;
+  background: var(--index);
+  color: var(--text);
+  font-family: var(--type);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  border-radius: 2px;
+}
+
+/* A folded tent card standing at the end of the shelf. */
+.tent {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  flex: none;
+  width: 9.5rem;
+  height: 7.5rem;
+  margin-right: 1.4rem;
+  padding: 0.6rem;
+  background:
+    linear-gradient(var(--redline), var(--redline)) 0 0.6rem / 100% 2px no-repeat,
+    var(--index);
+  border-radius: 3px 3px 0 0;
+  font-family: var(--type);
+  text-align: center;
+  transform: perspective(30rem) rotateX(14deg);
+  transform-origin: 50% 100%;
+  box-shadow: 0 -1px 0 color-mix(in oklab, var(--ink) 14%, transparent), 0 8px 14px -8px var(--shadow);
+}
+
+.tentHead {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.tentSub {
+  margin-top: 0.3rem;
+  padding: 0 0.4rem;
+  border: 3px double var(--stamp-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stamp-ink);
+  rotate: -4deg;
+}
+
+.bookend {
+  flex: none;
+  width: 3.4rem;
+  height: 10rem;
+  margin-left: 0.4rem;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(90deg, var(--metal-dark), var(--metal) 40%, var(--metal-light) 55%, var(--metal));
+  clip-path: polygon(0 0, 22% 0, 22% 86%, 100% 86%, 100% 100%, 0 100%);
+}
+
+.plank {
+  position: relative;
+  height: 1.5rem;
+  margin: 0 -0.2rem;
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(179deg, transparent 0 5px, var(--grain) 5px 6px, transparent 6px 11px),
+    linear-gradient(180deg, var(--wood-light), var(--wood) 45%, var(--wood-dark));
+  box-shadow: 0 10px 16px -10px color-mix(in oklab, var(--ink) 65%, transparent);
+}
+
+/* Shelf talkers, clipped to the plank's edge. */
+.talkers {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin: 0 clamp(0.6rem, 2vw, 1.4rem);
+  padding: 0 clamp(1.1rem, 3vw, 2.6rem) 2.4rem;
+  background: var(--tray);
+}
+
+.talker {
+  --pitch: 1.35rem;
+  --pad-top: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.1rem;
+  padding: var(--pad-top) 0.9rem 0.9rem;
+  font-family: var(--type);
+  rotate: -1deg;
+}
+
+.talker:nth-child(even) {
+  rotate: 1.2deg;
+  margin-top: 1.6rem;
+}
+
+.talker::before {
+  /* the clip from the plank */
+  content: '';
+  position: absolute;
+  top: -1.4rem;
+  left: 50%;
+  width: 0.7rem;
+  height: 2rem;
+  translate: -50% 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--metal-dark), var(--metal-light) 50%, var(--metal));
+}
+
+.talkerBy {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stamp-ink);
+}
+
+.talker h3 {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+}
+
+.talkerAuthor {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.talkerSays {
+  margin-top: var(--pitch);
+  font-size: 0.82rem;
+}
+
+.talkerCall {
+  margin-top: auto;
+  padding-top: var(--pitch);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ ask */
+
+.staff {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3rem 2rem;
+  padding-top: 3.2rem;
+}
+
+.person {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  column-gap: 1.4rem;
+  align-items: start;
+  padding: var(--pad-top) 1.5rem calc(var(--pitch) * 1.5) 1.3rem;
+}
+
+.person:nth-child(even) {
+  rotate: 0.8deg;
+}
+
+.person:nth-child(odd) {
+  rotate: -0.6deg;
+}
+
+/* The photograph, paper-clipped over the card's top edge. */
+.snapshot {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(-1 * var(--pad-top) - 1.2rem);
+  padding: 0.45rem 0.45rem 1.2rem;
+  background: var(--card);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ink) 12%, transparent),
+    0 10px 16px -10px color-mix(in oklab, var(--ink) 55%, transparent);
+  rotate: -4deg;
+}
+
+.person:nth-child(even) .snapshot {
+  rotate: 3deg;
+}
+
+.portrait {
+  width: 100%;
+}
+
+.clip {
+  position: absolute;
+  z-index: 2;
+  top: -1.1rem;
+  left: 1.4rem;
+  width: 1.05rem;
+  height: 3.9rem;
+  border: 2.5px solid var(--metal-dark);
+  border-radius: 999px;
+  rotate: 6deg;
+}
+
+.clip::after {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.12rem;
+  right: 0.12rem;
+  height: 2.3rem;
+  border: 2.5px solid var(--metal-dark);
+  border-top: 0;
+  border-radius: 0 0 999px 999px;
+}
+
+.personCard {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--type);
+}
+
+.personCard h3 {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+}
+
+.personRole {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stamp-ink);
+}
+
+.personAsk {
+  margin-top: var(--pitch);
+  font-size: 1rem;
+}
+
+.personDesk,
+.personSince {
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.personDesk {
+  margin-top: var(--pitch);
+}
+
+.askWays {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 clamp(0.6rem, 2vw, 1.4rem);
+  padding: 0 clamp(1.1rem, 3vw, 2.6rem) 2.2rem;
+  background: var(--tray);
+  font-family: var(--type);
+}
+
+.askWays div {
+  padding: 0.9rem 1rem;
+  border-top: 2px solid var(--text);
+}
+
+.askWays div + div {
+  border-left: 1px solid var(--rule);
+}
+
+.askWays dt {
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.askWays dd {
+  font-size: 1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* ----------------------------------------------------------------- card */
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1.6rem, 4vw, 3.4rem);
+  padding-top: 2.6rem;
+  padding-bottom: 2.8rem;
+}
+
+.cardSide {
+  display: grid;
+  align-content: start;
+  gap: 2rem;
+}
+
+/* The borrower's card itself, in green plastic. */
+.borrower {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30% minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr auto auto;
+  column-gap: 1.2rem;
+  width: min(27rem, 100%);
+  aspect-ratio: 1.586;
+  padding: 1.2rem 1.3rem 1rem 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--green);
+  color: var(--on-green);
+  rotate: -3deg;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--on-green) 18%, transparent),
+    0 24px 34px -20px color-mix(in oklab, var(--ink) 70%, transparent);
+}
+
+.borrowerBand {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 30%;
+  overflow: hidden;
+  border-right: 3px solid var(--on-green);
+}
+
+.borrowerLib,
+.borrowerBranch,
+.borrowerNo,
+.barcode,
+.borrowerSign {
+  grid-column: 2;
+}
+
+.borrowerLib {
+  font-size: 0.8rem;
+  font-family: var(--type);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.borrowerBranch {
+  font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.borrowerNo {
+  align-self: end;
+  font-family: var(--type);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.barcode {
+  display: block;
+  height: 2.1rem;
+  margin: 0.3rem 0 0.4rem;
+  border-radius: 2px;
+  border: 0.3rem solid var(--card);
+  background-color: var(--card);
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--text) 0 2px,
+    transparent 2px 4px,
+    var(--text) 4px 5px,
+    transparent 5px 8px,
+    var(--text) 8px 11px,
+    transparent 11px 12px,
+    var(--text) 12px 13px,
+    transparent 13px 17px
+  );
+}
+
+.borrowerSign {
+  padding-top: 0.2rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-green) 55%, transparent);
+  font-family: var(--type);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--on-green) 80%, var(--green));
+}
+
+.cardFacts {
+  display: grid;
+  font-family: var(--type);
+}
+
+.cardFacts div {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.cardFacts dt {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stamp-ink);
+  padding-top: 0.15rem;
+}
+
+.cardFacts dd {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.apply {
+  --pad-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad-top) clamp(1.2rem, 3vw, 2.2rem) calc(var(--pitch) * 2);
+  font-family: var(--type);
+}
+
+.applyHead {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.applyNote {
+  margin-top: var(--pitch);
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.applyGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--pitch) 1.4rem;
+  margin-top: var(--pitch);
+}
+
+.field {
+  display: grid;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.applyStamp {
+  position: absolute;
+  right: 2rem;
+  bottom: 2.2rem;
+  font-size: 1rem;
+  opacity: 0.85;
+  rotate: -12deg;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- rooms */
+
+.roomsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+  gap: clamp(1.4rem, 3.5vw, 3rem);
+  align-items: start;
+  padding-top: 2.6rem;
+  padding-bottom: 2.8rem;
+}
+
+/* The shelflist is ruled by its own table, so the card keeps only its
+   colored rule. */
+.shelflist {
+  --pad-top: 0.8rem;
+  --line: transparent;
+  padding: var(--pad-top) clamp(1rem, 2.6vw, 2rem) calc(var(--pitch) * 2);
+  font-family: var(--type);
+}
+
+.shelflistHead {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tableWrap {
+  margin-top: 0.8rem;
+}
+
+.rooms {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.rooms th,
+.rooms td {
+  padding: 0.6rem 0.8rem 0.6rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rooms thead th {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--text);
+}
+
+.rooms tbody th {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.seats {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.roomNotes {
+  display: grid;
+  gap: 1rem;
+  padding-top: 0.6rem;
+}
+
+.roomNotes h3 {
+  font-size: 1.45rem;
+}
+
+.roomNotes ul {
+  display: grid;
+  gap: 0.7rem;
+  font-family: var(--type);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+.roomNotes li {
+  position: relative;
+  padding-left: 1.3rem;
+}
+
+.roomNotes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 2px solid var(--stamp-ink);
+  rotate: 45deg;
+}
+
+.roomCall {
+  justify-self: start;
+  margin-top: 0.4rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 4px;
+  background: var(--green);
+  color: var(--on-green);
+  font-family: var(--type);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+/* ---------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(1.6rem, 4vw, 3.4rem);
+  align-items: start;
+  padding-top: 2.6rem;
+  padding-bottom: 2.8rem;
+}
+
+.mapCard {
+  position: relative;
+  aspect-ratio: 5 / 3.4;
+  overflow: hidden;
+  border-radius: 6px;
+  background-color: var(--index);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--pitch) - 1px), var(--line) calc(var(--pitch) - 1px) var(--pitch));
+  color: var(--text);
+  rotate: -1deg;
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--ink) 10%, transparent),
+    0 14px 24px -16px var(--shadow);
+}
+
+.map {
+  position: absolute;
+  inset: 0;
+}
+
+.street {
+  position: absolute;
+  background: color-mix(in oklab, var(--text) 16%, transparent);
+  border: 1px solid color-mix(in oklab, var(--text) 30%, transparent);
+}
+
+.streetMaple {
+  left: -2%;
+  right: -2%;
+  top: 56%;
+  height: 11%;
+  rotate: -4deg;
+}
+
+.streetOrchard {
+  top: -4%;
+  bottom: -4%;
+  left: 55%;
+  width: 8%;
+}
+
+.streetElm {
+  top: -4%;
+  bottom: -4%;
+  left: 14%;
+  width: 5%;
+  rotate: 9deg;
+}
+
+.park {
+  position: absolute;
+  top: 8%;
+  left: 24%;
+  width: 26%;
+  height: 38%;
+  border-radius: 40% 30% 36% 44%;
+  background: color-mix(in oklab, var(--green) 30%, transparent);
+}
+
+.building {
+  position: absolute;
+  top: 30%;
+  left: 66%;
+  width: 17%;
+  height: 20%;
+  background: var(--deep-green);
+  box-shadow: 0.4rem 0.4rem 0 color-mix(in oklab, var(--ink) 18%, transparent);
+}
+
+.busStop {
+  position: absolute;
+  top: 69%;
+  left: 64.5%;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--stamp-ink);
+  box-shadow: 0 0 0 3px var(--index);
+}
+
+.mapLabel {
+  position: absolute;
+  font-family: var(--type);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mapLabelMaple {
+  top: 68%;
+  left: 18%;
+  rotate: -4deg;
+}
+
+.mapLabelOrchard {
+  top: 12%;
+  left: 60%;
+  writing-mode: vertical-rl;
+}
+
+.mapLabelLib {
+  top: 12%;
+  left: 70%;
+  padding: 0.1rem 0.35rem;
+  border: 3px double var(--stamp-ink);
+  color: var(--stamp-ink);
+  rotate: 6deg;
+}
+
+.mapLabelPark {
+  top: 22%;
+  left: 28%;
+  font-weight: 400;
+  font-style: italic;
+  text-transform: none;
+}
+
+.visitText {
+  display: grid;
+  gap: 1rem;
+}
+
+.address {
+  font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.visitLede {
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+
+.getting {
+  display: grid;
+  font-family: var(--type);
+}
+
+.getting div {
+  display: grid;
+  grid-template-columns: 6.6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.getting dt {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stamp-ink);
+  padding-top: 0.15rem;
+}
+
+.getting dd {
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  font-family: var(--type);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.contact a {
+  text-decoration: underline;
+  text-decoration-color: var(--redline);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  margin-top: clamp(4rem, 8vw, 6rem);
+  background: var(--wood-dark);
+  color: var(--on-wood);
+}
+
+/* The cabinet's plinth: one more row of drawers, at the floor. */
+.plinth {
+  position: relative;
+  height: 5rem;
+  overflow: hidden;
+  background: var(--wood);
+  border-bottom: 6px solid var(--wood-light);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
+  gap: 1rem 2.4rem;
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 2.8rem;
+  font-family: var(--type);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.footName {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .week {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+
+  .guide:nth-child(4) .tab {
+    margin-left: 0;
+  }
+
+  .guide:nth-child(5) .tab {
+    margin-left: 12%;
+  }
+
+  .talkers {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .title {
+    font-size: 4rem;
+  }
+}
+
+@media (max-width: 1040px) {
+  .heroInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroSide {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding-top: 0;
+  }
+
+  .lookup {
+    grid-column: 1;
+  }
+
+  .slip {
+    grid-column: 2;
+    margin-top: 0;
+  }
+
+  .pockets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2.4rem;
+  }
+
+  .staff {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .person {
+    max-width: 44rem;
+  }
+
+  .footInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav,
+  .barNote {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .cardGrid,
+  .roomsGrid,
+  .visit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .askWays {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .askWays div:nth-child(3) {
+    border-left: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  /* The call number moves up beside the heading line. */
+  .catalog {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    padding: var(--pad-top) 1.3rem calc(var(--pitch) * 4);
+  }
+
+  .catalog::before {
+    display: none;
+  }
+
+  .callNo {
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  .catalog {
+    --rule-at: 3;
+  }
+
+  .entry span {
+    display: block;
+  }
+
+  .imprint,
+  .collation,
+  .tracings {
+    max-width: none;
+  }
+
+  .title {
+    margin: var(--pitch) 0;
+    font-size: 2.55rem;
+    line-height: calc(var(--pitch) * 2);
+  }
+
+  .heroStamp {
+    right: 1.2rem;
+    bottom: 1.8rem;
+  }
+
+  .heroSide {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lookup,
+  .slip {
+    grid-column: 1;
+  }
+
+  .slip {
+    justify-self: center;
+    width: min(16rem, 100%);
+  }
+
+  .week {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .guide .tab,
+  .guide:nth-child(n) .tab {
+    width: 58%;
+  }
+
+  .guide:nth-child(2) .tab {
+    margin-left: 20%;
+  }
+
+  .guide:nth-child(3) .tab {
+    margin-left: 42%;
+  }
+
+  .guide:nth-child(4) .tab {
+    margin-left: 10%;
+  }
+
+  .guide:nth-child(5) .tab {
+    margin-left: 32%;
+  }
+
+  .pockets {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shelf {
+    gap: 3px;
+    height: 17rem;
+    padding: 0;
+  }
+
+  .tent {
+    display: none;
+  }
+
+  .spineTitle {
+    font-size: 0.74rem;
+  }
+
+  .spineA {
+    width: 2.8rem;
+    height: 15rem;
+  }
+
+  .spineB {
+    width: 2.4rem;
+    height: 12.6rem;
+  }
+
+  .spineC {
+    width: 3rem;
+    height: 16rem;
+  }
+
+  .spineD {
+    width: 3.2rem;
+    height: 11.5rem;
+  }
+
+  .spineE {
+    width: 2.6rem;
+    height: 14.2rem;
+  }
+
+  .spineF {
+    width: 2.5rem;
+    height: 13.2rem;
+    margin-left: 0.9rem;
+  }
+
+  .spineCall {
+    font-size: 0.5rem;
+  }
+
+  .bookend {
+    width: 1.8rem;
+    height: 7rem;
+  }
+
+  .talkers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* The photograph takes nine lines of the card, the name the tenth. */
+  .person {
+    --pad-top: 0rem;
+    --rule-at: 10;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 1.2rem calc(var(--pitch) * 2);
+  }
+
+  .snapshot {
+    justify-self: start;
+    box-sizing: border-box;
+    height: calc(var(--pitch) * 9);
+    margin-top: -1.2rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .portrait {
+    width: auto;
+    height: 100%;
+  }
+
+  .plate {
+    min-width: 0;
+    width: calc(100% - 2.6rem);
+    padding: 0.45rem 0.9rem 0.55rem;
+  }
+
+  .plate::before {
+    left: -1.35rem;
+    width: 0.9rem;
+  }
+
+  .plate::after {
+    right: -1.35rem;
+    width: 0.9rem;
+  }
+
+  .applyGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .applyStamp {
+    right: 1.2rem;
+    bottom: 1.4rem;
+  }
+
+  .applyGo {
+    margin-bottom: calc(var(--pitch) * 2 + 0.25rem);
+  }
+
+  /* The shelflist restacks: one room per block. */
+  .rooms thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .rooms,
+  .rooms tbody,
+  .rooms tr,
+  .rooms th,
+  .rooms td {
+    display: block;
+  }
+
+  .rooms tr {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .rooms th,
+  .rooms td {
+    padding: 0.1rem 0;
+    border: 0;
+  }
+
+  .rooms td.seats::before {
+    content: 'Seats ';
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 460px) {
+  .talkers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .talker,
+  .talker:nth-child(even) {
+    margin-top: 1.4rem;
+  }
+
+  .askWays {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .askWays div + div {
+    border-left: 0;
+  }
+
+  .getting div,
+  .cardFacts div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

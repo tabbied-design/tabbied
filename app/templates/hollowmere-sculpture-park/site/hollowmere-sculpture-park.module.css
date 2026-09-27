@@ -1,0 +1,1439 @@
+/* ==========================================================================
+   HOLLOWMERE SCULPTURE PARK - Hollowmere Estate, Mere Lane, Eldon
+   The audio-guide trail. Every stop is a big circled number like the key
+   on a handset, and the hero has the handset itself; each work has a
+   museum wall label (artist, dates, title, material, a short text, the
+   credit line); the walk is a horizontal trail that scrolls stop to stop
+   with the distances marked on a dashed path. The works stand on plinths
+   cut from the abutment design, or on lawns of terrain. A survey map in
+   contour lines, an orangery poster and a stepped band for the schools.
+   ========================================================================== */
+
+.page {
+  --chalk: #eef0ea;
+  --ink: #1b1f1c;
+  --grass: #4c7a45;
+  --bronze: #a8733b;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --display: 'Familjen Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Radio Canada', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Fallbacks; derived from the surfaces below where the browser can. */
+  --bw: var(--ink);
+  --lift: var(--chalk);
+  --text: var(--ink);
+  --on-ink: var(--chalk);
+  --on-grass: var(--chalk);
+  --on-bronze: var(--ink);
+
+  /* Derived surfaces: never roles of their own, always mixed from them. */
+  --muted: color-mix(in oklab, var(--text) 68%, var(--chalk));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --hair: color-mix(in oklab, var(--text) 10%, transparent);
+  --paper: color-mix(in oklab, var(--chalk) 55%, var(--lift));
+  --wash: color-mix(in oklab, var(--chalk) 88%, var(--grass));
+  --stone: color-mix(in oklab, var(--chalk) 66%, var(--ink));
+  --ink-muted: color-mix(in oklab, var(--on-ink) 68%, var(--ink));
+  --ink-rule: color-mix(in oklab, var(--on-ink) 16%, transparent);
+  --path: color-mix(in oklab, var(--bronze) 80%, var(--bw));
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  background: var(--chalk);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --bw: oklch(from var(--chalk) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --lift: oklch(from var(--chalk) clamp(0, (l - 0.62) * 1000, 1) 0 0);
+    --text: color-mix(in oklab, var(--bw) 86%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--chalk));
+    --on-grass: color-mix(in oklab, oklch(from var(--grass) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--chalk));
+    --on-bronze: color-mix(in oklab, oklch(from var(--bronze) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--ink));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--path);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+/* An audio-guide key: the number in a ring, like the buttons on a handset. */
+.markKey,
+.heroKey,
+.stopKey,
+.endKey,
+.tierKey {
+  display: grid;
+  place-items: center;
+  flex: none;
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 50%;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 0.75rem var(--gut);
+  background: color-mix(in oklab, var(--chalk) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.markKey {
+  width: 2.3rem;
+  height: 2.3rem;
+  font-size: 1.1rem;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.markName {
+  max-width: 10rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--path);
+    text-underline-offset: 6px;
+  }
+}
+
+.barTicket {
+  padding: 0.5rem 1.1rem;
+  font-family: var(--display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--on-ink);
+  background: var(--ink);
+  border-radius: 999px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--chalk);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: stretch;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gut) clamp(3rem, 6vw, 4.5rem);
+}
+
+.heroText {
+  display: grid;
+  align-content: center;
+}
+
+.kicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroName {
+  margin-top: 1.2rem;
+  font-size: clamp(3rem, 6.4vw, 6rem);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+}
+
+.heroLede {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  font-size: clamp(1.05rem, 1.4vw, 1.18rem);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.btnInk,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.6rem 1.4rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.btnInk {
+  color: var(--on-ink);
+  background: var(--ink);
+  border: 0;
+}
+
+.btnLine {
+  color: var(--text);
+  border: 2px solid var(--text);
+}
+
+@media (hover: hover) {
+  .btnInk:hover {
+    background: color-mix(in oklab, var(--ink) 85%, var(--chalk));
+  }
+
+  .btnLine:hover {
+    background: var(--wash);
+  }
+}
+
+/* The handset: a screen, twelve keys and a play button. */
+.handset {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.4rem;
+  align-items: center;
+  margin-top: 2.4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.device {
+  position: relative;
+  display: grid;
+  gap: 0.7rem;
+  width: 9.6rem;
+  padding: 0.9rem 0.9rem 1.1rem;
+  border-radius: 1.4rem;
+  background: var(--ink);
+  box-shadow: 0 18px 30px -16px color-mix(in oklab, var(--ink) 70%, transparent), inset 0 1px 0 color-mix(in oklab, var(--on-ink) 20%, transparent);
+}
+
+.screen {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--display);
+  color: var(--on-grass);
+  background: var(--grass);
+  border-radius: 0.5rem;
+}
+
+.screen span {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.screen strong {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.keys {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.keys span {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  font-family: var(--display);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: color-mix(in oklab, var(--on-ink) 90%, var(--ink));
+  border-radius: 50%;
+}
+
+.keys span:nth-child(2) {
+  color: var(--on-bronze);
+  background: var(--bronze);
+}
+
+.play {
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--bronze);
+}
+
+.play::after {
+  content: '';
+  width: 0;
+  height: 0;
+  margin-left: 0.2rem;
+  border-top: 0.45rem solid transparent;
+  border-bottom: 0.45rem solid transparent;
+  border-left: 0.7rem solid var(--on-bronze);
+}
+
+.handsetTitle {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.handsetNote {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* The work in the hero, on its plinth, against a wash of sky. */
+.heroStage {
+  position: relative;
+  min-height: 38rem;
+  overflow: hidden;
+  border-radius: 4px;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--wash) 70%, var(--lift)) 0%, var(--wash) 70%, color-mix(in oklab, var(--wash) 88%, var(--ink)) 100%);
+}
+
+.heroKey {
+  position: absolute;
+  top: 1.4rem;
+  left: 1.4rem;
+  z-index: 2;
+  width: 5.2rem;
+  height: 5.2rem;
+  font-size: 2rem;
+  color: var(--text);
+  border: 3px solid var(--text);
+  background: var(--paper);
+}
+
+.heroStone {
+  position: absolute;
+  z-index: 1;
+  bottom: 8.4rem;
+  left: 50%;
+  width: min(62%, 23rem);
+  transform: translateX(-50%);
+  filter: drop-shadow(0 14px 14px color-mix(in oklab, var(--ink) 35%, transparent));
+}
+
+.heroPlinth {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(78%, 30rem);
+  height: 8.6rem;
+  overflow: hidden;
+  transform: translateX(-50%);
+  background: var(--stone);
+  box-shadow: inset 0 3px 0 color-mix(in oklab, var(--stone) 70%, var(--lift));
+}
+
+.heroLabel {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.4rem;
+  z-index: 2;
+  display: grid;
+  max-width: 15rem;
+  padding: 0.9rem 1rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  background: var(--paper);
+  box-shadow: 0 10px 20px -14px color-mix(in oklab, var(--ink) 60%, transparent);
+}
+
+.heroLabel strong {
+  font-family: var(--display);
+  font-size: 1rem;
+}
+
+.labelTitle {
+  font-style: italic;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  scroll-margin-top: 4rem;
+}
+
+.secHead {
+  max-width: 44rem;
+  margin-bottom: clamp(2.2rem, 4.5vw, 3.2rem);
+}
+
+.secNo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secNo::before {
+  content: '';
+  width: 1.8rem;
+  height: 3px;
+  background: var(--path);
+}
+
+.secTitle {
+  margin-top: 0.8rem;
+  font-size: clamp(2.2rem, 4.8vw, 3.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.secLede {
+  max-width: 38rem;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- trail */
+
+.trailSec {
+  padding: clamp(4rem, 8vw, 6rem) 0 clamp(3.5rem, 7vw, 5rem);
+  scroll-margin-top: 4rem;
+  background: var(--wash);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  --edge: max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+}
+
+.trailHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem 3rem;
+  align-items: end;
+  max-width: var(--max);
+  margin: 0 auto clamp(2rem, 4vw, 3rem);
+  padding: 0 var(--gut);
+}
+
+/* The walk: one stop per screen, snapping as it scrolls. */
+.trail {
+  display: flex;
+  gap: 2.4rem;
+  overflow-x: auto;
+  padding: 0.5rem var(--edge) 1.6rem;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--edge);
+  scrollbar-color: var(--path) transparent;
+}
+
+.stop {
+  flex: 0 0 min(28rem, 82vw);
+  scroll-snap-align: start;
+}
+
+.stopTop {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* The path: dashed from this stop's key on to the next one. */
+.stopTop::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 2rem;
+  right: -2.4rem;
+  border-top: 3px dashed var(--path);
+}
+
+.stopKey {
+  width: 4.2rem;
+  height: 4.2rem;
+  font-size: 1.55rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 3px solid var(--text);
+}
+
+.leg {
+  padding: 0.2rem 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: var(--wash);
+  border-radius: 999px;
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  margin-top: 1.2rem;
+  overflow: hidden;
+  background: var(--stage);
+  --base: 15%;
+}
+
+.stage:has(.lawn) {
+  --base: 13%;
+}
+
+.stagePale {
+  --stage: linear-gradient(180deg, var(--paper), color-mix(in oklab, var(--paper) 88%, var(--grass)));
+}
+
+.stageGreen {
+  --stage: linear-gradient(180deg, color-mix(in oklab, var(--chalk) 80%, var(--grass)), color-mix(in oklab, var(--chalk) 60%, var(--grass)));
+}
+
+.stageDark {
+  --stage: linear-gradient(180deg, color-mix(in oklab, var(--ink) 92%, var(--grass)), color-mix(in oklab, var(--ink) 78%, var(--grass)));
+}
+
+.stageWarm {
+  --stage: linear-gradient(180deg, color-mix(in oklab, var(--chalk) 86%, var(--bronze)), color-mix(in oklab, var(--chalk) 72%, var(--bronze)));
+}
+
+.workTall,
+.workWide {
+  position: absolute;
+  z-index: 1;
+  bottom: calc(var(--base) - 1px);
+  left: 50%;
+  width: auto;
+  max-width: 88%;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 10px 10px color-mix(in oklab, var(--ink) 30%, transparent));
+}
+
+.workTall {
+  height: 74%;
+}
+
+.workWide {
+  height: 60%;
+}
+
+.plinth {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 60%;
+  height: var(--base);
+  overflow: hidden;
+  transform: translateX(-50%);
+  background: var(--stone);
+  box-shadow: inset 0 3px 0 color-mix(in oklab, var(--stone) 70%, var(--lift));
+}
+
+.lawn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--base) + 2%);
+  overflow: hidden;
+}
+
+/* The museum wall label. */
+.wallLabel {
+  margin-top: 1.2rem;
+  padding: 1.2rem 1.3rem 1.1rem;
+  background: var(--paper);
+  box-shadow: 0 1px 0 var(--rule), 0 12px 24px -18px color-mix(in oklab, var(--ink) 60%, transparent);
+}
+
+.artist {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.life {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.workTitle {
+  margin-top: 0.7rem;
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.material {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.labelText {
+  margin-top: 0.7rem;
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+.credit {
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  border-top: 1px solid var(--hair);
+}
+
+.stopEnd {
+  flex: 0 0 min(16rem, 70vw);
+  align-self: start;
+  display: grid;
+  gap: 0.6rem;
+  scroll-snap-align: start;
+  padding-top: 0;
+}
+
+.endKey {
+  width: 4.2rem;
+  height: 4.2rem;
+  font-size: 1.55rem;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.endTitle {
+  margin-top: 0.6rem;
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.endNote {
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- visit */
+
+.signs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+/* Wayfinding signs: ink panels with chalk lettering. */
+.sign {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1.6rem 1.6rem 1.8rem;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.signHead {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding-bottom: 0.9rem;
+  font-size: 1.2rem;
+  border-bottom: 1px solid var(--ink-rule);
+}
+
+.signHead::before {
+  content: '';
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--bronze);
+}
+
+.signList div {
+  padding: 0.7rem 0;
+}
+
+.signList div + div {
+  border-top: 1px solid var(--ink-rule);
+}
+
+.signList dt {
+  font-size: 0.86rem;
+  color: var(--ink-muted);
+}
+
+.signBig {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.signNote {
+  font-size: 0.86rem;
+  color: var(--ink-muted);
+}
+
+.priceList div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--ink-rule);
+}
+
+.priceList dt {
+  font-size: 1rem;
+}
+
+.priceList dd {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.cafeHours {
+  font-size: 0.95rem;
+}
+
+.menu li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--ink-rule);
+}
+
+.menu strong {
+  font-family: var(--display);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ access */
+
+.accessGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.map {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.survey {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.mapSvg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The map is the survey field with the route drawn over it. */
+.map > .survey,
+.map > .mapSvg {
+  grid-area: 1 / 1;
+}
+
+.map > .survey {
+  position: relative;
+  inset: auto;
+  aspect-ratio: 640 / 440;
+  background: color-mix(in oklab, var(--chalk) 86%, var(--grass));
+}
+
+.mere {
+  fill: color-mix(in oklab, var(--grass) 40%, var(--chalk));
+  stroke: color-mix(in oklab, var(--grass) 70%, var(--ink));
+  stroke-width: 1.5;
+}
+
+.routeCasing {
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 13;
+}
+
+.route {
+  fill: none;
+  stroke: var(--path);
+  stroke-width: 5;
+  stroke-dasharray: 12 7;
+}
+
+.bench {
+  fill: var(--ink);
+}
+
+.stables {
+  fill: var(--ink);
+}
+
+.mapLabel,
+.mapWater,
+.mapStopNum {
+  font-family: var(--display);
+  text-anchor: middle;
+}
+
+.mapLabel {
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--text);
+}
+
+.mapWater {
+  font-size: 16px;
+  font-style: italic;
+  fill: var(--on-grass);
+}
+
+.mapStop {
+  fill: var(--ink);
+  stroke: var(--paper);
+  stroke-width: 3;
+}
+
+.mapStopNum {
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--on-ink);
+}
+
+.mapKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.mapKey span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mapKey span::before {
+  content: '';
+  flex: none;
+}
+
+.keyRoute::before {
+  width: 1.6rem;
+  border-top: 4px dashed var(--path);
+}
+
+.keyBench::before {
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--ink);
+}
+
+.keyStop::before {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.accessFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem 1.6rem;
+  margin-top: 1.8rem;
+}
+
+.accessFacts div {
+  padding-top: 0.8rem;
+  border-top: 3px solid var(--text);
+}
+
+.accessFacts dt {
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.accessFacts dd {
+  margin-top: 0.3rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.accessList {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 2rem;
+}
+
+.accessList li {
+  position: relative;
+  padding-left: 1.6rem;
+  font-size: 0.96rem;
+}
+
+.accessList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+}
+
+/* ------------------------------------------------------------- exhibitions */
+
+.exhGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+/* The orangery poster: the strand design behind a block of type. */
+.poster {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--grass);
+  box-shadow: 0 30px 50px -30px color-mix(in oklab, var(--ink) 70%, transparent);
+}
+
+.posterField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.posterBlock {
+  position: absolute;
+  left: 1.4rem;
+  right: 1.4rem;
+  bottom: 1.4rem;
+  padding: 1.4rem 1.4rem 1.2rem;
+  background: var(--chalk);
+}
+
+.posterWhere,
+.posterDates {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.posterTitle {
+  margin-top: 0.4rem;
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 5.2vw, 4.4rem);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+}
+
+.posterArtist {
+  margin: 0.6rem 0 0.8rem;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.exhFacts {
+  margin-top: 1.8rem;
+  border-top: 1px solid var(--rule);
+}
+
+.exhFacts div {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.exhFacts dt {
+  font-family: var(--display);
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- learning */
+
+.learnBand {
+  position: relative;
+  height: clamp(6rem, 10vw, 9rem);
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--chalk) 84%, var(--grass));
+}
+
+.learnHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1.5rem 3rem;
+  margin-bottom: clamp(2rem, 4vw, 2.8rem);
+}
+
+.learnFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.4rem;
+}
+
+.learnFacts dt {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.learnFacts dd {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.workshops {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+.workshop {
+  padding: 1.4rem 1.4rem 1.6rem;
+  background: var(--paper);
+  border-top: 5px solid var(--grass);
+}
+
+.workshopStage {
+  display: inline-block;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--on-grass);
+  background: var(--grass);
+  border-radius: 999px;
+}
+
+.workshopName {
+  margin-top: 0.9rem;
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.workshopAges {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.workshopText {
+  margin-top: 0.8rem;
+  font-size: 0.96rem;
+}
+
+.learnNote {
+  margin-top: 1.6rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------- membership */
+
+.memberGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.tier {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  padding: 1.4rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+
+.tierKey {
+  width: 3.2rem;
+  height: 3.2rem;
+  margin-bottom: 0.6rem;
+  font-size: 1.3rem;
+  color: var(--text);
+  border: 3px solid var(--text);
+}
+
+.tier:last-child .tierKey {
+  color: var(--on-bronze);
+  background: var(--bronze);
+  border-color: var(--bronze);
+}
+
+.tierName {
+  font-size: 1.5rem;
+}
+
+.tierPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.tierPrice strong {
+  font-family: var(--display);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.tierPrice span {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.tierGets {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  padding-top: 0.8rem;
+  font-size: 0.92rem;
+  border-top: 1px solid var(--rule);
+}
+
+.tierGets li {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.tierGets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.6rem;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.formTitle {
+  font-size: 1.6rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 2.8rem;
+  padding: 0.5rem 0.8rem;
+  font: inherit;
+  color: var(--on-ink);
+  background: color-mix(in oklab, var(--ink) 86%, var(--on-ink));
+  border: 1px solid var(--ink-rule);
+  border-radius: 6px;
+}
+
+.field select {
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--on-ink) 50%) calc(100% - 18px) 50% / 6px 6px no-repeat,
+    linear-gradient(-45deg, transparent 50%, var(--on-ink) 50%) calc(100% - 12px) 50% / 6px 6px no-repeat,
+    color-mix(in oklab, var(--ink) 86%, var(--on-ink));
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+}
+
+.check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--bronze);
+}
+
+.form .btnInk {
+  justify-self: start;
+  color: var(--on-bronze);
+  background: var(--bronze);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.footField {
+  position: relative;
+  height: clamp(90px, 10vw, 130px);
+  overflow: hidden;
+  border-bottom: 1px solid var(--ink-rule);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 3rem);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.6rem, 5vw, 3.6rem) var(--gut) clamp(3rem, 6vw, 4rem);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--on-ink);
+}
+
+.footSub {
+  margin-top: 0.5rem;
+}
+
+.footCol {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+}
+
+.footLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-ink);
+}
+
+.footCol a {
+  color: var(--on-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ink-rule);
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1150px) {
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .barTicket {
+    justify-self: end;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .tiers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .accessGrid,
+  .exhGrid,
+  .memberGrid,
+  .trailHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroStage {
+    min-height: 32rem;
+  }
+
+  .signs,
+  .workshops {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 36rem;
+  }
+
+  .poster {
+    max-width: 30rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .barTicket {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .handset {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+  }
+
+  .heroStage {
+    min-height: 30rem;
+  }
+
+  .heroKey {
+    width: 3.8rem;
+    height: 3.8rem;
+    font-size: 1.4rem;
+  }
+
+  .heroLabel {
+    left: auto;
+    max-width: 11rem;
+    font-size: 0.78rem;
+  }
+
+  .heroStone {
+    bottom: 6.4rem;
+    width: 58%;
+  }
+
+  .heroPlinth {
+    height: 6.6rem;
+    width: 86%;
+  }
+
+  .accessFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,1191 @@
+/* ==========================================================================
+   ALDER & STONE FUNERAL CARE - independent funeral directors, Ashcombe
+   The page is an order of service. Each section is a folded booklet laid
+   open on a table: two facing pages with a soft shadow in the fold, folio
+   numbers at the foot, headings set in small caps and centered, and a
+   pressed flower laid sideways between the sections, drawn in a soft ink.
+   The lead field is tulle, an even veil of dots: the cloth the booklet
+   lies on in the hero, a vignette on the cover, and again at the foot.
+   Everything is quiet on purpose; the one large thing is the telephone.
+   ========================================================================== */
+
+.page {
+  --stone: #eeeae3;
+  --charcoal: #2a2a2b;
+  --sage: #8a9a86;
+  --plum: #6b4a5a;
+
+  --serif: 'Gentium Book Plus', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --display: 'Crimson Pro', 'Gentium Book Plus', Georgia, serif;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --spread: 68rem;
+
+  --text: var(--charcoal);
+  --on-charcoal: var(--stone);
+
+  /* Everything else is mixed from the roles. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--stone));
+  --label: color-mix(in oklab, var(--plum) 42%, var(--text));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --edge: color-mix(in oklab, var(--text) 9%, transparent);
+  --paper: var(--stone);
+  --fold: color-mix(in oklab, var(--charcoal) 11%, transparent);
+  --shadow: color-mix(in oklab, var(--charcoal) 28%, transparent);
+  --flower: color-mix(in oklab, var(--sage) 58%, var(--text));
+  --flower-plum: color-mix(in oklab, var(--plum) 62%, var(--text));
+
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  background: var(--stone);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the lightness of the surface, tinted toward an ink. */
+    --text: color-mix(in oklab, oklch(from var(--stone) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--charcoal));
+    --on-charcoal: color-mix(in oklab, oklch(from var(--charcoal) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--stone));
+    /* The booklet's paper, a shade brighter than the table it lies on. */
+    --paper: oklch(from var(--stone) clamp(0, l + 0.025, 1) calc(c * 0.7) h);
+    /* Shadows and the fold are always the ground made darker, never an ink:
+       an ink can be the brightest color in a palette. */
+    --fold: oklch(from var(--stone) calc(l * 0.72) c h / 0.2);
+    --shadow: oklch(from var(--stone) calc(l * 0.3) c h / 0.42);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, h4) {
+  margin: 0;
+  font-weight: inherit;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, address) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.label {
+  font-variant-caps: all-small-caps;
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+  color: var(--label);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 0.75rem var(--gut);
+  background: var(--stone);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: grid;
+  line-height: 1.1;
+}
+
+.markName {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.markSub {
+  font-variant-caps: all-small-caps;
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  color: var(--label);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem 1.3rem;
+}
+
+.nav a {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.nav a:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--sage);
+  text-underline-offset: 5px;
+}
+
+.barPhone {
+  display: grid;
+  justify-items: end;
+  line-height: 1.1;
+}
+
+.barPhoneLabel {
+  font-variant-caps: all-small-caps;
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  color: var(--label);
+}
+
+.barPhoneNo {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--stone);
+}
+
+/* ------------------------------------------------------------ the booklet */
+
+.spread {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: var(--spread);
+  margin: 0 auto;
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px var(--edge),
+    0 0.3rem 0.6rem -0.3rem var(--shadow),
+    0 2rem 3.2rem -2.2rem var(--shadow);
+}
+
+.leftPage,
+.rightPage {
+  position: relative;
+  padding: clamp(2rem, 4.5vw, 3.8rem) clamp(1.4rem, 4vw, 3.6rem) clamp(3.4rem, 5vw, 4.4rem);
+}
+
+/* The fold: each page darkens a little toward the spine. */
+.leftPage {
+  background: linear-gradient(to left, var(--fold), transparent 4.5rem);
+}
+
+.rightPage {
+  background: linear-gradient(to right, var(--fold), transparent 4.5rem);
+}
+
+.rightPage::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: color-mix(in oklab, var(--charcoal) 16%, transparent);
+}
+
+.folio {
+  position: absolute;
+  bottom: 1.4rem;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.leftPage .folio {
+  left: clamp(1.4rem, 4vw, 3.6rem);
+}
+
+.rightPage .folio {
+  right: clamp(1.4rem, 4vw, 3.6rem);
+}
+
+.pageTitle {
+  margin-bottom: 1.4rem;
+  font-family: var(--display);
+  font-size: 1.75rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.pageTitle::after {
+  content: '';
+  display: block;
+  width: 2.6rem;
+  height: 1px;
+  margin: 0.8rem auto 0;
+  background: var(--sage);
+}
+
+/* A pressed flower laid sideways between two hairlines. */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  max-width: 36rem;
+  margin: 0 auto 1.4rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.sprig {
+  position: relative;
+  flex: none;
+  width: 7.6rem;
+  height: 4.4rem;
+}
+
+.sprigArt {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4.3rem;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.sec {
+  position: relative;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut);
+}
+
+.secHead {
+  max-width: 42rem;
+  margin: 0 auto clamp(2rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.h2 {
+  margin-top: 0.3rem;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 4.6vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.secNote {
+  margin-top: 1rem;
+  font-size: 1.12rem;
+  color: var(--muted);
+}
+
+.btn,
+.btnQuiet {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.btn {
+  background: var(--charcoal);
+  color: var(--on-charcoal);
+  border: 1px solid var(--text);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: color-mix(in oklab, var(--charcoal) 85%, var(--stone));
+}
+
+.btnQuiet {
+  padding-inline: 0.2rem;
+  border-bottom: 1px solid var(--sage);
+}
+
+.btnQuiet:hover {
+  border-bottom-color: var(--text);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  padding: clamp(2.5rem, 6vw, 5rem) var(--gut) clamp(3rem, 7vw, 6rem);
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.heroSpread {
+  text-align: center;
+}
+
+.heroSpread .leftPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--display);
+  font-size: clamp(2.8rem, 5.6vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.02;
+}
+
+.lede {
+  max-width: 26rem;
+  margin-top: 1.3rem;
+  font-size: 1.15rem;
+}
+
+.bigPhone {
+  display: block;
+  margin-top: 1.8rem;
+  font-family: var(--display);
+  font-size: clamp(2.3rem, 4.6vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: lining-nums;
+  letter-spacing: 0.01em;
+}
+
+.phoneNote {
+  margin-top: 0.4rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem 1.6rem;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.cover {
+  display: grid;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+}
+
+.coverFrame {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.2rem;
+  padding: clamp(2rem, 4vw, 3.2rem) 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  outline: 1px solid var(--rule);
+  outline-offset: -7px;
+}
+
+/* The veil frames the cover and clears in the middle for the flower. */
+.coverVeil {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -webkit-mask: radial-gradient(ellipse 58% 52% at 50% 50%, transparent 55%, var(--charcoal) 100%);
+  mask: radial-gradient(ellipse 58% 52% at 50% 50%, transparent 55%, var(--charcoal) 100%);
+}
+
+.coverTop {
+  position: relative;
+  font-variant-caps: all-small-caps;
+  font-size: 1.25rem;
+  letter-spacing: 0.24em;
+  color: var(--label);
+}
+
+.coverLily {
+  position: relative;
+  width: clamp(8.5rem, 15vw, 12.5rem);
+  margin: 1.4rem 0 1.2rem;
+}
+
+.coverTitle {
+  position: relative;
+  font-family: var(--display);
+  font-size: clamp(2rem, 3.4vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.coverSub {
+  position: relative;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- when */
+
+.steps {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.steps li {
+  text-align: center;
+}
+
+.stepNo {
+  display: block;
+  font-variant-caps: all-small-caps;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  color: var(--label);
+}
+
+.stepTitle {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.stepText {
+  max-width: 24rem;
+  margin: 0.3rem auto 0;
+  color: var(--muted);
+}
+
+.places {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.places div {
+  text-align: center;
+}
+
+.places div + div {
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.places dt {
+  font-variant-caps: all-small-caps;
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
+}
+
+.places dd {
+  max-width: 24rem;
+  margin: 0.25rem auto 0;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- prices */
+
+.priceTable {
+  position: relative;
+  max-width: 74rem;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 2.4rem);
+}
+
+.linen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.services {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.8rem, 2vw, 1.6rem);
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.6rem, 3vw, 2.4rem) clamp(1.2rem, 2.4vw, 2rem);
+  text-align: center;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--edge), 0 1.2rem 2rem -1.6rem var(--shadow);
+}
+
+.serviceName {
+  font-variant-caps: all-small-caps;
+  font-size: 1.4rem;
+  letter-spacing: 0.12em;
+}
+
+.servicePrice {
+  margin-top: 0.2rem;
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 4vw, 3.3rem);
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: lining-nums;
+}
+
+.serviceWhat {
+  margin-top: 0.9rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.lines {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1.4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+  text-align: left;
+}
+
+.lines div,
+.thirdList div,
+.pay div {
+  display: flex;
+  align-items: baseline;
+}
+
+/* A dotted leader from the item to its price. */
+.lines dt,
+.thirdList dt,
+.pay dt {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.lines dt::after,
+.thirdList dt::after,
+.pay dt::after {
+  content: '';
+  flex: 1;
+  min-width: 1rem;
+  margin: 0 0.5rem;
+  border-bottom: 1px dotted color-mix(in oklab, var(--text) 40%, transparent);
+}
+
+.lines dd,
+.thirdList dd,
+.pay dd {
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: nowrap;
+}
+
+.lines dt {
+  font-size: 0.98rem;
+}
+
+.total {
+  margin-top: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--text);
+  font-weight: 700;
+}
+
+.serviceAfter {
+  margin-top: auto;
+  padding-top: 1.1rem;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.thirdParty {
+  max-width: 40rem;
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  text-align: center;
+}
+
+.smallHead {
+  font-variant-caps: all-small-caps;
+  font-size: 1.2rem;
+  letter-spacing: 0.14em;
+}
+
+.thirdList {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.smallNote {
+  margin-top: 1.2rem;
+  font-size: 0.98rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- arranging */
+
+.orderSpread {
+  text-align: center;
+}
+
+.orderHead {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+  font-variant-caps: all-small-caps;
+  font-size: 1.15rem;
+  letter-spacing: 0.2em;
+  color: var(--label);
+}
+
+.orderHead::before,
+.orderHead::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.order {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.orderTitle {
+  font-variant-caps: all-small-caps;
+  font-size: 1.3rem;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+}
+
+.orderText {
+  max-width: 25rem;
+  margin: 0.3rem auto 0;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.orderEnd {
+  margin-top: 2rem;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------------- plans */
+
+.planTerms {
+  display: grid;
+  gap: 0.8rem;
+  margin-bottom: 2.2rem;
+}
+
+.planTerms li {
+  position: relative;
+  padding-left: 1.4rem;
+  line-height: 1.55;
+}
+
+.planTerms li::before {
+  content: '';
+  position: absolute;
+  left: 0.2rem;
+  top: 0.62em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--sage);
+}
+
+.pay {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.plans {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.plan {
+  position: relative;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+.planField {
+  position: relative;
+  height: 5rem;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--sage) 12%, var(--paper));
+  border-bottom: 1px solid var(--rule);
+}
+
+.planBody {
+  padding: 1.2rem 1.4rem 1.4rem;
+  text-align: center;
+}
+
+.planName {
+  font-variant-caps: all-small-caps;
+  font-size: 1.3rem;
+  letter-spacing: 0.12em;
+}
+
+.planPrice {
+  font-family: var(--display);
+  font-size: 2.6rem;
+  line-height: 1.05;
+  font-variant-numeric: lining-nums;
+}
+
+.planCovers {
+  max-width: 24rem;
+  margin: 0.5rem auto 0;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.planAsk {
+  margin-top: 1.6rem;
+  text-align: center;
+  line-height: 1.55;
+}
+
+/* ------------------------------------------------------------------ support */
+
+.supportSec {
+  padding-block: clamp(3.5rem, 8vw, 7rem);
+}
+
+.net {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.supportPage {
+  position: relative;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.3rem, 4vw, 3.6rem);
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--edge), 0 2rem 3rem -2rem var(--shadow);
+}
+
+.support {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 4vw, 3rem);
+}
+
+.support li {
+  text-align: center;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.supportTitle {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.supportWhen {
+  margin-top: 0.2rem;
+  font-variant-caps: all-small-caps;
+  font-size: 1.02rem;
+  letter-spacing: 0.12em;
+  color: var(--label);
+}
+
+.supportText {
+  max-width: 24rem;
+  margin: 0.5rem auto 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* -------------------------------------------------------------------- about */
+
+.dust {
+  position: relative;
+  max-width: var(--spread);
+  height: 9rem;
+  margin: 0 auto 2.2rem;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, var(--charcoal) 18%, var(--charcoal) 82%, transparent);
+  mask: linear-gradient(90deg, transparent, var(--charcoal) 18%, var(--charcoal) 82%, transparent);
+}
+
+.aboutLede {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.aboutText {
+  margin-top: 1.1rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.history {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.8rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.history li {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: baseline;
+}
+
+.year {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+  color: var(--label);
+}
+
+.yearText {
+  line-height: 1.5;
+}
+
+.people {
+  display: grid;
+  gap: 1.1rem;
+  text-align: center;
+}
+
+.people dt {
+  font-variant-caps: all-small-caps;
+  font-size: 1.3rem;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+}
+
+.people dd {
+  font-style: italic;
+  color: var(--muted);
+}
+
+.memberNote {
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.98rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ contact */
+
+.contactLabel {
+  font-variant-caps: all-small-caps;
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  text-align: center;
+  color: var(--label);
+}
+
+.contactSpread .leftPage {
+  text-align: center;
+}
+
+.contactSpread .bigPhone {
+  margin-top: 0.4rem;
+}
+
+.address {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+  font-style: normal;
+}
+
+.address a {
+  justify-self: center;
+  border-bottom: 1px solid var(--sage);
+  overflow-wrap: anywhere;
+}
+
+.hours {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.6rem;
+}
+
+.hours dt {
+  font-variant-caps: all-small-caps;
+  font-size: 1.08rem;
+  letter-spacing: 0.12em;
+}
+
+.hours dd {
+  font-style: italic;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.form .pageTitle {
+  margin-bottom: 0;
+}
+
+.formNote {
+  margin-bottom: 0.4rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--muted);
+}
+
+.field {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.field label {
+  font-variant-caps: all-small-caps;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  color: var(--label);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.45rem 0.1rem;
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--text) 40%, transparent);
+  border-radius: 0;
+}
+
+.field select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--sage) 50%),
+    linear-gradient(-45deg, transparent 50%, var(--sage) 50%);
+  background-position: calc(100% - 0.9rem) 55%, calc(100% - 0.55rem) 55%;
+  background-size: 0.35rem 0.35rem;
+  background-repeat: no-repeat;
+}
+
+.field select option {
+  background: var(--stone);
+  color: var(--text);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-bottom-color: var(--text);
+}
+
+.form .btn {
+  justify-self: center;
+  margin-top: 0.6rem;
+  min-width: 10rem;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  position: relative;
+  padding: 0 var(--gut) clamp(2.5rem, 5vw, 4rem);
+}
+
+.footVeil {
+  position: relative;
+  height: 6.5rem;
+  margin: 0 calc(var(--gut) * -1) 2.4rem;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(to bottom, transparent, var(--charcoal) 70%);
+  mask: linear-gradient(to bottom, transparent, var(--charcoal) 70%);
+  border-bottom: 1px solid var(--rule);
+}
+
+.footInner {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footName {
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.footLine {
+  color: var(--muted);
+}
+
+.footPhone {
+  margin-top: 0.4rem;
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+}
+
+.footSmall {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footSmall:first-of-type {
+  margin-top: 1rem;
+}
+
+.footSmall a {
+  color: var(--text);
+  border-bottom: 1px solid var(--sage);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1260px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .barPhone {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 960px) {
+  .services {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 30rem;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 820px) {
+  /* The booklet folds shut: the pages follow one another, and the fold's
+     shadow turns to lie between them. */
+  .spread {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .leftPage {
+    background: linear-gradient(to top, var(--fold), transparent 3rem);
+  }
+
+  .rightPage {
+    background: linear-gradient(to bottom, var(--fold), transparent 3rem);
+  }
+
+  .rightPage::before {
+    right: 0;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+  }
+
+  .support {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cover {
+    padding-top: 1.4rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .bar {
+    gap: 0.8rem;
+  }
+
+  .markName {
+    font-size: 1.3rem;
+  }
+
+  .markSub {
+    display: none;
+  }
+
+  .barPhoneLabel {
+    display: none;
+  }
+
+  .barPhoneNo {
+    font-size: 1.1rem;
+  }
+
+  .lines dt {
+    font-size: 0.92rem;
+  }
+
+  .history li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}

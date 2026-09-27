@@ -1,0 +1,1599 @@
+/* ==========================================================================
+   LOUDHOUSE - podcast recording studio, Eastgate
+   The page is a session in an audio editor. A transport bar across the
+   top, a timecode ruler over the hero with the playhead standing in it,
+   and every section is a track: a header on the left with its number,
+   name, mute / solo / record buttons, a fader and two level meters, and a
+   lane on the right where the content sits in clips (rounded, a colored
+   name bar, a waveform drawn behind). The lead pattern, a stipple thinning
+   to nothing, is the waveform texture of the hero's lane; the mic is drawn
+   twice, a tint over a stippled cut-out that a hover reveals.
+   ========================================================================== */
+
+.page {
+  --console: #16181d;
+  --white: #e9eaee;
+  --clip: #f25f3a;
+  --waves: #5ad1c8;
+  --meter: #f2c744;
+  --gut: clamp(1rem, 3vw, 2rem);
+  --head: 15.5rem;
+  --sans: 'IBM Plex Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Sometype Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --text: var(--white);
+  --on-clip: var(--console);
+  --on-waves: var(--console);
+  --on-meter: var(--console);
+
+  /* Derived: panels, lanes, lines and meters, all mixed from the roles. */
+  --muted: color-mix(in oklab, var(--text) 64%, var(--console));
+  --faint: color-mix(in oklab, var(--text) 44%, var(--console));
+  --line: color-mix(in oklab, var(--text) 11%, transparent);
+  --line-strong: color-mix(in oklab, var(--text) 22%, transparent);
+  --panel: color-mix(in oklab, var(--console) 91%, var(--text));
+  --panel-2: color-mix(in oklab, var(--console) 95%, var(--text));
+  --well: color-mix(in oklab, var(--console) 84%, transparent);
+  --lcd: color-mix(in oklab, var(--console) 70%, var(--waves));
+  --phones: color-mix(in oklab, var(--waves) 72%, var(--text));
+  --meter-off: color-mix(in oklab, var(--text) 10%, var(--console));
+  --meter-ramp: linear-gradient(90deg, var(--waves) 0 62%, var(--meter) 62% 84%, var(--clip) 84%);
+  --shadow: color-mix(in oklab, var(--console) 70%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  background: var(--console);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--console) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--white));
+    --on-clip: oklch(from var(--clip) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-waves: oklch(from var(--waves) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-meter: oklch(from var(--meter) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid var(--meter);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3, p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------- transport */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.3rem;
+  padding: 0.6rem var(--gut);
+  background: var(--panel);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.recDot {
+  display: inline-block;
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: var(--clip);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--clip) 30%, transparent);
+}
+
+.markName {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.transport {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.transport span {
+  position: relative;
+  display: block;
+  width: 1.9rem;
+  height: 1.6rem;
+  border-radius: 4px;
+  background: var(--panel-2);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.transport span::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+.tRew::after {
+  width: 0.8rem;
+  height: 0.6rem;
+  background: var(--muted);
+  clip-path: polygon(0 50%, 50% 0, 50% 50%, 100% 0, 100% 100%, 50% 50%, 50% 100%);
+}
+
+.tPlay::after {
+  width: 0.55rem;
+  height: 0.65rem;
+  background: var(--waves);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.tStop::after {
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--muted);
+}
+
+.tRec::after {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--clip);
+}
+
+.timecode {
+  padding: 0.25rem 0.7rem;
+  border-radius: 4px;
+  background: var(--lcd);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.3rem;
+}
+
+.nav a {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.barCta,
+.btnRec {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--clip);
+  color: var(--on-clip);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.barCta {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.barCta::before,
+.btnRec::before {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--on-clip);
+}
+
+.btnRec {
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0.6rem 1.3rem;
+  font-size: 0.98rem;
+}
+
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.9rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+  }
+
+  .barCta:hover,
+  .btnRec:hover {
+    background: color-mix(in oklab, var(--clip) 85%, var(--text));
+  }
+
+  .btnLine:hover {
+    background: var(--panel);
+  }
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--panel);
+}
+
+/* ------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+/* The timecode ruler: a tick every second, a label every five. */
+.ruler {
+  display: grid;
+  grid-template-columns: var(--head) minmax(0, 1fr);
+  height: 2.1rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.rulerCorner {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  border-right: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.rulerTrack {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  background:
+    repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 10%) 0 100% / 100% 45% no-repeat,
+    repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 2%) 0 100% / 100% 25% no-repeat;
+}
+
+.rulerMark {
+  padding: 0.25rem 0 0 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+/* The playhead stands in the ruler and runs down through the lane. */
+.playhead {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--head) + (100% - var(--head)) * 0.535);
+  width: 2px;
+  background: var(--clip);
+  box-shadow: 0 0 12px color-mix(in oklab, var(--clip) 60%, transparent);
+  pointer-events: none;
+}
+
+.playhead::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -0.5rem;
+  width: calc(1rem + 2px);
+  height: 0.85rem;
+  background: var(--clip);
+  clip-path: polygon(0 0, 100% 0, 100% 55%, 50% 100%, 0 55%);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: var(--head) minmax(0, 1fr);
+}
+
+.master {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(14rem, 1fr) auto;
+  gap: 0.8rem;
+  padding: 1.3rem 1rem 1.2rem;
+  background: var(--panel);
+  border-right: 1px solid var(--line-strong);
+}
+
+.headLabel {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.sessionName {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.sessionFacts {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sessionFacts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.8rem;
+}
+
+.sessionFacts dt {
+  color: var(--muted);
+}
+
+.sessionFacts dd {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+}
+
+/* Two tall stereo meters, segmented, lit to --l from the bottom. */
+.masterMeters {
+  display: grid;
+  grid-template-columns: 1.1rem 1.1rem auto;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.vMeter {
+  position: relative;
+  display: block;
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 4px, var(--panel) 4px 6px),
+    linear-gradient(0deg, var(--waves) 0 var(--l), transparent var(--l)),
+    var(--meter-off);
+}
+
+/* The upper segments go yellow and then red. */
+.vMeter::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 4px, var(--panel) 4px 6px),
+    linear-gradient(0deg, transparent 0 62%, var(--meter) 62% 84%, var(--clip) 84%);
+  -webkit-mask: linear-gradient(0deg, var(--console) 0 var(--l), transparent var(--l));
+  mask: linear-gradient(0deg, var(--console) 0 var(--l), transparent var(--l));
+}
+
+.vScale {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  line-height: 1;
+  color: var(--faint);
+}
+
+.heroLane {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  min-height: 40rem;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.2rem, 3vw, 3rem);
+  overflow: hidden;
+  background: var(--panel-2);
+}
+
+.stipple {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.heroClip {
+  position: relative;
+  z-index: 2;
+  container-type: inline-size;
+  display: grid;
+  overflow: hidden;
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--console) 90%, transparent);
+  box-shadow: inset 0 0 0 1.5px var(--clip), 0 30px 60px -30px var(--shadow);
+}
+
+.heroClip .clipName {
+  --tone: var(--clip);
+  --on-tone: var(--on-clip);
+}
+
+.heroBody {
+  display: grid;
+  gap: 1.3rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.name {
+  font-size: clamp(2.6rem, 16cqw, 6.8rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+
+.lede {
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  color: color-mix(in oklab, var(--text) 86%, var(--console));
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+/* The mic: a tint laid over a stippled cut-out of the same picture. */
+.micFig {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  overflow: hidden;
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--waves) 14%, var(--console));
+  box-shadow: inset 0 0 0 1.5px var(--waves), 0 30px 60px -30px var(--shadow);
+}
+
+.micCap {
+  order: -1;
+  padding: 0.3rem 0.7rem;
+  background: var(--waves);
+  color: var(--on-waves);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+}
+
+.micBox {
+  position: relative;
+  aspect-ratio: 1024 / 966;
+  margin: 1.2rem;
+}
+
+.micFill,
+.micTint {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.micFill {
+  --artwork-shade: 0.5;
+}
+
+.micTint {
+  transition: opacity 450ms ease;
+}
+
+@media (hover: hover) {
+  .micBox:hover .micTint {
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ tracks */
+
+.track {
+  display: grid;
+  grid-template-columns: var(--head) minmax(0, 1fr);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.trackHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: start;
+  gap: 0.9rem 0.6rem;
+  padding: 1.3rem 1rem 1.3rem 1.2rem;
+  background: var(--panel);
+  border-right: 1px solid var(--line-strong);
+  box-shadow: inset 4px 0 0 var(--track, var(--clip));
+}
+
+.track:nth-of-type(3n + 2) .trackHead {
+  --track: var(--waves);
+}
+
+.track:nth-of-type(3n) .trackHead {
+  --track: var(--meter);
+}
+
+.trackNum {
+  grid-column: 1 / -1;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--faint);
+}
+
+.trackName {
+  grid-column: 1 / -1;
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.trackIcon {
+  grid-column: 1 / -1;
+  width: 3.4rem;
+}
+
+.ms {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.ms span {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.5rem;
+  border-radius: 3px;
+  background: var(--panel-2);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.ms .soloOn {
+  background: var(--meter);
+  color: var(--on-meter);
+  box-shadow: none;
+}
+
+.ms .muteOn {
+  background: var(--waves);
+  color: var(--on-waves);
+  box-shadow: none;
+}
+
+.ms .armOn {
+  background: var(--clip);
+  color: var(--on-clip);
+  box-shadow: none;
+}
+
+/* A fader: the groove and a cap sitting at --f. */
+.fader {
+  position: relative;
+  grid-column: 1 / -1;
+  display: block;
+  height: 1.3rem;
+  background:
+    linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px) 0 100% / 12.5% 35% repeat-x,
+    linear-gradient(var(--well), var(--well)) 0 50% / 100% 4px no-repeat;
+}
+
+.fader::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(var(--f) - 0.45rem);
+  width: 0.9rem;
+  height: 1.3rem;
+  border-radius: 3px;
+  background:
+    linear-gradient(90deg, transparent 45%, var(--console) 45% 55%, transparent 55%),
+    var(--text);
+}
+
+/* Two horizontal meters, L and R, segmented and lit to --l and --r. */
+.hMeters {
+  position: relative;
+  grid-column: 1 / -1;
+  display: block;
+  height: 0.95rem;
+  background:
+    linear-gradient(90deg, var(--meter-off), var(--meter-off)) 0 0 / 100% 40% no-repeat,
+    linear-gradient(90deg, var(--meter-off), var(--meter-off)) 0 100% / 100% 40% no-repeat;
+}
+
+.hMeters::before,
+.hMeters::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 5px, var(--panel) 5px 7px),
+    var(--meter-ramp);
+}
+
+.hMeters::before {
+  top: 0;
+  -webkit-mask: linear-gradient(90deg, var(--console) 0 var(--l), transparent var(--l));
+  mask: linear-gradient(90deg, var(--console) 0 var(--l), transparent var(--l));
+}
+
+.hMeters::after {
+  bottom: 0;
+  -webkit-mask: linear-gradient(90deg, var(--console) 0 var(--r), transparent var(--r));
+  mask: linear-gradient(90deg, var(--console) 0 var(--r), transparent var(--r));
+}
+
+/* The lane: bar lines every 6rem, beats between them. */
+.lane {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 1.5rem;
+  min-width: 0;
+  padding: clamp(1.6rem, 3.5vw, 2.8rem) clamp(1.2rem, 3vw, 3rem) clamp(2rem, 4vw, 3.2rem);
+  background:
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 6rem 100%,
+    linear-gradient(90deg, color-mix(in oklab, var(--text) 5%, transparent) 1px, transparent 1px) 0 0 / 1.5rem 100%,
+    var(--panel-2);
+}
+
+.laneNote {
+  position: relative;
+  max-width: 44rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- clip */
+
+.clip {
+  --tone: var(--clip);
+  --on-tone: var(--on-clip);
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--tone) 15%, var(--console));
+  box-shadow: inset 0 0 0 1.5px var(--tone);
+}
+
+.tone_clip {
+  --tone: var(--clip);
+  --on-tone: var(--on-clip);
+}
+
+.tone_waves {
+  --tone: var(--waves);
+  --on-tone: var(--on-waves);
+}
+
+.tone_meter {
+  --tone: var(--meter);
+  --on-tone: var(--on-meter);
+}
+
+.clipName {
+  overflow: hidden;
+  padding: 0.3rem 0.7rem;
+  background: var(--tone);
+  color: var(--on-tone);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.clipBody {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  padding: 1.1rem 1.2rem 1.3rem;
+}
+
+/* The clip's waveform, drawn faintly behind its text. */
+.clipBody::before {
+  content: '';
+  position: absolute;
+  inset: 0.6rem 0.4rem;
+  background: repeating-linear-gradient(90deg, var(--tone) 0 2px, transparent 2px 5px);
+  -webkit-mask:
+    radial-gradient(ellipse 22% 42% at 12% 50%, var(--console), transparent),
+    radial-gradient(ellipse 30% 30% at 40% 50%, var(--console), transparent),
+    radial-gradient(ellipse 18% 46% at 66% 50%, var(--console), transparent),
+    radial-gradient(ellipse 26% 26% at 90% 50%, var(--console), transparent);
+  mask:
+    radial-gradient(ellipse 22% 42% at 12% 50%, var(--console), transparent),
+    radial-gradient(ellipse 30% 30% at 40% 50%, var(--console), transparent),
+    radial-gradient(ellipse 18% 46% at 66% 50%, var(--console), transparent),
+    radial-gradient(ellipse 26% 26% at 90% 50%, var(--console), transparent);
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+.clipBody > * {
+  position: relative;
+}
+
+.clipTitle {
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.clipText {
+  font-size: 0.96rem;
+  line-height: 1.5;
+  color: color-mix(in oklab, var(--text) 84%, var(--console));
+}
+
+.clipPrice {
+  margin-top: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.specs li {
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+/* ------------------------------------------------------------------- rooms */
+
+.ribs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.35;
+}
+
+.roomClips {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.95fr) minmax(0, 1.15fr);
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+.span_narrow {
+  margin-top: 3.5rem;
+}
+
+.span_mid {
+  margin-top: 1.5rem;
+}
+
+/* ------------------------------------------------------------------- rates */
+
+.laneGrid {
+  gap: 1rem;
+}
+
+.rateScale {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  margin-left: calc(7.5rem + 1rem);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.rateScale li {
+  padding: 0 0 0.3rem 0.3rem;
+  border-left: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--faint);
+}
+
+.rateRows {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.rateRow {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.rateRoom {
+  padding-top: 0.35rem;
+  font-weight: 600;
+}
+
+.rateTakes {
+  display: grid;
+  gap: 4px;
+}
+
+.take {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  min-width: 0;
+  padding: 0.35rem 0.6rem;
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--tone) 18%, var(--console));
+  box-shadow: inset 3px 0 0 var(--tone), inset 0 0 0 1px color-mix(in oklab, var(--tone) 60%, transparent);
+}
+
+.takeHour {
+  --tone: var(--waves);
+  width: 12.5%;
+  min-width: 8rem;
+}
+
+.takeHalf {
+  --tone: var(--meter);
+  width: 50%;
+}
+
+.takeDay {
+  --tone: var(--clip);
+  width: 100%;
+}
+
+.takeEng {
+  --tone: var(--text);
+  width: 100%;
+}
+
+.takeLabel {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.takePrice {
+  font-family: var(--mono);
+  font-size: 0.98rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rateEng {
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--line-strong);
+}
+
+/* ----------------------------------------------------------------- editing */
+
+.editWave {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 12rem;
+  overflow: hidden;
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--clip) 12%, var(--console));
+  box-shadow: inset 0 0 0 1.5px var(--clip);
+}
+
+.editWave .clipName {
+  --tone: var(--clip);
+  --on-tone: var(--on-clip);
+  position: relative;
+  z-index: 1;
+}
+
+.bars {
+  position: absolute;
+  inset: 1.6rem 0 0;
+  overflow: hidden;
+  /* Shaped into a waveform: loud and quiet passages along the take. */
+  -webkit-mask:
+    radial-gradient(ellipse 9% 46% at 6% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 7% 30% at 18% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 10% 48% at 29% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 6% 22% at 41% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 11% 44% at 52% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 5% 14% at 62% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 9% 40% at 72% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 8% 48% at 85% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 6% 26% at 96% 50%, var(--console) 60%, transparent 62%),
+    linear-gradient(var(--console), var(--console)) 0 50% / 100% 3px no-repeat;
+  mask:
+    radial-gradient(ellipse 9% 46% at 6% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 7% 30% at 18% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 10% 48% at 29% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 6% 22% at 41% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 11% 44% at 52% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 5% 14% at 62% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 9% 40% at 72% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 8% 48% at 85% 50%, var(--console) 60%, transparent 62%),
+    radial-gradient(ellipse 6% 26% at 96% 50%, var(--console) 60%, transparent 62%),
+    linear-gradient(var(--console), var(--console)) 0 50% / 100% 3px no-repeat;
+}
+
+.markers li {
+  position: absolute;
+  top: 1.6rem;
+  bottom: 0;
+  left: var(--at);
+  width: 2px;
+  background: var(--meter);
+}
+
+.markers span {
+  position: absolute;
+  bottom: 0.4rem;
+  left: 0.3rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  background: var(--meter);
+  color: var(--on-meter);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.editList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.editPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--line);
+}
+
+.editPrice strong {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+}
+
+.editPrice span {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ remote */
+
+.remoteGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 0.6rem;
+}
+
+.phonesBody {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1rem;
+  padding: 2rem 1.5rem 1.6rem;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--waves) 22%, transparent) 0 2px, transparent 2px 6px) 0 50% / 100% 30% no-repeat;
+}
+
+.phones {
+  position: relative;
+  width: min(100%, 15rem);
+}
+
+.phonesCap {
+  position: relative;
+  max-width: 18rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.remoteList {
+  display: grid;
+  gap: 0.6rem;
+}
+
+/* ------------------------------------------------------------------ launch */
+
+.launchHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2rem;
+  align-items: end;
+}
+
+.launchPrice {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.launchPrice strong {
+  font-family: var(--mono);
+  font-size: clamp(2.6rem, 5vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.launchPrice span {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* The arrangement: each week's clip starts where the last one ends. */
+.arrange {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+
+.arrange li {
+  border-radius: 8px;
+}
+
+.arrange li:nth-child(2) {
+  margin-top: 3rem;
+}
+
+.arrange li:nth-child(3) {
+  margin-top: 6rem;
+}
+
+/* ------------------------------------------------------------------- shows */
+
+.dots {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.3;
+}
+
+.shows {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.show {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--console) 88%, var(--text));
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+/* Cover art, drawn in the page's colors. */
+.cover {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 4px;
+}
+
+.cover_a {
+  background:
+    radial-gradient(circle at 50% 58%, var(--meter) 0 28%, transparent 29%),
+    linear-gradient(var(--clip), var(--clip));
+}
+
+.cover_b {
+  background:
+    radial-gradient(circle at 70% 30%, var(--white) 0 12%, transparent 13%),
+    repeating-linear-gradient(0deg, var(--waves) 0 6px, var(--console) 6px 12px);
+}
+
+.cover_c {
+  background: conic-gradient(var(--meter) 0 25%, var(--console) 0 50%, var(--waves) 0 75%, var(--clip) 0);
+}
+
+.cover_d {
+  background:
+    linear-gradient(90deg, transparent 0 20%, var(--console) 20% 28%, transparent 28%),
+    linear-gradient(var(--white), var(--white));
+}
+
+.cover_e {
+  background:
+    radial-gradient(circle at 30% 30%, var(--console) 0 22%, transparent 23%),
+    linear-gradient(135deg, var(--waves) 0 50%, var(--meter) 50%);
+}
+
+.cover_f {
+  background:
+    repeating-linear-gradient(90deg, var(--clip) 0 8px, transparent 8px 16px),
+    linear-gradient(var(--console), var(--console));
+}
+
+.showText {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.showName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.showAbout {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.showEps {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--faint);
+}
+
+/* -------------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 0.6rem;
+  align-items: start;
+}
+
+.bookSide {
+  display: grid;
+  overflow: hidden;
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--console) 88%, var(--text));
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.take2 {
+  position: relative;
+  height: 9rem;
+  overflow: hidden;
+}
+
+.bookInfo {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.4rem 1.4rem 1.6rem;
+}
+
+.address {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.bookText {
+  color: var(--muted);
+}
+
+.hours {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hours dt {
+  color: var(--muted);
+}
+
+.hours dd {
+  font-family: var(--mono);
+  font-size: 0.92rem;
+}
+
+.contact a {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--clip);
+}
+
+.form {
+  justify-items: start;
+  grid-template-rows: auto;
+  gap: 1.2rem;
+  padding-bottom: 1.5rem;
+}
+
+.form .clipName {
+  justify-self: stretch;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1rem;
+  width: 100%;
+  padding: 0.4rem 1.3rem 0;
+}
+
+.form .btnRec {
+  margin-left: 1.3rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  background: var(--well);
+  color: var(--text);
+  font: inherit;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--meter);
+  outline-offset: 1px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--clip);
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  background: var(--panel);
+}
+
+.fade {
+  position: relative;
+  height: 110px;
+  overflow: hidden;
+}
+
+.footInner {
+  display: grid;
+  gap: 0.5rem;
+  padding: 2.4rem var(--gut) 3rem calc(var(--head) + clamp(1.2rem, 3vw, 3rem));
+}
+
+.footName {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.footSmall {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.footSmall a {
+  color: var(--text);
+  border-bottom: 1px solid var(--clip);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1240px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: auto auto auto minmax(0, 1fr) auto auto;
+  }
+
+  .barCta {
+    justify-self: end;
+  }
+
+  .roomClips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .span_narrow,
+  .span_mid {
+    margin-top: 0;
+  }
+
+  .span_wide {
+    grid-column: 1 / -1;
+  }
+
+  .shows {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .page {
+    --head: 12rem;
+  }
+
+  .transport {
+    display: none;
+  }
+
+  .heroLane {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .micFig {
+    max-width: 26rem;
+  }
+
+  .editList,
+  .remoteGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .arrange {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .arrange li:nth-child(n) {
+    margin-top: 0;
+  }
+
+  .arrange li:nth-child(2) {
+    margin-left: 12%;
+  }
+
+  .arrange li:nth-child(3) {
+    margin-left: 24%;
+  }
+}
+
+@media (max-width: 760px) {
+  .timecode {
+    display: none;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+  }
+
+  .ruler {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rulerCorner {
+    display: none;
+  }
+
+  .rulerTrack {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .rulerMark:nth-child(even) {
+    display: none;
+  }
+
+  .playhead {
+    left: calc(100% - 0.7rem);
+  }
+
+  .heroGrid,
+  .track {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .master {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .master > .headLabel,
+  .sessionFacts,
+  .masterMeters {
+    display: none;
+  }
+
+  .trackHead {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.4rem 0.8rem;
+    padding: 0.9rem 1rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--line-strong);
+    box-shadow: inset 0 4px 0 var(--track, var(--clip));
+  }
+
+  .trackNum {
+    grid-column: auto;
+  }
+
+  .trackName {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 1.6rem;
+  }
+
+  .trackIcon {
+    display: none;
+  }
+
+  .ms {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .fader {
+    display: none;
+  }
+
+  .hMeters {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .roomClips {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shows {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rateScale {
+    display: none;
+  }
+
+  .rateRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+
+  .takeHour {
+    width: 40%;
+  }
+
+  .takeHalf {
+    width: 70%;
+  }
+
+  .launchHead {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .arrange li:nth-child(n) {
+    margin-left: 0;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    padding-left: var(--gut);
+  }
+}
+
+@media (max-width: 480px) {
+  .barCta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .micTint {
+    transition: none;
+  }
+}

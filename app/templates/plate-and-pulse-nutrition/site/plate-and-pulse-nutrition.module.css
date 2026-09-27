@@ -1,0 +1,1225 @@
+/* ==========================================================================
+   PLATE & PULSE - registered dietitians, 41 Garden Street, Brookline Park
+   The Nutrition Facts label, every section set as one. A label is a hairline
+   box on white with a black condensed title, a bar ten pixels thick under
+   the serving size, a five pixel bar under the big number, hairlines between
+   rows, a "% Daily Value" column flush right and a footnote with an
+   asterisk at the foot. Around the labels, a lot of white. The patterns are
+   the figures (a plate lit from the middle, a day of fibre as dots) and the
+   pictures are stickers somebody has slapped onto the labels at an angle,
+   each with a die-cut white border.
+   ========================================================================== */
+
+.page {
+  --white: #fbfbf8;
+  --black: #111111;
+  --green: #3ba55c;
+  --orange: #f28c28;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --sans: 'Pathway Extreme', 'Helvetica Neue', 'Arial Narrow', Arial, sans-serif;
+  --text: var(--black);
+  --on-black: var(--white);
+  --on-green: var(--white);
+  --on-orange: var(--black);
+
+  /* Derived: never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 68%, var(--white));
+  --hair: color-mix(in oklab, var(--text) 85%, transparent);
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --wash: color-mix(in oklab, var(--white) 95%, var(--text));
+  --shadow: color-mix(in oklab, var(--black) 30%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.02rem;
+  font-variation-settings: 'opsz' 12;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--white);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the ground's lightness, tinted toward the ink. */
+    --text: color-mix(in oklab, oklch(from var(--white) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--black));
+    --on-black: color-mix(in oklab, oklch(from var(--black) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--white));
+    --on-green: oklch(from var(--green) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-orange: oklch(from var(--orange) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 900;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.75rem var(--gut);
+  background: var(--white);
+  border-bottom: 1px solid var(--hair);
+  box-shadow: 0 5px 0 -1px var(--white), 0 5px 0 0 var(--text);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1.55rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.markAmp {
+  display: inline-grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  font-size: 1.1rem;
+  color: var(--on-green);
+  background: var(--green);
+  border-radius: 50%;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.1rem);
+}
+
+.nav a {
+  font-size: 0.98rem;
+  font-weight: 600;
+  font-stretch: 85%;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--green);
+  text-underline-offset: 6px;
+}
+
+.barBook {
+  padding: 0.55rem 1.1rem;
+  font-weight: 800;
+  font-stretch: 85%;
+  color: var(--on-black);
+  background: var(--black);
+}
+
+.barBook:hover {
+  color: var(--on-green);
+  background: var(--green);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--white);
+}
+
+/* --------------------------------------------------------------- the label */
+
+.label {
+  position: relative;
+  padding: 0.3rem 0.6rem 0.55rem;
+  background: var(--white);
+  border: 1.5px solid var(--text);
+  font-stretch: 88%;
+}
+
+.heroTitle,
+.labelTitle {
+  display: block;
+  padding-bottom: 0.15rem;
+  font-size: clamp(2.4rem, 4vw, 3.3rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid var(--hair);
+}
+
+.heroTitle {
+  max-width: 5.2em;
+  font-size: clamp(3.1rem, 6.2vw, 5.4rem);
+  line-height: 0.88;
+  padding-top: 0.2rem;
+  border-bottom: 0;
+}
+
+.heroSub {
+  padding: 0.35rem 0 0.4rem;
+  font-size: 0.98rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.labelTitleSmall {
+  font-size: 1.9rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.servings {
+  padding-top: 0.3rem;
+  font-size: 1.02rem;
+}
+
+.servingSize {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.25rem;
+  font-size: 1.22rem;
+  line-height: 1.2;
+  border-bottom: 10px solid var(--text);
+}
+
+.servingSize strong {
+  font-weight: 900;
+}
+
+.servingSize strong:last-child {
+  text-align: right;
+}
+
+.amountHead {
+  padding-top: 0.2rem;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.calories {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 0.1rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+  border-bottom: 5px solid var(--text);
+}
+
+.calories span:first-child {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+}
+
+.calories span:last-child {
+  font-size: clamp(3rem, 4.6vw, 3.8rem);
+}
+
+.dvHead {
+  padding: 0.2rem 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-align: right;
+  border-bottom: 1px solid var(--hair);
+}
+
+.dvRows {
+  border-bottom: 10px solid var(--text);
+}
+
+.dvRow,
+.dvSub {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.2rem 0;
+  font-size: 1rem;
+}
+
+.dvRow + .dvRow,
+.dvRow + .dvSub,
+.dvSub + .dvRow,
+.dvSub + .dvSub {
+  border-top: 1px solid var(--hair);
+}
+
+.dvRow span {
+  font-weight: 800;
+}
+
+.dvSub {
+  padding-left: 1.2rem;
+}
+
+.dvRow strong,
+.dvSub strong {
+  font-weight: 900;
+}
+
+.vitamins {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 1.2rem;
+  border-bottom: 5px solid var(--text);
+}
+
+.vitamins div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.2rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.vitamins div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.vitamins dd {
+  font-weight: 800;
+}
+
+.footnote {
+  position: relative;
+  padding: 0.4rem 0 0 0;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.subHead {
+  margin-top: 0.1rem;
+  padding: 0.25rem 0 0.2rem;
+  font-size: 1.1rem;
+  font-weight: 900;
+  border-top: 10px solid var(--text);
+  border-bottom: 1px solid var(--hair);
+}
+
+/* The sticker: a die-cut white edge from stacked shadows in the ground,
+   a hairline round that, and a soft shadow where it lifts off the label. */
+.sticker {
+  position: absolute;
+  z-index: 4;
+  filter:
+    drop-shadow(3px 0 0 var(--white))
+    drop-shadow(-3px 0 0 var(--white))
+    drop-shadow(0 3px 0 var(--white))
+    drop-shadow(0 -3px 0 var(--white))
+    drop-shadow(0 0 0.5px color-mix(in oklab, var(--text) 45%, transparent))
+    drop-shadow(0 7px 9px var(--shadow));
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 30rem) minmax(0, 1fr);
+  gap: clamp(3rem, 7vw, 7rem);
+  align-items: start;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5.5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.heroLabelWrap {
+  position: relative;
+}
+
+.stickerHero {
+  top: -2.4rem;
+  right: -3.2rem;
+  width: clamp(7rem, 11vw, 9.5rem);
+  rotate: 14deg;
+}
+
+.heroSide {
+  display: grid;
+  gap: 1.8rem;
+  padding-top: 1rem;
+}
+
+.heroLede {
+  max-width: 34rem;
+  font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.btnSolid,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0 1.4rem;
+  font-weight: 800;
+  font-stretch: 85%;
+  font-size: 1.05rem;
+}
+
+.btnSolid {
+  color: var(--on-green);
+  background: var(--green);
+}
+
+.btnSolid:hover {
+  background: color-mix(in oklab, var(--green) 82%, var(--black));
+}
+
+.btnLine {
+  border: 1.5px solid var(--text);
+}
+
+.btnLine:hover {
+  background: var(--wash);
+}
+
+/* The plate from above: the centroid field cut round, a rim inside it. */
+.platePanel {
+  display: grid;
+  justify-items: center;
+  gap: 1.2rem;
+  margin-top: 0.8rem;
+}
+
+.plateField {
+  position: relative;
+  width: min(100%, 30rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 1.5px solid var(--text);
+  box-shadow: inset 0 0 0 1.4rem var(--white), inset 0 0 0 calc(1.4rem + 1.5px) var(--text);
+}
+
+.plateField::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.4rem var(--white), inset 0 0 0 calc(1.4rem + 1.5px) var(--text);
+  pointer-events: none;
+}
+
+.figCap {
+  max-width: 26rem;
+  font-size: 0.88rem;
+  font-stretch: 88%;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.figCap strong {
+  font-weight: 900;
+}
+
+/* --------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 9vw, 8rem) var(--gut) 0;
+  scroll-margin-top: 4.5rem;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+  gap: 0.5rem 3rem;
+  align-items: end;
+  margin-bottom: clamp(2.4rem, 4.5vw, 3.6rem);
+  padding-bottom: 0.9rem;
+  border-bottom: 10px solid var(--text);
+}
+
+.secNo {
+  grid-column: 1;
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-stretch: 85%;
+}
+
+.secHead h2 {
+  grid-column: 1;
+  font-size: clamp(2.6rem, 5.6vw, 4.8rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+.secLede {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: end;
+  font-size: 1.08rem;
+}
+
+/* --------------------------------------------------------------- help */
+
+.helpGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.helpLabelWrap {
+  position: relative;
+}
+
+.stickerHelp {
+  left: -2.6rem;
+  bottom: -2.8rem;
+  width: clamp(6rem, 9vw, 8rem);
+  rotate: -11deg;
+}
+
+.helpTable {
+  width: 100%;
+  margin-top: 0.3rem;
+  border-collapse: collapse;
+  border-top: 10px solid var(--text);
+}
+
+.helpTable thead th {
+  padding: 0.25rem 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-align: left;
+  border-bottom: 5px solid var(--text);
+}
+
+.helpTable thead th:last-child {
+  text-align: right;
+}
+
+.helpTable tbody th {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 1rem 0.6rem 0;
+  font-weight: 400;
+  text-align: left;
+}
+
+.helpTable tbody tr + tr {
+  border-top: 1px solid var(--hair);
+}
+
+.helpTable tbody tr:last-child {
+  border-bottom: 10px solid var(--text);
+}
+
+.helpTable tbody th strong {
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.helpTable tbody th span {
+  max-width: 34rem;
+  font-size: 0.95rem;
+}
+
+.helpTable td {
+  width: 5rem;
+  font-size: 1.6rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  text-align: right;
+  vertical-align: top;
+  padding-top: 0.45rem;
+}
+
+.fibrePanel {
+  display: grid;
+  justify-items: center;
+  gap: 1.1rem;
+}
+
+.fibreField {
+  position: relative;
+  width: min(100%, 22rem);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1.5px solid var(--text);
+  box-shadow: 8px 8px 0 0 var(--text);
+}
+
+/* ---------------------------------------------------------------- how */
+
+.stepsWrap {
+  position: relative;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+  align-items: stretch;
+}
+
+.stepWrap {
+  display: grid;
+}
+
+.stepLabel {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepNo {
+  padding-top: 0.15rem;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.stepName {
+  padding-bottom: 0.15rem;
+  font-size: clamp(2.2rem, 3.4vw, 2.9rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 0.95;
+  border-bottom: 1px solid var(--hair);
+}
+
+.stepRows {
+  flex: 1;
+  border-bottom: 5px solid var(--text);
+}
+
+.stepRows li {
+  position: relative;
+  padding: 0.3rem 0 0.3rem 1.1rem;
+  font-size: 1rem;
+  border-top: 1px solid var(--hair);
+}
+
+.stepRows li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.78rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--green);
+}
+
+.stepWrap:nth-child(2) .stepRows li::before {
+  background: var(--orange);
+}
+
+.stepWrap:nth-child(3) .stepRows li::before {
+  background: var(--text);
+}
+
+.stickerHow {
+  top: -3.2rem;
+  right: -1.6rem;
+  width: clamp(6.5rem, 9vw, 8.2rem);
+  rotate: 9deg;
+}
+
+/* --------------------------------------------------------------- fees */
+
+.feesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.feesLabelWrap {
+  position: relative;
+}
+
+.feesLabel {
+  padding-bottom: 0.7rem;
+}
+
+.feeRows {
+  border-top: 5px solid var(--text);
+  margin-top: 0.2rem;
+}
+
+.feeRows li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.4rem 0;
+}
+
+.feeRows li + li {
+  border-top: 1px solid var(--hair);
+}
+
+.feeName {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+}
+
+.feeName strong {
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.feeName span {
+  font-size: 0.98rem;
+}
+
+.feePrice {
+  font-size: 1.9rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+}
+
+.insurers div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.28rem 0;
+  font-size: 0.98rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.insurers div:last-child {
+  border-bottom: 5px solid var(--text);
+}
+
+.insurers dt {
+  font-weight: 800;
+}
+
+.insurers dd {
+  text-align: right;
+}
+
+.stickerFees {
+  top: -2.2rem;
+  right: -2.6rem;
+  width: clamp(8rem, 13vw, 11rem);
+  rotate: -8deg;
+}
+
+.feesSide {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.payLabel {
+  max-width: 26rem;
+}
+
+.payRows div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.28rem 0;
+  font-size: 0.98rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.payRows div:first-child {
+  border-top: 10px solid var(--text);
+}
+
+.payRows div:last-child {
+  border-bottom: 0;
+}
+
+.payRows dt {
+  font-weight: 800;
+}
+
+.payRows dd {
+  text-align: right;
+}
+
+.splitPanel {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.splitField {
+  position: relative;
+  width: min(100%, 22rem);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1.5px solid var(--text);
+  box-shadow: 8px 8px 0 0 var(--text);
+}
+
+.splitPanel .figCap {
+  text-align: left;
+}
+
+/* --------------------------------------------------------------- team */
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+}
+
+.person {
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem 0.6rem 0.6rem;
+}
+
+.portrait {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-bottom: 10px solid var(--text);
+}
+
+.personName {
+  padding-top: 0.4rem;
+  font-size: clamp(1.9rem, 2.8vw, 2.4rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+}
+
+.personTitle {
+  padding: 0.2rem 0 0.3rem;
+  font-size: 1rem;
+  border-bottom: 5px solid var(--text);
+}
+
+.personRows {
+  flex: 1;
+}
+
+.personRows div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.28rem 0;
+  font-size: 0.98rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.personRows dt {
+  font-weight: 800;
+}
+
+.personRows dd {
+  text-align: right;
+}
+
+.person .footnote {
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------ recipes */
+
+.recipesWrap {
+  position: relative;
+}
+
+.recipes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+}
+
+.recipeWrap {
+  display: grid;
+}
+
+.recipe {
+  display: flex;
+  flex-direction: column;
+}
+
+.recipeName {
+  padding-bottom: 0.15rem;
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 0.95;
+  border-bottom: 1px solid var(--hair);
+}
+
+.ingredients {
+  border-bottom: 5px solid var(--text);
+}
+
+.ingredients li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0;
+  font-size: 0.98rem;
+  border-top: 1px solid var(--hair);
+}
+
+.ingredients strong {
+  font-weight: 900;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.method {
+  flex: 1;
+  padding-top: 0.45rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.stickerRecipes {
+  top: -3.4rem;
+  right: -2.2rem;
+  width: clamp(6.5rem, 9vw, 8rem);
+  rotate: -14deg;
+}
+
+/* --------------------------------------------------------------- book */
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.formWrap {
+  position: relative;
+}
+
+.form {
+  display: grid;
+}
+
+.formRows {
+  margin-top: 0.3rem;
+  border-top: 10px solid var(--text);
+  border-bottom: 5px solid var(--text);
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.4rem 1rem;
+  padding: 0.45rem 0;
+}
+
+.field + .field {
+  border-top: 1px solid var(--hair);
+}
+
+.field label {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.6rem;
+  font: inherit;
+  font-stretch: 88%;
+  color: var(--text);
+  background: var(--white);
+  border: 1px solid var(--hair);
+  border-radius: 0;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.submit {
+  justify-self: start;
+  min-height: 3rem;
+  margin-top: 0.8rem;
+  padding: 0 1.5rem;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--on-green);
+  background: var(--green);
+  border: 0;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: color-mix(in oklab, var(--green) 82%, var(--black));
+}
+
+.stickerBook {
+  top: -2.6rem;
+  right: -2rem;
+  width: clamp(6rem, 8vw, 7.4rem);
+  rotate: 12deg;
+}
+
+.hoursLabel {
+  display: grid;
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.28rem 0;
+  font-size: 1rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.hours div:first-child {
+  border-top: 10px solid var(--text);
+}
+
+.hours div:last-child {
+  border-bottom: 0;
+}
+
+.hours dt {
+  font-weight: 800;
+}
+
+.address {
+  padding-top: 0.3rem;
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.address + .address {
+  padding-top: 0;
+}
+
+.addressNote {
+  padding: 0.4rem 0;
+  font-size: 0.92rem;
+  border-bottom: 5px solid var(--text);
+}
+
+.contact {
+  padding-top: 0.4rem;
+  font-size: 1.02rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  border-bottom: 2px solid var(--green);
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(5rem, 10vw, 8rem);
+  border-top: 10px solid var(--text);
+}
+
+.sprinkle {
+  position: relative;
+  height: 7rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--hair);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.2rem 3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2rem var(--gut) 2.6rem;
+}
+
+.footName {
+  grid-row: span 3;
+  font-size: 2.4rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+}
+
+.footNote {
+  font-size: 0.88rem;
+  font-stretch: 88%;
+}
+
+.footNote a {
+  font-weight: 800;
+  border-bottom: 2px solid var(--green);
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1100px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 28rem) minmax(0, 1fr);
+    gap: 3.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .helpGrid,
+  .feesGrid,
+  .bookGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero {
+    max-width: 36rem;
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secLede {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .steps,
+  .team,
+  .recipes {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 30rem;
+  }
+
+  .fibreField {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+  }
+
+  .stickerRecipes {
+    top: auto;
+    bottom: -4.2rem;
+    right: 0.4rem;
+  }
+
+  .recipesWrap {
+    padding-bottom: 2rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .barBook {
+    display: none;
+  }
+
+  .stickerHero {
+    top: -2.2rem;
+    right: -0.4rem;
+    width: 6rem;
+  }
+
+  .stickerHelp {
+    left: auto;
+    right: -0.4rem;
+    bottom: -4rem;
+  }
+
+  .helpLabelWrap {
+    margin-bottom: 2rem;
+  }
+
+  .stickerHow,
+  .stickerFees {
+    right: -0.4rem;
+  }
+
+  .stickerBook {
+    top: -3.6rem;
+    right: -0.2rem;
+    width: 5.2rem;
+  }
+
+  .field {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vitamins {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vitamins div:nth-last-child(2) {
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footName {
+    grid-row: auto;
+  }
+}

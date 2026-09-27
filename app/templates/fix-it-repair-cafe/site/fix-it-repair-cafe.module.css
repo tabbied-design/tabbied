@@ -1,0 +1,2122 @@
+/* ==========================================================================
+   FIX-IT SATURDAY - community repair cafe, St Anne's church hall, Millbrook
+   A flat-pack assembly manual. Paper white, heavy black frames on a strict
+   grid, one bold condensed sans for everything, few words and big numbers:
+   circled step numbers, x4 part counts, a right-and-wrong pair with a tick
+   and a cross drawn in CSS, arrows made of shapes, tools as silhouettes in
+   boxes. The joinery patterns (halving joints, brackets, rebates, notched
+   tiles) are the page's hardware: the cover, the crew panel, the tool
+   pegboard, the street plan and the footer.
+   ========================================================================== */
+
+.page {
+  --paper: #f6f6f2;
+  --ink: #121212;
+  --blue: #1f57c3;
+  --yellow: #f6c400;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+  --frame: 2px;
+  --sans: 'Encode Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --text: var(--ink);
+  --on-ink: var(--paper);
+  --on-blue: var(--paper);
+  --on-yellow: var(--ink);
+
+  /* Derived surfaces: mixed from the roles, never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 66%, var(--paper));
+  --rule: color-mix(in oklab, var(--text) 20%, transparent);
+  --hatch: color-mix(in oklab, var(--text) 12%, transparent);
+  --panel: color-mix(in oklab, var(--paper) 95%, var(--text));
+  --panel-deep: color-mix(in oklab, var(--paper) 89%, var(--text));
+  --ink-muted: color-mix(in oklab, var(--on-ink) 66%, var(--ink));
+  --ink-rule: color-mix(in oklab, var(--on-ink) 20%, transparent);
+
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  background: var(--paper);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--paper) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--ink));
+    --on-ink: color-mix(in oklab, oklch(from var(--ink) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--paper));
+    --on-blue: oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-yellow: oklch(from var(--yellow) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem var(--gut);
+  background: var(--paper);
+  border-bottom: var(--frame) solid var(--text);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+}
+
+/* A halving joint: a block with two opposite notches. */
+.markGlyph {
+  width: 1.7rem;
+  height: 1.7rem;
+  background: var(--blue);
+  clip-path: polygon(0 0, 36% 0, 36% 26%, 64% 26%, 64% 0, 100% 0, 100% 100%, 64% 100%, 64% 74%, 36% 74%, 36% 100%, 0 100%);
+}
+
+.markName {
+  font-size: 1.3rem;
+  font-weight: 850;
+  font-stretch: 78%;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--yellow);
+  text-underline-offset: 5px;
+}
+
+.barNext {
+  display: inline-flex;
+  align-items: stretch;
+  font-size: 0.86rem;
+  font-weight: 700;
+  border: var(--frame) solid var(--text);
+}
+
+.barNext span {
+  padding: 0.3rem 0.7rem;
+}
+
+.barNextLabel {
+  color: var(--on-yellow);
+  background: var(--yellow);
+  border-right: var(--frame) solid var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-weight: 600;
+  --template-menu-bg: var(--paper);
+}
+
+/* -------------------------------------------------------------------- cover */
+
+.cover {
+  max-width: var(--max);
+  margin: clamp(1.2rem, 3vw, 2.5rem) auto 0;
+  padding: 0 var(--gut);
+}
+
+.coverStrip {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: var(--frame) solid var(--text);
+  border-bottom: 0;
+}
+
+.coverGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  border: var(--frame) solid var(--text);
+}
+
+.coverText {
+  display: grid;
+  align-content: start;
+  gap: 1.4rem;
+  padding: clamp(1.6rem, 4vw, 3.4rem);
+}
+
+.kicker {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  display: grid;
+  font-size: clamp(3.5rem, 7.6vw, 7.4rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 0.84;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.lede {
+  max-width: 28rem;
+  font-size: clamp(1.2rem, 1.7vw, 1.45rem);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.coverFacts {
+  display: grid;
+  border-top: var(--frame) solid var(--text);
+}
+
+.coverFacts div {
+  display: grid;
+  grid-template-columns: 5.2rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.coverFacts dt {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 0.15rem;
+}
+
+.coverFacts dd {
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.8rem 1.25rem;
+  font: inherit;
+  font-size: 0.98rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  border: var(--frame) solid var(--text);
+}
+
+.btn {
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.btn::after,
+.btnLine::after {
+  /* a manual arrow, made of a shape */
+  content: '';
+  width: 1.3rem;
+  height: 0.8rem;
+  background: currentColor;
+  clip-path: polygon(0 38%, 62% 38%, 62% 0, 100% 50%, 62% 100%, 62% 62%, 0 62%);
+}
+
+.btnLine {
+  color: var(--text);
+  background: transparent;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    color: var(--on-blue);
+    background: var(--blue);
+  }
+
+  .btnLine:hover {
+    color: var(--on-yellow);
+    background: var(--yellow);
+  }
+}
+
+/* What the morning takes: four icons in boxes with a count. */
+.kit {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: var(--frame) solid var(--text);
+}
+
+.kit li {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  padding: 0.8rem 0.4rem 0.7rem;
+  text-align: center;
+}
+
+.kit li + li {
+  border-left: 1px solid var(--rule);
+}
+
+.kit strong {
+  font-size: 1.35rem;
+  font-weight: 850;
+  font-stretch: 80%;
+  line-height: 1;
+}
+
+.kit li > span:last-child {
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+.glyph {
+  position: relative;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.glyph::before,
+.glyph::after {
+  content: '';
+  position: absolute;
+}
+
+/* a person: a head over shoulders */
+.person::before {
+  top: 0;
+  left: 50%;
+  width: 0.95rem;
+  height: 0.95rem;
+  background: var(--text);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.person::after {
+  bottom: 0;
+  left: 50%;
+  width: 1.9rem;
+  height: 1.2rem;
+  background: var(--text);
+  border-radius: 1rem 1rem 0.2rem 0.2rem;
+  transform: translateX(-50%);
+}
+
+/* a carton with its tape */
+.box::before {
+  inset: 0.35rem 0.2rem 0.1rem;
+  border: 2.5px solid var(--text);
+  background: linear-gradient(90deg, transparent 43%, var(--yellow) 43% 57%, transparent 57%);
+}
+
+.box::after {
+  top: 0.35rem;
+  left: 0.2rem;
+  right: 0.2rem;
+  height: 0.55rem;
+  border-bottom: 2.5px solid var(--text);
+}
+
+/* a coin, struck out */
+.coin::before {
+  inset: 0.2rem;
+  border: 2.5px solid var(--text);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--yellow) 0 44%, transparent 45%);
+}
+
+.coin::after {
+  top: 50%;
+  left: -0.1rem;
+  right: -0.1rem;
+  height: 3px;
+  background: var(--text);
+  transform: rotate(-38deg);
+}
+
+/* a clock at three */
+.clock::before {
+  inset: 0.2rem;
+  border: 2.5px solid var(--text);
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--text), var(--text)) 50% 30% / 2.5px 0.8rem no-repeat,
+    linear-gradient(var(--text), var(--text)) 68% 50% / 0.62rem 2.5px no-repeat;
+}
+
+/* The product plate: the lead pattern, and the drawing in a window. */
+.coverPlate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 38rem;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1.6rem, 4.4vw, 4rem);
+  border-left: var(--frame) solid var(--text);
+  overflow: hidden;
+}
+
+.coverField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.coverWindow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.2rem 1.1rem;
+  background: var(--paper);
+  border: var(--frame) solid var(--text);
+}
+
+.figNo {
+  justify-self: start;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--text);
+}
+
+.coverArt {
+  height: 100%;
+  max-height: 25rem;
+  width: auto;
+}
+
+.coverCaption {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  justify-self: stretch;
+  padding-top: 0.7rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-top: 1px solid var(--rule);
+}
+
+.coverCaptionBig {
+  font-size: 2rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 24rem);
+  align-items: center;
+  gap: 1rem 1.4rem;
+  padding-top: 1rem;
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+  border-top: var(--frame) solid var(--text);
+}
+
+.pageNo {
+  display: grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-size: 1.35rem;
+  font-weight: 850;
+  font-stretch: 80%;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.secTitle {
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.secNote {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------- how */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3.4vw, 3rem);
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'num num'
+    'picto picto'
+    'title title'
+    'note note';
+  gap: 0.9rem;
+  align-content: start;
+}
+
+.circled,
+.circledSm {
+  display: grid;
+  place-items: center;
+  flex: none;
+  font-weight: 850;
+  font-stretch: 85%;
+  line-height: 1;
+  border: 3px solid var(--text);
+  border-radius: 50%;
+}
+
+.circled {
+  grid-area: num;
+  width: 4.4rem;
+  height: 4.4rem;
+  font-size: 2.3rem;
+}
+
+.circledSm {
+  width: 2.6rem;
+  height: 2.6rem;
+  font-size: 1.25rem;
+  border-width: 2.5px;
+}
+
+.picto {
+  grid-area: picto;
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  background: var(--panel);
+  border: var(--frame) solid var(--text);
+}
+
+.picto > span {
+  position: absolute;
+  display: block;
+}
+
+.stepTitle {
+  grid-area: title;
+  font-size: 1.5rem;
+  font-weight: 850;
+  font-stretch: 80%;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.stepNote {
+  grid-area: note;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* the arrow between one step and the next */
+.arrow {
+  position: absolute;
+  top: calc(4.4rem + 0.9rem + 42%);
+  right: calc(clamp(1.5rem, 3.4vw, 3rem) * -0.5 - 0.95rem);
+  z-index: 2;
+  width: 1.9rem;
+  height: 1.3rem;
+  background: var(--text);
+  clip-path: polygon(0 34%, 56% 34%, 56% 0, 100% 50%, 56% 100%, 56% 66%, 0 66%);
+}
+
+.step:last-child .arrow {
+  display: none;
+}
+
+/* 1: a carton going in */
+.p_box > span:first-child {
+  left: 22%;
+  right: 22%;
+  bottom: 18%;
+  height: 40%;
+  border: 4px solid var(--text);
+  background: linear-gradient(90deg, transparent 42%, var(--yellow) 42% 58%, transparent 58%);
+}
+
+.p_box > span:last-child {
+  left: 50%;
+  top: 12%;
+  width: 18%;
+  height: 26%;
+  background: var(--blue);
+  transform: translateX(-50%);
+  clip-path: polygon(30% 0, 70% 0, 70% 55%, 100% 55%, 50% 100%, 0 55%, 30% 55%);
+}
+
+/* 2: the repair ticket */
+.p_ticket > span:first-child {
+  left: 20%;
+  right: 20%;
+  top: 16%;
+  bottom: 16%;
+  background:
+    radial-gradient(circle at 50% 12%, var(--panel) 0 6%, transparent 6.5%),
+    repeating-linear-gradient(180deg, transparent 0 12%, var(--rule) 12% 16%) 50% 70% / 64% 50% no-repeat,
+    var(--paper);
+  border: 4px solid var(--text);
+  transform: rotate(-6deg);
+}
+
+.p_ticket > span:last-child {
+  left: 30%;
+  top: 38%;
+  width: 34%;
+  height: 8%;
+  background: var(--blue);
+  transform: rotate(-6deg);
+}
+
+/* 3: two people at one table */
+.p_pair > span {
+  bottom: 30%;
+  width: 26%;
+  height: 34%;
+  border-radius: 999px 999px 0.4rem 0.4rem;
+}
+
+.p_pair > span::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.3rem);
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: inherit;
+  transform: translateX(-50%);
+}
+
+.p_pair > span:first-child {
+  left: 18%;
+  background: var(--text);
+}
+
+.p_pair > span:last-child {
+  right: 18%;
+  background: var(--blue);
+}
+
+.p_pair::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 22%;
+  height: 8%;
+  background: var(--text);
+}
+
+/* 4: home, with a tick */
+.p_home > span:first-child {
+  left: 18%;
+  bottom: 16%;
+  width: 52%;
+  height: 56%;
+  background: var(--text);
+  clip-path: polygon(50% 0, 100% 42%, 100% 100%, 62% 100%, 62% 66%, 38% 66%, 38% 100%, 0 100%, 0 42%);
+}
+
+.p_home > span:last-child {
+  right: 12%;
+  top: 14%;
+  width: 34%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--yellow);
+  border: 3px solid var(--text);
+}
+
+.p_home > span:last-child::after {
+  content: '';
+  position: absolute;
+  left: 30%;
+  top: 16%;
+  width: 26%;
+  height: 48%;
+  border-right: 4px solid var(--text);
+  border-bottom: 4px solid var(--text);
+  transform: rotate(40deg);
+}
+
+/* the parts list */
+.parts {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  grid-template-areas:
+    'title list'
+    'note list';
+  align-items: start;
+  gap: 0.3rem 2rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: 1.4rem;
+  border: var(--frame) solid var(--text);
+  background:
+    repeating-linear-gradient(135deg, transparent 0 9px, var(--hatch) 9px 10px);
+}
+
+.partsTitle {
+  grid-area: title;
+  font-size: 1.6rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.partsNote {
+  grid-area: note;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.partsList {
+  grid-area: list;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.partsList li {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  padding: 0.8rem 0.9rem;
+  background: var(--paper);
+  border: 1.5px solid var(--text);
+}
+
+.partCount {
+  font-size: 2.1rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+}
+
+.partName {
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.partNote {
+  font-size: 0.84rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- what we fix */
+
+.panels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: var(--frame) solid var(--text);
+}
+
+.panel {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
+  gap: 0.9rem;
+  padding: 1.1rem 1.2rem 1.3rem;
+}
+
+.panel + .panel {
+  border-left: var(--frame) solid var(--text);
+}
+
+.panelTop {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.panelTitle {
+  font-size: 1.35rem;
+  font-weight: 850;
+  font-stretch: 80%;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.panelArt {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  height: clamp(12rem, 18vw, 17rem);
+  padding: 0.7rem;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+}
+
+.panelPic {
+  width: 100%;
+  height: 100%;
+}
+
+.panelCount {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.panelCount strong {
+  font-size: 2.6rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+}
+
+.panelCount span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.panelCaption {
+  font-size: 0.96rem;
+  line-height: 1.45;
+}
+
+.ratesWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: 1.5rem 3rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.ratesHead {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.ratesTitle {
+  font-size: 1.8rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ratesNote {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.rates {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.rates li {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr) 3.6rem 4.2rem;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rateName {
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.rateTrack {
+  position: relative;
+  height: 1.4rem;
+  border: var(--frame) solid var(--text);
+  background:
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px) 0 0 / 10% 100%;
+}
+
+.rateFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--rate);
+  background: var(--blue);
+  border-right: var(--frame) solid var(--text);
+}
+
+.rateValue {
+  font-size: 1.3rem;
+  font-weight: 850;
+  font-stretch: 80%;
+  text-align: right;
+}
+
+.rateN {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.totals {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: var(--frame) solid var(--text);
+}
+
+.totals div {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem 1.3rem;
+}
+
+.totals div + div {
+  border-left: var(--frame) solid var(--text);
+}
+
+.totals dt {
+  font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+}
+
+.totals dd {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- dates */
+
+.dates {
+  display: grid;
+  border-top: var(--frame) solid var(--text);
+}
+
+.date,
+.dateClosed {
+  display: grid;
+  grid-template-columns: 6.4rem 11rem minmax(0, 1fr) 8.5rem;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--text);
+}
+
+.dateBlock {
+  display: grid;
+  justify-items: center;
+  padding: 0.35rem 0 0.4rem;
+  border: var(--frame) solid var(--text);
+}
+
+.dateDay {
+  font-size: 2.6rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 0.95;
+}
+
+.dateMon {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.date:first-child .dateBlock {
+  color: var(--on-yellow);
+  background: var(--yellow);
+}
+
+.dateTime {
+  font-weight: 800;
+}
+
+.dateNote {
+  font-size: 1rem;
+}
+
+.dateCrew {
+  justify-self: end;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  border: 1.5px solid var(--text);
+  white-space: nowrap;
+}
+
+.dateClosed {
+  background: repeating-linear-gradient(135deg, transparent 0 9px, var(--hatch) 9px 10px);
+}
+
+.dateClosed .dateBlock,
+.dateClosed .dateTime,
+.dateClosed .dateNote,
+.dateClosed .dateCrew {
+  color: var(--muted);
+}
+
+.dateClosed .dateBlock {
+  border-style: dashed;
+}
+
+.dateClosed .dateDay {
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+}
+
+/* ------------------------------------------------------------------ fixers */
+
+.fixersGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 0.95fr);
+  border: var(--frame) solid var(--text);
+}
+
+.skills,
+.join {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1.4rem;
+}
+
+.join {
+  border-left: var(--frame) solid var(--text);
+}
+
+.boxTitle {
+  font-size: 1.45rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.skillList {
+  display: grid;
+  border-top: 1.5px solid var(--text);
+}
+
+.skillList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  font-weight: 600;
+  border-bottom: 1px solid var(--rule);
+}
+
+.skillList strong {
+  display: grid;
+  place-items: center;
+  min-width: 2.6rem;
+  padding: 0.15rem 0.4rem;
+  font-size: 1.15rem;
+  font-weight: 900;
+  font-stretch: 80%;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.joinList {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.joinList li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.9rem;
+}
+
+.joinTitle {
+  font-weight: 800;
+}
+
+.joinNote {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+  padding-top: 1.1rem;
+  border-top: 1.5px solid var(--text);
+}
+
+.form .btn {
+  justify-self: start;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: 0.45rem 0.7rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--paper);
+  border: var(--frame) solid var(--text);
+  border-radius: 0;
+}
+
+.field select option {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.briefing {
+  position: relative;
+  display: grid;
+  align-items: end;
+  min-height: 24rem;
+  padding: 1.3rem;
+  overflow: hidden;
+  border-left: var(--frame) solid var(--text);
+}
+
+.crewField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.briefCard {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.1rem 1.2rem 1.2rem;
+  background: var(--paper);
+  border: var(--frame) solid var(--text);
+}
+
+.briefTitle {
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.briefWhen {
+  font-size: 1.9rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 1;
+}
+
+.briefNote {
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------------- rules */
+
+.rulesGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: var(--frame) solid var(--text);
+}
+
+.verdict {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  padding: 1.2rem 1.2rem 1.1rem;
+}
+
+.verdict + .verdict {
+  border-left: var(--frame) solid var(--text);
+}
+
+.verdictArt {
+  width: 78%;
+  justify-self: center;
+}
+
+.verdict figcaption {
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.3;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule);
+}
+
+.verdictDont {
+  background: repeating-linear-gradient(135deg, transparent 0 9px, var(--hatch) 9px 10px);
+}
+
+/* The tick and the cross: circles with strokes, no characters. */
+.tick,
+.cross {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 3.4rem;
+  height: 3.4rem;
+  border: 3px solid var(--text);
+  border-radius: 50%;
+}
+
+.tick {
+  background: var(--yellow);
+}
+
+.tick::after {
+  content: '';
+  position: absolute;
+  left: 34%;
+  top: 16%;
+  width: 26%;
+  height: 50%;
+  border-right: 5px solid var(--text);
+  border-bottom: 5px solid var(--text);
+  transform: rotate(40deg);
+}
+
+.cross {
+  background: var(--paper);
+}
+
+.cross::before,
+.cross::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  top: 50%;
+  height: 5px;
+  margin-top: -2.5px;
+  background: var(--text);
+  transform: rotate(45deg);
+}
+
+.cross::after {
+  transform: rotate(-45deg);
+}
+
+/* a warning triangle on the plugged-in lamp */
+.warn {
+  position: absolute;
+  top: 5.2rem;
+  right: 1.1rem;
+  width: 3rem;
+  height: 2.7rem;
+  background: var(--text);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.warn::before {
+  content: '';
+  position: absolute;
+  inset: 0.32rem 0.36rem 0.2rem;
+  background: var(--yellow);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.warn::after {
+  content: '!';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.18rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  color: var(--on-yellow);
+}
+
+.rules {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: var(--frame) solid var(--text);
+  border-left: var(--frame) solid var(--text);
+}
+
+.rules li {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  padding: 1rem 1.1rem 1.1rem;
+  border-right: var(--frame) solid var(--text);
+  border-bottom: var(--frame) solid var(--text);
+}
+
+.ruleNo {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.ruleTitle {
+  font-size: 1.25rem;
+  font-weight: 850;
+  font-stretch: 80%;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.ruleNote {
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------- tools */
+
+.toolsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.pegboard {
+  position: relative;
+  padding: clamp(1.4rem, 3.4vw, 2.8rem);
+  overflow: hidden;
+  border: var(--frame) solid var(--text);
+}
+
+.pegField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.tools {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2.6vw, 2.2rem);
+}
+
+.tool {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  background: var(--paper);
+  border: var(--frame) solid var(--text);
+}
+
+.silBox {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+}
+
+.sil {
+  display: block;
+  width: 72%;
+  height: 72%;
+  background: var(--text);
+}
+
+.t_drill {
+  clip-path: polygon(2% 38%, 14% 38%, 14% 32%, 24% 32%, 24% 20%, 88% 20%, 96% 28%, 96% 50%, 72% 50%, 66% 80%, 72% 80%, 72% 96%, 36% 96%, 36% 80%, 44% 80%, 50% 50%, 24% 50%, 24% 45%, 14% 45%, 14% 43%, 2% 43%);
+}
+
+.t_jigsaw {
+  clip-path: polygon(evenodd, 14% 58%, 14% 36%, 24% 36%, 30% 12%, 84% 12%, 90% 36%, 90% 58%, 94% 58%, 94% 66%, 44% 66%, 44% 94%, 38% 94%, 38% 66%, 8% 66%, 8% 58%, 14% 58%, 36% 36%, 80% 36%, 78% 23%, 38% 23%, 36% 36%, 14% 58%);
+}
+
+.t_ladder {
+  width: 34%;
+  height: 86%;
+  background:
+    linear-gradient(90deg, var(--text) 0 16%, transparent 16% 84%, var(--text) 84%),
+    repeating-linear-gradient(180deg, transparent 0 11%, var(--text) 11% 17%);
+}
+
+.t_trimmer {
+  height: 50%;
+  background:
+    repeating-linear-gradient(90deg, var(--text) 0 4%, transparent 4% 7%) 0 0 / 60% 22% no-repeat,
+    repeating-linear-gradient(90deg, var(--text) 0 4%, transparent 4% 7%) 0 100% / 60% 22% no-repeat,
+    linear-gradient(var(--text), var(--text)) 0 50% / 62% 56% no-repeat,
+    linear-gradient(var(--text), var(--text)) 100% 50% / 40% 100% no-repeat;
+  border-radius: 0 999px 999px 0;
+}
+
+.t_level {
+  height: 20%;
+  width: 90%;
+  border-radius: 3px;
+  background: radial-gradient(ellipse 9% 36% at 50% 50%, var(--yellow) 0 90%, transparent 95%), var(--text);
+  box-shadow: inset 0 0 0 3px var(--text);
+}
+
+.t_wrench {
+  clip-path: polygon(4% 26%, 36% 26%, 36% 40%, 20% 40%, 20% 48%, 36% 48%, 36% 60%, 96% 54%, 96% 68%, 32% 74%, 4% 74%);
+}
+
+.t_sewing {
+  clip-path: polygon(8% 22%, 80% 22%, 88% 30%, 88% 78%, 96% 78%, 96% 90%, 4% 90%, 4% 78%, 70% 78%, 70% 42%, 26% 42%, 26% 62%, 21% 62%, 21% 42%, 8% 42%);
+}
+
+.t_roller {
+  clip-path: polygon(8% 10%, 78% 10%, 78% 20%, 90% 20%, 90% 52%, 53% 52%, 53% 94%, 44% 94%, 44% 44%, 82% 44%, 82% 28%, 78% 28%, 78% 38%, 8% 38%);
+}
+
+.toolName {
+  font-size: 1.02rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.toolMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-self: end;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.toolMeta strong {
+  font-size: 1.3rem;
+  font-weight: 900;
+  font-stretch: 78%;
+  color: var(--text);
+}
+
+.libraryInfo {
+  display: grid;
+  gap: 1.3rem;
+  justify-items: start;
+}
+
+.libraryPrice {
+  display: grid;
+  padding: 1rem 1.3rem;
+  color: var(--on-yellow);
+  background: var(--yellow);
+  border: var(--frame) solid var(--text);
+}
+
+.libraryPrice strong {
+  font-size: 4rem;
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 0.9;
+}
+
+.libraryPrice span {
+  font-weight: 700;
+}
+
+.libraryList {
+  display: grid;
+  width: 100%;
+  border-top: var(--frame) solid var(--text);
+}
+
+.libraryList div {
+  display: grid;
+  grid-template-columns: 5.4rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.libraryList dt {
+  font-size: 0.82rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 0.12rem;
+}
+
+.libraryList dd {
+  font-size: 0.98rem;
+}
+
+/* -------------------------------------------------------------------- find */
+
+.findGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+/* The street plan: the lead pattern as blocks, roads and a river on top. */
+.map {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--panel);
+  border: var(--frame) solid var(--text);
+}
+
+.mapField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.3;
+}
+
+.river {
+  position: absolute;
+  top: -12%;
+  left: 17%;
+  width: 7%;
+  height: 130%;
+  background: var(--blue);
+  transform: rotate(14deg);
+}
+
+.road {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  border: var(--frame) solid var(--text);
+}
+
+.roadBridge {
+  left: -1%;
+  right: -1%;
+  top: 60%;
+  height: 10%;
+  border-left: 0;
+  border-right: 0;
+}
+
+.roadChurch {
+  top: -1%;
+  bottom: -1%;
+  left: 60%;
+  width: 7%;
+  border-top: 0;
+  border-bottom: 0;
+}
+
+.roadName {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.roadBridge .roadName {
+  justify-self: start;
+  margin-left: 30%;
+}
+
+.roadChurch .roadName {
+  writing-mode: vertical-rl;
+  align-self: start;
+  margin-top: 8%;
+}
+
+.pin {
+  position: absolute;
+  top: 34%;
+  left: 68%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pinDot {
+  width: 1.6rem;
+  height: 1.6rem;
+  background: var(--yellow);
+  border: 3px solid var(--text);
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px var(--paper);
+}
+
+.pinLabel {
+  padding: 0.25rem 0.55rem;
+  font-size: 0.86rem;
+  font-weight: 800;
+  background: var(--paper);
+  border: var(--frame) solid var(--text);
+}
+
+.busStop {
+  position: absolute;
+  top: 73%;
+  left: 38%;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.north {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  display: grid;
+  justify-items: center;
+  width: 2.2rem;
+  font-size: 0.86rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.north::before {
+  content: '';
+  width: 1.2rem;
+  height: 1.3rem;
+  margin-bottom: 0.2rem;
+  background: var(--text);
+  clip-path: polygon(50% 0, 100% 100%, 50% 74%, 0 100%);
+}
+
+.findInfo {
+  display: grid;
+  gap: 1.3rem;
+}
+
+.address {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 900;
+  font-stretch: 78%;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.directions {
+  display: grid;
+  border-top: var(--frame) solid var(--text);
+}
+
+.directions div {
+  display: grid;
+  grid-template-columns: 5.4rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.directions dt {
+  font-size: 0.82rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 0.12rem;
+}
+
+.directions dd {
+  font-size: 0.98rem;
+}
+
+.contact {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.contact a {
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.contact a:hover {
+  text-decoration: underline;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4rem, 8vw, 6.5rem);
+  color: var(--on-ink);
+  background: var(--ink);
+}
+
+.footField {
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  background: var(--paper);
+  border-top: var(--frame) solid var(--text);
+  border-bottom: var(--frame) solid var(--text);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 0.4rem 3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3rem) var(--gut) clamp(2rem, 4vw, 3rem);
+}
+
+.footName {
+  grid-row: span 4;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  font-stretch: 75%;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.footLine {
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+}
+
+.footLine a {
+  color: var(--on-ink);
+}
+
+.footPage {
+  grid-column: 1 / -1;
+  justify-self: end;
+  margin-top: 1rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--ink-rule);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .barNext {
+    justify-self: end;
+  }
+
+  .partsList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .fixersGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .briefing {
+    grid-column: 1 / -1;
+    min-height: 18rem;
+    border-left: 0;
+    border-top: var(--frame) solid var(--text);
+  }
+
+  .briefCard {
+    max-width: 26rem;
+  }
+
+  .toolsGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .libraryInfo {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .libraryInfo .btnLine {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 960px) {
+  .coverGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .coverPlate {
+    min-height: 0;
+    border-left: 0;
+    border-top: var(--frame) solid var(--text);
+  }
+
+  .coverArt {
+    height: auto;
+    width: min(60%, 18rem);
+  }
+
+  .secHead {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .secNote {
+    grid-column: 1 / -1;
+    max-width: 36rem;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .step:nth-child(2) .arrow {
+    display: none;
+  }
+
+  .parts {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'title'
+      'note'
+      'list';
+  }
+
+  .panels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .panel:nth-child(3) {
+    border-left: 0;
+  }
+
+  .panel:nth-child(n + 3) {
+    border-top: var(--frame) solid var(--text);
+  }
+
+  .ratesWrap,
+  .rulesGrid,
+  .findGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .date,
+  .dateClosed {
+    grid-template-columns: 5.4rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'block time crew'
+      'block note note';
+    gap: 0.3rem 1.2rem;
+  }
+
+  .dateBlock {
+    grid-area: block;
+  }
+
+  .dateTime {
+    grid-area: time;
+  }
+
+  .dateNote {
+    grid-area: note;
+  }
+
+  .dateCrew {
+    grid-area: crew;
+  }
+
+  .tools {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footName {
+    grid-row: auto;
+    margin-bottom: 0.6rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    font-size: 1rem;
+  }
+
+  .barNext {
+    display: none;
+  }
+
+  .coverStrip span:nth-child(2) {
+    display: none;
+  }
+
+  .coverFacts div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .kit {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kit li:nth-child(3) {
+    border-left: 0;
+  }
+
+  .kit li:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .coverArt {
+    width: min(70%, 16rem);
+  }
+
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .step {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    grid-template-areas:
+      'picto num'
+      'picto title'
+      'picto note';
+    column-gap: 1.1rem;
+    row-gap: 0.5rem;
+  }
+
+  .circled {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+  }
+
+  .arrow,
+  .step:nth-child(2) .arrow {
+    display: block;
+    top: auto;
+    bottom: -1.35rem;
+    right: auto;
+    left: 2.8rem;
+    transform: rotate(90deg);
+  }
+
+  .step:last-child .arrow {
+    display: none;
+  }
+
+  .partsList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .panelArt {
+    height: 16rem;
+  }
+
+  .panel + .panel {
+    border-left: 0;
+    border-top: var(--frame) solid var(--text);
+  }
+
+  .rates li {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'name value n'
+      'track track track';
+    gap: 0.3rem 0.8rem;
+  }
+
+  .rateName {
+    grid-area: name;
+  }
+
+  .rateTrack {
+    grid-area: track;
+  }
+
+  .rateValue {
+    grid-area: value;
+  }
+
+  .rateN {
+    grid-area: n;
+  }
+
+  .totals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .totals div + div {
+    border-left: 0;
+    border-top: var(--frame) solid var(--text);
+  }
+
+  .date,
+  .dateClosed {
+    grid-template-columns: 4.6rem minmax(0, 1fr);
+    grid-template-areas:
+      'block time'
+      'block note'
+      'block crew';
+  }
+
+  .dateCrew {
+    justify-self: start;
+  }
+
+  .fixersGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .join {
+    border-left: 0;
+    border-top: var(--frame) solid var(--text);
+  }
+
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .verdict + .verdict {
+    border-left: 0;
+    border-top: var(--frame) solid var(--text);
+  }
+
+  .verdictArt {
+    width: 62%;
+  }
+
+  .rules {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .libraryInfo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .libraryInfo .btnLine {
+    grid-column: auto;
+  }
+
+  .map {
+    aspect-ratio: 4 / 3.4;
+  }
+
+  .pin {
+    left: 48%;
+    top: 26%;
+  }
+
+  .roadBridge .roadName {
+    margin-left: 4%;
+  }
+}

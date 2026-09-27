@@ -1,0 +1,1967 @@
+/* ==========================================================================
+   MARINER'S CHANDLERY - ship chandler and rope shop, Saltcombe
+   Sail cloth, navy and the four colors of the signal flag locker. Every
+   section's name is hoisted in International Code flags (with the letters
+   written under them, for landlubbers), the rope is measured along a brass
+   tape on the counter, and the knots hang on a proper knot board: navy baize
+   inside a rope border in a wooden frame, each knot over an engraved brass
+   plate. Pennants make the wall behind the porthole, the drawers behind the
+   counter have brass card holders, and the hours are kept in the ship's log.
+   ========================================================================== */
+
+.page {
+  --sailcloth: #f4f2eb;
+  --navy: #172a4a;
+  --red: #cc2f2a;
+  --yellow: #f2c230;
+  --blue: #2c6fb0;
+
+  --slab: 'Rokkitt', 'Rockwell', 'Courier New', serif;
+  --caps: 'Sofia Sans Extra Condensed', 'Arial Narrow', sans-serif;
+  --body: 'Alike', Georgia, 'Times New Roman', serif;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+
+  --text: var(--navy);
+  --on-navy: var(--sailcloth);
+  --on-red: var(--sailcloth);
+  --on-yellow: var(--navy);
+  --on-blue: var(--sailcloth);
+
+  /* Derived surfaces: mixed from the roles, never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--sailcloth));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 40%, transparent);
+  --panel: color-mix(in oklab, var(--sailcloth) 92%, var(--text));
+  --paper: color-mix(in oklab, var(--sailcloth) 94%, var(--yellow));
+  --brass: color-mix(in oklab, var(--yellow) 80%, var(--navy));
+  --brass-light: color-mix(in oklab, var(--yellow) 72%, var(--sailcloth));
+  --brass-dark: color-mix(in oklab, var(--yellow) 48%, var(--navy));
+  --on-brass: var(--navy);
+  --wood: color-mix(in oklab, color-mix(in oklab, var(--red) 50%, var(--yellow)) 46%, var(--navy));
+  --wood-dark: color-mix(in oklab, var(--wood) 70%, var(--navy));
+  --on-wood: var(--sailcloth);
+  --rope: color-mix(in oklab, var(--yellow) 42%, var(--sailcloth));
+  --rope-shade: color-mix(in oklab, var(--yellow) 55%, var(--navy));
+  --rope-ink: color-mix(in oklab, var(--on-navy) 80%, var(--yellow));
+  --baize: color-mix(in oklab, var(--navy) 92%, var(--blue));
+  --navy-muted: color-mix(in oklab, var(--on-navy) 72%, var(--navy));
+  --navy-rule: color-mix(in oklab, var(--on-navy) 18%, transparent);
+  --flag-edge: color-mix(in oklab, var(--navy) 45%, transparent);
+
+  font-family: var(--body);
+  font-size: 1.04rem;
+  line-height: 1.6;
+  background: var(--sailcloth);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the lightness of the surface, tinted toward an ink,
+       so text reads on whatever ground a palette brings. */
+    --text: color-mix(in oklab, oklch(from var(--sailcloth) clamp(0, (0.62 - l) * 1000, 1) 0 0) 80%, var(--navy));
+    --on-navy: color-mix(in oklab, oklch(from var(--navy) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--sailcloth));
+    --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-yellow: oklch(from var(--yellow) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-blue: oklch(from var(--blue) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-brass: color-mix(in oklab, oklch(from var(--brass) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--brass));
+    --on-wood: color-mix(in oklab, oklch(from var(--wood) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--wood));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.small {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------- signal flags */
+
+.sig {
+  display: inline-grid;
+  justify-items: center;
+  gap: 0.3rem;
+}
+
+.sigGap {
+  display: inline-block;
+  width: 1rem;
+}
+
+.sigLetter {
+  font-family: var(--caps);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.flag {
+  --fw: 2rem;
+  position: relative;
+  display: block;
+  width: var(--fw);
+  height: calc(var(--fw) * 0.8);
+  background: var(--sailcloth);
+  box-shadow: inset 0 0 0 1px var(--flag-edge);
+}
+
+.fA,
+.fB {
+  box-shadow: none;
+  clip-path: polygon(0 0, 100% 0, 74% 50%, 100% 100%, 0 100%);
+}
+
+.fA { background: linear-gradient(90deg, var(--sailcloth) 0 48%, var(--blue) 48%); }
+.fB { background: var(--red); }
+.fC { background: linear-gradient(var(--blue) 0 20%, var(--sailcloth) 20% 40%, var(--red) 40% 60%, var(--sailcloth) 60% 80%, var(--blue) 80%); }
+.fD { background: linear-gradient(var(--yellow) 0 20%, var(--blue) 20% 80%, var(--yellow) 80%); }
+.fE { background: linear-gradient(var(--blue) 0 50%, var(--red) 50%); }
+.fF {
+  background:
+    linear-gradient(to bottom right, transparent 49.5%, var(--sailcloth) 50%) 100% 100% / 50% 50% no-repeat,
+    linear-gradient(to bottom left, transparent 49.5%, var(--sailcloth) 50%) 0 100% / 50% 50% no-repeat,
+    linear-gradient(to top right, transparent 49.5%, var(--sailcloth) 50%) 100% 0 / 50% 50% no-repeat,
+    linear-gradient(to top left, transparent 49.5%, var(--sailcloth) 50%) 0 0 / 50% 50% no-repeat,
+    var(--red);
+}
+.fG { background: repeating-linear-gradient(90deg, var(--yellow) 0 16.66%, var(--blue) 16.66% 33.33%); }
+.fH { background: linear-gradient(90deg, var(--sailcloth) 0 50%, var(--red) 50%); }
+.fI { background: radial-gradient(circle closest-side, var(--navy) 0 58%, var(--yellow) 60%); }
+.fJ { background: linear-gradient(var(--blue) 0 33.3%, var(--sailcloth) 33.3% 66.6%, var(--blue) 66.6%); }
+.fK { background: linear-gradient(90deg, var(--yellow) 0 50%, var(--blue) 50%); }
+.fL { background: conic-gradient(var(--navy) 0 25%, var(--yellow) 0 50%, var(--navy) 0 75%, var(--yellow) 0); }
+.fM {
+  background:
+    linear-gradient(to top right, transparent 41%, var(--sailcloth) 41% 59%, transparent 59%),
+    linear-gradient(to bottom right, transparent 41%, var(--sailcloth) 41% 59%, transparent 59%),
+    var(--blue);
+}
+.fN { background: conic-gradient(var(--blue) 0 25%, var(--sailcloth) 0 50%, var(--blue) 0 75%, var(--sailcloth) 0) 0 0 / 50% 50%; }
+.fO { background: linear-gradient(to top right, var(--yellow) 50%, var(--red) 50%); }
+.fP { background: linear-gradient(var(--sailcloth), var(--sailcloth)) center / 36% 45% no-repeat, var(--blue); }
+.fQ { background: var(--yellow); }
+.fR {
+  background:
+    linear-gradient(var(--yellow), var(--yellow)) center / 100% 20% no-repeat,
+    linear-gradient(var(--yellow), var(--yellow)) center / 16% 100% no-repeat,
+    var(--red);
+}
+.fS { background: linear-gradient(var(--blue), var(--blue)) center / 36% 45% no-repeat, var(--sailcloth); }
+.fT { background: linear-gradient(90deg, var(--red) 0 33.3%, var(--sailcloth) 33.3% 66.6%, var(--blue) 66.6%); }
+.fU { background: conic-gradient(var(--sailcloth) 0 25%, var(--red) 0 50%, var(--sailcloth) 0 75%, var(--red) 0); }
+.fV {
+  background:
+    linear-gradient(to top right, transparent 41%, var(--red) 41% 59%, transparent 59%),
+    linear-gradient(to bottom right, transparent 41%, var(--red) 41% 59%, transparent 59%),
+    var(--sailcloth);
+}
+.fW {
+  background:
+    linear-gradient(var(--red), var(--red)) center / 34% 34% no-repeat,
+    linear-gradient(var(--sailcloth), var(--sailcloth)) center / 68% 68% no-repeat,
+    var(--blue);
+}
+.fX {
+  background:
+    linear-gradient(var(--blue), var(--blue)) center / 100% 20% no-repeat,
+    linear-gradient(var(--blue), var(--blue)) center / 16% 100% no-repeat,
+    var(--sailcloth);
+}
+.fY { background: repeating-linear-gradient(-45deg, var(--yellow) 0 0.28rem, var(--red) 0.28rem 0.56rem); }
+.fZ { background: conic-gradient(from -45deg, var(--yellow) 0 25%, var(--blue) 0 50%, var(--red) 0 75%, var(--navy) 0); }
+
+.hoist {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.hoistOnNavy .sigLetter {
+  color: var(--navy-muted);
+}
+
+.hoistOnNavy .flag {
+  box-shadow: inset 0 0 0 1px var(--navy-rule);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.8rem var(--gut);
+  background: var(--navy);
+  color: var(--on-navy);
+  border-bottom: 3px solid var(--red);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  justify-self: start;
+}
+
+.brandFlags {
+  display: flex;
+  gap: 2px;
+}
+
+.brandFlags .flag {
+  --fw: 1.35rem;
+  box-shadow: none;
+}
+
+.brandName {
+  font-family: var(--slab);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.nav a {
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navy-muted);
+}
+
+.barTide {
+  font-family: var(--caps);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--navy-rule);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--navy);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--on-navy);
+  }
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  min-height: clamp(38rem, 82vh, 50rem);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.4rem;
+  padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 4vw, 4rem) clamp(3rem, 6vw, 5rem) max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+}
+
+/* A halyard of flags: a twisted line and the hoist hanging from it. */
+.halyard {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding-top: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.halyard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -3rem;
+  right: -2rem;
+  height: 4px;
+  background: repeating-linear-gradient(-60deg, var(--rope-shade) 0 2px, var(--rope) 2px 5px);
+  border-radius: 2px;
+}
+
+.halyard .sig {
+  position: relative;
+  padding-top: 0.2rem;
+}
+
+.halyard .sig::before {
+  content: '';
+  position: absolute;
+  top: -1rem;
+  left: 0.2rem;
+  width: 1px;
+  height: 1.2rem;
+  background: var(--rule-strong);
+}
+
+.halyard .flag {
+  --fw: clamp(2.2rem, 3.4vw, 3rem);
+}
+
+.kicker {
+  font-family: var(--caps);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-family: var(--slab);
+  font-size: clamp(3.2rem, 7.2vw, 6.6rem);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+}
+
+.lede {
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.btn,
+.btnLine,
+.btnYellow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.6rem 1.4rem;
+  font-family: var(--caps);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+  border: 2px solid var(--navy);
+  cursor: pointer;
+}
+
+.btn {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.btnLine {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--text);
+}
+
+.btnYellow {
+  background: var(--yellow);
+  color: var(--on-yellow);
+  border-color: var(--yellow);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--on-red);
+  }
+
+  .btnLine:hover {
+    background: var(--text);
+    color: var(--sailcloth);
+  }
+
+  .btnYellow:hover {
+    background: var(--sailcloth);
+    border-color: var(--sailcloth);
+    color: var(--navy);
+  }
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 34rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.heroFacts dt {
+  font-family: var(--slab);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.heroFacts dd {
+  margin-top: 0.3rem;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+/* The wall of pennants, and the porthole set into it. */
+.heroWall {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 3rem 1.5rem;
+  border-left: 1px solid var(--rule-strong);
+}
+
+.pennants {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.porthole {
+  --ring: clamp(1.3rem, 2.4vw, 2rem);
+  position: relative;
+  display: grid;
+  width: clamp(17rem, 30vw, 27rem);
+  aspect-ratio: 1;
+  padding: var(--ring);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, var(--brass-light), var(--brass) 42%, var(--brass-dark) 100%);
+  box-shadow:
+    0 0 0 0.35rem var(--navy),
+    0 1.6rem 3rem -1rem color-mix(in oklab, var(--navy) 70%, transparent),
+    inset 0 0 0 2px var(--brass-dark);
+}
+
+/* Eight bolt heads round the ring. */
+.bolts {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 0.42rem at 50% 4.2%, var(--brass-light) 0 45%, var(--brass-dark) 55% 100%, transparent 100%),
+    radial-gradient(circle 0.42rem at 82.5% 17.5%, var(--brass-light) 0 45%, var(--brass-dark) 55% 100%, transparent 100%),
+    radial-gradient(circle 0.42rem at 95.8% 50%, var(--brass-light) 0 45%, var(--brass-dark) 55% 100%, transparent 100%),
+    radial-gradient(circle 0.42rem at 82.5% 82.5%, var(--brass-light) 0 45%, var(--brass-dark) 55% 100%, transparent 100%),
+    radial-gradient(circle 0.42rem at 50% 95.8%, var(--brass-light) 0 45%, var(--brass-dark) 55% 100%, transparent 100%),
+    radial-gradient(circle 0.42rem at 17.5% 82.5%, var(--brass-light) 0 45%, var(--brass-dark) 55% 100%, transparent 100%),
+    radial-gradient(circle 0.42rem at 4.2% 50%, var(--brass-light) 0 45%, var(--brass-dark) 55% 100%, transparent 100%),
+    radial-gradient(circle 0.42rem at 17.5% 17.5%, var(--brass-light) 0 45%, var(--brass-dark) 55% 100%, transparent 100%);
+}
+
+.glass {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 55%, color-mix(in oklab, var(--yellow) 42%, var(--navy)) 0%, color-mix(in oklab, var(--blue) 30%, var(--navy)) 55%, var(--navy) 100%);
+  box-shadow:
+    inset 0 0 0 0.45rem var(--brass-dark),
+    inset 0 0 1.6rem 0.5rem color-mix(in oklab, var(--navy) 80%, transparent);
+}
+
+/* The glare on the glass. */
+.glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--sailcloth) 26%, transparent) 0 22%, transparent 38%);
+  pointer-events: none;
+}
+
+.lantern {
+  height: 76%;
+  width: auto;
+  margin-top: 3%;
+}
+
+.portCaption {
+  position: absolute;
+  left: 50%;
+  bottom: calc(-1 * var(--ring) - 1.7rem);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 0.35rem 0.9rem;
+  font-family: var(--caps);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'hoist hoist'
+    'title note';
+  column-gap: clamp(2rem, 5vw, 5rem);
+  row-gap: 1.3rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.4rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.secHead .hoist {
+  grid-area: hoist;
+}
+
+.secHead h2 {
+  grid-area: title;
+  font-family: var(--slab);
+  font-size: clamp(2.3rem, 4.6vw, 4rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.secNote {
+  grid-area: note;
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------- rope */
+
+.ropeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.counter {
+  min-width: 0;
+  border: 2px solid var(--text);
+  background: var(--paper);
+}
+
+/* The brass tape set into the counter's edge: a mark every centimetre,
+   longer every ten. */
+.tape {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 2.4rem;
+  padding: 0 0.5rem 0.25rem;
+  background:
+    repeating-linear-gradient(90deg, var(--on-brass) 0 1px, transparent 1px 10%) 0 0 / 100% 55% no-repeat,
+    repeating-linear-gradient(90deg, var(--on-brass) 0 1px, transparent 1px 1%) 0 0 / 100% 25% no-repeat,
+    var(--brass);
+  color: var(--on-brass);
+  border-bottom: 2px solid var(--text);
+}
+
+.tapeEnd,
+.tapeMid {
+  font-family: var(--caps);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.ropeScroll {
+  overflow-x: auto;
+}
+
+.ropeTable {
+  width: 100%;
+  min-width: 40rem;
+  border-collapse: collapse;
+}
+
+.ropeTable th,
+.ropeTable td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ropeTable thead th {
+  font-family: var(--caps);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.ropeTable tbody th {
+  font-family: var(--slab);
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+
+.ropeTable td {
+  font-size: 0.96rem;
+}
+
+.ropeTable tbody tr:nth-child(odd) {
+  background: color-mix(in oklab, var(--paper) 94%, var(--text));
+}
+
+.dia {
+  font-family: var(--slab);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.num {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.price {
+  font-family: var(--slab);
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.reelCol {
+  font-family: var(--caps);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.splice {
+  display: grid;
+  border: 2px solid var(--text);
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.laid {
+  position: relative;
+  height: 8.5rem;
+  overflow: hidden;
+  border-bottom: 2px solid var(--text);
+}
+
+.spliceText {
+  display: grid;
+  gap: 1rem;
+  padding: 1.4rem 1.4rem 1.6rem;
+}
+
+.spliceTitle {
+  font-family: var(--slab);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.spliceList {
+  display: grid;
+}
+
+.spliceList div {
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--navy-rule);
+}
+
+.spliceList dt {
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.spliceList dd {
+  font-size: 0.92rem;
+  color: var(--navy-muted);
+}
+
+.splice .small {
+  color: var(--navy-muted);
+}
+
+/* -------------------------------------------------------------- knot board */
+
+.knotGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 19rem);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: center;
+}
+
+.boardFrame {
+  padding: clamp(0.7rem, 1.4vw, 1.1rem);
+  background:
+    repeating-linear-gradient(92deg, transparent 0 11px, color-mix(in oklab, var(--wood-dark) 45%, transparent) 11px 12px, transparent 12px 29px),
+    var(--wood);
+  box-shadow:
+    inset 0 0 0 1px var(--wood-dark),
+    0 1.4rem 2.6rem -1.4rem color-mix(in oklab, var(--navy) 75%, transparent);
+}
+
+/* The rope border: a laid rope drawn as twisted strands. */
+.boardRope {
+  padding: clamp(0.6rem, 1.1vw, 0.85rem);
+  background: repeating-linear-gradient(-58deg, var(--rope) 0 7px, var(--rope-shade) 7px 9px, var(--rope) 9px 12px);
+  border-radius: 1.1rem;
+  box-shadow: inset 0 0 0 1px var(--rope-shade);
+}
+
+.baize {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.4rem);
+  padding: clamp(1.4rem, 3vw, 2.4rem) clamp(1rem, 2.6vw, 2.2rem) clamp(1.6rem, 3vw, 2.6rem);
+  background:
+    radial-gradient(ellipse at 50% 35%, color-mix(in oklab, var(--baize) 88%, var(--on-navy)), var(--baize) 70%);
+  color: var(--on-navy);
+  border-radius: 0.5rem;
+}
+
+.boardTitle {
+  justify-self: center;
+  font-family: var(--slab);
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: var(--rope-ink);
+}
+
+.knotRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2.4rem);
+  align-items: start;
+}
+
+.knot {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+}
+
+.knotMount {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: clamp(11rem, 18vw, 15rem);
+}
+
+.knotRowWide .knotMount {
+  height: clamp(7rem, 11vw, 9.5rem);
+}
+
+.knotArt {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  filter: drop-shadow(0 0.35rem 0.3rem color-mix(in oklab, var(--navy) 60%, transparent));
+}
+
+.kSlim {
+  height: 100%;
+}
+
+.kPost {
+  height: 94%;
+}
+
+.kWide {
+  width: 100%;
+  height: auto;
+}
+
+.kCleat {
+  height: 100%;
+}
+
+/* Engraved brass plates, two screws each. */
+.plate {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  align-content: center;
+  width: min(100%, 14rem);
+  min-height: 3.7rem;
+  padding: 0.55rem 1.6rem 0.6rem;
+  text-align: center;
+  background:
+    radial-gradient(circle 0.22rem at 0.7rem 50%, var(--brass-dark) 0 60%, transparent 70%),
+    radial-gradient(circle 0.22rem at calc(100% - 0.7rem) 50%, var(--brass-dark) 0 60%, transparent 70%),
+    linear-gradient(170deg, var(--brass-light), var(--brass) 45%, var(--brass-dark));
+  color: var(--on-brass);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--navy) 70%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--brass-dark) 70%, transparent);
+}
+
+.plateName {
+  font-family: var(--slab);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 color-mix(in oklab, var(--brass-light) 70%, transparent);
+}
+
+.plateUse {
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+.lessons {
+  display: grid;
+  gap: 1rem;
+  padding: 1.6rem;
+  border: 2px solid var(--text);
+  background: var(--paper);
+}
+
+.lessonsKicker {
+  justify-self: start;
+  padding: 0.2rem 0.6rem;
+  font-family: var(--caps);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--red);
+  color: var(--on-red);
+}
+
+.lessonsTitle {
+  font-family: var(--slab);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.02;
+}
+
+.lessonsList {
+  display: grid;
+}
+
+.lessonsList div {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 0.8rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.lessonsList dt {
+  font-family: var(--caps);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lessonsList dd {
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.lessonsNote {
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- chandlery */
+
+.burgeeStrip {
+  position: relative;
+  height: 5.6rem;
+  overflow: hidden;
+  margin-bottom: 1.6rem;
+  border: 2px solid var(--text);
+}
+
+.drawers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+.drawer {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 2px solid var(--text);
+  background: var(--paper);
+}
+
+.drawerFront {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.8rem;
+  padding: 1.3rem 1rem 1rem;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 9px, color-mix(in oklab, var(--wood-dark) 40%, transparent) 9px 10px, transparent 10px 23px),
+    var(--wood);
+  border-bottom: 2px solid var(--text);
+  box-shadow: inset 0 0 0 0.35rem color-mix(in oklab, var(--wood-dark) 60%, transparent);
+}
+
+/* A brass card holder with the label slid into it. */
+.cardHolder {
+  display: grid;
+  justify-items: center;
+  min-width: 11rem;
+  padding: 0.35rem 0.45rem;
+  background: linear-gradient(170deg, var(--brass-light), var(--brass) 50%, var(--brass-dark));
+  border-radius: 3px;
+}
+
+.drawerNo,
+.drawerName {
+  width: 100%;
+  text-align: center;
+  background: var(--paper);
+  color: var(--text);
+}
+
+.drawerNo {
+  padding-top: 0.25rem;
+  font-family: var(--caps);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+
+.drawerName {
+  padding: 0 0.8rem 0.3rem;
+  font-family: var(--slab);
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* A cup pull under the label. */
+.pull {
+  width: 4.6rem;
+  height: 1.3rem;
+  border-radius: 0 0 2.6rem 2.6rem;
+  background: linear-gradient(180deg, var(--brass-dark), var(--brass) 45%, var(--brass-light));
+  box-shadow: inset 0 0.35rem 0.3rem -0.1rem color-mix(in oklab, var(--navy) 55%, transparent);
+}
+
+.drawerItems {
+  display: grid;
+  align-content: start;
+  padding: 0.6rem 1.2rem 1rem;
+}
+
+.drawerItems li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.drawerItems li:last-child {
+  border-bottom: 0;
+}
+
+.itemPrice {
+  font-family: var(--slab);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ rigging */
+
+.rigSec {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.42fr);
+  margin-top: clamp(4rem, 8vw, 7rem);
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.rigCanvas {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  overflow: hidden;
+  min-height: 16rem;
+  border-left: 3px solid var(--red);
+}
+
+.rigInner {
+  grid-column: 1;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'head head'
+    'steps prices';
+  gap: clamp(2rem, 4vw, 3.5rem);
+  padding: clamp(3.5rem, 7vw, 6rem) clamp(1.5rem, 4vw, 4rem) clamp(3.5rem, 7vw, 6rem) max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+}
+
+.rigHead {
+  grid-area: head;
+  display: grid;
+  gap: 1.2rem;
+  max-width: 44rem;
+}
+
+.rigHead h2 {
+  font-family: var(--slab);
+  font-size: clamp(2.3rem, 4.6vw, 4rem);
+  font-weight: 700;
+  line-height: 0.95;
+}
+
+.rigHead p {
+  color: var(--navy-muted);
+}
+
+.rigSteps {
+  grid-area: steps;
+  display: grid;
+  gap: 1.2rem;
+}
+
+.rigSteps li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--navy-rule);
+}
+
+.rigNo {
+  grid-row: 1 / 3;
+  font-family: var(--slab);
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--navy-muted);
+}
+
+.rigSteps h3 {
+  font-family: var(--caps);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.rigSteps p {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--navy-muted);
+}
+
+.rigPrices {
+  grid-area: prices;
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--sailcloth);
+  color: var(--text);
+  box-shadow: 0.5rem 0.5rem 0 var(--red);
+}
+
+.rigPricesTitle {
+  font-family: var(--slab);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.rigPrices dl {
+  display: grid;
+}
+
+.rigPrices dl div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.rigPrices dt {
+  font-size: 0.95rem;
+}
+
+.rigPrices dd {
+  font-family: var(--slab);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rigPrices .btnYellow {
+  justify-self: start;
+  border-color: var(--text);
+}
+
+/* ------------------------------------------------------------------ notices */
+
+.noticeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.tideCard {
+  display: grid;
+  border: 2px solid var(--text);
+  background: var(--paper);
+}
+
+.tideScroll {
+  overflow-x: auto;
+  padding: 1.2rem 1.2rem 0.6rem;
+}
+
+.tideTable {
+  width: 100%;
+  min-width: 26rem;
+  border-collapse: collapse;
+}
+
+.tideCaption {
+  caption-side: top;
+  padding-bottom: 0.8rem;
+  font-family: var(--slab);
+  font-size: 1.45rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.tideTable th,
+.tideTable td {
+  padding: 0.5rem 0.4rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  font-variant-numeric: tabular-nums;
+}
+
+.tideTable thead th {
+  font-family: var(--caps);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tideTable tbody th {
+  font-family: var(--caps);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.tideTable td {
+  font-family: var(--slab);
+  font-size: 1.02rem;
+}
+
+.height {
+  color: var(--muted);
+  font-size: 0.92rem !important;
+}
+
+.water {
+  position: relative;
+  height: 6rem;
+  overflow: hidden;
+  border-top: 2px solid var(--text);
+  background: var(--blue);
+}
+
+/* The notice board in the window: painted blue boards, papers pinned on. */
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1.2rem;
+  padding: 1.6rem;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 4.4rem, color-mix(in oklab, var(--navy) 35%, transparent) 4.4rem calc(4.4rem + 2px)),
+    var(--blue);
+  border: 2px solid var(--text);
+}
+
+.poster,
+.card {
+  position: relative;
+  background: var(--paper);
+  color: var(--text);
+  box-shadow: 0 0.5rem 0.9rem -0.5rem color-mix(in oklab, var(--navy) 80%, transparent);
+}
+
+.poster::before,
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0.55rem;
+  left: 50%;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 1px 1px color-mix(in oklab, var(--navy) 60%, transparent);
+  transform: translateX(-50%);
+}
+
+.poster {
+  display: grid;
+  gap: 0.7rem;
+  align-content: start;
+  padding: 1.8rem 1.4rem 1.5rem;
+  transform: rotate(-1.2deg);
+  border-top: 0.6rem solid var(--red);
+}
+
+.posterKicker {
+  font-family: var(--caps);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.posterTitle {
+  font-family: var(--slab);
+  font-size: clamp(2rem, 3.4vw, 2.8rem);
+  font-weight: 800;
+  line-height: 0.92;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.posterDate {
+  justify-self: start;
+  padding: 0.2rem 0.55rem;
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: var(--yellow);
+  color: var(--on-yellow);
+}
+
+.posterBody {
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+
+.cards {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.card {
+  padding: 1.5rem 1.1rem 1rem;
+}
+
+.card:nth-child(1) {
+  transform: rotate(1.4deg);
+}
+
+.card:nth-child(2) {
+  transform: rotate(-0.8deg);
+}
+
+.card:nth-child(3) {
+  transform: rotate(0.9deg);
+}
+
+.card h3 {
+  font-family: var(--caps);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.card p {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+/* The log book: ruled lines, a red margin, a navy header rule. */
+.log {
+  overflow-x: auto;
+  padding: 1.6rem 1.6rem 1.8rem;
+  background:
+    linear-gradient(90deg, transparent 0 2.4rem, color-mix(in oklab, var(--red) 70%, transparent) 2.4rem calc(2.4rem + 1px), transparent calc(2.4rem + 1px)),
+    var(--paper);
+  border: 2px solid var(--text);
+  box-shadow: 0.5rem 0.5rem 0 var(--navy);
+}
+
+.logTable {
+  width: 100%;
+  min-width: 28rem;
+  border-collapse: collapse;
+}
+
+.logCaption {
+  caption-side: top;
+  padding: 0 0 1rem 1.6rem;
+  text-align: left;
+  font-family: var(--slab);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.logSub {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--caps);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.logTable th,
+.logTable td {
+  padding: 0.62rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid color-mix(in oklab, var(--blue) 40%, transparent);
+}
+
+.logTable thead th {
+  font-family: var(--caps);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--text);
+}
+
+.logTable th:first-child {
+  padding-left: 1.6rem;
+}
+
+.logTable tbody th {
+  font-family: var(--slab);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.logTable td {
+  font-family: var(--slab);
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.logTable .remarks {
+  font-family: var(--body);
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.logTable thead .remarks {
+  font-family: var(--caps);
+  font-style: normal;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.where {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.address {
+  font-family: var(--slab);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.contact {
+  display: grid;
+  border-top: 2px solid var(--text);
+}
+
+.contact div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.contact dt {
+  font-family: var(--caps);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contact dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.contact a {
+  text-decoration: underline;
+  text-decoration-color: var(--red);
+  text-underline-offset: 4px;
+}
+
+.form {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.4rem;
+  background: var(--panel);
+  border: 2px solid var(--text);
+}
+
+.formTitle {
+  font-family: var(--slab);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem;
+  gap: 0.9rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-family: var(--caps);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.55rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--sailcloth);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+}
+
+.field input::placeholder {
+  color: color-mix(in oklab, var(--text) 45%, var(--sailcloth));
+}
+
+.form .btn {
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.footBunting {
+  position: relative;
+  height: 4.5rem;
+  overflow: hidden;
+  border-top: 3px solid var(--red);
+  border-bottom: 1px solid var(--navy-rule);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
+  gap: 1.4rem 2.4rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.6rem var(--gut) 3.2rem;
+  font-size: 0.9rem;
+  color: var(--navy-muted);
+}
+
+.footBrand {
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
+}
+
+.footName {
+  font-family: var(--slab);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--on-navy);
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer .sigLetter {
+  color: var(--navy-muted);
+}
+
+.footer .flag {
+  --fw: 1.6rem;
+  box-shadow: inset 0 0 0 1px var(--navy-rule);
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .nav,
+  .barTide {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+@media (max-width: 1060px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroText {
+    padding-left: var(--gut);
+    padding-right: var(--gut);
+  }
+
+  .heroWall {
+    min-height: 30rem;
+    padding: 3rem 1.5rem 4.5rem;
+    border-left: 0;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .ropeGrid,
+  .knotGrid,
+  .noticeGrid,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .splice {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  }
+
+  .laid {
+    height: auto;
+    min-height: 10rem;
+    border-bottom: 0;
+    border-right: 2px solid var(--text);
+  }
+
+  .drawers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rigSec {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rigCanvas {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 9rem;
+    border-left: 0;
+    border-bottom: 3px solid var(--red);
+  }
+
+  .rigInner {
+    grid-row: 2;
+    padding-left: var(--gut);
+    padding-right: var(--gut);
+  }
+
+  .footInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+
+  /* The rope list folds into cards: name and price, then the details. */
+  .ropeTable {
+    min-width: 0;
+  }
+
+  .ropeTable thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .ropeTable tbody,
+  .ropeTable tr {
+    display: block;
+  }
+
+  .ropeTable tr {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'rope rope price'
+      'dia material load';
+    column-gap: 0.8rem;
+    row-gap: 0.15rem;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ropeTable th,
+  .ropeTable td {
+    padding: 0;
+    border: 0;
+  }
+
+  .ropeTable tbody th {
+    grid-area: rope;
+  }
+
+  .ropeTable .dia {
+    grid-area: dia;
+  }
+
+  .ropeTable td:nth-of-type(2) {
+    grid-area: material;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  .ropeTable td:nth-of-type(3) {
+    grid-area: load;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  .ropeTable .price {
+    grid-area: price;
+  }
+
+  .ropeTable .reelCol {
+    display: none;
+  }
+
+  .drawerFront {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 0.9rem 1rem;
+  }
+
+  .cardHolder {
+    min-width: 0;
+    justify-self: start;
+  }
+
+  .pull {
+    width: 3.2rem;
+    height: 1rem;
+  }
+
+  .tideScroll {
+    padding: 1rem 0.8rem 0.4rem;
+  }
+
+  .tideTable {
+    min-width: 0;
+  }
+
+  .tideTable th,
+  .tideTable td {
+    padding: 0.45rem 0.18rem;
+  }
+
+  .tideTable td {
+    font-size: 0.95rem;
+  }
+
+  .tideTable tbody th {
+    font-size: 0.92rem;
+  }
+
+  .height {
+    font-size: 0.82rem !important;
+  }
+
+  .logTable {
+    min-width: 0;
+  }
+
+  .logTable thead .remarks {
+    display: none;
+  }
+
+  .logTable tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 3.6rem 3.6rem;
+    align-items: baseline;
+    border-bottom: 1px solid color-mix(in oklab, var(--blue) 40%, transparent);
+  }
+
+  .logTable thead tr {
+    border-bottom: 2px solid var(--text);
+  }
+
+  .logTable th,
+  .logTable td {
+    border: 0;
+  }
+
+  .logTable td.remarks {
+    grid-column: 1 / -1;
+    padding-top: 0;
+    padding-left: 1.6rem;
+  }
+
+  .logTable td.remarks:empty {
+    display: none;
+  }
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'hoist'
+      'title'
+      'note';
+  }
+
+  .flag {
+    --fw: 1.7rem;
+  }
+
+  .halyard .flag {
+    --fw: 2rem;
+  }
+
+  .heroFacts {
+    gap: 0.8rem;
+  }
+
+  .heroFacts dt {
+    font-size: 1.6rem;
+  }
+
+  .splice {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .laid {
+    min-height: 7rem;
+    border-right: 0;
+    border-bottom: 2px solid var(--text);
+  }
+
+  .knotRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .knotMount {
+    height: 8.5rem;
+  }
+
+  .knotRowWide {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4rem;
+  }
+
+  .knotRowWide .knotMount {
+    height: 7rem;
+  }
+
+  .knotRowWide .kWide {
+    width: auto;
+    height: 100%;
+  }
+
+  .plate {
+    padding: 0.45rem 0.6rem;
+    background: linear-gradient(170deg, var(--brass-light), var(--brass) 45%, var(--brass-dark));
+  }
+
+  .plateName {
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+  }
+
+  .plateUse {
+    font-size: 0.72rem;
+  }
+
+  .knotRowWide .plate {
+    width: min(100%, 16rem);
+  }
+
+  .drawers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rigInner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'head'
+      'steps'
+      'prices';
+  }
+
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.2rem;
+  }
+
+  .log {
+    padding: 1.2rem 1rem 1.4rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 460px) {
+  .porthole {
+    width: min(100%, 17rem);
+  }
+
+  .formRow {
+    grid-template-columns: minmax(0, 1fr) 5.5rem;
+  }
+
+  .contact div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+}

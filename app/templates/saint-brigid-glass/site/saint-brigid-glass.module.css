@@ -1,0 +1,1225 @@
+/* ==========================================================================
+   ST BRIGID GLASS - stained glass studio and restoration, Kilbarry
+   Gothic lancets and tracery. The ground is the lead: every grid on the
+   page is drawn as came, a grey strip between panes of glass with round
+   solder joints where the strips meet. Panels are glass: clear glass is
+   the reading surface, and cobalt, ruby and amber panes carry the rest.
+   Pointed arches frame the hero window, the commission lancets and the
+   step panes; daylight glows behind the heron window. Uncial for the
+   few headings, Alegreya for everything read.
+   ========================================================================== */
+
+.page {
+  --lead: #17161c;
+  --clear: #eeece2;
+  --cobalt: #2a4db0;
+  --ruby: #b3283d;
+  --amber: #e8a93a;
+
+  --text: var(--clear);
+  --on-clear: var(--lead);
+  --on-cobalt: var(--clear);
+  --on-ruby: var(--clear);
+  --on-amber: var(--lead);
+
+  /* Derived: never roles of their own, always mixed from them. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--lead));
+  --rule: color-mix(in oklab, var(--text) 16%, transparent);
+  --came: color-mix(in oklab, var(--lead) 82%, var(--clear));
+  --solder: color-mix(in oklab, var(--lead) 50%, var(--clear));
+  --glass: color-mix(in oklab, var(--clear) 93%, var(--amber));
+  --glass-muted: color-mix(in oklab, var(--on-clear) 70%, var(--clear));
+  --glass-rule: color-mix(in oklab, var(--on-clear) 18%, transparent);
+  --glow: color-mix(in oklab, var(--amber) 42%, transparent);
+  --stone: color-mix(in oklab, var(--lead) 66%, var(--clear));
+
+  --cw: 10px;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 76rem;
+  --uncial: 'Uncial Antiqua', 'Luminari', Georgia, serif;
+  --serif: 'Alegreya', Georgia, 'Times New Roman', serif;
+  --caps: 'Alegreya SC', 'Alegreya', Georgia, serif;
+
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.55;
+  background: var(--lead);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by each surface's lightness, tinted toward the other. */
+    --text: color-mix(in oklab, oklch(from var(--lead) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--clear));
+    --on-clear: color-mix(in oklab, oklch(from var(--clear) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--lead));
+    --on-cobalt: oklch(from var(--cobalt) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-ruby: oklch(from var(--ruby) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-amber: oklch(from var(--amber) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure, blockquote) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+/* The pointed arch, drawn on any box: two arcs meeting at the apex, their
+   height set by --h (a length, or a share of the box's height). */
+.sideLight,
+.lancetHead,
+.pane,
+.quarries,
+.quarryLight {
+  clip-path: polygon(
+    0 100%,
+    0 var(--h),
+    1.52% calc(var(--h) * 0.7995),
+    6.03% calc(var(--h) * 0.6051),
+    13.4% calc(var(--h) * 0.4226),
+    23.4% calc(var(--h) * 0.2577),
+    35.72% calc(var(--h) * 0.1155),
+    50% 0,
+    64.28% calc(var(--h) * 0.1155),
+    76.6% calc(var(--h) * 0.2577),
+    86.6% calc(var(--h) * 0.4226),
+    93.97% calc(var(--h) * 0.6051),
+    98.48% calc(var(--h) * 0.7995),
+    100% var(--h),
+    100% 100%
+  );
+}
+
+/* ------------------------------------------------------------- the top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.8rem var(--gut);
+  background: var(--lead);
+  border-bottom: var(--cw) solid var(--came);
+}
+
+.mark {
+  display: grid;
+  line-height: 1;
+}
+
+.markName {
+  font-family: var(--uncial);
+  font-size: 1.35rem;
+}
+
+.markSub {
+  margin-top: 0.3rem;
+  font-family: var(--caps);
+  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(1rem, 2vw, 2rem);
+}
+
+.nav a {
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.barNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--caps);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+/* Three panes of glass as the badge. */
+.barNote::before {
+  content: '';
+  width: 1.5rem;
+  height: 0.9rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--cobalt) 0 31%, var(--came) 31% 36%, var(--ruby) 36% 64%, var(--came) 64% 69%, var(--amber) 69%);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--lead);
+  font-family: var(--caps);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3.5rem, 6vw, 5rem);
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+}
+
+.kicker,
+.secKey,
+.lancetKey {
+  font-family: var(--caps);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.kicker::before {
+  content: '';
+  width: 2.4rem;
+  height: 0;
+  border-top: 3px solid var(--amber);
+}
+
+.title {
+  margin-top: 1.2rem;
+  font-family: var(--uncial);
+  font-size: clamp(3.2rem, 7vw, 6.4rem);
+  line-height: 0.98;
+}
+
+.lede {
+  max-width: 32rem;
+  margin-top: 1.6rem;
+  font-size: 1.22rem;
+  line-height: 1.55;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnGhost,
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0 1.5rem;
+  border-radius: 1.5rem 1.5rem 3px 3px;
+  font-family: var(--caps);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.btn,
+.submit {
+  background: var(--amber);
+  color: var(--on-amber);
+}
+
+.btnGhost {
+  box-shadow: inset 0 0 0 2px var(--solder);
+}
+
+@media (hover: hover) {
+  .btn:hover,
+  .submit:hover {
+    background: color-mix(in oklab, var(--amber) 84%, var(--clear));
+  }
+
+  .btnGhost:hover {
+    background: var(--came);
+  }
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--cw);
+  margin-top: 2.4rem;
+  padding: var(--cw);
+  background: var(--came);
+  border-radius: 6px;
+}
+
+.heroFacts > div {
+  padding: 0.7rem 0.9rem;
+  border-radius: 4px;
+  background: var(--lead);
+}
+
+.heroFacts dt {
+  font-family: var(--caps);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+/* The window: three lights over a stone sill, daylight behind. */
+.window {
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
+.glow {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  top: -6%;
+  bottom: 4%;
+  background:
+    radial-gradient(ellipse 42% 50% at 50% 46%, var(--glow), transparent 72%),
+    radial-gradient(ellipse 30% 40% at 50% 40%, color-mix(in oklab, var(--clear) 18%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+.lights {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(0.7rem, 1.6vw, 1.3rem);
+}
+
+.sideLight {
+  --h: 27%;
+  position: relative;
+  width: clamp(5rem, 9.5vw, 8.4rem);
+  aspect-ratio: 1 / 3.2;
+  overflow: hidden;
+  background: var(--lead);
+}
+
+.heron {
+  position: relative;
+  height: clamp(26rem, 44vw, 40rem);
+  width: auto;
+}
+
+.sill {
+  position: relative;
+  width: 96%;
+  height: 16px;
+  margin-top: -2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--stone) 80%, var(--clear)) 0 3px, var(--stone) 3px);
+  box-shadow: 0 10px 18px -10px color-mix(in oklab, var(--lead) 80%, transparent);
+}
+
+.windowCap {
+  position: relative;
+  margin-top: 1rem;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* -------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gut) 0;
+  scroll-margin-top: 4.5rem;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 1rem 2.5rem;
+  align-items: end;
+  padding-bottom: 1.6rem;
+  margin-bottom: 2.4rem;
+  border-bottom: var(--cw) solid var(--came);
+}
+
+.secKey {
+  align-self: start;
+  padding-top: 0.5rem;
+}
+
+.secHead h2 {
+  font-family: var(--uncial);
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1.08;
+}
+
+.secNote {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------- commissions */
+
+.lancets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+/* Each lancet: a head of patterned glass, a came, the clear light below.
+   The came round it is four offset shadows of the glass itself, so it
+   follows the arch rather than boxing it. */
+.lancet {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--cw);
+  filter:
+    drop-shadow(var(--cw) 0 0 var(--came))
+    drop-shadow(calc(var(--cw) * -1) 0 0 var(--came))
+    drop-shadow(0 var(--cw) 0 var(--came))
+    drop-shadow(0 calc(var(--cw) * -1) 0 var(--came));
+  margin: var(--cw);
+}
+
+.lancetHead {
+  --h: 100%;
+  position: relative;
+  aspect-ratio: 1.3;
+  overflow: hidden;
+  background: var(--lead);
+}
+
+.lancetBody {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.5rem 1.5rem;
+  border-radius: 4px;
+  background: var(--glass);
+  color: var(--on-clear);
+}
+
+.lancetKey {
+  color: var(--glass-muted);
+}
+
+.lancetTitle {
+  margin-top: 0.2rem;
+  font-family: var(--uncial);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.lancetText {
+  margin-top: 0.6rem;
+  font-size: 1.02rem;
+}
+
+.prices {
+  display: grid;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.prices > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--glass-rule);
+}
+
+.prices dt {
+  font-size: 0.98rem;
+}
+
+.prices dd {
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------- restoration */
+
+.caseStudy {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.quarries {
+  --h: 30%;
+  position: sticky;
+  top: 6rem;
+  padding: calc(var(--cw) * 1.4);
+  background: var(--came);
+  aspect-ratio: 1 / 1.62;
+}
+
+.quarryLight {
+  --h: 28%;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: var(--lead);
+}
+
+.quarryCap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3rem;
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.caseText {
+  display: grid;
+  gap: 2rem;
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--cw);
+  padding: var(--cw);
+  background: var(--came);
+  border-radius: 6px;
+}
+
+.figures > div {
+  padding: 0.9rem 0.9rem 1rem;
+  border-radius: 4px;
+  background: var(--glass);
+  color: var(--on-clear);
+}
+
+.figures > div:nth-child(2) {
+  background: var(--cobalt);
+  color: var(--on-cobalt);
+}
+
+.figures > div:nth-child(3) {
+  background: var(--ruby);
+  color: var(--on-ruby);
+}
+
+.figures > div:nth-child(4) {
+  background: var(--amber);
+  color: var(--on-amber);
+}
+
+.figures dt {
+  font-family: var(--uncial);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.1;
+}
+
+.figures dd {
+  margin-top: 0.3rem;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.restore {
+  display: grid;
+}
+
+.restore li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1.2rem;
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.restoreNo {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  background: var(--came);
+  box-shadow: inset 0 0 0 3px var(--solder);
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.restoreName {
+  font-family: var(--caps);
+  font-size: 1.35rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.restoreBody {
+  margin-top: 0.25rem;
+  font-size: 1.04rem;
+  color: var(--muted);
+}
+
+.quote {
+  padding: 1.4rem 1.6rem;
+  border-left: var(--cw) solid var(--ruby);
+  background: var(--came);
+  border-radius: 0 6px 6px 0;
+}
+
+.quote p {
+  font-style: italic;
+  font-size: 1.35rem;
+  line-height: 1.4;
+}
+
+.quote cite {
+  display: block;
+  margin-top: 0.6rem;
+  font-family: var(--caps);
+  font-style: normal;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- making
+   A panel of six panes in came, soldered at every joint. */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--cw);
+  padding: var(--cw);
+  background: var(--came);
+  border-radius: 8px;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border-radius: 4px;
+  background: var(--glass);
+  color: var(--on-clear);
+}
+
+/* Solder: a round joint at two corners of every pane, so every place
+   where the came strips meet gets one. */
+.step::before,
+.step::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 36%, color-mix(in oklab, var(--solder) 60%, var(--clear)) 0 18%, var(--solder) 50%, color-mix(in oklab, var(--solder) 70%, var(--lead)));
+  pointer-events: none;
+}
+
+.step::before {
+  left: calc(var(--cw) / -2 - 9px);
+  top: calc(var(--cw) / -2 - 9px);
+}
+
+.step::after {
+  right: calc(var(--cw) / -2 - 9px);
+  bottom: calc(var(--cw) / -2 - 9px);
+}
+
+.pane {
+  --h: 46%;
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin: 1.2rem 1.2rem 0;
+  aspect-ratio: 5 / 4;
+  background: color-mix(in oklab, var(--glass) 86%, var(--on-clear));
+}
+
+.tool {
+  width: 62%;
+  margin-top: 16%;
+}
+
+.stepNo {
+  position: absolute;
+  left: 50%;
+  top: 7%;
+  translate: -50% 0;
+  font-family: var(--uncial);
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.stepBody {
+  padding: 1.1rem 1.4rem 1.5rem;
+}
+
+.stepName {
+  font-family: var(--uncial);
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.stepText {
+  margin-top: 0.4rem;
+  font-size: 1.02rem;
+}
+
+/* Steps 4-6: panes of colored glass with the numeral large. */
+.stepGlass {
+  grid-template-rows: none;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  align-items: center;
+}
+
+.stepBig {
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  font-family: var(--uncial);
+  font-size: 3rem;
+  line-height: 1;
+  border-right: var(--cw) solid var(--came);
+}
+
+.steps > .stepGlass:nth-child(4) {
+  background: var(--cobalt);
+  color: var(--on-cobalt);
+}
+
+.steps > .stepGlass:nth-child(5) {
+  background: var(--ruby);
+  color: var(--on-ruby);
+}
+
+.steps > .stepGlass:nth-child(6) {
+  background: var(--amber);
+  color: var(--on-amber);
+}
+
+/* --------------------------------------------------------------- classes */
+
+.courses {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--cw);
+  padding: var(--cw);
+  background: var(--came);
+  border-radius: 8px;
+}
+
+.course {
+  display: flex;
+  flex-direction: column;
+  padding: 1.8rem 1.9rem 1.9rem;
+  border-radius: 4px;
+}
+
+.cobalt {
+  background: var(--cobalt);
+  color: var(--on-cobalt);
+}
+
+.ruby {
+  background: var(--ruby);
+  color: var(--on-ruby);
+}
+
+.courseHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid color-mix(in oklab, currentColor 30%, transparent);
+}
+
+.courseName {
+  font-family: var(--uncial);
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.1;
+}
+
+.coursePrice {
+  font-family: var(--uncial);
+  font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+}
+
+.courseWhen {
+  margin-top: 0.9rem;
+  font-family: var(--caps);
+  font-size: 1.15rem;
+  letter-spacing: 0.03em;
+}
+
+.courseBody {
+  margin-top: 0.5rem;
+  font-size: 1.05rem;
+}
+
+.dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+
+.dates li {
+  padding: 0.3rem 0.8rem;
+  border-radius: 1rem 1rem 3px 3px;
+  box-shadow: inset 0 0 0 1.5px color-mix(in oklab, currentColor 55%, transparent);
+  font-size: 0.98rem;
+}
+
+.places {
+  margin-top: auto;
+  padding-top: 1.2rem;
+  font-style: italic;
+}
+
+.classNotes {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--cw);
+}
+
+.classNotes li {
+  padding: 0.8rem 1rem;
+  border-radius: 4px;
+  background: var(--glass);
+  color: var(--on-clear);
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+/* ----------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  padding-top: 1rem;
+}
+
+/* The rose: a round light of glass in a came ring, with its tracery of
+   spokes and rings drawn over it. */
+.roseWrap {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 1;
+  padding: calc(var(--cw) * 1.6);
+  border-radius: 50%;
+  background: var(--came);
+  box-shadow: 0 0 0 calc(var(--cw) * 0.8) var(--lead), 0 0 0 calc(var(--cw) * 2) var(--stone), 0 0 80px 20px var(--glow);
+}
+
+.rose {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--lead);
+}
+
+.rose::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--came) 0 11%, var(--solder) 11% 12.5%, transparent 12.5% 36%, var(--came) 36% 39%, transparent 39% 67%, var(--came) 67% 70.5%, transparent 70.5%),
+    repeating-conic-gradient(var(--came) 0 2deg, transparent 2deg 30deg);
+  pointer-events: none;
+}
+
+.visitText {
+  display: grid;
+  align-content: start;
+}
+
+.visitTitle {
+  margin-top: 0.4rem;
+  font-family: var(--uncial);
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+  line-height: 1.08;
+}
+
+.visitLede {
+  margin-top: 1rem;
+  font-size: 1.14rem;
+  line-height: 1.6;
+}
+
+.hours {
+  display: grid;
+  gap: var(--cw);
+  margin-top: 1.6rem;
+  padding: var(--cw);
+  background: var(--came);
+  border-radius: 6px;
+}
+
+.hours > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 4px;
+  background: var(--lead);
+}
+
+.hours dt {
+  font-family: var(--caps);
+  font-size: 1.05rem;
+  letter-spacing: 0.03em;
+}
+
+.hours dd {
+  font-size: 1.05rem;
+  text-align: right;
+}
+
+.hours > div:first-child {
+  background: var(--amber);
+  color: var(--on-amber);
+}
+
+.address {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1.4rem;
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+.addressLine {
+  font-family: var(--caps);
+  font-size: 1.3rem;
+  color: var(--text);
+}
+
+.contactLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  margin-top: 0.4rem;
+  font-weight: 700;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/* --------------------------------------------------------------- enquire */
+
+.form {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+  gap: 1.6rem clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(1.5rem, 3.5vw, 2.8rem);
+  border-radius: 6px;
+  background: var(--glass);
+  color: var(--on-clear);
+  box-shadow: 0 0 0 var(--cw) var(--came), 0 0 60px 0 var(--glow);
+  margin-inline: var(--cw);
+}
+
+.formHead .secKey {
+  color: var(--glass-muted);
+  padding-top: 0;
+}
+
+.formHead h2 {
+  margin-top: 0.5rem;
+  font-family: var(--uncial);
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  line-height: 1.1;
+}
+
+.formNote {
+  margin-top: 0.8rem;
+  font-size: 1.04rem;
+  color: var(--glass-muted);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--caps);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--glass-muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.5rem 0.8rem;
+  border: 2px solid var(--glass-rule);
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--glass) 94%, var(--on-clear));
+  color: var(--on-clear);
+  font: inherit;
+  font-size: 1.02rem;
+}
+
+.field input::placeholder {
+  color: var(--glass-muted);
+}
+
+.field input[type='file'] {
+  padding: 0.6rem;
+  font-size: 0.92rem;
+}
+
+.submit {
+  grid-column: 2;
+  justify-self: start;
+  cursor: pointer;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(4rem, 7vw, 6rem);
+  border-top: var(--cw) solid var(--came);
+}
+
+.footBorder {
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  border-bottom: var(--cw) solid var(--came);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto minmax(0, 1.3fr);
+  gap: 1rem 2.4rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.8rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+}
+
+.footName {
+  font-family: var(--uncial);
+  font-size: 1.4rem;
+  color: var(--text);
+}
+
+.footInner a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--amber);
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1120px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1.2rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .figures {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .classNotes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .secKey {
+    padding-top: 0;
+  }
+
+  .lancets {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .caseStudy,
+  .visit,
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .quarries {
+    position: relative;
+    top: 0;
+    width: min(100%, 20rem);
+    justify-self: center;
+    margin-bottom: 3rem;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .submit {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    --cw: 7px;
+    font-size: 1.02rem;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .barNote {
+    display: none;
+  }
+
+  .heroFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroFacts > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .heroFacts dd {
+    text-align: right;
+  }
+
+  .heron {
+    height: 25rem;
+  }
+
+  .sideLight {
+    width: 3.6rem;
+  }
+
+  .lancets,
+  .steps,
+  .courses,
+  .classNotes,
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lancetHead {
+    aspect-ratio: 1.8;
+  }
+
+  .courseHead {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

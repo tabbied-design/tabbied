@@ -1,0 +1,1711 @@
+/* ==========================================================================
+   FERNHOLLOW MUSEUM - natural history, Quarry Hill
+   A cabinet of curiosities. The page is a green specimen cabinet and every
+   section is a drawer pulled open: a painted front with a brass label
+   holder (the section's name in copperplate) and a half-moon pull, then
+   the drawer box, its contents laid out on bone mounts. Catalogue numbers,
+   Latin names in italic, collector and date lines on typed labels, and a
+   pin through each specimen. The luna moth is drawn larger than the room
+   behind the name, and again whole and small on its mount in drawer II.
+   ========================================================================== */
+
+.page {
+  --cabinet: #1e3a31;
+  --bone: #eee6d2;
+  --brass: #b98a3c;
+  --label: #9a2e27;
+
+  --text: var(--bone);
+  --on-bone: var(--cabinet);
+  --on-brass: var(--cabinet);
+  --on-label: var(--bone);
+
+  /* Derived: never roles of their own, always mixed from them. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--cabinet));
+  --rule: color-mix(in oklab, var(--text) 18%, transparent);
+  --ghost: color-mix(in oklab, var(--brass) 30%, var(--cabinet));
+  --front: color-mix(in oklab, var(--cabinet) 91%, var(--text));
+  --deep: color-mix(in oklab, var(--cabinet) 78%, var(--on-bone));
+  --shade: color-mix(in oklab, var(--on-bone) 55%, transparent);
+  --bone-muted: color-mix(in oklab, var(--on-bone) 70%, var(--bone));
+  --bone-rule: color-mix(in oklab, var(--on-bone) 20%, transparent);
+  --bone-hair: color-mix(in oklab, var(--on-bone) 10%, transparent);
+  --brass-lit: color-mix(in oklab, var(--brass) 62%, var(--bone));
+  --brass-dim: color-mix(in oklab, var(--brass) 70%, var(--on-bone));
+  --brass-text: color-mix(in oklab, var(--brass) 55%, var(--text));
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --goudy: 'Sorts Mill Goudy', 'Goudy Old Style', Garamond, Georgia, serif;
+  --script: 'Pinyon Script', 'Snell Roundhand', cursive;
+  --typed: 'Courier Prime', 'Courier New', Courier, monospace;
+
+  font-family: var(--goudy);
+  font-size: 1.06rem;
+  line-height: 1.55;
+  background: var(--cabinet);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by each surface's lightness, tinted toward the other. */
+    --text: color-mix(in oklab, oklch(from var(--cabinet) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--bone));
+    --on-bone: color-mix(in oklab, oklch(from var(--bone) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--cabinet));
+    --on-brass: oklch(from var(--brass) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-label: oklch(from var(--label) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------- the top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.75rem var(--gut);
+  background: var(--cabinet);
+  border-bottom: 3px solid var(--brass);
+  box-shadow: 0 1px 0 var(--deep);
+}
+
+.mark {
+  display: grid;
+  line-height: 1;
+}
+
+.markName {
+  font-size: 1.45rem;
+  letter-spacing: 0.01em;
+}
+
+.markSub {
+  margin-top: 0.22rem;
+  font-family: var(--typed);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 1.02rem;
+  color: var(--muted);
+}
+
+.barNote {
+  font-family: var(--typed);
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+  background: var(--bone);
+  color: var(--on-bone);
+  box-shadow: 0 0 0 2px var(--brass);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--cabinet);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--brass);
+    text-underline-offset: 6px;
+  }
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  padding: clamp(3.5rem, 7vw, 6rem) max(var(--gut), calc((100% - var(--max)) / 2)) clamp(4rem, 8vw, 7rem);
+  overflow: hidden;
+  border-bottom: 3px solid var(--brass);
+}
+
+/* One wing and a little of the body, cut off by the room. */
+.heroMoth {
+  position: absolute;
+  z-index: 0;
+  width: 180vw;
+  max-width: none;
+  left: -36vw;
+  top: -10vw;
+  pointer-events: none;
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+}
+
+.heroCat {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--typed);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  background: var(--label);
+  color: var(--on-label);
+}
+
+.title {
+  display: grid;
+  margin-top: 1.4rem;
+  font-size: clamp(3.6rem, 9vw, 8.6rem);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+}
+
+.title span + span {
+  font-style: italic;
+  padding-left: 0.6em;
+}
+
+.heroSub {
+  margin-top: 1.4rem;
+  font-style: italic;
+  font-size: clamp(1.2rem, 1.9vw, 1.55rem);
+  color: var(--brass-text);
+}
+
+.lede {
+  max-width: 34rem;
+  margin-top: 1.1rem;
+  font-size: 1.14rem;
+  line-height: 1.6;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.btn,
+.btnGhost,
+.submit,
+.tierLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0 1.4rem;
+  font-family: var(--typed);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 2px solid var(--brass);
+}
+
+.btn,
+.submit {
+  background: var(--brass);
+  color: var(--on-brass);
+}
+
+.btnGhost {
+  color: var(--text);
+}
+
+@media (hover: hover) {
+  .btn:hover,
+  .submit:hover {
+    background: var(--brass-lit);
+  }
+
+  .btnGhost:hover {
+    background: var(--front);
+  }
+}
+
+.heroFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.4rem;
+  margin-top: 2.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.heroFacts dt {
+  font-family: var(--typed);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroFacts dd {
+  font-size: 1.15rem;
+}
+
+/* The glazed case: a frame of painted wood round the little boxes, a
+   sheen on the glass, a brass holder on the rail and a keyhole. */
+.case {
+  position: relative;
+  z-index: 1;
+  align-self: stretch;
+  min-height: 36rem;
+  border: 16px solid var(--front);
+  outline: 2px solid var(--brass);
+  outline-offset: -18px;
+  background: var(--deep);
+  box-shadow: 0 0 0 1px var(--rule), 0 30px 60px -30px var(--shade);
+}
+
+.caseGlass {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.caseGlass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(115deg, transparent 28%, color-mix(in oklab, var(--bone) 16%, transparent) 36%, transparent 44%, transparent 62%, color-mix(in oklab, var(--bone) 9%, transparent) 66%, transparent 70%);
+  pointer-events: none;
+}
+
+.caseHolder {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: -2.3rem;
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  min-width: 15rem;
+  padding: 0.35rem 1.2rem 0.45rem;
+  background: var(--bone);
+  color: var(--on-bone);
+  border: 3px solid var(--brass);
+  box-shadow: 0 0 0 1px var(--deep), 0 6px 14px -6px var(--shade);
+  text-align: center;
+}
+
+.caseLabel {
+  font-family: var(--script);
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+
+.caseNote {
+  font-family: var(--typed);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.escutcheon {
+  position: absolute;
+  z-index: 2;
+  right: -12px;
+  top: 50%;
+  width: 10px;
+  height: 26px;
+  translate: 0 -50%;
+  border-radius: 5px;
+  background: var(--brass);
+  box-shadow: 0 0 0 1px var(--deep);
+}
+
+.escutcheon::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  width: 4px;
+  height: 12px;
+  border-radius: 2px 2px 0 0;
+  background: var(--deep);
+}
+
+/* ---------------------------------------------------------------- drawers
+   Each section: a painted front with a label holder and a pull, over the
+   open box, its sides and back in the same paint. */
+
+.drawer {
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: clamp(2.8rem, 5vw, 4.5rem) var(--gut) 0;
+  scroll-margin-top: 4.5rem;
+}
+
+.front {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.3rem clamp(1.2rem, 3vw, 2.4rem) 1.1rem;
+  background: var(--front);
+  box-shadow:
+    inset 0 2px 0 color-mix(in oklab, var(--text) 14%, transparent),
+    inset 0 -4px 0 var(--deep),
+    0 10px 18px -10px var(--shade);
+}
+
+.front::before {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border: 1px solid var(--rule);
+  pointer-events: none;
+}
+
+.drawerNo {
+  font-variant: small-caps;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.frontNote {
+  justify-self: end;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+.holderWrap {
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+}
+
+/* The label holder: a brass frame with a screw at each end and a card in
+   it, the section's name written in copperplate. */
+.holder {
+  position: relative;
+  min-width: 16rem;
+  padding: 0.25rem 2rem 0.4rem;
+  background: var(--bone);
+  color: var(--on-bone);
+  border: 3px solid var(--brass);
+  box-shadow:
+    0 0 0 1px var(--deep),
+    inset 0 0 0 1px var(--brass-dim),
+    inset 0 3px 6px -3px var(--shade);
+  font-family: var(--script);
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.holder::before,
+.holder::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  translate: 0 -50%;
+  border-radius: 50%;
+  background:
+    linear-gradient(45deg, transparent 44%, var(--brass-dim) 44% 56%, transparent 56%),
+    var(--brass-lit);
+  box-shadow: 0 0 0 1.5px var(--brass), 0 0 0 2.5px var(--deep);
+}
+
+.holder::before {
+  left: -22px;
+}
+
+.holder::after {
+  right: -22px;
+}
+
+/* The half-moon pull. */
+.pull {
+  display: block;
+  width: 7.5rem;
+  height: 1.55rem;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  background: linear-gradient(180deg, var(--brass-dim) 0 18%, var(--brass) 40%, var(--brass-lit) 88%);
+  box-shadow: 0 3px 0 var(--deep), 0 8px 10px -4px var(--shade);
+}
+
+.inside {
+  position: relative;
+  margin: 0 clamp(0.4rem, 1.2vw, 1rem);
+  padding: clamp(1.6rem, 3.5vw, 2.8rem);
+  background: var(--deep);
+  border: solid var(--front);
+  border-width: 0 12px 14px;
+  box-shadow: inset 0 22px 26px -20px var(--shade);
+}
+
+/* Bone mounts: every card laid in a drawer. */
+.sheet,
+.show,
+.mount,
+.trail,
+.card,
+.form,
+.programme,
+.tier {
+  background: var(--bone);
+  color: var(--on-bone);
+  box-shadow: 0 2px 0 var(--bone-rule), 0 14px 24px -16px var(--shade);
+}
+
+/* ------------------------------------------------------------ now showing */
+
+.shows {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.2rem, 2.5vw, 2rem);
+}
+
+.show {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+}
+
+.posterWrap {
+  position: relative;
+  border: 10px solid var(--bone);
+  border-right: 0;
+}
+
+.poster {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--bone-rule);
+}
+
+/* A gallery roundel, the kind screwed to the door frame. */
+.roundel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: 6.4rem;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--bone);
+  color: var(--on-bone);
+  box-shadow: 0 0 0 3px var(--brass), 0 0 0 4px var(--deep), 0 10px 16px -8px var(--shade);
+}
+
+.roundelSmall {
+  font-family: var(--typed);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.roundelBig {
+  font-size: 2.6rem;
+  line-height: 0.95;
+}
+
+.showBody {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.6rem 1.5rem 1.5rem;
+}
+
+.showKind {
+  font-family: var(--typed);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bone-muted);
+}
+
+.showTitle {
+  margin-top: 0.35rem;
+  font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+  line-height: 1.02;
+}
+
+.showSub {
+  margin-top: 0.2rem;
+  font-style: italic;
+  font-size: 1.15rem;
+}
+
+.showDates {
+  margin-top: 0.8rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--bone-rule);
+  border-bottom: 1px solid var(--bone-rule);
+  font-family: var(--typed);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.showText {
+  margin-top: 0.8rem;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.showRoom {
+  margin-top: 0.6rem;
+  font-style: italic;
+  font-size: 0.96rem;
+  color: var(--bone-muted);
+}
+
+.stamp,
+.tagCat {
+  align-self: flex-start;
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.2rem 0.55rem;
+  font-family: var(--typed);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: var(--label);
+  color: var(--on-label);
+  rotate: -1.5deg;
+}
+
+/* ------------------------------------------------------------ the drawers */
+
+.drawerIntro {
+  max-width: 44rem;
+  margin: 0 auto 2rem;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text);
+}
+
+.tray {
+  position: relative;
+  padding: clamp(1rem, 2.4vw, 2rem);
+  border: 2px solid var(--front);
+  box-shadow: inset 0 0 0 1px var(--shade), 0 0 0 1px var(--rule);
+}
+
+.lining {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.specimens {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.mount {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: 1.4rem 1.4rem 1.2rem;
+}
+
+.plate {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 17rem;
+  border: 1px solid var(--bone-hair);
+}
+
+.specimen {
+  position: relative;
+}
+
+.tall .specimen {
+  height: 92%;
+  width: auto;
+}
+
+.round .specimen {
+  height: 84%;
+  width: auto;
+}
+
+.wide .specimen {
+  width: 88%;
+  height: auto;
+}
+
+/* The pin: a brass head and, below it, the shaft's shadow on the mount. */
+.pin {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--brass-lit) 0 25%, var(--brass) 60%, var(--brass-dim));
+  box-shadow: 0 0 0 1px var(--shade);
+}
+
+.pin::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 60%;
+  top: 70%;
+  width: 2px;
+  height: 26px;
+  border-radius: 1px;
+  background: color-mix(in oklab, var(--on-bone) 30%, transparent);
+  transform-origin: top center;
+  rotate: -40deg;
+}
+
+.tag {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.1rem;
+  padding: 0.8rem 0.9rem 0.9rem;
+  border: 1px solid var(--bone-rule);
+  font-family: var(--typed);
+}
+
+.tagName {
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tagLatin {
+  font-family: var(--goudy);
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.tagLines {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.55rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.tagLines > div {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+  gap: 0.4rem;
+  border-bottom: 1px dotted var(--bone-rule);
+}
+
+.tagLines dt {
+  color: var(--bone-muted);
+}
+
+/* ---------------------------------------------------------------- visit */
+
+.visit {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.sheet {
+  padding: 1.5rem 1.6rem 1.6rem;
+}
+
+.sheetTitle {
+  font-size: 1.55rem;
+  line-height: 1.1;
+  padding-bottom: 0.6rem;
+  border-bottom: 3px double var(--bone-rule);
+}
+
+.table {
+  display: grid;
+  margin-top: 0.4rem;
+}
+
+.table > div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--bone-hair);
+}
+
+/* Dotted leaders between the term and the figure, as in a printed guide. */
+.table dt {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.table dt::after {
+  content: '';
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 1.5px dotted var(--bone-rule);
+}
+
+.table dd {
+  font-family: var(--typed);
+  font-size: 0.94rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.sheetNote {
+  margin-top: 0.8rem;
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--bone-muted);
+}
+
+.firstSunday {
+  grid-row: span 2;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.2rem;
+  padding: 2rem 1.6rem;
+  background: var(--label);
+  color: var(--on-label);
+  border: 3px double var(--brass);
+  outline: 1px solid var(--brass);
+  outline-offset: -12px;
+  text-align: center;
+}
+
+.fsSmall {
+  font-family: var(--typed);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.fsBig {
+  font-family: var(--script);
+  font-size: clamp(2.6rem, 4vw, 3.4rem);
+  line-height: 1.1;
+}
+
+.fsFree {
+  font-size: 1.5rem;
+  font-style: italic;
+}
+
+.fsNote {
+  max-width: 17rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-label) 30%, transparent);
+  font-size: 0.98rem;
+}
+
+.visit > .sheet:last-child {
+  grid-column: span 2;
+}
+
+.access {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1.6rem;
+  margin-top: 0.9rem;
+}
+
+.access li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 1rem;
+}
+
+.access li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brass);
+}
+
+/* -------------------------------------------------------------- families */
+
+.families {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(1.2rem, 2.5vw, 2rem);
+  align-items: start;
+}
+
+.trails {
+  display: grid;
+  gap: 1rem;
+}
+
+/* A trail sheet, with the punched hole it hangs by at the desk. */
+.trail {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  grid-template-areas:
+    'no name'
+    'no meta'
+    'no body';
+  column-gap: 1.2rem;
+  padding: 1.1rem 1.4rem 1.2rem 1.2rem;
+}
+
+.trailNo {
+  grid-area: no;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  padding-right: 1.1rem;
+  border-right: 1px dashed var(--bone-rule);
+  font-family: var(--typed);
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--bone-muted);
+}
+
+.trailName {
+  grid-area: name;
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.trailMeta {
+  grid-area: meta;
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.2rem;
+  font-family: var(--typed);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.trailMeta span + span::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 1rem;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--label);
+}
+
+.trailBody {
+  grid-area: body;
+  margin-top: 0.4rem;
+  font-size: 1rem;
+}
+
+.room {
+  position: relative;
+  display: grid;
+  min-height: 100%;
+  padding: 1.4rem;
+  overflow: hidden;
+  border: 2px solid var(--brass);
+  background: var(--cabinet);
+}
+
+.roomNet {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.roomCard {
+  position: relative;
+  align-self: end;
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: var(--bone);
+  color: var(--on-bone);
+  box-shadow: 0 0 0 3px var(--brass), 0 16px 30px -18px var(--shade);
+}
+
+.roomTitle {
+  font-family: var(--script);
+  font-size: 2.3rem;
+  line-height: 1.1;
+}
+
+.roomLede {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.roomFacts {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--bone-rule);
+}
+
+.roomFacts > div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 0.6rem;
+}
+
+.roomFacts dt {
+  font-family: var(--typed);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bone-muted);
+  padding-top: 0.15rem;
+}
+
+.roomFacts dd {
+  font-size: 0.98rem;
+}
+
+/* -------------------------------------------------------------- research */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+/* A catalogue card: ruled, with a red head rule and the rod hole. */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem 1.4rem 2.6rem;
+  background:
+    linear-gradient(180deg, transparent 3.1rem, var(--label) 3.1rem 3.25rem, transparent 3.25rem),
+    repeating-linear-gradient(180deg, transparent 0 1.6rem, var(--bone-hair) 1.6rem calc(1.6rem + 1px)),
+    var(--bone);
+}
+
+.cardCat {
+  position: absolute;
+  right: 1.2rem;
+  top: 1.3rem;
+  font-family: var(--typed);
+  font-size: 0.78rem;
+  color: var(--bone-muted);
+}
+
+.cardHead {
+  font-size: 1.65rem;
+  line-height: 1.2;
+}
+
+.cardBody {
+  margin-top: 1.05rem;
+  font-family: var(--typed);
+  font-size: 0.9rem;
+  line-height: 1.6rem;
+}
+
+.cardFoot {
+  margin-top: 0.8rem;
+  font-style: italic;
+  font-size: 0.98rem;
+  overflow-wrap: anywhere;
+}
+
+.cardHole {
+  position: absolute;
+  left: 50%;
+  bottom: 0.8rem;
+  width: 1rem;
+  height: 1rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--deep);
+  box-shadow: inset 0 2px 3px var(--shade);
+}
+
+.form {
+  margin-top: clamp(1.4rem, 3vw, 2.4rem);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.formTitle {
+  font-family: var(--script);
+  font-size: 2.4rem;
+  line-height: 1.1;
+}
+
+.formNote {
+  max-width: 40rem;
+  margin-top: 0.4rem;
+  font-style: italic;
+  color: var(--bone-muted);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+  margin-top: 1.4rem;
+}
+
+.field {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--typed);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bone-muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.8rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--bone-rule);
+  border-bottom: 2px solid var(--on-bone);
+  border-radius: 0;
+  background: color-mix(in oklab, var(--bone) 93%, var(--on-bone));
+  color: var(--on-bone);
+  font: inherit;
+  font-family: var(--typed);
+  font-size: 0.95rem;
+}
+
+.field input[type='file'] {
+  padding: 0.55rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.submit {
+  margin-top: 1.4rem;
+  cursor: pointer;
+}
+
+/* -------------------------------------------------------------- lectures */
+
+.lectures {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+  gap: clamp(1.2rem, 2.5vw, 2.2rem);
+  align-items: start;
+}
+
+/* The printed programme: centred heads between double rules. */
+.programme {
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  outline: 1px solid var(--bone-rule);
+  outline-offset: -10px;
+}
+
+.progHead {
+  font-family: var(--typed);
+  font-size: 0.8rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--bone-muted);
+}
+
+.progTitle {
+  margin-top: 0.3rem;
+  font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+  line-height: 1.05;
+  text-align: center;
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+}
+
+.progSeason {
+  margin: 0.4rem auto 0;
+  padding-bottom: 1rem;
+  font-style: italic;
+  font-size: 1.1rem;
+  text-align: center;
+  border-bottom: 4px double var(--bone-rule);
+}
+
+.progList {
+  display: grid;
+}
+
+.lecture {
+  display: grid;
+  grid-template-columns: 6.2rem minmax(0, 1fr) 3.6rem 3.2rem;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--bone-hair);
+}
+
+.lecDate {
+  font-family: var(--typed);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.lecTitle {
+  font-size: 1.14rem;
+  line-height: 1.3;
+}
+
+.lecWho {
+  margin-top: 0.15rem;
+  font-style: italic;
+  font-size: 0.96rem;
+  color: var(--bone-muted);
+}
+
+.lecTime,
+.lecPrice {
+  font-family: var(--typed);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.lecPrice {
+  font-weight: 700;
+}
+
+.progFoot {
+  margin-top: 1rem;
+  font-style: italic;
+  font-size: 0.98rem;
+  text-align: center;
+  color: var(--bone-muted);
+}
+
+/* A magic-lantern slide: a square mount with a round window. */
+.lantern {
+  position: sticky;
+  top: 6rem;
+}
+
+.slide {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: clamp(1.4rem, 3vw, 2.2rem) solid var(--bone);
+  outline: 1px solid var(--bone-rule);
+  outline-offset: -8px;
+  box-shadow: 0 14px 24px -16px var(--shade);
+  background: var(--bone);
+}
+
+/* The round window of the slide mount, cut over the picture. */
+.slide::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: radial-gradient(circle closest-side, transparent 0 calc(100% - 1.2rem), var(--brass-dim) calc(100% - 1.2rem) calc(100% - 1rem), var(--bone) calc(100% - 1rem));
+  pointer-events: none;
+}
+
+.slideCap {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 1rem;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.slideNo {
+  font-family: var(--typed);
+  font-style: normal;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* ------------------------------------------------------------ membership */
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+/* A membership card with brass corners. */
+.tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.8rem 1.6rem 1.6rem;
+  background:
+    linear-gradient(135deg, var(--brass) 0 1.2rem, transparent 1.2rem) top left / 50% 50% no-repeat,
+    linear-gradient(225deg, var(--brass) 0 1.2rem, transparent 1.2rem) top right / 50% 50% no-repeat,
+    linear-gradient(45deg, var(--brass) 0 1.2rem, transparent 1.2rem) bottom left / 50% 50% no-repeat,
+    linear-gradient(315deg, var(--brass) 0 1.2rem, transparent 1.2rem) bottom right / 50% 50% no-repeat,
+    var(--bone);
+}
+
+.tierBest {
+  outline: 3px solid var(--brass);
+  outline-offset: 6px;
+}
+
+.tierKind {
+  font-family: var(--typed);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--bone-muted);
+}
+
+.tierName {
+  margin-top: 0.2rem;
+  font-family: var(--script);
+  font-size: 3rem;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.tierPrice {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px double var(--bone-rule);
+}
+
+.tierPrice strong {
+  font-size: 2.2rem;
+  font-weight: 400;
+}
+
+.tierPrice span {
+  font-style: italic;
+  color: var(--bone-muted);
+}
+
+.tierLines {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1rem 0 1.4rem;
+}
+
+.tierLines li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 1.02rem;
+}
+
+.tierLines li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  rotate: 45deg;
+  background: var(--label);
+}
+
+.tierLink {
+  margin-top: auto;
+  border-color: var(--on-bone);
+  color: var(--on-bone);
+}
+
+@media (hover: hover) {
+  .tierLink:hover {
+    background: var(--on-bone);
+    color: var(--bone);
+  }
+}
+
+.tierBest .tierLink {
+  background: var(--label);
+  border-color: var(--label);
+  color: var(--on-label);
+}
+
+.giftNote {
+  max-width: 44rem;
+  margin: 2rem auto 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- contact */
+
+.contact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.address {
+  margin-top: 0.9rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.contactLine {
+  margin-top: 0.4rem;
+  font-family: var(--typed);
+  font-size: 1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.contactLine:first-of-type {
+  margin-top: 1rem;
+}
+
+.getting {
+  display: grid;
+  margin-top: 0.4rem;
+}
+
+.getting > div {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--bone-hair);
+}
+
+.getting dt {
+  font-family: var(--typed);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-top: 0.15rem;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  margin-top: clamp(3.5rem, 6vw, 5rem);
+  background: var(--deep);
+  border-top: 3px solid var(--brass);
+}
+
+.baize {
+  position: relative;
+  height: 60px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--rule);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto minmax(0, 1.2fr);
+  gap: 1rem 2.4rem;
+  align-items: baseline;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.2rem var(--gut) 2.8rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+}
+
+.footName {
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+.footInner a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--brass);
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 1180px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1.2rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .specimens,
+  .cards,
+  .tiers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shows {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .formGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroMoth {
+    width: 180vw;
+    left: -40vw;
+    top: -20vw;
+  }
+
+  .case {
+    min-height: 22rem;
+  }
+
+  .front {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 0.6rem;
+    text-align: center;
+  }
+
+  .frontNote {
+    justify-self: center;
+    text-align: center;
+  }
+
+  .visit,
+  .families,
+  .lectures,
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .firstSunday {
+    grid-row: auto;
+  }
+
+  .visit > .sheet:last-child {
+    grid-column: auto;
+  }
+
+  .lantern {
+    position: static;
+    display: grid;
+    grid-template-columns: 12rem minmax(0, 1fr);
+    gap: 1.4rem;
+    align-items: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    font-size: 1rem;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .barNote {
+    display: none;
+  }
+
+  .title span + span {
+    padding-left: 0.4em;
+  }
+
+  .heroFacts {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .heroFacts > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .case {
+    min-height: 18rem;
+    border-width: 12px;
+    outline-offset: -14px;
+  }
+
+  .caseHolder {
+    min-width: 12rem;
+  }
+
+  .holder {
+    min-width: 0;
+    padding: 0.2rem 1.2rem 0.35rem;
+    white-space: normal;
+  }
+
+  .inside {
+    margin: 0 0.3rem;
+    padding: 1.2rem 1rem;
+    border-width: 0 8px 10px;
+  }
+
+  .show {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .posterWrap {
+    height: 8.5rem;
+    border: 10px solid var(--bone);
+    border-bottom: 0;
+  }
+
+  .specimens,
+  .cards,
+  .tiers,
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plate {
+    height: 15rem;
+  }
+
+  .access {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .trail {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'no'
+      'name'
+      'meta'
+      'body';
+  }
+
+  .trailNo {
+    justify-items: start;
+    padding: 0 0 0.4rem;
+    margin-bottom: 0.5rem;
+    border-right: 0;
+    border-bottom: 1px dashed var(--bone-rule);
+  }
+
+  .room {
+    padding: 1rem;
+    min-height: 26rem;
+  }
+
+  .roomFacts > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .lecture {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'date price'
+      'body body';
+    gap: 0.3rem 1rem;
+  }
+
+  .lecDate {
+    grid-area: date;
+  }
+
+  .lecBody {
+    grid-area: body;
+  }
+
+  .lecTime {
+    display: none;
+  }
+
+  .lecPrice {
+    grid-area: price;
+  }
+
+  .lantern {
+    grid-template-columns: 8rem minmax(0, 1fr);
+  }
+
+  .tierBest {
+    outline-offset: 3px;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

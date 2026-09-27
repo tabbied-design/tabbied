@@ -1,0 +1,1456 @@
+/* ==========================================================================
+   GEODE & CO. - rocks, minerals and fossils, Stonebury
+   A museum after hours: slate cases under spotlights, every specimen with
+   an old-fashioned label card (name, formula, locality, crystal system,
+   hardness, price) in a serif and a typewriter mono. Section badges are
+   periodic table tiles. The hero geode is cut out of a field of gradient
+   facets and shaded by its own photograph; the mineral drawer slides
+   sideways; the Mohs scale is a long rule of the same facets, with the
+   fingernail and the steel file pinned where they fall.
+   ========================================================================== */
+
+.page {
+  --slate: #1b1d22;
+  --quartz: #edebe6;
+  --amethyst: #7b4fb5;
+  --pyrite: #c9a43e;
+  --malachite: #2e8c69;
+
+  --serif: 'Spectral', 'Iowan Old Style', Georgia, serif;
+  --mono: 'Chivo Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 82rem;
+
+  --text: var(--quartz);
+  --on-quartz: var(--slate);
+  --on-amethyst: var(--quartz);
+  --on-pyrite: var(--slate);
+  --on-malachite: var(--quartz);
+
+  /* Derived surfaces: mixed from the roles, never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 68%, var(--slate));
+  --rule: color-mix(in oklab, var(--text) 15%, transparent);
+  --rule-strong: color-mix(in oklab, var(--text) 32%, transparent);
+  --panel: color-mix(in oklab, var(--slate) 92%, var(--text));
+  --panel-deep: color-mix(in oklab, var(--slate) 86%, var(--text));
+  --label: color-mix(in oklab, var(--quartz) 94%, var(--pyrite));
+  --label-muted: color-mix(in oklab, var(--on-quartz) 66%, var(--label));
+  --label-rule: color-mix(in oklab, var(--on-quartz) 22%, transparent);
+  --spot: color-mix(in oklab, var(--text) 13%, transparent);
+
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  line-height: 1.6;
+  background: var(--slate);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by the lightness of the surface, tinted toward an ink,
+       so text reads on whatever ground a palette brings. */
+    --text: color-mix(in oklab, oklch(from var(--slate) clamp(0, (0.62 - l) * 1000, 1) 0 0) 84%, var(--quartz));
+    --on-quartz: color-mix(in oklab, oklch(from var(--quartz) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--slate));
+    --on-amethyst: oklch(from var(--amethyst) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-pyrite: oklch(from var(--pyrite) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-malachite: oklch(from var(--malachite) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.page sub {
+  font-size: 0.7em;
+  line-height: 0;
+}
+
+.small {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--label-muted);
+}
+
+.labelCat {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.7rem var(--gut);
+  background: color-mix(in oklab, var(--slate) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  justify-self: start;
+}
+
+.brandTile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--amethyst);
+  color: var(--on-amethyst);
+  border: 1.5px solid var(--text);
+}
+
+.brandNo {
+  position: absolute;
+  top: 0.12rem;
+  left: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  line-height: 1;
+}
+
+.brandSym {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-top: 0.2rem;
+}
+
+.brandName {
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem clamp(0.9rem, 1.8vw, 1.8rem);
+}
+
+.nav a {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.barNote {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--slate);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+  }
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) clamp(3rem, 6vw, 5rem);
+}
+
+.heroText {
+  display: grid;
+  gap: 1.4rem;
+  justify-items: start;
+}
+
+/* The shop as an element of its own. */
+.heroTile {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  width: 7.5rem;
+  height: 8.2rem;
+  padding: 0.5rem 0.6rem;
+  background: var(--amethyst);
+  color: var(--on-amethyst);
+  border: 2px solid var(--text);
+  box-shadow: 0.45rem 0.45rem 0 var(--panel-deep);
+}
+
+.tileNo {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.tileSym {
+  align-self: center;
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.tileName {
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.tileMass {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-size: clamp(3.4rem, 7.4vw, 7rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+}
+
+.lede {
+  max-width: 32rem;
+  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.btn,
+.btnLine {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0.6rem 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  border: 1.5px solid var(--text);
+  cursor: pointer;
+}
+
+.btn {
+  background: var(--text);
+  color: var(--slate);
+}
+
+.btnLine {
+  background: transparent;
+  color: var(--text);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: var(--pyrite);
+    border-color: var(--pyrite);
+    color: var(--on-pyrite);
+  }
+
+  .btnLine:hover {
+    background: var(--panel-deep);
+  }
+}
+
+/* The case: a spotlight, the geode, a plinth and its label. */
+.case {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 2rem 0 0;
+}
+
+.spot {
+  position: absolute;
+  inset: -2rem -3rem 0;
+  background: radial-gradient(ellipse 50% 55% at 50% 45%, var(--spot), transparent 72%);
+  pointer-events: none;
+}
+
+.geode {
+  width: clamp(17rem, 30vw, 28rem);
+  --artwork-shade: 0.95;
+  filter: drop-shadow(0 1.4rem 1.2rem color-mix(in oklab, var(--slate) 80%, transparent));
+}
+
+.plinth {
+  display: block;
+  width: clamp(20rem, 36vw, 34rem);
+  max-width: 100%;
+  height: 1.4rem;
+  margin-top: -1.2rem;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--slate) 70%, var(--text)), color-mix(in oklab, var(--slate) 88%, var(--text)));
+  border-top: 1px solid var(--rule-strong);
+  box-shadow: 0 1.2rem 2rem -1rem color-mix(in oklab, var(--slate) 90%, transparent);
+}
+
+.heroLabel {
+  position: absolute;
+  right: 0;
+  bottom: 2.6rem;
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.7rem 0.9rem 0.8rem;
+  background: var(--label);
+  color: var(--on-quartz);
+  box-shadow:
+    inset 0 0 0 0.25rem var(--label),
+    inset 0 0 0 0.32rem var(--on-quartz);
+  transform: rotate(-3deg);
+}
+
+.labelName {
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.labelLine {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--label-muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: 1.2rem clamp(1.4rem, 3vw, 2.6rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.secHead:not(:has(.secNote)) {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.secHead h2 {
+  font-size: clamp(2.2rem, 4.4vw, 3.8rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.eyebrow {
+  margin-bottom: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.secNote {
+  max-width: 32rem;
+  color: var(--muted);
+}
+
+/* Periodic table tiles for the section badges. */
+.element {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: 5.2rem;
+  height: 5.6rem;
+  padding: 0.35rem 0.45rem;
+  border: 1.5px solid var(--text);
+}
+
+.elNo {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.elSym {
+  align-self: center;
+  font-size: 2.2rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.elName {
+  font-size: 0.72rem;
+  line-height: 1.1;
+}
+
+.elPyrite {
+  background: var(--pyrite);
+  color: var(--on-pyrite);
+}
+
+.elAmethyst {
+  background: var(--amethyst);
+  color: var(--on-amethyst);
+}
+
+.elQuartz {
+  background: var(--quartz);
+  color: var(--on-quartz);
+}
+
+.elMalachite {
+  background: var(--malachite);
+  color: var(--on-malachite);
+}
+
+.elSlate {
+  background: var(--panel-deep);
+  color: var(--text);
+}
+
+/* ------------------------------------------------------ specimen of the week */
+
+.weekGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.6rem, 4vw, 3.5rem);
+  align-items: stretch;
+}
+
+.weekStage {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1.4rem;
+  padding: clamp(1.6rem, 4vw, 3rem);
+  background:
+    radial-gradient(ellipse 55% 50% at 50% 45%, var(--spot), transparent 75%),
+    var(--panel);
+  border: 1px solid var(--rule);
+}
+
+.weekArt {
+  width: min(100%, 26rem);
+}
+
+/* A two-centimetre scale bar, as in a catalog photograph. */
+.scaleBar {
+  display: flex;
+  justify-content: space-between;
+  width: 6rem;
+  padding-top: 0.55rem;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  color: var(--muted);
+  background:
+    linear-gradient(90deg, var(--text) 0 50%, transparent 50% 100%) 0 0 / 3rem 0.35rem repeat-x;
+  border: 1px solid var(--text);
+  border-width: 1px 0 0;
+}
+
+.bigLabel {
+  display: grid;
+  align-content: start;
+  gap: 0.8rem;
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  background: var(--label);
+  color: var(--on-quartz);
+  box-shadow:
+    inset 0 0 0 0.45rem var(--label),
+    inset 0 0 0 0.55rem var(--on-quartz),
+    inset 0 0 0 0.7rem var(--label),
+    inset 0 0 0 0.75rem var(--on-quartz);
+}
+
+.bigLabelTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.6rem;
+  font-size: 0.9rem;
+  font-style: italic;
+  border-bottom: 1px solid var(--label-rule);
+}
+
+.bigLabelName {
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.bigLabelFormula,
+.cardFormula {
+  font-family: var(--mono);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.bigLabelFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 1.4rem;
+}
+
+.bigLabelFacts div {
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--label-rule);
+}
+
+.bigLabelFacts dt {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--label-muted);
+}
+
+.bigLabelFacts dd {
+  font-size: 1.02rem;
+}
+
+.bigLabelNote {
+  padding-top: 0.8rem;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  border-top: 1px solid var(--label-rule);
+}
+
+/* --------------------------------------------------------------- the drawer */
+
+.drawerFrame {
+  position: relative;
+  padding: 1.2rem 1.2rem 2.4rem;
+  background: var(--panel-deep);
+  border: 1px solid var(--rule-strong);
+  box-shadow: inset 0 0.6rem 1.2rem -0.6rem color-mix(in oklab, var(--slate) 90%, transparent);
+}
+
+.drawer {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 1rem;
+  padding-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+}
+
+.slot {
+  flex: 0 0 clamp(15rem, 23vw, 18.5rem);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  scroll-snap-align: start;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+}
+
+/* Each tray, lined in a hint of its specimen's color. */
+.tray {
+  display: grid;
+  place-items: center;
+  height: 15rem;
+  padding: 1.2rem;
+  box-shadow: inset 0 0 1.4rem color-mix(in oklab, var(--slate) 70%, transparent);
+}
+
+.trayAmethyst {
+  background: color-mix(in oklab, var(--slate) 84%, var(--amethyst));
+}
+
+.trayPyrite {
+  background: color-mix(in oklab, var(--slate) 86%, var(--pyrite));
+}
+
+.trayQuartz {
+  background: color-mix(in oklab, var(--slate) 88%, var(--quartz));
+}
+
+.trayAmmonite {
+  background: color-mix(in oklab, var(--slate) 86%, var(--pyrite));
+}
+
+.trayMalachite {
+  background: color-mix(in oklab, var(--slate) 84%, var(--malachite));
+}
+
+.trayArt {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+}
+
+.card {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  margin: 0.8rem;
+  padding: 0.9rem 1rem 1rem;
+  background: var(--label);
+  color: var(--on-quartz);
+  box-shadow:
+    inset 0 0 0 0.25rem var(--label),
+    inset 0 0 0 0.3rem var(--on-quartz);
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.cardPrice {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.cardName {
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.15;
+}
+
+.cardFormula {
+  font-size: 0.85rem;
+}
+
+.cardFacts {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.3rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--label-rule);
+}
+
+.cardFacts div {
+  display: grid;
+  grid-template-columns: 4.8rem minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.cardFacts dt {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--label-muted);
+}
+
+.cardFacts dd {
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+/* The drawer's brass pull. */
+.drawerPull {
+  position: absolute;
+  left: 50%;
+  bottom: 0.7rem;
+  width: 7rem;
+  height: 0.9rem;
+  border-radius: 0 0 0.9rem 0.9rem;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--pyrite) 60%, var(--slate)), var(--pyrite));
+  transform: translateX(-50%);
+}
+
+/* ------------------------------------------------------------------ fossils */
+
+.timescale {
+  display: flex;
+  height: 9rem;
+  border: 1px solid var(--rule-strong);
+}
+
+.period {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: center;
+  min-width: 0;
+  padding: 0.6rem 0.2rem 0.45rem;
+  border-right: 1px solid var(--rule-strong);
+  color: var(--text);
+}
+
+.period:last-child {
+  border-right: 0;
+}
+
+.periodName {
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.periodStart {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--muted);
+}
+
+/* Widths in proportion to how long each period lasted. */
+.pCambrian { flex: 56; background: color-mix(in oklab, var(--slate) 70%, var(--malachite)); }
+.pOrdovician { flex: 41; background: color-mix(in oklab, var(--slate) 76%, var(--malachite)); }
+.pSilurian { flex: 25; background: color-mix(in oklab, var(--slate) 82%, var(--malachite)); }
+.pDevonian { flex: 60; background: color-mix(in oklab, var(--slate) 76%, var(--pyrite)); }
+.pCarboniferous { flex: 60; background: color-mix(in oklab, var(--slate) 84%, var(--quartz)); }
+.pPermian { flex: 47; background: color-mix(in oklab, var(--slate) 72%, var(--pyrite)); }
+.pTriassic { flex: 51; background: color-mix(in oklab, var(--slate) 72%, var(--amethyst)); }
+.pJurassic { flex: 56; background: color-mix(in oklab, var(--slate) 64%, var(--amethyst)); }
+.pCretaceous { flex: 79; background: color-mix(in oklab, var(--slate) 76%, var(--malachite)); }
+.pCenozoic { flex: 66; background: color-mix(in oklab, var(--slate) 80%, var(--pyrite)); }
+
+.timescaleNote {
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.fossilGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+  gap: clamp(1.6rem, 4vw, 3.5rem);
+  align-items: start;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.fossilFeature {
+  display: grid;
+  justify-items: center;
+  gap: 1.2rem;
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  background:
+    radial-gradient(ellipse 55% 50% at 50% 45%, var(--spot), transparent 75%),
+    var(--panel);
+  border: 1px solid var(--rule);
+}
+
+.fossilArt {
+  width: min(100%, 22rem);
+}
+
+.fossilCaption {
+  display: grid;
+  gap: 0.2rem;
+  justify-self: stretch;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  font-style: italic;
+  background: var(--label);
+  color: var(--on-quartz);
+  box-shadow:
+    inset 0 0 0 0.25rem var(--label),
+    inset 0 0 0 0.3rem var(--on-quartz);
+}
+
+.fossilCaption .labelCat {
+  font-style: normal;
+}
+
+.fossilList {
+  display: grid;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.fossilList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.2rem;
+  align-items: baseline;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.fossilList h3 {
+  font-size: 1.25rem;
+  font-style: italic;
+  line-height: 1.25;
+}
+
+.fossilMeta {
+  margin-top: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.fossilPrice {
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------- mohs */
+
+.mohs {
+  display: grid;
+}
+
+.tools {
+  position: relative;
+  height: 4.6rem;
+}
+
+.tool {
+  position: absolute;
+  bottom: 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  padding-bottom: 1.3rem;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* The pin down to the rule. */
+.tool::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  height: 1.1rem;
+  background: var(--text);
+}
+
+.tool::before {
+  content: '';
+  position: absolute;
+  bottom: -0.3rem;
+  left: 50%;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--text);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.t25 { left: 20%; }
+.t35 { left: 30%; }
+.t55 { left: 50%; }
+.t65 { left: 60%; }
+
+.toolAt {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.toolWhat {
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.rule {
+  display: grid;
+}
+
+.ruleFacets {
+  position: relative;
+  height: 3.6rem;
+  overflow: hidden;
+  border: 1.5px solid var(--text);
+}
+
+.ruleMarks {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+
+.ruleMarks li {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  padding: 1.1rem 0.2rem 0.4rem;
+  text-align: center;
+}
+
+/* A tick at each step. */
+.ruleMarks li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1.5px;
+  height: 0.8rem;
+  background: var(--text);
+}
+
+.ruleMarks li + li {
+  border-left: 1px dashed var(--rule);
+}
+
+.markNo {
+  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.markMineral {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.mohsNote {
+  max-width: 48rem;
+  margin-top: 1.2rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ parties */
+
+.pit {
+  position: relative;
+  display: grid;
+  justify-items: end;
+  min-height: 26rem;
+  padding: clamp(1.2rem, 3vw, 2.4rem);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--slate) 78%, var(--pyrite));
+  border: 1px solid var(--rule-strong);
+}
+
+.pitField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.pitCard {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  width: min(100%, 30rem);
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--label);
+  color: var(--on-quartz);
+  box-shadow:
+    inset 0 0 0 0.35rem var(--label),
+    inset 0 0 0 0.42rem var(--on-quartz),
+    0 1.2rem 2rem -1rem color-mix(in oklab, var(--slate) 80%, transparent);
+}
+
+.pitList {
+  display: grid;
+}
+
+.pitList div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--label-rule);
+}
+
+.pitList dt {
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.pitList dd {
+  font-size: 0.96rem;
+}
+
+.pitPrice {
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+  color: var(--label-muted);
+}
+
+.pitFigure {
+  font-size: 2.6rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--on-quartz);
+}
+
+.pitCard .btn {
+  justify-self: start;
+  background: var(--on-quartz);
+  color: var(--label);
+  border-color: var(--on-quartz);
+}
+
+/* ------------------------------------------------------------------- clinic */
+
+.clinicGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(1.6rem, 4vw, 3.5rem);
+  align-items: stretch;
+}
+
+.clinicSteps {
+  display: grid;
+  align-content: start;
+}
+
+.clinicSteps li {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  grid-template-areas:
+    'no title'
+    'no text';
+  column-gap: 1rem;
+  padding: 1.3rem 0;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.clinicNo {
+  grid-area: no;
+  font-family: var(--mono);
+  font-size: 1.6rem;
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--muted);
+}
+
+.clinicSteps h3 {
+  grid-area: title;
+  font-size: 1.55rem;
+  font-style: italic;
+  line-height: 1.15;
+}
+
+.clinicSteps p {
+  grid-area: text;
+  margin-top: 0.3rem;
+  color: var(--muted);
+}
+
+.lattice {
+  display: grid;
+  grid-template-rows: minmax(10rem, 1fr) auto;
+  border: 1px solid var(--rule-strong);
+  background: var(--panel);
+}
+
+.latticeField {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.latticeCard {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1rem;
+  padding: 1.3rem;
+  background: var(--label);
+  color: var(--on-quartz);
+}
+
+.latticeTitle {
+  font-size: 1.5rem;
+  font-style: italic;
+}
+
+.dates {
+  display: grid;
+}
+
+.dates li {
+  padding: 0.5rem 0;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  border-top: 1px solid var(--label-rule);
+}
+
+/* -------------------------------------------------------------------- visit */
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.6rem, 4vw, 3.5rem);
+  align-items: start;
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.visitLabel {
+  display: grid;
+  gap: 0.9rem;
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  background: var(--label);
+  color: var(--on-quartz);
+  box-shadow:
+    inset 0 0 0 0.45rem var(--label),
+    inset 0 0 0 0.55rem var(--on-quartz),
+    inset 0 0 0 0.7rem var(--label),
+    inset 0 0 0 0.75rem var(--on-quartz);
+}
+
+.visitAddress {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.visitText {
+  font-size: 1rem;
+}
+
+.hours {
+  display: grid;
+  border-top: 1px solid var(--label-rule);
+}
+
+.hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--label-rule);
+}
+
+.hours dd {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+}
+
+.visitInfo {
+  display: grid;
+  gap: 1rem;
+}
+
+.contactLine {
+  font-size: 1.4rem;
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.contactLine a {
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 5px;
+}
+
+.visitNote {
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.6rem;
+  padding: 1.4rem;
+  background: var(--panel);
+  border: 1px solid var(--rule-strong);
+}
+
+.formTitle {
+  font-size: 1.35rem;
+  font-style: italic;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input {
+  width: 100%;
+  min-height: 2.8rem;
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--slate);
+  border: 1px solid var(--rule-strong);
+}
+
+.field input::placeholder {
+  color: color-mix(in oklab, var(--text) 45%, var(--slate));
+}
+
+.form .btn {
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.strata {
+  position: relative;
+  height: 5.4rem;
+  overflow: hidden;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) repeat(3, minmax(0, 1fr));
+  gap: 1.2rem 2.4rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.6rem var(--gut) 3rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.footName {
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 1200px) {
+  .nav,
+  .barNote {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+@media (max-width: 1000px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secHead {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .secNote {
+    grid-column: 1 / -1;
+  }
+
+  .weekGrid,
+  .fossilGrid,
+  .clinicGrid,
+  .visitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .heroTile {
+    width: 6rem;
+    height: 6.6rem;
+  }
+
+  .tileSym {
+    font-size: 2.5rem;
+  }
+
+  .case {
+    padding-top: 1rem;
+  }
+
+  .heroLabel {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    margin-top: 1.4rem;
+    justify-self: end;
+  }
+
+  .element {
+    width: 4.2rem;
+    height: 4.6rem;
+  }
+
+  .elSym {
+    font-size: 1.7rem;
+  }
+
+  .bigLabelFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .timescale {
+    height: 8rem;
+  }
+
+  .periodName {
+    font-size: 0.78rem;
+  }
+
+  .periodStart {
+    font-size: 0.56rem;
+  }
+
+  .period {
+    padding: 0.4rem 0 0.35rem;
+  }
+
+  /* On a phone the rule stands up: ten rows, the tools listed at the side. */
+  .tools {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    height: auto;
+    margin-bottom: 1rem;
+  }
+
+  .tool {
+    position: static;
+    grid-template-columns: auto auto;
+    align-items: baseline;
+    gap: 0.45rem;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--rule-strong);
+    transform: none;
+  }
+
+  .tool::before,
+  .tool::after {
+    display: none;
+  }
+
+  .rule {
+    grid-template-columns: 3.2rem minmax(0, 1fr);
+  }
+
+  .ruleFacets {
+    height: auto;
+  }
+
+  .ruleMarks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ruleMarks li {
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+    justify-items: start;
+    align-items: baseline;
+    padding: 0.55rem 0 0.55rem 0.9rem;
+    text-align: left;
+  }
+
+  .ruleMarks li::before {
+    top: 50%;
+    left: 0;
+    width: 0.6rem;
+    height: 1.5px;
+  }
+
+  .ruleMarks li + li {
+    border-left: 0;
+    border-top: 1px dashed var(--rule);
+  }
+
+  .markNo {
+    font-size: 1.5rem;
+  }
+
+  .markMineral {
+    font-size: 0.8rem;
+  }
+
+  .pit {
+    justify-items: stretch;
+    padding: 5rem 1rem 1rem;
+  }
+
+  .pitList div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

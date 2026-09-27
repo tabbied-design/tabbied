@@ -1,0 +1,1632 @@
+/* ==========================================================================
+   ROWAN STREET ALLOTMENTS - allotment society, Canal Ward
+   The site map of plots. A soil-colored page in a sturdy slab serif, with
+   a hand-lettered face for everything that would be chalked, pinned or
+   written on a plant label. The hero is Plot 14 as an isometric diorama
+   with numbered pegs; the lead pattern, three steps down, is the terraced
+   ground under it and fills the plot-size diagram. Further down: the plot
+   map as a CSS grid with crops as small pattern fields, a chalkboard price
+   list, a cork noticeboard on the shed door and a growing calendar.
+   ========================================================================== */
+
+.page {
+  --soil: #ede6d6;
+  --dark: #22251d;
+  --green: #3f7a3a;
+  --terracotta: #c3623c;
+  --sky: #8db7d2;
+
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 80rem;
+  --hand: 'Gochi Hand', 'Comic Sans MS', 'Marker Felt', cursive;
+  --slab: 'Bitter', 'Rockwell', Georgia, serif;
+
+  --text: var(--dark);
+  --on-dark: var(--soil);
+  --on-green: var(--soil);
+  --on-terracotta: var(--soil);
+  --on-sky: var(--dark);
+  --paper: var(--soil);
+
+  /* Derived surfaces: mixed from the roles, never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 68%, var(--soil));
+  --rule: color-mix(in oklab, var(--text) 20%, transparent);
+  --faint: color-mix(in oklab, var(--text) 10%, transparent);
+  --bare: color-mix(in oklab, var(--soil) 88%, var(--dark));
+  --grass: color-mix(in oklab, var(--green) 34%, var(--soil));
+  --leafy: color-mix(in oklab, var(--green) 14%, var(--soil));
+  --path: color-mix(in oklab, var(--soil) 84%, var(--terracotta));
+  --cork: color-mix(in oklab, var(--terracotta) 42%, var(--soil));
+  --wood: color-mix(in oklab, var(--terracotta) 55%, var(--dark));
+  --dark-muted: color-mix(in oklab, var(--on-dark) 68%, var(--dark));
+  --dark-rule: color-mix(in oklab, var(--on-dark) 22%, transparent);
+  --shadow: color-mix(in oklab, var(--dark) 38%, transparent);
+
+  font-family: var(--slab);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  background: var(--soil);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    --text: color-mix(in oklab, oklch(from var(--soil) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--dark));
+    --on-dark: color-mix(in oklab, oklch(from var(--dark) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--soil));
+    --on-green: oklch(from var(--green) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-terracotta: oklch(from var(--terracotta) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-sky: oklch(from var(--sky) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    /* notice paper: the ground, a shade lighter */
+    --paper: oklch(from var(--soil) min(1, calc(l + 0.035)) calc(c * 0.7) h);
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+}
+
+.page :focus-visible {
+  outline: 3px solid var(--terracotta);
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 2rem;
+  padding: 0.7rem var(--gut);
+  background: var(--soil);
+  border-bottom: 2px solid var(--text);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+}
+
+/* a seedling: two leaves on a stem */
+.markGlyph {
+  position: relative;
+  width: 2rem;
+  height: 2.2rem;
+  flex: none;
+}
+
+.markGlyph::before,
+.markGlyph::after {
+  content: '';
+  position: absolute;
+  top: 0.2rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  background: var(--green);
+}
+
+.markGlyph::before {
+  left: 0.05rem;
+  border-radius: 0 100%;
+}
+
+.markGlyph::after {
+  right: 0.05rem;
+  border-radius: 100% 0;
+}
+
+.markGlyph {
+  background:
+    linear-gradient(var(--text), var(--text)) 50% 100% / 3px 1.3rem no-repeat,
+    linear-gradient(var(--terracotta), var(--terracotta)) 50% 100% / 100% 0.35rem no-repeat;
+}
+
+.markText {
+  display: grid;
+  line-height: 1;
+}
+
+.markName {
+  font-family: var(--hand);
+  font-size: 1.65rem;
+}
+
+.markSub {
+  margin-top: 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.3rem clamp(0.9rem, 2vw, 1.8rem);
+}
+
+.nav a {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: var(--green);
+  text-underline-offset: 6px;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  font-weight: 600;
+  --template-menu-bg: var(--soil);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+  padding: clamp(2.5rem, 5vw, 4rem) max(var(--gut), calc((100% - var(--max)) / 2)) clamp(3rem, 5vw, 4.5rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* The lead pattern as terraced beds, stepping up to the right. */
+.terraces {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42%;
+  overflow: hidden;
+  clip-path: polygon(0 34%, 34% 34%, 34% 17%, 67% 17%, 67% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.heroText {
+  display: grid;
+  gap: 1.4rem;
+  padding-top: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.kicker {
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-family: var(--hand);
+  font-size: clamp(3.3rem, 6.6vw, 6.3rem);
+  line-height: 0.95;
+}
+
+.lede {
+  max-width: 32rem;
+  font-size: clamp(1.1rem, 1.35vw, 1.22rem);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.3rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.btn {
+  color: var(--on-green);
+  background: var(--green);
+  border: 2px solid color-mix(in oklab, var(--green) 70%, var(--dark));
+  box-shadow: 0 3px 0 color-mix(in oklab, var(--green) 55%, var(--dark));
+}
+
+.btnGhost {
+  color: var(--text);
+  background: var(--soil);
+  border: 2px solid var(--text);
+  box-shadow: 0 3px 0 var(--text);
+}
+
+@media (hover: hover) {
+  .btn:hover,
+  .btnGhost:hover {
+    transform: translateY(1px);
+    box-shadow: 0 2px 0 var(--shadow);
+  }
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  background: var(--paper);
+  border: 2px solid var(--text);
+  border-radius: 0.5rem;
+}
+
+.stats div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.stats dt {
+  font-family: var(--hand);
+  font-size: clamp(2rem, 3.2vw, 2.7rem);
+  line-height: 1;
+}
+
+.stats dd {
+  font-size: 0.86rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+/* The diorama, with its plant label and pegs. */
+.diorama {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+}
+
+.dioramaTag {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  display: grid;
+  padding: 0.55rem 1rem 1.3rem;
+  color: var(--text);
+  background: var(--paper);
+  border: 2px solid var(--text);
+  clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  transform: rotate(-4deg);
+  transform-origin: left top;
+}
+
+.dioramaTitle {
+  font-family: var(--hand);
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.dioramaDate {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.dioramaStage {
+  position: relative;
+  padding-top: 1.5rem;
+}
+
+.dioramaArt {
+  width: 100%;
+  filter: drop-shadow(0 18px 18px var(--shadow));
+}
+
+.hotspot {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--hand);
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--on-dark);
+  background: var(--dark);
+  border: 3px solid var(--soil);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--dark), 0 6px 10px -4px var(--shadow);
+  transform: translate(-50%, -50%);
+}
+
+.diary {
+  position: relative;
+  z-index: 2;
+  padding: 1rem 1.2rem;
+  background: var(--paper);
+  border: 2px solid var(--text);
+  border-radius: 0.5rem;
+  box-shadow: 0 16px 30px -24px var(--shadow);
+}
+
+.diaryList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.4rem;
+}
+
+.diaryList li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'no name'
+    'no note';
+  column-gap: 0.7rem;
+}
+
+.diaryNo {
+  grid-area: no;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  font-family: var(--hand);
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--on-dark);
+  background: var(--dark);
+  border-radius: 50%;
+}
+
+.diaryName {
+  grid-area: name;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.diaryNote {
+  grid-area: note;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- sections */
+
+.sec {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut) 0;
+}
+
+.secHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem clamp(2rem, 6vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.secTitle {
+  font-family: var(--hand);
+  font-size: clamp(2.6rem, 5vw, 4.3rem);
+  line-height: 1;
+}
+
+.secNote {
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- site map */
+
+.mapWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14rem;
+  gap: 1.8rem;
+  align-items: start;
+}
+
+.mapScroll {
+  overflow-x: auto;
+  border: 3px solid var(--text);
+  border-radius: 0.4rem;
+}
+
+.map {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) 1.6rem repeat(9, minmax(0, 1fr));
+  grid-template-rows: 2.4rem 3.9rem 3.9rem 1.6rem 3.9rem 3.9rem 1.6rem 3.9rem 3.9rem 2.4rem;
+  gap: 5px;
+  min-width: 44rem;
+  padding: 0 0 0;
+  background: var(--grass);
+}
+
+.railway {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-dark);
+  background:
+    linear-gradient(var(--dark-muted), var(--dark-muted)) 0 30% / 100% 2px no-repeat,
+    linear-gradient(var(--dark-muted), var(--dark-muted)) 0 70% / 100% 2px no-repeat,
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--dark) 70%, var(--terracotta)) 0 6px, transparent 6px 16px),
+    var(--dark);
+}
+
+.railway::before {
+  content: '';
+}
+
+.pathMain {
+  grid-column: 7;
+  grid-row: 2 / 10;
+  background: var(--path);
+  background-image: linear-gradient(180deg, var(--faint) 50%, transparent 50%);
+  background-size: 2px 12px;
+  background-position: center;
+  background-repeat: repeat-y;
+}
+
+.pathCross {
+  grid-column: 1 / -1;
+  background: var(--path);
+}
+
+.pathCrossA {
+  grid-row: 4;
+}
+
+.pathCrossB {
+  grid-row: 7;
+}
+
+.street {
+  grid-column: 1 / -1;
+  grid-row: 10;
+  display: grid;
+  place-items: center;
+  font-family: var(--hand);
+  font-size: 1.2rem;
+  color: var(--on-dark);
+  background:
+    linear-gradient(90deg, var(--dark-muted) 50%, transparent 50%) 0 50% / 26px 2px repeat-x,
+    color-mix(in oklab, var(--dark) 88%, var(--soil));
+}
+
+.cell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 0.3rem;
+  overflow: hidden;
+}
+
+.cellLabel {
+  position: relative;
+  z-index: 1;
+  min-width: 1.7rem;
+  padding: 0.05rem 0.4rem;
+  font-family: var(--hand);
+  font-size: 1rem;
+  line-height: 1.3;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--text);
+  background: var(--paper);
+  border: 1.5px solid var(--text);
+  border-radius: 999px;
+}
+
+.cellNote {
+  position: relative;
+  z-index: 1;
+  padding: 0 0.3rem;
+  font-family: var(--hand);
+  font-size: 0.92rem;
+  line-height: 1.2;
+  color: var(--text);
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  border-radius: 0.2rem;
+}
+
+.crop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.plot {
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--green) 42%, var(--soil)) 0 4px, transparent 4px 13px),
+    var(--leafy);
+}
+
+.plot:nth-of-type(3n) {
+  background:
+    repeating-linear-gradient(0deg, color-mix(in oklab, var(--green) 38%, var(--soil)) 0 4px, transparent 4px 12px),
+    var(--leafy);
+}
+
+.vacant {
+  background: var(--soil);
+  outline: 2px dashed var(--muted);
+  outline-offset: -5px;
+}
+
+.cropped {
+  background: var(--bare);
+}
+
+.mine {
+  background: var(--bare);
+  box-shadow: inset 0 0 0 3px var(--terracotta);
+}
+
+.mine .cellLabel {
+  color: var(--on-terracotta);
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+}
+
+.trough {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 10px, color-mix(in oklab, var(--sky) 70%, var(--dark)) 10px 11px),
+    var(--sky);
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--sky) 60%, var(--dark));
+}
+
+.shed {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 7px, color-mix(in oklab, var(--terracotta) 70%, var(--dark)) 7px 8px),
+    var(--terracotta);
+}
+
+.compost {
+  background:
+    linear-gradient(90deg, transparent 32%, var(--wood) 32% 34%, transparent 34% 65%, var(--wood) 65% 67%, transparent 67%),
+    repeating-linear-gradient(135deg, color-mix(in oklab, var(--dark) 55%, var(--terracotta)) 0 3px, color-mix(in oklab, var(--dark) 35%, var(--terracotta)) 3px 7px);
+  box-shadow: inset 0 0 0 3px var(--wood);
+}
+
+.hut {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 9px, color-mix(in oklab, var(--dark) 70%, var(--soil)) 9px 10px),
+    var(--dark);
+}
+
+.raised {
+  background:
+    linear-gradient(90deg, var(--grass) 0 4%, transparent 4% 48%, var(--grass) 48% 52%, transparent 52% 96%, var(--grass) 96%),
+    linear-gradient(180deg, var(--grass) 0 6%, transparent 6% 47%, var(--grass) 47% 53%, transparent 53% 94%, var(--grass) 94%),
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--green) 45%, var(--soil)) 0 3px, transparent 3px 9px),
+    var(--wood);
+}
+
+.gate {
+  background:
+    repeating-linear-gradient(90deg, var(--text) 0 3px, transparent 3px 11px),
+    linear-gradient(var(--text), var(--text)) 0 50% / 100% 3px no-repeat,
+    var(--path);
+}
+
+.key {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.1rem 1.2rem;
+  font-size: 0.95rem;
+  background: var(--paper);
+  border: 2px solid var(--text);
+  border-radius: 0.5rem;
+}
+
+.key li {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.8rem;
+  line-height: 1.3;
+}
+
+.swatch {
+  height: 1.7rem;
+  border-radius: 0.2rem;
+}
+
+.sw_plot {
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--green) 42%, var(--soil)) 0 3px, transparent 3px 8px),
+    var(--leafy);
+}
+
+.sw_vacant {
+  background: var(--soil);
+  outline: 2px dashed var(--muted);
+  outline-offset: -3px;
+}
+
+.sw_mine {
+  background: var(--bare);
+  box-shadow: inset 0 0 0 3px var(--terracotta);
+}
+
+.sw_trough {
+  background: var(--sky);
+}
+
+.sw_compost {
+  background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--dark) 55%, var(--terracotta)) 0 3px, color-mix(in oklab, var(--dark) 35%, var(--terracotta)) 3px 6px);
+}
+
+.sw_path {
+  background: var(--path);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+/* -------------------------------------------------------------- get a plot */
+
+.plotGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.sizes {
+  display: grid;
+  gap: 1rem;
+  position: sticky;
+  top: 6rem;
+}
+
+/* A full plot drawn to scale, split into its two halves. */
+.fullPlot {
+  position: relative;
+  aspect-ratio: 25 / 10;
+  overflow: hidden;
+  background: var(--bare);
+  border: 3px solid var(--text);
+  border-radius: 0.3rem;
+}
+
+.halvesField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.halfLine {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  border-left: 3px dashed var(--text);
+}
+
+.halfLine::before {
+  content: '';
+  position: absolute;
+  inset: 0 -0.35rem;
+  background: var(--soil);
+  z-index: -1;
+}
+
+.sizeTag {
+  position: absolute;
+  top: 50%;
+  padding: 0.35rem 0.8rem;
+  font-family: var(--hand);
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--text);
+  background: var(--paper);
+  border: 2px solid var(--text);
+  border-radius: 0.4rem;
+  transform: translate(-50%, -50%);
+}
+
+.sizeTagA {
+  left: 25%;
+}
+
+.sizeTagB {
+  left: 75%;
+}
+
+.sizeCaption {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.tenancy {
+  display: grid;
+  gap: 1.3rem;
+}
+
+.rents {
+  display: grid;
+  border-top: 2px solid var(--text);
+}
+
+.rents li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'name price'
+    'size price';
+  column-gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.rentName {
+  grid-area: name;
+  font-weight: 700;
+}
+
+.rentSize {
+  grid-area: size;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.rentPrice {
+  grid-area: price;
+  align-self: center;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.rentPrice strong {
+  font-family: var(--hand);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text);
+}
+
+.concession {
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.welcomeTitle {
+  font-family: var(--hand);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.welcome {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.welcome li {
+  position: relative;
+  padding-left: 1.8rem;
+}
+
+.welcome li::before,
+.welcome li::after {
+  content: '';
+  position: absolute;
+  top: 0.35rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--green);
+}
+
+.welcome li::before {
+  left: 0.1rem;
+  border-radius: 0 100%;
+}
+
+.welcome li::after {
+  left: 0.72rem;
+  border-radius: 100% 0;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.3rem 1.3rem 1.4rem;
+  background: var(--paper);
+  border: 2px solid var(--text);
+  border-radius: 0.5rem;
+}
+
+.form .btn {
+  justify-self: start;
+}
+
+.formTitle {
+  font-family: var(--hand);
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.field label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: 0.45rem 0.7rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--soil);
+  border: 2px solid var(--text);
+  border-radius: 0.35rem;
+}
+
+.field select option {
+  color: var(--dark);
+  background: var(--soil);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+/* -------------------------------------------------------------------- shop */
+
+.shopGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.shopIntro {
+  display: grid;
+  gap: 1.3rem;
+}
+
+.shopHours {
+  display: inline-grid;
+  justify-self: start;
+  padding: 0.7rem 1rem;
+  color: var(--on-terracotta);
+  background: var(--terracotta);
+  border-radius: 0.4rem;
+  transform: rotate(-2deg);
+}
+
+.shopHours span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.shopHours strong {
+  font-family: var(--hand);
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+/* A chalkboard in a wooden frame. */
+.chalkboard {
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  color: var(--on-dark);
+  background:
+    radial-gradient(ellipse at 30% 20%, color-mix(in oklab, var(--on-dark) 7%, transparent), transparent 60%),
+    var(--dark);
+  border: 14px solid var(--wood);
+  border-radius: 0.3rem;
+  box-shadow:
+    inset 0 0 0 2px color-mix(in oklab, var(--wood) 60%, var(--dark)),
+    0 26px 40px -30px var(--shadow);
+}
+
+.chalkTitle {
+  font-family: var(--hand);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px dashed var(--dark-rule);
+}
+
+.prices {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.prices li {
+  display: grid;
+  grid-template-columns: auto auto minmax(1rem, 1fr) auto;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.priceItem {
+  font-family: var(--hand);
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.priceUnit {
+  font-size: 0.82rem;
+  color: var(--dark-muted);
+}
+
+.priceLeader {
+  border-bottom: 2px dotted var(--dark-rule);
+  transform: translateY(-0.3rem);
+}
+
+.priceValue {
+  font-family: var(--hand);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.chalkFoot {
+  padding-top: 0.7rem;
+  font-size: 0.9rem;
+  color: var(--dark-muted);
+  border-top: 2px dashed var(--dark-rule);
+}
+
+/* ----------------------------------------------------------------- notices */
+
+.cork {
+  padding: clamp(1.4rem, 3.4vw, 2.8rem);
+  background:
+    radial-gradient(circle at 30% 40%, color-mix(in oklab, var(--dark) 22%, transparent) 0 1px, transparent 1.6px) 0 0 / 9px 11px,
+    radial-gradient(circle at 70% 70%, color-mix(in oklab, var(--soil) 40%, transparent) 0 1px, transparent 1.6px) 0 0 / 13px 7px,
+    var(--cork);
+  border: 14px solid var(--wood);
+  border-radius: 0.3rem;
+  box-shadow: inset 0 4px 12px var(--shadow);
+}
+
+.notices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.6rem) clamp(1.2rem, 2.6vw, 2.2rem);
+  align-items: start;
+}
+
+.notice {
+  position: relative;
+  display: grid;
+  gap: 0.55rem;
+  padding: 1.5rem 1.3rem 1.3rem;
+  color: var(--text);
+  background: var(--paper);
+  box-shadow: 0 12px 18px -12px var(--shadow), 0 1px 2px var(--shadow);
+}
+
+.notice:nth-child(1) {
+  transform: rotate(-2deg);
+}
+
+.notice:nth-child(2) {
+  transform: rotate(1.6deg) translateY(0.8rem);
+}
+
+.notice:nth-child(3) {
+  transform: rotate(-1deg);
+}
+
+.notice:nth-child(4) {
+  transform: rotate(2.2deg);
+}
+
+.notice:nth-child(5) {
+  transform: rotate(-2.6deg) translateY(0.6rem);
+}
+
+.notice:nth-child(6) {
+  transform: rotate(1.2deg);
+}
+
+/* the pins */
+.pin {
+  position: absolute;
+  top: 0.35rem;
+  left: 50%;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, color-mix(in oklab, var(--terracotta) 35%, var(--soil)) 0 18%, var(--terracotta) 55%, color-mix(in oklab, var(--terracotta) 70%, var(--dark)));
+  box-shadow: 2px 4px 3px -1px var(--shadow);
+  transform: translateX(-50%);
+}
+
+.notice:nth-child(3n + 2) .pin {
+  background: radial-gradient(circle at 35% 35%, color-mix(in oklab, var(--green) 35%, var(--soil)) 0 18%, var(--green) 55%, color-mix(in oklab, var(--green) 70%, var(--dark)));
+}
+
+.notice:nth-child(3n) .pin {
+  background: radial-gradient(circle at 35% 35%, color-mix(in oklab, var(--sky) 35%, var(--soil)) 0 18%, var(--sky) 55%, color-mix(in oklab, var(--sky) 70%, var(--dark)));
+}
+
+.noticeTitle {
+  font-family: var(--hand);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.noticeBody {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.noticeFoot {
+  font-family: var(--hand);
+  font-size: 1.2rem;
+  line-height: 1.1;
+  color: var(--muted);
+}
+
+.n_poster {
+  border-top: 10px solid var(--green);
+}
+
+.n_poster .noticeTitle {
+  font-size: 2.6rem;
+}
+
+.n_result {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 1.45rem, color-mix(in oklab, var(--sky) 60%, transparent) 1.45rem calc(1.45rem + 1px)),
+    color-mix(in oklab, var(--paper) 86%, var(--sky));
+}
+
+.n_card {
+  background:
+    linear-gradient(180deg, transparent 3.2rem, color-mix(in oklab, var(--terracotta) 70%, transparent) 3.2rem calc(3.2rem + 2px), transparent calc(3.2rem + 2px)),
+    repeating-linear-gradient(180deg, transparent 0 1.45rem, color-mix(in oklab, var(--sky) 50%, transparent) 1.45rem calc(1.45rem + 1px)),
+    var(--paper);
+}
+
+.n_note {
+  background: color-mix(in oklab, var(--paper) 80%, var(--green));
+  aspect-ratio: 1;
+  align-content: center;
+}
+
+.n_list {
+  outline: 2px dashed var(--rule);
+  outline-offset: -8px;
+}
+
+.n_tabs {
+  padding-bottom: 0;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0.5rem -1.3rem 0;
+  border-top: 2px dashed var(--rule);
+}
+
+.tabs span {
+  height: 4.6rem;
+  display: grid;
+  place-items: center;
+  font-family: var(--hand);
+  font-size: 0.95rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  border-left: 1px dashed var(--rule);
+}
+
+.tabs span:nth-child(2) {
+  visibility: hidden;
+}
+
+/* ---------------------------------------------------------------- calendar */
+
+.seedbed {
+  position: relative;
+  height: 72px;
+  margin-bottom: 1.6rem;
+  overflow: hidden;
+  background: var(--bare);
+  border-radius: 0.4rem;
+  box-shadow: inset 0 0 0 2px var(--rule);
+}
+
+.calScroll {
+  overflow-x: auto;
+}
+
+.cal {
+  position: relative;
+  display: grid;
+  grid-template-columns: 9.5rem repeat(12, minmax(2.6rem, 1fr));
+  grid-template-rows: 2.4rem repeat(8, 2.5rem);
+  align-items: center;
+  column-gap: 0;
+  min-width: 44rem;
+  border-top: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 calc(2.5rem - 1px), var(--faint) calc(2.5rem - 1px) 2.5rem) 0 2.4rem / 100% calc(100% - 2.4rem) no-repeat;
+}
+
+.calCorner,
+.calMonth {
+  grid-row: 1;
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.calMonth {
+  text-align: center;
+  font-family: var(--hand);
+  font-size: 1.3rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.calNow {
+  color: var(--text);
+}
+
+.calRow {
+  display: contents;
+}
+
+.calCrop {
+  grid-column: 1;
+  grid-row: var(--row);
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+.calBar {
+  grid-row: var(--row);
+  position: relative;
+  z-index: 1;
+  height: 1.6rem;
+  margin: 0 2px;
+  padding: 0 0.6rem;
+  overflow: hidden;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.6rem;
+  white-space: nowrap;
+  border-radius: 999px;
+}
+
+.sow {
+  color: var(--on-green);
+  background: var(--green);
+}
+
+.plant {
+  color: var(--on-sky);
+  background: var(--sky);
+}
+
+.pick {
+  color: var(--on-terracotta);
+  background: var(--terracotta);
+}
+
+.nowLine {
+  grid-column: 10 / 11;
+  grid-row: 1 / -1;
+  align-self: stretch;
+  background: color-mix(in oklab, var(--terracotta) 14%, transparent);
+  border-inline: 2px dashed color-mix(in oklab, var(--terracotta) 70%, transparent);
+}
+
+.calKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  margin-top: 1rem;
+  font-size: 0.92rem;
+}
+
+.calKey li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calSwatch {
+  width: 2rem;
+  height: 0.9rem;
+  border-radius: 999px;
+}
+
+.calNowKey {
+  width: 1.2rem;
+  height: 1.1rem;
+  background: color-mix(in oklab, var(--terracotta) 14%, transparent);
+  border-inline: 2px dashed color-mix(in oklab, var(--terracotta) 70%, transparent);
+}
+
+/* ------------------------------------------------------------------- rules */
+
+.rules {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(2rem, 5vw, 4rem);
+  counter-reset: rule;
+}
+
+.rules li {
+  position: relative;
+  padding: 1rem 0 1rem 3.4rem;
+  border-top: 2px dashed var(--rule);
+  counter-increment: rule;
+}
+
+.rules li::before {
+  content: counter(rule);
+  position: absolute;
+  top: 0.55rem;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--hand);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--on-green);
+  background: var(--green);
+  border-radius: 50% 50% 50% 0.3rem;
+}
+
+/* ----------------------------------------------------------------- contact */
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.contactInfo {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.address {
+  font-family: var(--hand);
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  line-height: 1.2;
+}
+
+.contactList {
+  display: grid;
+  border-top: 2px solid var(--text);
+}
+
+.contactList div {
+  display: grid;
+  grid-template-columns: 6.4rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.contactList dt {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+
+.contactList dd {
+  overflow-wrap: anywhere;
+}
+
+.contactList a {
+  text-decoration-color: var(--green);
+  text-underline-offset: 3px;
+}
+
+/* A letter on lined paper. */
+.letter {
+  display: grid;
+  gap: 1rem;
+  padding: 1.6rem 1.5rem 1.6rem 2.6rem;
+  background:
+    linear-gradient(90deg, transparent 1.6rem, color-mix(in oklab, var(--terracotta) 60%, transparent) 1.6rem calc(1.6rem + 1.5px), transparent calc(1.6rem + 1.5px)),
+    var(--paper);
+  border: 2px solid var(--text);
+  border-radius: 0.3rem;
+  box-shadow: 0 20px 30px -26px var(--shadow);
+  transform: rotate(0.8deg);
+}
+
+.letter .btn {
+  justify-self: start;
+}
+
+.letterTitle {
+  font-family: var(--hand);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.footer {
+  margin-top: clamp(4.5rem, 9vw, 7rem);
+  color: var(--on-dark);
+  background: var(--dark);
+}
+
+.fence {
+  position: relative;
+  height: 72px;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--green) 60%, var(--dark));
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 1rem 3rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(2.2rem, 4vw, 3.2rem) var(--gut);
+}
+
+.footName {
+  font-family: var(--hand);
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  line-height: 1;
+}
+
+.footText {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--dark-muted);
+}
+
+.footText a {
+  color: var(--on-dark);
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1180px) {
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .mapWrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .key {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .terraces {
+    height: 30%;
+  }
+
+  .secHead,
+  .plotGrid,
+  .shopGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sizes {
+    position: static;
+  }
+
+  .notices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    font-size: 1rem;
+  }
+
+  .markSub {
+    display: none;
+  }
+
+  .stats {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .stats div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .dioramaTag {
+    position: relative;
+    justify-self: start;
+    transform: rotate(-3deg);
+  }
+
+  .dioramaStage {
+    padding-top: 0;
+  }
+
+  .hotspot {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.15rem;
+    border-width: 2px;
+  }
+
+  .diaryList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .key {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    font-size: 0.86rem;
+  }
+
+  .sizeTag {
+    font-size: 0.9rem;
+    padding: 0.2rem 0.45rem;
+    white-space: normal;
+    text-align: center;
+    width: 42%;
+  }
+
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .prices li {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'item value'
+      'unit value';
+    column-gap: 0.8rem;
+    row-gap: 0;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px dashed var(--dark-rule);
+  }
+
+  .priceItem {
+    grid-area: item;
+  }
+
+  .priceUnit {
+    grid-area: unit;
+  }
+
+  .priceValue {
+    grid-area: value;
+    align-self: center;
+  }
+
+  .priceLeader {
+    display: none;
+  }
+
+  .cork {
+    border-width: 10px;
+  }
+
+  .notices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .notice:nth-child(n) {
+    transform: rotate(-1deg);
+  }
+
+  .notice:nth-child(2n) {
+    transform: rotate(1.2deg);
+  }
+
+  .n_note {
+    aspect-ratio: auto;
+  }
+
+  .rules {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contactList div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .letter {
+    transform: none;
+    padding-left: 2.2rem;
+  }
+}

@@ -1,0 +1,1719 @@
+/* ==========================================================================
+   HEARTWOOD ARBORISTS - tree surgery and surveys, Old Station Road
+   Dendrochronology and the field survey. The hero is a slice of an oak,
+   read ring by ring with leader lines, and the core taken from it laid out
+   underneath as a timeline. The services are a marked-up drawing of an
+   oak and six aluminium tree tags with a nail hole and an embossed number;
+   the surveys are a sheet on graph paper with a contoured site plan; the
+   storm band has the same oak, enormous and faint, behind the phone
+   number. A sturdy slab for the field guide, a stamped mono for the tags.
+   ========================================================================== */
+
+.page {
+  --sawdust: #f0e7d6;
+  --bark: #2c241b;
+  --moss: #5d7a39;
+  --orange: #e2622c;
+  --text: var(--bark);
+  --on-bark: var(--sawdust);
+  --on-moss: var(--sawdust);
+  --on-orange: var(--bark);
+  --on-metal: var(--bark);
+  --slab: 'Roboto Slab', 'Rockwell', Georgia, serif;
+  --mono: 'Martian Mono', 'SFMono-Regular', Menlo, ui-monospace, monospace;
+  --gut: clamp(1rem, 4vw, 3rem);
+  --max: 78rem;
+
+  /* Derived: never roles of their own. */
+  --muted: color-mix(in oklab, var(--text) 70%, var(--sawdust));
+  --rule: color-mix(in oklab, var(--text) 20%, transparent);
+  --paper: color-mix(in oklab, var(--sawdust) 90%, var(--bark));
+  --field: color-mix(in oklab, var(--sawdust) 88%, var(--moss));
+  --grid: color-mix(in oklab, var(--moss) 16%, transparent);
+  --orange-ink: color-mix(in oklab, var(--orange) 62%, var(--text));
+  --bark-soft: color-mix(in oklab, var(--on-bark) 76%, var(--bark));
+  --storm-ink: color-mix(in oklab, var(--on-bark) 12%, var(--bark));
+  --metal: color-mix(in oklab, var(--sawdust) 72%, var(--bark));
+  --metal-light: color-mix(in oklab, var(--sawdust) 92%, var(--bark));
+  --metal-dark: color-mix(in oklab, var(--sawdust) 46%, var(--bark));
+  --wood: color-mix(in oklab, var(--sawdust) 76%, var(--orange));
+  --ring-line: color-mix(in oklab, var(--bark) 55%, var(--wood));
+  --shadow: color-mix(in oklab, var(--bark) 45%, transparent);
+
+  font-family: var(--slab);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  background: var(--sawdust);
+  color: var(--text);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .page {
+    /* Black or white by each surface's lightness, tinted toward an ink. */
+    --text: color-mix(in oklab, oklch(from var(--sawdust) clamp(0, (0.62 - l) * 1000, 1) 0 0) 82%, var(--bark));
+    --on-bark: color-mix(in oklab, oklch(from var(--bark) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--sawdust));
+    --on-moss: color-mix(in oklab, oklch(from var(--moss) clamp(0, (0.62 - l) * 1000, 1) 0 0) 90%, var(--sawdust));
+    --on-orange: oklch(from var(--orange) clamp(0, (0.62 - l) * 1000, 1) 0 0);
+    --on-metal: color-mix(in oklab, oklch(from var(--metal) clamp(0, (0.62 - l) * 1000, 1) 0 0) 86%, var(--bark));
+  }
+}
+
+.page :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page :focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+.page :where(h1, h2, h3) {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.page :where(p, dl, dd, ol, ul, figure) {
+  margin: 0;
+}
+
+.page :where(ol, ul) {
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.7rem var(--gut);
+  background: color-mix(in srgb, var(--sawdust) 95%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+}
+
+.markRings {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, var(--wood) 0 2px, var(--ring-line) 2px 3px);
+  box-shadow: 0 0 0 3px var(--bark);
+}
+
+.markName {
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+}
+
+.markSub {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem clamp(0.9rem, 1.8vw, 1.8rem);
+  font-weight: 500;
+  font-size: 0.98rem;
+}
+
+.nav a {
+  color: var(--muted);
+}
+
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--orange);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+}
+
+.barCall {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: var(--orange);
+  color: var(--on-orange);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.siteMenu {
+  display: none;
+  justify-self: end;
+  --template-menu-bg: var(--sawdust);
+}
+
+/* --------------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(3rem, 6vw, 5rem) var(--gut) 0;
+  background: var(--bark);
+  color: var(--on-bark);
+}
+
+.heroField {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+  gap: clamp(2rem, 3vw, 3rem);
+  align-items: center;
+  max-width: 86rem;
+  margin: 0 auto;
+}
+
+.heroText {
+  display: grid;
+  gap: 1rem;
+  padding: 1.8rem 1.8rem 2rem;
+  background: var(--bark);
+  border-top: 0.4rem solid var(--orange);
+  box-shadow: 0 30px 50px -20px color-mix(in oklab, var(--bark) 80%, transparent);
+}
+
+.kicker,
+.coreHead,
+.stormKicker {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.kicker::before,
+.coreHead::before,
+.stormKicker::before {
+  content: '';
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 2px var(--on-bark);
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-bark);
+}
+
+.title {
+  font-weight: 800;
+  font-size: clamp(2.8rem, 4.6vw, 4.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  font-weight: 300;
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.4rem;
+}
+
+.btn,
+.btnGhost {
+  display: inline-block;
+  padding: 0.65rem 1.2rem 0.7rem;
+  border: 0;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.btn {
+  background: var(--orange);
+  color: var(--on-orange);
+}
+
+.btnGhost {
+  color: inherit;
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: color-mix(in oklab, var(--orange) 84%, var(--bark));
+  }
+
+  .btnGhost:hover {
+    background: color-mix(in oklab, currentColor 10%, transparent);
+  }
+}
+
+/* The slice, and every annotated figure: a disc with pins, notes beside
+   it on leader lines. On a narrow screen the notes become a numbered list
+   under the picture and the pins carry the numbers. */
+.slice {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+}
+
+.plate {
+  position: relative;
+  width: min(100%, 32rem);
+  margin: 0 12.5rem;
+}
+
+.disc {
+  position: relative;
+}
+
+.rings {
+  width: 100%;
+  filter: drop-shadow(0 30px 40px color-mix(in oklab, var(--bark) 70%, transparent));
+}
+
+.pin {
+  position: absolute;
+  z-index: 2;
+  left: var(--x);
+  top: var(--y);
+  display: grid;
+  place-items: center;
+  width: 0.8rem;
+  height: 0.8rem;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 2px var(--sawdust);
+  color: var(--on-orange);
+  font-family: var(--mono);
+  font-size: 0;
+  font-weight: 800;
+}
+
+.notes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.note {
+  position: absolute;
+  top: var(--y);
+  display: grid;
+  align-items: center;
+  translate: 0 -50%;
+  pointer-events: auto;
+}
+
+.note::before {
+  content: '';
+  grid-row: 1 / span 2;
+  align-self: center;
+  height: 0;
+  border-top: 2px solid var(--orange);
+}
+
+.noteRight {
+  left: var(--x);
+  right: -12.5rem;
+  grid-template-columns: minmax(0, 1fr) 11rem;
+}
+
+.noteRight::before {
+  grid-column: 1;
+  margin-right: 0.6rem;
+}
+
+.noteLeft {
+  left: -12.5rem;
+  right: calc(100% - var(--x));
+  grid-template-columns: 11rem minmax(0, 1fr);
+  text-align: right;
+}
+
+.noteLeft::before {
+  grid-column: 2;
+  margin-left: 0.6rem;
+}
+
+.noteHead,
+.noteText {
+  grid-column: 2;
+}
+
+.noteLeft .noteHead,
+.noteLeft .noteText {
+  grid-column: 1;
+}
+
+.noteHead {
+  font-family: var(--mono);
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--orange-ink);
+}
+
+.noteText {
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+/* Over the hero's field the labels sit on a scrap of bark. */
+.slice .noteHead {
+  color: var(--on-bark);
+}
+
+.slice .noteHead,
+.slice .noteText {
+  justify-self: start;
+  padding: 0 0.3rem;
+  background: var(--bark);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.slice .noteLeft .noteHead,
+.slice .noteLeft .noteText {
+  justify-self: end;
+}
+
+.sliceCaption {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--bark-soft);
+}
+
+/* The core: an increment borer's sample, a decade to a segment. */
+.coreWrap {
+  position: relative;
+  z-index: 1;
+  max-width: 86rem;
+  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  padding: 1.4rem 0 2.4rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-bark) 20%, transparent);
+}
+
+.coreHead {
+  margin-bottom: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-bark);
+}
+
+.core {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  padding: 0.6rem 0.8rem;
+  background: var(--bark);
+  border-radius: 6px;
+}
+
+.coreSeg {
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+}
+
+.coreWood {
+  height: 2.2rem;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--sawdust) 35%, transparent), transparent 40%, color-mix(in oklab, var(--bark) 30%, transparent)),
+    repeating-linear-gradient(90deg, var(--ring-line) 0 1.5px, var(--wood) 1.5px var(--w));
+}
+
+.coreSeg:first-child .coreWood {
+  border-radius: 1.1rem 0 0 1.1rem;
+}
+
+.coreSeg:last-child .coreWood {
+  border-radius: 0 0.3rem 0.3rem 0;
+  box-shadow: inset -0.5rem 0 0 color-mix(in oklab, var(--bark) 70%, var(--wood));
+}
+
+.coreDec {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--bark-soft);
+}
+
+.coreEv {
+  padding-left: 0.4rem;
+  border-left: 2px solid var(--orange);
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+/* ------------------------------------------------------------ sections */
+
+.sec {
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.secHead {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 46rem;
+  margin-bottom: clamp(2.4rem, 5vw, 3.6rem);
+}
+
+.secNo {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange-ink);
+}
+
+.secHead h2,
+.surveyText h2,
+.pricesHead h2,
+.yardText h2 {
+  font-weight: 800;
+  font-size: clamp(2.1rem, 4.2vw, 3.3rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.secNote {
+  font-weight: 300;
+  font-size: 1.15rem;
+}
+
+/* ------------------------------------------------------------- services */
+
+.diagram {
+  display: grid;
+  justify-items: center;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.diagram .plate {
+  width: min(100%, 31rem);
+  margin: 0 13.5rem;
+}
+
+.oak {
+  width: 100%;
+}
+
+.oakNotes .noteRight {
+  right: -13.5rem;
+  grid-template-columns: minmax(0, 1fr) 12rem;
+}
+
+.oakNotes .noteLeft {
+  left: -13.5rem;
+  grid-template-columns: 12rem minmax(0, 1fr);
+}
+
+.oakDisc .pin {
+  box-shadow: 0 0 0 2px var(--sawdust);
+}
+
+/* The work drawn on the tree: the reduced outline, the lift line, a
+   cable between two stems and the root protection zone. */
+.reduceLine {
+  position: absolute;
+  left: 13%;
+  right: 13%;
+  top: 11%;
+  height: 50%;
+  border: 2px dashed var(--orange-ink);
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0 / 70% 70% 0 0;
+}
+
+.liftLine {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 66%;
+  border-top: 2px dashed var(--orange-ink);
+}
+
+.cable {
+  position: absolute;
+  left: 49%;
+  top: 27%;
+  width: 15%;
+  border-top: 3px solid var(--orange-ink);
+  rotate: -9deg;
+}
+
+.cable::before,
+.cable::after {
+  content: '';
+  position: absolute;
+  top: -0.35rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--orange-ink);
+}
+
+.cable::before {
+  left: -0.2rem;
+}
+
+.cable::after {
+  right: -0.2rem;
+}
+
+.rpz {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 88%;
+  height: 14%;
+  border: 2px dashed var(--orange-ink);
+  border-radius: 50%;
+}
+
+/* The tags, nailed to bark. */
+.tags {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.2rem 2rem;
+  padding: clamp(2rem, 4vw, 3rem);
+  background:
+    repeating-linear-gradient(91deg, transparent 0 13px, color-mix(in oklab, var(--on-bark) 9%, transparent) 13px 15px, transparent 15px 34px),
+    repeating-linear-gradient(89deg, transparent 0 21px, color-mix(in oklab, var(--bark) 60%, transparent) 21px 25px, transparent 25px 47px),
+    var(--bark);
+  border-radius: 6px;
+}
+
+.tag {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  padding: 2.4rem 1.4rem 1.3rem;
+  background: linear-gradient(145deg, var(--metal-light), var(--metal) 42%, var(--metal-light) 58%, var(--metal-dark));
+  color: var(--on-metal);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 0 0 1px var(--metal-dark),
+    inset 0 2px 0 var(--metal-light),
+    inset 0 0 0 5px color-mix(in oklab, var(--metal-light) 40%, transparent),
+    0 12px 18px -8px color-mix(in oklab, var(--bark) 80%, transparent);
+  rotate: -1.2deg;
+}
+
+.tag:nth-child(3n + 2) {
+  rotate: 1.4deg;
+}
+
+.tag:nth-child(3n) {
+  rotate: -0.5deg;
+}
+
+.nail {
+  position: absolute;
+  top: 0.75rem;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--metal-light), var(--metal-dark) 70%);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--bark) 55%, var(--metal)), 1px 2px 2px var(--shadow);
+}
+
+.tagNo {
+  font-family: var(--mono);
+  font-weight: 800;
+  font-stretch: 112.5%;
+  font-size: 2.3rem;
+  line-height: 1;
+  color: var(--metal-dark);
+  text-shadow: 1px 1px 0 var(--metal-light), -1px -1px 0 color-mix(in oklab, var(--metal-dark) 70%, var(--bark));
+}
+
+.tagName {
+  font-family: var(--mono);
+  font-weight: 800;
+  font-size: 0.98rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tagLine {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.tagFrom {
+  margin-top: 0.3rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid color-mix(in oklab, var(--on-metal) 25%, transparent);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* -------------------------------------------------------------- surveys */
+
+.surveySec {
+  background: var(--field);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.surveyInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.surveyText {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.surveyLede {
+  font-weight: 300;
+  font-size: 1.12rem;
+}
+
+.surveyTypes {
+  display: grid;
+  gap: 0;
+  margin-top: 0.6rem;
+  border-top: 2px solid var(--text);
+}
+
+.surveyTypes li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.surveyTypes h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.surveyTypes p:not(.surveyPrice) {
+  grid-column: 1;
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.surveyPrice {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  color: var(--orange-ink);
+}
+
+/* The survey sheet, on graph paper, clipped to its board. */
+.sheet {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding: 2.2rem clamp(1rem, 2.5vw, 1.8rem) 1.6rem;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 1rem,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 1rem 100%,
+    var(--sawdust);
+  border: 1px solid var(--rule);
+  box-shadow: 0 0 0 0.9rem color-mix(in oklab, var(--orange) 30%, var(--bark)), 0 30px 50px -24px var(--shadow);
+  rotate: 0.6deg;
+}
+
+.sheet::before {
+  /* the clipboard's clip */
+  content: '';
+  position: absolute;
+  top: -1.6rem;
+  left: 50%;
+  width: 9rem;
+  height: 2.4rem;
+  translate: -50% 0;
+  border-radius: 0.5rem 0.5rem 0.3rem 0.3rem;
+  background: linear-gradient(180deg, var(--metal-light), var(--metal) 60%, var(--metal-dark));
+  box-shadow: 0 3px 4px var(--shadow);
+}
+
+.sheetHead {
+  display: grid;
+  gap: 0.3rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.sheetTitle {
+  font-family: var(--mono);
+  font-weight: 800;
+  font-stretch: 112.5%;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sheetMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.sitePlan {
+  position: relative;
+  height: 15rem;
+  overflow: hidden;
+  background: var(--sawdust);
+  border: 2px solid var(--text);
+}
+
+.contours {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.planTree {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--moss);
+  color: var(--on-moss);
+  font-family: var(--mono);
+  font-weight: 800;
+  font-size: 0.62rem;
+}
+
+.planTree::after {
+  /* the root protection zone */
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--rpz, 1.6rem));
+  border: 2px dashed var(--orange-ink);
+  border-radius: 50%;
+}
+
+.planT1 {
+  left: 22%;
+  top: 34%;
+  --rpz: 2.4rem;
+}
+
+.planT2 {
+  left: 48%;
+  top: 70%;
+  --rpz: 1.4rem;
+  background: var(--orange);
+  color: var(--on-orange);
+}
+
+.planT3 {
+  left: 80%;
+  top: 30%;
+  --rpz: 1.9rem;
+}
+
+.planT4 {
+  left: 68%;
+  top: 76%;
+  --rpz: 0.9rem;
+}
+
+.planHouse {
+  position: absolute;
+  z-index: 1;
+  left: 34%;
+  top: 14%;
+  width: 26%;
+  height: 34%;
+  background: repeating-linear-gradient(45deg, var(--sawdust) 0 5px, color-mix(in oklab, var(--text) 45%, var(--sawdust)) 5px 6px);
+  border: 2px solid var(--text);
+}
+
+.planKey {
+  position: absolute;
+  z-index: 1;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.15rem 0.45rem;
+  background: var(--sawdust);
+  border: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+}
+
+.sheetTableWrap {
+  overflow-x: auto;
+}
+
+.sheetTable {
+  width: 100%;
+  min-width: 33rem;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+.sheetTable th,
+.sheetTable td {
+  padding: 0.45rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+  border: 1px solid color-mix(in oklab, var(--text) 30%, transparent);
+  background: color-mix(in oklab, var(--sawdust) 85%, transparent);
+}
+
+.sheetTable thead th {
+  font-weight: 800;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: color-mix(in oklab, var(--moss) 16%, var(--sawdust));
+}
+
+.sheetTable tbody th {
+  font-weight: 800;
+}
+
+.sheetTable .num {
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------- storm */
+
+.storm {
+  position: relative;
+  overflow: hidden;
+  background: var(--bark);
+  color: var(--on-bark);
+}
+
+.stormArt {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The oak, far too big for the band: only part of its crown fits. */
+.stormOak {
+  position: absolute;
+  left: 38%;
+  top: -18%;
+  width: 95%;
+  max-width: none;
+}
+
+.stormInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  max-width: calc(var(--max) + 2 * var(--gut));
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+}
+
+.stormHead {
+  display: grid;
+  gap: 1rem;
+}
+
+.stormKicker {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-bark);
+}
+
+.stormTitle {
+  font-weight: 800;
+  font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.stormPhone {
+  justify-self: start;
+  font-family: var(--mono);
+  font-weight: 800;
+  font-stretch: 112.5%;
+  font-size: clamp(1.8rem, 4.4vw, 3.2rem);
+  line-height: 1.1;
+  color: var(--on-bark);
+  border-bottom: 5px solid var(--orange);
+}
+
+.stormPromise {
+  font-weight: 300;
+  font-size: 1.15rem;
+}
+
+.stormSteps {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.stormSteps li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding: 1.1rem 1.2rem;
+  background: color-mix(in oklab, var(--bark) 82%, transparent);
+  border: 1px solid color-mix(in oklab, var(--on-bark) 18%, transparent);
+  border-radius: 4px;
+}
+
+.stormNo {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background: var(--orange);
+  color: var(--on-orange);
+  font-family: var(--mono);
+  font-weight: 800;
+}
+
+.stormSteps h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.stormSteps p {
+  font-size: 1rem;
+  color: var(--bark-soft);
+}
+
+/* ----------------------------------------------------------------- crew */
+
+.crewGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+/* The five cards and the insurance card share one grid. */
+.crew {
+  display: contents;
+}
+
+.member {
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+  padding: 1.2rem 1.3rem 1.3rem;
+  background: var(--paper);
+  border-left: 0.35rem solid var(--moss);
+}
+
+.member h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.memberRole {
+  font-weight: 500;
+}
+
+.memberYears {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.quals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.quals li {
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cover {
+  display: grid;
+  gap: 1rem;
+  padding: 1.6rem 1.6rem 1.8rem;
+  background: var(--moss);
+  color: var(--on-moss);
+  border-radius: 4px;
+}
+
+.coverHead {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.coverList {
+  display: grid;
+}
+
+.coverList div {
+  padding: 0.6rem 0;
+  border-top: 1px solid color-mix(in oklab, var(--on-moss) 30%, transparent);
+}
+
+.coverList dt {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--on-moss) 78%, var(--moss));
+}
+
+.coverList dd {
+  font-weight: 700;
+}
+
+.coverNote {
+  font-weight: 300;
+  font-size: 0.98rem;
+}
+
+/* --------------------------------------------------------------- prices */
+
+.pricesSec {
+  position: relative;
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* A column of map symbols down the edge, like a survey legend. */
+.symbols {
+  position: relative;
+  overflow: hidden;
+  border-right: 2px solid var(--text);
+}
+
+.pricesInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6rem) var(--gut);
+}
+
+.pricesHead {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.pricesHead p:not(.secNo) {
+  font-weight: 300;
+  font-size: 1.1rem;
+}
+
+.prices {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid var(--text);
+  border-bottom: 2px solid var(--text);
+}
+
+.prices th,
+.prices td {
+  padding: 0.7rem 0.8rem 0.7rem 0;
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.prices thead th {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.prices tbody th {
+  font-weight: 700;
+}
+
+.prices td {
+  color: var(--muted);
+}
+
+.prices .range {
+  padding-right: 0;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.prices thead th:last-child {
+  text-align: right;
+  padding-right: 0;
+}
+
+/* ----------------------------------------------------------------- yard */
+
+.yardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+/* One log end on the stack: end grain inside a ring of bark. */
+.log {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 27rem);
+  aspect-ratio: 1;
+  padding: 1.1rem;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(from 0deg, var(--bark) 0 4deg, color-mix(in oklab, var(--bark) 75%, var(--sawdust)) 4deg 7deg);
+  box-shadow: 0 30px 50px -24px var(--shadow);
+}
+
+.endGrain {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.log::after {
+  /* the drying crack */
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 46%;
+  height: 0.5rem;
+  background: var(--bark);
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  rotate: 34deg;
+  transform-origin: 0 50%;
+}
+
+.yardText {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.yardLede {
+  font-weight: 300;
+  font-size: 1.12rem;
+}
+
+.yard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.6rem;
+  margin-top: 0.6rem;
+}
+
+.yard li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--text);
+}
+
+.yard h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.yard p:not(.yardPrice) {
+  grid-column: 1 / -1;
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.yardPrice {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--mono);
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--orange-ink);
+}
+
+/* ----------------------------------------------------------------- book */
+
+.bookSec {
+  padding: clamp(4rem, 8vw, 6.5rem) var(--gut);
+  background: var(--moss);
+}
+
+/* A work order: numbered, ruled, with its carbon-copy edge. */
+.order {
+  display: grid;
+  gap: 1.2rem;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: clamp(1.4rem, 3.5vw, 2.4rem);
+  background: var(--sawdust);
+  color: var(--text);
+  border-radius: 3px;
+  box-shadow: 0.5rem 0.5rem 0 color-mix(in oklab, var(--sawdust) 70%, var(--moss)), 0 30px 50px -20px color-mix(in oklab, var(--bark) 70%, transparent);
+}
+
+.orderHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem 1.4rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid var(--text);
+}
+
+.orderHead h2 {
+  font-weight: 800;
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.orderNo {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--orange-ink);
+}
+
+.orderNote {
+  font-weight: 300;
+}
+
+.orderGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid color-mix(in oklab, var(--text) 45%, transparent);
+  border-radius: 2px;
+  background: var(--paper);
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.field select option {
+  background: var(--sawdust);
+  color: var(--text);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.orderFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.4rem;
+}
+
+.orderFoot p {
+  flex: 1 1 16rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  background: var(--bark);
+  color: var(--on-bark);
+}
+
+.footRings {
+  position: relative;
+  height: 4rem;
+  overflow: hidden;
+  border-bottom: 3px solid var(--orange);
+}
+
+.footInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
+  gap: 1rem 2.4rem;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 2.4rem var(--gut) 2.8rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.footName {
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.footInner a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 1240px) {
+  .heroInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroText {
+    max-width: 40rem;
+  }
+
+  .crewGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1040px) {
+  .surveyInner,
+  .stormInner,
+  .pricesInner,
+  .yardGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tags {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stormOak {
+    left: 10%;
+    width: 140%;
+  }
+
+  .footInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The oak's notes need 58rem across; below that they become a list. */
+@media (max-width: 1000px) {
+  .diagram .plate {
+    margin: 0;
+  }
+
+  .oakNotes {
+    position: static;
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1.6rem;
+    counter-reset: note;
+  }
+
+  .oakNotes .note,
+  .oakNotes .noteLeft,
+  .oakNotes .noteRight {
+    position: static;
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+    column-gap: 0.8rem;
+    translate: none;
+    text-align: left;
+  }
+
+  .oakNotes .note::before {
+    content: counter(note);
+    counter-increment: note;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: start;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    margin: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--orange);
+    color: var(--on-orange);
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: 0.72rem;
+  }
+
+  .oakNotes .noteHead,
+  .oakNotes .noteText {
+    grid-column: 2;
+  }
+
+  .oakDisc .pin {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1rem;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .siteMenu {
+    display: block;
+  }
+
+  .pricesSec {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .symbols {
+    height: 3.5rem;
+    border-right: 0;
+    border-bottom: 2px solid var(--text);
+  }
+
+  /* The slice's notes become a list under it, and the pins take numbers. */
+  .plate {
+    margin: 0;
+  }
+
+  .notes {
+    position: static;
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1.6rem;
+    counter-reset: note;
+  }
+
+  .note,
+  .noteLeft,
+  .noteRight {
+    position: static;
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+    column-gap: 0.8rem;
+    translate: none;
+    text-align: left;
+  }
+
+  .note::before,
+  .noteLeft::before,
+  .noteRight::before {
+    content: counter(note);
+    counter-increment: note;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: start;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    margin: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--orange);
+    color: var(--on-orange);
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: 0.72rem;
+  }
+
+  .noteHead,
+  .noteText,
+  .noteLeft .noteHead,
+  .noteLeft .noteText {
+    grid-column: 2;
+  }
+
+  .pin {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.7rem;
+  }
+
+  .slice .notes,
+  .sliceCaption {
+    padding: 1rem;
+    background: var(--bark);
+  }
+
+  .sliceCaption {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .slice .noteHead,
+  .slice .noteText,
+  .slice .noteLeft .noteHead,
+  .slice .noteLeft .noteText {
+    justify-self: start;
+    padding: 0;
+    background: none;
+  }
+
+  .core {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    row-gap: 1rem;
+  }
+
+  .coreSeg:nth-child(6) .coreWood {
+    border-radius: 0 0.3rem 0.3rem 0;
+  }
+
+  .coreSeg:nth-child(7) .coreWood {
+    border-radius: 0.3rem 0 0 0.3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .barCall {
+    display: none;
+  }
+
+  .tags,
+  .crewGrid,
+  .yard,
+  .orderGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .core {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .coreSeg:nth-child(6) .coreWood,
+  .coreSeg:nth-child(7) .coreWood {
+    border-radius: 0;
+  }
+
+  .coreSeg:nth-child(4n) .coreWood {
+    border-radius: 0 0.3rem 0.3rem 0;
+  }
+
+  .coreSeg:nth-child(4n + 1):not(:first-child) .coreWood {
+    border-radius: 0.3rem 0 0 0.3rem;
+  }
+
+  .footInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
