@@ -64,9 +64,10 @@
     --on-black: color-mix(in oklab, oklch(from var(--black) clamp(0, (0.62 - l) * 1000, 1) 0 0) 88%, var(--paper));
     --on-red: oklch(from var(--red) clamp(0, (0.62 - l) * 1000, 1) 0 0);
     --on-teal: oklch(from var(--teal) clamp(0, (0.62 - l) * 1000, 1) 0 0);
-    /* Print paper is always light, as photo paper is, whatever the ground;
-       the developing inks are always dark enough to hold a face on it. */
-    --print: oklch(from var(--paper) max(l, 0.96) min(c, 0.02) h);
+    /* Print paper is always light, as photo paper is, whatever the ground,
+       with a little of the ground mixed in so a re-color still reaches the
+       prints; the developing inks are always dark enough to hold a face. */
+    --print: color-mix(in oklab, oklch(from var(--paper) max(l, 0.96) min(c, 0.02) h) 86%, var(--paper));
     --dev-black: oklch(from var(--black) min(l, 0.27) c h);
     --dev-red: oklch(from var(--red) min(l, 0.5) c h);
     --dev-teal: oklch(from var(--teal) min(l, 0.47) c h);
